@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lesson Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F4; --surface:#FFFFFF; --ink:#18201E; --muted:#56615D; --line:#D5DCD9;
+  --accent:#1F5F7A; --accent-ink:#FFFFFF; --accent-soft:#E2EEF3;
+  --good:#22704A; --good-soft:#E3F2E9; --bad:#A8322B; --bad-soft:#F8E6E4; --note:#8A5A00; --note-soft:#FBF0DA;
+  --mock-bg:#FFFFFF; --mock-ink:#1D1D1F; --mock-muted:#6B6B70; --mock-line:#E3E3E6; --mock-brand:#5B3FD1;
+  --font:"IBM Plex Sans Arabic",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111614; --surface:#1A211F; --ink:#E5ECE9; --muted:#9AA7A2; --line:#2E3835;
+  --accent:#7DBAD3; --accent-ink:#0D1A20; --accent-soft:#1D3340;
+  --good:#7CCB9F; --good-soft:#18301F; --bad:#F09A92; --bad-soft:#3A1E1C; --note:#E8B866; --note-soft:#33280F;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111614; --surface:#1A211F; --ink:#E5ECE9; --muted:#9AA7A2; --line:#2E3835;
+  --accent:#7DBAD3; --accent-ink:#0D1A20; --accent-soft:#1D3340;
+  --good:#7CCB9F; --good-soft:#18301F; --bad:#F09A92; --bad-soft:#3A1E1C; --note:#E8B866; --note-soft:#33280F;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;min-height:100vh;padding-bottom:140px}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:12px;min-height:56px}
+.top .grow{flex:1;min-width:0}
+.crumb{font-size:.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;min-height:40px;padding:0 12px;cursor:pointer}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 0 10px}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+h1{font-size:1.6rem;line-height:1.25;margin:28px 0 6px;font-weight:700}
+h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
+.sub{color:var(--muted);margin:0 0 8px}
+.unit{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.unit h3{margin:0;font-size:1.05rem}
+.unit .skill{color:var(--muted);font-size:.92rem;margin:4px 0 10px}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:1px 9px;background:var(--good-soft);color:var(--good);margin-inline-start:6px;vertical-align:2px}
+.tag.check{background:var(--accent-soft);color:var(--accent)}
+.lessonlink{display:flex;width:100%;text-align:start;align-items:center;gap:12px;border:0;border-top:1px solid var(--line);background:none;padding:12px 2px;cursor:pointer;min-height:52px}
+.lessonlink .t{flex:1}
+.lessonlink .m{color:var(--muted);font-size:.85rem;white-space:nowrap}
+.part{font-size:.85rem;color:var(--muted);margin:22px 0 4px}
+.prompt{font-size:1.2rem;font-weight:600;line-height:1.4;margin:0 0 14px}
+.scenario{background:var(--surface);border-inline-start:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:0 0 14px}
+.body p{margin:0 0 12px}
+.opts{display:grid;gap:10px;margin:0 0 14px;padding:0;border:0}
+.opt{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:52px}
+.opt input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:none}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt.is-answer{border-color:var(--good);background:var(--good-soft)}
+.opt:has(input:disabled){cursor:default}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.legend{font-weight:600;margin:6px 0 10px;padding:0}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.row .lbl{margin:0 0 8px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{border:2px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 14px;min-height:40px;cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.ord{display:flex;align-items:center;gap:10px}
+.ord .n{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;flex:none;font-size:.9rem}
+.ord .t{flex:1}
+.ord button{border:1px solid var(--line);background:var(--bg);border-radius:8px;min-width:44px;min-height:44px;cursor:pointer}
+.ord button:disabled{opacity:.35;cursor:default}
+select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10px;background:var(--bg);padding:0 10px}
+.cmp{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:560px){.cmp{grid-template-columns:1fr 1fr}}
+.cmp .cap{font-weight:600;margin:0 0 6px}
+.conf{margin:6px 0 12px}
+.conf p{margin:0 0 8px;color:var(--muted);font-size:.92rem}
+.recall{background:var(--note-soft);color:var(--ink);border-radius:10px;padding:10px 14px;margin:0 0 14px}
+
+/* Mock screens: their own neutral product palette, independent of the app theme */
+.mock{background:var(--mock-bg);color:var(--mock-ink);border:1px solid var(--line);border-radius:22px;padding:18px 16px 20px;margin:0 0 14px;max-width:360px;box-shadow:0 1px 0 var(--line)}
+.cmp .mock{max-width:none}
+.mock .b{display:block;width:100%;text-align:start;border:0;background:none;color:inherit;padding:0;margin:0}
+.mock .gap-s{margin-top:4px}.mock .gap-m{margin-top:12px}.mock .gap-l{margin-top:24px}
+.mock .k-title{font-size:1.35rem;font-weight:700;line-height:1.25}
+.mock .k-heading{font-size:1.05rem;font-weight:600}
+.mock .k-text{font-size:.92rem}
+.mock .k-meta{font-size:.92rem;font-weight:500}
+.mock .k-small{font-size:.78rem;color:var(--mock-muted)}
+.mock .tone-faint{color:#CACACF;font-size:.66rem}
+.mock .k-chip{display:inline-block;width:auto;font-size:.78rem;font-weight:600;border-radius:999px;padding:2px 10px;background:#EAF6EE;color:#1E6B3F}
+.mock .k-chip.tone-warn{background:#FFF1DB;color:#8A5300}
+.mock .k-chip.tone-bad{background:#FDE7E5;color:#A3261F}
+.mock .k-button{text-align:center;font-weight:600;border-radius:12px;padding:12px;background:var(--mock-brand);color:#fff}
+.mock .k-button.em-low{background:transparent;color:var(--mock-brand);border:1.5px solid var(--mock-brand)}
+.mock .k-button.tone-off{background:#D9D9DE;color:#6B6B70}
+.mock .k-link{font-size:.9rem;color:var(--mock-brand);text-decoration:underline}
+.mock .k-image{border-radius:12px;background:repeating-linear-gradient(135deg,#ECE8FB 0 10px,#F5F3FD 10px 20px);color:#4A3AA8;display:grid;place-items:center;text-align:center;font-size:.85rem;font-weight:500;padding:8px}
+.mock .k-image.size-l{min-height:150px}.mock .k-image.size-m{min-height:96px}.mock .k-image.size-s{min-height:56px}
+.mock .k-banner{border-radius:12px;background:#F1EEFF;color:#3D2E91;padding:10px 12px;font-size:.88rem;font-weight:500}
+.mock .k-divider{border-top:1px solid var(--mock-line);height:0}
+.mock .k-group{border:1px solid var(--mock-line);border-radius:14px;padding:12px}
+.mock .k-field .fl{font-size:.85rem;font-weight:600}
+.mock .k-field .fi{border:1.5px solid #B9B9C0;border-radius:10px;min-height:44px;padding:10px 12px;font-size:.92rem;color:var(--mock-muted);margin-top:4px}
+.mock .k-field .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
+.mock .k-field.tone-bad .fi{border-color:#C6332A}
+.mock .k-field .fe{font-size:.8rem;color:#A3261F;margin-top:4px}
+.mock .size-xl{font-size:1.6rem}.mock .size-l{font-size:1.25rem}.mock .size-s{font-size:.8rem}
+.mock .em-high{font-weight:700}
+.mock .em-low{color:var(--mock-muted)}
+.mock .row2{display:flex;gap:10px}.mock .row2>*{flex:1}
+.mock button.region{cursor:pointer;border-radius:8px;outline:2px dashed transparent;outline-offset:3px}
+.mock button.region:hover{outline-color:#B9B9C0}
+.mock button.region[aria-pressed="true"]{outline:3px solid var(--accent);outline-offset:3px}
+
+/* Feedback sheet and action bar */
+.sheet{border-radius:14px;padding:14px 16px;margin:6px 0 14px}
+.sheet.good{background:var(--good-soft)}.sheet.bad{background:var(--bad-soft)}.sheet.note{background:var(--note-soft)}.sheet.info{background:var(--accent-soft)}
+.sheet h3{margin:0 0 4px;font-size:1.02rem}
+.sheet.good h3{color:var(--good)}.sheet.bad h3{color:var(--bad)}.sheet.note h3{color:var(--note)}.sheet.info h3{color:var(--accent)}
+.sheet p{margin:0 0 6px}
+.sheet details{margin-top:6px}
+.sheet summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.actions{position:fixed;inset:auto 0 0 0;background:var(--surface);border-top:1px solid var(--line);padding:12px 0 calc(12px + env(safe-area-inset-bottom));z-index:6}
+.actions .btnrow{display:flex;gap:10px;flex-wrap:wrap}
+#fb{max-height:48vh;overflow:auto}
+#fb .sheet{margin:0 0 12px}
+.btn{min-height:50px;border-radius:12px;padding:0 18px;font-weight:600;cursor:pointer;border:2px solid var(--line);background:var(--surface)}
+.btn.primary{flex:1;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.stats div{background:var(--bg);border-radius:10px;padding:10px;text-align:center}
+.stats b{display:block;font-size:1.4rem}
+.stats span{font-size:.8rem;color:var(--muted)}
+.result-list{list-style:none;padding:0;margin:0}
+.result-list li{border-top:1px solid var(--line);padding:10px 0}
+.mark{font-weight:700}.mark.ok{color:var(--good)}.mark.no{color:var(--bad)}
+.note-dev{font-size:.8rem;color:var(--muted);margin-top:30px}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top">
+    <button class="iconbtn" id="homeBtn" type="button" hidden></button>
+    <div class="grow"><div class="crumb" id="crumb"></div></div>
+    <button class="iconbtn" id="langBtn" type="button"></button>
+  </div>
+  <div class="bar" id="barWrap" hidden><i id="bar"></i></div>
+</div></header>
+<main class="wrap" id="main"></main>
+<div class="actions" id="actions" hidden><div class="wrap"><div id="fb" aria-live="polite"></div><div class="btnrow" id="actionRow"></div></div></div>
+
+<script>
+const CONTENT = /*__CONTENT__*/null;
+const BUILD = /*__BUILD__*/"";
+
+const UI = {
+  en:{home:"All lessons", lang:"عربي", check:"Check", cont:"Continue", again:"Try again", hint:"Hint", show:"Show the answer", start:"Start lesson",
+      correct:"Correct", alsook:"Also works", notquite:"Not quite", partial:"Right choice, check the reason", why:"Why?", saved:"Answer saved",
+      tryfirst:"Your prediction is saved", answer:"The answer", hintN:n=>`Hint ${n}`, conf:"How sure are you?", confOpts:["Guessing","Fairly sure","Sure"],
+      free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
+      done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
+      review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
+      yourFirst:"Your first answer:", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down",
+      pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
+      optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
+  ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
+      correct:"صحيح", alsook:"هذا يصلح أيضًا", notquite:"ليس تمامًا", partial:"اختيار صحيح، راجع السبب", why:"لماذا؟", saved:"تم حفظ إجابتك",
+      tryfirst:"تم حفظ توقّعك", answer:"الإجابة", hintN:n=>`تلميح ${n}`, conf:"ما مدى ثقتك؟", confOpts:["أخمّن","واثق إلى حد ما","واثق"],
+      free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
+      done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
+      review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
+      yourFirst:"إجابتك الأولى:", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل",
+      pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
+      optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
+};
+
+let lang = "en";
+try{ lang = localStorage.getItem("lp-lang") || "en"; }catch(e){}
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const tx = v => v == null ? "" : typeof v === "string" ? v : (v[lang] ?? v.en ?? "");
+const u = () => UI[lang];
+const para = v => tx(v).split(/\n\s*\n/).map(p => `<p>${esc(p).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}</p>`).join("");
+const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+
+/* ---------- mock screens ---------- */
+function mockBlocks(blocks, opts){
+  return (blocks||[]).map(b => {
+    const cls = ["b", `k-${b.kind}`, b.size?`size-${b.size}`:"", b.emphasis?`em-${b.emphasis}`:"", b.tone?`tone-${b.tone}`:"", b.gap?`gap-${b.gap}`:""].join(" ");
+    let inner;
+    if (b.kind === "group") inner = mockBlocks(b.blocks, opts);
+    else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
+    else if (b.kind === "field") inner = `<div class="fl">${esc(tx(b.label))}</div><div class="fi">${esc(tx(b.text))}</div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "divider") inner = "";
+    else inner = esc(tx(b.text));
+    if (opts && opts.regions && b.region){
+      const pressed = opts.selected.includes(b.region);
+      return `<button type="button" class="${cls} region" data-region="${b.region}" aria-pressed="${pressed}" ${opts.locked?"disabled":""}>${inner}</button>`;
+    }
+    return `<div class="${cls}">${inner}</div>`;
+  }).join("");
+}
+const mock = (m, opts) => m ? `<div class="mock" dir="${lang==="ar"?"rtl":"ltr"}">${mockBlocks(m.blocks, opts)}</div>` : "";
+
+/* ---------- state ---------- */
+let view = {screen:"home"};
+let L = null; // current lesson run
+
+function startLesson(pi, ui, li){
+  const path = CONTENT.paths[pi], unit = path.units[ui], lesson = unit.lessons[li];
+  L = {pi, ui, li, path, unit, lesson, i:0, steps: lesson.steps.map(s => ({sel:null, reason:[], conf:null, attempts:0, hints:0, revealed:false, first:null, done:false, status:null, mc:[] , fb:null}))};
+  L.steps.forEach((st, k) => st.sel = initialSel(lesson.steps[k]));
+  view = {screen:"lesson"};
+  render(); window.scrollTo(0,0);
+}
+function initialSel(s){
+  if (s.type === "sort") return {};
+  if (s.type === "order") return s.items.map(x => x.id);
+  if (s.type === "match") return {};
+  return [];
+}
+
+/* ---------- evaluation ---------- */
+function evaluate(s, st){
+  const sel = st.sel;
+  const res = {ok:false, also:null, mc:null, partial:false};
+  if (["choose","predict","words","fix","tune","spot"].includes(s.type)){
+    res.ok = sameSet(sel, s.answer);
+    const alt = (s.also_ok||[]).find(a => sameSet(sel, a.answer));
+    if (!res.ok && alt){ res.ok = true; res.also = alt.feedback; }
+    if (!res.ok) res.mc = (s.misconceptions||[]).find(m => [].concat(m.when).some(w => sel.includes(w)));
+  } else if (s.type === "compare"){
+    res.ok = sel[0] === s.answer;
+    if (!res.ok) res.mc = (s.misconceptions||[]).find(m => [].concat(m.when).includes(sel[0]));
+  } else if (s.type === "sort"){
+    const placed = ans => Object.entries(ans).every(([b, items]) => items.every(it => sel[it] === b));
+    res.ok = placed(s.answer);
+    const alt = (s.also_ok||[]).find(a => placed(a.answer));
+    if (!res.ok && alt){ res.ok = true; res.also = alt.feedback; }
+    if (!res.ok) res.mc = (s.misconceptions||[]).find(m => sel[m.when.item] === m.when.bucket);
+  } else if (s.type === "order"){
+    res.ok = sameOrder(sel, s.answer);
+    const alt = (s.also_ok||[]).find(a => sameOrder(sel, a.answer));
+    if (!res.ok && alt){ res.ok = true; res.also = alt.feedback; }
+    if (!res.ok) res.mc = (s.misconceptions||[]).find(m => sel.indexOf(m.when.before[0]) < sel.indexOf(m.when.before[1]));
+  } else if (s.type === "match"){
+    res.ok = Object.entries(s.answer).every(([l, r]) => sel[l] === r);
+    if (!res.ok) res.mc = (s.misconceptions||[]).find(m => sel[m.when.left] === m.when.right);
+  }
+  if (res.ok && s.reason){
+    const rOk = sameSet(st.reason, s.reason.answer);
+    if (!rOk){ res.ok = false; res.partial = true; res.mc = (s.reason.misconceptions||[]).find(m => [].concat(m.when).some(w => st.reason.includes(w))); }
+  }
+  return res;
+}
+const sameOrder = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+function ready(s, st){
+  if (s.type === "card") return true;
+  if (s.type === "sort") return s.items.every(it => st.sel[it.id]);
+  if (s.type === "match") return s.left.every(it => st.sel[it.id]);
+  if (s.type === "order") return true;
+  if (!st.sel.length) return false;
+  if (s.reason && !st.reason.length) return false;
+  return true;
+}
+
+/* ---------- rendering ---------- */
+function render(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  $("#langBtn").textContent = u().lang;
+  $("#homeBtn").textContent = u().home;
+  if (view.screen === "home") return renderHome();
+  if (view.screen === "summary") return renderSummary();
+  renderStep();
+}
+
+function renderHome(){
+  $("#fb").innerHTML = "";
+  $("#homeBtn").hidden = true; $("#barWrap").hidden = true; $("#actions").hidden = true;
+  $("#crumb").textContent = BUILD ? `${u().devnote} · ${BUILD}` : u().devnote;
+  let h = "";
+  CONTENT.paths.forEach((p, pi) => {
+    h += `<h1>${esc(tx(p.title))}</h1><p class="sub">${esc(tx(p.subtitle))}</p>`;
+    p.units.forEach((un, ui) => {
+      h += `<section class="unit"><h3>${esc(tx(un.title))}${un.free?`<span class="tag">${u().free}</span>`:""}</h3><p class="skill">${esc(tx(un.skill))}</p>`;
+      un.lessons.forEach((l, li) => {
+        h += `<button class="lessonlink" type="button" data-go="${pi},${ui},${li}"><span class="t">${esc(tx(l.title))}${l.mode==="check"?`<span class="tag check">${u().check_tag}</span>`:""}</span><span class="m">${u().min(l.minutes)}</span></button>`;
+      });
+      h += `</section>`;
+    });
+  });
+  $("#main").innerHTML = h;
+  document.querySelectorAll("[data-go]").forEach(b => b.onclick = () => startLesson(...b.dataset.go.split(",").map(Number)));
+}
+
+function renderStep(){
+  const s = L.lesson.steps[L.i], st = L.steps[L.i], check = L.lesson.mode === "check";
+  $("#homeBtn").hidden = false; $("#barWrap").hidden = false; $("#actions").hidden = false;
+  $("#crumb").textContent = `${tx(L.lesson.title)} · ${u().stepOf(L.i+1, L.lesson.steps.length)}`;
+  $("#bar").style.width = `${(L.i / L.lesson.steps.length) * 100}%`;
+  const locked = st.done;
+  let h = "";
+  if (s.scenario) h += `<div class="scenario">${para(s.scenario)}</div>`;
+  if (s.type === "card"){
+    if (s.title) h += `<h1>${esc(tx(s.title))}</h1>`;
+    h += `<div class="body">${para(s.body)}</div>${mock(s.mock)}`;
+  } else {
+    if (s.recall){
+      const k = L.lesson.steps.findIndex(x => x.id === s.recall), prev = L.lesson.steps[k];
+      const picked = (L.steps[k].first||[]).map(id => tx(prev.options.find(o => o.id === id)?.text)).join(", ");
+      if (picked) h += `<div class="recall">${u().yourFirst} <b>${esc(picked)}</b></div>`;
+    }
+    h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
+    h += renderInteraction(s, st, locked);
+    if (s.reason) h += renderReason(s, st, locked);
+    if (s.confidence && !locked) h += `<div class="conf"><p>${u().conf}</p><div class="seg">${u().confOpts.map((c,k)=>`<button type="button" data-conf="${k}" aria-pressed="${st.conf===k}">${c}</button>`).join("")}</div></div>`;
+  }
+  $("#main").innerHTML = h;
+  $("#fb").innerHTML = st.fb || "";
+  wire(s, st, locked);
+  renderActions(s, st, check);
+}
+
+function optionList(s, st, locked, name){
+  const multi = !!s.multi, type = multi ? "checkbox" : "radio";
+  const reveal = st.revealed;
+  return `<fieldset class="opts"><legend class="sr">${esc(tx(s.prompt))}</legend>${s.options.map(o => {
+    const id = `${name}_${o.id}`, checked = st.sel.includes(o.id);
+    const ans = reveal && s.answer && s.answer.includes(o.id) ? " is-answer" : "";
+    return `<label class="opt${ans}" for="${id}"><input type="${type}" name="${name}" id="${id}" value="${o.id}" ${checked?"checked":""} ${locked?"disabled":""}><span>${esc(tx(o.text))}</span></label>`;
+  }).join("")}</fieldset>`;
+}
+
+function renderInteraction(s, st, locked){
+  if (["choose","predict","words","fix"].includes(s.type)) return mock(s.mock) + optionList(s, st, locked, "opt");
+  if (s.type === "tune"){
+    const cur = s.options.find(o => o.id === st.sel[0]) || s.options.find(o => o.id === s.start) || s.options[0];
+    return mock(cur.mock) + optionList(s, st, locked, "opt");
+  }
+  if (s.type === "spot"){
+    let h = `<p class="sub">${u().tapRegions}</p>` + mock(s.mock, {regions:true, selected:st.sel, locked});
+    h += `<label class="sub" for="spotSel">${u().pick}</label><select id="spotSel" ${locked?"disabled":""}><option value="">${u().pick}</option>${s.regions.map(r=>`<option value="${r.id}" ${st.sel.includes(r.id)?"selected":""}>${esc(tx(r.label))}</option>`).join("")}</select>`;
+    return h;
+  }
+  if (s.type === "compare"){
+    return `<div class="cmp">${["a","b"].map(k => `<div><p class="cap">${esc(tx(s[k].label) || (k==="a"?u().optionA:u().optionB))}</p>${mock(s[k].mock)}</div>`).join("")}</div>` +
+      `<fieldset class="opts"><legend class="legend">${u().choose}</legend>${["a","b"].map(k => `<label class="opt${st.revealed && s.answer===k?" is-answer":""}" for="cmp_${k}"><input type="radio" name="cmp" id="cmp_${k}" value="${k}" ${st.sel[0]===k?"checked":""} ${locked?"disabled":""}><span>${esc(tx(s[k].label) || (k==="a"?u().optionA:u().optionB))}</span></label>`).join("")}</fieldset>`;
+  }
+  if (s.type === "sort"){
+    return mock(s.mock) + s.items.map(it => `<div class="row"><p class="lbl">${esc(tx(it.text))}</p><div class="seg" role="group" aria-label="${esc(tx(it.text))}">${s.buckets.map(b => {
+      const on = st.sel[it.id] === b.id, right = st.revealed && s.answer[b.id].includes(it.id);
+      return `<button type="button" data-item="${it.id}" data-bucket="${b.id}" aria-pressed="${on}" ${locked?"disabled":""} ${right?'style="border-color:var(--good)"':""}>${esc(tx(b.label))}</button>`;
+    }).join("")}</div></div>`).join("");
+  }
+  if (s.type === "order"){
+    const order = st.revealed ? s.answer : st.sel;
+    return mock(s.mock) + order.map((id, k) => {
+      const it = s.items.find(x => x.id === id);
+      return `<div class="row ord"><span class="n">${k+1}</span><span class="t">${esc(tx(it.text))}</span><button type="button" data-up="${k}" aria-label="${u().moveUp}: ${esc(tx(it.text))}" ${k===0||locked?"disabled":""}>↑</button><button type="button" data-down="${k}" aria-label="${u().moveDown}: ${esc(tx(it.text))}" ${k===order.length-1||locked?"disabled":""}>↓</button></div>`;
+    }).join("");
+  }
+  if (s.type === "match"){
+    return mock(s.mock) + s.left.map(l => `<div class="row"><label class="lbl" for="m_${l.id}">${esc(tx(l.text))}</label><select id="m_${l.id}" data-left="${l.id}" ${locked?"disabled":""}><option value="">${u().pick}</option>${s.right.map(r => {
+      const v = st.revealed ? s.answer[l.id] : st.sel[l.id];
+      return `<option value="${r.id}" ${v===r.id?"selected":""}>${esc(tx(r.text))}</option>`;
+    }).join("")}</select></div>`).join("");
+  }
+  return "";
+}
+
+function renderReason(s, st, locked){
+  const r = s.reason;
+  return `<fieldset class="opts"><legend class="legend">${esc(tx(r.prompt))}</legend>${r.options.map(o => {
+    const checked = st.reason.includes(o.id), ans = st.revealed && r.answer.includes(o.id) ? " is-answer" : "";
+    return `<label class="opt${ans}" for="r_${o.id}"><input type="radio" name="reason" id="r_${o.id}" value="${o.id}" ${checked?"checked":""} ${locked?"disabled":""}><span>${esc(tx(o.text))}</span></label>`;
+  }).join("")}</fieldset>`;
+}
+
+function wire(s, st, locked){
+  const redraw = () => renderStep();
+  document.querySelectorAll('input[name="opt"]').forEach(inp => inp.onchange = () => {
+    st.sel = [...document.querySelectorAll('input[name="opt"]:checked')].map(x => x.value);
+    if (s.type === "tune") redraw(); else renderActions(s, st, L.lesson.mode === "check");
+  });
+  document.querySelectorAll('input[name="cmp"]').forEach(inp => inp.onchange = () => { st.sel = [inp.value]; renderActions(s, st, L.lesson.mode === "check"); });
+  document.querySelectorAll('input[name="reason"]').forEach(inp => inp.onchange = () => { st.reason = [inp.value]; renderActions(s, st, L.lesson.mode === "check"); });
+  document.querySelectorAll("[data-item]").forEach(b => b.onclick = () => { st.sel[b.dataset.item] = b.dataset.bucket; redraw(); });
+  document.querySelectorAll("[data-up]").forEach(b => b.onclick = () => { const k = +b.dataset.up; [st.sel[k-1], st.sel[k]] = [st.sel[k], st.sel[k-1]]; redraw(); document.querySelector(`[data-up="${k-1}"]`)?.focus() || document.querySelector(`[data-down="${k-1}"]`)?.focus(); });
+  document.querySelectorAll("[data-down]").forEach(b => b.onclick = () => { const k = +b.dataset.down; [st.sel[k+1], st.sel[k]] = [st.sel[k], st.sel[k+1]]; redraw(); document.querySelector(`[data-down="${k+1}"]`)?.focus() || document.querySelector(`[data-up="${k+1}"]`)?.focus(); });
+  document.querySelectorAll("[data-left]").forEach(sel => sel.onchange = () => { st.sel[sel.dataset.left] = sel.value; renderActions(s, st, L.lesson.mode === "check"); });
+  document.querySelectorAll("[data-region]").forEach(b => b.onclick = () => { const r = b.dataset.region; st.sel = s.multi ? (st.sel.includes(r) ? st.sel.filter(x => x !== r) : [...st.sel, r]) : [r]; redraw(); });
+  const ss = $("#spotSel"); if (ss) ss.onchange = () => { st.sel = ss.value ? [ss.value] : []; redraw(); };
+  document.querySelectorAll("[data-conf]").forEach(b => b.onclick = () => { st.conf = +b.dataset.conf; redraw(); });
+}
+
+function btn(label, fn, primary, disabled){
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "btn" + (primary ? " primary" : ""); b.textContent = label; b.disabled = !!disabled; b.onclick = fn;
+  return b;
+}
+
+function renderActions(s, st, check){
+  const row = $("#actionRow"); row.innerHTML = "";
+  if (s.type === "card" || st.done){ row.append(btn(u().cont, next, true)); return; }
+  if (st.wrongShown){
+    const hints = s.hints || [];
+    if (!check && st.hints < hints.length) row.append(btn(u().hint, () => { st.hints++; st.fb = sheetHint(s, st); st.wrongShown = true; renderStep(); }));
+    if (!check && st.attempts >= 3) row.append(btn(u().show, () => reveal(s, st)));
+    row.append(btn(u().again, () => { st.wrongShown = false; st.fb = st.hints ? sheetHint(s, st, true) : null; renderStep(); }, true));
+    return;
+  }
+  if (!check && (s.hints||[]).length > st.hints && st.attempts > 0) row.append(btn(u().hint, () => { st.hints++; st.fb = sheetHint(s, st); renderStep(); }));
+  row.append(btn(u().check, () => doCheck(s, st, check), true, !ready(s, st)));
+}
+
+function sheetHint(s, st){
+  return `<div class="sheet info"><h3>${u().hintN(st.hints)}</h3>${(s.hints||[]).slice(0, st.hints).map(h => para(h)).join("")}</div>`;
+}
+
+function snapshot(s, st){ return JSON.parse(JSON.stringify(st.sel)); }
+
+function doCheck(s, st, check){
+  if (st.first === null) st.first = snapshot(s, st);
+  if (s.any_ok){
+    st.done = true; st.status = "ungraded";
+    st.fb = `<div class="sheet note"><h3>${u().tryfirst}</h3>${para(s.reveal)}</div>`;
+    return renderStep();
+  }
+  const res = evaluate(s, st);
+  st.attempts++;
+  if (res.mc) st.mc.push(res.mc.id);
+  if (check){
+    st.done = true; st.status = res.ok ? "independent" : "missed";
+    st.fb = `<div class="sheet info"><h3>${u().saved}</h3></div>`;
+    return renderStep();
+  }
+  if (res.ok){
+    st.done = true;
+    st.status = st.attempts === 1 && st.hints === 0 ? "independent" : "supported";
+    const head = res.also ? u().alsook : u().correct;
+    const body = res.also ? para(res.also) : para(s.correct);
+    st.fb = `<div class="sheet good"><h3>${head}</h3>${body}${s.explain?`<details ${s.part==="concept"||s.new?"open":""}><summary>${u().why}</summary>${para(s.explain)}</details>`:""}</div>`;
+  } else {
+    st.wrongShown = true;
+    const head = res.partial ? u().partial : u().notquite;
+    st.fb = `<div class="sheet bad"><h3>${head}</h3>${res.mc ? para(res.mc.feedback) : `<p>${u().genericWrong}</p>`}</div>`;
+  }
+  renderStep();
+}
+
+function reveal(s, st){
+  st.revealed = true; st.done = true; st.status = "revealed";
+  if (s.type === "order") st.sel = [...s.answer];
+  st.fb = `<div class="sheet note"><h3>${u().answer}</h3>${para(s.explain)}</div>`;
+  renderStep();
+}
+
+function next(){
+  if (L.i < L.lesson.steps.length - 1){ L.i++; renderStep(); window.scrollTo(0,0); $("#main").querySelector("h1,.prompt,.scenario,.body")?.setAttribute("tabindex","-1"); return; }
+  view = {screen:"summary"}; render(); window.scrollTo(0,0);
+}
+
+function renderSummary(){
+  $("#crumb").textContent = tx(L.lesson.title);
+  $("#barWrap").hidden = false; $("#bar").style.width = "100%";
+  const steps = L.lesson.steps, sts = L.steps, check = L.lesson.mode === "check";
+  const graded = steps.map((s, k) => [s, sts[k]]).filter(([s]) => s.type !== "card" && !s.any_ok);
+  const n = st => graded.filter(([, x]) => x.status === st).length;
+  const xp = n("independent") * 10 + n("supported") * 5;
+  const mcCount = {}; graded.forEach(([, x]) => x.mc.forEach(m => mcCount[m] = (mcCount[m]||0) + 1));
+  const top = Object.entries(mcCount).sort((a, b) => b[1] - a[1])[0];
+  const fbFor = id => { for (const s of steps){ const m = [...(s.misconceptions||[]), ...((s.reason||{}).misconceptions||[])].find(m => m.id === id); if (m) return m; } };
+  const label = top && (L.lesson.review_labels||{})[top[0]];
+  let h = `<h1>${check ? u().checkDone : u().done}</h1>`;
+  h += `<div class="summary"><div class="stats">`;
+  if (check) h += `<div><b>${n("independent")}</b><span>${u().score(n("independent"), graded.length)}</span></div><div><b>${xp}</b><span>${u().xp}</span></div><div><b>${graded.length - n("independent")}</b><span>${u().review}</span></div>`;
+  else h += `<div><b>${n("independent")}</b><span>${u().indep}</span></div><div><b>${n("supported")}</b><span>${u().supp}</span></div><div><b>${n("revealed")}</b><span>${u().rev}</span></div>`;
+  h += `</div>${check?"":`<p><b>${xp}</b> ${u().xp}</p>`}</div>`;
+  if (check){
+    h += `<ul class="result-list">${graded.map(([s, x]) => `<li><span class="mark ${x.status==="independent"?"ok":"no"}">${x.status==="independent"?"✓":"✗"}</span> ${esc(tx(s.prompt))}${x.status!=="independent"?`<details><summary>${u().why}</summary>${para(s.explain)}</details>`:""}</li>`).join("")}</ul>`;
+  } else {
+    h += `<h2>${u().review}</h2>`;
+    h += top ? `<div class="sheet note">${label ? `<h3>${esc(tx(label))}</h3>` : ""}${para(fbFor(top[0])?.feedback)}</div>` : `<p class="sub">${u().nothingToReview}</p>`;
+  }
+  $("#main").innerHTML = h;
+  $("#fb").innerHTML = "";
+  const row = $("#actionRow"); row.innerHTML = ""; $("#actions").hidden = false;
+  const nxt = nextLesson();
+  row.append(btn(u().back, goHome));
+  if (nxt) row.append(btn(u().next, () => startLesson(...nxt), true));
+}
+function nextLesson(){
+  const {pi, ui, li} = L, p = CONTENT.paths[pi];
+  if (li + 1 < p.units[ui].lessons.length) return [pi, ui, li + 1];
+  if (ui + 1 < p.units.length) return [pi, ui + 1, 0];
+  return null;
+}
+function goHome(){ view = {screen:"home"}; render(); window.scrollTo(0,0); }
+
+$("#homeBtn").onclick = goHome;
+$("#langBtn").onclick = () => { lang = lang === "en" ? "ar" : "en"; try{ localStorage.setItem("lp-lang", lang); }catch(e){} render(); };
+// Keep the page content clear of the fixed action panel, whose height changes with feedback.
+const pad = () => document.body.style.paddingBottom = `${($("#actions").hidden ? 0 : $("#actions").offsetHeight) + 24}px`;
+try{ new ResizeObserver(pad).observe($("#actions")); }catch(e){}
+render();
+</script>
+</body>
+</html>

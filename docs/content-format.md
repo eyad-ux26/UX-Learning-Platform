@@ -1,0 +1,94 @@
+# Content format
+
+Every lesson is one YAML file. English and Arabic sit side by side, and `npm run validate` fails if either is missing, so a lesson can't ship half translated.
+
+## Files
+
+```
+content/paths/P10/
+  path.yaml          id, title, subtitle
+  fixtures.yaml      shared scenario text, referenced as "@W1a"
+  U01/
+    unit.yaml        id, title, skill, free
+    P10-U01-L01-find-the-next-useful-thing.yaml
+```
+
+## Text
+
+Any text is either `{ en: "...", ar: "..." }` or a fixture reference such as `"@W1a"`. In longer text, a blank line starts a new paragraph and `**bold**` is supported.
+
+Arabic is simple Modern Standard Arabic. Keep English UX terms and explain them in brackets the first time, for example "التسلسل البصري (Visual hierarchy)". Write times as words when they could flip in right-to-left text ("من 18:00 إلى 20:00", not "18:00–20:00").
+
+## Lesson
+
+```yaml
+id: P10-U01-L01          # must match the file name
+mode: lesson             # or "check" for a skill check
+minutes: 7
+title: { en: "...", ar: "..." }
+review_labels:           # optional short names for misconceptions, shown in the recap
+  MC-P10-001: { en: "...", ar: "..." }
+steps: [ ... ]
+```
+
+## Steps
+
+Fields every step can have:
+
+| Field | Meaning |
+| --- | --- |
+| `id` | `S01`, `S02`, ... |
+| `type` | `card`, `choose`, `predict`, `words`, `fix`, `tune`, `sort`, `order`, `match`, `spot`, `compare` |
+| `part` | `hook`, `try`, `concept`, `guided`, `contrast`, `independent`, `recap`, `check` |
+| `scenario` | Optional text shown in a box above the prompt |
+| `prompt` | The question (not on cards) |
+| `mock` | Optional screen to show (see Mocks) |
+| `hints` | Up to 2, shown only after a wrong answer, never in skill checks |
+| `correct` | One line shown when right |
+| `explain` | The reasoning, shown under "Why?" and when the answer is revealed. Required on graded steps |
+| `misconceptions` | `{ id: MC-P10-001, when: ..., feedback }`. The first one that matches the answer is shown |
+| `confidence` | `true` to ask "How sure are you?" before Check. About 2 per lesson |
+| `rules` | The research rules the step applies, such as `R11` or `U25` |
+
+By type:
+
+| Type | Fields | `when` in a misconception |
+| --- | --- | --- |
+| `card` | `title`, `body` | none |
+| `choose`, `words`, `fix` | `options`, `answer: [ids]`, optional `multi`, `also_ok`, `reason` | `[option ids]`, matches if any was picked |
+| `predict` | as `choose`; with `any_ok: true` it's ungraded and needs `reveal`; `recall: S02` shows the learner's earlier answer | as `choose` |
+| `tune` | as `choose`, each option has a `mock`; `start` is the option previewed first | as `choose` |
+| `sort` | `items`, `buckets`, `answer: { bucket: [items] }`, `also_ok` | `{ item, bucket }` |
+| `order` | `items` (in their starting order), `answer: [ids]`, `also_ok` | `{ before: [x, y] }`, matches when x is above y |
+| `match` | `left`, `right`, `answer: { leftId: rightId }` | `{ left, right }` |
+| `spot` | `mock` with `region` on blocks, `regions` (labels for the list), `answer` | `[region ids]` |
+| `compare` | `a: { mock, label? }`, `b: { ... }`, `answer: a` or `b`, optional `reason` | `[a]` or `[b]` |
+
+`also_ok` lists other accepted answers, each with its own `feedback`. `reason` is a second question about why: `{ prompt, options, answer, misconceptions }`.
+
+## Mocks
+
+A mock is a phone-sized screen made of blocks, top to bottom:
+
+```yaml
+mock:
+  blocks:
+    - { kind: title, text: "@W1a" }
+    - { kind: meta, text: "@W1b", gap: s }
+    - kind: row
+      blocks:
+        - { kind: meta, text: "@W1d" }
+        - { kind: chip, text: "@W1e" }
+    - { kind: button, text: "@W1f", gap: m, region: button }
+```
+
+| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `button`, `link`, `image`, `banner`, `field`, `divider`, `group`, `row` |
+| --- | --- |
+| `gap` | Space above the block: `s`, `m`, `l` |
+| `size` | `s`, `m`, `l`, `xl` (images: height) |
+| `emphasis` | `high` or `low` |
+| `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text) |
+| `region` | Makes the block tappable in a `spot` step |
+| `field` | Has `label`, `text`, optional `hint` and `error` |
+
+Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
