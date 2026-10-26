@@ -1,0 +1,247 @@
+id: P01-U01-L03
+mode: lesson
+minutes: 9
+title:
+  en: "Ask in a way people can answer"
+  ar: "اسأل بطريقة يستطيع الناس الإجابة عنها"
+review_labels:
+  MC-P01-006: { en: "Not everyone's name has a first and last part", ar: "ليس لكل اسم جزء أول وجزء أخير" }
+  MC-P01-007: { en: "Let the system clean up the format, not the person", ar: "دع النظام ينظّف الصيغة، لا الشخص" }
+  MC-P01-008: { en: "Ask about the real need, in everyday words", ar: "اسأل عن الحاجة الفعلية بكلمات يومية" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Where does the rest of his name go?", ar: "أين يذهب باقي اسمه؟" }
+    body:
+      en: "Abdelrahman Mohamed El-Sayed is getting a library card. His ID shows four names: his own, his father's, his grandfather's and the family name.\n\nThe form gives him two boxes."
+      ar: "عبد الرحمن محمد السيد يستخرج بطاقة مكتبة. في بطاقته الشخصية أربعة أسماء: اسمه، واسم أبيه، واسم جدّه، واسم العائلة.\n\nوالنموذج يعطيه خانتين."
+    mock:
+      blocks:
+        - { kind: title, text: "@F4a" }
+        - { kind: field, label: "@F4first", text: { en: "Abdelrahman", ar: "عبد الرحمن" }, filled: true, gap: m }
+        - { kind: field, label: "@F4last", text: { en: "?", ar: "؟" }, gap: s }
+        - { kind: button, text: "@F4btn", gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "What will he type in \"Last name\"?"
+      ar: "ماذا سيكتب في «اسم العائلة»؟"
+    options:
+      - { id: family, text: { en: "Just \"El-Sayed\"", ar: "«السيد» فقط" } }
+      - { id: rest, text: { en: "\"Mohamed El-Sayed\"", ar: "«محمد السيد»" } }
+      - { id: depends, text: { en: "It depends on who you ask", ar: "يعتمد على من تسأل" } }
+    reveal:
+      en: "It depends, and that's the problem. Different people split the same name differently, so the library ends up with records that don't match his ID."
+      ar: "يعتمد، وهذه هي المشكلة. الناس يقسّمون الاسم نفسه بطرق مختلفة، فتنتهي المكتبة بسجلات لا تطابق بطاقته الشخصية."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Ask the way people think about the answer", ar: "اسأل بالطريقة التي يفكّر بها الناس في الإجابة" }
+    body:
+      en: "A question is easy when it matches how people already hold the answer in their heads.\n\n- **Names:** one \"Full name\" field fits every naming pattern. If you need a short name for greetings, ask \"What should we call you?\" separately.\n- **Formats:** accept phone numbers with spaces or dashes, with or without +20. Clean them up in the system; don't make people do it.\n- **Splitting:** split an answer only when people know the parts and you use them separately. A driver needs floor and flat on their own; nobody needs a name in pieces.\n- **Words:** use everyday words, and ask about the real need. \"Are you 18 or older?\" is easier than \"Age\" when that's all you need to know."
+      ar: "يكون السؤال سهلًا حين يطابق الطريقة التي يحتفظ بها الناس بالإجابة في أذهانهم.\n\n- **الأسماء:** حقل واحد «الاسم الكامل» يناسب كل أنماط التسمية. وإذا احتجت اسمًا قصيرًا للتحية، فاسأل «بماذا نناديك؟» منفصلًا.\n- **الصيغ:** اقبل أرقام الهواتف بالمسافات أو الشرطات، بـ‎+20 أو بدونها. نظّفها في النظام؛ ولا تجعل الناس يفعلون ذلك.\n- **التقسيم:** قسّم الإجابة فقط حين يعرف الناس أجزاءها وتستخدمها أنت منفصلة. السائق يحتاج الطابق والشقة كلٌّ على حدة؛ ولا أحد يحتاج الاسم مقطّعًا.\n- **الكلمات:** استخدم كلمات يومية، واسأل عن الحاجة الفعلية. «هل عمرك 18 سنة أو أكثر؟» أسهل من «العمر» حين يكون هذا كل ما تحتاج معرفته."
+
+  - id: S04
+    type: compare
+    part: guided
+    rules: [R06, U39]
+    prompt:
+      en: "Which version works for Abdelrahman, and for everyone else?"
+      ar: "أي نسخة تناسب عبد الرحمن، وتناسب الجميع؟"
+    a:
+      mock:
+        blocks:
+          - { kind: field, label: "@F4first", text: "" }
+          - { kind: field, label: "@F4last", text: "", gap: s }
+    b:
+      mock:
+        blocks:
+          - { kind: field, label: "@F4full", text: "" }
+          - { kind: field, label: "@F4call", text: "", gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P01-006
+        when: [a]
+        feedback:
+          en: "First and last assumes every name has exactly two parts. Many Arabic names have four, and some people have one."
+          ar: "الاسم الأول واسم العائلة يفترضان أن لكل اسم جزأين بالضبط. كثير من الأسماء العربية من أربعة أجزاء، وبعض الناس لهم اسم واحد."
+    hints:
+      - { en: "Where would a four-part name go in each?", ar: "أين سيذهب اسم من أربعة أجزاء في كل نسخة؟" }
+    correct:
+      en: "One full name field, plus an optional short name for greetings."
+      ar: "حقل واحد للاسم الكامل، واسم قصير اختياري للتحية."
+    explain:
+      en: "Abdelrahman types his name exactly as on his ID, and the library can still greet him as \"Abdelrahman\"."
+      ar: "يكتب عبد الرحمن اسمه كما في بطاقته تمامًا، ويمكن للمكتبة أن تحيّيه باسم «عبد الرحمن»."
+
+  - id: S05
+    type: choose
+    part: guided
+    confidence: true
+    rules: [R06, R15, U39, U40]
+    prompt:
+      en: "Abdelrahman types his mobile as \"010 1234 5678\". The form says \"Invalid number\" because of the spaces. Best fix?"
+      ar: "كتب عبد الرحمن رقم موبايله «010 1234 5678». فقال النموذج «رقم غير صالح» بسبب المسافات. ما أفضل إصلاح؟"
+    mock:
+      blocks:
+        - { kind: field, tone: bad, label: "@F1phone", text: "010 1234 5678", filled: true, error: { en: "Invalid number", ar: "رقم غير صالح" } }
+    options:
+      - { id: accept, text: { en: "Accept spaces and dashes, and remove them in the system", ar: "اقبل المسافات والشرطات، واحذفها في النظام" } }
+      - { id: hint, text: { en: "Add a hint: \"Numbers only, no spaces\"", ar: "أضف تلميحًا: «أرقام فقط، بدون مسافات»" } }
+      - { id: error, text: { en: "Change the error to \"Remove the spaces\"", ar: "غيّر رسالة الخطأ إلى «احذف المسافات»" } }
+    answer: [accept]
+    misconceptions:
+      - id: MC-P01-007
+        when: [hint, error]
+        feedback:
+          en: "That's clearer, but it still makes Abdelrahman do the computer's job. The number is right; only the formatting differs."
+          ar: "هذا أوضح، لكنه ما زال يجعل عبد الرحمن يقوم بعمل الحاسوب. الرقم صحيح؛ الصيغة فقط مختلفة."
+    hints:
+      - { en: "Is the number wrong, or just written differently?", ar: "هل الرقم خاطئ، أم مكتوب بطريقة مختلفة فقط؟" }
+    correct:
+      en: "The number was never wrong. Accept it the way people write it."
+      ar: "الرقم لم يكن خاطئًا أبدًا. اقبله كما يكتبه الناس."
+    explain:
+      en: "People copy numbers from contacts and messages with spaces in them. Clean them up quietly."
+      ar: "ينسخ الناس الأرقام من جهات الاتصال والرسائل وفيها مسافات. نظّفها بهدوء."
+
+  - id: S06
+    type: choose
+    part: guided
+    rules: [R11, U39]
+    prompt:
+      en: "Tamer's lunch is delivered to an office building. How should the form ask for the address?"
+      ar: "غداء تامر يُوصَّل إلى مبنى مكاتب. كيف يجب أن يسأل النموذج عن العنوان؟"
+    options:
+      - { id: some, text: { en: "Street and area in one field, then Building, Floor and Flat as separate short fields", ar: "الشارع والمنطقة في حقل واحد، ثم المبنى والطابق والشقة كحقول قصيرة منفصلة" } }
+      - { id: one, text: { en: "One big \"Address\" box", ar: "خانة واحدة كبيرة «العنوان»" } }
+      - { id: all, text: { en: "Separate fields for every part, including postal code and governorate", ar: "حقول منفصلة لكل جزء، بما فيها الرمز البريدي والمحافظة" } }
+    answer: [some]
+    misconceptions:
+      - id: MC-P01-008
+        when: [one]
+        feedback:
+          en: "It works, but people often forget the floor or flat in a free box, and that's exactly what the driver needs at the door."
+          ar: "يعمل، لكن الناس كثيرًا ما ينسون الطابق أو الشقة في خانة مفتوحة، وهذا بالضبط ما يحتاجه السائق عند الباب."
+      - id: MC-P01-008
+        when: [all]
+        feedback:
+          en: "Few people know their postal code, and the driver doesn't use it. Split only what's used separately."
+          ar: "قليلون يعرفون رمزهم البريدي، والسائق لا يستخدمه. قسّم فقط ما يُستخدم منفصلًا."
+    hints:
+      - { en: "Which parts does the driver look for separately?", ar: "أي الأجزاء يبحث عنها السائق منفصلة؟" }
+    correct:
+      en: "Split what the driver uses on its own; keep the rest together."
+      ar: "قسّم ما يستخدمه السائق وحده؛ وأبقِ الباقي معًا."
+    explain:
+      en: "A \"Landmark\" field (optional) also helps a lot where street numbers are unclear."
+      ar: "وحقل «علامة مميزة» (اختياري) يساعد كثيرًا حيث تكون أرقام الشوارع غير واضحة."
+
+  - id: S07
+    type: compare
+    part: contrast
+    rules: [R11, U13]
+    prompt:
+      en: "Which form uses words people understand?"
+      ar: "أي نموذج يستخدم كلمات يفهمها الناس؟"
+    a:
+      mock:
+        blocks:
+          - { kind: field, label: { en: "MSISDN", ar: "MSISDN" }, text: "" }
+          - { kind: field, label: { en: "Customer type", ar: "نوع العميل" }, text: "", gap: s }
+          - { kind: field, label: { en: "Ref. no.", ar: "رقم المرجع" }, text: "", gap: s }
+    b:
+      mock:
+        blocks:
+          - { kind: field, label: "@F1phone", text: "" }
+          - { kind: field, label: { en: "Have you ordered from us before?", ar: "هل طلبت منّا من قبل؟" }, text: "", gap: s }
+          - { kind: field, label: { en: "Booking code (from your SMS)", ar: "رمز الحجز (من رسالتك النصية)" }, text: "", gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P01-008
+        when: [a]
+        feedback:
+          en: "A uses the system's words. \"MSISDN\" is a mobile number to an engineer and a mystery to everyone else."
+          ar: "A تستخدم كلمات النظام. «MSISDN» رقم موبايل للمهندس ولغز للجميع."
+    correct:
+      en: "B asks the same things in everyday words, and says where to find the code."
+      ar: "B تسأل عن الأشياء نفسها بكلمات يومية، وتوضّح أين يجد الرمز."
+    explain:
+      en: "If someone has to look a word up, the question is too hard."
+      ar: "إذا احتاج شخص إلى البحث عن معنى كلمة، فالسؤال صعب جدًا."
+
+  - id: S08
+    type: fix
+    part: independent
+    rules: [R07, U39]
+    prompt:
+      en: "Hana's membership form asks \"Gender\". The only reason is that the gym has women-only hours. What's the best fix?"
+      ar: "نموذج اشتراك هناء يسأل عن «النوع». والسبب الوحيد أن النادي فيه ساعات للسيدات فقط. ما أفضل إصلاح؟"
+    mock:
+      blocks:
+        - { kind: field, label: "@F1gender", text: "" }
+    options:
+      - { id: need, text: { en: "Ask \"Would you like to use the women-only hours?\"", ar: "اسأل «هل تريدين استخدام ساعات السيدات فقط؟»" } }
+      - { id: keep, text: { en: "Keep \"Gender\" with Male and Female", ar: "أبقِ «النوع» مع ذكر وأنثى" } }
+      - { id: remove, text: { en: "Remove it and don't mention the hours", ar: "احذفه ولا تذكر الساعات" } }
+    answer: [need]
+    misconceptions:
+      - id: MC-P01-008
+        when: [keep]
+        feedback:
+          en: "That collects a personal detail and still doesn't tell the gym whether she wants those hours."
+          ar: "هذا يجمع معلومة شخصية ولا يخبر النادي إن كانت تريد تلك الساعات."
+      - id: MC-P01-001
+        when: [remove]
+        feedback:
+          en: "The hours are useful to Hana. The fix is to ask about them, not to hide them."
+          ar: "الساعات مفيدة لهناء. الإصلاح أن تسأل عنها، لا أن تخفيها."
+    hints:
+      - { en: "What does the gym actually need to know?", ar: "ماذا يحتاج النادي أن يعرف فعلًا؟" }
+    correct:
+      en: "Ask the real question. It's more useful to the gym and less personal for Hana."
+      ar: "اسأل السؤال الحقيقي. فهو أنفع للنادي وأقل خصوصية لهناء."
+    explain:
+      en: "When you catch yourself asking for a category, ask what decision it feeds, and ask about that."
+      ar: "حين تجد نفسك تسأل عن فئة، اسأل أي قرار تغذّيه، واسأل عنه هو."
+
+  - id: S09
+    type: choose
+    part: independent
+    rules: [R07, U39]
+    prompt:
+      en: "The library only needs to know if someone is under 18, because children need a parent's signature. Which question is best?"
+      ar: "تحتاج المكتبة فقط أن تعرف إن كان الشخص أقل من 18 سنة، لأن الأطفال يحتاجون توقيع وليّ الأمر. أي سؤال أفضل؟"
+    options:
+      - { id: yesno, text: { en: "\"Are you 18 or older?\" Yes / No", ar: "«هل عمرك 18 سنة أو أكثر؟» نعم / لا" } }
+      - { id: age, text: { en: "\"Age\"", ar: "«العمر»" } }
+      - { id: dob, text: { en: "\"Date of birth\"", ar: "«تاريخ الميلاد»" } }
+    answer: [yesno]
+    misconceptions:
+      - id: MC-P01-001
+        when: [age, dob]
+        feedback:
+          en: "That works, but it asks for more than the library needs. One tap answers the real question."
+          ar: "يعمل، لكنه يطلب أكثر مما تحتاجه المكتبة. ضغطة واحدة تجيب عن السؤال الحقيقي."
+    hints:
+      - { en: "What's the smallest answer that tells the library what it needs?", ar: "ما أصغر إجابة تخبر المكتبة بما تحتاجه؟" }
+    correct:
+      en: "One tap, and only the fact the library uses."
+      ar: "ضغطة واحدة، والحقيقة الوحيدة التي تستخدمها المكتبة."
+    explain:
+      en: "If a law or a policy really needs the full date, ask for it, and say why."
+      ar: "إذا كان قانون أو سياسة يحتاج التاريخ الكامل فعلًا، فاسأل عنه، ووضّح السبب."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    body:
+      en: "- Use one \"Full name\" field. Ask for a short name separately if you need it.\n- Accept the formats people type, and clean them up in the system.\n- Split an answer only when people know the parts and you use them separately.\n- Use everyday words, and ask about the real need.\n\nNext: the unit skill check."
+      ar: "- استخدم حقلًا واحدًا «الاسم الكامل». واسأل عن اسم قصير منفصلًا إن احتجته.\n- اقبل الصيغ التي يكتبها الناس، ونظّفها في النظام.\n- قسّم الإجابة فقط حين يعرف الناس أجزاءها وتستخدمها أنت منفصلة.\n- استخدم كلمات يومية، واسأل عن الحاجة الفعلية.\n\nالتالي: اختبار مهارة الوحدة."

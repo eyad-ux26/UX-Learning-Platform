@@ -82,7 +82,7 @@ mock:
     - { kind: button, text: "@W1f", gap: m, region: button }
 ```
 
-| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `field`, `divider`, `group`, `row` |
+| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `field`, `select`, `radio`, `check`, `divider`, `group`, `row` |
 | --- | --- |
 | `gap` | Space above the block: `xs` (none), `s`, `m`, `l`, `xl` |
 | `size` | `s`, `m`, `l`, `xl` (images: height) |
@@ -97,10 +97,11 @@ mock:
 | `overlap` | Pulls the block up over the one above it (to show overlapping controls) |
 | `code` | A left-to-right fragment, such as a booking code, isolated inside right-to-left text |
 | `region` | Makes the block tappable in a `spot` step |
-| `field` | Has `label`, `text`, optional `hint` and `error` |
+| `field`, `select` | Have `label`, `text`, optional `hint` and `error`. `text` looks like a placeholder unless `filled: true`. `hintFirst: true` puts the hint between the label and the box. `focus: true` draws a focus ring. A `select` shows a ▾ |
+| `radio`, `check` | One option with a round or square marker; `selected: true` fills it |
 
 A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), and `caption` (a small label such as "360 px").
 
-In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
+In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) and space-separated numbers (such as `010 1234 5678`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
 
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.

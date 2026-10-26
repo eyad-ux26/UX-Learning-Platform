@@ -1,0 +1,216 @@
+id: P01-U01-L04
+mode: check
+minutes: 6
+title:
+  en: "Skill check: ask only what you need"
+  ar: "اختبار المهارة: اسأل فقط عمّا تحتاجه"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Samir's football camp form", ar: "نموذج معسكر كرة القدم لسمير" }
+    body:
+      en: "Samir wants to register his 9-year-old son, Youssef, for a summer football camp. The academy's form looks like this.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "يريد سمير تسجيل ابنه يوسف، 9 سنوات، في معسكر صيفي لكرة القدم. ونموذج الأكاديمية يبدو هكذا.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      blocks:
+        - { kind: title, text: "@F3a" }
+        - { kind: field, label: "@F3child", text: "", gap: m }
+        - { kind: field, label: "@F3age", text: "", gap: s }
+        - { kind: field, label: "@F3parent", text: "", gap: s }
+        - { kind: field, label: "@F3med", text: "", gap: s }
+        - { kind: field, label: "@F3school", text: "", gap: s }
+        - { kind: field, label: "@F3income", text: "", gap: s }
+        - { kind: field, label: "@F3photo", text: "", gap: s }
+        - { kind: button, text: "@F3btn", gap: m }
+
+  - id: S02
+    type: sort
+    part: check
+    rules: [R19, U39]
+    prompt:
+      en: "When should the academy ask for each one?"
+      ar: "متى يجب أن تسأل الأكاديمية عن كل منها؟"
+    items:
+      - { id: income, text: "@F3income" }
+      - { id: child, text: "@F3child" }
+      - { id: photo, text: "@F3photo" }
+      - { id: med, text: "@F3med" }
+      - { id: parent, text: "@F3parent" }
+      - { id: age, text: "@F3age" }
+    buckets:
+      - { id: now, label: { en: "Ask now", ar: "اسأل الآن" } }
+      - { id: later, label: { en: "Ask before the first day", ar: "اسأل قبل اليوم الأول" } }
+      - { id: never, label: { en: "Don't ask", ar: "لا تسأل" } }
+    answer:
+      now: [child, age, parent, med]
+      later: [photo]
+      never: [income]
+    also_ok:
+      - answer: { now: [child, age, parent, med], later: [], never: [income, photo] }
+        feedback:
+          en: "Also fine, if the camp doesn't make ID badges."
+          ar: "مقبول أيضًا، إذا كان المعسكر لا يصدر بطاقات تعريف."
+    misconceptions:
+      - id: MC-P01-001
+        when: { item: income, bucket: now }
+        feedback:
+          en: "The camp has one price. Family income doesn't change anything about Youssef's registration."
+          ar: "للمعسكر سعر واحد. ودخل الأسرة لا يغيّر شيئًا في تسجيل يوسف."
+      - id: MC-P01-001
+        when: { item: med, bucket: never }
+        feedback:
+          en: "Allergies matter for a child's safety at camp. That one's needed now."
+          ar: "الحساسية مهمة لسلامة الطفل في المعسكر. هذا مطلوب الآن."
+    explain:
+      en: "Name, age group, a parent to call and health information are needed to register. A badge photo can come later. Income has no use here."
+      ar: "الاسم والفئة العمرية ووليّ أمر للاتصال والمعلومات الصحية مطلوبة للتسجيل. وصورة البطاقة يمكن أن تأتي لاحقًا. أما الدخل فلا فائدة منه هنا."
+
+  - id: S03
+    type: compare
+    part: check
+    rules: [R19, U39]
+    prompt:
+      en: "Which version asks for Youssef's name in a way that works for every family?"
+      ar: "أي نسخة تسأل عن اسم يوسف بطريقة تناسب كل الأسر؟"
+    a:
+      mock:
+        blocks:
+          - { kind: field, label: "@F3child", text: "" }
+    b:
+      mock:
+        blocks:
+          - { kind: field, label: { en: "Child's first name", ar: "الاسم الأول للطفل" }, text: "" }
+          - { kind: field, label: { en: "Child's last name", ar: "اسم عائلة الطفل" }, text: "", gap: s }
+    answer: a
+    misconceptions:
+      - id: MC-P01-006
+        when: [b]
+        feedback:
+          en: "First and last assumes two-part names. One full name field fits Youssef's four-part name and everyone else's."
+          ar: "الاسم الأول واسم العائلة يفترضان اسمًا من جزأين. حقل واحد للاسم الكامل يناسب اسم يوسف الرباعي واسم الجميع."
+    explain:
+      en: "One field, typed as it appears on his documents."
+      ar: "حقل واحد، يُكتب كما يظهر في أوراقه."
+
+  - id: S04
+    type: choose
+    part: check
+    rules: [R19, U39]
+    prompt:
+      en: "Most children have no allergies or conditions. How should the form ask?"
+      ar: "أغلب الأطفال ليس لديهم حساسية أو حالات طبية. كيف يجب أن يسأل النموذج؟"
+    options:
+      - { id: yesno, text: { en: "\"Does your child have allergies or medical conditions?\" Yes / No, with details if Yes", ar: "«هل لدى طفلك حساسية أو حالات طبية؟» نعم / لا، مع التفاصيل إن كانت الإجابة نعم" } }
+      - { id: optional, text: { en: "An optional free-text field", ar: "حقل نص حرّ اختياري" } }
+      - { id: required, text: { en: "A required free-text field", ar: "حقل نص حرّ إلزامي" } }
+    answer: [yesno]
+    misconceptions:
+      - id: MC-P01-008
+        when: [optional]
+        feedback:
+          en: "An empty optional field could mean \"none\" or \"forgot\". For safety, the camp needs a clear answer."
+          ar: "الحقل الاختياري الفارغ قد يعني «لا يوجد» أو «نسيت». ولأجل السلامة، يحتاج المعسكر إجابة واضحة."
+      - id: MC-P01-008
+        when: [required]
+        feedback:
+          en: "Most parents would have to type \"none\". A yes/no gets a clear answer in one tap."
+          ar: "أغلب الآباء سيضطرون إلى كتابة «لا يوجد». أما نعم/لا فتعطي إجابة واضحة بضغطة."
+    explain:
+      en: "A required yes/no means every parent answers, and only those with something to say type details."
+      ar: "سؤال نعم/لا الإلزامي يعني أن كل وليّ أمر يجيب، ولا يكتب التفاصيل إلا من لديه ما يقوله."
+
+  - id: S05
+    type: choose
+    part: check
+    rules: [R19, U39]
+    prompt:
+      en: "After trimming, every field is required except \"What should the coaches call him?\" How do you show that?"
+      ar: "بعد التقليص، كل الحقول إلزامية ما عدا «بماذا يناديه المدرّبون؟». كيف توضّح ذلك؟"
+    options:
+      - { id: word, text: { en: "Add \"(optional)\" to that label", ar: "أضف «(اختياري)» إلى تلك التسمية" } }
+      - { id: stars, text: { en: "Star every other label", ar: "ضع نجمة على كل التسميات الأخرى" } }
+      - { id: grey, text: { en: "Make that label lighter grey", ar: "اجعل تلك التسمية رمادية أفتح" } }
+    answer: [word]
+    misconceptions:
+      - id: MC-P01-003
+        when: [stars, grey]
+        feedback:
+          en: "Symbols and shades need decoding. One word on the one exception is clearer for everyone."
+          ar: "الرموز والدرجات تحتاج إلى تفسير. وكلمة واحدة على الاستثناء الوحيد أوضح للجميع."
+    explain:
+      en: "Mark the minority, in words."
+      ar: "علّم الأقلية، بالكلمات."
+
+  - id: S06
+    type: choose
+    part: check
+    rules: [R19, U40]
+    prompt:
+      en: "Samir types \"+20 10 1234 5678\". The form says \"Use 11 digits starting with 0\". Best fix?"
+      ar: "كتب سمير «‎+20 10 1234 5678». فقال النموذج «استخدم 11 رقمًا تبدأ بـ0». ما أفضل إصلاح؟"
+    options:
+      - { id: accept, text: { en: "Accept +20 and spaces, and convert the number in the system", ar: "اقبل ‎+20 والمسافات، وحوّل الرقم في النظام" } }
+      - { id: hint, text: { en: "Show the format as a hint before he types", ar: "اعرض الصيغة كتلميح قبل أن يكتب" } }
+      - { id: keep, text: { en: "Keep it; the error explains the rule", ar: "أبقه؛ رسالة الخطأ تشرح القاعدة" } }
+    answer: [accept]
+    misconceptions:
+      - id: MC-P01-007
+        when: [hint, keep]
+        feedback:
+          en: "His number is correct, just in international format. Let the system handle the format."
+          ar: "رقمه صحيح، لكن بالصيغة الدولية. دع النظام يتعامل مع الصيغة."
+    explain:
+      en: "+20 10 1234 5678 and 010 1234 5678 are the same number. Accept both."
+      ar: "‎+20 10 1234 5678 و 010 1234 5678 رقم واحد. اقبل الاثنين."
+
+  - id: S07
+    type: choose
+    part: check
+    rules: [R19, U40]
+    prompt:
+      en: "The label says \"Photo of the child (optional)\". Samir skips it and gets \"Photo is required\". What's wrong?"
+      ar: "التسمية تقول «صورة الطفل (اختياري)». تخطّاها سمير فظهر «الصورة إلزامية». ما الخطأ؟"
+    options:
+      - { id: mismatch, text: { en: "The label and the check disagree", ar: "التسمية والتحقق لا يتّفقان" } }
+      - { id: user, text: { en: "Samir should have added a photo", ar: "كان على سمير أن يضيف صورة" } }
+      - { id: nothing, text: { en: "Nothing; photos are always required", ar: "لا شيء؛ الصور إلزامية دائمًا" } }
+    answer: [mismatch]
+    misconceptions:
+      - id: MC-P01-004
+        when: [user, nothing]
+        feedback:
+          en: "Samir followed the label. The form contradicts itself; fix whichever one is wrong."
+          ar: "اتّبع سمير التسمية. النموذج يناقض نفسه؛ أصلح أيّهما الخاطئ."
+    explain:
+      en: "Decide once whether it's required, then make the label and the check agree."
+      ar: "قرّر مرة واحدة إن كان إلزاميًا، ثم اجعل التسمية والتحقق يتّفقان."
+
+  - id: S08
+    type: spot
+    part: check
+    rules: [R19, U13]
+    prompt:
+      en: "Which label would confuse Samir?"
+      ar: "أي تسمية ستربك سمير؟"
+    mock:
+      blocks:
+        - { kind: field, label: "@F3child", text: "", region: child }
+        - { kind: field, label: { en: "Guardian MSISDN", ar: "MSISDN وليّ الأمر" }, text: "", gap: s, region: msisdn }
+        - { kind: field, label: "@F3age", text: "", gap: s, region: dob }
+        - { kind: field, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "", gap: s, region: call }
+    regions:
+      - { id: child, label: "@F3child" }
+      - { id: msisdn, label: { en: "Guardian MSISDN", ar: "MSISDN وليّ الأمر" } }
+      - { id: dob, label: "@F3age" }
+      - { id: call, label: { en: "What should the coaches call him?", ar: "بماذا يناديه المدرّبون؟" } }
+    answer: [msisdn]
+    misconceptions:
+      - id: MC-P01-008
+        when: [child, dob, call]
+        feedback:
+          en: "That one is clear. Look for a word only an engineer would use."
+          ar: "هذه واضحة. ابحث عن كلمة لا يستخدمها إلا مهندس."
+    explain:
+      en: "\"MSISDN\" means mobile number. Say \"Parent's mobile number\"."
+      ar: "«MSISDN» تعني رقم الموبايل. قل «رقم موبايل وليّ الأمر»."

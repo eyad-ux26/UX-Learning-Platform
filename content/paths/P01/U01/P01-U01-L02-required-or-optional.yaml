@@ -1,0 +1,256 @@
+id: P01-U01-L02
+mode: lesson
+minutes: 8
+title:
+  en: "Required or optional? Say it in words"
+  ar: "إلزامي أم اختياري؟ قلها بالكلمات"
+review_labels:
+  MC-P01-003: { en: "A symbol alone doesn't say what's required", ar: "الرمز وحده لا يوضّح ما هو إلزامي" }
+  MC-P01-004: { en: "The label and the check must agree", ar: "يجب أن تتّفق التسمية مع التحقق" }
+  MC-P01-005: { en: "Many optional fields mean too many fields", ar: "كثرة الحقول الاختيارية تعني كثرة الحقول" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Hana joins", ar: "هناء تشترك" }
+    body:
+      en: "Hana loved the trial and decides to join. Now the gym does need more from her.\n\nSome labels have a star. Some don't. There's no note explaining the stars."
+      ar: "أحبّت هناء التجربة وقرّرت الاشتراك. الآن يحتاج النادي منها معلومات أكثر فعلًا.\n\nبعض التسميات عليها نجمة، وبعضها لا. ولا توجد ملاحظة تشرح النجوم."
+    mock:
+      blocks:
+        - { kind: title, text: "@F1join" }
+        - { kind: field, label: { en: "Full name *", ar: "الاسم الكامل *" }, text: "", gap: m }
+        - { kind: field, label: { en: "Mobile number *", ar: "رقم الموبايل *" }, text: "", gap: s }
+        - { kind: field, label: "@F1email", text: "", gap: s }
+        - { kind: field, label: { en: "National ID number *", ar: "الرقم القومي *" }, text: "", gap: s }
+        - { kind: field, label: "@F1emerg", text: "", gap: s }
+        - { kind: field, label: "@F1goal", text: "", gap: s }
+        - { kind: button, text: "@F1joinbtn", gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "Which fields does Hana have to fill in?"
+      ar: "أي الحقول يجب أن تملأها هناء؟"
+    options:
+      - { id: star, text: { en: "Only the ones with a star", ar: "التي عليها نجمة فقط" } }
+      - { id: all, text: { en: "All of them", ar: "كلها" } }
+      - { id: unsure, text: { en: "She can't be sure", ar: "لا يمكنها التأكد" } }
+    reveal:
+      en: "She can't be sure. Stars usually mean required, but nothing here says so, and the emergency contact looks like something a gym would insist on. She'll find out when she presses Join and gets errors."
+      ar: "لا يمكنها التأكد. النجمة تعني «إلزامي» عادةً، لكن لا شيء هنا يقول ذلك، ورقم الطوارئ يبدو شيئًا سيصرّ عليه النادي. وستكتشف ذلك حين تضغط «اشترك» وتظهر الأخطاء."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Make the exception clear", ar: "وضّح الاستثناء" }
+    body:
+      en: "People shouldn't have to guess which fields they can skip.\n\n- If you've cut the form down to what the task needs, most fields will be required. Then mark the few **optional** ones, in words: \"Email (optional)\".\n- If you find yourself marking many fields optional, go back to the last lesson. Do they need to be on this form at all?\n- A star alone needs a legend people might miss, and can be read aloud as just \"star\". If you use one, explain it at the top of the form.\n- Whatever the label says, the check must agree. A field marked optional must never come back with \"This field is required\"."
+      ar: "يجب ألا يضطر الناس إلى التخمين أي الحقول يمكنهم تخطّيها.\n\n- إذا قلّصت النموذج إلى ما تحتاجه المهمة، فستكون أغلب الحقول إلزامية. عندها علّم الحقول **الاختيارية** القليلة بالكلمات: «البريد الإلكتروني (اختياري)».\n- إذا وجدت نفسك تعلّم حقولًا كثيرة كاختيارية، فارجع إلى الدرس السابق. هل يجب أن تكون في هذا النموذج أصلًا؟\n- النجمة وحدها تحتاج شرحًا قد لا يراه الناس، وقد تُقرأ بصوت عالٍ «نجمة» فقط. إن استخدمتها، فاشرحها أعلى النموذج.\n- مهما قالت التسمية، يجب أن يتّفق التحقق معها. الحقل المعلَّم كاختياري يجب ألا يعود أبدًا برسالة «هذا الحقل إلزامي»."
+
+  - id: S04
+    type: choose
+    part: guided
+    confidence: true
+    rules: [R06, R15, U39]
+    prompt:
+      en: "On the membership form, everything is required except the fitness goal. How should you show that?"
+      ar: "في نموذج الاشتراك، كل الحقول إلزامية ما عدا الهدف الرياضي. كيف توضّح ذلك؟"
+    options:
+      - { id: optional, text: { en: "Add \"(optional)\" to the fitness goal label", ar: "أضف «(اختياري)» إلى تسمية الهدف الرياضي" } }
+      - { id: stars, text: { en: "Put a star on every other label", ar: "ضع نجمة على كل التسميات الأخرى" } }
+      - { id: red, text: { en: "Color the required labels red", ar: "لوّن التسميات الإلزامية بالأحمر" } }
+    answer: [optional]
+    misconceptions:
+      - id: MC-P01-003
+        when: [stars]
+        feedback:
+          en: "Five stars to say what one word could. And without a legend, a star doesn't say \"required\" to everyone."
+          ar: "خمس نجوم لتقول ما تقوله كلمة واحدة. وبدون شرح، لا تعني النجمة «إلزامي» للجميع."
+      - id: MC-P01-003
+        when: [red]
+        feedback:
+          en: "Color alone doesn't carry meaning for everyone, and red reads as an error before Hana has typed anything."
+          ar: "اللون وحده لا يحمل المعنى للجميع، والأحمر يُقرأ كخطأ قبل أن تكتب هناء أي شيء."
+    hints:
+      - { en: "Which is fewer: required fields or optional ones? Mark that.", ar: "أيّها أقل: الحقول الإلزامية أم الاختيارية؟ علّمها." }
+    correct:
+      en: "One word, on the one exception."
+      ar: "كلمة واحدة، على الاستثناء الوحيد."
+    explain:
+      en: "Mark the minority, in words. The rest is understood as required."
+      ar: "علّم الأقلية بالكلمات. ويُفهم الباقي على أنه إلزامي."
+
+  - id: S05
+    type: choose
+    part: guided
+    rules: [R11, U40]
+    prompt:
+      en: "The label says \"Email (optional)\". Hana leaves it empty, presses Join now, and sees \"Email is required\". What's the problem?"
+      ar: "التسمية تقول «البريد الإلكتروني (اختياري)». تركته هناء فارغًا، وضغطت «اشترك الآن»، فظهر «البريد الإلكتروني إلزامي». ما المشكلة؟"
+    mock:
+      blocks:
+        - { kind: field, tone: bad, label: { en: "Email (optional)", ar: "البريد الإلكتروني (اختياري)" }, text: "", error: { en: "Email is required", ar: "البريد الإلكتروني إلزامي" } }
+    options:
+      - { id: mismatch, text: { en: "The label and the check disagree; one of them is wrong", ar: "التسمية والتحقق لا يتّفقان؛ أحدهما خاطئ" } }
+      - { id: user, text: { en: "Hana should have filled it in anyway", ar: "كان على هناء أن تملأه على أي حال" } }
+      - { id: wording, text: { en: "The error should say \"Please\"", ar: "يجب أن تقول رسالة الخطأ «من فضلك»" } }
+    answer: [mismatch]
+    misconceptions:
+      - id: MC-P01-004
+        when: [user]
+        feedback:
+          en: "Hana did exactly what the form told her. The form is inconsistent, not her."
+          ar: "فعلت هناء بالضبط ما قاله النموذج. النموذج هو غير المتّسق، لا هي."
+    hints:
+      - { en: "Who made the mistake: Hana or the form?", ar: "من أخطأ: هناء أم النموذج؟" }
+    correct:
+      en: "Decide whether email is required, then make the label and the check say the same thing."
+      ar: "قرّر إن كان البريد إلزاميًا، ثم اجعل التسمية والتحقق يقولان الشيء نفسه."
+    explain:
+      en: "This often happens when design and development set required fields separately. Check both in the spec."
+      ar: "يحدث هذا كثيرًا حين يحدّد التصميم والتطوير الحقول الإلزامية كلٌّ على حدة. تحقّق من الاثنين في المواصفات."
+
+  - id: S06
+    type: compare
+    part: contrast
+    rules: [R11, U39]
+    prompt:
+      en: "Which version makes it easier to know what to fill in?"
+      ar: "أي نسخة تجعل معرفة ما يجب ملؤه أسهل؟"
+    a:
+      mock:
+        blocks:
+          - { kind: field, label: { en: "Full name *", ar: "الاسم الكامل *" }, text: "" }
+          - { kind: field, label: { en: "Mobile number *", ar: "رقم الموبايل *" }, text: "", gap: s }
+          - { kind: field, label: { en: "National ID number *", ar: "الرقم القومي *" }, text: "", gap: s }
+          - { kind: field, label: { en: "Emergency contact number *", ar: "رقم للطوارئ *" }, text: "", gap: s }
+          - { kind: field, label: "@F1goal", text: "", gap: s }
+          - { kind: small, text: { en: "* required", ar: "* إلزامي" }, gap: m }
+    b:
+      mock:
+        blocks:
+          - { kind: field, label: "@F1name", text: "" }
+          - { kind: field, label: "@F1phone", text: "", gap: s }
+          - { kind: field, label: "@F1nid", text: "", gap: s }
+          - { kind: field, label: "@F1emerg", text: "", gap: s }
+          - { kind: field, label: { en: "Your fitness goal (optional)", ar: "هدفك الرياضي (اختياري)" }, text: "", gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P01-003
+        when: [a]
+        feedback:
+          en: "A works, but Hana only learns what the stars mean at the bottom, after the fields. B says the one exception right where she needs it."
+          ar: "A تعمل، لكن هناء لا تعرف معنى النجوم إلا في الأسفل، بعد الحقول. أما B فتوضّح الاستثناء الوحيد في مكانه."
+    correct:
+      en: "B: one clear word instead of four symbols and a legend."
+      ar: "B: كلمة واحدة واضحة بدل أربعة رموز وشرح."
+    explain:
+      en: "If you do use stars, put the explanation at the top, before the first field."
+      ar: "إن استخدمت النجوم فعلًا، فضع الشرح في الأعلى، قبل أول حقل."
+
+  - id: S07
+    type: choose
+    part: independent
+    rules: [R07, U39]
+    prompt:
+      en: "A clinic's booking form has 8 fields: 4 required and 4 optional. What should you do first?"
+      ar: "نموذج حجز في عيادة فيه 8 حقول: 4 إلزامية و4 اختيارية. ماذا تفعل أولًا؟"
+    options:
+      - { id: question, text: { en: "Ask whether the 4 optional fields need to be there at all", ar: "اسأل إن كانت الحقول الاختيارية الأربعة يجب أن تكون موجودة أصلًا" } }
+      - { id: mark, text: { en: "Mark the 4 optional fields with \"(optional)\"", ar: "علّم الحقول الاختيارية الأربعة بـ«(اختياري)»" } }
+      - { id: stars, text: { en: "Put stars on the 4 required fields", ar: "ضع نجومًا على الحقول الإلزامية الأربعة" } }
+    answer: [question]
+    misconceptions:
+      - id: MC-P01-005
+        when: [mark, stars]
+        feedback:
+          en: "Marking them is fine later. But half the form being optional suggests some of it can go or move to a better moment."
+          ar: "تعليمها مقبول لاحقًا. لكن أن يكون نصف النموذج اختياريًا يعني أن بعضه يمكن حذفه أو نقله إلى لحظة أفضل."
+    hints:
+      - { en: "What did the last lesson say about fields no one needs right now?", ar: "ماذا قال الدرس السابق عن الحقول التي لا يحتاجها أحد الآن؟" }
+    correct:
+      en: "Trim first, then mark what's left."
+      ar: "قلّص أولًا، ثم علّم ما تبقّى."
+    explain:
+      en: "Every optional field is still something people read and wonder about. Fewer is clearer."
+      ar: "كل حقل اختياري يظل شيئًا يقرؤه الناس ويتساءلون عنه. الأقل أوضح."
+
+  - id: S08
+    type: sort
+    part: independent
+    rules: [R07, U39]
+    prompt:
+      en: "Tamer's lunch order: which fields are required and which are optional?"
+      ar: "طلب غداء تامر: أي الحقول إلزامية وأيّها اختياري؟"
+    items:
+      - { id: addr, text: "@F2addr" }
+      - { id: note, text: "@F2note" }
+      - { id: pay, text: "@F2pay" }
+      - { id: promo, text: "@F2promo" }
+      - { id: phone, text: "@F2phone" }
+    buckets:
+      - { id: req, label: { en: "Required", ar: "إلزامي" } }
+      - { id: opt, label: { en: "Optional", ar: "اختياري" } }
+    answer:
+      req: [addr, pay, phone]
+      opt: [note, promo]
+    misconceptions:
+      - id: MC-P01-001
+        when: { item: promo, bucket: req }
+        feedback:
+          en: "Most people don't have a promo code. Making it required would block almost every order."
+          ar: "أغلب الناس ليس لديهم كود خصم. جعله إلزاميًا سيعطّل تقريبًا كل الطلبات."
+      - id: MC-P01-001
+        when: { item: phone, bucket: opt }
+        feedback:
+          en: "If the driver can't find the office, the phone is the only way to reach Tamer."
+          ar: "إذا لم يجد السائق المكتب، فالهاتف هو الطريقة الوحيدة للوصول إلى تامر."
+    hints:
+      - { en: "Without which ones can the order not arrive or be paid for?", ar: "بدون أيّها لا يمكن أن يصل الطلب أو يُدفع ثمنه؟" }
+    correct:
+      en: "Three required, two optional: the note and the promo code get \"(optional)\"."
+      ar: "ثلاثة إلزامية واثنان اختياريان: الملاحظة وكود الخصم يأخذان «(اختياري)»."
+    explain:
+      en: "And the promo code could even hide behind a \"Have a code?\" link, since most people don't."
+      ar: "ويمكن لكود الخصم أن يختفي خلف رابط «لديك كود؟»، لأن أغلب الناس ليس لديهم."
+
+  - id: S09
+    type: choose
+    part: independent
+    confidence: true
+    multi: true
+    rules: [R07, U39]
+    prompt:
+      en: "Why write \"(optional)\" in words instead of relying on a symbol? Pick all that apply."
+      ar: "لماذا تكتب «(اختياري)» بالكلمات بدل الاعتماد على رمز؟ اختر كل ما ينطبق."
+    options:
+      - { id: aloud, text: { en: "Screen readers read the word clearly", ar: "برامج قراءة الشاشة تقرأ الكلمة بوضوح" } }
+      - { id: legend, text: { en: "People don't need to find a legend", ar: "لا يحتاج الناس إلى البحث عن شرح" } }
+      - { id: pretty, text: { en: "Words look more professional than symbols", ar: "الكلمات تبدو أكثر احترافية من الرموز" } }
+    answer: [aloud, legend]
+    misconceptions:
+      - id: MC-P01-003
+        when: [pretty]
+        feedback:
+          en: "It's not about looks. A word means the same thing to everyone, wherever they start reading."
+          ar: "الأمر ليس مظهرًا. الكلمة تعني الشيء نفسه للجميع، من أي مكان بدؤوا القراءة."
+    hints:
+      - { en: "Think about someone who hears the form instead of seeing it.", ar: "فكّر في شخص يسمع النموذج بدل أن يراه." }
+    correct:
+      en: "A word works without a legend and reads clearly aloud."
+      ar: "الكلمة تعمل دون شرح وتُقرأ بوضوح بصوت عالٍ."
+    explain:
+      en: "In code, required fields also need to be marked as required, so assistive tech announces it. That's Unit 5."
+      ar: "وفي الكود، يجب أن تُعلَّم الحقول الإلزامية أيضًا كإلزامية، حتى تعلنها التقنيات المساعدة. هذا في الوحدة 5."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    body:
+      en: "- Cut first. Then most fields are required, and you mark the few optional ones.\n- Say it in words: \"(optional)\". A star needs a legend at the top.\n- Many optional fields are a sign the form asks too much.\n- The label and the check must agree.\n\nNext: asking in a way people can actually answer."
+      ar: "- قلّص أولًا. عندها تصبح أغلب الحقول إلزامية، وتعلّم القليل الاختياري.\n- قلها بالكلمات: «(اختياري)». والنجمة تحتاج شرحًا في الأعلى.\n- كثرة الحقول الاختيارية علامة على أن النموذج يطلب الكثير.\n- يجب أن تتّفق التسمية مع التحقق.\n\nالتالي: كيف تسأل بطريقة يستطيع الناس الإجابة عنها فعلًا."

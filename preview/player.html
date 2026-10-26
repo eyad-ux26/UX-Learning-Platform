@@ -116,6 +116,18 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-field .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
 .mock .k-field.tone-bad .fi{border-color:#C6332A}
 .mock .k-field .fe{font-size:.8rem;color:#A3261F;margin-top:4px}
+.mock .k-select .fl{font-size:.85rem;font-weight:600}
+.mock .k-select .fi{border:1.5px solid #B9B9C0;border-radius:10px;min-height:44px;padding:10px 12px;font-size:.92rem;color:var(--mock-muted);margin-top:4px;display:flex;justify-content:space-between;gap:8px}
+.mock .k-select .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
+.mock .k-select .fe{font-size:.8rem;color:#A3261F;margin-top:4px}
+.mock .k-select.tone-bad .fi{border-color:#C6332A}
+.mock .fi.filled{color:#1D1D1F}
+.mock .fi.focus{outline:3px solid #5B3FD1;outline-offset:2px}
+.mock .k-radio,.mock .k-check{display:flex;align-items:center;gap:10px;font-size:.92rem;min-height:32px}
+.mock .k-radio .mk,.mock .k-check .mk{flex:none;width:20px;height:20px;border:2px solid #6B6B70;background:#fff}
+.mock .k-radio .mk{border-radius:50%}.mock .k-check .mk{border-radius:5px}
+.mock .k-radio .mk.on{border-color:#5B3FD1;box-shadow:inset 0 0 0 4px #fff;background:#5B3FD1}
+.mock .k-check .mk.on{border-color:#5B3FD1;background:#5B3FD1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3C/svg%3E") center/14px no-repeat}
 .mock .size-xl{font-size:1.6rem}.mock .size-l{font-size:1.25rem}.mock .size-s{font-size:.8rem}
 .mock .em-high{font-weight:700}
 .mock .em-low{color:var(--mock-muted)}
@@ -201,8 +213,12 @@ let lang = "en";
 try{ lang = localStorage.getItem("lp-lang") || "en"; }catch(e){}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-// In Arabic, codes like WS-204 or A14 are wrapped in invisible left-to-right isolates so they keep their order.
-const iso = s => lang !== "ar" ? s : s.replace(/[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/g, m => /[A-Za-z]/.test(m) && /\d/.test(m) ? "\u2066" + m + "\u2069" : m);
+// In Arabic, codes like WS-204 or A14 and phone numbers like 010 1234 5678 are wrapped in invisible
+// left-to-right isolates so they keep their order.
+const LRI = m => "\u2066" + m + "\u2069";
+const iso = s => lang !== "ar" ? s : s
+  .replace(/\+?\d+(?: \d+)+/g, LRI)
+  .replace(/[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/g, m => /[A-Za-z]/.test(m) && /\d/.test(m) ? LRI(m) : m);
 const tx = v => v == null ? "" : iso(typeof v === "string" ? v : (v[lang] ?? v.en ?? ""));
 const u = () => UI[lang];
 const para = v => tx(v).split(/\n\s*\n/).map(p => `<p>${esc(p).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}</p>`).join("");
@@ -217,7 +233,8 @@ function mockBlocks(blocks, opts){
     let inner;
     if (b.kind === "group") inner = mockBlocks(b.blocks, opts);
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
-    else if (b.kind === "field") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="fi">${esc(tx(b.text))}</div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
     else if (b.kind === "divider") inner = "";
     else inner = esc(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
     if (opts && opts.regions && b.region){
