@@ -68,6 +68,8 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .row .lbl{margin:0 0 8px}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 .seg button{border:2px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 14px;min-height:40px;cursor:pointer}
+.seg-stack{flex-direction:column}
+.seg-stack button{border-radius:10px;text-align:start;padding:8px 12px}
 .seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
 .ord{display:flex;align-items:center;gap:10px}
 .ord .n{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;flex:none;font-size:.9rem}
@@ -86,7 +88,7 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock{background:var(--mock-bg);color:var(--mock-ink);border:1px solid var(--line);border-radius:22px;padding:18px 16px 20px;margin:0 0 14px;max-width:360px;box-shadow:0 1px 0 var(--line)}
 .cmp .mock{max-width:none}
 .mock .b{display:block;width:100%;text-align:start;border:0;background:none;color:inherit;padding:0;margin:0}
-.mock .gap-s{margin-top:4px}.mock .gap-m{margin-top:12px}.mock .gap-l{margin-top:24px}
+.mock .gap-xs{margin-top:0}.mock .gap-s{margin-top:4px}.mock .gap-m{margin-top:12px}.mock .gap-l{margin-top:24px}.mock .gap-xl{margin-top:40px}
 .mock .k-title{font-size:1.35rem;font-weight:700;line-height:1.25}
 .mock .k-heading{font-size:1.05rem;font-weight:600}
 .mock .k-text{font-size:.92rem}
@@ -105,6 +107,10 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-banner{border-radius:12px;background:#F1EEFF;color:#3D2E91;padding:10px 12px;font-size:.88rem;font-weight:500}
 .mock .k-divider{border-top:1px solid var(--mock-line);height:0}
 .mock .k-group{border:1px solid var(--mock-line);border-radius:14px;padding:12px}
+.mock .k-group.tone-plain{border:0;padding:0;border-radius:0}
+.mock .k-group.tone-tint{border:0;background:#F4F4F6}
+.mock .k-line{border:1px solid var(--mock-line);border-radius:8px;padding:6px 8px}
+.mock .k-pill{display:inline-block;width:auto;font-size:.8rem;font-weight:600;border-radius:999px;padding:2px 10px;background:#E6F4EA;color:#1E6B3F}
 .mock .k-field .fl{font-size:.85rem;font-weight:600}
 .mock .k-field .fi{border:1.5px solid #B9B9C0;border-radius:10px;min-height:44px;padding:10px 12px;font-size:.92rem;color:var(--mock-muted);margin-top:4px}
 .mock .k-field .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
@@ -198,7 +204,7 @@ function mockBlocks(blocks, opts){
     let inner;
     if (b.kind === "group") inner = mockBlocks(b.blocks, opts);
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
-    else if (b.kind === "field") inner = `<div class="fl">${esc(tx(b.label))}</div><div class="fi">${esc(tx(b.text))}</div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "field") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="fi">${esc(tx(b.text))}</div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
     else if (b.kind === "divider") inner = "";
     else inner = esc(tx(b.text));
     if (opts && opts.regions && b.region){
@@ -369,10 +375,10 @@ function renderInteraction(s, st, locked){
     }).join("");
   }
   if (s.type === "match"){
-    return mock(s.mock) + s.left.map(l => `<div class="row"><label class="lbl" for="m_${l.id}">${esc(tx(l.text))}</label><select id="m_${l.id}" data-left="${l.id}" ${locked?"disabled":""}><option value="">${u().pick}</option>${s.right.map(r => {
+    return mock(s.mock) + s.left.map(l => `<div class="row"><p class="lbl">${esc(tx(l.text))}</p><div class="seg seg-stack" role="group" aria-label="${esc(tx(l.text))}">${s.right.map(r => {
       const v = st.revealed ? s.answer[l.id] : st.sel[l.id];
-      return `<option value="${r.id}" ${v===r.id?"selected":""}>${esc(tx(r.text))}</option>`;
-    }).join("")}</select></div>`).join("");
+      return `<button type="button" data-left="${l.id}" data-right="${r.id}" aria-pressed="${v===r.id}" ${locked?"disabled":""}>${esc(tx(r.text))}</button>`;
+    }).join("")}</div></div>`).join("");
   }
   return "";
 }
@@ -396,7 +402,7 @@ function wire(s, st, locked){
   document.querySelectorAll("[data-item]").forEach(b => b.onclick = () => { st.sel[b.dataset.item] = b.dataset.bucket; redraw(); });
   document.querySelectorAll("[data-up]").forEach(b => b.onclick = () => { const k = +b.dataset.up; [st.sel[k-1], st.sel[k]] = [st.sel[k], st.sel[k-1]]; redraw(); document.querySelector(`[data-up="${k-1}"]`)?.focus() || document.querySelector(`[data-down="${k-1}"]`)?.focus(); });
   document.querySelectorAll("[data-down]").forEach(b => b.onclick = () => { const k = +b.dataset.down; [st.sel[k+1], st.sel[k]] = [st.sel[k], st.sel[k+1]]; redraw(); document.querySelector(`[data-down="${k+1}"]`)?.focus() || document.querySelector(`[data-up="${k+1}"]`)?.focus(); });
-  document.querySelectorAll("[data-left]").forEach(sel => sel.onchange = () => { st.sel[sel.dataset.left] = sel.value; renderActions(s, st, L.lesson.mode === "check"); });
+  document.querySelectorAll("[data-right]").forEach(b => b.onclick = () => { st.sel[b.dataset.left] = b.dataset.right; redraw(); });
   document.querySelectorAll("[data-region]").forEach(b => b.onclick = () => { const r = b.dataset.region; st.sel = s.multi ? (st.sel.includes(r) ? st.sel.filter(x => x !== r) : [...st.sel, r]) : [r]; redraw(); });
   const ss = $("#spotSel"); if (ss) ss.onchange = () => { st.sel = ss.value ? [ss.value] : []; redraw(); };
   document.querySelectorAll("[data-conf]").forEach(b => b.onclick = () => { st.conf = +b.dataset.conf; redraw(); });

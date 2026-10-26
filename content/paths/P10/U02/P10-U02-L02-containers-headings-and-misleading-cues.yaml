@@ -1,0 +1,319 @@
+id: P10-U02-L02
+mode: lesson
+minutes: 8
+title:
+  en: "Containers, headings, and cues that mislead"
+  ar: "الحاويات والعناوين والإشارات المضلّلة"
+review_labels:
+  MC-P10-024: { en: "More borders don't mean clearer groups", ar: "الحدود الأكثر لا تعني مجموعات أوضح" }
+  MC-P10-025: { en: "Matching colors don't prove a relationship", ar: "تطابق الألوان لا يثبت العلاقة" }
+  MC-P10-026: { en: "Spacing alone is invisible to screen readers", ar: "المسافات وحدها لا يراها قارئ الشاشة" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "\"Add more structure\"", ar: "«أضيفوا تنظيمًا أكثر»" }
+    body:
+      en: "A teammate thinks the sessions page needs more structure. Their plan: a border around every item, and matching green pills for the two prices so they \"look consistent\".\n\nMore structure sounds good. Does it make the groups clearer?"
+      ar: "يرى أحد الزملاء أن صفحة الجلسات تحتاج إلى تنظيم أكثر. خطته: إطار حول كل عنصر، وشارات خضراء متطابقة للسعرين حتى «يبدوا متناسقين».\n\nالتنظيم الأكثر يبدو فكرة جيدة. لكن هل يجعل المجموعات أوضح؟"
+    mock: &pills
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: heading, text: "@W2e" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: "@W2b" }
+            - { kind: small, text: "@W2f" }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: pill, text: "@W2c" }
+            - { kind: pill, text: "@W2g" }
+        - { kind: button, text: { en: "Reserve", ar: "احجز" }, gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "Two facts are the same color but far apart on the page. Will people read them as related?"
+      ar: "حقيقتان باللون نفسه لكنهما متباعدتان في الصفحة. هل سيقرؤهما الناس كأنهما مرتبطتان؟"
+    options:
+      - { id: yes, text: { en: "Yes, color links them", ar: "نعم، اللون يربطهما" } }
+      - { id: no, text: { en: "No, distance wins", ar: "لا، المسافة تتغلّب" } }
+      - { id: some, text: { en: "Sometimes, but it's unreliable", ar: "أحيانًا، لكن ذلك غير مضمون" } }
+    reveal:
+      en: "Color similarity can hint at a link, but it's one of the weakest cues. Some people can't tell the colors apart, and nearby items usually win. Let's look at stronger ones."
+      ar: "تشابه الألوان قد يلمّح إلى علاقة، لكنه من أضعف الإشارات. بعض الناس لا يميّزون الألوان، والعناصر المتقاربة غالبًا تتغلّب. لنرَ إشارات أقوى."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Four cues, different strengths", ar: "أربع إشارات بقوى مختلفة" }
+    body:
+      en: "**Spacing**: close items read as a group.\n\n**A shared container** (a card, a tinted area): everything inside belongs together, even if the items look different.\n\n**A heading**: names what the group is about. It also helps people using a screen reader, which can't see spacing.\n\n**Matching color**: a weak hint. Never rely on it alone.\n\nEvery container also adds a boundary. A border around everything makes many small groups that compete."
+      ar: "**المسافة**: العناصر المتقاربة تُقرأ كمجموعة.\n\n**الحاوية المشتركة** (بطاقة أو مساحة ملوّنة): كل ما بداخلها ينتمي معًا، حتى لو بدت العناصر مختلفة.\n\n**العنوان**: يسمّي موضوع المجموعة. ويساعد أيضًا من يستخدمون قارئ الشاشة (screen reader)، الذي لا يرى المسافات.\n\n**تطابق اللون**: تلميح ضعيف. لا تعتمد عليه وحده أبدًا.\n\nكل حاوية تضيف حدًّا جديدًا. وإطار حول كل شيء يصنع مجموعات صغيرة كثيرة تتنافس."
+
+  - id: S04
+    type: match
+    part: guided
+    rules: [R07, R15]
+    prompt:
+      en: "Match each cue to what it tells people."
+      ar: "طابق كل إشارة مع ما تخبر الناس به."
+    left:
+      - { id: space, text: { en: "Small gap between items", ar: "مسافة صغيرة بين العناصر" } }
+      - { id: card, text: { en: "A card around several items", ar: "بطاقة حول عدة عناصر" } }
+      - { id: head, text: { en: "A heading above a group", ar: "عنوان فوق مجموعة" } }
+      - { id: color, text: { en: "Two far-apart items in the same color", ar: "عنصران متباعدان باللون نفسه" } }
+    right:
+      - { id: together, text: { en: "These items belong together", ar: "هذه العناصر تنتمي معًا" } }
+      - { id: region, text: { en: "These share one area, even if they look different", ar: "هذه تشترك في مساحة واحدة، حتى لو بدت مختلفة" } }
+      - { id: name, text: { en: "This is what the group is about", ar: "هذا موضوع المجموعة" } }
+      - { id: weak, text: { en: "Maybe related, but not reliable on its own", ar: "ربما مرتبطان، لكن ذلك غير موثوق وحده" } }
+    answer: { space: together, card: region, head: name, color: weak }
+    misconceptions:
+      - id: MC-P10-025
+        when: { left: color, right: together }
+        feedback:
+          en: "Matching color is a weak hint. Distance usually wins, and some people can't tell the colors apart."
+          ar: "تطابق اللون تلميح ضعيف. المسافة تتغلّب غالبًا، وبعض الناس لا يميّزون الألوان."
+    hints:
+      - { en: "Start with the weakest cue: which one would you never rely on alone?", ar: "ابدأ بأضعف إشارة: أيّها لن تعتمد عليه وحده أبدًا؟" }
+    correct:
+      en: "Spacing groups, containers enclose, headings name, color only hints."
+      ar: "المسافة تجمع، والحاوية تحتضن، والعنوان يسمّي، واللون يلمّح فقط."
+    explain:
+      en: "These cues work best together: a heading names the group, spacing or a container shows its edges, and color, if used, just reinforces."
+      ar: "هذه الإشارات تعمل أفضل معًا: العنوان يسمّي المجموعة، والمسافة أو الحاوية تُظهر حدودها، واللون، إن استُخدم، يعزّز فقط."
+
+  - id: S05
+    type: spot
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "On the teammate's layout, which part makes it hardest to tell which price belongs to which session?"
+      ar: "في تخطيط الزميل، أي جزء يجعل معرفة سعر كل جلسة أصعب؟"
+    mock:
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: heading, text: "@W2a", region: titles }
+            - { kind: heading, text: "@W2e" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: "@W2b", region: dates }
+            - { kind: small, text: "@W2f" }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: pill, text: "@W2c", region: prices }
+            - { kind: pill, text: "@W2g" }
+        - { kind: button, text: { en: "Reserve", ar: "احجز" }, gap: m, region: button }
+    regions:
+      - { id: titles, label: { en: "The row of titles", ar: "صف العناوين" } }
+      - { id: dates, label: { en: "The row of dates", ar: "صف التواريخ" } }
+      - { id: prices, label: { en: "The two matching price pills", ar: "شارتا السعر المتطابقتان" } }
+      - { id: button, label: { en: "The single Reserve button", ar: "زر «احجز» الوحيد" } }
+    answer: [button]
+    also_ok:
+      - answer: [prices]
+        feedback:
+          en: "Yes, that's a real problem too: identical pills side by side look like options of one thing. But the single button is worse: Sara can't even choose which session to reserve."
+          ar: "نعم، هذه مشكلة حقيقية أيضًا: شارتان متطابقتان متجاورتان تبدوان كخيارين لشيء واحد. لكن الزر الوحيد أسوأ: لا تستطيع سارة أصلًا اختيار الجلسة التي تحجزها."
+    misconceptions:
+      - id: MC-P10-021
+        when: [titles, dates]
+        feedback:
+          en: "The columns do line up titles and dates. The bigger problem is what Sara does next."
+          ar: "الأعمدة ترتّب العناوين والتواريخ فعلًا. المشكلة الأكبر فيما ستفعله سارة بعد ذلك."
+    hints:
+      - { en: "Try to reserve the Service session. Which part gets in your way?", ar: "حاول حجز جلسة «صمّم». أي جزء يعترض طريقك؟" }
+    correct:
+      en: "One Reserve for two sessions means the action has no group at all."
+      ar: "زر «احجز» واحد لجلستين يعني أن الإجراء لا ينتمي لأي مجموعة."
+    explain:
+      en: "The layout groups by type (all titles, all dates, all prices) instead of by booking. That's tidy to look at but breaks every relationship Sara needs, and the shared button can't belong to either session."
+      ar: "التخطيط يجمّع حسب النوع (كل العناوين، كل التواريخ، كل الأسعار) بدلًا من الحجز. يبدو مرتّبًا لكنه يكسر كل علاقة تحتاجها سارة، والزر المشترك لا يمكن أن ينتمي لأي جلسة."
+
+  - id: S06
+    type: compare
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    prompt:
+      en: "Both versions group the sessions. Which one does it more clearly?"
+      ar: "النسختان تجمّعان الجلسات. أيّهما تفعل ذلك بوضوح أكبر؟"
+    a:
+      mock:
+        blocks:
+          - kind: group
+            blocks:
+              - { kind: line, text: "@W2a" }
+              - { kind: line, text: "@W2b", gap: s }
+              - { kind: line, text: "@W2c", gap: s }
+              - { kind: button, emphasis: low, text: "@W2d", gap: s }
+          - kind: group
+            gap: s
+            blocks:
+              - { kind: line, text: "@W2e" }
+              - { kind: line, text: "@W2f", gap: s }
+              - { kind: line, text: "@W2g", gap: s }
+              - { kind: button, emphasis: low, text: "@W2h", gap: s }
+          - { kind: line, text: "@W2n", gap: s }
+    b:
+      mock:
+        blocks:
+          - { kind: heading, text: "@W2a" }
+          - { kind: text, text: "@W2b", gap: xs }
+          - { kind: meta, text: "@W2c", gap: xs }
+          - { kind: button, emphasis: low, text: "@W2d", gap: s }
+          - { kind: divider, gap: l }
+          - { kind: heading, text: "@W2e", gap: l }
+          - { kind: text, text: "@W2f", gap: xs }
+          - { kind: meta, text: "@W2g", gap: xs }
+          - { kind: button, emphasis: low, text: "@W2h", gap: s }
+          - { kind: link, text: "@W2n", gap: xl }
+    answer: b
+    reason:
+      prompt: { en: "What makes it clearer?", ar: "ما الذي يجعلها أوضح؟" }
+      options:
+        - { id: few, text: { en: "Fewer boundaries, so the two real groups stand out", ar: "حدود أقل، فتبرز المجموعتان الحقيقيتان" } }
+        - { id: modern, text: { en: "Borders look old-fashioned", ar: "الحدود تبدو قديمة الطراز" } }
+      answer: [few]
+      misconceptions:
+        - id: MC-P10-024
+          when: [modern]
+          feedback:
+            en: "It's not about style. In A, boxes inside boxes make many small groups compete with the two that matter."
+            ar: "الأمر لا يتعلّق بالأسلوب. في A، الإطارات داخل الإطارات تصنع مجموعات صغيرة كثيرة تنافس المجموعتين المهمّتين."
+    misconceptions:
+      - id: MC-P10-024
+        when: [a]
+        feedback:
+          en: "A boxes every line inside each card, so you see ten boxes before you see two bookings. More borders made the structure harder to read."
+          ar: "A تضع إطارًا لكل سطر داخل كل بطاقة، فترى عشرة إطارات قبل أن ترى حجزين. الحدود الأكثر جعلت قراءة التنظيم أصعب."
+    correct:
+      en: "Headings, spacing and one divider: two groups, nothing competing."
+      ar: "عناوين ومسافات وفاصل واحد: مجموعتان، دون منافسة."
+    explain:
+      en: "Both are valid structures, but A spends a border on every line. B uses headings to name each session, tight spacing inside, and one divider between. A card layout can be just as clear if each card wraps a whole booking and nothing else."
+      ar: "كلاهما تنظيم مقبول، لكن A تصرف إطارًا على كل سطر. أما B فتستخدم عناوين لتسمية كل جلسة، ومسافات ضيّقة في الداخل، وفاصلًا واحدًا بينهما. تخطيط البطاقات يمكن أن يكون بالوضوح نفسه إذا احتضنت كل بطاقة حجزًا كاملًا ولا شيء غيره."
+
+  - id: S07
+    type: fix
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "Which change best fixes the teammate's layout?"
+      ar: "أي تغيير يصلح تخطيط الزميل بأفضل شكل؟"
+    mock: *pills
+    options:
+      - { id: regroup, text: { en: "Stack the sessions: each title with its own date, price and Reserve button", ar: "رتّب الجلسات فوق بعضها: كل عنوان مع تاريخه وسعره وزر «احجز» الخاص به" } }
+      - { id: recolor, text: { en: "Make the two price pills different colors", ar: "اجعل شارتي السعر بلونين مختلفين" } }
+      - { id: arrows, text: { en: "Add arrows from each price to its title", ar: "أضف أسهمًا من كل سعر إلى عنوانه" } }
+      - { id: boxes, text: { en: "Put a border around each column", ar: "ضع إطارًا حول كل عمود" } }
+    answer: [regroup]
+    also_ok:
+      - answer: [boxes]
+        feedback:
+          en: "That can work if each column also gets its own Reserve button. Then each column is a complete booking. On a phone, the columns will still need to stack."
+          ar: "قد يصلح ذلك إذا حصل كل عمود على زر «احجز» خاص به. عندها يصبح كل عمود حجزًا كاملًا. وعلى الهاتف، سيظل على الأعمدة أن تُرتَّب فوق بعضها."
+    misconceptions:
+      - id: MC-P10-025
+        when: [recolor]
+        feedback:
+          en: "Different colors still don't say which title owns which price, and there's still one button for two sessions."
+          ar: "الألوان المختلفة لا تقول أي عنوان يملك أي سعر، ويبقى هناك زر واحد لجلستين."
+      - id: MC-P10-027
+        when: [arrows]
+        feedback:
+          en: "Arrows patch the symptom with more marks on the page. Grouping by booking removes the confusion instead."
+          ar: "الأسهم تعالج العَرَض بإضافة علامات أكثر على الصفحة. التجميع حسب الحجز يزيل الالتباس من أصله."
+    correct:
+      en: "Group by booking, not by type, and give each session its own action."
+      ar: "اجمع حسب الحجز لا حسب النوع، وأعطِ كل جلسة إجراءها الخاص."
+    explain:
+      en: "Once each session is one complete group, every fact and action has an owner. The colors and borders become optional."
+      ar: "عندما تصبح كل جلسة مجموعة كاملة واحدة، يصبح لكل حقيقة وإجراء مالك. وتصبح الألوان والحدود اختيارية."
+
+  - id: S08
+    type: spot
+    part: independent
+    rules: [R14, R19]
+    scenario:
+      en: "Nour is filling in a delivery address on her phone. The labels have uneven spacing."
+      ar: "تملأ نور عنوان التوصيل على هاتفها. المسافات حول التسميات غير متساوية."
+    prompt:
+      en: "Which label looks attached to the wrong field?"
+      ar: "أي تسمية تبدو مرتبطة بالحقل الخطأ؟"
+    mock:
+      blocks:
+        - { kind: small, text: "@A1a", region: street }
+        - { kind: field, text: "@A1b", gap: xs }
+        - { kind: small, text: "@A1c", gap: l, region: building }
+        - { kind: field, text: "@A1d", gap: xs }
+        - { kind: small, text: "@A1e", gap: xs, region: flat }
+        - { kind: field, text: "@A1f", gap: l }
+    regions:
+      - { id: street, label: "@A1a" }
+      - { id: building, label: "@A1c" }
+      - { id: flat, label: "@A1e" }
+    answer: [flat]
+    misconceptions:
+      - id: MC-P10-032
+        when: [street]
+        feedback:
+          en: "\"Street\" sits tight above its own field. Look further down for a label that's closer to someone else's field."
+          ar: "«الشارع» ملاصقة لحقلها من الأعلى. ابحث في الأسفل عن تسمية أقرب إلى حقل آخر."
+      - id: MC-P10-021
+        when: [building]
+        feedback:
+          en: "\"Building\" sits right above its field, with a bigger gap before it. That's correct. Look for a label that's closer to the wrong field."
+          ar: "«رقم المبنى» فوق حقله مباشرة، وقبله مسافة أكبر. هذا صحيح. ابحث عن تسمية أقرب إلى الحقل الخطأ."
+    correct:
+      en: "\"Flat\" is glued under the building field and far from its own."
+      ar: "«رقم الشقة» ملتصقة أسفل حقل المبنى وبعيدة عن حقلها."
+    explain:
+      en: "Labels group with whatever they're closest to. Here \"Flat\" is closest to the building field above it, so Nour may type her flat number there. Keep each label tight above its own field."
+      ar: "التسميات تنضم إلى أقرب شيء لها. هنا «رقم الشقة» أقرب إلى حقل المبنى الذي فوقها، فقد تكتب نور رقم الشقة فيه. أبقِ كل تسمية ملاصقة لحقلها من الأعلى."
+
+  - id: S09
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R14, U29]
+    prompt:
+      en: "A blind visitor uses a screen reader, which reads the page aloud in order and can't see spacing. What keeps the two sessions clear for them?"
+      ar: "زائر كفيف يستخدم قارئ الشاشة، الذي يقرأ الصفحة بصوت عالٍ بالترتيب ولا يرى المسافات. ما الذي يبقي الجلستين واضحتين له؟"
+    options:
+      - { id: heading, text: { en: "Each session starts with a real heading, and its details follow in order", ar: "كل جلسة تبدأ بعنوان حقيقي، وتليه تفاصيلها بالترتيب" } }
+      - { id: gaps, text: { en: "Bigger gaps between the sessions", ar: "مسافات أكبر بين الجلستين" } }
+      - { id: colors, text: { en: "A different background color for each session", ar: "لون خلفية مختلف لكل جلسة" } }
+      - { id: borders, text: { en: "A border around each session", ar: "إطار حول كل جلسة" } }
+    answer: [heading]
+    misconceptions:
+      - id: MC-P10-026
+        when: [gaps, colors, borders]
+        feedback:
+          en: "Those are visual cues, and the screen reader doesn't announce them. Headings and order are what it reads."
+          ar: "هذه إشارات بصرية، وقارئ الشاشة لا ينطقها. العناوين والترتيب هي ما يقرؤه."
+    correct:
+      en: "Headings and order carry the grouping when spacing can't."
+      ar: "العناوين والترتيب يحملان التجميع حين لا تستطيع المسافات ذلك."
+    explain:
+      en: "Spacing and borders show groups to the eye. A heading per session, with its facts and button following it in order, shows the same groups to a screen reader. Good grouping uses both."
+      ar: "المسافات والحدود تُظهر المجموعات للعين. أما عنوان لكل جلسة، تليه حقائقها وزرها بالترتيب، فيُظهر المجموعات نفسها لقارئ الشاشة. التجميع الجيد يستخدم الاثنين."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What you did", ar: "ما أنجزته" }
+    body:
+      en: "You compared four grouping cues and saw that more borders and matching colors don't make groups clearer. You grouped by booking instead of by type, fixed a mislabeled form field, and used headings so the groups survive without sight.\n\nNext: keeping groups together when the screen gets narrow."
+      ar: "قارنت أربع إشارات للتجميع ورأيت أن الحدود الأكثر والألوان المتطابقة لا توضّح المجموعات. جمعت حسب الحجز لا حسب النوع، وأصلحت تسمية حقل في نموذج، واستخدمت العناوين حتى تبقى المجموعات واضحة دون رؤية.\n\nالتالي: إبقاء المجموعات متماسكة حين تضيق الشاشة."

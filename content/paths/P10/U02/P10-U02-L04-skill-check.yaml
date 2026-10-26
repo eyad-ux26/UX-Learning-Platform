@@ -1,0 +1,217 @@
+id: P10-U02-L04
+mode: check
+minutes: 6
+title:
+  en: "Skill check: group what belongs together"
+  ar: "اختبار المهارة: اجمع ما ينتمي معًا"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Rana's gym classes", ar: "حصص رنا في النادي" }
+    body:
+      en: "Rana wants to book a class for Sunday. The gym's page lists two classes and an invite offer.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "تريد رنا حجز حصة يوم الأحد. تعرض صفحة النادي حصتين وعرضًا لدعوة صديق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      blocks:
+        - { kind: heading, text: "@G1a" }
+        - { kind: small, text: "@G1b", gap: m }
+        - { kind: chip, text: "@G1c", gap: m }
+        - { kind: button, emphasis: low, text: "@G1d", gap: m }
+        - { kind: heading, text: "@G1e", gap: m }
+        - { kind: small, text: "@G1f", gap: m }
+        - { kind: chip, tone: warn, text: "@G1g", gap: m }
+        - { kind: button, emphasis: low, text: "@G1h", gap: m }
+        - { kind: link, text: "@G1n", gap: m }
+
+  - id: S02
+    type: sort
+    part: check
+    rules: [R19]
+    prompt:
+      en: "Put each item in the group it belongs to."
+      ar: "ضع كل عنصر في المجموعة التي ينتمي إليها."
+    items:
+      - { id: G1f, text: "@G1f" }
+      - { id: G1a, text: "@G1a" }
+      - { id: G1n, text: "@G1n" }
+      - { id: G1c, text: "@G1c" }
+      - { id: G1h, text: "@G1h" }
+      - { id: G1b, text: "@G1b" }
+      - { id: G1g, text: "@G1g" }
+      - { id: G1e, text: "@G1e" }
+      - { id: G1d, text: "@G1d" }
+    buckets:
+      - { id: yoga, label: "@G1a" }
+      - { id: spin, label: "@G1e" }
+      - { id: own, label: { en: "On its own", ar: "منفصل" } }
+    answer:
+      yoga: [G1a, G1b, G1c, G1d]
+      spin: [G1e, G1f, G1g, G1h]
+      own: [G1n]
+    misconceptions:
+      - id: MC-P10-021
+        when: { item: G1g, bucket: yoga }
+        feedback:
+          en: "Spinning is the full class. Putting \"Full\" under Yoga would stop Rana booking a class that has space."
+          ar: "السبينينغ هي الحصة المكتملة. وضع «مكتمل» تحت اليوغا سيمنع رنا من حجز حصة فيها أماكن."
+    explain:
+      en: "Each class gets its own name, time and coach, availability, and button. The invite offer belongs to neither class."
+      ar: "لكل حصة اسمها ووقتها ومدرّبها وتوفّرها وزرها. وعرض الدعوة لا ينتمي لأي من الحصتين."
+
+  - id: S03
+    type: spot
+    part: check
+    rules: [R19]
+    prompt:
+      en: "Which item looks like it belongs to the wrong class?"
+      ar: "أي عنصر يبدو كأنه ينتمي إلى الحصة الخطأ؟"
+    mock:
+      blocks:
+        - { kind: heading, text: "@G1a", region: ytitle }
+        - { kind: small, text: "@G1b", gap: l, region: ytime }
+        - { kind: chip, text: "@G1c", gap: xs, region: yspots }
+        - { kind: button, emphasis: low, text: "@G1d", gap: s, region: ybutton }
+        - { kind: heading, text: "@G1e", gap: s, region: stitle }
+        - { kind: small, text: "@G1f", gap: l, region: stime }
+        - { kind: chip, tone: warn, text: "@G1g", gap: xs, region: sspots }
+        - { kind: button, emphasis: low, text: "@G1h", gap: s, region: sbutton }
+    regions:
+      - { id: ytime, label: "@G1b" }
+      - { id: yspots, label: "@G1c" }
+      - { id: stitle, label: "@G1e" }
+      - { id: sspots, label: "@G1g" }
+    answer: [stitle]
+    also_ok:
+      - answer: [ybutton]
+        feedback:
+          en: "Also right: the Yoga button is glued to the Spinning title."
+          ar: "صحيح أيضًا: زر اليوغا ملتصق بعنوان السبينينغ."
+    explain:
+      en: "\"Spinning\" sits tight under Book Yoga and far from its own time, so it reads as the end of the Yoga group."
+      ar: "«سبينينغ» ملاصق لزر «احجز اليوغا» وبعيد عن وقته، فيُقرأ كأنه نهاية مجموعة اليوغا."
+
+  - id: S04
+    type: tune
+    part: check
+    rules: [R19, R13]
+    prompt:
+      en: "Pick the spacing that makes the two classes easiest to tell apart."
+      ar: "اختر توزيع المسافات الذي يجعل التمييز بين الحصتين أسهل."
+    start: equal
+    options:
+      - id: equal
+        text: { en: "The same gap everywhere", ar: "المسافة نفسها في كل مكان" }
+        mock:
+          blocks:
+            - { kind: heading, text: "@G1a" }
+            - { kind: small, text: "@G1b", gap: m }
+            - { kind: chip, text: "@G1c", gap: m }
+            - { kind: button, emphasis: low, text: "@G1d", gap: m }
+            - { kind: heading, text: "@G1e", gap: m }
+            - { kind: small, text: "@G1f", gap: m }
+            - { kind: chip, tone: warn, text: "@G1g", gap: m }
+            - { kind: button, emphasis: low, text: "@G1h", gap: m }
+      - id: between
+        text: { en: "Large gaps inside each class, a small gap between", ar: "مسافات كبيرة داخل كل حصة، ومسافة صغيرة بينهما" }
+        mock:
+          blocks:
+            - { kind: heading, text: "@G1a" }
+            - { kind: small, text: "@G1b", gap: l }
+            - { kind: chip, text: "@G1c", gap: l }
+            - { kind: button, emphasis: low, text: "@G1d", gap: l }
+            - { kind: heading, text: "@G1e", gap: xs }
+            - { kind: small, text: "@G1f", gap: l }
+            - { kind: chip, tone: warn, text: "@G1g", gap: l }
+            - { kind: button, emphasis: low, text: "@G1h", gap: l }
+      - id: inside
+        text: { en: "Small gaps inside each class, a large gap between", ar: "مسافات صغيرة داخل كل حصة، ومسافة كبيرة بينهما" }
+        mock:
+          blocks:
+            - { kind: heading, text: "@G1a" }
+            - { kind: small, text: "@G1b", gap: xs }
+            - { kind: chip, text: "@G1c", gap: s }
+            - { kind: button, emphasis: low, text: "@G1d", gap: s }
+            - { kind: heading, text: "@G1e", gap: xl }
+            - { kind: small, text: "@G1f", gap: xs }
+            - { kind: chip, tone: warn, text: "@G1g", gap: s }
+            - { kind: button, emphasis: low, text: "@G1h", gap: s }
+    answer: [inside]
+    explain:
+      en: "Small inside, large between: each class reads as one block, and the big gap shows where the next begins."
+      ar: "صغيرة في الداخل وكبيرة بين المجموعات: كل حصة تُقرأ ككتلة واحدة، والمسافة الكبيرة تُظهر أين تبدأ التالية."
+
+  - id: S05
+    type: compare
+    part: check
+    rules: [R19, R11]
+    prompt:
+      en: "Two phone versions. Which one keeps each class intact?"
+      ar: "نسختان للهاتف. أيّهما تحافظ على كل حصة سليمة؟"
+    a:
+      mock:
+        blocks:
+          - kind: group
+            blocks:
+              - { kind: heading, text: "@G1a" }
+              - { kind: small, text: "@G1b", gap: xs }
+              - { kind: chip, text: "@G1c", gap: s }
+              - { kind: button, emphasis: low, text: "@G1d", gap: s }
+          - kind: group
+            gap: m
+            blocks:
+              - { kind: heading, text: "@G1e" }
+              - { kind: small, text: "@G1f", gap: xs }
+              - { kind: chip, tone: warn, text: "@G1g", gap: s }
+              - { kind: button, emphasis: low, text: "@G1h", gap: s }
+    b:
+      mock:
+        blocks:
+          - { kind: heading, text: "@G1a" }
+          - { kind: heading, text: "@G1e", gap: xs }
+          - { kind: small, text: "@G1b", gap: m }
+          - { kind: small, text: "@G1f", gap: xs }
+          - { kind: chip, text: "@G1c", gap: m }
+          - { kind: chip, tone: warn, text: "@G1g", gap: xs }
+          - { kind: button, emphasis: low, text: "@G1d", gap: m }
+          - { kind: button, emphasis: low, text: "@G1h", gap: s }
+    answer: a
+    explain:
+      en: "A stacks each whole class. B stacks the desktop rows, so Rana has to pair names, times and availability herself."
+      ar: "A ترتّب كل حصة كاملة. أما B فترتّب صفوف الحاسوب، فعلى رنا أن تطابق الأسماء والأوقات والتوفّر بنفسها."
+
+  - id: S06
+    type: choose
+    part: check
+    rules: [R19, U29]
+    prompt:
+      en: "Rana's friend uses a screen reader. What keeps the two classes clear when the page is read aloud?"
+      ar: "صديقة رنا تستخدم قارئ الشاشة. ما الذي يبقي الحصتين واضحتين عند قراءة الصفحة بصوت عالٍ؟"
+    options:
+      - { id: border, text: { en: "A colored border around each class", ar: "إطار ملوّن حول كل حصة" } }
+      - { id: heading, text: { en: "A heading for each class, with its details following in order", ar: "عنوان لكل حصة، تليه تفاصيلها بالترتيب" } }
+      - { id: gap, text: { en: "A bigger gap between the classes", ar: "مسافة أكبر بين الحصتين" } }
+    answer: [heading]
+    explain:
+      en: "A screen reader announces headings and reads in order; it doesn't see borders or gaps."
+      ar: "قارئ الشاشة ينطق العناوين ويقرأ بالترتيب؛ ولا يرى الحدود ولا المسافات."
+
+  - id: S07
+    type: order
+    part: check
+    rules: [R09, R19]
+    prompt:
+      en: "Inside the Yoga card, put these in the order Rana should meet them."
+      ar: "داخل بطاقة اليوغا، رتّب هذه بالترتيب الذي يجب أن تراها به رنا."
+    items:
+      - { id: G1d, text: "@G1d" }
+      - { id: G1c, text: "@G1c" }
+      - { id: G1a, text: "@G1a" }
+      - { id: G1b, text: "@G1b" }
+    answer: [G1a, G1b, G1c, G1d]
+    also_ok:
+      - { answer: [G1a, G1c, G1b, G1d], feedback: { en: "Also fine: availability before the time.", ar: "مقبول أيضًا: التوفّر قبل الوقت." } }
+      - { answer: [G1b, G1a, G1c, G1d], feedback: { en: "Also fine: time first, name right next to it.", ar: "مقبول أيضًا: الوقت أولًا والاسم بجانبه." } }
+    explain:
+      en: "From Unit 1: the facts Rana decides with come before the button. Grouping keeps them together; ordering puts the decision first."
+      ar: "من الوحدة 1: الحقائق التي تقرّر بها رنا تأتي قبل الزر. التجميع يبقيها معًا، والترتيب يضع القرار أولًا."

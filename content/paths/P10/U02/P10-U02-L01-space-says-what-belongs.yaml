@@ -1,0 +1,362 @@
+id: P10-U02-L01
+mode: lesson
+minutes: 8
+title:
+  en: "Space says what belongs together"
+  ar: "المسافة تقول ما ينتمي معًا"
+review_labels:
+  MC-P10-020: { en: "Less space inside a group, more between groups", ar: "مسافة أقل داخل المجموعة، وأكثر بين المجموعات" }
+  MC-P10-021: { en: "A fact grouped with the wrong item", ar: "حقيقة مجمّعة مع العنصر الخطأ" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Two workshops, one page", ar: "ورشتان في صفحة واحدة" }
+    body:
+      en: "The workshop page now lists two sessions. Every line has the same gap above it.\n\nSara wants the cheaper one. Can she tell, at a glance, which price and which button belong to which workshop?"
+      ar: "أصبحت صفحة الورش تعرض جلستين. وكل سطر فوقه المسافة نفسها.\n\nتريد سارة الأرخص. هل تستطيع أن تعرف بنظرة سريعة أي سعر وأي زر يخص كل ورشة؟"
+    mock:
+      blocks:
+        - { kind: heading, text: "@W2a" }
+        - { kind: text, text: "@W2b", gap: m }
+        - { kind: meta, text: "@W2c", gap: m }
+        - { kind: button, emphasis: low, text: "@W2d", gap: m }
+        - { kind: heading, text: "@W2e", gap: m }
+        - { kind: text, text: "@W2f", gap: m }
+        - { kind: meta, text: "@W2g", gap: m }
+        - { kind: button, emphasis: low, text: "@W2h", gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "Someone changed the spacing. Which button reserves \"Design Your First Service\"?"
+      ar: "غيّر أحدهم المسافات. أي زر يحجز «صمّم أول خدمة لك»؟"
+    mock: &misleading
+      blocks:
+        - { kind: heading, text: "@W2a", region: atitle }
+        - { kind: text, text: "@W2b", gap: l, region: adate }
+        - { kind: meta, text: "@W2c", gap: xs, region: aprice }
+        - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: s, region: abutton }
+        - { kind: heading, text: "@W2e", gap: s, region: btitle }
+        - { kind: text, text: "@W2f", gap: l, region: bdate }
+        - { kind: meta, text: "@W2g", gap: xs, region: bprice }
+        - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: s, region: bbutton }
+    options:
+      - { id: first, text: { en: "The first Reserve button", ar: "زر «احجز» الأول" } }
+      - { id: second, text: { en: "The second Reserve button", ar: "زر «احجز» الثاني" } }
+      - { id: unsure, text: { en: "I can't tell", ar: "لا أستطيع أن أعرف" } }
+    reveal:
+      en: "It's the second one, but the layout makes that hard to see. The first button sits right on top of the second title, as if they were a pair. Spacing told you something the content didn't mean."
+      ar: "إنه الزر الثاني، لكن التخطيط يجعل ذلك صعب الرؤية. الزر الأول ملاصق للعنوان الثاني كأنهما زوج. المسافات أخبرتك بشيء لا يقصده المحتوى."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Close means together", ar: "القريب يعني معًا" }
+    body:
+      en: "People read things that sit close together as one group. This is called **proximity**.\n\nSo spacing carries meaning. A simple test: is the space inside each group smaller than the space between groups? If not, items drift toward the wrong neighbor.\n\nThere's no magic number. What matters is the relationship between the two gaps."
+      ar: "يقرأ الناس الأشياء المتقاربة على أنها مجموعة واحدة. يُسمّى هذا **التقارب (proximity)**.\n\nلذلك تحمل المسافات معنى. اختبار بسيط: هل المسافة داخل كل مجموعة أصغر من المسافة بين المجموعات؟ إن لم تكن كذلك، تميل العناصر نحو الجار الخطأ.\n\nلا يوجد رقم سحري. المهم هو العلاقة بين المسافتين."
+
+  - id: S04
+    type: spot
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "In the layout from before, which item looks like it belongs to the wrong session?"
+      ar: "في التخطيط السابق، أي عنصر يبدو كأنه ينتمي إلى الجلسة الخطأ؟"
+    mock: *misleading
+    regions:
+      - { id: atitle, label: "@W2a" }
+      - { id: adate, label: "@W2b" }
+      - { id: abutton, label: { en: "The first Reserve button", ar: "زر «احجز» الأول" } }
+      - { id: btitle, label: "@W2e" }
+      - { id: bprice, label: "@W2g" }
+    answer: [btitle]
+    also_ok:
+      - answer: [abutton]
+        feedback:
+          en: "Yes, that's the same problem seen from the other side: the first button is glued to the second title, so they look like a pair."
+          ar: "نعم، هذه المشكلة نفسها من الجهة الأخرى: الزر الأول ملتصق بالعنوان الثاني، فيبدوان زوجًا."
+    misconceptions:
+      - id: MC-P10-022
+        when: [bprice]
+        feedback:
+          en: "The price sits tight under its own date, so it reads as part of the second session. Look for something that's closer to the other session than to its own."
+          ar: "السعر ملاصق لتاريخه، فيُقرأ كجزء من الجلسة الثانية. ابحث عن شيء أقرب إلى الجلسة الأخرى منه إلى جلسته."
+    hints:
+      - { en: "Find the smallest gap on the screen. What two things does it join?", ar: "ابحث عن أصغر مسافة في الشاشة. ما الشيئان اللذان تربطهما؟" }
+    correct:
+      en: "The second title is tight under the first button and far from its own date, so it reads as the end of the first session."
+      ar: "العنوان الثاني ملاصق للزر الأول وبعيد عن تاريخه، فيُقرأ كأنه نهاية الجلسة الأولى."
+    explain:
+      en: "Each title is separated from its own details by a big gap, and joined to the previous session by a small one. The groups are drawn in the wrong places."
+      ar: "كل عنوان مفصول عن تفاصيله بمسافة كبيرة، وموصول بالجلسة السابقة بمسافة صغيرة. المجموعات مرسومة في الأماكن الخطأ."
+
+  - id: S05
+    type: tune
+    part: guided
+    confidence: true
+    rules: [R13, R06]
+    prompt:
+      en: "Try each spacing. Which one makes the two sessions easiest to tell apart?"
+      ar: "جرّب كل توزيع للمسافات. أيّها يجعل التمييز بين الجلستين أسهل؟"
+    start: equal
+    options:
+      - id: equal
+        text: { en: "The same gap everywhere", ar: "المسافة نفسها في كل مكان" }
+        mock:
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, text: "@W2b", gap: m }
+            - { kind: meta, text: "@W2c", gap: m }
+            - { kind: button, emphasis: low, text: "@W2d", gap: m }
+            - { kind: heading, text: "@W2e", gap: m }
+            - { kind: text, text: "@W2f", gap: m }
+            - { kind: meta, text: "@W2g", gap: m }
+            - { kind: button, emphasis: low, text: "@W2h", gap: m }
+      - id: inside
+        text: { en: "Small gaps inside each session, a large gap between them", ar: "مسافات صغيرة داخل كل جلسة، ومسافة كبيرة بينهما" }
+        mock:
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, text: "@W2b", gap: xs }
+            - { kind: meta, text: "@W2c", gap: xs }
+            - { kind: button, emphasis: low, text: "@W2d", gap: s }
+            - { kind: heading, text: "@W2e", gap: xl }
+            - { kind: text, text: "@W2f", gap: xs }
+            - { kind: meta, text: "@W2g", gap: xs }
+            - { kind: button, emphasis: low, text: "@W2h", gap: s }
+      - id: between
+        text: { en: "Large gaps inside each session, a small gap between them", ar: "مسافات كبيرة داخل كل جلسة، ومسافة صغيرة بينهما" }
+        mock:
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, text: "@W2b", gap: l }
+            - { kind: meta, text: "@W2c", gap: l }
+            - { kind: button, emphasis: low, text: "@W2d", gap: l }
+            - { kind: heading, text: "@W2e", gap: xs }
+            - { kind: text, text: "@W2f", gap: l }
+            - { kind: meta, text: "@W2g", gap: l }
+            - { kind: button, emphasis: low, text: "@W2h", gap: l }
+    answer: [inside]
+    misconceptions:
+      - id: MC-P10-020
+        when: [equal]
+        feedback:
+          en: "With equal gaps, the page is one long list. Nothing tells Sara where one session ends and the next begins."
+          ar: "مع تساوي المسافات تصبح الصفحة قائمة طويلة واحدة. لا شيء يخبر سارة أين تنتهي جلسة وتبدأ الأخرى."
+      - id: MC-P10-021
+        when: [between]
+        feedback:
+          en: "Look at the preview: the first button now hugs the second title. Bigger gaps inside a group push its own items apart."
+          ar: "انظر إلى المعاينة: الزر الأول الآن ملتصق بالعنوان الثاني. المسافات الكبيرة داخل المجموعة تباعد بين عناصرها."
+    correct:
+      en: "Each session now reads as one block, and the big gap marks where the next one starts."
+      ar: "كل جلسة الآن تُقرأ ككتلة واحدة، والمسافة الكبيرة تحدّد أين تبدأ الجلسة التالية."
+    explain:
+      en: "Small inside, large between. The exact pixels are a design choice; the relationship between the two gaps is what does the work."
+      ar: "صغيرة في الداخل، كبيرة بين المجموعات. عدد البكسلات بالضبط اختيار تصميمي؛ العلاقة بين المسافتين هي التي تؤدّي المهمة."
+
+  - id: S06
+    type: sort
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "Put each item in the group it belongs to."
+      ar: "ضع كل عنصر في المجموعة التي ينتمي إليها."
+    items:
+      - { id: W2a, text: "@W2a" }
+      - { id: W2g, text: "@W2g" }
+      - { id: W2b, text: "@W2b" }
+      - { id: W2n, text: "@W2n" }
+      - { id: W2h, text: "@W2h" }
+      - { id: W2e, text: "@W2e" }
+      - { id: W2c, text: "@W2c" }
+      - { id: W2f, text: "@W2f" }
+      - { id: W2d, text: "@W2d" }
+    buckets:
+      - { id: a, label: { en: "Sketch session", ar: "جلسة «ارسم»" } }
+      - { id: b, label: { en: "Service session", ar: "جلسة «صمّم»" } }
+      - { id: n, label: { en: "On its own", ar: "منفصل" } }
+    answer:
+      a: [W2a, W2b, W2c, W2d]
+      b: [W2e, W2f, W2g, W2h]
+      n: [W2n]
+    misconceptions:
+      - id: MC-P10-021
+        when: { item: W2g, bucket: a }
+        feedback:
+          en: "EGP 120 is the price of the Service session. If it sits in the Sketch group, Sara will think the free workshop costs money. Check the facts before the spacing."
+          ar: "120 جنيهًا هو سعر جلسة «صمّم». إذا وُضع في مجموعة «ارسم»، ستظن سارة أن الورشة المجانية مدفوعة. تحقّق من الحقائق قبل المسافات."
+      - id: MC-P10-023
+        when: { item: W2n, bucket: b }
+        feedback:
+          en: "The monthly updates aren't part of either booking. Keep them apart so nobody thinks they're required to reserve."
+          ar: "التحديثات الشهرية ليست جزءًا من أي حجز. أبقها منفصلة حتى لا يظن أحد أنها مطلوبة للحجز."
+    hints:
+      - { en: "Read each session as one story: what, when, how much, reserve.", ar: "اقرأ كل جلسة كقصة واحدة: ماذا، متى، بكم، احجز." }
+      - { en: "Which title does EGP 120 belong to?", ar: "إلى أي عنوان ينتمي سعر 120 جنيهًا؟" }
+    correct:
+      en: "Each session holds its own four facts, and the updates stand apart."
+      ar: "كل جلسة تضم حقائقها الأربع، والتحديثات منفصلة."
+    explain:
+      en: "Grouping starts with the content: which facts describe the same thing? Only then do spacing and containers show it. A price in the wrong group is a factual error, not a style issue."
+      ar: "التجميع يبدأ بالمحتوى: أي الحقائق تصف الشيء نفسه؟ بعدها فقط تُظهر المسافات والحاويات ذلك. السعر في المجموعة الخطأ خطأ في الحقائق، لا مسألة أسلوب."
+
+  - id: S07
+    type: compare
+    part: contrast
+    rules: [R11, R15]
+    prompt:
+      en: "Which version makes the two bookings clearer?"
+      ar: "أي نسخة تجعل الحجزين أوضح؟"
+    a:
+      mock:
+        blocks:
+          - kind: group
+            blocks:
+              - { kind: heading, text: "@W2a" }
+              - { kind: text, text: "@W2b", gap: xs }
+              - { kind: meta, text: "@W2c", gap: xs }
+              - { kind: button, emphasis: low, text: "@W2d", gap: s }
+          - kind: group
+            gap: m
+            blocks:
+              - { kind: heading, text: "@W2e" }
+              - { kind: text, text: "@W2f", gap: xs }
+              - { kind: meta, text: "@W2g", gap: xs }
+              - { kind: button, emphasis: low, text: "@W2h", gap: s }
+    b:
+      mock:
+        blocks:
+          - kind: group
+            blocks:
+              - { kind: line, text: "@W2a" }
+              - { kind: line, text: "@W2b", gap: s }
+              - { kind: line, text: "@W2c", gap: s }
+              - { kind: line, text: "@W2d", gap: s }
+              - { kind: line, text: "@W2e", gap: s }
+              - { kind: line, text: "@W2f", gap: s }
+              - { kind: line, text: "@W2g", gap: s }
+              - { kind: line, text: "@W2h", gap: s }
+    answer: a
+    reason:
+      prompt: { en: "What makes the difference?", ar: "ما الذي يصنع الفرق؟" }
+      options:
+        - { id: whole, text: { en: "Each container holds one complete booking", ar: "كل حاوية تضم حجزًا كاملًا واحدًا" } }
+        - { id: more, text: { en: "It has fewer borders", ar: "فيها حدود أقل" } }
+        - { id: lines, text: { en: "Boxing every line adds structure", ar: "وضع إطار لكل سطر يضيف تنظيمًا" } }
+      answer: [whole]
+      misconceptions:
+        - id: MC-P10-024
+          when: [lines]
+          feedback:
+            en: "A box around every line makes eight equal groups. The borders are there, but they don't say which lines go together."
+            ar: "إطار حول كل سطر يصنع ثماني مجموعات متساوية. الحدود موجودة، لكنها لا تقول أي الأسطر تنتمي معًا."
+        - id: MC-P10-024
+          when: [more]
+          feedback:
+            en: "Fewer borders helps, but that's not the reason. What matters is what each border surrounds."
+            ar: "تقليل الحدود يساعد، لكنه ليس السبب. المهم هو ما يحيط به كل إطار."
+    misconceptions:
+      - id: MC-P10-024
+        when: [b]
+        feedback:
+          en: "B has more borders, but they wrap single lines. Nothing shows that a price belongs to a title."
+          ar: "في B حدود أكثر، لكنها تحيط بأسطر منفردة. لا شيء يُظهر أن السعر ينتمي إلى عنوان."
+    correct:
+      en: "One container per booking; spacing does the rest inside."
+      ar: "حاوية واحدة لكل حجز؛ والمسافات تتولّى الباقي في الداخل."
+    explain:
+      en: "A border groups what it surrounds. Around a whole booking it says \"these belong together\". Around every line it only says \"this is a line\"."
+      ar: "الإطار يجمع ما يحيط به. حول حجز كامل يقول «هذه تنتمي معًا». وحول كل سطر يقول فقط «هذا سطر»."
+
+  - id: S08
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R14, R19]
+    scenario:
+      en: "Omar's shopping cart has two products. Both Remove buttons sit together in one row at the bottom."
+      ar: "في سلة تسوّق عمر منتجان. وزرّا «إزالة» موضوعان معًا في صف واحد في الأسفل."
+    prompt:
+      en: "What's the main problem?"
+      ar: "ما المشكلة الأساسية؟"
+    mock:
+      blocks:
+        - { kind: heading, text: "@K1a" }
+        - { kind: small, text: "@K1b", gap: xs }
+        - { kind: heading, text: "@K1c", gap: l }
+        - { kind: small, text: "@K1d", gap: xs }
+        - kind: row
+          gap: l
+          blocks:
+            - { kind: button, emphasis: low, text: "@K1r" }
+            - { kind: button, emphasis: low, text: "@K1r" }
+    options:
+      - { id: owner, text: { en: "Each Remove isn't next to its product, so it's unclear which one it removes", ar: "كل زر «إزالة» ليس بجانب منتجه، فلا يتضح أي منتج سيزيله" } }
+      - { id: small, text: { en: "The buttons are too small", ar: "الأزرار صغيرة جدًا" } }
+      - { id: red, text: { en: "Remove should be red", ar: "يجب أن يكون زر الإزالة أحمر" } }
+      - { id: fine, text: { en: "Nothing, it's a common pattern", ar: "لا شيء، هذا نمط شائع" } }
+    answer: [owner]
+    misconceptions:
+      - id: MC-P10-025
+        when: [red, small]
+        feedback:
+          en: "Color or size won't tell Omar which product each button removes. The button has left its group."
+          ar: "اللون أو الحجم لن يخبر عمر أي منتج يزيله كل زر. الزر خرج من مجموعته."
+      - id: MC-P10-021
+        when: [fine]
+        feedback:
+          en: "Omar could easily remove the wrong product. Actions belong inside the group they act on."
+          ar: "قد يزيل عمر المنتج الخطأ بسهولة. الإجراءات تنتمي إلى داخل المجموعة التي تعمل عليها."
+    correct:
+      en: "An action belongs with the thing it acts on."
+      ar: "الإجراء ينتمي إلى الشيء الذي يعمل عليه."
+    explain:
+      en: "It's the same problem as the shared Reserve row: two identical actions, separated from what they affect. Put each Remove inside its product's group."
+      ar: "إنها المشكلة نفسها في صف أزرار «احجز» المشترك: إجراءان متطابقان، مفصولان عمّا يؤثّران فيه. ضع كل زر «إزالة» داخل مجموعة منتجه."
+
+  - id: S09
+    type: choose
+    part: independent
+    recall: S02
+    rules: [R21, R14]
+    prompt:
+      en: "Back to the misleading layout from the start. What would you change first?"
+      ar: "عودة إلى التخطيط المضلّل من البداية. ما أول شيء ستغيّره؟"
+    mock: *misleading
+    options:
+      - { id: gaps, text: { en: "Make the gap between sessions bigger than the gaps inside them", ar: "اجعل المسافة بين الجلستين أكبر من المسافات داخلهما" } }
+      - { id: borders, text: { en: "Put a border around every line", ar: "ضع إطارًا حول كل سطر" } }
+      - { id: colors, text: { en: "Give each button a different color", ar: "أعطِ كل زر لونًا مختلفًا" } }
+      - { id: bold, text: { en: "Make the titles bolder", ar: "اجعل العناوين أعرض خطًا" } }
+    answer: [gaps]
+    misconceptions:
+      - id: MC-P10-024
+        when: [borders]
+        feedback:
+          en: "Boxing each line creates eight separate groups. The fix is to make the two real groups visible."
+          ar: "وضع إطار لكل سطر يصنع ثماني مجموعات منفصلة. الحل هو إظهار المجموعتين الحقيقيتين."
+      - id: MC-P10-025
+        when: [colors, bold]
+        feedback:
+          en: "That changes how things look, not what they group with. The first button would still hug the second title."
+          ar: "هذا يغيّر الشكل، لا التجميع. سيبقى الزر الأول ملتصقًا بالعنوان الثاني."
+    correct:
+      en: "Fix the gaps and the groups appear on their own."
+      ar: "أصلح المسافات وستظهر المجموعات وحدها."
+    explain:
+      en: "The content was always in the right order. Only the spacing was wrong, so the spacing is the fix."
+      ar: "المحتوى كان دائمًا بالترتيب الصحيح. المسافات فقط كانت خاطئة، لذلك فهي الحل."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What you did", ar: "ما أنجزته" }
+    body:
+      en: "You used spacing to show what belongs together: small gaps inside a group, a bigger gap between groups. You kept each price and action with its own session, and spotted the same problem in a shopping cart.\n\nNext: containers, headings, and cues that mislead."
+      ar: "استخدمت المسافات لإظهار ما ينتمي معًا: مسافات صغيرة داخل المجموعة، ومسافة أكبر بين المجموعات. أبقيت كل سعر وإجراء مع جلسته، ولاحظت المشكلة نفسها في سلة تسوّق.\n\nالتالي: الحاويات والعناوين والإشارات المضلّلة."

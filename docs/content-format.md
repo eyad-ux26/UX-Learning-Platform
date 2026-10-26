@@ -82,12 +82,12 @@ mock:
     - { kind: button, text: "@W1f", gap: m, region: button }
 ```
 
-| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `button`, `link`, `image`, `banner`, `field`, `divider`, `group`, `row` |
+| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `field`, `divider`, `group`, `row` |
 | --- | --- |
-| `gap` | Space above the block: `s`, `m`, `l` |
+| `gap` | Space above the block: `xs` (none), `s`, `m`, `l`, `xl` |
 | `size` | `s`, `m`, `l`, `xl` (images: height) |
 | `emphasis` | `high` or `low` |
-| `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text) |
+| `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text), `plain` or `tint` (group) |
 | `region` | Makes the block tappable in a `spot` step |
 | `field` | Has `label`, `text`, optional `hint` and `error` |
 
