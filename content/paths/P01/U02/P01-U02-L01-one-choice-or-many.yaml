@@ -1,0 +1,261 @@
+id: P01-U02-L01
+mode: lesson
+minutes: 8
+title:
+  en: "One choice or many?"
+  ar: "اختيار واحد أم عدة اختيارات؟"
+review_labels:
+  MC-P01-009: { en: "Exactly one: radio buttons. Any number: checkboxes", ar: "واحد بالضبط: أزرار راديو. أي عدد: مربعات اختيار" }
+  MC-P01-010: { en: "A dropdown hides a short list", ar: "القائمة المنسدلة تخفي القائمة القصيرة" }
+  MC-P01-011: { en: "A single agreement is one checkbox", ar: "الموافقة الواحدة مربع اختيار واحد" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Nour books a doctor", ar: "نور تحجز عند طبيب" }
+    body:
+      en: "Nour is booking a check-up. She wants a video call, and reminders by both SMS and WhatsApp, because she misses one or the other.\n\nThe form lets her tick both visit types, but only pick one reminder."
+      ar: "تحجز نور موعد فحص. تريد مكالمة فيديو، وتذكيرات عبر الرسائل النصية وواتساب معًا، لأنها تفوّت أحدهما أحيانًا.\n\nالنموذج يسمح لها بتحديد نوعي الزيارة معًا، لكن باختيار تذكير واحد فقط."
+    mock:
+      blocks:
+        - { kind: title, text: "@F5a" }
+        - { kind: heading, text: "@F5type", gap: m }
+        - { kind: check, selected: true, text: "@F5clinic", gap: xs }
+        - { kind: check, selected: true, text: "@F5video", gap: xs }
+        - { kind: select, label: "@F5remind", text: "@F5sms", filled: true, gap: m }
+        - { kind: button, text: "@F5btn", gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "Visit type uses checkboxes and reminders use radio buttons. Which is set up wrong?"
+      ar: "نوع الزيارة يستخدم مربعات اختيار، والتذكيرات تستخدم أزرار راديو. أيّهما مُعدّ بشكل خاطئ؟"
+    options:
+      - { id: type, text: { en: "Visit type lets her pick both", ar: "نوع الزيارة يسمح باختيار الاثنين" } }
+      - { id: remind, text: { en: "Reminders only allow one", ar: "التذكيرات تسمح بواحد فقط" } }
+      - { id: both, text: { en: "Both are the wrong way round", ar: "الاثنان معكوسان" } }
+    reveal:
+      en: "Both. A visit is either at the clinic or by video, never both. Reminders can come any number of ways. Each control promises a rule, and here the rules are swapped."
+      ar: "الاثنان. الزيارة إما في العيادة أو بالفيديو، لا الاثنان معًا. أما التذكيرات فيمكن أن تأتي بأي عدد من الطرق. كل عنصر تحكّم يَعِد بقاعدة، وهنا القاعدتان معكوستان."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "The control is a promise about the answer", ar: "عنصر التحكّم وعدٌ بشكل الإجابة" }
+    body:
+      en: "Before choosing a control, ask: **how many answers can be true at once?**\n\n- **Exactly one:** radio buttons. All options visible, picking one clears the other.\n- **Any number, including none:** checkboxes.\n- **One yes-or-no statement**, like agreeing to a policy: a single checkbox.\n\nA dropdown is a space saver, not a rule. It hides the options until opened, so it's a poor fit for two or three choices people should compare at a glance. Save it for long lists, which is the next lesson."
+      ar: "قبل اختيار عنصر التحكّم، اسأل: **كم إجابة يمكن أن تكون صحيحة في الوقت نفسه؟**\n\n- **واحدة بالضبط:** أزرار راديو. كل الخيارات ظاهرة، واختيار واحد يُلغي الآخر.\n- **أي عدد، بما في ذلك لا شيء:** مربعات اختيار.\n- **عبارة واحدة بنعم أو لا**، مثل الموافقة على سياسة: مربع اختيار واحد.\n\nالقائمة المنسدلة توفّر المساحة، لكنها ليست قاعدة. فهي تخفي الخيارات حتى تُفتح، لذا لا تناسب خيارين أو ثلاثة يجب أن يقارنها الناس بنظرة. احتفظ بها للقوائم الطويلة، وهذا موضوع الدرس التالي."
+
+  - id: S04
+    type: sort
+    part: guided
+    confidence: true
+    rules: [R06, R15, U39]
+    prompt:
+      en: "Radio buttons or checkboxes?"
+      ar: "أزرار راديو أم مربعات اختيار؟"
+    items:
+      - { id: type, text: "@F5type" }
+      - { id: remind, text: "@F5remind" }
+      - { id: pay, text: { en: "Pay with", ar: "الدفع عبر" } }
+      - { id: days, text: { en: "Days you're free", ar: "الأيام التي تناسبك" } }
+      - { id: who, text: { en: "Who is the appointment for? Me / Someone else", ar: "لمن الموعد؟ لي / لشخص آخر" } }
+    buckets:
+      - { id: radio, label: { en: "Radio buttons (exactly one)", ar: "أزرار راديو (واحد بالضبط)" } }
+      - { id: check, label: { en: "Checkboxes (any number)", ar: "مربعات اختيار (أي عدد)" } }
+    answer:
+      radio: [type, pay, who]
+      check: [remind, days]
+    misconceptions:
+      - id: MC-P01-009
+        when: { item: days, bucket: radio }
+        feedback:
+          en: "Nour might be free on Sunday and Tuesday. Picking one day would hide the other options the clinic could offer."
+          ar: "قد تكون نور متفرّغة يومي الأحد والثلاثاء. واختيار يوم واحد يخفي خيارات أخرى يمكن للعيادة أن تعرضها."
+      - id: MC-P01-009
+        when: { item: pay, bucket: check }
+        feedback:
+          en: "One appointment is paid one way. Radio buttons make that clear."
+          ar: "الموعد الواحد يُدفع بطريقة واحدة. وأزرار الراديو توضّح ذلك."
+    hints:
+      - { en: "For each one, could two answers be true at the same time?", ar: "لكلٍّ منها: هل يمكن أن تكون إجابتان صحيحتين في الوقت نفسه؟" }
+    correct:
+      en: "If only one can be true, radio buttons. If several can, checkboxes."
+      ar: "إذا كانت إجابة واحدة فقط صحيحة، فأزرار راديو. وإذا كانت عدة إجابات، فمربعات اختيار."
+    explain:
+      en: "Get this right and the form itself prevents impossible answers, like a visit that's both in person and by video."
+      ar: "إذا أصبت هنا، يمنع النموذج نفسه الإجابات المستحيلة، مثل زيارة حضورية وبالفيديو معًا."
+
+  - id: S05
+    type: compare
+    part: guided
+    rules: [R06, U39]
+    prompt:
+      en: "Which reminder control lets Nour get what she wants?"
+      ar: "أي عنصر تحكّم للتذكير يتيح لنور ما تريده؟"
+    a:
+      mock:
+        blocks:
+          - { kind: select, label: "@F5remind", text: "@F5sms", filled: true }
+    b:
+      mock:
+        blocks:
+          - { kind: heading, text: "@F5remind" }
+          - { kind: check, selected: true, text: "@F5sms", gap: xs }
+          - { kind: check, selected: true, text: "@F5wa", gap: xs }
+          - { kind: check, text: "@F5mail", gap: xs }
+    answer: b
+    misconceptions:
+      - id: MC-P01-009
+        when: [a]
+        feedback:
+          en: "A dropdown allows one answer. Nour wants two, and she can't even see WhatsApp is an option until she opens it."
+          ar: "القائمة المنسدلة تسمح بإجابة واحدة. ونور تريد اثنتين، ولا ترى أن واتساب خيار حتى تفتحها."
+    hints:
+      - { en: "How many reminders does Nour want?", ar: "كم تذكيرًا تريد نور؟" }
+    correct:
+      en: "Checkboxes: she ticks SMS and WhatsApp and sees Email is there too."
+      ar: "مربعات الاختيار: تحدّد الرسائل النصية وواتساب وترى أن البريد متاح أيضًا."
+    explain:
+      en: "Three short options fit easily on screen. Showing them helps people choose."
+      ar: "ثلاثة خيارات قصيرة تتّسع بسهولة على الشاشة. وعرضها يساعد الناس على الاختيار."
+
+  - id: S06
+    type: choose
+    part: guided
+    rules: [R11, U39]
+    prompt:
+      en: "Visit type has two options: At the clinic, or Video call. Which control?"
+      ar: "نوع الزيارة له خياران: في العيادة، أو مكالمة فيديو. أي عنصر تحكّم؟"
+    options:
+      - { id: radio, text: { en: "Two radio buttons", ar: "زرّا راديو" } }
+      - { id: select, text: { en: "A dropdown", ar: "قائمة منسدلة" } }
+      - { id: check, text: { en: "Two checkboxes", ar: "مربعا اختيار" } }
+    answer: [radio]
+    misconceptions:
+      - id: MC-P01-010
+        when: [select]
+        feedback:
+          en: "A dropdown hides the second option behind a tap. With two choices, show both."
+          ar: "القائمة المنسدلة تخفي الخيار الثاني خلف ضغطة. مع خيارين، اعرض الاثنين."
+      - id: MC-P01-009
+        when: [check]
+        feedback:
+          en: "Checkboxes would let Nour pick both, which isn't a real visit."
+          ar: "مربعات الاختيار ستسمح لنور باختيار الاثنين، وهذه ليست زيارة حقيقية."
+    hints:
+      - { en: "One answer, and only two options. Which control shows both and allows one?", ar: "إجابة واحدة، وخياران فقط. أي عنصر يعرض الاثنين ويسمح بواحد؟" }
+    correct:
+      en: "Both options visible, only one possible."
+      ar: "الخياران ظاهران، وواحد فقط ممكن."
+    explain:
+      en: "A segmented control (two joined buttons) is also fine here; it's radio buttons in a different shape."
+      ar: "عنصر التحكّم المقسّم (زرّان متّصلان) مقبول هنا أيضًا؛ فهو أزرار راديو بشكل مختلف."
+
+  - id: S07
+    type: compare
+    part: contrast
+    rules: [R11, U39]
+    prompt:
+      en: "Nour has to agree to the cancellation policy before booking. Which control fits?"
+      ar: "يجب أن توافق نور على سياسة الإلغاء قبل الحجز. أي عنصر تحكّم يناسب؟"
+    a:
+      mock:
+        blocks:
+          - { kind: check, text: "@F5terms" }
+    b:
+      mock:
+        blocks:
+          - { kind: heading, text: { en: "Cancellation policy", ar: "سياسة الإلغاء" } }
+          - { kind: radio, text: { en: "I agree", ar: "أوافق" }, gap: xs }
+          - { kind: radio, text: { en: "I don't agree", ar: "لا أوافق" }, gap: xs }
+    answer: a
+    misconceptions:
+      - id: MC-P01-011
+        when: [b]
+        feedback:
+          en: "\"I don't agree\" isn't a real choice here; it just blocks the booking. One checkbox says exactly what's needed."
+          ar: "«لا أوافق» ليس خيارًا حقيقيًا هنا؛ هو فقط يمنع الحجز. ومربع اختيار واحد يقول المطلوب بالضبط."
+    correct:
+      en: "One statement, one checkbox."
+      ar: "عبارة واحدة، مربع اختيار واحد."
+    explain:
+      en: "Use Yes/No radio buttons when both answers are real and you need people to choose one actively, like \"Do you have insurance?\""
+      ar: "استخدم أزرار راديو نعم/لا حين تكون الإجابتان حقيقيتين وتحتاج أن يختار الناس واحدة بوعي، مثل «هل لديك تأمين؟»"
+
+  - id: S08
+    type: fix
+    part: independent
+    rules: [R07, U39]
+    prompt:
+      en: "Tamer's shawarma order shows the extras as radio buttons. He wants garlic sauce and pickles. Which fix lets him choose both?"
+      ar: "طلب شاورما تامر يعرض الإضافات كأزرار راديو. وهو يريد صوص الثوم والمخلل. أي إصلاح يسمح له باختيار الاثنين؟"
+    mock:
+      blocks:
+        - { kind: heading, text: "@F5extras" }
+        - { kind: radio, selected: true, text: "@F5garlic", gap: xs }
+        - { kind: radio, text: "@F5tahini", gap: xs }
+        - { kind: radio, text: "@F5pickles", gap: xs }
+    options:
+      - { id: check, text: { en: "Checkboxes", ar: "مربعات اختيار" } }
+      - { id: select, text: { en: "A dropdown", ar: "قائمة منسدلة" } }
+      - { id: text, text: { en: "A text field: \"Type your extras\"", ar: "حقل نص: «اكتب إضافاتك»" } }
+    answer: [check]
+    misconceptions:
+      - id: MC-P01-009
+        when: [select]
+        feedback:
+          en: "A dropdown still allows only one, and hides the options."
+          ar: "القائمة المنسدلة ما زالت تسمح بواحد فقط، وتخفي الخيارات."
+      - id: MC-P01-008
+        when: [text]
+        feedback:
+          en: "Typing turns a tap into a spelling test, and the kitchen gets \"garlik\". The options are known; let him pick."
+          ar: "الكتابة تحوّل الضغطة إلى اختبار إملاء، ويصل للمطبخ «توم». الخيارات معروفة؛ دعه يختار."
+    hints:
+      - { en: "How many extras can one sandwich have?", ar: "كم إضافة يمكن أن تكون في الساندويتش الواحد؟" }
+    correct:
+      en: "Any number of extras, including none: checkboxes."
+      ar: "أي عدد من الإضافات، بما فيها لا شيء: مربعات اختيار."
+    explain:
+      en: "\"Including none\" matters. Checkboxes let Tamer skip extras completely; radio buttons can't go back to nothing once picked."
+      ar: "«بما فيها لا شيء» مهمة. مربعات الاختيار تسمح لتامر بتخطّي الإضافات تمامًا؛ أما أزرار الراديو فلا تعود إلى لا شيء بعد الاختيار."
+
+  - id: S09
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R07, U39]
+    prompt:
+      en: "Which question decides between radio buttons and checkboxes?"
+      ar: "أي سؤال يحسم الاختيار بين أزرار الراديو ومربعات الاختيار؟"
+    options:
+      - { id: atonce, text: { en: "How many answers can be true at once?", ar: "كم إجابة يمكن أن تكون صحيحة في الوقت نفسه؟" } }
+      - { id: count, text: { en: "How many options are there?", ar: "كم عدد الخيارات؟" } }
+      - { id: look, text: { en: "Which looks cleaner?", ar: "أيّها يبدو أنظف؟" } }
+    answer: [atonce]
+    misconceptions:
+      - id: MC-P01-010
+        when: [count]
+        feedback:
+          en: "The number of options decides whether to show or hide them. Whether one or many can be picked depends on the answer itself."
+          ar: "عدد الخيارات يحدّد عرضها أو إخفاءها. أما اختيار واحد أو عدة فيعتمد على الإجابة نفسها."
+    hints:
+      - { en: "Think about Nour's reminders: three options, but how many could she want?", ar: "فكّر في تذكيرات نور: ثلاثة خيارات، لكن كم قد تريد؟" }
+    correct:
+      en: "One true answer or many decides the control."
+      ar: "إجابة صحيحة واحدة أم عدة: هذا ما يحدّد عنصر التحكّم."
+    explain:
+      en: "Option count matters for the next question: show the list, or let people search it."
+      ar: "عدد الخيارات مهم للسؤال التالي: هل تعرض القائمة، أم تتيح البحث فيها."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    body:
+      en: "- Ask how many answers can be true at once.\n- Exactly one: radio buttons. Any number, including none: checkboxes.\n- A single agreement: one checkbox.\n- Don't hide two or three options in a dropdown.\n\nNext: when to let people type, and when to let them pick."
+      ar: "- اسأل كم إجابة يمكن أن تكون صحيحة في الوقت نفسه.\n- واحدة بالضبط: أزرار راديو. أي عدد، بما فيها لا شيء: مربعات اختيار.\n- موافقة واحدة: مربع اختيار واحد.\n- لا تُخفِ خيارين أو ثلاثة في قائمة منسدلة.\n\nالدرس التالي: متى تدع الناس يكتبون، ومتى تدعهم يختارون."

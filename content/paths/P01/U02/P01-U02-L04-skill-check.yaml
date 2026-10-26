@@ -1,0 +1,229 @@
+id: P01-U02-L04
+mode: check
+minutes: 6
+title:
+  en: "Skill check: pick the right control"
+  ar: "اختبار المهارة: اختر عنصر التحكّم المناسب"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Laila's home cleaning booking", ar: "حجز تنظيف منزل ليلى" }
+    body:
+      en: "Laila lives in a 2-room flat in Heliopolis. She wants a cleaning with ironing and windows, on a day the company has a free team. The booking form looks like this.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "تعيش ليلى في شقة من غرفتين في مصر الجديدة. وتريد تنظيفًا مع كيّ الملابس والنوافذ، في يوم فيه فريق متاح لدى الشركة. ونموذج الحجز يبدو هكذا.\n\nهذا اختبار مهارة: دون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      blocks:
+        - { kind: title, text: "@F6a" }
+        - { kind: select, label: "@F6size", text: "@F6studio", filled: true, gap: m }
+        - { kind: heading, text: "@F6addons", gap: m }
+        - { kind: radio, selected: true, text: "@F6iron", gap: xs }
+        - { kind: radio, text: "@F6fridge", gap: xs }
+        - { kind: radio, text: "@F6windows", gap: xs }
+        - { kind: field, label: "@F6day", text: "@F6dayph", gap: m }
+        - { kind: select, label: "@F6area", text: "@F6nasr", filled: true, gap: s }
+        - { kind: heading, text: "@F6policy", gap: m }
+        - { kind: radio, text: "@F6yes", gap: xs }
+        - { kind: radio, text: "@F6no", gap: xs }
+        - { kind: button, text: "@F6btn", gap: m }
+
+  - id: S02
+    type: spot
+    part: check
+    rules: [R07, U39]
+    prompt:
+      en: "Which part stops Laila from booking both ironing and windows?"
+      ar: "أي جزء يمنع ليلى من حجز كيّ الملابس والنوافذ معًا؟"
+    mock:
+      blocks:
+        - { kind: select, label: "@F6size", text: "@F6studio", filled: true, region: size }
+        - kind: group
+          gap: m
+          region: addons
+          blocks:
+            - { kind: heading, text: "@F6addons" }
+            - { kind: radio, selected: true, text: "@F6iron", gap: xs }
+            - { kind: radio, text: "@F6fridge", gap: xs }
+            - { kind: radio, text: "@F6windows", gap: xs }
+        - { kind: field, label: "@F6day", text: "@F6dayph", gap: m, region: day }
+        - { kind: select, label: "@F6area", text: "@F6nasr", filled: true, gap: s, region: area }
+    regions:
+      - { id: size, label: "@F6size" }
+      - { id: addons, label: "@F6addons" }
+      - { id: day, label: "@F6day" }
+      - { id: area, label: "@F6area" }
+    answer: [addons]
+    misconceptions:
+      - id: MC-P01-009
+        when: [size, day, area]
+        feedback:
+          en: "That one has problems too, but it doesn't stop her choosing two add-ons. Look at the control that allows only one answer."
+          ar: "فيه مشكلة أيضًا، لكنه لا يمنعها من اختيار خدمتين إضافيتين. انظر إلى عنصر التحكّم الذي يسمح بإجابة واحدة فقط."
+    explain:
+      en: "Add-ons are radio buttons, so picking Windows clears Ironing. Any number of add-ons, including none, needs checkboxes."
+      ar: "الخدمات الإضافية أزرار راديو، فاختيار النوافذ يُلغي كيّ الملابس. وأي عدد من الإضافات، بما فيها لا شيء، يحتاج مربعات اختيار."
+
+  - id: S03
+    type: match
+    part: check
+    rules: [R07, U39]
+    prompt:
+      en: "Match each question on Laila's form to the control it needs."
+      ar: "طابق كل سؤال في نموذج ليلى مع عنصر التحكّم الذي يحتاجه."
+    left:
+      - { id: size, text: { en: "Home size (3 options, one answer)", ar: "حجم المنزل (3 خيارات، إجابة واحدة)" } }
+      - { id: addons, text: { en: "Add-ons (3 options, any number)", ar: "الخدمات الإضافية (3 خيارات، أي عدد)" } }
+      - { id: policy, text: { en: "Agreeing to the cancellation policy", ar: "الموافقة على سياسة الإلغاء" } }
+      - { id: area, text: { en: "Area (60 neighbourhoods, one answer)", ar: "المنطقة (60 حيًا، إجابة واحدة)" } }
+    right:
+      - { id: radio, text: { en: "Radio buttons", ar: "أزرار راديو" } }
+      - { id: checks, text: { en: "Checkboxes", ar: "مربعات اختيار" } }
+      - { id: one, text: { en: "One checkbox", ar: "مربع اختيار واحد" } }
+      - { id: search, text: { en: "A field you type in to filter the list", ar: "حقل تكتب فيه لتصفية القائمة" } }
+    answer: { size: radio, addons: checks, policy: one, area: search }
+    misconceptions:
+      - id: MC-P01-011
+        when: { left: policy, right: radio }
+        feedback:
+          en: "There's only one statement to agree to. Yes/No radios add a \"No\" that just blocks the booking."
+          ar: "هناك عبارة واحدة فقط للموافقة عليها. وأزرار نعم/لا تضيف «لا» لا تفعل شيئًا سوى منع الحجز."
+      - id: MC-P01-016
+        when: { left: area, right: radio }
+        feedback:
+          en: "Sixty radio buttons means a long scroll. Let Laila type \"Hel\" and pick Heliopolis."
+          ar: "ستون زر راديو يعني تمريرًا طويلًا. دع ليلى تكتب «مصر» وتختار مصر الجديدة."
+      - id: MC-P01-009
+        when: { left: addons, right: radio }
+        feedback:
+          en: "Radio buttons allow one answer. Laila wants two add-ons."
+          ar: "أزرار الراديو تسمح بإجابة واحدة. وليلى تريد خدمتين إضافيتين."
+    explain:
+      en: "One of a few: radios. Any number: checkboxes. One statement to accept: one checkbox. One of many: type to filter."
+      ar: "واحد من قليل: أزرار راديو. أي عدد: مربعات اختيار. عبارة واحدة للموافقة: مربع اختيار واحد. واحد من كثير: اكتب للتصفية."
+
+  - id: S04
+    type: choose
+    part: check
+    rules: [R06, U39]
+    prompt:
+      en: "Home size has three options. Today it's a dropdown showing \"Studio\". Which control shows Laila all three options without opening anything?"
+      ar: "حجم المنزل له ثلاثة خيارات. وهو الآن قائمة منسدلة تعرض «استوديو». أي عنصر تحكّم يعرض لليلى الخيارات الثلاثة دون أن تفتح شيئًا؟"
+    options:
+      - { id: radio, text: { en: "Radio buttons", ar: "أزرار راديو" } }
+      - { id: select, text: { en: "Keep the dropdown", ar: "أبقِ القائمة المنسدلة" } }
+      - { id: field, text: { en: "A number field for rooms", ar: "حقل رقمي لعدد الغرف" } }
+    answer: [radio]
+    misconceptions:
+      - id: MC-P01-010
+        when: [select]
+        feedback:
+          en: "A dropdown hides the other two until she opens it. With three options, show them."
+          ar: "القائمة المنسدلة تخفي الخيارين الآخرين حتى تفتحها. ومع ثلاثة خيارات، اعرضها."
+      - id: MC-P01-013
+        when: [field]
+        feedback:
+          en: "The company prices by three sizes. A number field lets her type 7 or 0, which matches none of them."
+          ar: "الشركة تسعّر حسب ثلاثة أحجام. والحقل الرقمي يسمح لها بكتابة 7 أو 0، ولا يطابق أيًّا منها."
+    explain:
+      en: "Three options, one answer: radio buttons, all visible, with none picked for her."
+      ar: "ثلاثة خيارات وإجابة واحدة: أزرار راديو، كلها ظاهرة، دون اختيار مسبق نيابةً عنها."
+
+  - id: S05
+    type: choose
+    part: check
+    rules: [R06, U39]
+    prompt:
+      en: "Teams are free only on some days. How should Laila enter the cleaning day?"
+      ar: "الفرق متاحة في بعض الأيام فقط. كيف يجب أن تُدخل ليلى يوم التنظيف؟"
+    options:
+      - { id: cal, text: { en: "A calendar where only the free days can be picked", ar: "تقويم لا يمكن فيه اختيار إلا الأيام المتاحة" } }
+      - { id: text, text: { en: "Keep the text field, with the format shown", ar: "أبقِ حقل النص، مع عرض الصيغة" } }
+      - { id: three, text: { en: "Three dropdowns: day, month, year", ar: "ثلاث قوائم منسدلة: اليوم والشهر والسنة" } }
+    answer: [cal]
+    misconceptions:
+      - id: MC-P01-013
+        when: [text, three]
+        feedback:
+          en: "Laila can't know which days are free. She'd guess, submit, and get an error. Only the system knows, so let her pick from what's available."
+          ar: "لا تستطيع ليلى أن تعرف الأيام المتاحة. ستخمّن وترسل ثم يظهر خطأ. النظام وحده يعرف، فدعها تختار من المتاح."
+    explain:
+      en: "Type what people know by heart. Pick what only the system knows."
+      ar: "اكتب ما يحفظه الناس. واختر ما لا يعرفه إلا النظام."
+
+  - id: S06
+    type: order
+    part: check
+    rules: [R06, U39]
+    prompt:
+      en: "The time slots appear in the order they were added. Put them in the order Laila expects."
+      ar: "مواعيد الزيارة تظهر بترتيب إضافتها. رتّبها بالترتيب الذي تتوقّعه ليلى."
+    items:
+      - { id: t12, text: "@F6t12", kind: radio }
+      - { id: t6, text: "@F6t6", kind: radio }
+      - { id: t9, text: "@F6t9", kind: radio }
+      - { id: t3, text: "@F6t3", kind: radio }
+    answer: [t9, t12, t3, t6]
+    misconceptions:
+      - id: MC-P01-014
+        when: { before: [t12, t9] }
+        feedback:
+          en: "Times are read in time order. 9 am comes first."
+          ar: "الأوقات تُقرأ بترتيبها الزمني. و9 صباحًا تأتي أولًا."
+      - id: MC-P01-014
+        when: { before: [t6, t3] }
+        feedback:
+          en: "6 pm is after 3 pm, so it goes last."
+          ar: "6 مساءً بعد 3 عصرًا، فتأتي في الآخر."
+    explain:
+      en: "Earliest to latest, so Laila can scan to the time she wants."
+      ar: "من الأبكر إلى الأحدث، حتى تصل ليلى بنظرة إلى الوقت الذي تريده."
+
+  - id: S07
+    type: compare
+    part: check
+    rules: [R11, U39]
+    prompt:
+      en: "Most bookings come from Nasr City, but Laila lives in Heliopolis. Which area field makes sure she picks her own area?"
+      ar: "أغلب الحجوزات من مدينة نصر، لكن ليلى تعيش في مصر الجديدة. أي حقل للمنطقة يضمن أن تختار منطقتها بنفسها؟"
+    a:
+      mock:
+        blocks:
+          - { kind: select, label: "@F6area", text: "@F6nasr", filled: true }
+    b:
+      mock:
+        blocks:
+          - { kind: field, label: "@F6area", text: { en: "Type your area", ar: "اكتب منطقتك" } }
+    answer: b
+    misconceptions:
+      - id: MC-P01-015
+        when: [a]
+        feedback:
+          en: "The field already looks answered. If Laila doesn't notice, the cleaners go to Nasr City."
+          ar: "الحقل يبدو مُجابًا أصلًا. وإن لم تنتبه ليلى، يذهب فريق التنظيف إلى مدينة نصر."
+    explain:
+      en: "An empty field she has to fill means the area is really hers. B also lets her type to find it in a long list."
+      ar: "الحقل الفارغ الذي يجب أن تملأه يعني أن المنطقة منطقتها فعلًا. كما تسمح B بالكتابة للعثور عليها في قائمة طويلة."
+
+  - id: S08
+    type: choose
+    part: check
+    rules: [R06, U39]
+    multi: true
+    prompt:
+      en: "Which should Laila type rather than pick? Pick all that apply."
+      ar: "ماذا يجب أن تكتب ليلى بدل أن تختار؟ اختر كل ما ينطبق."
+    options:
+      - { id: street, text: { en: "Street and building number", ar: "الشارع ورقم العمارة" } }
+      - { id: phone, text: { en: "Mobile number", ar: "رقم الموبايل" } }
+      - { id: slot, text: { en: "Time slot", ar: "موعد الزيارة" } }
+      - { id: size, text: { en: "Home size", ar: "حجم المنزل" } }
+    answer: [street, phone]
+    misconceptions:
+      - id: MC-P01-012
+        when: [slot, size]
+        feedback:
+          en: "The company sets the time slots and the sizes. Those are picked. Laila types what she knows by heart and the company can't list."
+          ar: "الشركة هي التي تحدّد المواعيد والأحجام، فهذه تُختار. أما ليلى فتكتب ما تحفظه ولا تستطيع الشركة أن تضع له قائمة."
+    explain:
+      en: "Her address and number are hers alone and quick to type. Slots and sizes come from the company's own list."
+      ar: "عنوانها ورقمها يخصّانها وحدها وكتابتهما سريعة. أما المواعيد والأحجام فتأتي من قائمة الشركة نفسها."
