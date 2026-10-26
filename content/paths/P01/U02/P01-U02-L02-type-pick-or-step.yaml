@@ -1,0 +1,246 @@
+id: P01-U02-L02
+mode: lesson
+minutes: 8
+title:
+  en: "Type it, pick it, or step it"
+  ar: "تكتبها أم تختارها أم تضبطها بالأزرار؟"
+review_labels:
+  MC-P01-012: { en: "Let people type what they know by heart", ar: "دع الناس يكتبون ما يحفظونه" }
+  MC-P01-013: { en: "Let people pick what only the system knows", ar: "دع الناس يختارون ما لا يعرفه إلا النظام" }
+  MC-P01-021: { en: "IDs and codes are text made of digits", ar: "الأرقام التعريفية والرموز نص مكوّن من أرقام" }
+  MC-P01-022: { en: "Sliders are for rough values", ar: "شريط التمرير للقيم التقريبية" }
+  MC-P01-023: { en: "Small counts near a default: a stepper", ar: "الأعداد الصغيرة القريبة من قيمة شائعة: أزرار − و+" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Back to 1991", ar: "العودة إلى 1991" }
+    body:
+      en: "The clinic asks for Nour's date of birth. Tapping the field opens a calendar on today's month, October 2026.\n\nNour was born in March 1991."
+      ar: "تسأل العيادة عن تاريخ ميلاد نور. والضغط على الحقل يفتح تقويمًا على الشهر الحالي، أكتوبر 2026.\n\nونور مولودة في مارس 1991."
+    mock:
+      blocks:
+        - { kind: select, label: "@F5dob", text: { en: "Choose a date", ar: "اختر تاريخًا" }, gap: s }
+        - kind: group
+          gap: s
+          blocks:
+            - { kind: heading, text: { en: "◀  October 2026  ▶", ar: "◀  أكتوبر 2026  ▶" } }
+            - { kind: small, text: { en: "Su  Mo  Tu  We  Th  Fr  Sa", ar: "أحد  اثنين  ثلاثاء  أربعاء  خميس  جمعة  سبت" }, gap: s }
+            - { kind: small, text: { en: "…", ar: "…" }, gap: xs }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "How many taps on ◀ to reach March 1991?"
+      ar: "كم ضغطة على ◀ للوصول إلى مارس 1991؟"
+    options:
+      - { id: few, text: { en: "About 35", ar: "نحو 35" } }
+      - { id: hundreds, text: { en: "About 400", ar: "نحو 400" } }
+      - { id: year, text: { en: "She'll find a year picker", ar: "ستجد منتقيًا للسنة" } }
+    reveal:
+      en: "About 427, unless she spots a hidden year picker. She knows the date by heart. Typing it would take seconds."
+      ar: "نحو 427، إلا إذا اكتشفت منتقيًا مخفيًا للسنة. هي تحفظ التاريخ عن ظهر قلب. وكتابته تستغرق ثواني."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Who knows the answer, and how exact is it?", ar: "من يعرف الإجابة، وما مدى دقّتها؟" }
+    body:
+      en: "- **The person knows it:** let them type. A date of birth fits three short fields: Day, Month, Year.\n- **Only the system knows the options**, like free appointment days: let them pick, and block what isn't available.\n- **IDs, codes and phone numbers** are text made of digits. Use a text field that opens the number pad, not a number field with ▲▼ arrows.\n- **Small counts near a usual value**, like 2 guests: a **stepper** (− and + buttons).\n- **A slider** is for rough values. For an exact number, let people type."
+      ar: "- **الشخص يعرف الإجابة:** دعه يكتبها. وتاريخ الميلاد يناسبه ثلاثة حقول قصيرة: اليوم والشهر والسنة.\n- **النظام وحده يعرف الخيارات**، مثل أيام المواعيد الفارغة: دع الناس يختارون، وامنع ما ليس متاحًا.\n- **الأرقام التعريفية والرموز وأرقام الهاتف** نص مكوّن من أرقام. استخدم حقلًا نصيًا يفتح لوحة الأرقام، لا حقلًا رقميًا بأسهم ▲▼.\n- **الأعداد الصغيرة القريبة من قيمة شائعة**، مثل ضيفين: **أزرار − و+ (Stepper)**.\n- **شريط التمرير (Slider)** للقيم التقريبية. وللرقم الدقيق، دع الناس يكتبونه."
+
+  - id: S04
+    type: sort
+    part: guided
+    confidence: true
+    rules: [R06, R15, U39]
+    prompt:
+      en: "Which control should each answer get?"
+      ar: "أي عنصر تحكّم يناسب كل إجابة؟"
+    items:
+      - { id: dob, text: { en: "Date of birth", ar: "تاريخ الميلاد" } }
+      - { id: slot, text: { en: "A free time slot with the doctor", ar: "موعد فارغ مع الطبيب" } }
+      - { id: guests, text: { en: "Number of guests (1 to 6, usually 1)", ar: "عدد الضيوف (من 1 إلى 6، غالبًا 1)" } }
+      - { id: nid, text: { en: "National ID number", ar: "الرقم القومي" } }
+      - { id: branch, text: { en: "Which of the clinic's 4 branches", ar: "أيّ فروع العيادة الأربعة" } }
+      - { id: nights, text: { en: "Nights in a hotel (1 to 5, usually 2)", ar: "عدد الليالي في فندق (من 1 إلى 5، غالبًا 2)" } }
+    buckets:
+      - { id: type, label: { en: "Type it", ar: "تُكتب" } }
+      - { id: pick, label: { en: "Pick it", ar: "تُختار" } }
+      - { id: step, label: { en: "Stepper", ar: "أزرار − و+" } }
+    answer:
+      type: [dob, nid]
+      pick: [slot, branch]
+      step: [guests, nights]
+    misconceptions:
+      - id: MC-P01-013
+        when: { item: slot, bucket: type }
+        feedback:
+          en: "Nour can't know which slots are free. Only the clinic does, so show them and let her pick."
+          ar: "لا تستطيع نور أن تعرف المواعيد الفارغة. العيادة وحدها تعرف، فاعرضها ودعها تختار."
+      - id: MC-P01-012
+        when: { item: nid, bucket: pick }
+        feedback:
+          en: "There's nothing to pick from. Each ID is unique and the person knows it."
+          ar: "لا يوجد ما يُختار منه. كل رقم قومي فريد، وصاحبه يعرفه."
+      - id: MC-P01-023
+        when: { item: guests, bucket: type }
+        feedback:
+          en: "Most people want 1, which a stepper already shows. One tap on + covers the rest."
+          ar: "أغلب الناس يريدون 1، وأزرار − و+ تعرضه أصلًا. وضغطة على + تكفي للباقي."
+    hints:
+      - { en: "For each one, ask: who knows the answer, and is it a small count?", ar: "اسأل عن كل واحدة: من يعرف الإجابة، وهل هي عدد صغير؟" }
+    correct:
+      en: "Known by heart: type. Known only by the system: pick. Small usual counts: step."
+      ar: "ما يحفظه الشخص: يُكتب. وما لا يعرفه إلا النظام: يُختار. والأعداد الصغيرة الشائعة: أزرار − و+."
+    explain:
+      en: "Typing is fastest for what people know. Picking is the only option for what they can't know. A stepper is fastest when the usual answer is already showing."
+      ar: "الكتابة أسرع لما يعرفه الناس. والاختيار هو الطريق الوحيد لما لا يمكنهم معرفته. وأزرار − و+ أسرع حين تكون الإجابة المعتادة ظاهرة أصلًا."
+
+  - id: S05
+    type: choose
+    part: guided
+    rules: [R06, U39]
+    prompt:
+      en: "Abdelrahman's national ID has 14 digits. Which field should the library use?"
+      ar: "الرقم القومي لعبد الرحمن مكوّن من 14 رقمًا. أي حقل يجب أن تستخدمه المكتبة؟"
+    options:
+      - { id: text, text: { en: "A text field that opens the number pad", ar: "حقل نصي يفتح لوحة الأرقام" } }
+      - { id: number, text: { en: "A number field with ▲▼ arrows", ar: "حقل رقمي بأسهم ▲▼" } }
+      - { id: boxes, text: { en: "14 boxes, one digit each", ar: "14 مربعًا، رقم واحد في كل مربع" } }
+    answer: [text]
+    misconceptions:
+      - id: MC-P01-021
+        when: [number]
+        feedback:
+          en: "An ID isn't a quantity. The arrows can change it by one, a scroll can change it by accident, and a leading 0 can be dropped."
+          ar: "الرقم القومي ليس كمية. فالأسهم قد تغيّره بواحد، والتمرير قد يغيّره بالخطأ، والصفر في أوله قد يُحذف."
+      - id: MC-P01-021
+        when: [boxes]
+        feedback:
+          en: "Pasting the number breaks, fixing one digit is fiddly, and a screen reader announces 14 separate fields."
+          ar: "لصق الرقم لا يعمل، وتصحيح رقم واحد مزعج، وقارئ الشاشة يقرأ 14 حقلًا منفصلًا."
+    hints:
+      - { en: "Would you ever add 1 to an ID number?", ar: "هل يمكن أن تضيف 1 إلى رقم قومي؟" }
+    correct:
+      en: "Digits, but not a number: a text field with the number pad."
+      ar: "أرقام، لكنها ليست عددًا: حقل نصي مع لوحة الأرقام."
+    explain:
+      en: "Use number fields only for amounts you'd count or add. IDs, codes and phone numbers are labels that happen to use digits."
+      ar: "استخدم الحقول الرقمية فقط للكميات التي تُعدّ أو تُجمع. أما الأرقام التعريفية والرموز وأرقام الهاتف فأسماء تصادف أنها مكتوبة بالأرقام."
+
+  - id: S06
+    type: choose
+    part: guided
+    rules: [R06, U40]
+    prompt:
+      en: "Dr. Hany sees patients only on Sundays and Wednesdays. How should the appointment calendar treat the other days?"
+      ar: "لا يستقبل د. هاني المرضى إلا يومي الأحد والأربعاء. كيف يجب أن يتعامل تقويم المواعيد مع باقي الأيام؟"
+    options:
+      - { id: block, text: { en: "Grey them out so they can't be picked, and say \"Dr. Hany: Sundays and Wednesdays\"", ar: "يجعلها رمادية فلا يمكن اختيارها، ويكتب «د. هاني: الأحد والأربعاء»" } }
+      - { id: error, text: { en: "Allow any day, then show an error if it's wrong", ar: "يسمح بأي يوم، ثم يُظهر خطأ إذا كان اليوم غير مناسب" } }
+      - { id: type, text: { en: "Replace the calendar with a field where she types a date", ar: "يستبدل التقويم بحقل تكتب فيه التاريخ" } }
+    answer: [block]
+    misconceptions:
+      - id: MC-P01-013
+        when: [error, type]
+        feedback:
+          en: "Nour can't know which days work, so she'd guess and fail. The system knows: show only what can be picked."
+          ar: "لا تستطيع نور أن تعرف الأيام المناسبة، فستخمّن وتفشل. النظام يعرف: اعرض فقط ما يمكن اختياره."
+    correct:
+      en: "Block what isn't possible, and say why."
+      ar: "امنع ما ليس ممكنًا، وقل السبب."
+    explain:
+      en: "Greyed-out days without a reason look broken. One line explains the pattern, so Nour can plan."
+      ar: "الأيام الرمادية دون سبب تبدو كأنها عطل. وسطر واحد يشرح النمط، فتستطيع نور أن تخطّط."
+
+  - id: S07
+    type: compare
+    part: contrast
+    rules: [R11, U39]
+    prompt:
+      en: "Tamer's budget is exactly 80 to 120 pounds. In which version can he set exactly that in one go?"
+      ar: "ميزانية تامر بالضبط من 80 إلى 120 جنيهًا. في أي نسخة يستطيع أن يضبط ذلك بالضبط من أول مرة؟"
+    a:
+      mock:
+        blocks:
+          - { kind: slider, label: { en: "Price", ar: "السعر" }, text: { en: "From 100 to 325 pounds", ar: "من 100 إلى 325 جنيهًا" } }
+    b:
+      mock:
+        blocks:
+          - kind: row
+            blocks:
+              - { kind: field, label: { en: "Min price", ar: "أقل سعر" }, text: "80", filled: true }
+              - { kind: field, label: { en: "Max price", ar: "أعلى سعر" }, text: "120", filled: true }
+    answer: b
+    reason:
+      prompt: { en: "Why?", ar: "لماذا؟" }
+      options:
+        - { id: exact, text: { en: "He has exact numbers, and a slider only gets close", ar: "لديه أرقام دقيقة، وشريط التمرير يقترب منها فقط" } }
+        - { id: arabic, text: { en: "Sliders don't work in Arabic", ar: "شريط التمرير لا يعمل بالعربية" } }
+        - { id: modern, text: { en: "Fields look more modern", ar: "الحقول تبدو أحدث" } }
+      answer: [exact]
+      misconceptions:
+        - id: MC-P01-022
+          when: [arabic, modern]
+          feedback:
+            en: "Sliders work in both languages, if built right. The point is precision: on a phone, a finger can't land exactly on 80."
+            ar: "شريط التمرير يعمل في اللغتين إذا صُمّم جيدًا. المهم هو الدقة: على الهاتف، لا يستطيع الإصبع أن يقف على 80 بالضبط."
+    misconceptions:
+      - id: MC-P01-022
+        when: [a]
+        feedback:
+          en: "With a range of 0 to 500 on a phone, each pixel jumps a few pounds. He'd nudge back and forth and still miss 80."
+          ar: "مع مدى من 0 إلى 500 على الهاتف، كل نقطة تقفز بضعة جنيهات. سيحرّك الشريط ذهابًا وإيابًا ولن يصل إلى 80."
+    correct:
+      en: "Exact values: type them."
+      ar: "القيم الدقيقة: تُكتب."
+    explain:
+      en: "A slider suits rough choices, like volume or \"around 100\". Many shops show both: a slider for exploring and fields for exact values."
+      ar: "شريط التمرير يناسب الاختيارات التقريبية، مثل مستوى الصوت أو «حوالي 100». وكثير من المتاجر تعرض الاثنين: شريطًا للاستكشاف وحقولًا للقيم الدقيقة."
+
+  - id: S08
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R06, U39]
+    prompt:
+      en: "Hossam is booking a holiday flat. Adults: 1 to 8, usually 2. Children: 0 to 6, usually 0. Which controls?"
+      ar: "يحجز حسام شقة للعطلة. البالغون: من 1 إلى 8، غالبًا 2. والأطفال: من 0 إلى 6، غالبًا 0. أي عناصر تحكّم تناسب؟"
+    mock:
+      blocks:
+        - { kind: stepper, label: { en: "Adults", ar: "البالغون" }, text: "2" }
+        - { kind: stepper, label: { en: "Children", ar: "الأطفال" }, text: "0", gap: s }
+    options:
+      - { id: step, text: { en: "Two steppers starting at 2 and 0, like the ones shown", ar: "أزرار − و+ للبالغين وللأطفال، تبدأ من 2 و0، كما في الشاشة" } }
+      - { id: fields, text: { en: "Two empty number fields", ar: "حقلان رقميان فارغان" } }
+      - { id: select, text: { en: "One dropdown: \"Guests: 1 to 14\"", ar: "قائمة منسدلة واحدة: «الضيوف: من 1 إلى 14»" } }
+    answer: [step]
+    misconceptions:
+      - id: MC-P01-023
+        when: [fields]
+        feedback:
+          en: "Most people would type 2 and 0 every time. Steppers already show the usual answer, so most people change nothing."
+          ar: "أغلب الناس سيكتبون 2 و0 كل مرة. أما أزرار − و+ فتعرض الإجابة المعتادة أصلًا، فلا يغيّر أغلب الناس شيئًا."
+      - id: MC-P01-023
+        when: [select]
+        feedback:
+          en: "One total hides who's coming. Flats often price children differently and need cots or extra beds."
+          ar: "العدد الإجمالي يُخفي من القادمون. فالشقق غالبًا تسعّر الأطفال بشكل مختلف وتحتاج أسرّة أطفال أو أسرّة إضافية."
+    correct:
+      en: "Small counts with a usual value: steppers, starting at that value."
+      ar: "أعداد صغيرة لها قيمة معتادة: أزرار − و+، تبدأ من تلك القيمة."
+    explain:
+      en: "A default is fine here because it's visible, harmless if left, and easy to change, unlike a guessed governorate."
+      ar: "القيمة الافتراضية مناسبة هنا لأنها ظاهرة، ولا ضرر إن بقيت، وسهلة التغيير، على عكس محافظة مخمّنة."
+
+  - id: S09
+    type: card
+    part: recap
+    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    body:
+      en: "- Known by heart: type. Known only by the system: pick, and block what's unavailable.\n- IDs and phone numbers are text with a number pad.\n- Small usual counts: a stepper.\n- Exact values: fields, not a slider.\n\nNext lesson: long lists, and search that finds what people type."
+      ar: "- ما يحفظه الشخص: يُكتب. وما لا يعرفه إلا النظام: يُختار، مع منع غير المتاح.\n- الأرقام التعريفية وأرقام الهاتف نص مع لوحة الأرقام.\n- الأعداد الصغيرة المعتادة: أزرار − و+.\n- القيم الدقيقة: حقول، لا شريط تمرير.\n\nالدرس التالي: القوائم الطويلة، والبحث الذي يجد ما يكتبه الناس."

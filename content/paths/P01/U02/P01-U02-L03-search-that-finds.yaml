@@ -1,0 +1,290 @@
+id: P01-U02-L03
+mode: lesson
+minutes: 8
+title:
+  en: "Search that finds what people type"
+  ar: "بحث يجد ما يكتبه الناس"
+review_labels:
+  MC-P01-014: { en: "Order options the way people expect", ar: "رتّب الخيارات كما يتوقّع الناس" }
+  MC-P01-015: { en: "Don't preselect a guess for a personal answer", ar: "لا تحدّد تخمينًا مسبقًا لإجابة شخصية" }
+  MC-P01-016: { en: "Long lists need a way to search", ar: "القوائم الطويلة تحتاج طريقة للبحث" }
+  MC-P01-024: { en: "Search should accept how people really type", ar: "البحث يجب أن يقبل ما يكتبه الناس فعلًا" }
+  MC-P01-025: { en: "Pin common options; keep the full list", ar: "ثبّت الخيارات الشائعة في الأعلى، واحتفظ بالقائمة كاملة" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "27 radio buttons", ar: "27 زر راديو" }
+    body:
+      en: "Abdelrahman lives in Ismailia. The library form lists all 27 governorates as radio buttons, in English alphabetical order, even on the Arabic page.\n\nHere's the first screen of three."
+      ar: "يعيش عبد الرحمن في الإسماعيلية. ونموذج المكتبة يعرض المحافظات الـ27 كلها كأزرار راديو، بترتيب الحروف الإنجليزية، حتى في الصفحة العربية.\n\nهذه أول شاشة من ثلاث."
+    mock:
+      blocks:
+        - { kind: heading, text: "@F5gov" }
+        - { kind: radio, text: { en: "Alexandria", ar: "الإسكندرية" }, gap: xs }
+        - { kind: radio, text: { en: "Aswan", ar: "أسوان" }, gap: xs }
+        - { kind: radio, text: { en: "Asyut", ar: "أسيوط" }, gap: xs }
+        - { kind: radio, text: { en: "Beheira", ar: "البحيرة" }, gap: xs }
+        - { kind: radio, text: { en: "Beni Suef", ar: "بني سويف" }, gap: xs }
+        - { kind: radio, text: { en: "Cairo", ar: "القاهرة" }, gap: xs }
+        - { kind: radio, text: { en: "Dakahlia", ar: "الدقهلية" }, gap: xs }
+        - { kind: radio, text: { en: "Damietta", ar: "دمياط" }, gap: xs }
+        - { kind: small, text: { en: "… 19 more below", ar: "… 19 أخرى بالأسفل" }, gap: s }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "The library replaces the list with a search field. Abdelrahman types \"اسماعيليه\", without the ال and with ه at the end. What should happen?"
+      ar: "تستبدل المكتبة القائمة بحقل بحث. فيكتب عبد الرحمن «اسماعيليه»، دون «ال» وبهاء في آخرها. ماذا يجب أن يحدث؟"
+    options:
+      - { id: find, text: { en: "It finds الإسماعيلية anyway", ar: "يجد «الإسماعيلية» رغم ذلك" } }
+      - { id: none, text: { en: "\"No results\": he should spell it properly", ar: "«لا توجد نتائج»: عليه أن يكتبها بشكل صحيح" } }
+      - { id: hint, text: { en: "It shows a spelling tip", ar: "يعرض نصيحة عن الإملاء" } }
+    reveal:
+      en: "It should find it. Most people type Arabic without hamzas, swap ة and ه, and skip ال. A search that demands exact spelling turns a shortcut into a test."
+      ar: "يجب أن يجدها. أغلب الناس يكتبون العربية دون همزات، ويخلطون بين ة وه، ويحذفون «ال». والبحث الذي يشترط الإملاء الدقيق يحوّل الطريق المختصر إلى اختبار."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "A search box is a promise to understand", ar: "حقل البحث وعدٌ بالفهم" }
+    body:
+      en: "Show a few options. Up to about 15, a dropdown is fine. Beyond that, let people type to filter. Then make search forgiving:\n\n- Treat أ إ آ ا as one letter, and ة ه, and ى ي. Ignore ال.\n- Match Arabic and English names, and short ones like \"Alex\".\n- For a small typo, suggest the closest match.\n- **Pin** the most common choices above the full list, but don't **preselect** them.\n- Sort by the names in the reader's language."
+      ar: "اعرض الخيارات القليلة. وحتى 15 خيارًا تقريبًا، القائمة المنسدلة مناسبة. وبعد ذلك دع الناس يكتبون للتصفية. ثم اجعل البحث متسامحًا:\n\n- اعتبر أ إ آ ا حرفًا واحدًا، وكذلك ة وه، وى وي. وتجاهل «ال».\n- طابق الأسماء العربية والإنجليزية، والأسماء المختصرة مثل «Alex».\n- عند خطأ إملائي بسيط، اقترح أقرب نتيجة.\n- **ثبّت** الخيارات الأكثر شيوعًا فوق القائمة الكاملة، لكن لا **تحدّدها مسبقًا**.\n- رتّب حسب الأسماء بلغة القارئ."
+
+  - id: S04
+    type: sort
+    part: guided
+    confidence: true
+    rules: [R06, U40]
+    prompt:
+      en: "The governorate search should find الإسماعيلية / Ismailia. Which typed text should find it?"
+      ar: "بحث المحافظات يجب أن يجد «الإسماعيلية / Ismailia». أيّ نص مكتوب يجب أن يجدها؟"
+    items:
+      - { id: a1, text: { en: "اسماعيلية", ar: "اسماعيلية" } }
+      - { id: a2, text: { en: "الاسماعيليه", ar: "الاسماعيليه" } }
+      - { id: e1, text: { en: "ismailia", ar: "ismailia" } }
+      - { id: e2, text: { en: "Ismalia (typo)", ar: "Ismalia (خطأ إملائي)" } }
+      - { id: n1, text: { en: "Suez", ar: "Suez" } }
+      - { id: n2, text: { en: "اسيوط", ar: "اسيوط" } }
+    buckets:
+      - { id: find, label: { en: "Should find it", ar: "يجب أن تجدها" } }
+      - { id: not, label: { en: "Shouldn't", ar: "لا يجب" } }
+    answer:
+      find: [a1, a2, e1, e2]
+      not: [n1, n2]
+    misconceptions:
+      - id: MC-P01-024
+        when: { item: a2, bucket: not }
+        feedback:
+          en: "ا for إ and ه for ة is how most people type on a phone. Treat those letters as the same."
+          ar: "كتابة ا بدل إ وه بدل ة هي الطريقة التي يكتب بها أغلب الناس على الهاتف. اعتبر هذه الحروف متطابقة."
+      - id: MC-P01-024
+        when: { item: e2, bucket: not }
+        feedback:
+          en: "One missing letter shouldn't hide the answer. Suggest the closest match."
+          ar: "حرف واحد ناقص لا يجب أن يُخفي الإجابة. اقترح أقرب نتيجة."
+      - id: MC-P01-024
+        when: { item: e1, bucket: not }
+        feedback:
+          en: "Many people type place names in English, even on an Arabic page. Match both names."
+          ar: "كثير من الناس يكتبون أسماء الأماكن بالإنجليزية، حتى في صفحة عربية. طابق الاسمين."
+    hints:
+      - { en: "Ask: would a person typing this mean Ismailia?", ar: "اسأل: هل يقصد من يكتب هذا الإسماعيلية؟" }
+    correct:
+      en: "Match the meaning, not the exact spelling."
+      ar: "طابق المعنى، لا الإملاء الحرفي."
+    explain:
+      en: "Different spellings, the other language, and small typos all mean Ismailia. Suez and Asyut are other places."
+      ar: "الإملاء المختلف واللغة الأخرى والأخطاء البسيطة كلها تعني الإسماعيلية. أما السويس وأسيوط فأماكن أخرى."
+
+  - id: S05
+    type: compare
+    part: guided
+    rules: [R06, U39]
+    prompt:
+      en: "Most users of a phone sign-up form are in Egypt or Saudi Arabia. Which country list gets them there fastest and still works for someone in Jordan?"
+      ar: "أغلب مستخدمي نموذج تسجيل برقم الهاتف في مصر أو السعودية. أي قائمة دول توصلهم أسرع، وتظل مناسبة لشخص في الأردن؟"
+    a:
+      mock:
+        blocks:
+          - { kind: field, label: { en: "Country", ar: "الدولة" }, text: { en: "Search countries", ar: "ابحث عن دولة" } }
+          - { kind: radio, text: { en: "Afghanistan", ar: "أفغانستان" }, gap: s }
+          - { kind: radio, text: { en: "Albania", ar: "ألبانيا" }, gap: xs }
+          - { kind: radio, text: { en: "Algeria", ar: "الجزائر" }, gap: xs }
+          - { kind: small, text: { en: "… 192 more", ar: "… 192 دولة أخرى" }, gap: xs }
+    b:
+      mock:
+        blocks:
+          - { kind: field, label: { en: "Country", ar: "الدولة" }, text: { en: "Search countries", ar: "ابحث عن دولة" } }
+          - { kind: small, text: { en: "Common", ar: "الأكثر استخدامًا" }, gap: s }
+          - { kind: radio, text: { en: "Egypt", ar: "مصر" }, gap: xs }
+          - { kind: radio, text: { en: "Saudi Arabia", ar: "السعودية" }, gap: xs }
+          - { kind: small, text: { en: "All countries", ar: "كل الدول" }, gap: s }
+          - { kind: radio, text: { en: "Afghanistan", ar: "أفغانستان" }, gap: xs }
+          - { kind: small, text: { en: "… 194 more", ar: "… 194 دولة أخرى" }, gap: xs }
+    answer: b
+    misconceptions:
+      - id: MC-P01-025
+        when: [a]
+        feedback:
+          en: "Search helps, but most people still have to type. Pinning the two common countries saves them that, and Jordan is still in the full list."
+          ar: "البحث يساعد، لكن أغلب الناس سيضطرون إلى الكتابة. وتثبيت الدولتين الشائعتين يوفّر عليهم ذلك، والأردن ما زال في القائمة الكاملة."
+    correct:
+      en: "Pinned at the top, still in the list, nothing chosen for them."
+      ar: "مثبّتة في الأعلى، وموجودة في القائمة، ولم يُختر شيء نيابةً عنهم."
+    explain:
+      en: "Pinning speeds up the many without trapping the few. Keep the pinned group small, two to five items, or it becomes another long list."
+      ar: "التثبيت يسرّع الأغلبية دون أن يحبس القلة. واجعل المجموعة المثبّتة صغيرة، من خيارين إلى خمسة، وإلا صارت قائمة طويلة أخرى."
+
+  - id: S06
+    type: compare
+    part: contrast
+    rules: [R11, U39]
+    prompt:
+      en: "Ahmad lives in Jordan and is in a hurry. Which version makes sure he gives a Jordanian number?"
+      ar: "يعيش أحمد في الأردن وهو مستعجل. أي نسخة تضمن أن يُدخل رقمًا أردنيًا؟"
+    a:
+      mock:
+        blocks:
+          - kind: row
+            blocks:
+              - { kind: select, label: { en: "Code", ar: "الرمز" }, text: "+20", filled: true }
+              - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "" }
+    b:
+      mock:
+        blocks:
+          - kind: row
+            blocks:
+              - { kind: select, label: { en: "Code", ar: "الرمز" }, text: { en: "Choose", ar: "اختر" } }
+              - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "" }
+    answer: b
+    reason:
+      prompt: { en: "Why?", ar: "لماذا؟" }
+      options:
+        - { id: done, text: { en: "A filled-in field looks done, so people in a hurry skip it", ar: "الحقل الممتلئ يبدو منتهيًا، فيتخطّاه المستعجل" } }
+        - { id: slow, text: { en: "Preselecting makes the page load slower", ar: "التحديد المسبق يبطئ تحميل الصفحة" } }
+        - { id: pin, text: { en: "Jordan should be pinned too", ar: "يجب تثبيت الأردن أيضًا" } }
+      answer: [done]
+      misconceptions:
+        - id: MC-P01-015
+          when: [slow, pin]
+          feedback:
+            en: "The risk is human, not technical. A field that already shows +20 looks answered, so Ahmad types his number after it."
+            ar: "الخطر بشري لا تقني. الحقل الذي يعرض ‎+20 أصلًا يبدو مُجابًا، فيكتب أحمد رقمه بعده."
+    misconceptions:
+      - id: MC-P01-015
+        when: [a]
+        feedback:
+          en: "Ahmad types his Jordanian number after +20, and the code goes to a stranger in Egypt."
+          ar: "يكتب أحمد رقمه الأردني بعد ‎+20، فيذهب رمز التحقق إلى شخص غريب في مصر."
+    correct:
+      en: "Pin common options, but let each person choose."
+      ar: "ثبّت الخيارات الشائعة، لكن دع كل شخص يختار."
+    explain:
+      en: "Preselecting saves one tap for most people and creates a silent error for the rest. Pinning gives the speed without the risk."
+      ar: "التحديد المسبق يوفّر ضغطة واحدة على الأغلبية، ويصنع خطأً صامتًا للباقين. أما التثبيت فيعطي السرعة دون الخطر."
+
+  - id: S07
+    type: choose
+    part: guided
+    rules: [R06, U39]
+    prompt:
+      en: "On the Arabic page, the governorates follow the English order: الإسكندرية، أسوان، أسيوط، البحيرة… What should the Arabic page do?"
+      ar: "في الصفحة العربية، تتبع المحافظات ترتيب الحروف الإنجليزية: الإسكندرية، أسوان، أسيوط، البحيرة… ماذا يجب أن تفعل الصفحة العربية؟"
+    options:
+      - { id: ar, text: { en: "Sort by the Arabic names, ignoring ال", ar: "ترتّبها حسب الأسماء العربية، مع تجاهل «ال»" } }
+      - { id: same, text: { en: "Keep one order for both languages", ar: "تُبقي ترتيبًا واحدًا للّغتين" } }
+      - { id: pop, text: { en: "Sort by population", ar: "ترتّبها حسب عدد السكان" } }
+    answer: [ar]
+    misconceptions:
+      - id: MC-P01-014
+        when: [same]
+        feedback:
+          en: "An Arabic reader scanning for الإسماعيلية looks near أسوان and أسيوط, not after الإسكندرية and البحيرة."
+          ar: "القارئ العربي الذي يبحث عن الإسماعيلية ينظر قرب أسوان وأسيوط، لا بعد الإسكندرية والبحيرة."
+      - id: MC-P01-014
+        when: [pop]
+        feedback:
+          en: "Nobody knows the population ranking, so nobody can predict where their governorate is."
+          ar: "لا أحد يعرف ترتيب المحافظات حسب السكان، فلا أحد يستطيع توقّع مكان محافظته."
+    correct:
+      en: "Alphabetical in the reader's language."
+      ar: "أبجديًا بلغة القارئ."
+    explain:
+      en: "Order is only useful if people can predict it. Each language needs its own alphabetical order, and ال shouldn't put half the list under A."
+      ar: "الترتيب مفيد فقط إذا استطاع الناس توقّعه. وكل لغة تحتاج ترتيبها الأبجدي الخاص، و«ال» لا يجب أن تضع نصف القائمة تحت الألف."
+
+  - id: S08
+    type: fix
+    part: independent
+    rules: [R07, U40]
+    prompt:
+      en: "Tamer types \"Zamalik\" in the delivery area search and gets \"No results\". Which fix gets him to Zamalek?"
+      ar: "يكتب تامر «Zamalik» في بحث منطقة التوصيل، فيظهر «لا توجد نتائج». أي إصلاح يوصله إلى الزمالك؟"
+    mock:
+      blocks:
+        - { kind: field, label: { en: "Delivery area", ar: "منطقة التوصيل" }, text: "Zamalik", filled: true, focus: true }
+        - { kind: small, text: { en: "No results", ar: "لا توجد نتائج" }, color: muted, gap: s }
+    options:
+      - { id: suggest, text: { en: "Show the closest matches: \"Did you mean Zamalek?\"", ar: "اعرض أقرب النتائج: «هل تقصد الزمالك؟»" } }
+      - { id: tip, text: { en: "Add \"Check your spelling\" under No results", ar: "أضِف «تأكّد من الإملاء» تحت «لا توجد نتائج»" } }
+      - { id: dropdown, text: { en: "Replace search with a 120-item dropdown", ar: "استبدل البحث بقائمة منسدلة من 120 عنصرًا" } }
+    answer: [suggest]
+    misconceptions:
+      - id: MC-P01-024
+        when: [tip]
+        feedback:
+          en: "Tamer doesn't know the \"right\" spelling. There are several in English. The system can guess better than he can."
+          ar: "تامر لا يعرف الإملاء «الصحيح»، فهناك أكثر من طريقة لكتابته بالإنجليزية. والنظام يستطيع أن يخمّن أفضل منه."
+      - id: MC-P01-016
+        when: [dropdown]
+        feedback:
+          en: "That trades one typo for a long scroll. Keep search, and make it forgiving."
+          ar: "هذا يستبدل خطأً إملائيًا واحدًا بتمرير طويل. احتفظ بالبحث، واجعله متسامحًا."
+    hints:
+      - { en: "How far is \"Zamalik\" from \"Zamalek\"?", ar: "ما الفرق بين «Zamalik» و«Zamalek»؟" }
+    correct:
+      en: "Near misses should still land."
+      ar: "الأخطاء القريبة يجب أن توصل للنتيجة رغم ذلك."
+    explain:
+      en: "Place names have many spellings, especially across Arabic and English. Fuzzy matching and \"Did you mean\" catch most of them."
+      ar: "لأسماء الأماكن طرق كتابة كثيرة، خاصة بين العربية والإنجليزية. والمطابقة التقريبية و«هل تقصد» تلتقطان أغلبها."
+
+  - id: S09
+    type: choose
+    part: independent
+    rules: [R06, U39]
+    multi: true
+    prompt:
+      en: "Which lists are fine as a plain dropdown, with no search? Pick all that apply."
+      ar: "أيّ القوائم مناسبة كقائمة منسدلة عادية دون بحث؟ اختر كل ما ينطبق."
+    options:
+      - { id: sizes, text: { en: "7 shirt sizes, S to 3XL, in size order", ar: "7 مقاسات قمصان، من S إلى 3XL، بترتيب المقاس" } }
+      - { id: months, text: { en: "The 12 months, in calendar order", ar: "الأشهر الـ12، بترتيب التقويم" } }
+      - { id: govs, text: { en: "27 governorates", ar: "27 محافظة" } }
+      - { id: countries, text: { en: "195 countries", ar: "195 دولة" } }
+    answer: [sizes, months]
+    misconceptions:
+      - id: MC-P01-016
+        when: [govs, countries]
+        feedback:
+          en: "Dozens of items in a dropdown means scrolling a tiny box. Let people type."
+          ar: "عشرات العناصر في قائمة منسدلة تعني التمرير في صندوق صغير. دع الناس يكتبون."
+    correct:
+      en: "Short and in a known order: a dropdown works. Dozens: search."
+      ar: "قصيرة وبترتيب معروف: القائمة المنسدلة تكفي. عشرات: بحث."
+    explain:
+      en: "People can jump straight to M or to March in a short, predictable list. Long lists need typing."
+      ar: "يستطيع الناس الوصول مباشرة إلى M أو إلى مارس في قائمة قصيرة متوقّعة. أما القوائم الطويلة فتحتاج كتابة."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    body:
+      en: "- Dozens of options: let people search.\n- Make search forgiving: Arabic letter variants, ال, both languages, small typos.\n- Pin common choices; don't preselect them.\n- Sort in the reader's language.\n\nNext lesson: the unit skill check."
+      ar: "- عشرات الخيارات: دع الناس يبحثون.\n- اجعل البحث متسامحًا: أشكال الحروف العربية، و«ال»، واللغتان، والأخطاء البسيطة.\n- ثبّت الخيارات الشائعة، ولا تحدّدها مسبقًا.\n- رتّب بلغة القارئ.\n\nالدرس التالي: اختبار مهارة الوحدة."
