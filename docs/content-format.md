@@ -92,7 +92,13 @@ mock:
 | `weight` | `regular` or `bold` |
 | `px` | Exact font size in pixels, when the size itself is being taught |
 | `style` | Buttons: `plain` (text only), `danger` (filled red), `dangerlink` (red text) |
+| `nowrap` | Cuts the text to one line with an ellipsis (to show truncation) |
+| `height` | Fixed height in pixels; anything taller is cut off (to show clipping) |
+| `overlap` | Pulls the block up over the one above it (to show overlapping controls) |
+| `code` | A left-to-right fragment, such as a booking code, isolated inside right-to-left text |
 | `region` | Makes the block tappable in a `spot` step |
 | `field` | Has `label`, `text`, optional `hint` and `error` |
+
+A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), and `caption` (a small label such as "360 px").
 
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.

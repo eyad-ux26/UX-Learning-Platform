@@ -124,6 +124,10 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-button.style-plain{background:transparent;color:var(--mock-brand);border:0;padding:8px}
 .mock .k-button.style-danger{background:#C6332A;color:#fff}
 .mock .k-button.style-dangerlink{background:transparent;color:#C6332A;border:0;padding:8px}
+.mock.wide{max-width:none}
+.mock{overflow:hidden}
+.mock .mcap{font-size:.72rem;color:var(--mock-muted);margin:-6px 0 10px;font-weight:600}
+.mock .nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mock .row2{display:flex;gap:10px}.mock .row2>*{flex:1}
 .mock button.region{cursor:pointer;border-radius:8px;outline:2px dashed transparent;outline-offset:3px}
 .mock button.region:hover{outline-color:#B9B9C0}
@@ -205,14 +209,15 @@ const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
 /* ---------- mock screens ---------- */
 function mockBlocks(blocks, opts){
   return (blocks||[]).map(b => {
-    const cls = ["b", `k-${b.kind}`, b.size?`size-${b.size}`:"", b.emphasis?`em-${b.emphasis}`:"", b.tone?`tone-${b.tone}`:"", b.gap?`gap-${b.gap}`:"", b.color?`c-${b.color}`:"", b.weight?`w-${b.weight}`:"", b.style?`style-${b.style}`:""].join(" ");
-    const st = b.px ? ` style="font-size:${b.px}px;line-height:1.3"` : "";
+    const cls = ["b", `k-${b.kind}`, b.size?`size-${b.size}`:"", b.emphasis?`em-${b.emphasis}`:"", b.tone?`tone-${b.tone}`:"", b.gap?`gap-${b.gap}`:"", b.color?`c-${b.color}`:"", b.weight?`w-${b.weight}`:"", b.style?`style-${b.style}`:"", b.nowrap?"nowrap":""].join(" ");
+    const css = [b.px ? `font-size:${b.px}px;line-height:1.3` : "", b.height ? `height:${b.height}px;overflow:hidden` : "", b.overlap ? "margin-top:-30px" : ""].filter(Boolean).join(";");
+    const st = css ? ` style="${css}"` : "";
     let inner;
     if (b.kind === "group") inner = mockBlocks(b.blocks, opts);
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
     else if (b.kind === "field") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="fi">${esc(tx(b.text))}</div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
     else if (b.kind === "divider") inner = "";
-    else inner = esc(tx(b.text));
+    else inner = esc(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
     if (opts && opts.regions && b.region){
       const pressed = opts.selected.includes(b.region);
       return `<button type="button" class="${cls} region"${st} data-region="${b.region}" aria-pressed="${pressed}" ${opts.locked?"disabled":""}>${inner}</button>`;
@@ -220,7 +225,7 @@ function mockBlocks(blocks, opts){
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
-const mock = (m, opts) => m ? `<div class="mock" dir="${lang==="ar"?"rtl":"ltr"}">${mockBlocks(m.blocks, opts)}</div>` : "";
+const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${mockBlocks(m.blocks, opts)}</div>` : "";
 
 /* ---------- state ---------- */
 let view = {screen:"home"};

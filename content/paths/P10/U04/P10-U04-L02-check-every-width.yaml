@@ -1,0 +1,236 @@
+id: P10-U04-L02
+mode: lesson
+minutes: 9
+title:
+  en: "Check every width, not one screenshot"
+  ar: "تحقّق من كل عرض، لا من لقطة شاشة واحدة"
+review_labels:
+  MC-P10-063: { en: "One screenshot doesn't prove a layout works", ar: "لقطة شاشة واحدة لا تثبت أن التخطيط يعمل" }
+  MC-P10-064: { en: "Remember the gutters", ar: "تذكّر الهوامش الجانبية" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "\"It works on my phone\"", ar: "«يعمل على هاتفي»" }
+    body:
+      en: "A teammate checked Sara's page on their own phone, 390px wide, and shared a screenshot: \"Mobile done.\"\n\nThe screenshot looks great. Many people use smaller phones, enlarge their text, or turn their tablet sideways."
+      ar: "تحقّق أحد الزملاء من صفحة سارة على هاتفه، بعرض 390 بكسل، وشارك لقطة شاشة: «انتهينا من الهاتف».\n\nاللقطة تبدو رائعة. لكن كثيرين يستخدمون هواتف أصغر، أو يكبّرون النص، أو يديرون أجهزتهم اللوحية أفقيًا."
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "If the page works at 390px, will it work at 320px?"
+      ar: "إذا كانت الصفحة تعمل بعرض 390 بكسل، فهل ستعمل بعرض 320 بكسل؟"
+    options:
+      - { id: yes, text: { en: "Yes, it's only a bit narrower", ar: "نعم، الفرق صغير" } }
+      - { id: no, text: { en: "Not necessarily", ar: "ليس بالضرورة" } }
+    reveal:
+      en: "Not necessarily. 70px is enough for a long word, two buttons in a row, or a fixed-width element to break. You only know by checking."
+      ar: "ليس بالضرورة. 70 بكسل كافية لأن تنكسر كلمة طويلة، أو زرّان في صف، أو عنصر بعرض ثابت. لن تعرف إلا بالتحقق."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "A range, not a size", ar: "مدى، لا مقاس واحد" }
+    body:
+      en: "Layouts live across a range of widths. Check the narrow end, the wide end, and the points where the layout changes.\n\nThe accessibility standard (WCAG \"Reflow\") expects ordinary pages to work at **320 CSS pixels** wide with no sideways scrolling and nothing lost. That also covers people who zoom their text: 1280px at 400% zoom behaves like 320px.\n\nAnd remember the side margins: content width is the screen width minus the gutters. With 16px each side, a 360px phone gives you 328px."
+      ar: "التخطيطات تعيش عبر مدى من العروض. تحقّق من الطرف الضيّق، والطرف العريض، والنقاط التي يتغيّر عندها التخطيط.\n\nيتوقّع معيار إتاحة الوصول (WCAG، معيار «Reflow») أن تعمل الصفحات العادية بعرض **320 بكسل CSS** دون تمرير أفقي ودون فقدان أي شيء. وهذا يشمل من يكبّرون النص: عرض 1280 بكسل مع تكبير 400% يتصرّف كعرض 320 بكسل.\n\nوتذكّر الهوامش الجانبية: عرض المحتوى هو عرض الشاشة ناقص الهوامش. مع 16 بكسل في كل جانب، يعطيك هاتف بعرض 360 بكسل مساحة 328 بكسل."
+
+  - id: S04
+    type: match
+    part: guided
+    rules: [R07, R13]
+    prompt:
+      en: "With a 16px gutter on each side, how wide is the content at each screen width?"
+      ar: "مع هامش 16 بكسل في كل جانب، ما عرض المحتوى عند كل عرض شاشة؟"
+    left:
+      - { id: w1280, text: { en: "1280 px screen", ar: "شاشة 1280 بكسل" } }
+      - { id: w768, text: { en: "768 px screen", ar: "شاشة 768 بكسل" } }
+      - { id: w360, text: { en: "360 px screen", ar: "شاشة 360 بكسل" } }
+      - { id: w320, text: { en: "320 px screen", ar: "شاشة 320 بكسل" } }
+    right:
+      - { id: c1248, text: { en: "1248 px", ar: "1248 بكسل" } }
+      - { id: c736, text: { en: "736 px", ar: "736 بكسل" } }
+      - { id: c344, text: { en: "344 px", ar: "344 بكسل" } }
+      - { id: c328, text: { en: "328 px", ar: "328 بكسل" } }
+      - { id: c288, text: { en: "288 px", ar: "288 بكسل" } }
+    answer: { w1280: c1248, w768: c736, w360: c328, w320: c288 }
+    misconceptions:
+      - id: MC-P10-064
+        when: { left: w360, right: c344 }
+        feedback:
+          en: "344 subtracts only one gutter. There's 16px on each side: 360 − 32 = 328."
+          ar: "344 تطرح هامشًا واحدًا فقط. يوجد 16 بكسل في كل جانب: 360 − 32 = 328."
+    hints:
+      - { en: "Subtract 32 from each: 16 on the left, 16 on the right.", ar: "اطرح 32 من كل عرض: 16 يسارًا و16 يمينًا." }
+    correct:
+      en: "Screen width minus 32."
+      ar: "عرض الشاشة ناقص 32."
+    explain:
+      en: "At 320px, there are only 288px for content. Everything inside, including the longest word and the widest row, has to fit in that."
+      ar: "عند 320 بكسل، لا يتبقّى للمحتوى إلا 288 بكسل. وكل ما في الداخل، بما فيه أطول كلمة وأعرض صف، يجب أن يتّسع فيها."
+
+  - id: S05
+    type: choose
+    part: guided
+    confidence: true
+    multi: true
+    rules: [R13, R06]
+    scenario:
+      en: "The two-column layout needs at least 360px for the details, 24px gap, and 280px for the booking panel: 664px of content."
+      ar: "التخطيط ذو العمودين يحتاج 360 بكسل على الأقل للتفاصيل، و24 بكسل فراغًا، و280 بكسل للوحة الحجز: أي 664 بكسل من المحتوى."
+    prompt:
+      en: "At which screen widths can it use two columns? Choose all that apply."
+      ar: "عند أي عروض شاشة يمكنه استخدام عمودين؟ اختر كل ما ينطبق."
+    options:
+      - { id: w1280, text: { en: "1280 px (1248 of content)", ar: "1280 بكسل (1248 للمحتوى)" } }
+      - { id: w768, text: { en: "768 px (736 of content)", ar: "768 بكسل (736 للمحتوى)" } }
+      - { id: w360, text: { en: "360 px (328 of content)", ar: "360 بكسل (328 للمحتوى)" } }
+      - { id: w320, text: { en: "320 px (288 of content)", ar: "320 بكسل (288 للمحتوى)" } }
+    answer: [w1280, w768]
+    misconceptions:
+      - id: MC-P10-060
+        when: [w360, w320]
+        feedback:
+          en: "328px and 288px are well under 664px. Squeezing two columns in there means unreadable text, so phones get one column."
+          ar: "328 و288 بكسل أقل بكثير من 664 بكسل. حشر عمودين فيهما يعني نصًا غير مقروء، لذلك تأخذ الهواتف عمودًا واحدًا."
+    correct:
+      en: "Two columns at 1280 and 768; one column on phones."
+      ar: "عمودان عند 1280 و768؛ وعمود واحد على الهواتف."
+    explain:
+      en: "Compare the content width with what the layout needs. 1248 and 736 are above 664, so two columns fit. Phones fall below, so they stack."
+      ar: "قارن عرض المحتوى بما يحتاجه التخطيط. 1248 و736 أكبر من 664، فيتّسع العمودان. أما الهواتف فأقل، لذلك تُرتَّب عموديًا."
+
+  - id: S06
+    type: choose
+    part: guided
+    rules: [R13, R06]
+    prompt:
+      en: "What's the narrowest screen where the two columns still fit?"
+      ar: "ما أضيق شاشة يتّسع فيها العمودان؟"
+    options:
+      - { id: s664, text: { en: "664 px", ar: "664 بكسل" } }
+      - { id: s696, text: { en: "696 px", ar: "696 بكسل" } }
+      - { id: s768, text: { en: "768 px", ar: "768 بكسل" } }
+    answer: [s696]
+    misconceptions:
+      - id: MC-P10-064
+        when: [s664]
+        feedback:
+          en: "664px is the content the layout needs. Add the two 16px gutters: 664 + 32 = 696."
+          ar: "664 بكسل هو المحتوى الذي يحتاجه التخطيط. أضف الهامشين بعرض 16 بكسل: 664 + 32 = 696."
+      - id: MC-P10-065
+        when: [s768]
+        feedback:
+          en: "768 is a common tablet width, but the layout fits from 696. Breakpoints should come from your content, not from device names."
+          ar: "768 عرض شائع للأجهزة اللوحية، لكن التخطيط يتّسع من 696. نقاط التحوّل (breakpoints) يجب أن تأتي من المحتوى، لا من أسماء الأجهزة."
+    correct:
+      en: "664 of content plus 32 of gutters."
+      ar: "664 للمحتوى زائد 32 للهوامش."
+    explain:
+      en: "That's where the layout should switch from one column to two, and it's exactly the width to test carefully, a little above and a little below."
+      ar: "هنا يجب أن يتحوّل التخطيط من عمود إلى عمودين، وهذا بالضبط العرض الذي يجب اختباره بعناية، أعلى منه بقليل وأقل منه بقليل."
+
+  - id: S07
+    type: spot
+    part: guided
+    rules: [R06, U47]
+    prompt:
+      en: "At 320px, which part of the page breaks?"
+      ar: "عند 320 بكسل، أي جزء من الصفحة ينكسر؟"
+    mock:
+      width: 260
+      caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
+      blocks:
+        - { kind: title, nowrap: true, text: "@W2e", region: title }
+        - { kind: meta, text: "@W2f", gap: s, region: date }
+        - { kind: meta, text: "@W2g", gap: xs, region: price }
+        - { kind: button, text: "@W2h", gap: m, region: button }
+    regions:
+      - { id: title, label: "@W2e" }
+      - { id: date, label: "@W2f" }
+      - { id: price, label: "@W2g" }
+      - { id: button, label: "@W2h" }
+    answer: [title]
+    misconceptions:
+      - id: MC-P10-063
+        when: [date, price, button]
+        feedback:
+          en: "That one wraps or fits fine. Look for text that's been cut off."
+          ar: "هذا العنصر يلتف أو يتّسع جيدًا. ابحث عن نص مقطوع."
+    correct:
+      en: "The title is cut off with \"…\". At 390px it fit on one line."
+      ar: "العنوان مقطوع بعلامة «…». عند 390 بكسل كان يتّسع في سطر واحد."
+    explain:
+      en: "The title was set to stay on one line. That held at 390px and broke at 320px. Let it wrap instead; Unit 5 goes deeper into long text."
+      ar: "ضُبط العنوان ليبقى في سطر واحد. نجح ذلك عند 390 بكسل وانكسر عند 320. اسمح له بالالتفاف بدلًا من ذلك؛ والوحدة 5 تتعمّق في النصوص الطويلة."
+
+  - id: S08
+    type: choose
+    part: contrast
+    rules: [R11, R39]
+    prompt:
+      en: "The teammate's 390px screenshot is the only check so far. What's missing before calling the page responsive?"
+      ar: "لقطة الزميل بعرض 390 بكسل هي التحقق الوحيد حتى الآن. ما الناقص قبل وصف الصفحة بأنها متجاوبة؟"
+    options:
+      - { id: range, text: { en: "Checks at 320px, around the 696px switch, and with enlarged text", ar: "التحقق عند 320 بكسل، وحول نقطة التحوّل 696 بكسل، ومع تكبير النص" } }
+      - { id: desktop, text: { en: "A desktop screenshot too", ar: "لقطة شاشة للحاسوب أيضًا" } }
+      - { id: nothing, text: { en: "Nothing, 390px is the most common phone width", ar: "لا شيء، 390 بكسل هو أشيع عرض للهواتف" } }
+    answer: [range]
+    misconceptions:
+      - id: MC-P10-063
+        when: [desktop, nothing]
+        feedback:
+          en: "One or two screenshots show one or two widths. The failures usually happen at the narrow end, near breakpoints, or with bigger text."
+          ar: "لقطة أو لقطتان تُظهران عرضًا أو عرضين. أما الأعطال فتحدث عادةً عند الطرف الضيّق، أو قرب نقاط التحوّل، أو مع النص الأكبر."
+    correct:
+      en: "Check the edges and the switch, and with bigger text."
+      ar: "تحقّق من الأطراف ونقطة التحوّل، ومع نص أكبر."
+    explain:
+      en: "A screenshot is evidence for one width on one device. A good check covers the narrowest width (320px), the points where the layout changes, and text enlargement. Some of this needs a real browser, not a design file."
+      ar: "لقطة الشاشة دليل على عرض واحد في جهاز واحد. أما التحقق الجيد فيغطي أضيق عرض (320 بكسل)، والنقاط التي يتغيّر عندها التخطيط، وتكبير النص. وبعض ذلك يحتاج متصفحًا حقيقيًا، لا ملف تصميم."
+
+  - id: S09
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R14, R19]
+    scenario:
+      en: "On a 320px phone, Lina's delivery screen shows \"Driver: Karim\" and a Call button side by side. The row is wider than the screen, so the page scrolls sideways."
+      ar: "على هاتف بعرض 320 بكسل، تعرض شاشة توصيل لينا «السائق: كريم» وزر «اتصال» متجاورين. الصف أعرض من الشاشة، فتتحرّك الصفحة أفقيًا."
+    prompt:
+      en: "What's the best fix?"
+      ar: "ما أفضل إصلاح؟"
+    options:
+      - { id: wrap, text: { en: "Let the Call button wrap under the driver's name when there isn't room", ar: "اسمح لزر «اتصال» بالنزول تحت اسم السائق عندما لا تكفي المساحة" } }
+      - { id: tiny, text: { en: "Shrink the text to 10px so the row fits", ar: "صغّر النص إلى 10 بكسل حتى يتّسع الصف" } }
+      - { id: hide, text: { en: "Hide the Call button on small phones", ar: "أخفِ زر «اتصال» على الهواتف الصغيرة" } }
+    answer: [wrap]
+    misconceptions:
+      - id: MC-P10-060
+        when: [tiny]
+        feedback:
+          en: "Tiny text fits but can't be read. Rearrange instead of shrinking."
+          ar: "النص الصغير جدًا يتّسع لكنه لا يُقرأ. أعد الترتيب بدلًا من التصغير."
+      - id: MC-P10-061
+        when: [hide]
+        feedback:
+          en: "Calling the driver is one of the two things Lina needs right now. It can move, but it can't go."
+          ar: "الاتصال بالسائق أحد الشيئين اللذين تحتاجهما لينا الآن. يمكن أن ينتقل، لكن لا يمكن أن يختفي."
+    correct:
+      en: "Let it wrap: same content, new arrangement."
+      ar: "اسمح له بالالتفاف: المحتوى نفسه، بترتيب جديد."
+    explain:
+      en: "Rows that fit on wider screens should be allowed to wrap on narrow ones. That keeps everything readable without sideways scrolling."
+      ar: "الصفوف التي تتّسع في الشاشات الأعرض يجب أن يُسمح لها بالالتفاف في الضيّقة. هذا يبقي كل شيء مقروءًا دون تمرير أفقي."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What you did", ar: "ما أنجزته" }
+    body:
+      en: "You worked out content widths with gutters, found where two columns stop fitting, and checked the narrow end at 320px instead of trusting one screenshot.\n\nNext: an order that makes sense without the columns."
+      ar: "حسبت عرض المحتوى مع الهوامش، ووجدت أين يتوقّف العمودان عن الاتّساع، وتحقّقت من الطرف الضيّق عند 320 بكسل بدلًا من الثقة بلقطة شاشة واحدة.\n\nالتالي: ترتيب منطقي حتى بدون الأعمدة."

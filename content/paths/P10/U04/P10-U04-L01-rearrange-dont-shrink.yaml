@@ -1,0 +1,312 @@
+id: P10-U04-L01
+mode: lesson
+minutes: 8
+title:
+  en: "Rearrange, don't shrink"
+  ar: "أعد الترتيب، لا تصغّر"
+review_labels:
+  MC-P10-060: { en: "Responsive isn't scaling everything down", ar: "التصميم المتجاوب ليس تصغير كل شيء" }
+  MC-P10-061: { en: "Hide what's optional, never what decides", ar: "أخفِ الاختياري، لا ما يحسم القرار" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "The laptop layout", ar: "تخطيط الحاسوب المحمول" }
+    body:
+      en: "On a laptop, Sara's page has two columns: the session details on the left, and a booking panel with Reserve on the right.\n\nOn her phone, the screen is about a third as wide. Something has to give."
+      ar: "على الحاسوب المحمول، صفحة سارة فيها عمودان: تفاصيل الجلسة على اليسار، ولوحة الحجز مع زر «احجز» على اليمين.\n\nأما على هاتفها، فعرض الشاشة نحو الثلث. يجب أن يتغيّر شيء ما."
+    mock: &desktop
+      frame: wide
+      caption: { en: "Laptop, 1280 px", ar: "حاسوب محمول، 1280 بكسل" }
+      blocks:
+        - { kind: title, text: "@W1a" }
+        - kind: row
+          gap: m
+          blocks:
+            - kind: group
+              tone: plain
+              blocks:
+                - { kind: image, size: m, text: "@W1i" }
+                - { kind: meta, text: "@W1b", gap: m }
+                - { kind: meta, text: "@W1c", gap: xs }
+                - { kind: small, text: "@W1g", gap: s }
+            - kind: group
+              blocks:
+                - { kind: meta, text: "@W1d" }
+                - { kind: chip, text: "@W1e", gap: s }
+                - { kind: button, text: "@W1f", gap: m }
+                - { kind: link, text: "@W1h", gap: s }
+        - { kind: link, text: "@W1j", gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "What's your first instinct for the phone?"
+      ar: "ما أول ما يخطر لك بالنسبة للهاتف؟"
+    options:
+      - { id: scale, text: { en: "Scale the whole layout down to fit", ar: "صغّر التخطيط كله حتى يتّسع" } }
+      - { id: stack, text: { en: "Put the columns one under the other", ar: "ضع العمودين أحدهما تحت الآخر" } }
+      - { id: hide, text: { en: "Hide the side panel", ar: "أخفِ اللوحة الجانبية" } }
+    reveal:
+      en: "Stacking is usually right, but the order of the stack matters as much as the stacking. Let's see why the other two go wrong."
+      ar: "الترتيب العمودي هو الصحيح غالبًا، لكن ترتيب العناصر داخله مهم بقدر الترتيب نفسه. لنرَ لماذا يخطئ الخياران الآخران."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Change the arrangement, keep the decision", ar: "غيّر الترتيب، واحفظ القرار" }
+    body:
+      en: "**Responsive design** means the layout responds to the space available. It doesn't mean shrinking everything: tiny text on a phone is just a smaller problem.\n\nOn a narrow screen, columns usually stack. Choose the stacking order by the decision: what, when, where, how much, then the action. The optional image can shrink or go. The facts Sara decides with can't."
+      ar: "**التصميم المتجاوب (Responsive design)** يعني أن التخطيط يستجيب للمساحة المتاحة. ولا يعني تصغير كل شيء: النص الصغير جدًا على الهاتف مجرد مشكلة أصغر حجمًا.\n\nعلى الشاشة الضيّقة، تُرتَّب الأعمدة عادةً عموديًا. اختر ترتيبها حسب القرار: ماذا، متى، أين، بكم، ثم الإجراء. يمكن للصورة الاختيارية أن تصغر أو تختفي. أما الحقائق التي تقرّر بها سارة فلا."
+
+  - id: S04
+    type: compare
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "Two ways to fit the laptop layout on a phone. Which works?"
+      ar: "طريقتان لملاءمة تخطيط الحاسوب مع الهاتف. أيّهما تنجح؟"
+    a:
+      mock:
+        caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
+        blocks:
+          - { kind: text, px: 13, weight: bold, text: "@W1a" }
+          - kind: row
+            gap: s
+            blocks:
+              - kind: group
+                tone: plain
+                blocks:
+                  - { kind: image, size: s, text: "@W1i" }
+                  - { kind: text, px: 9, text: "@W1b", gap: xs }
+                  - { kind: text, px: 9, text: "@W1c", gap: xs }
+              - kind: group
+                blocks:
+                  - { kind: text, px: 9, text: "@W1d" }
+                  - { kind: text, px: 9, weight: bold, color: brand, text: "@W1f", gap: xs }
+    b:
+      mock:
+        caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
+        blocks:
+          - { kind: title, text: "@W1a" }
+          - { kind: meta, text: "@W1b", gap: s }
+          - { kind: meta, text: "@W1c", gap: xs }
+          - { kind: meta, text: "@W1d", gap: xs }
+          - { kind: button, text: "@W1f", gap: m }
+          - { kind: small, text: "@W1g", gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P10-060
+        when: [a]
+        feedback:
+          en: "A keeps both columns and shrinks everything. The facts are all there, but at 9px nobody can read them, and Reserve is too small to tap."
+          ar: "A تحتفظ بالعمودين وتصغّر كل شيء. كل الحقائق موجودة، لكن لا أحد يستطيع قراءتها بحجم 9 بكسل، وزر «احجز» أصغر من أن يُضغط."
+    correct:
+      en: "One column, readable sizes, decision order."
+      ar: "عمود واحد، وأحجام مقروءة، وترتيب حسب القرار."
+    explain:
+      en: "Scaling down keeps the arrangement and loses the meaning. Stacking changes the arrangement and keeps the meaning."
+      ar: "التصغير يحتفظ بالترتيب ويفقد المعنى. أما الترتيب العمودي فيغيّر الترتيب ويحتفظ بالمعنى."
+
+  - id: S05
+    type: order
+    part: guided
+    confidence: true
+    rules: [R06, R15]
+    prompt:
+      en: "Stack the laptop blocks for the phone, top to bottom."
+      ar: "رتّب أجزاء تخطيط الحاسوب للهاتف، من الأعلى إلى الأسفل."
+    items:
+      - { id: H, text: { en: "Title", ar: "العنوان" } }
+      - { id: P, text: { en: "Photo", ar: "الصورة" } }
+      - { id: B, text: { en: "Reserve button", ar: "زر «احجز»" } }
+      - { id: N, text: { en: "Newsletter link", ar: "رابط النشرة" } }
+      - { id: D, text: { en: "Date, place, price and places left", ar: "التاريخ والمكان والسعر والأماكن المتبقية" } }
+      - { id: T, text: { en: "Cancellation rule and access link", ar: "قاعدة الإلغاء ورابط الدخول" } }
+    answer: [H, D, T, B, P, N]
+    also_ok:
+      - answer: [H, D, B, T, P, N]
+        feedback:
+          en: "That works too, as long as the cancellation rule sits right under Reserve, where Sara still sees it before tapping."
+          ar: "هذا يصلح أيضًا، ما دامت قاعدة الإلغاء تحت زر «احجز» مباشرة، حيث تراها سارة قبل الضغط."
+      - answer: [H, D, T, B, N, P]
+        feedback:
+          en: "That works too: the photo and newsletter are both optional, so their order at the end doesn't matter much."
+          ar: "هذا يصلح أيضًا: الصورة والنشرة اختياريتان، لذلك ترتيبهما في النهاية لا يهم كثيرًا."
+      - answer: [H, D, B, T, N, P]
+        feedback:
+          en: "That works too: decision first, then the extras."
+          ar: "هذا يصلح أيضًا: القرار أولًا، ثم الإضافات."
+    misconceptions:
+      - id: MC-P10-006
+        when: { before: [B, D] }
+        feedback:
+          en: "Reserve comes before the date and price, so Sara would have to scroll back up to check them. Facts first, then the action."
+          ar: "زر «احجز» يأتي قبل التاريخ والسعر، فستضطر سارة إلى التمرير للأعلى للتحقق منهما. الحقائق أولًا، ثم الإجراء."
+      - id: MC-P10-001
+        when: { before: [P, D] }
+        feedback:
+          en: "On a phone, the photo would fill the first screen and push the facts down. It can come later, or not at all."
+          ar: "على الهاتف، ستملأ الصورة الشاشة الأولى وتدفع الحقائق للأسفل. يمكن أن تأتي لاحقًا، أو لا تأتي أبدًا."
+    hints:
+      - { en: "It's the same decision order as Unit 1. The columns don't change what Sara needs first.", ar: "إنه ترتيب القرار نفسه في الوحدة 1. الأعمدة لا تغيّر ما تحتاجه سارة أولًا." }
+    correct:
+      en: "Title, facts, conditions, action, then the extras."
+      ar: "العنوان، ثم الحقائق، ثم الشروط، ثم الإجراء، ثم الإضافات."
+    explain:
+      en: "On the laptop the photo sat above the facts, and Reserve sat in its own panel. Stacked in that order, Sara would meet the photo first and Reserve before the conditions. The phone order follows the decision instead."
+      ar: "على الحاسوب كانت الصورة فوق الحقائق، و«احجز» في لوحتها الخاصة. لو رُتّبت بهذا الترتيب، لرأت سارة الصورة أولًا و«احجز» قبل الشروط. أما ترتيب الهاتف فيتبع القرار."
+
+  - id: S06
+    type: choose
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "The phone page is still long. What's OK to hide on narrow screens?"
+      ar: "صفحة الهاتف ما زالت طويلة. ما الذي يصح إخفاؤه على الشاشات الضيّقة؟"
+    options:
+      - { id: photo, text: { en: "The decorative photo", ar: "الصورة الزخرفية" } }
+      - { id: cancel, text: { en: "The cancellation rule", ar: "قاعدة الإلغاء" } }
+      - { id: place, text: { en: "The location", ar: "المكان" } }
+      - { id: access, text: { en: "The access link", ar: "رابط الدخول" } }
+    answer: [photo]
+    misconceptions:
+      - id: MC-P10-061
+        when: [cancel, place, access]
+        feedback:
+          en: "Phone visitors make the same decision as laptop visitors. If it's needed on a laptop, it's needed on a phone."
+          ar: "زوّار الهاتف يتّخذون القرار نفسه الذي يتّخذه زوّار الحاسوب. إذا كان ضروريًا على الحاسوب، فهو ضروري على الهاتف."
+    correct:
+      en: "Only the optional photo. Every fact stays."
+      ar: "الصورة الاختيارية فقط. وتبقى كل الحقائق."
+    explain:
+      en: "A smaller screen changes how much fits at once, not what people need. Hide or shrink what's optional; keep everything that decides, even if it moves down."
+      ar: "الشاشة الأصغر تغيّر مقدار ما يتّسع في وقت واحد، لا ما يحتاجه الناس. أخفِ الاختياري أو صغّره؛ وأبقِ كل ما يحسم القرار، حتى لو نزل للأسفل."
+
+  - id: S07
+    type: compare
+    part: contrast
+    rules: [R11, R15]
+    prompt:
+      en: "Both phone layouts stack. Which order is better for Sara?"
+      ar: "تخطيطا الهاتف كلاهما مرتّب عموديًا. أي ترتيب أفضل لسارة؟"
+    a:
+      mock:
+        caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
+        blocks:
+          - { kind: title, text: "@W1a" }
+          - { kind: image, size: l, text: "@W1i", gap: s }
+          - { kind: button, text: "@W1f", gap: m }
+          - { kind: link, text: "@W1j", gap: s }
+          - { kind: meta, text: "@W1b", gap: m }
+          - { kind: meta, text: "@W1c", gap: xs }
+    b:
+      mock:
+        caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
+        blocks:
+          - { kind: title, text: "@W1a" }
+          - { kind: meta, text: "@W1b", gap: s }
+          - { kind: meta, text: "@W1c", gap: xs }
+          - { kind: button, text: "@W1f", gap: m }
+          - { kind: image, size: s, text: "@W1i", gap: l }
+          - { kind: link, text: "@W1j", gap: s }
+    answer: b
+    reason:
+      prompt: { en: "What went wrong in the other one?", ar: "ما الخطأ في الأخرى؟" }
+      options:
+        - { id: order, text: { en: "It kept the laptop's order, so the photo and button came before the facts", ar: "احتفظت بترتيب الحاسوب، فجاءت الصورة والزر قبل الحقائق" } }
+        - { id: big, text: { en: "The photo is too big", ar: "الصورة كبيرة جدًا" } }
+      answer: [order]
+      misconceptions:
+        - id: MC-P10-062
+          when: [big]
+          feedback:
+            en: "The size is part of it, but the deeper problem is order: Reserve and the newsletter come before the date and place."
+            ar: "الحجم جزء من المشكلة، لكن المشكلة الأعمق في الترتيب: «احجز» والنشرة يأتيان قبل التاريخ والمكان."
+    misconceptions:
+      - id: MC-P10-006
+        when: [a]
+        feedback:
+          en: "A stacks in the laptop's order, so the photo, Reserve and newsletter all come before the date. Stacking alone isn't enough; the order has to follow the decision."
+          ar: "A ترتّب حسب ترتيب الحاسوب، فتأتي الصورة و«احجز» والنشرة كلها قبل التاريخ. الترتيب العمودي وحده لا يكفي؛ يجب أن يتبع القرار."
+    correct:
+      en: "Stacked in decision order."
+      ar: "مرتّب عموديًا حسب القرار."
+    explain:
+      en: "Both stack, but A simply drops the laptop columns one after another. B reorders for the phone. Plan the narrow order on purpose rather than inheriting it."
+      ar: "كلاهما مرتّب عموديًا، لكن A تُسقط أعمدة الحاسوب واحدًا بعد الآخر. أما B فتعيد الترتيب للهاتف. خطّط ترتيب الشاشة الضيّقة عن قصد بدلًا من أن ترثه."
+
+  - id: S08
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R14, R19]
+    scenario:
+      en: "Mariam's pharmacy pickup page has a map on the left and pickup details on the right. On her phone, the map is 300px tall."
+      ar: "صفحة استلام الصيدلية عند مريم فيها خريطة على اليسار وتفاصيل الاستلام على اليمين. وعلى هاتفها، يبلغ ارتفاع الخريطة 300 بكسل."
+    prompt:
+      en: "How should it stack on the phone?"
+      ar: "كيف يجب ترتيبها عموديًا على الهاتف؟"
+    options:
+      - { id: details, text: { en: "Pickup time, address and ID rule first; the map after, smaller", ar: "وقت الاستلام والعنوان وشرط الهوية أولًا؛ ثم الخريطة بعدها، أصغر" } }
+      - { id: map, text: { en: "The full map first, then the details", ar: "الخريطة كاملة أولًا، ثم التفاصيل" } }
+      - { id: side, text: { en: "Keep them side by side, each half the width", ar: "أبقهما متجاورتين، لكل منهما نصف العرض" } }
+    answer: [details]
+    misconceptions:
+      - id: MC-P10-001
+        when: [map]
+        feedback:
+          en: "A 300px map fills most of the first screen. Mariam would have to scroll to learn when to come and that she needs ID."
+          ar: "خريطة بارتفاع 300 بكسل تملأ معظم الشاشة الأولى. ستضطر مريم إلى التمرير لتعرف متى تأتي وأنها تحتاج إلى الهوية."
+      - id: MC-P10-060
+        when: [side]
+        feedback:
+          en: "Half of a phone screen is about 160px: too narrow for a useful map or readable details."
+          ar: "نصف شاشة الهاتف نحو 160 بكسل: ضيّق جدًا لخريطة مفيدة أو تفاصيل مقروءة."
+    correct:
+      en: "Same decision order, new page."
+      ar: "ترتيب القرار نفسه، في صفحة جديدة."
+    explain:
+      en: "The address is still there in words, so the map becomes supporting. It can follow the details, or open on tap."
+      ar: "العنوان موجود بالكلمات، فتصبح الخريطة داعمة. يمكن أن تأتي بعد التفاصيل، أو تُفتح عند الضغط."
+
+  - id: S09
+    type: choose
+    part: independent
+    rules: [R09, R14]
+    prompt:
+      en: "Sara's laptop page has two session cards side by side (from Unit 2). On a phone, which stays true?"
+      ar: "صفحة سارة على الحاسوب فيها بطاقتا جلستين متجاورتين (من الوحدة 2). على الهاتف، ما الذي يبقى صحيحًا؟"
+    options:
+      - { id: whole, text: { en: "Each card stacks whole, and inside each card the facts come before Reserve", ar: "كل بطاقة تُرتَّب كاملة، وداخل كل بطاقة تأتي الحقائق قبل «احجز»" } }
+      - { id: buttons, text: { en: "Both Reserve buttons move to the bottom, so the cards are shorter", ar: "ينتقل زرّا «احجز» إلى الأسفل، لتصبح البطاقتان أقصر" } }
+      - { id: one, text: { en: "Show only one card on phones", ar: "اعرض بطاقة واحدة فقط على الهواتف" } }
+    answer: [whole]
+    misconceptions:
+      - id: MC-P10-021
+        when: [buttons]
+        feedback:
+          en: "That separates each button from its session, like the shared button row in Unit 2. Each action stays in its card."
+          ar: "هذا يفصل كل زر عن جلسته، مثل صف الأزرار المشترك في الوحدة 2. كل إجراء يبقى في بطاقته."
+      - id: MC-P10-061
+        when: [one]
+        feedback:
+          en: "Phone visitors need both choices too. Stack them; don't drop one."
+          ar: "زوّار الهاتف يحتاجون الخيارين أيضًا. رتّبهما عموديًا؛ لا تحذف أحدهما."
+    correct:
+      en: "Grouping, decision order and stacking all work together."
+      ar: "التجميع وترتيب القرار والترتيب العمودي تعمل كلها معًا."
+    explain:
+      en: "Units 1 to 4 combine here: each card is a group (Unit 2), ordered by the decision (Unit 1), with one main action (Unit 3), stacked whole on a phone (this unit)."
+      ar: "تجتمع الوحدات من 1 إلى 4 هنا: كل بطاقة مجموعة (الوحدة 2)، مرتّبة حسب القرار (الوحدة 1)، بإجراء رئيسي واحد (الوحدة 3)، ومرتّبة كاملة على الهاتف (هذه الوحدة)."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What you did", ar: "ما أنجزته" }
+    body:
+      en: "You chose stacking over shrinking, planned the phone order by the decision instead of inheriting the laptop's, and hid only what's optional.\n\nNext: checking that a layout really works at every width."
+      ar: "اخترت الترتيب العمودي بدلًا من التصغير، وخطّطت ترتيب الهاتف حسب القرار بدلًا من وراثة ترتيب الحاسوب، وأخفيت الاختياري فقط.\n\nالتالي: التحقق من أن التخطيط يعمل فعلًا على كل عرض."
