@@ -102,3 +102,8 @@ mock:
 A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), and `caption` (a small label such as "360 px").
 
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
+
+## Player behaviour worth knowing
+
+- Every step after a lesson's hook card has a **Show the scenario** panel that reopens the hook (title, text and mock), so learners can re-check the situation at any time.
+- An `order` step without its own `mock` shows a **live preview** that updates as items move. Give items a `kind` (such as `title` or `button`) so the preview looks like the real screen; the default is `meta`. Set `preview: false` to turn it off.

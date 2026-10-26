@@ -39,8 +39,8 @@ steps:
       - { id: C1g, text: "@C1g" }
       - { id: C1h, text: "@C1h" }
     buckets:
-      - { id: now, label: { en: "Decide now", ar: "قرار الآن" } }
-      - { id: sup, label: { en: "Supporting", ar: "داعم" } }
+      - { id: now, label: { en: "Decide now", ar: "أساسي للقرار" } }
+      - { id: sup, label: { en: "Supporting", ar: "مساند" } }
       - { id: opt, label: { en: "Optional", ar: "اختياري" } }
     answer:
       now: [C1a, C1b, C1c, C1d, C1e]
@@ -53,7 +53,7 @@ steps:
           opt: [C1g, C1h]
         feedback:
           en: "Also fine: treating the insurance card as part of the decision."
-          ar: "مقبول أيضًا: اعتبار بطاقة التأمين جزءًا من القرار."
+          ar: "صحيح أيضًا: اعتبار بطاقة التأمين جزءًا من القرار."
     misconceptions:
       - id: MC-P10-002
         when: { item: C1f, bucket: opt }
@@ -64,10 +64,10 @@ steps:
         when: { item: C1h, bucket: now }
         feedback:
           en: "The clinic photo is big, but Huda doesn't decide anything with it."
-          ar: "صورة العيادة كبيرة، لكن هدى لا تقرّر بها أي شيء."
+          ar: "صورة العيادة كبيرة، لكن هدى لا تبني عليها أي قرار."
     explain:
       en: "Decide now: doctor, time, insurance, fee and the button. Supporting: bring your insurance card. Optional: the blog and the clinic photo."
-      ar: "قرار الآن: الطبيبة والموعد والتأمين والرسوم والزر. داعم: إحضار بطاقة التأمين. اختياري: المدوّنة وصورة العيادة."
+      ar: "أساسي للقرار: الطبيبة والموعد والتأمين والرسوم والزر. مساند: إحضار بطاقة التأمين. اختياري: المدوّنة وصورة العيادة."
 
   - id: S03
     type: order
@@ -77,16 +77,16 @@ steps:
       en: "Put these in the order Huda should meet them, top to bottom."
       ar: "رتّب هذه بالترتيب الذي يجب أن تراها به هدى، من الأعلى إلى الأسفل."
     items:
-      - { id: C1e, text: "@C1e" }
+      - { id: C1e, text: "@C1e", kind: button }
       - { id: C1c, text: "@C1c" }
-      - { id: C1a, text: "@C1a" }
+      - { id: C1a, text: "@C1a", kind: title }
       - { id: C1d, text: "@C1d" }
       - { id: C1b, text: "@C1b" }
     answer: [C1a, C1b, C1c, C1d, C1e]
     also_ok:
-      - { answer: [C1b, C1a, C1c, C1d, C1e], feedback: { en: "Also fine: time first, doctor right next to it.", ar: "مقبول أيضًا: الموعد أولًا والطبيبة بجانبه." } }
-      - { answer: [C1a, C1b, C1d, C1c, C1e], feedback: { en: "Also fine: fee and insurance can swap.", ar: "مقبول أيضًا: يمكن تبديل الرسوم والتأمين." } }
-      - { answer: [C1b, C1a, C1d, C1c, C1e], feedback: { en: "Also fine.", ar: "مقبول أيضًا." } }
+      - { answer: [C1b, C1a, C1c, C1d, C1e], feedback: { en: "Also fine: time first, doctor right next to it.", ar: "صحيح أيضًا: الموعد أولًا والطبيبة بجانبه." } }
+      - { answer: [C1a, C1b, C1d, C1c, C1e], feedback: { en: "Also fine: fee and insurance can swap.", ar: "صحيح أيضًا: يمكن تبديل الرسوم والتأمين." } }
+      - { answer: [C1b, C1a, C1d, C1c, C1e], feedback: { en: "Also fine.", ar: "صحيح أيضًا." } }
     misconceptions:
       - id: MC-P10-006
         when: { before: [C1e, C1c] }
@@ -95,7 +95,7 @@ steps:
           ar: "الزر يأتي قبل سطر التأمين، لذلك قد تحجز هدى دون أن تعرف إن كان MedCare مقبولًا."
     explain:
       en: "Who and when, then insurance and fee, then the button. Doctor and time can swap; insurance and fee can swap. The button always comes after the facts Huda decides with."
-      ar: "من ومتى، ثم التأمين والرسوم، ثم الزر. يمكن تبديل الطبيبة والموعد، ويمكن تبديل التأمين والرسوم. ويأتي الزر دائمًا بعد الحقائق التي تقرّر بها هدى."
+      ar: "من ومتى، ثم التأمين والرسوم، ثم الزر. يمكن تبديل الطبيبة والموعد، ويمكن تبديل التأمين والرسوم. ويأتي الزر دائمًا بعد المعلومات التي تبني عليها هدى قرارها."
 
   - id: S04
     type: spot
@@ -159,7 +159,7 @@ steps:
           - { kind: small, text: "@C1d", gap: s }
     answer: a
     reason:
-      prompt: { en: "What makes the difference?", ar: "ما الذي يصنع الفرق؟" }
+      prompt: { en: "What makes the difference?", ar: "ما سبب الفرق؟" }
       options:
         - { id: facts, text: { en: "Insurance and fee come before the button", ar: "التأمين والرسوم يأتيان قبل الزر" } }
         - { id: nophoto, text: { en: "It has no photo", ar: "لا توجد فيها صورة" } }
@@ -167,7 +167,7 @@ steps:
       answer: [facts]
     explain:
       en: "In A, everything Huda decides with comes before Book this slot. In B, the blog and photo lead, and insurance and fee arrive only after the button."
-      ar: "في A، كل ما تقرّر به هدى يأتي قبل «احجز هذا الموعد». في B، تتصدّر المدوّنة والصورة، ولا يظهر التأمين والرسوم إلا بعد الزر."
+      ar: "في A، كل ما تبني عليه هدى قرارها يأتي قبل «احجز هذا الموعد». في B، تتصدّر المدوّنة والصورة، ولا يظهر التأمين والرسوم إلا بعد الزر."
 
   - id: S06
     type: choose
@@ -175,7 +175,7 @@ steps:
     rules: [R14, R19]
     prompt:
       en: "This clinic page is mostly visited by older patients, many using wheelchairs. Which item should move up into \"Decide now\"?"
-      ar: "معظم زوّار صفحة هذه العيادة من المرضى الكبار في السن، وكثير منهم يستخدمون كراسي متحركة. أي عنصر يجب أن ينتقل إلى «قرار الآن»؟"
+      ar: "معظم زوّار صفحة هذه العيادة من المرضى الكبار في السن، وكثير منهم يستخدمون كراسي متحركة. أي عنصر يجب أن ينتقل إلى «أساسي للقرار»؟"
     options:
       - { id: access, text: "@C1i" }
       - { id: blog, text: "@C1g" }
@@ -199,4 +199,4 @@ steps:
     answer: [next]
     explain:
       en: "When the situation changes, so does the next useful thing. Huda needs to know the slot is gone and what she can book instead."
-      ar: "عندما يتغيّر الموقف، يتغيّر الشيء المفيد التالي. تحتاج هدى أن تعرف أن الموعد ذهب، وما الذي تستطيع حجزه بدلًا منه."
+      ar: "حين يتغيّر الموقف، يتغيّر ما تحتاجه أولًا. تحتاج هدى أن تعرف أن الموعد ذهب، وما الذي تستطيع حجزه بدلًا منه."
