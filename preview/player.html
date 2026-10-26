@@ -201,7 +201,9 @@ let lang = "en";
 try{ lang = localStorage.getItem("lp-lang") || "en"; }catch(e){}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const tx = v => v == null ? "" : typeof v === "string" ? v : (v[lang] ?? v.en ?? "");
+// In Arabic, codes like WS-204 or A14 are wrapped in invisible left-to-right isolates so they keep their order.
+const iso = s => lang !== "ar" ? s : s.replace(/[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/g, m => /[A-Za-z]/.test(m) && /\d/.test(m) ? "\u2066" + m + "\u2069" : m);
+const tx = v => v == null ? "" : iso(typeof v === "string" ? v : (v[lang] ?? v.en ?? ""));
 const u = () => UI[lang];
 const para = v => tx(v).split(/\n\s*\n/).map(p => `<p>${esc(p).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}</p>`).join("");
 const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));

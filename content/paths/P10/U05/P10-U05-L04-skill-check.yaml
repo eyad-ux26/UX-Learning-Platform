@@ -1,0 +1,256 @@
+id: P10-U05-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: let real words stretch it"
+  ar: "اختبار المهارة: دع الكلمات الحقيقية تختبره"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Mostafa's concert ticket", ar: "تذكرة حفلة مصطفى" }
+    body:
+      en: "Mostafa is buying a ticket for a jazz night in Zamalek. The ticket card was designed with \"Jazz Night\" as the title. Here it is with the real event name, on a 320px phone.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "يشتري مصطفى تذكرة لليلة جاز في الزمالك. صُمّمت بطاقة التذكرة بعنوان «ليلة جاز». وهذه هي باسم الحفلة الحقيقي، على هاتف بعرض 320 بكسل.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock: &ticket
+      width: 260
+      caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
+      blocks:
+        - kind: group
+          blocks:
+            - { kind: title, text: "@T1a", region: title }
+            - { kind: meta, text: "@T1b", gap: s, region: date }
+            - { kind: meta, nowrap: true, text: "@T1c", gap: xs, region: place }
+            - { kind: meta, text: "@T1d", gap: xs, region: price }
+            - { kind: button, text: "@T1e", gap: m }
+
+  - id: S02
+    type: spot
+    part: check
+    rules: [R19, U47]
+    prompt:
+      en: "Which fact can Mostafa no longer read in full?"
+      ar: "أي حقيقة لم يعد مصطفى يستطيع قراءتها كاملة؟"
+    mock: *ticket
+    regions:
+      - { id: title, label: "@T1a" }
+      - { id: date, label: "@T1b" }
+      - { id: place, label: "@T1c" }
+      - { id: price, label: "@T1d" }
+    answer: [place]
+    misconceptions:
+      - id: MC-P10-068
+        when: [title, date, price]
+        feedback:
+          en: "That one is readable. Look for a line that ends in \"…\"."
+          ar: "هذا مقروء. ابحث عن سطر ينتهي بـ«…»."
+    explain:
+      en: "The venue is set to one line, so the street and the area are cut off."
+      ar: "المكان مضبوط على سطر واحد، فينقطع الشارع والحي."
+
+  - id: S03
+    type: choose
+    part: check
+    multi: true
+    rules: [R19, U47]
+    prompt:
+      en: "Which settings should the ticket card use so it survives any event name and venue? Pick all that apply."
+      ar: "أي الإعدادات يجب أن تستخدمها بطاقة التذكرة حتى تصمد أمام أي اسم حفلة أو مكان؟ اختر كل ما ينطبق."
+    options:
+      - { id: height, text: { en: "Let the card's height follow its content", ar: "دع ارتفاع البطاقة يتبع محتواها" } }
+      - { id: wrap, text: { en: "Let the title and venue wrap", ar: "دع العنوان والمكان يلتفّان" } }
+      - { id: flow, text: { en: "Put the button after the details", ar: "ضع الزر بعد التفاصيل" } }
+      - { id: shorten, text: { en: "Shorten the title to \"Jazz Night\"", ar: "اختصر العنوان إلى «ليلة جاز»" } }
+      - { id: shrink, text: { en: "Set all the text to 11px", ar: "اجعل كل النص 11 بكسل" } }
+    answer: [height, wrap, flow]
+    misconceptions:
+      - id: MC-P10-069
+        when: [shorten]
+        feedback:
+          en: "\"Jazz Night\" drops what the evening actually is. Let the layout fit the words."
+          ar: "«ليلة جاز» تُسقط حقيقة الأمسية. دع التخطيط يناسب الكلمات."
+      - id: MC-P10-060
+        when: [shrink]
+        feedback:
+          en: "11px makes everything harder to read and only delays the problem."
+          ar: "11 بكسل يجعل كل شيء أصعب في القراءة ويؤجّل المشكلة فقط."
+    explain:
+      en: "Height from content, wrapping text, and the button in the flow. The card gets taller and every fact stays."
+      ar: "ارتفاع من المحتوى، ونص يلتف، وزر ضمن التدفّق. تصبح البطاقة أطول وتبقى كل حقيقة."
+
+  - id: S04
+    type: choose
+    part: check
+    rules: [R19, U49]
+    prompt:
+      en: "In the Arabic version, the ticket code NJ-3012 shows as 2103-JN. What's the right fix?"
+      ar: "في النسخة العربية، يظهر رمز التذكرة NJ-3012 هكذا: 2103-JN. ما الإصلاح الصحيح؟"
+    mock:
+      dir: rtl
+      width: 260
+      blocks:
+        - { kind: small, text: "رمز التذكرة", code: "2103-JN" }
+    options:
+      - { id: isolate, text: { en: "Keep the code as its original left-to-right piece inside the Arabic line", ar: "أبقِ الرمز قطعة أصلية من اليسار لليمين داخل السطر العربي" } }
+      - { id: fine, text: { en: "Leave it; Arabic reads right to left, so it's correct", ar: "اتركه؛ العربية تُقرأ من اليمين لليسار، فهو صحيح" } }
+      - { id: remove, text: { en: "Remove the code from the Arabic version", ar: "احذف الرمز من النسخة العربية" } }
+    answer: [isolate]
+    misconceptions:
+      - id: MC-P10-070
+        when: [fine]
+        feedback:
+          en: "2103-JN is a different code. Identifiers keep their order in every language."
+          ar: "2103-JN رمز مختلف. المعرّفات تحتفظ بترتيبها في كل لغة."
+      - id: MC-P10-061
+        when: [remove]
+        feedback:
+          en: "Mostafa needs the code at the gate. Removing it loses a fact."
+          ar: "يحتاج مصطفى الرمز عند البوابة. وحذفه يُفقد حقيقة."
+    explain:
+      en: "The sentence flows right to left; the code stays NJ-3012 as its own piece."
+      ar: "الجملة تسير من اليمين لليسار؛ ويبقى الرمز NJ-3012 قطعة مستقلة."
+
+  - id: S05
+    type: sort
+    part: check
+    rules: [R19, U49]
+    prompt:
+      en: "In the Arabic ticket screen, what gets mirrored and what stays the same?"
+      ar: "في شاشة التذكرة العربية، ما الذي يُعكس وما الذي يبقى كما هو؟"
+    items:
+      - { id: back, text: { en: "Back arrow", ar: "سهم الرجوع" } }
+      - { id: play, text: { en: "Play button on the song preview", ar: "زر التشغيل في معاينة الأغنية" } }
+      - { id: steps, text: { en: "Checkout steps 1, 2, 3", ar: "خطوات الدفع 1، 2، 3" } }
+      - { id: code, text: { en: "Ticket code NJ-3012", ar: "رمز التذكرة NJ-3012" } }
+      - { id: check, text: { en: "Check mark on \"Paid\"", ar: "علامة الصح على «مدفوع»" } }
+    buckets:
+      - { id: mirror, label: { en: "Mirror it", ar: "يُعكس" } }
+      - { id: keep, label: { en: "Keep it", ar: "يبقى كما هو" } }
+    answer:
+      mirror: [back, steps]
+      keep: [play, code, check]
+    misconceptions:
+      - id: MC-P10-071
+        when: { item: play, bucket: mirror }
+        feedback:
+          en: "A play button means \"play\" in every language; it doesn't point along the text."
+          ar: "زر التشغيل يعني «تشغيل» في كل لغة؛ ولا يشير في اتجاه النص."
+      - id: MC-P10-071
+        when: { item: check, bucket: mirror }
+        feedback:
+          en: "A check mark has no reading direction. Keep it."
+          ar: "علامة الصح ليس لها اتجاه قراءة. أبقِها."
+    explain:
+      en: "Back and the step order follow the reading direction. Play, the code and the check mark mean the same either way."
+      ar: "الرجوع وترتيب الخطوات يتبعان اتجاه القراءة. أما التشغيل والرمز وعلامة الصح فمعناها واحد في الاتجاهين."
+
+  - id: S06
+    type: choose
+    part: check
+    rules: [R19, U49, U59]
+    prompt:
+      en: "The Arabic ticket now fits at 320px. Who should check that the Arabic event name reads naturally?"
+      ar: "التذكرة العربية تتّسع الآن بعرض 320 بكسل. من يجب أن يتحقّق من أن اسم الحفلة بالعربية يُقرأ بشكل طبيعي؟"
+    options:
+      - { id: native, text: { en: "A native Arabic reader", ar: "قارئ لغته الأم العربية" } }
+      - { id: width, text: { en: "Nobody, it passed the 320px check", ar: "لا أحد، فقد اجتازت فحص 320 بكسل" } }
+      - { id: tool, text: { en: "An automatic translation tool", ar: "أداة ترجمة آلية" } }
+    answer: [native]
+    misconceptions:
+      - id: MC-P10-073
+        when: [width, tool]
+        feedback:
+          en: "A width check tells you it fits, not that it reads well. Meaning needs a person who reads Arabic."
+          ar: "فحص العرض يخبرك أنه يتّسع، لا أنه يُقرأ جيدًا. المعنى يحتاج شخصًا يقرأ العربية."
+    explain:
+      en: "Fit and meaning are different checks. Note the language questions as open until a native reader signs off."
+      ar: "الاتّساع والمعنى فحصان مختلفان. سجّل أسئلة اللغة كأسئلة مفتوحة حتى يوافق عليها قارئ عربي."
+
+  - id: S07
+    type: choose
+    part: check
+    rules: [R19, U21, U59]
+    prompt:
+      en: "A marketing lead says: \"Make Buy ticket huge and put it above the title. Sales will go up.\" What's the best response?"
+      ar: "تقول مديرة التسويق: «اجعلي زر اشترِ التذكرة ضخمًا وضعيه فوق العنوان. ستزيد المبيعات». ما أفضل رد؟"
+    options:
+      - { id: adapt, text: { en: "Adapt: make Buy ticket clearly the main action, right after the date, place and price. We expect faster buying without people missing the date. We'll check with a task.", ar: "تعديل: اجعل «اشترِ التذكرة» الإجراء الرئيسي بوضوح، مباشرة بعد التاريخ والمكان والسعر. نتوقّع شراءً أسرع دون أن يفوت الناس التاريخ. وسنتحقّق بمهمة." } }
+      - { id: accept, text: { en: "Accept: the button goes above the title", ar: "قبول: الزر يوضع فوق العنوان" } }
+      - { id: reject, text: { en: "Reject: that's bad UX", ar: "رفض: هذه تجربة استخدام سيئة" } }
+    answer: [adapt]
+    misconceptions:
+      - id: MC-P10-061
+        when: [accept]
+        feedback:
+          en: "Mostafa would be asked to pay before he sees the date, place and price."
+          ar: "سيُطلب من مصطفى الدفع قبل أن يرى التاريخ والمكان والسعر."
+      - id: MC-P10-075
+        when: [reject]
+        feedback:
+          en: "\"Bad UX\" isn't a reason. Say the consequence and offer a check."
+          ar: "«تجربة سيئة» ليست سببًا. اذكر الأثر واقترح اختبارًا."
+    explain:
+      en: "Her goal, more sales, is fair. Keep it, protect the decision, and say how you'd find out."
+      ar: "هدفها، زيادة المبيعات، مشروع. احتفظ به، واحمِ القرار، وقل كيف ستعرف."
+
+  - id: S08
+    type: compare
+    part: check
+    rules: [R19, U59]
+    prompt:
+      en: "Which task would you give participants to test the ticket page?"
+      ar: "أي مهمة ستعطيها للمشاركين لاختبار صفحة التذكرة؟"
+    a:
+      mock:
+        blocks:
+          - kind: text
+            text:
+              en: "\"You're free on Thursday evening and have EGP 500. Find out if you can go to the jazz night, and which gate to use.\""
+              ar: "«أنت متفرّغ مساء الخميس ومعك 500 جنيه. اعرف إن كان بإمكانك حضور ليلة الجاز، ومن أي بوابة تدخل»."
+    b:
+      mock:
+        blocks:
+          - kind: text
+            text:
+              en: "\"Look at the price under the date, then tap Buy ticket.\""
+              ar: "«انظر إلى السعر تحت التاريخ، ثم اضغط اشترِ التذكرة»."
+    answer: a
+    misconceptions:
+      - id: MC-P10-077
+        when: [b]
+        feedback:
+          en: "B points at the screen and tells them what to tap, so you learn nothing about whether they'd find it."
+          ar: "B تشير إلى الشاشة وتخبرهم بما يضغطون، فلا تعرف شيئًا عن قدرتهم على الإيجاد بأنفسهم."
+    explain:
+      en: "A describes a situation and asks for facts you can check against the page."
+      ar: "A تصف موقفًا وتطلب حقائق يمكنك مقارنتها بالصفحة."
+
+  - id: S09
+    type: sort
+    part: check
+    rules: [R19, U59]
+    prompt:
+      en: "Sort each claim in the team's report."
+      ar: "صنّف كل ادعاء في تقرير الفريق."
+    items:
+      - { id: wraps, text: { en: "The venue wraps to two lines at 320px", ar: "المكان يلتف على سطرين بعرض 320 بكسل" } }
+      - { id: faster, text: { en: "The new layout will make people buy faster", ar: "التخطيط الجديد سيجعل الناس يشترون أسرع" } }
+      - { id: easy, text: { en: "Testers found the gate easily", ar: "وجد المختبِرون البوابة بسهولة" } }
+      - { id: code, text: { en: "The Arabic version shows NJ-3012", ar: "النسخة العربية تعرض NJ-3012" } }
+    buckets:
+      - { id: see, label: { en: "Can be checked in the design now", ar: "يمكن التحقّق منه في التصميم الآن" } }
+      - { id: predict, label: { en: "A prediction to test", ar: "توقّع يحتاج اختبارًا" } }
+      - { id: cant, label: { en: "Can't claim it: no test has run", ar: "لا يمكن ادعاؤه: لم يُجرَ اختبار" } }
+    answer:
+      see: [wraps, code]
+      predict: [faster]
+      cant: [easy]
+    misconceptions:
+      - id: MC-P10-074
+        when: { item: easy, bucket: see }
+        feedback:
+          en: "No one has tested it. \"Testers found it easily\" reports a result that doesn't exist."
+          ar: "لم يختبره أحد. «وجد المختبِرون البوابة بسهولة» تُبلغ عن نتيجة غير موجودة."
+    explain:
+      en: "Two things you can see, one prediction, and one result that needs a test before anyone can claim it."
+      ar: "شيئان يمكنك رؤيتهما، وتوقّع واحد، ونتيجة تحتاج اختبارًا قبل أن يدّعيها أحد."
