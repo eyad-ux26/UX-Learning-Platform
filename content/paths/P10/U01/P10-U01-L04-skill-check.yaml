@@ -1,0 +1,202 @@
+id: P10-U01-L04
+mode: check
+minutes: 6
+title:
+  en: "Skill check: put the decision first"
+  ar: "اختبار المهارة: ضع القرار أولًا"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Huda's appointment", ar: "موعد هدى" }
+    body:
+      en: "Huda needs a dermatologist on Saturday morning, and her insurance is MedCare. She's booking from her phone during a break.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "تحتاج هدى إلى طبيبة جلدية صباح السبت، وتأمينها الصحي من MedCare. تحجز من هاتفها في وقت الاستراحة.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      blocks:
+        - { kind: image, size: l, text: "@C1h" }
+        - { kind: banner, text: "@C1g", gap: m }
+        - { kind: title, text: "@C1a", gap: m }
+        - { kind: meta, text: "@C1b", gap: s }
+        - { kind: button, text: "@C1e", gap: m }
+        - { kind: small, text: "@C1d", gap: s }
+        - { kind: small, text: "@C1c", gap: s }
+
+  - id: S02
+    type: sort
+    part: check
+    rules: [R19]
+    prompt:
+      en: "Label everything on Huda's booking page."
+      ar: "صنّف كل ما في صفحة حجز هدى."
+    items:
+      - { id: C1a, text: "@C1a" }
+      - { id: C1b, text: "@C1b" }
+      - { id: C1c, text: "@C1c" }
+      - { id: C1d, text: "@C1d" }
+      - { id: C1e, text: "@C1e" }
+      - { id: C1f, text: "@C1f" }
+      - { id: C1g, text: "@C1g" }
+      - { id: C1h, text: "@C1h" }
+    buckets:
+      - { id: now, label: { en: "Decide now", ar: "قرار الآن" } }
+      - { id: sup, label: { en: "Supporting", ar: "داعم" } }
+      - { id: opt, label: { en: "Optional", ar: "اختياري" } }
+    answer:
+      now: [C1a, C1b, C1c, C1d, C1e]
+      sup: [C1f]
+      opt: [C1g, C1h]
+    also_ok:
+      - answer:
+          now: [C1a, C1b, C1c, C1d, C1e, C1f]
+          sup: []
+          opt: [C1g, C1h]
+        feedback:
+          en: "Also fine: treating the insurance card as part of the decision."
+          ar: "مقبول أيضًا: اعتبار بطاقة التأمين جزءًا من القرار."
+    misconceptions:
+      - id: MC-P10-002
+        when: { item: C1f, bucket: opt }
+        feedback:
+          en: "Without the card, Huda's insurance may not apply. It's a condition that must come before she books."
+          ar: "بدون البطاقة قد لا يُطبَّق تأمين هدى. هذا شرط يجب أن يأتي قبل أن تحجز."
+      - id: MC-P10-001
+        when: { item: C1h, bucket: now }
+        feedback:
+          en: "The clinic photo is big, but Huda doesn't decide anything with it."
+          ar: "صورة العيادة كبيرة، لكن هدى لا تقرّر بها أي شيء."
+    explain:
+      en: "Decide now: doctor, time, insurance, fee and the button. Supporting: bring your insurance card. Optional: the blog and the clinic photo."
+      ar: "قرار الآن: الطبيبة والموعد والتأمين والرسوم والزر. داعم: إحضار بطاقة التأمين. اختياري: المدوّنة وصورة العيادة."
+
+  - id: S03
+    type: order
+    part: check
+    rules: [R19]
+    prompt:
+      en: "Put these in the order Huda should meet them, top to bottom."
+      ar: "رتّب هذه بالترتيب الذي يجب أن تراها به هدى، من الأعلى إلى الأسفل."
+    items:
+      - { id: C1e, text: "@C1e" }
+      - { id: C1c, text: "@C1c" }
+      - { id: C1a, text: "@C1a" }
+      - { id: C1d, text: "@C1d" }
+      - { id: C1b, text: "@C1b" }
+    answer: [C1a, C1b, C1c, C1d, C1e]
+    also_ok:
+      - { answer: [C1b, C1a, C1c, C1d, C1e], feedback: { en: "Also fine: time first, doctor right next to it.", ar: "مقبول أيضًا: الموعد أولًا والطبيبة بجانبه." } }
+      - { answer: [C1a, C1b, C1d, C1c, C1e], feedback: { en: "Also fine: fee and insurance can swap.", ar: "مقبول أيضًا: يمكن تبديل الرسوم والتأمين." } }
+      - { answer: [C1b, C1a, C1d, C1c, C1e], feedback: { en: "Also fine.", ar: "مقبول أيضًا." } }
+    misconceptions:
+      - id: MC-P10-006
+        when: { before: [C1e, C1c] }
+        feedback:
+          en: "The button comes before the insurance line, so Huda could book without knowing if MedCare is accepted."
+          ar: "الزر يأتي قبل سطر التأمين، لذلك قد تحجز هدى دون أن تعرف إن كان MedCare مقبولًا."
+    explain:
+      en: "Who and when, then insurance and fee, then the button. Doctor and time can swap; insurance and fee can swap. The button always comes after the facts Huda decides with."
+      ar: "من ومتى، ثم التأمين والرسوم، ثم الزر. يمكن تبديل الطبيبة والموعد، ويمكن تبديل التأمين والرسوم. ويأتي الزر دائمًا بعد الحقائق التي تقرّر بها هدى."
+
+  - id: S04
+    type: spot
+    part: check
+    rules: [R19]
+    prompt:
+      en: "A teammate tidied the page. Which part now stops Huda from deciding?"
+      ar: "رتّب زميل الصفحة. أي جزء الآن يمنع هدى من اتخاذ قرارها؟"
+    mock:
+      blocks:
+        - { kind: image, size: m, text: "@C1h", region: photo }
+        - { kind: title, text: "@C1a", gap: m, region: doctor }
+        - { kind: meta, text: "@C1b", gap: s, region: time }
+        - kind: link
+          gap: s
+          region: fees
+          text: { en: "Insurance and fees", ar: "التأمين والرسوم" }
+        - { kind: button, text: "@C1e", gap: m, region: button }
+    regions:
+      - { id: photo, label: "@C1h" }
+      - { id: time, label: "@C1b" }
+      - { id: fees, label: { en: "The \"Insurance and fees\" link", ar: "رابط «التأمين والرسوم»" } }
+      - { id: button, label: "@C1e" }
+    answer: [fees]
+    misconceptions:
+      - id: MC-P10-001
+        when: [photo]
+        feedback:
+          en: "The photo is optional, but it isn't what blocks Huda. The insurance and fee are now behind a tap."
+          ar: "الصورة اختيارية، لكنها ليست ما يعرقل هدى. التأمين والرسوم أصبحا خلف ضغطة."
+    explain:
+      en: "Huda's main question is whether MedCare is accepted and what she'll pay. Hiding that behind a link lets her book without knowing."
+      ar: "سؤال هدى الأساسي: هل MedCare مقبول وكم ستدفع؟ إخفاء ذلك خلف رابط يجعلها تحجز دون أن تعرف."
+
+  - id: S05
+    type: compare
+    part: check
+    rules: [R19, R11]
+    prompt:
+      en: "Which version helps Huda decide faster?"
+      ar: "أي نسخة تساعد هدى على القرار أسرع؟"
+    a:
+      mock:
+        blocks:
+          - { kind: title, text: "@C1a" }
+          - { kind: meta, text: "@C1b", gap: s }
+          - { kind: meta, text: "@C1c", gap: s }
+          - { kind: meta, text: "@C1d", gap: s }
+          - { kind: button, text: "@C1e", gap: m }
+          - { kind: small, text: "@C1f", gap: s }
+          - { kind: link, text: "@C1g", gap: l }
+    b:
+      mock:
+        blocks:
+          - { kind: banner, text: "@C1g" }
+          - { kind: image, size: m, text: "@C1h", gap: m }
+          - { kind: title, text: "@C1a", gap: m }
+          - { kind: meta, text: "@C1b", gap: s }
+          - { kind: button, text: "@C1e", gap: m }
+          - { kind: small, text: "@C1c", gap: s }
+          - { kind: small, text: "@C1d", gap: s }
+    answer: a
+    reason:
+      prompt: { en: "What makes the difference?", ar: "ما الذي يصنع الفرق؟" }
+      options:
+        - { id: facts, text: { en: "Insurance and fee come before the button", ar: "التأمين والرسوم يأتيان قبل الزر" } }
+        - { id: nophoto, text: { en: "It has no photo", ar: "لا توجد فيها صورة" } }
+        - { id: blog, text: { en: "The blog link is smaller", ar: "رابط المدوّنة أصغر" } }
+      answer: [facts]
+    explain:
+      en: "In A, everything Huda decides with comes before Book this slot. In B, the blog and photo lead, and insurance and fee arrive only after the button."
+      ar: "في A، كل ما تقرّر به هدى يأتي قبل «احجز هذا الموعد». في B، تتصدّر المدوّنة والصورة، ولا يظهر التأمين والرسوم إلا بعد الزر."
+
+  - id: S06
+    type: choose
+    part: check
+    rules: [R14, R19]
+    prompt:
+      en: "This clinic page is mostly visited by older patients, many using wheelchairs. Which item should move up into \"Decide now\"?"
+      ar: "معظم زوّار صفحة هذه العيادة من المرضى الكبار في السن، وكثير منهم يستخدمون كراسي متحركة. أي عنصر يجب أن ينتقل إلى «قرار الآن»؟"
+    options:
+      - { id: access, text: "@C1i" }
+      - { id: blog, text: "@C1g" }
+      - { id: photo, text: "@C1h" }
+    answer: [access]
+    explain:
+      en: "For these patients, whether they can get in decides whether they can come at all. Priority follows who the visitor is."
+      ar: "لهؤلاء المرضى، إمكانية الدخول تحدّد إن كانوا يستطيعون الحضور أصلًا. الأولوية تتبع هوية الزائر."
+
+  - id: S07
+    type: choose
+    part: check
+    rules: [R14, R19]
+    prompt:
+      en: "The 10:30 slot was just taken. What should lead the page now?"
+      ar: "حُجز موعد 10:30 للتو. ما الذي يجب أن يتصدّر الصفحة الآن؟"
+    options:
+      - { id: grey, text: { en: "The same page, with the Book button greyed out", ar: "الصفحة نفسها، مع زر الحجز باللون الرمادي" } }
+      - { id: next, text: { en: "\"This slot is taken\", then the next Saturday-morning slots", ar: "«هذا الموعد محجوز»، ثم مواعيد صباح السبت التالية" } }
+      - { id: blog, text: { en: "The blog, so Huda has something to read", ar: "المدوّنة، حتى تجد هدى ما تقرؤه" } }
+    answer: [next]
+    explain:
+      en: "When the situation changes, so does the next useful thing. Huda needs to know the slot is gone and what she can book instead."
+      ar: "عندما يتغيّر الموقف، يتغيّر الشيء المفيد التالي. تحتاج هدى أن تعرف أن الموعد ذهب، وما الذي تستطيع حجزه بدلًا منه."
