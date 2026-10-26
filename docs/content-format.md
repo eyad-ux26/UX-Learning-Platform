@@ -104,3 +104,8 @@ A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to
 In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
 
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
+
+## Player behaviour worth knowing
+
+- Every step after a lesson's hook card has a **Show the scenario** panel that reopens the hook (title, text and mock), so learners can re-check the situation at any time.
+- An `order` step without its own `mock` shows a **live preview** that updates as items move. Give items a `kind` (such as `title` or `button`) so the preview looks like the real screen; the default is `meta`. Set `preview: false` to turn it off.
