@@ -55,6 +55,11 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .part{font-size:.85rem;color:var(--muted);margin:22px 0 4px}
 .prompt{font-size:1.2rem;font-weight:600;line-height:1.4;margin:0 0 14px}
 .scenario{background:var(--surface);border-inline-start:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:0 0 14px}
+.scen{border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:0 0 14px;background:var(--surface)}
+.scen summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0;min-height:32px;display:flex;align-items:center}
+.scen h2{font-size:1.05rem;margin:8px 0 4px}
+.scen .mock{margin-bottom:8px}
+.live{margin:0 0 14px}
 .body p{margin:0 0 12px}
 .opts{display:grid;gap:10px;margin:0 0 14px;padding:0;border:0}
 .opt{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:52px}
@@ -168,7 +173,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -177,7 +182,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -319,6 +324,8 @@ function renderStep(){
       const picked = (L.steps[k].first||[]).map(id => tx(prev.options.find(o => o.id === id)?.text)).join(", ");
       if (picked) h += `<div class="recall">${u().yourFirst} <b>${esc(picked)}</b></div>`;
     }
+    const hook = L.lesson.steps.find(x => x.type === "card" && x.part === "hook");
+    if (hook && hook !== s) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
     h += renderInteraction(s, st, locked);
     if (s.reason) h += renderReason(s, st, locked);
@@ -363,7 +370,8 @@ function renderInteraction(s, st, locked){
   }
   if (s.type === "order"){
     const order = st.revealed ? s.answer : st.sel;
-    return mock(s.mock) + order.map((id, k) => {
+    const live = s.mock || s.preview === false ? "" : `<div class="live" aria-hidden="true">${mock({caption: {en: UI.en.live, ar: UI.ar.live}, blocks: order.map((id, k) => { const it = s.items.find(x => x.id === id); return {kind: it.kind || "meta", text: it.text, gap: k ? "s" : undefined}; })})}</div>`;
+    return mock(s.mock) + live + order.map((id, k) => {
       const it = s.items.find(x => x.id === id);
       return `<div class="row ord"><span class="n">${k+1}</span><span class="t">${esc(tx(it.text))}</span><button type="button" data-up="${k}" aria-label="${u().moveUp}: ${esc(tx(it.text))}" ${k===0||locked?"disabled":""}>↑</button><button type="button" data-down="${k}" aria-label="${u().moveDown}: ${esc(tx(it.text))}" ${k===order.length-1||locked?"disabled":""}>↓</button></div>`;
     }).join("");
@@ -386,6 +394,7 @@ function renderReason(s, st, locked){
 }
 
 function wire(s, st, locked){
+  const sc = document.querySelector("details.scen"); if (sc) sc.ontoggle = () => { L.scenOpen = sc.open; };
   const redraw = () => renderStep();
   document.querySelectorAll('input[name="opt"]').forEach(inp => inp.onchange = () => {
     st.sel = [...document.querySelectorAll('input[name="opt"]:checked')].map(x => x.value);
