@@ -1,0 +1,309 @@
+id: P10-U03-L01
+mode: lesson
+minutes: 8
+title:
+  en: "Too many loud things"
+  ar: "أشياء لافتة أكثر من اللازم"
+review_labels:
+  MC-P10-040: { en: "When everything stands out, nothing does", ar: "عندما يبرز كل شيء، لا يبرز شيء" }
+  MC-P10-041: { en: "One main action per decision", ar: "إجراء رئيسي واحد لكل قرار" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Everything is important", ar: "كل شيء مهم" }
+    body:
+      en: "A stakeholder reviewed Sara's page and said every item matters. So now everything is big and bold, and both buttons are filled.\n\nEverything does matter. But can Sara still see what to do?"
+      ar: "راجع أحد أصحاب المصلحة صفحة سارة وقال إن كل عنصر مهم. لذلك أصبح كل شيء كبيرًا وعريضًا، والزرّان ممتلئان باللون.\n\nكل شيء مهم فعلًا. لكن هل ما زالت سارة ترى ما يجب أن تفعله؟"
+    mock: &loud
+      blocks:
+        - { kind: text, px: 22, weight: bold, text: "@W1a" }
+        - { kind: text, px: 22, weight: bold, text: "@W1b", gap: s }
+        - { kind: text, px: 22, weight: bold, text: "@W1c", gap: s }
+        - { kind: text, px: 22, weight: bold, text: "@W1d", gap: s }
+        - { kind: button, text: "@W1f", gap: m }
+        - { kind: text, px: 22, weight: bold, color: faint, text: "@W1g", gap: s }
+        - { kind: button, text: "@W1j", gap: m }
+
+  - id: S02
+    type: predict
+    part: try
+    any_ok: true
+    rules: [R12]
+    prompt:
+      en: "Glance at the page for two seconds. What's the main thing to do here?"
+      ar: "انظر إلى الصفحة ثانيتين. ما الشيء الرئيسي الذي يجب فعله هنا؟"
+    mock: *loud
+    options:
+      - { id: reserve, text: "@W1f" }
+      - { id: news, text: "@W1j" }
+      - { id: unsure, text: { en: "Hard to say", ar: "يصعب القول" } }
+    reveal:
+      en: "Reserve is the main action, but the page doesn't say so: two filled buttons look equally important, and every line shouts at the same volume."
+      ar: "«احجز» هو الإجراء الرئيسي، لكن الصفحة لا توضّح ذلك: زرّان ممتلئان يبدوان بالأهمية نفسها، وكل سطر يصرخ بالصوت نفسه."
+
+  - id: S03
+    type: card
+    part: concept
+    title: { en: "Emphasis is a budget", ar: "البروز ميزانية محدودة" }
+    body:
+      en: "Size, weight and color only stand out compared with what's around them. Make everything loud and the differences disappear.\n\nSo give each item a **role**: page title, body facts, supporting text, primary action, secondary action. Each role gets one consistent style.\n\nUsually there's one primary action per decision. Everything else is quieter, but still readable."
+      ar: "الحجم وسُمك الخط واللون لا تبرز إلا مقارنةً بما حولها. اجعل كل شيء لافتًا وستختفي الفروق.\n\nلذلك أعطِ كل عنصر **دورًا**: عنوان الصفحة، الحقائق الأساسية، النص الداعم، الإجراء الرئيسي، الإجراء الثانوي. ولكل دور شكل واحد ثابت.\n\nعادةً يوجد إجراء رئيسي واحد لكل قرار. وكل ما عداه أهدأ، لكنه يبقى مقروءًا."
+
+  - id: S04
+    type: match
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "Give each item on Sara's page a role."
+      ar: "أعطِ كل عنصر في صفحة سارة دورًا."
+    left:
+      - { id: W1a, text: "@W1a" }
+      - { id: W1b, text: "@W1b" }
+      - { id: W1g, text: "@W1g" }
+      - { id: W1f, text: "@W1f" }
+      - { id: W1j, text: "@W1j" }
+    right:
+      - { id: title, text: { en: "Page title", ar: "عنوان الصفحة" } }
+      - { id: body, text: { en: "Body fact", ar: "حقيقة أساسية" } }
+      - { id: support, text: { en: "Supporting text", ar: "نص داعم" } }
+      - { id: primary, text: { en: "Primary action", ar: "إجراء رئيسي" } }
+      - { id: secondary, text: { en: "Secondary action", ar: "إجراء ثانوي" } }
+    answer: { W1a: title, W1b: body, W1g: support, W1f: primary, W1j: secondary }
+    misconceptions:
+      - id: MC-P10-041
+        when: { left: W1j, right: primary }
+        feedback:
+          en: "If the newsletter is primary too, Sara sees two equal choices. Only one action completes her decision."
+          ar: "إذا كانت النشرة إجراءً رئيسيًا أيضًا، سترى سارة خيارين متساويين. إجراء واحد فقط يكمل قرارها."
+      - id: MC-P10-002
+        when: { left: W1b, right: support }
+        feedback:
+          en: "The date is something Sara decides with, so it's a body fact, not supporting text."
+          ar: "التاريخ شيء تقرّر به سارة، لذلك هو حقيقة أساسية لا نص داعم."
+    hints:
+      - { en: "Which one action finishes Sara's decision?", ar: "ما الإجراء الوحيد الذي يكمل قرار سارة؟" }
+    correct:
+      en: "Five items, five roles, one primary action."
+      ar: "خمسة عناصر، خمسة أدوار، وإجراء رئيسي واحد."
+    explain:
+      en: "Roles come from the decision you mapped in Unit 1: the title names it, facts inform it, conditions support it, Reserve completes it, and the newsletter is an extra."
+      ar: "الأدوار تأتي من القرار الذي حدّدته في الوحدة 1: العنوان يسمّيه، والحقائق تُعلمه، والشروط تدعمه، و«احجز» يكمله، والنشرة إضافة."
+
+  - id: S05
+    type: tune
+    part: guided
+    confidence: true
+    rules: [R13, R06]
+    prompt:
+      en: "Try each button style. Which one makes Reserve clearly the main action?"
+      ar: "جرّب كل شكل للأزرار. أيّها يجعل «احجز» الإجراء الرئيسي بوضوح؟"
+    start: both
+    options:
+      - id: both
+        text: { en: "Both buttons filled", ar: "الزرّان ممتلئان" }
+        mock:
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: button, text: "@W1j", gap: s }
+      - id: one
+        text: { en: "Reserve filled, newsletter as a plain text button", ar: "«احجز» ممتلئ، والنشرة كزر نصي بسيط" }
+        mock:
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: button, style: plain, text: "@W1j", gap: s }
+      - id: none
+        text: { en: "Both as plain text buttons", ar: "الزرّان نصيّان بسيطان" }
+        mock:
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: button, style: plain, text: "@W1f", gap: m }
+            - { kind: button, style: plain, text: "@W1j", gap: s }
+    answer: [one]
+    misconceptions:
+      - id: MC-P10-041
+        when: [both]
+        feedback:
+          en: "Two filled buttons ask Sara to choose between them, as if subscribing were as important as booking."
+          ar: "زرّان ممتلئان يطلبان من سارة الاختيار بينهما، كأن الاشتراك بأهمية الحجز."
+      - id: MC-P10-042
+        when: [none]
+        feedback:
+          en: "Now nothing stands out. Calm is good, but the one action that completes the decision should be easy to find."
+          ar: "الآن لا شيء يبرز. الهدوء جيد، لكن الإجراء الذي يكمل القرار يجب أن يكون سهل الإيجاد."
+    correct:
+      en: "One filled button for the main action; the extra stays available but quiet."
+      ar: "زر ممتلئ واحد للإجراء الرئيسي؛ والإضافي يبقى متاحًا لكن هادئًا."
+    explain:
+      en: "A filled button is the loudest thing a page can say. Spend it on the action that completes the visitor's decision."
+      ar: "الزر الممتلئ هو أعلى ما يمكن أن تقوله الصفحة. اصرفه على الإجراء الذي يكمل قرار الزائر."
+
+  - id: S06
+    type: compare
+    part: contrast
+    rules: [R11, R15]
+    prompt:
+      en: "Same content. Which version makes the structure easier to see?"
+      ar: "المحتوى نفسه. أي نسخة تجعل رؤية التنظيم أسهل؟"
+    a: { mock: *loud }
+    b:
+      mock:
+        blocks:
+          - { kind: text, px: 24, weight: bold, text: "@W1a" }
+          - { kind: text, px: 16, text: "@W1b", gap: s }
+          - { kind: text, px: 16, text: "@W1c", gap: xs }
+          - { kind: text, px: 16, text: "@W1d", gap: xs }
+          - { kind: button, text: "@W1f", gap: m }
+          - { kind: text, px: 14, color: muted, text: "@W1g", gap: s }
+          - { kind: button, style: plain, text: "@W1j", gap: m }
+    answer: b
+    reason:
+      prompt: { en: "What makes it easier?", ar: "ما الذي يجعلها أسهل؟" }
+      options:
+        - { id: diff, text: { en: "The differences in size and weight show what matters", ar: "الفروق في الحجم وسُمك الخط تُظهر ما يهم" } }
+        - { id: big, text: { en: "Smaller text looks more professional", ar: "النص الأصغر يبدو أكثر احترافية" } }
+      answer: [diff]
+      misconceptions:
+        - id: MC-P10-043
+          when: [big]
+          feedback:
+            en: "It's not about looking professional. In A, every line is the same size and weight, so none stands out."
+            ar: "الأمر لا يتعلّق بالمظهر الاحترافي. في A كل سطر بالحجم والسُّمك نفسيهما، فلا يبرز أي منها."
+    misconceptions:
+      - id: MC-P10-040
+        when: [a]
+        feedback:
+          en: "A makes every line big and bold, so none of them stands out. Bigger everywhere isn't clearer."
+          ar: "A تجعل كل سطر كبيرًا وعريضًا، فلا يبرز أي منها. التكبير في كل مكان لا يعني وضوحًا أكثر."
+    correct:
+      en: "Four sizes, used for four roles."
+      ar: "أربعة أحجام لأربعة أدوار."
+    explain:
+      en: "B uses 24px bold for the title, 16px for facts, 14px for the condition and one filled button. The exact sizes are a choice; the point is that each role looks different and consistent."
+      ar: "B تستخدم 24 بكسل عريضًا للعنوان، و16 بكسل للحقائق، و14 بكسل للشرط، وزرًا ممتلئًا واحدًا. الأحجام بالضبط اختيار؛ المهم أن يبدو كل دور مختلفًا وثابتًا."
+
+  - id: S07
+    type: spot
+    part: guided
+    rules: [R06, R15]
+    prompt:
+      en: "Which element competes with Reserve without helping Sara decide?"
+      ar: "أي عنصر ينافس «احجز» دون أن يساعد سارة على القرار؟"
+    mock:
+      blocks:
+        - { kind: title, text: "@W1a", region: title }
+        - { kind: meta, text: "@W1b", gap: s, region: date }
+        - { kind: chip, text: "@W1e", gap: s, region: places }
+        - { kind: button, text: "@W1f", gap: m, region: reserve }
+        - { kind: button, text: "@W1j", gap: s, region: news }
+    regions:
+      - { id: title, label: "@W1a" }
+      - { id: places, label: "@W1e" }
+      - { id: reserve, label: "@W1f" }
+      - { id: news, label: "@W1j" }
+    answer: [news]
+    misconceptions:
+      - id: MC-P10-044
+        when: [places]
+        feedback:
+          en: "The chip stands out a little, but it helps Sara decide: only 4 places left. Look for something loud that doesn't help."
+          ar: "الشارة بارزة قليلًا، لكنها تساعد سارة على القرار: بقيت 4 أماكن فقط. ابحث عن شيء لافت لا يساعد."
+      - id: MC-P10-040
+        when: [title]
+        feedback:
+          en: "The title should be prominent; it names the decision. What's as loud as Reserve but serves something else?"
+          ar: "يجب أن يكون العنوان بارزًا؛ فهو يسمّي القرار. ما الذي بصوت «احجز» نفسه لكنه يخدم شيئًا آخر؟"
+    correct:
+      en: "The filled newsletter button is as loud as Reserve."
+      ar: "زر النشرة الممتلئ بصوت «احجز» نفسه."
+    explain:
+      en: "Emphasis on the title and the availability chip supports the decision. Emphasis on the newsletter competes with it."
+      ar: "البروز في العنوان وشارة التوفّر يدعم القرار. أما البروز في النشرة فينافسه."
+
+  - id: S08
+    type: choose
+    part: independent
+    confidence: true
+    rules: [R14, R19]
+    scenario:
+      en: "A different app. Omar is editing his profile. At the bottom are two buttons: Save changes and Delete account."
+      ar: "تطبيق مختلف. يعدّل عمر ملفه الشخصي. في الأسفل زرّان: «احفظ التغييرات» و«احذف الحساب»."
+    prompt:
+      en: "How should they be styled?"
+      ar: "كيف يجب تصميمهما؟"
+    mock:
+      blocks:
+        - { kind: field, label: { en: "Display name", ar: "الاسم المعروض" }, text: { en: "Omar H.", ar: "عمر ح." } }
+        - { kind: button, text: { en: "Save changes", ar: "احفظ التغييرات" }, gap: l }
+        - { kind: button, style: danger, text: { en: "Delete account", ar: "احذف الحساب" }, gap: s }
+    options:
+      - { id: same, text: { en: "Both filled, as now", ar: "الاثنان ممتلئان، كما هما الآن" } }
+      - { id: save, text: { en: "Save filled; Delete as quieter red text, set apart", ar: "«احفظ» ممتلئ؛ و«احذف» نص أحمر أهدأ ومنفصل" } }
+      - { id: delete, text: { en: "Delete filled and bigger, because it's the most serious", ar: "«احذف» ممتلئ وأكبر، لأنه الأخطر" } }
+    answer: [save]
+    misconceptions:
+      - id: MC-P10-041
+        when: [same]
+        feedback:
+          en: "Two filled buttons side by side make deleting the account look like an equal next step. That invites mistakes."
+          ar: "زرّان ممتلئان متجاوران يجعلان حذف الحساب يبدو خطوة تالية مساوية. هذا يدعو إلى الأخطاء."
+      - id: MC-P10-045
+        when: [delete]
+        feedback:
+          en: "Serious isn't the same as main. Most visitors came to save their changes; deleting should be possible, but not the loudest thing."
+          ar: "الخطير لا يعني الرئيسي. معظم الزوّار جاؤوا لحفظ تغييراتهم؛ الحذف يجب أن يكون ممكنًا، لكن ليس الأبرز."
+    correct:
+      en: "The main action leads; the risky one is available, clearly marked, and out of the way."
+      ar: "الإجراء الرئيسي في المقدّمة؛ والخطير متاح، ومميّز بوضوح، وبعيد عن الطريق."
+    explain:
+      en: "Emphasis follows what most people came to do. A destructive action keeps its red color as a warning, but not the visual weight of a primary button."
+      ar: "البروز يتبع ما جاء معظم الناس لفعله. الإجراء المدمّر يحتفظ بلونه الأحمر كتحذير، لكن ليس بثقل الزر الرئيسي."
+
+  - id: S09
+    type: choose
+    part: independent
+    rules: [R09, R14]
+    prompt:
+      en: "The page from Unit 2 lists two workshop sessions, each with its own Reserve button. Is it OK for both to be filled?"
+      ar: "الصفحة من الوحدة 2 تعرض جلستين، لكل منهما زر «احجز» خاص بها. هل يصح أن يكون الزرّان ممتلئين؟"
+    options:
+      - { id: yes, text: { en: "Yes, each is the main action of its own group", ar: "نعم، كل منهما الإجراء الرئيسي لمجموعته" } }
+      - { id: no, text: { en: "No, a page can only have one filled button", ar: "لا، الصفحة لا يمكن أن تحتوي إلا على زر ممتلئ واحد" } }
+      - { id: one, text: { en: "Only the cheaper session's button", ar: "فقط زر الجلسة الأرخص" } }
+    answer: [yes]
+    reason:
+      prompt: { en: "Why?", ar: "لماذا؟" }
+      options:
+        - { id: decision, text: { en: "Each group is a separate decision with one main action", ar: "كل مجموعة قرار منفصل له إجراء رئيسي واحد" } }
+        - { id: always, text: { en: "Buttons should always be filled", ar: "الأزرار يجب أن تكون ممتلئة دائمًا" } }
+      answer: [decision]
+    misconceptions:
+      - id: MC-P10-046
+        when: [no]
+        feedback:
+          en: "The rule is one main action per decision, not per page. Two separate bookings are two decisions."
+          ar: "القاعدة إجراء رئيسي واحد لكل قرار، لا لكل صفحة. حجزان منفصلان يعنيان قرارين."
+      - id: MC-P10-047
+        when: [one]
+        feedback:
+          en: "Emphasizing one session pushes Sara toward it for no reason she asked for. Equal choices get equal weight."
+          ar: "إبراز جلسة واحدة يدفع سارة نحوها دون سبب طلبته. الخيارات المتساوية تأخذ وزنًا متساويًا."
+    correct:
+      en: "One main action per decision, and each card is its own decision."
+      ar: "إجراء رئيسي واحد لكل قرار، وكل بطاقة قرار مستقل."
+    explain:
+      en: "Grouping (Unit 2) tells people which button belongs to which session. Emphasis (this unit) tells them which action is main within each group."
+      ar: "التجميع (الوحدة 2) يخبر الناس أي زر يخص أي جلسة. والبروز (هذه الوحدة) يخبرهم أي إجراء هو الرئيسي داخل كل مجموعة."
+
+  - id: S10
+    type: card
+    part: recap
+    title: { en: "What you did", ar: "ما أنجزته" }
+    body:
+      en: "You gave each item a role, spent the filled button on the one action that completes the decision, and kept risky and extra actions quieter. You also saw that the rule is one main action per decision, not per page.\n\nNext: making supporting text quiet without making it unreadable."
+      ar: "أعطيت كل عنصر دورًا، وصرفت الزر الممتلئ على الإجراء الوحيد الذي يكمل القرار، وأبقيت الإجراءات الخطيرة والإضافية أهدأ. ورأيت أن القاعدة إجراء رئيسي واحد لكل قرار، لا لكل صفحة.\n\nالتالي: جعل النص الداعم هادئًا دون أن يصبح غير مقروء."
