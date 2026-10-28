@@ -31,27 +31,38 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "In the Arabic version, what should change direction?"
-      ar: "في النسخة العربية، ما الذي يجب أن يتغيّر اتجاهه؟"
+    prompt: { en: "In the Arabic version, what should change direction?", ar: "في النسخة العربية، ما الذي يجب أن يتغيّر اتجاهه؟" }
     options:
+      - { id: none, text: { en: "Only the words; the layout stays the same", ar: "الكلمات فقط؛ ويبقى التخطيط كما هو" } }
       - { id: all, text: { en: "Everything, including codes and numbers", ar: "كل شيء، بما فيه الرموز والأرقام" } }
       - { id: layout, text: { en: "The layout and the text flow, but not codes or numbers", ar: "التخطيط واتجاه النص، لكن ليس الرموز أو الأرقام" } }
-      - { id: none, text: { en: "Only the words; the layout stays the same", ar: "الكلمات فقط؛ ويبقى التخطيط كما هو" } }
-    reveal:
-      en: "The layout and the text flow change. Codes, numbers, emails and phone numbers keep their own order. WS-204 is still WS-204 in an Arabic sentence."
-      ar: "التخطيط واتجاه النص يتغيّران. أما الرموز والأرقام والبريد الإلكتروني وأرقام الهواتف فتحتفظ بترتيبها. WS-204 يبقى WS-204 داخل جملة عربية."
-
+    answer: [layout]
+    misconceptions:
+      - id: MC-P10-070
+        when: [all]
+        feedback:
+          en: "Reverse WS-204 and you get 402-SW: a different code. Codes, numbers, emails and phone numbers keep their own order."
+          ar: "اعكس WS-204 فتحصل على 402-SW: رمز مختلف. الرموز والأرقام والبريد الإلكتروني وأرقام الهواتف تحتفظ بترتيبها."
+      - id: MC-P10-072
+        when: [none]
+        feedback:
+          en: "Arabic readers start on the right, so the layout starts there too: the title, the back arrow and the progress bar all begin on the right."
+          ar: "القارئ العربي يبدأ من اليمين، فيبدأ التخطيط من هناك أيضًا: العنوان وسهم الرجوع والـ Progress bar كلها تبدأ من اليمين."
+    correct:
+      en: "The flow flips; the facts don't."
+      ar: "الاتجاه ينعكس، والمعلومات لا."
+    explain:
+      en: "The layout and the sentences run right to left. WS-204 is still WS-204 inside an Arabic sentence."
+      ar: "التخطيط والجمل تسير من اليمين إلى اليسار. ويبقى WS-204 هو WS-204 داخل الجملة العربية."
   - id: S03
     type: card
     part: concept
+    icons: [order, id, eye, person]
     title: { en: "Flip the flow, not the facts", ar: "اعكس الاتجاه، لا المعلومات" }
     body:
-      en: "In Arabic, the page reads from right to left. So describe the layout by **start** and **end**, not left and right: the title aligns to the start, the back arrow sits at the start, progress fills from the start.\n\nSome things keep their own direction inside Arabic text: codes like WS-204, prices like EGP 120, phone numbers and emails. Mark them as separate left-to-right pieces so they stay whole and their punctuation stays put. Never reverse their characters.\n\nDon't mirror every icon. Mirror icons that point along the reading direction, like back and forward arrows. Keep icons that mean the same both ways, like a clock, a play button, a check mark or a logo.\n\nAnd a width check can't tell you if the Arabic reads naturally. Ask a native reader."
-      ar: "في العربية تُقرأ الصفحة من اليمين إلى اليسار. لذلك صِف التخطيط بـ**البداية** و**النهاية**، لا باليسار واليمين: العنوان يُحاذى إلى البداية، وسهم الرجوع في البداية، والتقدّم يمتلئ من البداية.\n\nبعض الأشياء تحتفظ باتجاهها داخل النص العربي: رموز مثل WS-204، وأسعار مثل EGP 120، وأرقام الهواتف والبريد الإلكتروني. علّمها كقطع منفصلة من اليسار لليمين حتى تبقى كاملة وتبقى علامات الترقيم في مكانها. ولا تعكس حروفها أبدًا.\n\nلا تعكس كل أيقونة. اعكس الأيقونات التي تشير في اتجاه القراءة، مثل سهمي الرجوع والتقدّم. وأبقِ الأيقونات التي معناها واحد في الاتجاهين، مثل الساعة وزر التشغيل وعلامة الصح والشعار.\n\nوفحص العرض لا يخبرك إن كانت العربية تُقرأ بشكل طبيعي. اسأل قارئًا لغته الأم العربية."
-
+      en: "Arabic reads from right to left (RTL). Flip the flow, not the facts.\n\n- **Start and end, not left and right:** the title aligns to the start, the back arrow sits at the start, progress fills from the start.\n- **Codes keep their direction:** codes like WS-204, prices like EGP 120, phone numbers and emails stay whole, as separate left-to-right pieces. Never reverse their characters.\n- **Mirror only directional icons:** flip back and forward arrows. Keep a clock, a play button, a check mark or a logo as they are.\n- **Ask a native reader:** a width check can't tell you whether the Arabic reads naturally."
+      ar: "العربية تُقرأ من اليمين إلى اليسار (RTL). اعكس الاتجاه، لا المعلومات.\n\n- **البداية والنهاية، لا اليسار واليمين:** العنوان يُحاذى إلى البداية، وسهم الرجوع في البداية، والـ Progress bar يمتلئ من البداية.\n- **الرموز تحتفظ باتجاهها:** رموز مثل WS-204، وأسعار مثل EGP 120، وأرقام الهواتف والبريد الإلكتروني تبقى كاملة، كقطع منفصلة من اليسار لليمين. ولا تعكس حروفها أبدًا.\n- **اعكس الأيقونات الاتجاهية فقط:** اعكس سهمي الرجوع والتقدّم. وأبقِ الساعة وزر التشغيل وعلامة الصح والشعار كما هي.\n- **اسأل قارئًا عربيًا:** فحص العرض لا يخبرك إن كانت العربية تُقرأ بشكل طبيعي."
   - id: S04
     type: spot
     part: guided
@@ -100,7 +111,7 @@ steps:
     items:
       - { id: back, text: { en: "Back arrow", ar: "سهم الرجوع" } }
       - { id: clock, text: { en: "Clock icon", ar: "أيقونة الساعة" } }
-      - { id: progress, text: { en: "Progress bar filling up", ar: "شريط التقدّم وهو يمتلئ" } }
+      - { id: progress, text: { en: "Progress bar filling up", ar: "الـ Progress bar وهو يمتلئ" } }
       - { id: code, text: { en: "Booking code WS-204", ar: "رمز الحجز WS-204" } }
       - { id: align, text: { en: "Alignment of the paragraphs", ar: "محاذاة الفقرات" } }
       - { id: phone, text: { en: "Phone number 0100 123 4567", ar: "رقم الهاتف 0100 123 4567" } }
@@ -143,8 +154,8 @@ steps:
       en: "You're writing the spec for the card. How should you describe the title's alignment?"
       ar: "تكتب مواصفات البطاقة. كيف تصف محاذاة العنوان؟"
     options:
-      - { id: start, text: { en: "Aligned to the start of the line", ar: "محاذاة إلى بداية السطر" } }
       - { id: left, text: { en: "Aligned left", ar: "محاذاة إلى اليسار" } }
+      - { id: start, text: { en: "Aligned to the start of the line", ar: "محاذاة إلى بداية السطر" } }
       - { id: center, text: { en: "Centered, so it works in both languages", ar: "في المنتصف، حتى يعمل في اللغتين" } }
     answer: [start]
     misconceptions:
@@ -211,9 +222,9 @@ steps:
       en: "Youssef's Arabic ticket says: \"Your seat is A14 on platform 4, booking ref EG-7781.\" What should the spec say about A14 and EG-7781?"
       ar: "تذكرة يوسف بالعربية تقول: «مقعدك A14 على الرصيف 4، رقم الحجز EG-7781». ماذا يجب أن تقول المواصفات عن A14 و EG-7781؟"
     options:
+      - { id: nothing, text: { en: "Nothing, they'll always display fine", ar: "لا شيء، سيظهران بشكل سليم دائمًا" } }
       - { id: isolate, text: { en: "Keep each as a separate left-to-right piece inside the Arabic sentence", ar: "أبقِ كلًّا منهما قطعة منفصلة من اليسار لليمين داخل الجملة العربية" } }
       - { id: reverse, text: { en: "Reverse them so they read right to left like the sentence", ar: "اعكسهما ليُقرآ من اليمين لليسار مثل الجملة" } }
-      - { id: nothing, text: { en: "Nothing, they'll always display fine", ar: "لا شيء، سيظهران بشكل سليم دائمًا" } }
     answer: [isolate]
     misconceptions:
       - id: MC-P10-070
@@ -244,10 +255,10 @@ steps:
       en: "The Arabic card passes the 320px check. What can that check NOT tell you? Pick all that apply."
       ar: "البطاقة العربية تجتاز فحص 320 بكسل. ما الذي لا يستطيع هذا الفحص إخبارك به؟ اختر كل ما ينطبق."
     options:
-      - { id: natural, text: { en: "Whether the Arabic reads naturally", ar: "إن كانت العربية تُقرأ بشكل طبيعي" } }
-      - { id: date, text: { en: "Whether the date is written the way people expect", ar: "إن كان التاريخ مكتوبًا بالطريقة التي يتوقعها الناس" } }
       - { id: cut, text: { en: "Whether any text is cut off", ar: "إن كان أي نص مقطوعًا" } }
       - { id: font, text: { en: "Whether the letters join correctly in the chosen font", ar: "إن كانت الحروف تتّصل بشكل صحيح في الخط المختار" } }
+      - { id: natural, text: { en: "Whether the Arabic reads naturally", ar: "إن كانت العربية تُقرأ بشكل طبيعي" } }
+      - { id: date, text: { en: "Whether the date is written the way people expect", ar: "إن كان التاريخ مكتوبًا بالطريقة التي يتوقعها الناس" } }
     answer: [natural, date, font]
     misconceptions:
       - id: MC-P10-073
@@ -267,7 +278,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [order, id, eye, person]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
-      en: "- Flip the flow: describe alignment and position by start and end.\n- Keep the facts: codes, prices, phone numbers and emails keep their order as separate left-to-right pieces.\n- Mirror arrows and progress; keep clocks, check marks and logos.\n- A width check tells you about fit. A native reader tells you about meaning.\n\nNext: answering critique with a check."
-      ar: "- اعكس الاتجاه: صِف المحاذاة والمواضع بالبداية والنهاية.\n- احفظ المعلومات: الرموز والأسعار وأرقام الهواتف والبريد الإلكتروني تحتفظ بترتيبها كقطع منفصلة من اليسار لليمين.\n- اعكس الأسهم والتقدّم؛ وأبقِ الساعات وعلامات الصح والشعارات.\n- فحص العرض يخبرك عن الاتّساع. والقارئ العربي يخبرك عن المعنى.\n\nالدرس التالي: الإجابة عن النقد باختبار."
+      en: "- Flip the flow: describe alignment and position by start and end.\n- Keep the facts: codes, prices, phone numbers and emails keep their order as separate left-to-right pieces.\n- Mirror arrows and progress; keep clocks, check marks and logos.\n- A width check tells you about fit. A native reader tells you about meaning.\n\nNext lesson: answering critique with a check."
+      ar: "- اعكس الاتجاه: صِف المحاذاة والمواضع بالبداية والنهاية.\n- احفظ المعلومات: الرموز والأسعار وأرقام الهواتف والبريد الإلكتروني تحتفظ بترتيبها كقطع منفصلة من اليسار لليمين.\n- اعكس الأسهم والـ Progress bar؛ وأبقِ الساعات وعلامات الصح والشعارات.\n- فحص العرض يخبرك عن الاتّساع. والقارئ العربي يخبرك عن المعنى.\n\nالدرس التالي: الرد على النقد باختبار."

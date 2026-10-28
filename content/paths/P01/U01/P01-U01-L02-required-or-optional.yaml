@@ -30,27 +30,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "Which fields does Hana have to fill in?"
-      ar: "أي الحقول يجب أن تملأها هناء؟"
+      en: "Some labels have a star, some don't, and nothing explains the stars. Which fields does Hana have to fill in?"
+      ar: "بعض التسميات عليها نجمة، وبعضها لا، ولا شيء يشرح النجوم. أي الحقول يجب أن تملأها هناء؟"
     options:
-      - { id: star, text: { en: "Only the ones with a star", ar: "التي عليها نجمة فقط" } }
       - { id: all, text: { en: "All of them", ar: "كلها" } }
-      - { id: unsure, text: { en: "She can't be sure", ar: "لا يمكنها التأكد" } }
-    reveal:
-      en: "She can't be sure. Stars usually mean required, but nothing here says so, and the emergency contact looks like something a gym would insist on. She'll find out when she presses Join and gets errors."
-      ar: "لا يمكنها التأكد. النجمة تعني «إلزامي» عادةً، لكن لا شيء هنا يقول ذلك، ورقم الطوارئ يبدو شيئًا سيصرّ عليه النادي. وستكتشف ذلك حين تضغط «اشترك» وتظهر الأخطاء."
-
+      - { id: unsure, text: { en: "She can't be sure until she presses Join", ar: "لا يمكنها التأكد حتى تضغط «اشترك»" } }
+      - { id: star, text: { en: "Only the ones with a star", ar: "التي عليها نجمة فقط" } }
+    answer: [unsure]
+    misconceptions:
+      - id: MC-P01-003
+        when: [star, all]
+        feedback:
+          en: "Stars often mean required, but nothing here says so, and the emergency contact has no star even though a gym might insist on it. She'll only find out from the errors."
+          ar: "النجمة تعني غالبًا «إلزامي»، لكن لا شيء هنا يقول ذلك، وجهة الاتصال للطوارئ بلا نجمة مع أن النادي قد يصرّ عليها. ستعرف فقط من رسائل الخطأ."
+    correct:
+      en: "She can't tell. The form makes her guess."
+      ar: "لا تستطيع أن تعرف. النموذج يجعلها تخمّن."
+    explain:
+      en: "A symbol nobody explains is a guess. People find out what was required from error messages, after they've pressed the button."
+      ar: "الرمز الذي لا يشرحه أحد مجرد تخمين. ويكتشف الناس ما كان إلزاميًا من رسائل الخطأ، بعد أن يضغطوا الزر."
   - id: S03
     type: card
     part: concept
+    icons: [text, warn, dot, ok]
     title: { en: "Make the exception clear", ar: "وضّح الاستثناء" }
     body:
-      en: "People shouldn't have to guess which fields they can skip.\n\n- If you've cut the form down to what the task needs, most fields will be required. Then mark the few **optional** ones, in words: \"Email (optional)\".\n- If you find yourself marking many fields optional, go back to the last lesson. Do they need to be on this form at all?\n- A star alone needs a legend people might miss, and can be read aloud as just \"star\". If you use one, explain it at the top of the form.\n- Whatever the label says, the check must agree. A field marked optional must never come back with \"This field is required\"."
-      ar: "يجب ألا يضطر الناس إلى التخمين أي الحقول يمكنهم تخطّيها.\n\n- إذا قلّصت النموذج إلى ما تحتاجه المهمة، فستكون أغلب الحقول إلزامية. عندها علّم الحقول **الاختيارية** القليلة بالكلمات: «البريد الإلكتروني (اختياري)».\n- إذا وجدت نفسك تعلّم حقولًا كثيرة كاختيارية، فارجع إلى الدرس السابق. هل يجب أن تكون في هذا النموذج أصلًا؟\n- النجمة وحدها تحتاج شرحًا قد لا يراه الناس، وقد تُقرأ بصوت عالٍ «نجمة» فقط. إن استخدمتها، فاشرحها أعلى النموذج.\n- مهما قالت التسمية، يجب أن يتّفق التحقق معها. الحقل المعلَّم كاختياري يجب ألا يعود أبدًا برسالة «هذا الحقل إلزامي»."
-
+      en: "People shouldn't have to guess which fields they can skip.\n\n- **Mark the exception, in words:** once the form asks only what the task needs, most fields are required. Mark the few optional ones: \"Email (optional)\".\n- **Many optional fields are a warning:** go back to the last lesson. Do they need to be on this form at all?\n- **A star needs a legend:** people may miss it, and a screen reader may read it as just \"star\". If you use one, explain it at the top of the form.\n- **The label and the check must agree:** a field marked optional must never come back with \"This field is required\"."
+      ar: "يجب ألا يضطر الناس إلى تخمين الحقول التي يمكنهم تخطّيها.\n\n- **علّم الاستثناء بالكلمات:** حين يطلب النموذج ما تحتاجه المهمة فقط، تصبح أغلب الحقول إلزامية. علّم القليل الاختياري: «البريد الإلكتروني (اختياري)».\n- **كثرة الحقول الاختيارية إنذار:** ارجع إلى الدرس السابق. هل يجب أن تكون في هذا النموذج أصلًا؟\n- **النجمة تحتاج شرحًا:** قد لا يراها الناس، وقد يقرؤها الـ Screen reader «نجمة» فقط. إن استخدمتها، فاشرحها أعلى النموذج.\n- **يجب أن تتّفق التسمية مع التحقق:** الحقل المعلَّم كاختياري يجب ألا يعود أبدًا برسالة «هذا الحقل إلزامي»."
   - id: S04
     type: choose
     part: guided
@@ -60,9 +68,9 @@ steps:
       en: "On the membership form, everything is required except the fitness goal. How should you show that?"
       ar: "في نموذج الاشتراك، كل الحقول إلزامية ما عدا الهدف الرياضي. كيف توضّح ذلك؟"
     options:
-      - { id: optional, text: { en: "Add \"(optional)\" to the fitness goal label", ar: "أضف «(اختياري)» إلى تسمية الهدف الرياضي" } }
       - { id: stars, text: { en: "Put a star on every other label", ar: "ضع نجمة على كل التسميات الأخرى" } }
       - { id: red, text: { en: "Color the required labels red", ar: "لوّن التسميات الإلزامية بالأحمر" } }
+      - { id: optional, text: { en: "Add \"(optional)\" to the fitness goal label", ar: "أضف «(اختياري)» إلى تسمية الهدف الرياضي" } }
     answer: [optional]
     misconceptions:
       - id: MC-P01-003
@@ -95,9 +103,9 @@ steps:
       blocks:
         - { kind: field, tone: bad, label: { en: "Email (optional)", ar: "البريد الإلكتروني (اختياري)" }, text: "", error: { en: "Email is required", ar: "البريد الإلكتروني إلزامي" } }
     options:
+      - { id: wording, text: { en: "The error should say \"Please\"", ar: "يجب أن تقول رسالة الخطأ «من فضلك»" } }
       - { id: mismatch, text: { en: "The label and the check disagree; one of them is wrong", ar: "التسمية والتحقق لا يتّفقان؛ أحدهما خاطئ" } }
       - { id: user, text: { en: "Hana should have filled it in anyway", ar: "كان على هناء أن تملأه على أي حال" } }
-      - { id: wording, text: { en: "The error should say \"Please\"", ar: "يجب أن تقول رسالة الخطأ «من فضلك»" } }
     answer: [mismatch]
     misconceptions:
       - id: MC-P01-004
@@ -160,9 +168,9 @@ steps:
       en: "A clinic's booking form has 8 fields: 4 required and 4 optional. What should you do first?"
       ar: "نموذج حجز في عيادة فيه 8 حقول: 4 إلزامية و4 اختيارية. ماذا تفعل أولًا؟"
     options:
-      - { id: question, text: { en: "Ask whether the 4 optional fields need to be there at all", ar: "اسأل إن كانت الحقول الاختيارية الأربعة يجب أن تكون موجودة أصلًا" } }
-      - { id: mark, text: { en: "Mark the 4 optional fields with \"(optional)\"", ar: "علّم الحقول الاختيارية الأربعة بـ«(اختياري)»" } }
       - { id: stars, text: { en: "Put stars on the 4 required fields", ar: "ضع نجومًا على الحقول الإلزامية الأربعة" } }
+      - { id: mark, text: { en: "Mark the 4 optional fields with \"(optional)\"", ar: "علّم الحقول الاختيارية الأربعة بـ«(اختياري)»" } }
+      - { id: question, text: { en: "Ask whether the 4 optional fields need to be there at all", ar: "اسأل إن كانت الحقول الاختيارية الأربعة يجب أن تكون موجودة أصلًا" } }
     answer: [question]
     misconceptions:
       - id: MC-P01-005
@@ -219,37 +227,9 @@ steps:
       ar: "ويمكن لكود الخصم أن يختفي خلف رابط «لديك كود؟»، لأن أغلب الناس ليس لديهم."
 
   - id: S09
-    type: choose
-    part: independent
-    confidence: true
-    multi: true
-    rules: [R07, U39]
-    prompt:
-      en: "Why write \"(optional)\" in words instead of relying on a symbol? Pick all that apply."
-      ar: "لماذا تكتب «(اختياري)» بالكلمات بدل الاعتماد على رمز؟ اختر كل ما ينطبق."
-    options:
-      - { id: aloud, text: { en: "Screen readers read the word clearly", ar: "برامج قراءة الشاشة تقرأ الكلمة بوضوح" } }
-      - { id: legend, text: { en: "People don't need to find a legend", ar: "لا يحتاج الناس إلى البحث عن شرح" } }
-      - { id: pretty, text: { en: "Words look more professional than symbols", ar: "الكلمات تبدو أكثر احترافية من الرموز" } }
-    answer: [aloud, legend]
-    misconceptions:
-      - id: MC-P01-003
-        when: [pretty]
-        feedback:
-          en: "It's not about looks. A word means the same thing to everyone, wherever they start reading."
-          ar: "الأمر ليس مظهرًا. الكلمة تعني الشيء نفسه للجميع، من أي مكان بدؤوا القراءة."
-    hints:
-      - { en: "Think about someone who hears the form instead of seeing it.", ar: "فكّر في شخص يسمع النموذج بدل أن يراه." }
-    correct:
-      en: "A word works without a legend and reads clearly aloud."
-      ar: "الكلمة تعمل دون شرح وتُقرأ بوضوح بصوت عالٍ."
-    explain:
-      en: "In code, required fields also need to be marked as required, so assistive tech announces it. That's Unit 5."
-      ar: "وفي الكود، يجب أن تُعلَّم الحقول الإلزامية أيضًا كإلزامية، حتى تعلنها التقنيات المساعدة. هذا في الوحدة 5."
-
-  - id: S10
     type: card
     part: recap
+    icons: [cut, text, warn, ok]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- Cut first. Then most fields are required, and you mark the few optional ones.\n- Say it in words: \"(optional)\". A star needs a legend at the top.\n- Many optional fields are a sign the form asks too much.\n- The label and the check must agree.\n\nNext: asking in a way people can actually answer."

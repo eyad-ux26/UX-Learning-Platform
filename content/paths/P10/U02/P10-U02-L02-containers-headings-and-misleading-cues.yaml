@@ -7,7 +7,7 @@ title:
 review_labels:
   MC-P10-024: { en: "More borders don't mean clearer groups", ar: "الحدود الأكثر لا تعني مجموعات أوضح" }
   MC-P10-025: { en: "Matching colors don't prove a relationship", ar: "تطابق الألوان لا يثبت العلاقة" }
-  MC-P10-026: { en: "Spacing alone is invisible to screen readers", ar: "المسافات وحدها لا يراها قارئ الشاشة" }
+  MC-P10-026: { en: "Spacing alone is invisible to screen readers", ar: "المسافات وحدها لا يراها الـ Screen reader" }
 steps:
   - id: S01
     type: card
@@ -37,27 +37,40 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "Two facts are the same color but far apart on the page. Will people read them as related?"
-      ar: "معلومتان باللون نفسه لكنهما متباعدتان في الصفحة. هل سيقرؤهما الناس كأنهما مرتبطتان؟"
+      en: "Two facts are the same colour but far apart on the page. Will people read them as related?"
+      ar: "معلومتان باللون نفسه لكنهما متباعدتان في الصفحة. هل سيقرؤهما الناس على أنهما مرتبطتان؟"
     options:
-      - { id: yes, text: { en: "Yes, color links them", ar: "نعم، اللون يربطهما" } }
-      - { id: no, text: { en: "No, distance wins", ar: "لا، المسافة تتغلّب" } }
-      - { id: some, text: { en: "Sometimes, but it's unreliable", ar: "أحيانًا، لكن ذلك غير مضمون" } }
-    reveal:
-      en: "Color similarity can hint at a link, but it's one of the weakest cues. Some people can't tell the colors apart, and nearby items usually win. Let's look at stronger ones."
-      ar: "تشابه الألوان قد يلمّح إلى علاقة، لكنه من أضعف الإشارات. بعض الناس لا يميّزون الألوان، والعناصر المتقاربة غالبًا تتغلّب. لنرَ إشارات أقوى."
-
+      - { id: never, text: { en: "Never; colour has no effect", ar: "أبدًا؛ اللون لا تأثير له" } }
+      - { id: yes, text: { en: 'Yes, matching colour links them', ar: "نعم، اللون المتطابق يربطهما" } }
+      - { id: weak, text: { en: 'Sometimes, but colour is a weak, unreliable cue', ar: "أحيانًا، لكن اللون إشارة ضعيفة وغير موثوقة" } }
+    answer: [weak]
+    misconceptions:
+      - id: MC-P10-025
+        when: [yes]
+        feedback:
+          en: "Colour can hint at a link, but distance usually wins, and some people can't tell the colours apart."
+          ar: "اللون قد يلمّح إلى علاقة، لكن المسافة تتغلّب غالبًا، وبعض الناس لا يميّزون الألوان."
+      - id: MC-P10-025
+        when: [never]
+        feedback:
+          en: "Colour does hint at a link. It's just too weak to rely on by itself."
+          ar: "اللون يلمّح إلى علاقة فعلًا. لكنه أضعف من أن يُعتمد عليه وحده."
+    correct:
+      en: "Colour hints; it doesn't group."
+      ar: "اللون يلمّح، لكنه لا يجمّع."
+    explain:
+      en: "Colour is one of the weakest grouping cues. Nearby items usually win, and colour fails for people who can't see the difference. Use it only to support stronger cues."
+      ar: "اللون من أضعف إشارات التجميع. فالعناصر المتقاربة تتغلّب غالبًا، واللون يفشل مع من لا يرون الفرق. استخدمه فقط لدعم إشارات أقوى."
   - id: S03
     type: card
     part: concept
+    icons: [space, group, text, color]
     title: { en: "Four cues, different strengths", ar: "أربع إشارات بقوى مختلفة" }
     body:
-      en: "**Spacing**: close items read as a group.\n\n**A shared container** (a card, a tinted area): everything inside belongs together, even if the items look different.\n\n**A heading**: names what the group is about. It also helps people using a screen reader, which can't see spacing.\n\n**Matching color**: a weak hint. Never rely on it alone.\n\nEvery container also adds a boundary. A border around everything makes many small groups that compete."
-      ar: "**المسافة**: العناصر المتقاربة تُقرأ كمجموعة.\n\n**الحاوية المشتركة** (بطاقة أو مساحة ملوّنة): كل ما بداخلها ينتمي معًا، حتى لو بدت العناصر مختلفة.\n\n**العنوان**: يسمّي موضوع المجموعة. ويساعد أيضًا من يستخدمون قارئ الشاشة (screen reader)، الذي لا يرى المسافات.\n\n**تطابق اللون**: تلميح ضعيف. لا تعتمد عليه وحده أبدًا.\n\nكل حاوية تضيف حدًّا جديدًا. وإطار حول كل شيء يصنع مجموعات صغيرة كثيرة تتنافس."
-
+      en: "Four cues show what belongs together, and they aren't equally strong.\n\n- **Spacing:** close items read as a group.\n- **A shared container:** a card or a tinted area. Everything inside belongs together, even if it looks different.\n- **A heading:** names the group. It also helps people using a screen reader, which can't see spacing.\n- **Matching colour:** a weak hint. Never rely on it alone.\n\nEvery container adds a boundary. A border around everything makes many small groups that compete."
+      ar: "أربع إشارات تُظهر ما ينتمي معًا، وقوّتها ليست متساوية.\n\n- **الـ Spacing:** العناصر المتقاربة تُقرأ كمجموعة.\n- **Container مشترك:** Card أو مساحة ملوّنة. كل ما بداخله ينتمي معًا، حتى لو بدا مختلفًا.\n- **العنوان (Heading):** يسمّي المجموعة. ويساعد أيضًا من يستخدمون الـ Screen reader، الذي لا يرى المسافات.\n- **تطابق اللون:** تلميح ضعيف. لا تعتمد عليه وحده أبدًا.\n\nكل Container يضيف حدًّا جديدًا. وإطار حول كل شيء يصنع مجموعات صغيرة كثيرة تتنافس."
   - id: S04
     type: match
     part: guided
@@ -183,8 +196,8 @@ steps:
     reason:
       prompt: { en: "What makes it clearer?", ar: "ما الذي يجعلها أوضح؟" }
       options:
-        - { id: few, text: { en: "Fewer boundaries, so the two real groups stand out", ar: "حدود أقل، فتبرز المجموعتان الحقيقيتان" } }
         - { id: modern, text: { en: "Borders look old-fashioned", ar: "الحدود تبدو قديمة الطراز" } }
+        - { id: few, text: { en: "Fewer boundaries, so the two real groups stand out", ar: "حدود أقل، فتبرز المجموعتان الحقيقيتان" } }
       answer: [few]
       misconceptions:
         - id: MC-P10-024
@@ -214,9 +227,9 @@ steps:
       ar: "أي تغيير يصلح تخطيط الزميل بأفضل شكل؟"
     mock: *pills
     options:
-      - { id: regroup, text: { en: "Stack the sessions: each title with its own date, price and Reserve button", ar: "رتّب الجلسات فوق بعضها: كل عنوان مع تاريخه وسعره وزر «احجز» الخاص به" } }
       - { id: recolor, text: { en: "Make the two price pills different colors", ar: "اجعل شارتي السعر بلونين مختلفين" } }
       - { id: arrows, text: { en: "Add arrows from each price to its title", ar: "أضف أسهمًا من كل سعر إلى عنوانه" } }
+      - { id: regroup, text: { en: "Stack the sessions: each title with its own date, price and Reserve button", ar: "رتّب الجلسات فوق بعضها: كل عنوان مع تاريخه وسعره وزر «احجز» الخاص به" } }
       - { id: boxes, text: { en: "Put a border around each column", ar: "ضع إطارًا حول كل عمود" } }
     answer: [regroup]
     also_ok:
@@ -290,30 +303,31 @@ steps:
     rules: [R14, U29]
     prompt:
       en: "A blind visitor uses a screen reader, which reads the page aloud in order and can't see spacing. What keeps the two sessions clear for them?"
-      ar: "زائر كفيف يستخدم قارئ الشاشة، الذي يقرأ الصفحة بصوت عالٍ بالترتيب ولا يرى المسافات. ما الذي يبقي الجلستين واضحتين له؟"
+      ar: "زائر كفيف يستخدم الـ Screen reader، الذي يقرأ الصفحة بصوت عالٍ بالترتيب ولا يرى المسافات. ما الذي يبقي الجلستين واضحتين له؟"
     options:
-      - { id: heading, text: { en: "Each session starts with a real heading, and its details follow in order", ar: "كل جلسة تبدأ بعنوان حقيقي، وتليه تفاصيلها بالترتيب" } }
       - { id: gaps, text: { en: "Bigger gaps between the sessions", ar: "مسافات أكبر بين الجلستين" } }
-      - { id: colors, text: { en: "A different background color for each session", ar: "لون خلفية مختلف لكل جلسة" } }
+      - { id: heading, text: { en: "Each session starts with a real heading, and its details follow in order", ar: "كل جلسة تبدأ بعنوان حقيقي، وتليه تفاصيلها بالترتيب" } }
       - { id: borders, text: { en: "A border around each session", ar: "إطار حول كل جلسة" } }
+      - { id: colors, text: { en: "A different background color for each session", ar: "لون خلفية مختلف لكل جلسة" } }
     answer: [heading]
     misconceptions:
       - id: MC-P10-026
         when: [gaps, colors, borders]
         feedback:
           en: "Those are visual cues, and the screen reader doesn't announce them. Headings and order are what it reads."
-          ar: "هذه إشارات بصرية، وقارئ الشاشة لا ينطقها. العناوين والترتيب هي ما يقرؤه."
+          ar: "هذه إشارات بصرية، والـ Screen reader لا ينطقها. العناوين والترتيب هي ما يقرؤه."
     correct:
       en: "Headings and order carry the grouping when spacing can't."
       ar: "العناوين والترتيب يحملان التجميع حين لا تستطيع المسافات ذلك."
     explain:
       en: "Spacing and borders show groups to the eye. A heading per session, with its facts and button following it in order, shows the same groups to a screen reader. Good grouping uses both."
-      ar: "المسافات والحدود تُظهر المجموعات للعين. أما عنوان لكل جلسة، تليه معلوماتها وزرها بالترتيب، فيُظهر المجموعات نفسها لقارئ الشاشة. التجميع الجيد يستخدم الاثنين."
+      ar: "المسافات والحدود تُظهر المجموعات للعين. أما عنوان لكل جلسة، تليه معلوماتها وزرها بالترتيب، فيُظهر المجموعات نفسها للـ Screen reader. التجميع الجيد يستخدم الاثنين."
 
   - id: S10
     type: card
     part: recap
+    icons: [warn, group, ear]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You compared four grouping cues and saw that more borders and matching colors don't make groups clearer. You grouped by booking instead of by type, fixed a mislabeled form field, and used headings so the groups survive without sight.\n\nNext: keeping groups together when the screen gets narrow."
-      ar: "قارنت أربع إشارات للتجميع ورأيت أن الحدود الأكثر والألوان المتطابقة لا توضّح المجموعات. جمعت حسب الحجز لا حسب النوع، وأصلحت تسمية حقل في نموذج، واستخدمت العناوين حتى تبقى المجموعات واضحة دون رؤية.\n\nالدرس التالي: إبقاء المجموعات متماسكة حين تضيق الشاشة."
+      en: "- More borders and matching colours don't make groups clearer.\n- Group by what people book, not by type of information.\n- Headings keep groups clear for people who can't see the spacing.\n\nNext lesson: keeping groups together when the screen gets narrow."
+      ar: "- الحدود الأكثر والألوان المتطابقة لا توضّح المجموعات.\n- اجمع حسب ما يحجزه الناس، لا حسب نوع المعلومة.\n- العناوين تُبقي المجموعات واضحة لمن لا يرون المسافات.\n\nالدرس التالي: إبقاء المجموعات متماسكة حين تضيق الشاشة."
