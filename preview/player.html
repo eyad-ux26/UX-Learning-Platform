@@ -171,6 +171,13 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .mcap{font-size:.72rem;color:var(--mock-muted);margin:-6px 0 10px;font-weight:600}
 .mock .nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mock .row2{display:flex;gap:10px}.mock .row2>*{flex:1}
+.mock .k-group.scroll{overflow-x:auto;padding:0;border:0;border-radius:0}.mock .k-group.scroll .row2>*{flex:none;width:var(--colw,120px)}
+.mock .k-group.scroll.sticky .row2>:first-child{position:sticky;inset-inline-start:0;background:var(--mock-bg);z-index:1;box-shadow:1px 0 0 var(--mock-line)}
+.mock .drag{cursor:grab;touch-action:none;position:relative;padding-inline-end:26px;border-radius:8px;outline-offset:2px}
+.mock .drag::after{content:"⠿";position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);color:var(--mock-muted);font-size:1rem}
+.mock .drag.dragging{cursor:grabbing;box-shadow:0 6px 18px rgba(0,0,0,.18);background:var(--mock-bg);z-index:3}
+.mock .drag:focus-visible{outline:2px solid var(--accent)}
+details.why{margin:-6px 0 14px;font-size:.88rem;color:var(--muted)}details.why summary{cursor:pointer;width:max-content;list-style:none}details.why summary::-webkit-details-marker{display:none}details.why p{margin:6px 0 0;padding:8px 12px;border-radius:10px;background:var(--note-soft);color:var(--ink)}
 .mock button.region{cursor:pointer;border-radius:8px;outline:2px dashed transparent;outline-offset:3px}
 .mock button.region:hover{outline-color:#B9B9C0}
 .mock button.region[aria-pressed="true"]{outline:3px solid var(--accent);outline-offset:3px}
@@ -225,7 +232,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", nowWhy:"Now, why?", dragItem:"draggable item", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -234,7 +241,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -320,7 +327,7 @@ function mockBlocks(blocks, opts){
     const css = [b.px ? `font-size:${b.px}px;line-height:1.3` : "", b.height ? `height:${b.height}px;overflow:hidden` : "", b.overlap ? "margin-top:-30px" : ""].filter(Boolean).join(";");
     const st = css ? ` style="${css}"` : "";
     let inner;
-    if (b.kind === "group") inner = mockBlocks(b.blocks, opts);
+    if (b.kind === "group") { inner = mockBlocks(b.blocks, opts); if (b.scroll) return `<div class="${cls} scroll${b.sticky?" sticky":""}"${b.colw?` style="--colw:${b.colw}px"`:""}>${inner}</div>`; }
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
     else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
     else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
@@ -346,6 +353,7 @@ function mockBlocks(blocks, opts){
       const pressed = opts.selected.includes(b.region);
       return `<button type="button" class="${cls} region"${st} data-region="${b.region}" aria-pressed="${pressed}" ${opts.locked?"disabled":""}>${inner}</button>`;
     }
+    if (b.drag !== undefined) return `<div class="${cls}${opts && opts.locked ? "" : " drag"}"${st} data-drag="${b.drag}" ${opts && opts.locked ? "" : `tabindex="0" role="button" aria-roledescription="${u().dragItem}"`}>${inner}</div>`;
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
@@ -409,7 +417,7 @@ function ready(s, st){
   if (s.type === "match") return s.left.every(it => st.sel[it.id]);
   if (s.type === "order") return true;
   if (!st.sel.length) return false;
-  if (s.reason && !st.reason.length) return false;
+  if (s.reason && st.mainOk && !st.reason.length) return false;
   return true;
 }
 
@@ -464,8 +472,10 @@ function renderStep(){
     const hook = L.lesson.steps.find(x => x.type === "card" && x.part === "hook");
     if (hook && hook !== s) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
-    h += renderInteraction(s, st, locked);
-    if (s.reason) h += renderReason(s, st, locked);
+    if (s.value) h += `<details class="why"><summary>${u().valueQ}</summary><p>${esc(tx(s.value))}</p></details>`;
+    h += renderInteraction(s, st, locked || !!st.mainOk);
+    /* the reason appears only after the main answer is right, so it can't give that answer away */
+    if (s.reason && (st.mainOk || locked)) h += renderReason(s, st, locked);
     if (s.confidence && !locked) h += `<div class="conf"><p>${u().conf}</p><div class="seg">${u().confOpts.map((c,k)=>`<button type="button" data-conf="${k}" aria-pressed="${st.conf===k}">${c}</button>`).join("")}</div></div>`;
   }
   $("#main").innerHTML = h;
@@ -488,7 +498,7 @@ function renderInteraction(s, st, locked){
   if (["choose","predict","words","fix"].includes(s.type)) return mock(s.mock) + optionList(s, st, locked, "opt");
   if (s.type === "tune"){
     const cur = s.options.find(o => o.id === st.sel[0]) || s.options.find(o => o.id === s.start) || s.options[0];
-    return mock(cur.mock) + optionList(s, st, locked, "opt");
+    return mock(s.mock) + mock(cur.mock) + optionList(s, st, locked, "opt");
   }
   if (s.type === "spot"){
     let h = `<p class="sub">${u().tapRegions}</p>` + mock(s.mock, {regions:true, selected:st.sel, locked});
@@ -507,6 +517,7 @@ function renderInteraction(s, st, locked){
   }
   if (s.type === "order"){
     const order = st.revealed ? s.answer : st.sel;
+    if (s.onscreen) return `<p class="sub">${u().dragHint}</p>` + mock({caption: s.caption, blocks: order.map((id, k) => { const it = s.items.find(x => x.id === id); return {kind: it.kind || "meta", text: it.text, gap: k ? (it.gap || "s") : undefined, drag: k, emphasis: it.emphasis}; })}, {locked});
     const live = s.mock || s.preview === false ? "" : `<div class="live" aria-hidden="true">${mock({caption: {en: UI.en.live, ar: UI.ar.live}, blocks: order.map((id, k) => { const it = s.items.find(x => x.id === id); return {kind: it.kind || "meta", text: it.text, gap: k ? "s" : undefined}; })})}</div>`;
     return mock(s.mock) + live + order.map((id, k) => {
       const it = s.items.find(x => x.id === id);
@@ -572,7 +583,27 @@ function wire(s, st, locked){
   document.querySelectorAll("[data-right]").forEach(b => b.onclick = () => { st.sel[b.dataset.left] = b.dataset.right; redraw(); });
   document.querySelectorAll("[data-region]").forEach(b => b.onclick = () => { const r = b.dataset.region; st.sel = s.multi ? (st.sel.includes(r) ? st.sel.filter(x => x !== r) : [...st.sel, r]) : [r]; redraw(); });
   const ss = $("#spotSel"); if (ss) ss.onchange = () => { st.sel = ss.value ? [ss.value] : []; redraw(); };
+  if (s.type === "order" && s.onscreen && !locked) wireDrag(st);
   document.querySelectorAll("[data-conf]").forEach(b => b.onclick = () => { st.conf = +b.dataset.conf; redraw(); });
+}
+
+/* on-screen ordering: drag a block within the mock, or move it with the arrow keys */
+function wireDrag(st){
+  const blocks = [...document.querySelectorAll(".mock [data-drag]")];
+  const move = (from, to) => { if (to < 0 || to >= st.sel.length || to === from) return; const [x] = st.sel.splice(from, 1); st.sel.splice(to, 0, x); renderStep(); document.querySelector(`[data-drag="${to}"]`)?.focus(); };
+  blocks.forEach(el => {
+    el.onkeydown = e => { const k = +el.dataset.drag; if (e.key === "ArrowUp") { e.preventDefault(); move(k, k - 1); } if (e.key === "ArrowDown") { e.preventDefault(); move(k, k + 1); } };
+    el.onpointerdown = e => {
+      const k = +el.dataset.drag, y0 = e.clientY, mids = blocks.map(b => { const r = b.getBoundingClientRect(); return r.top + r.height / 2; });
+      el.setPointerCapture?.(e.pointerId); el.classList.add("dragging"); e.preventDefault();
+      el.onpointermove = ev => { el.style.transform = `translateY(${ev.clientY - y0}px)`; };
+      el.onpointerup = ev => {
+        el.onpointermove = el.onpointerup = null; el.classList.remove("dragging"); el.style.transform = "";
+        const y = mids[k] + (ev.clientY - y0); let to = mids.filter((m, i) => i !== k && m < y).length;
+        move(k, to);
+      };
+    };
+  });
 }
 
 function btn(label, fn, primary, disabled){
@@ -606,6 +637,11 @@ function doCheck(s, st, check){
   if (s.any_ok){
     st.done = true; st.status = "ungraded";
     st.fb = `<div class="sheet note"><h3>${u().tryfirst}</h3>${para(s.reveal)}</div>`;
+    return renderStep();
+  }
+  if (s.reason && !st.mainOk && evaluate({...s, reason: undefined}, st).ok){
+    st.mainOk = true;
+    st.fb = `<div class="sheet good"><h3>${u().correct}</h3><p>${u().nowWhy}</p></div>`;
     return renderStep();
   }
   const res = evaluate(s, st);

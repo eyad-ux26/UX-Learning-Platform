@@ -112,6 +112,11 @@ Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 
 ## Player behaviour worth knowing
 
+- A `reason` question appears only after the main answer is right, so it can't give that answer away. Learners then answer it and press Check again.
+- Any question step can have `value` (`en`/`ar`): one sentence on what the question teaches. The preview shows it behind a small ⓘ toggle under the prompt, for reviewers.
+- An `order` step with `onscreen: true` shows the items as blocks on a phone screen that learners drag into place (arrow keys work too). Give it a `caption`; items can set `kind`, `gap` and `emphasis`.
+- A `tune` step can also have its own `mock`, shown above the option's mock. Use it for a "before" screen, such as a desktop table, with each option showing the result on a phone.
+- A `group` with `scroll: true` scrolls sideways inside the mock, with its `row` children at a fixed column width (`colw`, default 120). `sticky: true` keeps the first column in place.
 - Mock screens respond to taps: switches, checkboxes, radio buttons, segmented controls and − / + buttons change state, empty fields accept typing, and a slider with `min`/`max` can be dragged. This is only for trying things out and never affects the answer.
 
 - Every step after a lesson's hook card has a **Show the scenario** panel that reopens the hook (title, text and mock), so learners can re-check the situation at any time.

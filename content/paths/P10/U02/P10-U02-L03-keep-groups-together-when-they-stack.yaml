@@ -7,6 +7,8 @@ title:
 review_labels:
   MC-P10-028: { en: "Stack whole groups, never alternate their lines", ar: "رتّب المجموعات كاملة، ولا تبادل بين أسطرها" }
   MC-P10-029: { en: "Touching borders merge groups", ar: "الحدود المتلاصقة تدمج المجموعات" }
+  MC-P10-030: { en: "Cards or a table depends on how people read it", ar: "البطاقات أو الجدول حسب طريقة القراءة" }
+  MC-P10-032: { en: "Build each group as one block so it stacks whole", ar: "ابنِ كل مجموعة ككتلة واحدة حتى تُرتَّب كاملة" }
 steps:
   - id: S01
     type: card
@@ -36,76 +38,87 @@ steps:
     type: predict
     part: try
     rules: [R12]
+    value:
+      en: "How a layout is built decides how it stacks: build each session as one block on the laptop, and it stays whole on the phone for free."
+      ar: "طريقة بناء التخطيط تحدّد طريقة ترتيبه عموديًا: ابنِ كل جلسة ككتلة واحدة على الـ Laptop، فتبقى كاملة على الهاتف تلقائيًا."
     prompt:
-      en: "When the cards stack on Sara's phone, what should come right after the first session's date?"
-      ar: "حين تترتّب البطاقات فوق بعضها على هاتف سارة، ما الذي يجب أن يأتي مباشرة بعد موعد الجلسة الأولى؟"
+      en: "The page must work on the laptop and on Sara's phone. How should you build the two sessions so they stack correctly on the phone?"
+      ar: "يجب أن تعمل الصفحة على الـ Laptop وعلى هاتف سارة. كيف تبني الجلستين حتى تُرتَّبا عموديًا بشكل صحيح على الهاتف؟"
     options:
-      - { id: title2, text: "@W2e" }
-      - { id: date2, text: "@W2f" }
-      - { id: price, text: "@W2c" }
-    answer: [price]
+      - { id: rows, text: { en: "In rows: both titles, then both dates, then both prices, then both buttons", ar: "في صفوف: العنوانان، ثم الموعدان، ثم السعران، ثم الزرّان" } }
+      - { id: cards, text: { en: "As two blocks, each holding its own title, date, price and button", ar: "ككتلتين، كل واحدة فيها عنوانها وموعدها وسعرها وزرّها" } }
+      - { id: auto, text: { en: "Either way; the phone rearranges it", ar: "بأي طريقة؛ الهاتف يعيد ترتيبها" } }
+    answer: [cards]
     misconceptions:
-      - id: MC-P10-028
-        when: [date2, title2]
+      - id: MC-P10-032
+        when: [rows, auto]
         feedback:
-          en: "That jumps to the second session before the first is finished. Stack whole groups: the first session's price comes next."
-          ar: 'هذا ينتقل إلى الجلسة الثانية قبل أن تكتمل الأولى. رتّب المجموعات كاملة: سعر الجلسة الأولى يأتي بعد ذلك.'
+          en: "A narrow screen stacks things in the order they were built. Rows stack into title, title, date, date, price, price: Sara has to match them up herself."
+          ar: "الشاشة الضيّقة ترتّب العناصر بالترتيب الذي بُنيت به. والصفوف تتحوّل إلى: عنوان، عنوان، موعد، موعد، سعر، سعر، وعلى سارة أن تطابقها بنفسها."
     correct:
-      en: 'Its own price: Free.'
-      ar: 'سعرها هي: مجاني.'
+      en: "One block per session."
+      ar: "كتلة واحدة لكل جلسة."
     explain:
-      en: 'Each session stays whole: title, date, price, button. If the second date came next, the page would alternate lines from two sessions, and Sara would have to piece them together.'
-      ar: 'كل جلسة تبقى كاملة: العنوان والموعد والسعر والزر. ولو جاء الموعد الثاني بعد ذلك، لتبادلت الصفحة أسطرًا من جلستين، ولاضطرت سارة إلى تركيبها بنفسها.'
+      en: "Side by side, both builds look the same. On a phone, only the block-per-session build keeps each fact with its session."
+      ar: "جنبًا إلى جنب، يبدو البناءان متشابهين. لكن على الهاتف، البناء بكتلة لكل جلسة هو وحده الذي يبقي كل معلومة مع جلستها."
+
   - id: S03
     type: card
     part: concept
-    icons: [layers, warn, ear]
+    icons: [layers, warn, ear, width]
     title: { en: "Stack whole groups", ar: "رتّب المجموعات كاملة" }
     body:
-      en: "When a layout gets narrower, move whole groups, not their lines.\n\n- **Stack whole groups:** session A complete, then session B complete.\n- **Beware row-built layouts:** all titles in one row and all dates in the next turn into a zigzag on a phone.\n- **Match the code order:** screen readers and keyboards follow the code, not what the screen shows."
-      ar: "عندما يضيق التخطيط، انقل المجموعات كاملة، لا أسطرها.\n\n- **رتّب المجموعات كاملة:** الجلسة A كاملة، ثم الجلسة B كاملة.\n- **احذر التخطيط المبني على صفوف:** كل العناوين في صف وكل التواريخ في الصف التالي تتحوّل إلى تنقّل متعرّج على الهاتف.\n- **طابق ترتيب الكود:** الـ Screen reader ولوحة المفاتيح يتبعان الكود، لا ما تعرضه الشاشة."
+      en: "When a layout gets narrower, move whole groups, not their lines.\n\n- **Build each group as one block:** session A complete, then session B complete.\n- **Beware row-built layouts:** all titles in one row and all dates in the next turn into a zigzag on a phone.\n- **Match the code order:** screen readers and keyboards follow the code, not what the screen shows.\n- **Tables: cards or scroll?** A few items read one at a time become labelled cards. Many items compared feature by feature stay a table that scrolls sideways, with the first column pinned."
+      ar: "عندما يضيق التخطيط، انقل المجموعات كاملة، لا أسطرها.\n\n- **ابنِ كل مجموعة ككتلة واحدة:** الجلسة A كاملة، ثم الجلسة B كاملة.\n- **احذر التخطيط المبني على صفوف:** كل العناوين في صف وكل التواريخ في الصف التالي تتحوّل إلى تنقّل متعرّج على الهاتف.\n- **طابق ترتيب الكود:** الـ Screen reader ولوحة المفاتيح يتبعان الكود، لا ما تعرضه الشاشة.\n- **الجدول: بطاقات أم تمرير؟** العناصر القليلة التي تُقرأ واحدًا تلو الآخر تصبح بطاقات بتسميات. والعناصر الكثيرة التي تُقارن ميزة بميزة تبقى جدولًا يتحرّك أفقيًا، مع تثبيت العمود الأول."
+
   - id: S04
     type: order
     part: guided
     confidence: true
+    onscreen: true
     rules: [R06, R15]
+    value:
+      en: "Practise rebuilding a row-built page into whole groups, on a new case, by moving the real blocks on the phone."
+      ar: "تدريب على إعادة بناء صفحة مبنية على صفوف إلى مجموعات كاملة، في حالة جديدة، بتحريك العناصر الحقيقية على الهاتف."
+    caption: { en: "Ahmed's phone, 360 px", ar: "هاتف أحمد، 360 بكسل" }
     prompt:
-      en: "Order the phone layout, top to bottom."
-      ar: "رتّب تخطيط الهاتف من الأعلى إلى الأسفل."
+      en: "Ahmed's order arrives in two shipments. The page was built in rows, so on his phone it shows both dates, then both items, then both tracking links. Drag the blocks so each shipment stays whole."
+      ar: "يصل طلب أحمد في شحنتين. بُنيت الصفحة في صفوف، فتعرض على هاتفه الموعدين، ثم المنتجين، ثم رابطي التتبّع. اسحب العناصر حتى تبقى كل شحنة كاملة."
     items:
-      - { id: W2a, text: "@W2a", kind: heading }
-      - { id: W2e, text: "@W2e", kind: heading }
-      - { id: W2b, text: "@W2b" }
-      - { id: W2f, text: "@W2f" }
-      - { id: W2c, text: "@W2c" }
-      - { id: W2g, text: "@W2g" }
-      - { id: W2d, text: "@W2d", kind: button }
-      - { id: W2h, text: "@W2h", kind: button }
-    answer: [W2a, W2b, W2c, W2d, W2e, W2f, W2g, W2h]
+      - { id: S1a, text: "@S1a", kind: heading }
+      - { id: S1d, text: "@S1d", kind: heading }
+      - { id: S1b, text: "@S1b" }
+      - { id: S1e, text: "@S1e" }
+      - { id: S1c, text: "@S1c", kind: link }
+      - { id: S1f, text: "@S1f", kind: link }
+    answer: [S1a, S1b, S1c, S1d, S1e, S1f]
     also_ok:
-      - answer: [W2e, W2f, W2g, W2h, W2a, W2b, W2c, W2d]
+      - answer: [S1d, S1e, S1f, S1a, S1b, S1c]
         feedback:
-          en: "That works too: the Service session first, then Sketch. Either session can lead, as long as each stays whole."
-          ar: "هذا صحيح أيضًا: جلسة «صمّم» أولًا ثم «ارسم». يمكن لأي جلسة أن تتصدّر، ما دامت كل واحدة كاملة."
+          en: "That works too: shipment 2 first. Either can lead, as long as each stays whole."
+          ar: "هذا صحيح أيضًا: الشحنة 2 أولًا. يمكن لأي شحنة أن تتصدّر، ما دامت كل واحدة كاملة."
     misconceptions:
       - id: MC-P10-028
-        when: { before: [W2e, W2d] }
+        when: { before: [S1d, S1c] }
         feedback:
-          en: "The second title comes before the first session is finished, so lines from the two sessions are mixed. Keep each session's four lines together."
-          ar: "العنوان الثاني يأتي قبل أن تكتمل الجلسة الأولى، فاختلطت أسطر الجلستين. أبقِ أسطر كل جلسة الأربعة معًا."
+          en: "Shipment 2 starts before shipment 1 is finished, so its lines are mixed in. Keep each date, item and tracking link together."
+          ar: "تبدأ الشحنة 2 قبل أن تكتمل الشحنة 1، فتختلط أسطرهما. أبقِ كل موعد ومنتج ورابط تتبّع معًا."
     hints:
-      - { en: "Finish one session completely before starting the next.", ar: "أكمل جلسة واحدة بالكامل قبل أن تبدأ التالية." }
+      - { en: "Finish one shipment completely before starting the next.", ar: "أكمل شحنة واحدة بالكامل قبل أن تبدأ التالية." }
     correct:
-      en: "One complete session, then the other."
-      ar: "جلسة كاملة، ثم الأخرى."
+      en: "One complete shipment, then the other."
+      ar: "شحنة كاملة، ثم الأخرى."
     explain:
-      en: "The items start in table order (titles, then dates, then prices). Stacked on a phone, that order zigzags. Reordering by session keeps every fact next to its owner."
-      ar: "تبدأ العناصر بترتيب الجدول (العناوين، ثم التواريخ، ثم الأسعار). وعند ترتيبها عموديًا على الهاتف يتعرّج هذا الترتيب. إعادة الترتيب حسب الجلسة تبقي كل معلومة بجانب صاحبها."
+      en: "If the office chair sat under Monday's date, Ahmed would wait for it on the wrong day. Whole groups keep every fact with its owner."
+      ar: "لو جاء كرسي المكتب تحت موعد الاثنين، لانتظره أحمد في اليوم الخطأ. المجموعات الكاملة تبقي كل معلومة مع صاحبها."
 
   - id: S05
     type: compare
     part: contrast
     rules: [R11, R15]
+    value:
+      en: "Shows the result of row-built versus card-built layouts side by side, so the difference is visible, not just described."
+      ar: "يعرض نتيجة التخطيط المبني على صفوف مقابل المبني على بطاقات جنبًا إلى جنب، فيصبح الفرق مرئيًا لا موصوفًا فقط."
     prompt:
       en: "Two phone versions of the same page. Which one keeps the bookings intact?"
       ar: "نسختان للهاتف من الصفحة نفسها. أيّهما تحافظ على الحجزين سليمين؟"
@@ -151,122 +164,342 @@ steps:
       ar: "المحتوى نفسه والمساحة نفسها. A تحتفظ بصفوف الـ Laptop وتتنقّل بين الجلستين؛ وB تنقل كل بطاقة كاملة. هذا هو الفرق بين إعادة ترتيب المجموعات وإعادة ترتيب الأسطر."
 
   - id: S06
-    type: choose
+    type: tune
     part: guided
     rules: [R06, R14]
-    scenario:
-      en: "On desktop, the sessions are shown as a comparison table: one column per session, one row each for date, price and Reserve."
-      ar: "على الـ Laptop، تُعرض الجلسات كجدول مقارنة: عمود لكل جلسة، وصف لكل من التاريخ والسعر وزر الحجز."
+    value:
+      en: "A table can become cards or stay a scrolling table. This case shows when cards win: few items, read one at a time."
+      ar: "يمكن أن يتحوّل الجدول إلى بطاقات أو يبقى جدولًا يتحرّك أفقيًا. هذه الحالة توضّح متى تفوز البطاقات: عناصر قليلة تُقرأ واحدًا تلو الآخر."
+    mock:
+      frame: wide
+      caption: { en: "Laptop, 1280 px", ar: "Laptop، 1280 بكسل" }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: small, text: "" }
+            - { kind: heading, text: "@W2a" }
+            - { kind: heading, text: "@W2e" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: { en: "Date", ar: "الموعد" } }
+            - { kind: meta, text: "@W2b" }
+            - { kind: meta, text: "@W2f" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: { en: "Price", ar: "السعر" } }
+            - { kind: meta, text: "@W2c" }
+            - { kind: meta, text: "@W2g" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: "" }
+            - { kind: button, emphasis: low, text: "@W2d" }
+            - { kind: button, emphasis: low, text: "@W2h" }
     prompt:
-      en: "What's the best way to show this on a phone?"
-      ar: "ما أفضل طريقة لعرض ذلك على الهاتف؟"
+      en: "On the laptop, the two sessions are a comparison table. Sara reads one session at a time and books one. Try each option: which works best on her phone?"
+      ar: "على الـ Laptop، الجلستان في جدول مقارنة. سارة تقرأ جلسة واحدة في كل مرة وتحجز واحدة. جرّب كل خيار: أيّها الأفضل على هاتفها؟"
+    start: scroll
     options:
-      - { id: shrink, text: { en: "Shrink the table text until it fits", ar: "صغّر نص الجدول حتى يتّسع" } }
-      - { id: scroll, text: { en: "Keep the table and let it scroll sideways", ar: "أبقِ الجدول واجعله يتحرّك أفقيًا" } }
-      - { id: cards, text: { en: "Turn each column into a card, with each value labeled", ar: "حوّل كل عمود إلى بطاقة، مع تسمية كل قيمة" } }
+      - id: scroll
+        text: { en: "Keep the table; it scrolls sideways", ar: "أبقِ الجدول؛ ويتحرّك أفقيًا" }
+        mock:
+          width: 260
+          caption: { en: "Phone, 320 px · swipe the table", ar: "هاتف، 320 بكسل · اسحب الجدول" }
+          blocks:
+            - kind: group
+              scroll: true
+              colw: 130
+              blocks:
+                - kind: row
+                  blocks:
+                    - { kind: small, text: "" }
+                    - { kind: heading, text: "@W2a" }
+                    - { kind: heading, text: "@W2e" }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: { en: "Date", ar: "الموعد" } }
+                    - { kind: meta, text: "@W2b" }
+                    - { kind: meta, text: "@W2f" }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: { en: "Price", ar: "السعر" } }
+                    - { kind: meta, text: "@W2c" }
+                    - { kind: meta, text: "@W2g" }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: "" }
+                    - { kind: button, text: "@W2d", emphasis: low }
+                    - { kind: button, text: "@W2h", emphasis: low }
+      - id: cards
+        text: { en: "Turn each session into a card, with each value labelled", ar: "حوّل كل جلسة إلى بطاقة، مع تسمية كل قيمة" }
+        mock:
+          width: 260
+          caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: heading, text: "@W2a" }
+                - { kind: meta, text: { en: "Date: 17 November, 18:00", ar: "الموعد: 17 نوفمبر، الساعة 18:00" }, gap: xs }
+                - { kind: meta, text: { en: "Price: Free", ar: "السعر: مجاني" }, gap: xs }
+                - { kind: button, emphasis: low, text: "@W2d", gap: s }
+            - kind: group
+              gap: m
+              blocks:
+                - { kind: heading, text: "@W2e" }
+                - { kind: meta, text: { en: "Date: 18 November, 10:00", ar: "الموعد: 18 نوفمبر، الساعة 10:00" }, gap: xs }
+                - { kind: meta, text: { en: "Price: EGP 120", ar: "السعر: 120 جنيهًا" }, gap: xs }
+                - { kind: button, emphasis: low, text: "@W2h", gap: s }
+      - id: shrink
+        text: { en: "Shrink the table until it fits", ar: "صغّر الجدول حتى يتّسع" }
+        mock:
+          width: 260
+          caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: small, text: "", px: 8 }
+                - { kind: heading, text: "@W2a", px: 8 }
+                - { kind: heading, text: "@W2e", px: 8 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Date", ar: "الموعد" }, px: 8 }
+                - { kind: meta, text: "@W2b", px: 8 }
+                - { kind: meta, text: "@W2f", px: 8 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Price", ar: "السعر" }, px: 8 }
+                - { kind: meta, text: "@W2c", px: 8 }
+                - { kind: meta, text: "@W2g", px: 8 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: "", px: 8 }
+                - { kind: button, text: "@W2d", emphasis: low, px: 8 }
+                - { kind: button, text: "@W2h", emphasis: low, px: 8 }
     answer: [cards]
-    reason:
-      prompt: { en: "Why do the values need labels in the cards?", ar: "لماذا تحتاج القيم إلى تسميات داخل البطاقات؟" }
-      options:
-        - { id: pretty, text: { en: "Labels make cards look more complete", ar: "لأن التسميات تجعل البطاقات تبدو أكمل" } }
-        - { id: lost, text: { en: "The row headers that explained them are gone", ar: "لأن عناوين الصفوف التي كانت تشرحها اختفت" } }
-      answer: [lost]
     misconceptions:
       - id: MC-P10-030
-        when: [scroll, shrink]
+        when: [scroll]
         feedback:
-          en: "Sideways scrolling hides one session while you read the other, and shrunk text is hard to read. Both make comparing harder on a phone."
-          ar: "التمرير الأفقي يخفي جلسة وأنت تقرأ الأخرى، والنص المصغّر صعب القراءة. كلاهما يجعل المقارنة أصعب على الهاتف."
+          en: "Swipe the table: the second session is hidden until you scroll, and Sara reads one session at a time anyway. Scrolling tables pay off when people compare many items feature by feature, not here."
+          ar: "اسحب الجدول: الجلسة الثانية مخفية حتى تمرّر، وسارة تقرأ جلسة واحدة في كل مرة أصلًا. الجدول المتحرّك أفقيًا مفيد حين يقارن الناس عناصر كثيرة ميزة بميزة، لا هنا."
+      - id: MC-P10-060
+        when: [shrink]
+        feedback:
+          en: "Everything fits, at 8px. Nobody can read that on a phone."
+          ar: "كل شيء يتّسع، لكن بحجم 8 بكسل. لا أحد يستطيع قراءة ذلك على هاتف."
     correct:
-      en: "Each session becomes a complete card that reads top to bottom."
-      ar: "تصبح كل جلسة بطاقة كاملة تُقرأ من الأعلى إلى الأسفل."
+      en: "Labelled cards: each session reads top to bottom."
+      ar: "بطاقات بتسميات: كل جلسة تُقرأ من الأعلى إلى الأسفل."
     explain:
-      en: "A table's meaning comes from its row and column headers. When you turn columns into cards, bring the row headers along as labels (\"Price: EGP 120\") so each value still says what it is."
-      ar: "معنى الجدول يأتي من عناوين صفوفه وأعمدته. عندما تحوّل الأعمدة إلى بطاقات، انقل عناوين الصفوف معها كتسميات («السعر: 120 جنيهًا») حتى تبقى كل قيمة واضحة."
+      en: "A table's meaning comes from its row headers. When columns become cards, bring the headers along as labels (\"Price: EGP 120\"). Cards suit a few items read one at a time; the next question shows when a table is better."
+      ar: "معنى الجدول يأتي من عناوين صفوفه. وحين تتحوّل الأعمدة إلى بطاقات، انقل العناوين معها كتسميات («السعر: 120 جنيهًا»). البطاقات تناسب عناصر قليلة تُقرأ واحدًا تلو الآخر؛ والسؤال التالي يوضّح متى يكون الجدول أفضل."
 
   - id: S07
-    type: spot
-    part: guided
-    rules: [R06, R15]
-    prompt:
-      en: "This phone layout has one item in the wrong place. Find it."
-      ar: "في تخطيط الهاتف هذا عنصر واحد في المكان الخطأ. جِده."
-    mock:
-      blocks:
-        - kind: group
-          blocks:
-            - { kind: heading, text: "@W2a", region: atitle }
-            - { kind: small, text: "@W2b", gap: xs, region: adate }
-            - { kind: meta, text: "@W2g", gap: xs, region: wrongprice }
-            - { kind: button, emphasis: low, text: "@W2d", gap: s, region: abutton }
-        - kind: group
-          gap: m
-          blocks:
-            - { kind: heading, text: "@W2e", region: btitle }
-            - { kind: small, text: "@W2f", gap: xs, region: bdate }
-            - { kind: meta, text: "@W2c", gap: xs, region: bprice }
-            - { kind: button, emphasis: low, text: "@W2h", gap: s, region: bbutton }
-    regions:
-      - { id: adate, label: { en: "First card: 17 November, 18:00", ar: "البطاقة الأولى: 17 نوفمبر، الساعة 18:00" } }
-      - { id: wrongprice, label: { en: "First card: EGP 120", ar: "البطاقة الأولى: 120 جنيهًا" } }
-      - { id: abutton, label: "@W2d" }
-      - { id: bdate, label: { en: "Second card: 18 November, 10:00", ar: "البطاقة الثانية: 18 نوفمبر، الساعة 10:00" } }
-    answer: [wrongprice]
-    also_ok:
-      - answer: [bprice]
-        feedback:
-          en: "Yes, the prices were swapped, so the second card's \"Free\" is wrong too. Fixing either one means fixing both."
-          ar: "نعم، السعران تبادلا مكانيهما، لذلك «مجاني» في البطاقة الثانية خطأ أيضًا. إصلاح أحدهما يعني إصلاح الاثنين."
-    hints:
-      - { en: "Check each fact against the session data, not against how tidy the card looks.", ar: "قارن كل معلومة ببيانات الجلسة، لا بمدى ترتيب البطاقة." }
-    correct:
-      en: "The prices were swapped when the layout was rebuilt. Sketch is free; Service is EGP 120."
-      ar: "تبادل السعران مكانيهما عند إعادة بناء التخطيط. «ارسم» مجانية؛ و«صمّم» بـ120 جنيهًا."
-    explain:
-      en: "Both cards look perfectly grouped, which is exactly why the error is easy to miss. Good grouping makes a wrong fact more convincing, so check content against the source whenever the layout changes."
-      ar: "البطاقتان تبدوان مجمّعتين بإتقان، ولهذا بالضبط يسهل تفويت الخطأ. التجميع الجيد يجعل المعلومة الخاطئة أكثر إقناعًا، لذلك قارن المحتوى بالمصدر كلما تغيّر التخطيط."
-
-  - id: S08
-    type: sort
+    type: tune
     part: independent
     rules: [R14, R19]
-    scenario:
-      en: "Ahmed's order arrives in two shipments. On his phone, the order page stacks everything in one column."
-      ar: "يصل طلب أحمد في شحنتين. على هاتفه، تُرتّب صفحة الطلب كل شيء في عمود واحد."
+    value:
+      en: "The other side of the rule: when people compare many items feature by feature, keep the table and let it scroll, with the feature names pinned."
+      ar: "الوجه الآخر للقاعدة: حين يقارن الناس عناصر كثيرة ميزة بميزة، أبقِ الجدول ودعه يتحرّك أفقيًا، مع تثبيت أسماء الميزات."
+    mock:
+      frame: wide
+      caption: { en: "Laptop, 1280 px", ar: "Laptop، 1280 بكسل" }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: small, text: "" }
+            - { kind: heading, text: "Basic" }
+            - { kind: heading, text: "Plus" }
+            - { kind: heading, text: "Pro" }
+            - { kind: heading, text: "Family" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: { en: "Per month", ar: "شهريًا" } }
+            - { kind: meta, text: { en: "EGP 300", ar: "300 جنيه" } }
+            - { kind: meta, text: { en: "EGP 450", ar: "450 جنيهًا" } }
+            - { kind: meta, text: { en: "EGP 600", ar: "600 جنيه" } }
+            - { kind: meta, text: { en: "EGP 900", ar: "900 جنيه" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: { en: "Pool", ar: "حمام السباحة" } }
+            - { kind: meta, text: { en: "No", ar: "لا" } }
+            - { kind: meta, text: { en: "Yes", ar: "نعم" } }
+            - { kind: meta, text: { en: "Yes", ar: "نعم" } }
+            - { kind: meta, text: { en: "Yes", ar: "نعم" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: { en: "Classes", ar: "الحصص" } }
+            - { kind: meta, text: { en: "2 a week", ar: "2 أسبوعيًا" } }
+            - { kind: meta, text: { en: "4 a week", ar: "4 أسبوعيًا" } }
+            - { kind: meta, text: { en: "Unlimited", ar: "بلا حدود" } }
+            - { kind: meta, text: { en: "Unlimited", ar: "بلا حدود" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, text: { en: "Guests", ar: "الضيوف" } }
+            - { kind: meta, text: "0" }
+            - { kind: meta, text: "1" }
+            - { kind: meta, text: "2" }
+            - { kind: meta, text: "4" }
     prompt:
-      en: "Which shipment does each item belong to?"
-      ar: "إلى أي شحنة ينتمي كل عنصر؟"
-    items:
-      - { id: S1a, text: "@S1a" }
-      - { id: S1e, text: "@S1e" }
-      - { id: S1c, text: "@S1c" }
-      - { id: S1d, text: "@S1d" }
-      - { id: S1b, text: "@S1b" }
-      - { id: S1f, text: "@S1f" }
-    buckets:
-      - { id: one, label: { en: "Shipment 1", ar: "الشحنة 1" } }
-      - { id: two, label: { en: "Shipment 2", ar: "الشحنة 2" } }
-    answer:
-      one: [S1a, S1b, S1c]
-      two: [S1d, S1e, S1f]
+      en: "Mazen compares four gym plans feature by feature: he checks which have a pool, then compares the prices of those. Try each option: which works best on his phone?"
+      ar: "يقارن مازن أربع باقات في النادي ميزة بميزة: يبحث عن الباقات التي فيها حمام سباحة، ثم يقارن أسعارها. جرّب كل خيار: أيّها الأفضل على هاتفه؟"
+    start: cards
+    options:
+      - id: cards
+        text: { en: "A card for each plan, stacked", ar: "بطاقة لكل باقة، مرتّبة عموديًا" }
+        mock:
+          width: 260
+          caption: { en: "Phone, 320 px · 2 of 4 cards", ar: "هاتف، 320 بكسل · بطاقتان من 4" }
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: heading, text: "Basic" }
+                - { kind: meta, text: { en: "Per month: EGP 300", ar: "شهريًا: 300 جنيه" }, gap: xs }
+                - { kind: meta, text: { en: "Pool: No", ar: "حمام السباحة: لا" }, gap: xs }
+                - { kind: meta, text: { en: "Classes: 2 a week", ar: "الحصص: 2 أسبوعيًا" }, gap: xs }
+                - { kind: meta, text: { en: "Guests: 0", ar: "الضيوف: 0" }, gap: xs }
+            - kind: group
+              gap: m
+              blocks:
+                - { kind: heading, text: "Plus" }
+                - { kind: meta, text: { en: "Per month: EGP 450", ar: "شهريًا: 450 جنيهًا" }, gap: xs }
+                - { kind: meta, text: { en: "Pool: Yes", ar: "حمام السباحة: نعم" }, gap: xs }
+                - { kind: meta, text: { en: "Classes: 4 a week", ar: "الحصص: 4 أسبوعيًا" }, gap: xs }
+                - { kind: meta, text: { en: "Guests: 1", ar: "الضيوف: 1" }, gap: xs }
+      - id: shrink
+        text: { en: "Shrink the table until it fits", ar: "صغّر الجدول حتى يتّسع" }
+        mock:
+          width: 260
+          caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: small, text: "", px: 7 }
+                - { kind: heading, text: "Basic", px: 7 }
+                - { kind: heading, text: "Plus", px: 7 }
+                - { kind: heading, text: "Pro", px: 7 }
+                - { kind: heading, text: "Family", px: 7 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Per month", ar: "شهريًا" }, px: 7 }
+                - { kind: meta, text: { en: "EGP 300", ar: "300 جنيه" }, px: 7 }
+                - { kind: meta, text: { en: "EGP 450", ar: "450 جنيهًا" }, px: 7 }
+                - { kind: meta, text: { en: "EGP 600", ar: "600 جنيه" }, px: 7 }
+                - { kind: meta, text: { en: "EGP 900", ar: "900 جنيه" }, px: 7 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Pool", ar: "حمام السباحة" }, px: 7 }
+                - { kind: meta, text: { en: "No", ar: "لا" }, px: 7 }
+                - { kind: meta, text: { en: "Yes", ar: "نعم" }, px: 7 }
+                - { kind: meta, text: { en: "Yes", ar: "نعم" }, px: 7 }
+                - { kind: meta, text: { en: "Yes", ar: "نعم" }, px: 7 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Classes", ar: "الحصص" }, px: 7 }
+                - { kind: meta, text: { en: "2 a week", ar: "2 أسبوعيًا" }, px: 7 }
+                - { kind: meta, text: { en: "4 a week", ar: "4 أسبوعيًا" }, px: 7 }
+                - { kind: meta, text: { en: "Unlimited", ar: "بلا حدود" }, px: 7 }
+                - { kind: meta, text: { en: "Unlimited", ar: "بلا حدود" }, px: 7 }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Guests", ar: "الضيوف" }, px: 7 }
+                - { kind: meta, text: "0", px: 7 }
+                - { kind: meta, text: "1", px: 7 }
+                - { kind: meta, text: "2", px: 7 }
+                - { kind: meta, text: "4", px: 7 }
+      - id: pinned
+        text: { en: "Keep the table; it scrolls sideways with the feature names pinned", ar: "أبقِ الجدول؛ يتحرّك أفقيًا مع تثبيت أسماء الميزات" }
+        mock:
+          width: 260
+          caption: { en: "Phone, 320 px · swipe the table", ar: "هاتف، 320 بكسل · اسحب الجدول" }
+          blocks:
+            - kind: group
+              scroll: true
+              sticky: true
+              colw: 92
+              blocks:
+                - kind: row
+                  blocks:
+                    - { kind: small, text: "" }
+                    - { kind: heading, text: "Basic" }
+                    - { kind: heading, text: "Plus" }
+                    - { kind: heading, text: "Pro" }
+                    - { kind: heading, text: "Family" }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: { en: "Per month", ar: "شهريًا" } }
+                    - { kind: meta, text: { en: "EGP 300", ar: "300 جنيه" } }
+                    - { kind: meta, text: { en: "EGP 450", ar: "450 جنيهًا" } }
+                    - { kind: meta, text: { en: "EGP 600", ar: "600 جنيه" } }
+                    - { kind: meta, text: { en: "EGP 900", ar: "900 جنيه" } }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: { en: "Pool", ar: "حمام السباحة" } }
+                    - { kind: meta, text: { en: "No", ar: "لا" } }
+                    - { kind: meta, text: { en: "Yes", ar: "نعم" } }
+                    - { kind: meta, text: { en: "Yes", ar: "نعم" } }
+                    - { kind: meta, text: { en: "Yes", ar: "نعم" } }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: { en: "Classes", ar: "الحصص" } }
+                    - { kind: meta, text: { en: "2 a week", ar: "2 أسبوعيًا" } }
+                    - { kind: meta, text: { en: "4 a week", ar: "4 أسبوعيًا" } }
+                    - { kind: meta, text: { en: "Unlimited", ar: "بلا حدود" } }
+                    - { kind: meta, text: { en: "Unlimited", ar: "بلا حدود" } }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: small, text: { en: "Guests", ar: "الضيوف" } }
+                    - { kind: meta, text: "0" }
+                    - { kind: meta, text: "1" }
+                    - { kind: meta, text: "2" }
+                    - { kind: meta, text: "4" }
+    answer: [pinned]
     misconceptions:
-      - id: MC-P10-021
-        when: { item: S1e, bucket: one }
+      - id: MC-P10-030
+        when: [cards]
         feedback:
-          en: "The office chair arrives Thursday with shipment 2. If it's grouped with Monday's delivery, Ahmed will wait for it on the wrong day."
-          ar: "كرسي المكتب يصل يوم الخميس مع الشحنة 2. إذا جُمّع مع شحنة الاثنين، سينتظره أحمد في اليوم الخطأ."
+          en: "To compare pools and prices, Mazen would scroll through four long cards and remember every answer. When people compare across items, the table is the comparison: keep it."
+          ar: "لمقارنة حمام السباحة والأسعار، سيمرّر مازن عبر أربع بطاقات طويلة ويتذكّر كل إجابة. حين يقارن الناس بين العناصر، فالجدول هو المقارنة نفسها: أبقِه."
+      - id: MC-P10-060
+        when: [shrink]
+        feedback:
+          en: "Five columns at 7px fit, but nobody can read them."
+          ar: "خمسة أعمدة بحجم 7 بكسل تتّسع، لكن لا أحد يستطيع قراءتها."
     correct:
-      en: "Each shipment has its date, its item and its tracking link."
-      ar: "لكل شحنة تاريخها وعنصرها ورابط تتبّعها."
+      en: "A scrolling table with the feature names pinned."
+      ar: "جدول يتحرّك أفقيًا مع تثبيت أسماء الميزات."
     explain:
-      en: "Same pattern as the sessions: a heading (the shipment and date), its content, and its own action. Stack each shipment as one block on a phone."
-      ar: "النمط نفسه في الجلسات: عنوان (الشحنة والتاريخ)، ومحتواها، وإجراؤها الخاص. رتّب كل شحنة ككتلة واحدة على الهاتف."
+      en: "Swipe it: \"Pool\" and \"Per month\" stay in view while the plans slide past, so Mazen compares along one row. Cards for a few items read one at a time; a pinned, scrolling table for many items compared feature by feature."
+      ar: "اسحبه: «حمام السباحة» و«شهريًا» يبقيان ظاهرين بينما تمرّ الباقات، فيقارن مازن على صف واحد. البطاقات لعناصر قليلة تُقرأ واحدًا تلو الآخر؛ والجدول المتحرّك مع عمود مثبّت لعناصر كثيرة تُقارن ميزة بميزة."
 
-  - id: S09
+  - id: S08
     type: choose
     part: independent
     confidence: true
     rules: [R14, R10]
+    value:
+      en: "Containers need spacing too: a border alone doesn't keep two stacked cards apart."
+      ar: "الـ Containers تحتاج إلى مسافات أيضًا: الإطار وحده لا يفصل بطاقتين مرتّبتين عموديًا."
     prompt:
       en: "Each stacked session has its own border. Do you still need space between the cards?"
       ar: "لكل جلسة مرتّبة عموديًا إطارها الخاص. هل ما زلت تحتاج إلى مسافة بين البطاقتين؟"
@@ -275,18 +508,6 @@ steps:
       - { id: desktop, text: { en: "Only on desktop", ar: "على الـ Laptop فقط" } }
       - { id: yes, text: { en: "Yes, some space between them still helps", ar: "نعم، بعض المسافة بينهما ما زالت تساعد" } }
     answer: [yes]
-    reason:
-      prompt: { en: "Why?", ar: "لماذا؟" }
-      options:
-        - { id: rule, text: { en: "Cards must always have 16px between them", ar: "يجب أن يكون بين البطاقات 16 بكسل دائمًا" } }
-        - { id: merge, text: { en: "Touching borders start to look like one box", ar: "الحدود المتلاصقة تبدأ في الظهور كإطار واحد" } }
-      answer: [merge]
-      misconceptions:
-        - id: MC-P10-031
-          when: [rule]
-          feedback:
-            en: "There's no fixed number. What matters is that the space between cards is clearly bigger than the space inside them."
-            ar: "لا يوجد رقم ثابت. المهم أن تكون المسافة بين البطاقات أكبر بوضوح من المسافة داخلها."
     misconceptions:
       - id: MC-P10-029
         when: [no, desktop]
@@ -300,11 +521,11 @@ steps:
       en: "A border marks a group's edge; the space around it makes that edge easy to see. Without space, two neighboring containers blur into one."
       ar: "الإطار يحدّد حافة المجموعة؛ والمسافة حوله تجعل هذه الحافة سهلة الرؤية. بدون مسافة، تتداخل حاويتان متجاورتان كأنهما واحدة."
 
-  - id: S10
+  - id: S09
     type: card
     part: recap
-    icons: [layers, group, space]
+    icons: [layers, width, space]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "- Stack whole groups; never alternate their lines.\n- On a phone, turn a table into labelled cards.\n- Keep space between containers, even when they have borders.\n\nNext lesson: the skill check."
-      ar: "- رتّب المجموعات كاملة، ولا تبادل بين أسطرها أبدًا.\n- على الهاتف، حوّل الجدول إلى Cards لكل منها اسم.\n- أبقِ مسافة بين الـ Containers، حتى لو كانت لها حدود.\n\nالدرس التالي: اختبار المهارة."
+      en: "- Build each group as one block, so it stacks whole.\n- A few items read one at a time: labelled cards. Many items compared feature by feature: a scrolling table with the first column pinned.\n- Keep space between containers, even when they have borders.\n\nNext lesson: the skill check."
+      ar: "- ابنِ كل مجموعة ككتلة واحدة، حتى تُرتَّب كاملة.\n- عناصر قليلة تُقرأ واحدًا تلو الآخر: بطاقات بتسميات. وعناصر كثيرة تُقارن ميزة بميزة: جدول يتحرّك أفقيًا مع تثبيت العمود الأول.\n- أبقِ مسافة بين الـ Containers، حتى لو كانت لها حدود.\n\nالدرس التالي: اختبار المهارة."
