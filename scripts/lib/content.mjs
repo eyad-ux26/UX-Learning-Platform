@@ -9,6 +9,7 @@ const PATHS_DIR = path.join(ROOT, "content/paths");
 const readYaml = (file) => yaml.load(fs.readFileSync(file, "utf8"));
 
 export const CHOICE_TYPES = ["choose", "predict", "words", "fix", "tune"];
+const BANK_RE = /^P\d{2}-U\d{2}-B\d{2}-/;
 export const STEP_TYPES = ["card", ...CHOICE_TYPES, "sort", "order", "match", "spot", "compare"];
 
 // Each path folder holds path.yaml, an optional fixtures.yaml, and one folder per unit
@@ -28,11 +29,12 @@ export function loadContent() {
       if (!fs.statSync(uDir).isDirectory()) continue;
       const u = readYaml(path.join(uDir, "unit.yaml"));
       u._file = path.relative(ROOT, path.join(uDir, "unit.yaml"));
-      u.lessons = fs
-        .readdirSync(uDir)
-        .filter((f) => f.endsWith(".yaml") && f !== "unit.yaml")
-        .sort()
-        .map((f) => ({ ...readYaml(path.join(uDir, f)), _file: path.relative(ROOT, path.join(uDir, f)) }));
+      const files = fs.readdirSync(uDir).filter((f) => f.endsWith(".yaml") && f !== "unit.yaml").sort();
+      const load = (f) => ({ ...readYaml(path.join(uDir, f)), _file: path.relative(ROOT, path.join(uDir, f)) });
+      // Bank files (P10-U01-B01-...) hold re-test versions: learners never see them as lessons,
+      // only in the end-of-unit mastery round.
+      u.lessons = files.filter((f) => !BANK_RE.test(f)).map(load);
+      u.bank = files.filter((f) => BANK_RE.test(f)).map(load);
       p.units.push(u);
     }
     paths.push(p);
@@ -57,4 +59,13 @@ export function resolveRefs(node, fixtures, errors, where) {
     return out;
   }
   return node;
+}
+
+// A step's scenario: its own `scenario`, or else its lesson's hook. Two versions of a skill
+// count as different scenarios only when these differ.
+export function scenarioOf(lesson, step) {
+  const t = (v) => (v && typeof v === "object" ? v.en : v) || "";
+  if (step.scenario) return t(step.scenario).trim();
+  const hook = (lesson.steps || []).find((x) => x.type === "card" && x.part === "hook");
+  return hook ? `${t(hook.title)}: ${t(hook.body)}`.trim() : lesson.id;
 }
