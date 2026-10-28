@@ -27,24 +27,26 @@ steps:
     type: predict
     part: try
     rules: [R12]
-    prompt: { en: "His full name is four names. What will he type in \"Last name\"?", ar: "اسمه الكامل أربعة أسماء. ماذا سيكتب في «اسم العائلة»؟" }
+    prompt:
+      en: "His ID shows four names, and the form gives him First name and Last name. How should the form ask for his name?"
+      ar: "بطاقته فيها أربعة أسماء، والنموذج يعطيه «الاسم الأول» و«اسم العائلة». كيف يجب أن يسأل النموذج عن اسمه؟"
     options:
-      - { id: rest, text: { en: "\"Mohamed El-Sayed\"", ar: "«محمد السيد»" } }
-      - { id: family, text: { en: "Just \"El-Sayed\"", ar: "«السيد» فقط" } }
-      - { id: depends, text: { en: "Different people would split it differently", ar: "كل شخص سيقسّمه بطريقة مختلفة" } }
-    answer: [depends]
+      - { id: four, text: { en: "Four boxes, one for each name", ar: "أربعة مربّعات، واحد لكل اسم" } }
+      - { id: hint, text: { en: "Keep both boxes and add a hint: \"Last name = family name\"", ar: "أبقِ المربّعين وأضِف تلميحًا: «اسم العائلة = اللقب»" } }
+      - { id: full, text: { en: "One \"Full name\" field, and a separate \"What should we call you?\" if needed", ar: "حقل واحد «الاسم الكامل»، و«بماذا نناديك؟» منفصلًا إن احتجت" } }
+    answer: [full]
     misconceptions:
       - id: MC-P01-006
-        when: [family, rest]
+        when: [hint, four]
         feedback:
-          en: "Some people would type that, and others wouldn't. Two boxes force a split that his name doesn't have, so the same name gets stored in different ways."
-          ar: "بعض الناس سيكتبون ذلك، وغيرهم لا. والمربّعان يفرضان تقسيمًا ليس في اسمه، فيُحفظ الاسم نفسه بطرق مختلفة."
+          en: "Both still force a fixed number of parts. Many names have four parts, some have two, some one. One full-name field fits every pattern, exactly as it appears on the ID."
+          ar: "كلاهما يفرض عددًا ثابتًا من الأجزاء. كثير من الأسماء أربعة أجزاء، وبعضها جزءان، وبعضها جزء واحد. وحقل واحد للاسم الكامل يناسب كل الأنماط، تمامًا كما في البطاقة."
     correct:
-      en: "There's no right answer, and that's the problem."
-      ar: "لا توجد إجابة صحيحة، وهذه هي المشكلة."
+      en: "One full-name field fits every name."
+      ar: "حقل واحد للاسم الكامل يناسب كل الأسماء."
     explain:
-      en: "When people split the same name differently, the library ends up with records that don't match his ID."
-      ar: "حين يقسّم الناس الاسم نفسه بطرق مختلفة، تنتهي المكتبة بسجلّات لا تطابق بطاقته."
+      en: "Abdelrahman types his name exactly as on his ID, and the library can still greet him as \"Abdelrahman\" if it asks what to call him."
+      ar: "يكتب عبد الرحمن اسمه تمامًا كما في بطاقته، ويمكن للمكتبة أن تحيّيه بـ«عبد الرحمن» إذا سألته بماذا تناديه."
   - id: S03
     type: card
     part: concept
@@ -54,39 +56,6 @@ steps:
       en: "A question is easy when it matches how people already hold the answer in their heads.\n\n- **Names:** one \"Full name\" field fits every naming pattern. If you need a short name for greetings, ask \"What should we call you?\" separately.\n- **Formats:** accept phone numbers with spaces or dashes, with or without +20. Clean them up in the system; don't make people do it.\n- **Splitting:** split an answer only when people know the parts and you use them separately. A driver needs floor and flat on their own; nobody needs a name in pieces.\n- **Words:** use everyday words, and ask about the real need. \"Are you 18 or older?\" is easier than \"Age\" when that's all you need to know."
       ar: "يكون السؤال سهلًا حين يطابق الطريقة التي يحتفظ بها الناس بالإجابة في أذهانهم.\n\n- **الأسماء:** حقل واحد «الاسم الكامل» يناسب كل أنماط التسمية. وإذا احتجت اسمًا قصيرًا للتحية، فاسأل «بماذا نناديك؟» منفصلًا.\n- **الصيغ:** اقبل أرقام الهواتف بالمسافات أو الشرطات، بـ‎+20 أو بدونها. نظّفها في النظام؛ ولا تجعل الناس يفعلون ذلك.\n- **التقسيم:** قسّم الإجابة فقط حين يعرف الناس أجزاءها وتستخدمها أنت منفصلة. السائق يحتاج الطابق والشقة كلٌّ على حدة؛ ولا أحد يحتاج الاسم مقطّعًا.\n- **الكلمات:** استخدم كلمات يومية، واسأل عن الحاجة الفعلية. «هل عمرك 18 سنة أو أكثر؟» أسهل من «العمر» حين يكون هذا كل ما تحتاج معرفته."
   - id: S04
-    type: compare
-    part: guided
-    rules: [R06, U39]
-    prompt:
-      en: "Which version works for Abdelrahman, and for everyone else?"
-      ar: "أي نسخة تناسب عبد الرحمن، وتناسب الجميع؟"
-    a:
-      mock:
-        blocks:
-          - { kind: field, label: "@F4first", text: "" }
-          - { kind: field, label: "@F4last", text: "", gap: s }
-    b:
-      mock:
-        blocks:
-          - { kind: field, label: "@F4full", text: "" }
-          - { kind: field, label: "@F4call", text: "", gap: s }
-    answer: b
-    misconceptions:
-      - id: MC-P01-006
-        when: [a]
-        feedback:
-          en: "First and last assumes every name has exactly two parts. Many Arabic names have four, and some people have one."
-          ar: "الاسم الأول واسم العائلة يفترضان أن لكل اسم جزأين بالضبط. كثير من الأسماء العربية من أربعة أجزاء، وبعض الناس لهم اسم واحد."
-    hints:
-      - { en: "Where would a four-part name go in each?", ar: "أين سيذهب اسم من أربعة أجزاء في كل نسخة؟" }
-    correct:
-      en: "One full name field, plus an optional short name for greetings."
-      ar: "حقل واحد للاسم الكامل، واسم قصير اختياري للتحية."
-    explain:
-      en: "Abdelrahman types his name exactly as on his ID, and the library can still greet him as \"Abdelrahman\"."
-      ar: "يكتب عبد الرحمن اسمه كما في بطاقته تمامًا، ويمكن للمكتبة أن تحيّيه باسم «عبد الرحمن»."
-
-  - id: S05
     type: choose
     part: guided
     confidence: true
@@ -98,9 +67,9 @@ steps:
       blocks:
         - { kind: field, tone: bad, label: "@F1phone", text: "010 1234 5678", filled: true, error: { en: "Invalid number", ar: "رقم غير صالح" } }
     options:
+      - { id: hint, text: { en: "Add a hint: \"Numbers only, no spaces\"", ar: "أضف تلميحًا: «أرقام فقط، بدون مسافات»" } }
       - { id: error, text: { en: "Change the error to \"Remove the spaces\"", ar: "غيّر رسالة الخطأ إلى «احذف المسافات»" } }
       - { id: accept, text: { en: "Accept spaces and dashes, and remove them in the system", ar: "اقبل المسافات والشرطات، واحذفها في النظام" } }
-      - { id: hint, text: { en: "Add a hint: \"Numbers only, no spaces\"", ar: "أضف تلميحًا: «أرقام فقط، بدون مسافات»" } }
     answer: [accept]
     misconceptions:
       - id: MC-P01-007
@@ -117,7 +86,7 @@ steps:
       en: "People copy numbers from contacts and messages with spaces in them. Clean them up quietly."
       ar: "ينسخ الناس الأرقام من جهات الاتصال والرسائل وفيها مسافات. نظّفها بهدوء."
 
-  - id: S06
+  - id: S05
     type: choose
     part: guided
     rules: [R11, U39]
@@ -149,7 +118,7 @@ steps:
       en: "A \"Landmark\" field (optional) also helps a lot where street numbers are unclear."
       ar: "وحقل «علامة مميزة» (اختياري) يساعد كثيرًا حيث تكون أرقام الشوارع غير واضحة."
 
-  - id: S07
+  - id: S06
     type: compare
     part: contrast
     rules: [R11, U13]
@@ -182,7 +151,7 @@ steps:
       en: "If someone has to look a word up, the question is too hard."
       ar: "إذا احتاج شخص إلى البحث عن معنى كلمة، فالسؤال صعب جدًا."
 
-  - id: S08
+  - id: S07
     type: fix
     part: independent
     rules: [R07, U39]
@@ -193,8 +162,8 @@ steps:
       blocks:
         - { kind: field, label: "@F1gender", text: "" }
     options:
-      - { id: keep, text: { en: "Keep \"Gender\" with Male and Female", ar: "أبقِ «النوع» مع ذكر وأنثى" } }
       - { id: remove, text: { en: "Remove it and don't mention the hours", ar: "احذفه ولا تذكر الساعات" } }
+      - { id: keep, text: { en: "Keep \"Gender\" with Male and Female", ar: "أبقِ «النوع» مع ذكر وأنثى" } }
       - { id: need, text: { en: "Ask \"Would you like to use the women-only hours?\"", ar: "اسأل «هل تريدين استخدام ساعات السيدات فقط؟»" } }
     answer: [need]
     misconceptions:
@@ -217,7 +186,7 @@ steps:
       en: "When you catch yourself asking for a category, ask what decision it feeds, and ask about that."
       ar: "حين تجد نفسك تسأل عن فئة، اسأل أي قرار تغذّيه، واسأل عنه هو."
 
-  - id: S09
+  - id: S08
     type: card
     part: recap
     icons: [person, phone, cut, text]
