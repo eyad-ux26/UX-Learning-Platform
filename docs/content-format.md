@@ -115,6 +115,7 @@ Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 - A `reason` question appears only after the main answer is right, so it can't give that answer away. Learners then answer it and press Check again.
 - A lesson can list `sources` (each with `title` and `url`). They show under its concept and recap cards. Lesson content comes only from Nielsen Norman Group, the Interaction Design Foundation and Google's People + AI Research.
 - A mock with `blur` (pixels) is shown blurred, for squint-test questions.
+- Any question step can have `ref: { url, quote }`: the source it rests on. `url` must be one of the lesson's `sources`, and `quote` is a short passage copied exactly from the article. The step shows a **Source** link that opens the article with that passage highlighted (a URL text fragment, supported by Chrome, Edge and Safari; other browsers open the article at the top). Each unit and path on the home screen lists all its sources, with how many questions use each.
 - Any question step can have `value` (`en`/`ar`): one sentence on what the question teaches. The preview shows it behind a small ⓘ toggle under the prompt, for reviewers.
 - An `order` step with `onscreen: true` shows the items as blocks on a phone screen that learners drag into place (arrow keys work too). Give it a `caption`; items can set `kind`, `gap` and `emphasis`.
 - A `tune` step can also have its own `mock`, shown above the option's mock. Use it for a "before" screen, such as a desktop table, with each option showing the result on a phone.
