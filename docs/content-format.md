@@ -125,5 +125,6 @@ Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 - A `group` with `scroll: true` scrolls sideways inside the mock, with its `row` children at a fixed column width (`colw`, default 120). `sticky: true` keeps the first column in place.
 - Mock screens respond to taps: switches, checkboxes, radio buttons, segmented controls and − / + buttons change state, empty fields accept typing, and a slider with `min`/`max` can be dragged. This is only for trying things out and never affects the answer.
 
-- Every step after a lesson's hook card has a **Show the scenario** panel that reopens the hook (title, text and mock), so learners can re-check the situation at any time.
+- Every step after a lesson's hook card has a **Show the scenario** panel that reopens the hook (title, text and mock), so learners can re-check the situation at any time. A step with its own `scenario` is a new case, so it shows that scenario instead and doesn't offer the hook.
+- The preview has a reviewer bar above each step (previous, next, and a list of all steps), so a reviewer can jump to any step without answering the ones before it.
 - An `order` step without its own `mock` shows a **live preview** that updates as items move. Give items a `kind` (such as `title` or `button`) so the preview looks like the real screen; the default is `meta`. Set `preview: false` to turn it off.
