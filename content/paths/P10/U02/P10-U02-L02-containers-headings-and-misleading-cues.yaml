@@ -38,31 +38,32 @@ steps:
     type: predict
     part: try
     rules: [R12]
+    mock: *pills
     prompt:
-      en: "Two facts are the same colour but far apart on the page. Will people read them as related?"
-      ar: "معلومتان باللون نفسه لكنهما متباعدتان في الصفحة. هل سيقرؤهما الناس على أنهما مرتبطتان؟"
+      en: "The teammate gave both prices matching green pills so they \"look consistent\". Sara needs to see which price goes with which session. What should you change?"
+      ar: "أعطى الزميل السعرين شارتين خضراوين متطابقتين حتى «يبدوا متناسقين». وسارة تحتاج أن ترى أي سعر يخص أي جلسة. ماذا تغيّر؟"
     options:
-      - { id: never, text: { en: "Never; colour has no effect", ar: "أبدًا؛ اللون لا تأثير له" } }
-      - { id: yes, text: { en: 'Yes, matching colour links them', ar: "نعم، اللون المتطابق يربطهما" } }
-      - { id: weak, text: { en: 'Sometimes, but colour is a weak, unreliable cue', ar: "أحيانًا، لكن اللون إشارة ضعيفة وغير موثوقة" } }
-    answer: [weak]
+      - { id: big, text: { en: "Make the pills bigger", ar: "كبّر الشارتين" } }
+      - { id: color, text: { en: "Give the two pills different colours", ar: "اجعل الشارتين بلونين مختلفين" } }
+      - { id: group, text: { en: "Put each price in its own session's group, close to its title and date", ar: "ضع كل سعر داخل مجموعة جلسته، قريبًا من عنوانها وموعدها" } }
+    answer: [group]
     misconceptions:
       - id: MC-P10-025
-        when: [yes]
+        when: [color]
         feedback:
-          en: "Colour can hint at a link, but distance usually wins, and some people can't tell the colours apart."
-          ar: "اللون قد يلمّح إلى علاقة، لكن المسافة تتغلّب غالبًا، وبعض الناس لا يميّزون الألوان."
+          en: "Colour is one of the weakest grouping cues: distance usually wins, and some people can't tell the colours apart. Move each price into its session first."
+          ar: "اللون من أضعف إشارات التجميع: المسافة تتغلّب غالبًا، وبعض الناس لا يميّزون الألوان. انقل كل سعر إلى جلسته أولًا."
       - id: MC-P10-025
-        when: [never]
+        when: [big]
         feedback:
-          en: "Colour does hint at a link. It's just too weak to rely on by itself."
-          ar: "اللون يلمّح إلى علاقة فعلًا. لكنه أضعف من أن يُعتمد عليه وحده."
+          en: "Bigger pills are easier to see, but they still sit in their own row, away from the session they belong to."
+          ar: "الشارات الأكبر أسهل في الرؤية، لكنها ما زالت في صف وحدها، بعيدًا عن الجلسة التي تخصها."
     correct:
-      en: "Colour hints; it doesn't group."
-      ar: "اللون يلمّح، لكنه لا يجمّع."
+      en: "Grouping by position, not by colour."
+      ar: "التجميع بالمكان، لا باللون."
     explain:
-      en: "Colour is one of the weakest grouping cues. Nearby items usually win, and colour fails for people who can't see the difference. Use it only to support stronger cues."
-      ar: "اللون من أضعف إشارات التجميع. فالعناصر المتقاربة تتغلّب غالبًا، واللون يفشل مع من لا يرون الفرق. استخدمه فقط لدعم إشارات أقوى."
+      en: "Matching pills make the two prices look like a pair, apart from their sessions. Put each price with its session; use colour only to support that."
+      ar: "الشارتان المتطابقتان تجعلان السعرين يبدوان زوجًا، بعيدًا عن جلستيهما. ضع كل سعر مع جلسته، واستخدم اللون لدعم ذلك فقط."
   - id: S03
     type: card
     part: concept
@@ -196,8 +197,8 @@ steps:
     reason:
       prompt: { en: "What makes it clearer?", ar: "ما الذي يجعلها أوضح؟" }
       options:
-        - { id: modern, text: { en: "Borders look old-fashioned", ar: "الحدود تبدو قديمة الطراز" } }
         - { id: few, text: { en: "Fewer boundaries, so the two real groups stand out", ar: "حدود أقل، فتبرز المجموعتان الحقيقيتان" } }
+        - { id: modern, text: { en: "Borders look old-fashioned", ar: "الحدود تبدو قديمة الطراز" } }
       answer: [few]
       misconceptions:
         - id: MC-P10-024
@@ -227,9 +228,9 @@ steps:
       ar: "أي تغيير يصلح تخطيط الزميل بأفضل شكل؟"
     mock: *pills
     options:
-      - { id: recolor, text: { en: "Make the two price pills different colors", ar: "اجعل شارتي السعر بلونين مختلفين" } }
       - { id: arrows, text: { en: "Add arrows from each price to its title", ar: "أضف أسهمًا من كل سعر إلى عنوانه" } }
       - { id: regroup, text: { en: "Stack the sessions: each title with its own date, price and Reserve button", ar: "رتّب الجلسات فوق بعضها: كل عنوان مع تاريخه وسعره وزر «احجز» الخاص به" } }
+      - { id: recolor, text: { en: "Make the two price pills different colors", ar: "اجعل شارتي السعر بلونين مختلفين" } }
       - { id: boxes, text: { en: "Put a border around each column", ar: "ضع إطارًا حول كل عمود" } }
     answer: [regroup]
     also_ok:
@@ -306,9 +307,9 @@ steps:
       ar: "زائر كفيف يستخدم الـ Screen reader، الذي يقرأ الصفحة بصوت عالٍ بالترتيب ولا يرى المسافات. ما الذي يبقي الجلستين واضحتين له؟"
     options:
       - { id: gaps, text: { en: "Bigger gaps between the sessions", ar: "مسافات أكبر بين الجلستين" } }
-      - { id: heading, text: { en: "Each session starts with a real heading, and its details follow in order", ar: "كل جلسة تبدأ بعنوان حقيقي، وتليه تفاصيلها بالترتيب" } }
-      - { id: borders, text: { en: "A border around each session", ar: "إطار حول كل جلسة" } }
       - { id: colors, text: { en: "A different background color for each session", ar: "لون خلفية مختلف لكل جلسة" } }
+      - { id: borders, text: { en: "A border around each session", ar: "إطار حول كل جلسة" } }
+      - { id: heading, text: { en: "Each session starts with a real heading, and its details follow in order", ar: "كل جلسة تبدأ بعنوان حقيقي، وتليه تفاصيلها بالترتيب" } }
     answer: [heading]
     misconceptions:
       - id: MC-P10-026
