@@ -177,6 +177,7 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .drag::after{content:"⠿";position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);color:var(--mock-muted);font-size:1rem}
 .mock .drag.dragging{cursor:grabbing;box-shadow:0 6px 18px rgba(0,0,0,.18);background:var(--mock-bg);z-index:3}
 .mock .drag:focus-visible{outline:2px solid var(--accent)}
+.srcs{margin:4px 0 14px;font-size:.85rem;color:var(--muted)}.srcs p{margin:0 0 4px;font-weight:600}.srcs ul{margin:0;padding-inline-start:18px}.srcs a{color:var(--accent)}
 details.why{margin:-6px 0 14px;font-size:.88rem;color:var(--muted)}details.why summary{cursor:pointer;width:max-content;list-style:none}details.why summary::-webkit-details-marker{display:none}details.why p{margin:6px 0 0;padding:8px 12px;border-radius:10px;background:var(--note-soft);color:var(--ink)}
 .mock button.region{cursor:pointer;border-radius:8px;outline:2px dashed transparent;outline-offset:3px}
 .mock button.region:hover{outline-color:#B9B9C0}
@@ -232,7 +233,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", nowWhy:"Now, why?", dragItem:"draggable item", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -241,7 +242,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -357,7 +358,9 @@ function mockBlocks(blocks, opts){
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
-const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${mockBlocks(m.blocks, opts)}</div>` : "";
+const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
+/* where a lesson's ideas come from, shown on its concept and recap cards */
+const sourcesBox = l => (l.sources||[]).length ? `<div class="srcs"><p>${u().sources}</p><ul>${l.sources.map(x => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(tx(x.title))}</a></li>`).join("")}</ul></div>` : "";
 
 /* ---------- state ---------- */
 let view = {screen:"home"};
@@ -462,7 +465,7 @@ function renderStep(){
   if (s.type === "card"){
     const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
     if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
-    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
+    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}${tag ? sourcesBox(L.lesson) : ""}`;
   } else {
     if (s.recall){
       const k = L.lesson.steps.findIndex(x => x.id === s.recall), prev = L.lesson.steps[k];
