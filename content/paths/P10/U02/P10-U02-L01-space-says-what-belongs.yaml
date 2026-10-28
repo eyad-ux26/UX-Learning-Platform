@@ -36,7 +36,7 @@ steps:
         - { kind: button, emphasis: low, text: "@W2h", gap: m }
 
   - id: S02
-    type: predict
+    type: tune
     part: try
     rules: [R12]
     value:
@@ -44,6 +44,7 @@ steps:
       ar: "المسافات أول إشارة للتجميع (NN/g: التقارب قد يتغلّب على اللون والشكل). أصلح انتماء الزر لجلسته بتغيير المسافات، لا الكلمات ولا الحجم."
     ref: { url: "https://www.nngroup.com/articles/gestalt-proximity/", quote: "Proximity is one of the most important grouping principles" }
     mock:
+      caption: { en: "Now", ar: "الآن" }
       blocks:
         - { kind: heading, text: "@W2a" }
         - { kind: text, text: "@W2b", gap: l }
@@ -57,9 +58,45 @@ steps:
       en: "Someone changed the spacing. The first Reserve button now sits right above the second title, far from its own price. What should you change so it clearly belongs to the first session?"
       ar: "غيّر أحدهم المسافات. أصبح زر «احجز» الأول فوق العنوان الثاني مباشرة، وبعيدًا عن سعر جلسته. ماذا تغيّر حتى يبدو بوضوح أنه يخص الجلسة الأولى؟"
     options:
-      - { id: bigger, text: { en: "Make the button bigger", ar: "كبّر الزر" } }
-      - { id: label, text: { en: "Rename it \"Reserve this session\"", ar: "غيّر نصّه إلى «احجز هذه الجلسة»" } }
-      - { id: space, text: { en: "Less space above the button, more space below it", ar: "مسافة أقل فوق الزر، ومسافة أكبر تحته" } }
+      - id: bigger
+        text: { en: "Make the button filled and bigger", ar: "اجعل الزر ممتلئًا وأكبر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, text: "@W2b", gap: l }
+            - { kind: meta, text: "@W2c", gap: xs }
+            - { kind: button, emphasis: high, text: { en: "Reserve", ar: "احجز" }, gap: l }
+            - { kind: heading, text: "@W2e", gap: xs }
+            - { kind: text, text: "@W2f", gap: l }
+            - { kind: meta, text: "@W2g", gap: xs }
+            - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: l }
+      - id: label
+        text: { en: "Rename it \"Reserve this session\"", ar: "غيّر نصّه إلى «احجز هذه الجلسة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, text: "@W2b", gap: l }
+            - { kind: meta, text: "@W2c", gap: xs }
+            - { kind: button, emphasis: low, text: { en: "Reserve this session", ar: "احجز هذه الجلسة" }, gap: l }
+            - { kind: heading, text: "@W2e", gap: xs }
+            - { kind: text, text: "@W2f", gap: l }
+            - { kind: meta, text: "@W2g", gap: xs }
+            - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: l }
+      - id: space
+        text: { en: "Less space above the button, more space below it", ar: "مسافة أقل فوق الزر، ومسافة أكبر تحته" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, text: "@W2b", gap: l }
+            - { kind: meta, text: "@W2c", gap: xs }
+            - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: s }
+            - { kind: heading, text: "@W2e", gap: xl }
+            - { kind: text, text: "@W2f", gap: l }
+            - { kind: meta, text: "@W2g", gap: xs }
+            - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: l }
     answer: [space]
     misconceptions:
       - id: MC-P10-020
@@ -366,7 +403,7 @@ steps:
       ar: "اختبار التحديق من NN/g: ضيّق عينيك أو موّه الشاشة قليلًا. إن بقيت المجموعات التي قصدتها ظاهرة، فالتخطيط يعمل قبل أن يقرأ أحد. الفواصل تحت كل سطر تصنع قطعًا متساوية كثيرة؛ والمسافات تصنع جلستين."
 
   - id: S08
-    type: fix
+    type: tune
     part: independent
     confidence: true
     rules: [R14, R19]
@@ -381,6 +418,7 @@ steps:
       en: "What should you change?"
       ar: "ماذا تغيّر؟"
     mock:
+      caption: { en: "Now", ar: "الآن" }
       blocks:
         - { kind: heading, text: { en: "Employer 1", ar: "جهة العمل 1" } }
         - { kind: field, label: { en: "Employer name", ar: "اسم جهة العمل" }, text: { en: "Delta Foods", ar: "دلتا للأغذية" }, filled: true, gap: s }
@@ -394,10 +432,70 @@ steps:
             - { kind: button, emphasis: low, text: { en: "Cancel", ar: "إلغاء" } }
         - { kind: button, text: { en: "Next", ar: "التالي" }, gap: s }
     options:
-      - { id: primary, text: { en: "Make Add employer a filled, bright button in the same row", ar: "اجعل «إضافة جهة عمل» زرًّا ممتلئًا بلون لافت في الصف نفسه" } }
-      - { id: move, text: { en: "Move \"+ Add another employer\" right under the employer fields, away from Save, Cancel and Next", ar: "انقل «+ إضافة جهة عمل أخرى» تحت حقول جهة العمل مباشرة، بعيدًا عن الحفظ والإلغاء والتالي" } }
-      - { id: rename, text: { en: "Rename it \"Add employer (if you had more than one)\"", ar: "غيّر اسمه إلى «إضافة جهة عمل (إن كان لديك أكثر من واحدة)»" } }
-      - { id: first, text: { en: "Keep the row, but move Add employer to the end of it", ar: "أبقِ الصف، لكن انقل «إضافة جهة عمل» إلى آخره" } }
+      - id: primary
+        text: { en: "Make Add employer a filled, bright button in the same row", ar: "اجعل «إضافة جهة عمل» زرًّا ممتلئًا بلون لافت في الصف نفسه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Employer 1", ar: "جهة العمل 1" } }
+            - { kind: field, label: { en: "Employer name", ar: "اسم جهة العمل" }, text: { en: "Delta Foods", ar: "دلتا للأغذية" }, filled: true, gap: s }
+            - { kind: field, label: { en: "From", ar: "من" }, text: { en: "March 2025", ar: "مارس 2025" }, filled: true, gap: s }
+            - { kind: field, label: { en: "To", ar: "إلى" }, text: { en: "June 2026", ar: "يونيو 2026" }, filled: true, gap: s }
+            - kind: row
+              gap: xl
+              blocks:
+                - { kind: button, emphasis: high, text: { en: "Add employer", ar: "إضافة جهة عمل" } }
+                - { kind: button, emphasis: low, text: { en: "Save draft", ar: "حفظ كمسودة" } }
+                - { kind: button, emphasis: low, text: { en: "Cancel", ar: "إلغاء" } }
+            - { kind: button, text: { en: "Next", ar: "التالي" }, gap: s }
+      - id: move
+        text: { en: "Move \"+ Add another employer\" right under the employer fields, away from Save, Cancel and Next", ar: "انقل «+ إضافة جهة عمل أخرى» تحت حقول جهة العمل مباشرة، بعيدًا عن الحفظ والإلغاء والتالي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Employer 1", ar: "جهة العمل 1" } }
+            - { kind: field, label: { en: "Employer name", ar: "اسم جهة العمل" }, text: { en: "Delta Foods", ar: "دلتا للأغذية" }, filled: true, gap: s }
+            - { kind: field, label: { en: "From", ar: "من" }, text: { en: "March 2025", ar: "مارس 2025" }, filled: true, gap: s }
+            - { kind: field, label: { en: "To", ar: "إلى" }, text: { en: "June 2026", ar: "يونيو 2026" }, filled: true, gap: s }
+            - { kind: button, style: plain, text: { en: "+ Add another employer", ar: "+ إضافة جهة عمل أخرى" }, gap: s }
+            - kind: row
+              gap: xl
+              blocks:
+                - { kind: button, emphasis: low, text: { en: "Save draft", ar: "حفظ كمسودة" } }
+                - { kind: button, emphasis: low, text: { en: "Cancel", ar: "إلغاء" } }
+            - { kind: button, text: { en: "Next", ar: "التالي" }, gap: s }
+      - id: rename
+        text: { en: "Rename it \"Add employer (if you had more than one)\"", ar: "غيّر اسمه إلى «إضافة جهة عمل (إن كان لديك أكثر من واحدة)»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Employer 1", ar: "جهة العمل 1" } }
+            - { kind: field, label: { en: "Employer name", ar: "اسم جهة العمل" }, text: { en: "Delta Foods", ar: "دلتا للأغذية" }, filled: true, gap: s }
+            - { kind: field, label: { en: "From", ar: "من" }, text: { en: "March 2025", ar: "مارس 2025" }, filled: true, gap: s }
+            - { kind: field, label: { en: "To", ar: "إلى" }, text: { en: "June 2026", ar: "يونيو 2026" }, filled: true, gap: s }
+            - kind: row
+              gap: xl
+              blocks:
+                - { kind: button, emphasis: low, text: { en: "Add employer (if you had more than one)", ar: "إضافة جهة عمل (إن كان لديك أكثر من واحدة)" } }
+                - { kind: button, emphasis: low, text: { en: "Save draft", ar: "حفظ كمسودة" } }
+                - { kind: button, emphasis: low, text: { en: "Cancel", ar: "إلغاء" } }
+            - { kind: button, text: { en: "Next", ar: "التالي" }, gap: s }
+      - id: first
+        text: { en: "Keep the row, but move Add employer to the end of it", ar: "أبقِ الصف، لكن انقل «إضافة جهة عمل» إلى آخره" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Employer 1", ar: "جهة العمل 1" } }
+            - { kind: field, label: { en: "Employer name", ar: "اسم جهة العمل" }, text: { en: "Delta Foods", ar: "دلتا للأغذية" }, filled: true, gap: s }
+            - { kind: field, label: { en: "From", ar: "من" }, text: { en: "March 2025", ar: "مارس 2025" }, filled: true, gap: s }
+            - { kind: field, label: { en: "To", ar: "إلى" }, text: { en: "June 2026", ar: "يونيو 2026" }, filled: true, gap: s }
+            - kind: row
+              gap: xl
+              blocks:
+                - { kind: button, emphasis: low, text: { en: "Save draft", ar: "حفظ كمسودة" } }
+                - { kind: button, emphasis: low, text: { en: "Cancel", ar: "إلغاء" } }
+                - { kind: button, emphasis: low, text: { en: "Add employer", ar: "إضافة جهة عمل" } }
+            - { kind: button, text: { en: "Next", ar: "التالي" }, gap: s }
     answer: [move]
     misconceptions:
       - id: MC-P10-033
