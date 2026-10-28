@@ -1,0 +1,1037 @@
+id: P10-U05-B01
+mode: bank
+title:
+  en: "Re-tests: real text, real languages, real feedback"
+  ar: "إعادة اختبار: نص حقيقي، ولغات حقيقية، وملاحظات حقيقية"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Which Comes First? Layout or Content? (NN/g)", ar: "أيهما أولًا: التخطيط أم المحتوى؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/layout-vs-content/"
+  - title: { en: "International Usability: Big Stuff the Same, Details Differ (NN/g)", ar: "سهولة الاستخدام الدولية: الأساسيات واحدة والتفاصيل تختلف (NN/g)" }
+    url: "https://www.nngroup.com/articles/international-usability-details-differ/"
+  - title: { en: "Design Critiques: Encourage a Positive Culture to Improve Products (NN/g)", ar: "نقد التصميم: شجّع ثقافة إيجابية لتحسين المنتجات (NN/g)" }
+    url: "https://www.nngroup.com/articles/design-critiques/"
+  - title: { en: "Turn User Goals into Task Scenarios for Usability Testing (NN/g)", ar: "حوّل أهداف المستخدمين إلى سيناريوهات مهام لاختبار سهولة الاستخدام (NN/g)" }
+    url: "https://www.nngroup.com/articles/task-scenarios-usability-testing/"
+steps:
+  # SK-P10-U05-01: let boxes grow with real text
+  - id: S01
+    type: tune
+    skill: SK-P10-U05-01
+    part: retest
+    value:
+      en: "Re-test, layout vs. content (NN/g): scaling issues appear when the content doesn't match the space it goes into. Fix the box, not the words."
+      ar: "إعادة اختبار، التخطيط مقابل المحتوى (NN/g): تظهر مشكلات التحجيم عندما لا يناسب المحتوى المساحة التي يوضع فيها. أصلح الصندوق، لا الكلمات."
+    ref: { url: "https://www.nngroup.com/articles/layout-vs-content/", quote: "Scaling issues appear when the content size does not match the space that it needs to go into." }
+    scenario:
+      en: "Lobna lists upcoming conferences in an app. Each card has a fixed height and a one-line title, so long titles are cut off."
+      ar: "تعرض لبنى المؤتمرات القادمة في تطبيق. لكل بطاقة ارتفاع ثابت وعنوان من سطر واحد، فتُقطع العناوين الطويلة."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - kind: group
+          height: 96
+          blocks:
+            - { kind: heading, nowrap: true, text: &lb_t { en: "Renewable Energy and Water Conference for North Africa", ar: "مؤتمر الطاقة المتجدّدة والمياه في شمال أفريقيا" } }
+            - { kind: meta, nowrap: true, text: &lb_m { en: "12–14 May · International Convention Centre, Nasr City", ar: "12–14 مايو · مركز المؤتمرات الدولي، مدينة نصر" }, gap: s }
+            - { kind: button, emphasis: low, text: &lb_b { en: "Register", ar: "سجّل" }, gap: s }
+    options:
+      - id: shorten
+        text: { en: "Shorten the title so it fits: \"Energy Conference\"", ar: "اختصر العنوان حتى يتّسع: «مؤتمر الطاقة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - kind: group
+              height: 96
+              blocks:
+                - { kind: heading, nowrap: true, text: { en: "Energy Conference", ar: "مؤتمر الطاقة" } }
+                - { kind: meta, nowrap: true, text: *lb_m, gap: s }
+                - { kind: button, emphasis: low, text: *lb_b, gap: s }
+      - id: grow
+        text: { en: "Let the title and place wrap, and the card grow to fit", ar: "دع العنوان والمكان يلتفّان، والبطاقة تكبر لتتّسع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: heading, text: *lb_t }
+                - { kind: meta, text: *lb_m, gap: s }
+                - { kind: button, emphasis: low, text: *lb_b, gap: s }
+      - id: tap
+        text: { en: "Keep one line with \"…\"; the full title shows when people tap the card", ar: "أبقِ سطرًا واحدًا مع «…»؛ ويظهر العنوان كاملًا عند الضغط على البطاقة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - kind: group
+              height: 96
+              blocks:
+                - { kind: heading, nowrap: true, text: *lb_t }
+                - { kind: meta, nowrap: true, text: *lb_m, gap: s }
+                - { kind: small, color: muted, text: { en: "Tap for details", ar: "اضغط للتفاصيل" }, gap: xs }
+    answer: [grow]
+    misconceptions:
+      - id: MC-P10-069
+        when: [shorten]
+        feedback:
+          en: "\"Energy Conference\" drops what makes this one different: water, and North Africa. Don't cut the facts to fit the box; change the box."
+          ar: "«مؤتمر الطاقة» يُسقط ما يميّز هذا المؤتمر: المياه، وشمال أفريقيا. لا تقطع المعلومات لتناسب الصندوق؛ غيّر الصندوق."
+      - id: MC-P10-068
+        when: [tap]
+        feedback:
+          en: "People choose from the list, so they need the full title there. Hiding it behind a tap makes them open every card to compare."
+          ar: "يختار الناس من القائمة، فيحتاجون العنوان كاملًا فيها. إخفاؤه خلف ضغطة يجعلهم يفتحون كل بطاقة ليقارنوا."
+    correct:
+      en: "Right. The text stays whole; the card makes room."
+      ar: "صحيح. يبقى النص كاملًا؛ والبطاقة تفسح له المكان."
+    explain:
+      en: "Real titles vary in length. A card that grows with its content works for the shortest and the longest, without cutting a fact."
+      ar: "تختلف العناوين الحقيقية في طولها. البطاقة التي تكبر مع محتواها تعمل مع الأقصر والأطول، دون قطع أي معلومة."
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U05-01
+    part: retest
+    value:
+      en: "Re-test, layout vs. content (NN/g): debugging layouts during design saves copyfitting time and redesign money later. An address box must fit real, long addresses."
+      ar: "إعادة اختبار، التخطيط مقابل المحتوى (NN/g): إصلاح التخطيط أثناء التصميم يوفّر وقت ضبط النصوص وتكلفة إعادة التصميم لاحقًا. صندوق العنوان يجب أن يتّسع للعناوين الحقيقية الطويلة."
+    ref: { url: "https://www.nngroup.com/articles/layout-vs-content/", quote: "Debugging layouts during design will save a lot of copyfitting time and redesign money later." }
+    scenario:
+      en: "Ehab checks his order before paying. The delivery address sits in a fixed-height box, and his long address ends in \"…\", so he can't confirm the flat number."
+      ar: "يراجع إيهاب طلبه قبل الدفع. عنوان التوصيل في صندوق بارتفاع ثابت، وعنوانه الطويل ينتهي بـ «…»، فلا يستطيع التأكّد من رقم الشقة."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &eh_h { en: "Deliver to", ar: "التوصيل إلى" } }
+        - kind: group
+          height: 44
+          gap: xs
+          blocks:
+            - { kind: meta, nowrap: true, text: &eh_a { en: "22 Mostafa El Nahas St., 8th District, Nasr City, building 4, floor 7, flat 73", ar: "22 شارع مصطفى النحاس، الحي الثامن، مدينة نصر، عمارة 4، الدور 7، شقة 73" } }
+        - { kind: button, text: &eh_b { en: "Pay 340 EGP", ar: "ادفع 340 جنيهًا" }, gap: m }
+    options:
+      - id: wrap
+        text: { en: "Let the address wrap, and the box grow with it", ar: "دع العنوان يلتفّ، والصندوق يكبر معه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *eh_h }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: meta, text: *eh_a }
+            - { kind: button, text: *eh_b, gap: m }
+      - id: abbrev
+        text: { en: "Abbreviate the address so it fits: \"22 M. Nahas, 8th D., NC, B4/F7/73\"", ar: "اختصر العنوان حتى يتّسع: «22 م. النحاس، ح8، م.ن، ع4/د7/73»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *eh_h }
+            - kind: group
+              height: 44
+              gap: xs
+              blocks:
+                - { kind: meta, nowrap: true, text: { en: "22 M. Nahas, 8th D., NC, B4/F7/73", ar: "22 م. النحاس، ح8، م.ن، ع4/د7/73" } }
+            - { kind: button, text: *eh_b, gap: m }
+      - id: scroll
+        text: { en: "Keep the box's height, and let the address scroll inside it", ar: "أبقِ ارتفاع الصندوق، ودع العنوان يتحرّك بالتمرير داخله" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *eh_h }
+            - kind: group
+              height: 44
+              gap: xs
+              blocks:
+                - { kind: meta, text: *eh_a }
+            - { kind: small, color: muted, text: { en: "Scroll inside the box to see more", ar: "مرّر داخل الصندوق لترى المزيد" }, gap: xs }
+            - { kind: button, text: *eh_b, gap: s }
+    answer: [wrap]
+    misconceptions:
+      - id: MC-P10-069
+        when: [abbrev]
+        feedback:
+          en: "It fits, but Ehab has to decode it, and so does the driver. Changing the words to fit the box makes the most important line the hardest to check."
+          ar: "إنه يتّسع، لكن على إيهاب أن يفكّ رموزه، وكذلك السائق. تغيير الكلمات لتناسب الصندوق يجعل أهم سطر هو الأصعب في المراجعة."
+      - id: MC-P10-068
+        when: [scroll]
+        feedback:
+          en: "A tiny scrolling box still hides most of the address, and few people notice they can scroll it. Let the box fit the text."
+          ar: "صندوق صغير بتمرير داخلي ما زال يُخفي معظم العنوان، وقليلون ينتبهون أنه يمكن تمريره. اجعل الصندوق يناسب النص."
+    correct:
+      en: "Right. The whole address, readable before he pays."
+      ar: "صحيح. العنوان كاملًا، مقروءًا قبل أن يدفع."
+    explain:
+      en: "Testing with a long real address during design shows the box is too small, long before an order goes to the wrong flat."
+      ar: "الاختبار بعنوان حقيقي طويل أثناء التصميم يكشف أن الصندوق صغير، قبل وقت طويل من وصول طلب إلى الشقة الخطأ."
+
+  # SK-P10-U05-02: leave room for translated labels
+  - id: S03
+    type: tune
+    skill: SK-P10-U05-02
+    part: retest
+    value:
+      en: "Re-test, international usability (NN/g): leave room for labels and hints to grow by at least 50%. A label column sized for \"Email\" can't hold its Arabic translation."
+      ar: "إعادة اختبار، سهولة الاستخدام الدولية (NN/g): اترك مساحة لتكبر العناوين والتلميحات بنسبة 50% على الأقل. عمود عناوين بحجم «Email» لا يتّسع لترجمتها العربية."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "leave room for labels and hints to grow by at least 50%" }
+    scenario:
+      en: "Soha designed a sign-up form with a narrow label column, sized for \"Email\" and \"Phone\". In the Arabic version, the first label is cut."
+      ar: "صمّمت سهى نموذج تسجيل فيه عمود عناوين ضيق، بحجم «Email» و«Phone». في النسخة العربية، العنوان الأول مقطوع."
+    prompt:
+      en: "Try each fix for the Arabic form. Which one should ship?"
+      ar: "جرّب كل حل للنموذج العربي. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: rtl
+      width: 280
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: meta, text: "البريد الإلكت…" }
+            - { kind: field, text: "name@mail.com" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: meta, text: "الهاتف" }
+            - { kind: field, text: "01X XXXX XXXX" }
+    options:
+      - id: short
+        text: { en: "Change the Arabic label to just \"البريد\" (\"Mail\")", ar: "غيّر العنوان العربي إلى «البريد» فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: meta, text: "البريد" }
+                - { kind: field, text: "name@mail.com" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "الهاتف" }
+                - { kind: field, text: "01X XXXX XXXX" }
+      - id: tiny
+        text: { en: "Use a smaller font for the Arabic labels", ar: "استخدم خطًا أصغر للعناوين العربية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: text, px: 9, text: "البريد الإلكتروني" }
+                - { kind: field, text: "name@mail.com" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: text, px: 9, text: "الهاتف" }
+                - { kind: field, text: "01X XXXX XXXX" }
+      - id: above
+        text: { en: "Put each label above its field, with room to grow", ar: "ضع كل عنوان فوق حقله، مع مساحة ليكبر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: field, label: "البريد الإلكتروني", text: "name@mail.com" }
+            - { kind: field, label: "الهاتف", text: "01X XXXX XXXX", gap: s }
+    answer: [above]
+    misconceptions:
+      - id: MC-P10-069
+        when: [short]
+        feedback:
+          en: "\"البريد\" alone can mean a postal address, so people may type the wrong thing. Give the full label room instead of changing the words."
+          ar: "«البريد» وحدها قد تعني العنوان البريدي، فقد يكتب الناس شيئًا خطأ. أعطِ العنوان الكامل مساحة بدل تغيير الكلمات."
+      - id: MC-P10-078
+        when: [tiny]
+        feedback:
+          en: "It fits, but the labels are now too small to read comfortably. Arabic needs the same readable size as English."
+          ar: "إنه يتّسع، لكن العناوين صارت أصغر من أن تُقرأ براحة. العربية تحتاج الحجم المقروء نفسه الذي تحتاجه الإنجليزية."
+    correct:
+      en: "Right. Every label fits, in full, at a readable size."
+      ar: "صحيح. كل عنوان يتّسع، كاملًا، بحجم مقروء."
+    explain:
+      en: "Translations often run longer than English. Labels above fields can grow freely, so the same form works in every language."
+      ar: "الترجمات غالبًا أطول من الإنجليزية. العناوين فوق الحقول يمكن أن تكبر بحرية، فيعمل النموذج نفسه بكل اللغات."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U05-02
+    part: retest
+    value:
+      en: "Re-test, international usability (NN/g): leave room for labels and hints to grow by at least 50%. A one-line toast sized for English cuts the longer Arabic message."
+      ar: "إعادة اختبار، سهولة الاستخدام الدولية (NN/g): اترك مساحة لتكبر العناوين والتلميحات بنسبة 50% على الأقل. رسالة تأكيد من سطر واحد بحجم الإنجليزية تقطع الرسالة العربية الأطول."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "leave room for labels and hints to grow by at least 50%" }
+    scenario:
+      en: "Medhat saves a hotel to his favorites. A short message slides up to confirm it. It was sized for \"Saved to favorites\", and the Arabic message is cut."
+      ar: "يحفظ مدحت فندقًا في المفضّلة. تظهر رسالة قصيرة للتأكيد. صُمّمت بحجم «Saved to favorites»، فانقطعت الرسالة العربية."
+    prompt:
+      en: "Try each fix for the Arabic message. Which one should ship?"
+      ar: "جرّب كل حل للرسالة العربية. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: rtl
+      width: 280
+      blocks:
+        - { kind: title, text: "فندق شاطئ الفيروز" }
+        - { kind: meta, text: "الغردقة · 2,900 جنيه لليلة", gap: s }
+        - { kind: banner, nowrap: true, text: "تمّت إضافة الفندق إلى قائمة المفضّلة", gap: l }
+    options:
+      - id: done
+        text: { en: "Change the Arabic message to just \"تمّ\" (\"Done\")", ar: "غيّر الرسالة العربية إلى «تمّ» فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: title, text: "فندق شاطئ الفيروز" }
+            - { kind: meta, text: "الغردقة · 2,900 جنيه لليلة", gap: s }
+            - { kind: banner, text: "تمّ", gap: l }
+      - id: grow
+        text: { en: "Let the message wrap onto two lines when it needs to", ar: "دع الرسالة تلتفّ إلى سطرين عند الحاجة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: title, text: "فندق شاطئ الفيروز" }
+            - { kind: meta, text: "الغردقة · 2,900 جنيه لليلة", gap: s }
+            - { kind: banner, text: "تمّت إضافة الفندق إلى قائمة المفضّلة", gap: l }
+      - id: tiny
+        text: { en: "Use a smaller font for the Arabic message", ar: "استخدم خطًا أصغر للرسالة العربية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: title, text: "فندق شاطئ الفيروز" }
+            - { kind: meta, text: "الغردقة · 2,900 جنيه لليلة", gap: s }
+            - { kind: banner, px: 9, text: "تمّت إضافة الفندق إلى قائمة المفضّلة", gap: l }
+    answer: [grow]
+    misconceptions:
+      - id: MC-P10-069
+        when: [done]
+        feedback:
+          en: "\"Done\" doesn't say what happened, and it now says less than the English. Give the message room instead of cutting its words."
+          ar: "«تمّ» لا تقول ماذا حدث، وصارت تقول أقل من الإنجليزية. أعطِ الرسالة مساحة بدل قطع كلماتها."
+      - id: MC-P10-078
+        when: [tiny]
+        feedback:
+          en: "It fits, but a message that disappears in a few seconds is now the hardest text on screen to read."
+          ar: "إنها تتّسع، لكن رسالة تختفي خلال ثوانٍ صارت أصعب نص في الشاشة قراءةً."
+    correct:
+      en: "Right. The full message, at a readable size."
+      ar: "صحيح. الرسالة كاملة، بحجم مقروء."
+    explain:
+      en: "Messages, buttons and hints all grow in translation. Planning for at least 50% more room means every language says the same thing."
+      ar: "الرسائل والأزرار والتلميحات كلها تكبر عند الترجمة. التخطيط لمساحة أكبر بنسبة 50% على الأقل يعني أن كل لغة تقول الشيء نفسه."
+
+  # SK-P10-U05-03: design with real content
+  - id: S05
+    type: tune
+    skill: SK-P10-U05-03
+    part: retest
+    value:
+      en: "Re-test, layout vs. content (NN/g): use placeholders only if you have to. Test the profile header with the longest real names, in both languages."
+      ar: "إعادة اختبار، التخطيط مقابل المحتوى (NN/g): استخدم النصوص المؤقّتة فقط عند الضرورة. اختبر رأس الملف الشخصي بأطول الأسماء الحقيقية، باللغتين."
+    ref: { url: "https://www.nngroup.com/articles/layout-vs-content/", quote: "Use placeholders only if you have to" }
+    scenario:
+      en: "Abeer designs the profile header for a clinic app. Patients' real names can be long, in English and in Arabic. She wants to test the header before handoff."
+      ar: "تصمّم عبير رأس الملف الشخصي لتطبيق عيادة. أسماء المرضى الحقيقية قد تكون طويلة، بالإنجليزية والعربية. وتريد اختبار الرأس قبل التسليم."
+    prompt:
+      en: "Try each test name. Which one should she test with?"
+      ar: "جرّب كل اسم للاختبار. أيّها يجب أن تختبر به؟"
+    start: placeholder
+    options:
+      - id: longest
+        text: { en: "The longest real names, in English and in Arabic", ar: "أطول الأسماء الحقيقية، بالإنجليزية والعربية" }
+        mock:
+          width: 260
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: title, text: { en: "Abdelrahman Mohamed Abdelaziz El Sayed", ar: "عبد الرحمن محمد عبد العزيز السيد" } }
+                - { kind: meta, text: { en: "Patient no. 20418", ar: "رقم المريض 20418" }, gap: s }
+                - { kind: button, emphasis: low, text: { en: "Edit profile", ar: "عدّل الملف" }, gap: s }
+      - id: placeholder
+        text: { en: "A placeholder name that fits neatly", ar: "اسم مؤقّت يتّسع بشكل مرتّب" }
+        mock:
+          width: 260
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: title, text: "Name Surname" }
+                - { kind: meta, text: "Patient no. 00000", gap: s }
+                - { kind: button, emphasis: low, text: "Edit profile", gap: s }
+      - id: typical
+        text: { en: "A typical short real name, in English only", ar: "اسم حقيقي قصير معتاد، بالإنجليزية فقط" }
+        mock:
+          width: 260
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: title, text: "Mona Ali" }
+                - { kind: meta, text: "Patient no. 20418", gap: s }
+                - { kind: button, emphasis: low, text: "Edit profile", gap: s }
+    answer: [longest]
+    misconceptions:
+      - id: MC-P10-080
+        when: [placeholder, typical]
+        feedback:
+          en: "That name happens to fit. The header has to work for the longest real names, and in Arabic too. Test with the hardest real case."
+          ar: "هذا الاسم يتّسع مصادفةً. يجب أن يعمل الرأس مع أطول الأسماء الحقيقية، وبالعربية أيضًا. اختبر بأصعب حالة حقيقية."
+    correct:
+      en: "Right. The hardest real names she'll get."
+      ar: "صحيح. أصعب الأسماء الحقيقية التي ستأتيها."
+    explain:
+      en: "A layout is only as good as the worst real content it holds. A long four-part name shows whether the header wraps well before any patient sees it."
+      ar: "التخطيط جيد بقدر أسوأ محتوى حقيقي يحمله. اسم رباعي طويل يكشف هل يلتفّ الرأس جيدًا قبل أن يراه أي مريض."
+
+  - id: S06
+    type: tune
+    skill: SK-P10-U05-03
+    part: retest
+    value:
+      en: "Re-test, concise text (NN/g): users in all countries prefer concise sites. Concise means fewer words for the same facts, not fewer facts."
+      ar: "إعادة اختبار، النص الموجز (NN/g): المستخدمون في كل البلدان يفضّلون المواقع الموجزة. الإيجاز يعني كلمات أقل للمعلومات نفسها، لا معلومات أقل."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "Even so, users in all countries prefer concise sites." }
+    scenario:
+      en: "Nader writes the text for a desk lamp card in a shop. The first draft is a long paragraph. People choosing a lamp need the height, the bulb type and whether it dims."
+      ar: "يكتب نادر نص بطاقة أباجورة مكتب في متجر. المسوّدة الأولى فقرة طويلة. ومن يختار أباجورة يحتاج الارتفاع ونوع اللمبة وهل يمكن خفض إضاءتها."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 280
+      blocks:
+        - { kind: heading, text: &nd_t { en: "Desk lamp · 420 EGP", ar: "أباجورة مكتب · 420 جنيهًا" } }
+        - { kind: small, text: { en: "Light up your evenings with a lamp designed for the way you work. Standing 45 cm tall, it takes a standard LED bulb, and a smooth dimmer lets you find the perfect light for reading, studying or relaxing at the end of a long day.", ar: "أضئ أمسياتك بأباجورة مصمّمة لطريقة عملك. بارتفاع 45 سم، تعمل بلمبة LED عادية، ومفتاح تخفيت سلس يتيح لك الضوء المثالي للقراءة أو المذاكرة أو الاسترخاء بعد يوم طويل." }, gap: s }
+    options:
+      - id: first
+        text: { en: "Keep only the first sentence", ar: "أبقِ الجملة الأولى فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - { kind: heading, text: *nd_t }
+            - { kind: small, text: { en: "Light up your evenings with a lamp designed for the way you work.", ar: "أضئ أمسياتك بأباجورة مصمّمة لطريقة عملك." }, gap: s }
+      - id: mood
+        text: { en: "Keep the mood line about relaxing, and drop the numbers", ar: "أبقِ جملة الاسترخاء، واحذف الأرقام" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - { kind: heading, text: *nd_t }
+            - { kind: small, text: { en: "The perfect light for relaxing at the end of a long day.", ar: "الضوء المثالي للاسترخاء بعد يوم طويل." }, gap: s }
+      - id: tight
+        text: { en: "One short line with every fact: 45 cm, LED bulb, dimmable", ar: "سطر قصير بكل المعلومات: 45 سم، لمبة LED، إضاءة قابلة للتخفيت" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - { kind: heading, text: *nd_t }
+            - { kind: small, text: { en: "45 cm tall · Standard LED bulb · Dimmable", ar: "ارتفاع 45 سم · لمبة LED عادية · قابلة للتخفيت" }, gap: s }
+    answer: [tight]
+    misconceptions:
+      - id: MC-P10-081
+        when: [first, mood]
+        feedback:
+          en: "Shorter, but the height, the bulb and the dimmer are gone, and those are what people compare lamps on. Concise means fewer words, not fewer facts."
+          ar: "أقصر، لكن الارتفاع واللمبة والتخفيت اختفت، وهي ما يقارن به الناس بين الأباجورات. الإيجاز يعني كلمات أقل، لا معلومات أقل."
+    correct:
+      en: "Right. Every fact, in a few words."
+      ar: "صحيح. كل المعلومات، في كلمات قليلة."
+    explain:
+      en: "People everywhere prefer short text, as long as it answers their questions. Nader cut the decoration and kept the three facts buyers decide on."
+      ar: "يفضّل الناس في كل مكان النص القصير، ما دام يجيب عن أسئلتهم. حذف نادر الزخرفة وأبقى المعلومات الثلاث التي يقرّر بها المشترون."
+
+  # SK-P10-U05-04: mirror the layout for Arabic
+  - id: S07
+    type: tune
+    skill: SK-P10-U05-04
+    part: retest
+    value:
+      en: "Re-test, right-to-left (NN/g): mirror-image the design patterns for right-to-left languages. A step indicator is a direction-based pattern, so step 1 moves to the right."
+      ar: "إعادة اختبار، من اليمين إلى اليسار (NN/g): اعكس أنماط التصميم للغات التي تُكتب من اليمين إلى اليسار. مؤشّر الخطوات نمط يعتمد على الاتجاه، فتنتقل الخطوة 1 إلى اليمين."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "Inas checks out in the Arabic version of a shop. The words are translated, but the step indicator still runs from left to right, so step 1 sits on the left."
+      ar: "تُكمل إيناس الشراء في النسخة العربية من متجر. الكلمات مترجمة، لكن مؤشّر الخطوات ما زال من اليسار إلى اليمين، فالخطوة 1 على اليسار."
+    prompt:
+      en: "Try each version of the Arabic screen. Which one should ship?"
+      ar: "جرّب كل نسخة من الشاشة العربية. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: ltr
+      width: 300
+      blocks: &in_ltr
+        - kind: row
+          blocks:
+            - { kind: chip, text: "1 العنوان" }
+            - { kind: chip, tone: off, text: "2 الدفع" }
+            - { kind: chip, tone: off, text: "3 المراجعة" }
+        - { kind: title, style: end, text: "أين نوصّل طلبك؟", gap: m }
+        - { kind: field, label: "العنوان", text: "اكتب عنوانك", gap: s }
+        - { kind: button, text: "التالي: الدفع", gap: m }
+    options:
+      - id: words
+        text: { en: "Keep it; the words are already in Arabic", ar: "أبقِها؛ فالكلمات بالعربية بالفعل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks: *in_ltr
+      - id: half
+        text: { en: "Mirror the form, but keep the step indicator left to right like the English", ar: "اعكس النموذج، لكن أبقِ مؤشّر الخطوات من اليسار إلى اليمين كالإنجليزية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: chip, tone: off, text: "3 المراجعة" }
+                - { kind: chip, tone: off, text: "2 الدفع" }
+                - { kind: chip, text: "1 العنوان" }
+            - { kind: title, text: "أين نوصّل طلبك؟", gap: m }
+            - { kind: field, label: "العنوان", text: "اكتب عنوانك", gap: s }
+            - { kind: button, text: "التالي: الدفع", gap: m }
+      - id: mirror
+        text: { en: "Mirror the whole screen: step 1 on the right, steps running right to left", ar: "اعكس الشاشة كلها: الخطوة 1 على اليمين، والخطوات من اليمين إلى اليسار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: chip, text: "1 العنوان" }
+                - { kind: chip, tone: off, text: "2 الدفع" }
+                - { kind: chip, tone: off, text: "3 المراجعة" }
+            - { kind: title, text: "أين نوصّل طلبك؟", gap: m }
+            - { kind: field, label: "العنوان", text: "اكتب عنوانك", gap: s }
+            - { kind: button, text: "التالي: الدفع", gap: m }
+    answer: [mirror]
+    misconceptions:
+      - id: MC-P10-072
+        when: [words]
+        feedback:
+          en: "Translated words in a left-to-right layout make Arabic readers start in the wrong corner, and the steps run backwards for them. Mirror the layout too."
+          ar: "الكلمات المترجمة في تخطيط من اليسار إلى اليمين تجعل القارئ العربي يبدأ من الزاوية الخطأ، وتسير الخطوات بالعكس بالنسبة له. اعكس التخطيط أيضًا."
+      - id: MC-P10-082
+        when: [half]
+        feedback:
+          en: "Now the form reads from the right but the steps still read from the left. Half-mirrored screens confuse more than either direction alone. Mirror every pattern the same way."
+          ar: "الآن يُقرأ النموذج من اليمين، لكن الخطوات ما زالت تُقرأ من اليسار. الشاشة المعكوسة جزئيًا تُربك أكثر من أي اتجاه وحده. اعكس كل الأنماط بالطريقة نفسها."
+    correct:
+      en: "Right. The whole screen flows from the right."
+      ar: "صحيح. الشاشة كلها تبدأ من اليمين."
+    explain:
+      en: "Progress in Arabic moves from right to left, like reading. Mirroring the steps, the form and the buttons together keeps the whole screen telling one story."
+      ar: "التقدّم بالعربية يسير من اليمين إلى اليسار، مثل القراءة. عكس الخطوات والنموذج والأزرار معًا يجعل الشاشة كلها تحكي قصة واحدة."
+
+  - id: S08
+    type: tune
+    skill: SK-P10-U05-04
+    part: retest
+    value:
+      en: "Re-test, consistency (NN/g): the important thing is to stay consistent within the site. A mirrored home screen with an unmirrored settings screen breaks that."
+      ar: "إعادة اختبار، الثبات (NN/g): المهم هو الثبات داخل الموقع. شاشة رئيسية معكوسة مع شاشة إعدادات غير معكوسة تكسر ذلك."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "The important thing is to stay consistent within the site" }
+    scenario:
+      en: "Saad uses an app in Arabic. The home screen is fully mirrored, but on the settings screen the labels are still on the left and the arrows point right."
+      ar: "يستخدم سعد تطبيقًا بالعربية. الشاشة الرئيسية معكوسة بالكامل، لكن في شاشة الإعدادات ما زالت العناوين على اليسار والأسهم تشير إلى اليمين."
+    prompt:
+      en: "Try each version of the settings screen. Which one should ship?"
+      ar: "جرّب كل نسخة من شاشة الإعدادات. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: ltr
+      width: 300
+      blocks: &sd_ltr
+        - { kind: title, text: "الإعدادات" }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: meta, text: "اللغة" }
+            - { kind: meta, style: end, text: "›" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: meta, text: "الإشعارات" }
+            - { kind: meta, style: end, text: "›" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: meta, text: "كلمة المرور" }
+            - { kind: meta, style: end, text: "›" }
+    options:
+      - id: mirror
+        text: { en: "Mirror the settings too: labels on the right, arrows pointing left", ar: "اعكس الإعدادات أيضًا: العناوين على اليمين، والأسهم تشير إلى اليسار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "الإعدادات" }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, text: "اللغة" }
+                - { kind: meta, style: end, text: "‹" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "الإشعارات" }
+                - { kind: meta, style: end, text: "‹" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "كلمة المرور" }
+                - { kind: meta, style: end, text: "‹" }
+      - id: leave
+        text: { en: "Leave settings as they are; few people open them", ar: "اترك الإعدادات كما هي؛ فقليلون يفتحونها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks: *sd_ltr
+      - id: align
+        text: { en: "Right-align the labels only; leave the arrows as they are", ar: "اجعل العناوين بمحاذاة اليمين فقط؛ واترك الأسهم كما هي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks:
+            - { kind: title, style: end, text: "الإعدادات" }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, text: "›" }
+                - { kind: meta, style: end, text: "اللغة" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "›" }
+                - { kind: meta, style: end, text: "الإشعارات" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "›" }
+                - { kind: meta, style: end, text: "كلمة المرور" }
+    answer: [mirror]
+    misconceptions:
+      - id: MC-P10-082
+        when: [leave]
+        feedback:
+          en: "Saad moves between screens, and each one should work the same way. A screen that suddenly flips back to left-to-right feels broken, however rarely it's opened."
+          ar: "يتنقّل سعد بين الشاشات، ويجب أن تعمل كلها بالطريقة نفسها. الشاشة التي تعود فجأة من اليسار إلى اليمين تبدو معطّلة، مهما قلّ فتحها."
+      - id: MC-P10-072
+        when: [align]
+        feedback:
+          en: "The text moved, but the arrows still point right, which in Arabic means \"back\". The whole pattern has to mirror, not just the alignment."
+          ar: "تحرّك النص، لكن الأسهم ما زالت تشير إلى اليمين، وهذا يعني «رجوع» بالعربية. يجب عكس النمط كله، لا المحاذاة فقط."
+    correct:
+      en: "Right. Every screen mirrors the same way."
+      ar: "صحيح. كل شاشة معكوسة بالطريقة نفسها."
+    explain:
+      en: "Once an app is mirrored, people expect it everywhere. Arrows that point left for \"open\" on one screen and right on another make every arrow a guess."
+      ar: "بمجرد أن يُعكس التطبيق، يتوقّع الناس ذلك في كل مكان. الأسهم التي تشير لليسار لتعني «افتح» في شاشة ولليمين في أخرى تجعل كل سهم تخمينًا."
+
+  # SK-P10-U05-05: keep codes and numbers in their order
+  - id: S09
+    type: tune
+    skill: SK-P10-U05-05
+    part: retest
+    value:
+      en: "Re-test, mirroring (NN/g): mirror-image the design patterns, not the content. A phone number keeps its digits in order inside a right-to-left sentence."
+      ar: "إعادة اختبار، العكس (NN/g): اعكس أنماط التصميم، لا المحتوى. رقم الهاتف يحتفظ بترتيب أرقامه داخل جملة من اليمين إلى اليسار."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "Maha needs to call a plumber from a home-services app. On the Arabic screen, the team mirrored everything, including the phone number, which now reads 9876 5432 010."
+      ar: "تحتاج مها أن تتّصل بسبّاك من تطبيق خدمات منزلية. في الشاشة العربية، عكس الفريق كل شيء، بما فيه رقم الهاتف، فصار 9876 5432 010."
+    prompt:
+      en: "Try each version of the contact line. Which one should ship?"
+      ar: "جرّب كل نسخة من سطر التواصل. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: rtl
+      width: 300
+      blocks: &mh
+        - { kind: title, text: "الأسطى حسن · سبّاك" }
+        - { kind: meta, text: "متاح اليوم من 10:00 إلى 18:00", gap: s }
+        - { kind: meta, text: "للتواصل:", code: "9876 5432 010", gap: s }
+    options:
+      - id: keep
+        text: { en: "Keep it; everything in the Arabic version is mirrored", ar: "أبقِه؛ فكل شيء في النسخة العربية معكوس" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks: *mh
+      - id: order
+        text: { en: "The sentence flows right to left; the number stays 010 2345 6789", ar: "الجملة من اليمين إلى اليسار؛ والرقم يبقى 010 2345 6789" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "الأسطى حسن · سبّاك" }
+            - { kind: meta, text: "متاح اليوم من 10:00 إلى 18:00", gap: s }
+            - { kind: meta, text: "للتواصل:", code: "010 2345 6789", gap: s }
+      - id: drop
+        text: { en: "Remove the number from the Arabic version, and keep only a Call button", ar: "احذف الرقم من النسخة العربية، وأبقِ زر الاتصال فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "الأسطى حسن · سبّاك" }
+            - { kind: meta, text: "متاح اليوم من 10:00 إلى 18:00", gap: s }
+            - { kind: button, emphasis: low, text: "اتّصل", gap: s }
+    answer: [order]
+    misconceptions:
+      - id: MC-P10-070
+        when: [keep]
+        feedback:
+          en: "9876 5432 010 isn't the plumber's number. Reversing the digits made a different number, and Maha would call a stranger. Mirror the layout, not the facts."
+          ar: "9876 5432 010 ليس رقم السبّاك. عكس الأرقام صنع رقمًا مختلفًا، وستتّصل مها بشخص غريب. اعكس التخطيط، لا المعلومات."
+      - id: MC-P10-072
+        when: [drop]
+        feedback:
+          en: "Arabic readers need the number too, to save it or call from another phone. Keep it, written in its real order, inside the right-to-left sentence."
+          ar: "يحتاج القارئ العربي الرقم أيضًا، ليحفظه أو يتّصل من هاتف آخر. أبقِه، مكتوبًا بترتيبه الحقيقي، داخل الجملة التي تُقرأ من اليمين."
+    correct:
+      en: "Right. The sentence mirrors; the number doesn't."
+      ar: "صحيح. الجملة تنعكس؛ والرقم لا."
+    explain:
+      en: "Phone numbers, codes, prices and times are content. They keep their order in every language, even inside an Arabic sentence."
+      ar: "أرقام الهواتف والرموز والأسعار والمواعيد محتوى. تحتفظ بترتيبها في كل لغة، حتى داخل جملة عربية."
+
+  - id: S10
+    type: tune
+    skill: SK-P10-U05-05
+    part: retest
+    value:
+      en: "Re-test, mirroring (NN/g): mirror-image the design patterns. A tracking number is content: reversing all or part of it gives a number that doesn't exist."
+      ar: "إعادة اختبار، العكس (NN/g): اعكس أنماط التصميم. رقم التتبّع محتوى: عكسه كله أو جزء منه يعطي رقمًا غير موجود."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "Sobhy tracks a parcel in Arabic. His tracking number is EG-77310, and he types it into the courier's site. On the mirrored screen it shows as 01377-GE."
+      ar: "يتتبّع صبحي طردًا بالعربية. رقم التتبّع EG-77310، وسيكتبه في موقع شركة الشحن. في الشاشة المعكوسة يظهر 01377-GE."
+    prompt:
+      en: "Try each version of the tracking line. Which one should ship?"
+      ar: "جرّب كل نسخة من سطر التتبّع. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: rtl
+      width: 300
+      blocks: &sb
+        - { kind: title, text: "طردك في الطريق" }
+        - { kind: meta, text: "يصل الخميس قبل 21:00", gap: s }
+        - { kind: meta, text: "رقم التتبّع:", code: "01377-GE", gap: s }
+    options:
+      - id: keep
+        text: { en: "Keep it; mirroring has to be complete", ar: "أبقِه؛ فالعكس يجب أن يكون كاملًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks: *sb
+      - id: letters
+        text: { en: "Fix only the letters, so it shows GE-77310", ar: "أصلح الحروف فقط، فيظهر GE-77310" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "طردك في الطريق" }
+            - { kind: meta, text: "يصل الخميس قبل 21:00", gap: s }
+            - { kind: meta, text: "رقم التتبّع:", code: "GE-77310", gap: s }
+      - id: order
+        text: { en: "The screen stays mirrored; the number stays EG-77310", ar: "تبقى الشاشة معكوسة؛ ويبقى الرقم EG-77310" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "طردك في الطريق" }
+            - { kind: meta, text: "يصل الخميس قبل 21:00", gap: s }
+            - { kind: meta, text: "رقم التتبّع:", code: "EG-77310", gap: s }
+    answer: [order]
+    misconceptions:
+      - id: MC-P10-070
+        when: [keep, letters]
+        feedback:
+          en: "Neither is Sobhy's number, so the courier's site won't find his parcel. A code keeps every character in its original order. Mirror the layout around it."
+          ar: "لا أحد منهما رقم صبحي، فلن يجد موقع الشحن طرده. الرمز يحتفظ بكل حرف في ترتيبه الأصلي. اعكس التخطيط حوله."
+    correct:
+      en: "Right. A mirrored screen, and the real number."
+      ar: "صحيح. شاشة معكوسة، والرقم الحقيقي."
+    explain:
+      en: "Mirroring is for the layout: alignment, arrows, order of buttons. Anything people type, read out or copy, like a tracking number, stays exactly as it is."
+      ar: "العكس للتخطيط: المحاذاة والأسهم وترتيب الأزرار. وكل ما يكتبه الناس أو يقرؤونه بصوت عالٍ أو ينسخونه، مثل رقم التتبّع، يبقى كما هو تمامًا."
+
+  # SK-P10-U05-06: answer critique with the design's goal
+  - id: S11
+    type: tune
+    skill: SK-P10-U05-06
+    part: retest
+    value:
+      en: "Re-test, design critique (NN/g): a critique gives feedback on whether a design meets its objectives. Keep the reviewer's goal (the offer gets seen) without hurting the screen's goal (send money correctly)."
+      ar: "إعادة اختبار، نقد التصميم (NN/g): النقد يقيّم هل يحقّق التصميم أهدافه. حافظ على هدف المراجِع (أن يُرى العرض) دون الإضرار بهدف الشاشة (إرسال المال بشكل صحيح)."
+    ref: { url: "https://www.nngroup.com/articles/design-critiques/", quote: "giving feedback on whether it meets its objectives" }
+    scenario:
+      en: "Gehan designs a money transfer screen. Its goal: send money quickly to the right person. In review, the marketing lead asks for a big savings offer above the form."
+      ar: "تصمّم جيهان شاشة تحويل أموال. هدفها: إرسال المال بسرعة إلى الشخص الصحيح. في المراجعة، يطلب مسؤول التسويق عرض ادّخار كبيرًا فوق النموذج."
+    prompt:
+      en: "Try each response and see the screen. Which one should ship?"
+      ar: "جرّب كل رد وانظر إلى الشاشة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 280
+      blocks: &gh_page
+        - { kind: title, text: &gh_t { en: "Send money", ar: "إرسال أموال" } }
+        - { kind: field, label: &gh_tl { en: "To", ar: "إلى" }, filled: true, text: &gh_tv { en: "Hoda Kamel · •••• 4821", ar: "هدى كامل · •••• 4821" }, gap: s }
+        - { kind: field, label: &gh_al { en: "Amount", ar: "المبلغ" }, filled: true, text: &gh_av { en: "1,500 EGP", ar: "1,500 جنيه" }, gap: s }
+        - { kind: button, text: &gh_b { en: "Send 1,500 EGP", ar: "أرسل 1,500 جنيه" }, gap: m }
+    options:
+      - id: adapt
+        text: { en: "Adapt: keep the form first; show the offer on the success screen after sending", ar: "عدّل: أبقِ النموذج أولًا؛ واعرض العرض في شاشة النجاح بعد الإرسال" }
+        mock:
+          caption: { en: "After this change: success screen", ar: "بعد هذا التغيير: شاشة النجاح" }
+          width: 280
+          blocks:
+            - { kind: title, text: { en: "Sent to Hoda Kamel", ar: "تم الإرسال إلى هدى كامل" } }
+            - { kind: meta, text: { en: "1,500 EGP · Today 14:20", ar: "1,500 جنيه · اليوم 14:20" }, gap: s }
+            - { kind: banner, text: &gh_x { en: "Save 5% a year with a savings goal", ar: "ادّخر بعائد 5% سنويًا مع هدف ادّخار" }, gap: m }
+            - { kind: button, emphasis: low, text: { en: "Done", ar: "تم" }, gap: s }
+      - id: accept
+        text: { en: "Accept: a big offer banner at the top, above the form", ar: "اقبل: لافتة عرض كبيرة في الأعلى، فوق النموذج" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - { kind: image, size: m, text: *gh_x }
+            - { kind: title, text: *gh_t, gap: m }
+            - { kind: field, label: *gh_tl, filled: true, text: *gh_tv, gap: s }
+            - { kind: field, label: *gh_al, filled: true, text: *gh_av, gap: s }
+            - { kind: button, text: *gh_b, gap: m }
+      - id: reject
+        text: { en: "Reject: \"I'm the designer, and banners look cheap. It stays as it is.\"", ar: "ارفض: «أنا المصمّمة، واللافتات تبدو رخيصة. تبقى كما هي.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks: *gh_page
+    answer: [adapt]
+    misconceptions:
+      - id: MC-P10-075
+        when: [accept]
+        feedback:
+          en: "Now the first thing on a money screen is an ad, and the form is pushed down. That works against the goal: sending money quickly and correctly."
+          ar: "الآن أول شيء في شاشة أموال هو إعلان، والنموذج مدفوع للأسفل. وهذا ضد الهدف: إرسال المال بسرعة وبشكل صحيح."
+      - id: MC-P10-076
+        when: [reject]
+        feedback:
+          en: "\"I'm the designer\" and \"banners look cheap\" are opinion and rank, not reasons the team can check. The offer does need to be seen; find a place that doesn't hurt the transfer."
+          ar: "«أنا المصمّمة» و«اللافتات تبدو رخيصة» رأي ومنصب، لا أسباب يمكن للفريق التحقّق منها. العرض يحتاج أن يُرى فعلًا؛ ابحثي عن مكان لا يضرّ بالتحويل."
+    correct:
+      en: "Right. The offer is seen, and the transfer stays first."
+      ar: "صحيح. يُرى العرض، ويبقى التحويل أولًا."
+    explain:
+      en: "Separate what the reviewer wants from how they suggest it. Marketing wants the offer seen; after a successful transfer, people are calm and the offer doesn't get in the way."
+      ar: "افصل ما يريده المراجِع عن الطريقة التي يقترحها. التسويق يريد أن يُرى العرض؛ وبعد تحويل ناجح يكون الناس هادئين ولا يعيقهم العرض."
+
+  - id: S12
+    type: tune
+    skill: SK-P10-U05-06
+    part: retest
+    value:
+      en: "Re-test, design critique (NN/g): relate feedback to the goals of the design. Answer with the screen's goal and a quick check, not with agreement or rank."
+      ar: "إعادة اختبار، نقد التصميم (NN/g): اربط الملاحظات بأهداف التصميم. أجِب بهدف الشاشة وفحص سريع، لا بالموافقة ولا بالمنصب."
+    ref: { url: "https://www.nngroup.com/articles/design-critiques/", quote: "to relate them to the goals of the design." }
+    scenario:
+      en: "On a payment screen, the button says \"Pay 1,200 EGP to Cairo Electricity\". A senior developer says it's too long and should just say \"OK\". The goal: people know exactly what they're paying, and to whom."
+      ar: "في شاشة دفع، يقول الزر «ادفع 1,200 جنيه لكهرباء القاهرة». يقول مطوّر كبير إنه طويل ويجب أن يكون «موافق» فقط. والهدف: أن يعرف الناس بالضبط ماذا يدفعون، ولمن."
+    prompt:
+      en: "Try each reply. Which one should you give?"
+      ar: "جرّب كل رد. أيّها يجب أن تعطيه؟"
+    start: agree
+    options:
+      - id: agree
+        text: { en: "\"Sure, I'll change it to OK.\"", ar: "«حاضر، سأغيّره إلى موافق.»" }
+        mock:
+          caption: { en: "The button after this reply", ar: "الزر بعد هذا الرد" }
+          width: 280
+          blocks:
+            - { kind: meta, text: { en: "Electricity bill · March", ar: "فاتورة الكهرباء · مارس" } }
+            - { kind: button, text: { en: "OK", ar: "موافق" }, gap: m }
+      - id: goal
+        text: { en: "\"The goal is that people know what they pay and to whom. Let's ask five people what OK would do here.\"", ar: "«الهدف أن يعرف الناس ماذا يدفعون ولمن. لنسأل خمسة أشخاص ماذا سيفعل زر موافق هنا.»" }
+        mock:
+          caption: { en: "The button after this reply", ar: "الزر بعد هذا الرد" }
+          width: 280
+          blocks:
+            - { kind: meta, text: { en: "Electricity bill · March", ar: "فاتورة الكهرباء · مارس" } }
+            - { kind: button, text: { en: "Pay 1,200 EGP to Cairo Electricity", ar: "ادفع 1,200 جنيه لكهرباء القاهرة" }, gap: m }
+            - { kind: small, color: muted, text: { en: "Quick check planned: 5 people, 10 minutes", ar: "فحص سريع مخطّط: 5 أشخاص، 10 دقائق" }, gap: s }
+      - id: lead
+        text: { en: "\"Our design lead chose the long label, so it stays.\"", ar: "«قائد التصميم اختار النص الطويل، لذلك يبقى.»" }
+        mock:
+          caption: { en: "The button after this reply", ar: "الزر بعد هذا الرد" }
+          width: 280
+          blocks:
+            - { kind: meta, text: { en: "Electricity bill · March", ar: "فاتورة الكهرباء · مارس" } }
+            - { kind: button, text: { en: "Pay 1,200 EGP to Cairo Electricity", ar: "ادفع 1,200 جنيه لكهرباء القاهرة" }, gap: m }
+    answer: [goal]
+    misconceptions:
+      - id: MC-P10-075
+        when: [agree]
+        feedback:
+          en: "\"OK\" is shorter, but it no longer says what's being paid or to whom, which is the screen's whole goal. Judge the change against that goal before you accept it."
+          ar: "«موافق» أقصر، لكنها لم تعد تقول ماذا يُدفع ولمن، وهذا هو هدف الشاشة كله. قيّم التغيير على أساس هذا الهدف قبل أن تقبله."
+      - id: MC-P10-076
+        when: [lead]
+        feedback:
+          en: "The label may be right, but \"the lead chose it\" is rank, not a reason. The developer can't check it, so the argument will come back. Point to the goal and a quick test."
+          ar: "قد يكون النص صحيحًا، لكن «القائد اختاره» منصب، لا سبب. لا يستطيع المطوّر التحقّق منه، فسيعود النقاش. أشِر إلى الهدف وإلى اختبار سريع."
+    correct:
+      en: "Right. The goal, and a check anyone can run."
+      ar: "صحيح. الهدف، وفحص يستطيع أي أحد إجراءه."
+    explain:
+      en: "Tying the reply to the screen's goal moves the talk from taste to evidence. A five-minute check settles it either way, and the developer feels heard."
+      ar: "ربط الرد بهدف الشاشة ينقل النقاش من الذوق إلى الدليل. فحص من خمس دقائق يحسم الأمر في أي اتجاه، ويشعر المطوّر بأنه مسموع."
+
+  # SK-P10-U05-07: write test tasks without clues
+  - id: S13
+    type: tune
+    skill: SK-P10-U05-07
+    part: retest
+    value:
+      en: "Re-test, task scenarios (NN/g): step descriptions often contain hidden clues about how to use the interface. Name the goal, not the screen's labels."
+      ar: "إعادة اختبار، سيناريوهات المهام (NN/g): وصف الخطوات غالبًا يحمل تلميحات خفية عن طريقة استخدام الواجهة. اذكر الهدف، لا أسماء عناصر الشاشة."
+    ref: { url: "https://www.nngroup.com/articles/task-scenarios-usability-testing/", quote: "Step descriptions often contain hidden clues as to how to use the interface." }
+    scenario:
+      en: "Samia will test whether people can repeat a past order in a grocery app. The feature sits under the Orders tab, on a button called Reorder."
+      ar: "ستختبر سامية هل يستطيع الناس تكرار طلب سابق في تطبيق بقالة. الميزة تحت تبويب «طلباتي»، في زر اسمه «اطلب مرة أخرى»."
+    prompt:
+      en: "Try each task card. Which one should she give participants?"
+      ar: "جرّب كل بطاقة مهمّة. أيّها يجب أن تعطيها للمشاركين؟"
+    start: steps
+    options:
+      - id: steps
+        text: { en: "Steps that use the app's labels", ar: "خطوات تستخدم أسماء عناصر التطبيق" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: &sa_k { en: "Task", ar: "المهمّة" } }
+                - { kind: text, text: { en: "\"Open Orders, find last Thursday's order, and tap Reorder.\"", ar: "«افتح طلباتي، وابحث عن طلب الخميس الماضي، واضغط اطلب مرة أخرى.»" }, gap: xs }
+      - id: open
+        text: { en: "An open invitation to explore", ar: "دعوة مفتوحة للاستكشاف" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: *sa_k }
+                - { kind: text, text: { en: "\"Have a look around the app and tell us what you think.\"", ar: "«تجوّل في التطبيق وأخبرنا برأيك.»" }, gap: xs }
+      - id: scenario
+        text: { en: "A short situation with a goal", ar: "موقف قصير له هدف" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: *sa_k }
+                - { kind: text, text: { en: "\"Last Thursday you bought groceries for the week. You want exactly the same things again for tomorrow. Get them on their way.\"", ar: "«الخميس الماضي اشتريت بقالة الأسبوع. وتريد الأشياء نفسها تمامًا مرة أخرى لغد. اجعلها في طريقها إليك.»" }, gap: xs }
+    answer: [scenario]
+    misconceptions:
+      - id: MC-P10-077
+        when: [steps]
+        feedback:
+          en: "It names the tab and the button. You'd learn people can follow directions, not whether they'd ever find Reorder on their own."
+          ar: "إنها تذكر التبويب والزر. ستعرف أن الناس يتّبعون التعليمات، لا هل سيجدون الزر بأنفسهم يومًا."
+      - id: MC-P10-083
+        when: [open]
+        feedback:
+          en: "No clues, but no goal either. People may never try to repeat an order, and you can't tell if they succeeded. Give a situation with a clear end."
+          ar: "لا تلميحات، لكن لا هدف أيضًا. قد لا يحاول الناس تكرار طلب أبدًا، ولن تعرف هل نجحوا. أعطِهم موقفًا له نهاية واضحة."
+    correct:
+      en: "Right. A reason to act, and no directions."
+      ar: "صحيح. سبب للتصرّف، دون توجيهات."
+    explain:
+      en: "A scenario gives people a real reason to act and a clear finish line, without telling them where to look. Then Samia watches what they actually do."
+      ar: "السيناريو يعطي الناس سببًا حقيقيًا للتصرّف وخط نهاية واضحًا، دون أن يخبرهم أين ينظرون. ثم تراقب سامية ما يفعلونه فعلًا."
+
+  - id: S14
+    type: tune
+    skill: SK-P10-U05-07
+    part: retest
+    value:
+      en: "Re-test, task scenarios (NN/g): avoiding clues does not mean being vague. The task needs a concrete goal with an answer you can check."
+      ar: "إعادة اختبار، سيناريوهات المهام (NN/g): تجنّب التلميحات لا يعني الغموض. المهمّة تحتاج هدفًا محدّدًا له إجابة يمكن التحقّق منها."
+    ref: { url: "https://www.nngroup.com/articles/task-scenarios-usability-testing/", quote: "Avoiding clues does not mean being vague." }
+    scenario:
+      en: "Atef will test a library app. He wants to know if people can extend a borrowed book. The button is called Renew."
+      ar: "سيختبر عاطف تطبيق مكتبة. يريد أن يعرف هل يستطيع الناس تمديد استعارة كتاب. والزر اسمه «جدّد»."
+    prompt:
+      en: "Try each task card. Which one should he give participants?"
+      ar: "جرّب كل بطاقة مهمّة. أيّها يجب أن يعطيها للمشاركين؟"
+    start: vague
+    options:
+      - id: goal
+        text: { en: "A situation with a goal you can check", ar: "موقف له هدف يمكن التحقّق منه" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: &at_k { en: "Task", ar: "المهمّة" } }
+                - { kind: text, text: { en: "\"Your book is due tomorrow, but you haven't finished it. Make sure you can keep it for another week, and tell us the new due date.\"", ar: "«موعد إرجاع كتابك غدًا، لكنك لم تُنهِه. تأكّد أنك تستطيع الاحتفاظ به أسبوعًا آخر، وأخبرنا بموعد الإرجاع الجديد.»" }, gap: xs }
+      - id: vague
+        text: { en: "A general question with no clues", ar: "سؤال عام دون تلميحات" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: *at_k }
+                - { kind: text, text: { en: "\"See what you can do with your books in this app.\"", ar: "«انظر ماذا يمكنك أن تفعل بكتبك في هذا التطبيق.»" }, gap: xs }
+      - id: label
+        text: { en: "A direct instruction", ar: "تعليمات مباشرة" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: *at_k }
+                - { kind: text, text: { en: "\"Use the Renew button to extend your loan.\"", ar: "«استخدم زر جدّد لتمديد استعارتك.»" }, gap: xs }
+    answer: [goal]
+    misconceptions:
+      - id: MC-P10-083
+        when: [vague]
+        feedback:
+          en: "There are no clues, but there's no goal either. People may browse and never try to extend a book, and you'd have nothing to check."
+          ar: "لا توجد تلميحات، لكن لا يوجد هدف أيضًا. قد يتصفّح الناس ولا يحاولون تمديد كتاب أبدًا، ولن يكون لديك ما تتحقّق منه."
+      - id: MC-P10-077
+        when: [label]
+        feedback:
+          en: "It hands over the button's name, so people just look for the word \"Renew\". You'd never learn whether they'd find it on their own."
+          ar: "إنها تعطي اسم الزر، فيبحث الناس عن كلمة «جدّد» فقط. ولن تعرف أبدًا هل كانوا سيجدونه بأنفسهم."
+    correct:
+      en: "Right. Concrete, checkable, and free of clues."
+      ar: "صحيح. محدّدة، ويمكن التحقّق منها، ودون تلميحات."
+    explain:
+      en: "The new due date is the proof: if people can say it, they renewed the book. The task never mentions the button, so Atef sees whether the screen guides them."
+      ar: "موعد الإرجاع الجديد هو الدليل: إذا استطاع الناس قوله، فقد جدّدوا الكتاب. والمهمّة لا تذكر الزر أبدًا، فيرى عاطف هل ترشدهم الشاشة."
