@@ -232,7 +232,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", why:"ⓘ What this question teaches", dragItem:"draggable item", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", nowWhy:"Now, why?", dragItem:"draggable item", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -241,7 +241,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", why:"ⓘ ماذا يعلّم هذا السؤال", dragItem:"عنصر قابل للسحب", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -417,7 +417,7 @@ function ready(s, st){
   if (s.type === "match") return s.left.every(it => st.sel[it.id]);
   if (s.type === "order") return true;
   if (!st.sel.length) return false;
-  if (s.reason && !st.reason.length) return false;
+  if (s.reason && st.mainOk && !st.reason.length) return false;
   return true;
 }
 
@@ -472,9 +472,10 @@ function renderStep(){
     const hook = L.lesson.steps.find(x => x.type === "card" && x.part === "hook");
     if (hook && hook !== s) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
-    if (s.value) h += `<details class="why"><summary>${u().why}</summary><p>${esc(tx(s.value))}</p></details>`;
-    h += renderInteraction(s, st, locked);
-    if (s.reason) h += renderReason(s, st, locked);
+    if (s.value) h += `<details class="why"><summary>${u().valueQ}</summary><p>${esc(tx(s.value))}</p></details>`;
+    h += renderInteraction(s, st, locked || !!st.mainOk);
+    /* the reason appears only after the main answer is right, so it can't give that answer away */
+    if (s.reason && (st.mainOk || locked)) h += renderReason(s, st, locked);
     if (s.confidence && !locked) h += `<div class="conf"><p>${u().conf}</p><div class="seg">${u().confOpts.map((c,k)=>`<button type="button" data-conf="${k}" aria-pressed="${st.conf===k}">${c}</button>`).join("")}</div></div>`;
   }
   $("#main").innerHTML = h;
@@ -636,6 +637,11 @@ function doCheck(s, st, check){
   if (s.any_ok){
     st.done = true; st.status = "ungraded";
     st.fb = `<div class="sheet note"><h3>${u().tryfirst}</h3>${para(s.reveal)}</div>`;
+    return renderStep();
+  }
+  if (s.reason && !st.mainOk && evaluate({...s, reason: undefined}, st).ok){
+    st.mainOk = true;
+    st.fb = `<div class="sheet good"><h3>${u().correct}</h3><p>${u().nowWhy}</p></div>`;
     return renderStep();
   }
   const res = evaluate(s, st);
