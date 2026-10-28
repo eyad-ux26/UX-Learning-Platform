@@ -81,7 +81,7 @@ export function validate(paths) {
         need(new RegExp(`^${u.id}-${bank ? "B" : "L"}\\d{2}$`).test(l.id || ""), `${lw}: id must look like ${u.id}-${bank ? "B" : "L"}01`);
         need(path.basename(lw, ".yaml").startsWith(l.id || "?"), `${lw}: file name must start with the lesson id`);
         need(["lesson", "check", "bank"].includes(l.mode), `${lw}: mode must be lesson, check or bank`);
-        need(l.title && l.minutes, `${lw}: title and minutes are required`);
+        need(l.title && (bank || l.minutes), `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
         checkText(l, lw);
         for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
