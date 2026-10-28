@@ -219,7 +219,8 @@ details.why{margin:-6px 0 14px;font-size:.88rem;color:var(--muted)}details.why s
 .result-list li{border-top:1px solid var(--line);padding:10px 0}
 .mark{font-weight:700}.mark.ok{color:var(--good)}.mark.no{color:var(--bad)}
 .note-dev{font-size:.8rem;color:var(--muted);margin-top:30px}
-@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+.tunescreen.upd .mock{animation:upd .6s ease-out}@keyframes upd{from{box-shadow:0 0 0 4px #5B3FD1}to{box-shadow:0 0 0 0 transparent}}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}.tunescreen.upd .mock{animation:none}}
 </style>
 </head>
 <body>
@@ -245,7 +246,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pickPreview:"Pick an option to see its effect on the screen.", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pickPreview:"Pick an option to apply it to the screen.", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -254,7 +255,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pickPreview:"اختر خيارًا لترى أثره على الشاشة.", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pickPreview:"اختر خيارًا لتطبّقه على الشاشة.", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -525,9 +526,14 @@ function optionList(s, st, locked, name){
 function renderInteraction(s, st, locked){
   if (["choose","predict","words","fix"].includes(s.type)) return mock(s.mock) + optionList(s, st, locked, "opt");
   if (s.type === "tune"){
-    /* with a "now" screen on the step, the result preview waits until an option is picked */
+    /* one screen: it starts as the "now" example and the picked option is applied to it in place.
+       A wide (laptop) source stays above when the options show the result on a phone. */
     const cur = s.options.find(o => o.id === st.sel[0]) || s.options.find(o => o.id === s.start) || (s.mock ? null : s.options[0]);
-    return mock(s.mock) + (cur ? mock(cur.mock) : `<p class="sub pickprev">${u().pickPreview}</p>`) + optionList(s, st, locked, "opt");
+    const source = s.mock && s.mock.frame === "wide" && s.options.some(o => o.mock.frame !== "wide");
+    const shown = cur ? cur.id : "", flash = s.mock && cur && st.shown !== undefined && st.shown !== shown;
+    st.shown = shown;
+    if (source) return mock(s.mock) + (cur ? `<div class="tunescreen${flash?" upd":""}" aria-live="polite">${mock(cur.mock)}</div>` : `<p class="sub pickprev">${u().pickPreview}</p>`) + optionList(s, st, locked, "opt");
+    return `<div class="tunescreen${flash?" upd":""}" aria-live="polite">${mock(cur ? cur.mock : s.mock)}</div>` + (cur ? "" : `<p class="sub pickprev">${u().pickPreview}</p>`) + optionList(s, st, locked, "opt");
   }
   if (s.type === "spot"){
     let h = `<p class="sub">${u().tapRegions}</p>` + mock(s.mock, {regions:true, selected:st.sel, locked});
