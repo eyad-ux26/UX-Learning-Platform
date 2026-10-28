@@ -8,8 +8,8 @@ review_labels:
   MC-P01-012: { en: "Let people type what they know by heart", ar: "دع الناس يكتبون ما يحفظونه" }
   MC-P01-013: { en: "Let people pick what only the system knows", ar: "دع الناس يختارون ما لا يعرفه إلا النظام" }
   MC-P01-021: { en: "IDs and codes are text made of digits", ar: "الأرقام التعريفية والرموز نص مكوّن من أرقام" }
-  MC-P01-022: { en: "Sliders are for rough values", ar: "شريط التمرير للقيم التقريبية" }
-  MC-P01-023: { en: "Small counts near a default: a stepper", ar: "الأعداد الصغيرة القريبة من قيمة شائعة: أزرار − و+" }
+  MC-P01-022: { en: "Sliders are for rough values", ar: "الـ Slider للقيم التقريبية" }
+  MC-P01-023: { en: "Small counts near a default: a stepper", ar: "الأعداد الصغيرة القريبة من قيمة شائعة: Stepper" }
 steps:
   - id: S01
     type: card
@@ -31,7 +31,6 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
       en: "Nour knows her date of birth by heart. Which way would let her enter it fastest?"
@@ -39,18 +38,29 @@ steps:
     options:
       - { id: cal, text: { en: "This calendar, opening on today", ar: "هذا التقويم، الذي يفتح على اليوم" } }
       - { id: fields, text: { en: "Three short fields: Day, Month, Year", ar: "ثلاثة حقول قصيرة: اليوم والشهر والسنة" } }
-      - { id: lists, text: { en: "Three dropdowns: Day, Month, Year", ar: "ثلاث قوائم منسدلة: اليوم والشهر والسنة" } }
-    reveal:
+      - { id: lists, text: { en: "Three dropdowns: Day, Month, Year", ar: "ثلاث Dropdowns: اليوم والشهر والسنة" } }
+    answer: [fields]
+    misconceptions:
+      - id: MC-P01-012
+        when: [cal, lists]
+        feedback:
+          en: "She already knows every part of the date. A calendar or dropdowns make her hunt for what she could type in seconds."
+          ar: "هي تعرف كل جزء من التاريخ أصلًا. والتقويم أو الـ Dropdowns يجعلانها تبحث عمّا تستطيع كتابته في ثوانٍ."
+    correct:
+      en: "Three short fields: she types what she knows."
+      ar: "ثلاثة حقول قصيرة: تكتب ما تعرفه."
+    explain:
       en: "Three short fields. She types 14, 3, 1991 and she's done. This calendar makes her go back 427 months, and the year dropdown makes her scroll through about 100 years. A calendar helps when people don't know the date yet, like choosing next week's appointment."
-      ar: "ثلاثة حقول قصيرة. تكتب 14 و3 و1991 وتنتهي. أما هذا التقويم فيجعلها ترجع 427 شهرًا، وقائمة السنة المنسدلة تجعلها تمرّر بين نحو 100 سنة. التقويم يساعد حين لا يعرف الناس التاريخ بعد، مثل اختيار موعد الأسبوع القادم."
+      ar: "ثلاثة حقول قصيرة. تكتب 14 و3 و1991 وتنتهي. أما هذا التقويم فيجعلها ترجع 427 شهرًا، والـ Dropdown السنة تجعلها تمرّر بين نحو 100 سنة. التقويم يساعد حين لا يعرف الناس التاريخ بعد، مثل اختيار موعد الأسبوع القادم."
 
   - id: S03
     type: card
     part: concept
+    icons: [type, pick, id, stepper, slider]
     title: { en: "Who knows the answer, and how exact is it?", ar: "من يعرف الإجابة، وما مدى دقّتها؟" }
     body:
       en: "- **The person knows it:** let them type. A date of birth fits three short fields: Day, Month, Year.\n- **Only the system knows the options**, like free appointment days: let them pick, and block what isn't available.\n- **IDs, codes and phone numbers** are text made of digits. Use a text field that opens the number pad, not a number field with ▲▼ arrows.\n- **Small counts near a usual value**, like 2 guests: a **stepper** (− and + buttons).\n- **A slider** is for rough values. For an exact number, let people type."
-      ar: "- **الشخص يعرف الإجابة:** دعه يكتبها. وتاريخ الميلاد يناسبه ثلاثة حقول قصيرة: اليوم والشهر والسنة.\n- **النظام وحده يعرف الخيارات**، مثل أيام المواعيد الفارغة: دع الناس يختارون، وامنع ما ليس متاحًا.\n- **الأرقام التعريفية والرموز وأرقام الهاتف** نص مكوّن من أرقام. استخدم حقلًا نصيًا يفتح لوحة الأرقام، لا حقلًا رقميًا بأسهم ▲▼.\n- **الأعداد الصغيرة القريبة من قيمة شائعة**، مثل ضيفين: **أزرار − و+ (Stepper)**.\n- **شريط التمرير (Slider)** للقيم التقريبية. وللرقم الدقيق، دع الناس يكتبونه."
+      ar: "- **الشخص يعرف الإجابة:** دعه يكتبها. وتاريخ الميلاد يناسبه ثلاثة حقول قصيرة: اليوم والشهر والسنة.\n- **النظام وحده يعرف الخيارات**، مثل أيام المواعيد الفارغة: دع الناس يختارون، وامنع ما ليس متاحًا.\n- **الأرقام التعريفية والرموز وأرقام الهاتف** نص مكوّن من أرقام. استخدم حقلًا نصيًا يفتح لوحة الأرقام، لا حقلًا رقميًا بأسهم ▲▼.\n- **الأعداد الصغيرة القريبة من قيمة شائعة**، مثل ضيفين: **الـ Stepper (زرّا − و+)**.\n- **الـ Slider** للقيم التقريبية. وللرقم الدقيق، دع الناس يكتبونه."
 
   - id: S04
     type: sort
@@ -70,7 +80,7 @@ steps:
     buckets:
       - { id: type, label: { en: "Type it", ar: "تُكتب" } }
       - { id: pick, label: { en: "Pick it", ar: "تُختار" } }
-      - { id: step, label: { en: "Stepper", ar: "أزرار − و+" } }
+      - { id: step, label: { en: "Stepper", ar: "Stepper" } }
     answer:
       type: [dob, nid]
       pick: [slot, branch]
@@ -90,15 +100,15 @@ steps:
         when: { item: guests, bucket: type }
         feedback:
           en: "Most people want 1, which a stepper already shows. One tap on + covers the rest."
-          ar: "أغلب الناس يريدون 1، وأزرار − و+ تعرضه أصلًا. وضغطة على + تكفي للباقي."
+          ar: "أغلب الناس يريدون 1، والـ Stepper يعرضه أصلًا. وضغطة على + تكفي للباقي."
     hints:
       - { en: "For each one, ask: who knows the answer, and is it a small count?", ar: "اسأل عن كل واحدة: من يعرف الإجابة، وهل هي عدد صغير؟" }
     correct:
       en: "Known by heart: type. Known only by the system: pick. Small usual counts: step."
-      ar: "ما يحفظه الشخص: يُكتب. وما لا يعرفه إلا النظام: يُختار. والأعداد الصغيرة الشائعة: أزرار − و+."
+      ar: "ما يحفظه الشخص: يُكتب. وما لا يعرفه إلا النظام: يُختار. والأعداد الصغيرة الشائعة: Stepper."
     explain:
       en: "Typing is fastest for what people know. Picking is the only option for what they can't know. A stepper is fastest when the usual answer is already showing."
-      ar: "الكتابة أسرع لما يعرفه الناس. والاختيار هو الطريق الوحيد لما لا يمكنهم معرفته. وأزرار − و+ أسرع حين تكون الإجابة المعتادة ظاهرة أصلًا."
+      ar: "الكتابة أسرع لما يعرفه الناس. والاختيار هو الطريق الوحيد لما لا يمكنهم معرفته. والـ Stepper أسرع حين تكون الإجابة المعتادة ظاهرة أصلًا."
 
   - id: S05
     type: choose
@@ -179,8 +189,8 @@ steps:
     reason:
       prompt: { en: "Why?", ar: "لماذا؟" }
       options:
-        - { id: exact, text: { en: "He has exact numbers, and a slider only gets close", ar: "لديه أرقام دقيقة، وشريط التمرير يقترب منها فقط" } }
-        - { id: arabic, text: { en: "Sliders don't work in Arabic", ar: "شريط التمرير لا يعمل بالعربية" } }
+        - { id: exact, text: { en: "He has exact numbers, and a slider only gets close", ar: "لديه أرقام دقيقة، والـ Slider يقترب منها فقط" } }
+        - { id: arabic, text: { en: "Sliders don't work in Arabic", ar: "الـ Slider لا يعمل بالعربية" } }
         - { id: modern, text: { en: "Fields look more modern", ar: "الحقول تبدو أحدث" } }
       answer: [exact]
       misconceptions:
@@ -188,19 +198,19 @@ steps:
           when: [arabic, modern]
           feedback:
             en: "Sliders work in both languages, if built right. The point is precision: on a phone, a finger can't land exactly on 80."
-            ar: "شريط التمرير يعمل في اللغتين إذا صُمّم جيدًا. المهم هو الدقة: على الهاتف، لا يستطيع الإصبع أن يقف على 80 بالضبط."
+            ar: "الـ Slider يعمل في اللغتين إذا صُمّم جيدًا. المهم هو الدقة: على الهاتف، لا يستطيع الإصبع أن يقف على 80 بالضبط."
     misconceptions:
       - id: MC-P01-022
         when: [a]
         feedback:
           en: "With a range of 0 to 500 on a phone, each pixel jumps a few pounds. He'd nudge back and forth and still miss 80."
-          ar: "مع مدى من 0 إلى 500 على الهاتف، كل نقطة تقفز بضعة جنيهات. سيحرّك الشريط ذهابًا وإيابًا ولن يصل إلى 80."
+          ar: "مع مدى من 0 إلى 500 على الهاتف، كل نقطة تقفز بضعة جنيهات. سيحرّك الـ Slider ذهابًا وإيابًا ولن يصل إلى 80."
     correct:
       en: "Exact values: type them."
       ar: "القيم الدقيقة: تُكتب."
     explain:
       en: "A slider suits rough choices, like volume or \"around 100\". Many shops show both: a slider for exploring and fields for exact values."
-      ar: "شريط التمرير يناسب الاختيارات التقريبية، مثل مستوى الصوت أو «حوالي 100». وكثير من المتاجر تعرض الاثنين: شريطًا للاستكشاف وحقولًا للقيم الدقيقة."
+      ar: "الـ Slider يناسب الاختيارات التقريبية، مثل مستوى الصوت أو «حوالي 100». وكثير من المتاجر تعرض الاثنين: Slider للاستكشاف وحقولًا للقيم الدقيقة."
 
   - id: S08
     type: choose
@@ -215,16 +225,16 @@ steps:
         - { kind: stepper, label: { en: "Adults", ar: "البالغون" }, text: "2" }
         - { kind: stepper, label: { en: "Children", ar: "الأطفال" }, text: "0", gap: s }
     options:
-      - { id: step, text: { en: "Two steppers starting at 2 and 0, like the ones shown", ar: "أزرار − و+ للبالغين وللأطفال، تبدأ من 2 و0، كما في الشاشة" } }
+      - { id: step, text: { en: "Two steppers starting at 2 and 0, like the ones shown", ar: "Stepper للبالغين وللأطفال، يبدأ من 2 و0، كما في الشاشة" } }
       - { id: fields, text: { en: "Two empty number fields", ar: "حقلان رقميان فارغان" } }
-      - { id: select, text: { en: "One dropdown: \"Guests: 1 to 14\"", ar: "قائمة منسدلة واحدة: «الضيوف: من 1 إلى 14»" } }
+      - { id: select, text: { en: "One dropdown: \"Guests: 1 to 14\"", ar: "Dropdown واحدة: «الضيوف: من 1 إلى 14»" } }
     answer: [step]
     misconceptions:
       - id: MC-P01-023
         when: [fields]
         feedback:
           en: "Most people would type 2 and 0 every time. Steppers already show the usual answer, so most people change nothing."
-          ar: "أغلب الناس سيكتبون 2 و0 كل مرة. أما أزرار − و+ فتعرض الإجابة المعتادة أصلًا، فلا يغيّر أغلب الناس شيئًا."
+          ar: "أغلب الناس سيكتبون 2 و0 كل مرة. أما الـ Stepper فيعرض الإجابة المعتادة أصلًا، فلا يغيّر أغلب الناس شيئًا."
       - id: MC-P01-023
         when: [select]
         feedback:
@@ -232,7 +242,7 @@ steps:
           ar: "العدد الإجمالي يُخفي من القادمون. فالشقق غالبًا تسعّر الأطفال بشكل مختلف وتحتاج أسرّة أطفال أو أسرّة إضافية."
     correct:
       en: "Small counts with a usual value: steppers, starting at that value."
-      ar: "أعداد صغيرة لها قيمة معتادة: أزرار − و+، تبدأ من تلك القيمة."
+      ar: "أعداد صغيرة لها قيمة معتادة: Stepper، تبدأ من تلك القيمة."
     explain:
       en: "A default is fine here because it's visible, harmless if left, and easy to change, unlike a guessed governorate."
       ar: "القيمة الافتراضية مناسبة هنا لأنها ظاهرة، ولا ضرر إن بقيت، وسهلة التغيير، على عكس محافظة مخمّنة."
@@ -240,7 +250,8 @@ steps:
   - id: S09
     type: card
     part: recap
+    icons: [pick, id, stepper, slider]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- Known by heart: type. Known only by the system: pick, and block what's unavailable.\n- IDs and phone numbers are text with a number pad.\n- Small usual counts: a stepper.\n- Exact values: fields, not a slider.\n\nNext lesson: long lists, and search that finds what people type."
-      ar: "- ما يحفظه الشخص: يُكتب. وما لا يعرفه إلا النظام: يُختار، مع منع غير المتاح.\n- الأرقام التعريفية وأرقام الهاتف نص مع لوحة الأرقام.\n- الأعداد الصغيرة المعتادة: أزرار − و+.\n- القيم الدقيقة: حقول، لا شريط تمرير.\n\nالدرس التالي: القوائم الطويلة، والبحث الذي يجد ما يكتبه الناس."
+      ar: "- ما يحفظه الشخص: يُكتب. وما لا يعرفه إلا النظام: يُختار، مع منع غير المتاح.\n- الأرقام التعريفية وأرقام الهاتف نص مع لوحة الأرقام.\n- الأعداد الصغيرة المعتادة: Stepper.\n- القيم الدقيقة: حقول، لا Slider.\n\nالدرس التالي: القوائم الطويلة، والبحث الذي يجد ما يكتبه الناس."

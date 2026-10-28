@@ -14,10 +14,10 @@ steps:
   - id: S01
     type: card
     part: hook
-    title: { en: "27 radio buttons", ar: "27 زر راديو" }
+    title: { en: "27 radio buttons", ar: "27 Radio button" }
     body:
       en: "Abdelrahman lives in Ismailia. The library form lists all 27 governorates as radio buttons, in English alphabetical order, even on the Arabic page.\n\nHere's the first screen of three."
-      ar: "يعيش عبد الرحمن في الإسماعيلية. ونموذج المكتبة يعرض المحافظات الـ27 كلها كأزرار راديو، بترتيب الحروف الإنجليزية، حتى في الصفحة العربية.\n\nهذه أول شاشة من ثلاث."
+      ar: "يعيش عبد الرحمن في الإسماعيلية. ونموذج المكتبة يعرض المحافظات الـ27 كلها كـ Radio buttons، بترتيب الحروف الإنجليزية، حتى في الصفحة العربية.\n\nهذه أول شاشة من ثلاث."
     mock:
       blocks:
         - { kind: heading, text: "@F5gov" }
@@ -34,7 +34,6 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
       en: "The library replaces the list with a search field. Abdelrahman types \"اسماعيليه\", without the ال and with ه at the end. What should happen?"
@@ -43,17 +42,28 @@ steps:
       - { id: find, text: { en: "It finds الإسماعيلية anyway", ar: "يجد «الإسماعيلية» رغم ذلك" } }
       - { id: none, text: { en: "\"No results\": he should spell it properly", ar: "«لا توجد نتائج»: عليه أن يكتبها بشكل صحيح" } }
       - { id: hint, text: { en: "It shows a spelling tip", ar: "يعرض نصيحة عن الإملاء" } }
-    reveal:
+    answer: [find]
+    misconceptions:
+      - id: MC-P01-024
+        when: [none, hint]
+        feedback:
+          en: "He typed the right place, just the way most people type Arabic on a phone. The search should understand him, not correct him."
+          ar: "كتب المكان الصحيح، بالطريقة التي يكتب بها أغلب الناس العربية على الهاتف. يجب أن يفهمه البحث، لا أن يصحّح له."
+    correct:
+      en: "It should find الإسماعيلية anyway."
+      ar: "يجب أن يجد «الإسماعيلية» رغم ذلك."
+    explain:
       en: "It should find it. Most people type Arabic without hamzas, swap ة and ه, and skip ال. A search that demands exact spelling turns a shortcut into a test."
       ar: "يجب أن يجدها. أغلب الناس يكتبون العربية دون همزات، ويخلطون بين ة وه، ويحذفون «ال». والبحث الذي يشترط الإملاء الدقيق يحوّل الطريق المختصر إلى اختبار."
 
   - id: S03
     type: card
     part: concept
+    icons: [typo, search, idea, pin, sort]
     title: { en: "A search box is a promise to understand", ar: "حقل البحث وعدٌ بالفهم" }
     body:
       en: "Show a few options. Up to about 15, a dropdown is fine. Beyond that, let people type to filter. Then make search forgiving:\n\n- Treat أ إ آ ا as one letter, and ة ه, and ى ي. Ignore ال.\n- Match Arabic and English names, and short ones like \"Alex\".\n- For a small typo, suggest the closest match.\n- **Pin** the most common choices above the full list, but don't **preselect** them.\n- Sort by the names in the reader's language."
-      ar: "اعرض الخيارات القليلة. وحتى 15 خيارًا تقريبًا، القائمة المنسدلة مناسبة. وبعد ذلك دع الناس يكتبون للتصفية. ثم اجعل البحث متسامحًا:\n\n- اعتبر أ إ آ ا حرفًا واحدًا، وكذلك ة وه، وى وي. وتجاهل «ال».\n- طابق الأسماء العربية والإنجليزية، والأسماء المختصرة مثل «Alex».\n- عند خطأ إملائي بسيط، اقترح أقرب نتيجة.\n- **ثبّت** الخيارات الأكثر شيوعًا فوق القائمة الكاملة، لكن لا **تحدّدها مسبقًا**.\n- رتّب حسب الأسماء بلغة القارئ."
+      ar: "اعرض الخيارات القليلة. وحتى 15 خيارًا تقريبًا، الـ Dropdown مناسبة. وبعد ذلك دع الناس يكتبون للتصفية. ثم اجعل البحث متسامحًا:\n\n- اعتبر أ إ آ ا حرفًا واحدًا، وكذلك ة وه، وى وي. وتجاهل «ال».\n- طابق الأسماء العربية والإنجليزية، والأسماء المختصرة مثل «Alex».\n- عند خطأ إملائي بسيط، اقترح أقرب نتيجة.\n- **ثبّت** الخيارات الأكثر شيوعًا فوق القائمة الكاملة، لكن لا **تحدّدها مسبقًا**.\n- رتّب حسب الأسماء بلغة القارئ."
 
   - id: S04
     type: sort
@@ -232,7 +242,7 @@ steps:
     options:
       - { id: suggest, text: { en: "Show the closest matches: \"Did you mean Zamalek?\"", ar: "اعرض أقرب النتائج: «هل تقصد الزمالك؟»" } }
       - { id: tip, text: { en: "Add \"Check your spelling\" under No results", ar: "أضِف «تأكّد من الإملاء» تحت «لا توجد نتائج»" } }
-      - { id: dropdown, text: { en: "Replace search with a 120-item dropdown", ar: "استبدل البحث بقائمة منسدلة من 120 عنصرًا" } }
+      - { id: dropdown, text: { en: "Replace search with a 120-item dropdown", ar: "استبدل البحث بـ Dropdown من 120 عنصرًا" } }
     answer: [suggest]
     misconceptions:
       - id: MC-P01-024
@@ -261,7 +271,7 @@ steps:
     multi: true
     prompt:
       en: "Which lists are fine as a plain dropdown, with no search? Pick all that apply."
-      ar: "أيّ القوائم مناسبة كقائمة منسدلة عادية دون بحث؟ اختر كل ما ينطبق."
+      ar: "أيّ القوائم مناسبة كـ Dropdown عادية دون بحث؟ اختر كل ما ينطبق."
     options:
       - { id: sizes, text: { en: "7 shirt sizes, S to 3XL, in size order", ar: "7 مقاسات قمصان، من S إلى 3XL، بترتيب المقاس" } }
       - { id: months, text: { en: "The 12 months, in calendar order", ar: "الأشهر الـ12، بترتيب التقويم" } }
@@ -273,10 +283,10 @@ steps:
         when: [govs, countries]
         feedback:
           en: "Dozens of items in a dropdown means scrolling a tiny box. Let people type."
-          ar: "عشرات العناصر في قائمة منسدلة تعني التمرير في صندوق صغير. دع الناس يكتبون."
+          ar: "عشرات العناصر في Dropdown تعني التمرير في صندوق صغير. دع الناس يكتبون."
     correct:
       en: "Short and in a known order: a dropdown works. Dozens: search."
-      ar: "قصيرة وبترتيب معروف: القائمة المنسدلة تكفي. عشرات: بحث."
+      ar: "قصيرة وبترتيب معروف: الـ Dropdown تكفي. عشرات: بحث."
     explain:
       en: "People can jump straight to M or to March in a short, predictable list. Long lists need typing."
       ar: "يستطيع الناس الوصول مباشرة إلى M أو إلى مارس في قائمة قصيرة متوقّعة. أما القوائم الطويلة فتحتاج كتابة."
@@ -284,6 +294,7 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [search, typo, pin, sort]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- Dozens of options: let people search.\n- Make search forgiving: Arabic letter variants, ال, both languages, small typos.\n- Pin common choices; don't preselect them.\n- Sort in the reader's language.\n\nNext lesson: the unit skill check."

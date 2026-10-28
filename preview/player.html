@@ -61,6 +61,16 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .scen .mock{margin-bottom:8px}
 .live{margin:0 0 14px}
 .body p{margin:0 0 12px}
+.ic{flex:none;width:36px;height:36px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.ic svg{width:22px;height:22px}
+h1.ct{display:flex;align-items:center;gap:12px}
+.pts{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:10px}
+.pts li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;line-height:1.5}
+.pts li>div{min-width:0}
+.pt-t{display:block;margin-bottom:2px}
+.pts li span{color:var(--muted);font-size:.95rem}
+.quote{margin:0 0 12px;padding:12px 14px;border-inline-start:4px solid var(--note);background:var(--note-soft);border-radius:10px;font-weight:600}
+
 .opts{display:grid;gap:10px;margin:0 0 14px;padding:0;border:0}
 .opt{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:52px}
 .opt input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:none}
@@ -241,7 +251,41 @@ const iso = s => lang !== "ar" ? s : s
   .replace(/[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/g, m => /[A-Za-z]/.test(m) && /\d/.test(m) ? LRI(m) : m);
 const tx = v => v == null ? "" : iso(typeof v === "string" ? v : (v[lang] ?? v.en ?? ""));
 const u = () => UI[lang];
-const para = v => tx(v).split(/\n\s*\n/).map(p => `<p>${esc(p).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}</p>`).join("");
+/* small line icons for explanation cards; a card lists them in `icons`, one per bullet */
+const ICON = {
+  toggle:'<rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="16" cy="12" r="3"/>',
+  check:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l3 3 5-6"/>',
+  radio:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',
+  segment:'<rect x="2" y="7" width="20" height="10" rx="3"/><path d="M12 7v10"/>',
+  none:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/>',
+  other:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  yesno:'<circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><circle cx="7" cy="12" r="1.5"/>',
+  type:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h0M10 10h0M14 10h0M18 10h0M7 14h10"/>',
+  pick:'<path d="M4 6h16M4 12h10M4 18h7"/><path d="M15 15l3 3 4-5"/>',
+  stepper:'<rect x="2" y="7" width="20" height="10" rx="3"/><path d="M6 12h3M15 12h3M16.5 10.5v3"/>',
+  slider:'<path d="M3 12h18"/><circle cx="8" cy="12" r="2.5"/><circle cx="16" cy="12" r="2.5"/>',
+  id:'<path d="M9 4L7 20M17 4l-2 16M4 9h16M3 15h16"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+  pin:'<path d="M12 21v-6M7 15h10l-2-5V4H9v6z"/>',
+  sort:'<path d="M7 4v16M4 17l3 3 3-3M14 6h6M14 12h4M14 18h2"/>',
+  typo:'<path d="M4 18L9 6l5 12M6 14h6"/><path d="M15 17c2-3 3 3 5 0"/>',
+  idea:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>',
+  dot:'<circle cx="12" cy="12" r="3"/>'
+};
+const icon = n => `<span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[n] || ICON.dot}</svg></span>`;
+const inl = t => esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+/* text blocks: blank line = paragraph, "- " lines = a list of points, "> " lines = a highlighted quote */
+const para = (v, icons) => { let n = 0; return tx(v).split(/\n\s*\n/).map(p => {
+  const lines = p.split("\n");
+  if (lines.every(l => /^- /.test(l))) return `<ul class="pts">${lines.map(l => {
+    const m = l.slice(2).match(/^\*\*(.+?):?\*\*[:\s]*(.*)$/), ic = icons ? icon(icons[n++]) : "";
+    return `<li>${ic}<div>${m ? `<b class="pt-t">${esc(m[1])}</b>${m[2] ? `<span>${inl(m[2])}</span>` : ""}` : inl(l.slice(2))}</div></li>`;
+  }).join("")}</ul>`;
+  if (lines.every(l => /^> /.test(l))) return `<blockquote class="quote">${lines.map(l => inl(l.slice(2))).join("<br>")}</blockquote>`;
+  return `<p>${inl(p)}</p>`;
+}).join(""); };
 const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
 
 /* ---------- mock screens ---------- */
@@ -383,8 +427,9 @@ function renderStep(){
   let h = "";
   if (s.scenario) h += `<div class="scenario">${para(s.scenario)}</div>`;
   if (s.type === "card"){
-    if (s.title) h += `<h1>${esc(tx(s.title))}</h1>`;
-    h += `<div class="body">${para(s.body)}</div>${mock(s.mock)}`;
+    const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
+    if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
+    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
   } else {
     if (s.recall){
       const k = L.lesson.steps.findIndex(x => x.id === s.recall), prev = L.lesson.steps[k];

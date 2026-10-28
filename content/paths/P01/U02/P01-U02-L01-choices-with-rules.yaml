@@ -5,18 +5,18 @@ title:
   en: "Choices with rules"
   ar: "اختيارات لها قواعد"
 review_labels:
-  MC-P01-017: { en: "\"None of these\" clears the other boxes", ar: "«لا شيء» يُلغي المربعات الأخرى" }
-  MC-P01-018: { en: "A toggle acts now; a checkbox waits for submit", ar: "مفتاح التبديل يعمل فورًا، ومربع الاختيار ينتظر الإرسال" }
+  MC-P01-017: { en: "\"None of these\" clears the other boxes", ar: "«لا شيء» يُلغي الـ Checkboxes الأخرى" }
+  MC-P01-018: { en: "A toggle acts now; a checkbox waits for submit", ar: "الـ Toggle يعمل فورًا، والـ Checkbox ينتظر الإرسال" }
   MC-P01-019: { en: "\"Other\" needs a place to say what", ar: "«أخرى» تحتاج مكانًا لكتابة التفاصيل" }
-  MC-P01-020: { en: "An empty checkbox can't tell \"no\" from \"skipped\"", ar: "المربع الفارغ لا يفرّق بين «لا» و«تخطّيت»" }
+  MC-P01-020: { en: "An empty checkbox can't tell \"no\" from \"skipped\"", ar: "الـ Checkbox الفارغ لا يفرّق بين «لا» و«تخطّيت»" }
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Two surprises at the clinic", ar: "مفاجأتان في العيادة" }
     body:
-      en: "Nour filled in the clinic app's health form and pressed Save. The doctor received: **Allergies: Penicillin, None.**\n\nLater she switched reminders off on the same screen and closed the app. The reminders kept coming."
-      ar: "ملأت نور النموذج الصحي في تطبيق العيادة وضغطت «حفظ». فوصل للطبيب: **الحساسية: البنسلين، لا شيء.**\n\nوبعد ذلك أطفأت التذكيرات من الشاشة نفسها وأغلقت التطبيق. لكن التذكيرات استمرت."
+      en: "Nour filled in the clinic app's health form and pressed Save. This is what reached the doctor:\n\n> Allergies: Penicillin, None\n\nA week later she switched reminders off on the same screen, didn't press Save, and closed the app. The reminders kept coming."
+      ar: "ملأت نور النموذج الصحي في تطبيق العيادة وضغطت «حفظ». وهذا ما وصل للطبيب:\n\n> الحساسية: البنسلين، لا شيء\n\nوبعد أسبوع أطفأت التذكيرات من الشاشة نفسها، ولم تضغط «حفظ»، وأغلقت التطبيق. لكن التذكيرات استمرت."
     mock:
       blocks:
         - { kind: title, text: { en: "Health form", ar: "النموذج الصحي" } }
@@ -30,26 +30,36 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "Why did the reminders keep coming after Nour switched them off?"
-      ar: "لماذا استمرت التذكيرات بعد أن أطفأتها نور؟"
+      en: "Nour switched reminders off, didn't press Save, and closed the app. Why did the reminders keep coming?"
+      ar: "أطفأت نور التذكيرات، ولم تضغط «حفظ»، وأغلقت التطبيق. لماذا استمرت التذكيرات؟"
     options:
-      - { id: save, text: { en: "The switch only counted after Save, and she didn't press it", ar: "المفتاح لا يُحتسب إلا بعد «حفظ»، وهي لم تضغطه" } }
-      - { id: bug, text: { en: "The app has a bug", ar: "في التطبيق خطأ برمجي" } }
-      - { id: user, text: { en: "She switched the wrong thing off", ar: "أطفأت شيئًا آخر" } }
-    reveal:
-      en: "The switch waited for Save. But a switch looks like a light switch: people expect it to work the moment they flip it. Nour did what the control promised."
-      ar: "المفتاح كان ينتظر «حفظ». لكن المفتاح يشبه مفتاح الإضاءة: يتوقّع الناس أن يعمل لحظة تحريكه. ونور فعلت ما وعد به عنصر التحكّم."
+      - { id: save, text: { en: "The toggle only counted after Save, which she never pressed", ar: "الـ Toggle لا يُحتسب إلا بعد «حفظ»، وهي لم تضغطه" } }
+      - { id: silent, text: { en: "Her phone was on silent", ar: "كان هاتفها على الوضع الصامت" } }
+      - { id: other, text: { en: "She switched off a different setting", ar: "أطفأت إعدادًا آخر" } }
+    answer: [save]
+    misconceptions:
+      - id: MC-P01-018
+        when: [silent, other]
+        feedback:
+          en: "The story says she switched reminders off but skipped Save. On this screen nothing counts until Save, even the toggle."
+          ar: "القصة تقول إنها أطفأت التذكيرات لكنها لم تضغط «حفظ». وفي هذه الشاشة لا شيء يُحتسب قبل «حفظ»، حتى الـ Toggle."
+    correct:
+      en: "The toggle waited for Save, but a toggle looks like it works at once."
+      ar: "الـ Toggle انتظر «حفظ»، مع أن الـ Toggle يبدو كأنه يعمل فورًا."
+    explain:
+      en: "A toggle looks like a light switch, so people expect it to act the moment they flip it. Putting one on a screen that waits for Save breaks that promise. Nour did what the control told her."
+      ar: "الـ Toggle يشبه مفتاح الإضاءة، فيتوقّع الناس أن يعمل لحظة تحريكه. ووضعه في شاشة تنتظر «حفظ» يكسر هذا الوعد. ونور فعلت ما أخبرها به عنصر التحكّم."
 
   - id: S03
     type: card
     part: concept
-    title: { en: "Four rules beyond radio and checkbox", ar: "أربع قواعد بعد أزرار الراديو ومربعات الاختيار" }
+    icons: [toggle, segment, none, other]
+    title: { en: "Four rules beyond radio and checkbox", ar: "أربع قواعد بعد الـ Radio buttons والـ Checkboxes" }
     body:
       en: "One answer: radio buttons. Any number: checkboxes. That's the start. Then:\n\n- **Toggle** (a switch) acts **now**, like a light. Use it for settings. In a form that waits for Save or Submit, use a checkbox.\n- **Segmented control** (2 to 4 joined buttons) switches a view, like Day / Week.\n- **\"None of these\"** clears the other boxes, and ticking another box clears it.\n- **\"Other\"** shows a text field so people can say what.\n\nAnd an empty single checkbox can mean \"no\" or \"I skipped it\". When you need a real answer, ask Yes / No."
-      ar: "إجابة واحدة: أزرار راديو. أي عدد: مربعات اختيار. هذه البداية. وبعدها:\n\n- **مفتاح التبديل (Toggle)** يعمل **فورًا**، مثل مفتاح الإضاءة. استخدمه للإعدادات. وفي نموذج ينتظر «حفظ» أو «إرسال»، استخدم مربع اختيار.\n- **الأزرار المقسّمة (Segmented control)**، من 2 إلى 4 أزرار متصلة، تبدّل طريقة العرض، مثل يوم / أسبوع.\n- **«لا شيء مما سبق»** يُلغي المربعات الأخرى، وتحديد مربع آخر يُلغيه.\n- **«أخرى»** تُظهر حقلًا نصيًا ليكتب الناس ما يقصدونه.\n\nوالمربع الواحد الفارغ قد يعني «لا» أو «تخطّيت السؤال». حين تحتاج إجابة حقيقية، اسأل نعم / لا."
+      ar: "إجابة واحدة: Radio buttons. أي عدد: Checkboxes. هذه البداية. وبعدها:\n\n- **الـ Toggle** يعمل **فورًا**، مثل مفتاح الإضاءة. استخدمه للإعدادات. وفي نموذج ينتظر «حفظ» أو «إرسال»، استخدم Checkbox.\n- **الـ Segmented control** (من 2 إلى 4 أزرار متصلة) يبدّل طريقة العرض، مثل يوم / أسبوع.\n- **«لا شيء مما سبق»** يُلغي الـ Checkboxes الأخرى، وتحديد Checkbox آخر يُلغيه.\n- **«أخرى»** تُظهر حقلًا نصيًا ليكتب الناس ما يقصدونه.\n\nوالـ Checkbox الواحد الفارغ قد يعني «لا» أو «تخطّيت السؤال». حين تحتاج إجابة حقيقية، اسأل نعم / لا."
 
   - id: S04
     type: match
@@ -64,32 +74,32 @@ steps:
       - { id: symptoms, text: { en: "Symptoms today, any number", ar: "الأعراض اليوم، أي عدد" } }
       - { id: meds, text: { en: "Regular medicine: the doctor must know either way", ar: "أدوية منتظمة: يجب أن يعرف الطبيب في الحالتين" } }
     right:
-      - { id: toggle, text: { en: "Toggle", ar: "مفتاح تبديل" } }
-      - { id: seg, text: { en: "Segmented control", ar: "أزرار مقسّمة" } }
-      - { id: checks, text: { en: "Checkboxes", ar: "مربعات اختيار" } }
-      - { id: yesno, text: { en: "Yes / No radio buttons", ar: "أزرار راديو نعم / لا" } }
+      - { id: toggle, text: { en: "Toggle", ar: "Toggle" } }
+      - { id: seg, text: { en: "Segmented control", ar: "Segmented control" } }
+      - { id: checks, text: { en: "Checkboxes", ar: "Checkboxes" } }
+      - { id: yesno, text: { en: "Yes / No radio buttons", ar: "Radio buttons نعم / لا" } }
     answer: { dark: toggle, view: seg, symptoms: checks, meds: yesno }
     misconceptions:
       - id: MC-P01-018
         when: { left: dark, right: checks }
         feedback:
           en: "Dark mode changes the screen the moment it's picked. Instant settings are what toggles are for."
-          ar: "الوضع الداكن يغيّر الشاشة لحظة اختياره. والإعدادات الفورية هي ما صُنع له مفتاح التبديل."
+          ar: "الوضع الداكن يغيّر الشاشة لحظة اختياره. والإعدادات الفورية هي ما صُنع له الـ Toggle."
       - id: MC-P01-020
         when: { left: meds, right: checks }
         feedback:
           en: "An empty box could mean \"no medicine\" or \"didn't answer\". Yes / No forces a real answer."
-          ar: "المربع الفارغ قد يعني «لا أدوية» أو «لم تُجب». أما نعم / لا فتفرض إجابة حقيقية."
+          ar: "الـ Checkbox الفارغ قد يعني «لا أدوية» أو «لم تُجب». أما نعم / لا فتفرض إجابة حقيقية."
       - id: MC-P01-018
         when: { left: view, right: toggle }
         feedback:
           en: "A toggle is on or off. Day and Week are two named views, shown side by side: a segmented control."
-          ar: "مفتاح التبديل إما يعمل أو لا. أما يوم وأسبوع فطريقتا عرض لكل منهما اسم، تظهران جنبًا إلى جنب: أزرار مقسّمة."
+          ar: "الـ Toggle إما يعمل أو لا. أما يوم وأسبوع فطريقتا عرض لكل منهما اسم، تظهران جنبًا إلى جنب: Segmented control."
     hints:
       - { en: "Start with the one that changes the screen instantly.", ar: "ابدأ بالذي يغيّر الشاشة فورًا." }
     correct:
       en: "Toggle for instant settings, segments for views, checkboxes for many, Yes / No when silence isn't an answer."
-      ar: "مفتاح تبديل للإعدادات الفورية، وأزرار مقسّمة لطرق العرض، ومربعات للعدة، ونعم / لا حين لا يكون الصمت إجابة."
+      ar: "Toggle للإعدادات الفورية، والـ Segmented control لطرق العرض، وCheckboxes للعدة، ونعم / لا حين لا يكون الصمت إجابة."
     explain:
       en: "Each control promises a behaviour. Pick the one whose promise matches what really happens."
       ar: "كل عنصر تحكّم يَعِد بسلوك معيّن. اختر العنصر الذي يطابق وعدُه ما يحدث فعلًا."
@@ -125,7 +135,7 @@ steps:
       ar: "«لا شيء» يُلغي الباقي، وتحديد أي شيء آخر يُلغي «لا شيء»."
     explain:
       en: "\"None of these\" behaves like a radio button inside a checkbox group. Make that rule visible by clearing the others straight away."
-      ar: "«لا شيء مما سبق» يتصرّف مثل زر راديو داخل مجموعة مربعات. أظهِر هذه القاعدة بإلغاء الباقي فورًا."
+      ar: "«لا شيء مما سبق» يتصرّف مثل Radio button داخل مجموعة Checkboxes. أظهِر هذه القاعدة بإلغاء الباقي فورًا."
 
   - id: S06
     type: compare
@@ -152,7 +162,7 @@ steps:
     reason:
       prompt: { en: "Why?", ar: "لماذا؟" }
       options:
-        - { id: instant, text: { en: "A switch looks like it acts at once, and in B it does", ar: "المفتاح يبدو أنه يعمل فورًا، وفي B يعمل فعلًا" } }
+        - { id: instant, text: { en: "A switch looks like it acts at once, and in B it does", ar: "الـ Toggle يبدو أنه يعمل فورًا، وفي B يعمل فعلًا" } }
         - { id: fewer, text: { en: "B has fewer buttons", ar: "في B أزرار أقل" } }
         - { id: green, text: { en: "B uses green text", ar: "B تستخدم نصًا أخضر" } }
       answer: [instant]
@@ -161,19 +171,19 @@ steps:
           when: [fewer, green]
           feedback:
             en: "That's a side effect. What matters is that B saves the moment Nour flips the switch, as a switch promises, and says so."
-            ar: "هذا أثر جانبي. المهم أن B تحفظ لحظة تحريك نور للمفتاح، كما يَعِد المفتاح، وتقول ذلك."
+            ar: "هذا أثر جانبي. المهم أن B تحفظ لحظة تحريك نور للـ Toggle، كما يَعِد الـ Toggle، وتقول ذلك."
     misconceptions:
       - id: MC-P01-018
         when: [a]
         feedback:
           en: "In A the switch looks off, but nothing is saved until \"Save changes\". Nour closed the app first, so reminders are still on."
-          ar: "في A يبدو المفتاح مطفأً، لكن لا شيء يُحفظ قبل «احفظ التغييرات». ونور أغلقت التطبيق قبلها، فالتذكيرات ما زالت تعمل."
+          ar: "في A يبدو الـ Toggle مطفأً، لكن لا شيء يُحفظ قبل «احفظ التغييرات». ونور أغلقت التطبيق قبلها، فالتذكيرات ما زالت تعمل."
     correct:
       en: "B saves as she flips, and confirms it."
       ar: "B تحفظ لحظة التحريك، وتؤكّد ذلك."
     explain:
       en: "If a screen needs a Save button, use checkboxes on it. If you use toggles, save each one instantly."
-      ar: "إذا احتاجت الشاشة زر «حفظ»، فاستخدم فيها مربعات اختيار. وإذا استخدمت مفاتيح تبديل، فاحفظ كل واحد فورًا."
+      ar: "إذا احتاجت الشاشة زر «حفظ»، فاستخدم فيها Checkboxes. وإذا استخدمت Toggles، فاحفظ كل واحد فورًا."
 
   - id: S07
     type: fix
@@ -221,7 +231,7 @@ steps:
     rules: [R07, U39]
     prompt:
       en: "Samir's football camp form has one checkbox: \"My child has had the measles vaccine\". 40 parents leave it empty. What does the camp know about those 40?"
-      ar: "في نموذج معسكر سمير مربع اختيار واحد: «طفلي حصل على تطعيم الحصبة». ترك 40 وليّ أمر المربع فارغًا. ماذا يعرف المعسكر عن هؤلاء الأربعين؟"
+      ar: "في نموذج معسكر سمير Checkbox واحد: «طفلي حصل على تطعيم الحصبة». ترك 40 وليّ أمر الـ Checkbox فارغًا. ماذا يعرف المعسكر عن هؤلاء الأربعين؟"
     options:
       - { id: unknown, text: { en: "Nothing for sure: \"not vaccinated\" and \"skipped it\" look the same", ar: "لا شيء مؤكد: «لم يُطعَّم» و«تخطّى السؤال» يبدوان متشابهين" } }
       - { id: no, text: { en: "Their children aren't vaccinated", ar: "أطفالهم غير مُطعَّمين" } }
@@ -235,15 +245,16 @@ steps:
           ar: "قد يكون أيّهما صحيحًا، ولا يستطيع النموذج أن يميّز. ولسؤال صحي يجب أن يتصرّف المعسكر بناءً عليه، اسأل نعم / لا واجعل الإجابة إلزامية."
     correct:
       en: "An empty box is silent. Yes / No makes every parent say."
-      ar: "المربع الفارغ صامت. أما نعم / لا فتجعل كل وليّ أمر يجيب."
+      ar: "الـ Checkbox الفارغ صامت. أما نعم / لا فتجعل كل وليّ أمر يجيب."
     explain:
       en: "A single checkbox is right when empty clearly means no, like \"Send me the newsletter\". When both answers matter, use Yes / No."
-      ar: "المربع الواحد مناسب حين يعني الفراغ «لا» بوضوح، مثل «أرسل لي النشرة». وحين تهمّ الإجابتان، استخدم نعم / لا."
+      ar: "الـ Checkbox الواحد مناسب حين يعني الفراغ «لا» بوضوح، مثل «أرسل لي النشرة». وحين تهمّ الإجابتان، استخدم نعم / لا."
 
   - id: S09
     type: card
     part: recap
+    icons: [toggle, segment, none, other, yesno]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- A toggle acts now. On a screen with a Save button, use checkboxes.\n- A segmented control switches views.\n- \"None of these\" clears the other boxes.\n- \"Other\" brings its own text field.\n- When silence isn't an answer, ask Yes / No.\n\nNext lesson: typing, picking, and the controls in between."
-      ar: "- مفتاح التبديل يعمل فورًا. وفي شاشة فيها زر «حفظ»، استخدم مربعات اختيار.\n- الأزرار المقسّمة تبدّل طريقة العرض.\n- «لا شيء مما سبق» يُلغي المربعات الأخرى.\n- «أخرى» تأتي بحقلها النصي.\n- حين لا يكون الصمت إجابة، اسأل نعم / لا.\n\nالدرس التالي: الكتابة والاختيار، وما بينهما من عناصر تحكّم."
+      ar: "- الـ Toggle يعمل فورًا. وفي شاشة فيها زر «حفظ»، استخدم Checkboxes.\n- الـ Segmented control يبدّل طريقة العرض.\n- «لا شيء مما سبق» يُلغي الـ Checkboxes الأخرى.\n- «أخرى» تأتي بحقلها النصي.\n- حين لا يكون الصمت إجابة، اسأل نعم / لا.\n\nالدرس التالي: الكتابة والاختيار، وما بينهما من عناصر تحكّم."
