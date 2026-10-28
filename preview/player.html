@@ -138,6 +138,7 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-field .fi{border:1.5px solid #B9B9C0;border-radius:10px;min-height:44px;padding:10px 12px;font-size:.92rem;color:var(--mock-muted);margin-top:4px}
 .mock .k-field .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
 .mock .k-field.tone-bad .fi{border-color:#C6332A}
+.mock[dir=rtl] .k-field .fi[dir=ltr]{text-align:right}
 .mock .k-field .fe{font-size:.8rem;color:#A3261F;margin-top:4px}
 .mock .k-select .fl{font-size:.85rem;font-weight:600}
 .mock .k-select .fi{border:1.5px solid #B9B9C0;border-radius:10px;min-height:44px;padding:10px 12px;font-size:.92rem;color:var(--mock-muted);margin-top:4px;display:flex;justify-content:space-between;gap:8px}
@@ -341,7 +342,7 @@ function mockBlocks(blocks, opts){
     let inner;
     if (b.kind === "group") { inner = mockBlocks(b.blocks, opts); if (b.scroll) return `<div class="${cls} scroll${b.sticky?" sticky":""}"${b.colw?` style="--colw:${b.colw}px"`:""}>${inner}</div>`; }
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
-    else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div${/\d/.test(tx(b.text)||"") && /^[\s\d+\-()\u2066\u2069]+$/.test(tx(b.text)) ? ' dir="ltr"' : ""} class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
     else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
     else if (b.kind === "toggle") inner = `<span>${esc(tx(b.text))}</span><span class="sw${b.selected?" on":""}" aria-hidden="true"></span>`;
     else if (b.kind === "stepper") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="stp"><span aria-hidden="true">−</span><b>${esc(tx(b.text))}</b><span aria-hidden="true">+</span></div>`;
@@ -360,7 +361,7 @@ function mockBlocks(blocks, opts){
     }
     if (live && b.kind === "stepper") inner = inner.replace('<span aria-hidden="true">−</span>', `<span class="act" role="button" tabindex="0" data-step="-1" aria-label="−">−</span>`).replace('<span aria-hidden="true">+</span>', `<span class="act" role="button" tabindex="0" data-step="1" aria-label="+">+</span>`);
     if (live && b.kind === "segmented") inner = inner.replace(/<span class="sg( on)?">/g, (m, on) => `<span class="sg${on||""} act" role="radio" tabindex="0" aria-checked="${!!on}">`);
-    if (live && b.kind === "field" && !b.focus) inner = inner.replace(/<div class="fi([^"]*)">([^<]*)/, (m, c, t) => `<div class="fi${c} act-type" contenteditable="plaintext-only" spellcheck="false" data-ph="${t}" role="textbox" aria-label="${esc(tx(b.label))}">${b.filled ? t : ""}`);
+    if (live && b.kind === "field" && !b.focus) inner = inner.replace(/<div( dir="ltr")? class="fi([^"]*)">([^<]*)/, (m, d, c, t) => `<div${d||""} class="fi${c} act-type" contenteditable="plaintext-only" spellcheck="false" data-ph="${t}" role="textbox" aria-label="${esc(tx(b.label))}">${b.filled ? t : ""}`);
     if (opts && opts.regions && b.region){
       const pressed = opts.selected.includes(b.region);
       return `<button type="button" class="${cls} region"${st} data-region="${b.region}" aria-pressed="${pressed}" ${opts.locked?"disabled":""}>${inner}</button>`;
