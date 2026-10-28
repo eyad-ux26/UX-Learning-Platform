@@ -1,0 +1,1027 @@
+id: P10-U03-B01
+mode: bank
+title:
+  en: "Re-tests: make the right thing stand out"
+  ar: "إعادة اختبار: اجعل الشيء الصحيح يبرز"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Button States: Communicate Interaction (NN/g)", ar: "حالات الأزرار: كيف توضّح التفاعل (NN/g)" }
+    url: "https://www.nngroup.com/articles/button-states-communicate-interaction/"
+  - title: { en: "Using Color to Enhance Your Design (NN/g)", ar: "استخدام اللون لتحسين التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/color-enhance-design/"
+  - title: { en: "Visual Hierarchy in UX: Definition (NN/g)", ar: "التسلسل البصري في تجربة المستخدم: تعريف (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/"
+  - title: { en: "Proximity of Consequential Options (NN/g)", ar: "قرب الخيارات ذات العواقب (NN/g)" }
+    url: "https://www.nngroup.com/articles/proximity-consequential-options/"
+  - title: { en: "5 Visual Treatments that Improve Accessibility (NN/g)", ar: "5 معالجات بصرية تحسّن سهولة الوصول (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-treatments-accessibility/"
+  - title: { en: "Low-Contrast Text Is Not the Answer (NN/g)", ar: "النص منخفض الـ Contrast ليس هو الحل (NN/g)" }
+    url: "https://www.nngroup.com/articles/low-contrast/"
+  - title: { en: "Guidelines for Visualizing Links (NN/g)", ar: "إرشادات لإظهار الروابط (NN/g)" }
+    url: "https://www.nngroup.com/articles/guidelines-for-visualizing-links/"
+steps:
+  # SK-P10-U03-01: give each button the emphasis its action needs
+  - id: S01
+    type: tune
+    skill: SK-P10-U03-01
+    part: retest
+    value:
+      en: "Re-test, button levels (NN/g): tertiary buttons have the least visual emphasis. Three actions of different importance need three levels, not three equal buttons."
+      ar: "إعادة اختبار، مستويات الأزرار (NN/g): الـ Tertiary button له أقل بروز بصري. ثلاثة إجراءات بأهمية مختلفة تحتاج ثلاثة مستويات، لا ثلاثة أزرار متساوية."
+    ref: { url: "https://www.nngroup.com/articles/button-states-communicate-interaction/", quote: "Tertiary buttons have the least amount of visual emphasis" }
+    scenario:
+      en: "Noha opens a yoga class in her gym app. Most people came to book it. Some add it to their calendar, and a few share it with a friend. Right now all three buttons are filled."
+      ar: "تفتح نهى حصة يوغا في تطبيق النادي. معظم الناس جاؤوا ليحجزوها. بعضهم يضيفها إلى التقويم، وقليلون يشاركونها مع صديق. الآن الأزرار الثلاثة كلها ممتلئة."
+    prompt:
+      en: "Try each change. Which one should ship?"
+      ar: "جرّب كل تغيير. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &nh_t { en: "Morning yoga", ar: "يوغا الصباح" } }
+        - { kind: meta, text: &nh_m { en: "Tue · 7:00 · Studio 2", ar: "الثلاثاء · 7:00 · الاستوديو 2" }, gap: s }
+        - { kind: button, text: &nh_b { en: "Book this class", ar: "احجز هذه الحصة" }, gap: m }
+        - { kind: button, text: &nh_c { en: "Add to calendar", ar: "أضِف إلى التقويم" }, gap: s }
+        - { kind: button, text: &nh_s { en: "Share with a friend", ar: "شاركها مع صديق" }, gap: s }
+    options:
+      - id: all
+        text: { en: "Make all three outlined, so none of them shouts", ar: "اجعل الثلاثة بإطار فقط، حتى لا يصرخ أيّ منها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *nh_t }
+            - { kind: meta, text: *nh_m, gap: s }
+            - { kind: button, emphasis: low, text: *nh_b, gap: m }
+            - { kind: button, emphasis: low, text: *nh_c, gap: s }
+            - { kind: button, emphasis: low, text: *nh_s, gap: s }
+      - id: levels
+        text: { en: "Book filled, calendar outlined, share as a text link", ar: "الحجز ممتلئ، والتقويم بإطار، والمشاركة رابط نصّي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *nh_t }
+            - { kind: meta, text: *nh_m, gap: s }
+            - { kind: button, text: *nh_b, gap: m }
+            - { kind: button, emphasis: low, text: *nh_c, gap: s }
+            - { kind: button, style: plain, text: *nh_s, gap: s }
+      - id: bigger
+        text: { en: "Keep all three filled, and make Book taller", ar: "أبقِ الثلاثة ممتلئة، واجعل زر الحجز أطول" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *nh_t }
+            - { kind: meta, text: *nh_m, gap: s }
+            - { kind: button, px: 20, text: *nh_b, gap: m }
+            - { kind: button, text: *nh_c, gap: s }
+            - { kind: button, text: *nh_s, gap: s }
+    answer: [levels]
+    misconceptions:
+      - id: MC-P10-040
+        when: [all]
+        feedback:
+          en: "Now nothing shouts, but nothing leads either. Booking is why most people came, and it looks the same as sharing."
+          ar: "الآن لا شيء يصرخ، لكن لا شيء يقود أيضًا. الحجز هو سبب مجيء معظم الناس، ويبدو مثل المشاركة تمامًا."
+      - id: MC-P10-041
+        when: [bigger]
+        feedback:
+          en: "Three filled buttons still compete, even if one is taller. Lower the two less important actions to quieter styles."
+          ar: "ثلاثة أزرار ممتلئة ما زالت تتنافس، حتى لو كان أحدها أطول. اجعل الإجراءين الأقل أهمية بأشكال أهدأ."
+    correct:
+      en: "Right. Three actions, three levels."
+      ar: "صحيح. ثلاثة إجراءات، ثلاثة مستويات."
+    explain:
+      en: "The filled button goes to the action most people came for. The outlined one is there for some, and the text link for the few. Noha sees what to do first without reading all three."
+      ar: "الزر الممتلئ للإجراء الذي جاء من أجله معظم الناس. والزر بإطار لبعضهم، والرابط النصّي للقليلين. ترى نهى ما تفعله أولًا دون أن تقرأ الثلاثة."
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U03-01
+    part: retest
+    value:
+      en: "Re-test, primary button (NN/g): primary buttons have the most visual emphasis, for the important or common action. Making the second action a different color keeps two primaries."
+      ar: "إعادة اختبار، الزر الرئيسي (NN/g): الـ Primary button له أكبر بروز بصري، للإجراء المهم أو الشائع. تغيير لون الإجراء الثاني يُبقي زرّين رئيسيين."
+    ref: { url: "https://www.nngroup.com/articles/button-states-communicate-interaction/", quote: "Primary buttons have the most visual emphasis" }
+    scenario:
+      en: "Karim is about to order dinner. Under his cart there are two filled buttons: Place order, and Add a note for the driver. Few people add a note."
+      ar: "يوشك كريم أن يطلب العشاء. تحت سلّة الطلب زرّان ممتلئان: «أكّد الطلب»، و«أضِف ملاحظة للسائق». قليلون يضيفون ملاحظة."
+    prompt:
+      en: "Try each change. Which one should ship?"
+      ar: "جرّب كل تغيير. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: heading, text: &kr_h { en: "Your order", ar: "طلبك" } }
+        - { kind: meta, text: &kr_a { en: "2 × Chicken shawarma · 180 EGP", ar: "2 × شاورما فراخ · 180 جنيهًا" }, gap: s }
+        - { kind: meta, text: &kr_b { en: "1 × Lentil soup · 45 EGP", ar: "1 × شوربة عدس · 45 جنيهًا" }, gap: s }
+        - { kind: text, weight: bold, text: &kr_t { en: "Total 225 EGP", ar: "الإجمالي 225 جنيهًا" }, gap: s }
+        - { kind: button, text: &kr_n { en: "Add a note for the driver", ar: "أضِف ملاحظة للسائق" }, gap: m }
+        - { kind: button, text: &kr_o { en: "Place order", ar: "أكّد الطلب" }, gap: s }
+    options:
+      - id: red
+        text: { en: "Keep both filled, but make the note button red so they look different", ar: "أبقِ الزرّين ممتلئين، لكن اجعل زر الملاحظة أحمر ليختلفا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *kr_h }
+            - { kind: meta, text: *kr_a, gap: s }
+            - { kind: meta, text: *kr_b, gap: s }
+            - { kind: text, weight: bold, text: *kr_t, gap: s }
+            - { kind: button, style: danger, text: *kr_n, gap: m }
+            - { kind: button, text: *kr_o, gap: s }
+      - id: order
+        text: { en: "Keep both filled, and move Place order above the note", ar: "أبقِ الزرّين ممتلئين، وانقل «أكّد الطلب» فوق الملاحظة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *kr_h }
+            - { kind: meta, text: *kr_a, gap: s }
+            - { kind: meta, text: *kr_b, gap: s }
+            - { kind: text, weight: bold, text: *kr_t, gap: s }
+            - { kind: button, text: *kr_o, gap: m }
+            - { kind: button, text: *kr_n, gap: s }
+      - id: outline
+        text: { en: "Keep Place order filled; make the note an outlined button", ar: "أبقِ «أكّد الطلب» ممتلئًا؛ واجعل زر الملاحظة بإطار فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *kr_h }
+            - { kind: meta, text: *kr_a, gap: s }
+            - { kind: meta, text: *kr_b, gap: s }
+            - { kind: text, weight: bold, text: *kr_t, gap: s }
+            - { kind: button, emphasis: low, text: *kr_n, gap: m }
+            - { kind: button, text: *kr_o, gap: s }
+    answer: [outline]
+    misconceptions:
+      - id: MC-P10-041
+        when: [red, order]
+        feedback:
+          en: "Two filled buttons still ask Karim to choose between them, whatever the order or color. A red one can even look like a warning. Make the note quieter."
+          ar: "الزرّان الممتلئان ما زالا يطلبان من كريم أن يختار بينهما، مهما كان الترتيب أو اللون. بل قد يبدو الأحمر كتحذير. اجعل زر الملاحظة أهدأ."
+    correct:
+      en: "Right. One filled button, for the order."
+      ar: "صحيح. زر ممتلئ واحد، للطلب."
+    explain:
+      en: "Placing the order is what almost everyone came to do, so it gets the only filled button. The note stays easy to find for the few who need it."
+      ar: "تأكيد الطلب هو ما جاء من أجله الجميع تقريبًا، فيأخذ الزر الممتلئ الوحيد. وتبقى الملاحظة سهلة الإيجاد للقلّة الذين يحتاجونها."
+
+  # SK-P10-U03-02: let one thing lead
+  - id: S03
+    type: tune
+    skill: SK-P10-U03-02
+    part: retest
+    value:
+      en: "Re-test, accent color (NN/g): reserve the accent color for what you want to stand out the most. Five purple things point nowhere."
+      ar: "إعادة اختبار، لون التمييز (NN/g): احفظ لون التمييز لما تريده أن يبرز أكثر من غيره. خمسة أشياء بنفسجية لا تشير إلى أي مكان."
+    ref: { url: "https://www.nngroup.com/articles/color-enhance-design/", quote: "Reserve the accent color for what you want to stand out the most on your page" }
+    scenario:
+      en: "Youssef opens a podcast episode. The brand color is purple, and the episode title, the host, the length, the Play button and the Download link are all purple."
+      ar: "يفتح يوسف حلقة بودكاست. لون العلامة بنفسجي، وعنوان الحلقة والمقدّم والمدة وزر التشغيل ورابط التنزيل كلها بنفسجية."
+    prompt:
+      en: "Try each change. Which one should ship?"
+      ar: "جرّب كل تغيير. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, color: brand, text: &ys_t { en: "Ep. 42: Sleeping better", ar: "الحلقة 42: نوم أفضل" } }
+        - { kind: meta, color: brand, text: &ys_h { en: "With Dr. Hala Mostafa", ar: "مع د. هالة مصطفى" }, gap: s }
+        - { kind: meta, color: brand, text: &ys_d { en: "38 min", ar: "38 دقيقة" }, gap: s }
+        - { kind: button, text: &ys_p { en: "Play", ar: "تشغيل" }, gap: m }
+        - { kind: link, text: &ys_l { en: "Download", ar: "تنزيل" }, gap: s }
+    options:
+      - id: only
+        text: { en: "Purple only on Play; the title, host and length in dark grey", ar: "البنفسجي على زر التشغيل فقط؛ والعنوان والمقدّم والمدة بالرمادي الداكن" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ys_t }
+            - { kind: meta, text: *ys_h, gap: s }
+            - { kind: meta, text: *ys_d, gap: s }
+            - { kind: button, text: *ys_p, gap: m }
+            - { kind: link, text: *ys_l, gap: s }
+      - id: orange
+        text: { en: "Keep the purple text, and make Play orange so it stands out from it", ar: "أبقِ النصوص البنفسجية، واجعل زر التشغيل برتقاليًا ليبرز عنها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, color: brand, text: *ys_t }
+            - { kind: meta, color: brand, text: *ys_h, gap: s }
+            - { kind: meta, color: brand, text: *ys_d, gap: s }
+            - { kind: button, tone: warn, text: *ys_p, gap: m }
+            - { kind: link, text: *ys_l, gap: s }
+      - id: more
+        text: { en: "Add a purple description too, so the page feels on brand", ar: "أضِف وصفًا بنفسجيًا أيضًا، حتى تبدو الصفحة بلون العلامة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, color: brand, text: *ys_t }
+            - { kind: meta, color: brand, text: *ys_h, gap: s }
+            - { kind: meta, color: brand, text: *ys_d, gap: s }
+            - { kind: text, color: brand, text: { en: "Small habits that help you fall asleep.", ar: "عادات صغيرة تساعدك على النوم." }, gap: s }
+            - { kind: button, text: *ys_p, gap: m }
+            - { kind: link, text: *ys_l, gap: s }
+    answer: [only]
+    misconceptions:
+      - id: MC-P10-042
+        when: [orange, more]
+        feedback:
+          en: "Another color, or more purple, only adds more things competing. Take the accent off everything except the one thing Youssef should tap."
+          ar: "لون آخر، أو بنفسجي أكثر، يضيف فقط أشياء أكثر تتنافس. أزِل لون التمييز عن كل شيء إلا الشيء الذي يجب أن يضغطه يوسف."
+    correct:
+      en: "Right. The accent marks one thing: Play."
+      ar: "صحيح. لون التمييز يحدّد شيئًا واحدًا: التشغيل."
+    explain:
+      en: "An accent color works because it's rare. Spread over five things it stops pointing anywhere. On Play alone, it tells Youssef where to start."
+      ar: "يعمل لون التمييز لأنه نادر. إذا انتشر على خمسة أشياء توقّف عن الإشارة إلى أي مكان. وعلى زر التشغيل وحده، يخبر يوسف من أين يبدأ."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U03-02
+    part: retest
+    value:
+      en: "Re-test, squint test (NN/g): squint or apply a slight blur to the design to see what stands out. Every option passes contrast; only one keeps a clear first thing when blurred."
+      ar: "إعادة اختبار، اختبار التحديق (NN/g): حدّق في التصميم أو طبّق عليه Blur خفيفًا لترى ما يبرز. كل الخيارات تجتاز الـ Contrast؛ وخيار واحد فقط يبقى فيه شيء أول واضح بعد التمويه."
+    ref: { url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/", quote: "squint or apply a slight blur to the design" }
+    scenario:
+      en: "Sameh opens his electricity bill to pay it. What he needs first is how much he owes. Every line on the screen already passes 4.5:1. Each result below is blurred, the way the squint test sees it."
+      ar: "يفتح سامح فاتورة الكهرباء ليدفعها. أول ما يحتاجه هو المبلغ المطلوب. كل سطر في الشاشة يجتاز 4.5:1 بالفعل. كل نتيجة بالأسفل مموّهة (Blur)، كما يراها اختبار التحديق."
+    prompt:
+      en: "Try each change. Which one should ship?"
+      ar: "جرّب كل تغيير. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, blurred", ar: "الآن، مموّهة" }
+      blur: 4
+      blocks:
+        - { kind: text, px: 16, text: &sm_a { en: "Amount due: 486 EGP", ar: "المبلغ المطلوب: 486 جنيهًا" } }
+        - { kind: text, px: 16, text: &sm_d { en: "Due by 12 March", ar: "آخر موعد 12 مارس" }, gap: s }
+        - { kind: text, px: 16, text: &sm_u { en: "Used: 310 kWh", ar: "الاستهلاك: 310 كيلوواط ساعة" }, gap: s }
+        - { kind: text, px: 16, text: &sm_m { en: "Meter no. 40 2213 778", ar: "رقم العدّاد 40 2213 778" }, gap: s }
+        - { kind: button, emphasis: low, text: &sm_p { en: "Pay now", ar: "ادفع الآن" }, gap: m }
+    options:
+      - id: bold
+        text: { en: "Make every line 18px bold, so it's all easy to read", ar: "اجعل كل سطر بحجم 18px وبخط Bold، حتى يُقرأ كله بسهولة" }
+        mock:
+          caption: { en: "After this change, blurred", ar: "بعد هذا التغيير، مموّهة" }
+          blur: 4
+          blocks:
+            - { kind: text, px: 18, weight: bold, text: *sm_a }
+            - { kind: text, px: 18, weight: bold, text: *sm_d, gap: s }
+            - { kind: text, px: 18, weight: bold, text: *sm_u, gap: s }
+            - { kind: text, px: 18, weight: bold, text: *sm_m, gap: s }
+            - { kind: button, emphasis: low, text: *sm_p, gap: m }
+      - id: purple
+        text: { en: "Keep the sizes, and make the amount, the date and the meter number purple", ar: "أبقِ الأحجام، واجعل المبلغ والتاريخ ورقم العدّاد بنفسجية" }
+        mock:
+          caption: { en: "After this change, blurred", ar: "بعد هذا التغيير، مموّهة" }
+          blur: 4
+          blocks:
+            - { kind: text, px: 16, color: brand, text: *sm_a }
+            - { kind: text, px: 16, color: brand, text: *sm_d, gap: s }
+            - { kind: text, px: 16, text: *sm_u, gap: s }
+            - { kind: text, px: 16, color: brand, text: *sm_m, gap: s }
+            - { kind: button, emphasis: low, text: *sm_p, gap: m }
+      - id: lead
+        text: { en: "The amount big and bold, the rest regular, and Pay now filled", ar: "المبلغ كبير وبخط Bold، والباقي عادي، وزر الدفع ممتلئ" }
+        mock:
+          caption: { en: "After this change, blurred", ar: "بعد هذا التغيير، مموّهة" }
+          blur: 4
+          blocks:
+            - { kind: text, px: 28, weight: bold, text: *sm_a }
+            - { kind: text, px: 16, text: *sm_d, gap: s }
+            - { kind: text, px: 14, color: muted, text: *sm_u, gap: s }
+            - { kind: text, px: 14, color: muted, text: *sm_m, gap: s }
+            - { kind: button, text: *sm_p, gap: m }
+    answer: [lead]
+    misconceptions:
+      - id: MC-P10-049
+        when: [bold]
+        feedback:
+          en: "Squint at it: every line is equally heavy, so nothing comes first. Readable isn't the same as ordered."
+          ar: "حدّق فيها: كل الأسطر بالثقل نفسه، فلا شيء يأتي أولًا. المقروء لا يعني المرتّب."
+      - id: MC-P10-042
+        when: [purple]
+        feedback:
+          en: "Three purple lines compete with each other, and the blur shows no single winner. Color can't lead when it's on everything."
+          ar: "ثلاثة أسطر بنفسجية تتنافس فيما بينها، والتمويه لا يُظهر فائزًا واحدًا. لا يقود اللون عندما يكون على كل شيء."
+    correct:
+      en: "Right. Even blurred, the amount comes first, then Pay now."
+      ar: "صحيح. حتى مع التمويه، يأتي المبلغ أولًا، ثم زر الدفع."
+    explain:
+      en: "Passing contrast means Sameh can read each line. The squint test asks what he sees first. Size, weight and one filled button give the screen an order."
+      ar: "اجتياز الـ Contrast يعني أن سامح يستطيع قراءة كل سطر. واختبار التحديق يسأل: ماذا يرى أولًا؟ الحجم والثقل وزر ممتلئ واحد تعطي الشاشة ترتيبًا."
+
+  # SK-P10-U03-03: set risky actions apart
+  - id: S05
+    type: tune
+    skill: SK-P10-U03-03
+    part: retest
+    value:
+      en: "Re-test, risky actions (NN/g): confirmatory and destructive actions should be far apart from each other. Making Delete red but keeping it beside Share solves only half."
+      ar: "إعادة اختبار، الإجراءات الخطرة (NN/g): يجب أن تكون إجراءات التأكيد والإجراءات المدمّرة بعيدة عن بعضها. جعل زر الحذف أحمر مع إبقائه بجانب المشاركة يحلّ نصف المشكلة فقط."
+    ref: { url: "https://www.nngroup.com/articles/proximity-consequential-options/", quote: "Confirmatory and destructive actions should be far apart from each other" }
+    scenario:
+      en: "Laila made a photo album of her trip. Share album and Delete album are two equal buttons side by side. Deleting removes every photo and can't be undone."
+      ar: "صنعت ليلى ألبوم صور لرحلتها. «شارك الألبوم» و«احذف الألبوم» زرّان متساويان متجاوران. الحذف يزيل كل الصور ولا يمكن التراجع عنه."
+    prompt:
+      en: "Try each layout. Which one should ship?"
+      ar: "جرّب كل تخطيط. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &ll_t { en: "Aswan trip", ar: "رحلة أسوان" } }
+        - { kind: image, size: m, gap: s }
+        - { kind: meta, text: &ll_m { en: "64 photos · 3 videos", ar: "64 صورة · 3 فيديوهات" }, gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, text: &ll_s { en: "Share album", ar: "شارك الألبوم" } }
+            - { kind: button, text: &ll_d { en: "Delete album", ar: "احذف الألبوم" } }
+    options:
+      - id: red
+        text: { en: "Keep them side by side, and make Delete filled red", ar: "أبقِهما متجاورين، واجعل زر الحذف ممتلئًا بالأحمر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ll_t }
+            - { kind: image, size: m, gap: s }
+            - { kind: meta, text: *ll_m, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, text: *ll_s }
+                - { kind: button, style: danger, text: *ll_d }
+      - id: apart
+        text: { en: "Share filled; Delete as red text, lower down with space above it", ar: "المشاركة ممتلئة؛ والحذف نص أحمر، في الأسفل مع مسافة فوقه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ll_t }
+            - { kind: image, size: m, gap: s }
+            - { kind: meta, text: *ll_m, gap: s }
+            - { kind: button, text: *ll_s, gap: m }
+            - { kind: button, style: dangerlink, text: *ll_d, gap: xl }
+      - id: calm
+        text: { en: "Make both outlined and the same size, so neither one is pushed", ar: "اجعل الزرّين بإطار وبالحجم نفسه، حتى لا يُدفع أيّ منهما" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ll_t }
+            - { kind: image, size: m, gap: s }
+            - { kind: meta, text: *ll_m, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, emphasis: low, text: *ll_s }
+                - { kind: button, emphasis: low, text: *ll_d }
+    answer: [apart]
+    misconceptions:
+      - id: MC-P10-043
+        when: [red]
+        feedback:
+          en: "Red helps, but Delete is still right next to Share, and now it's the loudest button. A quick tap aimed at Share could still erase the album."
+          ar: "الأحمر يساعد، لكن الحذف ما زال بجوار المشاركة مباشرة، وأصبح الآن أعلى الأزرار صوتًا. ضغطة سريعة على المشاركة قد تمسح الألبوم."
+      - id: MC-P10-040
+        when: [calm]
+        feedback:
+          en: "Calm, but the two still look equal and touch each other. Laila has to read both every time, and one slip deletes everything."
+          ar: "هادئة، لكن الزرّين ما زالا متساويين ومتلاصقين. على ليلى أن تقرأ الاثنين كل مرة، وخطأ واحد يحذف كل شيء."
+    correct:
+      en: "Right. Apart and different, not hidden."
+      ar: "صحيح. بعيد ومختلف، لا مخفي."
+    explain:
+      en: "Sharing is the common action, so it's filled. Delete can't be undone, so it gets distance and a different look. Laila can still find it, but she can't hit it by mistake."
+      ar: "المشاركة هي الإجراء الشائع، فهي ممتلئة. والحذف لا يمكن التراجع عنه، فيأخذ مسافة وشكلًا مختلفًا. ما زالت ليلى تستطيع إيجاده، لكنها لن تضغطه بالخطأ."
+
+  - id: S06
+    type: tune
+    skill: SK-P10-U03-03
+    part: retest
+    value:
+      en: "Re-test, risky actions (NN/g): add additional space and redundant visual signals. A grey button next to Send changes one signal and keeps it close."
+      ar: "إعادة اختبار، الإجراءات الخطرة (NN/g): أضف مسافة إضافية وإشارات بصرية متعدّدة. زر رمادي بجانب «إرسال» يغيّر إشارة واحدة ويُبقيه قريبًا."
+    ref: { url: "https://www.nngroup.com/articles/proximity-consequential-options/", quote: "Add additional space and redundant visual signals" }
+    scenario:
+      en: "Waleed writes a long email on his phone. Under it, Send and Discard draft sit next to each other as two filled buttons. Discarding throws the whole email away."
+      ar: "يكتب وليد رسالة بريد طويلة على هاتفه. تحتها زرّا «إرسال» و«تجاهل المسودة» متجاوران وممتلئان. التجاهل يرمي الرسالة كلها."
+    prompt:
+      en: "Try each layout. Which one should ship?"
+      ar: "جرّب كل تخطيط. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: field, label: &wl_to { en: "To", ar: "إلى" }, filled: true, text: "office@clinic.com" }
+        - { kind: field, label: &wl_sl { en: "Subject", ar: "الموضوع" }, filled: true, text: &wl_sv { en: "My test results", ar: "نتائج تحاليلي" }, gap: s }
+        - { kind: text, text: &wl_b { en: "Hello, I'm attaching the results you asked for…", ar: "مرحبًا، أرفقت النتائج التي طلبتموها…" }, gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, text: &wl_d { en: "Discard draft", ar: "تجاهل المسودة" } }
+            - { kind: button, text: &wl_s { en: "Send", ar: "إرسال" } }
+    options:
+      - id: apart
+        text: { en: "Send filled; Discard as red text, set apart below with space", ar: "الإرسال ممتلئ؛ والتجاهل نص أحمر، بعيد في الأسفل مع مسافة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: field, label: *wl_to, filled: true, text: "office@clinic.com" }
+            - { kind: field, label: *wl_sl, filled: true, text: *wl_sv, gap: s }
+            - { kind: text, text: *wl_b, gap: s }
+            - { kind: button, text: *wl_s, gap: m }
+            - { kind: button, style: dangerlink, text: *wl_d, gap: xl }
+      - id: red
+        text: { en: "Keep them side by side, and make Discard filled red so it looks dangerous", ar: "أبقِهما متجاورين، واجعل التجاهل ممتلئًا بالأحمر ليبدو خطرًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: field, label: *wl_to, filled: true, text: "office@clinic.com" }
+            - { kind: field, label: *wl_sl, filled: true, text: *wl_sv, gap: s }
+            - { kind: text, text: *wl_b, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, style: danger, text: *wl_d }
+                - { kind: button, text: *wl_s }
+      - id: grey
+        text: { en: "Keep them side by side, and make Discard grey", ar: "أبقِهما متجاورين، واجعل التجاهل رماديًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: field, label: *wl_to, filled: true, text: "office@clinic.com" }
+            - { kind: field, label: *wl_sl, filled: true, text: *wl_sv, gap: s }
+            - { kind: text, text: *wl_b, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, tone: off, text: *wl_d }
+                - { kind: button, text: *wl_s }
+    answer: [apart]
+    misconceptions:
+      - id: MC-P10-043
+        when: [red, grey]
+        feedback:
+          en: "One changed color isn't enough while the two buttons still touch. A thumb aimed at Send can land on Discard. Move it away and give it a different look."
+          ar: "تغيير لون واحد لا يكفي ما دام الزرّان متلاصقين. قد يقع إبهام يقصد «إرسال» على «تجاهل». أبعِده وأعطِه شكلًا مختلفًا."
+    correct:
+      en: "Right. Space and a different look protect the email."
+      ar: "صحيح. المسافة والشكل المختلف يحميان الرسالة."
+    explain:
+      en: "Two signals work together here: distance, so a quick tap can't reach Discard, and red text, so it reads as a different kind of action. Send stays the one obvious next step."
+      ar: "إشارتان تعملان معًا هنا: المسافة، حتى لا تصل ضغطة سريعة إلى التجاهل، والنص الأحمر، حتى يُقرأ كإجراء من نوع مختلف. ويبقى «إرسال» الخطوة التالية الواضحة الوحيدة."
+
+  # SK-P10-U03-04: keep quiet text readable
+  - id: S07
+    type: tune
+    skill: SK-P10-U03-04
+    part: retest
+    value:
+      en: "Re-test, contrast (NN/g, citing WCAG): text contrast should be at least 4.5:1. A rule people must follow can be quieter than the main facts, but not below the line."
+      ar: "إعادة اختبار، الـ Contrast (NN/g نقلًا عن WCAG): يجب ألا تقل نسبة تباين النص عن 4.5:1. الشرط الذي يجب أن يتّبعه الناس يمكن أن يكون أهدأ من المعلومات الرئيسية، لكن ليس تحت الحدّ."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "the color-contrast ratio between text and its background should be at least 4.5:1" }
+    scenario:
+      en: "Rana booked a blood test. Under the booking, a 14px note says to come fasting and bring her ID. To keep it quiet, it's very pale grey (2.3:1). Text this size needs at least 4.5:1."
+      ar: "حجزت رنا تحليل دم. تحت الحجز ملاحظة بحجم 14px تقول أن تأتي صائمة ومعها بطاقتها. ولتكون هادئة، لونها رمادي باهت جدًا (2.3:1). والنص بهذا الحجم يحتاج 4.5:1 على الأقل."
+    prompt:
+      en: "Try each grey. Which one should ship?"
+      ar: "جرّب كل درجة رمادي. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now: very pale grey, 2.3:1", ar: "الآن: رمادي باهت جدًا، 2.3:1" }
+      blocks:
+        - { kind: title, text: &rn_t { en: "Blood test booked", ar: "تم حجز تحليل الدم" } }
+        - { kind: meta, text: &rn_d { en: "Sun 9 March · 8:30", ar: "الأحد 9 مارس · 8:30" }, gap: s }
+        - { kind: meta, text: &rn_l { en: "Nile Lab, Dokki branch", ar: "معمل النيل، فرع الدقي" }, gap: s }
+        - { kind: text, px: 14, color: faint, text: &rn_n { en: "Come fasting for 10 hours and bring your ID.", ar: "تعالي صائمة 10 ساعات وأحضري بطاقتك." }, gap: m }
+    options:
+      - id: light
+        text: { en: "Light grey, 3.0:1", ar: "رمادي فاتح، 3.0:1" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *rn_t }
+            - { kind: meta, text: *rn_d, gap: s }
+            - { kind: meta, text: *rn_l, gap: s }
+            - { kind: text, px: 14, color: pale, text: *rn_n, gap: m }
+      - id: boldpale
+        text: { en: "Keep the very pale grey, and make it bold", ar: "أبقِ الرمادي الباهت جدًا، واجعله Bold" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *rn_t }
+            - { kind: meta, text: *rn_d, gap: s }
+            - { kind: meta, text: *rn_l, gap: s }
+            - { kind: text, px: 14, weight: bold, color: faint, text: *rn_n, gap: m }
+      - id: mid
+        text: { en: "Mid grey, 5.3:1", ar: "رمادي متوسط، 5.3:1" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *rn_t }
+            - { kind: meta, text: *rn_d, gap: s }
+            - { kind: meta, text: *rn_l, gap: s }
+            - { kind: text, px: 14, color: muted, text: *rn_n, gap: m }
+    answer: [mid]
+    misconceptions:
+      - id: MC-P10-009
+        when: [light]
+        feedback:
+          en: "3.0:1 is still below 4.5:1 for 14px text. If Rana misses this note, she arrives after breakfast and has to rebook."
+          ar: "3.0:1 ما زالت أقل من 4.5:1 لنص بحجم 14px. إذا فاتت رنا هذه الملاحظة، ستأتي بعد الإفطار وتضطر لإعادة الحجز."
+      - id: MC-P10-048
+        when: [boldpale]
+        feedback:
+          en: "Bold doesn't make 14px text large, so it still needs 4.5:1, and this grey is far below it."
+          ar: "الخط الـ Bold لا يجعل نصًا بحجم 14px كبيرًا، فما زال يحتاج 4.5:1، وهذا الرمادي أقل منها بكثير."
+    correct:
+      en: "Right. Quieter than the booking, and still above 4.5:1."
+      ar: "صحيح. أهدأ من تفاصيل الحجز، وما زال فوق 4.5:1."
+    explain:
+      en: "Mid grey keeps the note clearly behind the title and time, yet everyone can read it. Quiet is about order, not about fading text people need."
+      ar: "الرمادي المتوسط يُبقي الملاحظة خلف العنوان والموعد بوضوح، ومع ذلك يستطيع الجميع قراءتها. الهدوء يتعلّق بالترتيب، لا بإبهات نص يحتاجه الناس."
+
+  - id: S08
+    type: tune
+    skill: SK-P10-U03-04
+    part: retest
+    value:
+      en: "Re-test, clutter (NN/g): instead of lowering contrast, explore alternatives to make the information display less condensed. Fading ten lines hides the three that matter."
+      ar: "إعادة اختبار، الزحام (NN/g): بدل خفض الـ Contrast، ابحث عن بدائل تجعل عرض المعلومات أقل تكدّسًا. إبهات عشرة أسطر يُخفي الثلاثة المهمة."
+    ref: { url: "https://www.nngroup.com/articles/low-contrast/", quote: "explore alternatives to make the information display less condensed" }
+    scenario:
+      en: "Ayman is buying a kettle. Under the price there are seven product details. The page felt busy, so a designer faded all of them to very pale grey. Ayman mainly wants the size, the power and the warranty."
+      ar: "يشتري أيمن غلاية. تحت السعر سبع تفاصيل عن المنتج. بدت الصفحة مزدحمة، فأبهت المصمّم كل التفاصيل إلى رمادي باهت جدًا. وما يريده أيمن أساسًا هو السعة والقدرة والضمان."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &ay_t { en: "Steel kettle · 950 EGP", ar: "غلاية ستانلس · 950 جنيهًا" } }
+        - { kind: small, color: faint, text: &ay_1 { en: "1.7 litres", ar: "سعة 1.7 لتر" }, gap: s }
+        - { kind: small, color: faint, text: &ay_2 { en: "2200 W", ar: "قدرة 2200 واط" }, gap: xs }
+        - { kind: small, color: faint, text: &ay_3 { en: "2-year warranty", ar: "ضمان سنتين" }, gap: xs }
+        - { kind: small, color: faint, text: &ay_4 { en: "Model KT-17S", ar: "موديل KT-17S" }, gap: xs }
+        - { kind: small, color: faint, text: &ay_5 { en: "Cable 75 cm", ar: "طول السلك 75 سم" }, gap: xs }
+        - { kind: small, color: faint, text: &ay_6 { en: "Weight 1.1 kg", ar: "الوزن 1.1 كجم" }, gap: xs }
+        - { kind: small, color: faint, text: &ay_7 { en: "Box: kettle, base, manual", ar: "في العلبة: الغلاية والقاعدة والدليل" }, gap: xs }
+        - { kind: button, text: &ay_b { en: "Add to cart", ar: "أضِف إلى السلّة" }, gap: m }
+    options:
+      - id: fainter
+        text: { en: "Make the details even smaller, so the page feels lighter", ar: "اجعل التفاصيل أصغر أيضًا، حتى تبدو الصفحة أخفّ" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ay_t }
+            - { kind: text, px: 11, color: faint, text: *ay_1, gap: s }
+            - { kind: text, px: 11, color: faint, text: *ay_2, gap: xs }
+            - { kind: text, px: 11, color: faint, text: *ay_3, gap: xs }
+            - { kind: text, px: 11, color: faint, text: *ay_4, gap: xs }
+            - { kind: text, px: 11, color: faint, text: *ay_5, gap: xs }
+            - { kind: text, px: 11, color: faint, text: *ay_6, gap: xs }
+            - { kind: text, px: 11, color: faint, text: *ay_7, gap: xs }
+            - { kind: button, text: *ay_b, gap: m }
+      - id: cut
+        text: { en: "Show the three key facts in readable text, and move the rest behind \"All details\"", ar: "اعرض المعلومات الثلاث المهمة بنص مقروء، وانقل الباقي خلف «كل التفاصيل»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ay_t }
+            - { kind: text, text: *ay_1, gap: s }
+            - { kind: text, text: *ay_2, gap: xs }
+            - { kind: text, text: *ay_3, gap: xs }
+            - { kind: link, text: { en: "All details", ar: "كل التفاصيل" }, gap: s }
+            - { kind: button, text: *ay_b, gap: m }
+      - id: keep
+        text: { en: "Keep it; pale details are what make the page calm", ar: "أبقِها؛ فالتفاصيل الباهتة هي ما يجعل الصفحة هادئة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *ay_t }
+            - { kind: small, color: faint, text: *ay_1, gap: s }
+            - { kind: small, color: faint, text: *ay_2, gap: xs }
+            - { kind: small, color: faint, text: *ay_3, gap: xs }
+            - { kind: small, color: faint, text: *ay_4, gap: xs }
+            - { kind: small, color: faint, text: *ay_5, gap: xs }
+            - { kind: small, color: faint, text: *ay_6, gap: xs }
+            - { kind: small, color: faint, text: *ay_7, gap: xs }
+            - { kind: button, text: *ay_b, gap: m }
+    answer: [cut]
+    misconceptions:
+      - id: MC-P10-044
+        when: [fainter, keep]
+        feedback:
+          en: "Fading hides the clutter, and the facts Ayman needs along with it. The page is still just as full. Remove what most people don't need, and keep the rest readable."
+          ar: "الإبهات يُخفي الزحام، ويُخفي معه المعلومات التي يحتاجها أيمن. وما زالت الصفحة ممتلئة كما هي. احذف ما لا يحتاجه معظم الناس، وأبقِ الباقي مقروءًا."
+    correct:
+      en: "Right. Fewer lines, and every one readable."
+      ar: "صحيح. أسطر أقل، وكلها مقروءة."
+    explain:
+      en: "The page felt busy because it showed too much, not because the text was too dark. Cutting to three facts calms it down, and the full list is one tap away."
+      ar: "بدت الصفحة مزدحمة لأنها تعرض الكثير، لا لأن النص كان داكنًا جدًا. الاكتفاء بثلاث معلومات يهدّئها، والقائمة الكاملة على بُعد ضغطة واحدة."
+
+  # SK-P10-U03-05: know when large text may use 3:1
+  - id: S09
+    type: tune
+    skill: SK-P10-U03-05
+    part: retest
+    value:
+      en: "Re-test, large text (NN/g, citing WCAG): text that is at least 18pt (24px), or 14pt (about 19px) bold, may use 3:1. A 14px bold label doesn't qualify; a 28px heading does."
+      ar: "إعادة اختبار، النص الكبير (NN/g نقلًا عن WCAG): النص الذي لا يقل عن 18pt (أي 24px)، أو 14pt (نحو 19px) بخط Bold، يكفيه 3:1. تسمية بحجم 14px بخط Bold لا تنطبق عليها القاعدة؛ وعنوان بحجم 28px تنطبق عليه."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "For text that is at least 18pt or 14pt bold, the ratio is a bit more generous at 3:1." }
+    scenario:
+      en: "Nour is going to a book fair. On its page, the 28px heading and a 14px bold note about the entry time are both light grey (3.0:1)."
+      ar: "تذهب نور إلى معرض كتاب. في صفحته، العنوان بحجم 28px وملاحظة بحجم 14px بخط Bold عن موعد الدخول، كلاهما رمادي فاتح (3.0:1)."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: text, px: 28, color: pale, text: &nr_h { en: "Book fair", ar: "معرض الكتاب" } }
+        - { kind: text, px: 14, weight: bold, color: pale, text: &nr_n { en: "Last entry at 21:00", ar: "آخر دخول الساعة 21:00" }, gap: s }
+        - { kind: text, text: &nr_b { en: "Hall 3, Fair Grounds. Free for students.", ar: "القاعة 3، أرض المعارض. مجاني للطلاب." }, gap: s }
+    options:
+      - id: note
+        text: { en: "Darken the 14px note; the 28px heading can stay light grey", ar: "اجعل الملاحظة بحجم 14px أغمق؛ والعنوان بحجم 28px يمكن أن يبقى رماديًا فاتحًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 28, color: pale, text: *nr_h }
+            - { kind: text, px: 14, weight: bold, text: *nr_n, gap: s }
+            - { kind: text, text: *nr_b, gap: s }
+      - id: heading
+        text: { en: "Darken the heading; keep the note light grey because it's bold", ar: "اجعل العنوان أغمق؛ وأبقِ الملاحظة رمادية فاتحة لأنها Bold" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 28, text: *nr_h }
+            - { kind: text, px: 14, weight: bold, color: pale, text: *nr_n, gap: s }
+            - { kind: text, text: *nr_b, gap: s }
+      - id: none
+        text: { en: "Keep both; anything big or bold can use 3.0:1", ar: "أبقِ الاثنين؛ فأي نص كبير أو Bold يكفيه 3.0:1" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 28, color: pale, text: *nr_h }
+            - { kind: text, px: 14, weight: bold, color: pale, text: *nr_n, gap: s }
+            - { kind: text, text: *nr_b, gap: s }
+    answer: [note]
+    misconceptions:
+      - id: MC-P10-048
+        when: [heading, none]
+        feedback:
+          en: "Bold doesn't make 14px text large. Large starts at 24px, or about 19px bold. The note still needs 4.5:1, while the 28px heading may stay at 3:1."
+          ar: "الخط الـ Bold لا يجعل نصًا بحجم 14px كبيرًا. يبدأ النص الكبير من 24px، أو نحو 19px بخط Bold. فما زالت الملاحظة تحتاج 4.5:1، بينما يمكن أن يبقى العنوان بحجم 28px على 3:1."
+    correct:
+      en: "Right. The small note gets darker; the big heading may stay."
+      ar: "صحيح. الملاحظة الصغيرة تصبح أغمق؛ والعنوان الكبير يمكن أن يبقى."
+    explain:
+      en: "Large letters stay readable at a lower contrast, so 28px may use 3:1. At 14px, even bold, the letters are too thin and small for that, and the entry time is something Nour must not miss."
+      ar: "الحروف الكبيرة تبقى مقروءة بتباين أقل، لذا يكفي 3:1 لحجم 28px. أما بحجم 14px، حتى بالخط الـ Bold، فالحروف أصغر وأرفع من ذلك، وموعد الدخول شيء يجب ألا يفوت نور."
+
+  - id: S10
+    type: tune
+    skill: SK-P10-U03-05
+    part: retest
+    value:
+      en: "Re-test, large text (NN/g, citing WCAG): 3:1 is enough only from 18pt (24px), or 14pt (about 19px) bold. Here the grey is fixed, so the size has to reach the large-text line."
+      ar: "إعادة اختبار، النص الكبير (NN/g نقلًا عن WCAG): تكفي 3:1 فقط من 18pt (أي 24px)، أو 14pt (نحو 19px) بخط Bold. هنا الرمادي ثابت، فيجب أن يصل الحجم إلى حدّ النص الكبير."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "For text that is at least 18pt or 14pt bold, the ratio is a bit more generous at 3:1." }
+    scenario:
+      en: "Hoda is designing a sale banner. The brand team insists the line \"Ends Friday\" stays light grey (3.0:1). She can change only its size and weight."
+      ar: "تصمّم هدى لافتة تخفيضات. يصرّ فريق العلامة على أن يبقى سطر «ينتهي الجمعة» رماديًا فاتحًا (3.0:1). ويمكنها تغيير حجمه وثقله فقط."
+    prompt:
+      en: "Try each size. Which one should ship?"
+      ar: "جرّب كل حجم. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: text, px: 26, weight: bold, text: &hd_h { en: "30% off all shoes", ar: "خصم 30% على كل الأحذية" } }
+        - { kind: text, px: 14, color: pale, text: &hd_e { en: "Ends Friday", ar: "ينتهي الجمعة" }, gap: s }
+        - { kind: button, text: &hd_b { en: "Shop the sale", ar: "تسوّق التخفيضات" }, gap: m }
+    options:
+      - id: b16
+        text: { en: "16px bold", ar: "16px بخط Bold" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 26, weight: bold, text: *hd_h }
+            - { kind: text, px: 16, weight: bold, color: pale, text: *hd_e, gap: s }
+            - { kind: button, text: *hd_b, gap: m }
+      - id: r20
+        text: { en: "20px regular", ar: "20px بخط عادي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 26, weight: bold, text: *hd_h }
+            - { kind: text, px: 20, color: pale, text: *hd_e, gap: s }
+            - { kind: button, text: *hd_b, gap: m }
+      - id: b20
+        text: { en: "20px bold", ar: "20px بخط Bold" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 26, weight: bold, text: *hd_h }
+            - { kind: text, px: 20, weight: bold, color: pale, text: *hd_e, gap: s }
+            - { kind: button, text: *hd_b, gap: m }
+    answer: [b20]
+    misconceptions:
+      - id: MC-P10-048
+        when: [b16, r20]
+        feedback:
+          en: "Neither reaches large text. Bold text counts from about 19px, and regular text from 24px. 16px bold and 20px regular both still need 4.5:1."
+          ar: "لا يصل أيّ منهما إلى النص الكبير. النص الـ Bold يُحسب كبيرًا من نحو 19px، والعادي من 24px. فـ 16px بخط Bold و20px بخط عادي كلاهما ما زال يحتاج 4.5:1."
+    correct:
+      en: "Right. 20px bold is large text, so 3:1 is enough."
+      ar: "صحيح. 20px بخط Bold نص كبير، فيكفيه 3:1."
+    explain:
+      en: "The 3:1 allowance depends on both size and weight together: 24px and up, or about 19px and up when bold. If the color can't change, the size has to cross that line."
+      ar: "يعتمد السماح بـ 3:1 على الحجم والثقل معًا: 24px فما فوق، أو نحو 19px فما فوق بخط Bold. وإذا كان اللون لا يتغيّر، فيجب أن يتجاوز الحجم هذا الحدّ."
+
+  # SK-P10-U03-06: never rely on color alone
+  - id: S11
+    type: tune
+    skill: SK-P10-U03-06
+    part: retest
+    value:
+      en: "Re-test, color alone (NN/g): use additional cues to communicate important information. A red border alone fails people who can't tell red apart; a message and an icon don't."
+      ar: "إعادة اختبار، اللون وحده (NN/g): استخدم إشارات إضافية لتوصيل المعلومات المهمة. الإطار الأحمر وحده لا يصل إلى من لا يميّزون الأحمر؛ أما الرسالة والأيقونة فتصلان."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "use additional cues (such as strokes, patterns) to communicate important information" }
+    scenario:
+      en: "Magdy is signing up for a gym. When he taps Create account, the phone field turns red, and nothing else changes. Magdy can't tell red from grey well."
+      ar: "يسجّل مجدي في نادٍ رياضي. عندما يضغط «أنشئ الحساب»، يتحوّل حقل الهاتف إلى الأحمر، ولا يتغيّر أي شيء آخر. ومجدي لا يميّز الأحمر من الرمادي جيدًا."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: field, label: &mg_n { en: "Full name", ar: "الاسم بالكامل" }, filled: true, text: &mg_nv { en: "Magdy Samir", ar: "مجدي سمير" } }
+        - { kind: field, label: &mg_p { en: "Phone", ar: "الهاتف" }, filled: true, text: "0101234567", tone: bad, gap: s }
+        - { kind: button, text: &mg_b { en: "Create account", ar: "أنشئ الحساب" }, gap: m }
+    options:
+      - id: thicker
+        text: { en: "Make the red border thicker and brighter", ar: "اجعل الإطار الأحمر أعرض وأكثر لمعانًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: field, label: *mg_n, filled: true, text: *mg_nv }
+            - { kind: field, label: { en: "Phone", ar: "الهاتف" }, filled: true, text: "0101234567", tone: bad, focus: true, gap: s }
+            - { kind: button, text: *mg_b, gap: m }
+      - id: message
+        text: { en: "Keep the red, and add a message with an icon under the field", ar: "أبقِ الأحمر، وأضف رسالة مع أيقونة تحت الحقل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: field, label: *mg_n, filled: true, text: *mg_nv }
+            - { kind: field, label: *mg_p, filled: true, text: "0101234567", tone: bad, error: { en: "⚠ Phone numbers have 11 digits. Check the number.", ar: "⚠ رقم الهاتف 11 رقمًا. راجع الرقم." }, gap: s }
+            - { kind: button, text: *mg_b, gap: m }
+      - id: key
+        text: { en: "Add a line at the top: \"Fields in red have a problem\"", ar: "أضف سطرًا في الأعلى: «الحقول الحمراء بها مشكلة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: small, color: red, text: { en: "Fields in red have a problem", ar: "الحقول الحمراء بها مشكلة" } }
+            - { kind: field, label: *mg_n, filled: true, text: *mg_nv, gap: s }
+            - { kind: field, label: *mg_p, filled: true, text: "0101234567", tone: bad, gap: s }
+            - { kind: button, text: *mg_b, gap: m }
+    answer: [message]
+    misconceptions:
+      - id: MC-P10-052
+        when: [thicker, key]
+        feedback:
+          en: "Both still depend on Magdy seeing which field is red. A thicker border or a color key doesn't help if red and grey look alike to him. Say what's wrong, next to the field."
+          ar: "كلاهما ما زال يعتمد على أن يرى مجدي أي حقل أحمر. الإطار الأعرض أو مفتاح الألوان لا يفيد إذا بدا له الأحمر والرمادي متشابهين. قل ما المشكلة، بجانب الحقل."
+    correct:
+      en: "Right. The message works with or without color."
+      ar: "صحيح. الرسالة تعمل باللون أو دونه."
+    explain:
+      en: "Red is still useful as an extra signal. The words and the icon carry the meaning, so Magdy knows which field is wrong and how to fix it, whatever colors he sees."
+      ar: "ما زال الأحمر مفيدًا كإشارة إضافية. الكلمات والأيقونة تحمل المعنى، فيعرف مجدي أي حقل خطأ وكيف يصلحه، أيًّا كانت الألوان التي يراها."
+
+  - id: S12
+    type: tune
+    skill: SK-P10-U03-06
+    part: retest
+    value:
+      en: "Re-test, grayscale check (NN/g): turn your design into grayscale and see if you can still understand it. Brighter or different colors fail the same check."
+      ar: "إعادة اختبار، فحص الأبيض والأسود (NN/g): حوّل التصميم إلى الأبيض والأسود وانظر هل ما زلت تفهمه. الألوان الأكثر لمعانًا أو المختلفة تفشل في الفحص نفسه."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "Turn your design into grayscale and see if you can correctly understand the design." }
+    scenario:
+      en: "Osama books a tennis court for the weekend. Free times are green and taken times are red. Each result below is shown in grayscale, as a check for people who can't see the colors."
+      ar: "يحجز أسامة ملعب تنس لعطلة نهاية الأسبوع. الأوقات المتاحة خضراء والمحجوزة حمراء. كل نتيجة بالأسفل معروضة بالأبيض والأسود، كفحص لمن لا يرون الألوان."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, in grayscale", ar: "الآن، بالأبيض والأسود" }
+      gray: true
+      blocks:
+        - { kind: heading, text: &os_h { en: "Court 2 · Friday", ar: "الملعب 2 · الجمعة" } }
+        - { kind: text, color: green, text: &os_1 { en: "16:00", ar: "16:00" }, gap: s }
+        - { kind: text, color: red, text: &os_2 { en: "17:00", ar: "17:00" }, gap: xs }
+        - { kind: text, color: red, text: &os_3 { en: "18:00", ar: "18:00" }, gap: xs }
+        - { kind: text, color: green, text: &os_4 { en: "19:00", ar: "19:00" }, gap: xs }
+    options:
+      - id: words
+        text: { en: "Add \"Free\" or \"Taken\" next to each time, and grey out taken times", ar: "أضف «متاح» أو «محجوز» بجانب كل وقت، واجعل الأوقات المحجوزة باهتة" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - { kind: heading, text: *os_h }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: text, color: green, text: *os_1 }
+                - { kind: chip, text: { en: "Free", ar: "متاح" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: text, color: faint, text: *os_2 }
+                - { kind: chip, tone: bad, text: { en: "Taken", ar: "محجوز" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: text, color: faint, text: *os_3 }
+                - { kind: chip, tone: bad, text: { en: "Taken", ar: "محجوز" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: text, color: green, text: *os_4 }
+                - { kind: chip, text: { en: "Free", ar: "متاح" } }
+      - id: brighter
+        text: { en: "Use a brighter green and red, in bold", ar: "استخدم أخضر وأحمر أكثر لمعانًا، بخط Bold" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - { kind: heading, text: *os_h }
+            - { kind: text, weight: bold, color: green, text: *os_1, gap: s }
+            - { kind: text, weight: bold, color: red, text: *os_2, gap: xs }
+            - { kind: text, weight: bold, color: red, text: *os_3, gap: xs }
+            - { kind: text, weight: bold, color: green, text: *os_4, gap: xs }
+      - id: orange
+        text: { en: "Change taken times from red to orange", ar: "غيّر الأوقات المحجوزة من الأحمر إلى البرتقالي" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - { kind: heading, text: *os_h }
+            - { kind: text, color: green, text: *os_1, gap: s }
+            - { kind: text, color: orange, text: *os_2, gap: xs }
+            - { kind: text, color: orange, text: *os_3, gap: xs }
+            - { kind: text, color: green, text: *os_4, gap: xs }
+    answer: [words]
+    misconceptions:
+      - id: MC-P10-052
+        when: [brighter, orange]
+        feedback:
+          en: "In grayscale the times still look the same, so Osama can't tell free from taken. Any fix that only changes color fails this check."
+          ar: "بالأبيض والأسود ما زالت الأوقات متشابهة، فلا يستطيع أسامة التمييز بين المتاح والمحجوز. أي حل يغيّر اللون فقط يفشل في هذا الفحص."
+    correct:
+      en: "Right. Even in grayscale, every time says what it is."
+      ar: "صحيح. حتى بالأبيض والأسود، كل وقت يقول ما هو."
+    explain:
+      en: "Words and a faded look carry the meaning, so the screen still works without color. The green and red can stay as an extra hint for those who see them."
+      ar: "الكلمات والشكل الباهت تحمل المعنى، فتعمل الشاشة دون لون. ويمكن أن يبقى الأخضر والأحمر كتلميح إضافي لمن يراهما."
+
+  # SK-P10-U03-07: keep color meanings consistent
+  - id: S13
+    type: tune
+    skill: SK-P10-U03-07
+    part: retest
+    value:
+      en: "Re-test, link color (NN/g): never show text in your chosen link colors unless it's a link. Underlining non-links makes the false promise stronger."
+      ar: "إعادة اختبار، لون الروابط (NN/g): لا تعرض نصًا بلون الروابط إلا إذا كان رابطًا. وضع خط تحت ما ليس رابطًا يجعل الوعد الكاذب أقوى."
+    ref: { url: "https://www.nngroup.com/articles/guidelines-for-visualizing-links/", quote: "Never show text in your chosen link colors" }
+    scenario:
+      en: "In a news app, purple text means a link. On each article card, the writer's name is purple too, but tapping it does nothing. Readers keep tapping it."
+      ar: "في تطبيق أخبار، النص البنفسجي يعني رابطًا. وفي كل بطاقة مقال، اسم الكاتب بنفسجي أيضًا، لكن الضغط عليه لا يفعل شيئًا. والقرّاء يظلّون يضغطونه."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: heading, text: &nw_h { en: "New metro line opens in May", ar: "خط مترو جديد يفتتح في مايو" } }
+        - { kind: meta, color: brand, text: &nw_w { en: "By Salma Hassan", ar: "بقلم سلمى حسن" }, gap: xs }
+        - { kind: text, text: &nw_x { en: "The line will link the east and the airport in 25 minutes.", ar: "سيربط الخط الشرق بالمطار في 25 دقيقة." }, gap: s }
+        - { kind: link, text: &nw_r { en: "Read more", ar: "اقرأ المزيد" }, gap: xs }
+    options:
+      - id: underline
+        text: { en: "Underline the writer's name too, so it matches the link style", ar: "ضع خطًا تحت اسم الكاتب أيضًا، ليطابق شكل الروابط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *nw_h }
+            - { kind: link, px: 13, text: *nw_w, gap: xs }
+            - { kind: text, text: *nw_x, gap: s }
+            - { kind: link, text: *nw_r, gap: xs }
+      - id: keep
+        text: { en: "Keep it purple; the writer's name deserves the brand color", ar: "أبقِه بنفسجيًا؛ فاسم الكاتب يستحق لون العلامة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *nw_h }
+            - { kind: meta, color: brand, text: *nw_w, gap: xs }
+            - { kind: text, text: *nw_x, gap: s }
+            - { kind: link, text: *nw_r, gap: xs }
+      - id: grey
+        text: { en: "Writer's name in grey; purple stays only on Read more", ar: "اسم الكاتب بالرمادي؛ ويبقى البنفسجي على «اقرأ المزيد» فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *nw_h }
+            - { kind: meta, text: *nw_w, gap: xs }
+            - { kind: text, text: *nw_x, gap: s }
+            - { kind: link, text: *nw_r, gap: xs }
+    answer: [grey]
+    misconceptions:
+      - id: MC-P10-054
+        when: [underline, keep]
+        feedback:
+          en: "Purple already means \"tap here\" in this app. A purple name, underlined or not, keeps inviting taps that do nothing, and readers start to doubt the real links."
+          ar: "البنفسجي يعني «اضغط هنا» في هذا التطبيق. اسم بنفسجي، بخط تحته أو دونه، يظلّ يدعو إلى ضغطات لا تفعل شيئًا، فيبدأ القرّاء بالشكّ في الروابط الحقيقية."
+    correct:
+      en: "Right. Purple only where you can tap."
+      ar: "صحيح. البنفسجي فقط حيث يمكنك الضغط."
+    explain:
+      en: "A link color is a promise that something happens on tap. Keeping it for links means readers can trust it every time they see it."
+      ar: "لون الروابط وعد بأن شيئًا سيحدث عند الضغط. حفظه للروابط يعني أن القرّاء يثقون به كلما رأوه."
+
+  - id: S14
+    type: tune
+    skill: SK-P10-U03-07
+    part: retest
+    value:
+      en: "Re-test, color meaning (NN/g): if you use red as a warning color on one screen, it shouldn't mean something else on another. A red or green badge borrows a status meaning it doesn't have."
+      ar: "إعادة اختبار، معنى اللون (NN/g): إذا استخدمت الأحمر كلون تحذير في شاشة، فلا يجب أن يعني شيئًا آخر في شاشة أخرى. الشارة الحمراء أو الخضراء تستعير معنى حالة ليس لها."
+    ref: { url: "https://www.nngroup.com/articles/color-enhance-design/", quote: "If you use red as a warning color on one screen" }
+    scenario:
+      en: "In Ghada's banking app, red means a failed payment or a problem, and green means money received. A new savings feature has a red \"New\" badge to catch the eye."
+      ar: "في تطبيق البنك الخاص بغادة، الأحمر يعني دفعة فاشلة أو مشكلة، والأخضر يعني أموالًا وصلت. وميزة الادّخار الجديدة عليها شارة «جديد» حمراء لتلفت النظر."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: heading, text: &gh_h { en: "Your accounts", ar: "حساباتك" } }
+        - { kind: meta, text: &gh_a { en: "Current account · 8,240 EGP", ar: "الحساب الجاري · 8,240 جنيهًا" }, gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: text, weight: bold, text: &gh_s { en: "Savings goals", ar: "أهداف الادّخار" } }
+            - { kind: chip, tone: bad, text: &gh_n { en: "New", ar: "جديد" } }
+        - { kind: small, text: &gh_d { en: "Put money aside for something you want.", ar: "ضع مالًا جانبًا لشيء تريده." }, gap: xs }
+    options:
+      - id: keep
+        text: { en: "Keep the red badge; it's the best way to catch the eye", ar: "أبقِ الشارة الحمراء؛ فهي أفضل طريقة للفت النظر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *gh_h }
+            - { kind: meta, text: *gh_a, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: text, weight: bold, text: *gh_s }
+                - { kind: chip, tone: bad, text: *gh_n }
+            - { kind: small, text: *gh_d, gap: xs }
+      - id: plain
+        text: { en: "Make the badge a plain grey chip", ar: "اجعل الشارة علامة رمادية عادية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *gh_h }
+            - { kind: meta, text: *gh_a, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: text, weight: bold, text: *gh_s }
+                - { kind: chip, tone: off, text: *gh_n }
+            - { kind: small, text: *gh_d, gap: xs }
+      - id: green
+        text: { en: "Make the badge text green, a friendlier color", ar: "اجعل نص الشارة أخضر، لون ألطف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *gh_h }
+            - { kind: meta, text: *gh_a, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: text, weight: bold, text: *gh_s }
+                - { kind: small, weight: bold, color: green, text: *gh_n }
+            - { kind: small, text: *gh_d, gap: xs }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P10-055
+        when: [keep, green]
+        feedback:
+          en: "Red and green already mean status in this app: a problem, or money received. A red badge looks like an error, and a green one like a payment. \"New\" isn't a status."
+          ar: "الأحمر والأخضر يعنيان حالة في هذا التطبيق: مشكلة، أو أموال وصلت. الشارة الحمراء تبدو كخطأ، والخضراء كدفعة. و«جديد» ليس حالة."
+    correct:
+      en: "Right. A plain badge for a plain fact."
+      ar: "صحيح. شارة عادية لمعلومة عادية."
+    explain:
+      en: "Status colors are worth protecting in a banking app. Each time red is used just to catch the eye, Ghada learns to ignore it, and it means less when a payment really fails."
+      ar: "ألوان الحالة تستحق الحماية في تطبيق بنكي. كلما استُخدم الأحمر للفت النظر فقط، تتعلّم غادة أن تتجاهله، فيقلّ معناه عندما تفشل دفعة فعلًا."
