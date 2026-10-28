@@ -28,28 +28,41 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "Glance at the page for two seconds. What's the main thing to do here?"
-      ar: "انظر إلى الصفحة ثانيتين. ما الشيء الرئيسي الذي يجب فعله هنا؟"
     mock: *loud
+    prompt:
+      en: Both buttons are filled and every line is bold. In two seconds, can Sara tell that Reserve is the main action?
+      ar: الزرّان ممتلئان وكل سطر بخط عريض. في ثانيتين، هل تستطيع سارة أن تعرف أن «احجز» هو الإجراء الرئيسي؟
     options:
-      - { id: reserve, text: "@W1f" }
-      - { id: news, text: "@W1j" }
-      - { id: unsure, text: { en: "Hard to say", ar: "يصعب القول" } }
-    reveal:
-      en: "Reserve is the main action, but the page doesn't say so: two filled buttons look equally important, and every line shouts at the same volume."
-      ar: "«احجز» هو الإجراء الرئيسي، لكن الصفحة لا توضّح ذلك: زرّان ممتلئان يبدوان بالأهمية نفسها، وكل سطر يصرخ بالصوت نفسه."
-
+      - { id: no, text: { en: 'No: two filled buttons look equally important', ar: 'لا: الزرّان الممتلئان يبدوان بالأهمية نفسها' } }
+      - { id: first, text: { en: 'Yes, because Reserve comes first', ar: نعم، لأن «احجز» يأتي أولًا } }
+      - { id: bold, text: { en: 'Yes, because the facts are bold', ar: نعم، لأن المعلومات بخط عريض } }
+    answer: [no]
+    misconceptions:
+      - id: MC-P10-041
+        when: [first]
+        feedback:
+          en: Position helps, but a second filled button says "I'm just as important". One decision, one filled button.
+          ar: المكان يساعد، لكن الزر الممتلئ الثاني يقول «أنا مهم بالقدر نفسه». قرار واحد، زر ممتلئ واحد.
+      - id: MC-P10-040
+        when: [bold]
+        feedback:
+          en: When every line is bold, bold stops meaning anything. Emphasis only works by contrast with what's around it.
+          ar: حين يكون كل سطر عريضًا، يفقد الخط الـ Bold معناه. فالإبراز لا يعمل إلا بالمقارنة مع ما حوله.
+    correct:
+      en: When everything is loud, nothing stands out.
+      ar: حين يبرز كل شيء، لا يبرز شيء.
+    explain:
+      en: Emphasis is relative. Two filled buttons and an all-bold page leave Sara to work out the main action herself.
+      ar: الإبراز نسبي. وزرّان ممتلئان مع صفحة كلها بخط عريض يتركان سارة تكتشف الإجراء الرئيسي بنفسها.
   - id: S03
     type: card
     part: concept
+    icons: [layers, text, target]
     title: { en: "Emphasis is a budget", ar: "البروز ميزانية محدودة" }
     body:
-      en: "Size, weight and color only stand out compared with what's around them. Make everything loud and the differences disappear.\n\nSo give each item a **role**: page title, body facts, supporting text, primary action, secondary action. Each role gets one consistent style.\n\nUsually there's one primary action per decision. Everything else is quieter, but still readable."
-      ar: "الحجم وسُمك الخط واللون لا تبرز إلا مقارنةً بما حولها. اجعل كل شيء لافتًا وستختفي الفروق.\n\nلذلك أعطِ كل عنصر **دورًا**: عنوان الصفحة، المعلومات الأساسية، النص الداعم، الإجراء الرئيسي، الإجراء الثانوي. ولكل دور شكل واحد ثابت.\n\nعادةً يوجد إجراء رئيسي واحد لكل قرار. وكل ما عداه أهدأ، لكنه يبقى مقروءًا."
-
+      en: "Size, weight and colour only stand out compared with what's around them. Make everything loud and nothing stands out.\n\n- **Give each item a role:** page title, body facts, supporting text, primary action, secondary action.\n- **One style per role:** the same role always looks the same.\n- **One primary action per decision:** everything else is quieter, but still readable."
+      ar: "الحجم والـ Font weight واللون لا تبرز إلا بالمقارنة مع ما حولها. اجعل كل شيء صاخبًا، فلن يبرز شيء.\n\n- **أعطِ كل عنصر دورًا:** عنوان الصفحة، والمعلومات الأساسية، والنص المساند، والـ Primary action، والـ Secondary action.\n- **شكل واحد لكل دور:** الدور نفسه يبدو دائمًا بالشكل نفسه.\n- **Primary action واحد لكل قرار:** وكل ما عداه أهدأ، لكنه مقروء."
   - id: S04
     type: match
     part: guided
@@ -303,7 +316,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [layers, target, warn, ok]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You gave each item a role, spent the filled button on the one action that completes the decision, and kept risky and extra actions quieter. You also saw that the rule is one main action per decision, not per page.\n\nNext: making supporting text quiet without making it unreadable."
-      ar: "أعطيت كل عنصر دورًا، وصرفت الزر الممتلئ على الإجراء الوحيد الذي يكمل القرار، وأبقيت الإجراءات الخطيرة والإضافية أهدأ. ورأيت أن القاعدة إجراء رئيسي واحد لكل قرار، لا لكل صفحة.\n\nالدرس التالي: جعل النص الداعم هادئًا دون أن يصبح غير مقروء."
+      en: "- Give each item a role, and one style per role.\n- Spend the filled button on the one action that completes the decision.\n- Keep risky and extra actions quieter.\n- One main action per decision, not per page.\n\nNext lesson: making supporting text quiet without making it unreadable."
+      ar: "- أعطِ كل عنصر دورًا، وشكلًا واحدًا لكل دور.\n- خصّص الزر الممتلئ للإجراء الوحيد الذي يُكمل القرار.\n- اجعل الإجراءات الخطرة والإضافية أهدأ.\n- Primary action واحد لكل قرار، لا لكل صفحة.\n\nالدرس التالي: نص مساند هادئ لكنه مقروء."
