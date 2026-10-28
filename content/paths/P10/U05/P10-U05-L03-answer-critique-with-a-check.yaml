@@ -21,27 +21,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "What would you do with Rami's request?"
-      ar: "ماذا ستفعل بطلب رامي؟"
+      en: "Before deciding how to answer Rami, work out the consequence. If the conditions move below the newsletter, what happens to Sara's decision?"
+      ar: "قبل أن تقرّر كيف تردّ على رامي، احسب الأثر. إذا انتقلت الشروط تحت النشرة، ماذا يحدث لقرار سارة؟"
     options:
-      - { id: accept, text: { en: "Accept it", ar: "أقبله" } }
-      - { id: adapt, text: { en: "Take part of it", ar: "آخذ جزءًا منه" } }
-      - { id: reject, text: { en: "Reject it", ar: "أرفضه" } }
-    reveal:
-      en: "Any of the three can be right. What makes a response good is the reason: what it does for the person's task, and how you'd check it."
-      ar: "أيّ الثلاثة قد يكون صحيحًا. ما يجعل الرد جيدًا هو السبب: ما يفعله لمهمة الشخص، وكيف ستتحقّق منه."
-
+      - { id: same, text: { en: "Nothing: the conditions are still on the page", ar: "لا شيء: الشروط ما زالت في الصفحة" } }
+      - { id: careful, text: { en: "She reads the conditions more carefully at the end", ar: "تقرأ الشروط بعناية أكبر في النهاية" } }
+      - { id: late, text: { en: "She can reach Reserve before she sees the cancellation rule", ar: "قد تصل إلى «احجز» قبل أن ترى قاعدة الإلغاء" } }
+    answer: [late]
+    misconceptions:
+      - id: MC-P10-061
+        when: [same, careful]
+        feedback:
+          en: "Being on the page isn't enough. Below the newsletter, the rule comes after Reserve, so some people book before they know it."
+          ar: "وجودها في الصفحة لا يكفي. تحت النشرة، تأتي القاعدة بعد «احجز»، فيحجز بعض الناس قبل أن يعرفوها."
+    correct:
+      en: "Some people would book before they know the rule."
+      ar: "سيحجز بعض الناس قبل أن يعرفوا القاعدة."
+    explain:
+      en: "That consequence is the reason you'll give Rami, whether you accept, adapt or reject. Critique is easier to answer once you know what it does to the user's task."
+      ar: "هذا الأثر هو السبب الذي ستقدّمه لرامي، سواء قبلت أو عدّلت أو رفضت. ويسهل الرد على النقد حين تعرف ما يفعله بمهمة المستخدم."
   - id: S03
     type: card
     part: concept
+    icons: [ok, idea, target, search]
     title: { en: "Turn a preference into a question", ar: "حوّل التفضيل إلى سؤال" }
     body:
-      en: "Feedback often arrives as taste: \"make it pop\", \"move the button up\". Translate it into the task: What should be easier to find? What mistake would this prevent? What new problem could it cause?\n\nA good response is short:\n- **Decision:** accept, adapt or reject.\n- **Reason:** what it does for the user's goal.\n- **Expected consequence:** what you predict will happen.\n- **Check:** how you'd find out.\n\nKeep three kinds of claims apart: what you can **see in the design now**, what you **predict**, and what you've **observed** in a test. If no test has run, there are no observations yet."
-      ar: "يصل النقد غالبًا على شكل ذوق: «اجعلها لافتة»، «ارفع الزر». ترجمه إلى المهمة: ما الذي يجب أن يصبح أسهل في الإيجاد؟ أي خطأ سيمنعه هذا؟ وأي مشكلة جديدة قد يسبّبها؟\n\nالرد الجيد قصير:\n- **القرار:** قبول أو تعديل أو رفض.\n- **السبب:** ما يفعله لهدف المستخدم.\n- **الأثر المتوقّع:** ما تتوقّع أن يحدث.\n- **الاختبار:** كيف ستعرف.\n\nافصل بين ثلاثة أنواع من الادعاءات: ما **تراه في التصميم الآن**، وما **تتوقّعه**، وما **لاحظته** في اختبار. وإذا لم يُجرَ أي اختبار، فلا توجد ملاحظات بعد."
-
+      en: "Feedback often arrives as taste: \"make it pop\", \"move the button up\". Translate it into the user's task: what should be easier, and what could go wrong?\n\n- **Decision:** accept, adapt or reject.\n- **Reason:** what it does for the user's goal.\n- **Expected consequence:** what you predict will happen.\n- **Check:** how you'd find out.\n\nKeep three kinds of claims apart: what you can **see in the design now**, what you **predict**, and what you've **observed** in a test. If no test has run, there are no observations yet."
+      ar: "يصل النقد غالبًا على شكل ذوق: «اجعلها لافتة»، «ارفع الزر». ترجمه إلى مهمة المستخدم: ما الذي يجب أن يصبح أسهل، وما الذي قد يسوء؟\n\n- **القرار:** قبول أو تعديل أو رفض.\n- **السبب:** ما يفعله لهدف المستخدم.\n- **الأثر المتوقّع:** ما تتوقّع أن يحدث.\n- **الاختبار:** كيف ستعرف.\n\nافصل بين ثلاثة أنواع من الادعاءات: ما **تراه في التصميم الآن**، وما **تتوقّعه**، وما **لاحظته** في اختبار. وإذا لم يُجرَ أي اختبار، فلا توجد ملاحظات بعد."
   - id: S04
     type: sort
     part: guided
@@ -98,9 +106,9 @@ steps:
       en: "What's the best response to Rami?"
       ar: "ما أفضل رد على رامي؟"
     options:
-      - { id: adapt, text: { en: "Adapt: keep the facts before Reserve, but put Reserve right beside them on a laptop. We expect people to act sooner without missing the date. We'll check with a task.", ar: "تعديل: أبقِ المعلومات قبل «احجز»، لكن ضع «احجز» بجانبها مباشرة على الحاسوب. نتوقّع أن يتصرّف الناس أسرع دون أن يفوتهم التاريخ. وسنتحقّق بمهمة." } }
+      - { id: reject, text: { en: "Reject: that goes against visual hierarchy principles.", ar: "رفض: هذا يخالف مبادئ الـ Visual hierarchy." } }
       - { id: accept, text: { en: "Accept: Reserve first, conditions after the newsletter.", ar: "قبول: «احجز» أولًا، والشروط بعد النشرة." } }
-      - { id: reject, text: { en: "Reject: that goes against visual hierarchy principles.", ar: "رفض: هذا يخالف مبادئ التسلسل البصري." } }
+      - { id: adapt, text: { en: "Adapt: keep the facts before Reserve, but put Reserve right beside them on a laptop. We expect people to act sooner without missing the date. We'll check with a task.", ar: "تعديل: أبقِ المعلومات قبل «احجز»، لكن ضع «احجز» بجانبها مباشرة على الحاسوب. نتوقّع أن يتصرّف الناس أسرع دون أن يفوتهم التاريخ. وسنتحقّق بمهمة." } }
     answer: [adapt]
     misconceptions:
       - id: MC-P10-061
@@ -130,8 +138,8 @@ steps:
       en: "Salma is the most senior designer on the team. What's the best response to her request?"
       ar: "سلمى أقدم مصمّمة في الفريق. ما أفضل رد على طلبها؟"
     options:
-      - { id: reject, text: { en: "Reject, with a reason: if everything is the same size, nothing stands out, so the date is harder to find. Offer to compare both in a test if she's still concerned.", ar: "رفض مع سبب: إذا تساوت الأحجام لا يبرز شيء، فيصبح التاريخ أصعب في الإيجاد. واقترح مقارنة النسختين في اختبار إن بقي لديها قلق." } }
       - { id: accept, text: { en: "Accept, she has the most experience", ar: "قبول، فلديها أكبر خبرة" } }
+      - { id: reject, text: { en: "Reject, with a reason: if everything is the same size, nothing stands out, so the date is harder to find. Offer to compare both in a test if she's still concerned.", ar: "رفض مع سبب: إذا تساوت الأحجام لا يبرز شيء، فيصبح التاريخ أصعب في الإيجاد. واقترح مقارنة النسختين في اختبار إن بقي لديها قلق." } }
       - { id: ignore, text: { en: "Don't reply; the page is already fine", ar: "لا ترد؛ الصفحة جيدة أصلًا" } }
     answer: [reject]
     misconceptions:
@@ -195,8 +203,8 @@ steps:
     options:
       - { id: facts, text: { en: "The correct answer: Tuesday 17 November, free, cancel up to 24 hours before", ar: "الإجابة الصحيحة: الثلاثاء 17 نوفمبر، مجاني، الإلغاء حتى 24 ساعة قبلها" } }
       - { id: watch, text: { en: "What to observe: the session chosen, hesitations, any help needed", ar: "ما ستراقبه: الجلسة المختارة، ولحظات التردّد، وأي مساعدة احتاجوها" } }
-      - { id: limits, text: { en: "What five people can and can't show", ar: "ما يستطيع خمسة أشخاص إظهاره وما لا يستطيعون" } }
       - { id: rate, text: { en: "The success rate you plan to report", ar: "نسبة النجاح التي تخطّط لإعلانها" } }
+      - { id: limits, text: { en: "What five people can and can't show", ar: "ما يستطيع خمسة أشخاص إظهاره وما لا يستطيعون" } }
     answer: [facts, watch, limits]
     misconceptions:
       - id: MC-P10-074
@@ -222,8 +230,8 @@ steps:
       en: "After the five sessions, four people chose the right workshop and one hesitated over the cancellation rule. What can you honestly say?"
       ar: "بعد الجلسات الخمس، اختار أربعة أشخاص الورشة الصحيحة وتردّد واحد عند قاعدة الإلغاء. ماذا يمكنك أن تقول بصدق؟"
     options:
-      - { id: honest, text: { en: "In our five sessions, four chose correctly; one hesitated at the cancellation rule, so we'll look at its wording", ar: "في جلساتنا الخمس، اختار أربعة بشكل صحيح؛ وتردّد واحد عند قاعدة الإلغاء، لذا سنراجع صياغتها" } }
       - { id: rate, text: { en: "80% of users will choose correctly", ar: "80% من المستخدمين سيختارون بشكل صحيح" } }
+      - { id: honest, text: { en: "In our five sessions, four chose correctly; one hesitated at the cancellation rule, so we'll look at its wording", ar: "في جلساتنا الخمس، اختار أربعة بشكل صحيح؛ وتردّد واحد عند قاعدة الإلغاء، لذا سنراجع صياغتها" } }
       - { id: proven, text: { en: "The design is proven to work", ar: "ثبت أن التصميم يعمل" } }
     answer: [honest]
     misconceptions:
@@ -244,7 +252,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [idea, ok, layers, search]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- Turn a preference into a question about the user's task.\n- Respond with a decision, a reason, an expected consequence and a check. Accept, adapt or reject can all be right.\n- Keep what you can see, what you predict, and what you observed apart.\n- Test tasks describe a situation, not a screen. Report what you saw, not what you hoped.\n\nNext: the unit skill check."
-      ar: "- حوّل التفضيل إلى سؤال عن مهمة المستخدم.\n- ردّ بقرار وسبب وأثر متوقّع واختبار. القبول والتعديل والرفض قد تكون كلها صحيحة.\n- افصل بين ما تراه، وما تتوقّعه، وما لاحظته.\n- مهام الاختبار تصف موقفًا، لا شاشة. وأبلغ عمّا رأيته، لا عمّا تمنّيته.\n\nالدرس التالي: اختبار مهارة الوحدة."
+      ar: "- حوّل التفضيل إلى سؤال عن مهمة المستخدم.\n- ردّ بقرار وسبب وأثر متوقّع واختبار. القبول والتعديل والرفض قد تكون كلها صحيحة.\n- افصل بين ما تراه، وما تتوقّعه، وما لاحظته.\n- مهام الاختبار تصف موقفًا، لا شاشة. وأبلغ عمّا رأيته، لا عمّا تمنّيته.\n\nالتالي: اختبار مهارة الوحدة."

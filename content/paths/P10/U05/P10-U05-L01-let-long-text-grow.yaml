@@ -31,65 +31,36 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "What went wrong with this card?"
-      ar: "ما الذي حدث لهذه البطاقة؟"
+      en: "The card has a fixed height of 150px, and the title is set to stay on one line. The real title needs three lines at 320px. What happens to the words that don't fit?"
+      ar: "البطاقة بارتفاع ثابت 150 بكسل، والعنوان مضبوط ليبقى على سطر واحد. والعنوان الحقيقي يحتاج ثلاثة أسطر بعرض 320 بكسل. ماذا يحدث للكلمات التي لا تتّسع؟"
     options:
-      - { id: cut, text: { en: "Text is cut off", ar: "النص مقطوع" } }
-      - { id: cover, text: { en: "The button covers a line", ar: "الزر يغطّي سطرًا" } }
-      - { id: box, text: { en: "The card didn't get taller", ar: "البطاقة لم تزدد طولًا" } }
-    reveal:
-      en: "All three, and they're the three most common ways real text breaks a layout: a fixed height, text forced onto one line, and a control placed on top of the content."
-      ar: "الثلاثة معًا، وهي أكثر ثلاث طرق شيوعًا يكسر بها النص الحقيقي التخطيط: ارتفاع ثابت، ونص مُجبر على سطر واحد، وعنصر تحكّم موضوع فوق المحتوى."
-
+      - { id: grow, text: { en: "The card grows to fit them", ar: "البطاقة تطول لتتّسع لها" } }
+      - { id: shrink, text: { en: "The text shrinks to fit", ar: "النص يصغر حتى يتّسع" } }
+      - { id: cut, text: { en: "They're cut off or hidden, and Sara never sees them", ar: "تُقطع أو تختفي، ولا تراها سارة أبدًا" } }
+    answer: [cut]
+    misconceptions:
+      - id: MC-P10-068
+        when: [grow, shrink]
+        feedback:
+          en: "A fixed height and a one-line rule do exactly what they say: the box stays 150px and the title stays on one line. Whatever doesn't fit is cut off with \"…\" or hidden."
+          ar: "الارتفاع الثابت وقاعدة السطر الواحد يفعلان ما يقولانه بالضبط: الصندوق يبقى 150 بكسل والعنوان يبقى سطرًا واحدًا. وكل ما لا يتّسع يُقطع بـ«…» أو يختفي."
+    correct:
+      en: "They're cut off. The layout hides facts without any warning."
+      ar: "تُقطع. التخطيط يخفي المعلومات دون أي تنبيه."
+    explain:
+      en: "Short sample text made this card look finished. Real text shows that two settings, the fixed height and the one-line title, hide what Sara needs to read."
+      ar: "النص التجريبي القصير جعل البطاقة تبدو مكتملة. والنص الحقيقي يكشف أن إعدادين، الارتفاع الثابت والعنوان ذا السطر الواحد، يخفيان ما تحتاج سارة إلى قراءته."
   - id: S03
     type: card
     part: concept
+    icons: [size, wrap, layers]
     title: { en: "Let the content set the size", ar: "دع المحتوى يحدّد المقاس" }
     body:
-      en: "Short sample text makes a brittle layout look finished. Real titles, addresses and translations show whether it can adapt.\n\nThree settings fail first:\n- **A fixed height.** Let the height follow the content.\n- **One line with \"…\".** Let titles and addresses wrap onto more lines.\n- **A button placed on top.** Keep it in the normal flow, after the details, so longer text pushes it down.\n\nDon't fix it by rewriting the facts shorter. Design for the longest real text you'll get, including the Arabic version."
-      ar: "النص التجريبي القصير يجعل التخطيط الهشّ يبدو مكتملًا. أما العناوين والأماكن والترجمات الحقيقية فتكشف إن كان قادرًا على التكيّف.\n\nثلاثة إعدادات تنكسر أولًا:\n- **ارتفاع ثابت.** دع الارتفاع يتبع المحتوى.\n- **سطر واحد مع «…».** دع العناوين والأماكن تلتف على أسطر أكثر.\n- **زر موضوع فوق المحتوى.** أبقه في التدفّق الطبيعي بعد التفاصيل، حتى يدفعه النص الأطول للأسفل.\n\nلا تصلح ذلك باختصار المعلومات. صمّم لأطول نص حقيقي ستحصل عليه، بما في ذلك النسخة العربية."
-
+      en: "Short sample text makes a brittle layout look finished. Real titles, addresses and translations show whether it can adapt.\n\n- **Fixed height:** let the height follow the content.\n- **One line with \"…\":** let titles and addresses wrap onto more lines.\n- **Button placed on top:** keep it in the normal flow, after the details, so longer text pushes it down.\n\nDon't fix it by shortening the facts. Design for the longest real text you'll get, including the Arabic version."
+      ar: "النص التجريبي القصير يجعل التخطيط الهشّ يبدو مكتملًا. أما العناوين والأماكن والترجمات الحقيقية فتكشف إن كان قادرًا على التكيّف.\n\n- **الارتفاع الثابت:** دع الارتفاع يتبع المحتوى.\n- **سطر واحد مع «…»:** دع العناوين والأماكن تلتف على أسطر أكثر.\n- **زر فوق المحتوى:** أبقه في التدفّق الطبيعي بعد التفاصيل، حتى يدفعه النص الأطول للأسفل.\n\nلا تصلح ذلك باختصار المعلومات. صمّم لأطول نص حقيقي ستحصل عليه، بما في ذلك النسخة العربية."
   - id: S04
-    type: spot
-    part: guided
-    rules: [R06, U47]
-    prompt:
-      en: "On this version, which fact can Sara no longer read in full?"
-      ar: "في هذه النسخة، أي معلومة لم تعد سارة تستطيع قراءتها كاملة؟"
-    mock:
-      width: 260
-      caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
-      blocks:
-        - { kind: title, text: "@W5a", region: title }
-        - { kind: meta, text: "@W5b", gap: s, region: date }
-        - { kind: meta, nowrap: true, text: "@W5c", gap: xs, region: place }
-        - { kind: meta, text: "@W5d", gap: xs, region: price }
-        - { kind: button, text: "@W5e", gap: m }
-    regions:
-      - { id: title, label: "@W5a" }
-      - { id: date, label: "@W5b" }
-      - { id: place, label: "@W5c" }
-      - { id: price, label: "@W5d" }
-    answer: [place]
-    misconceptions:
-      - id: MC-P10-068
-        when: [title, date, price]
-        feedback:
-          en: "That one is shown in full. Look for a line that ends in \"…\"."
-          ar: "هذا العنصر ظاهر كاملًا. ابحث عن سطر ينتهي بـ«…»."
-    hints:
-      - { en: "The title wraps now. What else was set to one line?", ar: "العنوان يلتف الآن. ما الذي ضُبط أيضًا على سطر واحد؟" }
-    correct:
-      en: "The address stops at \"…\". Sara can't tell which building or floor."
-      ar: "عنوان المكان يتوقف عند «…». لا تعرف سارة أي مبنى أو طابق."
-    explain:
-      en: "Fixing the title isn't enough. Check every field that can get long: title, address, button label, names."
-      ar: "إصلاح العنوان وحده لا يكفي. تحقّق من كل حقل يمكن أن يطول: العنوان، والمكان، ونص الزر، والأسماء."
-
-  - id: S05
     type: sort
     part: guided
     confidence: true
@@ -130,7 +101,7 @@ steps:
       en: "In design tools, that's \"hug contents\" for height, wrapping text, and the button as part of the auto layout instead of floating on top."
       ar: "في أدوات التصميم، هذا يعني ارتفاعًا يحتضن المحتوى (Hug contents)، ونصًا يلتف، وزرًا جزءًا من التخطيط التلقائي بدل أن يطفو فوقه."
 
-  - id: S06
+  - id: S05
     type: choose
     part: guided
     rules: [R11, U47]
@@ -138,9 +109,9 @@ steps:
       en: "The Arabic title needs three lines on a phone. A teammate suggests cutting it to \"Sketch your app\" so it fits on one. Good idea?"
       ar: "العنوان العربي يحتاج ثلاثة أسطر على الهاتف. يقترح أحد الزملاء اختصاره إلى «صمّم تطبيقك» ليتّسع في سطر واحد. هل هي فكرة جيدة؟"
     options:
-      - { id: wrap, text: { en: "No, let it wrap; the layout should fit the words", ar: "لا، دعه يلتف؛ التخطيط يجب أن يناسب الكلمات" } }
-      - { id: cut, text: { en: "Yes, shorter is cleaner", ar: "نعم، الأقصر أنظف" } }
       - { id: small, text: { en: "Keep the words, but make the title 11px", ar: "أبقِ الكلمات، لكن اجعل العنوان 11 بكسل" } }
+      - { id: cut, text: { en: "Yes, shorter is cleaner", ar: "نعم، الأقصر أنظف" } }
+      - { id: wrap, text: { en: "No, let it wrap; the layout should fit the words", ar: "لا، دعه يلتف؛ التخطيط يجب أن يناسب الكلمات" } }
     answer: [wrap]
     misconceptions:
       - id: MC-P10-069
@@ -162,7 +133,7 @@ steps:
       en: "Arabic and other translations are often longer or taller than English. Plan for it instead of trimming each language to fit."
       ar: "العربية والترجمات الأخرى غالبًا أطول أو أعلى من الإنجليزية. خطّط لذلك بدل قصّ كل لغة لتتّسع."
 
-  - id: S07
+  - id: S06
     type: compare
     part: contrast
     rules: [R11, U47]
@@ -201,8 +172,8 @@ steps:
     reason:
       prompt: { en: "What makes it work?", ar: "ما الذي يجعلها تعمل؟" }
       options:
-        - { id: flow, text: { en: "The height follows the content and the button comes after the details", ar: "الارتفاع يتبع المحتوى والزر يأتي بعد التفاصيل" } }
         - { id: font, text: { en: "It uses a smaller font", ar: "تستخدم خطًا أصغر" } }
+        - { id: flow, text: { en: "The height follows the content and the button comes after the details", ar: "الارتفاع يتبع المحتوى والزر يأتي بعد التفاصيل" } }
       answer: [flow]
     correct:
       en: "B grows to fit everything, and the button stays clear of the text."
@@ -211,7 +182,7 @@ steps:
       en: "B is taller, and that's fine. A taller card that shows every fact beats a neat one that hides them."
       ar: "B أطول، ولا بأس بذلك. بطاقة أطول تُظهر كل المعلومات أفضل من بطاقة أنيقة تخفيها."
 
-  - id: S08
+  - id: S07
     type: fix
     part: independent
     rules: [R07, U47]
@@ -224,9 +195,9 @@ steps:
         - { kind: text, nowrap: true, text: "@D1long" }
         - { kind: small, text: "@D1f", gap: s }
     options:
+      - { id: small, text: { en: "Make the order text smaller", ar: "صغّر نص الطلب" } }
       - { id: grow, text: { en: "Let the row grow and wrap the order onto more lines", ar: "دع الصف يتمدّد ويلتف الطلب على أسطر أكثر" } }
       - { id: dots, text: { en: "Keep one line with \"…\"; the restaurant knows the order", ar: "أبقِه سطرًا واحدًا مع «…»؛ المطعم يعرف الطلب" } }
-      - { id: small, text: { en: "Make the order text smaller", ar: "صغّر نص الطلب" } }
     answer: [grow]
     misconceptions:
       - id: MC-P10-068
@@ -248,7 +219,7 @@ steps:
       en: "44px is a fine minimum, not a fine maximum. Set a minimum height and let content go beyond it."
       ar: "44 بكسل حدّ أدنى جيد، لا حدّ أقصى. اضبط حدًا أدنى للارتفاع ودع المحتوى يتجاوزه."
 
-  - id: S09
+  - id: S08
     type: choose
     part: independent
     confidence: true
@@ -260,8 +231,8 @@ steps:
     options:
       - { id: longest, text: { en: "The longest real title in the data", ar: "أطول عنوان حقيقي في البيانات" } }
       - { id: arabic, text: { en: "The Arabic version", ar: "النسخة العربية" } }
-      - { id: zoom, text: { en: "The text enlarged to 200%", ar: "النص مكبّرًا إلى 200%" } }
       - { id: sample, text: { en: "A short sample title", ar: "عنوان تجريبي قصير" } }
+      - { id: zoom, text: { en: "The text enlarged to 200%", ar: "النص مكبّرًا إلى 200%" } }
     answer: [longest, arabic, zoom]
     misconceptions:
       - id: MC-P10-068
@@ -278,10 +249,11 @@ steps:
       en: "Many people enlarge text on their phones. If the card only works at default size, it doesn't work for them."
       ar: "كثيرون يكبّرون النص على هواتفهم. إذا كانت البطاقة لا تعمل إلا بالحجم الافتراضي، فهي لا تعمل لهم."
 
-  - id: S10
+  - id: S09
     type: card
     part: recap
+    icons: [eye, wrap, warn]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
-      en: "- Short sample text hides problems. Test with the longest real text, the Arabic version, and enlarged text.\n- Let the height follow the content, let text wrap, and keep buttons after the details.\n- Don't shorten facts or shrink type to fit the box.\n\nNext: Arabic and mixed-direction text."
+      en: "- Short sample text hides problems. Test with the longest real text, the Arabic version, and enlarged text.\n- Let the height follow the content, let text wrap, and keep buttons after the details.\n- Don't shorten facts or shrink type to fit the box.\n\nNext lesson: Arabic and mixed-direction text."
       ar: "- النص التجريبي القصير يخفي المشكلات. اختبر بأطول نص حقيقي، وبالنسخة العربية، وبالنص المكبّر.\n- دع الارتفاع يتبع المحتوى، ودع النص يلتف، وأبقِ الأزرار بعد التفاصيل.\n- لا تختصر المعلومات ولا تصغّر الخط ليتّسع في الصندوق.\n\nالدرس التالي: النص العربي والنص مختلط الاتجاه."

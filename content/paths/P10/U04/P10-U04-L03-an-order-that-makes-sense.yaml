@@ -15,7 +15,7 @@ steps:
     title: { en: "Mona listens to the page", ar: "منى تستمع إلى الصفحة" }
     body:
       en: "Mona wants to book Sara's workshop too. She's blind and uses a screen reader, which reads the page aloud from top to bottom.\n\nOn a laptop, the page looks fine. This is what Mona hears:"
-      ar: "منى تريد حجز ورشة سارة أيضًا. منى كفيفة وتستخدم قارئ شاشة، يقرأ الصفحة بصوت عالٍ من الأعلى إلى الأسفل.\n\nعلى الحاسوب المحمول تبدو الصفحة سليمة. وهذا ما تسمعه منى:"
+      ar: "منى تريد حجز ورشة سارة أيضًا. منى كفيفة وتستخدم Screen reader، يقرأ الصفحة بصوت عالٍ من الأعلى إلى الأسفل.\n\nعلى الحاسوب المحمول تبدو الصفحة سليمة. وهذا ما تسمعه منى:"
     mock:
       caption: { en: "Read aloud, in order", ar: "تُقرأ بصوت عالٍ، بالترتيب" }
       blocks:
@@ -31,27 +31,33 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "Why would the screen reader read it in this odd order?"
-      ar: "لماذا يقرأ قارئ الشاشة الصفحة بهذا الترتيب الغريب؟"
+    prompt: { en: "Why would the screen reader read it in this odd order?", ar: "لماذا يقرأ الـ Screen reader الصفحة بهذا الترتيب الغريب؟" }
     options:
-      - { id: code, text: { en: "It follows the order in the code, not the layout", ar: "يتبع الترتيب في الكود، لا التخطيط" } }
+      - { id: bug, text: { en: "The screen reader has a bug", ar: "في الـ Screen reader خلل" } }
+      - { id: code, text: { en: 'It follows the order in the code, not the layout', ar: "يتبع الترتيب في الكود، لا التخطيط" } }
       - { id: size, text: { en: "It reads the biggest things first", ar: "يقرأ العناصر الأكبر أولًا" } }
-      - { id: bug, text: { en: "The screen reader has a bug", ar: "في قارئ الشاشة خلل" } }
-    reveal:
-      en: "It follows the code. The team wrote the booking panel and newsletter first, then used the layout to move them to the right column. Eyes see the columns; Mona hears the code."
-      ar: "يتبع الكود. كتب الفريق لوحة الحجز والنشرة أولًا، ثم استخدموا التخطيط لنقلهما إلى العمود الأيمن. العين ترى الأعمدة، ومنى تسمع الكود."
-
+    answer: [code]
+    misconceptions:
+      - id: MC-P10-067
+        when: [size, bug]
+        feedback:
+          en: "Screen readers don't look at size or position at all. They read the code from top to bottom, and the team wrote the booking panel and newsletter first."
+          ar: "الـ Screen reader لا ينظر إلى الحجم أو المكان أصلًا. يقرأ الكود من الأعلى إلى الأسفل، والفريق كتب لوحة الحجز والنشرة أولًا."
+    correct:
+      en: "It follows the code."
+      ar: "يتبع الكود."
+    explain:
+      en: "The team wrote the booking panel and newsletter first, then used the layout to move them to the right column. Eyes see the columns; Mona hears the code."
+      ar: "كتب الفريق لوحة الحجز والنشرة أولًا، ثم استخدموا التخطيط لنقلهما إلى العمود الأيمن. العين ترى الأعمدة، ومنى تسمع الكود."
   - id: S03
     type: card
     part: concept
+    icons: [eye, ear, order, ok]
     title: { en: "Two orders: what you see and what's in the code", ar: "ترتيبان: ما تراه وما في الكود" }
     body:
-      en: "Every page has a **visual order** (where things sit) and a **reading order** (the order in the code).\n\nThe reading order is what screen readers read, what the Tab key moves through, and what you get when columns stack on a narrow screen. Columns can hide a bad reading order; a phone or a screen reader exposes it.\n\nSo design the reading order first: the order that makes sense read top to bottom. Keep labels with their values and actions after the facts that give them meaning. Then arrange it visually.\n\nThere's often more than one good order. What matters is that the meaning survives."
-      ar: "لكل صفحة **ترتيب بصري** (أين تقع العناصر) و**ترتيب قراءة** (الترتيب في الكود).\n\nترتيب القراءة هو ما تقرؤه برامج قراءة الشاشة، وما يتنقّل خلاله مفتاح Tab، وما تحصل عليه حين تتراصّ الأعمدة على شاشة ضيّقة. الأعمدة قد تخفي ترتيب قراءة سيئًا، أما الهاتف أو قارئ الشاشة فيكشفه.\n\nلذلك صمّم ترتيب القراءة أولًا: الترتيب المنطقي عند القراءة من الأعلى إلى الأسفل. أبقِ كل تسمية مع قيمتها، وضع الإجراءات بعد المعلومات التي تعطيها معناها. ثم رتّبها بصريًا.\n\nغالبًا يوجد أكثر من ترتيب جيد. المهم أن يبقى المعنى."
-
+      en: "Every page has two orders, and they can disagree.\n\n- **Visual order:** where things sit on the screen.\n- **Reading order:** the order in the code. Screen readers read it, the Tab key follows it, and narrow screens stack it.\n- **Design the reading order first:** keep labels with their values and put actions after the facts that give them meaning. Then arrange it visually.\n- **More than one order can work:** what matters is that the meaning survives."
+      ar: "لكل صفحة ترتيبان، وقد يختلفان.\n\n- **الترتيب البصري:** أين تقع العناصر على الشاشة.\n- **ترتيب القراءة:** الترتيب في الكود. يقرؤه الـ Screen reader، ويتبعه مفتاح Tab، وتُرصّ به الشاشات الضيّقة.\n- **صمّم ترتيب القراءة أولًا:** أبقِ كل تسمية مع قيمتها، وضع الإجراءات بعد المعلومات التي تعطيها معناها. ثم رتّبها بصريًا.\n- **قد ينجح أكثر من ترتيب:** المهم أن يبقى المعنى."
   - id: S04
     type: order
     part: guided
@@ -135,7 +141,7 @@ steps:
       ar: "«احجز مكانك» يأتي قبل الموعد والمكان، تمامًا كما سمعته منى."
     explain:
       en: "The phone stacks in reading order. Fix the order once, in the code, and the phone, the keyboard and the screen reader all improve together."
-      ar: "الهاتف يرصّ العناصر بترتيب القراءة. أصلح الترتيب مرة واحدة في الكود، فيتحسّن الهاتف ولوحة المفاتيح وقارئ الشاشة معًا."
+      ar: "الهاتف يرصّ العناصر بترتيب القراءة. أصلح الترتيب مرة واحدة في الكود، فيتحسّن الهاتف ولوحة المفاتيح والـ Screen reader معًا."
 
   - id: S06
     type: choose
@@ -145,8 +151,8 @@ steps:
       en: "A teammate suggests: \"Keep the code. On phones, just use CSS to move the booking panel below the details.\" What's the catch?"
       ar: "يقترح أحد الزملاء: «لنترك الكود. وعلى الهواتف نستخدم CSS لنقل لوحة الحجز تحت التفاصيل». ما المشكلة؟"
     options:
-      - { id: mismatch, text: { en: "It only moves things visually; screen readers and the Tab key still follow the code", ar: "ينقل العناصر بصريًا فقط؛ وقارئ الشاشة ومفتاح Tab ما زالا يتبعان الكود" } }
       - { id: none, text: { en: "Nothing, if it looks right it is right", ar: "لا شيء، إذا بدت صحيحة فهي صحيحة" } }
+      - { id: mismatch, text: { en: "It only moves things visually; screen readers and the Tab key still follow the code", ar: "ينقل العناصر بصريًا فقط؛ والـ Screen reader ومفتاح Tab ما زالا يتبعان الكود" } }
       - { id: slow, text: { en: "CSS makes the page load slower", ar: "CSS يجعل الصفحة أبطأ في التحميل" } }
     answer: [mismatch]
     misconceptions:
@@ -205,36 +211,6 @@ steps:
       ar: "الصفحة الأقصر جيدة حين تحذف الاختياري. أما إخفاء القرار خلف ضغطة فينقل العمل إلى المستخدم فقط."
 
   - id: S08
-    type: choose
-    part: independent
-    confidence: true
-    multi: true
-    rules: [R07, U35]
-    prompt:
-      en: "Lina's delivery tracking screen is long on a small phone. Which items could go behind a \"More\" link? Pick all that apply."
-      ar: "شاشة تتبّع طلب لينا طويلة على هاتف صغير. أي عناصر يمكن وضعها خلف رابط «المزيد»؟ اختر كل ما ينطبق."
-    options:
-      - { id: D1a, text: "@D1a" }
-      - { id: D1b, text: "@D1b" }
-      - { id: D1d, text: "@D1d" }
-      - { id: D1e, text: "@D1e" }
-    answer: [D1d, D1e]
-    misconceptions:
-      - id: MC-P10-061
-        when: [D1a, D1b]
-        feedback:
-          en: "Lina is waiting for her food. When it arrives and how to reach the driver are what she opened the screen for."
-          ar: "لينا تنتظر طعامها. موعد الوصول وطريقة الاتصال بالسائق هما سبب فتحها للشاشة."
-    hints:
-      - { en: "What did Lina open this screen to find out?", ar: "ما الذي فتحت لينا الشاشة لتعرفه؟" }
-    correct:
-      en: "The discount and the old order can wait. The arrival time and the driver stay visible."
-      ar: "الخصم والطلب السابق يمكنهما الانتظار. وموعد الوصول والسائق يبقيان ظاهرين."
-    explain:
-      en: "Same test as Unit 1: what does she need right now? That's what stays on screen."
-      ar: "الاختبار نفسه من الوحدة 1: ماذا تحتاج الآن؟ هذا ما يبقى على الشاشة."
-
-  - id: S09
     type: fix
     part: independent
     rules: [R07, U29]
@@ -248,35 +224,30 @@ steps:
         - { kind: title, text: "@B1b", gap: m }
         - { kind: meta, text: "@B1c", gap: s }
     options:
-      - { id: move, text: { en: "Move the banner after the ticket details, in the code", ar: "انقل الشريط بعد تفاصيل التذكرة، في الكود" } }
-      - { id: small, text: { en: "Make the banner smaller", ar: "صغّر الشريط" } }
-      - { id: css, text: { en: "Keep the code and move the banner down with CSS on phones", ar: "اترك الكود وانقل الشريط للأسفل باستخدام CSS على الهواتف" } }
+      - { id: small, text: { en: "Make the banner smaller", ar: "صغّر الـ Slider" } }
+      - { id: move, text: { en: "Move the banner after the ticket details, in the code", ar: "انقل الـ Slider بعد تفاصيل التذكرة، في الكود" } }
+      - { id: css, text: { en: "Keep the code and move the banner down with CSS on phones", ar: "اترك الكود وانقل الـ Slider للأسفل باستخدام CSS على الهواتف" } }
     answer: [move]
     misconceptions:
       - id: MC-P10-067
         when: [css]
         feedback:
           en: "That fixes how it looks, but a screen reader would still start with the ad. Change the order in the code."
-          ar: "هذا يصلح الشكل، لكن قارئ الشاشة سيبدأ بالإعلان. غيّر الترتيب في الكود."
+          ar: "هذا يصلح الشكل، لكن الـ Screen reader سيبدأ بالإعلان. غيّر الترتيب في الكود."
     hints:
-      - { en: "Which fix helps the screen reader too?", ar: "أي إصلاح يساعد قارئ الشاشة أيضًا؟" }
-    reason:
-      prompt: { en: "Why in the code?", ar: "لماذا في الكود؟" }
-      options:
-        - { id: everyone, text: { en: "The phone, the keyboard and the screen reader all follow it", ar: "الهاتف ولوحة المفاتيح وقارئ الشاشة كلها تتبعه" } }
-        - { id: faster, text: { en: "Code changes are faster to make", ar: "تغييرات الكود أسرع في التنفيذ" } }
-      answer: [everyone]
+      - { en: "Which fix helps the screen reader too?", ar: "أي إصلاح يساعد الـ Screen reader أيضًا؟" }
     correct:
       en: "The ticket comes first everywhere, and the banner waits until after it."
-      ar: "التذكرة أولًا في كل مكان، والشريط ينتظر بعدها."
+      ar: "التذكرة أولًا في كل مكان، والـ Slider ينتظر بعدها."
     explain:
       en: "A smaller banner is still in the way. Put the ticket first in the reading order and the ad can follow."
-      ar: "الشريط الأصغر ما زال يعترض الطريق. ضع التذكرة أولًا في ترتيب القراءة، ويأتي الإعلان بعدها."
+      ar: "الـ Slider الأصغر ما زال يعترض الطريق. ضع التذكرة أولًا في ترتيب القراءة، ويأتي الإعلان بعدها."
 
-  - id: S10
+  - id: S09
     type: card
     part: recap
+    icons: [order, ear, warn, cut]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- The reading order (the code) is what phones stack, keyboards follow, and screen readers read.\n- Design it first: what it is, the facts, then the action. Optional things last.\n- Moving things only visually leaves the reading order wrong.\n- Shorter is fine when you cut what's optional; never hide what decides.\n\nNext: a skill check with Dalia's hotel booking."
-      ar: "- ترتيب القراءة (الكود) هو ما يرصّه الهاتف، وتتبعه لوحة المفاتيح، ويقرؤه قارئ الشاشة.\n- صمّمه أولًا: ما هو، ثم المعلومات، ثم الإجراء. والاختياري في النهاية.\n- نقل العناصر بصريًا فقط يترك ترتيب القراءة خاطئًا.\n- التقصير جيد حين تحذف الاختياري؛ لكن لا تخفِ ما يحسم القرار.\n\nالدرس التالي: اختبار مهارة مع حجز فندق داليا."
+      ar: "- ترتيب القراءة (الكود) هو ما يرصّه الهاتف، وتتبعه لوحة المفاتيح، ويقرؤه الـ Screen reader.\n- صمّمه أولًا: ما هو، ثم المعلومات، ثم الإجراء. والاختياري في النهاية.\n- نقل العناصر بصريًا فقط يترك ترتيب القراءة خاطئًا.\n- التقصير جيد حين تحذف الاختياري؛ لكن لا تخفِ ما يحسم القرار.\n\nالتالي: اختبار مهارة مع حجز فندق داليا."

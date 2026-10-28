@@ -35,27 +35,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "When the cards stack, what should Sara see right after the first session's date?"
-      ar: "عندما تُرتَّب البطاقتان عموديًا، ماذا يجب أن ترى سارة بعد تاريخ الجلسة الأولى مباشرة؟"
+      en: "When the cards stack on Sara's phone, what should come right after the first session's date?"
+      ar: "حين تترتّب البطاقات فوق بعضها على هاتف سارة، ما الذي يجب أن يأتي مباشرة بعد موعد الجلسة الأولى؟"
     options:
-      - { id: price, text: "@W2c" }
-      - { id: date2, text: "@W2f" }
       - { id: title2, text: "@W2e" }
-    reveal:
-      en: "Free, its own price. If the second date came next, the page would be alternating lines from two sessions. We'll see why that happens."
-      ar: "«مجاني»، سعرها هي. لو جاء التاريخ الثاني بعدها لكانت الصفحة تبادل بين أسطر جلستين. سنرى لماذا يحدث ذلك."
-
+      - { id: date2, text: "@W2f" }
+      - { id: price, text: "@W2c" }
+    answer: [price]
+    misconceptions:
+      - id: MC-P10-028
+        when: [date2, title2]
+        feedback:
+          en: "That jumps to the second session before the first is finished. Stack whole groups: the first session's price comes next."
+          ar: 'هذا ينتقل إلى الجلسة الثانية قبل أن تكتمل الأولى. رتّب المجموعات كاملة: سعر الجلسة الأولى يأتي بعد ذلك.'
+    correct:
+      en: 'Its own price: Free.'
+      ar: 'سعرها هي: مجاني.'
+    explain:
+      en: 'Each session stays whole: title, date, price, button. If the second date came next, the page would alternate lines from two sessions, and Sara would have to piece them together.'
+      ar: 'كل جلسة تبقى كاملة: العنوان والموعد والسعر والزر. ولو جاء الموعد الثاني بعد ذلك، لتبادلت الصفحة أسطرًا من جلستين، ولاضطرت سارة إلى تركيبها بنفسها.'
   - id: S03
     type: card
     part: concept
+    icons: [layers, warn, ear]
     title: { en: "Stack whole groups", ar: "رتّب المجموعات كاملة" }
     body:
-      en: "When a layout gets narrower, move whole groups, not their lines. Session A, complete, then session B, complete.\n\nThe trap is a layout built in rows, like a table: all titles in one row, all dates in the next. On a phone, that turns into a zigzag between sessions.\n\nThe order on screen should also match the order in the code, because that's the order a screen reader and keyboard follow."
-      ar: "عندما يضيق التخطيط، انقل المجموعات كاملة، لا أسطرها. الجلسة A كاملة، ثم الجلسة B كاملة.\n\nالفخ هو تخطيط مبني على صفوف، مثل الجدول: كل العناوين في صف، وكل التواريخ في الصف التالي. على الهاتف يتحوّل ذلك إلى تنقّل متعرّج بين الجلستين.\n\nويجب أن يطابق الترتيب على الشاشة الترتيب في الكود، لأنه الترتيب الذي يتبعه قارئ الشاشة ولوحة المفاتيح."
-
+      en: "When a layout gets narrower, move whole groups, not their lines.\n\n- **Stack whole groups:** session A complete, then session B complete.\n- **Beware row-built layouts:** all titles in one row and all dates in the next turn into a zigzag on a phone.\n- **Match the code order:** screen readers and keyboards follow the code, not what the screen shows."
+      ar: "عندما يضيق التخطيط، انقل المجموعات كاملة، لا أسطرها.\n\n- **رتّب المجموعات كاملة:** الجلسة A كاملة، ثم الجلسة B كاملة.\n- **احذر التخطيط المبني على صفوف:** كل العناوين في صف وكل التواريخ في الصف التالي تتحوّل إلى تنقّل متعرّج على الهاتف.\n- **طابق ترتيب الكود:** الـ Screen reader ولوحة المفاتيح يتبعان الكود، لا ما تعرضه الشاشة."
   - id: S04
     type: order
     part: guided
@@ -153,15 +161,15 @@ steps:
       en: "What's the best way to show this on a phone?"
       ar: "ما أفضل طريقة لعرض ذلك على الهاتف؟"
     options:
+      - { id: shrink, text: { en: "Shrink the table text until it fits", ar: "صغّر نص الجدول حتى يتّسع" } }
       - { id: scroll, text: { en: "Keep the table and let it scroll sideways", ar: "أبقِ الجدول واجعله يتحرّك أفقيًا" } }
       - { id: cards, text: { en: "Turn each column into a card, with each value labeled", ar: "حوّل كل عمود إلى بطاقة، مع تسمية كل قيمة" } }
-      - { id: shrink, text: { en: "Shrink the table text until it fits", ar: "صغّر نص الجدول حتى يتّسع" } }
     answer: [cards]
     reason:
       prompt: { en: "Why do the values need labels in the cards?", ar: "لماذا تحتاج القيم إلى تسميات داخل البطاقات؟" }
       options:
-        - { id: lost, text: { en: "The row headers that explained them are gone", ar: "لأن عناوين الصفوف التي كانت تشرحها اختفت" } }
         - { id: pretty, text: { en: "Labels make cards look more complete", ar: "لأن التسميات تجعل البطاقات تبدو أكمل" } }
+        - { id: lost, text: { en: "The row headers that explained them are gone", ar: "لأن عناوين الصفوف التي كانت تشرحها اختفت" } }
       answer: [lost]
     misconceptions:
       - id: MC-P10-030
@@ -264,14 +272,14 @@ steps:
       ar: "لكل جلسة مرتّبة عموديًا إطارها الخاص. هل ما زلت تحتاج إلى مسافة بين البطاقتين؟"
     options:
       - { id: no, text: { en: "No, the borders already separate them", ar: "لا، الحدود تفصل بينهما أصلًا" } }
-      - { id: yes, text: { en: "Yes, some space between them still helps", ar: "نعم، بعض المسافة بينهما ما زالت تساعد" } }
       - { id: desktop, text: { en: "Only on desktop", ar: "على الحاسوب فقط" } }
+      - { id: yes, text: { en: "Yes, some space between them still helps", ar: "نعم، بعض المسافة بينهما ما زالت تساعد" } }
     answer: [yes]
     reason:
       prompt: { en: "Why?", ar: "لماذا؟" }
       options:
-        - { id: merge, text: { en: "Touching borders start to look like one box", ar: "الحدود المتلاصقة تبدأ في الظهور كإطار واحد" } }
         - { id: rule, text: { en: "Cards must always have 16px between them", ar: "يجب أن يكون بين البطاقات 16 بكسل دائمًا" } }
+        - { id: merge, text: { en: "Touching borders start to look like one box", ar: "الحدود المتلاصقة تبدأ في الظهور كإطار واحد" } }
       answer: [merge]
       misconceptions:
         - id: MC-P10-031
@@ -295,7 +303,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [layers, group, space]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You stacked whole groups instead of alternating their lines, turned a table into labeled cards, caught a swapped price that tidy grouping was hiding, and kept space between containers.\n\nNext: the skill check."
-      ar: "رتّبت المجموعات كاملة بدلًا من التبديل بين أسطرها، وحوّلت جدولًا إلى بطاقات مسمّاة، واكتشفت سعرًا مُبدَّلًا كان التجميع المرتّب يخفيه، وأبقيت مسافة بين الحاويات.\n\nالدرس التالي: اختبار المهارة."
+      en: "- Stack whole groups; never alternate their lines.\n- On a phone, turn a table into labelled cards.\n- Keep space between containers, even when they have borders.\n\nNext lesson: the skill check."
+      ar: "- رتّب المجموعات كاملة، ولا تبادل بين أسطرها أبدًا.\n- على الهاتف، حوّل الجدول إلى Cards لكل منها اسم.\n- أبقِ مسافة بين الـ Containers، حتى لو كانت لها حدود.\n\nالدرس التالي: اختبار المهارة."
