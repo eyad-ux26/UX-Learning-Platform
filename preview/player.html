@@ -55,6 +55,7 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .part{font-size:.85rem;color:var(--muted);margin:22px 0 4px}
 .prompt{font-size:1.2rem;font-weight:600;line-height:1.4;margin:0 0 14px}
 .scenario{background:var(--surface);border-inline-start:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:0 0 14px}
+.rev{display:flex;gap:8px;align-items:center;margin:12px 0 14px;padding:8px;border:1px dashed var(--line);border-radius:12px;font-size:.85rem}.rev select{flex:1;min-width:0;min-height:40px;font-size:.85rem}.rev .iconbtn{font-size:.85rem;white-space:nowrap}.rev .iconbtn:disabled{opacity:.4}
 .scen{border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:0 0 14px;background:var(--surface)}
 .scen summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0;min-height:32px;display:flex;align-items:center}
 .scen h2{font-size:1.05rem;margin:8px 0 4px}
@@ -233,7 +234,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -242,7 +243,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -460,7 +461,7 @@ function renderStep(){
   $("#crumb").textContent = `${tx(L.lesson.title)} · ${u().stepOf(L.i+1, L.lesson.steps.length)}`;
   $("#bar").style.width = `${(L.i / L.lesson.steps.length) * 100}%`;
   const locked = st.done;
-  let h = "";
+  let h = revNav();
   if (s.scenario) h += `<div class="scenario">${para(s.scenario)}</div>`;
   if (s.type === "card"){
     const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
@@ -473,7 +474,8 @@ function renderStep(){
       if (picked) h += `<div class="recall">${u().yourFirst} <b>${esc(picked)}</b></div>`;
     }
     const hook = L.lesson.steps.find(x => x.type === "card" && x.part === "hook");
-    if (hook && hook !== s) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
+    /* a step with its own scenario is a new case, so don't offer the old hook */
+    if (hook && hook !== s && !s.scenario) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
     if (s.value) h += `<details class="why"><summary>${u().valueQ}</summary><p>${esc(tx(s.value))}</p></details>`;
     h += renderInteraction(s, st, locked || !!st.mainOk);
@@ -572,6 +574,8 @@ document.addEventListener("click", e => { const el = e.target.closest(".mock .ac
 document.addEventListener("keydown", e => { const el = e.target.closest && e.target.closest(".mock .act"); if (el && (e.key === " " || e.key === "Enter")) { e.preventDefault(); mockAct(el); } });
 
 function wire(s, st, locked){
+  document.querySelectorAll("nav.rev [data-rev]").forEach(b => b.onclick = () => revGo(L.i + +b.dataset.rev));
+  const rs = document.querySelector("nav.rev select"); if (rs) rs.onchange = () => revGo(+rs.value);
   const sc = document.querySelector("details.scen"); if (sc) sc.ontoggle = () => { L.scenOpen = sc.open; };
   const redraw = () => renderStep();
   document.querySelectorAll('input[name="opt"]').forEach(inp => inp.onchange = () => {
@@ -676,6 +680,9 @@ function reveal(s, st){
   renderStep();
 }
 
+/* reviewer-only step jumper, so comments can be written on any step without answering the ones before it */
+const revNav = () => `<nav class="rev" aria-label="${u().revNav}"><button type="button" class="iconbtn" data-rev="-1" ${L.i ? "" : "disabled"}>${u().revPrev}</button><select aria-label="${u().revJump}">${L.lesson.steps.map((x, k) => `<option value="${k}"${k === L.i ? " selected" : ""}>${k + 1}. ${esc(x.type === "card" ? tx(x.title || "") : tx(x.prompt)).slice(0, 48)}</option>`).join("")}</select><button type="button" class="iconbtn" data-rev="1" ${L.i < L.lesson.steps.length - 1 ? "" : "disabled"}>${u().revNext}</button></nav>`;
+function revGo(k){ L.i = Math.max(0, Math.min(L.lesson.steps.length - 1, k)); $("#fb").innerHTML = ""; renderStep(); window.scrollTo(0,0); }
 function next(){
   if (L.i < L.lesson.steps.length - 1){ L.i++; renderStep(); window.scrollTo(0,0); $("#main").querySelector("h1,.prompt,.scenario,.body")?.setAttribute("tabindex","-1"); return; }
   view = {screen:"summary"}; render(); window.scrollTo(0,0);
