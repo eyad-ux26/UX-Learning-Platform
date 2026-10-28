@@ -5,7 +5,7 @@ title:
   en: "Rearrange, don't shrink"
   ar: "أعد الترتيب، لا تصغّر"
 review_labels:
-  MC-P10-060: { en: "Responsive isn't scaling everything down", ar: "التصميم المتجاوب ليس تصغير كل شيء" }
+  MC-P10-060: { en: "Responsive isn't scaling everything down", ar: "الـ Responsive design ليس تصغير كل شيء" }
   MC-P10-061: { en: "Hide what's optional, never what decides", ar: "أخفِ الاختياري، لا ما يحسم القرار" }
 steps:
   - id: S01
@@ -15,7 +15,7 @@ steps:
     body:
       en: "On a laptop, Sara's page has two columns: the session details on the left, and a booking panel with Reserve on the right.\n\nOn her phone, the screen is about a third as wide. Something has to give."
       ar: "على الحاسوب المحمول، صفحة سارة فيها عمودان: تفاصيل الجلسة على اليسار، ولوحة الحجز مع زر «احجز» على اليمين.\n\nأما على هاتفها، فعرض الشاشة نحو الثلث. يجب أن يتغيّر شيء ما."
-    mock: &desktop
+    mock:
       frame: wide
       caption: { en: "Laptop, 1280 px", ar: "حاسوب محمول، 1280 بكسل" }
       blocks:
@@ -41,27 +41,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "What's your first instinct for the phone?"
-      ar: "ما أول ما يخطر لك بالنسبة للهاتف؟"
+      en: "If you scale the 1280px laptop layout down to fit a 390px phone, the 16px body text shrinks with it. About how big does it get?"
+      ar: "إذا صغّرت تخطيط الحاسوب بعرض 1280 بكسل ليتّسع في هاتف بعرض 390 بكسل، يصغر نص المحتوى (16 بكسل) معه. كم يصبح حجمه تقريبًا؟"
     options:
-      - { id: scale, text: { en: "Scale the whole layout down to fit", ar: "صغّر التخطيط كله حتى يتّسع" } }
-      - { id: stack, text: { en: "Put the columns one under the other", ar: "ضع العمودين أحدهما تحت الآخر" } }
-      - { id: hide, text: { en: "Hide the side panel", ar: "أخفِ اللوحة الجانبية" } }
-    reveal:
-      en: "Stacking is usually right, but the order of the stack matters as much as the stacking. Let's see why the other two go wrong."
-      ar: "الترتيب العمودي هو الصحيح غالبًا، لكن ترتيب العناصر داخله مهم بقدر الترتيب نفسه. لنرَ لماذا يخطئ الخياران الآخران."
-
+      - { id: same, text: { en: 'Still 16px: text keeps its size', ar: 'يبقى 16 بكسل: النص يحتفظ بحجمه' } }
+      - { id: tiny, text: { en: 'About 5px: too small to read', ar: 'نحو 5 بكسل: أصغر من أن يُقرأ' } }
+      - { id: small, text: { en: 'About 12px: a bit small, but fine', ar: 'نحو 12 بكسل: صغير قليلًا، لكنه مقبول' } }
+    answer: [tiny]
+    misconceptions:
+      - id: MC-P10-060
+        when: [small, same]
+        feedback:
+          en: '390 is only about 30% of 1280, so everything shrinks to about 30%, text included: 16px becomes about 5px.'
+          ar: '390 تساوي نحو 30% فقط من 1280، فيصغر كل شيء إلى نحو 30%، ومنه النص: 16 بكسل تصبح نحو 5 بكسل.'
+    correct:
+      en: "About 5px. Shrinking the whole layout makes it unreadable."
+      ar: "نحو 5 بكسل. تصغير التخطيط كله يجعله غير مقروء."
+    explain:
+      en: "A phone is about a third as wide, so a scaled-down page is a third the size. That's why responsive layouts rearrange instead of shrinking."
+      ar: "الهاتف بعرض الثلث تقريبًا، فالصفحة المصغّرة تصبح بثلث حجمها. لهذا تعيد التخطيطات المتجاوبة الترتيب بدلًا من التصغير."
   - id: S03
     type: card
     part: concept
+    icons: [phone, order, cut]
     title: { en: "Change the arrangement, keep the decision", ar: "غيّر الترتيب، واحفظ القرار" }
     body:
-      en: "**Responsive design** means the layout responds to the space available. It doesn't mean shrinking everything: tiny text on a phone is just a smaller problem.\n\nOn a narrow screen, columns usually stack. Choose the stacking order by the decision: what, when, where, how much, then the action. The optional image can shrink or go. The facts Sara decides with can't."
-      ar: "**التصميم المتجاوب (Responsive design)** يعني أن التخطيط يستجيب للمساحة المتاحة. ولا يعني تصغير كل شيء: النص الصغير جدًا على الهاتف مجرد مشكلة أصغر حجمًا.\n\nعلى الشاشة الضيّقة، تُرتَّب الأعمدة عادةً عموديًا. اختر ترتيبها حسب القرار: ماذا، متى، أين، بكم، ثم الإجراء. يمكن للصورة الاختيارية أن تصغر أو تختفي. أما المعلومات التي تبني عليها سارة قرارها فلا."
-
+      en: "**Responsive design** means the layout responds to the space available. It doesn't mean shrinking everything.\n\n- **Stack, don't shrink:** on a narrow screen, columns go one under the other, at a readable size.\n- **Order by the decision:** what, when, where, how much, then the action.\n- **Optional things can go:** the photo can shrink or hide. The facts Sara decides with stay."
+      ar: "**الـ Responsive design** يعني أن التخطيط يستجيب للمساحة المتاحة، لا أن يُصغَّر كل شيء.\n\n- **رتّب عموديًا ولا تصغّر:** على الشاشة الضيّقة، تنزل الأعمدة واحدًا تحت الآخر، بحجم مقروء.\n- **رتّب حسب القرار:** ماذا، متى، أين، بكم، ثم الإجراء.\n- **الاختياري يمكن أن يختفي:** الصورة يمكن أن تصغر أو تختفي. أما المعلومات التي تبني عليها سارة قرارها فتبقى."
   - id: S04
     type: compare
     part: guided
@@ -112,55 +120,6 @@ steps:
       ar: "التصغير يحتفظ بالترتيب ويفقد المعنى. أما الترتيب العمودي فيغيّر الترتيب ويحتفظ بالمعنى."
 
   - id: S05
-    type: order
-    part: guided
-    confidence: true
-    rules: [R06, R15]
-    prompt:
-      en: "Stack the laptop blocks for the phone, top to bottom."
-      ar: "رتّب أجزاء تخطيط الحاسوب للهاتف، من الأعلى إلى الأسفل."
-    items:
-      - { id: H, kind: title, text: { en: "Title", ar: "العنوان" } }
-      - { id: P, kind: image, text: { en: "Photo", ar: "الصورة" } }
-      - { id: B, kind: button, text: { en: "Reserve button", ar: "زر «احجز»" } }
-      - { id: N, kind: link, text: { en: "Newsletter link", ar: "رابط النشرة" } }
-      - { id: D, text: { en: "Date, place, price and places left", ar: "التاريخ والمكان والسعر والأماكن المتبقية" } }
-      - { id: T, kind: small, text: { en: "Cancellation rule and access link", ar: "قاعدة الإلغاء ورابط الدخول" } }
-    answer: [H, D, T, B, P, N]
-    also_ok:
-      - answer: [H, D, B, T, P, N]
-        feedback:
-          en: "That works too, as long as the cancellation rule sits right under Reserve, where Sara still sees it before tapping."
-          ar: "هذا يصلح أيضًا، ما دامت قاعدة الإلغاء تحت زر «احجز» مباشرة، حيث تراها سارة قبل الضغط."
-      - answer: [H, D, T, B, N, P]
-        feedback:
-          en: "That works too: the photo and newsletter are both optional, so their order at the end doesn't matter much."
-          ar: "هذا صحيح أيضًا: الصورة والنشرة اختياريتان، لذلك ترتيبهما في النهاية لا يهم كثيرًا."
-      - answer: [H, D, B, T, N, P]
-        feedback:
-          en: "That works too: decision first, then the extras."
-          ar: "هذا صحيح أيضًا: القرار أولًا، ثم الإضافات."
-    misconceptions:
-      - id: MC-P10-006
-        when: { before: [B, D] }
-        feedback:
-          en: "Reserve comes before the date and price, so Sara would have to scroll back up to check them. Facts first, then the action."
-          ar: "زر «احجز» يأتي قبل التاريخ والسعر، فستضطر سارة إلى التمرير للأعلى للتحقق منهما. المعلومات أولًا، ثم الإجراء."
-      - id: MC-P10-001
-        when: { before: [P, D] }
-        feedback:
-          en: "On a phone, the photo would fill the first screen and push the facts down. It can come later, or not at all."
-          ar: "على الهاتف، ستملأ الصورة الشاشة الأولى وتدفع المعلومات للأسفل. يمكن أن تأتي لاحقًا، أو لا تأتي أبدًا."
-    hints:
-      - { en: "It's the same decision order as Unit 1. The columns don't change what Sara needs first.", ar: "إنه ترتيب القرار نفسه في الوحدة 1. الأعمدة لا تغيّر ما تحتاجه سارة أولًا." }
-    correct:
-      en: "Title, facts, conditions, action, then the extras."
-      ar: "العنوان، ثم المعلومات، ثم الشروط، ثم الإجراء، ثم الإضافات."
-    explain:
-      en: "On the laptop the photo sat above the facts, and Reserve sat in its own panel. Stacked in that order, Sara would meet the photo first and Reserve before the conditions. The phone order follows the decision instead."
-      ar: "على الحاسوب كانت الصورة فوق المعلومات، و«احجز» في لوحتها الخاصة. لو رُتّبت بهذا الترتيب، لرأت سارة الصورة أولًا و«احجز» قبل الشروط. أما ترتيب الهاتف فيتبع القرار."
-
-  - id: S06
     type: choose
     part: guided
     rules: [R06, R15]
@@ -168,10 +127,10 @@ steps:
       en: "The phone page is still long. What's OK to hide on narrow screens?"
       ar: "صفحة الهاتف ما زالت طويلة. ما الذي يصح إخفاؤه على الشاشات الضيّقة؟"
     options:
-      - { id: photo, text: { en: "The decorative photo", ar: "الصورة الزخرفية" } }
-      - { id: cancel, text: { en: "The cancellation rule", ar: "قاعدة الإلغاء" } }
-      - { id: place, text: { en: "The location", ar: "المكان" } }
       - { id: access, text: { en: "The access link", ar: "رابط الدخول" } }
+      - { id: cancel, text: { en: "The cancellation rule", ar: "قاعدة الإلغاء" } }
+      - { id: photo, text: { en: "The decorative photo", ar: "الصورة الزخرفية" } }
+      - { id: place, text: { en: "The location", ar: "المكان" } }
     answer: [photo]
     misconceptions:
       - id: MC-P10-061
@@ -186,7 +145,7 @@ steps:
       en: "A smaller screen changes how much fits at once, not what people need. Hide or shrink what's optional; keep everything that decides, even if it moves down."
       ar: "الشاشة الأصغر تغيّر مقدار ما يتّسع في وقت واحد، لا ما يحتاجه الناس. أخفِ الاختياري أو صغّره؛ وأبقِ كل ما يحسم القرار، حتى لو نزل للأسفل."
 
-  - id: S07
+  - id: S06
     type: compare
     part: contrast
     rules: [R11, R15]
@@ -217,8 +176,8 @@ steps:
     reason:
       prompt: { en: "What went wrong in the other one?", ar: "ما الخطأ في الأخرى؟" }
       options:
-        - { id: order, text: { en: "It kept the laptop's order, so the photo and button came before the facts", ar: "احتفظت بترتيب الحاسوب، فجاءت الصورة والزر قبل المعلومات" } }
         - { id: big, text: { en: "The photo is too big", ar: "الصورة كبيرة جدًا" } }
+        - { id: order, text: { en: "It kept the laptop's order, so the photo and button came before the facts", ar: "احتفظت بترتيب الحاسوب، فجاءت الصورة والزر قبل المعلومات" } }
       answer: [order]
       misconceptions:
         - id: MC-P10-062
@@ -239,7 +198,7 @@ steps:
       en: "Both stack, but A simply drops the laptop columns one after another. B reorders for the phone. Plan the narrow order on purpose rather than inheriting it."
       ar: "كلاهما مرتّب عموديًا، لكن A تُسقط أعمدة الحاسوب واحدًا بعد الآخر. أما B فتعيد الترتيب للهاتف. خطّط ترتيب الشاشة الضيّقة عن قصد بدلًا من أن ترثه."
 
-  - id: S08
+  - id: S07
     type: choose
     part: independent
     confidence: true
@@ -251,8 +210,8 @@ steps:
       en: "How should it stack on the phone?"
       ar: "كيف يجب ترتيبها عموديًا على الهاتف؟"
     options:
-      - { id: details, text: { en: "Pickup time, address and ID rule first; the map after, smaller", ar: "وقت الاستلام والعنوان وشرط الهوية أولًا؛ ثم الخريطة بعدها، أصغر" } }
       - { id: map, text: { en: "The full map first, then the details", ar: "الخريطة كاملة أولًا، ثم التفاصيل" } }
+      - { id: details, text: { en: "Pickup time, address and ID rule first; the map after, smaller", ar: "وقت الاستلام والعنوان وشرط الهوية أولًا؛ ثم الخريطة بعدها، أصغر" } }
       - { id: side, text: { en: "Keep them side by side, each half the width", ar: "أبقهما متجاورتين، لكل منهما نصف العرض" } }
     answer: [details]
     misconceptions:
@@ -273,7 +232,7 @@ steps:
       en: "The address is still there in words, so the map becomes supporting. It can follow the details, or open on tap."
       ar: "العنوان موجود بالكلمات، فتصبح الخريطة داعمة. يمكن أن تأتي بعد التفاصيل، أو تُفتح عند الضغط."
 
-  - id: S09
+  - id: S08
     type: choose
     part: independent
     rules: [R09, R14]
@@ -281,8 +240,8 @@ steps:
       en: "Sara's laptop page has two session cards side by side (from Unit 2). On a phone, which stays true?"
       ar: "صفحة سارة على الحاسوب فيها بطاقتا جلستين متجاورتين (من الوحدة 2). على الهاتف، ما الذي يبقى صحيحًا؟"
     options:
-      - { id: whole, text: { en: "Each card stacks whole, and inside each card the facts come before Reserve", ar: "كل بطاقة تُرتَّب كاملة، وداخل كل بطاقة تأتي المعلومات قبل «احجز»" } }
       - { id: buttons, text: { en: "Both Reserve buttons move to the bottom, so the cards are shorter", ar: "ينتقل زرّا «احجز» إلى الأسفل، لتصبح البطاقتان أقصر" } }
+      - { id: whole, text: { en: "Each card stacks whole, and inside each card the facts come before Reserve", ar: "كل بطاقة تُرتَّب كاملة، وداخل كل بطاقة تأتي المعلومات قبل «احجز»" } }
       - { id: one, text: { en: "Show only one card on phones", ar: "اعرض بطاقة واحدة فقط على الهواتف" } }
     answer: [whole]
     misconceptions:
@@ -303,10 +262,11 @@ steps:
       en: "Units 1 to 4 combine here: each card is a group (Unit 2), ordered by the decision (Unit 1), with one main action (Unit 3), stacked whole on a phone (this unit)."
       ar: "تجتمع الوحدات من 1 إلى 4 هنا: كل بطاقة مجموعة (الوحدة 2)، مرتّبة حسب القرار (الوحدة 1)، بإجراء رئيسي واحد (الوحدة 3)، ومرتّبة كاملة على الهاتف (هذه الوحدة)."
 
-  - id: S10
+  - id: S09
     type: card
     part: recap
+    icons: [phone, order, cut]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You chose stacking over shrinking, planned the phone order by the decision instead of inheriting the laptop's, and hid only what's optional.\n\nNext: checking that a layout really works at every width."
-      ar: "اخترت الترتيب العمودي بدلًا من التصغير، وخطّطت ترتيب الهاتف حسب القرار بدلًا من وراثة ترتيب الحاسوب، وأخفيت الاختياري فقط.\n\nالدرس التالي: التحقق من أن التخطيط يعمل فعلًا على كل عرض."
+      en: "- Stack instead of shrinking: a scaled-down page can't be read.\n- Plan the phone order by the decision; don't inherit the laptop's columns.\n- Hide only what's optional. Every fact stays.\n\nNext lesson: checking that a layout works at every width."
+      ar: "- رتّب عموديًا بدلًا من التصغير: الصفحة المصغّرة لا تُقرأ.\n- خطّط ترتيب الهاتف حسب القرار؛ لا ترث أعمدة الحاسوب.\n- أخفِ الاختياري فقط. وتبقى كل المعلومات.\n\nالدرس التالي: التحقق من أن التخطيط يعمل على كل عرض."

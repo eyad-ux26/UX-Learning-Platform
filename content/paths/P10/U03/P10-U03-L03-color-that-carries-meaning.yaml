@@ -32,27 +32,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "Could everyone tell which session is full?"
-      ar: "هل يستطيع الجميع معرفة أي جلسة مكتملة؟"
     mock: *dots
+    prompt:
+      en: "Green means open and red means full, with nothing else. Could everyone tell which session is full?"
+      ar: "الأخضر يعني متاح والأحمر يعني ممتلئ، ولا شيء غير ذلك. هل يستطيع الجميع معرفة الجلسة الممتلئة؟"
     options:
-      - { id: yes, text: { en: "Yes, red means full", ar: "نعم، الأحمر يعني مكتمل" } }
-      - { id: no, text: { en: "No, not everyone", ar: "لا، ليس الجميع" } }
-    reveal:
-      en: "For someone with red-green color blindness, the two dots can look almost the same. And even with perfect color vision, nothing says what green or red means here."
-      ar: "لمن لديه عمى اللونين الأحمر والأخضر، قد تبدو النقطتان متشابهتين تقريبًا. وحتى مع رؤية سليمة للألوان، لا شيء يقول ماذا يعني الأخضر أو الأحمر هنا."
-
+      - { id: yes, text: { en: 'Yes, red always means full', ar: "نعم، الأحمر يعني ممتلئ دائمًا" } }
+      - { id: no, text: { en: 'No: red and green can look the same to some people', ar: 'لا: الأحمر والأخضر قد يبدوان متشابهين لبعض الناس' } }
+    answer: [no]
+    misconceptions:
+      - id: MC-P10-052
+        when: [yes]
+        feedback:
+          en: "For someone with red-green colour blindness, the two dots can look almost the same. And nothing on the page says what the colours mean."
+          ar: "لمن لديه عمى الألوان الأحمر والأخضر، قد تبدو النقطتان متشابهتين تقريبًا. ولا شيء في الصفحة يقول ما تعنيه الألوان."
+    correct:
+      en: "Colour alone leaves some people out."
+      ar: "اللون وحده يستبعد بعض الناس."
+    explain:
+      en: "About 1 in 12 men can't reliably tell red from green. Add a word like \"Full\", or an icon, so the status doesn't depend on colour."
+      ar: "نحو رجل من كل 12 لا يميّز الأحمر من الأخضر بثقة. أضِف كلمة مثل «ممتلئ»، أو أيقونة، حتى لا تعتمد الحالة على اللون."
   - id: S03
     type: card
     part: concept
+    icons: [color, target, warn]
     title: { en: "Color reinforces, it doesn't carry", ar: "اللون يعزّز، ولا يحمل المعنى وحده" }
     body:
-      en: "Color is great at drawing attention and reinforcing meaning. It shouldn't be the only way meaning is shown: pair it with words, an icon, or a shape.\n\nGive each color one consistent job. If purple means \"you can tap this\", don't use it for plain headings. If red means \"error\" or \"full\", don't use it to decorate a price.\n\nWhen a color has one job, people learn it quickly and trust it."
-      ar: "اللون ممتاز في جذب الانتباه وتعزيز المعنى. لكن لا يجب أن يكون الطريقة الوحيدة لإظهار المعنى: اقرنه بكلمات أو أيقونة أو شكل.\n\nأعطِ كل لون وظيفة واحدة ثابتة. إذا كان البنفسجي يعني «يمكنك الضغط هنا»، فلا تستخدمه لعناوين عادية. وإذا كان الأحمر يعني «خطأ» أو «مكتمل»، فلا تستخدمه لتزيين سعر.\n\nعندما يكون للون وظيفة واحدة، يتعلّمها الناس بسرعة ويثقون بها."
-
+      en: "Colour is great at drawing attention and reinforcing meaning.\n\n- **Never colour alone:** pair it with words, an icon or a shape.\n- **One job per colour:** if purple means \"you can tap this\", don't use it for plain headings.\n- **Status colours stay status:** if red means error or full, don't decorate a price with it.\n\nWhen a colour has one job, people learn it quickly and trust it."
+      ar: "اللون ممتاز في جذب الانتباه وتعزيز المعنى.\n\n- **لا تعتمد على اللون وحده:** أضِف إليه كلمات أو أيقونة أو شكلًا.\n- **وظيفة واحدة لكل لون:** إذا كان البنفسجي يعني «يمكنك الضغط هنا»، فلا تستخدمه لعناوين عادية.\n- **ألوان الحالة تبقى للحالة:** إذا كان الأحمر يعني خطأ أو ممتلئ، فلا تزيّن به سعرًا.\n\nحين يكون للّون وظيفة واحدة، يتعلّمها الناس بسرعة ويثقون بها."
   - id: S04
     type: fix
     part: guided
@@ -63,10 +71,10 @@ steps:
       ar: "ما أفضل إصلاح للنقاط؟"
     mock: *dots
     options:
-      - { id: words, text: { en: "Add words: \"4 places left\" and \"Fully booked\"", ar: "أضف كلمات: «باقي 4 أماكن» و«اكتمل الحجز»" } }
       - { id: brighter, text: { en: "Use a brighter red and green", ar: "استخدم أحمر وأخضر أكثر سطوعًا" } }
-      - { id: bigger, text: { en: "Make the dots bigger", ar: "كبّر النقاط" } }
       - { id: legend, text: { en: "Add a color legend at the bottom of the page", ar: "أضف دليل ألوان في أسفل الصفحة" } }
+      - { id: words, text: { en: "Add words: \"4 places left\" and \"Fully booked\"", ar: "أضف كلمات: «باقي 4 أماكن» و«اكتمل الحجز»" } }
+      - { id: bigger, text: { en: "Make the dots bigger", ar: "كبّر النقاط" } }
     answer: [words]
     misconceptions:
       - id: MC-P10-052
@@ -208,9 +216,9 @@ steps:
             - { kind: text, weight: bold, color: orange, text: { en: "Platform 6", ar: "رصيف 6" } }
         - { kind: button, text: "@B1e", gap: m }
     options:
-      - { id: message, text: { en: "Add a clear message: \"Platform changed: now 6 (was 4)\"", ar: "أضف رسالة واضحة: «تغيّر الرصيف: الآن 6 (كان 4)»" } }
-      - { id: blink, text: { en: "Make the orange number blink", ar: "اجعل الرقم البرتقالي يومض" } }
       - { id: red, text: { en: "Use red instead of orange", ar: "استخدم الأحمر بدلًا من البرتقالي" } }
+      - { id: blink, text: { en: "Make the orange number blink", ar: "اجعل الرقم البرتقالي يومض" } }
+      - { id: message, text: { en: "Add a clear message: \"Platform changed: now 6 (was 4)\"", ar: "أضف رسالة واضحة: «تغيّر الرصيف: الآن 6 (كان 4)»" } }
     answer: [message]
     misconceptions:
       - id: MC-P10-052
@@ -223,7 +231,7 @@ steps:
       ar: "قل ما الذي تغيّر بالكلمات؛ ويمكن أن يبقى اللون ليساعده على البروز."
     explain:
       en: "A change is important news. Words explain it to everyone, including people who can't see the color difference and people using screen readers."
-      ar: "التغيير خبر مهم. الكلمات تشرحه للجميع، بمن فيهم من لا يرى فرق الألوان ومن يستخدم قارئ الشاشة."
+      ar: "التغيير خبر مهم. الكلمات تشرحه للجميع، بمن فيهم من لا يرى فرق الألوان ومن يستخدم الـ Screen reader."
 
   - id: S09
     type: choose
@@ -238,8 +246,8 @@ steps:
         - { kind: small, text: "@W1b", gap: xs }
         - { kind: chip, text: "@W1e", gap: s }
     options:
-      - { id: ok, text: { en: "Yes: it reinforces words that already say the status", ar: "نعم: يعزّز كلمات تقول الحالة أصلًا" } }
       - { id: never, text: { en: "No: never use color for status", ar: "لا: لا تستخدم اللون للحالة أبدًا" } }
+      - { id: ok, text: { en: "Yes: it reinforces words that already say the status", ar: "نعم: يعزّز كلمات تقول الحالة أصلًا" } }
       - { id: amber, text: { en: "No: only 4 left should be red", ar: "لا: بقاء 4 فقط يجب أن يكون أحمر" } }
     answer: [ok]
     also_ok:
@@ -263,7 +271,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [color, tap, money]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You made status work without color, kept the tappable color for tappable things, and stopped a status color from decorating a price. You gave four colors four jobs.\n\nNext: the skill check."
-      ar: "جعلت الحالة تعمل دون الاعتماد على اللون، وأبقيت لون الضغط للأشياء القابلة للضغط، ومنعت لون حالة من تزيين سعر. وأعطيت أربعة ألوان أربع وظائف.\n\nالدرس التالي: اختبار المهارة."
+      en: "- Status must work without colour: add words, icons or shapes.\n- Keep the tappable colour for tappable things.\n- Don't decorate with a status colour.\n\nNext lesson: the skill check."
+      ar: "- الحالة يجب أن تُفهم دون لون: أضِف كلمات أو أيقونات أو أشكالًا.\n- خصّص لون «يمكنك الضغط» للعناصر القابلة للضغط.\n- لا تزيّن بلون مخصّص للحالة.\n\nالدرس التالي: اختبار المهارة."

@@ -19,27 +19,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "Which page do you think gets more first-time visitors to book a session that actually fits them?"
-      ar: "أي صفحة تتوقّع أنها تجعل عددًا أكبر من الزوّار الجدد يحجزون جلسة تناسبهم فعلًا؟"
+      en: "If the big photo and the newsletter fill the top of Sara's phone, where does the evening time end up?"
+      ar: "إذا ملأت الصورة الكبيرة والنشرة البريدية أعلى شاشة هاتف سارة، أين يصبح موعد المساء؟"
     options:
-      - { id: promo, text: { en: "Big photo and newsletter first", ar: "الصورة الكبيرة والنشرة أولًا" } }
-      - { id: decision, text: { en: "Session details first, photo smaller", ar: "تفاصيل الجلسة أولًا، والصورة أصغر" } }
-      - { id: same, text: { en: "About the same", ar: "تقريبًا متساويتان" } }
-    reveal:
-      en: "Nobody has tested this exact page, so it's a prediction either way. By the end of the lesson you'll know how to check it instead of arguing about it."
-      ar: "لم يختبر أحد هذه الصفحة تحديدًا، لذلك كلا الرأيين توقّع. في نهاية الدرس ستعرف كيف تتحقّق من ذلك بدلًا من الجدال حوله."
-
+      - { id: gone, text: { en: "Off the page", ar: "خارج الصفحة" } }
+      - { id: top, text: { en: "Still near the top", ar: "ما زال قرب الأعلى" } }
+      - { id: below, text: { en: 'Below the first screen, after the promotion', ar: "أسفل الشاشة الأولى، بعد الترويج" } }
+    answer: [below]
+    misconceptions:
+      - id: MC-P10-015
+        when: [top, gone]
+        feedback:
+          en: "The time is still on the page, but the photo and banner take the first screen. Sara has to scroll past promotion to answer her question."
+          ar: "الموعد ما زال في الصفحة، لكن الصورة والـ Banner يأخذان الشاشة الأولى. فعلى سارة أن تمرّ بالترويج لتجيب عن سؤالها."
+    correct:
+      en: "The top spot went to promotion, so the decision moved down."
+      ar: "الموضع الأعلى ذهب للترويج، فنزل القرار للأسفل."
+    explain:
+      en: "The top of the screen is limited. Whatever takes it pushes everything else down. Getting attention isn't the same as helping people decide."
+      ar: "أعلى الشاشة مساحة محدودة. وما يأخذها يدفع كل شيء آخر للأسفل. ولفت الانتباه ليس هو مساعدة الناس على القرار."
   - id: S03
     type: card
     part: concept
+    icons: [eye, order, target, promo]
     title: { en: "Attention isn't understanding", ar: "الانتباه ليس فهمًا" }
     body:
-      en: "Big, bright things pull the eye. That's useful, and that's the risk: whatever is loudest gets looked at first, whether or not it helps.\n\nHierarchy suggests a route through the page; it can't force one. So spend the loudest spot on what answers the visitor's question. Promotion still has a place: after the decision, where it doesn't get in the way."
-      ar: "الأشياء الكبيرة والزاهية تجذب العين. هذا مفيد، وهنا الخطر أيضًا: أكثر العناصر لفتًا للنظر يُنظر إليه أولًا، سواء ساعد أم لا.\n\nالتسلسل البصري يقترح مسارًا داخل الصفحة، لكنه لا يفرضه. لذلك خصّص الموضع الأبرز لما يجيب عن سؤال الزائر. ويبقى للترويج مكان: بعد القرار، حيث لا يعترض الطريق."
-
+      en: "Big, bright things pull the eye first, whether or not they help.\n\n- **Attention isn't understanding:** the loudest item gets looked at, not necessarily read.\n- **Hierarchy suggests a route:** it can't force one.\n- **Spend the loudest spot** on what answers the visitor's question.\n- **Promotion still has a place:** after the decision, where it doesn't block it."
+      ar: "الأشياء الكبيرة والزاهية تجذب العين أولًا، سواء ساعدت أم لا.\n\n- **لفت الانتباه ليس فهمًا:** العنصر الأكثر لفتًا للنظر يُنظر إليه، لا يُقرأ بالضرورة.\n- **الـ Visual hierarchy يقترح مسارًا:** لكنه لا يفرضه.\n- **خصّص الموضع الأبرز** لما يجيب عن سؤال الزائر.\n- **للترويج مكان:** بعد القرار، حيث لا يعترض الطريق."
   - id: S04
     type: tune
     part: guided
@@ -81,7 +89,7 @@ steps:
       - answer: [strip]
         feedback:
           en: "That can work too. A thin strip keeps the title and time near the top. Check it on a small phone: the details should still show without scrolling."
-          ar: "هذا قد يصلح أيضًا. الشريط الرفيع يبقي العنوان والوقت قريبين من الأعلى. تحقّق منه على هاتف صغير: يجب أن تظهر التفاصيل دون تمرير."
+          ar: "هذا قد يصلح أيضًا. الـ Slider الرفيع يبقي العنوان والوقت قريبين من الأعلى. تحقّق منه على هاتف صغير: يجب أن تظهر التفاصيل دون تمرير."
     misconceptions:
       - id: MC-P10-001
         when: [big]
@@ -105,9 +113,9 @@ steps:
       ar: "أين يجب أن توضع دعوة الاشتراك في النشرة؟"
     options:
       - { id: top, text: { en: "A banner above the title", ar: "شريط فوق العنوان" } }
-      - { id: popup, text: { en: "A popup when the page opens", ar: "نافذة منبثقة عند فتح الصفحة" } }
       - { id: after, text: { en: "A link after the booking details", ar: "رابط بعد تفاصيل الحجز" } }
-      - { id: required, text: { en: "A checkbox Sara must tick to reserve", ar: "مربع اختيار يجب أن تختاره سارة لتحجز" } }
+      - { id: required, text: { en: "A checkbox Sara must tick to reserve", ar: "Checkbox يجب أن تختاره سارة لتحجز" } }
+      - { id: popup, text: { en: "A popup when the page opens", ar: "نافذة منبثقة عند فتح الصفحة" } }
     answer: [after]
     misconceptions:
       - id: MC-P10-015
@@ -186,7 +194,7 @@ steps:
     prompt:
       en: "Which part of his ticket gets more attention than it deserves?"
       ar: "أي جزء في تذكرته يأخذ انتباهًا أكثر مما يستحق؟"
-    mock: &ticketPromo
+    mock:
       blocks:
         - { kind: banner, text: "@B1a", region: banner }
         - { kind: heading, text: "@B1b", gap: m, region: route }
@@ -222,7 +230,7 @@ steps:
       ar: "شريط التطبيق هو الأكثر لفتًا للنظر، والأقل فائدة في المحطة."
     explain:
       en: "The banner is colored, boxed and at the top, while the departure time and platform are small grey text. The emphasis is spent on promotion instead of on what Youssef needs."
-      ar: "الشريط ملوّن ومحاط بإطار وفي الأعلى، بينما وقت المغادرة والرصيف نص رمادي صغير. البروز صُرف على الترويج بدلًا مما يحتاجه يوسف."
+      ar: "الـ Slider ملوّن ومحاط بإطار وفي الأعلى، بينما وقت المغادرة والرصيف نص رمادي صغير. البروز صُرف على الترويج بدلًا مما يحتاجه يوسف."
 
   - id: S08
     type: order
@@ -271,16 +279,16 @@ steps:
       en: "The marketing lead says: \"Make the photo bigger, it increases engagement.\" What's your best response?"
       ar: "تقول مسؤولة التسويق: «كبّروا الصورة، فهي تزيد التفاعل». ما أفضل ردّ؟"
     options:
-      - { id: agree, text: { en: "Agree and make it bigger", ar: "أوافق وأكبّرها" } }
-      - { id: refuse, text: { en: "Refuse: hierarchy rules say details come first", ar: "أرفض: قواعد التسلسل تقول إن التفاصيل أولًا" } }
+      - { id: refuse, text: { en: "Refuse: hierarchy rules say details come first", ar: "أرفض: قواعد الـ Visual hierarchy تقول إن التفاصيل أولًا" } }
       - { id: test, text: { en: "Keep the details first, and offer a quick test: can a first-time visitor find the time, price and cancellation rule?", ar: "أبقي التفاصيل أولًا، وأقترح اختبارًا سريعًا: هل يجد الزائر الجديد الوقت والسعر وشرط الإلغاء؟" } }
       - { id: both, text: { en: "Make the photo and title equally big", ar: "أجعل الصورة والعنوان بالحجم نفسه" } }
+      - { id: agree, text: { en: "Agree and make it bigger", ar: "أوافق وأكبّرها" } }
     answer: [test]
     reason:
       prompt: { en: "Why is that the strongest reply?", ar: "لماذا هذا أقوى ردّ؟" }
       options:
-        - { id: check, text: { en: "It checks the claim against what visitors need to do", ar: "لأنه يختبر الادّعاء مقابل ما يحتاج الزوّار إلى فعله" } }
         - { id: win, text: { en: "Tests always win arguments", ar: "لأن الاختبارات تحسم كل جدال" } }
+        - { id: check, text: { en: "It checks the claim against what visitors need to do", ar: "لأنه يختبر الادّعاء مقابل ما يحتاج الزوّار إلى فعله" } }
       answer: [check]
       misconceptions:
         - id: MC-P10-017
@@ -309,7 +317,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [promo, ok]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You moved promotion after the decision on three different pages: a workshop, a food order and a bus ticket. You also answered a \"make it pop\" request with a goal and a way to check it.\n\nNext: the skill check. A new page, no hints."
-      ar: "نقلت الترويج إلى ما بعد القرار في ثلاث صفحات مختلفة: ورشة، وطلب طعام، وتذكرة حافلة. وأجبت عن طلب «اجعلها لافتة» بهدف وطريقة للتحقق.\n\nالدرس التالي: اختبار المهارة. صفحة جديدة، بدون تلميحات."
+      en: "- Promotion goes after the decision, whether it's a workshop page, a food order or a bus ticket.\n- Answer a \"make it pop\" request with a goal and a way to check it.\n\nNext lesson: the skill check. A new page, no hints."
+      ar: "- الترويج يأتي بعد القرار، سواء في صفحة ورشة أو طلب طعام أو تذكرة حافلة.\n- أجب عن طلب «اجعلها لافتة» بهدف وطريقة للتحقق.\n\nالدرس التالي: اختبار المهارة. صفحة جديدة، دون تلميحات."
