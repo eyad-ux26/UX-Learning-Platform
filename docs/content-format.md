@@ -9,9 +9,25 @@ content/paths/P10/
   path.yaml          id, title, subtitle
   fixtures.yaml      shared scenario text, referenced as "@W1a"
   U01/
-    unit.yaml        id, title, skill, free
+    unit.yaml        id, title, skill, free, skills
     P10-U01-L01-find-the-next-useful-thing.yaml
+    P10-U01-B01-retests.yaml   re-test versions, never shown as a lesson
 ```
+
+## Skills and re-tests
+
+`unit.yaml` lists the unit's skills. Each is one thing a learner can be checked on:
+
+```yaml
+skills:
+  - id: SK-P10-U01-01
+    title: { en: "Put the deciding facts first", ar: "..." }
+    can_do: { en: "Order a screen so the facts people decide with come before the main action.", ar: "..." }
+```
+
+Every graded step names the skill it measures with `skill: SK-P10-U01-01`. A skill needs **at least 4 versions in 4 different scenarios**, and at least 2 of them must be re-test versions held back in the unit's bank file. A version's scenario is its own `scenario`, or else its lesson's hook, so two steps on the same hook count as one scenario. `npm run validate` warns about any skill short of this, and the control board shows the gaps.
+
+A bank file has `mode: bank`, an id like `P10-U01-B01`, a `title`, `sources` and `steps`. Each step is a full activity with its own `scenario`, `part: retest` and a `skill`. Write each re-test on a new case, testing the same finding as the lesson version, with its own `ref`.
 
 ## Text
 
@@ -49,6 +65,7 @@ Fields every step can have:
 | `misconceptions` | `{ id: MC-P10-001, when: ..., feedback }`. The first one that matches the answer is shown |
 | `confidence` | `true` to ask "How sure are you?" before Check. About 2 per lesson |
 | `rules` | The research rules the step applies, such as `R11` or `U25` |
+| `skill` | The unit skill a graded step measures, such as `SK-P10-U01-02`. Required on graded steps once the unit lists skills |
 
 By type:
 
@@ -124,6 +141,8 @@ Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 - A `group` with `scroll: true` scrolls sideways inside the mock, with its `row` children at a fixed column width (`colw`, default 120). `sticky: true` keeps the first column in place.
 - Mock screens respond to taps: switches, checkboxes, radio buttons, segmented controls and − / + buttons change state, empty fields accept typing, and a slider with `min`/`max` can be dragged. This is only for trying things out and never affects the answer.
 
+- **Mastery round.** Each graded step's first result is kept per skill. After the skill check, any skill the learner missed anywhere in the unit (wrong first try, a hint, or a shown answer) comes back in a mastery round as an unseen re-test version. A miss there brings the next unseen version. The skill is mastered once a re-test is right on the first try; when the versions run out it's marked for later review. The preview keeps these results in the browser.
+- **Control board.** `npm run board` builds `preview/dist/board.html`, which opens on the board: every path, unit, skill and activity with its coverage, the scenario of each version, where right answers sit, sources, mistakes tracked and your own test runs. Any activity can be played from there. Unit previews have a **Board** button on the home screen too.
 - Every step after a lesson's hook card has a **Show the scenario** panel that reopens the hook (title, text and mock), so learners can re-check the situation at any time. A step with its own `scenario` is a new case, so it shows that scenario instead and doesn't offer the hook.
 - The preview has a reviewer bar above each step (previous, next, and a list of all steps), so a reviewer can jump to any step without answering the ones before it.
 - An `order` step without its own `mock` shows a **live preview** that updates as items move. Give items a `kind` (such as `title` or `button`) so the preview looks like the real screen; the default is `meta`. Set `preview: false` to turn it off.

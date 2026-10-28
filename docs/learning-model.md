@@ -34,6 +34,10 @@ A **skill check** lesson uses a new scenario, shows no hints and no per-step ver
 - Each result is recorded as **independent** (first try, no hint), **supported**, or **revealed**. Only independent results count as skill evidence. XP: 10, 5 and 0.
 - About 2 steps per lesson ask for confidence before Check (R20). Confident errors go first in review.
 
+## Mastery
+
+Each unit lists several skills, each one measurable on its own. Every graded step measures one skill, and every skill has at least 4 versions of its question in 4 different scenarios: one or more in the lessons, one in the skill check, and at least 2 held back as re-tests. A skill missed anywhere in the unit comes back after the skill check as a fresh re-test, until the learner gets one right on the first try. Learners see this as a short "Mastery round" and a list of skills; the full structure is for the team, on the control board.
+
 ## Skill states
 
 Practiced (lessons done) → Shown (skill check passed unaided) → Kept (passed again in spaced review at least 3 days later, on a new scenario).
