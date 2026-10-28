@@ -41,7 +41,7 @@ steps:
     mock: *pills
     prompt:
       en: "The teammate gave both prices matching green pills so they \"look consistent\". Sara needs to see which price goes with which session. What should you change?"
-      ar: "أعطى الزميل السعرين شارتين خضراوين متطابقتين حتى «يبدوا متناسقين». وسارة تحتاج أن ترى أي سعر يخص أي جلسة. ماذا تغيّر؟"
+      ar: "أعطى زميلك السعرين شارتين خضراوين متطابقتين حتى «يبدوا متناسقين». وسارة تحتاج أن ترى أي سعر يخص أي جلسة. ماذا تغيّر؟"
     options:
       - { id: big, text: { en: "Make the pills bigger", ar: "كبّر الشارتين" } }
       - { id: color, text: { en: "Give the two pills different colours", ar: "اجعل الشارتين بلونين مختلفين" } }
@@ -73,45 +73,12 @@ steps:
       en: "Four cues show what belongs together, and they aren't equally strong.\n\n- **Spacing:** close items read as a group.\n- **A shared container:** a card or a tinted area. Everything inside belongs together, even if it looks different.\n- **A heading:** names the group. It also helps people using a screen reader, which can't see spacing.\n- **Matching colour:** a weak hint. Never rely on it alone.\n\nEvery container adds a boundary. A border around everything makes many small groups that compete."
       ar: "أربع إشارات تُظهر ما ينتمي معًا، وقوّتها ليست متساوية.\n\n- **الـ Spacing:** العناصر المتقاربة تُقرأ كمجموعة.\n- **Container مشترك:** Card أو مساحة ملوّنة. كل ما بداخله ينتمي معًا، حتى لو بدا مختلفًا.\n- **العنوان (Heading):** يسمّي المجموعة. ويساعد أيضًا من يستخدمون الـ Screen reader، الذي لا يرى المسافات.\n- **تطابق اللون:** تلميح ضعيف. لا تعتمد عليه وحده أبدًا.\n\nكل Container يضيف حدًّا جديدًا. وإطار حول كل شيء يصنع مجموعات صغيرة كثيرة تتنافس."
   - id: S04
-    type: match
-    part: guided
-    rules: [R07, R15]
-    prompt:
-      en: "Match each cue to what it tells people."
-      ar: "طابق كل إشارة مع ما تخبر الناس به."
-    left:
-      - { id: space, text: { en: "Small gap between items", ar: "مسافة صغيرة بين العناصر" } }
-      - { id: card, text: { en: "A card around several items", ar: "بطاقة حول عدة عناصر" } }
-      - { id: head, text: { en: "A heading above a group", ar: "عنوان فوق مجموعة" } }
-      - { id: color, text: { en: "Two far-apart items in the same color", ar: "عنصران متباعدان باللون نفسه" } }
-    right:
-      - { id: together, text: { en: "These items belong together", ar: "هذه العناصر تنتمي معًا" } }
-      - { id: region, text: { en: "These share one area, even if they look different", ar: "هذه تشترك في مساحة واحدة، حتى لو بدت مختلفة" } }
-      - { id: name, text: { en: "This is what the group is about", ar: "هذا موضوع المجموعة" } }
-      - { id: weak, text: { en: "Maybe related, but not reliable on its own", ar: "ربما مرتبطان، لكن ذلك غير موثوق وحده" } }
-    answer: { space: together, card: region, head: name, color: weak }
-    misconceptions:
-      - id: MC-P10-025
-        when: { left: color, right: together }
-        feedback:
-          en: "Matching color is a weak hint. Distance usually wins, and some people can't tell the colors apart."
-          ar: "تطابق اللون تلميح ضعيف. المسافة تتغلّب غالبًا، وبعض الناس لا يميّزون الألوان."
-    hints:
-      - { en: "Start with the weakest cue: which one would you never rely on alone?", ar: "ابدأ بأضعف إشارة: أيّها لن تعتمد عليه وحده أبدًا؟" }
-    correct:
-      en: "Spacing groups, containers enclose, headings name, color only hints."
-      ar: "المسافة تجمع، والحاوية تحتضن، والعنوان يسمّي، واللون يلمّح فقط."
-    explain:
-      en: "These cues work best together: a heading names the group, spacing or a container shows its edges, and color, if used, just reinforces."
-      ar: "هذه الإشارات تعمل أفضل معًا: العنوان يسمّي المجموعة، والمسافة أو الحاوية تُظهر حدودها، واللون، إن استُخدم، يعزّز فقط."
-
-  - id: S05
     type: spot
     part: guided
     rules: [R06, R15]
     prompt:
       en: "On the teammate's layout, which part makes it hardest to tell which price belongs to which session?"
-      ar: "في تخطيط الزميل، أي جزء يجعل معرفة سعر كل جلسة أصعب؟"
+      ar: "في التخطيط الذي صمّمه زميلك، أي جزء يجعل معرفة سعر كل جلسة أصعب؟"
     mock:
       blocks:
         - kind: row
@@ -155,7 +122,7 @@ steps:
       en: "The layout groups by type (all titles, all dates, all prices) instead of by booking. That's tidy to look at but breaks every relationship Sara needs, and the shared button can't belong to either session."
       ar: "التخطيط يجمّع حسب النوع (كل العناوين، كل التواريخ، كل الأسعار) بدلًا من الحجز. يبدو مرتّبًا لكنه يكسر كل علاقة تحتاجها سارة، والزر المشترك لا يمكن أن ينتمي لأي جلسة."
 
-  - id: S06
+  - id: S05
     type: compare
     part: contrast
     confidence: true
@@ -219,13 +186,13 @@ steps:
       en: "Both are valid structures, but A spends a border on every line. B uses headings to name each session, tight spacing inside, and one divider between. A card layout can be just as clear if each card wraps a whole booking and nothing else."
       ar: "كلاهما تنظيم مقبول، لكن A تصرف إطارًا على كل سطر. أما B فتستخدم عناوين لتسمية كل جلسة، ومسافات ضيّقة في الداخل، وفاصلًا واحدًا بينهما. تخطيط البطاقات يمكن أن يكون بالوضوح نفسه إذا احتضنت كل بطاقة حجزًا كاملًا ولا شيء غيره."
 
-  - id: S07
+  - id: S06
     type: fix
     part: guided
     rules: [R06, R15]
     prompt:
       en: "Which change best fixes the teammate's layout?"
-      ar: "أي تغيير يصلح تخطيط الزميل بأفضل شكل؟"
+      ar: "أي تغيير يصلح التخطيط الذي صمّمه زميلك بأفضل شكل؟"
     mock: *pills
     options:
       - { id: arrows, text: { en: "Add arrows from each price to its title", ar: "أضف أسهمًا من كل سعر إلى عنوانه" } }
@@ -256,7 +223,7 @@ steps:
       en: "Once each session is one complete group, every fact and action has an owner. The colors and borders become optional."
       ar: "عندما تصبح كل جلسة مجموعة كاملة واحدة، يصبح لكل معلومة وإجراء مالك. وتصبح الألوان والحدود اختيارية."
 
-  - id: S08
+  - id: S07
     type: spot
     part: independent
     rules: [R14, R19]
@@ -297,7 +264,7 @@ steps:
       en: "Labels group with whatever they're closest to. Here \"Flat\" is closest to the building field above it, so Nour may type her flat number there. Keep each label tight above its own field."
       ar: "التسميات تنضم إلى أقرب شيء لها. هنا «رقم الشقة» أقرب إلى حقل المبنى الذي فوقها، فقد تكتب نور رقم الشقة فيه. أبقِ كل تسمية ملاصقة لحقلها من الأعلى."
 
-  - id: S09
+  - id: S08
     type: choose
     part: independent
     confidence: true
@@ -324,7 +291,7 @@ steps:
       en: "Spacing and borders show groups to the eye. A heading per session, with its facts and button following it in order, shows the same groups to a screen reader. Good grouping uses both."
       ar: "المسافات والحدود تُظهر المجموعات للعين. أما عنوان لكل جلسة، تليه معلوماتها وزرها بالترتيب، فيُظهر المجموعات نفسها للـ Screen reader. التجميع الجيد يستخدم الاثنين."
 
-  - id: S10
+  - id: S09
     type: card
     part: recap
     icons: [warn, group, ear]
