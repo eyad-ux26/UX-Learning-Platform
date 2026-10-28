@@ -1,216 +1,436 @@
 id: P10-U04-L02
 mode: lesson
-minutes: 9
+minutes: 8
 title:
   en: "Check every width, not one screenshot"
-  ar: "تحقّق من كل عرض، لا من لقطة شاشة واحدة"
+  ar: "افحص كل عرض، لا لقطة شاشة واحدة"
+sources:
+  - title: { en: "Breakpoints in Responsive Design (NN/g)", ar: "نقاط التحوّل (Breakpoints) في التصميم المتجاوب (NN/g)" }
+    url: "https://www.nngroup.com/articles/breakpoints-in-responsive-design/"
+  - title: { en: "Responsive Web Design (RWD) and User Experience (NN/g)", ar: "التصميم المتجاوب (Responsive design) وتجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/responsive-web-design-definition/"
 review_labels:
+  MC-P10-060: { en: "Responsive isn't scaling everything down", ar: "الـ Responsive design ليس تصغير كل شيء" }
+  MC-P10-061: { en: "Hide what's optional, never what decides", ar: "أخفِ الاختياري، لا ما يحسم القرار" }
   MC-P10-063: { en: "One screenshot doesn't prove a layout works", ar: "لقطة شاشة واحدة لا تثبت أن التخطيط يعمل" }
-  MC-P10-064: { en: "Remember the gutters", ar: "تذكّر الهوامش الجانبية" }
+  MC-P10-078: { en: "Fitting isn't the same as usable", ar: "الاتّساع ليس هو سهولة الاستخدام" }
 steps:
   - id: S01
     type: card
     part: hook
-    title: { en: "\"It works on my phone\"", ar: "«يعمل على هاتفي»" }
+    title: { en: "\"Mobile done\"", ar: "«انتهينا من الهاتف»" }
     body:
-      en: "A teammate checked Sara's page on their own phone, 390px wide, and shared a screenshot: \"Mobile done.\"\n\nThe screenshot looks great. Many people use smaller phones, enlarge their text, or turn their tablet sideways."
-      ar: "تحقّق أحد الزملاء من صفحة سارة على هاتفه، بعرض 390 بكسل، وشارك لقطة شاشة: «انتهينا من الهاتف».\n\nاللقطة تبدو رائعة. لكن كثيرين يستخدمون هواتف أصغر، أو يكبّرون النص، أو يديرون أجهزتهم اللوحية أفقيًا."
+      en: "A teammate checked Sara's page on their own phone and shared a screenshot: \"Mobile done.\"\n\nThe screenshot looks great. But phones come in many widths, and so do tablets and laptop windows."
+      ar: "فحص أحد الزملاء صفحة سارة على هاتفه وشارك لقطة شاشة: «انتهينا من الهاتف».\n\nاللقطة تبدو رائعة. لكن الهواتف بعروض كثيرة، وكذلك الأجهزة اللوحية ونوافذ الـ Laptop."
+    mock:
+      caption: { en: "The teammate's phone", ar: "هاتف الزميل" }
+      width: 340
+      blocks:
+        - { kind: title, text: "@W1a" }
+        - { kind: meta, text: "@W1b", gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, text: "@W1f" }
+            - { kind: button, emphasis: low, text: { en: "Add to calendar", ar: "أضف إلى التقويم" } }
 
   - id: S02
-    type: predict
+    type: tune
     part: try
     rules: [R12]
+    value:
+      en: "Responsive design (NN/g): page elements reshuffle as the viewport shrinks. On a narrower phone, rows that fit before must be allowed to rearrange, not shrink or overflow."
+      ar: "التصميم المتجاوب (NN/g): تُعاد ترتيب عناصر الصفحة كلما صغرت الشاشة. وعلى هاتف أضيق، يجب أن يُسمح للصفوف التي كانت تتّسع بأن يُعاد ترتيبها، لا أن تصغر أو تخرج عن الشاشة."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "In responsive design, page elements reshuffle as the viewport grows or shrinks." }
     prompt:
-      en: "The page works at 390px. At 320px, with 16px side margins, only 288px is left for content. The Reserve and Add to calendar buttons sit in one row that needs 300px. What happens at 320px?"
-      ar: "الصفحة تعمل بعرض 390 بكسل. وعند 320 بكسل، مع هامش 16 بكسل في كل جانب، يبقى 288 بكسل فقط للمحتوى. زرّا «احجز» و«أضِف إلى التقويم» في صف واحد يحتاج 300 بكسل. ماذا يحدث عند 320 بكسل؟"
-    options:
-      - { id: auto, text: { en: "The browser shrinks the buttons to fit", ar: "المتصفح يصغّر الزرّين حتى يتّسعا" } }
-      - { id: break, text: { en: 'The row no longer fits: 288 is less than 300', ar: 'الصف لم يعد يتّسع: 288 أقل من 300' } }
-      - { id: fine, text: { en: "It's fine: 320px is only a bit narrower than 390px", ar: 'لا مشكلة: 320 بكسل أضيق قليلًا فقط من 390 بكسل' } }
-    answer: [break]
-    misconceptions:
-      - id: MC-P10-063
-        when: [fine, auto]
-        feedback:
-          en: "A row that's wider than the content area doesn't shrink by itself. It gets cut off or makes the page scroll sideways. 70px is plenty to break a layout."
-          ar: "الصف الأعرض من مساحة المحتوى لا يصغر من تلقاء نفسه. بل يُقطع أو يجعل الصفحة تتحرّك أفقيًا. و70 بكسل كافية لكسر التخطيط."
-    correct:
-      en: "It breaks, 12px short."
-      ar: "ينكسر، بفارق 12 بكسل."
-    explain:
-      en: "A screenshot at 390px can't show this. The only way to know is to check the narrow end, and to do the maths with the margins included."
-      ar: "لقطة الشاشة بعرض 390 بكسل لا تُظهر هذا. الطريقة الوحيدة للمعرفة هي التحقق من الطرف الضيّق، والحساب مع احتساب الهوامش."
-  - id: S03
-    type: card
-    part: concept
-    icons: [width, phone, space]
-    title: { en: "A range, not a size", ar: "مدى، لا مقاس واحد" }
-    body:
-      en: "Layouts live across a range of widths, not at one size.\n\n- **Check the range:** the narrow end, the wide end, and every point where the layout changes.\n- **320px is the floor:** WCAG \"Reflow\" expects ordinary pages to work at 320 CSS pixels with no sideways scrolling. That also covers zoom: 1280px at 400% behaves like 320px.\n- **Subtract the gutters:** content width is the screen minus the side margins. With 16px each side, a 360px phone gives you 328px."
-      ar: "التخطيطات تعيش عبر مدى من العروض، لا عند حجم واحد.\n\n- **تحقّق من المدى كله:** الطرف الضيّق، والطرف العريض، وكل نقطة يتغيّر عندها التخطيط.\n- **320 بكسل هو الحد الأدنى:** معيار «Reflow» في WCAG يتوقّع أن تعمل الصفحات العادية بعرض 320 بكسل CSS دون تمرير أفقي. وهذا يشمل التكبير: عرض 1280 بكسل مع تكبير 400% يتصرّف كعرض 320 بكسل.\n- **اطرح الـ Gutters:** عرض المحتوى هو عرض الشاشة ناقص الهوامش الجانبية. مع 16 بكسل في كل جانب، يعطيك هاتف بعرض 360 بكسل مساحة 328 بكسل."
-  - id: S04
-    type: match
-    part: guided
-    rules: [R07, R13]
-    prompt:
-      en: "With a 16px gutter on each side, how wide is the content at each screen width?"
-      ar: "مع هامش 16 بكسل في كل جانب، ما عرض المحتوى عند كل عرض شاشة؟"
-    left:
-      - { id: w1280, text: { en: "1280 px screen", ar: "شاشة 1280 بكسل" } }
-      - { id: w768, text: { en: "768 px screen", ar: "شاشة 768 بكسل" } }
-      - { id: w360, text: { en: "360 px screen", ar: "شاشة 360 بكسل" } }
-      - { id: w320, text: { en: "320 px screen", ar: "شاشة 320 بكسل" } }
-    right:
-      - { id: c1248, text: { en: "1248 px", ar: "1248 بكسل" } }
-      - { id: c736, text: { en: "736 px", ar: "736 بكسل" } }
-      - { id: c344, text: { en: "344 px", ar: "344 بكسل" } }
-      - { id: c328, text: { en: "328 px", ar: "328 بكسل" } }
-      - { id: c288, text: { en: "288 px", ar: "288 بكسل" } }
-    answer: { w1280: c1248, w768: c736, w360: c328, w320: c288 }
-    misconceptions:
-      - id: MC-P10-064
-        when: { left: w360, right: c344 }
-        feedback:
-          en: "344 subtracts only one gutter. There's 16px on each side: 360 − 32 = 328."
-          ar: "344 تطرح هامشًا واحدًا فقط. يوجد 16 بكسل في كل جانب: 360 − 32 = 328."
-    hints:
-      - { en: "Subtract 32 from each: 16 on the left, 16 on the right.", ar: "اطرح 32 من كل عرض: 16 يسارًا و16 يمينًا." }
-    correct:
-      en: "Screen width minus 32."
-      ar: "عرض الشاشة ناقص 32."
-    explain:
-      en: "At 320px, there are only 288px for content. Everything inside, including the longest word and the widest row, has to fit in that."
-      ar: "عند 320 بكسل، لا يتبقّى للمحتوى إلا 288 بكسل. وكل ما في الداخل، بما فيه أطول كلمة وأعرض صف، يجب أن يتّسع فيها."
-
-  - id: S05
-    type: choose
-    part: guided
-    confidence: true
-    rules: [R13, R06]
-    prompt:
-      en: "What's the narrowest screen where the two columns still fit?"
-      ar: "ما أضيق شاشة يتّسع فيها العمودان؟"
-    options:
-      - { id: s664, text: { en: "664 px", ar: "664 بكسل" } }
-      - { id: s696, text: { en: "696 px", ar: "696 بكسل" } }
-      - { id: s768, text: { en: "768 px", ar: "768 بكسل" } }
-    answer: [s696]
-    misconceptions:
-      - id: MC-P10-064
-        when: [s664]
-        feedback:
-          en: "664px is the content the layout needs. Add the two 16px gutters: 664 + 32 = 696."
-          ar: "664 بكسل هو المحتوى الذي يحتاجه التخطيط. أضف الهامشين بعرض 16 بكسل: 664 + 32 = 696."
-      - id: MC-P10-065
-        when: [s768]
-        feedback:
-          en: "768 is a common tablet width, but the layout fits from 696. Breakpoints should come from your content, not from device names."
-          ar: "768 عرض شائع للأجهزة اللوحية، لكن التخطيط يتّسع من 696. نقاط التحوّل (breakpoints) يجب أن تأتي من المحتوى، لا من أسماء الأجهزة."
-    correct:
-      en: "664 of content plus 32 of gutters."
-      ar: "664 للمحتوى زائد 32 للهوامش."
-    explain:
-      en: "That's where the layout should switch from one column to two, and it's exactly the width to test carefully, a little above and a little below."
-      ar: "هنا يجب أن يتحوّل التخطيط من عمود إلى عمودين، وهذا بالضبط العرض الذي يجب اختباره بعناية، أعلى منه بقليل وأقل منه بقليل."
-
-  - id: S06
-    type: spot
-    part: guided
-    rules: [R06, U47]
-    prompt:
-      en: "At 320px, which part of the page breaks?"
-      ar: "عند 320 بكسل، أي جزء من الصفحة ينكسر؟"
+      en: "Here's the same page on a narrower phone. The title is cut off and the second button runs off the screen. Try each fix. Which one should ship?"
+      ar: "هذه الصفحة نفسها على هاتف أضيق. العنوان مقطوع، والزر الثاني يخرج عن الشاشة. جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
     mock:
-      width: 260
-      caption: { en: "Phone, 320 px", ar: "هاتف، 320 بكسل" }
-      blocks:
-        - { kind: title, nowrap: true, text: "@W2e", region: title }
-        - { kind: meta, text: "@W2f", gap: s, region: date }
-        - { kind: meta, text: "@W2g", gap: xs, region: price }
-        - { kind: button, text: "@W2h", gap: m, region: button }
-    regions:
-      - { id: title, label: "@W2e" }
-      - { id: date, label: "@W2f" }
-      - { id: price, label: "@W2g" }
-      - { id: button, label: "@W2h" }
-    answer: [title]
-    misconceptions:
-      - id: MC-P10-063
-        when: [date, price, button]
-        feedback:
-          en: "That one wraps or fits fine. Look for text that's been cut off."
-          ar: "هذا العنصر يلتف أو يتّسع جيدًا. ابحث عن نص مقطوع."
-    correct:
-      en: "The title is cut off with \"…\". At 390px it fit on one line."
-      ar: "العنوان مقطوع بعلامة «…». عند 390 بكسل كان يتّسع في سطر واحد."
-    explain:
-      en: "The title was set to stay on one line. That held at 390px and broke at 320px. Let it wrap instead; Unit 5 goes deeper into long text."
-      ar: "ضُبط العنوان ليبقى في سطر واحد. نجح ذلك عند 390 بكسل وانكسر عند 320. اسمح له بالالتفاف بدلًا من ذلك؛ والوحدة 5 تتعمّق في النصوص الطويلة."
-
-  - id: S07
-    type: choose
-    part: contrast
-    rules: [R11, R39]
-    prompt:
-      en: "The teammate's 390px screenshot is the only check so far. What's missing before calling the page responsive?"
-      ar: "لقطة الشاشة التي أرسلها زميلك بعرض 390 بكسل هي التحقق الوحيد حتى الآن. ما الناقص قبل وصف الصفحة بأنها متجاوبة؟"
+      caption: { en: "Now, narrow phone", ar: "الآن، هاتف ضيّق" }
+      width: 250
+      blocks: &narrow
+        - { kind: title, nowrap: true, text: "@W1a" }
+        - { kind: meta, text: "@W1b", gap: s }
+        - kind: group
+          tone: plain
+          scroll: true
+          colw: 150
+          gap: m
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: button, text: "@W1f" }
+                - { kind: button, emphasis: low, text: { en: "Add to calendar", ar: "أضف إلى التقويم" } }
     options:
-      - { id: desktop, text: { en: "A desktop screenshot too", ar: "لقطة شاشة للـ Laptop أيضًا" } }
-      - { id: range, text: { en: "Checks at 320px, around the 696px switch, and with enlarged text", ar: "التحقق عند 320 بكسل، وحول الـ Breakpoint 696 بكسل، ومع تكبير النص" } }
-      - { id: nothing, text: { en: "Nothing, 390px is the most common phone width", ar: "لا شيء، 390 بكسل هو أشيع عرض للهواتف" } }
-    answer: [range]
-    misconceptions:
-      - id: MC-P10-063
-        when: [desktop, nothing]
-        feedback:
-          en: "One or two screenshots show one or two widths. The failures usually happen at the narrow end, near breakpoints, or with bigger text."
-          ar: "لقطة أو لقطتان تُظهران عرضًا أو عرضين. أما الأعطال فتحدث عادةً عند الطرف الضيّق، أو قرب نقاط التحوّل، أو مع النص الأكبر."
-    correct:
-      en: "Check the edges and the switch, and with bigger text."
-      ar: "تحقّق من الأطراف والـ Breakpoint، ومع نص أكبر."
-    explain:
-      en: "A screenshot is evidence for one width on one device. A good check covers the narrowest width (320px), the points where the layout changes, and text enlargement. Some of this needs a real browser, not a design file."
-      ar: "لقطة الشاشة دليل على عرض واحد في جهاز واحد. أما التحقق الجيد فيغطي أضيق عرض (320 بكسل)، والنقاط التي يتغيّر عندها التخطيط، وتكبير النص. وبعض ذلك يحتاج متصفحًا حقيقيًا، لا ملف تصميم."
-
-  - id: S08
-    type: choose
-    part: independent
-    confidence: true
-    rules: [R14, R19]
-    scenario:
-      en: "On a 320px phone, Lina's delivery screen shows \"Driver: Karim\" and a Call button side by side. The row is wider than the screen, so the page scrolls sideways."
-      ar: "على هاتف بعرض 320 بكسل، تعرض شاشة توصيل لينا «السائق: كريم» وزر «اتصال» متجاورين. الصف أعرض من الشاشة، فتتحرّك الصفحة أفقيًا."
-    prompt:
-      en: "What's the best fix?"
-      ar: "ما أفضل إصلاح؟"
-    options:
-      - { id: tiny, text: { en: "Shrink the text to 10px so the row fits", ar: "صغّر النص إلى 10 بكسل حتى يتّسع الصف" } }
-      - { id: wrap, text: { en: "Let the Call button wrap under the driver's name when there isn't room", ar: "اسمح لزر «اتصال» بالنزول تحت اسم السائق عندما لا تكفي المساحة" } }
-      - { id: hide, text: { en: "Hide the Call button on small phones", ar: "أخفِ زر «اتصال» على الهواتف الصغيرة" } }
+      - id: small
+        text: { en: "Make all the text smaller on narrow phones so it fits", ar: "صغّر كل النصوص على الهواتف الضيّقة حتى تتّسع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: text, px: 13, weight: bold, text: "@W1a" }
+            - { kind: text, px: 9, text: "@W1b", gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: button, px: 8, text: "@W1f" }
+                - { kind: button, px: 8, emphasis: low, text: { en: "Add to calendar", ar: "أضف إلى التقويم" } }
+      - id: wrap
+        text: { en: "Let the title wrap, and stack the buttons when the row doesn't fit", ar: "اسمح للعنوان بالالتفاف، وضع الزرّين فوق بعض حين لا يتّسع الصف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: button, emphasis: low, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: s }
+      - id: drop
+        text: { en: "Remove Add to calendar on narrow phones", ar: "احذف «أضف إلى التقويم» على الهواتف الضيّقة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, nowrap: true, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
     answer: [wrap]
     misconceptions:
       - id: MC-P10-060
-        when: [tiny]
+        when: [small]
         feedback:
-          en: "Tiny text fits but can't be read. Rearrange instead of shrinking."
-          ar: "النص الصغير جدًا يتّسع لكنه لا يُقرأ. أعد الترتيب بدلًا من التصغير."
+          en: "Everything fits, but now nothing is comfortable to read. Rearrange instead: let lines wrap and rows stack."
+          ar: "كل شيء يتّسع، لكن لا شيء صار مريحًا في القراءة. أعِد الترتيب بدلًا من ذلك: دع الأسطر تلتفّ والصفوف تتراصّ."
+      - id: MC-P10-061
+        when: [drop]
+        feedback:
+          en: "People with narrow phones want to add the session to their calendar too, and the title is still cut off. Keep the action; change the arrangement."
+          ar: "أصحاب الهواتف الضيّقة يريدون إضافة الجلسة إلى التقويم أيضًا، والعنوان ما زال مقطوعًا. أبقِ الإجراء؛ وغيّر الترتيب."
+    correct:
+      en: "Same content, rearranged for the narrow screen."
+      ar: "المحتوى نفسه، بترتيب جديد للشاشة الضيّقة."
+    explain:
+      en: "The teammate's screenshot couldn't show this: it broke only on a narrower screen. Lines that wrap and rows that stack keep working as the screen shrinks."
+      ar: "لم تستطع لقطة الزميل إظهار هذا: فالمشكلة ظهرت فقط على شاشة أضيق. والأسطر التي تلتفّ والصفوف التي تتراصّ تبقى تعمل كلما ضاقت الشاشة."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [phone, layers, eye, form]
+    title: { en: "A layout lives across a range", ar: "التخطيط يعيش على مدى من العروض" }
+    body:
+      en: "A layout isn't one size; it has to work from the narrowest phone to a wide laptop window.\n\n- **Breakpoint:** a width where the design switches to a different layout, such as from one column to two. Most designs need only 2 or 3.\n- **Check the range:** the narrowest width, the widest, and just above and below each breakpoint, where things break most.\n- **Fitting isn't enough:** a layout can fit on screen and still be hard to use.\n- **Tell the developers:** for each breakpoint, say what changes. One screenshot can't."
+      ar: "التخطيط ليس حجمًا واحدًا؛ بل يجب أن يعمل من أضيق هاتف إلى أعرض نافذة Laptop.\n\n- **نقطة التحوّل (Breakpoint):** عرض يتحوّل عنده التصميم إلى تخطيط مختلف، مثل الانتقال من عمود إلى عمودين. ومعظم التصاميم تحتاج 2 أو 3 فقط.\n- **افحص المدى كله:** أضيق عرض، وأعرض عرض، وما فوق كل نقطة تحوّل وما تحتها مباشرة، حيث تنكسر الأشياء غالبًا.\n- **الاتّساع لا يكفي:** قد يتّسع التخطيط في الشاشة ويبقى صعب الاستخدام.\n- **أخبر المطوّرين:** لكل نقطة تحوّل، قل ما الذي يتغيّر. لقطة واحدة لا تستطيع ذلك."
+
+  - id: S04
+    type: tune
+    part: guided
+    rules: [R06, R13]
+    value:
+      en: "Breakpoints (NN/g): a breakpoint is a screen size where the design adjusts to a different layout; once designed and tested, communicate to developers how the design will change."
+      ar: "نقاط التحوّل (NN/g): نقطة التحوّل حجم شاشة يتغيّر عنده التصميم إلى تخطيط مختلف؛ وبعد التصميم والاختبار، أخبر المطوّرين كيف سيتغيّر التصميم."
+    ref: { url: "https://www.nngroup.com/articles/breakpoints-in-responsive-design/", quote: "communicate to developers how the design will change" }
+    scenario:
+      en: "Sara's page has one breakpoint: below it, one column; above it, two. You're handing the design to the developers."
+      ar: "لصفحة سارة نقطة تحوّل واحدة: تحتها عمود واحد، وفوقها عمودان. وأنت تسلّم التصميم للمطوّرين."
+    prompt:
+      en: "Try each handoff. Which one should ship?"
+      ar: "جرّب كل طريقة تسليم. أيّها يجب أن تُطلق؟"
+    start: one
+    options:
+      - id: one
+        text: { en: "The phone screenshot: \"Mobile done\"", ar: "لقطة الهاتف: «انتهينا من الهاتف»" }
+        mock:
+          caption: { en: "Handoff", ar: "التسليم" }
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Phone screenshot", ar: "لقطة الهاتف" } }
+                - { kind: image, size: m, text: { en: "Phone layout", ar: "تخطيط الهاتف" }, gap: xs }
+      - id: notes
+        text: { en: "Both layouts, plus what changes at the breakpoint and what must wrap", ar: "التخطيطان، مع ما يتغيّر عند نقطة التحوّل وما يجب أن يلتفّ" }
+        mock:
+          caption: { en: "Handoff", ar: "التسليم" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: image, size: s, text: { en: "Phone layout", ar: "تخطيط الهاتف" } }
+                - { kind: image, size: s, text: { en: "Laptop layout", ar: "تخطيط الـ Laptop" } }
+            - kind: group
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Below the breakpoint: one column; booking panel after the facts; photo becomes a thumbnail.", ar: "تحت نقطة التحوّل: عمود واحد؛ لوحة الحجز بعد المعلومات؛ والصورة تصبح مصغّرة." } }
+                - { kind: small, text: { en: "Titles wrap, never cut off. Button rows stack when they don't fit.", ar: "العناوين تلتفّ ولا تُقطع أبدًا. وصفوف الأزرار تتراصّ حين لا تتّسع." }, gap: xs }
+      - id: two
+        text: { en: "The phone and laptop screenshots, side by side", ar: "لقطتا الهاتف والـ Laptop، جنبًا إلى جنب" }
+        mock:
+          caption: { en: "Handoff", ar: "التسليم" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: image, size: m, text: { en: "Phone layout", ar: "تخطيط الهاتف" } }
+                - { kind: image, size: m, text: { en: "Laptop layout", ar: "تخطيط الـ Laptop" } }
+    answer: [notes]
+    misconceptions:
+      - id: MC-P10-063
+        when: [one, two]
+        feedback:
+          en: "Screenshots show two widths. They don't say what happens in between, or what should wrap on a narrower phone. Write down what changes."
+          ar: "اللقطات تُظهر عرضين. ولا تقول ماذا يحدث بينهما، أو ما الذي يجب أن يلتفّ على هاتف أضيق. اكتب ما الذي يتغيّر."
+    correct:
+      en: "Say what changes, not just how two sizes look."
+      ar: "قل ما الذي يتغيّر، لا كيف يبدو حجمان فقط."
+    explain:
+      en: "Developers build the whole range, not two pictures. Short notes on what changes at each breakpoint, and what must wrap or stack, stop the gaps from being guessed."
+      ar: "المطوّرون يبنون المدى كله، لا صورتين. والملاحظات القصيرة عمّا يتغيّر عند كل نقطة تحوّل، وما يجب أن يلتفّ أو يتراصّ، تمنع تخمين الفراغات."
+
+  - id: S05
+    type: tune
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Breakpoints (NN/g): at a smaller breakpoint, a right column may collapse into the main content area or become available elsewhere."
+      ar: "نقاط التحوّل (NN/g): عند نقطة تحوّل أصغر، قد يندمج العمود الأيمن في منطقة المحتوى الرئيسي أو يصبح متاحًا في مكان آخر."
+    ref: { url: "https://www.nngroup.com/articles/breakpoints-in-responsive-design/", quote: "A right column, if present, may collapse into the main content area or become available elsewhere." }
+    scenario:
+      en: "On a wide laptop, the page has a third column, \"Other sessions\", that people use when this one is full. On a tablet, three columns no longer fit."
+      ar: "على الـ Laptop العريض، في الصفحة عمود ثالث «جلسات أخرى» يستخدمه الناس حين تكون هذه الجلسة مكتملة. وعلى الجهاز اللوحي، لم تعد الأعمدة الثلاثة تتّسع."
+    prompt:
+      en: "Try each tablet layout. Which one should ship?"
+      ar: "جرّب كل تخطيط للجهاز اللوحي. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, tablet", ar: "الآن، جهاز لوحي" }
+      width: 460
+      blocks: &three
+        - kind: row
+          gap: s
+          blocks:
+            - kind: group
+              tone: plain
+              blocks:
+                - { kind: heading, text: "@W1a" }
+                - { kind: small, text: "@W1b", gap: xs }
+            - kind: group
+              blocks:
+                - { kind: small, text: "@W1d" }
+                - { kind: button, text: "@W1f", gap: s }
+            - kind: group
+              tone: tint
+              blocks:
+                - { kind: small, text: { en: "Other sessions", ar: "جلسات أخرى" } }
+                - { kind: small, text: "@W1next", gap: xs }
+    options:
+      - id: squeeze
+        text: { en: "Keep all three columns, narrower", ar: "أبقِ الأعمدة الثلاثة، لكن أضيق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 460
+          blocks: *three
+      - id: collapse
+        text: { en: "Two columns; \"Other sessions\" moves under the details in the main column", ar: "عمودان؛ و«جلسات أخرى» تنتقل تحت التفاصيل في العمود الرئيسي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 460
+          blocks:
+            - kind: row
+              gap: m
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: title, text: "@W1a" }
+                    - { kind: meta, text: "@W1b", gap: xs }
+                    - { kind: heading, text: { en: "Other sessions", ar: "جلسات أخرى" }, gap: m }
+                    - { kind: small, text: "@W1next", gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: meta, text: "@W1d" }
+                    - { kind: button, text: "@W1f", gap: s }
+      - id: drop
+        text: { en: "Two columns; drop \"Other sessions\" on tablets", ar: "عمودان؛ واحذف «جلسات أخرى» على الأجهزة اللوحية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 460
+          blocks:
+            - kind: row
+              gap: m
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: title, text: "@W1a" }
+                    - { kind: meta, text: "@W1b", gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: meta, text: "@W1d" }
+                    - { kind: button, text: "@W1f", gap: s }
+    answer: [collapse]
+    misconceptions:
+      - id: MC-P10-060
+        when: [squeeze]
+        feedback:
+          en: "Three narrow columns break every line into a word or two. When columns stop fitting, change the layout."
+          ar: "ثلاثة أعمدة ضيّقة تكسر كل سطر إلى كلمة أو اثنتين. حين تتوقّف الأعمدة عن الاتّساع، غيّر التخطيط."
+      - id: MC-P10-061
+        when: [drop]
+        feedback:
+          en: "People rely on \"Other sessions\" when this one is full, and they'd lose it on tablets. Move it; don't remove it."
+          ar: "يعتمد الناس على «جلسات أخرى» حين تكون هذه الجلسة مكتملة، وسيفقدونها على الأجهزة اللوحية. انقلها؛ لا تحذفها."
+    correct:
+      en: "The side column moves into the main one."
+      ar: "العمود الجانبي ينتقل إلى العمود الرئيسي."
+    explain:
+      en: "At each breakpoint, decide where every column goes. A side column usually folds into the main content, so nothing is lost and nothing is squeezed."
+      ar: "عند كل نقطة تحوّل، قرّر أين يذهب كل عمود. والعمود الجانبي عادةً يندمج في المحتوى الرئيسي، فلا يضيع شيء ولا يُعصر شيء."
+
+  - id: S06
+    type: compare
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S02: here nothing overflows, yet one version is still hard to use. NN/g: ensuring that elements fit within a page is not enough."
+      ar: "مقارنة مع الخطوة 2: هنا لا شيء يخرج عن الشاشة، ومع ذلك تبقى نسخة صعبة الاستخدام. NN/g: التأكّد من أن العناصر تتّسع في الصفحة لا يكفي."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "However, ensuring that elements fit within a page is not enough." }
+    scenario:
+      en: "On the narrowest phone, after reserving, Sara can add the session to her calendar, share it, or get directions. Both versions fit the screen."
+      ar: "على أضيق هاتف، وبعد الحجز، تستطيع سارة إضافة الجلسة إلى التقويم، أو مشاركتها، أو معرفة الطريق. والنسختان تتّسعان في الشاشة."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أي نسخة يجب أن تُطلق؟"
+    a:
+      mock:
+        width: 250
+        blocks:
+          - { kind: title, text: { en: "You're booked!", ar: "تمّ حجزك!" } }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: button, px: 9, text: { en: "Calendar", ar: "التقويم" } }
+              - { kind: button, px: 9, emphasis: low, text: { en: "Share", ar: "مشاركة" } }
+              - { kind: button, px: 9, emphasis: low, text: { en: "Directions", ar: "الطريق" } }
+    b:
+      mock:
+        width: 250
+        blocks:
+          - { kind: title, text: { en: "You're booked!", ar: "تمّ حجزك!" } }
+          - { kind: button, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: m }
+          - { kind: button, emphasis: low, text: { en: "Share", ar: "مشاركة" }, gap: s }
+          - { kind: button, emphasis: low, text: { en: "Get directions", ar: "اعرف الطريق" }, gap: s }
+    answer: b
+    reason:
+      prompt: { en: "What makes A worse, if both fit?", ar: "ما الذي يجعل A أسوأ، إن كانت النسختان تتّسعان؟" }
+      options:
+        - { id: fit, text: { en: "Nothing; if it fits, it works", ar: "لا شيء؛ ما دام يتّسع فهو يعمل" } }
+        - { id: tiny, text: { en: "The buttons fit only by becoming tiny, with shortened labels that are hard to read and tap", ar: "الأزرار تتّسع فقط لأنها صارت صغيرة جدًا، بأسماء مختصرة يصعب قراءتها والضغط عليها" } }
+        - { id: three, text: { en: "Three buttons on one screen is always too many", ar: "ثلاثة أزرار في شاشة واحدة كثيرة دائمًا" } }
+      answer: [tiny]
+      misconceptions:
+        - id: MC-P10-078
+          when: [fit, three]
+          feedback:
+            en: "Three buttons are fine. A fits only because the text and buttons shrank. Check that it's comfortable, not just that it fits."
+            ar: "ثلاثة أزرار مقبولة. لكن A تتّسع فقط لأن النص والأزرار صغرت. افحص أنها مريحة، لا أنها تتّسع فقط."
+    misconceptions:
+      - id: MC-P10-078
+        when: [a]
+        feedback:
+          en: "A fits, but the labels are tiny and cut short, and the buttons are hard to hit. Fitting on screen isn't the goal; being usable is."
+          ar: "A تتّسع، لكن الأسماء صغيرة جدًا ومختصرة، والأزرار يصعب إصابتها. الاتّساع في الشاشة ليس الهدف؛ سهولة الاستخدام هي الهدف."
+    correct:
+      en: "Usable, not just fitting."
+      ar: "سهل الاستخدام، لا متّسع فقط."
+    explain:
+      en: "In S02 something overflowed, so the problem was easy to see. Here everything fits, which is why it slips through review. When you check a width, ask whether people can read and tap everything comfortably."
+      ar: "في الخطوة 2 خرج شيء عن الشاشة، فكانت المشكلة سهلة الرؤية. أما هنا فكل شيء يتّسع، ولهذا تمرّ في المراجعة. حين تفحص عرضًا، اسأل: هل يستطيع الناس قراءة كل شيء والضغط عليه بارتياح؟"
+
+  - id: S07
+    type: tune
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Responsive design (NN/g): elements reshuffle as the viewport shrinks. A row that fits on most phones has to wrap on the narrowest ones."
+      ar: "حالة جديدة. التصميم المتجاوب (NN/g): تُعاد ترتيب العناصر كلما صغرت الشاشة. والصف الذي يتّسع في معظم الهواتف يجب أن يلتفّ في أضيقها."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "page elements reshuffle as the viewport grows or shrinks" }
+    scenario:
+      en: "On Lina's narrow phone, the driver's name and the Call button sit in one row that's wider than the screen, so the page scrolls sideways."
+      ar: "على هاتف لينا الضيّق، اسم السائق وزر الاتصال في صف واحد أعرض من الشاشة، فتتحرّك الصفحة جانبيًا."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, narrow phone", ar: "الآن، هاتف ضيّق" }
+      width: 250
+      blocks:
+        - { kind: title, text: "@D1a" }
+        - kind: group
+          tone: plain
+          scroll: true
+          colw: 150
+          gap: m
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: meta, text: { en: "Driver: Karim Hassan", ar: "السائق: كريم حسن" } }
+                - { kind: button, emphasis: low, text: { en: "Call driver", ar: "اتصل بالسائق" } }
+        - { kind: small, text: "@D1c", gap: s }
+    options:
+      - id: hide
+        text: { en: "Hide the Call button on narrow phones", ar: "أخفِ زر الاتصال على الهواتف الضيّقة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@D1a" }
+            - { kind: meta, text: { en: "Driver: Karim Hassan", ar: "السائق: كريم حسن" }, gap: m }
+            - { kind: small, text: "@D1c", gap: s }
+      - id: wrap
+        text: { en: "Let the row wrap: the name, then the Call button below it", ar: "اسمح للصف بالالتفاف: الاسم، ثم زر الاتصال تحته" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@D1a" }
+            - { kind: meta, text: { en: "Driver: Karim Hassan", ar: "السائق: كريم حسن" }, gap: m }
+            - { kind: button, emphasis: low, text: { en: "Call driver", ar: "اتصل بالسائق" }, gap: s }
+            - { kind: small, text: "@D1c", gap: s }
+      - id: shrink
+        text: { en: "Keep one row, with smaller text and a smaller button", ar: "أبقِ صفًّا واحدًا، بنص أصغر وزر أصغر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@D1a" }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: text, px: 9, text: { en: "Driver: Karim Hassan", ar: "السائق: كريم حسن" } }
+                - { kind: button, px: 8, emphasis: low, text: { en: "Call driver", ar: "اتصل بالسائق" } }
+            - { kind: small, text: "@D1c", gap: s }
+    answer: [wrap]
+    misconceptions:
       - id: MC-P10-061
         when: [hide]
         feedback:
-          en: "Calling the driver is one of the two things Lina needs right now. It can move, but it can't go."
-          ar: "الاتصال بالسائق أحد الشيئين اللذين تحتاجهما لينا الآن. يمكن أن ينتقل، لكن لا يمكن أن يختفي."
+          en: "Lina may need to call the driver, and her phone is no less important. Keep the button; change where it sits."
+          ar: "قد تحتاج لينا إلى الاتصال بالسائق، وهاتفها ليس أقل أهمية. أبقِ الزر؛ وغيّر مكانه."
+      - id: MC-P10-078
+        when: [shrink]
+        feedback:
+          en: "It fits now, but the name is hard to read and the button hard to tap. Let it wrap instead."
+          ar: "صار يتّسع، لكن الاسم يصعب قراءته والزر يصعب الضغط عليه. اسمح له بالالتفاف بدلًا من ذلك."
     correct:
-      en: "Let it wrap: same content, new arrangement."
-      ar: "اسمح له بالالتفاف: المحتوى نفسه، بترتيب جديد."
+      en: "Let it wrap."
+      ar: "اسمح له بالالتفاف."
     explain:
-      en: "Rows that fit on wider screens should be allowed to wrap on narrow ones. That keeps everything readable without sideways scrolling."
-      ar: "الصفوف التي تتّسع في الشاشات الأعرض يجب أن يُسمح لها بالالتفاف في الضيّقة. هذا يبقي كل شيء مقروءًا دون تمرير أفقي."
+      en: "Same fix as Sara's buttons: a row that fits on wider screens should wrap on narrow ones. Everything stays readable, tappable, and on screen."
+      ar: "الإصلاح نفسه في أزرار سارة: الصف الذي يتّسع على الشاشات الأعرض يجب أن يلتفّ على الضيّقة. فيبقى كل شيء مقروءًا، وسهل الضغط، وداخل الشاشة."
 
-  - id: S09
+  - id: S08
     type: card
     part: recap
-    icons: [space, width, eye, wrap]
+    icons: [phone, layers, eye, form]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "- Content width is the screen width minus both gutters.\n- Breakpoints come from your content, not from device names.\n- One screenshot proves one width. Check 320px, the switch points, and enlarged text.\n- Let rows wrap instead of shrinking the text.\n\nNext lesson: an order that makes sense without the columns."
-      ar: "- عرض المحتوى هو عرض الشاشة ناقص الـ Gutters من الجانبين.\n- الـ Breakpoints تأتي من المحتوى، لا من أسماء الأجهزة.\n- لقطة الشاشة الواحدة تثبت عرضًا واحدًا. تحقّق عند 320 بكسل، وعند نقاط التحوّل، ومع تكبير النص.\n- اسمح للصفوف بالنزول لسطر جديد بدلًا من تصغير النص.\n\nالدرس التالي: ترتيب منطقي حتى بدون الأعمدة."
+      en: "- **Narrow end:** let titles wrap and rows stack instead of shrinking or overflowing.\n- **Breakpoints:** folded a side column into the main one instead of squeezing or dropping it.\n- **Handoff:** wrote down what changes at each breakpoint.\n- **Usable, not just fitting:** checked that everything is comfortable to read and tap.\n\nNext lesson: an order that makes sense without the columns."
+      ar: "- **العرض الأضيق:** دع العناوين تلتفّ والصفوف تتراصّ، بدل التصغير أو الخروج عن الشاشة.\n- **نقاط التحوّل:** أدمجت العمود الجانبي في الرئيسي بدل عصره أو حذفه.\n- **التسليم:** كتبت ما يتغيّر عند كل نقطة تحوّل.\n- **سهل الاستخدام، لا متّسع فقط:** تأكّدت أن كل شيء مريح في القراءة والضغط.\n\nالدرس التالي: ترتيب منطقي دون الأعمدة."
