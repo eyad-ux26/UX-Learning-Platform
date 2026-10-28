@@ -55,7 +55,7 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .part{font-size:.85rem;color:var(--muted);margin:22px 0 4px}
 .prompt{font-size:1.2rem;font-weight:600;line-height:1.4;margin:0 0 14px}
 .scenario{background:var(--surface);border-inline-start:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:0 0 14px}
-.qref{font-size:.85rem;color:var(--muted);margin:-6px 0 12px}.qref a{color:var(--accent)}
+.qref{font-size:.85rem;color:var(--muted);margin:6px 0 0}.qref a{color:var(--accent)}
 .refs{margin:8px 0 12px;font-size:.9rem}.refs summary{cursor:pointer;font-weight:600;color:var(--accent);min-height:32px;display:flex;align-items:center}.refs ul{margin:6px 0 0;padding-inline-start:20px}.refs li{margin:4px 0}.refs a{color:var(--accent)}.refs .m{color:var(--muted);font-size:.8rem}
 .rev{display:flex;gap:8px;align-items:center;margin:12px 0 14px;padding:8px;border:1px dashed var(--line);border-radius:12px;font-size:.85rem}.rev select{flex:1;min-width:0;min-height:40px;font-size:.85rem}.rev .iconbtn{font-size:.85rem;white-space:nowrap}.rev .iconbtn:disabled{opacity:.4}
 .scen{border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:0 0 14px;background:var(--surface)}
@@ -479,7 +479,7 @@ function renderStep(){
   if (s.type === "card"){
     const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
     if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
-    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}${tag ? sourcesBox(L.lesson) : ""}`;
+    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
   } else {
     if (s.recall){
       const k = L.lesson.steps.findIndex(x => x.id === s.recall), prev = L.lesson.steps[k];
@@ -490,8 +490,8 @@ function renderStep(){
     /* a step with its own scenario is a new case, so don't offer the old hook */
     if (hook && hook !== s && !s.scenario) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
-    if (s.value) h += `<details class="why"><summary>${u().valueQ}</summary><p>${esc(tx(s.value))}</p></details>`;
-    h += refLink(s, L.lesson);
+    /* reviewer-only: what the question teaches and its source; learners see references only on the path page */
+    if (s.value || s.ref) h += `<details class="why"><summary>${u().valueQ}</summary>${s.value ? `<p>${esc(tx(s.value))}</p>` : ""}${refLink(s, L.lesson)}</details>`;
     h += renderInteraction(s, st, locked || !!st.mainOk);
     /* the reason appears only after the main answer is right, so it can't give that answer away */
     if (s.reason && (st.mainOk || locked)) h += renderReason(s, st, locked);
