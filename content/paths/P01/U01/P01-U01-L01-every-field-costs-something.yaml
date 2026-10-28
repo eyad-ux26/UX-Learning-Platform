@@ -31,27 +31,33 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "Hana has ten minutes. What do you think she does?"
-      ar: "لدى هناء عشر دقائق. ماذا تتوقّع أن تفعل؟"
+    prompt: { en: "Hana is on her lunch break. Which field is most likely to make her stop and leave?", ar: "هناء في استراحة الغداء. أي حقل هو الأرجح أن يجعلها تتوقّف وتغادر؟" }
     options:
-      - { id: fill, text: { en: "Fills in all eight fields", ar: "تملأ الحقول الثمانية كلها" } }
-      - { id: later, text: { en: "Decides to do it later", ar: "تقرّر أن تكمله لاحقًا" } }
-      - { id: quit, text: { en: "Wonders why a free trial needs her national ID, and leaves", ar: "تتساءل لماذا تحتاج تجربة مجانية رقمها القومي، وتغادر" } }
-    reveal:
-      en: "Many people choose \"later\" and never come back, or leave when a question feels too personal for what they're doing. Every extra field is a reason to stop."
-      ar: "كثيرون يختارون «لاحقًا» ولا يعودون أبدًا، أو يغادرون حين يبدو سؤال شخصيًا أكثر مما يتطلّبه ما يفعلونه. كل حقل إضافي سبب للتوقّف."
-
+      - { id: phone, text: { en: "Mobile number", ar: "رقم الموبايل" } }
+      - { id: nid, text: { en: "National ID number", ar: "الرقم القومي" } }
+      - { id: name, text: { en: "Full name", ar: "الاسم الكامل" } }
+    answer: [nid]
+    misconceptions:
+      - id: MC-P01-001
+        when: [name, phone]
+        feedback:
+          en: "A trial obviously needs her name and a way to reach her, so those feel fair. A national ID for a free 3-day trial feels too personal, with no reason given."
+          ar: "التجربة تحتاج بوضوح اسمها وطريقة للتواصل معها، فيبدو ذلك عادلًا. أما الرقم القومي لتجربة مجانية لثلاثة أيام فيبدو شخصيًا أكثر من اللازم، دون أي سبب."
+    correct:
+      en: "The national ID: personal, and with no clear reason."
+      ar: "الرقم القومي: شخصي، ودون سبب واضح."
+    explain:
+      en: "Every field costs time. A personal question that the task doesn't explain also costs trust, and that's when people leave."
+      ar: "كل حقل يكلّف وقتًا. والسؤال الشخصي الذي لا تبرّره المهمة يكلّف ثقة أيضًا، وعندها يغادر الناس."
   - id: S03
     type: card
     part: concept
+    icons: [target, clock, none]
     title: { en: "A field is a question you make someone answer", ar: "الحقل سؤال تُلزم شخصًا بالإجابة عنه" }
     body:
-      en: "Each field costs the person time, effort and a little trust. It's also one more place to make a mistake.\n\nFor every field, ask:\n- **Does this task need it now?** A free trial needs a way to identify Hana and reach her.\n- **Can it wait?** Some things only matter if she becomes a member.\n- **Will anyone use it?** If not, don't ask.\n\n\"It might be useful one day\" isn't a reason. Ask for it on the day it's useful, and tell people why."
-      ar: "كل حقل يكلّف الشخص وقتًا وجهدًا وقليلًا من الثقة. وهو أيضًا مكان إضافي لارتكاب خطأ.\n\nلكل حقل، اسأل:\n- **هل تحتاجه هذه المهمة الآن؟** التجربة المجانية تحتاج طريقة للتعرّف على هناء والتواصل معها.\n- **هل يمكنه الانتظار؟** بعض الأشياء لا تهم إلا إذا أصبحت عضوًا.\n- **هل سيستخدمه أحد؟** إن لم يكن، فلا تسأل.\n\n«قد يفيد يومًا ما» ليس سببًا. اسأل عنه في اليوم الذي يفيد فيه، وأخبر الناس لماذا."
-
+      en: "Each field costs the person time, effort and a little trust. It's also one more place to make a mistake. For every field, ask:\n\n- **Does this task need it now?** A free trial needs a way to identify Hana and reach her.\n- **Can it wait?** Some things only matter if she becomes a member.\n- **Will anyone use it?** If not, don't ask.\n\n\"It might be useful one day\" isn't a reason. Ask for it on the day it's useful, and tell people why."
+      ar: "كل حقل يكلّف الشخص وقتًا وجهدًا وقليلًا من الثقة. وهو أيضًا مكان إضافي لارتكاب خطأ. لكل حقل، اسأل:\n\n- **هل تحتاجه هذه المهمة الآن؟** التجربة المجانية تحتاج طريقة للتعرّف على هناء والتواصل معها.\n- **هل يمكنه الانتظار؟** بعض الأشياء لا تهم إلا إذا أصبحت عضوًا.\n- **هل سيستخدمه أحد؟** إن لم يكن، فلا تسأل.\n\n«قد يفيد يومًا ما» ليس سببًا. اسأل عنه في اليوم الذي يفيد فيه، وأخبر الناس لماذا."
   - id: S04
     type: sort
     part: guided
@@ -113,9 +119,9 @@ steps:
       en: "Marketing wants to keep \"How did you hear about us?\" as a required field. What's the best response?"
       ar: "يريد فريق التسويق إبقاء «كيف عرفت عنّا؟» حقلًا إلزاميًا. ما أفضل رد؟"
     options:
+      - { id: remove, text: { en: "Delete it and tell marketing no", ar: "احذفه وارفض طلب التسويق" } }
       - { id: after, text: { en: "Ask it after she's signed up, as an optional one-tap question", ar: "اسأل عنه بعد أن تسجّل، كسؤال اختياري بضغطة واحدة" } }
       - { id: keep, text: { en: "Keep it required; the data is valuable", ar: "أبقِه إلزاميًا؛ البيانات قيّمة" } }
-      - { id: remove, text: { en: "Delete it and tell marketing no", ar: "احذفه وارفض طلب التسويق" } }
     answer: [after]
     misconceptions:
       - id: MC-P01-001
@@ -166,8 +172,8 @@ steps:
     reason:
       prompt: { en: "What else makes B better?", ar: "ما الذي يجعل B أفضل أيضًا؟" }
       options:
-        - { id: why, text: { en: "It says what the phone number is for", ar: "توضّح الغرض من رقم الهاتف" } }
         - { id: short, text: { en: "Short forms always look more modern", ar: "النماذج القصيرة تبدو أحدث دائمًا" } }
+        - { id: why, text: { en: "It says what the phone number is for", ar: "توضّح الغرض من رقم الهاتف" } }
       answer: [why]
     correct:
       en: "Fewer questions, and the one personal detail comes with a reason."
@@ -225,9 +231,9 @@ steps:
       en: "The restaurant also wants \"Your birthday, for a gift\". Where does it fit best?"
       ar: "يريد المطعم أيضًا «عيد ميلادك، لهدية». أين يناسب أكثر؟"
     options:
-      - { id: profile, text: { en: "In his profile, optional, whenever he likes", ar: "في ملفه الشخصي، اختياريًا، متى شاء" } }
       - { id: order, text: { en: "In the order form, required", ar: "في نموذج الطلب، إلزاميًا" } }
       - { id: orderopt, text: { en: "In the order form, optional", ar: "في نموذج الطلب، اختياريًا" } }
+      - { id: profile, text: { en: "In his profile, optional, whenever he likes", ar: "في ملفه الشخصي، اختياريًا، متى شاء" } }
     answer: [profile]
     misconceptions:
       - id: MC-P01-001
@@ -250,38 +256,9 @@ steps:
       ar: "القاعدة نفسها في النادي: اسأل حين يهم الأمر الشخص، لا حين يناسب الشركة."
 
   - id: S09
-    type: choose
-    part: independent
-    confidence: true
-    multi: true
-    rules: [R07, U39]
-    prompt:
-      en: "Which questions help you decide whether a field belongs? Pick all that apply."
-      ar: "أي الأسئلة تساعدك على تقرير ما إذا كان الحقل في مكانه؟ اختر كل ما ينطبق."
-    options:
-      - { id: need, text: { en: "Does this task need it now?", ar: "هل تحتاجه هذه المهمة الآن؟" } }
-      - { id: use, text: { en: "Who will use the answer, and for what?", ar: "من سيستخدم الإجابة، ولأي غرض؟" } }
-      - { id: wait, text: { en: "Could we ask it later, when it matters?", ar: "هل يمكن أن نسأل عنه لاحقًا، حين يهم؟" } }
-      - { id: maybe, text: { en: "Might it be useful one day?", ar: "هل قد يفيد يومًا ما؟" } }
-    answer: [need, use, wait]
-    misconceptions:
-      - id: MC-P01-002
-        when: [maybe]
-        feedback:
-          en: "Almost any data might be useful one day. That question lets every field in."
-          ar: "أي بيانات تقريبًا قد تفيد يومًا ما. هذا السؤال يُدخل كل الحقول."
-    hints:
-      - { en: "Which question could justify any field at all?", ar: "أي سؤال يمكن أن يبرّر أي حقل على الإطلاق؟" }
-    correct:
-      en: "Need now, who uses it, and could it wait."
-      ar: "الحاجة الآن، ومن يستخدمه، وهل يمكنه الانتظار."
-    explain:
-      en: "These three questions are your filter for every form in this path."
-      ar: "هذه الأسئلة الثلاثة هي مصفاتك لكل نموذج في هذا المسار."
-
-  - id: S10
     type: card
     part: recap
+    icons: [clock, target, none, idea]
     title: { en: "What to remember", ar: "ما يجب تذكّره" }
     body:
       en: "- Every field costs time, effort and trust, and adds a chance to fail.\n- Ask what the task needs now. Move the rest to the moment it matters.\n- If no one will use the answer, don't ask.\n- When you ask for something personal, say why.\n\nNext: required or optional, and how to say which."
