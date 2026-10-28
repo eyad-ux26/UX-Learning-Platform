@@ -45,20 +45,54 @@ steps:
                 - { kind: button, emphasis: low, text: "@W2h", gap: s }
 
   - id: S02
-    type: predict
+    type: tune
     part: try
     rules: [R12]
     value:
       en: "How a layout is built decides how it stacks: build each session as one block on the laptop, and it stays whole on the phone for free."
       ar: "طريقة بناء التخطيط تحدّد طريقة ترتيبه عموديًا: ابنِ كل جلسة ككتلة واحدة على الـ Laptop، فتبقى كاملة على الهاتف تلقائيًا."
     ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "in the sequence dictated by the code" }
+    mock:
+      caption: { en: "Now: laptop", ar: "الآن: الـ Laptop" }
+      blocks:
+        - kind: row
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: heading, text: "@W2a" }
+                - { kind: small, text: "@W2b", gap: xs }
+                - { kind: meta, text: "@W2c", gap: xs }
+                - { kind: button, emphasis: low, text: "@W2d", gap: s }
+            - kind: group
+              blocks:
+                - { kind: heading, text: "@W2e" }
+                - { kind: small, text: "@W2f", gap: xs }
+                - { kind: meta, text: "@W2g", gap: xs }
+                - { kind: button, emphasis: low, text: "@W2h", gap: s }
+
+      frame: wide
     prompt:
       en: "The page must work on the laptop and on Sara's phone. How should you build the two sessions so they stack correctly on the phone?"
       ar: "يجب أن تعمل الصفحة على الـ Laptop وعلى هاتف سارة. كيف تبني الجلستين حتى تُرتَّبا عموديًا بشكل صحيح على الهاتف؟"
     options:
-      - { id: rows, text: { en: "In rows: both titles, then both dates, then both prices, then both buttons", ar: "في صفوف: العنوانان، ثم الموعدان، ثم السعران، ثم الزرّان" } }
-      - { id: cards, text: { en: "As two blocks, each holding its own title, date, price and button", ar: "ككتلتين، كل واحدة فيها عنوانها وموعدها وسعرها وزرّها" } }
-      - { id: auto, text: { en: "Either way; the phone rearranges it", ar: "بأي طريقة؛ الهاتف يعيد ترتيبها" } }
+      - id: rows
+        text: { en: "In rows: both titles, then both dates, then both prices, then both buttons", ar: "في صفوف: العنوانان، ثم الموعدان، ثم السعران، ثم الزرّان" }
+        mock:
+          width: 300
+          caption: { en: "After: phone, 360 px", ar: "بعد التغيير: هاتف، 360 بكسل" }
+          blocks: [{ kind: heading, text: "@W2a" }, { kind: heading, text: "@W2e", gap: xs }, { kind: small, text: "@W2b", gap: s }, { kind: small, text: "@W2f", gap: xs }, { kind: meta, text: "@W2c", gap: s }, { kind: meta, text: "@W2g", gap: xs }, { kind: button, emphasis: low, text: "@W2d", gap: s }, { kind: button, emphasis: low, text: "@W2h", gap: xs }]
+      - id: cards
+        text: { en: "As two blocks, each holding its own title, date, price and button", ar: "ككتلتين، كل واحدة فيها عنوانها وموعدها وسعرها وزرّها" }
+        mock:
+          width: 300
+          caption: { en: "After: phone, 360 px", ar: "بعد التغيير: هاتف، 360 بكسل" }
+          blocks: [{ kind: group, blocks: [{ kind: heading, text: "@W2a" }, { kind: small, text: "@W2b", gap: xs }, { kind: meta, text: "@W2c", gap: xs }, { kind: button, emphasis: low, text: "@W2d", gap: s }] }, { kind: group, gap: m, blocks: [{ kind: heading, text: "@W2e" }, { kind: small, text: "@W2f", gap: xs }, { kind: meta, text: "@W2g", gap: xs }, { kind: button, emphasis: low, text: "@W2h", gap: s }] }]
+      - id: auto
+        text: { en: "Either way; the phone rearranges it", ar: "بأي طريقة؛ الهاتف يعيد ترتيبها" }
+        mock:
+          width: 300
+          caption: { en: "After: phone, 360 px", ar: "بعد التغيير: هاتف، 360 بكسل" }
+          blocks: [{ kind: heading, text: "@W2a" }, { kind: heading, text: "@W2e", gap: xs }, { kind: small, text: "@W2b", gap: s }, { kind: small, text: "@W2f", gap: xs }, { kind: meta, text: "@W2c", gap: s }, { kind: meta, text: "@W2g", gap: xs }, { kind: button, emphasis: low, text: "@W2d", gap: s }, { kind: button, emphasis: low, text: "@W2h", gap: xs }]
     answer: [cards]
     misconceptions:
       - id: MC-P10-032
@@ -535,7 +569,7 @@ steps:
       ar: "هذا وهم الاكتمال مرة أخرى، لكن أفقيًا. تقول NN/g إن الجداول المتحرّكة أفقيًا مقبولة على الهاتف فقط مع إشارة واضحة، وأفضلها العمود المقطوع أو الأسهم. اختر عرض الأعمدة بحيث تظهر الباقة التالية مقطوعة بوضوح."
 
   - id: S08
-    type: fix
+    type: tune
     part: independent
     rules: [R14, R19]
     value:
@@ -549,7 +583,7 @@ steps:
       en: "What should you change on phones?"
       ar: "ماذا تغيّر على الهاتف؟"
     mock:
-      caption: { en: "Phone: the two columns stacked", ar: "الهاتف: العمودان فوق بعضهما" }
+      caption: { en: "Now: phone, the two columns stacked", ar: "الآن: الهاتف، العمودان فوق بعضهما" }
       blocks:
         - { kind: title, text: { en: "Does your vehicle need to pay?", ar: "هل يجب أن تدفع مركبتك؟" } }
         - { kind: heading, text: { en: "Ultra Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة جدًا (ULEZ)" }, gap: l }
@@ -562,10 +596,65 @@ steps:
         - { kind: heading, text: { en: "Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة (LEZ)" }, gap: l }
         - { kind: link, text: { en: "Check your vehicle for LEZ", ar: "افحص مركبتك لـ LEZ" }, gap: s }
     options:
-      - { id: bigger, text: { en: "Make the Low Emission Zone heading bigger so it stands out further down", ar: "كبّر عنوان منطقة LEZ حتى يبرز في الأسفل" } }
-      - { id: hide, text: { en: "Hide the LEZ section on phones to keep the page short", ar: "أخفِ قسم LEZ على الهاتف حتى تبقى الصفحة قصيرة" } }
-      - { id: seealso, text: { en: "Add \"See also: LEZ\" at the very bottom of the page", ar: "أضف «انظر أيضًا: LEZ» في أسفل الصفحة تمامًا" } }
-      - { id: together, text: { en: "Put the two checkers together at the top, one under the other, before the other ULEZ links", ar: "ضع أداتي الفحص معًا في الأعلى، واحدة تحت الأخرى، قبل باقي روابط ULEZ" } }
+      - id: bigger
+        text: { en: "Make the Low Emission Zone heading bigger so it stands out further down", ar: "كبّر عنوان منطقة LEZ حتى يبرز في الأسفل" }
+        mock:
+          caption: { en: "After: phone", ar: "بعد التغيير: الهاتف" }
+          blocks:
+            - { kind: title, text: { en: "Does your vehicle need to pay?", ar: "هل يجب أن تدفع مركبتك؟" } }
+            - { kind: heading, text: { en: "Ultra Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة جدًا (ULEZ)" }, gap: l }
+            - { kind: link, text: { en: "Check your vehicle for ULEZ", ar: "افحص مركبتك لـ ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Pay the ULEZ charge", ar: "ادفع رسوم ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Set up Auto Pay", ar: "فعّل الدفع التلقائي" }, gap: s }
+            - { kind: link, text: { en: "Discounts and exemptions", ar: "الخصومات والإعفاءات" }, gap: s }
+            - { kind: link, text: { en: "Penalty charges", ar: "غرامات المخالفات" }, gap: s }
+            - { kind: link, text: { en: "Map of the zone", ar: "خريطة المنطقة" }, gap: s }
+            - { kind: title, text: { en: "Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة (LEZ)" }, gap: l }
+            - { kind: link, text: { en: "Check your vehicle for LEZ", ar: "افحص مركبتك لـ LEZ" }, gap: s }
+      - id: hide
+        text: { en: "Hide the LEZ section on phones to keep the page short", ar: "أخفِ قسم LEZ على الهاتف حتى تبقى الصفحة قصيرة" }
+        mock:
+          caption: { en: "After: phone", ar: "بعد التغيير: الهاتف" }
+          blocks:
+            - { kind: title, text: { en: "Does your vehicle need to pay?", ar: "هل يجب أن تدفع مركبتك؟" } }
+            - { kind: heading, text: { en: "Ultra Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة جدًا (ULEZ)" }, gap: l }
+            - { kind: link, text: { en: "Check your vehicle for ULEZ", ar: "افحص مركبتك لـ ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Pay the ULEZ charge", ar: "ادفع رسوم ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Set up Auto Pay", ar: "فعّل الدفع التلقائي" }, gap: s }
+            - { kind: link, text: { en: "Discounts and exemptions", ar: "الخصومات والإعفاءات" }, gap: s }
+            - { kind: link, text: { en: "Penalty charges", ar: "غرامات المخالفات" }, gap: s }
+            - { kind: link, text: { en: "Map of the zone", ar: "خريطة المنطقة" }, gap: s }
+      - id: seealso
+        text: { en: "Add \"See also: LEZ\" at the very bottom of the page", ar: "أضف «انظر أيضًا: LEZ» في أسفل الصفحة تمامًا" }
+        mock:
+          caption: { en: "After: phone", ar: "بعد التغيير: الهاتف" }
+          blocks:
+            - { kind: title, text: { en: "Does your vehicle need to pay?", ar: "هل يجب أن تدفع مركبتك؟" } }
+            - { kind: heading, text: { en: "Ultra Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة جدًا (ULEZ)" }, gap: l }
+            - { kind: link, text: { en: "Check your vehicle for ULEZ", ar: "افحص مركبتك لـ ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Pay the ULEZ charge", ar: "ادفع رسوم ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Set up Auto Pay", ar: "فعّل الدفع التلقائي" }, gap: s }
+            - { kind: link, text: { en: "Discounts and exemptions", ar: "الخصومات والإعفاءات" }, gap: s }
+            - { kind: link, text: { en: "Penalty charges", ar: "غرامات المخالفات" }, gap: s }
+            - { kind: link, text: { en: "Map of the zone", ar: "خريطة المنطقة" }, gap: s }
+            - { kind: heading, text: { en: "Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة (LEZ)" }, gap: l }
+            - { kind: link, text: { en: "Check your vehicle for LEZ", ar: "افحص مركبتك لـ LEZ" }, gap: s }
+            - { kind: link, text: { en: "See also: Low Emission Zone", ar: "انظر أيضًا: منطقة LEZ" }, gap: xl }
+      - id: together
+        text: { en: "Put the two checkers together at the top, one under the other, before the other ULEZ links", ar: "ضع أداتي الفحص معًا في الأعلى، واحدة تحت الأخرى، قبل باقي روابط ULEZ" }
+        mock:
+          caption: { en: "After: phone", ar: "بعد التغيير: الهاتف" }
+          blocks:
+            - { kind: title, text: { en: "Does your vehicle need to pay?", ar: "هل يجب أن تدفع مركبتك؟" } }
+            - { kind: heading, text: { en: "Ultra Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة جدًا (ULEZ)" }, gap: l }
+            - { kind: link, text: { en: "Check your vehicle for ULEZ", ar: "افحص مركبتك لـ ULEZ" }, gap: s }
+            - { kind: heading, text: { en: "Low Emission Zone", ar: "منطقة الانبعاثات المنخفضة (LEZ)" }, gap: m }
+            - { kind: link, text: { en: "Check your vehicle for LEZ", ar: "افحص مركبتك لـ LEZ" }, gap: s }
+            - { kind: link, text: { en: "Pay the ULEZ charge", ar: "ادفع رسوم ULEZ" }, gap: s }
+            - { kind: link, text: { en: "Set up Auto Pay", ar: "فعّل الدفع التلقائي" }, gap: s }
+            - { kind: link, text: { en: "Discounts and exemptions", ar: "الخصومات والإعفاءات" }, gap: s }
+            - { kind: link, text: { en: "Penalty charges", ar: "غرامات المخالفات" }, gap: s }
+            - { kind: link, text: { en: "Map of the zone", ar: "خريطة المنطقة" }, gap: s }
     answer: [together]
     misconceptions:
       - id: MC-P10-038
