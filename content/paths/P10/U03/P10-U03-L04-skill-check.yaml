@@ -1,147 +1,367 @@
 id: P10-U03-L04
 mode: check
-minutes: 6
+minutes: 7
 title:
   en: "Skill check: give emphasis a job"
   ar: "اختبار المهارة: اجعل للبروز وظيفة"
+sources:
+  - title: { en: "Button States: Communicate Interaction (NN/g)", ar: "حالات الأزرار: كيف توضّح التفاعل (NN/g)" }
+    url: "https://www.nngroup.com/articles/button-states-communicate-interaction/"
+  - title: { en: "Proximity of Consequential Options (NN/g)", ar: "قرب الخيارات ذات العواقب (NN/g)" }
+    url: "https://www.nngroup.com/articles/proximity-consequential-options/"
+  - title: { en: "5 Visual Treatments that Improve Accessibility (NN/g)", ar: "5 معالجات بصرية تحسّن سهولة الوصول (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-treatments-accessibility/"
+  - title: { en: "Using Color to Enhance Your Design (NN/g)", ar: "استخدام اللون لتحسين التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/color-enhance-design/"
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Karim's car service", ar: "صيانة سيارة كريم" }
     body:
-      en: "Karim is booking a full service for his car on Saturday morning. Here's the booking page as the team designed it.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
-      ar: "يحجز كريم صيانة كاملة لسيارته صباح السبت. هذه صفحة الحجز كما صمّمها الفريق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
-    mock: &service
-      blocks:
-        - { kind: text, px: 22, weight: bold, text: "@V1a", region: title }
-        - { kind: text, px: 22, weight: bold, text: "@V1b", gap: s, region: time }
-        - { kind: text, px: 22, weight: bold, color: red, text: "@V1c", gap: s, region: price }
-        - { kind: button, text: "@V1d", gap: m, region: book }
-        - { kind: button, text: "@V1e", gap: s, region: wash }
-        - { kind: text, px: 14, color: faint, text: "@V1f", gap: s, region: cancel }
+      en: "Karim is booking a full service for his car on Saturday morning. You're reviewing the garage's booking screens before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "يحجز كريم صيانة كاملة لسيارته صباح السبت. وأنت تراجع شاشات الحجز في مركز الصيانة قبل إطلاقها.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      blocks: &service
+        - { kind: title, text: "@V1a" }
+        - { kind: meta, text: "@V1b", gap: s }
+        - { kind: meta, weight: bold, color: red, text: "@V1c", gap: s }
+        - { kind: button, text: "@V1d", gap: m }
+        - { kind: button, text: "@V1e", gap: s }
+        - { kind: text, px: 14, color: faint, text: "@V1f", gap: s }
 
   - id: S02
-    type: match
+    type: tune
     part: check
     rules: [R19]
+    value:
+      en: "Skill check, button levels (NN/g): primary buttons have the most visual emphasis, for the main action; an optional extra gets less."
+      ar: "اختبار مهارة، مستويات الأزرار (NN/g): الـ Primary button له أكبر بروز، للإجراء الرئيسي؛ والإضافة الاختيارية تأخذ بروزًا أقل."
+    ref: { url: "https://www.nngroup.com/articles/button-states-communicate-interaction/", quote: "Primary buttons have the most visual emphasis" }
+    scenario:
+      en: "Everyone on this screen books the service. Some also add a car wash."
+      ar: "كل من يصل إلى هذه الشاشة يحجز الصيانة. وبعضهم يضيف غسيل السيارة أيضًا."
     prompt:
-      en: "Give each item a role."
-      ar: "أعطِ كل عنصر دورًا."
-    left:
-      - { id: V1a, text: "@V1a" }
-      - { id: V1b, text: "@V1b" }
-      - { id: V1d, text: "@V1d" }
-      - { id: V1e, text: "@V1e" }
-      - { id: V1f, text: "@V1f" }
-    right:
-      - { id: title, text: { en: "Page title", ar: "عنوان الصفحة" } }
-      - { id: body, text: { en: "Body fact", ar: "معلومة أساسية" } }
-      - { id: primary, text: { en: "Primary action", ar: "إجراء رئيسي" } }
-      - { id: secondary, text: { en: "Secondary action", ar: "إجراء ثانوي" } }
-      - { id: support, text: { en: "Supporting text", ar: "نص داعم" } }
-    answer: { V1a: title, V1b: body, V1d: primary, V1e: secondary, V1f: support }
+      en: "Try each button style. Which one should ship?"
+      ar: "جرّب كل شكل للأزرار. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &btns
+        - { kind: title, text: "@V1a" }
+        - { kind: meta, text: "@V1b", gap: s }
+        - { kind: button, text: "@V1d", gap: m }
+        - { kind: button, text: "@V1e", gap: s }
+    options:
+      - id: orange
+        text: { en: "Both filled; the car wash in orange so they differ", ar: "الزرّان ممتلئان؛ وغسيل السيارة بالبرتقالي ليختلفا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@V1a" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: button, text: "@V1d", gap: m }
+            - { kind: button, tone: warn, text: "@V1e", gap: s }
+      - id: both
+        text: { en: "Both outlined, so neither pushes", ar: "الزرّان بإطار فقط، حتى لا يُلحّ أيّهما" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@V1a" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: button, emphasis: low, text: "@V1d", gap: m }
+            - { kind: button, emphasis: low, text: "@V1e", gap: s }
+      - id: outline
+        text: { en: "Book service filled; the car wash outlined", ar: "زر حجز الصيانة ممتلئ؛ وغسيل السيارة بإطار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@V1a" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: button, text: "@V1d", gap: m }
+            - { kind: button, emphasis: low, text: "@V1e", gap: s }
+    answer: [outline]
+    misconceptions:
+      - id: MC-P10-041
+        when: [orange]
+        feedback:
+          en: "Two filled buttons still compete; an orange one may even look more urgent. Give the filled style only to Book service."
+          ar: "الزرّان الممتلئان يبقيان متنافسين؛ بل قد يبدو البرتقالي أكثر إلحاحًا. أعطِ الشكل الممتلئ لزر حجز الصيانة فقط."
+      - id: MC-P10-040
+        when: [both]
+        feedback:
+          en: "Now nothing leads, and Book service looks as optional as the wash."
+          ar: "الآن لا شيء يقود، ويبدو حجز الصيانة اختياريًا مثل الغسيل."
     explain:
-      en: "The service names the decision, the time informs it, Book service completes it, the car wash is an extra, and the cancellation rule supports it."
-      ar: "الخدمة تسمّي القرار، والموعد يُعلمه، و«احجز الصيانة» يكمله، وغسيل السيارة إضافة، وقاعدة الإلغاء تدعمه."
+      en: "From Lesson 1: one filled button for the action everyone takes, a quieter style for the extra."
+      ar: "من الدرس 1: زر ممتلئ واحد للإجراء الذي يقوم به الجميع، وشكل أهدأ للإضافة."
 
   - id: S03
-    type: spot
+    type: tune
     part: check
     rules: [R19]
+    value:
+      en: "Skill check, risky actions (NN/g): confirmatory and destructive actions should be far apart, with extra space and redundant visual signals."
+      ar: "اختبار مهارة، الإجراءات الخطرة (NN/g): يجب أن تكون إجراءات التأكيد والإجراءات المدمّرة بعيدة عن بعضها، مع مسافة وإشارات بصرية متعدّدة."
+    ref: { url: "https://www.nngroup.com/articles/proximity-consequential-options/", quote: "Confirmatory and destructive actions should be far apart from each other" }
+    scenario:
+      en: "After booking, Karim sees his booking. Most people who come back here change the time. Cancelling frees the slot at once and can't be undone."
+      ar: "بعد الحجز، يرى كريم حجزه. ومعظم من يعودون إلى هنا يغيّرون الموعد. أما الإلغاء فيحرّر الموعد فورًا ولا يمكن التراجع عنه."
     prompt:
-      en: "Which button competes with the main action?"
-      ar: "أي زر ينافس الإجراء الرئيسي؟"
-    mock: *service
-    regions:
-      - { id: book, label: "@V1d" }
-      - { id: wash, label: "@V1e" }
-    answer: [wash]
+      en: "Try each layout. Which one should ship?"
+      ar: "جرّب كل تخطيط. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &booked
+        - { kind: title, text: { en: "Your booking", ar: "حجزك" } }
+        - { kind: meta, text: "@V1b", gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, text: { en: "Change time", ar: "غيّر الموعد" } }
+            - { kind: button, text: { en: "Cancel booking", ar: "ألغِ الحجز" } }
+    options:
+      - id: apart
+        text: { en: "Change time filled; Cancel booking as a red text link, lower down with space", ar: "تغيير الموعد ممتلئ؛ وإلغاء الحجز رابط نصّي أحمر، في الأسفل مع مسافة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: { en: "Your booking", ar: "حجزك" } }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: button, text: { en: "Change time", ar: "غيّر الموعد" }, gap: m }
+            - { kind: button, style: dangerlink, text: { en: "Cancel booking", ar: "ألغِ الحجز" }, gap: xl }
+      - id: red
+        text: { en: "Keep them side by side, with Cancel filled in red", ar: "أبقِهما متجاورين، مع جعل زر الإلغاء ممتلئًا بالأحمر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: { en: "Your booking", ar: "حجزك" } }
+            - { kind: meta, text: "@V1b", gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, text: { en: "Change time", ar: "غيّر الموعد" } }
+                - { kind: button, style: danger, text: { en: "Cancel booking", ar: "ألغِ الحجز" } }
+      - id: menu
+        text: { en: "Hide Cancel inside a \"⋯\" menu with no label", ar: "أخفِ الإلغاء داخل قائمة «⋯» دون اسم" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: title, text: { en: "Your booking", ar: "حجزك" } }
+                - { kind: text, px: 22, text: "⋯" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: button, text: { en: "Change time", ar: "غيّر الموعد" }, gap: m }
+    answer: [apart]
+    misconceptions:
+      - id: MC-P10-043
+        when: [red, menu]
+        feedback:
+          en: "Side by side, a quick tap meant for Change time can cancel the booking. Hiding it behind an unlabelled menu goes too far. Keep it visible, apart and different."
+          ar: "متجاوران، فقد تُلغي ضغطةٌ سريعة قُصد بها تغيير الموعد الحجزَ. وإخفاؤه خلف قائمة بلا اسم مبالغة. أبقِه ظاهرًا، وبعيدًا، ومختلفًا."
     explain:
-      en: "\"Add a car wash\" is filled like Book service, so it looks like an equal next step. As an extra, it should be quieter."
-      ar: "«أضف غسيل السيارة» ممتلئ مثل «احجز الصيانة»، فيبدو خطوة تالية مساوية. وبما أنه إضافة، يجب أن يكون أهدأ."
+      en: "From Lesson 1: the risky action stays easy to find, but far from the common one and different in look."
+      ar: "من الدرس 1: الإجراء الخطر يبقى سهل الإيجاد، لكن بعيدًا عن الإجراء الشائع ومختلفًا في شكله."
 
   - id: S04
     type: tune
     part: check
-    rules: [R19, U14]
+    rules: [R19]
+    value:
+      en: "Skill check, contrast (NN/g, citing WCAG): text needs at least 4.5:1 against its background; quieter is fine, fainter than that isn't."
+      ar: "اختبار مهارة، الـ Contrast (NN/g نقلًا عن WCAG): يحتاج النص 4.5:1 على الأقل مع خلفيته؛ الأهدأ مقبول، والأبهت من ذلك لا."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "the color-contrast ratio between text and its background should be at least 4.5:1" }
     prompt:
-      en: "Pick a color for the 14px cancellation rule."
-      ar: "اختر لونًا لقاعدة الإلغاء بحجم 14 بكسل."
-    start: faint
+      en: "The cancellation rule is 14px. Try each grey. Which one should ship?"
+      ar: "شرط الإلغاء بحجم 14px. جرّب كل درجة رمادي. أيّها يجب أن تُطلق؟"
+    start: light
     options:
-      - id: faint
-        text: { en: "Pale grey, 2.3:1", ar: "رمادي باهت، 2.3:1" }
-        mock:
-          blocks:
-            - { kind: button, text: "@V1d" }
-            - { kind: text, px: 14, color: faint, text: "@V1f", gap: s }
-      - id: pale
+      - id: light
         text: { en: "Light grey, 3.0:1", ar: "رمادي فاتح، 3.0:1" }
         mock:
           blocks:
             - { kind: button, text: "@V1d" }
             - { kind: text, px: 14, color: pale, text: "@V1f", gap: s }
-      - id: muted
-        text: { en: "Grey, 5.3:1", ar: "رمادي، 5.3:1" }
+      - id: mid
+        text: { en: "Mid grey, 5.3:1", ar: "رمادي متوسط، 5.3:1" }
         mock:
           blocks:
             - { kind: button, text: "@V1d" }
             - { kind: text, px: 14, color: muted, text: "@V1f", gap: s }
-    answer: [muted]
+      - id: pale
+        text: { en: "Pale grey, 2.3:1", ar: "رمادي باهت، 2.3:1" }
+        mock:
+          blocks:
+            - { kind: button, text: "@V1d" }
+            - { kind: text, px: 14, color: faint, text: "@V1f", gap: s }
+    answer: [mid]
+    misconceptions:
+      - id: MC-P10-009
+        when: [light, pale]
+        feedback:
+          en: "Below 4.5:1, small text is hard to read, especially outdoors. Karim needs this rule; keep it quiet with a grey that passes."
+          ar: "تحت 4.5:1 يصعب قراءة النص الصغير، خصوصًا في الخارج. وكريم يحتاج هذا الشرط؛ فاجعله هادئًا برمادي يجتاز الحدّ."
     explain:
-      en: "At 14px, text needs 4.5:1. Grey at 5.3:1 is quiet and still readable."
-      ar: "عند 14 بكسل يحتاج النص 4.5:1. الرمادي بنسبة 5.3:1 هادئ ومقروء."
+      en: "From Lesson 2: mid grey is clearly quieter than the facts and still passes 4.5:1."
+      ar: "من الدرس 2: الرمادي المتوسط أهدأ بوضوح من المعلومات، وما زال يجتاز 4.5:1."
 
   - id: S05
-    type: choose
+    type: tune
     part: check
-    rules: [R19, U14]
+    rules: [R19]
+    value:
+      en: "Skill check, large text (NN/g, citing WCAG): 3:1 applies only from 18pt (24px), or 14pt (about 19px) bold. Smaller bold text still needs 4.5:1."
+      ar: "اختبار مهارة، النص الكبير (NN/g نقلًا عن WCAG): حدّ 3:1 ينطبق فقط من 18pt (24px)، أو 14pt Bold (نحو 19px). والنص الـ Bold الأصغر يحتاج 4.5:1."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "For text that is at least 18pt or 14pt bold, the ratio is a bit more generous at 3:1." }
+    scenario:
+      en: "A teammate wants the label \"Pick-up from 16:00\" in light grey (3.0:1), and says making it bold is enough."
+      ar: "يريد أحد الزملاء التسمية «الاستلام من الساعة 16:00» بالرمادي الفاتح (3.0:1)، ويقول إن جعلها Bold يكفي."
     prompt:
-      en: "The team suggests making the cancellation rule 14px bold in light grey (3.0:1). Does that pass?"
-      ar: "يقترح الفريق جعل قاعدة الإلغاء بحجم 14 بكسل عريضة بالرمادي الفاتح (3.0:1). هل يجتاز ذلك المعيار؟"
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: bold14
     options:
-      - { id: no, text: { en: "No, 14px bold still needs 4.5:1", ar: "لا، 14 بكسل عريضًا ما زال يحتاج 4.5:1" } }
-      - { id: yes, text: { en: "Yes, bold text only needs 3:1", ar: "نعم، الخط الـ Bold يحتاج 3:1 فقط" } }
-    answer: [no]
+      - id: bold14
+        text: { en: "14px bold, light grey", ar: "14px Bold، رمادي فاتح" }
+        mock:
+          blocks:
+            - { kind: meta, text: "@V1b" }
+            - { kind: text, px: 14, weight: bold, color: pale, text: { en: "Pick-up from 16:00", ar: "الاستلام من الساعة 16:00" }, gap: s }
+      - id: bold16
+        text: { en: "16px bold, light grey", ar: "16px Bold، رمادي فاتح" }
+        mock:
+          blocks:
+            - { kind: meta, text: "@V1b" }
+            - { kind: text, px: 16, weight: bold, color: pale, text: { en: "Pick-up from 16:00", ar: "الاستلام من الساعة 16:00" }, gap: s }
+      - id: mid
+        text: { en: "14px bold, mid grey (5.3:1)", ar: "14px Bold، رمادي متوسط (5.3:1)" }
+        mock:
+          blocks:
+            - { kind: meta, text: "@V1b" }
+            - { kind: text, px: 14, weight: bold, color: muted, text: { en: "Pick-up from 16:00", ar: "الاستلام من الساعة 16:00" }, gap: s }
+    answer: [mid]
+    misconceptions:
+      - id: MC-P10-048
+        when: [bold14, bold16]
+        feedback:
+          en: "Bold text counts as large only from about 19px. At 14 or 16px it still needs 4.5:1, so light grey fails."
+          ar: "الخط الـ Bold يُعدّ كبيرًا فقط من نحو 19px. وبحجم 14 أو 16px ما زال يحتاج 4.5:1، فالرمادي الفاتح لا يجتاز الحدّ."
     explain:
-      en: "Bold counts as large text only from about 18.7px. At 14px, bold or not, the line is 4.5:1."
-      ar: "الخط الـ Bold يُعدّ نصًا كبيرًا فقط من نحو 18.7 بكسل. عند 14 بكسل، عريضًا أو لا، الحد هو 4.5:1."
+      en: "From Lesson 2: bold doesn't turn small text into large text. Keep the size and use a grey that passes."
+      ar: "من الدرس 2: الـ Bold لا يحوّل النص الصغير إلى كبير. أبقِ الحجم واستخدم رماديًا يجتاز الحدّ."
 
   - id: S06
-    type: choose
+    type: tune
     part: check
-    rules: [R19, U17]
+    rules: [R19]
+    value:
+      en: "Skill check, color meaning (NN/g): if red is a warning color on one screen, it should not mean something different elsewhere. A price is a plain fact."
+      ar: "اختبار مهارة، معنى اللون (NN/g): إذا كان الأحمر لون تحذير في شاشة، فلا يجب أن يعني شيئًا آخر في مكان آخر. والسعر معلومة عادية."
+    ref: { url: "https://www.nngroup.com/articles/color-enhance-design/", quote: "If you use red as a warning color on one screen" }
+    scenario:
+      en: "In the garage's app, red means an error or a problem with the car. The price is shown in bold red."
+      ar: "في تطبيق مركز الصيانة، الأحمر يعني خطأ أو مشكلة في السيارة. والسعر معروض بالأحمر وبخط Bold."
     prompt:
-      en: "The price is shown in bold red. What's the problem?"
-      ar: "السعر معروض بالأحمر العريض. ما المشكلة؟"
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: red
     options:
-      - { id: contrast, text: { en: "Red always fails contrast", ar: "الأحمر لا يجتاز الـ Contrast دائمًا" } }
-      - { id: none, text: { en: "Nothing, red makes the price easy to find", ar: "لا شيء، الأحمر يجعل السعر سهل الإيجاد" } }
-      - { id: signal, text: { en: "Red suggests an error or warning, so it sends a false signal", ar: "الأحمر يوحي بخطأ أو تحذير، فيرسل إشارة خاطئة" } }
-    answer: [signal]
+      - id: plain
+        text: { en: "The price in near-black, like the other facts", ar: "السعر بلون قريب من الأسود، مثل باقي المعلومات" }
+        mock:
+          blocks:
+            - { kind: title, text: "@V1a" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: meta, text: "@V1c", gap: s }
+            - { kind: button, text: "@V1d", gap: m }
+      - id: red
+        text: { en: "Keep the bold red price", ar: "أبقِ السعر بالأحمر وبخط Bold" }
+        mock:
+          blocks:
+            - { kind: title, text: "@V1a" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: meta, weight: bold, color: red, text: "@V1c", gap: s }
+            - { kind: button, text: "@V1d", gap: m }
+      - id: orange
+        text: { en: "The price in orange, a softer warning color", ar: "السعر بالبرتقالي، وهو لون تحذير أخفّ" }
+        mock:
+          blocks:
+            - { kind: title, text: "@V1a" }
+            - { kind: meta, text: "@V1b", gap: s }
+            - { kind: meta, weight: bold, color: orange, text: "@V1c", gap: s }
+            - { kind: button, text: "@V1d", gap: m }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P10-055
+        when: [red, orange]
+        feedback:
+          en: "Red, and orange too, already say \"something's wrong\". On a price, Karim may think there's a problem or an extra charge. A plain fact gets plain text."
+          ar: "الأحمر، والبرتقالي أيضًا، يقولان «هناك مشكلة». وعلى السعر قد يظنّ كريم أن هناك مشكلة أو رسومًا إضافية. والمعلومة العادية تُكتب بنص عادي."
     explain:
-      en: "Keep red for full, error or destructive. A plain fact like a price gets ordinary text."
-      ar: "احتفظ بالأحمر للمكتمل والخطأ والإجراءات المدمّرة. أما معلومة عادية كالسعر فتأخذ نصًا عاديًا."
+      en: "From Lesson 3: status colors keep their meaning only if they aren't used for decoration."
+      ar: "من الدرس 3: ألوان الحالة تحتفظ بمعناها فقط إن لم تُستخدم للزينة."
 
   - id: S07
-    type: fix
+    type: tune
     part: check
-    rules: [R19, U16]
+    rules: [R19]
+    value:
+      en: "Skill check, grayscale test (NN/g): turn the design into grayscale and see if it still makes sense; color alone can't carry the difference."
+      ar: "اختبار مهارة، اختبار الأبيض والأسود (NN/g): حوّل التصميم إلى Grayscale وانظر هل ما زال مفهومًا؛ فاللون وحده لا يحمل الفرق."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "Turn your design into grayscale and see if you can correctly understand the design." }
+    scenario:
+      en: "The time picker shows open slots in green and booked slots in grey. Each version below is shown in grayscale, as a test."
+      ar: "منتقي المواعيد يعرض المواعيد المتاحة بالأخضر والمحجوزة بالرمادي. وكل نسخة تحت معروضة بالأبيض والأسود كاختبار."
     prompt:
-      en: "The time picker shows open slots in green and booked slots in grey, with no other difference. What's the best fix?"
-      ar: "منتقي المواعيد يعرض المواعيد المتاحة بالأخضر والمحجوزة بالرمادي، دون أي فرق آخر. ما أفضل إصلاح؟"
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
     mock:
-      blocks:
+      caption: { en: "Now, in grayscale", ar: "الآن، بالأبيض والأسود" }
+      gray: true
+      blocks: &slots
         - kind: row
           blocks:
             - { kind: chip, text: "@V1g" }
-            - { kind: text, color: pale, text: "@V1h" }
+            - { kind: chip, tone: off, text: "@V1h" }
     options:
-      - { id: darker, text: { en: "Use a darker green", ar: "استخدم أخضر أغمق" } }
-      - { id: legend, text: { en: "Add a legend explaining the colors", ar: "أضف دليلًا يشرح الألوان" } }
-      - { id: words, text: { en: "Add \"Booked\" to taken slots and make them clearly not tappable", ar: "أضف «محجوز» للمواعيد المأخوذة واجعلها غير قابلة للضغط بوضوح" } }
+      - id: darker
+        text: { en: "A darker green for open slots", ar: "أخضر أغمق للمواعيد المتاحة" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: chip, tone: dark, text: "@V1g" }
+                - { kind: chip, tone: off, text: "@V1h" }
+      - id: words
+        text: { en: "Add the word \"Booked\" to taken slots", ar: "أضف كلمة «محجوز» إلى المواعيد المأخوذة" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: chip, text: "@V1g" }
+                - { kind: chip, tone: off, text: { en: "Saturday 13:00 · Booked", ar: "السبت 13:00 · محجوز" } }
+      - id: legend
+        text: { en: "Add a key under the slots: \"green = open, grey = booked\"", ar: "أضف مفتاحًا تحت المواعيد: «الأخضر = متاح، الرمادي = محجوز»" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: chip, text: "@V1g" }
+                - { kind: chip, tone: off, text: "@V1h" }
+            - { kind: small, text: { en: "green = open, grey = booked", ar: "الأخضر = متاح، الرمادي = محجوز" }, gap: s }
     answer: [words]
+    misconceptions:
+      - id: MC-P10-052
+        when: [darker, legend]
+        feedback:
+          en: "In grayscale the two slots still look almost the same, and a key only explains colors some people can't see. Add the word \"Booked\"."
+          ar: "بالأبيض والأسود ما زال الموعدان متشابهين تقريبًا، والمفتاح يشرح فقط ألوانًا لا يراها بعض الناس. أضف كلمة «محجوز»."
     explain:
-      en: "Color can reinforce, but it shouldn't be the only difference. Words (and a clearly disabled state) work for everyone."
-      ar: "اللون يمكن أن يعزّز، لكن لا يجب أن يكون الفرق الوحيد. الكلمات (وحالة تعطيل واضحة) تعمل للجميع."
+      en: "From Lesson 3: if the meaning disappears in grayscale, it depended on color alone. The word \"Booked\" works for everyone."
+      ar: "من الدرس 3: إذا اختفى المعنى بالأبيض والأسود، فقد كان يعتمد على اللون وحده. وكلمة «محجوز» تصل إلى الجميع."
