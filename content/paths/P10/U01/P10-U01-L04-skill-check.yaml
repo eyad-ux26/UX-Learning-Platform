@@ -1,21 +1,35 @@
 id: P10-U01-L04
 mode: check
-minutes: 6
+minutes: 7
 title:
   en: "Skill check: put the decision first"
   ar: "اختبار المهارة: ضع القرار أولًا"
+sources:
+  - title: { en: "Scrolling and Attention (NN/g)", ar: "التمرير والانتباه (NN/g)" }
+    url: "https://www.nngroup.com/articles/scrolling-and-attention/"
+  - title: { en: "Progressive Disclosure (NN/g)", ar: "الإفصاح التدريجي (NN/g)" }
+    url: "https://www.nngroup.com/articles/progressive-disclosure/"
+  - title: { en: "Banner Blindness Revisited: Old and New Findings (NN/g)", ar: "عمى الإعلانات (Banner blindness): نتائج قديمة وجديدة (NN/g)" }
+    url: "https://www.nngroup.com/articles/banner-blindness-old-and-new-findings/"
+  - title: { en: "Visual Hierarchy in UX: Definition (NN/g)", ar: "التسلسل البصري في تجربة المستخدم: تعريف (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/"
+  - title: { en: "Inverted Pyramid: Writing for Comprehension (NN/g)", ar: "الهرم المقلوب: الكتابة من أجل الفهم (NN/g)" }
+    url: "https://www.nngroup.com/articles/inverted-pyramid/"
+  - title: { en: "Photos as Web Content (NN/g)", ar: "الصور كمحتوى على الويب (NN/g)" }
+    url: "https://www.nngroup.com/articles/photos-as-web-content/"
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Huda's appointment", ar: "موعد هدى" }
     body:
-      en: "Huda needs a dermatologist on Saturday morning, and her insurance is MedCare. She's booking from her phone during a break.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
-      ar: "تحتاج هدى إلى طبيبة جلدية صباح السبت، وتأمينها الصحي من MedCare. تحجز من هاتفها في وقت الاستراحة.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+      en: "Huda needs a dermatologist for her eczema on Saturday morning, and her insurance is MedCare. She's booking from her phone during a break. You're reviewing the clinic's booking page before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "تحتاج هدى إلى طبيبة جلدية لعلاج الإكزيما صباح السبت، وتأمينها الصحي من MedCare. تحجز من هاتفها في وقت الاستراحة. وأنت تراجع صفحة الحجز في العيادة قبل إطلاقها.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
     mock:
+      height: 380
       blocks:
-        - { kind: image, size: l, text: "@C1h" }
-        - { kind: banner, text: "@C1g", gap: m }
+        - { kind: banner, text: "@C1g" }
+        - { kind: image, size: l, text: "@C1h", gap: m }
         - { kind: title, text: "@C1a", gap: m }
         - { kind: meta, text: "@C1b", gap: s }
         - { kind: button, text: "@C1e", gap: m }
@@ -23,198 +37,357 @@ steps:
         - { kind: small, text: "@C1c", gap: s }
 
   - id: S02
-    type: sort
+    type: tune
     part: check
     rules: [R19]
     value:
-      en: "Skill check: label every item as decide now, supporting or optional."
-      ar: "اختبار مهارة: تصنيف كل عنصر إلى أساسي للقرار أو مساند أو اختياري."
+      en: "Skill check, page order (NN/g): reserve the top of the page for high-priority content; the button comes after the facts it depends on."
+      ar: "اختبار مهارة، ترتيب الصفحة (NN/g): خصّص أعلى الصفحة للمحتوى الأهم؛ ويأتي الزر بعد المعلومات التي يعتمد عليها."
+    ref: { url: "https://www.nngroup.com/articles/scrolling-and-attention/", quote: "Reserve the top of the page for high-priority content" }
     prompt:
-      en: "Label everything on Huda's booking page."
-      ar: "صنّف كل ما في صفحة حجز هدى."
-    items:
-      - { id: C1a, text: "@C1a" }
-      - { id: C1b, text: "@C1b" }
-      - { id: C1c, text: "@C1c" }
-      - { id: C1d, text: "@C1d" }
-      - { id: C1e, text: "@C1e" }
-      - { id: C1f, text: "@C1f" }
-      - { id: C1g, text: "@C1g" }
-      - { id: C1h, text: "@C1h" }
-    buckets:
-      - { id: now, label: { en: "Decide now", ar: "أساسي للقرار" } }
-      - { id: sup, label: { en: "Supporting", ar: "مساند" } }
-      - { id: opt, label: { en: "Optional", ar: "اختياري" } }
-    answer:
-      now: [C1a, C1b, C1c, C1d, C1e]
-      sup: [C1f]
-      opt: [C1g, C1h]
-    also_ok:
-      - answer:
-          now: [C1a, C1b, C1c, C1d, C1e, C1f]
-          sup: []
-          opt: [C1g, C1h]
-        feedback:
-          en: "Also fine: treating the insurance card as part of the decision."
-          ar: "صحيح أيضًا: اعتبار بطاقة التأمين جزءًا من القرار."
-    misconceptions:
-      - id: MC-P10-002
-        when: { item: C1f, bucket: opt }
-        feedback:
-          en: "Without the card, Huda's insurance may not apply. It's a condition that must come before she books."
-          ar: "بدون البطاقة قد لا يُطبَّق تأمين هدى. هذا شرط يجب أن يأتي قبل أن تحجز."
-      - id: MC-P10-001
-        when: { item: C1h, bucket: now }
-        feedback:
-          en: "The clinic photo is big, but Huda doesn't decide anything with it."
-          ar: "صورة العيادة كبيرة، لكن هدى لا تبني عليها أي قرار."
-    explain:
-      en: "Decide now: doctor, time, insurance, fee and the button. Supporting: bring your insurance card. Optional: the blog and the clinic photo."
-      ar: "أساسي للقرار: الطبيبة والموعد والتأمين والرسوم والزر. مساند: إحضار بطاقة التأمين. اختياري: المدوّنة وصورة العيادة."
-
-  - id: S03
-    type: order
-    part: check
-    rules: [R19]
-    value:
-      en: "Skill check: put the facts before the action."
-      ar: "اختبار مهارة: وضع المعلومات قبل الإجراء."
-    prompt:
-      en: "Put these in the order Huda should meet them, top to bottom."
-      ar: "رتّب هذه بالترتيب الذي يجب أن تراها به هدى، من الأعلى إلى الأسفل."
-    items:
-      - { id: C1e, text: "@C1e", kind: button }
-      - { id: C1c, text: "@C1c" }
-      - { id: C1a, text: "@C1a", kind: title }
-      - { id: C1d, text: "@C1d" }
-      - { id: C1b, text: "@C1b" }
-    answer: [C1a, C1b, C1c, C1d, C1e]
-    also_ok:
-      - { answer: [C1b, C1a, C1c, C1d, C1e], feedback: { en: "Also fine: time first, doctor right next to it.", ar: "صحيح أيضًا: الموعد أولًا والطبيبة بجانبه." } }
-      - { answer: [C1a, C1b, C1d, C1c, C1e], feedback: { en: "Also fine: fee and insurance can swap.", ar: "صحيح أيضًا: يمكن تبديل الرسوم والتأمين." } }
-      - { answer: [C1b, C1a, C1d, C1c, C1e], feedback: { en: "Also fine.", ar: "صحيح أيضًا." } }
+      en: "Try each order. Which one should ship?"
+      ar: "جرّب كل ترتيب. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      height: 380
+      blocks:
+        - { kind: banner, text: "@C1g" }
+        - { kind: image, size: l, text: "@C1h", gap: m }
+        - { kind: title, text: "@C1a", gap: m }
+        - { kind: meta, text: "@C1b", gap: s }
+        - { kind: button, text: "@C1e", gap: m }
+        - { kind: small, text: "@C1d", gap: s }
+        - { kind: small, text: "@C1c", gap: s }
+    options:
+      - id: button
+        text: { en: "Book this slot at the very top, then everything else", ar: "زر «احجز هذا الموعد» في الأعلى تمامًا، ثم كل شيء آخر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 380
+          blocks:
+            - { kind: button, text: "@C1e" }
+            - { kind: banner, text: "@C1g", gap: m }
+            - { kind: image, size: l, text: "@C1h", gap: m }
+            - { kind: title, text: "@C1a", gap: m }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: small, text: "@C1d", gap: s }
+            - { kind: small, text: "@C1c", gap: s }
+      - id: facts
+        text: { en: "Doctor, time, insurance and fee first, then Book; the blog and photo after", ar: "الطبيبة والموعد والتأمين والرسوم أولًا، ثم زر الحجز؛ والمدوّنة والصورة بعدها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 380
+          blocks:
+            - { kind: title, text: "@C1a" }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+            - { kind: image, size: m, text: "@C1h", gap: l }
+            - { kind: link, text: "@C1g", gap: m }
+      - id: small
+        text: { en: "Keep the order, but make the photo smaller", ar: "أبقِ الترتيب، لكن صغّر الصورة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 380
+          blocks:
+            - { kind: banner, text: "@C1g" }
+            - { kind: image, size: s, text: "@C1h", gap: m }
+            - { kind: title, text: "@C1a", gap: m }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+            - { kind: small, text: "@C1d", gap: s }
+            - { kind: small, text: "@C1c", gap: s }
+    answer: [facts]
     misconceptions:
       - id: MC-P10-006
-        when: { before: [C1e, C1c] }
+        when: [button, small]
         feedback:
-          en: "The button comes before the insurance line, so Huda could book without knowing if MedCare is accepted."
-          ar: "الزر يأتي قبل سطر التأمين، لذلك قد تحجز هدى دون أن تعرف إن كان MedCare مقبولًا."
+          en: "Book this slot still comes before the insurance and fee, so Huda could book without knowing if MedCare is accepted."
+          ar: "ما زال «احجز هذا الموعد» يأتي قبل التأمين والرسوم، فقد تحجز هدى دون أن تعرف إن كان MedCare مقبولًا."
     explain:
-      en: "Who and when, then insurance and fee, then the button. Doctor and time can swap; insurance and fee can swap. The button always comes after the facts Huda decides with."
-      ar: "من ومتى، ثم التأمين والرسوم، ثم الزر. يمكن تبديل الطبيبة والموعد، ويمكن تبديل التأمين والرسوم. ويأتي الزر دائمًا بعد المعلومات التي تبني عليها هدى قرارها."
+      en: "From Lesson 1: the top of the screen goes to what Huda decides with, and the button follows those facts. The blog and photo can wait."
+      ar: "من الدرس 1: أعلى الشاشة لما تقرّر به هدى، والزر يأتي بعد هذه المعلومات. أما المدوّنة والصورة فيمكنهما الانتظار."
 
-  - id: S04
-    type: spot
+  - id: S03
+    type: tune
     part: check
     rules: [R19]
     value:
-      en: "Skill check: catch a tidy-up that hid the decision."
-      ar: "اختبار مهارة: اكتشاف ترتيب «نظيف» أخفى القرار."
+      en: "Skill check, progressive disclosure (NN/g): disclose everything users frequently need up front; specialised details go behind a clearly named link."
+      ar: "اختبار مهارة، الإفصاح التدريجي (NN/g): اعرض كل ما يحتاجه المستخدمون كثيرًا في الواجهة؛ والتفاصيل المتخصّصة خلف رابط باسم واضح."
+    ref: { url: "https://www.nngroup.com/articles/progressive-disclosure/", quote: "You have to disclose everything that users frequently need up front" }
+    scenario:
+      en: "Almost every patient checks the insurance and the fee before booking. Few read the clinic's history and awards. A teammate tidied the page by putting all of it behind one link."
+      ar: "تقريبًا كل مريض يتحقّق من التأمين والرسوم قبل الحجز. وقليلون يقرؤون تاريخ العيادة وجوائزها. رتّب زميلك الصفحة بوضع كل ذلك خلف رابط واحد."
     prompt:
-      en: "A teammate tidied the page. Which part now stops Huda from deciding?"
-      ar: "رتّب زميل الصفحة. أي جزء الآن يمنع هدى من اتخاذ قرارها؟"
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن يُطلق؟"
     mock:
+      caption: { en: "Now", ar: "الآن" }
       blocks:
-        - { kind: image, size: m, text: "@C1h", region: photo }
-        - { kind: title, text: "@C1a", gap: m, region: doctor }
-        - { kind: meta, text: "@C1b", gap: s, region: time }
-        - kind: link
-          gap: s
-          region: fees
-          text: { en: "Insurance and fees", ar: "التأمين والرسوم" }
-        - { kind: button, text: "@C1e", gap: m, region: button }
-    regions:
-      - { id: photo, label: "@C1h" }
-      - { id: time, label: "@C1b" }
-      - { id: fees, label: { en: "The \"Insurance and fees\" link", ar: "رابط «التأمين والرسوم»" } }
-      - { id: button, label: "@C1e" }
-    answer: [fees]
+        - { kind: title, text: "@C1a" }
+        - { kind: meta, text: "@C1b", gap: s }
+        - { kind: link, text: { en: "More info", ar: "معلومات أكثر" }, gap: s }
+        - { kind: button, text: "@C1e", gap: m }
+    options:
+      - id: history
+        text: { en: "Show the clinic's history and awards; keep insurance and fee behind \"More info\"", ar: "اعرض تاريخ العيادة وجوائزها؛ وأبقِ التأمين والرسوم خلف «معلومات أكثر»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@C1a" }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: small, text: { en: "Open since 2009 · Best clinic award 2023", ar: "تعمل منذ 2009 · جائزة أفضل عيادة 2023" }, gap: s }
+            - { kind: link, text: { en: "More info", ar: "معلومات أكثر" }, gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+      - id: keep
+        text: { en: "Keep everything behind \"More info\"; the page is cleaner", ar: "أبقِ كل شيء خلف «معلومات أكثر»؛ فالصفحة أنظف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@C1a" }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: link, text: { en: "More info", ar: "معلومات أكثر" }, gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+      - id: show
+        text: { en: "Show insurance and fee; put the history and awards behind \"About the clinic\"", ar: "اعرض التأمين والرسوم؛ وضع التاريخ والجوائز خلف «عن العيادة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@C1a" }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+            - { kind: link, text: { en: "About the clinic", ar: "عن العيادة" }, gap: s }
+    answer: [show]
     misconceptions:
-      - id: MC-P10-001
-        when: [photo]
+      - id: MC-P10-002
+        when: [history, keep]
         feedback:
-          en: "The photo is optional, but it isn't what blocks Huda. The insurance and fee are now behind a tap."
-          ar: "الصورة اختيارية، لكنها ليست ما يعرقل هدى. التأمين والرسوم أصبحا خلف ضغطة."
+          en: "Almost every patient needs the insurance and fee, so hiding them makes nearly everyone tap. Hide only what few people read."
+          ar: "تقريبًا كل مريض يحتاج إلى التأمين والرسوم، فإخفاؤهما يجعل الجميع تقريبًا يضغط. أخفِ فقط ما يقرؤه القليلون."
     explain:
-      en: "Huda's main question is whether MedCare is accepted and what she'll pay. Hiding that behind a link lets her book without knowing."
-      ar: "سؤال هدى الأساسي: هل MedCare مقبول وكم ستدفع؟ إخفاء ذلك خلف رابط يجعلها تحجز دون أن تعرف."
+      en: "From Lesson 2: what most people need stays up front, and what few need goes behind a link that names it."
+      ar: "من الدرس 2: ما يحتاجه معظم الناس يبقى ظاهرًا، وما يحتاجه القليلون يذهب خلف رابط يسمّيه."
+
+  - id: S04
+    type: tune
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, banner blindness (NN/g): do not make content look like ads; a bright, different-looking box is often skipped."
+      ar: "اختبار مهارة، عمى الإعلانات (NN/g): لا تجعل المحتوى يشبه الإعلانات؛ فالصندوق اللامع المختلف الشكل يُتخطّى غالبًا."
+    ref: { url: "https://www.nngroup.com/articles/banner-blindness-old-and-new-findings/", quote: "Do not make content look like ads." }
+    scenario:
+      en: "Patients must bring their insurance card, or they pay the full fee. Where should this note go?"
+      ar: "يجب أن يُحضر المرضى بطاقة التأمين، وإلا يدفعون الرسوم كاملة. أين يجب أن توضع هذه الملاحظة؟"
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن يُطلق؟"
+    start: plain
+    options:
+      - id: plain
+        text: { en: "A plain line right under the insurance line", ar: "سطر عادي تحت سطر التأمين مباشرة" }
+        mock:
+          blocks:
+            - { kind: title, text: "@C1a" }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: { en: "Bring your insurance card, or you pay the full fee", ar: "أحضر بطاقة التأمين، وإلا تدفع الرسوم كاملة" }, gap: xs }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+      - id: strip
+        text: { en: "A bright red strip at the top of the page", ar: "شريط أحمر لامع أعلى الصفحة" }
+        mock:
+          blocks:
+            - { kind: banner, tone: bad, text: { en: "⚠ Bring your insurance card! ⚠", ar: "⚠ أحضر بطاقة التأمين! ⚠" } }
+            - { kind: title, text: "@C1a", gap: m }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+      - id: picture
+        text: { en: "A big picture of an insurance card above the doctor's name", ar: "صورة كبيرة لبطاقة تأمين فوق اسم الطبيبة" }
+        mock:
+          blocks:
+            - { kind: image, size: m, text: { en: "🪪 Bring your insurance card!", ar: "🪪 أحضر بطاقة التأمين!" } }
+            - { kind: title, text: "@C1a", gap: m }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P10-013
+        when: [strip, picture]
+        feedback:
+          en: "A bright strip or a big picture at the top looks like an ad, so many patients will skip it. Keep the note with the insurance facts, in the same style."
+          ar: "الشريط اللامع أو الصورة الكبيرة في الأعلى يشبهان الإعلان، فسيتخطّاهما كثير من المرضى. أبقِ الملاحظة مع معلومات التأمين، بالشكل نفسه."
+    explain:
+      en: "From Lesson 3: making a note look different to get attention often backfires. Right next to the insurance line, it's read as part of the decision."
+      ar: "من الدرس 3: جعل الملاحظة مختلفة لتلفت الانتباه يأتي غالبًا بعكس النتيجة. وبجانب سطر التأمين مباشرة، تُقرأ كجزء من القرار."
 
   - id: S05
+    type: tune
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, visual hierarchy (NN/g): limit how many elements are big to a maximum of 2. When everything is big, nothing stands out."
+      ar: "اختبار مهارة، التسلسل البصري (NN/g): لا تكبّر أكثر من عنصرين. حين يكون كل شيء كبيرًا، لا يبرز شيء."
+    ref: { url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/", quote: "Limit how many elements are big to a maximum of 2" }
+    scenario:
+      en: "The clinic knows patients pick an appointment mainly by its time. Right now, four things on the page are big."
+      ar: "تعرف العيادة أن المرضى يختارون الموعد أساسًا حسب وقته. والآن، أربعة أشياء في الصفحة كبيرة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: "@C1a" }
+        - { kind: title, text: "@C1b", gap: s }
+        - { kind: meta, text: "@C1c", gap: s }
+        - { kind: title, text: "@C1d", gap: s }
+        - { kind: button, text: "@C1e", gap: m }
+    options:
+      - id: red
+        text: { en: "Keep all four big, and make the fee red so it stands out", ar: "أبقِ الأربعة كبيرة، واجعل الرسوم حمراء لتبرز" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@C1a" }
+            - { kind: title, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: title, color: red, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+      - id: flat
+        text: { en: "Make everything the same normal size, the button too", ar: "اجعل كل شيء بالحجم العادي نفسه، والزر أيضًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: meta, text: "@C1a" }
+            - { kind: meta, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: link, text: "@C1e", gap: s }
+      - id: two
+        text: { en: "Only the time and the Book button big; the rest normal", ar: "الموعد وزر الحجز فقط كبيران؛ والباقي عادي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: meta, text: "@C1a" }
+            - { kind: title, text: "@C1b", gap: s }
+            - { kind: meta, text: "@C1c", gap: s }
+            - { kind: meta, text: "@C1d", gap: s }
+            - { kind: button, text: "@C1e", gap: m }
+    answer: [two]
+    misconceptions:
+      - id: MC-P10-003
+        when: [red]
+        feedback:
+          en: "With four big things, adding red just makes a fifth thing compete. Keep two big: what patients choose by, and the button."
+          ar: "مع أربعة أشياء كبيرة، يضيف اللون الأحمر شيئًا خامسًا ينافس فقط. أبقِ شيئين كبيرين: ما يختار به المرضى، والزر."
+      - id: MC-P10-001
+        when: [flat]
+        feedback:
+          en: "Now nothing leads the eye, not even the button. Make the two things that matter most bigger than the rest."
+          ar: "الآن لا شيء يقود العين، ولا حتى الزر. اجعل الشيئين الأهم أكبر من الباقي."
+    explain:
+      en: "From Lesson 1: two big things at most. Here, the time patients choose by and the action they take."
+      ar: "من الدرس 1: شيئان كبيران كحدّ أقصى. هنا: الموعد الذي يختار به المرضى، والإجراء الذي يقومون به."
+
+  - id: S06
     type: compare
     part: check
     rules: [R19, R11]
     value:
-      en: "Skill check: pick the version where the facts come before the button."
-      ar: "اختبار مهارة: اختيار النسخة التي تأتي فيها المعلومات قبل الزر."
+      en: "Skill check, inverted pyramid (NN/g): the first sentence of every paragraph should be the most important. Huda scans for whether the doctor treats eczema."
+      ar: "اختبار مهارة، الهرم المقلوب (NN/g): يجب أن تكون الجملة الأولى في كل فقرة هي الأهم. وهدى تبحث بسرعة: هل تعالج الطبيبة الإكزيما؟"
+    ref: { url: "https://www.nngroup.com/articles/inverted-pyramid/", quote: "The first sentence of every paragraph should be the most important." }
     prompt:
-      en: "In which version does Huda see her insurance and the fee before the Book button?"
-      ar: "في أي نسخة ترى هدى التأمين والرسوم قبل زر الحجز؟"
+      en: "Both descriptions say the same things. Which one should ship?"
+      ar: "الوصفان يقولان الأشياء نفسها. أيّهما يجب أن يُطلق؟"
     a:
       mock:
         blocks:
           - { kind: title, text: "@C1a" }
-          - { kind: meta, text: "@C1b", gap: s }
-          - { kind: meta, text: "@C1c", gap: s }
-          - { kind: meta, text: "@C1d", gap: s }
-          - { kind: button, text: "@C1e", gap: m }
-          - { kind: small, text: "@C1f", gap: s }
-          - { kind: link, text: "@C1g", gap: l }
+          - { kind: text, text: { en: "Treats eczema, acne and hair loss in adults and children. Dr. Mona has 15 years of experience and believes every patient deserves time and care.", ar: "تعالج الإكزيما وحب الشباب وتساقط الشعر للكبار والأطفال. لدى د. منى خبرة 15 عامًا، وتؤمن بأن كل مريض يستحق الوقت والاهتمام." }, gap: s }
     b:
       mock:
         blocks:
-          - { kind: banner, text: "@C1g" }
-          - { kind: image, size: m, text: "@C1h", gap: m }
-          - { kind: title, text: "@C1a", gap: m }
-          - { kind: meta, text: "@C1b", gap: s }
-          - { kind: button, text: "@C1e", gap: m }
-          - { kind: small, text: "@C1c", gap: s }
-          - { kind: small, text: "@C1d", gap: s }
+          - { kind: title, text: "@C1a" }
+          - { kind: text, text: { en: "Dr. Mona has 15 years of experience and believes every patient deserves time and care. She treats eczema, acne and hair loss in adults and children.", ar: "لدى د. منى خبرة 15 عامًا، وتؤمن بأن كل مريض يستحق الوقت والاهتمام. وهي تعالج الإكزيما وحب الشباب وتساقط الشعر للكبار والأطفال." }, gap: s }
     answer: a
     reason:
       prompt: { en: "What makes the difference?", ar: "ما سبب الفرق؟" }
       options:
-        - { id: blog, text: { en: "The blog link is smaller", ar: "رابط المدوّنة أصغر" } }
-        - { id: nophoto, text: { en: "It has no photo", ar: "لا توجد فيها صورة" } }
-        - { id: facts, text: { en: "Insurance and fee come before the button", ar: "التأمين والرسوم يأتيان قبل الزر" } }
-      answer: [facts]
+        - { id: short, text: { en: "A is shorter", ar: "A أقصر" } }
+        - { id: first, text: { en: "A starts with what she treats, which is what Huda is checking", ar: "A تبدأ بما تعالجه الطبيبة، وهذا ما تتحقّق منه هدى" } }
+        - { id: warm, text: { en: "B sounds warmer, so patients trust it more", ar: "B أدفأ، لذلك يثق بها المرضى أكثر" } }
+      answer: [first]
+      misconceptions:
+        - id: MC-P10-004
+          when: [short, warm]
+          feedback:
+            en: "Both have the same words and length. The difference is which sentence comes first: people often read only the start."
+            ar: "للوصفين الكلمات والطول نفسهما. الفرق في الجملة التي تأتي أولًا: فالناس كثيرًا ما يقرؤون البداية فقط."
+    misconceptions:
+      - id: MC-P10-004
+        when: [b]
+        feedback:
+          en: "In B, what Huda needs (does she treat eczema?) is hidden in the second sentence. Put the deciding fact first."
+          ar: "في B، ما تحتاجه هدى (هل تعالج الإكزيما؟) مخفي في الجملة الثانية. ضع المعلومة الحاسمة أولًا."
     explain:
-      en: "In A, everything Huda decides with comes before Book this slot. In B, the blog and photo lead, and insurance and fee arrive only after the button."
-      ar: "في A، كل ما تبني عليه هدى قرارها يأتي قبل «احجز هذا الموعد». في B، تتصدّر المدوّنة والصورة، ولا يظهر التأمين والرسوم إلا بعد الزر."
-
-  - id: S06
-    type: choose
-    part: check
-    rules: [R14, R19]
-    value:
-      en: "Skill check: priority depends on the audience."
-      ar: "اختبار مهارة: الأولوية تعتمد على الجمهور."
-    prompt:
-      en: "This clinic page is mostly visited by older patients, many using wheelchairs. Which item should move up into \"Decide now\"?"
-      ar: "معظم زوّار صفحة هذه العيادة من المرضى الكبار في السن، وكثير منهم يستخدمون كراسي متحركة. أي عنصر يجب أن ينتقل إلى «أساسي للقرار»؟"
-    options:
-      - { id: blog, text: "@C1g" }
-      - { id: access, text: "@C1i" }
-      - { id: photo, text: "@C1h" }
-    answer: [access]
-    explain:
-      en: "For these patients, whether they can get in decides whether they can come at all. Priority follows who the visitor is."
-      ar: "لهؤلاء المرضى، إمكانية الدخول تحدّد إن كانوا يستطيعون الحضور أصلًا. الأولوية تتبع هوية الزائر."
+      en: "From Lesson 1: the first words carry the decision. Lead with what the reader is checking; the rest can follow."
+      ar: "من الدرس 1: الكلمات الأولى تحمل القرار. ابدأ بما يتحقّق منه القارئ، والباقي يأتي بعده."
 
   - id: S07
-    type: choose
+    type: tune
     part: check
-    rules: [R14, R19]
+    rules: [R19]
     value:
-      en: "Skill check: priority changes when the situation changes."
-      ar: "اختبار مهارة: الأولوية تتغيّر حين يتغيّر الموقف."
+      en: "Skill check, photos (NN/g): users pay attention to information-carrying images relevant to their task and ignore decorative ones. The entrance photo helps patients find the clinic."
+      ar: "اختبار مهارة، الصور (NN/g): ينتبه المستخدمون للصور التي تحمل معلومة تخصّ مهمّتهم، ويتجاهلون صور الزينة. وصورة المدخل تساعد المرضى على الوصول إلى العيادة."
+    ref: { url: "https://www.nngroup.com/articles/photos-as-web-content/", quote: "users pay attention to information-carrying images" }
+    scenario:
+      en: "Patients often can't find the clinic's entrance, which is in a side street. Below the booking details there's room for one photo."
+      ar: "كثيرًا ما لا يجد المرضى مدخل العيادة، فهو في شارع جانبي. وتحت تفاصيل الحجز مكان لصورة واحدة."
     prompt:
-      en: "The 10:30 slot was just taken. What should lead the page now?"
-      ar: "حُجز موعد 10:30 للتو. ما الذي يجب أن يتصدّر الصفحة الآن؟"
+      en: "Try each photo. Which one should ship?"
+      ar: "جرّب كل صورة. أيّها يجب أن تُطلق؟"
+    start: smile
     options:
-      - { id: blog, text: { en: "The blog, so Huda has something to read", ar: "المدوّنة، حتى تجد هدى ما تقرؤه" } }
-      - { id: grey, text: { en: "The same page, with the Book button greyed out", ar: "الصفحة نفسها، مع زر الحجز باللون الرمادي" } }
-      - { id: next, text: { en: "\"This slot is taken\", then the next Saturday-morning slots", ar: "«هذا الموعد محجوز»، ثم مواعيد صباح السبت التالية" } }
-    answer: [next]
+      - id: smile
+        text: { en: "A stock photo of a smiling doctor with a clipboard", ar: "صورة Stock لطبيبة تبتسم وتحمل لوح أوراق" }
+        mock:
+          blocks:
+            - { kind: meta, text: "@C1b" }
+            - { kind: button, text: "@C1e", gap: m }
+            - { kind: image, size: m, text: { en: "Photo: smiling doctor with a clipboard", ar: "صورة: طبيبة تبتسم وتحمل لوح أوراق" }, gap: l }
+      - id: door
+        text: { en: "A photo of the clinic's door from the street, with \"Ground floor, side entrance\"", ar: "صورة لباب العيادة من الشارع، مع «الطابق الأرضي، المدخل الجانبي»" }
+        mock:
+          blocks:
+            - { kind: meta, text: "@C1b" }
+            - { kind: button, text: "@C1e", gap: m }
+            - { kind: image, size: m, text: { en: "Photo: the clinic's door from the street", ar: "صورة: باب العيادة من الشارع" }, gap: l }
+            - { kind: small, text: { en: "Ground floor, side entrance", ar: "الطابق الأرضي، المدخل الجانبي" }, gap: xs }
+      - id: happy
+        text: { en: "A stock photo of a happy patient with clear skin", ar: "صورة Stock لمريضة سعيدة ببشرة صافية" }
+        mock:
+          blocks:
+            - { kind: meta, text: "@C1b" }
+            - { kind: button, text: "@C1e", gap: m }
+            - { kind: image, size: m, text: { en: "Photo: happy patient with clear skin", ar: "صورة: مريضة سعيدة ببشرة صافية" }, gap: l }
+    answer: [door]
+    misconceptions:
+      - id: MC-P10-012
+        when: [smile, happy]
+        feedback:
+          en: "A generic stock photo tells patients nothing they need, so they'll scroll past it. A photo of the real door solves a real problem."
+          ar: "صورة الـ Stock العامّة لا تخبر المرضى بشيء يحتاجونه، فسيتخطّونها. أما صورة الباب الحقيقي فتحلّ مشكلة حقيقية."
     explain:
-      en: "When the situation changes, so does the next useful thing. Huda needs to know the slot is gone and what she can book instead."
-      ar: "حين يتغيّر الموقف، يتغيّر ما تحتاجه أولًا. تحتاج هدى أن تعرف أن الموعد ذهب، وما الذي تستطيع حجزه بدلًا منه."
+      en: "From Lesson 3: a photo earns its place when it carries information for the task. Here, the task includes finding the door."
+      ar: "من الدرس 3: تستحق الصورة مكانها حين تحمل معلومة للمهمّة. وهنا، المهمّة تشمل الوصول إلى الباب."
