@@ -3,277 +3,389 @@ mode: lesson
 minutes: 8
 title:
   en: "Color that carries meaning"
-  ar: "ألوان تحمل معنى"
+  ar: "اللون الذي يحمل معنى"
+sources:
+  - title: { en: "5 Visual Treatments that Improve Accessibility (NN/g)", ar: "5 معالجات بصرية تحسّن سهولة الوصول (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-treatments-accessibility/"
+  - title: { en: "Using Color to Enhance Your Design (NN/g)", ar: "استخدام اللون لتحسين التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/color-enhance-design/"
+  - title: { en: "Guidelines for Visualizing Links (NN/g)", ar: "إرشادات لإظهار الروابط (NN/g)" }
+    url: "https://www.nngroup.com/articles/guidelines-for-visualizing-links/"
 review_labels:
+  MC-P10-050: { en: "Color is fine as an extra signal", ar: "اللون مناسب كإشارة إضافية" }
   MC-P10-052: { en: "Never rely on color alone", ar: "لا تعتمد على اللون وحده" }
-  MC-P10-053: { en: "Keep each color's job consistent", ar: "حافظ على ثبات وظيفة كل لون" }
+  MC-P10-054: { en: "Link color only on links", ar: "لون الروابط للروابط فقط" }
+  MC-P10-055: { en: "Status colors aren't decoration", ar: "ألوان الحالة ليست للزينة" }
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Green and red dots", ar: "نقاط خضراء وحمراء" }
     body:
-      en: "To save space, the sessions list now shows availability as a small dot: green for open, red for full.\n\nIt's neat. About 1 in 12 men and 1 in 200 women have some form of color blindness, and red versus green is the most common pair to confuse."
-      ar: "لتوفير المساحة، أصبحت قائمة الجلسات تعرض التوفّر كنقطة صغيرة: خضراء للمتاح وحمراء للمكتمل.\n\nالشكل مرتّب. لكن نحو رجل من كل 12 وامرأة من كل 200 لديهم نوع من عمى الألوان، والأحمر مقابل الأخضر هما أكثر لونين يُخلط بينهما."
-    mock: &dots
-      blocks:
+      en: "To save space, the sessions list now shows availability as a small dot: green for open, red for full.\n\nIt looks neat. But some people can't tell red from green apart."
+      ar: "لتوفير المساحة، أصبحت قائمة الجلسات تعرض التوفّر كنقطة صغيرة: خضراء للمتاح وحمراء للمكتمل.\n\nالشكل مرتّب. لكن بعض الناس لا يستطيعون التمييز بين الأحمر والأخضر."
+    mock:
+      blocks: &dots
         - kind: row
           blocks:
-            - { kind: heading, text: "@W2a", region: atitle }
-            - { kind: text, color: green, text: "●", region: adot }
+            - { kind: heading, text: "@W2a" }
+            - { kind: text, color: green, text: "●" }
         - { kind: small, text: "@W2b", gap: xs }
         - kind: row
           gap: l
           blocks:
-            - { kind: heading, text: "@W2e", region: btitle }
-            - { kind: text, color: red, text: "●", region: bdot }
+            - { kind: heading, text: "@W2e" }
+            - { kind: text, color: red, text: "●" }
         - { kind: small, text: "@W2f", gap: xs }
 
   - id: S02
-    type: predict
+    type: tune
     part: try
     rules: [R12]
-    mock: *dots
+    value:
+      en: "Accessibility (NN/g): some people can't distinguish certain colors, so use additional cues to communicate important information, not color alone."
+      ar: "سهولة الوصول (NN/g): بعض الناس لا يميّزون ألوانًا معيّنة، لذلك استخدم إشارات إضافية لتوصيل المعلومات المهمّة، لا اللون وحده."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "use additional cues (such as strokes, patterns) to communicate important information" }
     prompt:
-      en: "Green means open and red means full, with nothing else. What should you add so every visitor can tell which session is full?"
-      ar: "الأخضر يعني متاح والأحمر يعني ممتلئ، ولا شيء غير ذلك. ماذا تضيف حتى يعرف كل زائر الجلسة الممتلئة؟"
+      en: "Every visitor must be able to tell which session is full, including people who can't tell red from green. Try each fix. Which one should ship?"
+      ar: "يجب أن يعرف كل زائر أي جلسة مكتملة، بمن فيهم من لا يميّز الأحمر من الأخضر. جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: *dots
     options:
-      - { id: brighter, text: { en: "A brighter red", ar: "أحمر أقوى" } }
-      - { id: nothing, text: { en: "Nothing; red always means full", ar: "لا شيء؛ الأحمر يعني ممتلئ دائمًا" } }
-      - { id: word, text: { en: "The word \"Full\" (or an icon) next to the colour", ar: "كلمة «ممتلئ» (أو أيقونة) بجانب اللون" } }
-    answer: [word]
-    misconceptions:
-      - id: MC-P10-052
-        when: [brighter, nothing]
-        feedback:
-          en: "About 1 in 12 men can't reliably tell red from green, however bright. And nothing on the page says what the colours mean."
-          ar: "نحو رجل من كل 12 لا يميّز الأحمر من الأخضر بثقة، مهما كان اللون قويًا. ولا شيء في الصفحة يقول ما تعنيه الألوان."
-    correct:
-      en: "A word or icon, so the status doesn't depend on colour."
-      ar: "كلمة أو أيقونة، حتى لا تعتمد الحالة على اللون."
-    explain:
-      en: "Colour alone leaves some people out. Keep the colour as a support, and let the word carry the meaning."
-      ar: "اللون وحده يستبعد بعض الناس. أبقِ اللون للدعم، ودع الكلمة تحمل المعنى."
-  - id: S03
-    type: card
-    part: concept
-    icons: [color, target, warn]
-    title: { en: "Color reinforces, it doesn't carry", ar: "اللون يعزّز، ولا يحمل المعنى وحده" }
-    body:
-      en: "Colour is great at drawing attention and reinforcing meaning.\n\n- **Never colour alone:** pair it with words, an icon or a shape.\n- **One job per colour:** if purple means \"you can tap this\", don't use it for plain headings.\n- **Status colours stay status:** if red means error or full, don't decorate a price with it.\n\nWhen a colour has one job, people learn it quickly and trust it."
-      ar: "اللون ممتاز في جذب الانتباه وتعزيز المعنى.\n\n- **لا تعتمد على اللون وحده:** أضِف إليه كلمات أو أيقونة أو شكلًا.\n- **وظيفة واحدة لكل لون:** إذا كان البنفسجي يعني «يمكنك الضغط هنا»، فلا تستخدمه لعناوين عادية.\n- **ألوان الحالة تبقى للحالة:** إذا كان الأحمر يعني خطأ أو ممتلئ، فلا تزيّن به سعرًا.\n\nحين يكون للّون وظيفة واحدة، يتعلّمها الناس بسرعة ويثقون بها."
-  - id: S04
-    type: fix
-    part: guided
-    confidence: true
-    rules: [R06, U16]
-    prompt:
-      en: "What's the best fix for the dots?"
-      ar: "ما أفضل إصلاح للنقاط؟"
-    mock: *dots
-    options:
-      - { id: legend, text: { en: "Add a color legend at the bottom of the page", ar: "أضف دليل ألوان في أسفل الصفحة" } }
-      - { id: bigger, text: { en: "Make the dots bigger", ar: "كبّر النقاط" } }
-      - { id: brighter, text: { en: "Use a brighter red and green", ar: "استخدم أحمر وأخضر أكثر سطوعًا" } }
-      - { id: words, text: { en: "Add words: \"4 places left\" and \"Fully booked\"", ar: "أضف كلمات: «باقي 4 أماكن» و«اكتمل الحجز»" } }
+      - id: brighter
+        text: { en: "Make the dots bigger and brighter", ar: "اجعل النقاط أكبر وأكثر لمعانًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: heading, text: "@W2a" }
+                - { kind: text, px: 28, color: green, text: "●" }
+            - { kind: small, text: "@W2b", gap: xs }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: heading, text: "@W2e" }
+                - { kind: text, px: 28, color: red, text: "●" }
+            - { kind: small, text: "@W2f", gap: xs }
+      - id: words
+        text: { en: "Replace each dot with a chip that says \"Open\" or \"Full\", keeping the color", ar: "استبدل كل نقطة بعلامة مكتوب فيها «متاح» أو «مكتمل»، مع الإبقاء على اللون" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W2a" }
+            - { kind: small, text: "@W2b", gap: xs }
+            - { kind: chip, text: { en: "Open", ar: "متاح" }, gap: xs }
+            - { kind: heading, text: "@W2e", gap: l }
+            - { kind: small, text: "@W2f", gap: xs }
+            - { kind: chip, tone: bad, text: { en: "Full", ar: "مكتمل" }, gap: xs }
+      - id: legend
+        text: { en: "Keep the dots and add a key at the bottom: \"● open ● full\"", ar: "أبقِ النقاط وأضف مفتاحًا في الأسفل: «● متاح ● مكتمل»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: heading, text: "@W2a" }
+                - { kind: text, color: green, text: "●" }
+            - { kind: small, text: "@W2b", gap: xs }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: heading, text: "@W2e" }
+                - { kind: text, color: red, text: "●" }
+            - { kind: small, text: "@W2f", gap: xs }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: small, color: green, text: { en: "● open", ar: "● متاح" } }
+                - { kind: small, color: red, text: { en: "● full", ar: "● مكتمل" } }
     answer: [words]
     misconceptions:
       - id: MC-P10-052
-        when: [brighter, bigger]
+        when: [brighter, legend]
         feedback:
-          en: "Brighter or bigger dots are still just color. Someone who can't tell red from green still can't tell which session is full."
-          ar: "النقاط الأسطع أو الأكبر تبقى مجرد لون. من لا يميّز الأحمر من الأخضر لن يعرف أي جلسة مكتملة."
-      - id: MC-P10-054
-        when: [legend]
-        feedback:
-          en: "A legend explains the colors, but people still have to match colors they may not be able to tell apart, and scroll to do it."
-          ar: "الدليل يشرح الألوان، لكن على الناس أن يطابقوا ألوانًا قد لا يميّزونها، وأن يمرّروا للأسفل لذلك."
-    hints:
-      - { en: "What would make the status clear in a black-and-white printout?", ar: "ما الذي يجعل الحالة واضحة في نسخة مطبوعة بالأبيض والأسود؟" }
+          en: "Bigger dots and a key are still only color. Someone who can't tell red from green still can't tell which dot is which. Add words."
+          ar: "النقاط الأكبر والمفتاح ما زالت لونًا فقط. ومن لا يميّز الأحمر من الأخضر ما زال لا يعرف أي نقطة هي أيّها. أضف كلمات."
     correct:
-      en: "Words carry the meaning; the color can stay to reinforce it."
-      ar: "الكلمات تحمل المعنى؛ ويمكن أن يبقى اللون لتعزيزه."
+      en: "Words carry the meaning; color helps."
+      ar: "الكلمات تحمل المعنى؛ واللون يساعد."
     explain:
-      en: "Keep the color if you like, inside a chip with the words. Now the status works for everyone, and the color still helps people scan."
-      ar: "أبقِ اللون إن شئت، داخل شارة فيها الكلمات. الآن تعمل الحالة للجميع، ويبقى اللون مساعدًا للتصفّح السريع."
+      en: "With a word in each chip, the status works for everyone. The color can stay as a second signal that helps people scan."
+      ar: "مع كلمة في كل علامة، تصل الحالة إلى الجميع. ويمكن أن يبقى اللون إشارة ثانية تساعد الناس على المسح السريع."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [eye, ok, target, warn]
+    title: { en: "One color, one job", ar: "لون واحد، وظيفة واحدة" }
+    body:
+      en: "Color is great for drawing attention and reinforcing meaning, but some people can't tell certain colors apart.\n\n- **Never color alone:** pair it with words, an icon or a shape. Test by viewing the screen in grayscale: if the meaning disappears, it depended on color.\n- **Link color for links:** if purple means \"you can tap this\", don't use it for plain text.\n- **Status colors stay status:** if red means error or full, don't use it to decorate a price.\n\nWhen each color has one job, people learn it quickly and trust it."
+      ar: "اللون ممتاز للفت الانتباه وتقوية المعنى، لكن بعض الناس لا يميّزون ألوانًا معيّنة.\n\n- **لا تعتمد على اللون وحده:** أضف إليه كلمات أو أيقونة أو شكلًا. واختبر ذلك بعرض الشاشة بالأبيض والأسود (Grayscale): إذا اختفى المعنى، فقد كان يعتمد على اللون.\n- **لون الروابط للروابط:** إذا كان البنفسجي يعني «يمكنك الضغط هنا»، فلا تستخدمه لنص عادي.\n- **ألوان الحالة للحالة:** إذا كان الأحمر يعني خطأ أو مكتمل، فلا تزيّن به السعر.\n\nحين يكون لكل لون وظيفة واحدة، يتعلّمه الناس بسرعة ويثقون به."
+
+  - id: S04
+    type: tune
+    part: guided
+    rules: [R06, R13]
+    value:
+      en: "Links (NN/g): never show text in your chosen link color unless it's a link; people tap it and lose trust in real links."
+      ar: "الروابط (NN/g): لا تعرض أي نص بلون الروابط إلا إذا كان رابطًا؛ فالناس يضغطونه ويفقدون الثقة في الروابط الحقيقية."
+    ref: { url: "https://www.nngroup.com/articles/guidelines-for-visualizing-links/", quote: "Never show text in your chosen link colors" }
+    scenario:
+      en: "In this app, purple text means a link. On the \"Before you come\" page, the section headings are also purple, but tapping them does nothing."
+      ar: "في هذا التطبيق، النص البنفسجي يعني رابطًا. وفي صفحة «قبل أن تأتي»، عناوين الأقسام بنفسجية أيضًا، لكن الضغط عليها لا يفعل شيئًا."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &heads
+        - { kind: heading, color: brand, text: { en: "What to bring", ar: "ماذا تُحضر" } }
+        - { kind: text, text: { en: "Pencil and paper. No laptop needed.", ar: "قلم وورق. لا تحتاج إلى Laptop." }, gap: xs }
+        - { kind: heading, color: brand, text: { en: "How to find the room", ar: "كيف تصل إلى القاعة" }, gap: m }
+        - { kind: text, text: { en: "Lift to floor 1, Room 2.", ar: "المصعد إلى الطابق 1، القاعة 2." }, gap: xs }
+        - { kind: link, text: { en: "Open the map", ar: "افتح الخريطة" }, gap: xs }
+    options:
+      - id: black
+        text: { en: "Headings in near-black; purple stays only on the map link", ar: "العناوين بلون قريب من الأسود؛ ويبقى البنفسجي على رابط الخريطة فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "What to bring", ar: "ماذا تُحضر" } }
+            - { kind: text, text: { en: "Pencil and paper. No laptop needed.", ar: "قلم وورق. لا تحتاج إلى Laptop." }, gap: xs }
+            - { kind: heading, text: { en: "How to find the room", ar: "كيف تصل إلى القاعة" }, gap: m }
+            - { kind: text, text: { en: "Lift to floor 1, Room 2.", ar: "المصعد إلى الطابق 1، القاعة 2." }, gap: xs }
+            - { kind: link, text: { en: "Open the map", ar: "افتح الخريطة" }, gap: xs }
+      - id: underline
+        text: { en: "Keep the purple headings and underline them so they look finished", ar: "أبقِ العناوين البنفسجية وضع تحتها خطًا حتى تبدو مكتملة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: link, px: 17, weight: bold, text: { en: "What to bring", ar: "ماذا تُحضر" } }
+            - { kind: text, text: { en: "Pencil and paper. No laptop needed.", ar: "قلم وورق. لا تحتاج إلى Laptop." }, gap: xs }
+            - { kind: link, px: 17, weight: bold, text: { en: "How to find the room", ar: "كيف تصل إلى القاعة" }, gap: m }
+            - { kind: text, text: { en: "Lift to floor 1, Room 2.", ar: "المصعد إلى الطابق 1، القاعة 2." }, gap: xs }
+            - { kind: link, text: { en: "Open the map", ar: "افتح الخريطة" }, gap: xs }
+      - id: keep
+        text: { en: "Keep them; purple headings match the brand", ar: "أبقِها؛ فالعناوين البنفسجية تناسب لون العلامة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks: *heads
+    answer: [black]
+    misconceptions:
+      - id: MC-P10-054
+        when: [underline, keep]
+        feedback:
+          en: "Purple already means \"tap here\" in this app. Purple headings, underlined or not, invite taps that do nothing, and make people doubt the real map link."
+          ar: "البنفسجي يعني «اضغط هنا» في هذا التطبيق. والعناوين البنفسجية، بخط تحتها أو بدونه، تدعو إلى ضغطات لا تفعل شيئًا، وتجعل الناس يشكّون في رابط الخريطة الحقيقي."
+    correct:
+      en: "Purple only where you can tap."
+      ar: "البنفسجي فقط حيث يمكنك الضغط."
+    explain:
+      en: "A link color is a promise: tap this and something happens. Keep it for links and buttons, and headings stand out through size and weight instead."
+      ar: "لون الرابط وعد: اضغط هنا وسيحدث شيء. احتفظ به للروابط والأزرار، ولتبرز العناوين بالحجم والسُمك بدلًا منه."
 
   - id: S05
-    type: spot
+    type: tune
     part: guided
-    rules: [R06, U17]
+    rules: [R06, R15]
+    value:
+      en: "Color consistency (NN/g): if you use red as a warning color on one screen, it should not mean something different elsewhere."
+      ar: "ثبات الألوان (NN/g): إذا استخدمت الأحمر كلون تحذير في شاشة، فلا يجب أن يعني شيئًا مختلفًا في مكان آخر."
+    ref: { url: "https://www.nngroup.com/articles/color-enhance-design/", quote: "If you use red as a warning color on one screen" }
+    scenario:
+      en: "In this app, red means full, error or a problem. To make the price \"pop\", a designer set it in bold red."
+      ar: "في هذا التطبيق، الأحمر يعني مكتمل أو خطأ أو مشكلة. وليبرز السعر، كتبه أحد المصمّمين بالأحمر وبخط Bold."
     prompt:
-      en: "On this page, purple means \"you can tap this\". Which item breaks that rule?"
-      ar: "في هذه الصفحة، البنفسجي يعني «يمكنك الضغط هنا». أي عنصر يكسر هذه القاعدة؟"
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
-      blocks:
-        - { kind: heading, color: brand, text: { en: "Upcoming sessions", ar: "الجلسات القادمة" }, region: heading }
-        - { kind: text, weight: bold, text: "@W1a", gap: m, region: title }
-        - { kind: small, text: "@W1b", gap: xs }
-        - { kind: link, text: "@W1h", gap: s, region: link }
-        - { kind: button, text: "@W1f", gap: m, region: button }
-    regions:
-      - { id: heading, label: { en: "Upcoming sessions", ar: "الجلسات القادمة" } }
-      - { id: title, label: "@W1a" }
-      - { id: link, label: "@W1h" }
-      - { id: button, label: "@W1f" }
-    answer: [heading]
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &redprice
+        - { kind: heading, text: "@W2e" }
+        - { kind: meta, text: "@W2f", gap: xs }
+        - { kind: meta, weight: bold, color: red, text: "@W2g", gap: xs }
+        - { kind: button, text: "@W2h", gap: m }
+    options:
+      - id: keep
+        text: { en: "Keep the red; it gets the price noticed", ar: "أبقِ الأحمر؛ فهو يلفت النظر إلى السعر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks: *redprice
+      - id: green
+        text: { en: "Make the price green instead, so it feels positive", ar: "اجعل السعر أخضر بدلًا من ذلك، حتى يبدو إيجابيًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W2e" }
+            - { kind: meta, text: "@W2f", gap: xs }
+            - { kind: meta, weight: bold, color: green, text: "@W2g", gap: xs }
+            - { kind: button, text: "@W2h", gap: m }
+      - id: plain
+        text: { en: "Show the price in near-black, like the date", ar: "اعرض السعر بلون قريب من الأسود، مثل التاريخ" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W2e" }
+            - { kind: meta, text: "@W2f", gap: xs }
+            - { kind: meta, text: "@W2g", gap: xs }
+            - { kind: button, text: "@W2h", gap: m }
+    answer: [plain]
     misconceptions:
-      - id: MC-P10-053
-        when: [link, button]
+      - id: MC-P10-055
+        when: [keep, green]
         feedback:
-          en: "That one is tappable, so purple fits. Look for something purple that does nothing when tapped."
-          ar: "هذا العنصر قابل للضغط، لذلك يناسبه البنفسجي. ابحث عن شيء بنفسجي لا يفعل شيئًا عند الضغط."
+          en: "Red and green already mean status here: full or open, error or OK. A red price looks like a problem; a green one looks like a discount or \"available\". A plain fact gets plain text."
+          ar: "الأحمر والأخضر يعنيان الحالة هنا: مكتمل أو متاح، خطأ أو صحيح. السعر الأحمر يبدو مشكلة، والأخضر يبدو خصمًا أو «متاحًا». والمعلومة العادية تُكتب بنص عادي."
     correct:
-      en: "The purple heading looks tappable, but it isn't."
-      ar: "العنوان البنفسجي يبدو قابلًا للضغط، لكنه ليس كذلك."
+      en: "A plain fact in plain text."
+      ar: "معلومة عادية بنص عادي."
     explain:
-      en: "When the link color is also used for decoration, people tap headings that do nothing, and start doubting real links. Keep the interactive color for interactive things."
-      ar: "عندما يُستخدم لون الروابط للزينة أيضًا، يضغط الناس على عناوين لا تفعل شيئًا، ويبدؤون في الشك في الروابط الحقيقية. أبقِ لون التفاعل للأشياء التفاعلية."
+      en: "Status colors are worth protecting. Each time red is used just for decoration, it means a little less when there's a real problem."
+      ar: "ألوان الحالة تستحق الحماية. فكل مرة يُستخدم فيها الأحمر للزينة فقط، يقلّ معناه قليلًا حين توجد مشكلة حقيقية."
 
   - id: S06
     type: compare
     part: contrast
-    rules: [R11, U17]
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S02: color isn't the problem, color alone is. NN/g: use additional cues with color. Here words carry the status, and color adds fast scanning."
+      ar: "مقارنة مع الخطوة 2: المشكلة ليست في اللون، بل في اللون وحده. NN/g: استخدم إشارات إضافية مع اللون. هنا تحمل الكلمات الحالة، ويضيف اللون سرعة في المسح."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "use additional cues (such as strokes, patterns) to communicate important information" }
+    scenario:
+      en: "The full list has 20 sessions. People scroll it looking for one that's open."
+      ar: "القائمة الكاملة فيها 20 جلسة. ويمرّر الناس فيها بحثًا عن جلسة متاحة."
     prompt:
-      en: "Which version avoids sending a false signal?"
-      ar: "أي نسخة تتجنّب إرسال إشارة خاطئة؟"
+      en: "Which version should ship?"
+      ar: "أي نسخة يجب أن تُطلق؟"
     a:
       mock:
         blocks:
-          - { kind: heading, text: "@W2e" }
-          - { kind: small, text: "@W2f", gap: xs }
-          - { kind: text, weight: bold, color: red, text: "@W2g", gap: s }
-          - { kind: button, text: "@W2h", gap: m }
+          - { kind: heading, text: "@W2a" }
+          - { kind: small, text: { en: "17 November · Open", ar: "17 نوفمبر · متاح" }, gap: xs }
+          - { kind: heading, text: "@W2e", gap: m }
+          - { kind: small, text: { en: "18 November · Full", ar: "18 نوفمبر · مكتمل" }, gap: xs }
+          - { kind: heading, text: { en: "Test With Five People", ar: "اختبر مع خمسة أشخاص" }, gap: m }
+          - { kind: small, text: { en: "20 November · Open", ar: "20 نوفمبر · متاح" }, gap: xs }
     b:
       mock:
         blocks:
-          - { kind: heading, text: "@W2e" }
-          - { kind: small, text: "@W2f", gap: xs }
-          - { kind: text, weight: bold, text: "@W2g", gap: s }
-          - { kind: button, text: "@W2h", gap: m }
+          - { kind: heading, text: "@W2a" }
+          - { kind: chip, text: { en: "17 November · Open", ar: "17 نوفمبر · متاح" }, gap: xs }
+          - { kind: heading, text: "@W2e", gap: m }
+          - { kind: chip, tone: bad, text: { en: "18 November · Full", ar: "18 نوفمبر · مكتمل" }, gap: xs }
+          - { kind: heading, text: { en: "Test With Five People", ar: "اختبر مع خمسة أشخاص" }, gap: m }
+          - { kind: chip, text: { en: "20 November · Open", ar: "20 نوفمبر · متاح" }, gap: xs }
     answer: b
+    reason:
+      prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
+      options:
+        - { id: friendly, text: { en: "Colorful pages feel friendlier", ar: "الصفحات الملوّنة تبدو أكثر ودًّا" } }
+        - { id: extra, text: { en: "The words work for everyone, and the color adds a quick way to scan", ar: "الكلمات تصل إلى الجميع، واللون يضيف طريقة سريعة للمسح" } }
+        - { id: color, text: { en: "Color is the clearest way to show a status", ar: "اللون هو أوضح طريقة لعرض الحالة" } }
+      answer: [extra]
+      misconceptions:
+        - id: MC-P10-052
+          when: [color]
+          feedback:
+            en: "Color alone was the problem with the dots. B works because the words are there; the color is a bonus."
+            ar: "اللون وحده كان مشكلة النقاط. وB تنجح لأن الكلمات موجودة؛ واللون إضافة."
+        - id: MC-P10-050
+          when: [friendly]
+          feedback:
+            en: "It's not about mood. The color has a job here: it lets people spot the open sessions in a long list."
+            ar: "الأمر لا يتعلّق بالشعور. للّون وظيفة هنا: يجعل الناس يلاحظون الجلسات المتاحة في قائمة طويلة."
     misconceptions:
-      - id: MC-P10-053
+      - id: MC-P10-050
         when: [a]
         feedback:
-          en: "Red usually means error or warning. A red price makes people wonder what went wrong, or think it's a discount."
-          ar: "الأحمر يعني عادةً خطأ أو تحذيرًا. السعر الأحمر يجعل الناس يتساءلون ما الخطأ، أو يظنونه خصمًا."
+          en: "A works for everyone, but every line looks the same, so people must read all 20. Color is fine as an extra signal next to words."
+          ar: "A تصل إلى الجميع، لكن كل سطر يبدو مثل غيره، فعلى الناس قراءة الـ 20 كلها. واللون مناسب كإشارة إضافية بجانب الكلمات."
     correct:
-      en: "The price is a plain fact; it gets plain text."
-      ar: "السعر معلومة عادية؛ فيأخذ نصًا عاديًا."
+      en: "Words first, color as a helper."
+      ar: "الكلمات أولًا، واللون مساعد."
     explain:
-      en: "Status colors (green, amber, red) are worth protecting for status. Used for decoration, they lose their meaning or add a wrong one."
-      ar: "ألوان الحالة (الأخضر والكهرماني والأحمر) تستحق أن تُحفظ للحالة. وعند استخدامها للزينة تفقد معناها أو تضيف معنى خاطئًا."
+      en: "The rule is \"never color alone\", not \"no color\". With the words in place, a consistent green and red make a long list much faster to scan."
+      ar: "القاعدة هي «لا تعتمد على اللون وحده»، لا «لا تستخدم اللون». ومع وجود الكلمات، يجعل الأخضر والأحمر الثابتان القائمة الطويلة أسرع كثيرًا في المسح."
 
   - id: S07
-    type: match
-    part: guided
-    rules: [R07, U17]
-    prompt:
-      en: "Give each color on this product one job."
-      ar: "أعطِ كل لون في هذا المنتج وظيفة واحدة."
-    left:
-      - { id: purple, text: { en: "Purple", ar: "البنفسجي" } }
-      - { id: green, text: { en: "Green", ar: "الأخضر" } }
-      - { id: red, text: { en: "Red", ar: "الأحمر" } }
-      - { id: ink, text: { en: "Near-black", ar: "شبه الأسود" } }
-    right:
-      - { id: tap, text: { en: "Something you can tap", ar: "شيء يمكنك الضغط عليه" } }
-      - { id: ok, text: { en: "Available or done", ar: "متاح أو تم" } }
-      - { id: bad, text: { en: "Full, error, or destructive", ar: "مكتمل أو خطأ أو إجراء مدمّر" } }
-      - { id: text, text: { en: "Ordinary text", ar: "نص عادي" } }
-    answer: { purple: tap, green: ok, red: bad, ink: text }
-    misconceptions:
-      - id: MC-P10-053
-        when: { left: purple, right: text }
-        feedback:
-          en: "If purple is also ordinary text, nobody can tell which purple things are tappable."
-          ar: "إذا كان البنفسجي نصًا عاديًا أيضًا، فلن يعرف أحد أي العناصر البنفسجية قابلة للضغط."
-    correct:
-      en: "Four colors, four jobs, no overlap."
-      ar: "أربعة ألوان، أربع وظائف، دون تداخل."
-    explain:
-      en: "This is the start of a color system. In Path 11 you'll turn choices like these into design tokens a whole team can share."
-      ar: "هذه بداية نظام الألوان. في المسار 11 ستحوّل اختيارات كهذه إلى رموز تصميم (design tokens) يتشاركها فريق كامل."
-
-  - id: S08
-    type: choose
+    type: tune
     part: independent
-    confidence: true
-    rules: [R14, U16]
+    rules: [R14, R19]
+    value:
+      en: "New case. Grayscale test (NN/g): turn the design into grayscale and see if you can still understand it; a color change alone is not enough to signal a change."
+      ar: "حالة جديدة. اختبار الأبيض والأسود (NN/g): حوّل التصميم إلى Grayscale وانظر هل ما زلت تفهمه؛ فتغيير اللون وحده لا يكفي للإشارة إلى تغيير."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "Turn your design into grayscale and see if you can correctly understand the design." }
     scenario:
-      en: "Youssef's ticket. His platform changed from 4 to 6, and the app shows it only by turning the platform number orange."
-      ar: "تذكرة يوسف. تغيّر رصيفه من 4 إلى 6، والتطبيق يُظهر ذلك فقط بتحويل رقم الرصيف إلى اللون البرتقالي."
+      en: "Youssef's bus now leaves from platform 6, not 4. The ticket shows the change only by turning the platform number orange. Below, every version is shown in grayscale, as a test."
+      ar: "حافلة يوسف تغادر الآن من الرصيف 6، لا 4. والتذكرة تُظهر التغيير فقط بتحويل رقم الرصيف إلى البرتقالي. وتحت، كل نسخة معروضة بالأبيض والأسود كاختبار."
     prompt:
-      en: "What's the best fix?"
-      ar: "ما أفضل إصلاح؟"
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
     mock:
-      blocks:
-        - { kind: heading, text: "@B1b" }
-        - kind: row
-          gap: s
-          blocks:
-            - { kind: text, text: { en: "Departs 07:30", ar: "المغادرة 07:30" } }
-            - { kind: text, weight: bold, color: orange, text: { en: "Platform 6", ar: "رصيف 6" } }
+      caption: { en: "Now, in grayscale", ar: "الآن، بالأبيض والأسود" }
+      gray: true
+      blocks: &ticket
+        - { kind: title, text: "@B1b" }
+        - { kind: meta, text: { en: "Departs 07:30", ar: "المغادرة 07:30" }, gap: s }
+        - { kind: meta, color: orange, text: { en: "Platform 6", ar: "رصيف 6" }, gap: xs }
+        - { kind: meta, text: "@B1d", gap: xs }
         - { kind: button, text: "@B1e", gap: m }
     options:
-      - { id: red, text: { en: "Use red instead of orange", ar: "استخدم الأحمر بدلًا من البرتقالي" } }
-      - { id: message, text: { en: "Add a clear message: \"Platform changed: now 6 (was 4)\"", ar: "أضف رسالة واضحة: «تغيّر الرصيف: الآن 6 (كان 4)»" } }
-      - { id: blink, text: { en: "Make the orange number blink", ar: "اجعل الرقم البرتقالي يومض" } }
-    answer: [message]
+      - id: brighter
+        text: { en: "A brighter orange, and make the number bigger", ar: "برتقالي أكثر لمعانًا، مع تكبير الرقم" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - { kind: title, text: "@B1b" }
+            - { kind: meta, text: { en: "Departs 07:30", ar: "المغادرة 07:30" }, gap: s }
+            - { kind: meta, px: 18, color: orange, text: { en: "Platform 6", ar: "رصيف 6" }, gap: xs }
+            - { kind: meta, text: "@B1d", gap: xs }
+            - { kind: button, text: "@B1e", gap: m }
+      - id: words
+        text: { en: "Add a line in words: \"⚠ Platform changed: now 6 (was 4)\"", ar: "أضف سطرًا بالكلمات: «⚠ تغيّر الرصيف: الآن 6 (كان 4)»" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - { kind: title, text: "@B1b" }
+            - { kind: meta, text: { en: "Departs 07:30", ar: "المغادرة 07:30" }, gap: s }
+            - { kind: meta, weight: bold, color: orange, text: { en: "⚠ Platform changed: now 6 (was 4)", ar: "⚠ تغيّر الرصيف: الآن 6 (كان 4)" }, gap: xs }
+            - { kind: meta, text: "@B1d", gap: xs }
+            - { kind: button, text: "@B1e", gap: m }
+      - id: box
+        text: { en: "Put the orange platform number in an orange box", ar: "ضع رقم الرصيف البرتقالي داخل صندوق برتقالي" }
+        mock:
+          caption: { en: "After this change, in grayscale", ar: "بعد هذا التغيير، بالأبيض والأسود" }
+          gray: true
+          blocks:
+            - { kind: title, text: "@B1b" }
+            - { kind: meta, text: { en: "Departs 07:30", ar: "المغادرة 07:30" }, gap: s }
+            - { kind: chip, tone: warn, text: { en: "Platform 6", ar: "رصيف 6" }, gap: xs }
+            - { kind: meta, text: "@B1d", gap: xs }
+            - { kind: button, text: "@B1e", gap: m }
+    answer: [words]
     misconceptions:
       - id: MC-P10-052
-        when: [red, blink]
+        when: [brighter, box]
         feedback:
-          en: "A different color or blinking still doesn't say what happened. Youssef might not notice, or not know why it's highlighted."
-          ar: "لون مختلف أو وميض لا يقول ما الذي حدث. قد لا يلاحظ يوسف، أو لا يعرف لماذا هو مميّز."
+          en: "Look at it in grayscale: nothing says the platform changed. Youssef might go to platform 4 out of habit. Say what changed in words."
+          ar: "انظر إليها بالأبيض والأسود: لا شيء يقول إن الرصيف تغيّر. وقد يذهب يوسف إلى الرصيف 4 بحكم العادة. قل ما تغيّر بالكلمات."
     correct:
-      en: "Say what changed in words; color can still help it stand out."
-      ar: "قل ما الذي تغيّر بالكلمات؛ ويمكن أن يبقى اللون ليساعده على البروز."
+      en: "Say the change in words."
+      ar: "قل التغيير بالكلمات."
     explain:
-      en: "A change is important news. Words explain it to everyone, including people who can't see the color difference and people using screen readers."
-      ar: "التغيير خبر مهم. الكلمات تشرحه للجميع، بمن فيهم من لا يرى فرق الألوان ومن يستخدم الـ Screen reader."
+      en: "A change is news, and color can't say what happened. In grayscale only the version with words still works, for people who can't see the color and for screen readers too."
+      ar: "التغيير خبر، واللون لا يستطيع أن يقول ما حدث. وبالأبيض والأسود، لا تنجح إلا النسخة التي فيها كلمات، لمن لا يرى اللون ولقارئ الشاشة (Screen reader) أيضًا."
 
-  - id: S09
-    type: choose
-    part: independent
-    rules: [R09, R14]
-    prompt:
-      en: "Sara's session card has a green \"4 places left\" chip. Is green OK here?"
-      ar: "بطاقة جلسة سارة فيها شارة خضراء «باقي 4 أماكن». هل الأخضر مناسب هنا؟"
-    mock:
-      blocks:
-        - { kind: heading, text: "@W1a" }
-        - { kind: small, text: "@W1b", gap: xs }
-        - { kind: chip, text: "@W1e", gap: s }
-    options:
-      - { id: never, text: { en: "No: never use color for status", ar: "لا: لا تستخدم اللون للحالة أبدًا" } }
-      - { id: amber, text: { en: "No: only 4 left should be red", ar: "لا: بقاء 4 فقط يجب أن يكون أحمر" } }
-      - { id: ok, text: { en: "Yes: it reinforces words that already say the status", ar: "نعم: يعزّز كلمات تقول الحالة أصلًا" } }
-    answer: [ok]
-    also_ok:
-      - answer: [amber]
-        feedback:
-          en: "Reasonable too, if your system uses amber or red for \"almost full\". The key is that the words carry the meaning and the color follows a consistent rule."
-          ar: "معقول أيضًا، إذا كان نظامك يستخدم الكهرماني أو الأحمر لـ«قارب على الاكتمال». المهم أن تحمل الكلمات المعنى، وأن يتبع اللون قاعدة ثابتة."
-    misconceptions:
-      - id: MC-P10-055
-        when: [never]
-        feedback:
-          en: "Color for status is fine, even helpful. The problem is color alone. Here the words are already there."
-          ar: "استخدام اللون للحالة مقبول، بل مفيد. المشكلة في اللون وحده. وهنا الكلمات موجودة أصلًا."
-    correct:
-      en: "Words carry it; green reinforces it."
-      ar: "الكلمات تحمله؛ والأخضر يعزّزه."
-    explain:
-      en: "This is the fixed version of the dots: the status is written, and the color helps people scan a long list."
-      ar: "هذه هي النسخة المصلحة من النقاط: الحالة مكتوبة، واللون يساعد الناس على تصفّح قائمة طويلة."
-
-  - id: S10
+  - id: S08
     type: card
     part: recap
-    icons: [color, tap, money]
+    icons: [eye, ok, target, warn]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "- Status must work without colour: add words, icons or shapes.\n- Keep the tappable colour for tappable things.\n- Don't decorate with a status colour.\n\nNext lesson: the skill check."
-      ar: "- الحالة يجب أن تُفهم دون لون: أضِف كلمات أو أيقونات أو أشكالًا.\n- خصّص لون «يمكنك الضغط» للعناصر القابلة للضغط.\n- لا تزيّن بلون مخصّص للحالة.\n\nالدرس التالي: اختبار المهارة."
+      en: "- **Never color alone:** replaced dots with words, and kept color as a helper.\n- **Grayscale test:** checked that a change still shows without color.\n- **Link color:** kept it for things you can tap.\n- **Status colors:** kept red and green for status, not decoration.\n\nNext: a skill check on a new page."
+      ar: "- **لا تعتمد على اللون وحده:** استبدلت النقاط بكلمات، وأبقيت اللون مساعدًا.\n- **اختبار الأبيض والأسود:** تأكّدت أن التغيير يظهر دون لون.\n- **لون الروابط:** احتفظت به لما يمكن الضغط عليه.\n- **ألوان الحالة:** أبقيت الأحمر والأخضر للحالة، لا للزينة.\n\nالتالي: اختبار مهارة على صفحة جديدة."

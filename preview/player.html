@@ -116,6 +116,9 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-chip{display:inline-block;width:auto;font-size:.78rem;font-weight:600;border-radius:999px;padding:2px 10px;background:#EAF6EE;color:#1E6B3F}
 .mock .k-chip.tone-warn{background:#FFF1DB;color:#8A5300}
 .mock .k-chip.tone-bad{background:#FDE7E5;color:#A3261F}
+.k-chip.tone-off{background:#EDEDEF;color:#5E5E63}
+.k-chip.tone-dark{background:#BFE3CA;color:#0F4D2A}
+.style-strike{text-decoration:line-through}
 .mock .k-button{text-align:center;font-weight:600;border-radius:12px;padding:12px;background:var(--mock-brand);color:#fff}
 .mock .k-button.em-low{background:transparent;color:var(--mock-brand);border:1.5px solid var(--mock-brand)}
 .mock .k-button.tone-off{background:#D9D9DE;color:#6B6B70}
@@ -169,8 +172,11 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .w-regular{font-weight:400}.mock .w-bold{font-weight:700}
 .mock .k-button.style-plain{background:transparent;color:var(--mock-brand);border:0;padding:8px}
 .mock .k-button.style-danger{background:#C6332A;color:#fff}
+.k-button.tone-warn{background:#C46A00;color:#fff}
+.k-button.em-low.c-red{color:#C6332A;border-color:#C6332A}
 .mock .k-button.style-dangerlink{background:transparent;color:#C6332A;border:0;padding:8px}
 .mock.wide{max-width:none}
+.mock.gray>:not(.mcap){filter:grayscale(1)}
 .mock{overflow:hidden}
 .mock .mcap{font-size:.72rem;color:var(--mock-muted);margin:-6px 0 10px;font-weight:600}
 .mock .nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -362,7 +368,7 @@ function mockBlocks(blocks, opts){
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
-const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
+const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
 /* a source link that opens the article with the supporting passage highlighted (URL text fragment) */
 const fragUrl = r => r.quote ? `${r.url}#:~:text=${encodeURIComponent(r.quote).replace(/-/g, "%2D")}` : r.url;
 const srcTitle = (url, lessons) => { for (const l of lessons) { const x = (l.sources||[]).find(x => x.url === url); if (x) return tx(x.title); } return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]; };
