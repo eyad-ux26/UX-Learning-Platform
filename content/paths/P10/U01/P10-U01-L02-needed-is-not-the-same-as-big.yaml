@@ -26,27 +26,35 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
     prompt:
-      en: "What's your gut feeling: does the cleaner page help Sara decide?"
-      ar: "ما إحساسك الأول: هل تساعد الصفحة الأنظف سارة على اتخاذ قرارها؟"
+      en: The date and the conditions are now behind "More details". What can't Sara do without an extra tap?
+      ar: أصبح الموعد والشروط خلف «تفاصيل أكثر». ما الذي لا تستطيع سارة فعله دون ضغطة إضافية؟
     options:
-      - { id: yes, text: { en: "Yes, less to read", ar: "نعم، قراءة أقل" } }
-      - { id: no, text: { en: "No, something is missing", ar: "لا، هناك شيء ناقص" } }
-      - { id: unsure, text: { en: "Not sure yet", ar: "لست متأكدًا بعد" } }
-    reveal:
-      en: "Hold that thought. This lesson is about the difference between how big something is and whether it's there at all."
-      ar: "احتفظ بهذه الفكرة. هذا الدرس عن الفرق بين حجم الشيء وبين وجوده أصلًا."
-
+      - { id: decide, text: { en: Check whether the time works and what she's agreeing to, ar: أن تتأكد من مناسبة الموعد ومما توافق عليه}}
+      - { id: photo, text: { en: See the photo, ar: أن ترى الصورة } }
+      - { id: btn, text: { en: Find the Reserve button, ar: أن تجد زر «احجز مكانك» } }
+    answer: [decide]
+    misconceptions:
+      - id: MC-P10-002
+        when: [photo, btn]
+        feedback:
+          en: Those are still on screen. What went behind the tap is exactly what she decides with.
+          ar: هذان ما زالا على الشاشة. أما ما اختفى خلف الضغطة فهو بالضبط ما تبني عليه قرارها.
+    correct:
+      en: The page looks calmer, but the decision moved behind a tap.
+      ar: الصفحة تبدو أهدأ، لكن القرار انتقل خلف ضغطة.
+    explain:
+      en: Most visitors never open "More details". Hiding what they decide with makes the page cleaner and the decision harder. Below the fold is fine; behind a tap usually means unseen.
+      ar: أغلب الزوار لا يفتحون «تفاصيل أكثر» أبدًا. وإخفاء ما يبنون عليه قرارهم يجعل الصفحة أنظف والقرار أصعب. أن يكون العنصر أسفل الـ Fold مقبول، أما خلف ضغطة فغالبًا يعني أنه لن يُرى.
   - id: S03
     type: card
     part: concept
+    icons: [target, layers, cut]
     title: { en: "Priority and presence", ar: "الأولوية والحضور" }
     body:
-      en: "Two different questions: how prominent should this be, and does it need to be here before the action?\n\nWe'll use three working labels. **Decide now**: what the visitor decides with. **Supporting**: smaller, but still on the way to the button. **Optional**: can shrink, move down, or go.\n\nBelow the fold isn't the same as missing. Hidden behind a tap often is."
-      ar: "سؤالان مختلفان: ما مدى بروز هذا العنصر؟ وهل يجب أن يكون موجودًا قبل الإجراء؟\n\nسنستخدم ثلاثة تصنيفات عملية. **قرار الآن**: ما يبني عليه الزائر قراره. **داعم**: أصغر، لكنه يبقى في الطريق إلى الزر. **اختياري**: يمكن تصغيره أو نقله للأسفل أو حذفه.\n\nأن يكون العنصر أسفل الجزء الظاهر من الشاشة (below the fold) لا يعني أنه غير موجود. أما إخفاؤه خلف ضغطة فغالبًا يعني ذلك."
-
+      en: "Two separate questions: how prominent should this be, and must it be there before the action?\n\n- **Decide now:** what the visitor decides with. Prominent.\n- **Supporting:** smaller, but still on the way to the button.\n- **Optional:** can shrink, move down, or go.\n\nBelow the fold isn't missing. Hidden behind a tap often is."
+      ar: "سؤالان منفصلان: ما مدى بروز هذا العنصر؟ وهل يجب أن يكون موجودًا قبل الإجراء؟\n\n- **أساسي للقرار:** ما يبني عليه الزائر قراره. بارز.\n- **مساند:** أصغر، لكنه يبقى في الطريق إلى الزر.\n- **اختياري:** يمكن تصغيره أو نقله للأسفل أو حذفه.\n\nأن يكون العنصر أسفل الـ Fold لا يعني أنه مفقود. أما إخفاؤه خلف ضغطة فغالبًا يعني ذلك."
   - id: S04
     type: sort
     part: guided
@@ -225,7 +233,7 @@ steps:
       ar: "في B الشرط أهدأ من الزر، وقراءته ما زالت سهلة."
     explain:
       en: "Both have the rule in the same place and size. A fades it to near-invisible, which is hiding it in plain sight. You'll learn exact contrast checks in Unit 3; for now, the test is simple: could Sara read it on a sunny street?"
-      ar: "الشرط في المكان والحجم نفسيهما في النسختين. لكن A تجعله باهتًا حتى يكاد يختفي، وهذا إخفاء أمام العين. ستتعلّم قياس التباين بدقة في الوحدة 3؛ أما الآن فالاختبار بسيط: هل تستطيع سارة قراءته في الشارع تحت الشمس؟"
+      ar: "الشرط في المكان والحجم نفسيهما في النسختين. لكن A تجعله باهتًا حتى يكاد يختفي، وهذا إخفاء أمام العين. ستتعلّم قياس الـ Contrast بدقة في الوحدة 3؛ أما الآن فالاختبار بسيط: هل تستطيع سارة قراءته في الشارع تحت الشمس؟"
 
   - id: S08
     type: choose
@@ -308,7 +316,8 @@ steps:
   - id: S10
     type: card
     part: recap
+    icons: [layers, eye, cut]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You separated how prominent something is from whether it must be there. You kept small conditions readable and on the way to the button, and made room by shrinking what's optional.\n\nNext: when promotion competes with the decision."
-      ar: "فصلت بين مدى بروز العنصر وبين ضرورة وجوده. أبقيت الشروط الصغيرة مقروءة وفي الطريق إلى الزر، وأفسحت المجال بتصغير الاختياري.\n\nالدرس التالي: عندما ينافس الترويج القرار."
+      en: "- How prominent something is and whether it's there are separate decisions.\n- Small is fine; unreadable isn't.\n- Make room by shrinking or moving what's optional, not by hiding facts.\n\nNext lesson: when promotion competes with the decision."
+      ar: "- مدى بروز العنصر وضرورة وجوده قراران منفصلان.\n- الصغير مقبول، أما غير المقروء فلا.\n- أفسح المجال بتصغير الاختياري أو نقله، لا بإخفاء المعلومات.\n\nالدرس التالي: عندما ينافس الترويج القرار."
