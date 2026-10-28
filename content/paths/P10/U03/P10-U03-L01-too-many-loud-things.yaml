@@ -31,30 +31,25 @@ steps:
     rules: [R12]
     mock: *loud
     prompt:
-      en: "Both buttons are filled and every line is bold. In two seconds, can Sara tell that Reserve is the main action?"
-      ar: "الزرّان ممتلئان وكل سطر بخط عريض. في ثانيتين، هل تستطيع سارة أن تعرف أن «احجز» هو الإجراء الرئيسي؟"
+      en: "Both buttons are filled and every line is bold. What should you change so Reserve reads as the main action?"
+      ar: "الزرّان ممتلئان وكل سطر بخط Bold. ماذا تغيّر حتى يُقرأ «احجز» على أنه الإجراء الرئيسي؟"
     options:
-      - { id: first, text: { en: 'Yes, because Reserve comes first', ar: "نعم، لأن «احجز» يأتي أولًا" } }
-      - { id: no, text: { en: 'No: two filled buttons look equally important', ar: 'لا: الزرّان الممتلئان يبدوان بالأهمية نفسها' } }
-      - { id: bold, text: { en: 'Yes, because the facts are bold', ar: "نعم، لأن المعلومات بخط عريض" } }
-    answer: [no]
+      - { id: brighter, text: { en: "Give Reserve a brighter colour", ar: "اجعل لون «احجز» أفتح وأكثر لمعانًا" } }
+      - { id: bigger, text: { en: "Make Reserve bigger, and keep both buttons filled", ar: "كبّر «احجز»، وأبقِ الزرّين ممتلئين" } }
+      - { id: quiet, text: { en: "Keep Reserve filled, make the other button outlined, and take the bold off the body text", ar: "أبقِ «احجز» ممتلئًا، واجعل الزر الآخر بإطار فقط، وأزِل الـ Bold من النص العادي" } }
+    answer: [quiet]
     misconceptions:
       - id: MC-P10-041
-        when: [first]
+        when: [bigger, brighter]
         feedback:
-          en: "Position helps, but a second filled button says \"I'm just as important\". One decision, one filled button."
-          ar: "المكان يساعد، لكن الزر الممتلئ الثاني يقول «أنا مهم بالقدر نفسه». قرار واحد، زر ممتلئ واحد."
-      - id: MC-P10-040
-        when: [bold]
-        feedback:
-          en: "When every line is bold, bold stops meaning anything. Emphasis only works by contrast with what's around it."
-          ar: "حين يكون كل سطر عريضًا، يفقد الخط الـ Bold معناه. فالإبراز لا يعمل إلا بالمقارنة مع ما حوله."
+          en: "Two filled buttons still compete, and making one louder starts a race. Emphasis is relative: quieten everything else instead."
+          ar: "الزرّان الممتلئان يبقيان متنافسين، وجعل أحدهما أعلى صوتًا يبدأ سباقًا. الإبراز نسبي: اجعل كل ما عداه أهدأ بدلًا من ذلك."
     correct:
-      en: "When everything is loud, nothing stands out."
-      ar: "حين يبرز كل شيء، لا يبرز شيء."
+      en: "Quieten the rest, and Reserve stands out."
+      ar: "اجعل الباقي أهدأ، فيبرز «احجز»."
     explain:
-      en: "Emphasis is relative. Two filled buttons and an all-bold page leave Sara to work out the main action herself."
-      ar: "الإبراز نسبي. وزرّان ممتلئان مع صفحة كلها بخط عريض يتركان سارة تكتشف الإجراء الرئيسي بنفسها."
+      en: "When everything is loud, nothing stands out. One filled button per decision, and bold only where it means something."
+      ar: "حين يبرز كل شيء، لا يبرز شيء. زر ممتلئ واحد لكل قرار، والـ Bold فقط حيث يعني شيئًا."
   - id: S03
     type: card
     part: concept
@@ -178,8 +173,8 @@ steps:
     reason:
       prompt: { en: "What makes it easier?", ar: "ما الذي يجعلها أسهل؟" }
       options:
-        - { id: big, text: { en: "Smaller text looks more professional", ar: "النص الأصغر يبدو أكثر احترافية" } }
         - { id: diff, text: { en: "The differences in size and weight show what matters", ar: "الفروق في الحجم وسُمك الخط تُظهر ما يهم" } }
+        - { id: big, text: { en: "Smaller text looks more professional", ar: "النص الأصغر يبدو أكثر احترافية" } }
       answer: [diff]
       misconceptions:
         - id: MC-P10-043
@@ -256,8 +251,8 @@ steps:
         - { kind: button, style: danger, text: { en: "Delete account", ar: "احذف الحساب" }, gap: s }
     options:
       - { id: same, text: { en: "Both filled, as now", ar: "الاثنان ممتلئان، كما هما الآن" } }
-      - { id: delete, text: { en: "Delete filled and bigger, because it's the most serious", ar: "«احذف» ممتلئ وأكبر، لأنه الأخطر" } }
       - { id: save, text: { en: "Save filled; Delete as quieter red text, set apart", ar: "«احفظ» ممتلئ؛ و«احذف» نص أحمر أهدأ ومنفصل" } }
+      - { id: delete, text: { en: "Delete filled and bigger, because it's the most serious", ar: "«احذف» ممتلئ وأكبر، لأنه الأخطر" } }
     answer: [save]
     misconceptions:
       - id: MC-P10-041
@@ -286,14 +281,14 @@ steps:
       ar: "الصفحة من الوحدة 2 تعرض جلستين، لكل منهما زر «احجز» خاص بها. هل يصح أن يكون الزرّان ممتلئين؟"
     options:
       - { id: no, text: { en: "No, a page can only have one filled button", ar: "لا، الصفحة لا يمكن أن تحتوي إلا على زر ممتلئ واحد" } }
-      - { id: yes, text: { en: "Yes, each is the main action of its own group", ar: "نعم، كل منهما الإجراء الرئيسي لمجموعته" } }
       - { id: one, text: { en: "Only the cheaper session's button", ar: "فقط زر الجلسة الأرخص" } }
+      - { id: yes, text: { en: "Yes, each is the main action of its own group", ar: "نعم، كل منهما الإجراء الرئيسي لمجموعته" } }
     answer: [yes]
     reason:
       prompt: { en: "Why?", ar: "لماذا؟" }
       options:
-        - { id: always, text: { en: "Buttons should always be filled", ar: "الأزرار يجب أن تكون ممتلئة دائمًا" } }
         - { id: decision, text: { en: "Each group is a separate decision with one main action", ar: "كل مجموعة قرار منفصل له إجراء رئيسي واحد" } }
+        - { id: always, text: { en: "Buttons should always be filled", ar: "الأزرار يجب أن تكون ممتلئة دائمًا" } }
       answer: [decision]
     misconceptions:
       - id: MC-P10-046

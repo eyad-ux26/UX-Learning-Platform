@@ -35,24 +35,25 @@ steps:
     rules: [R12]
     mock: *dots
     prompt:
-      en: "Green means open and red means full, with nothing else. Could everyone tell which session is full?"
-      ar: "الأخضر يعني متاح والأحمر يعني ممتلئ، ولا شيء غير ذلك. هل يستطيع الجميع معرفة الجلسة الممتلئة؟"
+      en: "Green means open and red means full, with nothing else. What should you add so every visitor can tell which session is full?"
+      ar: "الأخضر يعني متاح والأحمر يعني ممتلئ، ولا شيء غير ذلك. ماذا تضيف حتى يعرف كل زائر الجلسة الممتلئة؟"
     options:
-      - { id: yes, text: { en: 'Yes, red always means full', ar: "نعم، الأحمر يعني ممتلئ دائمًا" } }
-      - { id: no, text: { en: 'No: red and green can look the same to some people', ar: 'لا: الأحمر والأخضر قد يبدوان متشابهين لبعض الناس' } }
-    answer: [no]
+      - { id: brighter, text: { en: "A brighter red", ar: "أحمر أقوى" } }
+      - { id: nothing, text: { en: "Nothing; red always means full", ar: "لا شيء؛ الأحمر يعني ممتلئ دائمًا" } }
+      - { id: word, text: { en: "The word \"Full\" (or an icon) next to the colour", ar: "كلمة «ممتلئ» (أو أيقونة) بجانب اللون" } }
+    answer: [word]
     misconceptions:
       - id: MC-P10-052
-        when: [yes]
+        when: [brighter, nothing]
         feedback:
-          en: "For someone with red-green colour blindness, the two dots can look almost the same. And nothing on the page says what the colours mean."
-          ar: "لمن لديه عمى الألوان الأحمر والأخضر، قد تبدو النقطتان متشابهتين تقريبًا. ولا شيء في الصفحة يقول ما تعنيه الألوان."
+          en: "About 1 in 12 men can't reliably tell red from green, however bright. And nothing on the page says what the colours mean."
+          ar: "نحو رجل من كل 12 لا يميّز الأحمر من الأخضر بثقة، مهما كان اللون قويًا. ولا شيء في الصفحة يقول ما تعنيه الألوان."
     correct:
-      en: "Colour alone leaves some people out."
-      ar: "اللون وحده يستبعد بعض الناس."
+      en: "A word or icon, so the status doesn't depend on colour."
+      ar: "كلمة أو أيقونة، حتى لا تعتمد الحالة على اللون."
     explain:
-      en: "About 1 in 12 men can't reliably tell red from green. Add a word like \"Full\", or an icon, so the status doesn't depend on colour."
-      ar: "نحو رجل من كل 12 لا يميّز الأحمر من الأخضر بثقة. أضِف كلمة مثل «ممتلئ»، أو أيقونة، حتى لا تعتمد الحالة على اللون."
+      en: "Colour alone leaves some people out. Keep the colour as a support, and let the word carry the meaning."
+      ar: "اللون وحده يستبعد بعض الناس. أبقِ اللون للدعم، ودع الكلمة تحمل المعنى."
   - id: S03
     type: card
     part: concept
@@ -71,10 +72,10 @@ steps:
       ar: "ما أفضل إصلاح للنقاط؟"
     mock: *dots
     options:
-      - { id: brighter, text: { en: "Use a brighter red and green", ar: "استخدم أحمر وأخضر أكثر سطوعًا" } }
       - { id: legend, text: { en: "Add a color legend at the bottom of the page", ar: "أضف دليل ألوان في أسفل الصفحة" } }
-      - { id: words, text: { en: "Add words: \"4 places left\" and \"Fully booked\"", ar: "أضف كلمات: «باقي 4 أماكن» و«اكتمل الحجز»" } }
       - { id: bigger, text: { en: "Make the dots bigger", ar: "كبّر النقاط" } }
+      - { id: brighter, text: { en: "Use a brighter red and green", ar: "استخدم أحمر وأخضر أكثر سطوعًا" } }
+      - { id: words, text: { en: "Add words: \"4 places left\" and \"Fully booked\"", ar: "أضف كلمات: «باقي 4 أماكن» و«اكتمل الحجز»" } }
     answer: [words]
     misconceptions:
       - id: MC-P10-052
@@ -217,8 +218,8 @@ steps:
         - { kind: button, text: "@B1e", gap: m }
     options:
       - { id: red, text: { en: "Use red instead of orange", ar: "استخدم الأحمر بدلًا من البرتقالي" } }
-      - { id: blink, text: { en: "Make the orange number blink", ar: "اجعل الرقم البرتقالي يومض" } }
       - { id: message, text: { en: "Add a clear message: \"Platform changed: now 6 (was 4)\"", ar: "أضف رسالة واضحة: «تغيّر الرصيف: الآن 6 (كان 4)»" } }
+      - { id: blink, text: { en: "Make the orange number blink", ar: "اجعل الرقم البرتقالي يومض" } }
     answer: [message]
     misconceptions:
       - id: MC-P10-052
@@ -247,8 +248,8 @@ steps:
         - { kind: chip, text: "@W1e", gap: s }
     options:
       - { id: never, text: { en: "No: never use color for status", ar: "لا: لا تستخدم اللون للحالة أبدًا" } }
-      - { id: ok, text: { en: "Yes: it reinforces words that already say the status", ar: "نعم: يعزّز كلمات تقول الحالة أصلًا" } }
       - { id: amber, text: { en: "No: only 4 left should be red", ar: "لا: بقاء 4 فقط يجب أن يكون أحمر" } }
+      - { id: ok, text: { en: "Yes: it reinforces words that already say the status", ar: "نعم: يعزّز كلمات تقول الحالة أصلًا" } }
     answer: [ok]
     also_ok:
       - answer: [amber]
