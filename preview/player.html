@@ -55,6 +55,8 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .part{font-size:.85rem;color:var(--muted);margin:22px 0 4px}
 .prompt{font-size:1.2rem;font-weight:600;line-height:1.4;margin:0 0 14px}
 .scenario{background:var(--surface);border-inline-start:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:0 0 14px}
+.qref{font-size:.85rem;color:var(--muted);margin:-6px 0 12px}.qref a{color:var(--accent)}
+.refs{margin:8px 0 12px;font-size:.9rem}.refs summary{cursor:pointer;font-weight:600;color:var(--accent);min-height:32px;display:flex;align-items:center}.refs ul{margin:6px 0 0;padding-inline-start:20px}.refs li{margin:4px 0}.refs a{color:var(--accent)}.refs .m{color:var(--muted);font-size:.8rem}
 .rev{display:flex;gap:8px;align-items:center;margin:12px 0 14px;padding:8px;border:1px dashed var(--line);border-radius:12px;font-size:.85rem}.rev select{flex:1;min-width:0;min-height:40px;font-size:.85rem}.rev .iconbtn{font-size:.85rem;white-space:nowrap}.rev .iconbtn:disabled{opacity:.4}
 .scen{border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:0 0 14px;background:var(--surface)}
 .scen summary{cursor:pointer;font-weight:600;color:var(--accent);padding:4px 0;min-height:32px;display:flex;align-items:center}
@@ -234,7 +236,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build"},
   ar:{home:"كل الدروس", lang:"English", check:"تحقّق", cont:"متابعة", again:"حاول مرة أخرى", hint:"تلميح", show:"اعرض الإجابة", start:"ابدأ الدرس",
@@ -243,7 +245,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة"}
 };
@@ -360,6 +362,17 @@ function mockBlocks(blocks, opts){
   }).join("");
 }
 const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
+/* a source link that opens the article with the supporting passage highlighted (URL text fragment) */
+const fragUrl = r => r.quote ? `${r.url}#:~:text=${encodeURIComponent(r.quote).replace(/-/g, "%2D")}` : r.url;
+const srcTitle = (url, lessons) => { for (const l of lessons) { const x = (l.sources||[]).find(x => x.url === url); if (x) return tx(x.title); } return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]; };
+const refLink = (s, l) => s.ref ? `<p class="qref">${u().srcQ} <a href="${esc(fragUrl(s.ref))}" target="_blank" rel="noopener">${esc(srcTitle(s.ref.url, [l]))}</a></p>` : "";
+/* every source used by a set of lessons, for the unit and path reference lists */
+const refsList = (lessons, label) => {
+  const seen = new Map();
+  lessons.forEach(l => (l.sources||[]).forEach(x => { if (!seen.has(x.url)) seen.set(x.url, { t: tx(x.title), n: 0 }); }));
+  lessons.forEach(l => l.steps.forEach(s => { if (s.ref && seen.has(s.ref.url)) seen.get(s.ref.url).n++; }));
+  return seen.size ? `<details class="refs"><summary>${label} (${seen.size})</summary><ul>${[...seen].map(([url, x]) => `<li><a href="${esc(url)}" target="_blank" rel="noopener">${esc(x.t)}</a>${x.n ? ` <span class="m">${u().usedBy(x.n)}</span>` : ""}</li>`).join("")}</ul></details>` : "";
+};
 /* where a lesson's ideas come from, shown on its concept and recap cards */
 const sourcesBox = l => (l.sources||[]).length ? `<div class="srcs"><p>${u().sources}</p><ul>${l.sources.map(x => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(tx(x.title))}</a></li>`).join("")}</ul></div>` : "";
 
@@ -442,9 +455,9 @@ function renderHome(){
   $("#crumb").textContent = BUILD ? `${u().devnote} · ${BUILD}` : u().devnote;
   let h = "";
   CONTENT.paths.forEach((p, pi) => {
-    h += `<h1>${esc(tx(p.title))}</h1><p class="sub">${esc(tx(p.subtitle))}</p>`;
+    h += `<h1>${esc(tx(p.title))}</h1><p class="sub">${esc(tx(p.subtitle))}</p>${refsList(p.units.flatMap(x => x.lessons), u().pathRefs)}`;
     p.units.forEach((un, ui) => {
-      h += `<section class="unit"><h3>${esc(tx(un.title))}${un.free?`<span class="tag">${u().free}</span>`:""}</h3><p class="skill">${esc(tx(un.skill))}</p>`;
+      h += `<section class="unit"><h3>${esc(tx(un.title))}${un.free?`<span class="tag">${u().free}</span>`:""}</h3><p class="skill">${esc(tx(un.skill))}</p>${refsList(un.lessons, u().unitRefs)}`;
       un.lessons.forEach((l, li) => {
         h += `<button class="lessonlink" type="button" data-go="${pi},${ui},${li}"><span class="t">${esc(tx(l.title))}${l.mode==="check"?`<span class="tag check">${u().check_tag}</span>`:""}</span><span class="m">${u().min(l.minutes)}</span></button>`;
       });
@@ -478,6 +491,7 @@ function renderStep(){
     if (hook && hook !== s && !s.scenario) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
     if (s.value) h += `<details class="why"><summary>${u().valueQ}</summary><p>${esc(tx(s.value))}</p></details>`;
+    h += refLink(s, L.lesson);
     h += renderInteraction(s, st, locked || !!st.mainOk);
     /* the reason appears only after the main answer is right, so it can't give that answer away */
     if (s.reason && (st.mainOk || locked)) h += renderReason(s, st, locked);
