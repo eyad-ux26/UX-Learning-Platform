@@ -1,0 +1,962 @@
+id: P10-U04-B01
+mode: bank
+title:
+  en: "Re-tests: one design, every screen"
+  ar: "إعادة اختبار: تصميم واحد لكل الشاشات"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Responsive Web Design (RWD) and User Experience (NN/g)", ar: "التصميم المتجاوب وتجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/responsive-web-design-definition/"
+  - title: { en: "The Negative Impact of Mobile-First Web Design on Desktop (NN/g)", ar: "الأثر السلبي لتصميم الهاتف أولًا على شاشات الكمبيوتر (NN/g)" }
+    url: "https://www.nngroup.com/articles/content-dispersion/"
+  - title: { en: "Challenges for Screen-Reader Users on Mobile (NN/g)", ar: "صعوبات مستخدمي الـ Screen reader على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/"
+steps:
+  # SK-P10-U04-01: rearrange the layout at every width
+  - id: S01
+    type: tune
+    skill: SK-P10-U04-01
+    part: retest
+    value:
+      en: "Re-test, responsive (NN/g): in responsive design, page elements reshuffle as the viewport shrinks. Two columns on a laptop become one column on a phone, at normal text sizes."
+      ar: "إعادة اختبار، التصميم المتجاوب (NN/g): في التصميم المتجاوب تُعاد ترتيب عناصر الصفحة كلما صغرت الشاشة. العمودان على الـ Laptop يصبحان عمودًا واحدًا على الهاتف، بأحجام نص عادية."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "In responsive design, page elements reshuffle as the viewport grows or shrinks." }
+    scenario:
+      en: "Mostafa runs a recipe site. On the laptop, the ingredients sit in a column on the left and the steps on the right. Now the page needs to work on phones."
+      ar: "يدير مصطفى موقع وصفات. على الـ Laptop، المكوّنات في عمود على اليسار والخطوات على اليمين. والآن يجب أن تعمل الصفحة على الهواتف."
+    prompt:
+      en: "Try each way of fitting the page on a phone. Which one should ship?"
+      ar: "جرّب كل طريقة لعرض الصفحة على الهاتف. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now: laptop", ar: "الآن: الـ Laptop" }
+      frame: wide
+      blocks:
+        - { kind: title, text: &ms_t { en: "Lentil soup", ar: "شوربة العدس" } }
+        - kind: row
+          gap: s
+          blocks:
+            - kind: group
+              tone: plain
+              blocks:
+                - { kind: heading, text: &ms_ih { en: "Ingredients", ar: "المكوّنات" } }
+                - { kind: meta, text: &ms_i1 { en: "1 cup red lentils", ar: "كوب عدس أحمر" }, gap: xs }
+                - { kind: meta, text: &ms_i2 { en: "1 onion, 1 carrot", ar: "بصلة وجزرة" }, gap: xs }
+                - { kind: meta, text: &ms_i3 { en: "1 tsp cumin", ar: "ملعقة صغيرة كمّون" }, gap: xs }
+            - kind: group
+              blocks:
+                - { kind: heading, text: &ms_sh { en: "Steps", ar: "الخطوات" } }
+                - { kind: meta, text: &ms_s1 { en: "1. Fry the onion until soft.", ar: "1. قلّب البصل حتى يذبل." }, gap: xs }
+                - { kind: meta, text: &ms_s2 { en: "2. Add lentils, carrot and 5 cups of water.", ar: "2. أضف العدس والجزر و5 أكواب ماء." }, gap: xs }
+                - { kind: meta, text: &ms_s3 { en: "3. Cook 25 min, then blend.", ar: "3. اطهُ 25 دقيقة، ثم اخلط." }, gap: xs }
+    options:
+      - id: scale
+        text: { en: "Scale the whole laptop page down to fit", ar: "صغّر صفحة الـ Laptop كلها حتى تتّسع" }
+        mock:
+          caption: { en: "After this change: phone", ar: "بعد هذا التغيير: الهاتف" }
+          width: 300
+          blocks:
+            - { kind: text, px: 9, weight: bold, text: *ms_t }
+            - kind: row
+              gap: xs
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: text, px: 6, weight: bold, text: *ms_ih }
+                    - { kind: text, px: 5, text: *ms_i1, gap: xs }
+                    - { kind: text, px: 5, text: *ms_i2, gap: xs }
+                    - { kind: text, px: 5, text: *ms_i3, gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: text, px: 6, weight: bold, text: *ms_sh }
+                    - { kind: text, px: 5, text: *ms_s1, gap: xs }
+                    - { kind: text, px: 5, text: *ms_s2, gap: xs }
+                    - { kind: text, px: 5, text: *ms_s3, gap: xs }
+      - id: squeeze
+        text: { en: "Keep both columns, each half the phone's width", ar: "أبقِ العمودين، كلٌّ بنصف عرض الهاتف" }
+        mock:
+          caption: { en: "After this change: phone", ar: "بعد هذا التغيير: الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ms_t }
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: heading, text: *ms_ih }
+                    - { kind: meta, text: *ms_i1, gap: xs }
+                    - { kind: meta, text: *ms_i2, gap: xs }
+                    - { kind: meta, text: *ms_i3, gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: heading, text: *ms_sh }
+                    - { kind: meta, text: *ms_s1, gap: xs }
+                    - { kind: meta, text: *ms_s2, gap: xs }
+                    - { kind: meta, text: *ms_s3, gap: xs }
+      - id: stack
+        text: { en: "One column at full width: ingredients, then steps, at normal sizes", ar: "عمود واحد بكامل العرض: المكوّنات، ثم الخطوات، بأحجام عادية" }
+        mock:
+          caption: { en: "After this change: phone", ar: "بعد هذا التغيير: الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ms_t }
+            - { kind: heading, text: *ms_ih, gap: s }
+            - { kind: meta, text: *ms_i1, gap: xs }
+            - { kind: meta, text: *ms_i2, gap: xs }
+            - { kind: meta, text: *ms_i3, gap: xs }
+            - { kind: heading, text: *ms_sh, gap: m }
+            - { kind: meta, text: *ms_s1, gap: xs }
+            - { kind: meta, text: *ms_s2, gap: xs }
+            - { kind: meta, text: *ms_s3, gap: xs }
+    answer: [stack]
+    misconceptions:
+      - id: MC-P10-060
+        when: [scale, squeeze]
+        feedback:
+          en: "Scaled down, the text is too small to read while cooking. Squeezed, every step breaks into a few words per line. A phone needs a new arrangement, not a smaller copy."
+          ar: "عند التصغير، يصبح النص أصغر من أن يُقرأ أثناء الطبخ. وعند الضغط، تنقسم كل خطوة إلى كلمات قليلة في كل سطر. الهاتف يحتاج ترتيبًا جديدًا، لا نسخة أصغر."
+    correct:
+      en: "Right. One column, at a size people can read."
+      ar: "صحيح. عمود واحد، بحجم يستطيع الناس قراءته."
+    explain:
+      en: "The columns stack: first what to buy, then what to do. Each line keeps a normal size and enough width to read in one go."
+      ar: "يتراصّ العمودان: أولًا ما تشتريه، ثم ما تفعله. ويحتفظ كل سطر بحجم عادي وبعرض كافٍ ليُقرأ دفعة واحدة."
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U04-01
+    part: retest
+    value:
+      en: "Re-test, responsive (NN/g): page elements reshuffle as the viewport shrinks. On a narrower phone, a row of buttons should wrap, not shrink or run off the edge."
+      ar: "إعادة اختبار، التصميم المتجاوب (NN/g): تُعاد ترتيب عناصر الصفحة كلما صغرت الشاشة. على هاتف أضيق، يجب أن يلتفّ صف الأزرار، لا أن يصغر أو يخرج عن الحافة."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "page elements reshuffle as the viewport grows or shrinks" }
+    scenario:
+      en: "Shaimaa looks for a restaurant on a small 320px phone. The row of filters fits on the designer's bigger phone, but here the last one runs off the screen."
+      ar: "تبحث شيماء عن مطعم على هاتف صغير بعرض 320px. صف الفلاتر يتّسع على هاتف المصمّم الأكبر، لكن هنا يخرج آخرها عن الشاشة."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now: 320 px", ar: "الآن: 320 بكسل" }
+      width: 240
+      blocks:
+        - { kind: title, text: &sh_t { en: "Restaurants near you", ar: "مطاعم قريبة منك" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: button, nowrap: true, text: &sh_a { en: "All", ar: "الكل" } }
+            - { kind: button, nowrap: true, emphasis: low, text: &sh_o { en: "Open now", ar: "مفتوح الآن" } }
+            - { kind: button, nowrap: true, emphasis: low, text: &sh_d { en: "Free delivery", ar: "توصيل مجاني" } }
+        - { kind: meta, text: &sh_r { en: "Koshary El Tahrir · 0.4 km", ar: "كشري التحرير · 0.4 كم" }, gap: m }
+    options:
+      - id: tiny
+        text: { en: "Shrink the button text to 10px so all three fit", ar: "صغّر نص الأزرار إلى 10px حتى تتّسع الثلاثة" }
+        mock:
+          caption: { en: "After this change: 320 px", ar: "بعد هذا التغيير: 320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: title, text: *sh_t }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: button, px: 10, text: *sh_a }
+                - { kind: button, px: 10, emphasis: low, text: *sh_o }
+                - { kind: button, px: 10, emphasis: low, text: *sh_d }
+            - { kind: meta, text: *sh_r, gap: m }
+      - id: wrap
+        text: { en: "Let the buttons wrap onto a second line when they don't fit", ar: "دع الأزرار تلتفّ إلى سطر ثانٍ حين لا تتّسع" }
+        mock:
+          caption: { en: "After this change: 320 px", ar: "بعد هذا التغيير: 320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: title, text: *sh_t }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: button, text: *sh_a }
+                - { kind: button, emphasis: low, text: *sh_o }
+            - { kind: button, emphasis: low, text: *sh_d, gap: xs }
+            - { kind: meta, text: *sh_r, gap: m }
+      - id: keep
+        text: { en: "Keep it; it looks right on the phone we designed for", ar: "أبقِها؛ فهي تبدو صحيحة على الهاتف الذي صمّمنا له" }
+        mock:
+          caption: { en: "After this change: 320 px", ar: "بعد هذا التغيير: 320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: title, text: *sh_t }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: button, nowrap: true, text: *sh_a }
+                - { kind: button, nowrap: true, emphasis: low, text: *sh_o }
+                - { kind: button, nowrap: true, emphasis: low, text: *sh_d }
+            - { kind: meta, text: *sh_r, gap: m }
+    answer: [wrap]
+    misconceptions:
+      - id: MC-P10-060
+        when: [tiny]
+        feedback:
+          en: "10px text fits, but it's hard to read and the buttons get harder to tap. Rearrange the row instead of shrinking it."
+          ar: "النص بحجم 10px يتّسع، لكن يصعب قراءته ويصبح الضغط على الأزرار أصعب. أعِد ترتيب الصف بدل تصغيره."
+      - id: MC-P10-063
+        when: [keep]
+        feedback:
+          en: "One phone isn't every phone. On Shaimaa's 320px screen the filter she needs is cut off. Plan what happens when the row doesn't fit."
+          ar: "هاتف واحد ليس كل الهواتف. على شاشة شيماء بعرض 320px، الفلتر الذي تحتاجه مقطوع. خطّط لما يحدث حين لا يتّسع الصف."
+    correct:
+      en: "Right. The row wraps, and every filter stays whole."
+      ar: "صحيح. يلتفّ الصف، ويبقى كل فلتر كاملًا."
+    explain:
+      en: "Narrow screens need the layout to change, not the text to shrink. Wrapping keeps every button readable and easy to tap, on any width."
+      ar: "الشاشات الضيقة تحتاج أن يتغيّر التخطيط، لا أن يصغر النص. الالتفاف يُبقي كل زر مقروءًا وسهل الضغط، على أي عرض."
+
+  # SK-P10-U04-02: put what people need first on a phone
+  - id: S03
+    type: tune
+    skill: SK-P10-U04-02
+    part: retest
+    value:
+      en: "Re-test, prioritization (NN/g): smart content prioritization helps users find what they need more efficiently. The laptop's column order isn't the phone's priority order."
+      ar: "إعادة اختبار، ترتيب الأولويات (NN/g): الترتيب الذكي للمحتوى يساعد المستخدمين على إيجاد ما يحتاجونه بكفاءة أكبر. ترتيب أعمدة الـ Laptop ليس ترتيب الأولويات على الهاتف."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "Smart content prioritization helps users find what they need more efficiently." }
+    scenario:
+      en: "Gamal looks at a job ad on his phone. On the laptop, a long \"About the company\" column sits on the left, and the salary, place and Apply button sit on the right."
+      ar: "يتصفّح جمال إعلان وظيفة على هاتفه. على الـ Laptop، عمود طويل «عن الشركة» على اليسار، والراتب والمكان وزر التقديم على اليمين."
+    prompt:
+      en: "Try each phone order. Which one should ship?"
+      ar: "جرّب كل ترتيب للهاتف. أيّها يجب أن يُطلق؟"
+    start: inherit
+    options:
+      - id: needs
+        text: { en: "Job title, salary and place, then Apply, then About the company", ar: "المسمّى الوظيفي والراتب والمكان، ثم التقديم، ثم «عن الشركة»" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: &gm_t { en: "Junior accountant", ar: "محاسب مبتدئ" } }
+            - { kind: meta, weight: bold, text: &gm_s { en: "9,000 to 11,000 EGP a month", ar: "من 9,000 إلى 11,000 جنيه شهريًا" }, gap: s }
+            - { kind: meta, text: &gm_p { en: "Nasr City · Full time", ar: "مدينة نصر · دوام كامل" }, gap: xs }
+            - { kind: button, text: &gm_a { en: "Apply", ar: "قدّم الآن" }, gap: m }
+            - { kind: heading, text: &gm_ch { en: "About the company", ar: "عن الشركة" }, gap: l }
+            - { kind: small, text: &gm_c { en: "Founded in 1998, we supply medical equipment to 300 hospitals across the country…", ar: "تأسّسنا عام 1998، ونورّد الأجهزة الطبية إلى 300 مستشفى في أنحاء البلاد…" }, gap: xs }
+      - id: inherit
+        text: { en: "Same order as the laptop columns: About the company, then the job and Apply", ar: "ترتيب أعمدة الـ Laptop نفسه: «عن الشركة»، ثم الوظيفة والتقديم" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: *gm_t }
+            - { kind: heading, text: *gm_ch, gap: m }
+            - { kind: small, text: *gm_c, gap: xs }
+            - { kind: small, text: { en: "Our team of 120 people works across five offices, and we believe in…", ar: "يعمل فريقنا المكوّن من 120 شخصًا في خمسة مكاتب، ونؤمن بأن…" }, gap: xs }
+            - { kind: image, size: m, text: { en: "Office photo", ar: "صورة المكتب" }, gap: s }
+            - { kind: meta, weight: bold, text: *gm_s, gap: m }
+      - id: first
+        text: { en: "Apply at the very top, before the job title and salary", ar: "زر التقديم في أعلى الصفحة، قبل المسمّى الوظيفي والراتب" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: button, text: *gm_a }
+            - { kind: title, text: *gm_t, gap: m }
+            - { kind: meta, weight: bold, text: *gm_s, gap: s }
+            - { kind: meta, text: *gm_p, gap: xs }
+            - { kind: heading, text: *gm_ch, gap: l }
+            - { kind: small, text: *gm_c, gap: xs }
+    answer: [needs]
+    misconceptions:
+      - id: MC-P10-062
+        when: [inherit]
+        feedback:
+          en: "On the laptop, the side columns are seen at once. Stacked in that order, Gamal scrolls through the company's history before he learns the salary. Plan the phone order."
+          ar: "على الـ Laptop، يُرى العمودان معًا. وعند تراصّهما بالترتيب نفسه، يمرّ جمال بتاريخ الشركة كله قبل أن يعرف الراتب. خطّط لترتيب الهاتف."
+      - id: MC-P10-066
+        when: [first]
+        feedback:
+          en: "Apply comes before Gamal knows what the job is or what it pays. Give him the facts he decides on, then the action."
+          ar: "يأتي زر التقديم قبل أن يعرف جمال ما الوظيفة أو كم تدفع. أعطِه المعلومات التي يقرّر بها، ثم الإجراء."
+    correct:
+      en: "Right. The facts he decides on, then Apply."
+      ar: "صحيح. المعلومات التي يقرّر بها، ثم التقديم."
+    explain:
+      en: "On a phone, everything is in one line, so the order is the priority. Gamal sees the job, the pay and the place, can apply right away, and can still read about the company below."
+      ar: "على الهاتف، كل شيء في خط واحد، فالترتيب هو الأولوية. يرى جمال الوظيفة والراتب والمكان، ويستطيع التقديم فورًا، ويمكنه قراءة ما يخصّ الشركة في الأسفل."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U04-02
+    part: retest
+    value:
+      en: "Re-test, prioritization (NN/g): on a smartphone, users may have to scroll endlessly to reach the content they want. Put the deciding facts first, then the action, then the long extras."
+      ar: "إعادة اختبار، ترتيب الأولويات (NN/g): على الهاتف قد يضطر المستخدمون إلى التمرير طويلًا للوصول إلى ما يريدون. ضع المعلومات الحاسمة أولًا، ثم الإجراء، ثم الإضافات الطويلة."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "On a smartphone, users may have to scroll endlessly to discover the content of interest." }
+    scenario:
+      en: "Eman orders a vitamin from a pharmacy site. On the laptop, a big photo gallery and the reviews fill the left column; the price, the dose and Add to cart sit on the right."
+      ar: "تطلب إيمان فيتامين من موقع صيدلية. على الـ Laptop، معرض صور كبير والتقييمات يملآن العمود الأيسر؛ والسعر والجرعة وزر الإضافة إلى السلّة على اليمين."
+    prompt:
+      en: "Try each phone order. Which one should ship?"
+      ar: "جرّب كل ترتيب للهاتف. أيّها يجب أن يُطلق؟"
+    start: inherit
+    options:
+      - id: inherit
+        text: { en: "Same order as the laptop: gallery, reviews, then price and Add to cart", ar: "ترتيب الـ Laptop نفسه: المعرض، والتقييمات، ثم السعر والإضافة إلى السلّة" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: &em_t { en: "Vitamin D3, 60 tablets", ar: "فيتامين D3، 60 قرصًا" } }
+            - { kind: image, size: l, text: { en: "Photo 1 of 5", ar: "صورة 1 من 5" }, gap: s }
+            - { kind: heading, text: &em_rh { en: "Reviews (48)", ar: "التقييمات (48)" }, gap: m }
+            - { kind: small, text: &em_r1 { en: "\"Easy to swallow, arrived in two days.\"", ar: "«سهل البلع، ووصل في يومين.»" }, gap: xs }
+            - { kind: small, text: &em_r2 { en: "\"Good value for the price.\"", ar: "«قيمة جيدة مقابل السعر.»" }, gap: xs }
+      - id: first
+        text: { en: "Add to cart first, then the name, price and dose", ar: "زر الإضافة إلى السلّة أولًا، ثم الاسم والسعر والجرعة" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: button, text: &em_a { en: "Add to cart", ar: "أضِف إلى السلّة" } }
+            - { kind: title, text: *em_t, gap: m }
+            - { kind: meta, weight: bold, text: &em_p { en: "185 EGP", ar: "185 جنيهًا" }, gap: s }
+            - { kind: meta, text: &em_d { en: "1 tablet a day with food", ar: "قرص واحد يوميًا مع الطعام" }, gap: xs }
+            - { kind: image, size: m, text: { en: "Photo 1 of 5", ar: "صورة 1 من 5" }, gap: s }
+      - id: needs
+        text: { en: "Name, one photo, price and dose, Add to cart, then reviews", ar: "الاسم، وصورة واحدة، والسعر والجرعة، والإضافة إلى السلّة، ثم التقييمات" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: *em_t }
+            - { kind: image, size: s, text: { en: "Photo 1 of 5", ar: "صورة 1 من 5" }, gap: s }
+            - { kind: meta, weight: bold, text: *em_p, gap: s }
+            - { kind: meta, text: *em_d, gap: xs }
+            - { kind: button, text: *em_a, gap: m }
+            - { kind: heading, text: *em_rh, gap: l }
+            - { kind: small, text: *em_r1, gap: xs }
+    answer: [needs]
+    misconceptions:
+      - id: MC-P10-062
+        when: [inherit]
+        feedback:
+          en: "Stacked in the laptop's order, the price and dose sit below five photos and every review. Eman scrolls a long way for the two facts she needs."
+          ar: "عند التراصّ بترتيب الـ Laptop، يقع السعر والجرعة تحت خمس صور وكل التقييمات. تمرّر إيمان طويلًا لتصل إلى معلومتين تحتاجهما."
+      - id: MC-P10-066
+        when: [first]
+        feedback:
+          en: "The button comes before Eman knows the price or the dose. People decide first, then act."
+          ar: "يأتي الزر قبل أن تعرف إيمان السعر أو الجرعة. الناس يقرّرون أولًا، ثم يتصرّفون."
+    correct:
+      en: "Right. What she decides on, then the button, then the extras."
+      ar: "صحيح. ما تقرّر به، ثم الزر، ثم الإضافات."
+    explain:
+      en: "The phone order follows Eman's questions: what is it, how much, how do I take it. The button comes right after the answers, and the reviews are there for anyone who wants more."
+      ar: "يتبع ترتيب الهاتف أسئلة إيمان: ما هذا، وكم سعره، وكيف أتناوله. ويأتي الزر بعد الإجابات مباشرة، والتقييمات موجودة لمن يريد المزيد."
+
+  # SK-P10-U04-03: give the same information on every device
+  - id: S05
+    type: tune
+    skill: SK-P10-U04-03
+    part: retest
+    value:
+      en: "Re-test, equivalent access (NN/g): the goal is to give equivalent access to information regardless of device. Hide the promotion, never the baggage allowance people decide on."
+      ar: "إعادة اختبار، الوصول المتكافئ (NN/g): الهدف هو إتاحة المعلومات نفسها بغضّ النظر عن الجهاز. أخفِ العرض الترويجي، لا الأمتعة المسموحة التي يقرّر بها الناس."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "The goal of many responsive designs is to give equivalent access to information regardless of device." }
+    scenario:
+      en: "Tamer compares two flights on his phone. Each flight card is too long for the small screen, so one thing has to go on phones."
+      ar: "يقارن تامر بين رحلتين على هاتفه. كل بطاقة رحلة أطول من الشاشة الصغيرة، فيجب الاستغناء عن شيء واحد على الهواتف."
+    prompt:
+      en: "Try each cut. Which one should ship?"
+      ar: "جرّب كل حذف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now: one flight card", ar: "الآن: بطاقة رحلة واحدة" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &tm_r { en: "Cairo → Jeddah · 09:10 – 11:25", ar: "القاهرة ← جدة · 09:10 – 11:25" } }
+        - { kind: meta, text: &tm_b { en: "Bags: 1 cabin bag only", ar: "الأمتعة: حقيبة مقصورة واحدة فقط" }, gap: s }
+        - { kind: meta, weight: bold, text: &tm_p { en: "6,450 EGP", ar: "6,450 جنيهًا" }, gap: xs }
+        - { kind: banner, text: &tm_x { en: "Get double miles with our credit card!", ar: "اكسب أميالًا مضاعفة مع بطاقتنا الائتمانية!" }, gap: s }
+        - { kind: button, emphasis: low, text: &tm_c { en: "Choose", ar: "اختر" }, gap: s }
+    options:
+      - id: bags
+        text: { en: "Hide the baggage line on phones", ar: "أخفِ سطر الأمتعة على الهواتف" }
+        mock:
+          caption: { en: "After this change: phone", ar: "بعد هذا التغيير: الهاتف" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *tm_r }
+            - { kind: meta, weight: bold, text: *tm_p, gap: s }
+            - { kind: banner, text: *tm_x, gap: s }
+            - { kind: button, emphasis: low, text: *tm_c, gap: s }
+      - id: promo
+        text: { en: "Hide the credit card offer on phones", ar: "أخفِ عرض البطاقة الائتمانية على الهواتف" }
+        mock:
+          caption: { en: "After this change: phone", ar: "بعد هذا التغيير: الهاتف" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *tm_r }
+            - { kind: meta, text: *tm_b, gap: s }
+            - { kind: meta, weight: bold, text: *tm_p, gap: xs }
+            - { kind: button, emphasis: low, text: *tm_c, gap: s }
+      - id: times
+        text: { en: "Hide the times; they can see them after choosing", ar: "أخفِ المواعيد؛ يمكنهم رؤيتها بعد الاختيار" }
+        mock:
+          caption: { en: "After this change: phone", ar: "بعد هذا التغيير: الهاتف" }
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Cairo → Jeddah", ar: "القاهرة ← جدة" } }
+            - { kind: meta, text: *tm_b, gap: s }
+            - { kind: meta, weight: bold, text: *tm_p, gap: xs }
+            - { kind: banner, text: *tm_x, gap: s }
+            - { kind: button, emphasis: low, text: *tm_c, gap: s }
+    answer: [promo]
+    misconceptions:
+      - id: MC-P10-061
+        when: [bags, times]
+        feedback:
+          en: "The times and the bags are what Tamer compares the two flights on. Hiding them on phones makes the cheaper flight look better than it is. Cut the extra, not a deciding fact."
+          ar: "المواعيد والأمتعة هما ما يقارن به تامر بين الرحلتين. إخفاؤهما على الهواتف يجعل الرحلة الأرخص تبدو أفضل مما هي. احذف الإضافة، لا معلومة حاسمة."
+    correct:
+      en: "Right. The offer goes; every fact Tamer decides on stays."
+      ar: "صحيح. يُحذف العرض؛ وتبقى كل معلومة يقرّر بها تامر."
+    explain:
+      en: "People on phones decide the same things as people on laptops, so they need the same facts. When space is short, cut what's optional, like a promotion."
+      ar: "من يستخدم الهاتف يقرّر الأشياء نفسها التي يقرّرها مستخدم الـ Laptop، فيحتاج المعلومات نفسها. وحين تضيق المساحة، احذف ما هو اختياري، مثل العرض الترويجي."
+
+  - id: S06
+    type: tune
+    skill: SK-P10-U04-03
+    part: retest
+    value:
+      en: "Re-test, equivalent access (NN/g): give equivalent access to information regardless of device. Change the form of the schedule on a phone, but don't remove it or send people to a laptop."
+      ar: "إعادة اختبار، الوصول المتكافئ (NN/g): أتِح المعلومات نفسها بغضّ النظر عن الجهاز. غيّر شكل الجدول على الهاتف، لكن لا تحذفه ولا ترسل الناس إلى الـ Laptop."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "The goal of many responsive designs is to give equivalent access to information regardless of device." }
+    scenario:
+      en: "Yasmin wants to join an evening English course. On the laptop, its page has a wide schedule table with all six class dates. On the phone, the table doesn't fit."
+      ar: "تريد ياسمين الانضمام إلى دورة إنجليزي مسائية. على الـ Laptop، في صفحتها جدول عريض بمواعيد الحصص الست. وعلى الهاتف، لا يتّسع الجدول."
+    prompt:
+      en: "Try each phone version. Which one should ship?"
+      ar: "جرّب كل نسخة للهاتف. أيّها يجب أن تُطلق؟"
+    start: desktop
+    options:
+      - id: list
+        text: { en: "Show the six dates as a short list", ar: "اعرض المواعيد الستة كقائمة قصيرة" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: &yz_t { en: "English B1 · Evenings", ar: "إنجليزي B1 · مسائي" } }
+            - { kind: heading, text: &yz_h { en: "Class dates", ar: "مواعيد الحصص" }, gap: s }
+            - { kind: meta, text: { en: "Sun 5 Oct · 19:00", ar: "الأحد 5 أكتوبر · 19:00" }, gap: xs }
+            - { kind: meta, text: { en: "Wed 8 Oct · 19:00", ar: "الأربعاء 8 أكتوبر · 19:00" }, gap: xs }
+            - { kind: meta, text: { en: "Sun 12 Oct · 19:00", ar: "الأحد 12 أكتوبر · 19:00" }, gap: xs }
+            - { kind: meta, text: { en: "Wed 15 Oct · 19:00", ar: "الأربعاء 15 أكتوبر · 19:00" }, gap: xs }
+            - { kind: meta, text: { en: "Sun 19 Oct · 19:00", ar: "الأحد 19 أكتوبر · 19:00" }, gap: xs }
+            - { kind: meta, text: { en: "Wed 22 Oct · 19:00", ar: "الأربعاء 22 أكتوبر · 19:00" }, gap: xs }
+            - { kind: button, text: &yz_b { en: "Join the course", ar: "انضمّ إلى الدورة" }, gap: m }
+      - id: desktop
+        text: { en: "Hide the table, and add \"See the full schedule on a computer\"", ar: "أخفِ الجدول، وأضف «اطّلع على الجدول الكامل من الكمبيوتر»" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: *yz_t }
+            - { kind: small, text: { en: "See the full schedule on a computer.", ar: "اطّلع على الجدول الكامل من الكمبيوتر." }, gap: s }
+            - { kind: button, text: *yz_b, gap: m }
+      - id: firstonly
+        text: { en: "Show only the first class date, to keep it short", ar: "اعرض موعد الحصة الأولى فقط، حتى تبقى قصيرة" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: *yz_t }
+            - { kind: meta, text: { en: "Starts Sun 5 Oct · 19:00", ar: "تبدأ الأحد 5 أكتوبر · 19:00" }, gap: s }
+            - { kind: button, text: *yz_b, gap: m }
+    answer: [list]
+    misconceptions:
+      - id: MC-P10-061
+        when: [desktop, firstonly]
+        feedback:
+          en: "Yasmin needs every date to know if she can attend them all. Sending her to a computer, or showing one date, hides the fact she decides on. Change the form, keep the facts."
+          ar: "تحتاج ياسمين كل المواعيد لتعرف هل تستطيع حضورها كلها. إرسالها إلى الكمبيوتر، أو عرض موعد واحد، يُخفي المعلومة التي تقرّر بها. غيّر الشكل، وأبقِ المعلومات."
+    correct:
+      en: "Right. A different shape, the same facts."
+      ar: "صحيح. شكل مختلف، والمعلومات نفسها."
+    explain:
+      en: "The table was just one way to show the dates. On a phone, a list carries the same six dates in a shape that fits, so Yasmin can decide right there."
+      ar: "الجدول كان مجرد طريقة لعرض المواعيد. على الهاتف، تحمل القائمة المواعيد الستة نفسها بشكل يتّسع، فتستطيع ياسمين أن تقرّر في مكانها."
+
+  # SK-P10-U04-04: keep related content together on wide screens
+  - id: S07
+    type: tune
+    skill: SK-P10-U04-04
+    part: retest
+    value:
+      en: "Re-test, content dispersion (NN/g): keep critical, related content grouped together in the same viewport. A stretched or centred phone column spreads it out on a laptop."
+      ar: "إعادة اختبار، تشتّت المحتوى (NN/g): أبقِ المحتوى المهم والمترابط مجمّعًا في الشاشة نفسها. عمود الهاتف الممطوط أو الموضوع في المنتصف يشتّته على الـ Laptop."
+    ref: { url: "https://www.nngroup.com/articles/content-dispersion/", quote: "Keep critical, related content grouped together in the same viewport." }
+    scenario:
+      en: "A used-car site was designed phone first. Sayed browses it on his laptop, and the team must decide how a car's page should look there."
+      ar: "صُمّم موقع سيارات مستعملة للهاتف أولًا. يتصفّحه سيد على الـ Laptop، وعلى الفريق أن يقرّر كيف تبدو صفحة السيارة هناك."
+    prompt:
+      en: "Try each laptop layout. Which one should ship?"
+      ar: "جرّب كل تخطيط للـ Laptop. أيّها يجب أن يُطلق؟"
+    start: stretch
+    options:
+      - id: stretch
+        text: { en: "The phone column, stretched to full width", ar: "عمود الهاتف، ممطوطًا بكامل العرض" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: image, size: l, height: 200, text: &sy_i { en: "Car photos", ar: "صور السيارة" } }
+            - { kind: title, text: &sy_t { en: "2019 hatchback · 1.6 L", ar: "هاتشباك 2019 · 1.6 لتر" }, gap: m }
+            - { kind: meta, weight: bold, text: &sy_p { en: "640,000 EGP", ar: "640,000 جنيه" }, gap: s }
+      - id: centre
+        text: { en: "The phone column, centred at phone width", ar: "عمود الهاتف في المنتصف بعرض الهاتف" }
+        mock:
+          frame: wide
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: divider }
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: image, size: m, text: *sy_i }
+                    - { kind: title, text: *sy_t, gap: s }
+                    - { kind: meta, weight: bold, text: *sy_p, gap: s }
+                    - { kind: meta, text: &sy_k { en: "68,000 km · Automatic", ar: "68,000 كم · أوتوماتيك" }, gap: xs }
+                    - { kind: button, text: &sy_b { en: "Contact the seller", ar: "تواصل مع البائع" }, gap: m }
+                - { kind: divider }
+      - id: cols
+        text: { en: "Two columns: the photos beside the price, details and Contact", ar: "عمودان: الصور بجانب السعر والتفاصيل والتواصل" }
+        mock:
+          frame: wide
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: image, size: l, text: *sy_i }
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: title, text: *sy_t }
+                    - { kind: meta, weight: bold, text: *sy_p, gap: s }
+                    - { kind: meta, text: *sy_k, gap: xs }
+                    - { kind: button, text: *sy_b, gap: m }
+    answer: [cols]
+    misconceptions:
+      - id: MC-P10-065
+        when: [stretch, centre]
+        feedback:
+          en: "Both reuse the phone layout. Stretched, the photos fill the screen and the details fall out of view; centred, the page stays long and most of the laptop is empty. Rearrange for the wide screen."
+          ar: "كلاهما يعيد استخدام تخطيط الهاتف. عند المطّ، تملأ الصور الشاشة وتسقط التفاصيل خارجها؛ وفي المنتصف، تبقى الصفحة طويلة ومعظم الـ Laptop فارغ. أعِد الترتيب للشاشة العريضة."
+    correct:
+      en: "Right. Photos and the facts Sayed needs, in one view."
+      ar: "صحيح. الصور والمعلومات التي يحتاجها سيد، في شاشة واحدة."
+    explain:
+      en: "Responsive works both ways. On a wide screen, related things go side by side, so Sayed can look at the car, its price and its mileage without scrolling."
+      ar: "التصميم المتجاوب يعمل في الاتجاهين. على الشاشة العريضة، توضع الأشياء المترابطة جنبًا إلى جنب، فيستطيع سيد أن يرى السيارة وسعرها وعدد كيلومتراتها دون تمرير."
+
+  - id: S08
+    type: tune
+    skill: SK-P10-U04-04
+    part: retest
+    value:
+      en: "Re-test, content dispersion (NN/g): keep critical, related content grouped together in the same viewport. The doctor and her free times belong in one view; the map can wait."
+      ar: "إعادة اختبار، تشتّت المحتوى (NN/g): أبقِ المحتوى المهم والمترابط مجمّعًا في الشاشة نفسها. الطبيبة ومواعيدها المتاحة مكانهما شاشة واحدة؛ والخريطة يمكن أن تنتظر."
+    ref: { url: "https://www.nngroup.com/articles/content-dispersion/", quote: "Keep critical, related content grouped together in the same viewport." }
+    scenario:
+      en: "Marwa books a dentist on her laptop. The page shows the doctor at the top, then a full-width map, and the free times only below the map."
+      ar: "تحجز مروة موعدًا عند طبيبة أسنان من الـ Laptop. تعرض الصفحة الطبيبة في الأعلى، ثم خريطة بكامل العرض، والمواعيد المتاحة تحت الخريطة فقط."
+    prompt:
+      en: "Try each laptop layout. Which one should ship?"
+      ar: "جرّب كل تخطيط للـ Laptop. أيّها يجب أن يُطلق؟"
+    start: bigmap
+    options:
+      - id: side
+        text: { en: "The doctor beside her free times; a small map below", ar: "الطبيبة بجانب مواعيدها المتاحة؛ وخريطة صغيرة في الأسفل" }
+        mock:
+          frame: wide
+          blocks:
+            - kind: row
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: title, text: &mw_d { en: "Dr. Rania Adel", ar: "د. رانيا عادل" } }
+                    - { kind: meta, text: &mw_s { en: "Dentist · Heliopolis · 350 EGP", ar: "طبيبة أسنان · مصر الجديدة · 350 جنيهًا" }, gap: s }
+                - kind: group
+                  blocks:
+                    - { kind: heading, text: &mw_h { en: "Free times this week", ar: "المواعيد المتاحة هذا الأسبوع" } }
+                    - kind: row
+                      gap: s
+                      blocks:
+                        - { kind: button, emphasis: low, text: &mw_1 { en: "Mon 17:00", ar: "الاثنين 17:00" } }
+                        - { kind: button, emphasis: low, text: &mw_2 { en: "Tue 18:30", ar: "الثلاثاء 18:30" } }
+                        - { kind: button, emphasis: low, text: &mw_3 { en: "Thu 16:00", ar: "الخميس 16:00" } }
+            - { kind: image, size: s, text: &mw_m { en: "Map", ar: "الخريطة" }, gap: m }
+      - id: bigmap
+        text: { en: "Keep the order, and make the map even wider so the page feels full", ar: "أبقِ الترتيب، واجعل الخريطة أعرض حتى تبدو الصفحة ممتلئة" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: title, text: *mw_d }
+            - { kind: meta, text: *mw_s, gap: s }
+            - { kind: image, size: l, height: 220, text: *mw_m, gap: m }
+            - { kind: heading, text: *mw_h, gap: m }
+      - id: tab
+        text: { en: "Move the free times to their own tab, next to \"About\"", ar: "انقل المواعيد المتاحة إلى تبويب مستقل، بجانب «نبذة»" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: title, text: *mw_d }
+            - { kind: meta, text: *mw_s, gap: s }
+            - { kind: segmented, options: [{ en: "About", ar: "نبذة" }, { en: "Free times", ar: "المواعيد المتاحة" }], value: 0, gap: m }
+            - { kind: image, size: l, height: 160, text: *mw_m, gap: m }
+    answer: [side]
+    misconceptions:
+      - id: MC-P10-065
+        when: [bigmap, tab]
+        feedback:
+          en: "Either way, Marwa can't see the doctor and her free times together. A wide screen has room to put them side by side, so she can choose without scrolling or switching."
+          ar: "في الحالتين، لا تستطيع مروة رؤية الطبيبة ومواعيدها معًا. الشاشة العريضة فيها مساحة لوضعهما جنبًا إلى جنب، فتختار دون تمرير أو تنقّل."
+    correct:
+      en: "Right. Who, how much, and when, in one view."
+      ar: "صحيح. مَن، وبكم، ومتى، في شاشة واحدة."
+    explain:
+      en: "Marwa decides with the doctor's details and the free times together. Side by side, she compares them at a glance. The map still matters, just less, so it can sit lower and smaller."
+      ar: "تقرّر مروة بتفاصيل الطبيبة والمواعيد المتاحة معًا. وعندما يكونان جنبًا إلى جنب، تقارن بينهما بنظرة. والخريطة ما زالت مهمة، لكن أقل، فيمكن أن تكون أسفل وأصغر."
+
+  # SK-P10-U04-05: check it's usable, not just that it fits
+  - id: S09
+    type: tune
+    skill: SK-P10-U04-05
+    part: retest
+    value:
+      en: "Re-test, fit vs. use (NN/g): ensuring that elements fit within a page is not enough. Labels beside fields fit at 320px, but squeeze the box until the typed text is cut off."
+      ar: "إعادة اختبار، الاتّساع مقابل الاستخدام (NN/g): التأكّد من أن العناصر تتّسع في الصفحة لا يكفي. العناوين بجانب الحقول تتّسع على 320px، لكنها تضغط الحقل حتى ينقطع النص المكتوب."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "However, ensuring that elements fit within a page is not enough." }
+    scenario:
+      en: "Hazem fills in his delivery address on a small 320px phone. Every label sits beside its field. Nothing runs off the screen, but the fields are very narrow."
+      ar: "يكتب حازم عنوان التوصيل على هاتف صغير بعرض 320px. كل عنوان حقل بجانب حقله. لا شيء يخرج عن الشاشة، لكن الحقول ضيقة جدًا."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: beside
+    options:
+      - id: beside
+        text: { en: "Keep labels beside the fields; everything fits", ar: "أبقِ العناوين بجانب الحقول؛ فكل شيء يتّسع" }
+        mock:
+          caption: { en: "320 px", ar: "320 بكسل" }
+          width: 240
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: meta, text: &hz_sl { en: "Street", ar: "الشارع" } }
+                - { kind: field, filled: true, nowrap: true, text: &hz_sv { en: "14 Abbas El Akkad St.", ar: "14 شارع عباس العقاد" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: &hz_bl { en: "Building", ar: "المبنى" } }
+                - { kind: field, filled: true, nowrap: true, text: &hz_bv { en: "Tower B, floor 6, flat 62", ar: "البرج B، الدور 6، شقة 62" } }
+      - id: above
+        text: { en: "Put each label above its field, at full width", ar: "ضع كل عنوان فوق حقله، بكامل العرض" }
+        mock:
+          caption: { en: "320 px", ar: "320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: field, label: *hz_sl, filled: true, text: *hz_sv }
+            - { kind: field, label: *hz_bl, filled: true, text: *hz_bv, gap: s }
+      - id: short
+        text: { en: "Keep them beside the fields, and shorten the labels to \"St.\" and \"Bldg.\"", ar: "أبقِها بجانب الحقول، واختصر العناوين إلى «ش.» و«م.»" }
+        mock:
+          caption: { en: "320 px", ar: "320 بكسل" }
+          width: 240
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: small, text: { en: "St.", ar: "ش." } }
+                - { kind: field, filled: true, nowrap: true, text: *hz_sv }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: small, text: { en: "Bldg.", ar: "م." } }
+                - { kind: field, filled: true, nowrap: true, text: *hz_bv }
+    answer: [above]
+    misconceptions:
+      - id: MC-P10-078
+        when: [beside, short]
+        feedback:
+          en: "It fits, but Hazem can't see the end of what he typed, so he can't check his flat number. Short labels like \"Bldg.\" also make people guess. Fitting isn't the goal; being usable is."
+          ar: "إنها تتّسع، لكن حازم لا يرى نهاية ما كتبه، فلا يستطيع التأكّد من رقم شقته. والعناوين المختصرة مثل «م.» تجعل الناس يخمّنون. الاتّساع ليس الهدف؛ الاستخدام هو الهدف."
+    correct:
+      en: "Right. Each field gets the full width, so Hazem can check what he typed."
+      ar: "صحيح. كل حقل يأخذ العرض كاملًا، فيستطيع حازم مراجعة ما كتبه."
+    explain:
+      en: "On a narrow phone, labels above fields leave the whole width for the answer. Checking a layout means asking whether people can read and fix their input, not only whether anything overflows."
+      ar: "على الهاتف الضيق، تترك العناوين فوق الحقول العرض كله للإجابة. فحص التخطيط يعني أن تسأل: هل يستطيع الناس قراءة ما كتبوه وتصحيحه؟ لا فقط: هل يخرج شيء عن الشاشة؟"
+
+  - id: S10
+    type: tune
+    skill: SK-P10-U04-05
+    part: retest
+    value:
+      en: "Re-test, fit vs. use (NN/g): ensuring that elements fit within a page is not enough. A cut-off label or tiny text fits; stacked full-width buttons are usable."
+      ar: "إعادة اختبار، الاتّساع مقابل الاستخدام (NN/g): التأكّد من أن العناصر تتّسع في الصفحة لا يكفي. النص المقطوع أو الصغير جدًا يتّسع؛ أما الأزرار المتراصّة بكامل العرض فقابلة للاستخدام."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "However, ensuring that elements fit within a page is not enough." }
+    scenario:
+      en: "Doaa is confirming a hair appointment on a small 320px phone. Keep appointment and Cancel appointment sit side by side, and both labels are long."
+      ar: "تؤكّد دعاء موعدًا في صالون تجميل على هاتف صغير بعرض 320px. زرّا «أبقِ الموعد» و«ألغِ الموعد» متجاوران، ونص كليهما طويل."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: cut
+    options:
+      - id: cut
+        text: { en: "Keep them side by side, and cut the labels with \"…\"", ar: "أبقِهما متجاورين، واقطع النص بـ «…»" }
+        mock:
+          caption: { en: "320 px", ar: "320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: title, text: &da_t { en: "Sat 11:00 · Haircut", ar: "السبت 11:00 · قصّ شعر" } }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, nowrap: true, text: &da_k { en: "Keep appointment", ar: "أبقِ الموعد" } }
+                - { kind: button, nowrap: true, emphasis: low, text: &da_c { en: "Cancel appointment", ar: "ألغِ الموعد" } }
+      - id: tiny
+        text: { en: "Keep them side by side, with 10px text so the labels fit", ar: "أبقِهما متجاورين، بنص 10px حتى يتّسع" }
+        mock:
+          caption: { en: "320 px", ar: "320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: title, text: *da_t }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, px: 10, text: *da_k }
+                - { kind: button, px: 10, emphasis: low, text: *da_c }
+      - id: stack
+        text: { en: "Stack them, each at full width", ar: "ضعهما فوق بعض، كلٌّ بكامل العرض" }
+        mock:
+          caption: { en: "320 px", ar: "320 بكسل" }
+          width: 240
+          blocks:
+            - { kind: title, text: *da_t }
+            - { kind: button, text: *da_k, gap: m }
+            - { kind: button, emphasis: low, text: *da_c, gap: s }
+    answer: [stack]
+    misconceptions:
+      - id: MC-P10-078
+        when: [cut, tiny]
+        feedback:
+          en: "Both fit, but Doaa either can't read which button cancels, or gets tiny targets that are easy to miss. Fitting isn't the same as usable."
+          ar: "كلاهما يتّسع، لكن دعاء إمّا لا تستطيع قراءة أي زر يُلغي، أو تحصل على أزرار صغيرة يسهل أن تخطئها. الاتّساع لا يعني قابلية الاستخدام."
+    correct:
+      en: "Right. Full labels, full-width targets."
+      ar: "صحيح. نص كامل، وأزرار بكامل العرض."
+    explain:
+      en: "When two buttons don't fit side by side, stack them. Doaa reads each label in full and taps a big target, and choosing the wrong one becomes much harder."
+      ar: "حين لا يتّسع زرّان متجاوران، ضعهما فوق بعض. تقرأ دعاء كل زر كاملًا وتضغط هدفًا كبيرًا، ويصبح اختيار الزر الخطأ أصعب بكثير."
+
+  # SK-P10-U04-06: fix the reading order in the code
+  - id: S11
+    type: tune
+    skill: SK-P10-U04-06
+    part: retest
+    value:
+      en: "Re-test, reading order (NN/g): screen-reader users can't jump around; they move through the sequence. Layout code moves pixels, not that sequence."
+      ar: "إعادة اختبار، ترتيب القراءة (NN/g): مستخدمو الـ Screen reader لا يستطيعون القفز؛ بل يتحرّكون عبر التسلسل. كود التخطيط يحرّك ما يظهر على الشاشة، لا هذا التسلسل."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "The user cannot jump around; they must move forward and backward through the sequence to access what they want." }
+    scenario:
+      en: "Akram uses a screen reader. On a shop's product card, the code puts Add to cart first, then the price, then the product name, so that's the order he hears."
+      ar: "يستخدم أكرم الـ Screen reader. في بطاقة منتج بمتجر، يضع الكود زر الإضافة إلى السلّة أولًا، ثم السعر، ثم اسم المنتج، وهذا هو الترتيب الذي يسمعه."
+    prompt:
+      en: "Each version shows what people see and what Akram hears. Try each fix. Which one should ship?"
+      ar: "كل نسخة تعرض ما يراه الناس وما يسمعه أكرم. جرّب كل حل. أيّها يجب أن يُطلق؟"
+    start: visual
+    options:
+      - id: visual
+        text: { en: "Move the button below the name on screen, with layout code only", ar: "انقل الزر تحت الاسم على الشاشة، بكود التخطيط فقط" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: &ak_sees { en: "People see", ar: "يرى الناس" } }
+                    - { kind: meta, text: &ak_n { en: "Hand cream", ar: "كريم اليدين" }, gap: xs }
+                    - { kind: meta, text: &ak_p { en: "75 EGP", ar: "75 جنيهًا" }, gap: xs }
+                    - { kind: meta, text: &ak_b { en: "Add to cart", ar: "أضِف إلى السلّة" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: &ak_hears { en: "Akram hears", ar: "يسمع أكرم" } }
+                    - { kind: meta, text: { en: "Add to cart, button", ar: "أضِف إلى السلّة، زر" }, gap: xs }
+                    - { kind: meta, text: *ak_p, gap: xs }
+                    - { kind: meta, text: *ak_n, gap: xs }
+      - id: code
+        text: { en: "Change the order in the code: name, price, then the button", ar: "غيّر الترتيب في الكود: الاسم، ثم السعر، ثم الزر" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: *ak_sees }
+                    - { kind: meta, text: *ak_n, gap: xs }
+                    - { kind: meta, text: *ak_p, gap: xs }
+                    - { kind: meta, text: *ak_b, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: *ak_hears }
+                    - { kind: meta, text: *ak_n, gap: xs }
+                    - { kind: meta, text: *ak_p, gap: xs }
+                    - { kind: meta, text: { en: "Add to cart, button", ar: "أضِف إلى السلّة، زر" }, gap: xs }
+      - id: keep
+        text: { en: "Keep it; the button first saves time for people who already know what they want", ar: "أبقِه؛ فالزر أولًا يوفّر الوقت لمن يعرف ما يريد" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: *ak_sees }
+                    - { kind: meta, text: *ak_b }
+                    - { kind: meta, text: *ak_p, gap: xs }
+                    - { kind: meta, text: *ak_n, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: *ak_hears }
+                    - { kind: meta, text: { en: "Add to cart, button", ar: "أضِف إلى السلّة، زر" }, gap: xs }
+                    - { kind: meta, text: *ak_p, gap: xs }
+                    - { kind: meta, text: *ak_n, gap: xs }
+    answer: [code]
+    misconceptions:
+      - id: MC-P10-067
+        when: [visual]
+        feedback:
+          en: "The screen looks right, but Akram still hears the button before he knows what it adds. Layout code moves what people see, not what he hears."
+          ar: "تبدو الشاشة صحيحة، لكن أكرم ما زال يسمع الزر قبل أن يعرف ماذا يضيف. كود التخطيط يحرّك ما يراه الناس، لا ما يسمعه هو."
+      - id: MC-P10-066
+        when: [keep]
+        feedback:
+          en: "Akram hears \"Add to cart\" before he knows which product, so he has to keep going and come back. The facts come first, then the action."
+          ar: "يسمع أكرم «أضِف إلى السلّة» قبل أن يعرف أي منتج، فيضطر للتقدّم ثم الرجوع. المعلومات أولًا، ثم الإجراء."
+    correct:
+      en: "Right. One fix in the code, and what people see and hear agree."
+      ar: "صحيح. إصلاح واحد في الكود، فيتّفق ما يراه الناس وما يسمعونه."
+    explain:
+      en: "When the code is in the right order, the screen reader, the Tab key and a narrow screen all follow it. Akram hears what the product is and what it costs, then the button."
+      ar: "عندما يكون الكود بالترتيب الصحيح، يتبعه الـ Screen reader ومفتاح Tab والشاشة الضيقة كلها. يسمع أكرم ما المنتج وكم سعره، ثم الزر."
+
+  - id: S12
+    type: tune
+    skill: SK-P10-U04-06
+    part: retest
+    value:
+      en: "Re-test, label-value pairs (NN/g): a screen-reader user is unaware of what's ahead and must remember what they've already heard. All labels, then all values, forces them to match by memory."
+      ar: "إعادة اختبار، أزواج العنوان والقيمة (NN/g): مستخدم الـ Screen reader لا يعرف ما ينتظره، ويجب أن يتذكّر كل ما سمعه. كل العناوين ثم كل القيم يجبره على المطابقة من الذاكرة."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "Someone using a screen reader is unaware of everything ahead and must remember everything they have already encountered." }
+    scenario:
+      en: "Nermeen uses a screen reader to check her flight. On screen, each label sits above its value, but in the code all the labels come first and all the values after."
+      ar: "تستخدم نرمين الـ Screen reader لتتحقّق من رحلتها. على الشاشة، كل عنوان فوق قيمته، لكن في الكود تأتي كل العناوين أولًا ثم كل القيم."
+    prompt:
+      en: "Each version shows what people see and what Nermeen hears. Try each fix. Which one should ship?"
+      ar: "كل نسخة تعرض ما يراه الناس وما تسمعه نرمين. جرّب كل حل. أيّها يجب أن يُطلق؟"
+    start: bold
+    options:
+      - id: pairs
+        text: { en: "Change the code so each label is followed by its value", ar: "غيّر الكود حتى تأتي كل قيمة بعد عنوانها مباشرة" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: &nm_sees { en: "People see", ar: "يرى الناس" } }
+                    - { kind: meta, text: &nm_1 { en: "Departs 08:15", ar: "الإقلاع 08:15" }, gap: xs }
+                    - { kind: meta, text: &nm_2 { en: "Lands 11:40", ar: "الهبوط 11:40" }, gap: xs }
+                    - { kind: meta, text: &nm_3 { en: "Gate B7", ar: "البوابة B7" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: &nm_hears { en: "Nermeen hears", ar: "تسمع نرمين" } }
+                    - { kind: meta, text: { en: "Departs, 08:15", ar: "الإقلاع، 08:15" }, gap: xs }
+                    - { kind: meta, text: { en: "Lands, 11:40", ar: "الهبوط، 11:40" }, gap: xs }
+                    - { kind: meta, text: { en: "Gate, B7", ar: "البوابة، B7" }, gap: xs }
+      - id: bold
+        text: { en: "Keep the code, and make the labels bold so they stand out", ar: "أبقِ الكود، واجعل العناوين بخط Bold حتى تبرز" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: *nm_sees }
+                    - { kind: meta, weight: bold, text: *nm_1, gap: xs }
+                    - { kind: meta, weight: bold, text: *nm_2, gap: xs }
+                    - { kind: meta, weight: bold, text: *nm_3, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: *nm_hears }
+                    - { kind: meta, text: { en: "Departs, Lands, Gate", ar: "الإقلاع، الهبوط، البوابة" }, gap: xs }
+                    - { kind: meta, text: { en: "08:15, 11:40, B7", ar: "08:15، 11:40، B7" }, gap: xs }
+      - id: grid
+        text: { en: "Keep the code, and line the values up in a neat grid on screen", ar: "أبقِ الكود، ورتّب القيم في شبكة منظّمة على الشاشة" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: *nm_sees }
+                    - kind: row
+                      gap: xs
+                      blocks:
+                        - { kind: meta, text: { en: "Departs", ar: "الإقلاع" } }
+                        - { kind: meta, text: "08:15" }
+                    - kind: row
+                      gap: xs
+                      blocks:
+                        - { kind: meta, text: { en: "Lands", ar: "الهبوط" } }
+                        - { kind: meta, text: "11:40" }
+                    - kind: row
+                      gap: xs
+                      blocks:
+                        - { kind: meta, text: { en: "Gate", ar: "البوابة" } }
+                        - { kind: meta, text: "B7" }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: *nm_hears }
+                    - { kind: meta, text: { en: "Departs, Lands, Gate", ar: "الإقلاع، الهبوط، البوابة" }, gap: xs }
+                    - { kind: meta, text: { en: "08:15, 11:40, B7", ar: "08:15، 11:40، B7" }, gap: xs }
+    answer: [pairs]
+    misconceptions:
+      - id: MC-P10-079
+        when: [bold]
+        feedback:
+          en: "Bold changes what people see, but Nermeen still hears three labels, then three values, and has to match them from memory. Keep each label with its value in the code."
+          ar: "الخط الـ Bold يغيّر ما يراه الناس، لكن نرمين ما زالت تسمع ثلاثة عناوين، ثم ثلاث قيم، وعليها أن تطابقها من الذاكرة. أبقِ كل عنوان مع قيمته في الكود."
+      - id: MC-P10-067
+        when: [grid]
+        feedback:
+          en: "The grid looks tidy, but it only moves things on screen. Nermeen hears the same order as before."
+          ar: "تبدو الشبكة منظّمة، لكنها تحرّك الأشياء على الشاشة فقط. تسمع نرمين الترتيب نفسه كما كان."
+    correct:
+      en: "Right. Each label arrives with its value."
+      ar: "صحيح. كل عنوان يصل مع قيمته."
+    explain:
+      en: "Nermeen can't glance back at the screen. When each label is followed by its value in the code, she hears \"Gate, B7\" as one fact, with nothing to remember or match."
+      ar: "لا تستطيع نرمين أن تلقي نظرة على الشاشة. حين تأتي كل قيمة بعد عنوانها في الكود، تسمع «البوابة، B7» كمعلومة واحدة، دون شيء تتذكّره أو تطابقه."
