@@ -1,0 +1,1043 @@
+id: P10-U01-B01
+mode: bank
+title:
+  en: "Re-tests: put the decision first"
+  ar: "إعادة اختبار: ضع القرار أولًا"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Scrolling and Attention (NN/g)", ar: "التمرير والانتباه (NN/g)" }
+    url: "https://www.nngroup.com/articles/scrolling-and-attention/"
+  - title: { en: "Visual Hierarchy in UX: Definition (NN/g)", ar: "التسلسل البصري في تجربة المستخدم: تعريف (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/"
+  - title: { en: "Inverted Pyramid: Writing for Comprehension (NN/g)", ar: "الهرم المقلوب: الكتابة من أجل الفهم (NN/g)" }
+    url: "https://www.nngroup.com/articles/inverted-pyramid/"
+  - title: { en: "Progressive Disclosure (NN/g)", ar: "الإفصاح التدريجي (NN/g)" }
+    url: "https://www.nngroup.com/articles/progressive-disclosure/"
+  - title: { en: "Banner Blindness Revisited: Old and New Findings (NN/g)", ar: "عمى الإعلانات (Banner blindness): نتائج قديمة وجديدة (NN/g)" }
+    url: "https://www.nngroup.com/articles/banner-blindness-old-and-new-findings/"
+  - title: { en: "Photos as Web Content (NN/g)", ar: "الصور كمحتوى على الويب (NN/g)" }
+    url: "https://www.nngroup.com/articles/photos-as-web-content/"
+steps:
+  # SK-P10-U01-01: put the deciding facts first
+  - id: S01
+    type: tune
+    skill: SK-P10-U01-01
+    part: retest
+    value:
+      en: "Re-test, page order (NN/g): reserve the top of the page for high-priority content. Yara decides by the showtimes, so they come before Buy and before the club banner."
+      ar: "إعادة اختبار، ترتيب الصفحة (NN/g): خصّص أعلى الصفحة للمحتوى الأهم. تقرّر يارا حسب مواعيد العرض، فتأتي قبل زر الشراء وقبل إعلان النادي."
+    ref: { url: "https://www.nngroup.com/articles/scrolling-and-attention/", quote: "Reserve the top of the page for high-priority content" }
+    scenario:
+      en: "Yara wants to see the film The Last Lighthouse tonight, but only in a showing that starts after 20:00. She opens the cinema's film page on her phone."
+      ar: "تريد يارا مشاهدة فيلم «المنارة الأخيرة» الليلة، لكن فقط في عرض يبدأ بعد الساعة 20:00. تفتح صفحة الفيلم في موقع السينما من هاتفها."
+    prompt:
+      en: "Try each order. Which one should ship?"
+      ar: "جرّب كل ترتيب. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      height: 400
+      blocks:
+        - &y_club { kind: banner, text: { en: "Join the Film Club: 2 tickets for 1 on Mondays", ar: "انضم إلى نادي الأفلام: تذكرتان بسعر واحدة أيام الاثنين" } }
+        - &y_trailer { kind: image, size: l, text: { en: "Trailer: The Last Lighthouse", ar: "الإعلان التشويقي: المنارة الأخيرة" }, gap: m }
+        - &y_title { kind: title, text: { en: "The Last Lighthouse", ar: "المنارة الأخيرة" }, gap: m }
+        - &y_buy { kind: button, text: { en: "Buy tickets", ar: "اشترِ التذاكر" }, gap: m }
+        - &y_times { kind: meta, text: { en: "Tonight: 17:30 · 20:15 · 22:45", ar: "الليلة: 17:30 · 20:15 · 22:45" }, gap: s }
+        - &y_len { kind: small, text: { en: "1 h 52 min · Hall 3", ar: "ساعة و52 دقيقة · القاعة 3" }, gap: s }
+    options:
+      - id: buy
+        text: { en: "Buy tickets at the very top, then everything else", ar: "زر «اشترِ التذاكر» في الأعلى تمامًا، ثم كل شيء آخر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 400
+          blocks:
+            - { kind: button, text: { en: "Buy tickets", ar: "اشترِ التذاكر" } }
+            - { kind: banner, text: { en: "Join the Film Club: 2 tickets for 1 on Mondays", ar: "انضم إلى نادي الأفلام: تذكرتان بسعر واحدة أيام الاثنين" }, gap: m }
+            - *y_trailer
+            - *y_title
+            - *y_times
+            - *y_len
+      - id: facts
+        text: { en: "Film, tonight's times and length first, then Buy; the trailer and club banner after", ar: "الفيلم ومواعيد الليلة ومدته أولًا، ثم زر الشراء؛ والإعلان التشويقي وإعلان النادي بعدها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 400
+          blocks:
+            - { kind: title, text: { en: "The Last Lighthouse", ar: "المنارة الأخيرة" } }
+            - *y_times
+            - *y_len
+            - *y_buy
+            - { kind: image, size: m, text: { en: "Trailer: The Last Lighthouse", ar: "الإعلان التشويقي: المنارة الأخيرة" }, gap: l }
+            - { kind: link, text: { en: "Join the Film Club: 2 tickets for 1 on Mondays", ar: "انضم إلى نادي الأفلام: تذكرتان بسعر واحدة أيام الاثنين" }, gap: m }
+      - id: smaller
+        text: { en: "Keep the order, but make the club banner smaller", ar: "أبقِ الترتيب، لكن صغّر إعلان النادي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 400
+          blocks:
+            - { kind: small, text: { en: "Join the Film Club: 2 tickets for 1 on Mondays", ar: "انضم إلى نادي الأفلام: تذكرتان بسعر واحدة أيام الاثنين" } }
+            - *y_trailer
+            - *y_title
+            - *y_buy
+            - *y_times
+            - *y_len
+    answer: [facts]
+    misconceptions:
+      - id: MC-P10-006
+        when: [buy]
+        feedback:
+          en: "Now Yara is asked to buy before she sees whether any showing starts after 20:00. Put the times first, then the button."
+          ar: "الآن يُطلب من يارا أن تشتري قبل أن ترى هل يبدأ أي عرض بعد الساعة 20:00. ضع المواعيد أولًا، ثم الزر."
+      - id: MC-P10-015
+        when: [smaller]
+        feedback:
+          en: "The trailer and the banner still come before the times, and Buy still sits above them. A smaller promotion still blocks the decision."
+          ar: "ما زال الإعلان التشويقي والإعلان الترويجي قبل المواعيد، وما زال زر الشراء فوقها. الترويج الأصغر ما زال يعرقل القرار."
+    correct:
+      en: "Right. Yara sees 20:15 first, then buys."
+      ar: "صحيح. ترى يارا موعد 20:15 أولًا، ثم تشتري."
+    explain:
+      en: "The top of the screen goes to what Yara decides with: the film, tonight's times and the length. Buy follows those facts, and the trailer and club offer can wait below."
+      ar: "أعلى الشاشة لما تقرّر به يارا: الفيلم ومواعيد الليلة ومدته. يأتي زر الشراء بعد هذه المعلومات، ويمكن أن ينتظر الإعلان التشويقي وعرض النادي في الأسفل."
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U01-01
+    part: retest
+    value:
+      en: "Re-test, page order (NN/g): reserve the top of the page for high-priority content. Hesham needs stock and pickup time before he taps Refill; tips and app promotion come later."
+      ar: "إعادة اختبار، ترتيب الصفحة (NN/g): خصّص أعلى الصفحة للمحتوى الأهم. يحتاج هشام إلى معرفة التوفّر وموعد الاستلام قبل أن يضغط «أعد الصرف»؛ والنصائح وترويج التطبيق لاحقًا."
+    ref: { url: "https://www.nngroup.com/articles/scrolling-and-attention/", quote: "Reserve the top of the page for high-priority content" }
+    scenario:
+      en: "Hesham refills his blood-pressure medicine every month. Before he orders, he needs to know that it's in stock at his branch and when he can pick it up."
+      ar: "يعيد هشام صرف دواء الضغط كل شهر. وقبل أن يطلب، يحتاج أن يعرف أن الدواء متوفّر في فرعه، ومتى يستطيع استلامه."
+    prompt:
+      en: "Try each order. Which one should ship?"
+      ar: "جرّب كل ترتيب. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      height: 400
+      blocks:
+        - &h_app { kind: banner, text: { en: "Get our app and save 5% on every order", ar: "حمّل تطبيقنا ووفّر 5% على كل طلب" } }
+        - &h_tips { kind: image, size: m, text: { en: "Health tips: 5 ways to sleep better", ar: "نصائح صحية: 5 طرق لنوم أفضل" }, gap: m }
+        - &h_refill { kind: button, text: { en: "Refill", ar: "أعد الصرف" }, gap: m }
+        - &h_med { kind: title, text: { en: "Amlodipine 5 mg, 30 tablets", ar: "أملوديبين 5 ملغ، 30 قرصًا" }, gap: m }
+        - &h_stock { kind: meta, text: { en: "In stock at the Nasr City branch", ar: "متوفّر في فرع مدينة نصر" }, gap: s }
+        - &h_ready { kind: meta, text: { en: "Ready for pickup in 2 hours · 85 EGP", ar: "جاهز للاستلام خلال ساعتين · 85 جنيهًا" }, gap: s }
+    options:
+      - id: smaller
+        text: { en: "Keep the order, but make the health tips smaller", ar: "أبقِ الترتيب، لكن صغّر النصائح الصحية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 400
+          blocks:
+            - *h_app
+            - { kind: small, text: { en: "Health tips: 5 ways to sleep better", ar: "نصائح صحية: 5 طرق لنوم أفضل" }, gap: m }
+            - *h_refill
+            - *h_med
+            - *h_stock
+            - *h_ready
+      - id: button
+        text: { en: "Refill at the very top, then everything else", ar: "زر «أعد الصرف» في الأعلى تمامًا، ثم كل شيء آخر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 400
+          blocks:
+            - { kind: button, text: { en: "Refill", ar: "أعد الصرف" } }
+            - { kind: banner, text: { en: "Get our app and save 5% on every order", ar: "حمّل تطبيقنا ووفّر 5% على كل طلب" }, gap: m }
+            - *h_tips
+            - *h_med
+            - *h_stock
+            - *h_ready
+      - id: facts
+        text: { en: "Medicine, stock and pickup time first, then Refill; the tips and app offer after", ar: "الدواء والتوفّر وموعد الاستلام أولًا، ثم «أعد الصرف»؛ والنصائح وعرض التطبيق بعدها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 400
+          blocks:
+            - { kind: title, text: { en: "Amlodipine 5 mg, 30 tablets", ar: "أملوديبين 5 ملغ، 30 قرصًا" } }
+            - *h_stock
+            - *h_ready
+            - *h_refill
+            - { kind: image, size: s, text: { en: "Health tips: 5 ways to sleep better", ar: "نصائح صحية: 5 طرق لنوم أفضل" }, gap: l }
+            - { kind: link, text: { en: "Get our app and save 5% on every order", ar: "حمّل تطبيقنا ووفّر 5% على كل طلب" }, gap: m }
+    answer: [facts]
+    misconceptions:
+      - id: MC-P10-015
+        when: [smaller]
+        feedback:
+          en: "The app banner and the tips still come first, and Refill still sits above the stock and pickup time. Smaller promotion is still in the way."
+          ar: "ما زال إعلان التطبيق والنصائح في البداية، وما زال «أعد الصرف» فوق التوفّر وموعد الاستلام. الترويج الأصغر ما زال يعترض الطريق."
+      - id: MC-P10-006
+        when: [button]
+        feedback:
+          en: "Now Hesham is asked to refill before he knows the medicine is at his branch. The button belongs after the facts it depends on."
+          ar: "الآن يُطلب من هشام أن يعيد الصرف قبل أن يعرف أن الدواء موجود في فرعه. مكان الزر بعد المعلومات التي يعتمد عليها."
+    correct:
+      en: "Right. Hesham sees it's in stock and ready in 2 hours, then refills."
+      ar: "صحيح. يرى هشام أن الدواء متوفّر وجاهز خلال ساعتين، ثم يعيد الصرف."
+    explain:
+      en: "Hesham decides with three facts: which medicine, whether his branch has it, and when it's ready. Those go first, then Refill. The tips and the app offer move below."
+      ar: "يقرّر هشام بثلاث معلومات: أي دواء، وهل هو في فرعه، ومتى يكون جاهزًا. تأتي هذه أولًا، ثم «أعد الصرف». وتنتقل النصائح وعرض التطبيق إلى الأسفل."
+
+  # SK-P10-U01-02: no more than two things big
+  - id: S03
+    type: tune
+    skill: SK-P10-U01-02
+    part: retest
+    value:
+      en: "Re-test, visual hierarchy (NN/g): limit how many elements are big to a maximum of 2. Mariam picks a class by its date, so the class name and date lead."
+      ar: "إعادة اختبار، التسلسل البصري (NN/g): لا تكبّر أكثر من عنصرين. تختار مريم الورشة حسب تاريخها، فيقود اسم الورشة وتاريخها."
+    ref: { url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/", quote: "Limit how many elements are big to a maximum of 2" }
+    scenario:
+      en: "Mariam is choosing a cooking class. She can only come on a Friday, so she checks the date of each class first. The class page shows five facts, and all of them are big and bold."
+      ar: "تختار مريم ورشة طبخ. تستطيع الحضور يوم الجمعة فقط، لذلك تتحقّق من تاريخ كل ورشة أولًا. تعرض صفحة الورشة خمس معلومات، وكلها كبيرة وبخط عريض."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &m_name { en: "Homemade Pasta", ar: "المعكرونة المنزلية" } }
+        - { kind: title, text: &m_date { en: "Friday 4 December, 16:00", ar: "الجمعة 4 ديسمبر، الساعة 16:00" }, gap: s }
+        - { kind: title, text: &m_place { en: "Zamalek Kitchen Studio", ar: "استوديو المطبخ بالزمالك" }, gap: s }
+        - { kind: title, text: &m_price { en: "450 EGP, ingredients included", ar: "450 جنيهًا، شاملة المكوّنات" }, gap: s }
+        - { kind: title, text: &m_seats { en: "6 seats left", ar: "باقي 6 مقاعد" }, gap: s }
+        - { kind: button, text: &m_book { en: "Book a seat", ar: "احجز مقعدًا" }, gap: m }
+    options:
+      - id: two
+        text: { en: "Class name biggest, date second, the rest in regular text", ar: "اسم الورشة الأكبر، والتاريخ ثانيًا، والباقي بخط عادي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *m_name }
+            - { kind: heading, text: *m_date, gap: s }
+            - { kind: meta, text: *m_place, gap: s }
+            - { kind: meta, text: *m_price, gap: s }
+            - { kind: chip, text: *m_seats, gap: s }
+            - { kind: button, text: *m_book, gap: m }
+      - id: photo
+        text: { en: "Add a big photo of the chef at the top, and make all the facts small", ar: "أضف صورة كبيرة للطاهي في الأعلى، واجعل كل المعلومات صغيرة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: image, size: l, text: { en: "Photo: the chef smiling", ar: "صورة: الطاهي يبتسم" } }
+            - { kind: small, text: *m_name, gap: m }
+            - { kind: small, text: *m_date, gap: s }
+            - { kind: small, text: *m_place, gap: s }
+            - { kind: small, text: *m_price, gap: s }
+            - { kind: small, text: *m_seats, gap: s }
+            - { kind: button, text: *m_book, gap: m }
+      - id: colors
+        text: { en: "Keep all five big, and give each one its own color", ar: "أبقِ الخمس كبيرة، وأعطِ كل واحدة لونًا مختلفًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *m_name }
+            - { kind: title, color: brand, text: *m_date, gap: s }
+            - { kind: title, color: green, text: *m_place, gap: s }
+            - { kind: title, color: orange, text: *m_price, gap: s }
+            - { kind: title, color: red, text: *m_seats, gap: s }
+            - { kind: button, text: *m_book, gap: m }
+    answer: [two]
+    misconceptions:
+      - id: MC-P10-001
+        when: [photo]
+        feedback:
+          en: "Now the biggest thing is a photo that tells Mariam nothing about the date. Size should follow what she decides with."
+          ar: "الآن أكبر شيء صورة لا تخبر مريم بشيء عن التاريخ. يجب أن يتبع الحجم ما تقرّر به."
+      - id: MC-P10-003
+        when: [colors]
+        feedback:
+          en: "Five big lines in five colors still compete, so none of them leads. Pick two to make big."
+          ar: "خمسة أسطر كبيرة بخمسة ألوان ما زالت تتنافس، فلا يقود أيّ منها. اختر اثنين فقط لتكبيرهما."
+    correct:
+      en: "Right. The name and the Friday date lead; the rest is easy to scan."
+      ar: "صحيح. يقود الاسمُ وتاريخُ الجمعة، ويسهل تصفّح الباقي."
+    explain:
+      en: "Two big things at most: the class name, and the date Mariam chooses by. Place, price and seats stay readable in regular text, so they don't fight for attention."
+      ar: "شيئان كبيران كحدّ أقصى: اسم الورشة، والتاريخ الذي تختار به مريم. ويبقى المكان والسعر والمقاعد مقروءة بخط عادي، فلا تتنافس على الانتباه."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U01-02
+    part: retest
+    value:
+      en: "Re-test, visual hierarchy (NN/g): limit how many elements are big to a maximum of 2. Adel compares cars by price per day, so the car and its price lead."
+      ar: "إعادة اختبار، التسلسل البصري (NN/g): لا تكبّر أكثر من عنصرين. يقارن عادل السيارات حسب السعر اليومي، فتقود السيارة وسعرها."
+    ref: { url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/", quote: "Limit how many elements are big to a maximum of 2" }
+    scenario:
+      en: "Adel is renting a car for a weekend trip. He scrolls through the cars and compares them by their price per day. Each car card has five big lines."
+      ar: "يستأجر عادل سيارة لرحلة في عطلة نهاية الأسبوع. يتصفّح السيارات ويقارن بينها حسب السعر اليومي. وفي بطاقة كل سيارة خمسة أسطر كبيرة."
+    prompt:
+      en: "Try each version of the car card. Which one should ship?"
+      ar: "جرّب كل نسخة من بطاقة السيارة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &a_car { en: "Hatchback, 2023", ar: "Hatchback، موديل 2023" } }
+        - { kind: title, text: &a_price { en: "1,100 EGP a day", ar: "1,100 جنيه في اليوم" }, gap: s }
+        - { kind: title, text: &a_seats { en: "5 seats · automatic", ar: "5 مقاعد · ناقل حركة أوتوماتيكي" }, gap: s }
+        - { kind: title, text: &a_fuel { en: "Full to full fuel", ar: "الوقود: استلام وتسليم بخزان ممتلئ" }, gap: s }
+        - { kind: title, text: &a_free { en: "Free cancellation", ar: "إلغاء مجاني" }, gap: s }
+        - { kind: button, text: &a_pick { en: "Choose this car", ar: "اختر هذه السيارة" }, gap: m }
+    options:
+      - id: badge
+        text: { en: "Make Free cancellation the biggest thing, as a badge", ar: "اجعل «إلغاء مجاني» أكبر شيء، على شكل شارة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, color: green, text: *a_free }
+            - { kind: meta, text: *a_car, gap: s }
+            - { kind: meta, text: *a_price, gap: s }
+            - { kind: meta, text: *a_seats, gap: s }
+            - { kind: meta, text: *a_fuel, gap: s }
+            - { kind: button, text: *a_pick, gap: m }
+      - id: bigger
+        text: { en: "Make all five lines even bigger, so they stand out", ar: "كبّر الأسطر الخمسة أكثر، حتى تبرز" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, px: 26, text: *a_car }
+            - { kind: title, px: 26, text: *a_price, gap: s }
+            - { kind: title, px: 26, text: *a_seats, gap: s }
+            - { kind: title, px: 26, text: *a_fuel, gap: s }
+            - { kind: title, px: 26, text: *a_free, gap: s }
+            - { kind: button, text: *a_pick, gap: m }
+      - id: two
+        text: { en: "Car and price per day big; seats, fuel and cancellation in regular text", ar: "السيارة والسعر اليومي كبيران؛ والمقاعد والوقود والإلغاء بخط عادي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *a_car }
+            - { kind: heading, text: *a_price, gap: s }
+            - { kind: meta, text: *a_seats, gap: s }
+            - { kind: meta, text: *a_fuel, gap: s }
+            - { kind: meta, text: *a_free, gap: s }
+            - { kind: button, text: *a_pick, gap: m }
+    answer: [two]
+    misconceptions:
+      - id: MC-P10-001
+        when: [badge]
+        feedback:
+          en: "Now the biggest thing is the same on every card, so it can't help Adel compare. Make the price per day lead."
+          ar: "الآن أكبر شيء هو نفسه في كل البطاقات، فلا يساعد عادل على المقارنة. اجعل السعر اليومي يقود."
+      - id: MC-P10-003
+        when: [bigger]
+        feedback:
+          en: "When all five lines grow, they still compete at the same weight. Bigger everything is the same as nothing big."
+          ar: "عندما تكبر الأسطر الخمسة كلها، تبقى متنافسة بالوزن نفسه. تكبير كل شيء يساوي ألا يكون شيء كبيرًا."
+    correct:
+      en: "Right. Adel can scan down the cards and compare prices at a glance."
+      ar: "صحيح. يستطيع عادل تصفّح البطاقات ومقارنة الأسعار بنظرة سريعة."
+    explain:
+      en: "Two big things: which car, and the price per day Adel compares by. The rest is the same on most cards, so regular text is enough."
+      ar: "شيئان كبيران: أي سيارة، والسعر اليومي الذي يقارن به عادل. أما الباقي فمتشابه في أغلب البطاقات، ويكفيه الخط العادي."
+
+  # SK-P10-U01-03: lead text with what decides it
+  - id: S05
+    type: tune
+    skill: SK-P10-U01-03
+    part: retest
+    value:
+      en: "Re-test, inverted pyramid (NN/g): the first sentence of every paragraph should be the most important. Nadia scans for cats and Friday; the welcome line delays both."
+      ar: "إعادة اختبار، الهرم المقلوب (NN/g): يجب أن تكون الجملة الأولى في كل فقرة هي الأهم. تبحث نادية بسرعة عن القطط ويوم الجمعة؛ وجملة الترحيب تؤخّر الاثنين."
+    ref: { url: "https://www.nngroup.com/articles/inverted-pyramid/", quote: "The first sentence of every paragraph should be the most important." }
+    scenario:
+      en: "Nadia's cat is sick, and Friday is her only day off. In a list of vet clinics, she reads only the first line of each description to see which ones treat cats on Fridays."
+      ar: "قطة نادية مريضة، ويوم الجمعة هو يوم إجازتها الوحيد. في قائمة عيادات بيطرية، تقرأ السطر الأول فقط من وصف كل عيادة لترى أيّها يعالج القطط يوم الجمعة."
+    prompt:
+      en: "Try each version of the description. Which one should ship?"
+      ar: "جرّب كل نسخة من الوصف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: heading, text: &n_name { en: "Heliopolis Vet Clinic", ar: "عيادة مصر الجديدة البيطرية" } }
+        - { kind: text, text: &n_old { en: "Welcome! Since 2009, our caring team has loved animals of every kind. We treat cats and dogs, and we're open every day, Friday included.", ar: "أهلًا بكم! منذ 2009 وفريقنا يحب الحيوانات بكل أنواعها. نعالج القطط والكلاب، ونفتح كل يوم، ومنها الجمعة." }, gap: s }
+    options:
+      - id: bold
+        text: { en: "Keep the text, but make the first sentence bold", ar: "أبقِ النص، لكن اجعل الجملة الأولى بخط عريض" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *n_name }
+            - { kind: text, weight: bold, text: { en: "Welcome! Since 2009, our caring team has loved animals of every kind.", ar: "أهلًا بكم! منذ 2009 وفريقنا يحب الحيوانات بكل أنواعها." }, gap: s }
+            - { kind: text, text: { en: "We treat cats and dogs, and we're open every day, Friday included.", ar: "نعالج القطط والكلاب، ونفتح كل يوم، ومنها الجمعة." }, gap: xs }
+      - id: lead
+        text: { en: "Start with \"Cats and dogs, open every day including Friday\", then the welcome", ar: "ابدأ بـ«قطط وكلاب، نفتح كل يوم ومنها الجمعة»، ثم الترحيب" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *n_name }
+            - { kind: text, text: { en: "Cats and dogs, open every day including Friday. Our caring team has looked after pets since 2009.", ar: "قطط وكلاب، نفتح كل يوم ومنها الجمعة. يرعى فريقنا الحيوانات الأليفة منذ 2009." }, gap: s }
+      - id: cut
+        text: { en: "Shorten it to the first sentence only", ar: "اختصره إلى الجملة الأولى فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *n_name }
+            - { kind: text, text: { en: "Welcome! Since 2009, our caring team has loved animals of every kind.", ar: "أهلًا بكم! منذ 2009 وفريقنا يحب الحيوانات بكل أنواعها." }, gap: s }
+    answer: [lead]
+    misconceptions:
+      - id: MC-P10-004
+        when: [bold]
+        feedback:
+          en: "Bold makes the welcome louder, but Nadia still reads it first and learns nothing about cats or Friday."
+          ar: "الخط العريض يجعل الترحيب أعلى صوتًا، لكن نادية ما زالت تقرؤه أولًا ولا تعرف منه شيئًا عن القطط أو الجمعة."
+      - id: MC-P10-004
+        when: [cut]
+        feedback:
+          en: "Now the description is short, but the facts Nadia needs are gone. Keep them, and move them to the front."
+          ar: "الوصف الآن قصير، لكن المعلومات التي تحتاجها نادية اختفت. أبقِها، وانقلها إلى البداية."
+    correct:
+      en: "Right. The first words answer Nadia's question."
+      ar: "صحيح. الكلمات الأولى تجيب عن سؤال نادية."
+    explain:
+      en: "People scanning a list read the start of each description. Put the deciding facts there (cats, every day, Friday) and the friendly history after."
+      ar: "من يتصفّح قائمة يقرأ بداية كل وصف. ضع المعلومات الحاسمة هناك (القطط، كل يوم، الجمعة)، والتاريخ الودود بعدها."
+
+  - id: S06
+    type: tune
+    skill: SK-P10-U01-03
+    part: retest
+    value:
+      en: "Re-test, inverted pyramid (NN/g): the first sentence of every paragraph should be the most important. Tarek needs the hours and what a day pass includes; the mood line can follow."
+      ar: "إعادة اختبار، الهرم المقلوب (NN/g): يجب أن تكون الجملة الأولى في كل فقرة هي الأهم. يحتاج طارق إلى المواعيد وما يشمله التذكرة اليومية؛ ويمكن أن تأتي جملة الأجواء بعدها."
+    ref: { url: "https://www.nngroup.com/articles/inverted-pyramid/", quote: "The first sentence of every paragraph should be the most important." }
+    scenario:
+      en: "Tarek works from a co-working space one day a week. He starts at 7:00 and needs Wi-Fi. He compares spaces by the first line of each listing."
+      ar: "يعمل طارق من مساحة عمل مشتركة يومًا في الأسبوع. يبدأ عمله في الساعة 7:00 ويحتاج إلى Wi-Fi. يقارن بين المساحات من السطر الأول في كل إعلان."
+    prompt:
+      en: "Try each version of the listing. Which one should ship?"
+      ar: "جرّب كل نسخة من الإعلان. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: heading, text: &t_name { en: "Maadi Work Hub", ar: "مساحة عمل المعادي" } }
+        - { kind: text, text: { en: "A bright, friendly space for creative minds in the heart of Maadi. Day passes include fast Wi-Fi and coffee. Open 7:00 to 22:00.", ar: "مساحة مشرقة وودودة للعقول المبدعة في قلب المعادي. التذكرة اليومية تشمل Wi-Fi سريعًا وقهوة. نفتح من 7:00 إلى 22:00." }, gap: s }
+    options:
+      - id: lead
+        text: { en: "Start with \"Day pass: fast Wi-Fi and coffee, open 7:00 to 22:00\", then the rest", ar: "ابدأ بـ«التذكرة اليومية: Wi-Fi سريع وقهوة، نفتح من 7:00 إلى 22:00»، ثم الباقي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *t_name }
+            - { kind: text, text: { en: "Day pass: fast Wi-Fi and coffee, open 7:00 to 22:00. A bright, friendly space in the heart of Maadi.", ar: "التذكرة اليومية: Wi-Fi سريع وقهوة، نفتح من 7:00 إلى 22:00. مساحة مشرقة وودودة في قلب المعادي." }, gap: s }
+      - id: photos
+        text: { en: "Keep the text, and add three photos of the space above it", ar: "أبقِ النص، وأضف فوقه ثلاث صور للمكان" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *t_name }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, size: s, text: { en: "Photo", ar: "صورة" } }
+                - { kind: image, size: s, text: { en: "Photo", ar: "صورة" } }
+                - { kind: image, size: s, text: { en: "Photo", ar: "صورة" } }
+            - { kind: text, text: { en: "A bright, friendly space for creative minds in the heart of Maadi. Day passes include fast Wi-Fi and coffee. Open 7:00 to 22:00.", ar: "مساحة مشرقة وودودة للعقول المبدعة في قلب المعادي. التذكرة اليومية تشمل Wi-Fi سريعًا وقهوة. نفتح من 7:00 إلى 22:00." }, gap: s }
+      - id: more
+        text: { en: "Show the first sentence, and hide the rest behind Read more", ar: "اعرض الجملة الأولى، وأخفِ الباقي خلف «اقرأ المزيد»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: *t_name }
+            - { kind: text, text: { en: "A bright, friendly space for creative minds in the heart of Maadi.", ar: "مساحة مشرقة وودودة للعقول المبدعة في قلب المعادي." }, gap: s }
+            - { kind: link, text: { en: "Read more", ar: "اقرأ المزيد" }, gap: xs }
+    answer: [lead]
+    misconceptions:
+      - id: MC-P10-004
+        when: [photos]
+        feedback:
+          en: "The photos push the text down, and its first line still says nothing about hours or Wi-Fi."
+          ar: "الصور تدفع النص إلى الأسفل، وسطره الأول ما زال لا يقول شيئًا عن المواعيد أو الـ Wi-Fi."
+      - id: MC-P10-004
+        when: [more]
+        feedback:
+          en: "Now the only line Tarek sees is the mood line, and the hours and Wi-Fi are hidden. Lead with them instead."
+          ar: "الآن السطر الوحيد الذي يراه طارق هو سطر الأجواء، والمواعيد والـ Wi-Fi مخفية. ابدأ بها بدلًا من ذلك."
+    correct:
+      en: "Right. Tarek sees the 7:00 start and the Wi-Fi in the first words."
+      ar: "صحيح. يرى طارق موعد 7:00 والـ Wi-Fi في الكلمات الأولى."
+    explain:
+      en: "The first sentence should carry what people compare by: what the day pass includes and the opening hours. The description of the space can follow."
+      ar: "يجب أن تحمل الجملة الأولى ما يقارن به الناس: ما تشمله التذكرة اليومية ومواعيد العمل. ويمكن أن يأتي وصف المكان بعدها."
+
+  # SK-P10-U01-04: keep what most people need in view
+  - id: S07
+    type: tune
+    skill: SK-P10-U01-04
+    part: retest
+    value:
+      en: "Re-test, progressive disclosure (NN/g): disclose everything users frequently need up front. Almost everyone checks the time and seat class; few read the luggage rules."
+      ar: "إعادة اختبار، الإفصاح التدريجي (NN/g): اعرض في الواجهة كل ما يحتاجه المستخدمون كثيرًا. تقريبًا الجميع يتحقّق من الموعد ودرجة المقعد؛ وقليلون يقرؤون قواعد الأمتعة."
+    ref: { url: "https://www.nngroup.com/articles/progressive-disclosure/", quote: "You have to disclose everything that users frequently need up front" }
+    scenario:
+      en: "On the train booking page, almost every traveler checks the departure time and the seat class before paying. Few read the full luggage rules. Right now the page shows the luggage rules in full, and the time and class are behind a link."
+      ar: "في صفحة حجز القطار، يتحقّق كل المسافرين تقريبًا من موعد المغادرة ودرجة المقعد قبل الدفع. وقليلون يقرؤون قواعد الأمتعة كاملة. الآن تعرض الصفحة قواعد الأمتعة كاملة، أما الموعد والدرجة فخلف رابط."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &r_route { en: "Cairo to Luxor", ar: "القاهرة إلى الأقصر" } }
+        - { kind: link, text: &r_tripl { en: "Trip details", ar: "تفاصيل الرحلة" }, gap: s }
+        - { kind: heading, text: &r_lugh { en: "Luggage rules", ar: "قواعد الأمتعة" }, gap: m }
+        - { kind: small, text: &r_lug { en: "2 bags up to 23 kg each. Bicycles must be folded. Musical instruments over 1 m need a separate ticket. Pets travel in a closed carrier.", ar: "حقيبتان حتى 23 كغ لكل منهما. يجب طيّ الدراجات. الآلات الموسيقية الأطول من متر تحتاج تذكرة منفصلة. تسافر الحيوانات الأليفة في صندوق مغلق." }, gap: s }
+        - { kind: button, text: &r_pay { en: "Pay 640 EGP", ar: "ادفع 640 جنيهًا" }, gap: m }
+    options:
+      - id: hideall
+        text: { en: "Put everything behind \"Trip details\" to keep the page clean", ar: "ضع كل شيء خلف «تفاصيل الرحلة» لتبقى الصفحة نظيفة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *r_route }
+            - { kind: link, text: *r_tripl, gap: s }
+            - { kind: button, text: *r_pay, gap: m }
+      - id: showall
+        text: { en: "Show the time, class and full luggage rules, all at the same size", ar: "اعرض الموعد والدرجة وقواعد الأمتعة كاملة، كلها بالحجم نفسه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *r_route }
+            - { kind: small, text: &r_time { en: "Departs 08:10 from Ramses, arrives 17:40", ar: "المغادرة 08:10 من رمسيس، والوصول 17:40" }, gap: s }
+            - { kind: small, text: &r_class { en: "First class, seat 14B", ar: "الدرجة الأولى، مقعد 14B" }, gap: s }
+            - { kind: small, text: *r_lug, gap: s }
+            - { kind: button, text: *r_pay, gap: m }
+      - id: split
+        text: { en: "Show the time and class; put the luggage rules behind a \"Luggage rules\" link", ar: "اعرض الموعد والدرجة؛ وضع قواعد الأمتعة خلف رابط «قواعد الأمتعة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *r_route }
+            - { kind: meta, text: *r_time, gap: s }
+            - { kind: meta, text: *r_class, gap: s }
+            - { kind: button, text: *r_pay, gap: m }
+            - { kind: link, text: *r_lugh, gap: m }
+    answer: [split]
+    misconceptions:
+      - id: MC-P10-008
+        when: [hideall]
+        feedback:
+          en: "Almost every traveler needs the time and class, and now all of them must open a link to see them. Keep what most people need in view."
+          ar: "تقريبًا كل مسافر يحتاج إلى الموعد والدرجة، والآن عليهم جميعًا فتح رابط لرؤيتها. أبقِ ما يحتاجه معظم الناس ظاهرًا."
+      - id: MC-P10-016
+        when: [showall]
+        feedback:
+          en: "The time and class are back, but the long luggage rules sit at the same weight and bury them. Show the few things most people need first."
+          ar: "عاد الموعد والدرجة، لكن قواعد الأمتعة الطويلة بالوزن نفسه وتطغى عليهما. اعرض أولًا الأشياء القليلة التي يحتاجها معظم الناس."
+    correct:
+      en: "Right. The time and class are in view, and the luggage rules are one clear tap away."
+      ar: "صحيح. الموعد والدرجة ظاهران، وقواعد الأمتعة على بعد ضغطة واحدة واضحة."
+    explain:
+      en: "What almost everyone checks stays on the screen. What few people need goes behind a link named for exactly what's there."
+      ar: "ما يتحقّق منه الجميع تقريبًا يبقى على الشاشة. وما يحتاجه قليلون يذهب خلف رابط يحمل اسم ما خلفه تمامًا."
+
+  - id: S08
+    type: tune
+    skill: SK-P10-U01-04
+    part: retest
+    value:
+      en: "Re-test, progressive disclosure (NN/g): initially, show users only a few of the most important options. Every customer needs the cost and the ready date; few read the warranty terms."
+      ar: "إعادة اختبار، الإفصاح التدريجي (NN/g): اعرض في البداية القليل من أهم الخيارات فقط. كل عميل يحتاج إلى التكلفة وموعد الاستلام؛ وقليلون يقرؤون شروط الضمان."
+    ref: { url: "https://www.nngroup.com/articles/progressive-disclosure/", quote: "Initially, show users only a few of the most important options." }
+    scenario:
+      en: "Ziad's laptop is at a repair shop. On the repair page, every customer checks the cost and when the laptop will be ready. A few read the warranty terms and the parts list. Right now all four sections are closed."
+      ar: "الـ Laptop الخاص بزياد في محل صيانة. في صفحة الإصلاح، يتحقّق كل عميل من التكلفة ومن موعد جاهزية الجهاز. وقليلون يقرؤون شروط الضمان وقائمة القطع. الآن الأقسام الأربعة كلها مغلقة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &z_t { en: "Repair #4471", ar: "إصلاح رقم 4471" } }
+        - { kind: select, text: &z_c { en: "Cost", ar: "التكلفة" }, gap: s }
+        - { kind: select, text: &z_d { en: "Ready date", ar: "موعد الجاهزية" }, gap: s }
+        - { kind: select, text: &z_w { en: "Warranty terms", ar: "شروط الضمان" }, gap: s }
+        - { kind: select, text: &z_p { en: "Parts list", ar: "قائمة القطع" }, gap: s }
+        - { kind: button, text: &z_ok { en: "Approve the repair", ar: "وافق على الإصلاح" }, gap: m }
+    options:
+      - id: closed
+        text: { en: "Keep all four sections closed, but make their titles bigger", ar: "أبقِ الأقسام الأربعة مغلقة، لكن كبّر عناوينها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *z_t }
+            - { kind: select, px: 19, text: *z_c, gap: s }
+            - { kind: select, px: 19, text: *z_d, gap: s }
+            - { kind: select, px: 19, text: *z_w, gap: s }
+            - { kind: select, px: 19, text: *z_p, gap: s }
+            - { kind: button, text: *z_ok, gap: m }
+      - id: split
+        text: { en: "Show the cost and ready date; keep warranty and parts behind their own links", ar: "اعرض التكلفة وموعد الجاهزية؛ وأبقِ الضمان والقطع خلف روابطهما" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *z_t }
+            - { kind: heading, text: { en: "Cost: 1,850 EGP", ar: "التكلفة: 1,850 جنيهًا" }, gap: s }
+            - { kind: meta, text: { en: "Ready on Thursday after 14:00", ar: "جاهز يوم الخميس بعد الساعة 14:00" }, gap: s }
+            - { kind: button, text: *z_ok, gap: m }
+            - { kind: link, text: *z_w, gap: m }
+            - { kind: link, text: *z_p, gap: s }
+      - id: open
+        text: { en: "Open all four sections in full", ar: "افتح الأقسام الأربعة كاملة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          height: 360
+          blocks:
+            - { kind: title, text: *z_t }
+            - { kind: small, text: { en: "Cost: 1,850 EGP", ar: "التكلفة: 1,850 جنيهًا" }, gap: s }
+            - { kind: small, text: { en: "Ready on Thursday after 14:00", ar: "جاهز يوم الخميس بعد الساعة 14:00" }, gap: s }
+            - { kind: small, text: { en: "Warranty: 90 days on parts and labor. Not covered: liquid damage, drops, software problems, batteries older than 2 years, repairs by others…", ar: "الضمان: 90 يومًا على القطع والعمل. لا يشمل: تلف السوائل، والسقوط، ومشاكل البرامج، والبطاريات الأقدم من سنتين، والإصلاح لدى غيرنا…" }, gap: s }
+            - { kind: small, text: { en: "Parts: keyboard (1), screen hinge (2), screws (8), thermal paste, cleaning…", ar: "القطع: لوحة مفاتيح (1)، مفصل الشاشة (2)، مسامير (8)، معجون حراري، تنظيف…" }, gap: s }
+            - { kind: button, text: *z_ok, gap: m }
+    answer: [split]
+    misconceptions:
+      - id: MC-P10-008
+        when: [closed]
+        feedback:
+          en: "Every customer still has to open two sections to learn the cost and date. Don't close what everyone needs."
+          ar: "ما زال على كل عميل فتح قسمين ليعرف التكلفة والموعد. لا تُغلق ما يحتاجه الجميع."
+      - id: MC-P10-016
+        when: [open]
+        feedback:
+          en: "Now the cost and date are buried in the long warranty and parts text. Show the few things everyone needs first."
+          ar: "الآن التكلفة والموعد مدفونان في نص الضمان والقطع الطويل. اعرض أولًا الأشياء القليلة التي يحتاجها الجميع."
+    correct:
+      en: "Right. Ziad sees the cost and date at once, and the rest is there if he wants it."
+      ar: "صحيح. يرى زياد التكلفة والموعد فورًا، والباقي متاح إن أراده."
+    explain:
+      en: "Show the few things every customer needs, here the cost and the ready date, and keep the specialised details one clearly named tap away."
+      ar: "اعرض الأشياء القليلة التي يحتاجها كل عميل، وهي هنا التكلفة وموعد الجاهزية، واجعل التفاصيل المتخصّصة على بعد ضغطة واحدة باسم واضح."
+
+  # SK-P10-U01-05: hide details in few, clearly named levels
+  - id: S09
+    type: tune
+    skill: SK-P10-U01-05
+    part: retest
+    value:
+      en: "Re-test, progressive disclosure (NN/g): designs that go beyond 2 disclosure levels typically have low usability, and the link should set clear expectations."
+      ar: "إعادة اختبار، الإفصاح التدريجي (NN/g): التصميمات التي تتجاوز مستويين من الإخفاء تكون عادةً صعبة الاستخدام، ويجب أن يوضّح الرابط ما خلفه."
+    ref: { url: "https://www.nngroup.com/articles/progressive-disclosure/", quote: "beyond 2 disclosure levels typically have low usability" }
+    scenario:
+      en: "Salwa signed up for an English course and wants to know if she can get a refund after the first lesson. On the course page, the refund rule is behind More, then Policies, then Refunds."
+      ar: "سجّلت سلوى في دورة لغة إنجليزية، وتريد أن تعرف هل يمكنها استرداد المبلغ بعد الدرس الأول. في صفحة الدورة، قاعدة الاسترداد خلف «المزيد»، ثم «السياسات»، ثم «الاسترداد»."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &s_t { en: "English B1, evenings", ar: "الإنجليزية B1، دورة مسائية" } }
+        - { kind: meta, text: &s_m { en: "Starts 6 December · 12 lessons · 2,400 EGP", ar: "تبدأ 6 ديسمبر · 12 درسًا · 2,400 جنيه" }, gap: s }
+        - { kind: link, text: { en: "More › Policies › Refunds", ar: "المزيد › السياسات › الاسترداد" }, gap: s }
+    options:
+      - id: direct
+        text: { en: "One link named \"Refund rules\" that opens the rule directly", ar: "رابط واحد باسم «قواعد الاسترداد» يفتح القاعدة مباشرة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *s_t }
+            - { kind: meta, text: *s_m, gap: s }
+            - { kind: link, text: { en: "Refund rules", ar: "قواعد الاسترداد" }, gap: s }
+            - { kind: small, text: { en: "Opens: Full refund until the second lesson starts.", ar: "يفتح: استرداد كامل حتى بداية الدرس الثاني." }, gap: xs }
+      - id: rename
+        text: { en: "Keep the three levels, but rename More to \"Click here\"", ar: "أبقِ المستويات الثلاثة، لكن غيّر اسم «المزيد» إلى «اضغط هنا»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *s_t }
+            - { kind: meta, text: *s_m, gap: s }
+            - { kind: link, text: { en: "Click here › Policies › Refunds", ar: "اضغط هنا › السياسات › الاسترداد" }, gap: s }
+      - id: search
+        text: { en: "Keep the three levels, and add a search box on the Policies page", ar: "أبقِ المستويات الثلاثة، وأضف مربع بحث في صفحة «السياسات»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *s_t }
+            - { kind: meta, text: *s_m, gap: s }
+            - { kind: link, text: { en: "More › Policies (with search) › Refunds", ar: "المزيد › السياسات (مع بحث) › الاسترداد" }, gap: s }
+    answer: [direct]
+    misconceptions:
+      - id: MC-P10-007
+        when: [rename]
+        feedback:
+          en: "\"Click here\" tells Salwa even less than More about what's behind it, and the rule is still three levels deep."
+          ar: "«اضغط هنا» يخبر سلوى بأقل مما يخبرها به «المزيد» عمّا خلفه، والقاعدة ما زالت على عمق ثلاثة مستويات."
+      - id: MC-P10-010
+        when: [search]
+        feedback:
+          en: "Search inside the second level still leaves three levels to get through. Link straight to the rule."
+          ar: "البحث داخل المستوى الثاني ما زال يترك ثلاثة مستويات للوصول. اربط مباشرة بالقاعدة."
+    correct:
+      en: "Right. One clearly named link, one level deep."
+      ar: "صحيح. رابط واحد باسم واضح، على عمق مستوى واحد."
+    explain:
+      en: "Keep hidden details within two levels, and name the link by what's behind it, so Salwa knows before she taps that her answer is there."
+      ar: "أبقِ التفاصيل المخفية ضمن مستويين، وسمِّ الرابط بما خلفه، حتى تعرف سلوى قبل أن تضغط أن إجابتها هناك."
+
+  - id: S10
+    type: tune
+    skill: SK-P10-U01-05
+    part: retest
+    value:
+      en: "Re-test, staged disclosure (NN/g): splitting steps is problematic when the steps are interdependent and users must alternate between them. Bassem picks by size and rent together."
+      ar: "إعادة اختبار، الإفصاح على مراحل (NN/g): تقسيم الخطوات مشكلة عندما تعتمد الخطوات على بعضها ويضطر المستخدمون للتنقّل بينها. يختار باسم حسب المساحة والإيجار معًا."
+    ref: { url: "https://www.nngroup.com/articles/progressive-disclosure/", quote: "It is problematic when the steps are interdependent and users must alternate between them." }
+    scenario:
+      en: "Bassem is renting a flat. He wants the biggest one he can afford, so he weighs size against rent. The app asks him to pick a flat by size on step 1, and shows the rent only on step 2."
+      ar: "يستأجر باسم شقة. يريد أكبر شقة يستطيع دفع إيجارها، لذلك يوازن بين المساحة والإيجار. يطلب التطبيق منه اختيار الشقة حسب المساحة في الخطوة 1، ولا يعرض الإيجار إلا في الخطوة 2."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now: step 1 of 2", ar: "الآن: الخطوة 1 من 2" }
+      blocks:
+        - { kind: heading, text: { en: "Pick a flat", ar: "اختر شقة" } }
+        - { kind: radio, text: { en: "Flat A · 90 m²", ar: "شقة A · 90 م²" }, gap: s }
+        - { kind: radio, text: { en: "Flat B · 110 m²", ar: "شقة B · 110 م²" }, gap: xs }
+        - { kind: radio, text: { en: "Flat C · 140 m²", ar: "شقة C · 140 م²" }, gap: xs }
+        - { kind: button, text: { en: "Next: see the rent", ar: "التالي: اعرض الإيجار" }, gap: m }
+    options:
+      - id: back
+        text: { en: "Keep the two steps, and add a Back button on step 2", ar: "أبقِ الخطوتين، وأضف زر «رجوع» في الخطوة 2" }
+        mock:
+          caption: { en: "After this change: step 2 of 2", ar: "بعد هذا التغيير: الخطوة 2 من 2" }
+          blocks:
+            - { kind: heading, text: { en: "Rent for Flat B", ar: "إيجار شقة B" } }
+            - { kind: meta, text: { en: "9,500 EGP a month", ar: "9,500 جنيه في الشهر" }, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, style: plain, text: { en: "Back", ar: "رجوع" } }
+                - { kind: button, text: { en: "Continue", ar: "متابعة" } }
+      - id: link
+        text: { en: "One step, with each flat's rent behind a \"Price details\" link", ar: "خطوة واحدة، وإيجار كل شقة خلف رابط «تفاصيل السعر»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Pick a flat", ar: "اختر شقة" } }
+            - { kind: radio, text: { en: "Flat A · 90 m²", ar: "شقة A · 90 م²" }, gap: s }
+            - { kind: link, text: { en: "Price details", ar: "تفاصيل السعر" }, gap: xs }
+            - { kind: radio, text: { en: "Flat B · 110 m²", ar: "شقة B · 110 م²" }, gap: s }
+            - { kind: link, text: { en: "Price details", ar: "تفاصيل السعر" }, gap: xs }
+            - { kind: radio, text: { en: "Flat C · 140 m²", ar: "شقة C · 140 م²" }, gap: s }
+            - { kind: link, text: { en: "Price details", ar: "تفاصيل السعر" }, gap: xs }
+      - id: together
+        text: { en: "One step that shows each flat's size and rent together", ar: "خطوة واحدة تعرض مساحة كل شقة وإيجارها معًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Pick a flat", ar: "اختر شقة" } }
+            - { kind: radio, text: { en: "Flat A · 90 m² · 7,800 EGP a month", ar: "شقة A · 90 م² · 7,800 جنيه شهريًا" }, gap: s }
+            - { kind: radio, text: { en: "Flat B · 110 m² · 9,500 EGP a month", ar: "شقة B · 110 م² · 9,500 جنيه شهريًا" }, gap: xs }
+            - { kind: radio, text: { en: "Flat C · 140 m² · 13,000 EGP a month", ar: "شقة C · 140 م² · 13,000 جنيه شهريًا" }, gap: xs }
+            - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+    answer: [together]
+    misconceptions:
+      - id: MC-P10-011
+        when: [back, link]
+        feedback:
+          en: "Bassem still has to go back and forth to see size and rent side by side. What's decided together belongs on one screen."
+          ar: "ما زال على باسم التنقّل ذهابًا وإيابًا ليرى المساحة والإيجار جنبًا إلى جنب. ما يُقرَّر معًا مكانه شاشة واحدة."
+    correct:
+      en: "Right. Bassem weighs size against rent in one look."
+      ar: "صحيح. يوازن باسم بين المساحة والإيجار بنظرة واحدة."
+    explain:
+      en: "Splitting a choice into steps only helps when the steps don't depend on each other. Size and rent are weighed together, so they stay on one screen."
+      ar: "تقسيم الاختيار إلى خطوات يفيد فقط عندما لا تعتمد الخطوات على بعضها. المساحة والإيجار يُوزنان معًا، لذلك يبقيان في شاشة واحدة."
+
+  # SK-P10-U01-06: don't make content look like an ad
+  - id: S11
+    type: tune
+    skill: SK-P10-U01-06
+    part: retest
+    value:
+      en: "Re-test, banner blindness (NN/g): do not make content look like ads. The order deadline is real content, so a flashing ad-style banner is likely to be skipped."
+      ar: "إعادة اختبار، عمى الإعلانات (NN/g): لا تجعل المحتوى يشبه الإعلانات. آخر موعد للطلب محتوى حقيقي، لذلك قد يتخطّاه الناس إن ظهر كشريط إعلاني لامع."
+    ref: { url: "https://www.nngroup.com/articles/banner-blindness-old-and-new-findings/", quote: "Do not make content look like ads." }
+    scenario:
+      en: "Amira pre-orders bread and cakes from a bakery for the next morning. Orders close at 18:00 the day before. Customers keep missing that deadline."
+      ar: "تطلب أميرة الخبز والكعك مسبقًا من مخبز لصباح اليوم التالي. يُغلق باب الطلب الساعة 18:00 في اليوم السابق. والعملاء يفوّتون هذا الموعد مرارًا."
+    prompt:
+      en: "Try each way to show the deadline. Which one should ship?"
+      ar: "جرّب كل طريقة لعرض آخر موعد. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: banner, text: &am_ban { en: "LIMITED! Order before 18:00!!", ar: "عرض محدود! اطلب قبل 18:00!!" } }
+        - { kind: title, text: &am_t { en: "Tomorrow's order", ar: "طلب الغد" }, gap: m }
+        - { kind: meta, text: &am_i { en: "2 baguettes · 6 croissants · 95 EGP", ar: "2 باجيت · 6 كرواسون · 95 جنيهًا" }, gap: s }
+        - { kind: button, text: &am_b { en: "Place order", ar: "أرسل الطلب" }, gap: m }
+    options:
+      - id: louder
+        text: { en: "Make the banner brighter and add a bell icon", ar: "اجعل الشريط أكثر لمعانًا وأضف أيقونة جرس" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: banner, text: { en: "🔔 LIMITED! Order before 18:00!!", ar: "🔔 عرض محدود! اطلب قبل 18:00!!" } }
+            - { kind: title, text: *am_t, gap: m }
+            - { kind: meta, text: *am_i, gap: s }
+            - { kind: button, text: *am_b, gap: m }
+      - id: plain
+        text: { en: "Show \"Order by 18:00 today for tomorrow morning\" as plain text above the button", ar: "اعرض «اطلب قبل 18:00 اليوم لصباح الغد» كنص عادي فوق الزر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *am_t }
+            - { kind: meta, text: *am_i, gap: s }
+            - { kind: text, text: { en: "Order by 18:00 today for tomorrow morning.", ar: "اطلب قبل 18:00 اليوم لصباح الغد." }, gap: m }
+            - { kind: button, text: *am_b, gap: s }
+      - id: side
+        text: { en: "Move the banner to the bottom, next to the coupon offers", ar: "انقل الشريط إلى الأسفل، بجانب عروض الكوبونات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *am_t }
+            - { kind: meta, text: *am_i, gap: s }
+            - { kind: button, text: *am_b, gap: m }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: banner, text: { en: "Order before 18:00!!", ar: "اطلب قبل 18:00!!" } }
+                - { kind: banner, text: { en: "20% off cakes", ar: "خصم 20% على الكعك" } }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P10-013
+        when: [louder]
+        feedback:
+          en: "A brighter, flashier box looks even more like an ad, so people are even more likely to skip it."
+          ar: "الصندوق الأكثر لمعانًا يشبه الإعلان أكثر، فيزيد احتمال أن يتخطّاه الناس."
+      - id: MC-P10-014
+        when: [side]
+        feedback:
+          en: "Next to the coupon offers, the deadline sits in an ad's place and looks like one. People skip that whole area."
+          ar: "بجانب عروض الكوبونات، يجلس آخر موعد في مكان الإعلانات ويبدو مثلها. والناس يتخطّون هذه المنطقة كلها."
+    correct:
+      en: "Right. The deadline reads as part of the order, right where Amira decides."
+      ar: "صحيح. يُقرأ آخر موعد كجزء من الطلب، في المكان الذي تقرّر فيه أميرة."
+    explain:
+      en: "Content styled like an ad gets ignored. Plain text next to the order and its button reads as part of the task, so people notice it."
+      ar: "المحتوى المصمّم كإعلان يُتجاهل. أما النص العادي بجانب الطلب وزره فيُقرأ كجزء من المهمة، فيلاحظه الناس."
+
+  - id: S12
+    type: tune
+    skill: SK-P10-U01-06
+    part: retest
+    value:
+      en: "Re-test, banner blindness (NN/g): do not mix content and ads in the same visual section. The pitch rules sit between two sponsor boxes, so they read as one more ad."
+      ar: "إعادة اختبار، عمى الإعلانات (NN/g): لا تخلط المحتوى والإعلانات في القسم البصري نفسه. قواعد الملعب بين صندوقين للرعاة، فتُقرأ كإعلان آخر."
+    ref: { url: "https://www.nngroup.com/articles/banner-blindness-old-and-new-findings/", quote: "Do not mix content and ads in the same visual section." }
+    scenario:
+      en: "Fady books a five-a-side football pitch for Friday night. The pitch only allows flat shoes, and players who come in studs are turned away. The rule sits in a box between two sponsor ads."
+      ar: "يحجز فادي ملعب كرة خماسي ليلة الجمعة. الملعب يسمح بالأحذية المسطّحة فقط، ومن يأتي بحذاء ذي مسامير يُمنع من اللعب. والقاعدة في صندوق بين إعلانين للرعاة."
+    prompt:
+      en: "Try each place for the rule. Which one should ship?"
+      ar: "جرّب كل مكان للقاعدة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: title, text: &f_t { en: "Pitch 2 · Friday 21:00", ar: "ملعب 2 · الجمعة 21:00" } }
+        - { kind: meta, text: &f_m { en: "1 hour · 600 EGP", ar: "ساعة واحدة · 600 جنيه" }, gap: s }
+        - { kind: button, text: &f_b { en: "Book the pitch", ar: "احجز الملعب" }, gap: m }
+        - kind: row
+          gap: l
+          blocks:
+            - { kind: banner, text: &f_ad1 { en: "Sports drinks, buy 2 get 1", ar: "مشروبات رياضية، اشترِ 2 واحصل على 1" } }
+            - { kind: banner, text: &f_rule { en: "Flat shoes only, no studs", ar: "أحذية مسطّحة فقط، بدون مسامير" } }
+            - { kind: banner, text: &f_ad2 { en: "New boots, 30% off", ar: "أحذية جديدة، خصم 30%" } }
+    options:
+      - id: details
+        text: { en: "Put the rule as plain text in the booking details, away from the sponsor boxes", ar: "ضع القاعدة كنص عادي ضمن تفاصيل الحجز، بعيدًا عن صناديق الرعاة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *f_t }
+            - { kind: meta, text: *f_m, gap: s }
+            - { kind: meta, text: { en: "Flat shoes only. Players in studs can't play.", ar: "أحذية مسطّحة فقط. لا يُسمح باللعب بحذاء ذي مسامير." }, gap: s }
+            - { kind: button, text: *f_b, gap: m }
+            - kind: row
+              gap: xl
+              blocks:
+                - { kind: banner, text: *f_ad1 }
+                - { kind: banner, text: *f_ad2 }
+      - id: bigger
+        text: { en: "Keep it between the ads, but make its box twice as big", ar: "أبقِها بين الإعلانات، لكن اجعل صندوقها ضعف الحجم" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *f_t }
+            - { kind: meta, text: *f_m, gap: s }
+            - { kind: button, text: *f_b, gap: m }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: banner, text: *f_ad1 }
+                - { kind: banner, size: l, px: 20, text: *f_rule }
+                - { kind: banner, text: *f_ad2 }
+      - id: top
+        text: { en: "Turn the rule into a colorful banner at the top of the page", ar: "حوّل القاعدة إلى شريط ملوّن في أعلى الصفحة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: banner, text: { en: "⚽ Flat shoes only, no studs! ⚽", ar: "⚽ أحذية مسطّحة فقط، بدون مسامير! ⚽" } }
+            - { kind: title, text: *f_t, gap: m }
+            - { kind: meta, text: *f_m, gap: s }
+            - { kind: button, text: *f_b, gap: m }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: banner, text: *f_ad1 }
+                - { kind: banner, text: *f_ad2 }
+    answer: [details]
+    misconceptions:
+      - id: MC-P10-014
+        when: [bigger]
+        feedback:
+          en: "A bigger box between two ads still sits in the ad area and looks like a third ad. Size doesn't fix the place."
+          ar: "الصندوق الأكبر بين إعلانين ما زال في منطقة الإعلانات ويبدو كإعلان ثالث. الحجم لا يُصلح المكان."
+      - id: MC-P10-013
+        when: [top]
+        feedback:
+          en: "A colorful banner is the classic look of an ad, so people skip it on sight. Make the rule look like the booking details."
+          ar: "الشريط الملوّن هو الشكل المعتاد للإعلان، فيتخطّاه الناس فور رؤيته. اجعل القاعدة تشبه تفاصيل الحجز."
+    correct:
+      en: "Right. The rule reads as part of the booking, not as an offer."
+      ar: "صحيح. تُقرأ القاعدة كجزء من الحجز، لا كعرض ترويجي."
+    explain:
+      en: "Keep content and ads in separate sections. A rule placed with the booking details, styled like them, gets read; the same rule among sponsor boxes gets skipped."
+      ar: "افصل المحتوى عن الإعلانات في أقسام مختلفة. القاعدة الموضوعة مع تفاصيل الحجز وبشكلها تُقرأ؛ أما القاعدة نفسها بين صناديق الرعاة فتُتخطّى."
+
+  # SK-P10-U01-07: use photos that carry information
+  - id: S13
+    type: tune
+    skill: SK-P10-U01-07
+    part: retest
+    value:
+      en: "Re-test, photos (NN/g): users ignore stock photos of generic people but pay attention to information-carrying images. A photo of the actual exhibition helps Dina decide."
+      ar: "إعادة اختبار، الصور (NN/g): يتجاهل المستخدمون صور الـ Stock العامة لأشخاص عاديين، وينتبهون للصور التي تحمل معلومة. صورة المعرض نفسه تساعد دينا على القرار."
+    ref: { url: "https://www.nngroup.com/articles/photos-as-web-content/", quote: "users ignore stock photos of generic people" }
+    scenario:
+      en: "Dina is deciding whether the museum's new exhibition, Old Cairo Maps, is worth the trip. The exhibition page shows one large photo."
+      ar: "تفكّر دينا هل يستحق المعرض الجديد في المتحف، «خرائط القاهرة القديمة»، المشوار إليه. تعرض صفحة المعرض صورة واحدة كبيرة."
+    prompt:
+      en: "Try each photo. Which one should ship?"
+      ar: "جرّب كل صورة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: image, size: l, text: { en: "Photo: a smiling family taking a selfie", ar: "صورة: عائلة تبتسم وتلتقط صورة سيلفي" } }
+        - { kind: title, text: &d_t { en: "Old Cairo Maps", ar: "خرائط القاهرة القديمة" }, gap: m }
+        - { kind: meta, text: &d_m { en: "Until 31 January · 150 EGP", ar: "حتى 31 يناير · 150 جنيهًا" }, gap: s }
+        - { kind: button, text: &d_b { en: "Buy a ticket", ar: "اشترِ تذكرة" }, gap: m }
+    options:
+      - id: larger
+        text: { en: "Keep the family photo, but make it full-screen", ar: "أبقِ صورة العائلة، لكن اجعلها بملء الشاشة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: image, size: xl, text: { en: "Photo: a smiling family taking a selfie", ar: "صورة: عائلة تبتسم وتلتقط صورة سيلفي" } }
+            - { kind: title, text: *d_t, gap: m }
+            - { kind: meta, text: *d_m, gap: s }
+            - { kind: button, text: *d_b, gap: m }
+      - id: couple
+        text: { en: "Swap it for a photo of a happy couple holding tickets", ar: "استبدلها بصورة لزوجين سعيدين يحملان التذاكر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: image, size: l, text: { en: "Photo: a happy couple holding tickets", ar: "صورة: زوجان سعيدان يحملان التذاكر" } }
+            - { kind: title, text: *d_t, gap: m }
+            - { kind: meta, text: *d_m, gap: s }
+            - { kind: button, text: *d_b, gap: m }
+      - id: hall
+        text: { en: "Swap it for a photo of the hall, showing the maps on display", ar: "استبدلها بصورة للقاعة تُظهر الخرائط المعروضة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: image, size: l, text: { en: "Photo: the hall, with large 1800s maps of Cairo on the walls", ar: "صورة: القاعة، وعلى جدرانها خرائط كبيرة للقاهرة من القرن التاسع عشر" } }
+            - { kind: title, text: *d_t, gap: m }
+            - { kind: meta, text: *d_m, gap: s }
+            - { kind: button, text: *d_b, gap: m }
+    answer: [hall]
+    misconceptions:
+      - id: MC-P10-012
+        when: [larger, couple]
+        feedback:
+          en: "A photo of generic, smiling people tells Dina nothing about the maps, so people skip it, however big it is."
+          ar: "صورة أشخاص عاديين يبتسمون لا تخبر دينا بشيء عن الخرائط، لذلك يتخطّاها الناس مهما كان حجمها."
+    correct:
+      en: "Right. Dina can see what she'd go to see."
+      ar: "صحيح. تستطيع دينا أن ترى ما ستذهب لتراه."
+    explain:
+      en: "Photos earn their space when they carry information for the task. Here that's the maps themselves; generic happy people are decoration that gets ignored."
+      ar: "تستحق الصورة مساحتها عندما تحمل معلومة تخدم المهمة. وهنا المعلومة هي الخرائط نفسها؛ أما الأشخاص السعداء العاديون فزينة يتجاهلها الناس."
+
+  - id: S14
+    type: tune
+    skill: SK-P10-U01-07
+    part: retest
+    value:
+      en: "Re-test, photos (NN/g): users pay attention to information-carrying images. For a used phone, photos of that exact phone, scratch included, are the content buyers decide with."
+      ar: "إعادة اختبار، الصور (NN/g): ينتبه المستخدمون للصور التي تحمل معلومة. في حالة هاتف مستعمل، صور الهاتف نفسه بما فيها الخدش هي المحتوى الذي يقرّر به المشترون."
+    ref: { url: "https://www.nngroup.com/articles/photos-as-web-content/", quote: "users pay attention to information-carrying images" }
+    scenario:
+      en: "Khaled is selling his used phone on a marketplace app. It works well but has one scratch on the back. Buyers want to see its real condition before they message him."
+      ar: "يبيع خالد هاتفه المستعمل على تطبيق للبيع والشراء. الهاتف يعمل جيدًا، لكن فيه خدش واحد في الخلف. ويريد المشترون رؤية حالته الحقيقية قبل أن يراسلوه."
+    prompt:
+      en: "Try each version of the listing. Which one should ship?"
+      ar: "جرّب كل نسخة من الإعلان. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: image, size: l, text: { en: "Photo: a brand-new phone from the maker's ad", ar: "صورة: هاتف جديد تمامًا من إعلان الشركة المصنّعة" } }
+        - { kind: title, text: &k_t { en: "Used phone, 128 GB", ar: "هاتف مستعمل، 128 جيجابايت" }, gap: m }
+        - { kind: meta, text: &k_m { en: "7,500 EGP · one scratch on the back", ar: "7,500 جنيه · خدش واحد في الخلف" }, gap: s }
+        - { kind: button, text: &k_b { en: "Message Khaled", ar: "راسل خالد" }, gap: m }
+    options:
+      - id: stock
+        text: { en: "Use a photo of a person smiling at a phone", ar: "استخدم صورة لشخص يبتسم أمام هاتف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: image, size: l, text: { en: "Photo: a person smiling at a phone", ar: "صورة: شخص يبتسم أمام هاتف" } }
+            - { kind: title, text: *k_t, gap: m }
+            - { kind: meta, text: *k_m, gap: s }
+            - { kind: button, text: *k_b, gap: m }
+      - id: real
+        text: { en: "Use photos of this phone, front and back, with the scratch visible", ar: "استخدم صورًا لهذا الهاتف، من الأمام والخلف، والخدش ظاهر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: image, size: m, text: { en: "Photo: the front, screen on", ar: "صورة: الواجهة والشاشة تعمل" } }
+                - { kind: image, size: m, text: { en: "Photo: the back, with the scratch", ar: "صورة: الخلف، مع الخدش" } }
+            - { kind: title, text: *k_t, gap: m }
+            - { kind: meta, text: *k_m, gap: s }
+            - { kind: button, text: *k_b, gap: m }
+      - id: none
+        text: { en: "Remove the photo to keep the listing short", ar: "احذف الصورة ليبقى الإعلان قصيرًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: *k_t }
+            - { kind: meta, text: *k_m, gap: s }
+            - { kind: button, text: *k_b, gap: m }
+    answer: [real]
+    misconceptions:
+      - id: MC-P10-012
+        when: [stock]
+        feedback:
+          en: "A generic photo of someone smiling tells buyers nothing about this phone, so they skip it."
+          ar: "الصورة العامة لشخص يبتسم لا تخبر المشترين بشيء عن هذا الهاتف، فيتخطّونها."
+      - id: MC-P10-018
+        when: [none]
+        feedback:
+          en: "Here the photo is the content: buyers want to see the real phone and its scratch. Removing it removes what they decide with."
+          ar: "الصورة هنا هي المحتوى: يريد المشترون رؤية الهاتف الحقيقي وخدشه. وحذفها يحذف ما يقرّرون به."
+    correct:
+      en: "Right. Buyers see the real condition before they message."
+      ar: "صحيح. يرى المشترون الحالة الحقيقية قبل أن يراسلوا."
+    explain:
+      en: "A photo that shows the real thing people are deciding about is information, not decoration. Stock images get ignored; the real phone and its scratch get studied."
+      ar: "الصورة التي تُظهر الشيء الحقيقي الذي يقرّر الناس بشأنه معلومة، لا زينة. صور الـ Stock يتجاهلها الناس، أما الهاتف الحقيقي وخدشه فيتأمّلونهما."
