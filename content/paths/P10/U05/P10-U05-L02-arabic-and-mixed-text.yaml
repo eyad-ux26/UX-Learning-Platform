@@ -1,285 +1,406 @@
 id: P10-U05-L02
 mode: lesson
-minutes: 9
+minutes: 8
 title:
-  en: "Arabic and mixed-direction text"
-  ar: "النص العربي والنص مختلط الاتجاه"
+  en: "Arabic and the right-to-left layout"
+  ar: "العربية والتخطيط من اليمين إلى اليسار"
+sources:
+  - title: { en: "International Usability: Big Stuff the Same, Details Differ (NN/g)", ar: "سهولة الاستخدام عالميًا: الأساسيات واحدة والتفاصيل تختلف (NN/g)" }
+    url: "https://www.nngroup.com/articles/international-usability-details-differ/"
 review_labels:
-  MC-P10-070: { en: "Right-to-left doesn't mean reversing every character", ar: "من اليمين لليسار لا يعني عكس كل حرف" }
-  MC-P10-071: { en: "Not every icon should be mirrored", ar: "ليست كل أيقونة تُعكس" }
+  MC-P10-070: { en: "Mirror the layout, not the content", ar: "اعكس التخطيط، لا المحتوى" }
   MC-P10-072: { en: "Translating the text isn't enough; the layout flows too", ar: "ترجمة النص لا تكفي؛ التخطيط يتغيّر اتجاهه أيضًا" }
-  MC-P10-073: { en: "A layout check can't judge the language", ar: "فحص التخطيط لا يحكم على اللغة" }
+  MC-P10-082: { en: "Mirror every screen the same way", ar: "اعكس كل الشاشات بالطريقة نفسها" }
 steps:
   - id: S01
     type: card
     part: hook
-    title: { en: "The Arabic card", ar: "البطاقة العربية" }
+    title: { en: "Translated, but not turned around", ar: "مترجمة، لكن غير معكوسة" }
     body:
-      en: "The team built the Arabic version of Sara's workshop card. They flipped everything to be safe, including the booking code.\n\nSara's booking code is WS-204. Look at the last line."
-      ar: "بنى الفريق النسخة العربية من بطاقة ورشة سارة. وعكسوا كل شيء احتياطًا، حتى رمز الحجز.\n\nرمز حجز سارة هو WS-204. انظر إلى السطر الأخير."
+      en: "The team built the Arabic version of Sara's booking screen. They translated every word, but kept the layout exactly as in English.\n\nArabic is read from right to left. Look at where everything sits."
+      ar: "بنى الفريق النسخة العربية من شاشة حجز سارة. ترجموا كل كلمة، لكن أبقوا التخطيط كما هو في الإنجليزية تمامًا.\n\nالعربية تُقرأ من اليمين إلى اليسار. انظر أين يقع كل شيء."
     mock:
-      dir: rtl
+      dir: ltr
       width: 300
-      caption: { en: "Arabic version", ar: "النسخة العربية" }
-      blocks:
-        - { kind: title, text: "صمّم تطبيقك الأول للمبادرات المجتمعية والفرق التطوعية" }
-        - { kind: meta, text: "17 نوفمبر، من 18:00 إلى 20:00", gap: s }
-        - { kind: meta, text: "120 جنيهًا", gap: xs }
-        - { kind: button, text: "احجز مكانك في هذه الورشة", gap: m }
-        - { kind: small, text: "رمز الحجز", code: "402-SW", gap: s }
+      blocks: &ltr
+        - { kind: small, text: "← رجوع" }
+        - { kind: title, text: "ارسم تطبيقك الأول", gap: s }
+        - { kind: meta, text: "الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00", gap: s }
+        - { kind: meta, text: "مجاني", gap: xs }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, emphasis: low, text: "رجوع" }
+            - { kind: button, text: "متابعة" }
 
   - id: S02
-    type: predict
+    type: tune
     part: try
     rules: [R12]
-    prompt: { en: "In the Arabic version, what should change direction?", ar: "في النسخة العربية، ما الذي يجب أن يتغيّر اتجاهه؟" }
+    value:
+      en: "International usability (NN/g): for right-to-left languages, the guideline is to mirror-image the design patterns from left-to-right sites."
+      ar: "سهولة الاستخدام عالميًا (NN/g): في اللغات التي تُقرأ من اليمين إلى اليسار، القاعدة أن تُعكس أنماط التصميم المستخدمة في المواقع التي تُقرأ من اليسار إلى اليمين."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    prompt:
+      en: "Try each version of the Arabic screen. Which one should ship?"
+      ar: "جرّب كل نسخة من الشاشة العربية. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: ltr
+      width: 300
+      blocks: *ltr
     options:
-      - { id: none, text: { en: "Only the words; the layout stays the same", ar: "الكلمات فقط؛ ويبقى التخطيط كما هو" } }
-      - { id: all, text: { en: "Everything, including codes and numbers", ar: "كل شيء، بما فيه الرموز والأرقام" } }
-      - { id: layout, text: { en: "The layout and the text flow, but not codes or numbers", ar: "التخطيط واتجاه النص، لكن ليس الرموز أو الأرقام" } }
-    answer: [layout]
+      - id: align
+        text: { en: "Right-align the text; leave the arrow and buttons where they are", ar: "اجعل النص بمحاذاة اليمين؛ واترك السهم والأزرار في أماكنها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks:
+            - { kind: small, text: "← رجوع" }
+            - { kind: title, style: end, text: "ارسم تطبيقك الأول", gap: s }
+            - { kind: meta, style: end, text: "الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00", gap: s }
+            - { kind: meta, style: end, text: "مجاني", gap: xs }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, emphasis: low, text: "رجوع" }
+                - { kind: button, text: "متابعة" }
+      - id: mirror
+        text: { en: "Mirror the whole layout: it starts from the right", ar: "اعكس التخطيط كله: يبدأ من اليمين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: small, text: "→ رجوع" }
+            - { kind: title, text: "ارسم تطبيقك الأول", gap: s }
+            - { kind: meta, text: "الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00", gap: s }
+            - { kind: meta, text: "مجاني", gap: xs }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, emphasis: low, text: "رجوع" }
+                - { kind: button, text: "متابعة" }
+      - id: keep
+        text: { en: "Keep it; Arabic speakers also use English apps", ar: "أبقِها؛ فمتحدّثو العربية يستخدمون تطبيقات إنجليزية أيضًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks: *ltr
+    answer: [mirror]
     misconceptions:
-      - id: MC-P10-070
-        when: [all]
-        feedback:
-          en: "Reverse WS-204 and you get 402-SW: a different code. Codes, numbers, emails and phone numbers keep their own order."
-          ar: "اعكس WS-204 فتحصل على 402-SW: رمز مختلف. الرموز والأرقام والبريد الإلكتروني وأرقام الهواتف تحتفظ بترتيبها."
       - id: MC-P10-072
-        when: [none]
+        when: [align, keep]
         feedback:
-          en: "Arabic readers start on the right, so the layout starts there too: the title, the back arrow and the progress bar all begin on the right."
-          ar: "القارئ العربي يبدأ من اليمين، فيبدأ التخطيط من هناك أيضًا: العنوان وسهم الرجوع والـ Progress bar كلها تبدأ من اليمين."
+          en: "Arabic readers start at the right. Translated text in a left-to-right layout makes them start in the wrong corner, and the back arrow and buttons still point the English way. Mirror the layout."
+          ar: "القارئ العربي يبدأ من اليمين. والنص المترجم داخل تخطيط من اليسار إلى اليمين يجعله يبدأ من الزاوية الخطأ، والسهم والأزرار ما زالت باتجاه الإنجليزية. اعكس التخطيط."
     correct:
-      en: "The flow flips; the facts don't."
-      ar: "الاتجاه ينعكس، والمعلومات لا."
+      en: "The whole layout flows from the right."
+      ar: "التخطيط كله يتدفّق من اليمين."
     explain:
-      en: "The layout and the sentences run right to left. WS-204 is still WS-204 inside an Arabic sentence."
-      ar: "التخطيط والجمل تسير من اليمين إلى اليسار. ويبقى WS-204 هو WS-204 داخل الجملة العربية."
+      en: "Translation changes the words; mirroring changes the flow. In Arabic, the screen starts at the right: alignment, the back arrow and the button order all follow."
+      ar: "الترجمة تغيّر الكلمات؛ والعكس يغيّر الاتجاه. في العربية تبدأ الشاشة من اليمين: والمحاذاة، وسهم الرجوع، وترتيب الأزرار كلها تتبع ذلك."
+
   - id: S03
     type: card
     part: concept
-    icons: [order, id, eye, person]
-    title: { en: "Flip the flow, not the facts", ar: "اعكس الاتجاه، لا المعلومات" }
+    icons: [layers, target, text, ok]
+    title: { en: "Mirror the flow, keep the facts", ar: "اعكس الاتجاه، وأبقِ المعلومات" }
     body:
-      en: "Arabic reads from right to left (RTL). Flip the flow, not the facts.\n\n- **Start and end, not left and right:** the title aligns to the start, the back arrow sits at the start, progress fills from the start.\n- **Codes keep their direction:** codes like WS-204, prices like EGP 120, phone numbers and emails stay whole, as separate left-to-right pieces. Never reverse their characters.\n- **Mirror only directional icons:** flip back and forward arrows. Keep a clock, a play button, a check mark or a logo as they are.\n- **Ask a native reader:** a width check can't tell you whether the Arabic reads naturally."
-      ar: "العربية تُقرأ من اليمين إلى اليسار (RTL). اعكس الاتجاه، لا المعلومات.\n\n- **البداية والنهاية، لا اليسار واليمين:** العنوان يُحاذى إلى البداية، وسهم الرجوع في البداية، والـ Progress bar يمتلئ من البداية.\n- **الرموز تحتفظ باتجاهها:** رموز مثل WS-204، وأسعار مثل EGP 120، وأرقام الهواتف والبريد الإلكتروني تبقى كاملة، كقطع منفصلة من اليسار لليمين. ولا تعكس حروفها أبدًا.\n- **اعكس الأيقونات الاتجاهية فقط:** اعكس سهمي الرجوع والتقدّم. وأبقِ الساعة وزر التشغيل وعلامة الصح والشعار كما هي.\n- **اسأل قارئًا عربيًا:** فحص العرض لا يخبرك إن كانت العربية تُقرأ بشكل طبيعي."
+      en: "Arabic reads from right to left (RTL). The guideline is to mirror the left-to-right design patterns.\n\n- **Start and end:** in Arabic, the start is the right. Text aligns there, the back arrow sits there, and steps run from there.\n- **The flow mirrors, the content doesn't:** a booking code, a price or a time is a fact. Its characters keep their order.\n- **Every screen:** mirror all of them the same way. A half-mirrored app is the most confusing of all.\n- **Room to grow:** Arabic text often runs longer, so leave space."
+      ar: "العربية تُقرأ من اليمين إلى اليسار (RTL). والقاعدة أن تُعكس أنماط التصميم المستخدمة من اليسار إلى اليمين.\n\n- **البداية والنهاية:** في العربية، البداية هي اليمين. هناك يُحاذى النص، وهناك يقع سهم الرجوع، ومن هناك تبدأ الخطوات.\n- **الاتجاه يُعكس، والمحتوى لا:** رمز الحجز أو السعر أو الوقت معلومة. وحروفها تبقى بترتيبها.\n- **كل الشاشات:** اعكسها كلها بالطريقة نفسها. والتطبيق المعكوس جزئيًا هو الأكثر إرباكًا.\n- **مساحة للتمدّد:** النص العربي كثيرًا ما يكون أطول، فاترك مساحة."
+
   - id: S04
-    type: spot
+    type: tune
     part: guided
-    rules: [R06, U49]
+    rules: [R06, R13]
+    value:
+      en: "International usability (NN/g): mirror the design patterns. A code is content, not a pattern; reversing its characters creates a different code."
+      ar: "سهولة الاستخدام عالميًا (NN/g): اعكس أنماط التصميم. والرمز محتوى، لا نمط؛ وعكس حروفه يصنع رمزًا مختلفًا."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "Sara's booking code is WS-204. She'll read it out at the door. To be safe, the team mirrored everything on the Arabic confirmation, including the code."
+      ar: "رمز حجز سارة هو WS-204. وستقرؤه عند الباب. واحتياطًا، عكس الفريق كل شيء في رسالة التأكيد العربية، حتى الرمز."
     prompt:
-      en: "Which line of the Arabic card has the wrong meaning?"
-      ar: "أي سطر في البطاقة العربية معناه خاطئ؟"
+      en: "Try each version of the last line. Which one should ship?"
+      ar: "جرّب كل نسخة من السطر الأخير. أيّها يجب أن يُطلق؟"
     mock:
+      caption: { en: "Now", ar: "الآن" }
       dir: rtl
       width: 300
-      blocks:
-        - { kind: title, text: "صمّم تطبيقك الأول للمبادرات المجتمعية والفرق التطوعية", region: title }
-        - { kind: meta, text: "17 نوفمبر، من 18:00 إلى 20:00", gap: s, region: date }
-        - { kind: meta, text: "120 جنيهًا", gap: xs, region: price }
-        - { kind: button, text: "احجز مكانك في هذه الورشة", gap: m }
-        - { kind: small, text: "رمز الحجز", code: "402-SW", gap: s, region: code }
-    regions:
-      - { id: title, label: { en: "Title", ar: "العنوان" } }
-      - { id: date, label: { en: "Date and time", ar: "التاريخ والوقت" } }
-      - { id: price, label: { en: "Price", ar: "السعر" } }
-      - { id: code, label: { en: "Booking code", ar: "رمز الحجز" } }
+      blocks: &conf
+        - { kind: title, text: "تمّ حجزك!" }
+        - { kind: meta, text: "الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00", gap: s }
+        - { kind: meta, text: "رمز الحجز:", code: "402-SW", gap: s }
+    options:
+      - id: keep
+        text: { en: "Keep it; everything in the Arabic version is mirrored", ar: "أبقِه؛ فكل شيء في النسخة العربية معكوس" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks: *conf
+      - id: drop
+        text: { en: "Leave the code out of the Arabic version", ar: "احذف الرمز من النسخة العربية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "تمّ حجزك!" }
+            - { kind: meta, text: "الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00", gap: s }
+      - id: code
+        text: { en: "The sentence flows right to left; the code stays WS-204", ar: "الجملة من اليمين إلى اليسار؛ والرمز يبقى WS-204" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "تمّ حجزك!" }
+            - { kind: meta, text: "الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00", gap: s }
+            - { kind: meta, text: "رمز الحجز:", code: "WS-204", gap: s }
     answer: [code]
     misconceptions:
       - id: MC-P10-070
-        when: [title, date, price]
+        when: [keep]
         feedback:
-          en: "That line reads correctly. Compare the booking code with WS-204."
-          ar: "هذا السطر صحيح. قارن رمز الحجز بـ WS-204."
-    hints:
-      - { en: "Sara will read this code to the front desk.", ar: "ستقرأ سارة هذا الرمز لموظف الاستقبال." }
+          en: "402-SW isn't Sara's code. Reversing its characters made a different identifier, and she'd be turned away at the door. Mirror the layout, not the facts."
+          ar: "402-SW ليس رمز سارة. عكس حروفه صنع رمزًا آخر، وقد تُرفض عند الباب. اعكس التخطيط، لا المعلومات."
+      - id: MC-P10-072
+        when: [drop]
+        feedback:
+          en: "Arabic readers need the code too. Keep it, written exactly as it is, inside the right-to-left sentence."
+          ar: "القرّاء العرب يحتاجون الرمز أيضًا. أبقِه مكتوبًا كما هو تمامًا، داخل الجملة التي تُقرأ من اليمين إلى اليسار."
     correct:
-      en: "402-SW isn't Sara's code. Reversing it created a different identifier."
-      ar: "402-SW ليس رمز سارة. عكسه صنع معرّفًا مختلفًا."
+      en: "The sentence mirrors; the code doesn't."
+      ar: "الجملة تُعكس؛ والرمز لا."
     explain:
-      en: "A code is an identifier, not a word. It keeps its order in every language. The time range 18:00 to 20:00 also keeps its meaning."
-      ar: "الرمز معرّف، لا كلمة. يحتفظ بترتيبه في كل لغة. وكذلك النطاق الزمني من 18:00 إلى 20:00 يحتفظ بمعناه."
+      en: "Mirroring applies to the layout and the patterns. A code, a price or a time keeps its characters in the same order in every language."
+      ar: "العكس ينطبق على التخطيط والأنماط. أما الرمز أو السعر أو الوقت فيبقى بحروفه وترتيبها نفسه في كل لغة."
 
   - id: S05
-    type: sort
+    type: tune
     part: guided
-    confidence: true
-    rules: [R06, R15, U49]
+    rules: [R06, R15]
+    value:
+      en: "International usability (NN/g): the important thing is to stay consistent within the site. Users switch between Arabic and English sites without trouble, but a mix inside one product breaks their expectations."
+      ar: "سهولة الاستخدام عالميًا (NN/g): المهم هو الثبات داخل الموقع الواحد. ينتقل المستخدمون بين المواقع العربية والإنجليزية دون مشكلة، لكن الخلط داخل منتج واحد يكسر توقّعاتهم."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "The important thing is to stay consistent within the site" }
+    scenario:
+      en: "Every screen of the Arabic app is mirrored except the payment form, which a developer copied from the English version."
+      ar: "كل شاشات التطبيق العربي معكوسة، إلا نموذج الدفع الذي نسخه أحد المطوّرين من النسخة الإنجليزية."
     prompt:
-      en: "In the Arabic version, what gets mirrored and what stays the same?"
-      ar: "في النسخة العربية، ما الذي يُعكس وما الذي يبقى كما هو؟"
-    items:
-      - { id: back, text: { en: "Back arrow", ar: "سهم الرجوع" } }
-      - { id: clock, text: { en: "Clock icon", ar: "أيقونة الساعة" } }
-      - { id: progress, text: { en: "Progress bar filling up", ar: "الـ Progress bar وهو يمتلئ" } }
-      - { id: code, text: { en: "Booking code WS-204", ar: "رمز الحجز WS-204" } }
-      - { id: align, text: { en: "Alignment of the paragraphs", ar: "محاذاة الفقرات" } }
-      - { id: phone, text: { en: "Phone number 0100 123 4567", ar: "رقم الهاتف 0100 123 4567" } }
-    buckets:
-      - { id: mirror, label: { en: "Mirror it", ar: "يُعكس" } }
-      - { id: keep, label: { en: "Keep it", ar: "يبقى كما هو" } }
-    answer:
-      mirror: [back, progress, align]
-      keep: [clock, code, phone]
+      en: "Try each fix for the payment form. Which one should ship?"
+      ar: "جرّب كل إصلاح لنموذج الدفع. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: ltr
+      width: 300
+      blocks: &payltr
+        - { kind: title, text: "الدفع" }
+        - { kind: field, label: "رقم البطاقة", text: "•••• •••• •••• 4821", filled: true, gap: s }
+        - { kind: field, label: "الاسم على البطاقة", text: "سارة أحمد", filled: true, gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, emphasis: low, text: "رجوع" }
+            - { kind: button, text: "ادفع" }
+    options:
+      - id: leave
+        text: { en: "Leave it; payment forms are a standard pattern", ar: "اتركه؛ فنماذج الدفع نمط معتاد" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks: *payltr
+      - id: english
+        text: { en: "Switch this one screen to English, so the layout matches", ar: "حوّل هذه الشاشة وحدها إلى الإنجليزية، حتى يتطابق التخطيط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks:
+            - { kind: title, text: "Payment" }
+            - { kind: field, label: "Card number", text: "•••• •••• •••• 4821", filled: true, gap: s }
+            - { kind: field, label: "Name on card", text: "Sara Ahmed", filled: true, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, emphasis: low, text: "Back" }
+                - { kind: button, text: "Pay" }
+      - id: mirror
+        text: { en: "Mirror it like every other screen", ar: "اعكسه مثل كل الشاشات الأخرى" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: title, text: "الدفع" }
+            - { kind: field, label: "رقم البطاقة", text: "•••• •••• •••• 4821", filled: true, gap: s }
+            - { kind: field, label: "الاسم على البطاقة", text: "سارة أحمد", filled: true, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, emphasis: low, text: "رجوع" }
+                - { kind: button, text: "ادفع" }
+    answer: [mirror]
     misconceptions:
-      - id: MC-P10-071
-        when: { item: clock, bucket: mirror }
+      - id: MC-P10-082
+        when: [leave, english]
         feedback:
-          en: "A mirrored clock runs backwards. The clock means the same in both languages, so keep it."
-          ar: "الساعة المعكوسة تدور للخلف. والساعة معناها واحد في اللغتين، فأبقِها."
-      - id: MC-P10-070
-        when: { item: code, bucket: mirror }
-        feedback:
-          en: "Mirroring the code gives 402-SW, a different code. Keep it whole."
-          ar: "عكس الرمز يعطي 402-SW، وهو رمز مختلف. أبقِه كاملًا."
-      - id: MC-P10-070
-        when: { item: phone, bucket: mirror }
-        feedback:
-          en: "Phone numbers are dialled in the same order everywhere. Keep them as they are."
-          ar: "أرقام الهواتف تُطلب بالترتيب نفسه في كل مكان. أبقِها كما هي."
-    hints:
-      - { en: "Does it point along the reading direction, or does it mean the same either way?", ar: "هل يشير في اتجاه القراءة، أم أن معناه واحد في الاتجاهين؟" }
+          en: "Sara has just learned that this app starts from the right. One screen that flips back, or switches language, breaks that at the moment she pays. Keep every screen the same."
+          ar: "تعلّمت سارة للتوّ أن هذا التطبيق يبدأ من اليمين. وشاشة واحدة تنقلب عكس ذلك، أو تتغيّر لغتها، تكسر هذا في لحظة الدفع. أبقِ كل الشاشات بالطريقة نفسها."
     correct:
-      en: "Things that follow the reading direction mirror. Identifiers and symbols with a fixed meaning stay."
-      ar: "ما يتبع اتجاه القراءة يُعكس. والمعرّفات والرموز ذات المعنى الثابت تبقى."
+      en: "One direction, on every screen."
+      ar: "اتجاه واحد، في كل الشاشات."
     explain:
-      en: "In Arabic, \"back\" points right, and progress fills from the right. A clock, a code and a phone number don't have a reading direction to follow."
-      ar: "في العربية يشير «الرجوع» إلى اليمين، ويمتلئ التقدّم من اليمين. أما الساعة والرمز ورقم الهاتف فليس لها اتجاه قراءة تتبعه."
+      en: "People adapt easily to either direction, as long as a product stays with one. Check every screen, including forms copied from the English version."
+      ar: "يتكيّف الناس بسهولة مع أي اتجاه، ما دام المنتج ثابتًا على اتجاه واحد. افحص كل شاشة، حتى النماذج المنسوخة من النسخة الإنجليزية."
 
   - id: S06
-    type: choose
-    part: guided
-    rules: [R11, U49]
-    prompt:
-      en: "You're writing the spec for the card. How should you describe the title's alignment?"
-      ar: "تكتب مواصفات البطاقة. كيف تصف محاذاة العنوان؟"
-    options:
-      - { id: left, text: { en: "Aligned left", ar: "محاذاة إلى اليسار" } }
-      - { id: start, text: { en: "Aligned to the start of the line", ar: "محاذاة إلى بداية السطر" } }
-      - { id: center, text: { en: "Centered, so it works in both languages", ar: "في المنتصف، حتى يعمل في اللغتين" } }
-    answer: [start]
-    misconceptions:
-      - id: MC-P10-072
-        when: [left]
-        feedback:
-          en: "Left is right for English, and wrong for Arabic. \"Start\" means left in English and right in Arabic, with one rule."
-          ar: "اليسار صحيح للإنجليزية وخاطئ للعربية. «البداية» تعني اليسار في الإنجليزية واليمين في العربية، بقاعدة واحدة."
-    hints:
-      - { en: "Which word is true in both languages?", ar: "أي كلمة صحيحة في اللغتين؟" }
-    correct:
-      en: "\"Start\" works in both directions without a second spec."
-      ar: "«البداية» تعمل في الاتجاهين دون مواصفات ثانية."
-    explain:
-      en: "Centering long text makes it harder to read in any language. Start and end keep one spec for both."
-      ar: "توسيط النص الطويل يجعله أصعب في القراءة بأي لغة. أما البداية والنهاية فتُبقيان مواصفات واحدة للغتين."
-
-  - id: S07
     type: compare
     part: contrast
-    rules: [R11, U49]
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S04: the code kept its order because it's content. A Back/Continue pair is a pattern: it follows the reading direction, so it mirrors (NN/g: mirror-image the design patterns)."
+      ar: "مقارنة مع الخطوة 4: بقي الرمز بترتيبه لأنه محتوى. أما زوج «رجوع/متابعة» فهو نمط: يتبع اتجاه القراءة، فيُعكس (NN/g: اعكس أنماط التصميم)."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "In the English app, Back sits on the left and Continue on the right: you move forward in the reading direction."
+      ar: "في التطبيق الإنجليزي، يقع «رجوع» على اليسار و«متابعة» على اليمين: تتقدّم في اتجاه القراءة."
     prompt:
-      en: "Both cards have the same Arabic text. Which one is laid out correctly?"
-      ar: "البطاقتان فيهما النص العربي نفسه. أيّهما تخطيطها صحيح؟"
+      en: "Which Arabic button row should ship?"
+      ar: "أي صف أزرار عربي يجب أن يُطلق؟"
     a:
       mock:
         dir: ltr
         width: 300
         blocks:
-          - { kind: title, text: "صمّم تطبيقك الأول للمبادرات المجتمعية والفرق التطوعية" }
-          - { kind: meta, text: "17 نوفمبر، من 18:00 إلى 20:00", gap: s }
-          - { kind: meta, text: "120 جنيهًا", gap: xs }
-          - { kind: button, text: "احجز مكانك في هذه الورشة", gap: m }
-          - { kind: small, text: "رمز الحجز", code: "WS-204", gap: s }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: button, emphasis: low, text: "رجوع" }
+              - { kind: button, text: "متابعة" }
     b:
       mock:
         dir: rtl
         width: 300
         blocks:
-          - { kind: title, text: "صمّم تطبيقك الأول للمبادرات المجتمعية والفرق التطوعية" }
-          - { kind: meta, text: "17 نوفمبر، من 18:00 إلى 20:00", gap: s }
-          - { kind: meta, text: "120 جنيهًا", gap: xs }
-          - { kind: button, text: "احجز مكانك في هذه الورشة", gap: m }
-          - { kind: small, text: "رمز الحجز", code: "WS-204", gap: s }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: button, emphasis: low, text: "رجوع" }
+              - { kind: button, text: "متابعة" }
     answer: b
+    reason:
+      prompt: { en: "Why does this one mirror, when the code didn't?", ar: "لماذا يُعكس هذا، مع أن الرمز لم يُعكس؟" }
+      options:
+        - { id: pattern, text: { en: "Back and forward follow the reading direction; a code is a fact with a fixed order", ar: "الرجوع والتقدّم يتبعان اتجاه القراءة؛ أما الرمز فمعلومة بترتيب ثابت" } }
+        - { id: buttons, text: { en: "Buttons always mirror; text never does", ar: "الأزرار تُعكس دائمًا؛ والنص لا يُعكس أبدًا" } }
+        - { id: right, text: { en: "The main button should always be on the right", ar: "الزر الرئيسي يجب أن يكون على اليمين دائمًا" } }
+      answer: [pattern]
+      misconceptions:
+        - id: MC-P10-070
+          when: [buttons, right]
+          feedback:
+            en: "The text in a sentence does flow right to left, and the main button isn't always on one side. What mirrors is anything that follows the reading direction, like back and forward."
+            ar: "النص داخل الجملة يتدفّق من اليمين إلى اليسار فعلًا، والزر الرئيسي ليس دائمًا في جانب واحد. ما يُعكس هو كل ما يتبع اتجاه القراءة، مثل الرجوع والتقدّم."
     misconceptions:
       - id: MC-P10-072
         when: [a]
         feedback:
-          en: "In A, only the words were translated. The lines still start on the left, and look at the date and price: the numbers jumped to the wrong end of the line."
-          ar: "في A تُرجمت الكلمات فقط. ما زالت الأسطر تبدأ من اليسار، وانظر إلى التاريخ والسعر: قفزت الأرقام إلى الطرف الخاطئ من السطر."
+          en: "In A, Continue sits at the start of an Arabic row, so moving forward points backwards. Back and forward follow the reading direction, so they mirror."
+          ar: "في A، تقع «متابعة» في بداية صف عربي، فيصبح التقدّم باتجاه الرجوع. والرجوع والتقدّم يتبعان اتجاه القراءة، لذلك يُعكسان."
     correct:
-      en: "B flows from the right, and the code is still WS-204."
-      ar: "B تبدأ من اليمين، والرمز ما زال WS-204."
+      en: "Patterns mirror; facts don't."
+      ar: "الأنماط تُعكس؛ والمعلومات لا."
     explain:
-      en: "Direction is set for the whole card, then the code is kept as its own left-to-right piece inside it."
-      ar: "يُضبط الاتجاه للبطاقة كلها، ثم يُحفظ الرمز كقطعة مستقلة من اليسار لليمين داخلها."
+      en: "Ask one question: does this follow the reading direction? Alignment, back and forward, and step order do, so they mirror. Codes, prices and times don't, so they stay."
+      ar: "اسأل سؤالًا واحدًا: هل يتبع هذا اتجاه القراءة؟ المحاذاة، والرجوع والتقدّم، وترتيب الخطوات تتبعه، فتُعكس. أما الرموز والأسعار والأوقات فلا، فتبقى كما هي."
+
+  - id: S07
+    type: tune
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. International usability (NN/g): mirror-image the design patterns. A screen header with a back arrow is a pattern that follows the reading direction."
+      ar: "حالة جديدة. سهولة الاستخدام عالميًا (NN/g): اعكس أنماط التصميم. ورأس الشاشة مع سهم الرجوع نمط يتبع اتجاه القراءة."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "Youssef's ticket screen in Arabic still has the English header: a back arrow at the left, pointing left, and the title next to it."
+      ar: "شاشة تذكرة يوسف بالعربية ما زالت برأس الشاشة الإنجليزي: سهم رجوع على اليسار يشير إلى اليسار، والعنوان بجانبه."
+    prompt:
+      en: "Try each header. Which one should ship?"
+      ar: "جرّب كل رأس للشاشة. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: ltr
+      width: 300
+      blocks: &head
+        - { kind: heading, text: "← تذكرتك" }
+        - { kind: title, text: "القاهرة ← الإسكندرية", gap: m }
+        - { kind: meta, text: "المغادرة 07:30 · رصيف 4", gap: s }
+    options:
+      - id: title
+        text: { en: "Move the title to the right; keep the arrow at the left", ar: "انقل العنوان إلى اليمين؛ وأبقِ السهم على اليسار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: heading, text: "←" }
+                - { kind: heading, style: end, text: "تذكرتك" }
+            - { kind: title, style: end, text: "القاهرة ← الإسكندرية", gap: m }
+            - { kind: meta, style: end, text: "المغادرة 07:30 · رصيف 4", gap: s }
+      - id: mirror
+        text: { en: "Mirror the header: the arrow at the right, pointing right, then the title", ar: "اعكس رأس الشاشة: السهم على اليمين يشير إلى اليمين، ثم العنوان" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: heading, text: "→ تذكرتك" }
+            - { kind: title, text: "القاهرة ← الإسكندرية", gap: m }
+            - { kind: meta, text: "المغادرة 07:30 · رصيف 4", gap: s }
+      - id: none
+        text: { en: "Remove the back arrow; phones have a back gesture", ar: "احذف سهم الرجوع؛ فللهواتف إيماءة رجوع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 300
+          blocks:
+            - { kind: heading, text: "تذكرتك" }
+            - { kind: title, text: "القاهرة ← الإسكندرية", gap: m }
+            - { kind: meta, text: "المغادرة 07:30 · رصيف 4", gap: s }
+    answer: [mirror]
+    misconceptions:
+      - id: MC-P10-072
+        when: [title]
+        feedback:
+          en: "Now the title is mirrored but the arrow still points the English way, at the end of an Arabic header. Mirror the whole pattern."
+          ar: "الآن العنوان معكوس، لكن السهم ما زال باتجاه الإنجليزية، في نهاية رأس عربي. اعكس النمط كله."
+      - id: MC-P10-082
+        when: [none]
+        feedback:
+          en: "The English version keeps its back arrow, so the Arabic one should too. Mirror it rather than remove it."
+          ar: "النسخة الإنجليزية تحتفظ بسهم الرجوع، فيجب أن تحتفظ به العربية أيضًا. اعكسه بدل أن تحذفه."
+    correct:
+      en: "Back points to the start: the right."
+      ar: "الرجوع يشير إلى البداية: اليمين."
+    explain:
+      en: "Same rule as Sara's screen: in Arabic, the screen starts at the right, so the back arrow sits there and points that way. The route \"Cairo to Alexandria\" still reads in Arabic order."
+      ar: "القاعدة نفسها في شاشة سارة: في العربية تبدأ الشاشة من اليمين، فيقع سهم الرجوع هناك ويشير إلى ذلك الاتجاه. وخط السير «القاهرة إلى الإسكندرية» يُقرأ بالترتيب العربي."
 
   - id: S08
-    type: choose
-    part: independent
-    rules: [R07, U49]
-    prompt:
-      en: "Youssef's Arabic ticket says: \"Your seat is A14 on platform 4, booking ref EG-7781.\" What should the spec say about A14 and EG-7781?"
-      ar: "تذكرة يوسف بالعربية تقول: «مقعدك A14 على الرصيف 4، رقم الحجز EG-7781». ماذا يجب أن تقول المواصفات عن A14 و EG-7781؟"
-    options:
-      - { id: nothing, text: { en: "Nothing, they'll always display fine", ar: "لا شيء، سيظهران بشكل سليم دائمًا" } }
-      - { id: isolate, text: { en: "Keep each as a separate left-to-right piece inside the Arabic sentence", ar: "أبقِ كلًّا منهما قطعة منفصلة من اليسار لليمين داخل الجملة العربية" } }
-      - { id: reverse, text: { en: "Reverse them so they read right to left like the sentence", ar: "اعكسهما ليُقرآ من اليمين لليسار مثل الجملة" } }
-    answer: [isolate]
-    misconceptions:
-      - id: MC-P10-070
-        when: [reverse]
-        feedback:
-          en: "Reversed, EG-7781 becomes 1877-GE, and Youssef can't find his booking."
-          ar: "إذا عُكس، يصبح EG-7781 هو 1877-GE، ولن يجد يوسف حجزه."
-      - id: MC-P10-072
-        when: [nothing]
-        feedback:
-          en: "Often they do, but punctuation and neighbouring numbers can jump to the wrong side. Saying so in the spec prevents it."
-          ar: "غالبًا نعم، لكن علامات الترقيم والأرقام المجاورة قد تقفز إلى الجهة الخاطئة. ذكر ذلك في المواصفات يمنعه."
-    hints:
-      - { en: "What does Youssef do with EG-7781?", ar: "ماذا يفعل يوسف بـ EG-7781؟" }
-    correct:
-      en: "Isolated, each code stays whole and the sentence around it flows right to left."
-      ar: "بالعزل، يبقى كل رمز كاملًا وتسير الجملة حوله من اليمين لليسار."
-    explain:
-      en: "A separate line for the code is also fine, as long as it's clear what the code belongs to."
-      ar: "وضع الرمز في سطر منفصل مقبول أيضًا، ما دام واضحًا لمن يعود الرمز."
-
-  - id: S09
-    type: choose
-    part: independent
-    multi: true
-    rules: [R07, U49, U59]
-    prompt:
-      en: "The Arabic card passes the 320px check. What can that check NOT tell you? Pick all that apply."
-      ar: "البطاقة العربية تجتاز فحص 320 بكسل. ما الذي لا يستطيع هذا الفحص إخبارك به؟ اختر كل ما ينطبق."
-    options:
-      - { id: cut, text: { en: "Whether any text is cut off", ar: "إن كان أي نص مقطوعًا" } }
-      - { id: font, text: { en: "Whether the letters join correctly in the chosen font", ar: "إن كانت الحروف تتّصل بشكل صحيح في الخط المختار" } }
-      - { id: natural, text: { en: "Whether the Arabic reads naturally", ar: "إن كانت العربية تُقرأ بشكل طبيعي" } }
-      - { id: date, text: { en: "Whether the date is written the way people expect", ar: "إن كان التاريخ مكتوبًا بالطريقة التي يتوقعها الناس" } }
-    answer: [natural, date, font]
-    misconceptions:
-      - id: MC-P10-073
-        when: [cut]
-        feedback:
-          en: "That one the width check does show. The others need a person who reads Arabic, looking at the real rendering."
-          ar: "هذا بالذات يُظهره فحص العرض. أما الباقي فيحتاج شخصًا يقرأ العربية وينظر إلى العرض الفعلي."
-    hints:
-      - { en: "Which of these needs someone who reads Arabic?", ar: "أيّ هذه يحتاج شخصًا يقرأ العربية؟" }
-    correct:
-      en: "Meaning, date wording and letter shaping need a native reader. Width only tells you about fit."
-      ar: "المعنى وصياغة التاريخ وتشكيل الحروف تحتاج قارئًا لغته الأم العربية. أما العرض فيخبرك عن الاتّساع فقط."
-    explain:
-      en: "Write those down as open questions for review instead of marking the Arabic version done."
-      ar: "سجّلها أسئلةً مفتوحة للمراجعة بدل أن تعتبر النسخة العربية منتهية."
-
-  - id: S10
     type: card
     part: recap
-    icons: [order, id, eye, person]
-    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    icons: [layers, target, text, ok]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "- Flip the flow: describe alignment and position by start and end.\n- Keep the facts: codes, prices, phone numbers and emails keep their order as separate left-to-right pieces.\n- Mirror arrows and progress; keep clocks, check marks and logos.\n- A width check tells you about fit. A native reader tells you about meaning.\n\nNext lesson: answering critique with a check."
-      ar: "- اعكس الاتجاه: صِف المحاذاة والمواضع بالبداية والنهاية.\n- احفظ المعلومات: الرموز والأسعار وأرقام الهواتف والبريد الإلكتروني تحتفظ بترتيبها كقطع منفصلة من اليسار لليمين.\n- اعكس الأسهم والـ Progress bar؛ وأبقِ الساعات وعلامات الصح والشعارات.\n- فحص العرض يخبرك عن الاتّساع. والقارئ العربي يخبرك عن المعنى.\n\nالدرس التالي: الرد على النقد باختبار."
+      en: "- **Mirror the flow:** the Arabic screen starts at the right.\n- **Keep the facts:** the code stayed WS-204.\n- **Every screen:** mirrored the payment form like the rest.\n- **Patterns mirror:** back and forward follow the reading direction.\n\nNext lesson: answering critique with a check."
+      ar: "- **اعكس الاتجاه:** الشاشة العربية تبدأ من اليمين.\n- **أبقِ المعلومات:** بقي الرمز WS-204.\n- **كل الشاشات:** عكست نموذج الدفع مثل باقي الشاشات.\n- **الأنماط تُعكس:** الرجوع والتقدّم يتبعان اتجاه القراءة.\n\nالدرس التالي: الردّ على النقد باختبار."
