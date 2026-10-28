@@ -61,6 +61,16 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .scen .mock{margin-bottom:8px}
 .live{margin:0 0 14px}
 .body p{margin:0 0 12px}
+.ic{flex:none;width:36px;height:36px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.ic svg{width:22px;height:22px}
+h1.ct{display:flex;align-items:center;gap:12px}
+.pts{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:10px}
+.pts li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;line-height:1.5}
+.pts li>div{min-width:0}
+.pt-t{display:block;margin-bottom:2px}
+.pts li span{color:var(--muted);font-size:.95rem}
+.quote{margin:0 0 12px;padding:12px 14px;border-inline-start:4px solid var(--note);background:var(--note-soft);border-radius:10px;font-weight:600}
+
 .opts{display:grid;gap:10px;margin:0 0 14px;padding:0;border:0}
 .opt{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;min-height:52px}
 .opt input{margin-top:5px;accent-color:var(--accent);width:18px;height:18px;flex:none}
@@ -121,6 +131,33 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-field .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
 .mock .k-field.tone-bad .fi{border-color:#C6332A}
 .mock .k-field .fe{font-size:.8rem;color:#A3261F;margin-top:4px}
+.mock .k-select .fl{font-size:.85rem;font-weight:600}
+.mock .k-select .fi{border:1.5px solid #B9B9C0;border-radius:10px;min-height:44px;padding:10px 12px;font-size:.92rem;color:var(--mock-muted);margin-top:4px;display:flex;justify-content:space-between;gap:8px}
+.mock .k-select .fh{font-size:.78rem;color:var(--mock-muted);margin-top:4px}
+.mock .k-select .fe{font-size:.8rem;color:#A3261F;margin-top:4px}
+.mock .k-select.tone-bad .fi{border-color:#C6332A}
+.mock .fi.filled{color:#1D1D1F}
+.mock .fi.focus{outline:3px solid #5B3FD1;outline-offset:2px}
+.mock .act{cursor:pointer;border-radius:8px}.mock .act:focus-visible,.mock .act-type:focus{outline:2px solid #5B3FD1;outline-offset:2px}
+.mock .act-type{cursor:text;outline:none}.mock .act-type:empty::before{content:attr(data-ph);color:#8A8A90}
+.mock .k-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.92rem;min-height:34px}
+.mock .sw{flex:none;width:40px;height:24px;border-radius:12px;background:#C9C9CE;position:relative}
+.mock .sw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.mock .sw.on{background:#5B3FD1}.mock .sw.on::after{inset-inline-start:19px}
+.mock .stp{display:inline-flex;align-items:center;border:1.5px solid #B9B9BF;border-radius:10px;overflow:hidden}
+.mock .stp span{width:38px;height:36px;display:grid;place-items:center;font-size:1.1rem;color:#5B3FD1;background:#F4F2FB}
+.mock .stp b{min-width:44px;text-align:center}
+.mock .k-segmented{display:flex;background:#EFEFF2;border-radius:10px;padding:3px;gap:3px}
+.mock .sg{flex:1;text-align:center;padding:6px 4px;border-radius:8px;font-size:.85rem;color:#4A4A50}
+.mock .sg.on{background:#fff;color:#1C1C1E;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.mock .sl{position:relative;height:4px;background:#5B3FD1;border-radius:2px;margin:14px 9px 8px}
+.mock .sl i{position:absolute;top:-8px;width:20px;height:20px;margin-inline-start:-10px;border-radius:50%;background:#fff;border:2px solid #5B3FD1}
+.mock .act-slide{cursor:pointer;touch-action:none;padding:8px 0;background-clip:content-box;height:20px}.mock .act-slide i{top:0}
+.mock .k-radio,.mock .k-check{display:flex;align-items:center;gap:10px;font-size:.92rem;min-height:32px}
+.mock .k-radio .mk,.mock .k-check .mk{flex:none;width:20px;height:20px;border:2px solid #6B6B70;background:#fff}
+.mock .k-radio .mk{border-radius:50%}.mock .k-check .mk{border-radius:5px}
+.mock .k-radio .mk.on{border-color:#5B3FD1;box-shadow:inset 0 0 0 4px #fff;background:#5B3FD1}
+.mock .k-check .mk.on{border-color:#5B3FD1;background:#5B3FD1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3C/svg%3E") center/14px no-repeat}
 .mock .size-xl{font-size:1.6rem}.mock .size-l{font-size:1.25rem}.mock .size-s{font-size:.8rem}
 .mock .em-high{font-weight:700}
 .mock .em-low{color:var(--mock-muted)}
@@ -206,9 +243,74 @@ let lang = "en";
 try{ lang = localStorage.getItem("lp-lang") || "en"; }catch(e){}
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const tx = v => v == null ? "" : typeof v === "string" ? v : (v[lang] ?? v.en ?? "");
+// In Arabic, codes like WS-204 or A14 and phone numbers like 010 1234 5678 are wrapped in invisible
+// left-to-right isolates so they keep their order.
+const LRI = m => "\u2066" + m + "\u2069";
+const iso = s => lang !== "ar" ? s : s
+  .replace(/\+?\d+(?: \d+)+/g, LRI)
+  .replace(/[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/g, m => /[A-Za-z]/.test(m) && /\d/.test(m) ? LRI(m) : m);
+const tx = v => v == null ? "" : iso(typeof v === "string" ? v : (v[lang] ?? v.en ?? ""));
 const u = () => UI[lang];
-const para = v => tx(v).split(/\n\s*\n/).map(p => `<p>${esc(p).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}</p>`).join("");
+/* small line icons for explanation cards; a card lists them in `icons`, one per bullet */
+const ICON = {
+  toggle:'<rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="16" cy="12" r="3"/>',
+  check:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12l3 3 5-6"/>',
+  radio:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',
+  segment:'<rect x="2" y="7" width="20" height="10" rx="3"/><path d="M12 7v10"/>',
+  none:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/>',
+  other:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  yesno:'<circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><circle cx="7" cy="12" r="1.5"/>',
+  type:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h0M10 10h0M14 10h0M18 10h0M7 14h10"/>',
+  pick:'<path d="M4 6h16M4 12h10M4 18h7"/><path d="M15 15l3 3 4-5"/>',
+  stepper:'<rect x="2" y="7" width="20" height="10" rx="3"/><path d="M6 12h3M15 12h3M16.5 10.5v3"/>',
+  slider:'<path d="M3 12h18"/><circle cx="8" cy="12" r="2.5"/><circle cx="16" cy="12" r="2.5"/>',
+  id:'<path d="M9 4L7 20M17 4l-2 16M4 9h16M3 15h16"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>',
+  pin:'<path d="M12 21v-6M7 15h10l-2-5V4H9v6z"/>',
+  sort:'<path d="M7 4v16M4 17l3 3 3-3M14 6h6M14 12h4M14 18h2"/>',
+  typo:'<path d="M4 18L9 6l5 12M6 14h6"/><path d="M15 17c2-3 3 3 5 0"/>',
+  idea:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>',
+  size:'<path d="M3 19L8 6l5 13M5 15h6"/><path d="M14 19l3.5-8 3.5 8M15.2 16.5h4.6"/>',
+  space:'<path d="M4 4v16M20 4v16"/><path d="M8 12h8M10 10l-2 2 2 2M14 10l2 2-2 2"/>',
+  contrast:'<circle cx="12" cy="12" r="8"/><path d="M12 4v16a8 8 0 0 0 0-16z" fill="currentColor"/>',
+  order:'<path d="M5 5h8M5 12h11M5 19h14"/><circle cx="19" cy="5" r="1.5"/>',
+  eye:'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  promo:'<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 7a7 7 0 0 1 0 10"/>',
+  tap:'<path d="M9 11V5a2 2 0 0 1 4 0v5l4.5 1a2 2 0 0 1 1.5 2.3L18 20H10l-4-5 1.5-1.5L9 15"/>',
+  fold:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M3 13h18" stroke-dasharray="2 2"/>',
+  clock:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  money:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+  place:'<path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/>',
+  width:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 12h10M9 10l-2 2 2 2M15 10l2 2-2 2"/>',
+  wrap:'<path d="M4 6h16M4 12h13a3 3 0 0 1 0 6h-4M4 18h5"/><path d="M15 16l-2 2 2 2"/>',
+  color:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+  ear:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9.5a3.5 3.5 0 0 1 0 5"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>',
+  phone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>',
+  ok:'<circle cx="12" cy="12" r="8"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+  warn:'<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h0"/>',
+  text:'<path d="M5 6h14M5 10h14M5 14h10M5 18h7"/>',
+  group:'<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="18" height="8" rx="2"/>',
+  form:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><rect x="3" y="12" width="18" height="5" rx="1.5"/><path d="M3 21h8"/>',
+  person:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  cut:'<circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><path d="M8.5 8.5L20 19M8.5 15.5L20 5"/>',
+  dot:'<circle cx="12" cy="12" r="3"/>'
+};
+const icon = n => `<span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[n] || ICON.dot}</svg></span>`;
+const inl = t => esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+/* text blocks: blank line = paragraph, "- " lines = a list of points, "> " lines = a highlighted quote */
+const para = (v, icons) => { let n = 0; return tx(v).split(/\n\s*\n/).map(p => {
+  const lines = p.split("\n");
+  if (lines.every(l => /^- /.test(l))) return `<ul class="pts">${lines.map(l => {
+    const m = l.slice(2).match(/^\*\*(.+?):?\*\*[:\s]*(.*)$/), ic = icons ? icon(icons[n++]) : "";
+    return `<li>${ic}<div>${m ? `<b class="pt-t">${esc(m[1])}</b>${m[2] ? `<span>${inl(m[2])}</span>` : ""}` : inl(l.slice(2))}</div></li>`;
+  }).join("")}</ul>`;
+  if (lines.every(l => /^> /.test(l))) return `<blockquote class="quote">${lines.map(l => inl(l.slice(2))).join("<br>")}</blockquote>`;
+  return `<p>${inl(p)}</p>`;
+}).join(""); };
 const sameSet = (a, b) => a.length === b.length && a.every(x => b.includes(x));
 
 /* ---------- mock screens ---------- */
@@ -220,9 +322,26 @@ function mockBlocks(blocks, opts){
     let inner;
     if (b.kind === "group") inner = mockBlocks(b.blocks, opts);
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
-    else if (b.kind === "field") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="fi">${esc(tx(b.text))}</div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
+    else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
+    else if (b.kind === "toggle") inner = `<span>${esc(tx(b.text))}</span><span class="sw${b.selected?" on":""}" aria-hidden="true"></span>`;
+    else if (b.kind === "stepper") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="stp"><span aria-hidden="true">−</span><b>${esc(tx(b.text))}</b><span aria-hidden="true">+</span></div>`;
+    else if (b.kind === "segmented") inner = (b.options||[]).map((o, k) => `<span class="sg${k===(b.value??0)?" on":""}">${esc(tx(o))}</span>`).join("");
+    else if (b.kind === "slider") {
+      const lo = b.min ?? 0, hi = b.max ?? 100, f = v => (v - lo) / (hi - lo) * 100, a = b.from ?? lo + (hi - lo) * .2, z = b.to ?? lo + (hi - lo) * .65;
+      const fmt = (x, y) => esc(tx(b.format || b.text).replace("{a}", x).replace("{b}", y));
+      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="sl${b.format?" act-slide":""}" data-min="${lo}" data-max="${hi}" data-fmt="${b.format?esc(tx(b.format)):""}" aria-hidden="true"><i style="inset-inline-start:${f(a)}%" data-v="${a}"></i><i style="inset-inline-start:${f(z)}%" data-v="${z}"></i></div><div class="fh">${b.format ? fmt(a, z) : esc(tx(b.text))}</div>`;
+    }
     else if (b.kind === "divider") inner = "";
     else inner = esc(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
+    const live = !(opts && opts.regions);
+    if (live && (b.kind === "toggle" || b.kind === "check" || b.kind === "radio")) {
+      const role = b.kind === "toggle" ? "switch" : b.kind === "check" ? "checkbox" : "radio";
+      return `<div class="${cls} act"${st} role="${role}" tabindex="0" aria-checked="${!!b.selected}">${inner}</div>`;
+    }
+    if (live && b.kind === "stepper") inner = inner.replace('<span aria-hidden="true">−</span>', `<span class="act" role="button" tabindex="0" data-step="-1" aria-label="−">−</span>`).replace('<span aria-hidden="true">+</span>', `<span class="act" role="button" tabindex="0" data-step="1" aria-label="+">+</span>`);
+    if (live && b.kind === "segmented") inner = inner.replace(/<span class="sg( on)?">/g, (m, on) => `<span class="sg${on||""} act" role="radio" tabindex="0" aria-checked="${!!on}">`);
+    if (live && b.kind === "field" && !b.focus) inner = inner.replace(/<div class="fi([^"]*)">([^<]*)/, (m, c, t) => `<div class="fi${c} act-type" contenteditable="plaintext-only" spellcheck="false" data-ph="${t}" role="textbox" aria-label="${esc(tx(b.label))}">${b.filled ? t : ""}`);
     if (opts && opts.regions && b.region){
       const pressed = opts.selected.includes(b.region);
       return `<button type="button" class="${cls} region"${st} data-region="${b.region}" aria-pressed="${pressed}" ${opts.locked?"disabled":""}>${inner}</button>`;
@@ -333,8 +452,9 @@ function renderStep(){
   let h = "";
   if (s.scenario) h += `<div class="scenario">${para(s.scenario)}</div>`;
   if (s.type === "card"){
-    if (s.title) h += `<h1>${esc(tx(s.title))}</h1>`;
-    h += `<div class="body">${para(s.body)}</div>${mock(s.mock)}`;
+    const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
+    if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
+    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
   } else {
     if (s.recall){
       const k = L.lesson.steps.findIndex(x => x.id === s.recall), prev = L.lesson.steps[k];
@@ -409,6 +529,33 @@ function renderReason(s, st, locked){
     return `<label class="opt${ans}" for="r_${o.id}"><input type="radio" name="reason" id="r_${o.id}" value="${o.id}" ${checked?"checked":""} ${locked?"disabled":""}><span>${esc(tx(o.text))}</span></label>`;
   }).join("")}</fieldset>`;
 }
+
+/* mock screens respond to taps, so learners can try the controls they read about */
+function mockAct(el){
+  if (el.matches(".k-toggle,.k-check")) { const on = el.getAttribute("aria-checked") !== "true"; el.setAttribute("aria-checked", on); el.querySelector(".sw,.mk").classList.toggle("on", on); }
+  else if (el.matches(".k-radio")) {
+    let g = [el], n = el; while ((n = n.previousElementSibling) && n.matches(".k-radio")) g.push(n); n = el; while ((n = n.nextElementSibling) && n.matches(".k-radio")) g.push(n);
+    g.forEach(r => { r.setAttribute("aria-checked", r === el); r.querySelector(".mk").classList.toggle("on", r === el); });
+  }
+  else if (el.matches(".sg")) el.parentElement.querySelectorAll(".sg").forEach(x => { x.classList.toggle("on", x === el); x.setAttribute("aria-checked", x === el); });
+  else if (el.dataset.step) { const v = el.parentElement.querySelector("b"), n = (parseInt(v.textContent.replace(/[^0-9]/g, "")) || 0) + +el.dataset.step; if (n >= 0) v.textContent = n; }
+}
+/* a slider in a mock can be dragged, to feel how hard an exact value is */
+let slideDrag = null;
+function slideTo(sl, e){
+  const r = sl.getBoundingClientRect(), rtl = getComputedStyle(sl).direction === "rtl";
+  let fr = (e.clientX - r.left) / r.width; if (rtl) fr = 1 - fr; fr = Math.min(1, Math.max(0, fr));
+  const lo = +sl.dataset.min, hi = +sl.dataset.max, v = Math.round(lo + fr * (hi - lo)), ks = [...sl.querySelectorAll("i")];
+  if (!slideDrag.k) slideDrag.k = ks.reduce((m, k) => Math.abs(+k.dataset.v - v) < Math.abs(+m.dataset.v - v) ? k : m);
+  const k = slideDrag.k, other = ks.find(x => x !== k), cl = k === ks[0] ? Math.min(v, +other.dataset.v) : Math.max(v, +other.dataset.v);
+  k.dataset.v = cl; k.style.insetInlineStart = (cl - lo) / (hi - lo) * 100 + "%";
+  const [a, z] = ks.map(x => x.dataset.v); sl.nextElementSibling.textContent = sl.dataset.fmt.replace("{a}", a).replace("{b}", z);
+}
+document.addEventListener("pointerdown", e => { const sl = e.target.closest(".mock .act-slide"); if (!sl) return; slideDrag = {sl}; sl.setPointerCapture?.(e.pointerId); slideTo(sl, e); e.preventDefault(); });
+document.addEventListener("pointermove", e => { if (slideDrag) slideTo(slideDrag.sl, e); });
+document.addEventListener("pointerup", () => { slideDrag = null; });
+document.addEventListener("click", e => { const el = e.target.closest(".mock .act"); if (el) mockAct(el); });
+document.addEventListener("keydown", e => { const el = e.target.closest && e.target.closest(".mock .act"); if (el && (e.key === " " || e.key === "Enter")) { e.preventDefault(); mockAct(el); } });
 
 function wire(s, st, locked){
   const sc = document.querySelector("details.scen"); if (sc) sc.ontoggle = () => { L.scenOpen = sc.open; };

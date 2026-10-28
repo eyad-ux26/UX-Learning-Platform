@@ -29,11 +29,7 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "Someone changed the spacing. Which button reserves \"Design Your First Service\"?"
-      ar: "غيّر أحدهم المسافات. أي زر يحجز «صمّم أول خدمة لك»؟"
     mock: &misleading
       blocks:
         - { kind: heading, text: "@W2a", region: atitle }
@@ -44,22 +40,34 @@ steps:
         - { kind: text, text: "@W2f", gap: l, region: bdate }
         - { kind: meta, text: "@W2g", gap: xs, region: bprice }
         - { kind: button, emphasis: low, text: { en: "Reserve", ar: "احجز" }, gap: s, region: bbutton }
+    prompt:
+      en: Someone changed the spacing. The first Reserve button now sits right above the second title. Which session will most people think that button belongs to?
+      ar: غيّر أحدهم المسافات. أصبح زر «احجز» الأول فوق العنوان الثاني مباشرة. لأي جلسة سيظن أغلب الناس أن هذا الزر ينتمي؟
     options:
-      - { id: first, text: { en: "The first Reserve button", ar: "زر «احجز» الأول" } }
-      - { id: second, text: { en: "The second Reserve button", ar: "زر «احجز» الثاني" } }
-      - { id: unsure, text: { en: "I can't tell", ar: "لا أستطيع أن أعرف" } }
-    reveal:
-      en: "It's the second one, but the layout makes that hard to see. The first button sits right on top of the second title, as if they were a pair. Spacing told you something the content didn't mean."
-      ar: "إنه الزر الثاني، لكن التخطيط يجعل ذلك صعب الرؤية. الزر الأول ملاصق للعنوان الثاني كأنهما زوج. المسافات أخبرتك بشيء لا يقصده المحتوى."
-
+      - { id: below, text: { en: 'Design Your First Service, right below it', ar: «صمّم أول خدمة لك»، الذي تحته مباشرة } }
+      - { id: above, text: { en: 'Sketch Your First App, above it', ar: «ارسم تطبيقك الأول»، الذي فوقه } }
+      - { id: neither, text: { en: 'Neither; people read the words, not the gaps', ar: لا هذه ولا تلك؛ الناس يقرؤون الكلمات لا المسافات } }
+    answer: [below]
+    misconceptions:
+      - id: MC-P10-020
+        when: [above, neither]
+        feedback:
+          en: The button really belongs to the first session, but it sits tight against the second title and far from its own. People pair what's close, so the layout says the wrong thing.
+          ar: الزر ينتمي فعلًا للجلسة الأولى، لكنه ملتصق بالعنوان الثاني وبعيد عن جلسته. والناس يربطون المتقارب، فيقول التخطيط شيئًا خاطئًا.
+    correct:
+      en: Close means together, even when that's wrong.
+      ar: المتقارب يُقرأ معًا، حتى لو كان ذلك خطأ.
+    explain:
+      en: Spacing carries meaning before anyone reads a word. Here it pairs the button with the wrong session, so Sara could reserve the paid workshop by mistake.
+      ar: المسافات تحمل معنى قبل أن يقرأ أحد كلمة. وهنا تربط الزر بالجلسة الخطأ، فقد تحجز سارة الورشة المدفوعة بالخطأ.
   - id: S03
     type: card
     part: concept
+    icons: [group, space, ok]
     title: { en: "Close means together", ar: "القريب يعني معًا" }
     body:
-      en: "People read things that sit close together as one group. This is called **proximity**.\n\nSo spacing carries meaning. A simple test: is the space inside each group smaller than the space between groups? If not, items drift toward the wrong neighbor.\n\nThere's no magic number. What matters is the relationship between the two gaps."
-      ar: "يقرأ الناس الأشياء المتقاربة على أنها مجموعة واحدة. يُسمّى هذا **التقارب (proximity)**.\n\nلذلك تحمل المسافات معنى. اختبار بسيط: هل المسافة داخل كل مجموعة أصغر من المسافة بين المجموعات؟ إن لم تكن كذلك، تميل العناصر نحو الجار الخطأ.\n\nلا يوجد رقم سحري. المهم هو العلاقة بين المسافتين."
-
+      en: "People read things that sit close together as one group. This is called **proximity**.\n\n- **Inside a group:** small gaps.\n- **Between groups:** bigger gaps.\n- **The test:** is every gap inside a group smaller than the gap between groups? If not, items drift toward the wrong neighbour.\n\nThere's no magic number. What matters is how the two gaps compare."
+      ar: "يقرأ الناس العناصر المتقاربة على أنها مجموعة واحدة. يُسمّى هذا **الـ Proximity (التقارب)**.\n\n- **داخل المجموعة:** مسافات صغيرة.\n- **بين المجموعات:** مسافات أكبر.\n- **الاختبار:** هل كل مسافة داخل المجموعة أصغر من المسافة بين المجموعات؟ إن لم تكن كذلك، تميل العناصر نحو الجار الخطأ.\n\nلا يوجد رقم سحري. المهم هو المقارنة بين المسافتين."
   - id: S04
     type: spot
     part: guided
@@ -321,42 +329,10 @@ steps:
       ar: "إنها المشكلة نفسها في صف أزرار «احجز» المشترك: إجراءان متطابقان، مفصولان عمّا يؤثّران فيه. ضع كل زر «إزالة» داخل مجموعة منتجه."
 
   - id: S09
-    type: choose
-    part: independent
-    recall: S02
-    rules: [R21, R14]
-    prompt:
-      en: "Back to the misleading layout from the start. What would you change first?"
-      ar: "عودة إلى التخطيط المضلّل من البداية. ما أول شيء ستغيّره؟"
-    mock: *misleading
-    options:
-      - { id: gaps, text: { en: "Make the gap between sessions bigger than the gaps inside them", ar: "اجعل المسافة بين الجلستين أكبر من المسافات داخلهما" } }
-      - { id: borders, text: { en: "Put a border around every line", ar: "ضع إطارًا حول كل سطر" } }
-      - { id: colors, text: { en: "Give each button a different color", ar: "أعطِ كل زر لونًا مختلفًا" } }
-      - { id: bold, text: { en: "Make the titles bolder", ar: "اجعل العناوين أعرض خطًا" } }
-    answer: [gaps]
-    misconceptions:
-      - id: MC-P10-024
-        when: [borders]
-        feedback:
-          en: "Boxing each line creates eight separate groups. The fix is to make the two real groups visible."
-          ar: "وضع إطار لكل سطر يصنع ثماني مجموعات منفصلة. الحل هو إظهار المجموعتين الحقيقيتين."
-      - id: MC-P10-025
-        when: [colors, bold]
-        feedback:
-          en: "That changes how things look, not what they group with. The first button would still hug the second title."
-          ar: "هذا يغيّر الشكل، لا التجميع. سيبقى الزر الأول ملتصقًا بالعنوان الثاني."
-    correct:
-      en: "Fix the gaps and the groups appear on their own."
-      ar: "أصلح المسافات وستظهر المجموعات وحدها."
-    explain:
-      en: "The content was always in the right order. Only the spacing was wrong, so the spacing is the fix."
-      ar: "المحتوى كان دائمًا بالترتيب الصحيح. المسافات فقط كانت خاطئة، لذلك فهي الحل."
-
-  - id: S10
     type: card
     part: recap
+    icons: [space, money, ok]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You used spacing to show what belongs together: small gaps inside a group, a bigger gap between groups. You kept each price and action with its own session, and spotted the same problem in a shopping cart.\n\nNext: containers, headings, and cues that mislead."
-      ar: "استخدمت المسافات لإظهار ما ينتمي معًا: مسافات صغيرة داخل المجموعة، ومسافة أكبر بين المجموعات. أبقيت كل سعر وإجراء مع جلسته، ولاحظت المشكلة نفسها في سلة تسوّق.\n\nالدرس التالي: الحاويات والعناوين والإشارات المضلّلة."
+      en: "- Small gaps inside a group, a bigger gap between groups.\n- Keep each price and action next to its own item.\n- The same check works on any screen, like a shopping cart.\n\nNext lesson: containers, headings, and cues that mislead."
+      ar: "- مسافات صغيرة داخل المجموعة، ومسافة أكبر بين المجموعات.\n- أبقِ كل سعر وإجراء بجانب العنصر الذي يخصّه.\n- الاختبار نفسه يصلح لأي شاشة، مثل سلة التسوّق.\n\nالدرس التالي: الـ Containers والعناوين والإشارات المضلّلة."
