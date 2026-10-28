@@ -75,6 +75,7 @@ export function validate(paths) {
         need(l.title && l.minutes, `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
         checkText(l, lw);
+        for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
         const steps = l.steps || [];
         unique(steps.map((s) => s.id), lw);
         const graded = steps.filter((s) => s.type !== "card" && !s.any_ok).length;
@@ -95,6 +96,10 @@ export function validate(paths) {
             continue;
           }
           need(s.prompt, `${sw}: prompt is required`);
+          if (s.ref) {
+            need(typeof s.ref.url === "string" && typeof s.ref.quote === "string" && s.ref.quote.trim(), `${sw}: ref needs url and quote`);
+            need((l.sources || []).some((x) => x.url === s.ref.url), `${sw}: ref.url must be one of the lesson's sources`);
+          }
           if (!s.any_ok) need(s.explain, `${sw}: explain is required on graded steps`);
           if (l.mode === "check" && (s.hints || []).length) warnings.push(`${sw}: hints are hidden in skill checks`);
 
