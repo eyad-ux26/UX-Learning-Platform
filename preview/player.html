@@ -537,7 +537,8 @@ function renderInteraction(s, st, locked){
   }
   if (s.type === "order"){
     const order = st.revealed ? s.answer : st.sel;
-    if (s.onscreen) return `<p class="sub">${u().dragHint}</p>` + mock({caption: s.caption, blocks: order.map((id, k) => { const it = s.items.find(x => x.id === id); return {kind: it.kind || "meta", text: it.text, gap: k ? (it.gap || "s") : undefined, drag: k, emphasis: it.emphasis}; })}, {locked});
+    /* an optional "source" screen (such as the laptop layout) sits above the phone the learner rearranges */
+    if (s.onscreen) return mock(s.mock) + `<p class="sub">${u().dragHint}</p>` + mock({caption: s.caption, blocks: order.map((id, k) => { const it = s.items.find(x => x.id === id); return {kind: it.kind || "meta", text: it.text, gap: k ? (it.gap || "s") : undefined, drag: k, emphasis: it.emphasis}; })}, {locked});
     const live = s.mock || s.preview === false ? "" : `<div class="live" aria-hidden="true">${mock({caption: {en: UI.en.live, ar: UI.ar.live}, blocks: order.map((id, k) => { const it = s.items.find(x => x.id === id); return {kind: it.kind || "meta", text: it.text, gap: k ? "s" : undefined}; })})}</div>`;
     return mock(s.mock) + live + order.map((id, k) => {
       const it = s.items.find(x => x.id === id);
