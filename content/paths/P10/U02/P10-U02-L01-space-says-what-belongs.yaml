@@ -30,6 +30,9 @@ steps:
     type: predict
     part: try
     rules: [R12]
+    value:
+      en: "Spacing is the first grouping cue: fix which session a button belongs to by changing the gaps, not the words."
+      ar: "المسافات أول إشارة للتجميع: أصلح انتماء الزر لجلسته بتغيير المسافات، لا الكلمات."
     mock: &misleading
       blocks:
         - { kind: heading, text: "@W2a", region: atitle }
@@ -72,6 +75,9 @@ steps:
     type: spot
     part: guided
     rules: [R06, R15]
+    value:
+      en: "Spot a title pulled into the wrong group by the gaps around it."
+      ar: "اكتشاف عنوان سحبته المسافات حوله إلى المجموعة الخطأ."
     prompt:
       en: "In the layout from before, which item looks like it belongs to the wrong session?"
       ar: "في التخطيط السابق، أي عنصر يبدو كأنه ينتمي إلى الجلسة الخطأ؟"
@@ -108,6 +114,9 @@ steps:
     part: guided
     confidence: true
     rules: [R13, R06]
+    value:
+      en: "Try spacings live: what matters is the gap inside a group compared with the gap between groups, not a magic number."
+      ar: "تجربة المسافات مباشرة: المهم هو المسافة داخل المجموعة مقارنة بالمسافة بين المجموعات، لا رقم سحري."
     prompt:
       en: "Try each spacing. Which one makes the two sessions easiest to tell apart?"
       ar: "جرّب كل توزيع للمسافات. أيّها يجعل التمييز بين الجلستين أسهل؟"
@@ -169,55 +178,12 @@ steps:
       ar: "صغيرة في الداخل، كبيرة بين المجموعات. عدد البكسلات بالضبط اختيار تصميمي؛ العلاقة بين المسافتين هي التي تؤدّي المهمة."
 
   - id: S06
-    type: sort
-    part: guided
-    rules: [R06, R15]
-    prompt:
-      en: "Put each item in the group it belongs to."
-      ar: "ضع كل عنصر في المجموعة التي ينتمي إليها."
-    items:
-      - { id: W2a, text: "@W2a" }
-      - { id: W2g, text: "@W2g" }
-      - { id: W2b, text: "@W2b" }
-      - { id: W2n, text: "@W2n" }
-      - { id: W2h, text: "@W2h" }
-      - { id: W2e, text: "@W2e" }
-      - { id: W2c, text: "@W2c" }
-      - { id: W2f, text: "@W2f" }
-      - { id: W2d, text: "@W2d" }
-    buckets:
-      - { id: a, label: { en: "Sketch session", ar: "جلسة «ارسم»" } }
-      - { id: b, label: { en: "Service session", ar: "جلسة «صمّم»" } }
-      - { id: n, label: { en: "On its own", ar: "منفصل" } }
-    answer:
-      a: [W2a, W2b, W2c, W2d]
-      b: [W2e, W2f, W2g, W2h]
-      n: [W2n]
-    misconceptions:
-      - id: MC-P10-021
-        when: { item: W2g, bucket: a }
-        feedback:
-          en: "EGP 120 is the price of the Service session. If it sits in the Sketch group, Sara will think the free workshop costs money. Check the facts before the spacing."
-          ar: "120 جنيهًا هو سعر جلسة «صمّم». إذا وُضع في مجموعة «ارسم»، ستظن سارة أن الورشة المجانية مدفوعة. تحقّق من المعلومات قبل المسافات."
-      - id: MC-P10-023
-        when: { item: W2n, bucket: b }
-        feedback:
-          en: "The monthly updates aren't part of either booking. Keep them apart so nobody thinks they're required to reserve."
-          ar: "التحديثات الشهرية ليست جزءًا من أي حجز. أبقها منفصلة حتى لا يظن أحد أنها مطلوبة للحجز."
-    hints:
-      - { en: "Read each session as one story: what, when, how much, reserve.", ar: "اقرأ كل جلسة كقصة واحدة: ماذا، متى، بكم، احجز." }
-      - { en: "Which title does EGP 120 belong to?", ar: "إلى أي عنوان ينتمي سعر 120 جنيهًا؟" }
-    correct:
-      en: "Each session holds its own four facts, and the updates stand apart."
-      ar: "كل جلسة تضم معلوماتها الأربع، والتحديثات منفصلة."
-    explain:
-      en: "Grouping starts with the content: which facts describe the same thing? Only then do spacing and containers show it. A price in the wrong group is a factual error, not a style issue."
-      ar: "التجميع يبدأ بالمحتوى: أي المعلومات تصف الشيء نفسه؟ بعدها فقط تُظهر المسافات والحاويات ذلك. السعر في المجموعة الخطأ خطأ في المعلومات، لا مسألة أسلوب."
-
-  - id: S07
     type: compare
     part: contrast
     rules: [R11, R15]
+    value:
+      en: "Contrast step: a border groups what it surrounds. Around a whole booking it helps; around every line it doesn't."
+      ar: "خطوة مقارنة: الإطار يجمع ما يحيط به. حول حجز كامل يساعد؛ وحول كل سطر لا يساعد."
     prompt:
       en: "In which version can you tell, from the borders alone, which price and button belong to which session?"
       ar: "في أي نسخة تعرف، من الإطارات وحدها، أي سعر وأي زر يتبع كل جلسة؟"
@@ -282,11 +248,14 @@ steps:
       en: "A border groups what it surrounds. Around a whole booking it says \"these belong together\". Around every line it only says \"this is a line\"."
       ar: "الإطار يجمع ما يحيط به. حول حجز كامل يقول «هذه تنتمي معًا». وحول كل سطر يقول فقط «هذا سطر»."
 
-  - id: S08
+  - id: S07
     type: choose
     part: independent
     confidence: true
     rules: [R14, R19]
+    value:
+      en: "New case (a cart): an action separated from what it affects is the same grouping problem."
+      ar: "حالة جديدة (سلة مشتريات): الإجراء المفصول عمّا يؤثّر فيه هو مشكلة التجميع نفسها."
     scenario:
       en: "Omar's shopping cart has two products. Both Remove buttons sit together in one row at the bottom."
       ar: "في سلة تسوّق عمر منتجان. وزرّا «إزالة» موضوعان معًا في صف واحد في الأسفل."
@@ -328,7 +297,7 @@ steps:
       en: "It's the same problem as the shared Reserve row: two identical actions, separated from what they affect. Put each Remove inside its product's group."
       ar: "إنها المشكلة نفسها في صف أزرار «احجز» المشترك: إجراءان متطابقان، مفصولان عمّا يؤثّران فيه. ضع كل زر «إزالة» داخل مجموعة منتجه."
 
-  - id: S09
+  - id: S08
     type: card
     part: recap
     icons: [space, money, ok]
