@@ -1,19 +1,29 @@
 id: P01-U01-L04
 mode: check
-minutes: 6
+minutes: 7
 title:
   en: "Skill check: ask only what you need"
   ar: "اختبار المهارة: اسأل فقط عمّا تحتاجه"
+sources:
+  - title: { en: "Less Effort, More Completion: The EAS Framework for Simplifying Forms (NN/g)", ar: "جهد أقل وإكمال أكثر: إطار EAS لتبسيط النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/"
+  - title: { en: "Marking Required Fields in Forms (NN/g)", ar: "تمييز الحقول الإلزامية في النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/required-fields/"
+  - title: { en: "Few Guesses, More Success: 4 Principles to Reduce Cognitive Load in Forms (NN/g)", ar: "تخمين أقل ونجاح أكثر: 4 مبادئ لتخفيف العبء الذهني في النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/"
+  - title: { en: "International Sites: Minimum Requirements (NN/g)", ar: "المواقع الدولية: الحد الأدنى من المتطلبات (NN/g)" }
+    url: "https://www.nngroup.com/articles/international-sites-requirements/"
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Samir's football camp form", ar: "نموذج معسكر كرة القدم لسمير" }
     body:
-      en: "Samir wants to register his 9-year-old son, Youssef, for a summer football camp. The academy's form looks like this.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
-      ar: "يريد سمير تسجيل ابنه يوسف، 9 سنوات، في معسكر صيفي لكرة القدم. ونموذج الأكاديمية يبدو هكذا.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+      en: "Samir wants to register his 9-year-old son, Youssef, for a summer football camp. The academy's form looks like this.\n\nYour job: help the academy fix it, one decision at a time.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "يريد سمير تسجيل ابنه يوسف، 9 سنوات، في معسكر صيفي لكرة القدم. ونموذج الأكاديمية يبدو هكذا.\n\nمهمّتك: ساعد الأكاديمية على إصلاحه، قرارًا بعد قرار.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      blocks:
+      width: 300
+      blocks: &campfull
         - { kind: title, text: "@F3a" }
         - { kind: field, label: "@F3child", text: "", gap: m }
         - { kind: field, label: "@F3age", text: "", gap: s }
@@ -25,192 +35,380 @@ steps:
         - { kind: button, text: "@F3btn", gap: m }
 
   - id: S02
-    type: sort
+    type: tune
     part: check
-    rules: [R19, U39]
+    rules: [R19]
+    value:
+      en: "Skill check, EAS framework (NN/g): ask whether each question is needed now. Income has no use; the school isn't used; the badge photo can wait until the first day."
+      ar: "اختبار مهارة، إطار EAS (NN/g): اسأل هل كل سؤال مطلوب الآن. الدخل لا فائدة له؛ والمدرسة لا تُستخدم؛ وصورة البطاقة يمكن أن تنتظر حتى اليوم الأول."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "Do we need this information now?" }
+    scenario:
+      en: "To register, the academy needs to know who Youssef is, his age group, a parent to call, and any health needs. The badge photo is taken on the first day. Nothing uses the school or the income."
+      ar: "لإتمام التسجيل، تحتاج الأكاديمية أن تعرف من هو يوسف، وفئته العمرية، ووليّ أمر للاتصال به، وأي احتياجات صحية. وصورة البطاقة تُلتقط في اليوم الأول. ولا شيء يستخدم المدرسة أو الدخل."
     prompt:
-      en: "When should the academy ask for each one?"
-      ar: "متى يجب أن تسأل الأكاديمية عن كل منها؟"
-    items:
-      - { id: income, text: "@F3income" }
-      - { id: child, text: "@F3child" }
-      - { id: photo, text: "@F3photo" }
-      - { id: med, text: "@F3med" }
-      - { id: parent, text: "@F3parent" }
-      - { id: age, text: "@F3age" }
-    buckets:
-      - { id: now, label: { en: "Ask now", ar: "اسأل الآن" } }
-      - { id: later, label: { en: "Ask before the first day", ar: "اسأل قبل اليوم الأول" } }
-      - { id: never, label: { en: "Don't ask", ar: "لا تسأل" } }
-    answer:
-      now: [child, age, parent, med]
-      later: [photo]
-      never: [income]
-    also_ok:
-      - answer: { now: [child, age, parent, med], later: [], never: [income, photo] }
-        feedback:
-          en: "Also fine, if the camp doesn't make ID badges."
-          ar: "مقبول أيضًا، إذا كان المعسكر لا يصدر بطاقات تعريف."
-    misconceptions:
-      - id: MC-P01-001
-        when: { item: income, bucket: now }
-        feedback:
-          en: "The camp has one price. Family income doesn't change anything about Youssef's registration."
-          ar: "للمعسكر سعر واحد. ودخل الأسرة لا يغيّر شيئًا في تسجيل يوسف."
-      - id: MC-P01-001
-        when: { item: med, bucket: never }
-        feedback:
-          en: "Allergies matter for a child's safety at camp. That one's needed now."
-          ar: "الحساسية مهمة لسلامة الطفل في المعسكر. هذا مطلوب الآن."
-    explain:
-      en: "Name, age group, a parent to call and health information are needed to register. A badge photo can come later. Income has no use here."
-      ar: "الاسم والفئة العمرية ووليّ أمر للاتصال والمعلومات الصحية مطلوبة للتسجيل. وصورة البطاقة يمكن أن تأتي لاحقًا. أما الدخل فلا فائدة منه هنا."
-
-  - id: S03
-    type: compare
-    part: check
-    rules: [R19, U39]
-    prompt:
-      en: "Which version asks for Youssef's name in a way that works for every family?"
-      ar: "أي نسخة تسأل عن اسم يوسف بطريقة تناسب كل الأسر؟"
-    a:
-      mock:
-        blocks:
-          - { kind: field, label: "@F3child", text: "" }
-    b:
-      mock:
-        blocks:
-          - { kind: field, label: { en: "Child's first name", ar: "الاسم الأول للطفل" }, text: "" }
-          - { kind: field, label: { en: "Child's last name", ar: "اسم عائلة الطفل" }, text: "", gap: s }
-    answer: a
-    misconceptions:
-      - id: MC-P01-006
-        when: [b]
-        feedback:
-          en: "First and last assumes two-part names. One full name field fits Youssef's four-part name and everyone else's."
-          ar: "الاسم الأول واسم العائلة يفترضان اسمًا من جزأين. حقل واحد للاسم الكامل يناسب اسم يوسف الرباعي واسم الجميع."
-    explain:
-      en: "One field, typed as it appears on his documents."
-      ar: "حقل واحد، يُكتب كما يظهر في أوراقه."
-
-  - id: S04
-    type: choose
-    part: check
-    rules: [R19, U39]
-    prompt:
-      en: "Most children have no allergies or conditions. How should the form ask?"
-      ar: "أغلب الأطفال ليس لديهم حساسية أو حالات طبية. كيف يجب أن يسأل النموذج؟"
+      en: "Try each version of the form. Which one should ship?"
+      ar: "جرّب كل نسخة من النموذج. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: *campfull
     options:
-      - { id: optional, text: { en: "An optional free-text field", ar: "حقل نص حرّ اختياري" } }
-      - { id: required, text: { en: "A required free-text field", ar: "حقل نص حرّ إلزامي" } }
-      - { id: yesno, text: { en: "\"Does your child have allergies or medical conditions?\" Yes / No, with details if Yes", ar: "«هل لدى طفلك حساسية أو حالات طبية؟» نعم / لا، مع التفاصيل إن كانت الإجابة نعم" } }
-    answer: [yesno]
+      - id: optional
+        text: { en: "Keep all seven; mark school, income and photo optional", ar: "أبقِ السبعة؛ واجعل المدرسة والدخل والصورة اختيارية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@F3a" }
+            - { kind: field, label: "@F3child", text: "", gap: m }
+            - { kind: field, label: "@F3age", text: "", gap: s }
+            - { kind: field, label: "@F3parent", text: "", gap: s }
+            - { kind: field, label: "@F3med", text: "", gap: s }
+            - { kind: field, label: { en: "School name (optional)", ar: "اسم المدرسة (اختياري)" }, text: "", gap: s }
+            - { kind: field, label: { en: "Monthly family income (optional)", ar: "دخل الأسرة الشهري (اختياري)" }, text: "", gap: s }
+            - { kind: field, label: { en: "Photo of the child (optional)", ar: "صورة الطفل (اختياري)" }, text: "", gap: s }
+            - { kind: button, text: "@F3btn", gap: m }
+      - id: income
+        text: { en: "Remove the income only", ar: "احذف الدخل فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@F3a" }
+            - { kind: field, label: "@F3child", text: "", gap: m }
+            - { kind: field, label: "@F3age", text: "", gap: s }
+            - { kind: field, label: "@F3parent", text: "", gap: s }
+            - { kind: field, label: "@F3med", text: "", gap: s }
+            - { kind: field, label: "@F3school", text: "", gap: s }
+            - { kind: field, label: "@F3photo", text: "", gap: s }
+            - { kind: button, text: "@F3btn", gap: m }
+      - id: needed
+        text: { en: "Keep the four it needs now; the photo on day one", ar: "أبقِ الأربعة المطلوبة الآن؛ والصورة في اليوم الأول" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@F3a" }
+            - { kind: field, label: "@F3child", text: "", gap: m }
+            - { kind: field, label: "@F3age", text: "", gap: s }
+            - { kind: field, label: "@F3parent", text: "", gap: s }
+            - { kind: field, label: "@F3med", text: "", gap: s }
+            - { kind: button, text: "@F3btn", gap: m }
+            - { kind: small, text: { en: "Day one: badge photo at the gate", ar: "اليوم الأول: صورة البطاقة عند البوابة" }, gap: l }
+    answer: [needed]
     misconceptions:
-      - id: MC-P01-008
+      - id: MC-P01-005
         when: [optional]
         feedback:
-          en: "An empty optional field could mean \"none\" or \"forgot\". For safety, the camp needs a clear answer."
-          ar: "الحقل الاختياري الفارغ قد يعني «لا يوجد» أو «نسيت». ولأجل السلامة، يحتاج المعسكر إجابة واضحة."
-      - id: MC-P01-008
-        when: [required]
+          en: "Marked optional, they're still on the form, and many parents will fill them in just in case. Remove what has no use; move what can wait."
+          ar: "حتى مع وسمها كاختيارية، ما زالت في النموذج، وسيملؤها كثير من الآباء احتياطًا. احذف ما لا فائدة له؛ وانقل ما يمكن أن ينتظر."
+      - id: MC-P01-002
+        when: [income]
         feedback:
-          en: "Most parents would have to type \"none\". A yes/no gets a clear answer in one tap."
-          ar: "أغلب الآباء سيضطرون إلى كتابة «لا يوجد». أما نعم/لا فتعطي إجابة واضحة بضغطة."
+          en: "A good start, but the school is never used, and the photo isn't needed until the first day. Ask only what registering needs."
+          ar: "بداية جيدة، لكن المدرسة لا تُستخدم أبدًا، والصورة لا تلزم قبل اليوم الأول. اسأل فقط عمّا يحتاجه التسجيل."
     explain:
-      en: "A required yes/no means every parent answers, and only those with something to say type details."
-      ar: "سؤال نعم/لا الإلزامي يعني أن كل وليّ أمر يجيب، ولا يكتب التفاصيل إلا من لديه ما يقوله."
+      en: "From Lesson 1: keep what the task needs now, move what can wait, and remove what nobody uses."
+      ar: "من الدرس 1: أبقِ ما تحتاجه المهمة الآن، وانقل ما يمكن أن ينتظر، واحذف ما لا يستخدمه أحد."
+
+  - id: S03
+    type: tune
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, EAS framework (NN/g): a simple, clear explanation reassures people and builds trust. Health details are personal; say who sees them and why."
+      ar: "اختبار مهارة، إطار EAS (NN/g): الشرح البسيط الواضح يطمئن الناس ويبني الثقة. والتفاصيل الصحية شخصية؛ فوضّح من يراها ولماذا."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "A simple, clear explanation reassures users, builds trust, and helps them understand the rationale behind each question." }
+    scenario:
+      en: "Youssef has a mild nut allergy. Samir isn't sure he wants to write it down for an academy he doesn't know yet."
+      ar: "لدى يوسف حساسية خفيفة من المكسّرات. ولا يعرف سمير هل يريد كتابتها لأكاديمية لا يعرفها بعد."
+    prompt:
+      en: "Try each version of the health field. Which one should ship?"
+      ar: "جرّب كل نسخة من حقل الصحة. أيّها يجب أن يُطلق؟"
+    start: bare
+    options:
+      - id: why
+        text: { en: "Say who sees it and what it's for", ar: "وضّح من يراه وما الغرض منه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F3med", text: "", hint: { en: "Only Youssef's coaches see this, so they know what to do in an emergency.", ar: "لا يرى هذا إلا مدرّبو يوسف، ليعرفوا ماذا يفعلون في حالة طارئة." } }
+      - id: bare
+        text: { en: "Just the label", ar: "التسمية فقط" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F3med", text: "" }
+      - id: legal
+        text: { en: "Add \"We collect this as required by our policies\"", ar: "أضف «نجمع هذا وفقًا لسياساتنا»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F3med", text: "", hint: { en: "We collect this as required by our policies.", ar: "نجمع هذا وفقًا لسياساتنا." } }
+    answer: [why]
+    misconceptions:
+      - id: MC-P01-027
+        when: [bare]
+        feedback:
+          en: "Samir has to guess who reads it and why. A worried parent may leave it vague, which is the worst outcome for Youssef."
+          ar: "على سمير أن يخمّن من يقرؤه ولماذا. والوالد القلق قد يكتبه بشكل مبهم، وهذه أسوأ نتيجة ليوسف."
+      - id: MC-P01-027
+        when: [legal]
+        feedback:
+          en: "That says the academy wants it, not why it helps Youssef. Name who sees it and what they'll do with it."
+          ar: "هذا يقول إن الأكاديمية تريده، لا لماذا يساعد يوسف. اذكر من يراه وماذا سيفعل به."
+    explain:
+      en: "From Lesson 1: when you ask something personal, say why, right at the field."
+      ar: "من الدرس 1: حين تسأل عن شيء شخصي، وضّح السبب، عند الحقل مباشرة."
+
+  - id: S04
+    type: tune
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, marking required fields (NN/g): mark every required field, and label the few optional ones. A note at the top is skipped or forgotten."
+      ar: "اختبار مهارة، تمييز الحقول الإلزامية (NN/g): ميّز كل حقل إلزامي، وسمِّ القليل الاختياري. والملاحظة في الأعلى تُتخطّى أو تُنسى."
+    ref: { url: "https://www.nngroup.com/articles/required-fields/", quote: "People don’t read instructions at the top of forms." }
+    scenario:
+      en: "After trimming, every field is required except a new one: \"What should the coaches call him?\""
+      ar: "بعد الحذف، كل الحقول إلزامية إلا حقلًا جديدًا: «بماذا يناديه المدرّبون؟»"
+    prompt:
+      en: "Try each way of marking the form. Which one should ship?"
+      ar: "جرّب كل طريقة لتمييز الحقول. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, label: "@F3child", text: "" }
+        - { kind: field, label: "@F3age", text: "", gap: s }
+        - { kind: field, label: "@F3parent", text: "", gap: s }
+        - { kind: field, label: "@F3med", text: "", gap: s }
+        - { kind: field, label: { en: "What should the coaches call him?", ar: "بماذا يناديه المدرّبون؟" }, text: "", gap: s }
+    options:
+      - id: note
+        text: { en: "A note at the top: \"All fields required except the last\"", ar: "ملاحظة في الأعلى: «كل الحقول إلزامية ما عدا الأخير»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "All fields are required except the last one.", ar: "كل الحقول إلزامية ما عدا الأخير." } }
+            - { kind: field, label: "@F3child", text: "", gap: s }
+            - { kind: field, label: "@F3age", text: "", gap: s }
+            - { kind: field, label: "@F3parent", text: "", gap: s }
+            - { kind: field, label: "@F3med", text: "", gap: s }
+            - { kind: field, label: { en: "What should the coaches call him?", ar: "بماذا يناديه المدرّبون؟" }, text: "", gap: s }
+      - id: both
+        text: { en: "A star on each required field, \"(optional)\" on the last", ar: "نجمة على كل حقل إلزامي، و«(اختياري)» على الأخير" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "* Required", ar: "* إلزامي" } }
+            - { kind: field, label: { en: "Child's full name *", ar: "اسم الطفل الكامل *" }, text: "", gap: s }
+            - { kind: field, label: { en: "Child's date of birth *", ar: "تاريخ ميلاد الطفل *" }, text: "", gap: s }
+            - { kind: field, label: { en: "Parent's mobile number *", ar: "رقم موبايل وليّ الأمر *" }, text: "", gap: s }
+            - { kind: field, label: { en: "Allergies or medical conditions *", ar: "حساسية أو حالات طبية *" }, text: "", gap: s }
+            - { kind: field, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "", gap: s }
+      - id: optonly
+        text: { en: "Only \"(optional)\" on the last field", ar: "«(اختياري)» على الحقل الأخير فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F3child", text: "" }
+            - { kind: field, label: "@F3age", text: "", gap: s }
+            - { kind: field, label: "@F3parent", text: "", gap: s }
+            - { kind: field, label: "@F3med", text: "", gap: s }
+            - { kind: field, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "", gap: s }
+    answer: [both]
+    misconceptions:
+      - id: MC-P01-028
+        when: [note]
+        feedback:
+          en: "Samir may skip the note, or forget it by the last field. Put the answer on each field."
+          ar: "قد يتخطّى سمير الملاحظة، أو ينساها عند الحقل الأخير. ضع الإجابة عند كل حقل."
+      - id: MC-P01-028
+        when: [optonly]
+        feedback:
+          en: "Nothing tells Samir that the other four must be filled in. If he doesn't notice the word at the end, he guesses. Star the required ones too."
+          ar: "لا شيء يخبر سمير أن الأربعة الأخرى يجب ملؤها. وإذا لم يلاحظ الكلمة في النهاية، فسيخمّن. ضع نجمة على الإلزامية أيضًا."
+    explain:
+      en: "From Lesson 2: a star on every required field, and \"(optional)\" on the ones people may skip."
+      ar: "من الدرس 2: نجمة على كل حقل إلزامي، و«(اختياري)» على الحقول التي يمكن تخطّيها."
 
   - id: S05
-    type: choose
+    type: tune
     part: check
-    rules: [R19, U39]
+    rules: [R19]
+    value:
+      en: "Skill check, cognitive load in forms (NN/g): communicate requirements and set expectations upfront. The coaches only use the nickname if a parent gives one, so the check is wrong, not the label."
+      ar: "اختبار مهارة، العبء الذهني في النماذج (NN/g): وضّح المتطلبات وحدّد التوقعات مسبقًا. والمدرّبون يستخدمون اسم الدلع فقط إذا أعطاه الوالد، فالتحقق هو الخطأ، لا التسمية."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "Communicate requirements and set expectations upfront." }
+    scenario:
+      en: "Samir leaves the nickname empty and presses Register. The coaches only use a nickname if a parent gives one."
+      ar: "يترك سمير اسم الدلع فارغًا ويضغط «سجّل». والمدرّبون يستخدمون اسم الدلع فقط إذا أعطاه الوالد."
     prompt:
-      en: "After trimming, every field is required except \"What should the coaches call him?\" How do you show that?"
-      ar: "بعد التقليص، كل الحقول إلزامية ما عدا «بماذا يناديه المدرّبون؟». كيف توضّح ذلك؟"
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: &nickerr
+        - { kind: field, tone: bad, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "", error: { en: "This field is required.", ar: "هذا الحقل إلزامي." } }
+        - { kind: button, text: "@F3btn", gap: m }
     options:
-      - { id: grey, text: { en: "Make that label lighter grey", ar: "اجعل تلك التسمية رمادية أفتح" } }
-      - { id: word, text: { en: "Add \"(optional)\" to that label", ar: "أضف «(اختياري)» إلى تلك التسمية" } }
-      - { id: stars, text: { en: "Star every other label", ar: "ضع نجمة على كل التسميات الأخرى" } }
-    answer: [word]
+      - id: star
+        text: { en: "Make the label required: add a star", ar: "اجعل التسمية إلزامية: أضف نجمة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "What should the coaches call him? *", ar: "بماذا يناديه المدرّبون؟ *" }, text: "" }
+            - { kind: button, text: "@F3btn", gap: m }
+      - id: keep
+        text: { en: "Keep it; the error explains what to do", ar: "أبقِه؛ فرسالة الخطأ توضّح ما يجب فعله" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *nickerr
+      - id: check
+        text: { en: "Fix the check so an empty nickname goes through", ar: "أصلِح التحقق ليمرّ اسم الدلع الفارغ" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "" }
+            - { kind: button, text: "@F3btn", gap: m }
+            - { kind: small, color: green, text: { en: "Youssef is registered!", ar: "تمّ تسجيل يوسف!" }, gap: s }
+    answer: [check]
     misconceptions:
-      - id: MC-P01-003
-        when: [stars, grey]
+      - id: MC-P01-004
+        when: [star]
         feedback:
-          en: "Symbols and shades need decoding. One word on the one exception is clearer for everyone."
-          ar: "الرموز والدرجات تحتاج إلى تفسير. وكلمة واحدة على الاستثناء الوحيد أوضح للجميع."
+          en: "The label and the check now agree, but every parent must invent a nickname the academy doesn't need. Fix the check."
+          ar: "الآن تتّفق التسمية مع التحقق، لكن على كل والد أن يخترع اسم دلع لا تحتاجه الأكاديمية. أصلِح التحقق."
+      - id: MC-P01-004
+        when: [keep]
+        feedback:
+          en: "The label said he could skip it, and the form punished him for trusting it. Make them agree."
+          ar: "قالت التسمية إنه يستطيع تخطّيه، ثم عاقبه النموذج لأنه صدّقها. اجعلهما يتّفقان."
     explain:
-      en: "Mark the minority, in words."
-      ar: "علّم الأقلية، بالكلمات."
+      en: "From Lesson 2: decide what the task needs, then make the label and the check say the same thing."
+      ar: "من الدرس 2: قرّر ما تحتاجه المهمة، ثم اجعل التسمية والتحقق يقولان الشيء نفسه."
 
   - id: S06
-    type: choose
+    type: tune
     part: check
-    rules: [R19, U40]
+    rules: [R19]
+    value:
+      en: "Skill check, international sites (NN/g): separate first and last name fields are a prescription for confusion. One full-name field fits every family."
+      ar: "اختبار مهارة، المواقع الدولية (NN/g): الحقول المنفصلة للاسم الأول واسم العائلة وصفة للارتباك. وحقل واحد للاسم الكامل يناسب كل عائلة."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "Offering separate fields for first name and last name is a prescription for confusion." }
+    scenario:
+      en: "The developer wants to split the child's name so the system can sort by family name."
+      ar: "يريد المطوّر تقسيم اسم الطفل ليتمكّن النظام من الترتيب حسب اسم العائلة."
     prompt:
-      en: "Samir types \"+20 10 1234 5678\". The form says \"Use 11 digits starting with 0\". Best fix?"
-      ar: "كتب سمير «‎+20 10 1234 5678». فقال النموذج «استخدم 11 رقمًا تبدأ بـ0». ما أفضل إصلاح؟"
+      en: "Try each way of asking for Youssef's name. Which one should ship?"
+      ar: "جرّب كل طريقة لطلب اسم يوسف. أيّها يجب أن تُطلق؟"
+    start: split
     options:
-      - { id: keep, text: { en: "Keep it; the error explains the rule", ar: "أبقه؛ رسالة الخطأ تشرح القاعدة" } }
-      - { id: hint, text: { en: "Show the format as a hint before he types", ar: "اعرض الصيغة كتلميح قبل أن يكتب" } }
-      - { id: accept, text: { en: "Accept +20 and spaces, and convert the number in the system", ar: "اقبل ‎+20 والمسافات، وحوّل الرقم في النظام" } }
+      - id: one
+        text: { en: "One field: \"Child's full name, as on his birth certificate\"", ar: "حقل واحد: «اسم الطفل الكامل، كما في شهادة الميلاد»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Child's full name, as on his birth certificate *", ar: "اسم الطفل الكامل، كما في شهادة الميلاد *" }, filled: true, text: { en: "Youssef Samir Abdelaziz Farid", ar: "يوسف سمير عبد العزيز فريد" } }
+      - id: split
+        text: { en: "Two fields: first name and last name", ar: "حقلان: الاسم الأول واسم العائلة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Child's first name *", ar: "الاسم الأول للطفل *" }, text: "" }
+            - { kind: field, label: { en: "Child's last name *", ar: "اسم عائلة الطفل *" }, text: "", gap: s }
+      - id: three
+        text: { en: "Three fields: name, father's name, family name", ar: "ثلاثة حقول: الاسم، اسم الأب، اسم العائلة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Child's name *", ar: "اسم الطفل *" }, text: "" }
+            - { kind: field, label: { en: "Father's name *", ar: "اسم الأب *" }, text: "", gap: s }
+            - { kind: field, label: { en: "Family name *", ar: "اسم العائلة *" }, text: "", gap: s }
+    answer: [one]
+    misconceptions:
+      - id: MC-P01-006
+        when: [split]
+        feedback:
+          en: "Samir has to decide where \"Samir Abdelaziz\" goes, and the next family's names won't fit two boxes either. One field."
+          ar: "على سمير أن يقرّر أين يكتب «سمير عبد العزيز»، وأسماء العائلة التالية لن تناسب خانتين أيضًا. حقل واحد."
+      - id: MC-P01-006
+        when: [three]
+        feedback:
+          en: "This fits some families and fails others. Names don't share one structure; let each family type theirs."
+          ar: "هذا يناسب بعض العائلات ويفشل مع غيرها. الأسماء ليس لها بنية واحدة؛ فدع كل عائلة تكتب اسمها."
+    explain:
+      en: "From Lesson 3: one full-name field, typed as on the official document, fits every naming pattern."
+      ar: "من الدرس 3: حقل واحد للاسم الكامل، يُكتب كما في الوثيقة الرسمية، يناسب كل أنماط الأسماء."
+
+  - id: S07
+    type: tune
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, international sites (NN/g): allow phone numbers with a country code and a varying number of digits. ⁦+20 10 1234 5678⁩ is the same number as ⁦010 1234 5678⁩."
+      ar: "اختبار مهارة، المواقع الدولية (NN/g): اسمح بأرقام الهواتف مع رمز الدولة وبعدد أرقام متغيّر. والرقم ‎⁦+20 10 1234 5678⁩ هو نفسه ⁦010 1234 5678⁩."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "For phone numbers, allow for international numbers containing a varying number of digits and a country code." }
+    scenario:
+      en: "Samir pastes his number from his contacts, with the country code. The form rejects it."
+      ar: "يلصق سمير رقمه من جهات الاتصال، مع رمز الدولة. فيرفضه النموذج."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, tone: bad, label: "@F3parent", filled: true, text: "⁦+20 10 1234 5678⁩", error: { en: "Use 11 digits starting with 0.", ar: "استخدم 11 رقمًا تبدأ بـ 0." } }
+    options:
+      - id: hint
+        text: { en: "Add a hint: \"Start with 0, no country code\"", ar: "أضف تلميحًا: «ابدأ بـ 0، بدون رمز الدولة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F3parent", text: "", hint: { en: "Start with 0, no country code, no spaces.", ar: "ابدأ بـ 0، بدون رمز الدولة، بدون مسافات." } }
+      - id: accept
+        text: { en: "Accept it with or without the country code and spaces", ar: "اقبله برمز الدولة أو بدونه، وبالمسافات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F3parent", filled: true, text: "⁦+20 10 1234 5678⁩" }
+            - { kind: small, color: green, text: { en: "✓ Saved", ar: "✓ تم الحفظ" }, gap: xs }
+      - id: picker
+        text: { en: "Split it: a country box and an 11-digit box", ar: "قسّمه: خانة للدولة وخانة من 11 رقمًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: "@F3parent" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: field, text: "⁦+20⁩" }
+                - { kind: field, tone: bad, filled: true, text: "⁦10 1234 5678⁩" }
+            - { kind: small, color: red, text: { en: "Use 11 digits starting with 0.", ar: "استخدم 11 رقمًا تبدأ بـ 0." }, gap: xs }
     answer: [accept]
     misconceptions:
       - id: MC-P01-007
-        when: [hint, keep]
+        when: [hint]
         feedback:
-          en: "His number is correct, just in international format. Let the system handle the format."
-          ar: "رقمه صحيح، لكن بالصيغة الدولية. دع النظام يتعامل مع الصيغة."
-    explain:
-      en: "+20 10 1234 5678 and 010 1234 5678 are the same number. Accept both."
-      ar: "‎+20 10 1234 5678 و 010 1234 5678 رقم واحد. اقبل الاثنين."
-
-  - id: S07
-    type: choose
-    part: check
-    rules: [R19, U40]
-    prompt:
-      en: "The label says \"Photo of the child (optional)\". Samir skips it and gets \"Photo is required\". What's wrong?"
-      ar: "التسمية تقول «صورة الطفل (اختياري)». تخطّاها سمير فظهر «الصورة إلزامية». ما الخطأ؟"
-    options:
-      - { id: nothing, text: { en: "Nothing; photos are always required", ar: "لا شيء؛ الصور إلزامية دائمًا" } }
-      - { id: user, text: { en: "Samir should have added a photo", ar: "كان على سمير أن يضيف صورة" } }
-      - { id: mismatch, text: { en: "The label and the check disagree", ar: "التسمية والتحقق لا يتّفقان" } }
-    answer: [mismatch]
-    misconceptions:
-      - id: MC-P01-004
-        when: [user, nothing]
+          en: "The number was right. Now Samir has to edit a pasted number by hand on his phone. Let the system tidy it."
+          ar: "الرقم كان صحيحًا. والآن على سمير أن يعدّل رقمًا ملصوقًا بيده على هاتفه. دع النظام يرتّبه."
+      - id: MC-P01-007
+        when: [picker]
         feedback:
-          en: "Samir followed the label. The form contradicts itself; fix whichever one is wrong."
-          ar: "اتّبع سمير التسمية. النموذج يناقض نفسه؛ أصلح أيّهما الخاطئ."
+          en: "Splitting it still forces one exact shape, and his pasted number breaks again. Accept the number as people write it."
+          ar: "التقسيم ما زال يفرض شكلًا واحدًا محدّدًا، فيفشل رقمه الملصوق مرة أخرى. اقبل الرقم كما يكتبه الناس."
     explain:
-      en: "Decide once whether it's required, then make the label and the check agree."
-      ar: "قرّر مرة واحدة إن كان إلزاميًا، ثم اجعل التسمية والتحقق يتّفقان."
-
-  - id: S08
-    type: spot
-    part: check
-    rules: [R19, U13]
-    prompt:
-      en: "Which label would confuse Samir?"
-      ar: "أي تسمية ستربك سمير؟"
-    mock:
-      blocks:
-        - { kind: field, label: "@F3child", text: "", region: child }
-        - { kind: field, label: { en: "Guardian MSISDN", ar: "MSISDN وليّ الأمر" }, text: "", gap: s, region: msisdn }
-        - { kind: field, label: "@F3age", text: "", gap: s, region: dob }
-        - { kind: field, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "", gap: s, region: call }
-    regions:
-      - { id: child, label: "@F3child" }
-      - { id: msisdn, label: { en: "Guardian MSISDN", ar: "MSISDN وليّ الأمر" } }
-      - { id: dob, label: "@F3age" }
-      - { id: call, label: { en: "What should the coaches call him?", ar: "بماذا يناديه المدرّبون؟" } }
-    answer: [msisdn]
-    misconceptions:
-      - id: MC-P01-008
-        when: [child, dob, call]
-        feedback:
-          en: "That one is clear. Look for a word only an engineer would use."
-          ar: "هذه واضحة. ابحث عن كلمة لا يستخدمها إلا مهندس."
-    explain:
-      en: "\"MSISDN\" means mobile number. Say \"Parent's mobile number\"."
-      ar: "«MSISDN» تعني رقم الموبايل. قل «رقم موبايل وليّ الأمر»."
+      en: "From Lesson 3: accept the formats people actually use, country codes included, and tidy them in the system."
+      ar: "من الدرس 3: اقبل الصيغ التي يستخدمها الناس فعلًا، بما فيها رموز الدول، ورتّبها في النظام."
