@@ -93,7 +93,7 @@ steps:
       ar: "من الدرس 1: التسمية وحقلها مجموعة من عنصرين. مسافة صغيرة داخل الزوج، ومسافة أكبر قبل التسمية التالية."
 
   - id: S03
-    type: fix
+    type: tune
     part: check
     rules: [R19]
     value:
@@ -107,6 +107,7 @@ steps:
       en: "What should you change?"
       ar: "ماذا تغيّر؟"
     mock:
+      caption: { en: "Now", ar: "الآن" }
       blocks:
         - kind: row
           blocks:
@@ -117,9 +118,42 @@ steps:
         - { kind: button, text: { en: "Become a member", ar: "اشترك في النادي" }, gap: l }
         - { kind: button, emphasis: low, text: { en: "I'm already a member", ar: "أنا مشترك بالفعل" }, gap: s }
     options:
-      - { id: under, text: { en: "Add \"Book a trial class as a guest\" right under the two buttons", ar: "أضف «احجز حصة تجريبية كزائر» تحت الزرّين مباشرة" } }
-      - { id: bold, text: { en: "Keep Guest in the corner but make it bold", ar: "أبقِ «زائر» في الزاوية لكن اجعله عريضًا" } }
-      - { id: popup, text: { en: "Show a pop-up explaining that guests can book", ar: "اعرض نافذة منبثقة تشرح أن الزوّار يستطيعون الحجز" } }
+      - id: under
+        text: { en: "Add \"Book a trial class as a guest\" right under the two buttons", ar: "أضف «احجز حصة تجريبية كزائر» تحت الزرّين مباشرة" }
+        mock:
+          blocks:
+            - { kind: title, text: { en: "Book your first class", ar: "احجز حصتك الأولى" }, gap: xl }
+            - { kind: button, text: { en: "Become a member", ar: "اشترك في النادي" }, gap: l }
+            - { kind: button, emphasis: low, text: { en: "I'm already a member", ar: "أنا مشترك بالفعل" }, gap: s }
+            - { kind: link, text: { en: "Book a trial class as a guest", ar: "احجز حصة تجريبية كزائر" }, gap: s }
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+      - id: bold
+        text: { en: "Keep Guest in the corner but make it bold", ar: "أبقِ «زائر» في الزاوية لكن اجعله عريضًا" }
+        mock:
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: small, text: "" }
+                - { kind: small, text: "" }
+                - { kind: link, text: { en: "Guest", ar: "زائر" }, weight: bold }
+            - { kind: title, text: { en: "Book your first class", ar: "احجز حصتك الأولى" }, gap: xl }
+            - { kind: button, text: { en: "Become a member", ar: "اشترك في النادي" }, gap: l }
+            - { kind: button, emphasis: low, text: { en: "I'm already a member", ar: "أنا مشترك بالفعل" }, gap: s }
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+      - id: popup
+        text: { en: "Show a pop-up explaining that guests can book", ar: "اعرض نافذة منبثقة تشرح أن الزوّار يستطيعون الحجز" }
+        mock:
+          blocks:
+            - { kind: group, tone: tint, blocks: [{ kind: text, text: { en: "Guests can book a trial class too. Tap Guest at the top.", ar: "يستطيع الزوّار حجز حصة تجريبية أيضًا. اضغط «زائر» في الأعلى." } }, { kind: button, emphasis: low, text: { en: "OK", ar: "حسنًا" }, gap: s }] }
+            - kind: row
+              blocks:
+                - { kind: small, text: "" }
+                - { kind: small, text: "" }
+                - { kind: link, text: { en: "Guest", ar: "زائر" } }
+            - { kind: title, text: { en: "Book your first class", ar: "احجز حصتك الأولى" }, gap: xl }
+            - { kind: button, text: { en: "Become a member", ar: "اشترك في النادي" }, gap: l }
+            - { kind: button, emphasis: low, text: { en: "I'm already a member", ar: "أنا مشترك بالفعل" }, gap: s }
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
     answer: [under]
     misconceptions:
       - id: MC-P10-033
@@ -132,7 +166,7 @@ steps:
       ar: "من الدرس 1: رأت NN/g رابط «تخطَّ» البعيد في Kayak يجعل تسجيل الدخول يبدو إلزاميًا. الطريق الاختياري مكانه داخل مجموعة الخيارات التي ينتمي إليها."
 
   - id: S04
-    type: fix
+    type: tune
     part: check
     rules: [R19]
     value:
@@ -146,7 +180,7 @@ steps:
       en: "What should you change?"
       ar: "ماذا تغيّر؟"
     mock:
-      caption: { en: "First screen, before scrolling", ar: "الشاشة الأولى، قبل التمرير" }
+      caption: { en: "Now: first screen, before scrolling", ar: "الآن: الشاشة الأولى، قبل التمرير" }
       blocks:
         - kind: group
           tone: plain
@@ -166,9 +200,74 @@ steps:
             - { kind: small, text: "", height: 80 }
             - { kind: heading, text: "@G1e" }
     options:
-      - { id: line, text: { en: "Add a second full-width line under the banner", ar: "أضف خطًا ثانيًا بعرض الصفحة تحت الشريط" } }
-      - { id: bigger, text: { en: "Make the banner bigger so people stop at it", ar: "كبّر الشريط حتى يتوقّف الناس عنده" } }
-      - { id: peek, text: { en: "Move the banner after Spinning and close the gap, so Spinning starts on the first screen", ar: "انقل الشريط بعد السبينينغ وقلّل المسافة، حتى تبدأ حصة السبينينغ في الشاشة الأولى" } }
+      - id: line
+        text: { en: "Add a second full-width line under the banner", ar: "أضف خطًا ثانيًا بعرض الصفحة تحت الشريط" }
+        mock:
+          caption: { en: "After: first screen, before scrolling", ar: "بعد التغيير: الشاشة الأولى، قبل التمرير" }
+          blocks:
+            - kind: group
+              tone: plain
+              height: 360
+              blocks:
+                - { kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }
+                - { kind: heading, text: "@G1a", gap: l }
+                - { kind: small, text: "@G1b", gap: xs }
+                - { kind: chip, text: "@G1c", gap: xs }
+                - { kind: button, emphasis: low, text: "@G1d", gap: s }
+                - { kind: divider, gap: l }
+                - kind: group
+                  tone: tint
+                  gap: l
+                  blocks:
+                    - { kind: heading, text: "@G1n" }
+                - { kind: divider, gap: l }
+                - { kind: small, text: "", height: 80 }
+                - { kind: heading, text: "@G1e" }
+      - id: bigger
+        text: { en: "Make the banner bigger so people stop at it", ar: "كبّر الشريط حتى يتوقّف الناس عنده" }
+        mock:
+          caption: { en: "After: first screen, before scrolling", ar: "بعد التغيير: الشاشة الأولى، قبل التمرير" }
+          blocks:
+            - kind: group
+              tone: plain
+              height: 360
+              blocks:
+                - { kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }
+                - { kind: heading, text: "@G1a", gap: l }
+                - { kind: small, text: "@G1b", gap: xs }
+                - { kind: chip, text: "@G1c", gap: xs }
+                - { kind: button, emphasis: low, text: "@G1d", gap: s }
+                - { kind: divider, gap: l }
+                - kind: group
+                  tone: tint
+                  gap: l
+                  blocks:
+                    - { kind: heading, text: "@G1n", px: 22 }
+                    - { kind: text, text: { en: "Bring a friend this month and you both get a free class.", ar: "ادعُ صديقًا هذا الشهر واحصلا معًا على حصة مجانية." }, gap: xs }
+                - { kind: small, text: "", height: 80 }
+                - { kind: heading, text: "@G1e" }
+      - id: peek
+        text: { en: "Move the banner after Spinning and close the gap, so Spinning starts on the first screen", ar: "انقل الشريط بعد السبينينغ وقلّل المسافة، حتى تبدأ حصة السبينينغ في الشاشة الأولى" }
+        mock:
+          caption: { en: "After: first screen, before scrolling", ar: "بعد التغيير: الشاشة الأولى، قبل التمرير" }
+          blocks:
+            - kind: group
+              tone: plain
+              height: 360
+              blocks:
+                - { kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }
+                - { kind: heading, text: "@G1a", gap: l }
+                - { kind: small, text: "@G1b", gap: xs }
+                - { kind: chip, text: "@G1c", gap: xs }
+                - { kind: button, emphasis: low, text: "@G1d", gap: s }
+                - { kind: heading, text: "@G1e", gap: xl }
+                - { kind: small, text: "@G1f", gap: xs }
+                - { kind: chip, tone: warn, text: "@G1g", gap: xs }
+                - kind: group
+                  tone: tint
+                  gap: xl
+                  blocks:
+                    - { kind: heading, text: "@G1n" }
     answer: [peek]
     misconceptions:
       - id: MC-P10-035
@@ -181,7 +280,7 @@ steps:
       ar: "من الدرس 2: وهم الاكتمال من NN/g. الخط والشريط والمسافة تحته تصنع نهاية وهمية. والمحتوى الذي يبدأ في الشاشة الأولى يخبر الناس أن يكملوا."
 
   - id: S05
-    type: choose
+    type: tune
     part: check
     rules: [R19, U29]
     value:
@@ -194,11 +293,20 @@ steps:
     prompt:
       en: "What should you change so Hala can jump straight to Spinning?"
       ar: "ماذا تغيّر حتى تنتقل هالة مباشرة إلى حصة السبينينغ؟"
+    mock: { caption: { en: "Now", ar: "الآن" }, blocks: [{ kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }, { kind: heading, text: "@G1a", gap: l }, { kind: small, text: "@G1b", gap: xs }, { kind: heading, text: "@G1e", gap: l }, { kind: small, text: "@G1f", gap: xs }, { kind: group, tone: tint, gap: xl, blocks: [{ kind: small, text: { en: "Headings the screen reader finds", ar: "العناوين التي يجدها الـ Screen reader" } }, { kind: meta, text: { en: "1. Sunday classes", ar: "1. حصص الأحد" }, gap: xs }] }] }
     options:
-      - { id: divider, text: { en: "Put a divider line between the two classes", ar: "ضع خطًا فاصلًا بين الحصتين" } }
-      - { id: code, text: { en: "Code each class name as a heading", ar: "عرّف اسم كل حصة كعنوان في الكود" } }
-      - { id: larger, text: { en: "Make the class names larger than the page title", ar: "اجعل أسماء الحصص أكبر من عنوان الصفحة" } }
-      - { id: icon, text: { en: "Add a class icon before each name", ar: "أضف أيقونة قبل اسم كل حصة" } }
+      - id: divider
+        text: { en: "Put a divider line between the two classes", ar: "ضع خطًا فاصلًا بين الحصتين" }
+        mock: { blocks: [{ kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }, { kind: heading, text: "@G1a", gap: l }, { kind: small, text: "@G1b", gap: xs }, { kind: divider, gap: m }, { kind: heading, text: "@G1e", gap: l }, { kind: small, text: "@G1f", gap: xs }, { kind: group, tone: tint, gap: xl, blocks: [{ kind: small, text: { en: "Headings the screen reader finds", ar: "العناوين التي يجدها الـ Screen reader" } }, { kind: meta, text: { en: "1. Sunday classes", ar: "1. حصص الأحد" }, gap: xs }] }], caption: { en: "After this change", ar: "بعد هذا التغيير" } }
+      - id: code
+        text: { en: "Code each class name as a heading", ar: "عرّف اسم كل حصة كعنوان في الكود" }
+        mock: { blocks: [{ kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }, { kind: heading, text: "@G1a", gap: l }, { kind: small, text: "@G1b", gap: xs }, { kind: heading, text: "@G1e", gap: l }, { kind: small, text: "@G1f", gap: xs }, { kind: group, tone: tint, gap: xl, blocks: [{ kind: small, text: { en: "Headings the screen reader finds", ar: "العناوين التي يجدها الـ Screen reader" } }, { kind: meta, text: { en: "1. Sunday classes", ar: "1. حصص الأحد" }, gap: xs }, { kind: meta, text: { en: "2. Morning Yoga", ar: "2. يوغا الصباح" }, gap: xs }, { kind: meta, text: { en: "3. Spinning", ar: "3. سبينينغ" }, gap: xs }] }], caption: { en: "After this change", ar: "بعد هذا التغيير" } }
+      - id: larger
+        text: { en: "Make the class names larger than the page title", ar: "اجعل أسماء الحصص أكبر من عنوان الصفحة" }
+        mock: { blocks: [{ kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }, { kind: heading, text: "@G1a", gap: l, px: 28 }, { kind: small, text: "@G1b", gap: xs }, { kind: heading, text: "@G1e", gap: l, px: 28 }, { kind: small, text: "@G1f", gap: xs }, { kind: group, tone: tint, gap: xl, blocks: [{ kind: small, text: { en: "Headings the screen reader finds", ar: "العناوين التي يجدها الـ Screen reader" } }, { kind: meta, text: { en: "1. Sunday classes", ar: "1. حصص الأحد" }, gap: xs }] }], caption: { en: "After this change", ar: "بعد هذا التغيير" } }
+      - id: icon
+        text: { en: "Add a class icon before each name", ar: "أضف أيقونة قبل اسم كل حصة" }
+        mock: { blocks: [{ kind: title, text: { en: "Sunday classes", ar: "حصص الأحد" } }, { kind: heading, text: { en: "🧘 Morning Yoga", ar: "🧘 يوغا الصباح" }, gap: l }, { kind: small, text: "@G1b", gap: xs }, { kind: heading, text: { en: "🚴 Spinning", ar: "🚴 سبينينغ" }, gap: l }, { kind: small, text: "@G1f", gap: xs }, { kind: group, tone: tint, gap: xl, blocks: [{ kind: small, text: { en: "Headings the screen reader finds", ar: "العناوين التي يجدها الـ Screen reader" } }, { kind: meta, text: { en: "1. Sunday classes", ar: "1. حصص الأحد" }, gap: xs }] }], caption: { en: "After this change", ar: "بعد هذا التغيير" } }
     answer: [code]
     misconceptions:
       - id: MC-P10-037
