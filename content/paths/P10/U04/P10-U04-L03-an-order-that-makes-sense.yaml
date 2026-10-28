@@ -1,253 +1,417 @@
 id: P10-U04-L03
 mode: lesson
-minutes: 9
+minutes: 8
 title:
   en: "An order that makes sense without the columns"
-  ar: "ترتيب منطقي حتى بدون الأعمدة"
+  ar: "ترتيب منطقي دون الأعمدة"
+sources:
+  - title: { en: "Challenges for Screen-Reader Users on Mobile (NN/g)", ar: "صعوبات مستخدمي الـ Screen reader على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/"
+  - title: { en: "Responsive Web Design (RWD) and User Experience (NN/g)", ar: "التصميم المتجاوب (Responsive design) وتجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/responsive-web-design-definition/"
 review_labels:
+  MC-P10-061: { en: "Hide what's optional, never what decides", ar: "أخفِ الاختياري، لا ما يحسم القرار" }
   MC-P10-066: { en: "Facts come before the action in the reading order", ar: "المعلومات قبل الإجراء في ترتيب القراءة" }
   MC-P10-067: { en: "Moving things visually doesn't change the reading order", ar: "نقل العناصر بصريًا لا يغيّر ترتيب القراءة" }
-  MC-P10-061: { en: "Hide what's optional, never what decides", ar: "أخفِ الاختياري، لا ما يحسم القرار" }
+  MC-P10-079: { en: "Keep each label with its value", ar: "أبقِ كل تسمية مع قيمتها" }
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Mona listens to the page", ar: "منى تستمع إلى الصفحة" }
     body:
-      en: "Mona wants to book Sara's workshop too. She's blind and uses a screen reader, which reads the page aloud from top to bottom.\n\nOn a laptop, the page looks fine. This is what Mona hears:"
-      ar: "منى تريد حجز ورشة سارة أيضًا. منى كفيفة وتستخدم Screen reader، يقرأ الصفحة بصوت عالٍ من الأعلى إلى الأسفل.\n\nعلى الـ Laptop تبدو الصفحة سليمة. وهذا ما تسمعه منى:"
+      en: "Mona wants to book Sara's workshop too. She's blind and uses a screen reader, which reads the page aloud, one item at a time, in the order of the page's code.\n\nOn a laptop, the page looks fine. This is what Mona hears:"
+      ar: "تريد منى حجز ورشة سارة أيضًا. منى كفيفة وتستخدم Screen reader، يقرأ الصفحة بصوت عالٍ، عنصرًا بعد عنصر، بترتيب الكود.\n\nعلى الـ Laptop تبدو الصفحة سليمة. وهذا ما تسمعه منى:"
     mock:
       caption: { en: "Read aloud, in order", ar: "تُقرأ بصوت عالٍ، بالترتيب" }
-      blocks:
-        - { kind: meta, text: "@W1a" }
-        - { kind: meta, text: "@W1i", gap: xs }
-        - { kind: meta, text: "@W1f", gap: xs }
-        - { kind: meta, text: "@W1j", gap: xs }
-        - { kind: meta, text: "@W1b", gap: xs }
-        - { kind: meta, text: "@W1c", gap: xs }
-        - { kind: meta, text: "@W1d", gap: xs }
-        - { kind: meta, text: "@W1g", gap: xs }
+      blocks: &heard
+        - { kind: meta, text: { en: "1. Get the monthly newsletter", ar: "1. اشترك في النشرة الشهرية" } }
+        - { kind: meta, text: { en: "2. Reserve a place, button", ar: "2. احجز مكانك، زر" }, gap: xs }
+        - { kind: meta, text: { en: "3. Free", ar: "3. مجاني" }, gap: xs }
+        - { kind: meta, text: { en: "4. Sketch Your First App", ar: "4. ارسم تطبيقك الأول" }, gap: xs }
+        - { kind: meta, text: { en: "5. Tuesday 17 November, 18:00–20:00", ar: "5. الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00" }, gap: xs }
+        - { kind: meta, text: { en: "6. Downtown Learning Hub, Room 2", ar: "6. مركز التعلّم بوسط البلد، قاعة 2" }, gap: xs }
 
   - id: S02
-    type: predict
+    type: tune
     part: try
     rules: [R12]
-    prompt: { en: "Why would the screen reader read it in this odd order?", ar: "لماذا يقرأ الـ Screen reader الصفحة بهذا الترتيب الغريب؟" }
+    value:
+      en: "Screen readers on mobile (NN/g): the user can't jump around; to reach the last element in the sequence they must pass through all the ones before it. The code order is what they hear."
+      ar: "قارئ الشاشة على الهاتف (NN/g): لا يستطيع المستخدم القفز؛ وليصل إلى آخر عنصر في التسلسل عليه أن يمرّ بكل ما قبله. وترتيب الكود هو ما يسمعه."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "To access the last element in the sequence, they must pass through all the ones preceding it." }
+    prompt:
+      en: "Mona can't skip ahead; she hears each item in turn. Try each change to the code order. Which one should ship?"
+      ar: "لا تستطيع منى القفز إلى الأمام؛ فهي تسمع كل عنصر بدوره. جرّب كل تغيير في ترتيب الكود. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, read aloud", ar: "الآن، بصوت عالٍ" }
+      blocks: *heard
     options:
-      - { id: bug, text: { en: "The screen reader has a bug", ar: "في الـ Screen reader خلل" } }
-      - { id: code, text: { en: 'It follows the order in the code, not the layout', ar: "يتبع الترتيب في الكود، لا التخطيط" } }
-      - { id: size, text: { en: "It reads the biggest things first", ar: "يقرأ العناصر الأكبر أولًا" } }
-    answer: [code]
+      - id: reorder
+        text: { en: "Title, time, place, price, then Reserve; the newsletter last", ar: "العنوان، الموعد، المكان، السعر، ثم زر الحجز؛ والنشرة في النهاية" }
+        mock:
+          caption: { en: "After this change, read aloud", ar: "بعد هذا التغيير، بصوت عالٍ" }
+          blocks:
+            - { kind: meta, text: { en: "1. Sketch Your First App", ar: "1. ارسم تطبيقك الأول" } }
+            - { kind: meta, text: { en: "2. Tuesday 17 November, 18:00–20:00", ar: "2. الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00" }, gap: xs }
+            - { kind: meta, text: { en: "3. Downtown Learning Hub, Room 2", ar: "3. مركز التعلّم بوسط البلد، قاعة 2" }, gap: xs }
+            - { kind: meta, text: { en: "4. Free", ar: "4. مجاني" }, gap: xs }
+            - { kind: meta, text: { en: "5. Reserve a place, button", ar: "5. احجز مكانك، زر" }, gap: xs }
+            - { kind: meta, text: { en: "6. Get the monthly newsletter", ar: "6. اشترك في النشرة الشهرية" }, gap: xs }
+      - id: label
+        text: { en: "Keep the order, but give the newsletter a clearer name", ar: "أبقِ الترتيب، لكن أعطِ النشرة اسمًا أوضح" }
+        mock:
+          caption: { en: "After this change, read aloud", ar: "بعد هذا التغيير، بصوت عالٍ" }
+          blocks:
+            - { kind: meta, text: { en: "1. Monthly newsletter about new workshops", ar: "1. نشرة شهرية عن الورش الجديدة" } }
+            - { kind: meta, text: { en: "2. Reserve a place, button", ar: "2. احجز مكانك، زر" }, gap: xs }
+            - { kind: meta, text: { en: "3. Free", ar: "3. مجاني" }, gap: xs }
+            - { kind: meta, text: { en: "4. Sketch Your First App", ar: "4. ارسم تطبيقك الأول" }, gap: xs }
+            - { kind: meta, text: { en: "5. Tuesday 17 November, 18:00–20:00", ar: "5. الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00" }, gap: xs }
+            - { kind: meta, text: { en: "6. Downtown Learning Hub, Room 2", ar: "6. مركز التعلّم بوسط البلد، قاعة 2" }, gap: xs }
+      - id: action
+        text: { en: "Reserve first, so Mona reaches the action fastest", ar: "زر الحجز أولًا، حتى تصل منى إلى الإجراء أسرع" }
+        mock:
+          caption: { en: "After this change, read aloud", ar: "بعد هذا التغيير، بصوت عالٍ" }
+          blocks:
+            - { kind: meta, text: { en: "1. Reserve a place, button", ar: "1. احجز مكانك، زر" } }
+            - { kind: meta, text: { en: "2. Sketch Your First App", ar: "2. ارسم تطبيقك الأول" }, gap: xs }
+            - { kind: meta, text: { en: "3. Tuesday 17 November, 18:00–20:00", ar: "3. الثلاثاء 17 نوفمبر، من 18:00 إلى 20:00" }, gap: xs }
+            - { kind: meta, text: { en: "4. Downtown Learning Hub, Room 2", ar: "4. مركز التعلّم بوسط البلد، قاعة 2" }, gap: xs }
+            - { kind: meta, text: { en: "5. Free", ar: "5. مجاني" }, gap: xs }
+            - { kind: meta, text: { en: "6. Get the monthly newsletter", ar: "6. اشترك في النشرة الشهرية" }, gap: xs }
+    answer: [reorder]
     misconceptions:
-      - id: MC-P10-067
-        when: [size, bug]
+      - id: MC-P10-066
+        when: [label, action]
         feedback:
-          en: "Screen readers don't look at size or position at all. They read the code from top to bottom, and the team wrote the booking panel and newsletter first."
-          ar: "الـ Screen reader لا ينظر إلى الحجم أو المكان أصلًا. يقرأ الكود من الأعلى إلى الأسفل، والفريق كتب لوحة الحجز والنشرة أولًا."
+          en: "Mona still hears \"Reserve\" before she knows what or when. She'd have to remember the button and come back to it. Put the facts first, then the action."
+          ar: "ما زالت منى تسمع «احجز» قبل أن تعرف ما هي الورشة ومتى. وعليها أن تتذكّر الزر وتعود إليه. ضع المعلومات أولًا، ثم الإجراء."
     correct:
-      en: "It follows the code."
-      ar: "يتبع الكود."
+      en: "Read aloud, it makes sense in order."
+      ar: "بصوت عالٍ، يصبح الترتيب منطقيًا."
     explain:
-      en: "The team wrote the booking panel and newsletter first, then used the layout to move them to the right column. Eyes see the columns; Mona hears the code."
-      ar: "كتب الفريق لوحة الحجز والنشرة أولًا، ثم استخدموا التخطيط لنقلهما إلى العمود الأيمن. العين ترى الأعمدة، ومنى تسمع الكود."
+      en: "A screen reader can't show two columns at once; it reads one item after another. When the code follows the decision, Mona hears what it is, when, where and how much, and then the button that acts on it."
+      ar: "قارئ الشاشة لا يعرض عمودين في وقت واحد؛ بل يقرأ عنصرًا بعد عنصر. وحين يتبع الكود ترتيب القرار، تسمع منى ما هي الورشة، ومتى، وأين، وبكم، ثم الزر الذي يتصرّف بناءً على ذلك."
+
   - id: S03
     type: card
     part: concept
-    icons: [eye, ear, order, ok]
-    title: { en: "Two orders: what you see and what's in the code", ar: "ترتيبان: ما تراه وما في الكود" }
+    icons: [ear, list, layers, phone]
+    title: { en: "Two orders, one meaning", ar: "ترتيبان، ومعنى واحد" }
     body:
-      en: "Every page has two orders, and they can disagree.\n\n- **Visual order:** where things sit on the screen.\n- **Reading order:** the order in the code. Screen readers read it, the Tab key follows it, and narrow screens stack it.\n- **Design the reading order first:** keep labels with their values and put actions after the facts that give them meaning. Then arrange it visually.\n- **More than one order can work:** what matters is that the meaning survives."
-      ar: "لكل صفحة ترتيبان، وقد يختلفان.\n\n- **الترتيب البصري:** أين تقع العناصر على الشاشة.\n- **ترتيب القراءة:** الترتيب في الكود. يقرؤه الـ Screen reader، ويتبعه مفتاح Tab، وتُرصّ به الشاشات الضيّقة.\n- **صمّم ترتيب القراءة أولًا:** أبقِ كل تسمية مع قيمتها، وضع الإجراءات بعد المعلومات التي تعطيها معناها. ثم رتّبها بصريًا.\n- **قد ينجح أكثر من ترتيب:** المهم أن يبقى المعنى."
+      en: "Every page has two orders, and they can disagree.\n\n- **Visual order:** where things sit on the screen.\n- **Reading order:** the order in the code. Screen readers read it one item at a time, the Tab key follows it, and narrow screens stack it.\n- **Design the reading order first:** what it is, the facts, then the action, then extras. Keep each label next to its value.\n- **Moving things only visually** (with layout code) changes what eyes see, not what screen readers read."
+      ar: "لكل صفحة ترتيبان، وقد يختلفان.\n\n- **الترتيب البصري:** أين تقع الأشياء على الشاشة.\n- **ترتيب القراءة:** الترتيب في الكود. يقرؤه الـ Screen reader عنصرًا بعد عنصر، ويتبعه مفتاح Tab، وتتراصّ به الشاشات الضيّقة.\n- **صمّم ترتيب القراءة أولًا:** ما هو، ثم المعلومات، ثم الإجراء، ثم الإضافات. وأبقِ كل تسمية بجانب قيمتها.\n- **النقل البصري فقط** (بكود التخطيط) يغيّر ما تراه العين، لا ما يقرؤه الـ Screen reader."
+
   - id: S04
-    type: order
+    type: tune
     part: guided
-    confidence: true
-    rules: [R06, R15, U29]
+    rules: [R06, R13]
+    value:
+      en: "Screen readers (NN/g): users move forward and backward through the sequence; they can't jump around. Visual reordering leaves that sequence unchanged."
+      ar: "قارئ الشاشة (NN/g): يتحرّك المستخدمون للأمام وللخلف في التسلسل؛ ولا يستطيعون القفز. والنقل البصري يترك هذا التسلسل كما هو."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "The user cannot jump around; they must move forward and backward through the sequence to access what they want." }
+    scenario:
+      en: "A developer suggests a quick fix: keep the code as it is, and use layout code to move the booking panel below the details on screen."
+      ar: "يقترح أحد المطوّرين إصلاحًا سريعًا: إبقاء الكود كما هو، واستخدام كود التخطيط لنقل لوحة الحجز تحت التفاصيل على الشاشة."
     prompt:
-      en: "Put Sara's page in a reading order that makes sense aloud."
-      ar: "رتّب صفحة سارة بترتيب قراءة منطقي عند سماعه."
-    items:
-      - { id: W1f, text: "@W1f", kind: button }
-      - { id: W1j, text: "@W1j", kind: link }
-      - { id: W1b, text: "@W1b" }
-      - { id: W1a, text: "@W1a", kind: title }
-      - { id: W1g, text: "@W1g", kind: small }
-      - { id: W1d, text: "@W1d" }
-    answer: [W1a, W1b, W1d, W1g, W1f, W1j]
-    also_ok:
-      - answer: [W1a, W1b, W1d, W1f, W1g, W1j]
-        feedback:
-          en: "That works too: the cancellation rule right after Reserve is fine, as long as it's there before she confirms."
-          ar: "هذا صحيح أيضًا: قاعدة الإلغاء بعد «احجز مكانك» مباشرة مقبولة، ما دامت تظهر قبل أن تؤكّد."
-      - answer: [W1a, W1d, W1b, W1g, W1f, W1j]
-        feedback:
-          en: "That works too: price before date is a fair choice for a free event."
-          ar: "هذا صحيح أيضًا: السعر قبل الموعد اختيار معقول لفعالية مجانية."
-      - answer: [W1a, W1d, W1b, W1f, W1g, W1j]
-        feedback:
-          en: "That works too: the facts lead, Reserve follows, the cancellation rule is right beside it."
-          ar: "هذا صحيح أيضًا: المعلومات أولًا، ثم «احجز مكانك»، وقاعدة الإلغاء بجانبه."
+      en: "Each version shows what Sara sees and what Mona hears. Try each fix. Which one should ship?"
+      ar: "كل نسخة تُظهر ما تراه سارة وما تسمعه منى. جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    start: visual
+    options:
+      - id: visual
+        text: { en: "Move it on screen only, with layout code", ar: "انقلها على الشاشة فقط، بكود التخطيط" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: { en: "Sara sees", ar: "ترى سارة" } }
+                    - { kind: meta, text: { en: "Title", ar: "العنوان" }, gap: xs }
+                    - { kind: meta, text: { en: "Time, place", ar: "الموعد، المكان" }, gap: xs }
+                    - { kind: meta, text: { en: "Price", ar: "السعر" }, gap: xs }
+                    - { kind: meta, text: { en: "Reserve", ar: "زر الحجز" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: { en: "Mona hears", ar: "تسمع منى" } }
+                    - { kind: meta, text: { en: "Reserve", ar: "زر الحجز" }, gap: xs }
+                    - { kind: meta, text: { en: "Price", ar: "السعر" }, gap: xs }
+                    - { kind: meta, text: { en: "Title", ar: "العنوان" }, gap: xs }
+                    - { kind: meta, text: { en: "Time, place", ar: "الموعد، المكان" }, gap: xs }
+      - id: code
+        text: { en: "Change the order in the code itself", ar: "غيّر الترتيب في الكود نفسه" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: { en: "Sara sees", ar: "ترى سارة" } }
+                    - { kind: meta, text: { en: "Title", ar: "العنوان" }, gap: xs }
+                    - { kind: meta, text: { en: "Time, place", ar: "الموعد، المكان" }, gap: xs }
+                    - { kind: meta, text: { en: "Price", ar: "السعر" }, gap: xs }
+                    - { kind: meta, text: { en: "Reserve", ar: "زر الحجز" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: { en: "Mona hears", ar: "تسمع منى" } }
+                    - { kind: meta, text: { en: "Title", ar: "العنوان" }, gap: xs }
+                    - { kind: meta, text: { en: "Time, place", ar: "الموعد، المكان" }, gap: xs }
+                    - { kind: meta, text: { en: "Price", ar: "السعر" }, gap: xs }
+                    - { kind: meta, text: { en: "Reserve", ar: "زر الحجز" }, gap: xs }
+      - id: skip
+        text: { en: "Keep the code, and add a hidden \"Skip to details\" link for screen readers at the top", ar: "أبقِ الكود، وأضف رابطًا مخفيًا «انتقل إلى التفاصيل» للـ Screen reader في الأعلى" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: { en: "Sara sees", ar: "ترى سارة" } }
+                    - { kind: meta, text: { en: "Reserve", ar: "زر الحجز" }, gap: xs }
+                    - { kind: meta, text: { en: "Price", ar: "السعر" }, gap: xs }
+                    - { kind: meta, text: { en: "Title", ar: "العنوان" }, gap: xs }
+                    - { kind: meta, text: { en: "Time, place", ar: "الموعد، المكان" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: { en: "Mona hears", ar: "تسمع منى" } }
+                    - { kind: meta, text: { en: "Skip to details, link", ar: "انتقل إلى التفاصيل، رابط" }, gap: xs }
+                    - { kind: meta, text: { en: "Reserve", ar: "زر الحجز" }, gap: xs }
+                    - { kind: meta, text: { en: "Price", ar: "السعر" }, gap: xs }
+                    - { kind: meta, text: { en: "Title", ar: "العنوان" }, gap: xs }
+    answer: [code]
     misconceptions:
-      - id: MC-P10-066
-        when: { before: [W1f, W1b] }
+      - id: MC-P10-067
+        when: [visual]
         feedback:
-          en: "Mona would hear \"Reserve a place\" before she knows when the workshop is. Facts first, then the action."
-          ar: "ستسمع منى «احجز مكانك» قبل أن تعرف موعد الورشة. المعلومات أولًا، ثم الإجراء."
+          en: "Sara's screen looks right, but Mona still hears Reserve and the price before the title. Layout code moves pixels, not the reading order."
+          ar: "شاشة سارة تبدو صحيحة، لكن منى ما زالت تسمع زر الحجز والسعر قبل العنوان. كود التخطيط ينقل البكسلات، لا ترتيب القراءة."
       - id: MC-P10-066
-        when: { before: [W1j, W1f] }
+        when: [skip]
         feedback:
-          en: "The newsletter is optional. Put it after the booking so it doesn't interrupt the decision."
-          ar: "النشرة اختيارية. ضعها بعد الحجز حتى لا تقطع القرار."
-    hints:
-      - { en: "Start with what it is, then when and how much.", ar: "ابدأ بما هي، ثم متى وبكم." }
-      - { en: "The button comes after the facts it depends on.", ar: "الزر يأتي بعد المعلومات التي يعتمد عليها." }
+          en: "A skip link adds one more item to hear, and the phone still stacks Reserve first for Sara. Fix the order itself."
+          ar: "رابط القفز يضيف عنصرًا آخر لتسمعه منى، والهاتف ما زال يرصّ زر الحجز أولًا لسارة. أصلِح الترتيب نفسه."
     correct:
-      en: "What it is, the facts, the rule, then the action. Optional extras last."
-      ar: "ما هي، ثم المعلومات، ثم القاعدة، ثم الإجراء. والإضافات الاختيارية في النهاية."
+      en: "Fix the order once, in the code."
+      ar: "أصلِح الترتيب مرة واحدة، في الكود."
     explain:
-      en: "This order works read aloud, tabbed through, and stacked on a phone. On a laptop, the layout can still put the booking panel in a side column."
-      ar: "هذا الترتيب يعمل عند القراءة بصوت عالٍ، وعند التنقل بمفتاح Tab، وعند التراصّ على الهاتف. وعلى الـ Laptop يمكن للتخطيط أن يضع لوحة الحجز في عمود جانبي."
+      en: "When the code is in the right order, the phone stacks it correctly, the Tab key follows it, and the screen reader reads it. One fix, and every way of using the page agrees."
+      ar: "حين يكون الكود بالترتيب الصحيح، يرصّه الهاتف صحيحًا، ويتبعه مفتاح Tab، ويقرؤه الـ Screen reader. إصلاح واحد، وكل طرق استخدام الصفحة تتّفق."
 
   - id: S05
-    type: spot
+    type: tune
     part: guided
-    rules: [R06, U29, U47]
+    rules: [R06, R15]
+    value:
+      en: "Screen readers (NN/g): the user is unaware of what's ahead and must remember everything already heard. All labels first, then all values, makes them hold a list in memory."
+      ar: "قارئ الشاشة (NN/g): المستخدم لا يعرف ما ينتظره، وعليه أن يتذكّر كل ما سمعه. وكل التسميات أولًا ثم كل القيم يجبره على حفظ قائمة في ذاكرته."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "Someone using a screen reader is unaware of everything ahead and must remember everything they have already encountered." }
+    scenario:
+      en: "On the laptop, the session details are in two columns: the labels (Date, Place, Price) on one side and the values on the other. The code lists all the labels first, then all the values."
+      ar: "على الـ Laptop، تفاصيل الجلسة في عمودين: التسميات (التاريخ، المكان، السعر) في جانب، والقيم في الجانب الآخر. والكود يضع كل التسميات أولًا، ثم كل القيم."
     prompt:
-      en: "The team left the code as it was and let the columns stack on the phone. What does Sara meet too early?"
-      ar: "ترك الفريق الكود كما هو وترك الأعمدة تتراصّ على الهاتف. ما الذي تراه سارة مبكرًا جدًا؟"
+      en: "This is what happens on a phone and read aloud. Try each fix. Which one should ship?"
+      ar: "هذا ما يحدث على الهاتف وبصوت عالٍ. جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
     mock:
-      caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
-      blocks:
-        - { kind: title, text: "@W1a", region: title }
-        - { kind: image, size: m, text: "@W1i", gap: s }
-        - { kind: button, text: "@W1f", gap: m, region: reserve }
-        - { kind: link, text: "@W1j", gap: s }
-        - { kind: meta, text: "@W1b", gap: m, region: date }
-        - { kind: meta, text: "@W1c", gap: xs, region: place }
-    regions:
-      - { id: title, label: "@W1a" }
-      - { id: reserve, label: "@W1f" }
-      - { id: date, label: "@W1b" }
-      - { id: place, label: "@W1c" }
-    answer: [reserve]
+      caption: { en: "Now, phone", ar: "الآن، الهاتف" }
+      width: 300
+      blocks: &split
+        - { kind: small, text: { en: "Date", ar: "التاريخ" } }
+        - { kind: small, text: { en: "Place", ar: "المكان" }, gap: xs }
+        - { kind: small, text: { en: "Price", ar: "السعر" }, gap: xs }
+        - { kind: meta, text: "@W1b", gap: s }
+        - { kind: meta, text: "@W1c", gap: xs }
+        - { kind: meta, text: "@W1d", gap: xs }
+    options:
+      - id: bold
+        text: { en: "Keep the order; make the values bold so they stand out", ar: "أبقِ الترتيب؛ واجعل القيم Bold لتبرز" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Date", ar: "التاريخ" } }
+            - { kind: small, text: { en: "Place", ar: "المكان" }, gap: xs }
+            - { kind: small, text: { en: "Price", ar: "السعر" }, gap: xs }
+            - { kind: meta, weight: bold, text: "@W1b", gap: s }
+            - { kind: meta, weight: bold, text: "@W1c", gap: xs }
+            - { kind: meta, weight: bold, text: "@W1d", gap: xs }
+      - id: drop
+        text: { en: "Remove the labels on phones; the values are clear enough", ar: "احذف التسميات على الهاتف؛ فالقيم واضحة بما يكفي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: meta, text: "@W1b" }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: meta, text: "@W1d", gap: xs }
+      - id: pairs
+        text: { en: "Put each label right before its value in the code", ar: "ضع كل تسمية قبل قيمتها مباشرة في الكود" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Date", ar: "التاريخ" } }
+            - { kind: meta, text: "@W1b", gap: xs }
+            - { kind: small, text: { en: "Place", ar: "المكان" }, gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: small, text: { en: "Price", ar: "السعر" }, gap: s }
+            - { kind: meta, text: "@W1d", gap: xs }
+    answer: [pairs]
     misconceptions:
-      - id: MC-P10-066
-        when: [title, date, place]
+      - id: MC-P10-079
+        when: [bold]
         feedback:
-          en: "That one's fine where it is. Look for the thing she's asked to act on before she has the facts."
-          ar: "هذا العنصر في مكانه الصحيح. ابحث عن الشيء الذي يُطلب منها التصرّف فيه قبل أن تعرف المعلومات."
+          en: "Bold doesn't change the order. Mona still hears three labels, then three values, and has to match them in her head."
+          ar: "الـ Bold لا يغيّر الترتيب. ما زالت منى تسمع ثلاث تسميات، ثم ثلاث قيم، وعليها أن تطابقها في ذهنها."
+      - id: MC-P10-061
+        when: [drop]
+        feedback:
+          en: "\"Free\" alone doesn't say it's the price, and a screen reader user hears it without context. Keep the labels, next to their values."
+          ar: "«مجاني» وحدها لا تقول إنها السعر، ومستخدم الـ Screen reader يسمعها دون سياق. أبقِ التسميات، بجانب قيمها."
     correct:
-      en: "Reserve comes before the date and place, exactly as Mona heard it."
-      ar: "«احجز مكانك» يأتي قبل الموعد والمكان، تمامًا كما سمعته منى."
+      en: "Each label travels with its value."
+      ar: "كل تسمية ترافق قيمتها."
     explain:
-      en: "The phone stacks in reading order. Fix the order once, in the code, and the phone, the keyboard and the screen reader all improve together."
-      ar: "الهاتف يرصّ العناصر بترتيب القراءة. أصلح الترتيب مرة واحدة في الكود، فيتحسّن الهاتف ولوحة المفاتيح والـ Screen reader معًا."
+      en: "Columns of labels and values look tidy on a wide screen, but stacked or read aloud they split apart. Pair them in the code, and the laptop can still line them up in columns."
+      ar: "أعمدة التسميات والقيم تبدو مرتّبة على الشاشة العريضة، لكنها تنفصل حين تتراصّ أو تُقرأ بصوت عالٍ. اجعلها أزواجًا في الكود، ويبقى بإمكان الـ Laptop أن يصفّها في أعمدة."
 
   - id: S06
-    type: choose
-    part: guided
-    rules: [R11, U29, U28]
-    prompt:
-      en: "A teammate suggests: \"Keep the code. On phones, just use CSS to move the booking panel below the details.\" What's the catch?"
-      ar: "يقترح أحد الزملاء: «لنترك الكود. وعلى الهواتف نستخدم CSS لنقل لوحة الحجز تحت التفاصيل». ما المشكلة؟"
-    options:
-      - { id: none, text: { en: "Nothing, if it looks right it is right", ar: "لا شيء، إذا بدت صحيحة فهي صحيحة" } }
-      - { id: mismatch, text: { en: "It only moves things visually; screen readers and the Tab key still follow the code", ar: "ينقل العناصر بصريًا فقط؛ والـ Screen reader ومفتاح Tab ما زالا يتبعان الكود" } }
-      - { id: slow, text: { en: "CSS makes the page load slower", ar: "CSS يجعل الصفحة أبطأ في التحميل" } }
-    answer: [mismatch]
-    misconceptions:
-      - id: MC-P10-067
-        when: [none]
-        feedback:
-          en: "It would look right, but Mona would still hear Reserve first, and a keyboard user would jump from the top to the bottom of the screen and back."
-          ar: "ستبدو صحيحة، لكن منى ستسمع «احجز» أولًا، ومستخدم لوحة المفاتيح سيقفز من أعلى الشاشة إلى أسفلها ثم يعود."
-    hints:
-      - { en: "Who doesn't see the layout at all?", ar: "من لا يرى التخطيط أصلًا؟" }
-    correct:
-      en: "Visual reordering leaves the reading order unchanged."
-      ar: "إعادة الترتيب بصريًا تترك ترتيب القراءة كما هو."
-    explain:
-      en: "Use visual reordering for small adjustments that don't change meaning. When the order matters, fix it in the code."
-      ar: "استخدم إعادة الترتيب البصري للتعديلات الصغيرة التي لا تغيّر المعنى. وحين يكون الترتيب مهمًا، أصلحه في الكود."
-
-  - id: S07
     type: compare
     part: contrast
-    rules: [R11, U35]
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S02: not just actions, any extra placed first costs time. NN/g: wading through all the copy to find something informative takes too much time and energy."
+      ar: "مقارنة مع الخطوة 2: ليس الإجراء فقط، فأي إضافة في البداية تكلّف وقتًا. NN/g: المرور بكل النص لإيجاد شيء مفيد يتطلّب وقتًا وجهدًا كبيرين."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "Wading through all the copy on the page to find something informative requires too much time and energy for users." }
+    scenario:
+      en: "Youssef uses a screen reader too. He opens his bus ticket at the station to check the platform."
+      ar: "يستخدم يوسف الـ Screen reader أيضًا. ويفتح تذكرة الحافلة في المحطة ليتحقّق من الرصيف."
     prompt:
-      en: "Both phone versions are shorter than the laptop page. Which one keeps the decision intact?"
-      ar: "نسختا الهاتف كلتاهما أقصر من صفحة الـ Laptop. أيّهما تحفظ القرار كاملًا؟"
+      en: "Here's what Youssef hears in each version. Which one should ship?"
+      ar: "هذا ما يسمعه يوسف في كل نسخة. أيّهما يجب أن تُطلق؟"
     a:
+      label: { en: "Read aloud", ar: "بصوت عالٍ" }
       mock:
-        caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
         blocks:
-          - { kind: title, text: "@W1a" }
-          - { kind: image, size: m, text: "@W1i", gap: s }
-          - { kind: link, text: "@W1more", gap: s }
-          - { kind: button, text: "@W1f", gap: m }
+          - { kind: meta, text: { en: "1. Download our app and save 10%", ar: "1. حمّل تطبيقنا ووفّر 10%" } }
+          - { kind: meta, text: { en: "2. Get the app, button", ar: "2. احصل على التطبيق، زر" }, gap: xs }
+          - { kind: meta, text: { en: "3. Rate us, link", ar: "3. قيّمنا، رابط" }, gap: xs }
+          - { kind: meta, text: { en: "4. Cairo to Alexandria", ar: "4. القاهرة إلى الإسكندرية" }, gap: xs }
+          - { kind: meta, text: { en: "5. Departs 07:30, platform 4", ar: "5. المغادرة 07:30، رصيف 4" }, gap: xs }
     b:
+      label: { en: "Read aloud", ar: "بصوت عالٍ" }
       mock:
-        caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
         blocks:
-          - { kind: title, text: "@W1a" }
-          - { kind: meta, text: "@W1b", gap: s }
-          - { kind: meta, text: "@W1c", gap: xs }
-          - { kind: meta, text: "@W1d", gap: xs }
-          - { kind: chip, text: "@W1e", gap: s }
-          - { kind: button, text: "@W1f", gap: m }
-          - { kind: small, text: "@W1g", gap: s }
+          - { kind: meta, text: { en: "1. Cairo to Alexandria", ar: "1. القاهرة إلى الإسكندرية" } }
+          - { kind: meta, text: { en: "2. Departs 07:30, platform 4", ar: "2. المغادرة 07:30، رصيف 4" }, gap: xs }
+          - { kind: meta, text: { en: "3. Seat 12A", ar: "3. مقعد 12A" }, gap: xs }
+          - { kind: meta, text: { en: "4. Show ticket, button", ar: "4. اعرض التذكرة، زر" }, gap: xs }
+          - { kind: meta, text: { en: "5. Download our app and save 10%", ar: "5. حمّل تطبيقنا ووفّر 10%" }, gap: xs }
     answer: b
+    reason:
+      prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
+      options:
+        - { id: ads, text: { en: "Offers should never appear on a ticket", ar: "العروض يجب ألّا تظهر في التذكرة أبدًا" } }
+        - { id: wade, text: { en: "In A, Youssef must listen through three extras before his ticket", ar: "في A، على يوسف أن يستمع إلى ثلاث إضافات قبل تذكرته" } }
+        - { id: short, text: { en: "B is shorter", ar: "B أقصر" } }
+      answer: [wade]
+      misconceptions:
+        - id: MC-P10-066
+          when: [ads, short]
+          feedback:
+            en: "Both have five items, and the offer is still in B. The difference is what comes first: Youssef hears his ticket at once in B."
+            ar: "في النسختين خمسة عناصر، والعرض ما زال في B. الفرق فيما يأتي أولًا: يسمع يوسف تذكرته فورًا في B."
     misconceptions:
-      - id: MC-P10-061
+      - id: MC-P10-066
         when: [a]
         feedback:
-          en: "A keeps the photo and hides the date, place and price behind \"More details\". Those are the facts Sara decides with."
-          ar: "A تحتفظ بالصورة وتخفي الموعد والمكان والسعر خلف «تفاصيل أكثر». وهذه هي المعلومات التي تبني عليها سارة قرارها."
+          en: "In A, Youssef hears an ad, a button and a link before his route and platform. Seeing users skip an ad with a glance; he has to listen through it."
+          ar: "في A، يسمع يوسف إعلانًا وزرًا ورابطًا قبل خط سيره ورصيفه. من يرى يتخطّى الإعلان بنظرة؛ أما هو فعليه أن يستمع إليه."
     correct:
-      en: "B drops the photo and keeps every fact Sara needs to decide."
-      ar: "B تحذف الصورة وتحتفظ بكل معلومة تحتاجها سارة لتقرّر."
+      en: "The ticket first; extras after."
+      ar: "التذكرة أولًا؛ والإضافات بعدها."
     explain:
-      en: "Shorter is good when you cut what's optional. Hiding the decision behind a tap only moves the work to the user."
-      ar: "الصفحة الأقصر جيدة حين تحذف الاختياري. أما إخفاء القرار خلف ضغطة فينقل العمل إلى المستخدم فقط."
+      en: "On Sara's page the problem was the action before the facts. Here it's extras before the content. For someone listening, everything placed first costs time, every single visit."
+      ar: "في صفحة سارة كانت المشكلة أن الإجراء قبل المعلومات. وهنا الإضافات قبل المحتوى. ولمن يستمع، كل ما يوضع أولًا يكلّف وقتًا، في كل زيارة."
+
+  - id: S07
+    type: tune
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Responsive design (NN/g): on a phone, content prioritization helps users find what they need. The order summary belongs before Pay, in the code, so it stacks and reads in the right place."
+      ar: "حالة جديدة. التصميم المتجاوب (NN/g): على الهاتف، ترتيب أولويات المحتوى يساعد المستخدمين على إيجاد ما يحتاجونه. وملخّص الطلب مكانه قبل زر الدفع في الكود، فيتراصّ ويُقرأ في المكان الصحيح."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "Smart content prioritization helps users find what they need more efficiently." }
+    scenario:
+      en: "Tarek is buying two concert tickets. On a laptop, the order summary (tickets, fees, total) sits in a side column next to the payment form. In the code, the summary comes after the Pay button."
+      ar: "يشتري طارق تذكرتين لحفلة. على الـ Laptop، ملخّص الطلب (التذاكر، والرسوم، والإجمالي) في عمود جانبي بجانب نموذج الدفع. وفي الكود، يأتي الملخّص بعد زر الدفع."
+    prompt:
+      en: "Try each phone order. Which one should ship?"
+      ar: "جرّب كل ترتيب على الهاتف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, phone", ar: "الآن، الهاتف" }
+      width: 300
+      blocks: &pay
+        - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "•••• •••• •••• 4821", filled: true }
+        - { kind: button, text: { en: "Pay EGP 1,300", ar: "ادفع 1,300 جنيه" }, gap: m }
+        - { kind: heading, text: { en: "Order summary", ar: "ملخّص الطلب" }, gap: l }
+        - { kind: small, text: { en: "2 tickets × EGP 600 · Fees EGP 100", ar: "تذكرتان × 600 جنيه · رسوم 100 جنيه" }, gap: xs }
+    options:
+      - id: hide
+        text: { en: "Drop the summary on phones; the total is on the Pay button", ar: "احذف الملخّص على الهاتف؛ فالإجمالي على زر الدفع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "•••• •••• •••• 4821", filled: true }
+            - { kind: button, text: { en: "Pay EGP 1,300", ar: "ادفع 1,300 جنيه" }, gap: m }
+      - id: keep
+        text: { en: "Keep the code order; Tarek can scroll down to check", ar: "أبقِ ترتيب الكود؛ ويمكن لطارق أن يمرّر للأسفل ليتحقّق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *pay
+      - id: before
+        text: { en: "Move the summary before the card field and Pay, in the code", ar: "انقل الملخّص قبل حقل البطاقة وزر الدفع، في الكود" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Order summary", ar: "ملخّص الطلب" } }
+            - { kind: small, text: { en: "2 tickets × EGP 600 · Fees EGP 100", ar: "تذكرتان × 600 جنيه · رسوم 100 جنيه" }, gap: xs }
+            - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "•••• •••• •••• 4821", filled: true, gap: m }
+            - { kind: button, text: { en: "Pay EGP 1,300", ar: "ادفع 1,300 جنيه" }, gap: m }
+    answer: [before]
+    misconceptions:
+      - id: MC-P10-066
+        when: [keep]
+        feedback:
+          en: "Tarek meets Pay before he can check what he's paying for. On a phone and read aloud, the summary has to come first."
+          ar: "يلتقي طارق بزر الدفع قبل أن يتحقّق ممّا يدفع مقابله. وعلى الهاتف وبصوت عالٍ، يجب أن يأتي الملخّص أولًا."
+      - id: MC-P10-061
+        when: [hide]
+        feedback:
+          en: "The total alone doesn't show the fees or the number of tickets. Phone users need the same facts before paying."
+          ar: "الإجمالي وحده لا يُظهر الرسوم ولا عدد التذاكر. ومستخدمو الهاتف يحتاجون المعلومات نفسها قبل الدفع."
+    correct:
+      en: "What he's paying for, then Pay."
+      ar: "ما يدفع مقابله، ثم الدفع."
+    explain:
+      en: "Same rule as Sara's page: facts before the action, fixed in the code. On a laptop, the summary can still sit in a side column."
+      ar: "القاعدة نفسها في صفحة سارة: المعلومات قبل الإجراء، والإصلاح في الكود. وعلى الـ Laptop يمكن أن يبقى الملخّص في عمود جانبي."
 
   - id: S08
-    type: fix
-    part: independent
-    rules: [R07, U29]
-    prompt:
-      en: "On Youssef's bus ticket, the \"Download our app\" banner is first in the code. On his phone it pushes the route and departure time below the fold. What's the best fix?"
-      ar: "في تذكرة حافلة يوسف، شريط «حمّل تطبيقنا» هو الأول في الكود. وعلى هاتفه يدفع المسار وموعد المغادرة إلى أسفل الشاشة. ما أفضل إصلاح؟"
-    mock:
-      caption: { en: "Phone, 360 px", ar: "هاتف، 360 بكسل" }
-      blocks:
-        - { kind: image, size: m, text: "@B1a" }
-        - { kind: title, text: "@B1b", gap: m }
-        - { kind: meta, text: "@B1c", gap: s }
-    options:
-      - { id: small, text: { en: "Make the banner smaller", ar: "صغّر الـ Slider" } }
-      - { id: move, text: { en: "Move the banner after the ticket details, in the code", ar: "انقل الـ Slider بعد تفاصيل التذكرة، في الكود" } }
-      - { id: css, text: { en: "Keep the code and move the banner down with CSS on phones", ar: "اترك الكود وانقل الـ Slider للأسفل باستخدام CSS على الهواتف" } }
-    answer: [move]
-    misconceptions:
-      - id: MC-P10-067
-        when: [css]
-        feedback:
-          en: "That fixes how it looks, but a screen reader would still start with the ad. Change the order in the code."
-          ar: "هذا يصلح الشكل، لكن الـ Screen reader سيبدأ بالإعلان. غيّر الترتيب في الكود."
-    hints:
-      - { en: "Which fix helps the screen reader too?", ar: "أي إصلاح يساعد الـ Screen reader أيضًا؟" }
-    correct:
-      en: "The ticket comes first everywhere, and the banner waits until after it."
-      ar: "التذكرة أولًا في كل مكان، والـ Slider ينتظر بعدها."
-    explain:
-      en: "A smaller banner is still in the way. Put the ticket first in the reading order and the ad can follow."
-      ar: "الـ Slider الأصغر ما زال يعترض الطريق. ضع التذكرة أولًا في ترتيب القراءة، ويأتي الإعلان بعدها."
-
-  - id: S09
     type: card
     part: recap
-    icons: [order, ear, warn, cut]
-    title: { en: "What to remember", ar: "ما يجب تذكّره" }
+    icons: [ear, list, layers, phone]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "- The reading order (the code) is what phones stack, keyboards follow, and screen readers read.\n- Design it first: what it is, the facts, then the action. Optional things last.\n- Moving things only visually leaves the reading order wrong.\n- Shorter is fine when you cut what's optional; never hide what decides.\n\nNext: a skill check with Dalia's hotel booking."
-      ar: "- ترتيب القراءة (الكود) هو ما يرصّه الهاتف، وتتبعه لوحة المفاتيح، ويقرؤه الـ Screen reader.\n- صمّمه أولًا: ما هو، ثم المعلومات، ثم الإجراء. والاختياري في النهاية.\n- نقل العناصر بصريًا فقط يترك ترتيب القراءة خاطئًا.\n- التقصير جيد حين تحذف الاختياري؛ لكن لا تخفِ ما يحسم القرار.\n\nالتالي: اختبار مهارة مع حجز فندق داليا."
+      en: "- **Reading order:** put the facts before the action in the code.\n- **Not just visual:** fixed the order in the code, not only on screen.\n- **Labels with values:** paired them so they make sense stacked and read aloud.\n- **Extras last:** moved the offer after the ticket.\n\nNext: a skill check on a new page."
+      ar: "- **ترتيب القراءة:** وضعت المعلومات قبل الإجراء في الكود.\n- **ليس بصريًا فقط:** أصلحت الترتيب في الكود، لا على الشاشة فقط.\n- **التسميات مع القيم:** جعلتها أزواجًا حتى تُفهم متراصّة وبصوت عالٍ.\n- **الإضافات في النهاية:** نقلت العرض بعد التذكرة.\n\nالتالي: اختبار مهارة على صفحة جديدة."
