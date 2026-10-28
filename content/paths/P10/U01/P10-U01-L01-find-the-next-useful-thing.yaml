@@ -13,8 +13,8 @@ steps:
     part: hook
     title: { en: "Meet Sara", ar: "تعرّف على سارة" }
     body:
-      en: "Sara wants a free beginner workshop next week. She works until 17:00, so she can only come in the evening.\n\nShe opens this page on her phone. Can she tell, quickly, whether this session works for her?"
-      ar: "تبحث سارة عن ورشة مجانية للمبتدئين في الأسبوع القادم. دوامها ينتهي الساعة 17:00، فلا تستطيع الحضور إلا مساءً.\n\nفتحت هذه الصفحة على هاتفها. هل تعرف بسرعة إن كان الموعد يناسبها؟"
+      en: "Sara wants a free beginner workshop next week, and this is the one she wants. She works until 17:00, so she can only come in the evening.\n\nShe opens this page on her phone. Can she tell, quickly, whether the time works for her?"
+      ar: "تبحث سارة عن ورشة مجانية للمبتدئين في الأسبوع القادم، وهذه هي الورشة التي تريدها. دوامها ينتهي الساعة 17:00، فلا تستطيع الحضور إلا مساءً.\n\nفتحت هذه الصفحة على هاتفها. هل تعرف بسرعة إن كان الموعد يناسبها؟"
     mock: &promoFirst
       blocks:
         - { kind: image, size: l, text: "@W1i" }
@@ -31,29 +31,42 @@ steps:
   - id: S02
     type: predict
     part: try
-    any_ok: true
     rules: [R12]
-    prompt:
-      en: "Before we start: what is Sara looking for first on this page?"
-      ar: "قبل أن نبدأ: عن أي شيء تبحث سارة أولًا في هذه الصفحة؟"
     mock: *promoFirst
+    prompt:
+      en: Sara can only come in the evening. Which item tells her first whether this session works for her?
+      ar: سارة لا تستطيع الحضور إلا مساءً. أي عنصر يخبرها أولًا إن كانت هذه الجلسة تناسبها؟
     options:
-      - { id: photo, text: { en: "The photo", ar: "الصورة" } }
-      - { id: title, text: { en: "The workshop title", ar: "عنوان الورشة" } }
-      - { id: time, text: { en: "The date and time", ar: "التاريخ والوقت" } }
-      - { id: news, text: { en: "The newsletter", ar: "النشرة البريدية" } }
-    reveal:
-      en: "Keep your answer in mind. We'll come back to it at the end of the lesson."
-      ar: "احتفظ بإجابتك في ذهنك، فسنعود إليها في آخر الدرس."
-
+      - { id: photo, text: { en: The photo, ar: الصورة } }
+      - { id: title, text: { en: The workshop title, ar: عنوان الورشة } }
+      - { id: time, text: { en: The date and time, ar: الموعد } }
+      - { id: news, text: { en: The newsletter, ar: النشرة البريدية } }
+    answer: [time]
+    misconceptions:
+      - id: MC-P10-001
+        when: [photo, news]
+        feedback:
+          en: It's big and colourful, but it can't tell Sara whether she can come. Only the date and time can.
+          ar: كبيرة وملوّنة، لكنها لا تخبر سارة إن كانت تستطيع الحضور. الموعد وحده يخبرها.
+      - id: MC-P10-001
+        when: [title]
+        feedback:
+          en: She already knows this is the workshop she wants. Her open question is the evening time.
+          ar: هي تعرف أصلًا أن هذه الورشة التي تريدها. سؤالها المفتوح هو موعد المساء.
+    correct:
+      en: The date and time answer her question first.
+      ar: الموعد يجيب عن سؤالها أولًا.
+    explain:
+      en: Order a page by the visitor's question, not by what's biggest. Sara's question is "can I come?", so the time leads. The photo can stay, just lower.
+      ar: رتّب الصفحة حسب سؤال الزائر، لا حسب الأكبر. سؤال سارة «هل أستطيع الحضور؟»، فالموعد يأتي أولًا. ويمكن أن تبقى الصورة، لكن في مكان أدنى.
   - id: S03
     type: card
     part: concept
+    icons: [size, order, space, contrast]
     title: { en: "Hierarchy follows the decision", ar: "القرار هو الذي يحدّد الترتيب" }
     body:
-      en: "**Visual hierarchy** is how a screen shows what matters more, using size, position, spacing and contrast.\n\nStart with the question the visitor is trying to answer. Sara's question is: can I attend, and should I reserve? Whatever answers that question comes first. Promotion and decoration come after, even when they are big and colorful."
-      ar: "**التسلسل البصري (Visual hierarchy)** هو أن تُظهر الشاشة ما هو أهم أولًا، عن طريق الحجم والمكان والمسافات والتباين.\n\nابدأ بالسؤال الذي جاء الزائر ليجد إجابته. سؤال سارة: هل أستطيع الحضور؟ وهل أحجز؟ كل ما يجيب عن ذلك يأتي أولًا. أما الإعلانات والزخارف فتأتي بعده، مهما كانت كبيرة وملوّنة."
-
+      en: "**Visual hierarchy** is how a screen shows what matters more. Start from the visitor's question. Sara's is: can I come, and should I reserve?\n\n- **Size:** bigger draws the eye first.\n- **Position:** higher is read first.\n- **Spacing:** things close together read as one group.\n- **Contrast:** darker and bolder stands out.\n\nSpend these on what answers the question. Promotion and decoration come after, however big and colourful."
+      ar: "**الـ Visual hierarchy** هو أن تُظهر الشاشة ما هو أهم أولًا. ابدأ من سؤال الزائر. وسؤال سارة: هل أستطيع الحضور؟ وهل أحجز؟\n\n- **الحجم (Size):** الأكبر يجذب العين أولًا.\n- **المكان (Position):** الأعلى يُقرأ أولًا.\n- **الـ Spacing:** العناصر المتقاربة تُقرأ كمجموعة واحدة.\n- **الـ Contrast:** الأغمق والأعرض يبرز.\n\nاستخدم هذه الأدوات لما يجيب عن السؤال. أما الترويج والزخارف فتأتي بعده، مهما كانت كبيرة وملوّنة."
   - id: S04
     type: sort
     part: guided
@@ -200,7 +213,7 @@ steps:
           - { kind: small, color: pale, text: "@W1e", gap: xs }
           - { kind: small, color: pale, text: "@W1g", gap: xs }
     b:
-      mock: &decisionFirst
+      mock:
         blocks:
           - { kind: title, text: "@W1a" }
           - { kind: meta, text: "@W1b", gap: s }
@@ -280,27 +293,10 @@ steps:
       ar: "الأولوية لا تحدّدها الهوية البصرية ولا القالب، بل ما يستطيع الزائر أن يقرّره الآن. حين تكتمل الورشة، يصبح أهم ما في الصفحة: «اكتمل الحجز»، ومعه الموعد التالي أو قائمة الانتظار."
 
   - id: S09
-    type: predict
-    part: independent
-    any_ok: true
-    recall: S02
-    rules: [R21]
-    prompt:
-      en: "Back to your first guess. Now, what should Sara find first on this page?"
-      ar: "لنعد إلى توقّعك الأول. الآن، ما أول شيء يجب أن تجده سارة في الصفحة؟"
-    options:
-      - { id: photo, text: { en: "The photo", ar: "الصورة" } }
-      - { id: title, text: { en: "The workshop title", ar: "عنوان الورشة" } }
-      - { id: time, text: { en: "The date and time", ar: "التاريخ والوقت" } }
-      - { id: news, text: { en: "The newsletter", ar: "النشرة البريدية" } }
-    reveal:
-      en: "Title or time, both are good answers: they answer \"what and when\". If your first guess was the photo, notice what changed: you now order by Sara's question, not by what's biggest."
-      ar: "العنوان أو الوقت، وكلاهما إجابة صحيحة لأنهما يجيبان عن «ماذا ومتى». إذا كان توقّعك الأول الصورة، فلاحظ الفرق: صرت ترتّب حسب سؤال سارة، لا حسب الأكبر حجمًا."
-
-  - id: S10
     type: card
     part: recap
+    icons: [order, warn, clock]
     title: { en: "What you did", ar: "ماذا تعلّمت" }
     body:
-      en: "You ordered a page by the visitor's decision: what and when, where and how much, then the action. You kept everything, including small conditions, on the way to the button.\n\nNext: needed isn't the same as big."
-      ar: "رتّبت صفحة حسب قرار الزائر: ماذا ومتى، ثم أين وبكم، ثم الزر. وأبقيت كل ما يلزم، حتى الشروط الصغيرة، قبل الزر.\n\nالدرس التالي: الضروري ليس بالضرورة الأكبر."
+      en: "- Order the page by the visitor's question: what and when, then where and how much, then the action.\n- Keep small conditions on the way to the button.\n- When the situation changes, like a full session, what leads changes too.\n\nNext lesson: needed isn't the same as big."
+      ar: "- رتّب الصفحة حسب سؤال الزائر: ماذا ومتى، ثم أين وبكم، ثم الزر.\n- أبقِ الشروط الصغيرة في الطريق إلى الزر.\n- حين يتغيّر الموقف، مثل امتلاء الجلسة، يتغيّر ما يأتي أولًا.\n\nالدرس التالي: الضروري ليس بالضرورة الأكبر."
