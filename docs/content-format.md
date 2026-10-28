@@ -112,6 +112,7 @@ Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 
 ## Player behaviour worth knowing
 
+- A `reason` question appears only after the main answer is right, so it can't give that answer away. Learners then answer it and press Check again.
 - Any question step can have `value` (`en`/`ar`): one sentence on what the question teaches. The preview shows it behind a small ⓘ toggle under the prompt, for reviewers.
 - An `order` step with `onscreen: true` shows the items as blocks on a phone screen that learners drag into place (arrow keys work too). Give it a `caption`; items can set `kind`, `gap` and `emphasis`.
 - A `tune` step can also have its own `mock`, shown above the option's mock. Use it for a "before" screen, such as a desktop table, with each option showing the result on a phone.
