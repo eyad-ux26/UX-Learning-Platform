@@ -4,16 +4,27 @@ import { fontsReady } from "./brand/fonts";
 import { C01, C01_FRAMES } from "./clips/C01";
 import { C02, C02_FRAMES } from "./clips/C02";
 import { C03, C03_FRAMES } from "./clips/C03";
+import { C04, C04_FRAMES } from "./clips/C04";
+import { C05, C05_FRAMES } from "./clips/C05";
+import { C06, C06_FRAMES } from "./clips/C06";
 
 const meta = async () => {
   await fontsReady;
   return {};
 };
+const clips: [string, React.FC, number][] = [
+  ["P14-C01", C01, C01_FRAMES],
+  ["P14-C02", C02, C02_FRAMES],
+  ["P14-C03", C03, C03_FRAMES],
+  ["P14-C04", C04, C04_FRAMES],
+  ["P14-C05", C05, C05_FRAMES],
+  ["P14-C06", C06, C06_FRAMES],
+];
 
 export const RemotionRoot: React.FC = () => (
   <>
-    <Composition id="P14-C01" component={C01} width={1080} height={1080} fps={30} durationInFrames={C01_FRAMES} calculateMetadata={meta} />
-    <Composition id="P14-C02" component={C02} width={1080} height={1080} fps={30} durationInFrames={C02_FRAMES} calculateMetadata={meta} />
-    <Composition id="P14-C03" component={C03} width={1080} height={1080} fps={30} durationInFrames={C03_FRAMES} calculateMetadata={meta} />
+    {clips.map(([id, c, n]) => (
+      <Composition key={id} id={id} component={c} width={1080} height={1080} fps={30} durationInFrames={n} calculateMetadata={meta} />
+    ))}
   </>
 );
