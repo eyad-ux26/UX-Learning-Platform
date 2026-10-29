@@ -1,0 +1,37 @@
+{
+  "$comment": "Pipeline settings: recorded audio, transcription/alignment, render/export. Visual tokens and series identity live elsewhere.",
+  "audio": {
+    "source": "Only the narration file Eyad supplies for the current episode. Never TTS, never a previous episode's or preview's audio.",
+    "keepOriginal": true,
+    "normalize": {
+      "method": "linear gain only (no compression, no limiting, no EQ, no tempo/pitch change, no trimming)",
+      "targetLUFS": -14,
+      "truePeakCeilingDb": -1.0,
+      "rule": "If reaching the target would exceed the peak ceiling, apply the largest gain that respects the ceiling and report the resulting loudness."
+    },
+    "deliveryChannels": "dual-mono stereo (measured the way it plays)",
+    "referenceVideoAudio": "muted unless the episode storyboard sets allowAudio: true with Eyad's explicit request"
+  },
+  "alignment": {
+    "model_dir": "models/sherpa-onnx-omnilingual-asr-1600-languages-300M-ctc-int8-2025-11-12",
+    "window_s": 28,
+    "overlap_s": 2,
+    "low_confidence_threshold": 0.3,
+    "lexicon": "config/alignment.lexicon.json"
+  },
+  "compare": {
+    "flag_runs_of_words": 2,
+    "$note": "Script vs recording differences of 2+ words are reported. ASR on Egyptian Arabic is imperfect; flags mean 'listen here', not proof."
+  },
+  "duration": {
+    "policy": "The full recording, from its first to its last sample, plus tailMs of visual hold. No trimming, no speed change.",
+    "tailMs": 600
+  },
+  "render": {
+    "fps": 30,
+    "visualIntermediate": "prores 422 HQ (rendered once, reused for both MP4s)",
+    "captionsLayer": "prores 4444 with alpha",
+    "final": { "codec": "h264", "crf": 18, "preset": "slow", "audioBitrate": "192k" },
+    "browserExecutableEnv": "REMOTION_BROWSER"
+  }
+}
