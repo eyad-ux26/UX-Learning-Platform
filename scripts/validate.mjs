@@ -97,6 +97,8 @@ export function validate(paths) {
         }
         if (l.mode === "lesson" && (steps.length < 8 || steps.length > 12)) warnings.push(`${lw}: ${steps.length} steps (aim for 8 to 12)`);
         if (l.mode === "check" && graded < 4) warnings.push(`${lw}: a skill check should have at least 4 graded steps`);
+        const vids = steps.filter((s) => s.video).length;
+        need(vids <= 1, `${lw}: at most one video per lesson`);
         const conf = steps.filter((s) => s.confidence).length;
         if (conf > 2) warnings.push(`${lw}: ${conf} confidence taps (aim for about 2)`);
 
@@ -108,7 +110,14 @@ export function validate(paths) {
           for (const r of s.rules || []) need(RULE_RE.test(r), `${sw}: unknown rule ${r}`);
           need((s.hints || []).length <= 2, `${sw}: at most 2 hints`);
           if (s.type === "card") {
-            need(s.body || s.mock, `${sw}: a card needs a body or a mock`);
+            need(s.body || s.mock || s.video, `${sw}: a card needs a body, a mock or a video`);
+            if (s.video) {
+              const v = s.video;
+              need(/^clips\/[\w-]+\.mp4$/.test(v.src || ""), `${sw}: video.src must look like clips/<clip id>.mp4`);
+              need(v.captions?.ar && v.captions?.en, `${sw}: video needs captions.ar and captions.en (.vtt)`);
+              need(v.transcript, `${sw}: video needs a transcript`);
+              need(l.mode === "lesson", `${sw}: videos belong in lessons, not skill checks or re-tests`);
+            }
             continue;
           }
           need(s.prompt, `${sw}: prompt is required`);

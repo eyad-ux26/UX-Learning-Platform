@@ -127,6 +127,25 @@ In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin lett
 
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 
+## Instructor clips
+
+A `card` can carry a short video from the UXGate course recordings:
+
+```yaml
+- id: S03
+  type: card
+  part: concept
+  video:
+    src: clips/P14-C03.mp4          # the clip id; the .mp4 lives outside git in media/clips/
+    captions: { ar: P14-C03.ar.vtt, en: P14-C03.en.vtt }   # in content/paths/P14/captions/
+    who: { en: "Eyad, UX designer", ar: "إياد، مصمم UX" }
+    transcript: { en: "...", ar: "..." }
+  title: { en: "...", ar: "..." }
+  body: { en: "...", ar: "..." }     # the rule in a few lines, under the clip
+```
+
+Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` copies the clip and its captions into `preview/dist/clips/`, which is published with the page.
+
 ## Player behaviour worth knowing
 
 - A `reason` question appears only after the main answer is right, so it can't give that answer away. Learners then answer it and press Check again.
