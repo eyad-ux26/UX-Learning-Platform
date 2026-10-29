@@ -2,7 +2,7 @@
 
 A practice-first learning platform for UI/UX designers, in English and Arabic. Learners build skills through short lessons of small, auto-checked steps, in the style of Duolingo and Brilliant.
 
-This repository currently holds the **course content** and a **preview player** for reviewing it. The product app will be added here once the stack is chosen.
+This repository currently holds the **course content** and a **preview player** for reviewing it. The product app (Next.js, Supabase, Vercel) will be added here; see the architecture doc.
 
 ## Layout
 
@@ -29,6 +29,17 @@ Open `preview/dist/index.html` in a browser to play the lessons. The language bu
 Each unit arrives in its own pull request with a link to a playable preview. Play the lessons on a phone, comment on the PR, and merge when the unit is ready.
 
 ## Docs
+
+Product and delivery:
+
+- [Product spec](docs/product/spec.md)
+- [Metrics and events](docs/product/metrics.md)
+- [Decisions and risks](docs/product/decisions-and-risks.md)
+- [Architecture](docs/tech/architecture.md) and [data model](docs/tech/data-model.md)
+- [Backlog and sprint plan](docs/delivery/backlog.md), [Definition of Ready and Done](docs/delivery/definition-of-done.md)
+- [Design brief](docs/design/brief.md)
+
+Content:
 
 - [Learning model](docs/learning-model.md)
 - [Content format](docs/content-format.md)
