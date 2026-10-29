@@ -101,7 +101,7 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .conf{margin:6px 0 12px}
 .conf p{margin:0 0 8px;color:var(--muted);font-size:.92rem}
 .vsum{font-size:18px;margin:18px 0 2px}.vsum-note{margin:0 0 10px;color:var(--muted);font-size:14px}
-.clip{margin:4px 0 14px}.clip video{width:100%;max-height:60vh;border-radius:12px;background:#000;display:block}
+.clip{margin:4px 0 14px}.clip.loading video{aspect-ratio:1;opacity:.6}.clip video{width:100%;max-height:60vh;border-radius:12px;background:#000;display:block}
 .clip .who{font-size:13px;color:var(--muted);margin:6px 0 0}.clip details{margin-top:8px}.clip details p{font-size:14px;line-height:1.7}
 .mock.has-ov{position:relative;overflow:hidden;min-height:400px}
 .mock.has-fab{position:relative;padding-bottom:84px}
@@ -688,13 +688,25 @@ function renderStep(){
   $("#main").innerHTML = h;
   $("#fb").innerHTML = st.fb || "";
   wire(s, st, locked);
+  loadClips();
   renderActions(s, st, check);
+}
+
+/* The Artifact media store answers without byte ranges, which Safari needs to stream a video. So each clip is
+   downloaded once and played from a blob: URL, which every browser can seek. */
+const clipBlobs = {};
+function loadClips(){
+  for (const el of document.querySelectorAll("video[data-src]")){
+    const src = el.dataset.src;
+    clipBlobs[src] = clipBlobs[src] || fetch(src).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(b => URL.createObjectURL(b)).catch(() => src);
+    clipBlobs[src].then(url => { if (el.isConnected) { el.src = url; el.closest(".clip")?.classList.remove("loading"); } });
+  }
 }
 
 function clip(v){
   const on = lang === "ar" ? "ar" : "en";
   const tracks = ["ar","en"].filter(k => v.captions && v.captions[k]).map(k => `<track kind="captions" srclang="${k}" label="${k === "ar" ? "العربية" : "English"}" src="${esc(v.captions[k])}"${k === on ? " default" : ""}>`).join("");
-  return `<figure class="clip"><video controls playsinline preload="metadata"${v.poster ? ` poster="${esc(v.poster)}"` : ""} src="${esc(v.src)}">${tracks}</video>${v.who ? `<p class="who">${esc(tx(v.who))}</p>` : ""}${v.transcript ? `<details><summary>${u().transcript}</summary>${para(v.transcript)}</details>` : ""}</figure>`;
+  return `<figure class="clip loading"><video controls playsinline preload="metadata"${v.poster ? ` poster="${esc(v.poster)}"` : ""} data-src="${esc(v.src)}">${tracks}</video>${v.who ? `<p class="who">${esc(tx(v.who))}</p>` : ""}${v.transcript ? `<details><summary>${u().transcript}</summary>${para(v.transcript)}</details>` : ""}</figure>`;
 }
 
 function optionList(s, st, locked, name){
