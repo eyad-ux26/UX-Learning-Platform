@@ -144,7 +144,7 @@ A `card` can carry a short video from the UXGate course recordings:
   body: { en: "...", ar: "..." }     # the rule in a few lines, under the clip
 ```
 
-Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` puts the captions inside the page and copies the clip into `preview/dist/clips/`, which is published with the page.
+Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` puts the captions inside the page and copies the clip into `preview/dist/clips/`, which is published with the page. Supporting files don't play for every viewer of a shared preview, so upload each clip to the preview Artifact's asset store and list it in `preview/clip-urls/<unit id>.json` (`{"clips": {"P14-C01.mp4": "/_blob/<id>"}}`); the preview then plays it from there. The card under a clip is shown as the video summary, so it must cover the same points as the clip.
 
 ## Overlays
 

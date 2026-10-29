@@ -100,6 +100,7 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .cmp .cap{font-weight:600;margin:0 0 6px}
 .conf{margin:6px 0 12px}
 .conf p{margin:0 0 8px;color:var(--muted);font-size:.92rem}
+.vsum{font-size:18px;margin:18px 0 2px}.vsum-note{margin:0 0 10px;color:var(--muted);font-size:14px}
 .clip{margin:4px 0 14px}.clip video{width:100%;max-height:60vh;border-radius:12px;background:#000;display:block}
 .clip .who{font-size:13px;color:var(--muted);margin:6px 0 0}.clip details{margin-top:8px}.clip details p{font-size:14px;line-height:1.7}
 .mock.has-ov{position:relative;overflow:hidden;min-height:400px}
@@ -346,7 +347,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", transcript:"Read the transcript", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pickPreview:"Pick an option to apply it to the screen.", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", transcript:"Read the transcript", vidSum:"Video summary", vidSumNote:"Can’t watch the video? This summary covers the same points.", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pickPreview:"Pick an option to apply it to the screen.", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build",
       mastery:"Mastery round", masteryIntro:"Each skill you missed in this unit comes back as a new case. Get it right on the first try and the skill is mastered.", masteryGo:n=>`Start the mastery round (${n === 1 ? "1 skill" : `${n} skills`})`,
@@ -358,7 +359,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", transcript:"اقرأ نص الفيديو", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pickPreview:"اختر خيارًا لتطبّقه على الشاشة.", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", transcript:"اقرأ نص الفيديو", vidSum:"ملخص الفيديو", vidSumNote:"لا تستطيع مشاهدة الفيديو؟ هذا الملخص فيه النقاط نفسها.", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pickPreview:"اختر خيارًا لتطبّقه على الشاشة.", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة",
       mastery:"جولة الإتقان", masteryIntro:"كل مهارة أخطأت فيها في هذه الوحدة تعود إليك بحالة جديدة. أجب عنها صحيحًا من أول محاولة لتُتقن المهارة.", masteryGo:n=>`ابدأ جولة الإتقان (${n === 1 ? "مهارة واحدة" : n === 2 ? "مهارتان" : `${n} مهارات`})`,
@@ -665,7 +666,7 @@ function renderStep(){
     const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
     if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
     /* an instructor clip: captions in both languages, the learner's language on by default, transcript underneath */
-    if (s.video) h += clip(s.video);
+    if (s.video) h += clip(s.video) + `<h2 class="vsum">${u().vidSum}</h2><p class="vsum-note">${u().vidSumNote}</p>`;
     h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
   } else {
     if (s.recall){

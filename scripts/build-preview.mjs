@@ -46,6 +46,14 @@ JSON.stringify(bundle, (k, v) => {
   }
   return v;
 });
+// Clips uploaded to the preview Artifact's asset store play for anyone with the link, so they are used instead of
+// local files when preview/clip-urls/<unit>.json lists them (supporting files don't load for every viewer).
+const assetFile = path.join(ROOT, "preview/clip-urls", `${only}.json`);
+const assetUrls = !board && fs.existsSync(assetFile) ? JSON.parse(fs.readFileSync(assetFile, "utf8")).clips : {};
+JSON.stringify(bundle, (k, v) => {
+  if (k === "video" && v && v.src && assetUrls[path.basename(v.src)]) v.src = assetUrls[path.basename(v.src)];
+  return v;
+});
 const template = fs.readFileSync(path.join(ROOT, "preview/player.html"), "utf8");
 const json = JSON.stringify(bundle).replace(/</g, "\\u003c");
 const html = template.replace("/*__CONTENT__*/null", json).replace('/*__BUILD__*/""', JSON.stringify(label)).replace('/*__START__*/""', JSON.stringify(board ? "board" : ""));
@@ -56,7 +64,7 @@ fs.writeFileSync(out, html);
 // page as clips/; publish them with the page as supporting files.
 const used = new Set();
 let copied = 0;
-JSON.stringify(bundle, (k, v) => { if (k === "video" && v && v.src) used.add(v.src); return v; });
+JSON.stringify(bundle, (k, v) => { if (k === "video" && v && v.src && !v.src.startsWith("/_blob/")) used.add(v.src); return v; });
 const clipsDir = process.env.CLIPS_DIR || path.join(ROOT, "media/clips");
 for (const rel of used) {
   const name = path.basename(rel);
