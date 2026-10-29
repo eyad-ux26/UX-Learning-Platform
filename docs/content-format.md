@@ -144,7 +144,7 @@ A `card` can carry a short video from the UXGate course recordings:
   body: { en: "...", ar: "..." }     # the rule in a few lines, under the clip
 ```
 
-Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` copies the clip and its captions into `preview/dist/clips/`, which is published with the page.
+Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` puts the captions inside the page and copies the clip into `preview/dist/clips/`, which is published with the page.
 
 ## Overlays
 

@@ -37,24 +37,31 @@ try {
 } catch {}
 const label = [board ? "All paths" : only, rev].filter(Boolean).join(" @ ");
 
+// Captions are small, so they go inside the page as data: URLs; only the .mp4 files are served next to it.
+JSON.stringify(bundle, (k, v) => {
+  if (k === "video" && v && v.captions) for (const [lang, rel] of Object.entries(v.captions)) {
+    const file = paths.map((p) => path.join(ROOT, "content/paths", p.id, "captions", path.basename(rel))).find((f) => fs.existsSync(f));
+    if (file) v.captions[lang] = `data:text/vtt;base64,${fs.readFileSync(file).toString("base64")}`;
+    else console.log(`warning  missing ${rel}`);
+  }
+  return v;
+});
 const template = fs.readFileSync(path.join(ROOT, "preview/player.html"), "utf8");
 const json = JSON.stringify(bundle).replace(/</g, "\\u003c");
 const html = template.replace("/*__CONTENT__*/null", json).replace('/*__BUILD__*/""', JSON.stringify(label)).replace('/*__START__*/""', JSON.stringify(board ? "board" : ""));
 const out = path.join(ROOT, board ? "preview/dist/board.html" : "preview/dist/index.html");
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, html);
-// Instructor clips: captions live in content/paths/<path>/captions/, the .mp4 files outside git in media/clips/
-// (or CLIPS_DIR). Both are copied next to the page as clips/; publish them with the page as supporting files.
+// Instructor clips: the .mp4 files live outside git in media/clips/ (or CLIPS_DIR). They are copied next to the
+// page as clips/; publish them with the page as supporting files.
 const used = new Set();
 let copied = 0;
-JSON.stringify(bundle, (k, v) => { if (k === "video" && v && v.src) { used.add(v.src); Object.values(v.captions || {}).forEach((c) => used.add(c)); } return v; });
+JSON.stringify(bundle, (k, v) => { if (k === "video" && v && v.src) used.add(v.src); return v; });
 const clipsDir = process.env.CLIPS_DIR || path.join(ROOT, "media/clips");
 for (const rel of used) {
   const name = path.basename(rel);
-  const from = rel.endsWith(".vtt")
-    ? paths.map((p) => path.join(ROOT, "content/paths", p.id, "captions", name)).find((f) => fs.existsSync(f))
-    : path.join(clipsDir, name);
-  if (!from || !fs.existsSync(from)) { console.log(`warning  missing ${rel}`); continue; }
+  const from = path.join(clipsDir, name);
+  if (!fs.existsSync(from)) { console.log(`warning  missing ${rel}`); continue; }
   fs.mkdirSync(path.join(path.dirname(out), "clips"), { recursive: true });
   fs.copyFileSync(from, path.join(path.dirname(out), "clips", name));
   copied++;
