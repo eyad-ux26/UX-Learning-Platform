@@ -1,6 +1,6 @@
 # Backlog and sprint plan
 
-Version 1, 29 October 2026. GitHub Issues is the live backlog: one issue per epic (label `epic`) and one per story (label `story`), each tagged with its sprint label (`sprint-1` … `sprint-9`). This file is the planning snapshot; when they differ, the issues win.
+Version 1, 29 October 2026. GitHub Issues is the live backlog: one issue per epic (label `epic`) and one per story (label `story`), each tagged with its sprint label (`sprint-1` … `sprint-9`). This file is the planning snapshot; when they differ, the issues win. Epics are #10 to #19 and #21; Sprint 1 and 2 stories are open as sub-issues of their epics, and later sprints' stories are listed in each epic and opened at that sprint's planning.
 
 ## How we work
 

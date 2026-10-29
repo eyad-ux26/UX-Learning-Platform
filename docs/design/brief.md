@@ -50,5 +50,8 @@ Sprint 2 adds every step type, skill check, mastery round, review, paywall, prof
 
 ## Links
 
-- Design system: (added when published)
-- Sprint 1 screens: (added when published)
+- Design system (Claude Design): https://claude.ai/artifact/2LESW4z1FamcmcUAUJ8Vxs
+- Sprint 1 screens (Claude Design canvas, clickable): https://claude.ai/artifact/G4i3nsXhBcx39HLv4ARGAS
+- Snapshot in this repo: [`system/`](system/) holds `tokens.json`, the generated `tokens.css`, `components.css` and the logo SVGs. Claude Design stays the source; refresh the snapshot when it changes. EN-01 turns these into `packages/tokens`.
+
+The canvas shows every Sprint 1 screen twice: English in the light theme and Arabic (RTL) in the dark theme. Each screen also has `lang` and `theme` tweaks, so any combination can be checked. The lesson step is interactive: pick an answer, Check, see the wrong-answer sheet with a hint, Try again, then the right-answer sheet.
