@@ -1,0 +1,420 @@
+id: P14-U01-L01
+mode: lesson
+minutes: 8
+title:
+  en: "Block the screen only when it matters"
+  ar: "لا تحجب الشاشة إلا حين يهمّ الأمر"
+sources:
+  - title: { en: "Modal & Nonmodal Dialogs: When (& When Not) to Use Them (NN/g)", ar: "النوافذ الـ Modal والـ Nonmodal: متى نستخدمها ومتى لا (NN/g)" }
+    url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/"
+  - title: { en: "Confirmation Dialogs Can Prevent User Errors (NN/g)", ar: "نوافذ التأكيد تمنع أخطاء المستخدمين (NN/g)" }
+    url: "https://www.nngroup.com/articles/confirmation-dialog/"
+review_labels:
+  MC-P14-001: { en: "Don't block a task with an unrelated offer", ar: "لا تحجب المهمة بعرض لا علاقة له بها" }
+  MC-P14-002: { en: "Delaying an interruption doesn't make it related", ar: "تأخير المقاطعة لا يجعلها مرتبطة بالمهمة" }
+  MC-P14-003: { en: "Confirm what can't be undone, in a dialog", ar: "أكِّد ما لا يمكن التراجع عنه، في نافذة" }
+  MC-P14-004: { en: "Ask for what's missing where the task happens", ar: "اطلب الناقص في مكان المهمة نفسها" }
+  MC-P14-005: { en: "A modal hides what people need to compare", ar: "الـ Modal يُخفي ما يحتاج الناس إلى مقارنته" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Hassan's electricity bill", ar: "فاتورة الكهرباء لحسن" }
+    body:
+      en: "Hassan is paying his electricity bill in a wallet app. He has checked the amount and is about to confirm.\n\nAs he taps **Pay now**, a window covers the screen: an offer for the app's new credit card. He closes it, loses his place, and decides to pay later."
+      ar: "يدفع حسن فاتورة الكهرباء في تطبيق محفظة. راجع المبلغ وهو على وشك التأكيد.\n\nوحين ضغط **ادفع الآن**، غطّت نافذة الشاشة: عرض لبطاقة الائتمان الجديدة من التطبيق. أغلقها، فضاع مكانه، وقرّر أن يدفع لاحقًا."
+    mock:
+      width: 300
+      blocks: &paynow
+        - { kind: title, text: { en: "Pay bill", ar: "دفع الفاتورة" } }
+        - { kind: meta, text: { en: "Electricity · October", ar: "الكهرباء · أكتوبر" }, gap: s }
+        - { kind: heading, text: { en: "EGP 640", ar: "640 جنيه" }, gap: m }
+        - { kind: small, text: { en: "From: Wallet balance", ar: "من: رصيد المحفظة" }, gap: s }
+        - { kind: button, text: { en: "Pay now", ar: "ادفع الآن" }, gap: xl }
+      overlay:
+        type: dialog
+        close: true
+        blocks:
+          - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" } }
+          - { kind: small, text: { en: "Apply for our new credit card in 2 minutes.", ar: "قدّم على بطاقتنا الائتمانية الجديدة في دقيقتين." }, gap: s }
+          - { kind: button, text: { en: "Apply now", ar: "قدّم الآن" }, gap: m }
+
+  - id: S02
+    type: tune
+    part: try
+    skill: SK-P14-U01-01
+    rules: [R12]
+    confidence: true
+    value:
+      en: "Try first. Modal dialogs (NN/g): avoid modals that interrupt high-stakes processes such as checkout, and don't use them for information unrelated to the current flow. Delaying the popup doesn't fix either problem."
+      ar: "جرّب أولًا. النوافذ الـ Modal (NN/g): تجنّب النوافذ التي تقاطع العمليات المهمة مثل الدفع، ولا تستخدمها لمعلومات لا علاقة لها بالمهمة الحالية. وتأخير النافذة لا يحلّ أيًّا من المشكلتين."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs that interrupt high-stake processes such as checkout flows." }
+    prompt:
+      en: "The team still wants people to see the card offer. Try each version. Which one should ship?"
+      ar: "ما زال الفريق يريد أن يرى الناس عرض البطاقة. جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: *paynow
+      overlay:
+        type: dialog
+        close: true
+        blocks:
+          - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" } }
+          - { kind: small, text: { en: "Apply for our new credit card in 2 minutes.", ar: "قدّم على بطاقتنا الائتمانية الجديدة في دقيقتين." }, gap: s }
+          - { kind: button, text: { en: "Apply now", ar: "قدّم الآن" }, gap: m }
+    options:
+      - id: delay
+        text: { en: "Keep the window, but show it 5 seconds after the screen opens", ar: "أبقِ النافذة، لكن اعرضها بعد 5 ثوانٍ من فتح الشاشة" }
+        mock:
+          caption: { en: "After this change (5 seconds in)", ar: "بعد هذا التغيير (بعد 5 ثوانٍ)" }
+          width: 300
+          blocks: *paynow
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" } }
+              - { kind: small, text: { en: "Apply for our new credit card in 2 minutes.", ar: "قدّم على بطاقتنا الائتمانية الجديدة في دقيقتين." }, gap: s }
+              - { kind: button, text: { en: "Apply now", ar: "قدّم الآن" }, gap: m }
+      - id: after
+        text: { en: "Remove the window; show the offer as a line on the \"Payment done\" screen", ar: "احذف النافذة؛ واعرض العرض سطرًا في شاشة «تمّ الدفع»" }
+        mock:
+          caption: { en: "After this change (once paid)", ar: "بعد هذا التغيير (بعد الدفع)" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Payment done", ar: "تمّ الدفع" } }
+            - { kind: meta, text: { en: "EGP 640 · Electricity · October", ar: "640 جنيه · الكهرباء · أكتوبر" }, gap: s }
+            - { kind: button, text: { en: "Back to home", ar: "العودة للرئيسية" }, gap: l }
+            - { kind: divider, gap: l }
+            - { kind: small, text: { en: "Get 5% cashback on bills with our credit card.", ar: "احصل على استرداد 5% على الفواتير ببطاقتنا الائتمانية." }, gap: m }
+            - { kind: link, text: { en: "See the card", ar: "اعرف البطاقة" }, gap: s }
+      - id: smaller
+        text: { en: "Keep the window, but make it smaller with a big Close button", ar: "أبقِ النافذة، لكن صغّرها وكبّر زر الإغلاق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *paynow
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: small, text: { en: "Get 5% cashback with our new credit card.", ar: "احصل على استرداد 5% ببطاقتنا الائتمانية الجديدة." } }
+              - { kind: button, text: { en: "Close", ar: "إغلاق" }, gap: m }
+    answer: [after]
+    misconceptions:
+      - id: MC-P14-002
+        when: [delay]
+        feedback:
+          en: "Five seconds later, Hassan is still paying. The window still covers the payment and still has nothing to do with it."
+          ar: "بعد خمس ثوانٍ، ما زال حسن يدفع. والنافذة ما زالت تغطّي الدفع، وما زالت لا علاقة لها به."
+      - id: MC-P14-001
+        when: [smaller]
+        feedback:
+          en: "A smaller window still blocks the payment until Hassan deals with it. The problem is the interruption, not its size."
+          ar: "النافذة الأصغر ما زالت تحجب الدفع حتى يتعامل معها حسن. فالمشكلة في المقاطعة، لا في حجمها."
+    hints:
+      - en: "What is Hassan trying to finish, and does the offer help him finish it?"
+        ar: "ما الذي يحاول حسن إنهاءه؟ وهل يساعده العرض على إنهائه؟"
+    correct:
+      en: "Let the payment finish; offer the card after it."
+      ar: "دَع الدفع يكتمل، واعرض البطاقة بعده."
+    explain:
+      en: "A window that blocks the screen should help the task in front of people. An unrelated offer in the middle of paying makes people lose their place and leave. After the payment, the same offer interrupts nothing."
+      ar: "النافذة التي تحجب الشاشة يجب أن تخدم المهمة التي أمام الناس. والعرض غير المرتبط وسط الدفع يجعل الناس يفقدون مكانهم ويغادرون. وبعد الدفع، العرض نفسه لا يقاطع شيئًا."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [warn, form, promo, layers]
+    video:
+      src: clips/P14-C01.mp4
+      captions: { ar: P14-C01.ar.vtt, en: P14-C01.en.vtt }
+      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
+      transcript:
+        en: "(Transcript is added when the clip is cut.)"
+        ar: "(يُضاف نص الفيديو بعد قصّ المقطع.)"
+    title: { en: "A modal dialog stops everything", ar: "الـ Modal dialog يوقف كل شيء" }
+    body:
+      en: "A **modal dialog** sits on top of the screen and blocks it until people respond. That is worth it only when the task needs it.\n\n- **Use it for a critical warning:** to stop a serious mistake, like deleting something that can't come back.\n- **Use it for what the task needs now:** information the current task can't continue without.\n- **Not for unrelated things:** offers, surveys and news that have nothing to do with the task.\n- **Not for decisions that need more information:** if people must check something the dialog hides, use a page."
+      ar: "الـ **Modal dialog** نافذة تظهر فوق الشاشة وتحجبها حتى يردّ الناس. ولا يستحق ذلك إلا حين تحتاجه المهمة.\n\n- **استخدمه لتحذير مهم:** لمنع خطأ كبير، مثل حذف شيء لا يمكن استعادته.\n- **استخدمه لما تحتاجه المهمة الآن:** معلومة لا تكتمل المهمة الحالية دونها.\n- **لا تستخدمه لأشياء غير مرتبطة:** العروض والاستبيانات والأخبار التي لا علاقة لها بالمهمة.\n- **لا تستخدمه لقرار يحتاج معلومات أكثر:** إن احتاج الناس إلى مراجعة شيء تُخفيه النافذة، فاستخدم صفحة."
+
+  - id: S04
+    type: tune
+    part: guided
+    skill: SK-P14-U01-01
+    rules: [R06, R15]
+    value:
+      en: "Confirmation dialogs (NN/g): consider a confirmation dialog before actions that cannot be undone, and label the buttons with what will happen instead of Yes/No. A banner or nothing at all doesn't stop the mistake."
+      ar: "نوافذ التأكيد (NN/g): فكّر في نافذة تأكيد قبل الإجراءات التي لا يمكن التراجع عنها، واكتب على الأزرار ما سيحدث بدل «نعم/لا». والـ Banner أو عدم التأكيد لا يمنعان الخطأ."
+    ref: { url: "https://www.nngroup.com/articles/confirmation-dialog/", quote: "In particular, consider a confirmation dialog before actions that cannot be undone." }
+    scenario:
+      en: "Hassan can remove a saved bank card from the wallet. Once removed, he has to add the card again from scratch, with a code from his bank."
+      ar: "يستطيع حسن حذف بطاقة بنكية محفوظة من المحفظة. وبعد حذفها، عليه أن يضيفها من جديد بالكامل، برمز من البنك."
+    prompt:
+      en: "Try each version of what happens when he taps Remove. Which one should ship?"
+      ar: "جرّب كل نسخة لما يحدث حين يضغط «حذف». أيّها يجب أن تُطلق؟"
+    start: instant
+    options:
+      - id: instant
+        text: { en: "Remove the card at once", ar: "احذف البطاقة فورًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Saved cards", ar: "البطاقات المحفوظة" } }
+            - { kind: meta, text: { en: "No saved cards", ar: "لا توجد بطاقات محفوظة" }, gap: m }
+            - { kind: button, text: { en: "Add a card", ar: "أضف بطاقة" }, gap: l, style: plain }
+      - id: dialog
+        text: { en: "Ask first, in a dialog that names the card", ar: "اسأل أولًا، في نافذة تذكر البطاقة" }
+        mock:
+          width: 300
+          blocks: &cards
+            - { kind: title, text: { en: "Saved cards", ar: "البطاقات المحفوظة" } }
+            - { kind: meta, text: { en: "Visa ending 4821", ar: "Visa تنتهي بـ 4821" }, gap: m }
+            - { kind: link, text: { en: "Remove", ar: "حذف" }, gap: s }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Remove Visa ending 4821?", ar: "حذف Visa التي تنتهي بـ 4821؟" } }
+              - { kind: small, text: { en: "To use it again, you'll need to add it and get a code from your bank.", ar: "لاستخدامها مرة أخرى، ستحتاج إلى إضافتها والحصول على رمز من البنك." }, gap: s }
+              - { kind: button, text: { en: "Remove card", ar: "احذف البطاقة" }, style: danger, gap: m }
+              - { kind: button, text: { en: "Keep card", ar: "أبقِ البطاقة" }, style: plain, gap: s }
+      - id: banner
+        text: { en: "Remove it and show a banner: \"Card removed\"", ar: "احذفها واعرض Banner: «حُذفت البطاقة»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: banner, text: { en: "Card removed.", ar: "حُذفت البطاقة." } }
+            - { kind: title, text: { en: "Saved cards", ar: "البطاقات المحفوظة" }, gap: m }
+            - { kind: meta, text: { en: "No saved cards", ar: "لا توجد بطاقات محفوظة" }, gap: m }
+    answer: [dialog]
+    misconceptions:
+      - id: MC-P14-003
+        when: [instant, banner]
+        feedback:
+          en: "If Hassan tapped Remove by mistake, the card is already gone, and getting it back takes a bank code. A message after the fact can't stop that."
+          ar: "إن ضغط حسن «حذف» بالخطأ، تكون البطاقة قد حُذفت، واستعادتها تحتاج رمزًا من البنك. والرسالة بعد الحذف لا تمنع ذلك."
+    correct:
+      en: "Can't be undone: ask first, in a dialog."
+      ar: "لا يمكن التراجع عنه: اسأل أولًا، في نافذة."
+    explain:
+      en: "Removing the card can't be undone, so this is worth a dialog. It names the card and labels the buttons \"Remove card\" and \"Keep card\", so Hassan knows exactly what each one does."
+      ar: "حذف البطاقة لا يمكن التراجع عنه، لذلك يستحق نافذة. وهي تذكر البطاقة، وعلى أزرارها «احذف البطاقة» و«أبقِ البطاقة»، فيعرف حسن بالضبط ما يفعله كل زر."
+
+  - id: S05
+    type: tune
+    part: guided
+    skill: SK-P14-U01-01
+    rules: [R06, R15]
+    value:
+      en: "Modal dialogs (NN/g): use them to ask for information critical to continuing the current process. Sending people to another screen, or only telling them what's missing, breaks the task."
+      ar: "النوافذ الـ Modal (NN/g): استخدمها لطلب معلومة ضرورية لمتابعة العملية الحالية. وإرسال الناس إلى شاشة أخرى، أو مجرد إخبارهم بالناقص، يقطع المهمة."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Use modal dialogs to request the user to enter information critical to continuing the current process." }
+    scenario:
+      en: "Ziad has filled his cart in a food delivery app and taps **Order**. He has never saved a delivery address, and the order can't be placed without one."
+      ar: "ملأ زياد سلّته في تطبيق توصيل طعام وضغط **اطلب**. لم يحفظ أي عنوان توصيل من قبل، ولا يمكن إرسال الطلب دون عنوان."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: settings
+    options:
+      - id: settings
+        text: { en: "Open the Settings page so he can add an address", ar: "افتح صفحة الإعدادات ليضيف عنوانًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Settings", ar: "الإعدادات" } }
+            - { kind: meta, text: { en: "Account", ar: "الحساب" }, gap: m }
+            - { kind: meta, text: { en: "Addresses", ar: "العناوين" }, gap: s }
+            - { kind: meta, text: { en: "Payment methods", ar: "طرق الدفع" }, gap: s }
+            - { kind: meta, text: { en: "Notifications", ar: "الإشعارات" }, gap: s }
+      - id: ask
+        text: { en: "Ask for the address in a dialog over the cart", ar: "اطلب العنوان في نافذة فوق السلّة" }
+        mock:
+          width: 300
+          blocks: &cart
+            - { kind: title, text: { en: "Your cart", ar: "سلّتك" } }
+            - { kind: meta, text: { en: "2 × Chicken shawarma", ar: "2 × شاورما فراخ" }, gap: m }
+            - { kind: meta, text: { en: "1 × Fries", ar: "1 × بطاطس" }, gap: s }
+            - { kind: button, text: { en: "Order · EGP 285", ar: "اطلب · 285 جنيه" }, gap: xl }
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Where should we deliver?", ar: "إلى أين نوصّل الطلب؟" } }
+              - { kind: field, label: { en: "Street and building", ar: "الشارع والعمارة" }, text: { en: "e.g. 12 Nile St, building 4", ar: "مثال: 12 شارع النيل، عمارة 4" }, gap: m }
+              - { kind: field, label: { en: "Floor and flat", ar: "الدور والشقة" }, text: { en: "e.g. 3rd floor, flat 7", ar: "مثال: الدور الثالث، شقة 7" }, gap: s }
+              - { kind: button, text: { en: "Save and order", ar: "احفظ واطلب" }, gap: m }
+      - id: toast
+        text: { en: "Show a message: \"Add an address in Settings first\"", ar: "اعرض رسالة: «أضف عنوانًا من الإعدادات أولًا»" }
+        mock:
+          width: 300
+          blocks: *cart
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Add an address in Settings first.", ar: "أضف عنوانًا من الإعدادات أولًا." } }
+    answer: [ask]
+    misconceptions:
+      - id: MC-P14-004
+        when: [settings, toast]
+        feedback:
+          en: "Ziad has to leave his cart, find the right setting, and come back to order again. Ask for the one missing thing right where he is."
+          ar: "على زياد أن يترك سلّته، ويبحث عن الإعداد الصحيح، ثم يعود ليطلب من جديد. اطلب الشيء الناقص في المكان الذي هو فيه."
+    correct:
+      en: "The order needs it now: ask for it in a dialog."
+      ar: "الطلب يحتاجه الآن: اطلبه في نافذة."
+    explain:
+      en: "The order can't go ahead without an address, so a dialog that asks for it is part of the task, not an interruption. Ziad stays on his cart and orders in one step."
+      ar: "الطلب لا يكتمل دون عنوان، لذلك النافذة التي تطلبه جزء من المهمة، لا مقاطعة لها. ويبقى زياد على سلّته ويطلب في خطوة واحدة."
+
+  - id: S06
+    type: compare
+    part: contrast
+    skill: SK-P14-U01-02
+    rules: [R11]
+    value:
+      en: "Modal dialogs (NN/g): avoid them for complex decisions that need information not available in the modal. Picking a ticket type while the seat map is hidden behind the modal is exactly that."
+      ar: "النوافذ الـ Modal (NN/g): تجنّبها للقرارات المعقّدة التي تحتاج معلومات غير موجودة في النافذة. واختيار نوع التذكرة بينما خريطة المقاعد مخفية خلف النافذة مثال على ذلك تمامًا."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs for complex decision making that requires additional sources of information unavailable in the modal." }
+    scenario:
+      en: "Mariam is buying a concert ticket. The ticket type sets where she sits, so she wants to check the seat map while she chooses."
+      ar: "تشتري مريم تذكرة حفلة. ونوع التذكرة يحدّد مكان جلوسها، لذلك تريد أن تراجع خريطة المقاعد وهي تختار."
+    prompt:
+      en: "Which version lets Mariam make this choice?"
+      ar: "أيّ نسخة تتيح لمريم أن تتّخذ هذا القرار؟"
+    a:
+      label: { en: "Version A: types in a dialog", ar: "النسخة A: الأنواع في نافذة" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Seat map", ar: "خريطة المقاعد" } }
+          - { kind: image, size: m, gap: s }
+          - { kind: small, text: { en: "Zones A, B, C", ar: "المناطق A وB وC" }, gap: s }
+        overlay:
+          type: dialog
+          blocks:
+            - { kind: heading, text: { en: "Choose a ticket", ar: "اختر تذكرة" } }
+            - { kind: radio, text: { en: "Gold · EGP 1,500", ar: "Gold · 1500 جنيه" }, gap: s }
+            - { kind: radio, text: { en: "Silver · EGP 900", ar: "Silver · 900 جنيه" }, gap: xs }
+            - { kind: radio, text: { en: "Standard · EGP 450", ar: "Standard · 450 جنيه" }, gap: xs }
+            - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+    b:
+      label: { en: "Version B: types on the page", ar: "النسخة B: الأنواع في الصفحة" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Seat map", ar: "خريطة المقاعد" } }
+          - { kind: image, size: m, gap: s }
+          - { kind: radio, text: { en: "Gold · Zone A · EGP 1,500", ar: "Gold · المنطقة A · 1500 جنيه" }, gap: m }
+          - { kind: radio, text: { en: "Silver · Zone B · EGP 900", ar: "Silver · المنطقة B · 900 جنيه" }, gap: xs }
+          - { kind: radio, text: { en: "Standard · Zone C · EGP 450", ar: "Standard · المنطقة C · 450 جنيه" }, gap: xs }
+          - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+    answer: b
+    misconceptions:
+      - id: MC-P14-005
+        when: [a]
+        feedback:
+          en: "The dialog covers the seat map, which is the one thing Mariam needs to see. She has to close it, look, and open it again."
+          ar: "النافذة تغطّي خريطة المقاعد، وهي الشيء الوحيد الذي تحتاج مريم أن تراه. فعليها أن تغلقها، وتنظر، ثم تفتحها من جديد."
+    correct:
+      en: "B: the choice sits next to the map it depends on."
+      ar: "B: الاختيار بجانب الخريطة التي يعتمد عليها."
+    explain:
+      en: "In B, Mariam can see each zone while she picks a type. A dialog fits a quick answer, not a choice that depends on information behind it."
+      ar: "في B، ترى مريم كل منطقة وهي تختار النوع. والنافذة تناسب إجابة سريعة، لا اختيارًا يعتمد على معلومات خلفها."
+
+  - id: S07
+    type: tune
+    part: independent
+    skill: SK-P14-U01-02
+    rules: [R14]
+    confidence: true
+    value:
+      en: "Modal dialogs (NN/g): a complex decision that needs information unavailable in the modal belongs outside it. Here the deciding numbers (her usage) are on the screen the modal covers; a bigger modal or a link that closes it doesn't bring them in."
+      ar: "النوافذ الـ Modal (NN/g): القرار المعقّد الذي يحتاج معلومات غير موجودة في النافذة مكانه خارجها. وهنا الأرقام التي تحسم القرار (استهلاكها) على الشاشة التي تغطّيها النافذة؛ والنافذة الأكبر أو الرابط الذي يغلقها لا يُدخلانها."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs for complex decision making that requires additional sources of information unavailable in the modal." }
+    scenario:
+      en: "Farida wants a bigger internet package. To pick one, she needs to know how many GB she used in the last few months. Her usage is on the home screen, and the packages open in a dialog on top of it."
+      ar: "تريد فريدة باقة إنترنت أكبر. ولكي تختار، تحتاج أن تعرف كم GB استهلكت في الشهور الأخيرة. واستهلاكها في الشاشة الرئيسية، والباقات تُفتح في نافذة فوقها."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: &home
+        - { kind: title, text: { en: "My line", ar: "خطّي" } }
+        - { kind: meta, text: { en: "Usage: Aug 128 GB · Sep 141 GB · Oct 150 GB", ar: "الاستهلاك: أغسطس 128 GB · سبتمبر 141 GB · أكتوبر 150 GB" }, gap: s }
+        - { kind: button, text: { en: "Upgrade package", ar: "رقِّ الباقة" }, gap: xl }
+      overlay:
+        type: dialog
+        close: true
+        blocks:
+          - { kind: heading, text: { en: "Choose a package", ar: "اختر باقة" } }
+          - { kind: radio, text: { en: "140 GB · EGP 400", ar: "140 GB · 400 جنيه" }, gap: s }
+          - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: xs }
+          - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: xs }
+    options:
+      - id: link
+        text: { en: "Keep the dialog; add a \"Check my usage\" link that closes it", ar: "أبقِ النافذة؛ وأضف رابط «راجع استهلاكي» يغلقها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *home
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Choose a package", ar: "اختر باقة" } }
+              - { kind: radio, text: { en: "140 GB · EGP 400", ar: "140 GB · 400 جنيه" }, gap: s }
+              - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: xs }
+              - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: xs }
+              - { kind: link, text: { en: "Check my usage", ar: "راجع استهلاكي" }, gap: m }
+      - id: page
+        text: { en: "Open a page that shows her usage above the packages", ar: "افتح صفحة تعرض استهلاكها فوق الباقات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Upgrade package", ar: "ترقية الباقة" } }
+            - { kind: banner, text: { en: "You used 128, 141 and 150 GB in the last 3 months.", ar: "استهلكتِ 128 و141 و150 GB في آخر 3 شهور." }, gap: m }
+            - { kind: radio, text: { en: "140 GB · EGP 400", ar: "140 GB · 400 جنيه" }, gap: m }
+            - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: xs }
+            - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: xs }
+            - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+      - id: bigger
+        text: { en: "Keep the dialog, but make it cover the whole screen", ar: "أبقِ النافذة، لكن اجعلها تغطّي الشاشة كلها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *home
+          overlay:
+            type: full
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Choose a package", ar: "اختر باقة" } }
+              - { kind: radio, text: { en: "140 GB · EGP 400", ar: "140 GB · 400 جنيه" }, gap: m }
+              - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: s }
+              - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: s }
+    answer: [page]
+    misconceptions:
+      - id: MC-P14-005
+        when: [link, bigger]
+        feedback:
+          en: "Farida still can't see her usage while she picks. Closing the dialog to check it, or covering even more of the screen, keeps the numbers away from the choice."
+          ar: "ما زالت فريدة لا ترى استهلاكها وهي تختار. وإغلاق النافذة لمراجعته، أو تغطية جزء أكبر من الشاشة، يُبقي الأرقام بعيدة عن الاختيار."
+    correct:
+      en: "Put the deciding numbers next to the choice, on a page."
+      ar: "ضع الأرقام التي تحسم القرار بجانب الاختيار، في صفحة."
+    explain:
+      en: "Her usage of 128 to 150 GB is what decides the package. On a page, it sits right above the options, so she can see that 140 GB is already too small."
+      ar: "استهلاكها من 128 إلى 150 GB هو ما يحسم الباقة. وفي صفحة، يكون فوق الخيارات مباشرة، فترى أن 140 GB صغيرة عليها أصلًا."
+
+  - id: S08
+    type: card
+    part: recap
+    icons: [layers, warn, ok]
+    title: { en: "What you practised", ar: "ما تدرّبت عليه" }
+    body:
+      en: "- **A modal dialog blocks everything,** so it must serve the task on the screen.\n- **Use it** for a warning before something that can't be undone, or for the one thing the task needs to continue.\n- **Move it out** when it's unrelated, or when the choice needs information the dialog hides.\n\nNext: smaller helpers, the bottom sheet and the tooltip."
+      ar: "- **الـ Modal dialog يحجب كل شيء،** لذلك يجب أن يخدم المهمة التي على الشاشة.\n- **استخدمه** لتحذير قبل شيء لا يمكن التراجع عنه، أو للشيء الوحيد الذي تحتاجه المهمة لتستمر.\n- **أخرِجه** حين لا علاقة له بالمهمة، أو حين يحتاج الاختيار معلومات تُخفيها النافذة.\n\nالتالي: مساعدات أصغر، الـ Bottom sheet والـ Tooltip."

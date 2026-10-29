@@ -102,6 +102,21 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .conf p{margin:0 0 8px;color:var(--muted);font-size:.92rem}
 .clip{margin:4px 0 14px}.clip video{width:100%;max-height:60vh;border-radius:12px;background:#000;display:block}
 .clip .who{font-size:13px;color:var(--muted);margin:6px 0 0}.clip details{margin-top:8px}.clip details p{font-size:14px;line-height:1.7}
+.mock.has-ov{position:relative;overflow:hidden;min-height:400px}
+.mock .scrim{position:absolute;inset:0;background:rgba(20,20,30,.45)}
+.mock .ov{position:absolute;background:var(--mock-bg);color:var(--mock-ink);box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px}
+.mock .ov-dialog{left:8%;right:8%;top:50%;transform:translateY(-50%);border-radius:16px}
+.mock .ov-sheet{left:0;right:0;bottom:0;border-radius:18px 18px 0 0;max-height:78%;padding-top:10px}
+.mock .ov-sheet.tall{top:6%}
+.mock .ov-full{inset:0;border-radius:0;box-shadow:none}
+.mock .ov-toast{left:12px;right:12px;bottom:14px;border-radius:10px;background:#2B2B33;color:#fff;padding:10px 14px;font-size:.88rem}
+.mock .ov-toast .k-link{color:#B9AEFF}
+.mock .ov-banner{left:0;right:0;top:0;border-radius:0;box-shadow:none;background:#FFF4D6;color:#5C4300;padding:12px 16px;font-size:.88rem}
+.mock .grab{width:40px;height:4px;border-radius:2px;background:#C9C9D1;margin:0 auto 10px}
+.mock .ovx{position:absolute;top:10px;inset-inline-end:14px;font-size:.95rem;color:var(--mock-muted)}
+.mock .k-tip{display:inline-block;width:auto;max-width:85%;background:#2B2B33;color:#fff;font-size:.8rem;border-radius:8px;padding:7px 10px;position:relative;margin-top:8px}
+.mock .k-tip::before{content:"";position:absolute;top:-6px;inset-inline-start:16px;border:6px solid transparent;border-top:0;border-bottom-color:#2B2B33}
+.mock .k-iconbtn{display:inline-flex;width:auto;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:13px;border:1px solid var(--line);font-size:.85rem;color:var(--mock-muted)}
 .recall{background:var(--note-soft);color:var(--ink);border-radius:10px;padding:10px 14px;margin:0 0 14px}
 
 /* Mock screens: their own neutral product palette, independent of the app theme */
@@ -458,7 +473,9 @@ function mockBlocks(blocks, opts){
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
-const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
+/* an overlay on top of the screen: a dialog, a bottom sheet or a snackbar (toast) */
+const overlay = o => !o ? "" : `${(o.scrim ?? (o.type === "dialog" || o.type === "sheet")) ? `<div class="scrim" aria-hidden="true"></div>` : ""}<div class="ov ov-${o.type}" role="${o.type === "toast" ? "status" : "dialog"}">${o.type === "sheet" && o.handle !== false ? `<div class="grab" aria-hidden="true"></div>` : ""}${o.close ? `<span class="ovx" aria-label="Close">✕</span>` : ""}${mockBlocks(o.blocks)}</div>`;
+const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}${m.overlay?" has-ov":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}${overlay(m.overlay)}</div>` : "";
 /* a source link that opens the article with the supporting passage highlighted (URL text fragment) */
 const fragUrl = r => r.quote ? `${r.url}#:~:text=${encodeURIComponent(r.quote).replace(/-/g, "%2D")}` : r.url;
 const srcTitle = (url, lessons) => { for (const l of lessons) { const x = (l.sources||[]).find(x => x.url === url); if (x) return tx(x.title); } return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]; };

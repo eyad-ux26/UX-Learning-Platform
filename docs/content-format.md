@@ -146,6 +146,22 @@ A `card` can carry a short video from the UXGate course recordings:
 
 Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` copies the clip and its captions into `preview/dist/clips/`, which is published with the page.
 
+## Overlays
+
+A mock can carry one `overlay` drawn on top of the screen, for lessons about dialogs, sheets and messages:
+
+```yaml
+mock:
+  blocks: [ ... ]            # the screen underneath
+  overlay:
+    type: dialog             # dialog, sheet, full (a full-screen sheet), toast (a snackbar) or banner (pinned to the top)
+    close: true              # draws an ✕ in the corner
+    scrim: false             # dialogs and sheets dim the screen by default; false keeps it bright (a nonmodal sheet)
+    blocks: [ ... ]          # what the overlay holds
+```
+
+Two block kinds go with it: `tip` (a dark tooltip bubble with an arrow, placed under the block it explains) and `iconbtn` (a small round icon-only button, such as ⓘ).
+
 ## Player behaviour worth knowing
 
 - A `reason` question appears only after the main answer is right, so it can't give that answer away. Learners then answer it and press Check again.

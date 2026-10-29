@@ -46,6 +46,7 @@ fs.writeFileSync(out, html);
 // Instructor clips: captions live in content/paths/<path>/captions/, the .mp4 files outside git in media/clips/
 // (or CLIPS_DIR). Both are copied next to the page as clips/; publish them with the page as supporting files.
 const used = new Set();
+let copied = 0;
 JSON.stringify(bundle, (k, v) => { if (k === "video" && v && v.src) { used.add(v.src); Object.values(v.captions || {}).forEach((c) => used.add(c)); } return v; });
 const clipsDir = process.env.CLIPS_DIR || path.join(ROOT, "media/clips");
 for (const rel of used) {
@@ -56,7 +57,8 @@ for (const rel of used) {
   if (!from || !fs.existsSync(from)) { console.log(`warning  missing ${rel}`); continue; }
   fs.mkdirSync(path.join(path.dirname(out), "clips"), { recursive: true });
   fs.copyFileSync(from, path.join(path.dirname(out), "clips", name));
+  copied++;
 }
-if (used.size) console.log(`Copied ${used.size} clip files to ${path.relative(ROOT, path.join(path.dirname(out), "clips"))}/.`);
+if (copied) console.log(`Copied ${copied} clip files to ${path.relative(ROOT, path.join(path.dirname(out), "clips"))}/.`);
 const lessons = bundle.paths.flatMap((p) => p.units.flatMap((u) => u.lessons)).length;
 console.log(`Built ${path.relative(ROOT, out)} with ${lessons} lessons.`);

@@ -1,0 +1,380 @@
+id: P14-U01-L03
+mode: lesson
+minutes: 8
+title:
+  en: "Snackbar, banner or dialog?"
+  ar: "Snackbar أم Banner أم Dialog؟"
+sources:
+  - title: { en: "Indicators, Validations, and Notifications (NN/g)", ar: "المؤشرات والتحقّق والإشعارات (NN/g)" }
+    url: "https://www.nngroup.com/articles/indicators-validations-notifications/"
+  - title: { en: "Confirmation Dialogs Can Prevent User Errors (NN/g)", ar: "نوافذ التأكيد تمنع أخطاء المستخدمين (NN/g)" }
+    url: "https://www.nngroup.com/articles/confirmation-dialog/"
+review_labels:
+  MC-P14-012: { en: "An error people must fix isn't a passing message", ar: "الخطأ الذي يجب إصلاحه ليس رسالة عابرة" }
+  MC-P14-013: { en: "Don't stop people for good news", ar: "لا توقف الناس من أجل خبر جيد" }
+  MC-P14-014: { en: "Something that lasts needs a message that lasts", ar: "ما يستمر يحتاج رسالة تستمر" }
+  MC-P14-015: { en: "Offer Undo instead of asking every time", ar: "قدّم «تراجع» بدل السؤال كل مرة" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Reem's ride", ar: "مشوار ريم" }
+    body:
+      en: "Reem books a ride home. Her card payment fails, and the app shows a dark strip at the bottom: \"Payment failed\". Four seconds later, it's gone.\n\nReem was looking at the map. Ten minutes later, she is still waiting, and no driver has been asked to come."
+      ar: "تحجز ريم مشوارًا إلى البيت. فشل الدفع بالبطاقة، فأظهر التطبيق شريطًا داكنًا في الأسفل: «فشل الدفع». وبعد أربع ثوانٍ، اختفى.\n\nكانت ريم تنظر إلى الخريطة. وبعد عشر دقائق، ما زالت تنتظر، ولم يُطلب أي سائق."
+    mock:
+      width: 300
+      blocks: &map
+        - { kind: title, text: { en: "Finding your driver…", ar: "نبحث عن سائق…" } }
+        - { kind: image, size: l, gap: m }
+        - { kind: meta, text: { en: "To: Home · EGP 85", ar: "إلى: البيت · 85 جنيه" }, gap: m }
+      overlay:
+        type: toast
+        blocks:
+          - { kind: text, text: { en: "Payment failed.", ar: "فشل الدفع." } }
+
+  - id: S02
+    type: tune
+    part: try
+    skill: SK-P14-U01-05
+    rules: [R12]
+    confidence: true
+    value:
+      en: "Try first. Notifications (NN/g): a toast (snackbar) is fine for passive notifications but would be a bad way to show an error, and passive messages are easily missed because they need no action. This ride can't go ahead until Reem acts."
+      ar: "جرّب أولًا. الإشعارات (NN/g): الـ Toast (الـ Snackbar) مناسب للإشعارات التي لا تحتاج إجراءً، لكنه طريقة سيئة لعرض خطأ، والرسائل التي لا تحتاج إجراءً يسهل أن تفوت الناس. وهذا المشوار لا يتم حتى تتصرّف ريم."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications can easily be missed, since they require no user action." }
+    prompt:
+      en: "Try each version of the payment message. Which one should ship?"
+      ar: "جرّب كل نسخة من رسالة الدفع. أيّها يجب أن تُطلق؟"
+    start: longer
+    options:
+      - id: longer
+        text: { en: "Keep the snackbar, but show it for 10 seconds", ar: "أبقِ الـ Snackbar، لكن اعرضه 10 ثوانٍ" }
+        mock:
+          caption: { en: "Disappears after 10 seconds", ar: "يختفي بعد 10 ثوانٍ" }
+          width: 300
+          blocks: *map
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Payment failed. Try another way to pay.", ar: "فشل الدفع. جرّبي طريقة دفع أخرى." } }
+      - id: dialog
+        text: { en: "A dialog that asks how she wants to pay", ar: "Dialog يسألها كيف تريد أن تدفع" }
+        mock:
+          width: 300
+          blocks: *map
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Your card was declined", ar: "رُفضت بطاقتك" } }
+              - { kind: small, text: { en: "We'll ask a driver as soon as you choose how to pay.", ar: "سنطلب سائقًا بمجرد أن تختاري طريقة الدفع." }, gap: s }
+              - { kind: button, text: { en: "Pay with another card", ar: "ادفعي ببطاقة أخرى" }, gap: m }
+              - { kind: button, text: { en: "Pay cash to the driver", ar: "ادفعي نقدًا للسائق" }, style: plain, gap: s }
+      - id: color
+        text: { en: "Keep the snackbar, but make it red", ar: "أبقِ الـ Snackbar، لكن اجعله أحمر" }
+        mock:
+          caption: { en: "Disappears after 4 seconds", ar: "يختفي بعد 4 ثوانٍ" }
+          width: 300
+          blocks: *map
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, color: red, weight: bold, text: { en: "Payment failed.", ar: "فشل الدفع." } }
+    answer: [dialog]
+    misconceptions:
+      - id: MC-P14-012
+        when: [longer, color]
+        feedback:
+          en: "It still disappears on its own, while Reem may be looking at the map. Nothing happens until she pays another way, so the message can't just pass by."
+          ar: "ما زال يختفي وحده، بينما قد تكون ريم تنظر إلى الخريطة. ولن يحدث شيء حتى تدفع بطريقة أخرى، فلا يصح أن تمرّ الرسالة وتختفي."
+    hints:
+      - en: "Can the ride go ahead if Reem never notices this message?"
+        ar: "هل يمكن أن يتم المشوار إن لم تنتبه ريم إلى هذه الرسالة أبدًا؟"
+    correct:
+      en: "She must act now: a dialog with the ways forward."
+      ar: "يجب أن تتصرّف الآن: Dialog فيه طرق المتابعة."
+    explain:
+      en: "The ride is stuck until Reem picks another way to pay. A dialog stays until she answers, says what went wrong, and gives her two ways forward."
+      ar: "المشوار متوقّف حتى تختار ريم طريقة دفع أخرى. والـ Dialog يبقى حتى تردّ، ويقول ما المشكلة، ويعطيها طريقتين للمتابعة."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [ok, warn, target]
+    video:
+      src: clips/P14-C03.mp4
+      captions: { ar: P14-C03.ar.vtt, en: P14-C03.en.vtt }
+      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
+      transcript:
+        en: "(Transcript is added when the clip is cut.)"
+        ar: "(يُضاف نص الفيديو بعد قصّ المقطع.)"
+    title: { en: "Make the message as loud as it matters", ar: "اجعل صوت الرسالة على قدر أهميتها" }
+    body:
+      en: "Three ways to tell people something, from quietest to loudest:\n\n- **Snackbar:** a short strip that disappears by itself. For news that needs no action, like \"Saved\". It can carry one action, such as Undo. Never for an error people must fix.\n- **Banner:** stays at the top of the screen until people close it or the problem is solved. For something that matters and lasts.\n- **Dialog:** blocks the screen until people answer. Only when they must respond now."
+      ar: "ثلاث طرق لإخبار الناس بشيء، من الأهدأ إلى الأعلى صوتًا:\n\n- **الـ Snackbar:** شريط قصير يختفي وحده. لخبر لا يحتاج إجراءً، مثل «تم الحفظ». ويمكن أن يحمل إجراءً واحدًا، مثل «تراجع». ولا يُستخدم أبدًا لخطأ يجب أن يصلحه الناس.\n- **الـ Banner:** يبقى أعلى الشاشة حتى يغلقه الناس أو تُحلّ المشكلة. لشيء مهم ومستمر.\n- **الـ Dialog:** يحجب الشاشة حتى يردّ الناس. فقط حين يجب أن يردّوا الآن."
+
+  - id: S04
+    type: tune
+    part: guided
+    skill: SK-P14-U01-05
+    rules: [R06, R15]
+    value:
+      en: "Notifications (NN/g): passive notifications are typically not urgent and should be less intrusive. \"Place saved\" needs nothing from Reem, so blocking the screen or leaving a lasting banner is louder than it deserves."
+      ar: "الإشعارات (NN/g): الإشعارات التي لا تحتاج إجراءً ليست عاجلة عادةً ويجب أن تكون أقل إزعاجًا. و«حُفظ المكان» لا يحتاج شيئًا من ريم، فحجب الشاشة أو ترك Banner دائم أعلى صوتًا مما يستحق."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications are typically not urgent and should be less intrusive." }
+    scenario:
+      en: "Reem saves her home address as a favorite place. The save always works, and she can rename or remove it later from Favorites."
+      ar: "تحفظ ريم عنوان بيتها كمكان مفضّل. والحفظ ينجح دائمًا، ويمكنها أن تغيّر اسمه أو تحذفه لاحقًا من «المفضّلة»."
+    prompt:
+      en: "Try each way of confirming the save. Which one should ship?"
+      ar: "جرّب كل طريقة لتأكيد الحفظ. أيّها يجب أن تُطلق؟"
+    start: dialog
+    options:
+      - id: dialog
+        text: { en: "A dialog: \"Place saved!\" with an OK button", ar: "Dialog: «تم حفظ المكان!» مع زر «حسنًا»" }
+        mock:
+          width: 300
+          blocks: &where
+            - { kind: title, text: { en: "Where to?", ar: "إلى أين؟" } }
+            - { kind: field, label: { en: "Destination", ar: "الوجهة" }, text: "", gap: m }
+            - { kind: meta, text: { en: "★ Home", ar: "★ البيت" }, gap: m }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Place saved!", ar: "تم حفظ المكان!" } }
+              - { kind: button, text: { en: "OK", ar: "حسنًا" }, gap: m }
+      - id: snack
+        text: { en: "A snackbar: \"Home saved\"", ar: "Snackbar: «تم حفظ البيت»" }
+        mock:
+          width: 300
+          blocks: *where
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Home saved to Favorites.", ar: "تم حفظ «البيت» في المفضّلة." } }
+      - id: banner
+        text: { en: "A banner at the top that stays until she closes it", ar: "Banner في الأعلى يبقى حتى تغلقه" }
+        mock:
+          width: 300
+          blocks: *where
+          overlay:
+            type: banner
+            close: true
+            blocks:
+              - { kind: text, text: { en: "Home saved to Favorites.", ar: "تم حفظ «البيت» في المفضّلة." } }
+    answer: [snack]
+    misconceptions:
+      - id: MC-P14-013
+        when: [dialog]
+        feedback:
+          en: "Reem has to stop and tap OK for news she didn't need to act on. That's the loudest message used for the quietest news."
+          ar: "على ريم أن تتوقّف وتضغط «حسنًا» لخبر لا تحتاج أن تفعل معه شيئًا. وهذا أعلى صوت لأهدأ خبر."
+      - id: MC-P14-013
+        when: [banner]
+        feedback:
+          en: "Nothing is left to solve, yet the banner stays and takes space until Reem closes it. Good news can pass."
+          ar: "لم يبقَ شيء لحلّه، ومع ذلك يبقى الـ Banner ويأخذ مساحة حتى تغلقه ريم. والخبر الجيد يمكن أن يمرّ."
+    correct:
+      en: "No action needed: a snackbar."
+      ar: "لا يحتاج إجراءً: Snackbar."
+    explain:
+      en: "The save worked and needs nothing from Reem. A snackbar tells her, then gets out of the way, so she can keep booking."
+      ar: "نجح الحفظ ولا يحتاج شيئًا من ريم. والـ Snackbar يخبرها، ثم يبتعد عن طريقها، فتكمل الحجز."
+
+  - id: S05
+    type: tune
+    part: guided
+    skill: SK-P14-U01-05
+    rules: [R06, R15]
+    value:
+      en: "Notifications (NN/g): passive notifications are easily missed. A problem that lasts (receipts can't be sent until the email is verified) needs a message that stays visible until it's solved, without blocking every visit."
+      ar: "الإشعارات (NN/g): الإشعارات التي لا تحتاج إجراءً يسهل أن تفوت الناس. والمشكلة المستمرة (لا تُرسل الإيصالات حتى يُؤكَّد البريد) تحتاج رسالة تبقى ظاهرة حتى تُحلّ، دون أن تحجب كل زيارة."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications can easily be missed, since they require no user action." }
+    scenario:
+      en: "Reem hasn't confirmed her email address. Until she does, the app can't email her ride receipts, which she needs for work. She can still book rides."
+      ar: "لم تؤكّد ريم بريدها الإلكتروني. وحتى تفعل، لا يستطيع التطبيق إرسال إيصالات المشاوير إليها، وهي تحتاجها للعمل. وما زالت تستطيع حجز المشاوير."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: snack
+    options:
+      - id: snack
+        text: { en: "A snackbar each time she opens the app", ar: "Snackbar في كل مرة تفتح فيها التطبيق" }
+        mock:
+          width: 300
+          blocks: &trips
+            - { kind: title, text: { en: "Your trips", ar: "مشاويرك" } }
+            - { kind: meta, text: { en: "Today · Home · EGP 85", ar: "اليوم · البيت · 85 جنيه" }, gap: m }
+            - { kind: meta, text: { en: "Yesterday · Office · EGP 70", ar: "أمس · المكتب · 70 جنيه" }, gap: s }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Confirm your email to get receipts.", ar: "أكّدي بريدك لتصلك الإيصالات." } }
+      - id: banner
+        text: { en: "A banner on Your trips that stays until she confirms", ar: "Banner في «مشاويرك» يبقى حتى تؤكّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: banner, text: { en: "Confirm your email to get ride receipts.", ar: "أكّدي بريدك لتصلك إيصالات المشاوير." } }
+            - { kind: link, text: { en: "Send confirmation email", ar: "أرسلوا رسالة التأكيد" }, gap: s }
+            - { kind: title, text: { en: "Your trips", ar: "مشاويرك" }, gap: m }
+            - { kind: meta, text: { en: "Today · Home · EGP 85", ar: "اليوم · البيت · 85 جنيه" }, gap: m }
+            - { kind: meta, text: { en: "Yesterday · Office · EGP 70", ar: "أمس · المكتب · 70 جنيه" }, gap: s }
+      - id: dialog
+        text: { en: "A dialog each time she opens the app", ar: "Dialog في كل مرة تفتح فيها التطبيق" }
+        mock:
+          width: 300
+          blocks: *trips
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Confirm your email", ar: "أكّدي بريدك" } }
+              - { kind: small, text: { en: "We can't send receipts until you do.", ar: "لا نستطيع إرسال الإيصالات حتى تفعلي." }, gap: s }
+              - { kind: button, text: { en: "Send confirmation email", ar: "أرسلوا رسالة التأكيد" }, gap: m }
+              - { kind: button, text: { en: "Later", ar: "لاحقًا" }, style: plain, gap: s }
+    answer: [banner]
+    misconceptions:
+      - id: MC-P14-014
+        when: [snack]
+        feedback:
+          en: "The problem lasts, but the message keeps disappearing. Reem can miss it every time and only find out when a receipt never arrives."
+          ar: "المشكلة مستمرة، لكن الرسالة تختفي كل مرة. فقد تفوت ريم في كل مرة، ولا تعرف إلا حين لا يصل الإيصال أبدًا."
+      - id: MC-P14-013
+        when: [dialog]
+        feedback:
+          en: "Reem can still book rides, so nothing has to stop her. A dialog on every visit blocks her for something she can do later."
+          ar: "ما زالت ريم تستطيع حجز المشاوير، فلا شيء يستدعي إيقافها. والـ Dialog في كل زيارة يحجبها من أجل شيء يمكنها فعله لاحقًا."
+    correct:
+      en: "Matters and lasts: a banner until it's solved."
+      ar: "مهم ومستمر: Banner حتى يُحلّ."
+    explain:
+      en: "The banner stays where Reem looks for her trips, with the action that fixes it, and disappears once her email is confirmed. It never stops her from booking."
+      ar: "الـ Banner يبقى حيث تبحث ريم عن مشاويرها، ومعه الإجراء الذي يحلّ المشكلة، ويختفي بمجرد تأكيد بريدها. ولا يمنعها أبدًا من الحجز."
+
+  - id: S06
+    type: compare
+    part: contrast
+    skill: SK-P14-U01-05
+    rules: [R11]
+    value:
+      en: "Notifications (NN/g): passive notifications are easily missed because they need no action. Being offline lasts and changes what people's actions do, so a message that disappears after a few seconds leaves them unaware."
+      ar: "الإشعارات (NN/g): الإشعارات التي لا تحتاج إجراءً يسهل أن تفوت الناس. وانقطاع الإنترنت يستمر ويغيّر نتيجة ما يفعله الناس، فالرسالة التي تختفي بعد ثوانٍ تتركهم غير منتبهين."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications can easily be missed, since they require no user action." }
+    scenario:
+      en: "Khaled writes notes in a notes app on the metro. His connection drops for 15 minutes. He can keep writing, but nothing is saved to his other devices until he is back online."
+      ar: "يكتب خالد ملاحظات في تطبيق ملاحظات وهو في المترو. وانقطع الإنترنت 15 دقيقة. يستطيع أن يستمر في الكتابة، لكن لا شيء يُحفظ على أجهزته الأخرى حتى يعود الاتصال."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: a snackbar for 4 seconds", ar: "النسخة A: Snackbar لمدة 4 ثوانٍ" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Shopping list", ar: "قائمة المشتريات" } }
+          - { kind: text, text: { en: "Bread, eggs, tea…", ar: "عيش، بيض، شاي…" }, gap: s }
+        overlay:
+          type: toast
+          blocks:
+            - { kind: text, text: { en: "You're offline.", ar: "أنت غير متصل." } }
+    b:
+      label: { en: "Version B: a banner while offline", ar: "النسخة B: Banner طوال الانقطاع" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: banner, text: { en: "You're offline. Notes will sync when you're back online.", ar: "أنت غير متصل. ستُزامَن الملاحظات حين يعود الاتصال." } }
+          - { kind: heading, text: { en: "Shopping list", ar: "قائمة المشتريات" }, gap: m }
+          - { kind: text, text: { en: "Bread, eggs, tea…", ar: "عيش، بيض، شاي…" }, gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P14-014
+        when: [a]
+        feedback:
+          en: "Khaled is offline for 15 minutes, but the message lasts 4 seconds. If he looked away, he may think his notes are already on his laptop."
+          ar: "خالد غير متصل 15 دقيقة، لكن الرسالة تبقى 4 ثوانٍ. وإن نظر بعيدًا، قد يظنّ أن ملاحظاته وصلت إلى اللابتوب."
+    correct:
+      en: "B: the message lasts as long as the problem."
+      ar: "B: الرسالة تستمر ما دامت المشكلة."
+    explain:
+      en: "The banner stays the whole time Khaled is offline and tells him what it means for his notes. It disappears by itself once he's back online."
+      ar: "الـ Banner يبقى طوال انقطاع الاتصال، ويخبر خالد بما يعنيه ذلك لملاحظاته. ويختفي وحده حين يعود الاتصال."
+
+  - id: S07
+    type: tune
+    part: independent
+    skill: SK-P14-U01-05
+    rules: [R14]
+    value:
+      en: "Confirmation dialogs (NN/g): don't use confirmation dialogs for routine actions; people stop reading warnings they see too often. For an action that can be reversed, offer Undo instead, which a snackbar can carry."
+      ar: "نوافذ التأكيد (NN/g): لا تستخدم نوافذ التأكيد للإجراءات الروتينية؛ فالناس يتوقّفون عن قراءة التحذيرات التي يرونها كثيرًا. وللإجراء الذي يمكن عكسه، قدّم «تراجع» بدلًا من ذلك، ويمكن أن يحمله الـ Snackbar."
+    ref: { url: "https://www.nngroup.com/articles/confirmation-dialog/", quote: "Do not use confirmation dialogs for routine actions." }
+    scenario:
+      en: "Dina uses a study website on her laptop. She archives 10 to 20 old notes a week. Archived notes are never deleted; she can bring them back at any time."
+      ar: "تستخدم دينا موقعًا للمذاكرة على اللابتوب. وتؤرشف من 10 إلى 20 ملاحظة قديمة كل أسبوع. والملاحظات المؤرشفة لا تُحذف أبدًا؛ ويمكنها استعادتها في أي وقت."
+    prompt:
+      en: "Try each version of what happens when she archives a note. Which one should ship?"
+      ar: "جرّب كل نسخة لما يحدث حين تؤرشف ملاحظة. أيّها يجب أن تُطلق؟"
+    start: confirm
+    options:
+      - id: confirm
+        text: { en: "A dialog each time: \"Archive this note?\"", ar: "Dialog كل مرة: «أرشفة هذه الملاحظة؟»" }
+        mock:
+          frame: wide
+          blocks: &notes
+            - { kind: title, text: { en: "My notes", ar: "ملاحظاتي" } }
+            - { kind: meta, text: { en: "Biology · Chapter 3", ar: "الأحياء · الفصل 3" }, gap: m }
+            - { kind: meta, text: { en: "Physics · Revision", ar: "الفيزياء · مراجعة" }, gap: s }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Archive this note?", ar: "أرشفة هذه الملاحظة؟" } }
+              - { kind: button, text: { en: "Archive", ar: "أرشفة" }, gap: m }
+              - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: plain, gap: s }
+      - id: undo
+        text: { en: "Archive at once, with a snackbar: \"Note archived · Undo\"", ar: "أرشِف فورًا، مع Snackbar: «أُرشفت الملاحظة · تراجع»" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: title, text: { en: "My notes", ar: "ملاحظاتي" } }
+            - { kind: meta, text: { en: "Physics · Revision", ar: "الفيزياء · مراجعة" }, gap: m }
+          overlay:
+            type: toast
+            blocks:
+              - kind: row
+                blocks:
+                  - { kind: text, text: { en: "Note archived.", ar: "أُرشفت الملاحظة." } }
+                  - { kind: link, text: { en: "Undo", ar: "تراجع" } }
+      - id: silent
+        text: { en: "Archive at once, with no message", ar: "أرشِف فورًا، دون أي رسالة" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: title, text: { en: "My notes", ar: "ملاحظاتي" } }
+            - { kind: meta, text: { en: "Physics · Revision", ar: "الفيزياء · مراجعة" }, gap: m }
+    answer: [undo]
+    misconceptions:
+      - id: MC-P14-015
+        when: [confirm]
+        feedback:
+          en: "Dina archives up to 20 notes a week, so she'll learn to click Archive without reading. And the action can be reversed anyway, so there's nothing to protect her from."
+          ar: "تؤرشف دينا حتى 20 ملاحظة في الأسبوع، فستعتاد الضغط على «أرشفة» دون قراءة. والإجراء يمكن عكسه أصلًا، فلا يوجد ما يحتاج حمايتها منه."
+      - id: MC-P14-015
+        when: [silent]
+        feedback:
+          en: "If Dina clicks the wrong note, the note just vanishes. She doesn't know it was archived or how to get it back quickly."
+          ar: "إن ضغطت دينا على الملاحظة الخطأ، تختفي الملاحظة فقط. ولا تعرف أنها أُرشفت أو كيف تستعيدها بسرعة."
+    correct:
+      en: "Reversible and routine: act, then offer Undo."
+      ar: "روتيني ويمكن عكسه: نفّذ، ثم قدّم «تراجع»."
+    explain:
+      en: "The snackbar tells Dina what happened and gives her one click to reverse a slip, without stopping her 20 times a week. Save the dialog for actions that can't be undone."
+      ar: "الـ Snackbar يخبر دينا بما حدث، ويعطيها ضغطة واحدة لعكس الخطأ، دون أن يوقفها 20 مرة في الأسبوع. واحتفظ بالـ Dialog للإجراءات التي لا يمكن التراجع عنها."
+
+  - id: S08
+    type: card
+    part: recap
+    icons: [ok, warn, target]
+    title: { en: "What you practised", ar: "ما تدرّبت عليه" }
+    body:
+      en: "- **Snackbar** for news that needs no action, with Undo when an action can be reversed.\n- **Banner** for something that matters and lasts, until it's solved.\n- **Dialog** only when people must answer now, like a failed payment that stops the task.\n\nNext: the skill check, on new cases."
+      ar: "- **الـ Snackbar** لخبر لا يحتاج إجراءً، ومعه «تراجع» حين يمكن عكس الإجراء.\n- **الـ Banner** لشيء مهم ومستمر، حتى يُحلّ.\n- **الـ Dialog** فقط حين يجب أن يردّ الناس الآن، مثل دفع فاشل يوقف المهمة.\n\nالتالي: اختبار المهارة، على حالات جديدة."
