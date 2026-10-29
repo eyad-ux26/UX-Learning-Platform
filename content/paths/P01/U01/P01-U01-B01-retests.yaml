@@ -1,0 +1,1162 @@
+id: P01-U01-B01
+mode: bank
+title:
+  en: "Re-tests: ask only what you need"
+  ar: "إعادة اختبار: اسأل فقط عمّا تحتاجه"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Less Effort, More Completion: The EAS Framework for Simplifying Forms (NN/g)", ar: "جهد أقل وإكمال أكثر: إطار EAS لتبسيط النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/"
+  - title: { en: "Website Forms Usability: Top 10 Recommendations (NN/g)", ar: "سهولة استخدام النماذج: أهم 10 توصيات (NN/g)" }
+    url: "https://www.nngroup.com/articles/web-form-design/"
+  - title: { en: "Marking Required Fields in Forms (NN/g)", ar: "تمييز الحقول الإلزامية في النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/required-fields/"
+  - title: { en: "Few Guesses, More Success: 4 Principles to Reduce Cognitive Load in Forms (NN/g)", ar: "تخمين أقل ونجاح أكثر: 4 مبادئ لتخفيف العبء الذهني في النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/"
+  - title: { en: "A Checklist for Designing Mobile Input Fields (NN/g)", ar: "قائمة تحقّق لتصميم حقول الإدخال على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/mobile-input-checklist/"
+  - title: { en: "International Sites: Minimum Requirements (NN/g)", ar: "المواقع الدولية: الحد الأدنى من المتطلبات (NN/g)" }
+    url: "https://www.nngroup.com/articles/international-sites-requirements/"
+steps:
+  # SK-P01-U01-01: cut the fields the form doesn't need
+  - id: S01
+    type: tune
+    skill: SK-P01-U01-01
+    part: retest
+    value:
+      en: "Re-test, EAS framework (NN/g): asking for unnecessary information adds effort and makes people question your intentions. Keep the email, because the link goes there; drop the rest."
+      ar: "إعادة اختبار، إطار EAS (NN/g): طلب معلومات غير ضرورية يزيد الجهد ويجعل الناس يشكّون في نواياك. أبقِ البريد الإلكتروني لأن الرابط يُرسل إليه؛ واحذف الباقي."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "Asking for unnecessary information increases user effort and can cause users to question your intentions." }
+    scenario:
+      en: "Basma signs up for a free online talk. The link to join is sent by email. The form also asks for her job title, her company's size and her home address. Nobody uses those."
+      ar: "تسجّل بسمة في ندوة مجانية أونلاين. رابط الدخول يُرسل بالبريد الإلكتروني. والنموذج يسأل أيضًا عن مسمّاها الوظيفي وحجم شركتها وعنوان منزلها. ولا أحد يستخدم هذه المعلومات."
+    prompt:
+      en: "Try each version of the form. Which one should ship?"
+      ar: "جرّب كل نسخة من النموذج. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &bs_t { en: "Join the free talk", ar: "احضر الندوة المجانية" } }
+        - { kind: field, label: &bs_n { en: "Full name *", ar: "الاسم الكامل *" }, text: "", gap: m }
+        - { kind: field, label: &bs_e { en: "Email *", ar: "البريد الإلكتروني *" }, text: "", gap: s }
+        - { kind: field, label: &bs_j { en: "Job title *", ar: "المسمّى الوظيفي *" }, text: "", gap: s }
+        - { kind: field, label: &bs_c { en: "Company size *", ar: "حجم الشركة *" }, text: "", gap: s }
+        - { kind: field, label: &bs_a { en: "Home address *", ar: "عنوان المنزل *" }, text: "", gap: s }
+        - { kind: button, text: &bs_b { en: "Save my seat", ar: "احجز مقعدي" }, gap: m }
+    options:
+      - id: optional
+        text: { en: "Keep all five, and make the last three optional", ar: "أبقِ الخمسة، واجعل الثلاثة الأخيرة اختيارية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *bs_t }
+            - { kind: field, label: *bs_n, text: "", gap: m }
+            - { kind: field, label: *bs_e, text: "", gap: s }
+            - { kind: field, label: { en: "Job title (optional)", ar: "المسمّى الوظيفي (اختياري)" }, text: "", gap: s }
+            - { kind: field, label: { en: "Company size (optional)", ar: "حجم الشركة (اختياري)" }, text: "", gap: s }
+            - { kind: field, label: { en: "Home address (optional)", ar: "عنوان المنزل (اختياري)" }, text: "", gap: s }
+            - { kind: button, text: *bs_b, gap: m }
+      - id: two
+        text: { en: "Ask only for her name and email", ar: "اسأل عن اسمها وبريدها الإلكتروني فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *bs_t }
+            - { kind: field, label: *bs_n, text: "", gap: m }
+            - { kind: field, label: *bs_e, text: "", hint: { en: "We'll send the link here.", ar: "سنرسل الرابط إلى هنا." }, gap: s }
+            - { kind: button, text: *bs_b, gap: m }
+      - id: one
+        text: { en: "Ask only for her name, so it's as short as possible", ar: "اسأل عن اسمها فقط، حتى يكون أقصر ما يمكن" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *bs_t }
+            - { kind: field, label: *bs_n, text: "", gap: m }
+            - { kind: button, text: *bs_b, gap: m }
+    answer: [two]
+    misconceptions:
+      - id: MC-P01-005
+        when: [optional]
+        feedback:
+          en: "Optional fields still sit on the form, and many people fill them in anyway. If nobody uses an answer, remove the question."
+          ar: "الحقول الاختيارية ما زالت في النموذج، وكثيرون يملؤونها على أي حال. إذا لم يستخدم أحد الإجابة، فاحذف السؤال."
+      - id: MC-P01-026
+        when: [one]
+        feedback:
+          en: "Short, but now there's nowhere to send the link, so Basma can't join. Keep every field the task needs."
+          ar: "قصير، لكن لا يوجد الآن مكان لإرسال الرابط، فلن تستطيع بسمة الحضور. أبقِ كل حقل تحتاجه المهمّة."
+    correct:
+      en: "Right. Only what the talk needs."
+      ar: "صحيح. فقط ما تحتاجه الندوة."
+    explain:
+      en: "Each question should earn its place. The name and email are used to send the link; the job title, company size and address aren't used, so they only add effort and doubt."
+      ar: "كل سؤال يجب أن يستحق مكانه. الاسم والبريد يُستخدمان لإرسال الرابط؛ أما المسمّى وحجم الشركة والعنوان فلا يُستخدمون، فيضيفون الجهد والشك فقط."
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U01-01
+    part: retest
+    value:
+      en: "Re-test, EAS framework (NN/g): forms should ask only for essential information. The courier needs the phone; nobody needs the birth date or gender."
+      ar: "إعادة اختبار، إطار EAS (NN/g): يجب أن تطلب النماذج المعلومات الأساسية فقط. المندوب يحتاج الهاتف؛ ولا أحد يحتاج تاريخ الميلاد أو النوع."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "Forms should only ask for essential information" }
+    scenario:
+      en: "Hatem orders a phone charger. The courier calls before arriving. The checkout also asks for his date of birth and gender, which the shop doesn't use."
+      ar: "يطلب حاتم شاحن هاتف. يتّصل المندوب قبل الوصول. وصفحة الدفع تسأل أيضًا عن تاريخ ميلاده ونوعه، والمتجر لا يستخدمهما."
+    prompt:
+      en: "Try each version of the checkout. Which one should ship?"
+      ar: "جرّب كل نسخة من صفحة الدفع. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &ht_t { en: "Delivery details", ar: "بيانات التوصيل" } }
+        - { kind: field, label: &ht_a { en: "Address *", ar: "العنوان *" }, text: "", gap: m }
+        - { kind: field, label: &ht_p { en: "Mobile number *", ar: "رقم الموبايل *" }, text: "", gap: s }
+        - { kind: field, label: &ht_d { en: "Date of birth *", ar: "تاريخ الميلاد *" }, text: "", gap: s }
+        - { kind: field, label: &ht_g { en: "Gender *", ar: "النوع *" }, text: "", gap: s }
+        - { kind: button, text: &ht_b { en: "Place order", ar: "أكّد الطلب" }, gap: m }
+    options:
+      - id: essential
+        text: { en: "Remove the date of birth and gender; keep the address and mobile", ar: "احذف تاريخ الميلاد والنوع؛ وأبقِ العنوان والموبايل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ht_t }
+            - { kind: field, label: *ht_a, text: "", gap: m }
+            - { kind: field, label: *ht_p, text: "", gap: s }
+            - { kind: button, text: *ht_b, gap: m }
+      - id: short
+        text: { en: "Keep only the address, so checkout is as short as possible", ar: "أبقِ العنوان فقط، حتى تكون صفحة الدفع أقصر ما يمكن" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ht_t }
+            - { kind: field, label: *ht_a, text: "", gap: m }
+            - { kind: button, text: *ht_b, gap: m }
+      - id: later
+        text: { en: "Keep everything; marketing might use the birth date for offers one day", ar: "أبقِ كل شيء؛ فقد يستخدم التسويق تاريخ الميلاد للعروض يومًا ما" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ht_t }
+            - { kind: field, label: *ht_a, text: "", gap: m }
+            - { kind: field, label: *ht_p, text: "", gap: s }
+            - { kind: field, label: *ht_d, text: "", gap: s }
+            - { kind: field, label: *ht_g, text: "", gap: s }
+            - { kind: button, text: *ht_b, gap: m }
+    answer: [essential]
+    misconceptions:
+      - id: MC-P01-026
+        when: [short]
+        feedback:
+          en: "The courier calls before arriving, so without a mobile number Hatem may miss his delivery. Shortest isn't the goal; essential is."
+          ar: "المندوب يتّصل قبل الوصول، فبدون رقم موبايل قد تفوت حاتم طلبيته. الأقصر ليس الهدف؛ الأساسي هو الهدف."
+      - id: MC-P01-002
+        when: [later]
+        feedback:
+          en: "\"Might be useful one day\" isn't a reason to ask today. Every extra field adds effort and makes people wonder why you want it."
+          ar: "«قد يفيد يومًا ما» ليس سببًا للسؤال اليوم. كل حقل إضافي يزيد الجهد ويجعل الناس يتساءلون لماذا تريده."
+    correct:
+      en: "Right. What the delivery needs, nothing more."
+      ar: "صحيح. ما يحتاجه التوصيل، لا أكثر."
+    explain:
+      en: "Ask what the task needs: where to deliver and how to reach Hatem. Fields nobody uses only slow him down, and a missing essential one breaks the task."
+      ar: "اسأل عمّا تحتاجه المهمّة: أين يكون التوصيل وكيف نصل إلى حاتم. الحقول التي لا يستخدمها أحد تبطئه فقط، والحقل الأساسي المفقود يُفشل المهمّة."
+
+  # SK-P01-U01-02: postpone what can wait
+  - id: S03
+    type: tune
+    skill: SK-P01-U01-02
+    part: retest
+    value:
+      en: "Re-test, EAS framework (NN/g): not every question needs to be asked immediately; if it can wait, postpone it. Card details and the school report matter only if the family continues."
+      ar: "إعادة اختبار، إطار EAS (NN/g): ليس كل سؤال يجب أن يُطرح فورًا؛ إذا كان يمكن أن ينتظر فأجّله. بيانات البطاقة وشهادة المدرسة مهمّة فقط إذا استمرّت الأسرة."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "If it can wait, postpone it." }
+    scenario:
+      en: "Rehab books a free first maths lesson for her son. The form also asks for card details for the monthly fee and his last school report. Those are only needed if they sign up after the free lesson."
+      ar: "تحجز رحاب حصة رياضيات أولى مجانية لابنها. النموذج يطلب أيضًا بيانات البطاقة للاشتراك الشهري وآخر شهادة مدرسية له. وهذه تُحتاج فقط إذا اشتركوا بعد الحصة المجانية."
+    prompt:
+      en: "Try each version of the booking form. Which one should ship?"
+      ar: "جرّب كل نسخة من نموذج الحجز. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &rh_t { en: "Book a free lesson", ar: "احجز حصة مجانية" } }
+        - { kind: field, label: &rh_n { en: "Child's full name *", ar: "اسم الطفل الكامل *" }, text: "", gap: m }
+        - { kind: field, label: &rh_g { en: "School year *", ar: "الصف الدراسي *" }, text: "", gap: s }
+        - { kind: field, label: &rh_p { en: "Parent's mobile *", ar: "موبايل ولي الأمر *" }, text: "", gap: s }
+        - { kind: field, label: &rh_c { en: "Card number *", ar: "رقم البطاقة *" }, text: "", gap: s }
+        - { kind: field, label: &rh_r { en: "Upload last school report *", ar: "ارفع آخر شهادة مدرسية *" }, text: "", gap: s }
+        - { kind: button, text: &rh_b { en: "Book free lesson", ar: "احجز الحصة المجانية" }, gap: m }
+    options:
+      - id: optional
+        text: { en: "Keep the card and report, but make them optional", ar: "أبقِ البطاقة والشهادة، لكن اجعلهما اختياريتين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *rh_t }
+            - { kind: field, label: *rh_n, text: "", gap: m }
+            - { kind: field, label: *rh_g, text: "", gap: s }
+            - { kind: field, label: *rh_p, text: "", gap: s }
+            - { kind: field, label: { en: "Card number (optional)", ar: "رقم البطاقة (اختياري)" }, text: "", gap: s }
+            - { kind: field, label: { en: "Upload last school report (optional)", ar: "ارفع آخر شهادة مدرسية (اختياري)" }, text: "", gap: s }
+            - { kind: button, text: *rh_b, gap: m }
+      - id: keep
+        text: { en: "Keep it; collecting everything now saves a step later", ar: "أبقِه؛ فجمع كل شيء الآن يوفّر خطوة لاحقًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *rh_t }
+            - { kind: field, label: *rh_n, text: "", gap: m }
+            - { kind: field, label: *rh_g, text: "", gap: s }
+            - { kind: field, label: *rh_p, text: "", gap: s }
+            - { kind: field, label: *rh_c, text: "", gap: s }
+            - { kind: field, label: *rh_r, text: "", gap: s }
+            - { kind: button, text: *rh_b, gap: m }
+      - id: later
+        text: { en: "Ask for the child, the year and a mobile now; the card and report only when they sign up", ar: "اسأل عن الطفل والصف والموبايل الآن؛ والبطاقة والشهادة عند الاشتراك فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *rh_t }
+            - { kind: field, label: *rh_n, text: "", gap: m }
+            - { kind: field, label: *rh_g, text: "", gap: s }
+            - { kind: field, label: *rh_p, text: "", gap: s }
+            - { kind: button, text: *rh_b, gap: m }
+    answer: [later]
+    misconceptions:
+      - id: MC-P01-005
+        when: [optional]
+        feedback:
+          en: "A card number on a free booking still looks like a trap, optional or not, and many parents fill in optional fields anyway. Move the question to when it's needed."
+          ar: "رقم البطاقة في حجز مجاني يبدو كفخّ، اختياريًا كان أو لا، وكثير من الآباء يملؤون الحقول الاختيارية على أي حال. انقل السؤال إلى حين الحاجة إليه."
+      - id: MC-P01-001
+        when: [keep]
+        feedback:
+          en: "Most families decide after the free lesson. Asking for a card and a report now makes Rehab do work that may never be needed, and some parents will just leave."
+          ar: "معظم الأسر تقرّر بعد الحصة المجانية. طلب البطاقة والشهادة الآن يجعل رحاب تقوم بعمل قد لا يُحتاج أبدًا، وبعض الآباء سيغادرون ببساطة."
+    correct:
+      en: "Right. What the free lesson needs now, the rest later."
+      ar: "صحيح. ما تحتاجه الحصة المجانية الآن، والباقي لاحقًا."
+    explain:
+      en: "Ask yourself: do we need this now? For a free lesson, the school needs the child, the year and a way to reach the parent. Payment and records belong to the sign-up step."
+      ar: "اسأل نفسك: هل نحتاج هذا الآن؟ للحصة المجانية، يحتاج المركز الطفل والصف وطريقة للوصول إلى ولي الأمر. والدفع والسجلات مكانهما خطوة الاشتراك."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U01-02
+    part: retest
+    value:
+      en: "Re-test, EAS framework (NN/g): start with the bare minimum needed at this stage, then gradually request more. Preferences can be asked when they're first useful."
+      ar: "إعادة اختبار، إطار EAS (NN/g): ابدأ بأقل ما تحتاجه في هذه المرحلة، ثم اطلب المزيد تدريجيًا. يمكن السؤال عن التفضيلات عندما تصبح مفيدة لأول مرة."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "Start by asking for the bare minimum needed at this stage, then gradually request more, to avoid overwhelming users upfront." }
+    scenario:
+      en: "Mazen creates an account in a recipe app so he can save recipes. Sign-up also asks about his diet, his cooking level and his kitchen tools, which the app uses later to suggest recipes."
+      ar: "ينشئ مازن حسابًا في تطبيق وصفات ليحفظ الوصفات. والتسجيل يسأل أيضًا عن نظامه الغذائي ومستواه في الطبخ وأدوات مطبخه، ويستخدمها التطبيق لاحقًا لاقتراح وصفات."
+    prompt:
+      en: "Try each version of sign-up. Which one should ship?"
+      ar: "جرّب كل نسخة من التسجيل. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &mz_t { en: "Create your account", ar: "أنشئ حسابك" } }
+        - { kind: field, label: &mz_e { en: "Email *", ar: "البريد الإلكتروني *" }, text: "", gap: m }
+        - { kind: field, label: &mz_p { en: "Password *", ar: "كلمة المرور *" }, text: "", gap: s }
+        - { kind: select, label: &mz_d { en: "Your diet *", ar: "نظامك الغذائي *" }, text: { en: "Choose", ar: "اختر" }, gap: s }
+        - { kind: select, label: &mz_l { en: "Cooking level *", ar: "مستواك في الطبخ *" }, text: { en: "Choose", ar: "اختر" }, gap: s }
+        - { kind: select, label: &mz_k { en: "Kitchen tools you own *", ar: "أدوات المطبخ لديك *" }, text: { en: "Choose", ar: "اختر" }, gap: s }
+        - { kind: button, text: &mz_b { en: "Create account", ar: "أنشئ الحساب" }, gap: m }
+    options:
+      - id: optional
+        text: { en: "Keep the three questions on sign-up, but make them optional", ar: "أبقِ الأسئلة الثلاثة في التسجيل، لكن اجعلها اختيارية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *mz_t }
+            - { kind: field, label: *mz_e, text: "", gap: m }
+            - { kind: field, label: *mz_p, text: "", gap: s }
+            - { kind: select, label: { en: "Your diet (optional)", ar: "نظامك الغذائي (اختياري)" }, text: { en: "Choose", ar: "اختر" }, gap: s }
+            - { kind: select, label: { en: "Cooking level (optional)", ar: "مستواك في الطبخ (اختياري)" }, text: { en: "Choose", ar: "اختر" }, gap: s }
+            - { kind: select, label: { en: "Kitchen tools you own (optional)", ar: "أدوات المطبخ لديك (اختياري)" }, text: { en: "Choose", ar: "اختر" }, gap: s }
+            - { kind: button, text: *mz_b, gap: m }
+      - id: later
+        text: { en: "Email and password now; ask about his diet the first time he looks for suggestions", ar: "البريد وكلمة المرور الآن؛ واسأله عن نظامه الغذائي أول مرة يبحث فيها عن اقتراحات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *mz_t }
+            - { kind: field, label: *mz_e, text: "", gap: m }
+            - { kind: field, label: *mz_p, text: "", gap: s }
+            - { kind: button, text: *mz_b, gap: m }
+      - id: keep
+        text: { en: "Keep them required, so suggestions are good from day one", ar: "أبقِها إلزامية، حتى تكون الاقتراحات جيدة من اليوم الأول" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *mz_t }
+            - { kind: field, label: *mz_e, text: "", gap: m }
+            - { kind: field, label: *mz_p, text: "", gap: s }
+            - { kind: select, label: *mz_d, text: { en: "Choose", ar: "اختر" }, gap: s }
+            - { kind: select, label: *mz_l, text: { en: "Choose", ar: "اختر" }, gap: s }
+            - { kind: select, label: *mz_k, text: { en: "Choose", ar: "اختر" }, gap: s }
+            - { kind: button, text: *mz_b, gap: m }
+    answer: [later]
+    misconceptions:
+      - id: MC-P01-005
+        when: [optional]
+        feedback:
+          en: "Optional or not, three extra questions still stand between Mazen and saving his first recipe. Ask them when they help him."
+          ar: "اختيارية أو لا، ما زالت ثلاثة أسئلة إضافية تقف بين مازن وحفظ أول وصفة. اسأله عنها عندما تفيده."
+      - id: MC-P01-001
+        when: [keep]
+        feedback:
+          en: "Mazen came to save a recipe, not to describe his kitchen. Asking everything upfront makes sign-up feel like a survey, and some people give up."
+          ar: "جاء مازن ليحفظ وصفة، لا ليصف مطبخه. السؤال عن كل شيء من البداية يجعل التسجيل يبدو كاستبيان، وبعض الناس يستسلمون."
+    correct:
+      en: "Right. The minimum now, more when it helps."
+      ar: "صحيح. الحدّ الأدنى الآن، والمزيد عندما يفيد."
+    explain:
+      en: "At sign-up, the app only needs a way for Mazen to log in. When he later asks for suggestions, a question about his diet has an obvious reason, and he's more likely to answer it."
+      ar: "عند التسجيل، يحتاج التطبيق فقط طريقة ليسجّل مازن دخوله. وعندما يطلب اقتراحات لاحقًا، يكون للسؤال عن نظامه الغذائي سبب واضح، فيزيد احتمال أن يجيب."
+
+  # SK-P01-U01-03: explain why you ask for personal details
+  - id: S05
+    type: tune
+    skill: SK-P01-U01-03
+    part: retest
+    value:
+      en: "Re-test, EAS framework (NN/g): people are more likely to complete a form when they understand how their data will be used. Say it at the field, in plain words."
+      ar: "إعادة اختبار، إطار EAS (NN/g): يزيد احتمال إكمال الناس للنموذج عندما يفهمون كيف ستُستخدم بياناتهم. قلها عند الحقل، بكلمات بسيطة."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "Users will be more likely to complete the form when they understand how their data will be used." }
+    scenario:
+      en: "Sanaa orders medicine from a pharmacy app. It asks for her date of birth, because the pharmacist must check age for some medicines. She stops at that field and wonders why a shop wants it."
+      ar: "تطلب سناء دواءً من تطبيق صيدلية. يسأل عن تاريخ ميلادها، لأن الصيدلي يجب أن يتحقّق من العمر لبعض الأدوية. فتتوقّف عند هذا الحقل وتتساءل لماذا يريده متجر."
+    prompt:
+      en: "Try each version of the field. Which one should ship?"
+      ar: "جرّب كل نسخة من الحقل. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &sn_t { en: "Your details", ar: "بياناتك" } }
+        - { kind: field, label: &sn_n { en: "Full name *", ar: "الاسم الكامل *" }, filled: true, text: { en: "Sanaa Fathy", ar: "سناء فتحي" }, gap: m }
+        - { kind: field, label: &sn_d { en: "Date of birth *", ar: "تاريخ الميلاد *" }, text: "", gap: s }
+        - { kind: button, text: &sn_b { en: "Continue", ar: "متابعة" }, gap: m }
+    options:
+      - id: why
+        text: { en: "Add a hint at the field: who checks it, and that it isn't shared", ar: "أضف تلميحًا عند الحقل: من يتحقّق منه، وأنه لا يُشارك" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *sn_t }
+            - { kind: field, label: *sn_n, filled: true, text: { en: "Sanaa Fathy", ar: "سناء فتحي" }, gap: m }
+            - { kind: field, label: *sn_d, text: "", hint: { en: "Our pharmacist checks age for some medicines. We don't share it.", ar: "يتحقّق الصيدلي من العمر لبعض الأدوية. ولا نشاركه مع أحد." }, gap: s }
+            - { kind: button, text: *sn_b, gap: m }
+      - id: policy
+        text: { en: "Add a link to the privacy policy at the bottom of the page", ar: "أضف رابطًا لسياسة الخصوصية في أسفل الصفحة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *sn_t }
+            - { kind: field, label: *sn_n, filled: true, text: { en: "Sanaa Fathy", ar: "سناء فتحي" }, gap: m }
+            - { kind: field, label: *sn_d, text: "", gap: s }
+            - { kind: button, text: *sn_b, gap: m }
+            - { kind: link, text: { en: "Privacy policy", ar: "سياسة الخصوصية" }, gap: s }
+      - id: lock
+        text: { en: "Add a lock icon and the word \"Secure\" next to the field", ar: "أضف أيقونة قفل وكلمة «آمن» بجانب الحقل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *sn_t }
+            - { kind: field, label: *sn_n, filled: true, text: { en: "Sanaa Fathy", ar: "سناء فتحي" }, gap: m }
+            - { kind: field, label: { en: "Date of birth * 🔒 Secure", ar: "تاريخ الميلاد * 🔒 آمن" }, text: "", gap: s }
+            - { kind: button, text: *sn_b, gap: m }
+    answer: [why]
+    misconceptions:
+      - id: MC-P01-027
+        when: [policy, lock]
+        feedback:
+          en: "Sanaa's question is why a pharmacy needs her birth date. A lock or a policy link doesn't answer it. One short line at the field does."
+          ar: "سؤال سناء هو لماذا تحتاج صيدلية تاريخ ميلادها. القفل أو رابط السياسة لا يجيب عنه. سطر قصير عند الحقل يجيب."
+    correct:
+      en: "Right. The reason, right where she hesitates."
+      ar: "صحيح. السبب، في المكان الذي تتردّد فيه بالضبط."
+    explain:
+      en: "A clear reason at the field turns a strange question into a sensible one. Sanaa sees who uses her birth date, for what, and that it stays private."
+      ar: "السبب الواضح عند الحقل يحوّل سؤالًا غريبًا إلى سؤال منطقي. ترى سناء من يستخدم تاريخ ميلادها، ولماذا، وأنه يبقى خاصًا."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U01-03
+    part: retest
+    value:
+      en: "Re-test, EAS framework (NN/g): a simple, clear explanation reassures people and builds trust. A national ID is sensitive; say who sees it and why."
+      ar: "إعادة اختبار، إطار EAS (NN/g): الشرح البسيط الواضح يطمئن الناس ويبني الثقة. الرقم القومي معلومة حسّاسة؛ قل من يراه ولماذا."
+    ref: { url: "https://www.nngroup.com/articles/eas-framework-simplify-forms/", quote: "A simple, clear explanation reassures users, builds trust, and helps them understand the rationale behind each question." }
+    scenario:
+      en: "Wael is selling his used car in an app. Before the ad goes live, the app asks for his national ID to confirm the car is his. He worries buyers will see it."
+      ar: "يبيع وائل سيارته المستعملة في تطبيق. قبل نشر الإعلان، يطلب التطبيق رقمه القومي للتأكّد من أن السيارة باسمه. ويخشى أن يراه المشترون."
+    prompt:
+      en: "Try each version of the field. Which one should ship?"
+      ar: "جرّب كل نسخة من الحقل. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &wl_t { en: "Confirm you own the car", ar: "أكّد ملكيتك للسيارة" } }
+        - { kind: field, label: &wl_i { en: "National ID number *", ar: "الرقم القومي *" }, text: "", gap: m }
+        - { kind: button, text: &wl_b { en: "Publish my ad", ar: "انشر إعلاني" }, gap: m }
+    options:
+      - id: lock
+        text: { en: "Add a lock icon and \"256-bit encryption\" under the field", ar: "أضف أيقونة قفل و«تشفير 256-bit» تحت الحقل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *wl_t }
+            - { kind: field, label: *wl_i, text: "", hint: { en: "🔒 256-bit encryption", ar: "🔒 تشفير 256-bit" }, gap: m }
+            - { kind: button, text: *wl_b, gap: m }
+      - id: top
+        text: { en: "Add \"We respect your privacy\" at the top of the page", ar: "أضف «نحترم خصوصيتك» في أعلى الصفحة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "We respect your privacy.", ar: "نحترم خصوصيتك." } }
+            - { kind: title, text: *wl_t, gap: s }
+            - { kind: field, label: *wl_i, text: "", gap: m }
+            - { kind: button, text: *wl_b, gap: m }
+      - id: why
+        text: { en: "Add a hint at the field: buyers never see it, and what it's checked against", ar: "أضف تلميحًا عند الحقل: المشترون لا يرونه أبدًا، وبماذا يُطابق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *wl_t }
+            - { kind: field, label: *wl_i, text: "", hint: { en: "Buyers never see this. We check it once against the car's licence.", ar: "المشترون لا يرونه أبدًا. نطابقه مرة واحدة مع رخصة السيارة." }, gap: m }
+            - { kind: button, text: *wl_b, gap: m }
+    answer: [why]
+    misconceptions:
+      - id: MC-P01-027
+        when: [lock, top]
+        feedback:
+          en: "Wael's worry is specific: will buyers see my ID? Encryption terms and general promises don't answer it. Say who sees it and what it's for."
+          ar: "قلق وائل محدّد: هل سيرى المشترون رقمي القومي؟ مصطلحات التشفير والوعود العامة لا تجيب عنه. قل من يراه وفيمَ يُستخدم."
+    correct:
+      en: "Right. The answer to the exact worry, at the field."
+      ar: "صحيح. إجابة القلق نفسه، عند الحقل."
+    explain:
+      en: "People hesitate at personal fields because they don't know what happens next. One plain sentence about who sees it and why turns that doubt into trust."
+      ar: "يتردّد الناس عند الحقول الشخصية لأنهم لا يعرفون ماذا سيحدث بعدها. جملة بسيطة واحدة عن من يراها ولماذا تحوّل هذا الشك إلى ثقة."
+
+  # SK-P01-U01-04: mark required and optional fields
+  - id: S07
+    type: tune
+    skill: SK-P01-U01-04
+    part: retest
+    value:
+      en: "Re-test, required fields (NN/g): the asterisk is familiar to users. Mark every required field with it, and label the optional one. Red labels are a private code."
+      ar: "إعادة اختبار، الحقول الإلزامية (NN/g): النجمة مألوفة للمستخدمين. ضعها على كل حقل إلزامي، واكتب «اختياري» على الحقل الاختياري. العناوين الحمراء رمز خاص."
+    ref: { url: "https://www.nngroup.com/articles/required-fields/", quote: "The asterisk has become very common on the web and users are familiar with its meaning." }
+    scenario:
+      en: "Nahla registers for an evening drawing course. Three fields are required and one, \"Anything we should know?\", is optional. Right now nothing is marked."
+      ar: "تسجّل نهلة في دورة رسم مسائية. ثلاثة حقول إلزامية وحقل واحد، «هل هناك ما يجب أن نعرفه؟»، اختياري. والآن لا شيء مميّز."
+    prompt:
+      en: "Try each way of marking the form. Which one should ship?"
+      ar: "جرّب كل طريقة لتمييز النموذج. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &nh_t { en: "Register for the course", ar: "سجّل في الدورة" } }
+        - { kind: field, label: { en: "Full name", ar: "الاسم الكامل" }, text: "", gap: m }
+        - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "", gap: s }
+        - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "", gap: s }
+        - { kind: field, label: { en: "Anything we should know?", ar: "هل هناك ما يجب أن نعرفه؟" }, text: "", gap: s }
+        - { kind: button, text: &nh_b { en: "Register", ar: "سجّل" }, gap: m }
+    options:
+      - id: red
+        text: { en: "Make the required labels red", ar: "اجعل عناوين الحقول الإلزامية حمراء" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *nh_t }
+            - { kind: text, color: red, text: { en: "Full name", ar: "الاسم الكامل" }, gap: m }
+            - { kind: field, text: "", gap: xs }
+            - { kind: text, color: red, text: { en: "Mobile number", ar: "رقم الموبايل" }, gap: s }
+            - { kind: field, text: "", gap: xs }
+            - { kind: text, color: red, text: { en: "Email", ar: "البريد الإلكتروني" }, gap: s }
+            - { kind: field, text: "", gap: xs }
+            - { kind: field, label: { en: "Anything we should know?", ar: "هل هناك ما يجب أن نعرفه؟" }, text: "", gap: s }
+            - { kind: button, text: *nh_b, gap: m }
+      - id: both
+        text: { en: "A star on each required field, and \"(optional)\" on the last one", ar: "نجمة على كل حقل إلزامي، و«(اختياري)» على الأخير" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *nh_t }
+            - { kind: small, text: { en: "* Required", ar: "* إلزامي" }, gap: s }
+            - { kind: field, label: { en: "Full name *", ar: "الاسم الكامل *" }, text: "", gap: m }
+            - { kind: field, label: { en: "Mobile number *", ar: "رقم الموبايل *" }, text: "", gap: s }
+            - { kind: field, label: { en: "Email *", ar: "البريد الإلكتروني *" }, text: "", gap: s }
+            - { kind: field, label: { en: "Anything we should know? (optional)", ar: "هل هناك ما يجب أن نعرفه؟ (اختياري)" }, text: "", gap: s }
+            - { kind: button, text: *nh_b, gap: m }
+      - id: note
+        text: { en: "Add \"All fields are required unless stated\" at the top", ar: "أضف «كل الحقول إلزامية ما لم يُذكر غير ذلك» في الأعلى" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *nh_t }
+            - { kind: small, text: { en: "All fields are required unless stated.", ar: "كل الحقول إلزامية ما لم يُذكر غير ذلك." }, gap: s }
+            - { kind: field, label: { en: "Full name", ar: "الاسم الكامل" }, text: "", gap: m }
+            - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "", gap: s }
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "", gap: s }
+            - { kind: field, label: { en: "Anything we should know?", ar: "هل هناك ما يجب أن نعرفه؟" }, text: "", gap: s }
+            - { kind: button, text: *nh_b, gap: m }
+    answer: [both]
+    misconceptions:
+      - id: MC-P01-003
+        when: [red]
+        feedback:
+          en: "Red labels are a code Nahla has to guess, and red usually means an error. The star is the mark people already know."
+          ar: "العناوين الحمراء رمز على نهلة أن تخمّنه، والأحمر يعني عادةً خطأ. النجمة هي العلامة التي يعرفها الناس بالفعل."
+      - id: MC-P01-028
+        when: [note]
+        feedback:
+          en: "People don't read notes at the top of forms, and \"unless stated\" is never stated here. Mark each field where Nahla fills it in."
+          ar: "الناس لا يقرؤون الملاحظات في أعلى النماذج، و«ما لم يُذكر» لم يُذكر هنا أصلًا. ميّز كل حقل في المكان الذي تملؤه فيه نهلة."
+    correct:
+      en: "Right. Every field says what it is, at the field."
+      ar: "صحيح. كل حقل يقول ما هو، عند الحقل نفسه."
+    explain:
+      en: "A star on each required field is the mark people already know. Labelling the one optional field too means Nahla never has to guess."
+      ar: "النجمة على كل حقل إلزامي هي العلامة التي يعرفها الناس بالفعل. وكتابة «اختياري» على الحقل الاختياري الوحيد أيضًا تعني أن نهلة لن تخمّن أبدًا."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U01-04
+    part: retest
+    value:
+      en: "Re-test, cognitive load in forms (NN/g): when marking isn't clear enough, many people feel obliged to answer optional questions. Stars alone leave the optional fields looking required."
+      ar: "إعادة اختبار، العبء الذهني في النماذج (NN/g): عندما لا يكون التمييز واضحًا بما يكفي، يشعر كثيرون بأنهم مُلزمون بالإجابة عن الأسئلة الاختيارية. النجوم وحدها تجعل الحقول الاختيارية تبدو إلزامية."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "When marking is not clear enough, many people feel obligated to answer optional questions." }
+    scenario:
+      en: "Essam replies to a wedding invitation. His name and the number of guests have stars. Two fields have none: food needs and a message for the couple. Essam isn't sure he can skip them."
+      ar: "يردّ عصام على دعوة زفاف. اسمه وعدد الضيوف عليهما نجمة. وحقلان بدون نجمة: احتياجات الطعام ورسالة للعروسين. وعصام ليس متأكّدًا هل يمكنه تجاوزهما."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &es_t { en: "Will you come?", ar: "هل ستحضر؟" } }
+        - { kind: field, label: &es_n { en: "Your name *", ar: "اسمك *" }, text: "", gap: m }
+        - { kind: field, label: &es_g { en: "Number of guests *", ar: "عدد الضيوف *" }, text: "", gap: s }
+        - { kind: field, label: { en: "Food needs", ar: "احتياجات الطعام" }, text: "", gap: s }
+        - { kind: field, label: { en: "A message for the couple", ar: "رسالة للعروسين" }, text: "", gap: s }
+        - { kind: button, text: &es_b { en: "Send reply", ar: "أرسل الرد" }, gap: m }
+    options:
+      - id: label
+        text: { en: "Add \"(optional)\" to the two unmarked fields", ar: "أضف «(اختياري)» إلى الحقلين غير المميّزين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *es_t }
+            - { kind: field, label: *es_n, text: "", gap: m }
+            - { kind: field, label: *es_g, text: "", gap: s }
+            - { kind: field, label: { en: "Food needs (optional)", ar: "احتياجات الطعام (اختياري)" }, text: "", gap: s }
+            - { kind: field, label: { en: "A message for the couple (optional)", ar: "رسالة للعروسين (اختياري)" }, text: "", gap: s }
+            - { kind: button, text: *es_b, gap: m }
+      - id: keep
+        text: { en: "Keep it; the stars already show what's required", ar: "أبقِه؛ فالنجوم توضّح بالفعل ما هو إلزامي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *es_t }
+            - { kind: field, label: *es_n, text: "", gap: m }
+            - { kind: field, label: *es_g, text: "", gap: s }
+            - { kind: field, label: { en: "Food needs", ar: "احتياجات الطعام" }, text: "", gap: s }
+            - { kind: field, label: { en: "A message for the couple", ar: "رسالة للعروسين" }, text: "", gap: s }
+            - { kind: button, text: *es_b, gap: m }
+      - id: grey
+        text: { en: "Make the two optional fields light grey", ar: "اجعل الحقلين الاختياريين رماديين فاتحين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *es_t }
+            - { kind: field, label: *es_n, text: "", gap: m }
+            - { kind: field, label: *es_g, text: "", gap: s }
+            - { kind: text, color: pale, text: { en: "Food needs", ar: "احتياجات الطعام" }, gap: s }
+            - { kind: field, text: "", gap: xs }
+            - { kind: text, color: pale, text: { en: "A message for the couple", ar: "رسالة للعروسين" }, gap: s }
+            - { kind: field, text: "", gap: xs }
+            - { kind: button, text: *es_b, gap: m }
+    answer: [label]
+    misconceptions:
+      - id: MC-P01-029
+        when: [keep]
+        feedback:
+          en: "Many people don't notice that a field has no star, and fill everything in to be safe. Essam may spend time on a message he never meant to write."
+          ar: "كثيرون لا يلاحظون أن الحقل بلا نجمة، فيملؤون كل شيء احتياطًا. وقد يقضي عصام وقتًا في رسالة لم يكن ينوي كتابتها."
+      - id: MC-P01-003
+        when: [grey]
+        feedback:
+          en: "Grey fields look disabled, not optional, and the labels get harder to read. Say \"optional\" in words."
+          ar: "الحقول الرمادية تبدو معطّلة، لا اختيارية، وتصبح عناوينها أصعب في القراءة. اكتب «اختياري» بالكلمات."
+    correct:
+      en: "Right. Stars for required, words for optional."
+      ar: "صحيح. النجوم للإلزامي، والكلمات للاختياري."
+    explain:
+      en: "Stars alone ask people to notice an absence. A clear \"(optional)\" tells Essam he can skip those two and send his reply."
+      ar: "النجوم وحدها تطلب من الناس أن يلاحظوا غياب شيء. أما «(اختياري)» الواضحة فتخبر عصام أنه يستطيع تجاوز الحقلين وإرسال ردّه."
+
+  # SK-P01-U01-05: keep the check true to the label
+  - id: S09
+    type: tune
+    skill: SK-P01-U01-05
+    part: retest
+    value:
+      en: "Re-test, cognitive load in forms (NN/g): communicate requirements and set expectations upfront. The label promised optional; the check must keep that promise."
+      ar: "إعادة اختبار، العبء الذهني في النماذج (NN/g): وضّح المتطلّبات وحدّد التوقّعات من البداية. العنوان وعد بأنه اختياري؛ والتحقّق يجب أن يفي بهذا الوعد."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "Communicate requirements and set expectations upfront." }
+    scenario:
+      en: "Zeinab signs up for a bookshop's newsletter. She leaves \"Mobile (optional)\" empty and presses Subscribe. The form stops her. The shop only sends emails; it never uses the mobile."
+      ar: "تشترك زينب في النشرة البريدية لمكتبة. تترك «الموبايل (اختياري)» فارغًا وتضغط «اشترك». فيوقفها النموذج. المكتبة ترسل رسائل بريد فقط؛ ولا تستخدم الموبايل أبدًا."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &zn_t { en: "Get our newsletter", ar: "اشترك في نشرتنا" } }
+        - { kind: field, label: &zn_e { en: "Email *", ar: "البريد الإلكتروني *" }, filled: true, text: "zeinab@mail.com", gap: m }
+        - { kind: field, tone: bad, label: &zn_m { en: "Mobile (optional)", ar: "الموبايل (اختياري)" }, text: "", error: { en: "Mobile is required.", ar: "الموبايل إلزامي." }, gap: s }
+        - { kind: button, text: &zn_b { en: "Subscribe", ar: "اشترك" }, gap: m }
+    options:
+      - id: label
+        text: { en: "Change the label to \"Mobile *\" so it matches the check", ar: "غيّر العنوان إلى «الموبايل *» ليطابق التحقّق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *zn_t }
+            - { kind: field, label: *zn_e, filled: true, text: "zeinab@mail.com", gap: m }
+            - { kind: field, label: { en: "Mobile *", ar: "الموبايل *" }, text: "", gap: s }
+            - { kind: button, text: *zn_b, gap: m }
+      - id: check
+        text: { en: "Fix the check so an empty mobile is accepted", ar: "أصلح التحقّق حتى يُقبل الموبايل فارغًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "You're subscribed", ar: "تم اشتراكك" } }
+            - { kind: text, text: { en: "Look out for our first email this Friday.", ar: "انتظري أول رسالة منّا يوم الجمعة." }, gap: s }
+      - id: message
+        text: { en: "Change the error to \"Please add a mobile to continue\"", ar: "غيّر رسالة الخطأ إلى «يرجى إضافة موبايل للمتابعة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *zn_t }
+            - { kind: field, label: *zn_e, filled: true, text: "zeinab@mail.com", gap: m }
+            - { kind: field, tone: bad, label: *zn_m, text: "", error: { en: "Please add a mobile to continue.", ar: "يرجى إضافة موبايل للمتابعة." }, gap: s }
+            - { kind: button, text: *zn_b, gap: m }
+    answer: [check]
+    misconceptions:
+      - id: MC-P01-004
+        when: [label, message]
+        feedback:
+          en: "The shop never uses the mobile, so the label was right and the check is wrong. Making it required asks for data nobody needs; a nicer error still breaks the promise."
+          ar: "المكتبة لا تستخدم الموبايل أبدًا، فالعنوان كان صحيحًا والتحقّق هو الخطأ. جعله إلزاميًا يطلب بيانات لا يحتاجها أحد؛ ورسالة خطأ ألطف ما زالت تخلف الوعد."
+    correct:
+      en: "Right. Optional now really means optional."
+      ar: "صحيح. «اختياري» الآن تعني اختياري فعلًا."
+    explain:
+      en: "When the label and the check disagree, decide which one tells the truth. Here the mobile isn't used, so the check is the bug."
+      ar: "عندما يختلف العنوان والتحقّق، قرّر أيهما يقول الحقيقة. هنا لا يُستخدم الموبايل، فالتحقّق هو الخطأ."
+
+  - id: S10
+    type: tune
+    skill: SK-P01-U01-05
+    part: retest
+    value:
+      en: "Re-test, cognitive load in forms (NN/g): set expectations upfront, then keep them. An optional arrival time must not block the booking, and a fake default isn't a fix."
+      ar: "إعادة اختبار، العبء الذهني في النماذج (NN/g): حدّد التوقّعات من البداية، ثم التزم بها. وقت الوصول الاختياري يجب ألا يوقف الحجز، والقيمة الافتراضية الوهمية ليست حلًا."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "Communicate requirements and set expectations upfront." }
+    scenario:
+      en: "Fouad books a hotel room. \"Arrival time (optional)\" just helps the front desk, which is open all night. He doesn't know when his train arrives, leaves it empty, and the form says \"Choose a time\"."
+      ar: "يحجز فؤاد غرفة فندق. «وقت الوصول (اختياري)» يساعد الاستقبال فقط، وهو مفتوح طوال الليل. لا يعرف فؤاد متى يصل قطاره، فيتركه فارغًا، فيقول النموذج «اختر وقتًا»."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &fd_t { en: "Your stay · 2 nights", ar: "إقامتك · ليلتان" } }
+        - { kind: select, tone: bad, label: &fd_a { en: "Arrival time (optional)", ar: "وقت الوصول (اختياري)" }, text: { en: "Choose", ar: "اختر" }, error: { en: "Choose a time.", ar: "اختر وقتًا." }, gap: m }
+        - { kind: button, text: &fd_b { en: "Book room", ar: "احجز الغرفة" }, gap: m }
+    options:
+      - id: default
+        text: { en: "Preselect 14:00, so the check always passes", ar: "اختر 14:00 مسبقًا، حتى ينجح التحقّق دائمًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *fd_t }
+            - { kind: select, label: *fd_a, filled: true, text: "14:00", gap: m }
+            - { kind: button, text: *fd_b, gap: m }
+      - id: star
+        text: { en: "Make it required, with a star", ar: "اجعله إلزاميًا، بنجمة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *fd_t }
+            - { kind: select, label: { en: "Arrival time *", ar: "وقت الوصول *" }, text: { en: "Choose", ar: "اختر" }, gap: m }
+            - { kind: button, text: *fd_b, gap: m }
+      - id: accept
+        text: { en: "Accept it empty, as the label says", ar: "اقبله فارغًا، كما يقول العنوان" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Room booked", ar: "تم حجز الغرفة" } }
+            - { kind: text, text: { en: "Check-in from 14:00. The front desk is open all night.", ar: "الدخول من 14:00. الاستقبال مفتوح طوال الليل." }, gap: s }
+    answer: [accept]
+    misconceptions:
+      - id: MC-P01-004
+        when: [default, star]
+        feedback:
+          en: "The hotel doesn't need the time, so it shouldn't be required. A preselected 14:00 is worse: the front desk gets a time Fouad never chose. Let the check match the label."
+          ar: "الفندق لا يحتاج الوقت، فلا يجب أن يكون إلزاميًا. واختيار 14:00 مسبقًا أسوأ: يحصل الاستقبال على وقت لم يختره فؤاد. اجعل التحقّق يطابق العنوان."
+    correct:
+      en: "Right. Empty is allowed, as promised."
+      ar: "صحيح. الترك فارغًا مسموح، كما وُعد."
+    explain:
+      en: "An optional field is a promise. Keeping it means accepting it empty, not forcing an answer or filling one in for Fouad."
+      ar: "الحقل الاختياري وعد. والوفاء به يعني قبوله فارغًا، لا إجبار فؤاد على إجابة ولا ملؤها نيابة عنه."
+
+  # SK-P01-U01-06: ask for a name in one field
+  - id: S11
+    type: tune
+    skill: SK-P01-U01-06
+    part: retest
+    value:
+      en: "Re-test, international sites (NN/g): separate first-name and last-name fields are a prescription for confusion. A four-part Egyptian name doesn't fit two short boxes."
+      ar: "إعادة اختبار، المواقع الدولية (NN/g): حقلا الاسم الأول واسم العائلة المنفصلان وصفة للارتباك. الاسم المصري الرباعي لا يتّسع في مربعين قصيرين."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "Offering separate fields for first name and last name is a prescription for confusion." }
+    scenario:
+      en: "Hayam registers her grandmother at a clinic. The ID card shows four names: Fatma Mohamed Abdel Hamid Ibrahim. The form has First name and Last name, 15 letters each."
+      ar: "تسجّل هيام جدّتها في عيادة. البطاقة فيها أربعة أسماء: فاطمة محمد عبد الحميد إبراهيم. والنموذج فيه «الاسم الأول» و«اسم العائلة»، 15 حرفًا لكلٍّ منهما."
+    prompt:
+      en: "Try each version of the name field. Which one should ship?"
+      ar: "جرّب كل نسخة من حقل الاسم. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &hy_t { en: "Patient details", ar: "بيانات المريض" } }
+        - { kind: field, label: &hy_f { en: "First name *", ar: "الاسم الأول *" }, filled: true, text: { en: "Fatma", ar: "فاطمة" }, gap: m }
+        - { kind: field, label: &hy_l { en: "Last name *", ar: "اسم العائلة *" }, filled: true, text: { en: "Mohamed Abdel H", ar: "محمد عبد الحمي" }, gap: s }
+        - { kind: small, text: { en: "Max. 15 letters", ar: "15 حرفًا كحدّ أقصى" }, gap: xs }
+    options:
+      - id: full
+        text: { en: "One \"Full name, as on the ID\" field, with room for long names", ar: "حقل واحد «الاسم الكامل كما في البطاقة»، مع مساحة للأسماء الطويلة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *hy_t }
+            - { kind: field, label: { en: "Full name, as on the ID *", ar: "الاسم الكامل كما في البطاقة *" }, filled: true, text: { en: "Fatma Mohamed Abdel Hamid Ibrahim", ar: "فاطمة محمد عبد الحميد إبراهيم" }, gap: m }
+      - id: middle
+        text: { en: "Add a Middle name field between the two", ar: "أضف حقل «الاسم الأوسط» بين الحقلين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *hy_t }
+            - { kind: field, label: *hy_f, filled: true, text: { en: "Fatma", ar: "فاطمة" }, gap: m }
+            - { kind: field, label: { en: "Middle name", ar: "الاسم الأوسط" }, filled: true, text: { en: "Mohamed", ar: "محمد" }, gap: s }
+            - { kind: field, label: *hy_l, filled: true, text: { en: "Abdel Hamid Ibr", ar: "عبد الحميد إبرا" }, gap: s }
+            - { kind: small, text: { en: "Max. 15 letters", ar: "15 حرفًا كحدّ أقصى" }, gap: xs }
+      - id: keep
+        text: { en: "Keep it; people can shorten their names to fit", ar: "أبقِه؛ يمكن للناس اختصار أسمائهم لتتّسع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *hy_t }
+            - { kind: field, label: *hy_f, filled: true, text: { en: "Fatma", ar: "فاطمة" }, gap: m }
+            - { kind: field, label: *hy_l, filled: true, text: { en: "Ibrahim", ar: "إبراهيم" }, gap: s }
+    answer: [full]
+    misconceptions:
+      - id: MC-P01-006
+        when: [middle, keep]
+        feedback:
+          en: "Her name still doesn't fit the boxes, and a shortened name may not match her ID at the clinic. Not every name splits into first and last. One full-name field fits them all."
+          ar: "ما زال اسمها لا يتّسع في المربعات، والاسم المختصر قد لا يطابق بطاقتها في العيادة. ليس كل اسم ينقسم إلى أول وعائلة. حقل واحد للاسم الكامل يناسبها كلها."
+    correct:
+      en: "Right. One field, the whole name, as on the ID."
+      ar: "صحيح. حقل واحد، الاسم كاملًا، كما في البطاقة."
+    explain:
+      en: "Names come in many shapes: one part, two, four or more. A single full-name field lets Hayam type it exactly as it appears on the ID."
+      ar: "تأتي الأسماء بأشكال كثيرة: جزء واحد أو اثنان أو أربعة أو أكثر. حقل واحد للاسم الكامل يتيح لهيام كتابته تمامًا كما يظهر في البطاقة."
+
+  - id: S12
+    type: tune
+    skill: SK-P01-U01-06
+    part: retest
+    value:
+      en: "Re-test, international sites (NN/g): separate first- and last-name fields are a prescription for confusion. Some people have a single name; a required Last name blocks them."
+      ar: "إعادة اختبار، المواقع الدولية (NN/g): حقلا الاسم الأول واسم العائلة المنفصلان وصفة للارتباك. بعض الناس لهم اسم واحد فقط؛ واسم العائلة الإلزامي يوقفهم."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "Offering separate fields for first name and last name is a prescription for confusion." }
+    scenario:
+      en: "Ashraf books concert tickets for himself and a friend from abroad. His friend's passport shows only one name. The form requires both First name and Last name for each guest."
+      ar: "يحجز أشرف تذاكر حفلة له ولصديق من الخارج. جواز سفر صديقه فيه اسم واحد فقط. والنموذج يطلب «الاسم الأول» و«اسم العائلة» لكل ضيف إلزاميًا."
+    prompt:
+      en: "Try each version of the guest form. Which one should ship?"
+      ar: "جرّب كل نسخة من نموذج الضيوف. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &as_h { en: "Guest 2", ar: "الضيف 2" } }
+        - { kind: field, label: { en: "First name *", ar: "الاسم الأول *" }, filled: true, text: "Arjun", gap: s }
+        - { kind: field, tone: bad, label: { en: "Last name *", ar: "اسم العائلة *" }, text: "", error: { en: "Last name is required.", ar: "اسم العائلة إلزامي." }, gap: s }
+    options:
+      - id: optional
+        text: { en: "Keep both fields, and make Last name optional", ar: "أبقِ الحقلين، واجعل اسم العائلة اختياريًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *as_h }
+            - { kind: field, label: { en: "First name *", ar: "الاسم الأول *" }, filled: true, text: "Arjun", gap: s }
+            - { kind: field, label: { en: "Last name (optional)", ar: "اسم العائلة (اختياري)" }, text: "", gap: s }
+      - id: full
+        text: { en: "One field: \"Full name, as on the passport\"", ar: "حقل واحد: «الاسم الكامل كما في جواز السفر»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *as_h }
+            - { kind: field, label: { en: "Full name, as on the passport *", ar: "الاسم الكامل كما في جواز السفر *" }, filled: true, text: "Arjun", gap: s }
+      - id: repeat
+        text: { en: "Add a hint: \"Only one name? Type it in both fields\"", ar: "أضف تلميحًا: «لديك اسم واحد؟ اكتبه في الحقلين»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *as_h }
+            - { kind: field, label: { en: "First name *", ar: "الاسم الأول *" }, filled: true, text: "Arjun", gap: s }
+            - { kind: field, label: { en: "Last name *", ar: "اسم العائلة *" }, filled: true, text: "Arjun", hint: { en: "Only one name? Type it in both fields.", ar: "لديك اسم واحد؟ اكتبه في الحقلين." }, gap: s }
+    answer: [full]
+    misconceptions:
+      - id: MC-P01-006
+        when: [optional, repeat]
+        feedback:
+          en: "Both still assume a name has two parts. \"Arjun Arjun\" won't match the passport at the door, and an optional last name still asks which part goes where. One full-name field fits every name."
+          ar: "كلاهما ما زال يفترض أن للاسم جزأين. «Arjun Arjun» لن يطابق جواز السفر عند الباب، واسم العائلة الاختياري ما زال يسأل أي جزء يوضع أين. حقل واحد للاسم الكامل يناسب كل الأسماء."
+    correct:
+      en: "Right. One name or five, it fits."
+      ar: "صحيح. اسم واحد أو خمسة، يتّسع."
+    explain:
+      en: "The ticket needs the name as it appears on the passport. One full-name field takes it exactly as written, however many parts it has."
+      ar: "التذكرة تحتاج الاسم كما يظهر في جواز السفر. حقل واحد للاسم الكامل يأخذه تمامًا كما هو مكتوب، مهما كان عدد أجزائه."
+
+  # SK-P01-U01-07: accept numbers the way people write them
+  - id: S13
+    type: tune
+    skill: SK-P01-U01-07
+    part: retest
+    value:
+      en: "Re-test, international sites (NN/g): allow international phone numbers with a varying number of digits and a country code. A Saudi number is real and valid."
+      ar: "إعادة اختبار، المواقع الدولية (NN/g): اسمح بأرقام الهواتف الدولية بعدد أرقام مختلف ومع مفتاح الدولة. الرقم السعودي رقم حقيقي وصالح."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "For phone numbers, allow for international numbers containing a varying number of digits and a country code." }
+    scenario:
+      en: "Shereen lives in Riyadh and sends a gift to her mother in Cairo. She types her own mobile, ⁦+966 55 123 4567⁩, so the courier can reach her. The form only accepts 11 digits starting with 01."
+      ar: "تعيش شيرين في الرياض وترسل هدية لأمها في القاهرة. تكتب رقم موبايلها ⁦+966 55 123 4567⁩، حتى يستطيع المندوب الوصول إليها. والنموذج يقبل فقط 11 رقمًا تبدأ بـ 01."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &sh_t { en: "Sender's details", ar: "بيانات المرسِل" } }
+        - { kind: field, tone: bad, label: &sh_p { en: "Your mobile *", ar: "موبايلك *" }, filled: true, text: "⁦+966 55 123 4567⁩", error: { en: "Enter a valid number.", ar: "أدخل رقمًا صالحًا." }, gap: m }
+        - { kind: button, text: &sh_b { en: "Send gift", ar: "أرسل الهدية" }, gap: m }
+    options:
+      - id: hint
+        text: { en: "Add a hint: \"Format: 01XXXXXXXXX\"", ar: "أضف تلميحًا: «الصيغة: 01XXXXXXXXX»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *sh_t }
+            - { kind: field, label: *sh_p, text: "", hint: { en: "Format: 01XXXXXXXXX", ar: "الصيغة: 01XXXXXXXXX" }, gap: m }
+            - { kind: button, text: *sh_b, gap: m }
+      - id: egypt
+        text: { en: "Add a country list with only Egypt in it", ar: "أضف قائمة دول فيها مصر فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *sh_t }
+            - { kind: select, label: { en: "Country", ar: "الدولة" }, filled: true, text: { en: "Egypt (+20)", ar: "مصر (+20)" }, gap: m }
+            - { kind: field, label: *sh_p, text: "", gap: s }
+            - { kind: button, text: *sh_b, gap: m }
+      - id: accept
+        text: { en: "Accept any country code, spaces and length, and tidy it up behind the scenes", ar: "اقبل أي مفتاح دولة وأي مسافات وأي طول، ونظّم الرقم في الخلفية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *sh_t }
+            - { kind: field, label: *sh_p, filled: true, text: "⁦+966 55 123 4567⁩", gap: m }
+            - { kind: small, color: green, text: { en: "✓ Saudi Arabia number", ar: "✓ رقم من السعودية" }, gap: xs }
+            - { kind: button, text: *sh_b, gap: m }
+    answer: [accept]
+    misconceptions:
+      - id: MC-P01-007
+        when: [hint, egypt]
+        feedback:
+          en: "Both still reject a real number. Shereen doesn't have an Egyptian mobile, so a hint or an Egypt-only list leaves her stuck. Accept the number she has."
+          ar: "كلاهما ما زال يرفض رقمًا حقيقيًا. شيرين ليس لديها موبايل مصري، فالتلميح أو القائمة التي فيها مصر فقط يتركانها عالقة. اقبل الرقم الذي لديها."
+    correct:
+      en: "Right. Her real number works."
+      ar: "صحيح. رقمها الحقيقي يعمل."
+    explain:
+      en: "Phone numbers vary by country in length and format. Accept the country code and spaces, and let the system store the number in the form it needs."
+      ar: "تختلف أرقام الهواتف بين الدول في طولها وصيغتها. اقبل مفتاح الدولة والمسافات، ودع النظام يحفظ الرقم بالصيغة التي يحتاجها."
+
+  - id: S14
+    type: tune
+    skill: SK-P01-U01-07
+    part: retest
+    value:
+      en: "Re-test, mobile input checklist (NN/g): do you allow users to enter the number in whatever format they like? Dashes are a common way to write numbers; the system can remove them."
+      ar: "إعادة اختبار، قائمة تحقّق حقول الهاتف (NN/g): هل تسمح للمستخدمين بإدخال الرقم بأي صيغة يحبّونها؟ الشَرطات طريقة شائعة لكتابة الأرقام؛ ويمكن للنظام حذفها."
+    ref: { url: "https://www.nngroup.com/articles/mobile-input-checklist/", quote: "Do you allow users to enter it in whatever format they like?" }
+    scenario:
+      en: "Kamal books a car service. He types his mobile the way he always writes it, ⁦0100-123-4567⁩. The form rejects it because of the dashes."
+      ar: "يحجز كمال صيانة لسيارته. يكتب رقم موبايله كما يكتبه دائمًا، ⁦0100-123-4567⁩. فيرفضه النموذج بسبب الشَرطات."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل حل. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &km_t { en: "Book a service", ar: "احجز صيانة" } }
+        - { kind: field, tone: bad, label: &km_p { en: "Mobile *", ar: "الموبايل *" }, filled: true, text: "⁦0100-123-4567⁩", error: { en: "Invalid number.", ar: "رقم غير صالح." }, gap: m }
+        - { kind: button, text: &km_b { en: "Book", ar: "احجز" }, gap: m }
+    options:
+      - id: accept
+        text: { en: "Accept dashes and spaces, and remove them behind the scenes", ar: "اقبل الشَرطات والمسافات، واحذفها في الخلفية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *km_t }
+            - { kind: field, label: *km_p, filled: true, text: "⁦0100 123 4567⁩", gap: m }
+            - { kind: button, text: *km_b, gap: m }
+      - id: error
+        text: { en: "Make the error clearer: \"Numbers only, no dashes or spaces\"", ar: "اجعل الخطأ أوضح: «أرقام فقط، بدون شَرطات أو مسافات»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *km_t }
+            - { kind: field, tone: bad, label: *km_p, filled: true, text: "⁦0100-123-4567⁩", error: { en: "Numbers only, no dashes or spaces.", ar: "أرقام فقط، بدون شَرطات أو مسافات." }, gap: m }
+            - { kind: button, text: *km_b, gap: m }
+      - id: boxes
+        text: { en: "Split the field into three boxes of 4, 3 and 4 digits", ar: "قسّم الحقل إلى ثلاثة مربعات: 4 و3 و4 أرقام" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *km_t }
+            - { kind: small, text: *km_p, gap: m }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: field, text: "0100" }
+                - { kind: field, text: "123" }
+                - { kind: field, text: "4567" }
+            - { kind: button, text: *km_b, gap: m }
+    answer: [accept]
+    misconceptions:
+      - id: MC-P01-007
+        when: [error, boxes]
+        feedback:
+          en: "Both make Kamal do the system's work: retype his number, or split it and jump between boxes. Paste or type it any way he likes, and clean it up in the code."
+          ar: "كلاهما يجعل كمال يقوم بعمل النظام: يعيد كتابة رقمه، أو يقسّمه ويتنقّل بين المربعات. دعه يلصقه أو يكتبه بأي طريقة، ونظّفه في الكود."
+    correct:
+      en: "Right. The system tidies the number, not Kamal."
+      ar: "صحيح. النظام هو من ينظّم الرقم، لا كمال."
+    explain:
+      en: "Dashes and spaces make numbers easier for people to read and check. Removing them is easy for the system, so there's no reason to reject them."
+      ar: "الشَرطات والمسافات تجعل الأرقام أسهل في القراءة والمراجعة. وحذفها سهل على النظام، فلا سبب لرفضها."
+
+  # SK-P01-U01-08: use labels and formats people understand
+  - id: S15
+    type: tune
+    skill: SK-P01-U01-08
+    part: retest
+    value:
+      en: "Re-test, cognitive load in forms (NN/g): form labels and instructions should be immediately understandable. Technical terms need a plain question, not a tooltip."
+      ar: "إعادة اختبار، العبء الذهني في النماذج (NN/g): يجب أن تكون عناوين النموذج وتعليماته مفهومة فورًا. المصطلحات التقنية تحتاج سؤالًا بسيطًا، لا تلميحًا منبثقًا."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "Form labels and instructions should be immediately understandable." }
+    scenario:
+      en: "Afaf orders home internet. The form asks \"Line type: ADSL, VDSL or FTTH\". The company really needs to know if her building has a fibre box. Afaf has no idea what the letters mean."
+      ar: "تطلب عفاف إنترنت منزليًا. النموذج يسأل «نوع الخط: ADSL أو VDSL أو FTTH». والشركة تحتاج فعلًا أن تعرف هل في عمارتها صندوق ألياف. وعفاف لا تعرف ماذا تعني هذه الحروف."
+    prompt:
+      en: "Try each version of the question. Which one should ship?"
+      ar: "جرّب كل نسخة من السؤال. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &af_q { en: "Line type *", ar: "نوع الخط *" } }
+        - { kind: radio, text: "ADSL", gap: s }
+        - { kind: radio, text: "VDSL", gap: xs }
+        - { kind: radio, text: "FTTH", gap: xs }
+    options:
+      - id: tooltip
+        text: { en: "Keep the choices, and add an ⓘ with technical definitions", ar: "أبقِ الخيارات، وأضف ⓘ فيها تعريفات تقنية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Line type * ⓘ", ar: "نوع الخط * ⓘ" } }
+            - { kind: small, color: muted, text: { en: "FTTH: fibre-to-the-home, GPON-based…", ar: "FTTH: ألياف حتى المنزل، تعتمد على GPON…" }, gap: xs }
+            - { kind: radio, text: "ADSL", gap: s }
+            - { kind: radio, text: "VDSL", gap: xs }
+            - { kind: radio, text: "FTTH", gap: xs }
+      - id: acronyms
+        text: { en: "Spell out the full technical names of the three line types", ar: "اكتب الأسماء التقنية الكاملة لأنواع الخطوط الثلاثة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *af_q }
+            - { kind: radio, text: "Asymmetric Digital Subscriber Line", gap: s }
+            - { kind: radio, text: "Very-high-bit-rate DSL", gap: xs }
+            - { kind: radio, text: "Fibre To The Home", gap: xs }
+      - id: plain
+        text: { en: "Ask in everyday words: \"Is there a fibre box in your building?\"", ar: "اسأل بكلمات يومية: «هل يوجد صندوق ألياف في عمارتك؟»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Is there a fibre box in your building? *", ar: "هل يوجد صندوق ألياف في عمارتك؟ *" } }
+            - { kind: small, color: muted, text: { en: "A small white box near the entrance, often with the company's name.", ar: "صندوق أبيض صغير قرب المدخل، عليه اسم الشركة غالبًا." }, gap: xs }
+            - { kind: radio, text: { en: "Yes", ar: "نعم" }, gap: s }
+            - { kind: radio, text: { en: "No", ar: "لا" }, gap: xs }
+            - { kind: radio, text: { en: "I'm not sure", ar: "لست متأكّدة" }, gap: xs }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P01-008
+        when: [tooltip, acronyms]
+        feedback:
+          en: "Longer technical words are still technical. Afaf can't tell which line she has, so she'll guess. Ask about the real need in words she uses."
+          ar: "الكلمات التقنية الأطول ما زالت تقنية. لا تستطيع عفاف معرفة أي خط لديها، فستخمّن. اسأل عن الحاجة الحقيقية بكلمات تستخدمها."
+    correct:
+      en: "Right. A question Afaf can answer by looking."
+      ar: "صحيح. سؤال تستطيع عفاف الإجابة عنه بالنظر."
+    explain:
+      en: "The company needs one fact: is fibre in the building? Asking that in plain words, with \"I'm not sure\", gets a true answer instead of a guess."
+      ar: "الشركة تحتاج معلومة واحدة: هل الألياف موجودة في العمارة؟ السؤال عنها بكلمات بسيطة، مع «لست متأكّدة»، يأتي بإجابة صحيحة بدل التخمين."
+
+  - id: S16
+    type: tune
+    skill: SK-P01-U01-08
+    part: retest
+    value:
+      en: "Re-test, international sites (NN/g): for dates, always spell out the name of the month. 05/06 reads as May or June depending on where you're from."
+      ar: "إعادة اختبار، المواقع الدولية (NN/g): في التواريخ، اكتب اسم الشهر دائمًا. 05/06 تُقرأ مايو أو يونيو حسب البلد الذي جئت منه."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "For dates, the main guideline is: Always spell out the name of the month." }
+    scenario:
+      en: "Raouf books a visa appointment. The confirmation shows 05/06/2027. He isn't sure if it means 5 June or 6 May, and he can't afford to miss it."
+      ar: "يحجز رؤوف موعدًا للتأشيرة. التأكيد يعرض 05/06/2027. وهو ليس متأكّدًا هل يعني 5 يونيو أم 6 مايو، ولا يستطيع أن يفوّته."
+    prompt:
+      en: "Try each way of showing the date. Which one should ship?"
+      ar: "جرّب كل طريقة لعرض التاريخ. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &ra_t { en: "Appointment booked", ar: "تم حجز الموعد" } }
+        - { kind: meta, weight: bold, text: "05/06/2027 · 09:30", gap: s }
+        - { kind: small, text: &ra_n { en: "Bring your passport and two photos.", ar: "أحضر جواز سفرك وصورتين." }, gap: s }
+    options:
+      - id: note
+        text: { en: "Keep the numbers, and add \"Format: DD/MM/YYYY\" under it", ar: "أبقِ الأرقام، وأضف «الصيغة: يوم/شهر/سنة» تحته" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ra_t }
+            - { kind: meta, weight: bold, text: "05/06/2027 · 09:30", gap: s }
+            - { kind: small, color: muted, text: { en: "Format: DD/MM/YYYY", ar: "الصيغة: يوم/شهر/سنة" }, gap: xs }
+            - { kind: small, text: *ra_n, gap: s }
+      - id: words
+        text: { en: "Write the month as a word: Saturday 5 June 2027", ar: "اكتب الشهر بالكلمات: السبت 5 يونيو 2027" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ra_t }
+            - { kind: meta, weight: bold, text: { en: "Saturday 5 June 2027 · 09:30", ar: "السبت 5 يونيو 2027 · 09:30" }, gap: s }
+            - { kind: small, text: *ra_n, gap: s }
+      - id: iso
+        text: { en: "Use the international format: 2027-06-05", ar: "استخدم الصيغة الدولية: 2027-06-05" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *ra_t }
+            - { kind: meta, weight: bold, text: "2027-06-05 · 09:30", gap: s }
+            - { kind: small, text: *ra_n, gap: s }
+    answer: [words]
+    misconceptions:
+      - id: MC-P01-030
+        when: [note, iso]
+        feedback:
+          en: "Raouf still has to decode the numbers, and many people misread both formats. A month written as a word can't be confused."
+          ar: "ما زال على رؤوف أن يفكّ الأرقام، وكثيرون يخطئون في قراءة الصيغتين. الشهر المكتوب بالكلمات لا يمكن الخلط فيه."
+    correct:
+      en: "Right. No one can misread June."
+      ar: "صحيح. لا أحد يخطئ في قراءة يونيو."
+    explain:
+      en: "Day-month order differs between countries, so number-only dates are a guess. Writing the month, and the weekday too, makes the appointment impossible to misread."
+      ar: "يختلف ترتيب اليوم والشهر بين الدول، فالتواريخ الرقمية فقط تخمين. كتابة الشهر، واليوم أيضًا، تجعل الموعد مستحيل الخطأ في قراءته."
