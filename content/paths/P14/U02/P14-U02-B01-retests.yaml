@@ -1,0 +1,641 @@
+id: P14-U02-B01
+mode: bank
+title:
+  en: "Re-tests: show what's needed, make the next step obvious"
+  ar: "إعادة اختبار: أظهر المطلوب، ووضّح الخطوة التالية"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Accordions on Desktop: When and How to Use (NN/g)", ar: "الـ Accordion على الكمبيوتر: متى وكيف نستخدمه (NN/g)" }
+    url: "https://www.nngroup.com/articles/accordions-on-desktop/"
+  - title: { en: "Similarity Principle in Visual Design (NN/g)", ar: "مبدأ التشابه في التصميم المرئي (NN/g)" }
+    url: "https://www.nngroup.com/articles/gestalt-similarity/"
+  - title: { en: "Designing Effective Contextual Menus: 10 Guidelines (NN/g)", ar: "تصميم قوائم السياق الفعّالة: 10 إرشادات (NN/g)" }
+    url: "https://www.nngroup.com/articles/contextual-menus-guidelines/"
+  - title: { en: "User-Interface Elements: Glossary (NN/g)", ar: "عناصر واجهة المستخدم: مسرد المصطلحات (NN/g)" }
+    url: "https://www.nngroup.com/articles/ui-elements-glossary/"
+  - title: { en: "Icon Usability (NN/g)", ar: "سهولة استخدام الأيقونات (NN/g)" }
+    url: "https://www.nngroup.com/articles/icon-usability/"
+steps:
+  # SK-P14-U02-01: collapse only what most people skip
+  - id: S01
+    type: tune
+    skill: SK-P14-U02-01
+    part: retest
+    value:
+      en: "Re-test, accordions (NN/g): when people need most or all of the content, display it all at once. A cook needs every ingredient and every step, so collapsing them only adds taps with wet hands."
+      ar: "إعادة اختبار، الـ Accordion (NN/g): حين يحتاج الناس أغلب المحتوى أو كله، فاعرضه كله مرة واحدة. والطبّاخ يحتاج كل المكوّنات وكل الخطوات، فطيّها يزيد الضغطات فقط ويداه مبلّلتان."
+    ref: { url: "https://www.nngroup.com/articles/accordions-on-desktop/", quote: "If you expect users to need information from several accordions at once, it is better to display all the content at once" }
+    scenario:
+      en: "Adham is cooking from a recipe on his phone. The recipe has 8 ingredients and 6 short steps, and he needs all of them, in order."
+      ar: "يطبخ أدهم من وصفة على هاتفه. والوصفة فيها 8 مكوّنات و6 خطوات قصيرة، وهو يحتاجها كلها، بالترتيب."
+    prompt:
+      en: "Try each version of the recipe. Which one should ship?"
+      ar: "جرّب كل نسخة من الوصفة. أيّها يجب أن تُطلق؟"
+    start: acc
+    options:
+      - id: acc
+        text: { en: "Ingredients and each step collapsed under titles", ar: "المكوّنات وكل خطوة مطويّة تحت عناوين" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Ingredients", ar: "المكوّنات" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 1", ar: "الخطوة 1" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 2", ar: "الخطوة 2" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 3", ar: "الخطوة 3" } }, { kind: meta, text: "+" }] }
+      - id: open
+        text: { en: "Ingredients and steps open, one after the other", ar: "المكوّنات والخطوات مفتوحة، واحدة بعد الأخرى" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: text, weight: bold, text: { en: "Ingredients", ar: "المكوّنات" }, gap: m }
+            - { kind: small, text: { en: "1 cup lentils · 1 onion · 1 carrot · 2 cloves garlic · cumin · salt…", ar: "كوب عدس · بصلة · جزرة · فصّان ثوم · كمّون · ملح…" }, gap: xs }
+            - { kind: text, weight: bold, text: { en: "1. Wash the lentils.", ar: "1. اغسل العدس." }, gap: m }
+            - { kind: text, weight: bold, text: { en: "2. Fry the onion for 3 minutes.", ar: "2. حمّر البصل 3 دقائق." }, gap: s }
+            - { kind: text, weight: bold, text: { en: "3. Add everything with 5 cups of water.", ar: "3. أضف كل شيء مع 5 أكواب ماء." }, gap: s }
+      - id: one
+        text: { en: "One step at a time; opening a step closes the one before", ar: "خطوة واحدة في كل مرة؛ وفتح خطوة يغلق السابقة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Ingredients", ar: "المكوّنات" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 1", ar: "الخطوة 1" } }, { kind: meta, text: "−" }] }
+            - { kind: small, text: { en: "Wash the lentils.", ar: "اغسل العدس." }, gap: xs }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 2", ar: "الخطوة 2" } }, { kind: meta, text: "+" }] }
+    answer: [open]
+    misconceptions:
+      - id: MC-P14-016
+        when: [acc, one]
+        feedback:
+          en: "Adham needs every part, so he'll open every one, with his hands busy. And he can't check the ingredients while he reads a step."
+          ar: "أدهم يحتاج كل جزء، فسيفتحها كلها ويداه مشغولتان. ولا يستطيع أن يراجع المكوّنات وهو يقرأ خطوة."
+    correct:
+      en: "He needs it all: show it all."
+      ar: "يحتاج كل شيء: اعرض كل شيء."
+    explain:
+      en: "Everything is short and needed. Open on one page, Adham can glance at the ingredients and the next step without a single tap."
+      ar: "كل شيء قصير ومطلوب. ومفتوحًا في صفحة واحدة، يستطيع أدهم أن ينظر إلى المكوّنات والخطوة التالية دون أي ضغطة."
+
+  - id: S02
+    type: tune
+    skill: SK-P14-U02-01
+    part: retest
+    value:
+      en: "Re-test, accordions (NN/g): product-detail sections are good candidates for accordions. Each shopper checks one or two specs, and which ones differs from shopper to shopper, so removing sections loses answers."
+      ar: "إعادة اختبار، الـ Accordion (NN/g): أقسام تفاصيل المنتج مناسبة جدًا للـ Accordion. فكل مشترٍ يراجع مواصفة أو اثنتين، وتختلف المواصفة من مشترٍ لآخر، فحذف الأقسام يُضيّع أجوبة."
+    ref: { url: "https://www.nngroup.com/articles/accordions-on-desktop/", quote: "FAQ pages and product-detail sections are good candidates for accordions." }
+    scenario:
+      en: "Rana is choosing a phone on an electronics website, on her laptop. Each phone page has six spec sections: screen, battery, camera, storage, what's in the box, and warranty. Shoppers usually check one or two, and not the same ones."
+      ar: "تختار رنا هاتفًا على موقع إلكترونيات، من اللابتوب. وكل صفحة هاتف فيها ستة أقسام للمواصفات: الشاشة، والبطارية، والكاميرا، والذاكرة، وما في العلبة، والضمان. والمشترون يراجعون عادةً قسمًا أو اثنين، وليست الأقسام نفسها."
+    prompt:
+      en: "Try each version of the phone page. Which one should ship?"
+      ar: "جرّب كل نسخة من صفحة الهاتف. أيّها يجب أن تُطلق؟"
+    start: two
+    options:
+      - id: two
+        text: { en: "Show only Battery and Camera; remove the other four", ar: "اعرض البطارية والكاميرا فقط؛ واحذف الأقسام الأربعة الأخرى" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: heading, text: { en: "Phone X5 · EGP 14,999", ar: "هاتف X5 · 14,999 جنيه" } }
+            - { kind: text, weight: bold, text: { en: "Battery", ar: "البطارية" }, gap: m }
+            - { kind: small, text: { en: "5,000 mAh, about two days of normal use…", ar: "5,000 مللي أمبير، تقريبًا يومان من الاستخدام العادي…" }, gap: xs }
+            - { kind: text, weight: bold, text: { en: "Camera", ar: "الكاميرا" }, gap: m }
+            - { kind: small, text: { en: "50 MP main camera, 12 MP wide…", ar: "كاميرا رئيسية 50 ميجابكسل، وعريضة 12 ميجابكسل…" }, gap: xs }
+      - id: acc
+        text: { en: "The six sections as an accordion", ar: "الأقسام الستة كـ Accordion" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: heading, text: { en: "Phone X5 · EGP 14,999", ar: "هاتف X5 · 14,999 جنيه" } }
+            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Screen", ar: "الشاشة" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Battery", ar: "البطارية" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Camera", ar: "الكاميرا" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Storage", ar: "الذاكرة" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "In the box", ar: "ما في العلبة" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Warranty", ar: "الضمان" } }, { kind: meta, text: "+" }] }
+      - id: open
+        text: { en: "All six sections open", ar: "الأقسام الستة مفتوحة" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: heading, text: { en: "Phone X5 · EGP 14,999", ar: "هاتف X5 · 14,999 جنيه" } }
+            - { kind: text, weight: bold, text: { en: "Screen", ar: "الشاشة" }, gap: m }
+            - { kind: small, text: { en: "6.7 inches, 120 Hz, readable in the sun. Glass on the front and the back…", ar: "6.7 بوصة، 120 هرتز، واضحة تحت الشمس. وزجاج في الأمام والخلف…" }, gap: xs }
+            - { kind: text, weight: bold, text: { en: "Battery", ar: "البطارية" }, gap: m }
+            - { kind: small, text: { en: "5,000 mAh, about two days of normal use. Charges to 50% in 25 minutes…", ar: "5,000 مللي أمبير، تقريبًا يومان من الاستخدام العادي. ويشحن إلى 50% في 25 دقيقة…" }, gap: xs }
+    answer: [acc]
+    misconceptions:
+      - id: MC-P14-018
+        when: [two]
+        feedback:
+          en: "A shopper who wants to know the warranty or what's in the box finds nothing. Collapsing keeps every answer; removing loses it."
+          ar: "المشتري الذي يريد معرفة الضمان أو ما في العلبة لن يجد شيئًا. فالطيّ يُبقي كل جواب؛ أما الحذف فيُضيّعه."
+      - id: MC-P14-017
+        when: [open]
+        feedback:
+          en: "Rana wants the warranty, the last section, so she scrolls past five long sections she doesn't need."
+          ar: "تريد رنا الضمان، وهو القسم الأخير، فتمرّ على خمسة أقسام طويلة لا تحتاجها."
+    correct:
+      en: "Each shopper needs a few: an accordion."
+      ar: "كل مشترٍ يحتاج القليل: Accordion."
+    explain:
+      en: "All six titles fit on one screen, so every shopper finds their spec at once and nothing is removed."
+      ar: "العناوين الستة كلها في شاشة واحدة، فيجد كل مشترٍ مواصفته فورًا ولا يُحذف شيء."
+
+  # SK-P14-U02-02: never collapse what people must see
+  - id: S03
+    type: tune
+    skill: SK-P14-U02-02
+    part: retest
+    value:
+      en: "Re-test, accordions (NN/g): avoid hiding crucial information within collapsed panels. A monthly charge that renews by itself changes whether Fady joins, so it belongs next to Join."
+      ar: "إعادة اختبار، الـ Accordion (NN/g): تجنّب إخفاء أي معلومة مهمة داخل الأقسام المطويّة. والاشتراك الشهري الذي يتجدّد وحده يغيّر قرار فادي بالاشتراك، فمكانه بجانب «اشترك»."
+    ref: { url: "https://www.nngroup.com/articles/accordions-on-desktop/", quote: "Avoid hiding any crucial information within the collapsed panels." }
+    scenario:
+      en: "Fady is joining a gym through its app. The membership renews and charges his card every month until he cancels. That rule is inside the collapsed **Terms** section, above the **Join** button."
+      ar: "يشترك فادي في نادٍ رياضي من تطبيقه. والاشتراك يتجدّد ويُخصم من بطاقته كل شهر حتى يلغيه. وهذا الشرط داخل قسم **الشروط** المطويّ، فوق زر **اشترك**."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: terms
+    options:
+      - id: terms
+        text: { en: "Keep the rule inside Terms", ar: "أبقِ الشرط داخل «الشروط»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Monthly plan · EGP 600", ar: "اشتراك شهري · 600 جنيه" } }
+            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "What's included", ar: "ما يشمله" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
+            - { kind: button, text: { en: "Join", ar: "اشترك" }, gap: l }
+      - id: open
+        text: { en: "Open Terms by default, with all 12 rules", ar: "افتح «الشروط» تلقائيًا، بقواعدها الـ 12 كلها" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Monthly plan · EGP 600", ar: "اشتراك شهري · 600 جنيه" } }
+            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "What's included", ar: "ما يشمله" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "−" }] }
+            - { kind: small, text: { en: "1. Members must be 16 or older. 2. Bring a towel. 3. Lockers are emptied at closing. 4. Classes must be booked a day ahead. 5. Guests pay a day fee. 6. The plan renews every month…", ar: "1. يجب أن يكون العضو 16 عامًا أو أكثر. 2. أحضر منشفة. 3. تُفرَّغ الخزائن عند الإغلاق. 4. تُحجز الحصص قبلها بيوم. 5. يدفع الضيوف رسم يوم. 6. يتجدّد الاشتراك كل شهر…" }, gap: xs }
+            - { kind: button, text: { en: "Join", ar: "اشترك" }, gap: l }
+      - id: line
+        text: { en: "A line above Join: \"Renews every month until you cancel\"", ar: "سطر فوق «اشترك»: «يتجدّد كل شهر حتى تلغيه»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Monthly plan · EGP 600", ar: "اشتراك شهري · 600 جنيه" } }
+            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "What's included", ar: "ما يشمله" } }, { kind: meta, text: "+" }] }
+            - { kind: divider }
+            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
+            - { kind: small, weight: bold, text: { en: "Renews and charges EGP 600 every month until you cancel.", ar: "يتجدّد ويُخصم 600 جنيه كل شهر حتى تلغيه." }, gap: l }
+            - { kind: button, text: { en: "Join", ar: "اشترك" }, gap: s }
+    answer: [line]
+    misconceptions:
+      - id: MC-P14-018
+        when: [terms]
+        feedback:
+          en: "Fady taps Join without opening Terms, and finds out about the monthly charge on his card statement."
+          ar: "يضغط فادي «اشترك» دون أن يفتح «الشروط»، ويعرف بالخصم الشهري من كشف حساب بطاقته."
+      - id: MC-P14-018
+        when: [open]
+        feedback:
+          en: "The renewal rule is now on screen, but it's rule 6 of 12 in a block of small text. Fady can still skim past it."
+          ar: "صار شرط التجديد على الشاشة، لكنه القاعدة السادسة من 12 في كتلة نص صغير. وما زال فادي قد يمرّ عليه دون أن ينتبه."
+    correct:
+      en: "It changes the decision: a clear line by Join."
+      ar: "يغيّر القرار: سطر واضح بجانب «اشترك»."
+    explain:
+      en: "Right above Join, the one rule that affects his money can't be missed. The other rules can stay in Terms."
+      ar: "فوق «اشترك» مباشرة، لا يمكن أن يفوت الشرط الوحيد الذي يمسّ ماله. ويمكن أن تبقى القواعد الأخرى في «الشروط»."
+
+  - id: S04
+    type: compare
+    skill: SK-P14-U02-02
+    part: retest
+    value:
+      en: "Re-test, accordions (NN/g): valuable content hidden under an accordion may be missed altogether. Learning at the airport that the fare has no checked bag is too late."
+      ar: "إعادة اختبار، الـ Accordion (NN/g): المحتوى المهم المخفي تحت Accordion قد يفوت الناس تمامًا. ومعرفة أن التذكرة بلا حقيبة شحن في المطار متأخرة جدًا."
+    ref: { url: "https://www.nngroup.com/articles/accordions-on-desktop/", quote: "Valuable content that is hidden under an accordion may be missed altogether." }
+    scenario:
+      en: "Shaimaa is booking the cheapest flight to Jeddah. That fare includes only a 7 kg cabin bag, with no checked bag. She's travelling for two weeks."
+      ar: "تحجز شيماء أرخص رحلة إلى جدة. وهذه التذكرة تشمل حقيبة يد 7 كجم فقط، بلا حقيبة شحن. وهي مسافرة لمدة أسبوعين."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: the bag rule inside Fare rules", ar: "النسخة A: شرط الحقيبة داخل «قواعد التذكرة»" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Cairo → Jeddah · EGP 6,300", ar: "القاهرة ← جدة · 6,300 جنيه" } }
+          - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Fare rules", ar: "قواعد التذكرة" } }, { kind: meta, text: "+" }] }
+          - { kind: divider }
+          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Seat", ar: "المقعد" } }, { kind: meta, text: "+" }] }
+          - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: l }
+    b:
+      label: { en: "Version B: \"Cabin bag only\" next to the price", ar: "النسخة B: «حقيبة يد فقط» بجانب السعر" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Cairo → Jeddah · EGP 6,300", ar: "القاهرة ← جدة · 6,300 جنيه" } }
+          - { kind: chip, tone: warn, text: { en: "Cabin bag only (7 kg) · no checked bag", ar: "حقيبة يد فقط (7 كجم) · بلا حقيبة شحن" }, gap: s }
+          - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Fare rules", ar: "قواعد التذكرة" } }, { kind: meta, text: "+" }] }
+          - { kind: divider }
+          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Seat", ar: "المقعد" } }, { kind: meta, text: "+" }] }
+          - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: l }
+    answer: b
+    misconceptions:
+      - id: MC-P14-018
+        when: [a]
+        feedback:
+          en: "Shaimaa sees the low price and taps Continue. She learns about the missing bag only at check-in, when it costs much more."
+          ar: "ترى شيماء السعر المنخفض فتضغط «متابعة». ولا تعرف أن الحقيبة غير مشمولة إلا عند تسجيل الوصول، حين تكلّف أكثر بكثير."
+    correct:
+      en: "B: the rule that changes the choice sits by the price."
+      ar: "B: الشرط الذي يغيّر الاختيار بجانب السعر."
+    explain:
+      en: "Next to the price, Shaimaa sees what the cheap fare leaves out and can pick a fare with a bag for two weeks away."
+      ar: "بجانب السعر، ترى شيماء ما لا تشمله التذكرة الرخيصة، فتستطيع أن تختار تذكرة فيها حقيبة لسفر أسبوعين."
+
+  # SK-P14-U02-03: make one action stand out
+  - id: S05
+    type: tune
+    skill: SK-P14-U02-03
+    part: retest
+    value:
+      en: "Re-test, similarity (NN/g): reserve a separate color for the primary action. Wael came to create an account; giving the filled style to Sign in instead sends most people the wrong way."
+      ar: "إعادة اختبار، مبدأ التشابه (NN/g): خصّص لونًا منفصلًا للإجراء الرئيسي. وجاء وائل لينشئ حسابًا؛ وإعطاء الشكل الممتلئ لـ«سجّل الدخول» بدلًا منه يوجّه أغلب الناس في الاتجاه الخطأ."
+    ref: { url: "https://www.nngroup.com/articles/gestalt-similarity/", quote: "Thus, a separate color should be reserved for primary calls-to-action to help them stand out among secondary buttons." }
+    scenario:
+      en: "Wael has just filled in the sign-up form of a language app. Under the form are **Create account**, outlined, and **I already have an account**, filled."
+      ar: "ملأ وائل للتوّ نموذج التسجيل في تطبيق لتعلّم اللغات. وتحت النموذج **أنشئ حسابًا** بإطار فقط، و**لديّ حساب بالفعل** ممتلئ."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: now
+    options:
+      - id: now
+        text: { en: "Keep it as it is", ar: "أبقِه كما هو" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "wael@mail.com", filled: true }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, gap: s }
+            - { kind: button, emphasis: low, text: { en: "Create account", ar: "أنشئ حسابًا" }, gap: l }
+            - { kind: button, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
+      - id: both
+        text: { en: "Make both filled", ar: "اجعل الاثنين ممتلئين" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "wael@mail.com", filled: true }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, gap: s }
+            - { kind: button, text: { en: "Create account", ar: "أنشئ حسابًا" }, gap: l }
+            - { kind: button, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
+      - id: create
+        text: { en: "Create account filled; the other as a text button", ar: "«أنشئ حسابًا» ممتلئ؛ والآخر زر نصي" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "wael@mail.com", filled: true }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, gap: s }
+            - { kind: button, text: { en: "Create account", ar: "أنشئ حسابًا" }, gap: l }
+            - { kind: button, style: plain, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
+    answer: [create]
+    misconceptions:
+      - id: MC-P14-020
+        when: [now]
+        feedback:
+          en: "Wael just filled in the sign-up form, yet the loudest button leads away from it. The step that finishes what he started looks secondary."
+          ar: "ملأ وائل نموذج التسجيل للتوّ، ومع ذلك يقوده أوضح زر بعيدًا عنه. والخطوة التي تُنهي ما بدأه تبدو ثانوية."
+      - id: MC-P14-019
+        when: [both]
+        feedback:
+          en: "Two filled buttons look equally important, so Wael has to read both to find the one that creates his account."
+          ar: "الزرّان الممتلئان يبدوان متساويين في الأهمية، فعلى وائل أن يقرأ الاثنين ليجد الزر الذي ينشئ حسابه."
+    correct:
+      en: "Filled for the step forward: Create account."
+      ar: "الممتلئ للخطوة إلى الأمام: «أنشئ حسابًا»."
+    explain:
+      en: "Wael's eye lands on Create account, the step that finishes the form. People who already have an account still see the text button."
+      ar: "تقع عين وائل على «أنشئ حسابًا»، الخطوة التي تُنهي النموذج. ومن لديهم حساب ما زالوا يرون الزر النصي."
+
+  - id: S06
+    type: compare
+    skill: SK-P14-U02-03
+    part: retest
+    value:
+      en: "Re-test, similarity (NN/g): same-color buttons are seen as equally important. Three filled buttons in an email editor leave Dalia working out which one sends."
+      ar: "إعادة اختبار، مبدأ التشابه (NN/g): الأزرار ذات اللون نفسه تبدو متساوية في الأهمية. وثلاثة أزرار ممتلئة في محرّر البريد تجعل داليا تحاول أن تعرف أيّها يرسل."
+    ref: { url: "https://www.nngroup.com/articles/gestalt-similarity/", quote: "Same-color buttons will be perceived as sharing the same level of importance." }
+    scenario:
+      en: "Dalia writes a newsletter for her bakery on a website, on her laptop. When it's ready, she wants to send it to her 900 customers."
+      ar: "تكتب داليا نشرة بريدية لمخبزها على موقع، من اللابتوب. وحين تجهز، تريد أن ترسلها إلى عملائها الـ 900."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: Send filled; the others outlined", ar: "النسخة A: «أرسل» ممتلئ؛ والباقي بإطار فقط" }
+      mock:
+        frame: wide
+        blocks:
+          - { kind: heading, text: { en: "New this week: date cookies", ar: "جديد هذا الأسبوع: كعك التمر" } }
+          - { kind: small, text: { en: "To: 900 customers", ar: "إلى: 900 عميل" }, gap: s }
+          - kind: row
+            gap: l
+            blocks:
+              - { kind: button, emphasis: low, text: { en: "Preview", ar: "معاينة" } }
+              - { kind: button, emphasis: low, text: { en: "Send test to me", ar: "أرسل تجربة لي" } }
+              - { kind: button, text: { en: "Send to 900 customers", ar: "أرسل إلى 900 عميل" } }
+    b:
+      label: { en: "Version B: all three filled", ar: "النسخة B: الثلاثة ممتلئة" }
+      mock:
+        frame: wide
+        blocks:
+          - { kind: heading, text: { en: "New this week: date cookies", ar: "جديد هذا الأسبوع: كعك التمر" } }
+          - { kind: small, text: { en: "To: 900 customers", ar: "إلى: 900 عميل" }, gap: s }
+          - kind: row
+            gap: l
+            blocks:
+              - { kind: button, text: { en: "Preview", ar: "معاينة" } }
+              - { kind: button, text: { en: "Send test to me", ar: "أرسل تجربة لي" } }
+              - { kind: button, text: { en: "Send to 900 customers", ar: "أرسل إلى 900 عميل" } }
+    answer: a
+    misconceptions:
+      - id: MC-P14-019
+        when: [b]
+        feedback:
+          en: "Three filled buttons look equally important, and two of them say \"Send\". Dalia has to read carefully to avoid sending the test to all 900 people, or the real email to herself."
+          ar: "ثلاثة أزرار ممتلئة تبدو متساوية في الأهمية، واثنان منها فيهما «أرسل». فعلى داليا أن تقرأ بعناية حتى لا ترسل التجربة إلى الـ 900، أو الرسالة الحقيقية إلى نفسها."
+    correct:
+      en: "A: one filled button, the main action."
+      ar: "A: زر واحد ممتلئ، للإجراء الرئيسي."
+    explain:
+      en: "Only the real send is filled, so it stands apart from Preview and the test. Dalia can't mistake one for the other."
+      ar: "الإرسال الحقيقي وحده ممتلئ، فيتميّز عن «معاينة» والتجربة. ولا يمكن أن تخلط داليا بينهما."
+
+  # SK-P14-U02-04: keep frequent actions in sight
+  - id: S07
+    type: tune
+    skill: SK-P14-U02-04
+    part: retest
+    value:
+      en: "Re-test, contextual menus (NN/g): display single actions, or limited sets, directly when possible, and use menus for low-priority options. Magdy replies to most emails; printing and blocking are rare."
+      ar: "إعادة اختبار، قوائم السياق (NN/g): اعرض الإجراء المفرد، أو المجموعة القليلة، مباشرة حين يمكن، واستخدم القوائم للخيارات قليلة الأهمية. ومجدي يردّ على أغلب الرسائل؛ أما الطباعة والحظر فنادران."
+    ref: { url: "https://www.nngroup.com/articles/contextual-menus-guidelines/", quote: "Display single actions (or limited sets of actions) directly in the interface when possible." }
+    scenario:
+      en: "Magdy reads work email on his phone. He replies to most messages and forwards some. He prints an email or blocks a sender a few times a year."
+      ar: "يقرأ مجدي بريد العمل على هاتفه. ويردّ على أغلب الرسائل ويعيد توجيه بعضها. ويطبع رسالة أو يحظر مُرسلًا مرات قليلة في السنة."
+    prompt:
+      en: "Try each version of the email screen. Which one should ship?"
+      ar: "جرّب كل نسخة من شاشة الرسالة. أيّها يجب أن تُطلق؟"
+    start: all
+    options:
+      - id: all
+        text: { en: "Reply, Forward, Print and Block as four buttons", ar: "«ردّ» و«إعادة توجيه» و«اطبع» و«احظر» كأربعة أزرار" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
+            - { kind: small, text: { en: "From Hala · Please check the numbers before Thursday…", ar: "من هالة · من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: button, emphasis: low, text: { en: "Reply", ar: "ردّ" } }
+                - { kind: button, emphasis: low, text: { en: "Forward", ar: "إعادة توجيه" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: button, emphasis: low, text: { en: "Print", ar: "اطبع" } }
+                - { kind: button, emphasis: low, text: { en: "Block", ar: "احظر" } }
+      - id: two
+        text: { en: "Reply and Forward on screen; Print and Block in ⋯", ar: "«ردّ» و«إعادة توجيه» على الشاشة؛ و«اطبع» و«احظر» في ⋯" }
+        mock:
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
+                - { kind: iconbtn, text: "⋯" }
+            - { kind: small, text: { en: "From Hala · Please check the numbers before Thursday…", ar: "من هالة · من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: button, emphasis: low, text: { en: "Reply", ar: "ردّ" } }
+                - { kind: button, emphasis: low, text: { en: "Forward", ar: "إعادة توجيه" } }
+      - id: menu
+        text: { en: "All four in ⋯", ar: "الأربعة في ⋯" }
+        mock:
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
+                - { kind: iconbtn, text: "⋯" }
+            - { kind: small, text: { en: "From Hala · Please check the numbers before Thursday…", ar: "من هالة · من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
+    answer: [two]
+    misconceptions:
+      - id: MC-P14-022
+        when: [all]
+        feedback:
+          en: "Print and Block are used a few times a year, yet they take the same room as Reply. The screen is busier for every email."
+          ar: "«اطبع» و«احظر» يُستخدمان مرات قليلة في السنة، ومع ذلك يأخذان مساحة «ردّ» نفسها. فتصبح الشاشة أكثر ازدحامًا في كل رسالة."
+      - id: MC-P14-021
+        when: [menu]
+        feedback:
+          en: "Magdy replies to most emails, so he'd open ⋯ for almost every one. Hidden actions get found and used less."
+          ar: "مجدي يردّ على أغلب الرسائل، فسيفتح ⋯ في كل رسالة تقريبًا. والإجراءات المخفية يجدها الناس ويستخدمونها أقل."
+    correct:
+      en: "Often used: on screen. Rare: in ⋯."
+      ar: "المتكرّر: على الشاشة. والنادر: في ⋯."
+    explain:
+      en: "Reply and Forward are one tap away on every email. Print and Block wait in ⋯ for the few times a year Magdy needs them."
+      ar: "«ردّ» و«إعادة توجيه» على بُعد ضغطة في كل رسالة. و«اطبع» و«احظر» ينتظران في ⋯ للمرات القليلة في السنة التي يحتاجهما فيها مجدي."
+
+  - id: S08
+    type: compare
+    skill: SK-P14-U02-04
+    part: retest
+    value:
+      en: "Re-test, contextual menus (NN/g): menus aren't for actions people rely on frequently. Yasmin adds songs to playlists many times a day, so that action stays visible on each song."
+      ar: "إعادة اختبار، قوائم السياق (NN/g): القوائم ليست للإجراءات التي يعتمد عليها الناس كثيرًا. وياسمين تضيف أغاني إلى قوائمها مرات كثيرة في اليوم، فيبقى هذا الإجراء ظاهرًا في كل أغنية."
+    ref: { url: "https://www.nngroup.com/articles/contextual-menus-guidelines/", quote: "Contextual menus are not appropriate for actions users rely on frequently." }
+    scenario:
+      en: "Yasmin uses a music app. She adds songs to her playlists many times a day. Sharing a song or viewing its credits is rare."
+      ar: "تستخدم ياسمين تطبيق موسيقى. وتضيف أغاني إلى قوائم تشغيلها مرات كثيرة في اليوم. أما مشاركة أغنية أو عرض بياناتها فنادر."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: everything in ⋯", ar: "النسخة A: كل شيء في ⋯" }
+      mock:
+        width: 260
+        blocks:
+          - kind: row
+            blocks:
+              - { kind: text, weight: bold, text: { en: "Morning song", ar: "أغنية الصباح" } }
+              - { kind: iconbtn, text: "⋯" }
+          - { kind: meta, text: { en: "Band Nour · 3:42", ar: "فرقة نور · 3:42" }, gap: xs }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: text, weight: bold, text: { en: "Old street", ar: "الشارع القديم" } }
+              - { kind: iconbtn, text: "⋯" }
+          - { kind: meta, text: { en: "Salma Adel · 4:10", ar: "سلمى عادل · 4:10" }, gap: xs }
+    b:
+      label: { en: "Version B: \"＋ Add\" on each song; the rest in ⋯", ar: "النسخة B: «＋ أضف» في كل أغنية؛ والباقي في ⋯" }
+      mock:
+        width: 260
+        blocks:
+          - kind: row
+            blocks:
+              - { kind: text, weight: bold, text: { en: "Morning song", ar: "أغنية الصباح" } }
+              - { kind: chip, text: { en: "＋ Add", ar: "＋ أضف" } }
+              - { kind: iconbtn, text: "⋯" }
+          - { kind: meta, text: { en: "Band Nour · 3:42", ar: "فرقة نور · 3:42" }, gap: xs }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: text, weight: bold, text: { en: "Old street", ar: "الشارع القديم" } }
+              - { kind: chip, text: { en: "＋ Add", ar: "＋ أضف" } }
+              - { kind: iconbtn, text: "⋯" }
+          - { kind: meta, text: { en: "Salma Adel · 4:10", ar: "سلمى عادل · 4:10" }, gap: xs }
+    answer: b
+    misconceptions:
+      - id: MC-P14-021
+        when: [a]
+        feedback:
+          en: "Yasmin adds songs many times a day, so she'd open ⋯ every time. The action she uses most is the one she has to dig for."
+          ar: "تضيف ياسمين أغاني مرات كثيرة في اليوم، فستفتح ⋯ في كل مرة. والإجراء الذي تستخدمه أكثر هو الذي عليها أن تبحث عنه."
+    correct:
+      en: "B: the frequent action stays in sight."
+      ar: "B: الإجراء المتكرّر يبقى ظاهرًا."
+    explain:
+      en: "Adding a song is one tap on every row. Share and credits stay in ⋯, close but out of the way."
+      ar: "إضافة أغنية على بُعد ضغطة في كل صف. والمشاركة والبيانات تبقى في ⋯، قريبة لكن بعيدة عن الطريق."
+
+  # SK-P14-U02-05: float only the screen's main action
+  - id: S09
+    type: tune
+    skill: SK-P14-U02-05
+    part: retest
+    value:
+      en: "Re-test, floating buttons and icons (NN/g): one floating button for the main action, and icon labels visible at all times. A ⇄ icon alone could mean transfer or exchange rates, and a second floating button for bills only competes."
+      ar: "إعادة اختبار، الأزرار العائمة والأيقونات (NN/g): زر عائم واحد للإجراء الرئيسي، وتسميات الأيقونات ظاهرة دائمًا. وأيقونة ⇄ وحدها قد تعني التحويل أو أسعار الصرف، وزر عائم ثانٍ للفواتير لا يفعل إلا المنافسة."
+    ref: { url: "https://www.nngroup.com/articles/icon-usability/", quote: "Icon labels should be visible at all times, without any interaction from the user." }
+    scenario:
+      en: "Osama's banking app home screen. Most people open it to send money to someone. Paying bills is less common and has its own tab."
+      ar: "الشاشة الرئيسية في تطبيق البنك لأسامة. وأغلب الناس يفتحونه ليحوّلوا مالًا لشخص ما. ودفع الفواتير أقل شيوعًا وله تبويب خاص."
+    prompt:
+      en: "Try each floating button. Which one should ship?"
+      ar: "جرّب كل زر عائم. أيّه يجب أن يُطلق؟"
+    start: icon
+    options:
+      - id: label
+        text: { en: "\"⇄ Transfer\"", ar: "«⇄ حوّل»" }
+        mock:
+          width: 300
+          fab: { icon: "⇄", text: { en: "Transfer", ar: "حوّل" } }
+          blocks: &bank
+            - { kind: meta, text: { en: "Current account", ar: "الحساب الجاري" } }
+            - { kind: title, text: { en: "EGP 18,240", ar: "18,240 جنيه" }, gap: xs }
+            - { kind: text, weight: bold, text: { en: "Recent", ar: "آخر العمليات" }, gap: l }
+            - { kind: meta, text: { en: "Supermarket · −EGP 640", ar: "سوبر ماركت · −640 جنيه" }, gap: s }
+            - { kind: meta, text: { en: "Salary · +EGP 15,000", ar: "الراتب · +15,000 جنيه" }, gap: s }
+      - id: icon
+        text: { en: "\"⇄\" alone", ar: "«⇄» وحدها" }
+        mock:
+          width: 300
+          fab: { icon: "⇄" }
+          blocks: *bank
+      - id: two
+        text: { en: "Two floating buttons: \"⇄ Transfer\" and \"🧾 Pay bills\"", ar: "زرّان عائمان: «⇄ حوّل» و«🧾 ادفع الفواتير»" }
+        mock:
+          width: 300
+          fab: [{ icon: "⇄", text: { en: "Transfer", ar: "حوّل" } }, { icon: "🧾", text: { en: "Pay bills", ar: "ادفع الفواتير" } }]
+          blocks: *bank
+    answer: [label]
+    misconceptions:
+      - id: MC-P14-024
+        when: [icon]
+        feedback:
+          en: "⇄ could mean transfer, exchange rates or switching accounts. With money involved, people won't tap a button they have to guess about."
+          ar: "⇄ قد تعني التحويل أو أسعار الصرف أو التبديل بين الحسابات. ومع المال، لن يضغط الناس زرًا عليهم أن يخمّنوا وظيفته."
+      - id: MC-P14-023
+        when: [two]
+        feedback:
+          en: "Two floating buttons compete and cover the recent payments. Bills already have their own tab."
+          ar: "زرّان عائمان يتنافسان ويغطّيان آخر العمليات. والفواتير لها تبويب خاص أصلًا."
+    correct:
+      en: "One floating button, clearly labeled."
+      ar: "زر عائم واحد، بتسمية واضحة."
+    explain:
+      en: "\"Transfer\" says exactly what the main action is, and nothing else floats over the account."
+      ar: "«حوّل» تقول بالضبط ما الإجراء الرئيسي، ولا شيء آخر يطفو فوق الحساب."
+
+  - id: S10
+    type: tune
+    skill: SK-P14-U02-05
+    part: retest
+    value:
+      en: "Re-test, floating buttons (NN/g glossary): for the most commonly used and important action on the screen. In a shopping list, that's adding an item; sharing and deleting the list are rare."
+      ar: "إعادة اختبار، الأزرار العائمة (مسرد NN/g): للإجراء الأكثر استخدامًا وأهمية في الشاشة. وفي قائمة المشتريات، هذا الإجراء هو إضافة منتج؛ أما مشاركة القائمة وحذفها فنادران."
+    ref: { url: "https://www.nngroup.com/articles/ui-elements-glossary/", quote: "A floating button is typically used for the most commonly used and important action on the screen." }
+    scenario:
+      en: "Nermeen keeps a shopping list in an app. She adds items all week. She shares the list with her husband now and then, and deletes it once a month."
+      ar: "تحتفظ نرمين بقائمة مشتريات في تطبيق. وتضيف منتجات طوال الأسبوع. وتشارك القائمة مع زوجها من حين لآخر، وتحذفها مرة في الشهر."
+    prompt:
+      en: "Try each floating button. Which one should ship?"
+      ar: "جرّب كل زر عائم. أيّه يجب أن يُطلق؟"
+    start: share
+    options:
+      - id: share
+        text: { en: "\"↗ Share list\"", ar: "«↗ شارك القائمة»" }
+        mock:
+          width: 300
+          fab: { icon: "↗", text: { en: "Share list", ar: "شارك القائمة" } }
+          blocks: &list
+            - { kind: title, text: { en: "This week", ar: "هذا الأسبوع" } }
+            - { kind: check, text: { en: "Milk", ar: "لبن" }, gap: m }
+            - { kind: check, text: { en: "Tomatoes", ar: "طماطم" }, gap: s }
+            - { kind: check, selected: true, text: { en: "Bread", ar: "عيش" }, gap: s }
+      - id: add
+        text: { en: "\"＋ Add item\"", ar: "«＋ أضف منتجًا»" }
+        mock:
+          width: 300
+          fab: { icon: "＋", text: { en: "Add item", ar: "أضف منتجًا" } }
+          blocks: *list
+      - id: delete
+        text: { en: "\"🗑 Delete list\"", ar: "«🗑 احذف القائمة»" }
+        mock:
+          width: 300
+          fab: { icon: "🗑", text: { en: "Delete list", ar: "احذف القائمة" } }
+          blocks: *list
+    answer: [add]
+    misconceptions:
+      - id: MC-P14-023
+        when: [share, delete]
+        feedback:
+          en: "Nermeen does this rarely, yet it takes the button that's always in reach. A floating Delete is also one slip away from losing the whole list."
+          ar: "نرمين تفعل هذا نادرًا، ومع ذلك يأخذ الزر الذي يبقى دائمًا في المتناول. وزر «احذف» العائم قد يُضيّع القائمة كلها بضغطة خاطئة."
+    correct:
+      en: "Her most common action: add an item."
+      ar: "إجراؤها الأكثر تكرارًا: أضف منتجًا."
+    explain:
+      en: "Adding is what Nermeen does all week, so it floats. Sharing and deleting can live in the menu."
+      ar: "الإضافة هي ما تفعله نرمين طوال الأسبوع، لذلك هي العائمة. ويمكن أن تكون المشاركة والحذف في القائمة."

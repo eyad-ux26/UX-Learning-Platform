@@ -103,6 +103,10 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .clip{margin:4px 0 14px}.clip video{width:100%;max-height:60vh;border-radius:12px;background:#000;display:block}
 .clip .who{font-size:13px;color:var(--muted);margin:6px 0 0}.clip details{margin-top:8px}.clip details p{font-size:14px;line-height:1.7}
 .mock.has-ov{position:relative;overflow:hidden;min-height:400px}
+.mock.has-fab{position:relative;padding-bottom:84px}
+.mock .k-fab{position:absolute;inset-inline-end:16px;bottom:16px;height:56px;min-width:56px;border-radius:18px;background:var(--mock-brand);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px rgba(0,0,0,.22);font-size:22px;line-height:1}
+.mock .k-fab.ext{padding:0 18px}.mock .k-fab b{font-size:15px;font-weight:600}
+.mock .k-fab.n2{bottom:84px}.mock .k-fab.n3{bottom:152px}
 .mock .scrim{position:absolute;inset:0;background:rgba(20,20,30,.45)}
 .mock .ov{position:absolute;background:var(--mock-bg);color:var(--mock-ink);box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px}
 .mock .ov-dialog{left:8%;right:8%;top:50%;transform:translateY(-50%);border-radius:16px}
@@ -475,7 +479,9 @@ function mockBlocks(blocks, opts){
 }
 /* an overlay on top of the screen: a dialog, a bottom sheet or a snackbar (toast) */
 const overlay = o => !o ? "" : `${(o.scrim ?? (o.type === "dialog" || o.type === "sheet")) ? `<div class="scrim" aria-hidden="true"></div>` : ""}<div class="ov ov-${o.type}" role="${o.type === "toast" ? "status" : "dialog"}">${o.type === "sheet" && o.handle !== false ? `<div class="grab" aria-hidden="true"></div>` : ""}${o.close ? `<span class="ovx" aria-label="Close">✕</span>` : ""}${mockBlocks(o.blocks)}</div>`;
-const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}${m.overlay?" has-ov":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}${overlay(m.overlay)}</div>` : "";
+/* floating action buttons: one or more, stacked from the bottom corner; `text` makes it an extended FAB */
+const fabs = f => !f ? "" : [].concat(f).map((x, i) => `<div class="k-fab${x.text ? " ext" : ""}${i ? ` n${i + 1}` : ""}" aria-hidden="true"><span>${esc(x.icon || "+")}</span>${x.text ? `<b>${esc(tx(x.text))}</b>` : ""}</div>`).join("");
+const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}${m.overlay?" has-ov":""}${m.fab?" has-fab":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}${fabs(m.fab)}${overlay(m.overlay)}</div>` : "";
 /* a source link that opens the article with the supporting passage highlighted (URL text fragment) */
 const fragUrl = r => r.quote ? `${r.url}#:~:text=${encodeURIComponent(r.quote).replace(/-/g, "%2D")}` : r.url;
 const srcTitle = (url, lessons) => { for (const l of lessons) { const x = (l.sources||[]).find(x => x.url === url); if (x) return tx(x.title); } return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]; };
