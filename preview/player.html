@@ -599,7 +599,7 @@ function render(){
   $("#langBtn").textContent = u().lang;
   $("#homeBtn").textContent = u().home;
   document.body.classList.toggle("board", view.screen === "board");
-  $("#boardBtn").hidden = view.screen !== "home";
+  $("#boardBtn").hidden = view.screen !== "home"; $("#boardBtn").textContent = bd().board;
   if (view.screen === "board") return renderBoard();
   if (view.screen === "home") return renderHome();
   if (view.screen === "summary") return renderSummary();
@@ -901,7 +901,7 @@ function renderSummary(){
   $("#fb").innerHTML = "";
   const row = $("#actionRow"); row.innerHTML = ""; $("#actions").hidden = false;
   const nxt = L.kind === "lesson" ? nextLesson() : null;
-  row.append(btn(L.back === "board" ? "Back to the board" : u().back, goHome));
+  row.append(btn(L.back === "board" ? bd().backBoard : u().back, goHome));
   if ((check || L.kind === "mastery") && waiting) row.append(btn(u().masteryGo(waiting), () => startMastery(L.pi, L.ui), true));
   else if (nxt) row.append(btn(u().next, () => startLesson(...nxt), true));
 }
@@ -923,8 +923,47 @@ function goHome(){
 const B = {
   sum: (a, f) => a.reduce((n, x) => n + f(x), 0),
   pct: (a, b) => b ? Math.round(a / b * 100) : 0,
-  roleName: {lesson: "Lesson", check: "Skill check", retest: "Re-test"},
 };
+/* board wording in both languages; counts in Arabic sit after a colon to avoid number agreement */
+const BD = {
+  en:{board:"Board", lessons:"Lessons", title:"Control board", allPaths:"All paths", backBoard:"Back to the board",
+      find:"Find an activity", findPh:"Find an activity, scenario or ID", browse:"Paths, units and skills",
+      reset:"Clear my test runs", sure:"Press again to clear them", nothing:"Nothing here.", backAll:"Back to all paths", unitOverview:"Unit overview",
+      lede:"Every path, unit, skill and activity, counted from the lesson files. A skill is <b>ready</b> when it has at least 4 versions in 4 different scenarios, with 2 or more held back for re-tests. Test-run numbers come from activities played in this browser.",
+      paths:"Paths", units:"Units", skills:"Skills", activities:"Activities", lessonsT:"Lessons", inLessonsChecks:"in lessons and skill checks", lessonsChecks:"lessons and skill checks",
+      retestVersions:"Re-test versions", skillsReady:"Skills ready", path:"Path", unit:"Unit", skill:"Skill", retests:"Re-tests", runs:"Your test runs",
+      versions:"Versions", scenarios:"Scenarios", coverage:"Coverage", noneYet:"None yet",
+      triedRight:(a,b)=>`${a} tried, ${b} right first time`, triedMastered:(a,b)=>`${a} tried, ${b} skills mastered`,
+      minTotal:m=>`${m} min in total`, mistakes:"Mistakes tracked", mcIds:"misconception IDs", sources:"Sources", quotePct:n=>`${n}% of activities quote one`,
+      untagged:n=>`${n} activities have no skill yet.`, triedByYou:"Tried by you", rightFirst:n=>`${n} right first time`,
+      inLessons:"In lessons", inCheck:"In the skill check", heldBack:"Held back for re-tests", lcr:"L: in lessons. C: in the skill check. R: held back for the mastery round.",
+      posTitle:"Where the right answer sits", posNote:"Options appear in the order they're written, so this should stay roughly even.", typesTitle:"Activity types",
+      retestsOnly:"re-tests only", nActs:n=>`${n} activities`, rightSuffix:" · right answer", startScreen:"Starting screen", rightAnswer:"Right answer",
+      answer:"answer", rightFirstTime:"Right first time", missed:"Missed", nRuns:n=>`${n} run${n === 1 ? "" : "s"}`,
+      details:"Screens, answer and source", teaches:"What it teaches.", source:"Source.", noQuote:"No source quote yet.", catches:"Mistakes it catches.", play:"Play this activity",
+      split:(a,b,c)=>`${a} lesson · ${b} check · ${c} re-test`, needs:"needs 4 versions, 4 scenarios, 2 re-tests", triedOf:(a,n,r)=>`${a} of ${n} tried, ${r} right first time`,
+      ready:"Ready", needMore:n=>`Needs ${n} more`, results:q=>`Results for “${q}”`, nHits:n=>`${n} activit${n === 1 ? "y" : "ies"}`, first40:", showing the first 40", of:(a,b)=>`${a} of ${b}`,
+      role:{lesson:"Lesson", check:"Skill check", retest:"Re-test"}, type:{tune:"tune", compare:"compare", order:"order", card:"card"}},
+  ar:{board:"اللوحة", lessons:"الدروس", title:"لوحة التحكم بالمحتوى", allPaths:"كل المسارات", backBoard:"العودة إلى اللوحة",
+      find:"ابحث عن نشاط", findPh:"ابحث عن نشاط أو سيناريو أو ID", browse:"المسارات والوحدات والمهارات",
+      reset:"امسح تجاربي", sure:"اضغط مرة أخرى للمسح", nothing:"لا يوجد شيء هنا.", backAll:"العودة إلى كل المسارات", unitOverview:"نظرة عامة على الوحدة",
+      lede:"كل مسار ووحدة ومهارة ونشاط، محسوبة من ملفات الدروس. تكون المهارة <b>جاهزة</b> عندما يكون لها 4 نسخ على الأقل في 4 سيناريوهات مختلفة، منها نسختان أو أكثر محجوزة لإعادة الاختبار. أرقام التجارب تأتي من الأنشطة التي جرّبتها في هذا المتصفح.",
+      paths:"المسارات", units:"الوحدات", skills:"المهارات", activities:"الأنشطة", lessonsT:"الدروس", inLessonsChecks:"في الدروس واختبارات المهارة", lessonsChecks:"الدروس واختبارات المهارة",
+      retestVersions:"نسخ إعادة الاختبار", skillsReady:"المهارات الجاهزة", path:"المسار", unit:"الوحدة", skill:"المهارة", retests:"إعادة الاختبار", runs:"تجاربك",
+      versions:"النسخ", scenarios:"السيناريوهات", coverage:"التغطية", noneYet:"لا شيء بعد",
+      triedRight:(a,b)=>`جرّبت: ${a}، صحيحة من أول مرة: ${b}`, triedMastered:(a,b)=>`جرّبت: ${a}، مهارات أتقنتها: ${b}`,
+      minTotal:m=>`المدة الكلية: ${m} دقيقة`, mistakes:"الأخطاء المتتبَّعة", mcIds:"معرّفات الأخطاء الشائعة (misconception IDs)", sources:"المصادر", quotePct:n=>`${n}% من الأنشطة تقتبس من مصدر`,
+      untagged:n=>`أنشطة بلا مهارة بعد: ${n}`, triedByYou:"جرّبتها أنت", rightFirst:n=>`صحيحة من أول مرة: ${n}`,
+      inLessons:"في الدروس", inCheck:"في اختبار المهارة", heldBack:"محجوزة لإعادة الاختبار", lcr:"L: في الدروس. C: في اختبار المهارة. R: محجوزة لجولة الإتقان.",
+      posTitle:"موضع الإجابة الصحيحة", posNote:"تظهر الخيارات بالترتيب الذي كُتبت به، لذا يجب أن يبقى هذا التوزيع متقاربًا.", typesTitle:"أنواع الأنشطة",
+      retestsOnly:"إعادة اختبار فقط", nActs:n=>`الأنشطة: ${n}`, rightSuffix:" · الإجابة الصحيحة", startScreen:"الشاشة الأولى", rightAnswer:"الإجابة الصحيحة",
+      answer:"الإجابة", rightFirstTime:"صحيحة من أول مرة", missed:"أخطأت فيها", nRuns:n=>`المحاولات: ${n}`,
+      details:"الشاشات والإجابة والمصدر", teaches:"ماذا يعلّم.", source:"المصدر.", noQuote:"لا يوجد اقتباس من مصدر بعد.", catches:"الأخطاء التي يكشفها.", play:"جرّب هذا النشاط",
+      split:(a,b,c)=>`درس: ${a} · اختبار: ${b} · إعادة: ${c}`, needs:"تحتاج 4 نسخ و4 سيناريوهات ونسختين لإعادة الاختبار", triedOf:(a,n,r)=>`جرّبت ${a} من ${n}، صحيحة من أول مرة: ${r}`,
+      ready:"جاهزة", needMore:n=>`ينقصها: ${n}`, results:q=>`نتائج البحث عن «${q}»`, nHits:n=>`الأنشطة: ${n}`, first40:"، تظهر أول 40", of:(a,b)=>`${a} من ${b}`,
+      role:{lesson:"درس", check:"اختبار مهارة", retest:"إعادة اختبار"}, type:{tune:"جرّب وعدّل (tune)", compare:"قارن (compare)", order:"رتّب (order)", card:"بطاقة (card)"}},
+};
+const bd = () => BD[lang];
 function skillStats(un, sk, vs){
   const v = vs.filter(x => x.s.skill === sk.id), sc = new Set(v.map(x => x.scen)).size, re = v.filter(x => x.role === "retest").length;
   return {sk, v, n: v.length, sc, re, lesson: v.filter(x => x.role === "lesson").length, check: v.filter(x => x.role === "check").length,
@@ -957,9 +996,9 @@ function answerPos(s){
   const k = s.options.findIndex(o => s.answer.includes(o.id));
   return k < 0 ? "" : "ABCDEFG"[k];
 }
-const meter = (a, b) => `<span class="bd-meter" role="img" aria-label="${a} of ${b}"><i style="width:${B.pct(a, b)}%"></i></span>`;
+const meter = (a, b) => `<span class="bd-meter" role="img" aria-label="${bd().of(a, b)}"><i style="width:${B.pct(a, b)}%"></i></span>`;
 const pill = (t, cls) => `<span class="bd-pill ${cls}">${t}</span>`;
-const readyPill = x => x.ready ? pill("Ready", "ok") : pill(`Needs ${x.need} more`, "warn");
+const readyPill = x => x.ready ? pill(bd().ready, "ok") : pill(bd().needMore(x.need), "warn");
 const tile = (n, label, sub) => `<div class="bd-tile"><b>${n}</b><span>${label}</span>${sub ? `<small>${sub}</small>` : ""}</div>`;
 const link = (route, label) => `<a href="#board${route ? "-" + route : ""}" data-route="${route}">${label}</a>`;
 const findUnit = id => { for (const p of CONTENT.paths) for (const un of p.units) if (un.id === id) return {p, un}; };
@@ -975,13 +1014,13 @@ function boardTree(route){
   return CONTENT.paths.map(p => `<div class="bd-tp">${link(p.id, `<b>${esc(p.id)}</b> ${esc(tx(p.title))}`)}${p.units.map(un => {
     const st = unitStats(un), open = route.includes(un.id);
     return `<details class="bd-tu"${open ? " open" : ""}><summary><span>${esc(un.id.slice(4))} · ${esc(tx(un.title))}</span><span class="bd-mini">${st.ready}/${st.skills}</span></summary>
-      ${link(un.id, "Unit overview")}${st.per.map(x => `<a href="#board-${x.sk.id}" data-route="${x.sk.id}" class="bd-ts${route === x.sk.id ? " on" : ""}"><i class="bd-dot ${x.ready ? "ok" : "warn"}" aria-hidden="true"></i>${esc(tx(x.sk.title))}</a>`).join("")}</details>`;
+      ${link(un.id, bd().unitOverview)}${st.per.map(x => `<a href="#board-${x.sk.id}" data-route="${x.sk.id}" class="bd-ts${route === x.sk.id ? " on" : ""}"><i class="bd-dot ${x.ready ? "ok" : "warn"}" aria-hidden="true"></i>${esc(tx(x.sk.title))}</a>`).join("")}</details>`;
   }).join("")}</div>`).join("");
 }
 function renderBoard(){
   const route = view.route || "", q = (B.q || "").trim();
-  $("#homeBtn").hidden = false; $("#homeBtn").textContent = "Lessons"; $("#barWrap").hidden = true; $("#actions").hidden = true; $("#fb").innerHTML = "";
-  $("#crumb").textContent = `Control board${BUILD ? " · " + BUILD : ""}`;
+  $("#homeBtn").hidden = false; $("#homeBtn").textContent = bd().lessons; $("#barWrap").hidden = true; $("#actions").hidden = true; $("#fb").innerHTML = "";
+  $("#crumb").textContent = `${bd().title}${BUILD ? " · " + BUILD.replace("All paths", bd().allPaths) : ""}`;
   let main;
   if (q) main = boardSearch(q);
   else if (route.startsWith("SK-")) main = boardSkill(findSkill(route));
@@ -989,72 +1028,72 @@ function renderBoard(){
   else if (/^P\d{2}$/.test(route)) main = boardPath(CONTENT.paths.find(p => p.id === route));
   else main = boardHome();
   $("#main").innerHTML = `<div class="bd">
-    <aside class="bd-side"><label class="bd-search"><span class="sr">Find an activity</span><input id="bdq" type="search" placeholder="Find an activity, scenario or ID" value="${esc(q)}"></label>
-      <details class="bd-browse"${matchMedia("(max-width:860px)").matches ? "" : " open"}><summary>Paths, units and skills</summary><nav aria-label="Paths, units and skills">${boardTree(route)}</nav></details>
-      <button type="button" class="bd-reset" id="bdReset">Clear my test runs</button></aside>
-    <section class="bd-main">${main || `<p>Nothing here. ${link("", "Back to all paths")}</p>`}</section></div>`;
+    <aside class="bd-side"><label class="bd-search"><span class="sr">${bd().find}</span><input id="bdq" type="search" placeholder="${bd().findPh}" value="${esc(q)}"></label>
+      <details class="bd-browse"${matchMedia("(max-width:860px)").matches ? "" : " open"}><summary>${bd().browse}</summary><nav aria-label="${bd().browse}">${boardTree(route)}</nav></details>
+      <button type="button" class="bd-reset" id="bdReset">${bd().reset}</button></aside>
+    <section class="bd-main">${main || `<p>${bd().nothing} ${link("", bd().backAll)}</p>`}</section></div>`;
   document.querySelectorAll("#main [data-route]").forEach(a => a.onclick = e => { e.preventDefault(); B.q = ""; openBoard(a.dataset.route); });
   document.querySelectorAll("#main [data-play]").forEach(b => b.onclick = () => playOne(b.dataset.play));
   const qi = $("#bdq"); qi.oninput = () => { B.q = qi.value; const pos = qi.selectionStart; renderBoard(); const n = $("#bdq"); n.focus(); n.setSelectionRange(pos, pos); };
-  $("#bdReset").onclick = () => { const b = $("#bdReset"); if (b.dataset.sure) { PROG = {}; saveProg(); renderBoard(); } else { b.dataset.sure = 1; b.textContent = "Press again to clear them"; } };
+  $("#bdReset").onclick = () => { const b = $("#bdReset"); if (b.dataset.sure) { PROG = {}; saveProg(); renderBoard(); } else { b.dataset.sure = 1; b.textContent = bd().sure; } };
 }
-const crumbs = parts => `<p class="bd-crumbs">${[link("", "All paths"), ...parts].join(' <span aria-hidden="true">›</span> ')}</p>`;
+const crumbs = parts => `<p class="bd-crumbs">${[link("", bd().allPaths), ...parts].join(' <span aria-hidden="true">›</span> ')}</p>`;
 function boardHome(){
   const ps = CONTENT.paths.map(pathStats), t = k => B.sum(ps, x => x[k]);
-  return `<h1 class="bd-h1">Control board</h1><p class="sub bd-lede">Every path, unit, skill and activity, counted from the lesson files. A skill is <b>ready</b> when it has at least 4 versions in 4 different scenarios, with 2 or more held back for re-tests. Test-run numbers come from activities played in this browser.</p>
-    <div class="bd-tiles">${tile(ps.length, "Paths")}${tile(B.sum(ps, x => x.p.units.length), "Units")}${tile(t("skills"), "Skills")}${tile(t("activities"), "Activities", "in lessons and skill checks")}${tile(t("retests"), "Re-test versions")}${tile(`${t("ready")}/${t("skills")}`, "Skills ready", `${B.pct(t("ready"), t("skills"))}%`)}</div>
-    <h2>Paths</h2><div class="bd-table-wrap"><table class="bd-table"><thead><tr><th>Path</th><th>Units</th><th>Lessons</th><th>Skills</th><th>Activities</th><th>Re-tests</th><th>Skills ready</th><th>Your test runs</th></tr></thead><tbody>
-    ${ps.map(x => `<tr><td>${link(x.p.id, `<b>${esc(x.p.id)}</b> ${esc(tx(x.p.title))}`)}</td><td>${x.p.units.length}</td><td>${x.lessons}</td><td>${x.skills}</td><td>${x.activities}</td><td>${x.retests}</td><td class="bd-nw">${meter(x.ready, x.skills)} ${x.ready}/${x.skills}</td><td>${x.tested ? `${x.tested} tried, ${x.right} right first time` : "None yet"}</td></tr>`).join("")}
+  return `<h1 class="bd-h1">${bd().title}</h1><p class="sub bd-lede">${bd().lede}</p>
+    <div class="bd-tiles">${tile(ps.length, bd().paths)}${tile(B.sum(ps, x => x.p.units.length), bd().units)}${tile(t("skills"), bd().skills)}${tile(t("activities"), bd().activities, bd().inLessonsChecks)}${tile(t("retests"), bd().retestVersions)}${tile(`${t("ready")}/${t("skills")}`, bd().skillsReady, `${B.pct(t("ready"), t("skills"))}%`)}</div>
+    <h2>${bd().paths}</h2><div class="bd-table-wrap"><table class="bd-table"><thead><tr><th>${bd().path}</th><th>${bd().units}</th><th>${bd().lessonsT}</th><th>${bd().skills}</th><th>${bd().activities}</th><th>${bd().retests}</th><th>${bd().skillsReady}</th><th>${bd().runs}</th></tr></thead><tbody>
+    ${ps.map(x => `<tr><td>${link(x.p.id, `<b>${esc(x.p.id)}</b> ${esc(tx(x.p.title))}`)}</td><td>${x.p.units.length}</td><td>${x.lessons}</td><td>${x.skills}</td><td>${x.activities}</td><td>${x.retests}</td><td class="bd-nw">${meter(x.ready, x.skills)} ${x.ready}/${x.skills}</td><td>${x.tested ? bd().triedRight(x.tested, x.right) : bd().noneYet}</td></tr>`).join("")}
     </tbody></table></div>`;
 }
 function boardPath(p){
   if (!p) return "";
   const x = pathStats(p);
   return crumbs([esc(p.id)]) + `<h1 class="bd-h1">${esc(tx(p.title))}</h1><p class="sub">${esc(tx(p.subtitle))}</p>
-    <div class="bd-tiles">${tile(p.units.length, "Units")}${tile(x.lessons, "Lessons", `${x.minutes} min in total`)}${tile(x.skills, "Skills")}${tile(x.activities, "Activities", "lessons and skill checks")}${tile(x.retests, "Re-test versions")}${tile(`${x.ready}/${x.skills}`, "Skills ready", `${B.pct(x.ready, x.skills)}%`)}${tile(x.mcs, "Mistakes tracked", "misconception IDs")}${tile(x.srcs, "Sources", `${B.pct(x.refs, x.versions)}% of activities quote one`)}</div>
-    ${x.untagged ? `<p class="bd-alert">${x.untagged} activities have no skill yet.</p>` : ""}
-    <h2>Units</h2><div class="bd-table-wrap"><table class="bd-table"><thead><tr><th>Unit</th><th>Lessons</th><th>Skills</th><th>Activities</th><th>Re-tests</th><th>Skills ready</th><th>Your test runs</th></tr></thead><tbody>
-    ${x.us.map(s => `<tr><td>${link(s.un.id, `<b>${esc(s.un.id.slice(4))}</b> ${esc(tx(s.un.title))}`)}${s.un.free ? ` ${pill("Free", "ok")}` : ""}</td><td>${s.lessons}</td><td>${s.skills || "—"}</td><td>${s.activities}</td><td>${s.retests}</td><td class="bd-nw">${meter(s.ready, s.skills)} ${s.ready}/${s.skills}</td><td>${s.tested ? `${s.tested} tried, ${s.mastered} skills mastered` : "None yet"}</td></tr>`).join("")}
+    <div class="bd-tiles">${tile(p.units.length, bd().units)}${tile(x.lessons, bd().lessonsT, bd().minTotal(x.minutes))}${tile(x.skills, bd().skills)}${tile(x.activities, bd().activities, bd().lessonsChecks)}${tile(x.retests, bd().retestVersions)}${tile(`${x.ready}/${x.skills}`, bd().skillsReady, `${B.pct(x.ready, x.skills)}%`)}${tile(x.mcs, bd().mistakes, bd().mcIds)}${tile(x.srcs, bd().sources, bd().quotePct(B.pct(x.refs, x.versions)))}</div>
+    ${x.untagged ? `<p class="bd-alert">${bd().untagged(x.untagged)}</p>` : ""}
+    <h2>${bd().units}</h2><div class="bd-table-wrap"><table class="bd-table"><thead><tr><th>${bd().unit}</th><th>${bd().lessonsT}</th><th>${bd().skills}</th><th>${bd().activities}</th><th>${bd().retests}</th><th>${bd().skillsReady}</th><th>${bd().runs}</th></tr></thead><tbody>
+    ${x.us.map(s => `<tr><td>${link(s.un.id, `<b>${esc(s.un.id.slice(4))}</b> ${esc(tx(s.un.title))}`)}${s.un.free ? ` ${pill(u().free, "ok")}` : ""}</td><td>${s.lessons}</td><td>${s.skills || "—"}</td><td>${s.activities}</td><td>${s.retests}</td><td class="bd-nw">${meter(s.ready, s.skills)} ${s.ready}/${s.skills}</td><td>${s.tested ? bd().triedMastered(s.tested, s.mastered) : bd().noneYet}</td></tr>`).join("")}
     </tbody></table></div>`;
 }
 function boardUnit(f){
   if (!f) return "";
   const {p, un} = f, x = unitStats(un), posMax = Math.max(1, ...Object.values(x.pos));
   return crumbs([link(p.id, esc(p.id)), esc(un.id)]) + `<h1 class="bd-h1">${esc(tx(un.title))}</h1><p class="sub">${esc(tx(un.skill))}</p>
-    <div class="bd-tiles">${tile(x.lessons, "Lessons", `${x.minutes} min`)}${tile(x.skills, "Skills")}${tile(x.activities, "Activities")}${tile(x.retests, "Re-test versions")}${tile(`${x.ready}/${x.skills}`, "Skills ready")}${tile(x.scen, "Scenarios")}${tile(x.mcs.size, "Mistakes tracked")}${tile(x.tested, "Tried by you", `${x.right} right first time`)}</div>
-    ${x.untagged ? `<p class="bd-alert">${x.untagged} activities have no skill yet.</p>` : ""}
-    <h2>Skills</h2><div class="bd-table-wrap"><table class="bd-table"><thead><tr><th>Skill</th><th>Versions</th><th>Scenarios</th><th>Coverage</th><th>Your test runs</th></tr></thead><tbody>
-    ${x.per.map(s => `<tr><td>${link(s.sk.id, esc(tx(s.sk.title)))}<div class="bd-id">${esc(s.sk.id)}</div></td><td class="bd-nw"><span class="bd-vc" title="In lessons">L ${s.lesson}</span><span class="bd-vc" title="In the skill check">C ${s.check}</span><span class="bd-vc re" title="Held back for re-tests">R ${s.re}</span></td><td>${s.sc}</td><td>${readyPill(s)}</td><td>${s.tested ? stateTag(s.state) : "—"}</td></tr>`).join("")}
-    </tbody></table></div><p class="bd-note">L: in lessons. C: in the skill check. R: held back for the mastery round.</p>
-    <div class="bd-cols"><div><h2>Where the right answer sits</h2><div class="bd-bars">${Object.keys(x.pos).sort().map(k => `<div><span>${k}</span><i style="width:${x.pos[k] / posMax * 100}%"></i><b>${x.pos[k]}</b></div>`).join("")}</div><p class="bd-note">Options appear in the order they're written, so this should stay roughly even.</p></div>
-    <div><h2>Activity types</h2><div class="bd-bars">${Object.entries(x.types).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<div><span>${esc(k)}</span><i style="width:${n / x.vs.length * 100}%"></i><b>${n}</b></div>`).join("")}</div></div></div>
-    <h2>Lessons</h2><ul class="bd-list">${[...un.lessons, ...(un.bank||[])].map(l => `<li><b>${esc(l.id.slice(8))}</b> ${esc(tx(l.title))} <span class="bd-id">${l.mode === "bank" ? "re-tests only" : `${l.minutes} min`} · ${l.steps.filter(isGraded).length} activities</span></li>`).join("")}</ul>`;
+    <div class="bd-tiles">${tile(x.lessons, bd().lessonsT, u().min(x.minutes))}${tile(x.skills, bd().skills)}${tile(x.activities, bd().activities)}${tile(x.retests, bd().retestVersions)}${tile(`${x.ready}/${x.skills}`, bd().skillsReady)}${tile(x.scen, bd().scenarios)}${tile(x.mcs.size, bd().mistakes)}${tile(x.tested, bd().triedByYou, bd().rightFirst(x.right))}</div>
+    ${x.untagged ? `<p class="bd-alert">${bd().untagged(x.untagged)}</p>` : ""}
+    <h2>${bd().skills}</h2><div class="bd-table-wrap"><table class="bd-table"><thead><tr><th>${bd().skill}</th><th>${bd().versions}</th><th>${bd().scenarios}</th><th>${bd().coverage}</th><th>${bd().runs}</th></tr></thead><tbody>
+    ${x.per.map(s => `<tr><td>${link(s.sk.id, esc(tx(s.sk.title)))}<div class="bd-id">${esc(s.sk.id)}</div></td><td class="bd-nw"><span class="bd-vc" title="${bd().inLessons}">L ${s.lesson}</span><span class="bd-vc" title="${bd().inCheck}">C ${s.check}</span><span class="bd-vc re" title="${bd().heldBack}">R ${s.re}</span></td><td>${s.sc}</td><td>${readyPill(s)}</td><td>${s.tested ? stateTag(s.state) : "—"}</td></tr>`).join("")}
+    </tbody></table></div><p class="bd-note">${bd().lcr}</p>
+    <div class="bd-cols"><div><h2>${bd().posTitle}</h2><div class="bd-bars">${Object.keys(x.pos).sort().map(k => `<div><span>${k}</span><i style="width:${x.pos[k] / posMax * 100}%"></i><b>${x.pos[k]}</b></div>`).join("")}</div><p class="bd-note">${bd().posNote}</p></div>
+    <div><h2>${bd().typesTitle}</h2><div class="bd-bars">${Object.entries(x.types).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<div><span>${esc(bd().type[k] || k)}</span><i style="width:${n / x.vs.length * 100}%"></i><b>${n}</b></div>`).join("")}</div></div></div>
+    <h2>${bd().lessonsT}</h2><ul class="bd-list">${[...un.lessons, ...(un.bank||[])].map(l => `<li><b>${esc(l.id.slice(8))}</b> ${esc(tx(l.title))} <span class="bd-id">${l.mode === "bank" ? bd().retestsOnly : u().min(l.minutes)} · ${bd().nActs(l.steps.filter(isGraded).length)}</span></li>`).join("")}</ul>`;
 }
 const still = m => mock(m, {regions: true, selected: [], locked: true});
 function versionCard(x){
   const s = x.s, prog = PROG[x.key], mcs = (s.misconceptions||[]).map(m => m.id);
-  const preview = s.type === "compare" ? `<div class="bd-mocks">${["a","b"].map(k => `<div><p class="bd-cap">${k.toUpperCase()}${s.answer === k ? " · right answer" : ""}</p>${still(s[k].mock)}</div>`).join("")}</div>`
-    : s.type === "tune" ? `<div class="bd-mocks">${s.mock ? `<div><p class="bd-cap">Starting screen</p>${still(s.mock)}</div>` : ""}${s.options.filter(o => (s.answer||[]).includes(o.id)).map(o => `<div><p class="bd-cap">Right answer</p>${still(o.mock)}</div>`).join("")}</div>`
+  const preview = s.type === "compare" ? `<div class="bd-mocks">${["a","b"].map(k => `<div><p class="bd-cap">${k.toUpperCase()}${s.answer === k ? bd().rightSuffix : ""}</p>${still(s[k].mock)}</div>`).join("")}</div>`
+    : s.type === "tune" ? `<div class="bd-mocks">${s.mock ? `<div><p class="bd-cap">${bd().startScreen}</p>${still(s.mock)}</div>` : ""}${s.options.filter(o => (s.answer||[]).includes(o.id)).map(o => `<div><p class="bd-cap">${bd().rightAnswer}</p>${still(o.mock)}</div>`).join("")}</div>`
     : s.mock ? `<div class="bd-mocks"><div>${still(s.mock)}</div></div>` : "";
   const opts = s.options ? `<ol class="bd-opts" type="A">${s.options.map(o => `<li class="${(s.answer||[]).includes(o.id) ? "ok" : ""}">${esc(tx(o.text))}${(s.answer||[]).includes(o.id) ? " ✓" : ""}</li>`).join("")}</ol>` : "";
   return `<article class="bd-card">
-    <header><span class="bd-role ${x.role}">${B.roleName[x.role]}</span><span class="bd-id">${esc(x.l.id.slice(8))} · ${esc(s.id)} · ${esc(s.type)} · answer ${answerPos(s) || "—"}</span>${prog ? `<span class="bd-run ${prog.last === "independent" ? "ok" : "no"}">${prog.last === "independent" ? "Right first time" : "Missed"} · ${prog.tries} run${prog.tries === 1 ? "" : "s"}</span>` : ""}</header>
+    <header><span class="bd-role ${x.role}">${bd().role[x.role]}</span><span class="bd-id">${esc(x.l.id.slice(8))} · ${esc(s.id)} · ${esc(bd().type[s.type] || s.type)} · ${bd().answer} ${answerPos(s) || "—"}</span>${prog ? `<span class="bd-run ${prog.last === "independent" ? "ok" : "no"}">${prog.last === "independent" ? bd().rightFirstTime : bd().missed} · ${bd().nRuns(prog.tries)}</span>` : ""}</header>
     <p class="bd-scen">${esc((tx(s.scenario) || x.scen).replace(/\*\*/g, "").slice(0, 220))}</p>
     <p class="bd-prompt">${esc(tx(s.prompt))}</p>
-    <details><summary>Screens, answer and source</summary>${preview}${opts}
-      ${s.value ? `<p><b>What it teaches.</b> ${esc(tx(s.value))}</p>` : ""}
-      ${s.ref ? `<p><b>Source.</b> <a href="${esc(fragUrl(s.ref))}" target="_blank" rel="noopener">${esc(srcTitle(s.ref.url, [x.l]))}</a>: “${esc(s.ref.quote)}”</p>` : `<p class="bd-alert">No source quote yet.</p>`}
-      ${mcs.length ? `<p><b>Mistakes it catches.</b> ${mcs.map(id => `<span class="bd-mc">${esc(id)}</span> ${esc(tx(mcLabel(id)))}`).join("; ")}</p>` : ""}
+    <details><summary>${bd().details}</summary>${preview}${opts}
+      ${s.value ? `<p><b>${bd().teaches}</b> ${esc(tx(s.value))}</p>` : ""}
+      ${s.ref ? `<p><b>${bd().source}</b> <a href="${esc(fragUrl(s.ref))}" target="_blank" rel="noopener">${esc(srcTitle(s.ref.url, [x.l]))}</a>: “${esc(s.ref.quote)}”</p>` : `<p class="bd-alert">${bd().noQuote}</p>`}
+      ${mcs.length ? `<p><b>${bd().catches}</b> ${mcs.map(id => `<span class="bd-mc">${esc(id)}</span> ${esc(tx(mcLabel(id)))}`).join("; ")}</p>` : ""}
     </details>
-    <button type="button" class="btn bd-play" data-play="${esc(x.key)}">Play this activity</button></article>`;
+    <button type="button" class="btn bd-play" data-play="${esc(x.key)}">${bd().play}</button></article>`;
 }
 function boardSkill(f){
   if (!f) return "";
   const {p, un, sk} = f, x = skillStats(un, sk, unitVersions(un)), order = {lesson: 0, check: 1, retest: 2};
   const v = [...x.v].sort((a, b) => order[a.role] - order[b.role]);
   return crumbs([link(p.id, esc(p.id)), link(un.id, esc(un.id)), esc(sk.id)]) + `<h1 class="bd-h1">${esc(tx(sk.title))}</h1><p class="sub">${esc(tx(sk.can_do))}</p>
-    <div class="bd-tiles">${tile(x.n, "Versions", `${x.lesson} lesson · ${x.check} check · ${x.re} re-test`)}${tile(x.sc, "Scenarios")}${tile(readyPill(x), "Coverage", "needs 4 versions, 4 scenarios, 2 re-tests")}${tile(x.mcs.size, "Mistakes tracked")}${tile(x.tested ? stateTag(x.state) : "—", "Your test runs", x.tested ? `${x.tested} of ${x.n} tried, ${x.right} right first time` : "")}</div>
-    <h2>Versions</h2><div class="bd-cards">${v.map(versionCard).join("")}</div>`;
+    <div class="bd-tiles">${tile(x.n, bd().versions, bd().split(x.lesson, x.check, x.re))}${tile(x.sc, bd().scenarios)}${tile(readyPill(x), bd().coverage, bd().needs)}${tile(x.mcs.size, bd().mistakes)}${tile(x.tested ? stateTag(x.state) : "—", bd().runs, x.tested ? bd().triedOf(x.tested, x.n, x.right) : "")}</div>
+    <h2>${bd().versions}</h2><div class="bd-cards">${v.map(versionCard).join("")}</div>`;
 }
 function boardSearch(q){
   const n = q.toLowerCase(), hits = [];
@@ -1062,7 +1101,7 @@ function boardSearch(q){
     const hay = [x.key, x.s.skill, tx(x.s.prompt), enText(x.s.prompt), x.scen, tx(x.s.scenario)].join(" ").toLowerCase();
     if (hay.includes(n)) hits.push(x);
   })));
-  return `<h1 class="bd-h1">Results for “${esc(q)}”</h1><p class="sub">${hits.length} activit${hits.length === 1 ? "y" : "ies"}${hits.length > 40 ? ", showing the first 40" : ""}</p><div class="bd-cards">${hits.slice(0, 40).map(versionCard).join("")}</div>`;
+  return `<h1 class="bd-h1">${bd().results(esc(q))}</h1><p class="sub">${bd().nHits(hits.length)}${hits.length > 40 ? bd().first40 : ""}</p><div class="bd-cards">${hits.slice(0, 40).map(versionCard).join("")}</div>`;
 }
 /* open one activity in the player, then come back to the same board page */
 function playOne(key){
