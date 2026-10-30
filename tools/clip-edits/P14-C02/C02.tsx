@@ -169,7 +169,7 @@ const Screen: React.FC<{ st: St }> = ({ st }) => {
       </div>
       {st.screen === "shop" ? (
         <>
-          <div style={{ position: "absolute", top: 26, left: 0, right: 0, height: 52, background: D.brand, color: D.onBrand, display: "flex", alignItems: "center", padding: "0 18px", fontSize: 22, fontWeight: 700 }}>متجري</div>
+          <div style={{ position: "absolute", top: 26, left: 0, right: 0, height: 52, background: D.brand, color: D.onBrand, display: "flex", alignItems: "center", padding: "0 18px", fontSize: 22, fontWeight: 700 }}>سوق لين</div>
           {PRODUCTS.map(([t, p, c], i) => (
             <div key={t} style={{ position: "absolute", left: 14, right: 14, top: 90 + 96 * i, height: 84, borderRadius: 14, background: C.surfaceAlt, padding: 12, display: "flex", gap: 12, alignItems: "center", boxSizing: "border-box" }}>
               <div style={{ width: 60, height: 60, borderRadius: 12, background: c, flexShrink: 0 }} />

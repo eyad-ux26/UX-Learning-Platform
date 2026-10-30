@@ -1,5 +1,6 @@
 import React from "react";
-import { Composition } from "remotion";
+import { AbsoluteFill, Composition } from "remotion";
+import { themeVars } from "./brand/theme";
 import { fontsReady } from "./brand/fonts";
 import { C01, C01_FRAMES } from "./clips/C01";
 import { C02, C02_FRAMES } from "./clips/C02";
@@ -21,9 +22,17 @@ const clips: [string, React.FC, number][] = [
   ["P14-C06", C06, C06_FRAMES],
 ];
 
+/** Every clip runs in the UXGate night look; the example product inside resets to its own light palette. */
+const night = (Clip: React.FC): React.FC => () => (
+  <AbsoluteFill style={themeVars(1)}>
+    <Clip />
+  </AbsoluteFill>
+);
+const wrapped = clips.map(([id, c, n]) => [id, night(c), n] as [string, React.FC, number]);
+
 export const RemotionRoot: React.FC = () => (
   <>
-    {clips.map(([id, c, n]) => (
+    {wrapped.map(([id, c, n]) => (
       <Composition key={id} id={id} component={c} width={1080} height={1080} fps={30} durationInFrames={n} calculateMetadata={meta} />
     ))}
   </>

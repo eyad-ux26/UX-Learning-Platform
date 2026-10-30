@@ -1,0 +1,402 @@
+id: P14-U03-L01
+mode: lesson
+minutes: 8
+title:
+  en: "Suggestions that lead somewhere"
+  ar: "اقتراحات توصل إلى شيء"
+sources:
+  - title: { en: "Site Search Suggestions (NN/g)", ar: "اقتراحات البحث في الموقع (NN/g)" }
+    url: "https://www.nngroup.com/articles/site-search-suggestions/"
+review_labels:
+  MC-P14-025: { en: "A suggestion must lead to real results", ar: "الاقتراح يجب أن يوصل إلى نتائج حقيقية" }
+  MC-P14-026: { en: "Style the part people need to tell apart", ar: "ميّز الجزء الذي يحتاج الناس إلى تمييزه" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Samar's recipe site", ar: "موقع الوصفات لسمر" }
+    body:
+      en: "Samar works on a recipe site. When people tap the search box, a list of suggestions drops down under it.\n\nThe team fills that list from the most popular food searches on the web. Some of them, like **lentil burger**, have no recipe on Samar's site at all."
+      ar: "تعمل سمر على موقع للوصفات. وحين يضغط الناس على مربع البحث، تظهر تحته قائمة اقتراحات.\n\nويملأ الفريق هذه القائمة من أشهر عمليات البحث عن الطعام على الإنترنت. وبعضها، مثل **شوربة البصل الفرنسية**، ليس له أي وصفة في موقع سمر."
+    mock:
+      width: 300
+      blocks: &lentil
+        - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
+        - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
+        - { kind: text, text: { en: "lentil **burger**", ar: "شوربة **بصل فرنسية**" }, gap: s }
+        - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+
+  - id: S02
+    type: tune
+    part: try
+    skill: SK-P14-U03-01
+    rules: [R12]
+    confidence: true
+    value:
+      en: "Try first. Search suggestions (NN/g): suggested terms that return zero results, or irrelevant results, are worse than unhelpful. A suggestion is a promise that something is there."
+      ar: "جرّب أولًا. اقتراحات البحث (NN/g): الاقتراحات التي تُرجع صفر نتائج، أو نتائج غير مرتبطة، أسوأ من عديمة الفائدة. فالاقتراح وعد بأن هناك شيئًا موجودًا."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "Suggested terms that return zero results, or irrelevant results, are worse than unhelpful" }
+    prompt:
+      en: "Someone types \"lentil\". Try each suggestion list. Which one should ship?"
+      ar: "كتب شخص «شوربة». جرّب كل قائمة اقتراحات. أيّها يجب أن تُطلق؟"
+    start: web
+    options:
+      - id: web
+        text: { en: "Popular web searches, including dishes the site doesn't have", ar: "أشهر عمليات البحث على الإنترنت، ومعها أطباق ليست في الموقع" }
+        mock:
+          width: 300
+          caption: { en: "No recipe on the site for burger or pasta", ar: "لا وصفة في الموقع لشوربة البصل ولا لشوربة الكاري" }
+          blocks:
+            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
+            - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
+            - { kind: text, text: { en: "lentil **burger**", ar: "شوربة **بصل فرنسية**" }, gap: s }
+            - { kind: text, text: { en: "lentil **pasta**", ar: "شوربة **كريمة بالكاري**" }, gap: s }
+            - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+      - id: site
+        text: { en: "Only searches that find recipes on this site", ar: "فقط عمليات البحث التي تجد وصفات في هذا الموقع" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
+            - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
+            - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+            - { kind: text, text: { en: "lentil **with rice (koshari)**", ar: "شوربة **خضار**" }, gap: s }
+      - id: none
+        text: { en: "No suggestions; people type the whole search", ar: "بدون اقتراحات؛ يكتب الناس البحث كاملًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
+    answer: [site]
+    misconceptions:
+      - id: MC-P14-025
+        when: [web]
+        feedback:
+          en: "\"Lentil burger\" and \"lentil pasta\" look like a promise, then open an empty results page. People who pick them waste a tap and often give up on searching."
+          ar: "«شوربة بصل فرنسية» و«شوربة كريمة بالكاري» تبدوان وعدًا، ثم يفتحان صفحة نتائج فارغة. ومن يختارهما يضيّع ضغطة، وكثيرًا ما يتوقّف عن البحث."
+      - id: MC-P14-025
+        when: [none]
+        feedback:
+          en: "Without suggestions, people type the whole search themselves, with more effort and more typos. Good suggestions save that work."
+          ar: "بدون اقتراحات، يكتب الناس البحث كاملًا بأنفسهم، بجهد أكبر وأخطاء إملائية أكثر. والاقتراحات الجيدة توفّر هذا الجهد."
+    hints:
+      - en: "What happens when someone taps \"lentil burger\"?"
+        ar: "ماذا يحدث حين يضغط شخص على «شوربة بصل فرنسية»؟"
+    correct:
+      en: "Only suggestions that find recipes here."
+      ar: "فقط الاقتراحات التي تجد وصفات هنا."
+    explain:
+      en: "Every suggestion in the list opens real recipes, so picking one is always a good move. People type less and still land on something."
+      ar: "كل اقتراح في القائمة يفتح وصفات حقيقية، فاختيار أي واحد منها خطوة صحيحة دائمًا. ويكتب الناس أقل ويصلون إلى شيء."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [text, list, ok, warn, eye]
+    video:
+      src: clips/P14-C07.mp4
+      captions: { ar: P14-C07.ar.vtt, en: P14-C07.en.vtt }
+      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
+      transcript:
+        en: "(Transcript is added when the clip is cut.)"
+        ar: "(يُضاف نص الفيديو بعد قصّ المقطع.)"
+    title: { en: "Suggestions that lead somewhere", ar: "اقتراحات توصل إلى شيء" }
+    body:
+      en: "People often can't phrase a search that gets good results, and many don't try a second time. Suggestions help them get there on the first try.\n\n- **A hint in the box:** short text like \"Search recipes or ingredients\" says what people can search for.\n- **Suggestions as they type:** a list appears under the box as soon as people tap it, and updates with each letter.\n- **Less typing, fewer typos:** picking a suggestion is quicker than typing the whole search, and it's spelled right.\n- **Only real results:** every suggestion must open good, relevant results. A suggestion that leads nowhere is worse than none.\n- **Show the difference:** style the suggested words differently from what people typed, so they can scan the list fast."
+      ar: "كثيرًا ما لا يعرف الناس كيف يصيغون بحثًا يأتي بنتائج جيدة، وكثيرون لا يحاولون مرة ثانية. والاقتراحات تساعدهم على الوصول من أول محاولة.\n\n- **تلميح داخل المربع:** نص قصير مثل «ابحث عن وصفة أو مكوّن» يقول ما يمكن البحث عنه.\n- **اقتراحات أثناء الكتابة:** تظهر قائمة تحت المربع بمجرد الضغط عليه، وتتغيّر مع كل حرف.\n- **كتابة أقل، وأخطاء أقل:** اختيار اقتراح أسرع من كتابة البحث كاملًا، ومكتوب بشكل صحيح.\n- **نتائج حقيقية فقط:** كل اقتراح يجب أن يفتح نتائج جيدة ومرتبطة. والاقتراح الذي لا يوصل إلى شيء أسوأ من عدم وجوده.\n- **وضّح الفرق:** اجعل شكل الكلمات المقترحة مختلفًا عمّا كتبه الناس، حتى يتصفّحوا القائمة بسرعة."
+
+  - id: S04
+    type: tune
+    part: guided
+    skill: SK-P14-U03-02
+    rules: [R06, R15]
+    value:
+      en: "Search suggestions (NN/g): when suggestions only add text to the end of the query, highlight the suggested characters. Every line starts with the same word, so the new words are what people compare."
+      ar: "اقتراحات البحث (NN/g): حين تضيف الاقتراحات نصًا في نهاية البحث فقط، أبرز الحروف المقترحة. فكل سطر يبدأ بالكلمة نفسها، والكلمات الجديدة هي ما يقارن بينه الناس."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "you should highlight the suggested characters" }
+    scenario:
+      en: "On Samar's site, every suggestion starts with exactly what people typed, then adds words after it. Someone has typed \"chicken\"."
+      ar: "في موقع سمر، يبدأ كل اقتراح بما كتبه الناس بالضبط، ثم يضيف كلمات بعده. وقد كتب شخص «فراخ»."
+    prompt:
+      en: "Try each style. Which one should ship?"
+      ar: "جرّب كل شكل. أيّها يجب أن يُطلق؟"
+    start: plain
+    options:
+      - id: plain
+        text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
+            - { kind: text, text: { en: "chicken shawarma", ar: "فراخ بانيه" }, gap: s }
+            - { kind: text, text: { en: "chicken with potatoes", ar: "فراخ بالبطاطس" }, gap: s }
+            - { kind: text, text: { en: "chicken soup", ar: "فراخ مشوية" }, gap: s }
+      - id: typed
+        text: { en: "Bold the typed word", ar: "الكلمة المكتوبة بخط عريض" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**chicken** shawarma", ar: "**فراخ** بانيه" }, gap: s }
+            - { kind: text, text: { en: "**chicken** with potatoes", ar: "**فراخ** بالبطاطس" }, gap: s }
+            - { kind: text, text: { en: "**chicken** soup", ar: "**فراخ** مشوية" }, gap: s }
+      - id: added
+        text: { en: "Bold the suggested words", ar: "الكلمات المقترحة بخط عريض" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
+            - { kind: text, text: { en: "chicken **shawarma**", ar: "فراخ **بانيه**" }, gap: s }
+            - { kind: text, text: { en: "chicken **with potatoes**", ar: "فراخ **بالبطاطس**" }, gap: s }
+            - { kind: text, text: { en: "chicken **soup**", ar: "فراخ **مشوية**" }, gap: s }
+    answer: [added]
+    misconceptions:
+      - id: MC-P14-026
+        when: [plain, typed]
+        feedback:
+          en: "Every line starts with \"chicken\", so that part tells people nothing new. The words that differ are what they need to spot, and here they don't stand out."
+          ar: "كل سطر يبدأ بـ«فراخ»، فهذا الجزء لا يقول للناس شيئًا جديدًا. والكلمات المختلفة هي ما يحتاجون إلى ملاحظته، وهي هنا غير بارزة."
+    hints:
+      - en: "Which part of each line is different from the others?"
+        ar: "أيّ جزء في كل سطر يختلف عن باقي السطور؟"
+    correct:
+      en: "The suggestions only add words: bold those."
+      ar: "الاقتراحات تضيف كلمات فقط: أبرزها."
+    explain:
+      en: "People already know what they typed. Bold endings let them compare shawarma, potatoes and soup at a glance."
+      ar: "الناس يعرفون أصلًا ما كتبوه. والنهايات العريضة تجعلهم يقارنون بين البانيه والمشوية والبطاطس بنظرة واحدة."
+
+  - id: S05
+    type: tune
+    part: guided
+    skill: SK-P14-U03-02
+    rules: [R06, R15]
+    value:
+      en: "Search suggestions (NN/g): when suggestions contain the query anywhere, it's best to highlight the user's query. The typed word moves around in each line, so bold shows where it sits."
+      ar: "اقتراحات البحث (NN/g): حين تحتوي الاقتراحات على البحث في أي مكان، الأفضل إبراز ما كتبه المستخدم. فالكلمة المكتوبة تتنقّل في كل سطر، والخط العريض يوضّح مكانها."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "it’s best to highlight the user’s query." }
+    scenario:
+      en: "The team changed the search: now a suggestion can contain the typed word anywhere, at the start, in the middle or at the end. Someone types \"lemon\"."
+      ar: "غيّر الفريق البحث: أصبح الاقتراح يمكن أن يحتوي على الكلمة المكتوبة في أي مكان، في أوله أو وسطه أو آخره. وكتب شخص «ليمون»."
+    prompt:
+      en: "Try each style. Which one should ship?"
+      ar: "جرّب كل شكل. أيّها يجب أن يُطلق؟"
+    start: rest
+    options:
+      - id: rest
+        text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**grilled fish with** lemon", ar: "**سمك مشوي بالـ**ليمون" }, gap: s }
+            - { kind: text, text: { en: "lemon **cake**", ar: "**كيكة** ليمون" }, gap: s }
+            - { kind: text, text: { en: "**chicken with** lemon **and garlic**", ar: "**فراخ بالـ**ليمون **والثوم**" }, gap: s }
+      - id: query
+        text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
+            - { kind: text, text: { en: "grilled fish with **lemon**", ar: "سمك مشوي بالـ**ليمون**" }, gap: s }
+            - { kind: text, text: { en: "**lemon** cake", ar: "كيكة **ليمون**" }, gap: s }
+            - { kind: text, text: { en: "chicken with **lemon** and garlic", ar: "فراخ بالـ**ليمون** والثوم" }, gap: s }
+      - id: plain
+        text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
+            - { kind: text, text: { en: "grilled fish with lemon", ar: "سمك مشوي بالليمون" }, gap: s }
+            - { kind: text, text: { en: "lemon cake", ar: "كيكة ليمون" }, gap: s }
+            - { kind: text, text: { en: "chicken with lemon and garlic", ar: "فراخ بالليمون والثوم" }, gap: s }
+    answer: [query]
+    misconceptions:
+      - id: MC-P14-026
+        when: [rest, plain]
+        feedback:
+          en: "The typed word sits in a different place in every line, so people have to hunt for it. Here it's the part that needs to stand out."
+          ar: "الكلمة المكتوبة في مكان مختلف في كل سطر، فيضطر الناس إلى البحث عنها. وهنا هي الجزء الذي يجب أن يبرز."
+    hints:
+      - en: "Is the typed word in the same place in every line?"
+        ar: "هل الكلمة المكتوبة في المكان نفسه في كل سطر؟"
+    correct:
+      en: "The match moves around: bold the typed word."
+      ar: "الكلمة تتنقّل: أبرز الكلمة المكتوبة."
+    explain:
+      en: "With \"lemon\" in bold, people see at once where their word sits in each dish and read the rest around it."
+      ar: "حين تكون «ليمون» بخط عريض، يرى الناس فورًا مكان كلمتهم في كل طبق، ويقرؤون الباقي حولها."
+
+  - id: S06
+    type: compare
+    part: contrast
+    skill: SK-P14-U03-01
+    rules: [R11]
+    value:
+      en: "Search suggestions (NN/g): make sure every suggested query actually has good, relevant results. The discontinued model opens an empty page, so version A turns a shortcut into a dead end."
+      ar: "اقتراحات البحث (NN/g): تأكّد أن كل بحث مقترح له فعلًا نتائج جيدة ومرتبطة. والطراز المتوقّف يفتح صفحة فارغة، فتحوّل النسخة A الاختصار إلى طريق مسدود."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "Make sure every suggested query actually has good, relevant results." }
+    scenario:
+      en: "An electronics store. Someone types \"earbuds\". The store stopped selling the **X2** model last year, but the suggestions still come from last year's popular searches."
+      ar: "متجر إلكترونيات. كتب شخص «سماعات». وقد توقّف المتجر عن بيع طراز **X2** العام الماضي، لكن الاقتراحات ما زالت تأتي من أشهر عمليات البحث في العام الماضي."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: last year's popular searches", ar: "النسخة A: أشهر عمليات البحث في العام الماضي" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: field, text: { en: "earbuds", ar: "سماعات" }, filled: true, focus: true }
+          - { kind: text, text: { en: "earbuds **X2**", ar: "سماعات **X2**" }, gap: s }
+          - { kind: text, text: { en: "earbuds **with noise cancelling**", ar: "سماعات **بعزل الضوضاء**" }, gap: s }
+          - { kind: text, text: { en: "earbuds **for sports**", ar: "سماعات **للرياضة**" }, gap: s }
+    b:
+      label: { en: "Version B: only searches with products in the store", ar: "النسخة B: فقط عمليات البحث التي لها منتجات في المتجر" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: field, text: { en: "earbuds", ar: "سماعات" }, filled: true, focus: true }
+          - { kind: text, text: { en: "earbuds **with noise cancelling**", ar: "سماعات **بعزل الضوضاء**" }, gap: s }
+          - { kind: text, text: { en: "earbuds **for sports**", ar: "سماعات **للرياضة**" }, gap: s }
+          - { kind: text, text: { en: "earbuds **under EGP 1,000**", ar: "سماعات **أقل من 1,000 جنيه**" }, gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P14-025
+        when: [a]
+        feedback:
+          en: "\"Earbuds X2\" sits first in the list and opens an empty page: the store doesn't sell it anymore. A suggestion with no results is worse than no suggestion."
+          ar: "«سماعات X2» في أول القائمة وتفتح صفحة فارغة: فالمتجر لم يعد يبيعها. والاقتراح الذي ليس له نتائج أسوأ من عدم وجود اقتراح."
+    correct:
+      en: "B: every suggestion finds products."
+      ar: "B: كل اقتراح يجد منتجات."
+    explain:
+      en: "Suggestions should follow what the store has today, not what was popular. Then any line people pick shows something they can buy."
+      ar: "الاقتراحات يجب أن تتبع ما يوجد في المتجر اليوم، لا ما كان مشهورًا. وعندها أي سطر يختاره الناس يعرض شيئًا يمكنهم شراؤه."
+
+  - id: S07
+    type: tune
+    part: guided
+    skill: SK-P14-U03-01
+    rules: [R06, R15]
+    confidence: true
+    value:
+      en: "Search suggestions (NN/g): suggested terms that return zero results are worse than unhelpful, and suggestions help people pick an appropriate term that shows good results. A suggestion for a misspelling only repeats the mistake."
+      ar: "اقتراحات البحث (NN/g): الاقتراحات التي تُرجع صفر نتائج أسوأ من عديمة الفائدة، والاقتراحات تساعد الناس على اختيار كلمة مناسبة تعرض نتائج جيدة. واقتراح كلمة بها خطأ إملائي لا يفعل إلا تكرار الخطأ."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "Pick an appropriate term, which will show them good results" }
+    scenario:
+      en: "Samar's team adds a shortcut: they also suggest exactly what people typed most often. Many people type \"mulukhia\" with a spelling the site's recipes don't use, so it finds nothing. The recipes are under \"molokhia\"."
+      ar: "أضاف فريق سمر اختصارًا: أصبحوا يقترحون أيضًا ما كتبه الناس كثيرًا بالضبط. وكثيرون يكتبون «ملوخيا» بإملاء لا تستخدمه وصفات الموقع، فلا يجد شيئًا. والوصفات مكتوبة «ملوخية»."
+    prompt:
+      en: "Someone types \"mulu\". Try each list. Which one should ship?"
+      ar: "كتب شخص «ملو». جرّب كل قائمة. أيّها يجب أن تُطلق؟"
+    start: typed
+    options:
+      - id: typed
+        text: { en: "Suggest the common misspelling as typed", ar: "اقترح الإملاء الشائع كما كتبه الناس" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
+            - { kind: text, text: { en: "mulu**khia**", ar: "ملو**خيا**" }, gap: s }
+            - { kind: text, text: { en: "mulu**khia with rabbit**", ar: "ملو**خيا بالأرانب**" }, gap: s }
+      - id: fixed
+        text: { en: "Suggest the spelling that finds recipes", ar: "اقترح الإملاء الذي يجد وصفات" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**molokhia**", ar: "**ملوخية**" }, gap: s }
+            - { kind: text, text: { en: "**molokhia with rabbit**", ar: "**ملوخية بالأرانب**" }, gap: s }
+      - id: both
+        text: { en: "Suggest both spellings", ar: "اقترح الإملاءين" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
+            - { kind: text, text: { en: "mulu**khia**", ar: "ملو**خيا**" }, gap: s }
+            - { kind: text, text: { en: "**molokhia**", ar: "**ملوخية**" }, gap: s }
+            - { kind: text, text: { en: "**molokhia with rabbit**", ar: "**ملوخية بالأرانب**" }, gap: s }
+    answer: [fixed]
+    misconceptions:
+      - id: MC-P14-025
+        when: [typed, both]
+        feedback:
+          en: "\"Mulukhia\" finds nothing on this site. Suggesting it, even next to the right spelling, invites people to pick a search that ends on an empty page."
+          ar: "«ملوخيا» لا تجد شيئًا في هذا الموقع. واقتراحها، حتى بجانب الإملاء الصحيح، يدعو الناس إلى اختيار بحث ينتهي بصفحة فارغة."
+    hints:
+      - en: "What does each suggestion open?"
+        ar: "ماذا يفتح كل اقتراح؟"
+    correct:
+      en: "Suggest only the spelling that finds recipes."
+      ar: "اقترح فقط الإملاء الذي يجد وصفات."
+    explain:
+      en: "People who start typing the other spelling still land on the molokhia recipes. The suggestion fixes the spelling for them."
+      ar: "من يبدأ بكتابة الإملاء الآخر يصل مع ذلك إلى وصفات الملوخية. فالاقتراح يصحّح الإملاء بدلًا منه."
+
+  - id: S08
+    type: tune
+    part: independent
+    skill: SK-P14-U03-02
+    rules: [R14]
+    value:
+      en: "Search suggestions (NN/g): when suggestions contain the query anywhere, it's best to highlight the user's query. In a job search, \"design\" lands in a different place in every title."
+      ar: "اقتراحات البحث (NN/g): حين تحتوي الاقتراحات على البحث في أي مكان، الأفضل إبراز ما كتبه المستخدم. وفي البحث عن وظيفة، تقع «تصميم» في مكان مختلف في كل مسمّى."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "it’s best to highlight the user’s query." }
+    scenario:
+      en: "Ghada designs a jobs app. Its suggestions show job titles that contain the typed word anywhere. Someone types \"design\"."
+      ar: "تصمّم غادة تطبيقًا للوظائف. وتعرض اقتراحاته مسمّيات وظائف تحتوي على الكلمة المكتوبة في أي مكان. وكتب شخص «تصميم»."
+    prompt:
+      en: "Try each style. Which one should ship?"
+      ar: "جرّب كل شكل. أيّها يجب أن يُطلق؟"
+    start: plain
+    options:
+      - id: plain
+        text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Senior UX design lead", ar: "قائد فريق تصميم UX" }, gap: s }
+            - { kind: text, text: { en: "Design engineer", ar: "مهندس تصميم" }, gap: s }
+            - { kind: text, text: { en: "Interior design intern", ar: "متدرّب تصميم داخلي" }, gap: s }
+      - id: query
+        text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Senior UX **design** lead", ar: "قائد فريق **تصميم** UX" }, gap: s }
+            - { kind: text, text: { en: "**Design** engineer", ar: "مهندس **تصميم**" }, gap: s }
+            - { kind: text, text: { en: "Interior **design** intern", ar: "متدرّب **تصميم** داخلي" }, gap: s }
+      - id: rest
+        text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**Senior UX** design **lead**", ar: "**قائد فريق** تصميم **UX**" }, gap: s }
+            - { kind: text, text: { en: "Design **engineer**", ar: "**مهندس** تصميم" }, gap: s }
+            - { kind: text, text: { en: "**Interior** design **intern**", ar: "**متدرّب** تصميم **داخلي**" }, gap: s }
+    answer: [query]
+    misconceptions:
+      - id: MC-P14-026
+        when: [plain, rest]
+        feedback:
+          en: "\"Design\" moves around in every title, so people have to search each line for their own word. Bolding it shows where it sits at a glance."
+          ar: "«تصميم» تتنقّل في كل مسمّى، فيضطر الناس إلى البحث عن كلمتهم في كل سطر. وإبرازها يوضّح مكانها بنظرة واحدة."
+    correct:
+      en: "Matches anywhere: bold the typed word."
+      ar: "الكلمة في أي مكان: أبرز الكلمة المكتوبة."
+    explain:
+      en: "Ghada's users see \"design\" in each title right away and judge the rest: senior, engineer or intern."
+      ar: "يرى مستخدمو غادة كلمة «تصميم» في كل مسمّى فورًا، ثم يحكمون على الباقي: قائد فريق أو مهندس أو متدرّب."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [ok, eye, list]
+    title: { en: "What you practised", ar: "ما تدرّبت عليه" }
+    body:
+      en: "- **Suggest only searches that find something**, based on what the site has today.\n- **Suggestions only add words?** Bold the added words.\n- **The typed word can be anywhere?** Bold the typed word.\n\nNext: what to show when a search finds nothing."
+      ar: "- **لا تقترح إلا عمليات بحث تجد شيئًا**، بناءً على ما في الموقع اليوم.\n- **الاقتراحات تضيف كلمات فقط؟** أبرز الكلمات المضافة.\n- **الكلمة المكتوبة قد تكون في أي مكان؟** أبرز الكلمة المكتوبة.\n\nالتالي: ماذا تعرض حين لا يجد البحث شيئًا."

@@ -461,7 +461,7 @@ function mockBlocks(blocks, opts){
       inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="sl${b.format?" act-slide":""}" data-min="${lo}" data-max="${hi}" data-fmt="${b.format?esc(tx(b.format)):""}" aria-hidden="true"><i style="inset-inline-start:${f(a)}%" data-v="${a}"></i><i style="inset-inline-start:${f(z)}%" data-v="${z}"></i></div><div class="fh">${b.format ? fmt(a, z) : esc(tx(b.text))}</div>`;
     }
     else if (b.kind === "divider") inner = "";
-    else inner = esc(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
+    else inner = inl(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
     const live = !(opts && opts.regions);
     if (live && (b.kind === "toggle" || b.kind === "check" || b.kind === "radio")) {
       const role = b.kind === "toggle" ? "switch" : b.kind === "check" ? "checkbox" : "radio";

@@ -107,6 +107,7 @@ mock:
 | `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text), `plain` or `tint` (group) |
 | `color` | Exact text colors on white, for contrast lessons: `ink` 16.8:1, `muted` 5.3:1, `pale` 3.0:1, `faint` 2.3:1, `brand` 6.8:1, plus `green`, `red`, `orange` |
 | `weight` | `regular` or `bold` |
+| `**…**` | Inside a text block, marks part of the text bold (such as the suggested part of a search suggestion) |
 | `px` | Exact font size in pixels, when the size itself is being taught |
 | `style` | Buttons: `plain` (text only), `danger` (filled red), `dangerlink` (red text) |
 | `nowrap` | Cuts the text to one line with an ellipsis (to show truncation) |

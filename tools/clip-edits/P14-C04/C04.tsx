@@ -124,7 +124,7 @@ export const C04: React.FC = () => {
   const shots: Shot[] = [{ f: 0, ...overview }, push(B.disc), { f: B.when, ...overview }];
   const cam = cameraAt(f, shots);
   const mode: DebugMode = f < B.split ? "live" : f >= B.c1 ? (f >= B.c1No && f < B.c2 ? "compare" : "inspect") : "inspect";
-  const address = scene === "product" ? "shop.app/product" : scene === "plan" ? "shop.app/plans" : scene === "checkout" ? "shop.app/checkout" : "shop.app/help";
+  const address = scene === "product" ? "shop.app/product" : scene === "plan" ? "wasla.app/plans" : scene === "checkout" ? "shop.app/checkout" : "wasla.app/help";
 
   const dim = Math.max(span(f, B.many, B.when), span(f, B.c1Note, B.c2)) * 0.9;
 

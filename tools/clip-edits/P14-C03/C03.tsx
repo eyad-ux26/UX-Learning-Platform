@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, OffthreadVideo, staticFile, useCurrentFrame } from "remotion";
 import { Audio } from "@remotion/media";
-import { C, CONTENT, D, FONT, T } from "../brand/theme";
+import { C, CONTENT, D, FONT, T, themeVars } from "../brand/theme";
 import { cameraAt, camPoint, camRect, camStyle, Rect, Shot } from "../debugger/camera";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { FocusDim, Selection, Tag } from "../debugger/Inspect";
@@ -108,7 +108,7 @@ const SideNote: React.FC<{ y: number; text: string; p: number; icon?: React.Reac
 const NameChip: React.FC<{ x: number; name: string; prio: string; n: number; p: number; q: number }> = ({ x, name, prio, n, p, q }) => {
   if (p <= 0) return null;
   return (
-    <div style={{ position: "absolute", left: x, width: PH.w, top: 14, height: 44, display: "flex", justifyContent: "center", opacity: p, translate: `0px ${(1 - p) * 10}px` }}>
+    <div style={{ ...themeVars(1), position: "absolute", left: x, width: PH.w, top: 14, height: 44, display: "flex", justifyContent: "center", opacity: p, translate: `0px ${(1 - p) * 10}px` }}>
       <div dir="rtl" style={{ display: "flex", alignItems: "center", gap: 10, height: 44, padding: "0 16px", borderRadius: T.radius.pill, background: C.selectSoft, border: `2px solid ${C.select}`, color: C.select, fontFamily: FONT, fontSize: 22, fontWeight: 700, whiteSpace: "nowrap", boxSizing: "border-box" }}>
         <span dir="ltr">{name}</span>
         {q > 0 ? (
@@ -141,7 +141,7 @@ const colRect = (i: number): Rect => {
 const Table: React.FC<{ p: number; rows: number[] }> = ({ p, rows }) => {
   if (p <= 0) return null;
   return (
-    <div dir="rtl" style={{ position: "absolute", left: TBL.x, top: TBL.y, width: 880, opacity: p, fontFamily: FONT, borderRadius: 22, background: "#FFFFFF", border: `2px solid ${C.border}`, overflow: "hidden", boxShadow: T.shadow.viewport }}>
+    <div dir="rtl" style={{ position: "absolute", left: TBL.x, top: TBL.y, width: 880, opacity: p, fontFamily: FONT, borderRadius: 22, background: C.surface, border: `2px solid ${C.border}`, overflow: "hidden", boxShadow: T.shadow.viewport }}>
       <div style={{ display: "flex", height: TBL.head, background: C.surfaceAlt, borderBottom: `2px solid ${C.border}` }}>
         {COLS.map((c) => (
           <div key={c.k} style={{ width: c.w, padding: "0 26px", display: "flex", alignItems: "center", fontSize: 26, fontWeight: 700, color: C.textMuted, boxSizing: "border-box" }}>{c.title}</div>
@@ -232,7 +232,7 @@ export const C03: React.FC = () => {
   const selDialog = enter(frame, tDialog + 14, 10) * exit(frame, tBanner - 8, 8);
   const selBanner = enter(frame, tBanner + 16, 10) * exit(frame, tSnack - 8, 8);
   const selSnack = enter(frame, tSnackShow + 6, 10) * exit(frame, tSnackGone, 8);
-  const ws = (x: React.ReactNode) => <span style={{ color: "#FFFFFF", display: "inline-flex" }}>{x}</span>;
+  const ws = (x: React.ReactNode) => <span style={{ color: "#012E4B", display: "inline-flex" }}>{x}</span>;
   const blocked = camPoint({ x: mid(rowRect(X.dialog, 0, 0)).x, y: rowRect(X.dialog, 0, 0).y }, cameraAt(tDlgTap, shots));
 
   const overlay = (
@@ -242,16 +242,16 @@ export const C03: React.FC = () => {
       <Selection r={camRect(bannerRect(X.banner), cam)} hover={selBanner} selected={selBanner} label="Banner" />
       <Selection r={camRect(snackRect(X.snack), cam)} hover={selSnack} selected={selSnack} label="Snackbar" />
 
-      <SideNote y={150} text="يوقف كل شيء حتى يُغلق" p={span(frame, tDlgNote, tHigh)} icon={<IconLock color="#FFFFFF" size={30} stroke={2.4} />} />
+      <SideNote y={150} text="يوقف كل شيء حتى يُغلق" p={span(frame, tDlgNote, tHigh)} icon={<IconLock color="#012E4B" size={30} stroke={2.4} />} />
       <Tag r={{ x: 0, y: blocked.y + 40, w: 0, h: 0 }} x={blocked.x - 330} text="لا شيء يحدث" tone="warn" progress={span(frame, tDlgTap + 4, tDlgTap + 50)} />
-      <SideNote y={210} text="أولوية عالية" p={span(frame, tHigh, tBanner)} icon={<Bars n={3} color="#FFFFFF" />} big />
+      <SideNote y={210} text="أولوية عالية" p={span(frame, tHigh, tBanner)} icon={<Bars n={3} color="#012E4B" />} big />
 
-      <SideNote y={130} text="أولوية متوسطة: ظاهر في الأعلى" p={span(frame, tBanNote, tBanNote2)} icon={<Bars n={2} color="#FFFFFF" />} />
+      <SideNote y={130} text="أولوية متوسطة: ظاهر في الأعلى" p={span(frame, tBanNote, tBanNote2)} icon={<Bars n={2} color="#012E4B" />} />
       <Tag r={{ x: banRow.x - 110, y: banRow.y + 64, w: 0, h: 0 }} text="المحتوى ما زال متاحًا" progress={span(frame, tBanTap + 6, tBanNote2 + 10)} icon={IconCheck} />
       <SideNote y={130} text="مهم، لكن لا يوقف المستخدم" p={span(frame, tBanNote2, tSnack)} />
 
-      <SideNote y={250} text="أولوية منخفضة" p={span(frame, tSnackNote, tAuto)} icon={<Bars n={1} color="#FFFFFF" />} big />
-      <SideNote y={250} text="يختفي وحده، دون أي تفاعل" p={span(frame, tAuto, tCompare + 4)} icon={ws(<IconClock color="#FFFFFF" size={30} stroke={2.4} />)} />
+      <SideNote y={250} text="أولوية منخفضة" p={span(frame, tSnackNote, tAuto)} icon={<Bars n={1} color="#012E4B" />} big />
+      <SideNote y={250} text="يختفي وحده، دون أي تفاعل" p={span(frame, tAuto, tCompare + 4)} icon={ws(<IconClock color="#012E4B" size={30} stroke={2.4} />)} />
 
       <Tag r={camRect({ x: X.snack + 40, y: PH.y + 410, w: 0, h: 0 }, cam)} text="يختفي وحده" progress={span(frame, tSnack2 + 8, tDlgClose)} icon={IconClock} />
       <Tag r={camRect({ x: X.banner + 30, y: PH.y + 490, w: 0, h: 0 }, cam)} text="يبقى حتى يُغلق" tone="warn" progress={span(frame, tSnack2 + 20, tBanX + 2)} />

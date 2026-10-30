@@ -1,7 +1,7 @@
 import React from "react";
-import { AbsoluteFill, OffthreadVideo, Sequence, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame } from "remotion";
 import { Audio } from "@remotion/media";
-import { C, D, FONT, T } from "../brand/theme";
+import { C, D, FONT, PRODUCT_FONT, T } from "../brand/theme";
 import { Rect } from "../debugger/camera";
 import { IconCheck, IconClose } from "../components/Icons";
 import { enter, exit } from "../lib/timeline";
@@ -19,7 +19,7 @@ export const v = (sec: number) => s(INTRO + sec);
 export const clipFrames = (voiceSec: number) => s(INTRO + voiceSec + OUTRO);
 
 export type IconC = React.FC<{ color: string; size?: number; stroke?: number }>;
-export const wi = (I: IconC) => <I color="#FFFFFF" size={30} stroke={2.4} />;
+export const wi = (I: IconC) => <I color="#012E4B" size={30} stroke={2.4} />;
 export const mid = (r: Rect) => ({ x: r.x + r.w / 2, y: r.y + r.h / 2 });
 
 // ---- one phone, right of the content area (content coordinates; its own layout is in local pixels) ----
@@ -28,10 +28,21 @@ export const L = (x: number, y: number, w: number, h: number): Rect => ({ x: PH.
 export const loc = (r: Rect): React.CSSProperties => ({ position: "absolute", left: r.x - PH.x, top: r.y - PH.y, width: r.w, height: r.h, boxSizing: "border-box" });
 export const phoneRect: Rect = L(0, 0, PH.w, PH.h);
 
+/** The example product's phone, in neutral grey device chrome so it never reads as the UXGate interface. */
 export const PhoneFrame: React.FC<{ children: React.ReactNode; fade?: number }> = ({ children, fade = 1 }) => (
-  <div dir="rtl" style={{ position: "absolute", left: PH.x, top: PH.y, width: PH.w, height: PH.h, borderRadius: 30, background: "#FFFFFF", border: `2px solid ${C.border}`, boxShadow: T.shadow.viewport, overflow: "hidden", fontFamily: FONT, boxSizing: "border-box" }}>
-    <div style={{ position: "absolute", inset: 0, opacity: fade }}>{children}</div>
-  </div>
+  <>
+    <div style={{ position: "absolute", left: PH.x - 10, top: PH.y - 10, width: PH.w + 20, height: PH.h + 20, borderRadius: 40, background: "#C9CED6", boxShadow: "0 18px 40px rgba(0,0,0,0.35)" }} />
+    <div dir="rtl" style={{ position: "absolute", left: PH.x, top: PH.y, width: PH.w, height: PH.h, borderRadius: 30, background: "#FFFFFF", overflow: "hidden", fontFamily: PRODUCT_FONT, boxSizing: "border-box" }}>
+      <div style={{ position: "absolute", inset: 0, opacity: fade }}>{children}</div>
+    </div>
+  </>
+);
+
+/** A UXGate sound effect at frame `at`, kept low under the narration. */
+export const Sfx: React.FC<{ at: number; name: string; volume?: number }> = ({ at, name, volume = 0.3 }) => (
+  <Sequence from={Math.max(0, at)} layout="none">
+    <Audio src={staticFile(`sfx/${name}.wav`)} volume={volume} />
+  </Sequence>
 );
 
 export const Header: React.FC<{ title: string; back?: boolean }> = ({ title, back }) => (
@@ -89,7 +100,7 @@ export const CaseChip: React.FC<{ y: number; text: string; p: number; warn?: boo
 export const ListCard: React.FC<{ y?: number; title?: string; p: number; items: { text: string; p: number; no?: boolean }[]; w?: number }> = ({ y = 120, title, p, items, w = 440 }) => {
   if (p <= 0) return null;
   return (
-    <div dir="rtl" style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, fontFamily: FONT, background: "#FFFFFF", border: `2px solid ${C.border}`, borderRadius: 22, boxShadow: T.shadow.viewport, padding: "18px 24px", boxSizing: "border-box" }}>
+    <div dir="rtl" style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, fontFamily: FONT, background: C.surface, border: `2px solid ${C.border}`, borderRadius: 22, boxShadow: T.shadow.viewport, padding: "18px 24px", boxSizing: "border-box" }}>
       {title ? <div style={{ fontSize: 26, fontWeight: 700, color: C.select, lineHeight: 1.4, marginBottom: 6 }}>{title}</div> : null}
       {items.map((it, i) => (
         <div key={it.text} style={{ display: "flex", alignItems: "center", gap: 14, minHeight: 62, borderTop: i || title ? `1px solid ${C.border}` : undefined, opacity: it.p, translate: `${(1 - it.p) * -20}px 0px` }}>
@@ -132,12 +143,14 @@ export const IntroCard: React.FC<{ title: string; sub: string; points: string[] 
   const o = exit(f, s(INTRO) - 10, 10);
   if (o <= 0) return null;
   return (
-    <AbsoluteFill dir="rtl" style={{ zIndex: 50, background: C.workspace, opacity: o, fontFamily: FONT, alignItems: "center", justifyContent: "center", padding: 80, boxSizing: "border-box" }}>
+    <AbsoluteFill dir="rtl" style={{ zIndex: 50, background: C.workspace, backgroundImage: `radial-gradient(${C.border} 1.6px, transparent 1.6px)`, backgroundSize: "24px 24px", opacity: o, fontFamily: FONT, alignItems: "center", justifyContent: "center", padding: 80, boxSizing: "border-box" }}>
+      <Sfx at={0} name="gate-open" volume={0.35} />
+      <Img src={staticFile("brand/uxgate-mark-white.svg")} style={{ height: 96, marginBottom: 34, opacity: enter(f, 0, 12) }} />
       <div dir="ltr" style={{ fontSize: 30, fontWeight: 700, color: C.select, opacity: enter(f, 2, 12) }}>{sub}</div>
       <div style={{ fontSize: 66, fontWeight: 800, color: C.text, marginTop: 18, textAlign: "center", lineHeight: 1.3, opacity: enter(f, 6, 14), translate: `0px ${(1 - enter(f, 6, 14)) * 20}px` }}>{title}</div>
       <div style={{ display: "flex", gap: 14, marginTop: 40, flexWrap: "wrap", justifyContent: "center" }}>
         {points.map((t, i) => (
-          <span key={t} style={{ fontSize: 28, fontWeight: 600, color: C.text, background: "#FFFFFF", border: `2px solid ${C.border}`, borderRadius: 999, padding: "12px 24px", opacity: enter(f, 16 + i * 6, 12) }}>{t}</span>
+          <span key={t} style={{ fontSize: 28, fontWeight: 600, color: C.text, background: C.surface, border: `2px solid ${C.border}`, borderRadius: 999, padding: "12px 24px", opacity: enter(f, 16 + i * 6, 12) }}>{t}</span>
         ))}
       </div>
     </AbsoluteFill>
@@ -151,10 +164,11 @@ export const RecapCard: React.FC<{ voiceSec: number; title: string; items: { tex
   const p = enter(f, a, 14);
   if (p <= 0) return null;
   return (
-    <AbsoluteFill dir="rtl" style={{ zIndex: 50, background: C.workspace, opacity: p, fontFamily: FONT, alignItems: "center", justifyContent: "center", padding: "60px 90px", boxSizing: "border-box" }}>
+    <AbsoluteFill dir="rtl" style={{ zIndex: 50, background: C.workspace, backgroundImage: `radial-gradient(${C.border} 1.6px, transparent 1.6px)`, backgroundSize: "24px 24px", opacity: p, fontFamily: FONT, alignItems: "center", justifyContent: "center", padding: "60px 90px", boxSizing: "border-box" }}>
+      <Sfx at={a} name="lesson-complete" volume={0.3} />
       <div style={{ fontSize: 30, fontWeight: 700, color: C.select }}>الخلاصة</div>
       <div style={{ fontSize: 52, fontWeight: 800, color: C.text, marginTop: 10, marginBottom: 30, textAlign: "center", lineHeight: 1.3 }}>{title}</div>
-      <div style={{ width: "100%", background: "#FFFFFF", border: `2px solid ${C.border}`, borderRadius: 26, padding: "10px 34px", boxSizing: "border-box", boxShadow: T.shadow.viewport }}>
+      <div style={{ width: "100%", background: C.surface, border: `2px solid ${C.border}`, borderRadius: 26, padding: "10px 34px", boxSizing: "border-box", boxShadow: T.shadow.viewport }}>
         {items.map((it, i) => {
           const q = enter(f, a + 10 + i * 8, 12);
           return (

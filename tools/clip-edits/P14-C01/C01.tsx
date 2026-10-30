@@ -127,7 +127,7 @@ export const C01: React.FC = () => {
   if (scene === "intro" || scene === "home") {
     phone = (
       <>
-        <Header title="متجري" />
+        <Header title="سوق لين" />
         {ask > 0 ? (
           <div style={{ ...loc(askRect), height: (ASK_H - 12) * ask, overflow: "hidden", borderRadius: 14, background: D.brandSoft, border: `2px solid ${D.brand}`, padding: "12px 14px" }}>
             {f >= B.n1Save + 6 ? (
