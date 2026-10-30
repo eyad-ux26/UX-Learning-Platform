@@ -72,7 +72,7 @@ create table public.profiles (
 create table public.onboarding (
   user_id uuid primary key references auth.users (id) on delete cascade,
   goal text,
-  experience text,
+  focus text,
   weekly_time text,
   recommended_path_id text references public.paths (id),
   skipped boolean not null default false,

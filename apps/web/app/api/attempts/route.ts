@@ -3,6 +3,7 @@ import { getLessonVersion } from "@uxgate/content";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { bodySchema, processEvents } from "@/lib/server/process-attempts";
+import { localDay } from "@/lib/progress";
 
 /**
  * Receives a learner's committed answers, re-scores them from the stored lesson and saves them.
@@ -52,7 +53,23 @@ export async function POST(req: Request) {
     );
     if (error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
   }
-  if (out.finished && !attempt.finished_at) await db.from("attempts").update({ finished_at: new Date().toISOString() }).eq("id", attempt.id);
+  if (out.finished && !attempt.finished_at) {
+    const now = new Date();
+    // Only the request that actually flips finished_at counts the lesson, so a double send cannot count it twice.
+    const { data: flipped } = await db.from("attempts").update({ finished_at: now.toISOString() }).eq("id", attempt.id).is("finished_at", null).select("id");
+    if (flipped?.length) await recordFinish(db, userId, version.body.steps.flatMap((s) => ("skill" in s ? [s.skill] : [])), now);
+  }
 
   return NextResponse.json({ saved: out.results.length, xp: out.xp, finished: out.finished, rejected: out.rejected });
+}
+
+/** A lesson was finished for the first time in this attempt: count it for today and mark its skills Practiced. */
+async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, skillIds: string[], now: Date) {
+  const { data: profile } = await db.from("profiles").select("time_zone, daily_goal").eq("user_id", userId).maybeSingle();
+  const day = localDay(now, profile?.time_zone);
+  const { data: today } = await db.from("daily_activity").select("lessons_done").eq("user_id", userId).eq("day", day).maybeSingle();
+  const lessonsDone = (today?.lessons_done ?? 0) + 1;
+  await db.from("daily_activity").upsert({ user_id: userId, day, lessons_done: lessonsDone, goal_met: lessonsDone >= (profile?.daily_goal ?? 1) }, { onConflict: "user_id,day" });
+  const unique = [...new Set(skillIds)];
+  if (unique.length) await db.from("skill_states").upsert(unique.map((skill_id) => ({ user_id: userId, skill_id, state: "practiced" })), { onConflict: "user_id,skill_id", ignoreDuplicates: true });
 }

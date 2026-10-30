@@ -9,3 +9,14 @@ export function Logo({ height = 26 }: { height?: number }) {
     </>
   );
 }
+
+/** The small mark used in phone headers. */
+export function IconMark({ height = 30 }: { height?: number }) {
+  const style = { height, width: "auto" };
+  return (
+    <>
+      <img className="logo-on-light" src="/brand/icon.svg" alt="UXGate" style={style} />
+      <img className="logo-on-dark" src="/brand/icon-white.svg" alt="UXGate" style={style} />
+    </>
+  );
+}

@@ -80,7 +80,10 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
           <div className="paths-grid">
             {paths.map((p) => (
               <Link key={p.name} href="/signup" className="card press path-card">
-                <span className="path-art">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={`/ill/uxgate-ill-${p.img}.png`} alt="" width={84} height={84} /></span>
+                <span className="path-art">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/ill/uxgate-ill-${p.img}.png`} alt="" width={84} height={84} />
+                </span>
                 <span className="path-body">
                   <span className="t-label ltr path-name">{p.name}</span>
                   <span className="t-small ink-2">{p.sub}</span>
