@@ -37,7 +37,7 @@ Layout: on mobile the order is question, example, answer area, bottom bar. On de
 
 ## Feedback
 
-- **Wrong:** "Not quite" sheet with "Try n of 3", the misconception line, hints as comment pins ("Hint 1 of 2", then 2), "Show the answer" from the second try, Try again. When confidence was Sure: "You were sure, so this one comes first in your review." A flag link "Think your answer works too? Ask for a review" on every wrong sheet.
+- **Wrong:** "Not quite" sheet with "Try n of 3", the misconception line, hints as comment pins ("Hint 1 of 2", then 2), Try again. After the third wrong try, Try again goes away and "Show the answer" appears (hint 1, then hint 2, then the answer). When confidence was Sure: "You were sure, so this one comes first in your review." A flag link "Think your answer works too? Ask for a review" on every wrong sheet.
 - **Revealed:** "The answer, step by step" with numbered worked steps; no XP.
 - **Right:** XP, the answer and a "Why?" button that opens the explanation.
 - **Skill check:** no hints, no verdict per step. Check leads to a quiet "Answer saved" sheet with progress dots and "No right or wrong during a skill check". The summary page lists each skill as Shown أثبتّ or "Try again later".
@@ -71,4 +71,4 @@ Sample content only. Fix uses P01-U01-L02 step 5; the rest use Hana's Gym and Lu
 ## Sprint 1 copy fixes in this change
 
 - Second hint on Hana's gym step (`ScreenStep`, `DeskStep`).
-- The five landing FAQs from the slice 2 brief (`ScreenLanding`, `DeskLanding`). The landing boards have fixed heights, so check the FAQ end in the build.
+- The five landing FAQs from the slice 2 brief (`ScreenLanding`, `DeskLanding`). The landing boards grew to fit them (mobile 2940, desktop 2640); all five show unclipped in English and Arabic.
