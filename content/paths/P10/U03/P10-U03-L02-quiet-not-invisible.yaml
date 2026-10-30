@@ -1,0 +1,368 @@
+id: P10-U03-L02
+mode: lesson
+minutes: 8
+title:
+  en: "Quiet, not invisible"
+  ar: "هادئ، لا مختفٍ"
+sources:
+  - title: { en: "5 Visual Treatments that Improve Accessibility (NN/g)", ar: "5 معالجات بصرية تحسّن سهولة الوصول (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-treatments-accessibility/"
+  - title: { en: "Low-Contrast Text Is Not the Answer (NN/g)", ar: "النص منخفض الـ Contrast ليس هو الحل (NN/g)" }
+    url: "https://www.nngroup.com/articles/low-contrast/"
+  - title: { en: "Visual Hierarchy in UX: Definition (NN/g)", ar: "التسلسل البصري في تجربة المستخدم: تعريف (NN/g)" }
+    url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/"
+review_labels:
+  MC-P10-009: { en: "Supporting text still needs 4.5:1", ar: "النص المساند يحتاج 4.5:1 أيضًا" }
+  MC-P10-044: { en: "Cut clutter instead of fading it", ar: "احذف الزحام بدل أن تبهته" }
+  MC-P10-045: { en: "Phones are read in bright light", ar: "الهواتف تُقرأ في ضوء قوي" }
+  MC-P10-048: { en: "Bold doesn't make small text \"large\"", ar: "الخط الـ Bold لا يجعل النص الصغير «كبيرًا»" }
+  MC-P10-049: { en: "Passing contrast isn't the same as clear hierarchy", ar: "اجتياز الـ Contrast لا يعني وضوح الـ Visual hierarchy" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Toned down", ar: "تمّ تهدئته" }
+    body:
+      en: "To stop the cancellation rule competing with Reserve, a designer made it pale grey.\n\nIt certainly stopped competing. Sara is reading on her phone, outside, in the afternoon sun."
+      ar: "حتى لا ينافس شرط الإلغاء زرَّ الحجز، جعله أحد المصمّمين رماديًا باهتًا.\n\nتوقّف عن المنافسة فعلًا. لكن سارة تقرأ على هاتفها، في الخارج، تحت شمس العصر."
+    mock:
+      blocks: &pale
+        - { kind: title, text: "@W1a" }
+        - { kind: meta, text: "@W1b", gap: s }
+        - { kind: meta, text: "@W1d", gap: s }
+        - { kind: button, text: "@W1f", gap: m }
+        - { kind: text, px: 14, color: faint, text: "@W1g", gap: s }
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U03-04
+    part: try
+    rules: [R12]
+    value:
+      en: "Contrast (NN/g, citing WCAG): the contrast ratio between text and its background should be at least 4.5:1. Quieter doesn't have to mean fainter."
+      ar: "الـ Contrast (NN/g نقلًا عن WCAG): يجب أن تكون نسبة التباين بين النص وخلفيته 4.5:1 على الأقل. الأهدأ لا يعني بالضرورة الأبهت."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "the color-contrast ratio between text and its background should be at least 4.5:1" }
+    prompt:
+      en: "The rule is 14px text on white. Text this size needs a contrast ratio of at least 4.5:1 with its background. Try each grey. Which one should ship?"
+      ar: "الشرط نص بحجم 14px على خلفية بيضاء. والنص بهذا الحجم يحتاج نسبة تباين (Contrast ratio) لا تقل عن 4.5:1 مع خلفيته. جرّب كل درجة رمادي. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now: pale grey, 2.3:1", ar: "الآن: رمادي باهت، 2.3:1" }
+      blocks: *pale
+    options:
+      - id: light
+        text: { en: "Light grey, 3.0:1", ar: "رمادي فاتح، 3.0:1" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1d", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: text, px: 14, color: pale, text: "@W1g", gap: s }
+      - id: mid
+        text: { en: "Mid grey, 5.3:1", ar: "رمادي متوسط، 5.3:1" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1d", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: text, px: 14, color: muted, text: "@W1g", gap: s }
+      - id: keep
+        text: { en: "Keep the pale grey; it's quiet, and the rule is only a detail", ar: "أبقِ الرمادي الباهت؛ فهو هادئ، والشرط مجرد تفصيل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks: *pale
+    answer: [mid]
+    misconceptions:
+      - id: MC-P10-009
+        when: [light, keep]
+        feedback:
+          en: "Both are below 4.5:1, so many people, especially outdoors or with older eyes, will struggle to read a rule they need. Quiet text still has to pass."
+          ar: "كلاهما أقل من 4.5:1، فسيجد كثيرون صعوبة في قراءة شرط يحتاجونه، خصوصًا في الخارج أو مع تقدّم العمر. النص الهادئ يجب أن يجتاز الحدّ أيضًا."
+    hints:
+      - { en: "The rule is 4.5:1 for 14px text. Check each grey's number.", ar: "القاعدة هي 4.5:1 لنص بحجم 14px. افحص رقم كل لون رمادي." }
+      - { en: "Quiet is fine, as long as it still passes the line.", ar: "الهدوء مقبول، ما دام النص ما زال يتجاوز الحد." }
+    correct:
+      en: "Quieter than the facts, and still above 4.5:1."
+      ar: "أهدأ من المعلومات، وما زال فوق 4.5:1."
+    explain:
+      en: "Mid grey is clearly quieter than the near-black facts, and it still passes. You don't have to choose between a calm page and a readable one."
+      ar: "الرمادي المتوسط أهدأ بوضوح من المعلومات القريبة من الأسود، وما زال يجتاز الحدّ. لست مضطرًا للاختيار بين صفحة هادئة وصفحة مقروءة."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [eye, text, layers, phone, target]
+    title: { en: "Quiet, but readable", ar: "هادئ، لكن مقروء" }
+    body:
+      en: "**Contrast ratio** compares how light text is against its background, from 1:1 (invisible) to 21:1 (black on white). A design tool or contrast checker gives you the number.\n\n- **Normal text:** at least 4.5:1.\n- **Large text:** at least 3:1. Large means about 24px regular, or about 19px bold. A 14px bold label is not large.\n- **Real life:** phones are read in sunlight and with glare, and eyesight gets weaker with age. Low contrast fails first there.\n- **Too busy?** Remove what isn't needed rather than fading it.\n- **Passing isn't enough:** readable text still needs a clear order of what's important."
+      ar: "**نسبة التباين (Contrast ratio)** تقارن بين فتاحة النص وفتاحة خلفيته، من 1:1 (غير مرئي) إلى 21:1 (أسود على أبيض). وأداة التصميم أو أداة فحص التباين تعطيك الرقم.\n\n- **النص العادي:** 4.5:1 على الأقل.\n- **النص الكبير:** 3:1 على الأقل. والكبير يعني نحو 24px بخط عادي، أو نحو 19px بخط Bold. والتسمية بحجم 14px Bold ليست كبيرة.\n- **في الواقع:** تُقرأ الهواتف تحت الشمس ومع الانعكاس، والنظر يضعف مع العمر. وهناك يفشل التباين المنخفض أولًا.\n- **الصفحة مزدحمة؟** احذف ما لا يلزم بدل أن تجعله باهتًا.\n- **الاجتياز وحده لا يكفي:** النص المقروء يحتاج أيضًا ترتيبًا واضحًا لما هو مهم."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U03-05
+    part: guided
+    rules: [R06, R13]
+    value:
+      en: "Large text (NN/g, citing WCAG): text at least 18pt (24px) or 14pt bold (about 19px) may use 3:1. A 14px bold label is not large and still needs 4.5:1."
+      ar: "النص الكبير (NN/g نقلًا عن WCAG): النص الذي لا يقل عن 18pt (24px) أو 14pt Bold (نحو 19px) يكفيه 3:1. والتسمية بحجم 14px Bold ليست كبيرة وتحتاج 4.5:1."
+    ref: { url: "https://www.nngroup.com/articles/visual-treatments-accessibility/", quote: "For text that is at least 18pt or 14pt bold, the ratio is a bit more generous at 3:1." }
+    scenario:
+      en: "On the \"Before you come\" page, the 24px heading and a 14px bold label are both in light grey (3.0:1)."
+      ar: "في صفحة «قبل أن تأتي»، العنوان بحجم 24px وتسمية بحجم 14px Bold، كلاهما باللون الرمادي الفاتح (3.0:1)."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &before
+        - { kind: text, px: 24, color: pale, text: { en: "Before you come", ar: "قبل أن تأتي" } }
+        - { kind: text, px: 14, weight: bold, color: pale, text: { en: "Doors close at 18:05", ar: "تُغلق الأبواب الساعة 18:05" }, gap: m }
+        - { kind: text, text: { en: "Bring pencil and paper. No laptop needed.", ar: "أحضر قلمًا وورقًا. لا تحتاج إلى Laptop." }, gap: s }
+    options:
+      - id: heading
+        text: { en: "Darken the heading; keep the label light grey because it's bold", ar: "اجعل العنوان أغمق؛ وأبقِ التسمية رمادية فاتحة لأنها Bold" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 24, text: { en: "Before you come", ar: "قبل أن تأتي" } }
+            - { kind: text, px: 14, weight: bold, color: pale, text: { en: "Doors close at 18:05", ar: "تُغلق الأبواب الساعة 18:05" }, gap: m }
+            - { kind: text, text: { en: "Bring pencil and paper. No laptop needed.", ar: "أحضر قلمًا وورقًا. لا تحتاج إلى Laptop." }, gap: s }
+      - id: label
+        text: { en: "Darken the 14px label; the 24px heading can stay light grey", ar: "اجعل التسمية بحجم 14px أغمق؛ والعنوان بحجم 24px يمكن أن يبقى رماديًا فاتحًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 24, color: pale, text: { en: "Before you come", ar: "قبل أن تأتي" } }
+            - { kind: text, px: 14, weight: bold, text: { en: "Doors close at 18:05", ar: "تُغلق الأبواب الساعة 18:05" }, gap: m }
+            - { kind: text, text: { en: "Bring pencil and paper. No laptop needed.", ar: "أحضر قلمًا وورقًا. لا تحتاج إلى Laptop." }, gap: s }
+      - id: none
+        text: { en: "Keep both; 3.0:1 is enough for anything bold or big", ar: "أبقِ الاثنين؛ فـ 3.0:1 تكفي لأي نص Bold أو كبير" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks: *before
+    answer: [label]
+    misconceptions:
+      - id: MC-P10-048
+        when: [heading, none]
+        feedback:
+          en: "Bold counts as large only from about 19px. At 14px, bold or not, the label needs 4.5:1. The 24px heading is large, so 3:1 is enough for it."
+          ar: "الخط الـ Bold يُعدّ كبيرًا فقط من نحو 19px. وبحجم 14px، Bold أو لا، تحتاج التسمية 4.5:1. أما العنوان بحجم 24px فهو كبير، فيكفيه 3:1."
+    hints:
+      - { en: "Which text counts as large: 24px, or 14px bold?", ar: "أي نص يُعدّ كبيرًا: 24px، أم 14px عريض؟" }
+      - { en: "Large text may go down to 3:1. Is the 14px label large?", ar: "النص الكبير يمكن أن ينخفض إلى 3:1. هل التسمية بحجم 14px كبيرة؟" }
+    correct:
+      en: "Size decides the line; 14px bold isn't large."
+      ar: "الحجم يحدّد الحدّ؛ و14px Bold ليس كبيرًا."
+    explain:
+      en: "Large text is easier to read, so its line is lower: 3:1 from about 24px regular or 19px bold. Smaller text needs 4.5:1 whatever its weight, and here it's the label people must read."
+      ar: "النص الكبير أسهل في القراءة، لذلك حدّه أقل: 3:1 من نحو 24px عادي أو 19px Bold. والنص الأصغر يحتاج 4.5:1 مهما كان سُمكه، وهنا التسمية هي ما يجب أن يقرأه الناس."
+
+  - id: S05
+    type: tune
+    skill: SK-P10-U03-04
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Low contrast (NN/g): instead of fading text to calm a dense screen, remove what isn't essential or make the display less condensed."
+      ar: "التباين المنخفض (NN/g): بدل أن تُبهت النص لتهدئة شاشة مزدحمة، احذف ما ليس ضروريًا أو اجعل العرض أقل ازدحامًا."
+    ref: { url: "https://www.nngroup.com/articles/low-contrast/", quote: "explore alternatives to make the information display less condensed" }
+    scenario:
+      en: "Under its title, each session card in the list shows five lines. To make the list feel calmer, a designer faded four of them to pale grey (2.3:1). People choose a session by its date, time and price."
+      ar: "تحت العنوان، تعرض كل بطاقة جلسة في القائمة خمسة أسطر. ولتبدو القائمة أهدأ، جعل أحد المصمّمين أربعة منها رمادية باهتة (2.3:1). والناس يختارون الجلسة حسب التاريخ والموعد والسعر."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &busy
+        - { kind: heading, text: "@W1a" }
+        - { kind: text, px: 14, text: "@W1b", gap: xs }
+        - { kind: text, px: 14, color: faint, text: "@W1d", gap: xs }
+        - { kind: text, px: 14, color: faint, text: { en: "Host: Downtown Learning Hub", ar: "المنظّم: مركز التعلّم بوسط البلد" }, gap: xs }
+        - { kind: text, px: 14, color: faint, text: { en: "Session ID: SK-1117", ar: "رقم الجلسة: SK-1117" }, gap: xs }
+        - { kind: text, px: 14, color: faint, text: { en: "Added 3 weeks ago", ar: "أُضيفت قبل 3 أسابيع" }, gap: xs }
+    options:
+      - id: cut
+        text: { en: "Remove the ID and \"Added\" lines; show the price in near-black and the host in mid grey", ar: "احذف سطري الرقم و«أُضيفت»؛ واعرض السعر بلون قريب من الأسود والمنظّم بالرمادي المتوسط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W1a" }
+            - { kind: text, px: 14, text: "@W1b", gap: xs }
+            - { kind: text, px: 14, text: "@W1d", gap: xs }
+            - { kind: text, px: 14, color: muted, text: { en: "Host: Downtown Learning Hub", ar: "المنظّم: مركز التعلّم بوسط البلد" }, gap: xs }
+      - id: small
+        text: { en: "Keep all five lines, in mid grey, but at 11px so they take less room", ar: "أبقِ الأسطر الخمسة بالرمادي المتوسط، لكن بحجم 11px لتأخذ مساحة أقل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: "@W1a" }
+            - { kind: text, px: 11, text: "@W1b", gap: xs }
+            - { kind: text, px: 11, color: muted, text: "@W1d", gap: xs }
+            - { kind: text, px: 11, color: muted, text: { en: "Host: Downtown Learning Hub", ar: "المنظّم: مركز التعلّم بوسط البلد" }, gap: xs }
+            - { kind: text, px: 11, color: muted, text: { en: "Session ID: SK-1117", ar: "رقم الجلسة: SK-1117" }, gap: xs }
+            - { kind: text, px: 11, color: muted, text: { en: "Added 3 weeks ago", ar: "أُضيفت قبل 3 أسابيع" }, gap: xs }
+      - id: keep
+        text: { en: "Keep it; the faded lines make the list feel calm", ar: "أبقِها؛ فالأسطر الباهتة تجعل القائمة هادئة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks: *busy
+    answer: [cut]
+    misconceptions:
+      - id: MC-P10-044
+        when: [keep]
+        feedback:
+          en: "The price is one of the three things people choose by, and now it's hard to read. Fading hides clutter and facts alike. Remove what isn't needed instead."
+          ar: "السعر من الأشياء الثلاثة التي يختار بها الناس، والآن صار صعب القراءة. الإبهات يُخفي الزحام والمعلومات معًا. احذف ما لا يلزم بدلًا من ذلك."
+      - id: MC-P10-009
+        when: [small]
+        feedback:
+          en: "Shrinking everything to 11px just moves the problem: tiny text is hard to read too. The ID and \"Added\" lines don't help anyone choose; remove them."
+          ar: "تصغير كل شيء إلى 11px ينقل المشكلة فقط: فالنص الصغير جدًا صعب القراءة أيضًا. وسطرا الرقم و«أُضيفت» لا يساعدان أحدًا على الاختيار؛ احذفهما."
+    hints:
+      - { en: "Which lines does a person need to choose a session?", ar: "ما الأسطر التي يحتاجها الشخص لاختيار جلسة؟" }
+      - { en: "Fading or shrinking the lines keeps them but makes them hard to read. What else can you do with lines nobody uses?", ar: "تخفيف لون الأسطر أو تصغيرها يبقيها لكنه يصعّب قراءتها. ماذا يمكنك أن تفعل أيضًا بالأسطر التي لا يستخدمها أحد؟" }
+    correct:
+      en: "Fewer lines, all readable."
+      ar: "أسطر أقل، وكلها مقروءة."
+    explain:
+      en: "A busy card calls for editing, not fading. Keep what people choose by, keep secondary details in a grey that passes, and drop what nobody uses."
+      ar: "البطاقة المزدحمة تحتاج إلى تحرير، لا إلى إبهات. أبقِ ما يختار به الناس، وأبقِ التفاصيل الثانوية برمادي يجتاز الحدّ، واحذف ما لا يستخدمه أحد."
+
+  - id: S06
+    type: compare
+    skill: SK-P10-U03-02
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S02 to S05: passing is necessary, not sufficient. NN/g's squint test (blur the design and see what stands out) checks hierarchy, which contrast numbers don't."
+      ar: "مقارنة مع الخطوات 2 إلى 5: الاجتياز ضروري، لكنه لا يكفي. اختبار التحديق في NN/g (طمس التصميم ورؤية ما يبرز) يفحص الـ Visual hierarchy، وهذا ما لا تفحصه أرقام الـ Contrast."
+    ref: { url: "https://www.nngroup.com/articles/visual-hierarchy-ux-definition/", quote: "squint or apply a slight blur to the design" }
+    prompt:
+      en: "Every line in both versions passes 4.5:1. Which version should ship?"
+      ar: "كل سطر في النسختين يجتاز 4.5:1. أي نسخة يجب أن تُطلق؟"
+    a:
+      mock:
+        blocks:
+          - { kind: text, px: 18, weight: bold, text: "@W1a" }
+          - { kind: text, px: 18, weight: bold, text: "@W1b", gap: s }
+          - { kind: text, px: 18, weight: bold, text: "@W1d", gap: s }
+          - { kind: text, px: 18, weight: bold, text: "@W1g", gap: s }
+          - { kind: button, text: "@W1f", gap: m }
+    b:
+      mock:
+        blocks:
+          - { kind: text, px: 24, weight: bold, text: "@W1a" }
+          - { kind: text, px: 16, text: "@W1b", gap: s }
+          - { kind: text, px: 16, text: "@W1d", gap: s }
+          - { kind: button, text: "@W1f", gap: m }
+          - { kind: text, px: 14, color: muted, text: "@W1g", gap: s }
+    answer: b
+    reason:
+      prompt: { en: "What does this show?", ar: "ماذا يوضّح هذا؟" }
+      options:
+        - { id: enough, text: { en: "If every line passes, the design is done", ar: "إذا اجتاز كل سطر الحدّ، فالتصميم انتهى" } }
+        - { id: both, text: { en: "Passing makes text readable; sizes and weights still have to show what matters", ar: "الاجتياز يجعل النص مقروءًا؛ لكن الأحجام والسُمك يجب أن تُظهر ما هو مهم" } }
+        - { id: bigger, text: { en: "Bigger text is always clearer", ar: "النص الأكبر أوضح دائمًا" } }
+      answer: [both]
+      misconceptions:
+        - id: MC-P10-049
+          when: [enough, bigger]
+          feedback:
+            en: "A passes everywhere and uses big text, yet every line is equally loud. Readable isn't the same as clear."
+            ar: "A تجتاز الحدّ في كل مكان وتستخدم نصًا كبيرًا، لكن كل سطر بالصوت نفسه. المقروء ليس هو الواضح."
+    misconceptions:
+      - id: MC-P10-049
+        when: [a]
+        feedback:
+          en: "A is readable, but squint at it: every line is the same 18px bold, so nothing leads. Passing contrast doesn't create an order."
+          ar: "A مقروءة، لكن حدّق فيها: كل سطر بالحجم نفسه 18px Bold، فلا شيء يقود. اجتياز الـ Contrast لا يصنع ترتيبًا."
+    hints:
+      - { en: "Both pass contrast. Look at what's darkest and largest in each.", ar: "كلتاهما تنجح في التباين. انظر إلى الأغمق والأكبر في كل منهما." }
+      - { en: "Does each version show which fact matters most?", ar: "هل توضّح كل نسخة المعلومة الأهم؟" }
+    correct:
+      en: "Readable and ordered."
+      ar: "مقروء ومرتّب."
+    explain:
+      en: "A contrast check answers \"can people read it?\" Hierarchy answers \"what do they read first?\" Squint at a design, or blur it, to check the second."
+      ar: "فحص الـ Contrast يجيب عن: «هل يستطيع الناس قراءته؟» والـ Visual hierarchy تجيب عن: «ماذا يقرؤون أولًا؟» حدّق في التصميم، أو اطمسه، لتفحص السؤال الثاني."
+
+  - id: S07
+    type: tune
+    skill: SK-P10-U03-04
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Low contrast (NN/g): imagine reading low-contrast text on a phone while walking in bright sun; glare makes even high contrast harder."
+      ar: "حالة جديدة. التباين المنخفض (NN/g): تخيّل قراءة نص منخفض التباين على هاتف وأنت تمشي تحت شمس قوية؛ فالانعكاس يُصعّب حتى التباين العالي."
+    ref: { url: "https://www.nngroup.com/articles/low-contrast/", quote: "Imagine trying to read low-contrast text on a mobile device while walking in bright sun." }
+    scenario:
+      en: "Lina checks her delivery while walking home at noon. To look \"subtle\", the arrival time is 14px light grey (3.0:1)."
+      ar: "تتابع لينا طلبها وهي تمشي إلى البيت وقت الظهر. ولتبدو الشاشة «ناعمة»، وقت الوصول مكتوب بحجم 14px ورمادي فاتح (3.0:1)."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      blocks: &lina
+        - { kind: heading, text: { en: "Your order", ar: "طلبك" } }
+        - { kind: text, px: 14, color: pale, text: "@D1a", gap: s }
+        - { kind: text, px: 14, text: "@D1b", gap: s }
+        - { kind: small, text: "@D1c", gap: s }
+    options:
+      - id: dark
+        text: { en: "Arrival time in near-black at 22px, as the first line", ar: "وقت الوصول بلون قريب من الأسود وبحجم 22px، في السطر الأول" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: text, px: 22, weight: bold, text: "@D1a" }
+            - { kind: text, px: 14, text: "@D1b", gap: s }
+            - { kind: small, text: "@D1c", gap: s }
+      - id: bold
+        text: { en: "Keep the light grey, but make it bold", ar: "أبقِ الرمادي الفاتح، لكن اجعله Bold" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: heading, text: { en: "Your order", ar: "طلبك" } }
+            - { kind: text, px: 14, weight: bold, color: pale, text: "@D1a", gap: s }
+            - { kind: text, px: 14, text: "@D1b", gap: s }
+            - { kind: small, text: "@D1c", gap: s }
+      - id: keep
+        text: { en: "Keep it; it reads fine on a good screen indoors", ar: "أبقِه؛ فهو مقروء جيدًا على شاشة جيدة داخل المبنى" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks: *lina
+    answer: [dark]
+    misconceptions:
+      - id: MC-P10-045
+        when: [keep]
+        feedback:
+          en: "We judge with our own eyes on a good screen indoors. Lina reads in the sun, with glare, on the move. Low contrast fails first there."
+          ar: "نحن نحكم بأعيننا على شاشة جيدة داخل المبنى. أما لينا فتقرأ تحت الشمس، مع الانعكاس، وهي تمشي. وهناك يفشل التباين المنخفض أولًا."
+      - id: MC-P10-048
+        when: [bold]
+        feedback:
+          en: "14px bold still isn't large text, so 3.0:1 still fails. And this is the one line Lina opened the screen for."
+          ar: "الـ 14px Bold ما زال ليس نصًا كبيرًا، فـ 3.0:1 ما زالت لا تجتاز الحدّ. وهذا هو السطر الوحيد الذي فتحت لينا الشاشة من أجله."
+    hints:
+      - { en: "Lina is walking in the noon sun. What does she need to read at a glance?", ar: "لينا تمشي في شمس الظهيرة. ماذا تحتاج أن تقرأ بنظرة سريعة؟" }
+      - { en: "Bold light grey is still light grey. What reads well outside?", ar: "الرمادي الفاتح العريض ما زال رماديًا فاتحًا. ما الذي يُقرأ جيدًا في الخارج؟" }
+    correct:
+      en: "The thing she came for, easy to read anywhere."
+      ar: "ما جاءت من أجله، سهل القراءة في أي مكان."
+    explain:
+      en: "\"Subtle\" was the wrong goal for the main fact. Strong contrast and a bigger size make it readable in the sun, and they also make it lead the screen."
+      ar: "«الناعم» كان الهدف الخطأ للمعلومة الأساسية. التباين القوي والحجم الأكبر يجعلانها مقروءة تحت الشمس، ويجعلانها تتصدّر الشاشة أيضًا."
+
+  - id: S08
+    type: card
+    part: recap
+    icons: [eye, text, layers, phone]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **4.5:1 for normal text:** made the cancellation rule quieter with a grey that still passes.\n- **Large text:** 3:1 only from about 24px, or 19px bold.\n- **Busy screens:** removed lines instead of fading them.\n- **Real conditions:** sun and glare make low contrast fail first.\n- **Passing isn't hierarchy:** readable text still needs a clear order.\n\nNext lesson: color that carries meaning."
+      ar: "- **4.5:1 للنص العادي:** جعلت شرط الإلغاء أهدأ برمادي ما زال يجتاز الحدّ.\n- **النص الكبير:** 3:1 فقط من نحو 24px، أو 19px Bold.\n- **الشاشات المزدحمة:** حذفت أسطرًا بدل أن تُبهتها.\n- **الظروف الحقيقية:** الشمس والانعكاس يُفشلان التباين المنخفض أولًا.\n- **الاجتياز ليس ترتيبًا:** النص المقروء يحتاج أيضًا ترتيبًا واضحًا.\n\nالدرس التالي: اللون الذي يحمل معنى."
