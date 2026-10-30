@@ -11,6 +11,8 @@ Sprint 1 design (design system and core learner screens) is done by the admins i
 | [`02-brand.md`](handoff/02-brand.md) | Logo, colours, type, icons and the brand look |
 | [`03-sprint-1-stories.md`](handoff/03-sprint-1-stories.md) | Sprint 1 design stories with acceptance checks |
 | [`04-screens-and-copy.md`](handoff/04-screens-and-copy.md) | Every Sprint 1 screen with English and Arabic copy |
+| [`05-playful-style-and-illustrations.md`](handoff/05-playful-style-and-illustrations.md) | The playful ledge style, motion and the illustration set |
+| [`06-videos-and-example-products.md`](handoff/06-videos-and-example-products.md) | Example products in videos and mock screens keep their own industry style |
 
 The brand images, logo files and a zip of everything are in the project files under `design-handoff/`.
 
@@ -20,6 +22,9 @@ The brand images, logo files and a zip of everything are in the project files un
 - **Colours:** taken from the UXGate Brand Resources: navy #012E4B, UXGate blue #005F99, cyan #78E4FC, ice #F2FAFD, mint #DDF5E8, night #00121B, logo teal #60BEBB.
 - **Type:** Cairo for Arabic, Titillium Web for English (Cairo's Latin letters are based on it).
 - **Icons:** Phosphor Icons; Tabler Icons outline at 1.5 stroke only for gaps.
+- **Playful layer:** 2px outlines and a solid 4px ledge under everything pressable, sinking when pressed; bold type; bouncy motion.
+- **Illustrations:** soft 3D set in [`system/illustrations/`](system/illustrations/), 33 stills and 9 animations.
+- **Example products:** never styled like UXGate; see handoff 06.
 - **Logo motion:** six animations for review in [`system/logo-motion/`](system/logo-motion/), described in [`system/motion-and-video.md`](system/motion-and-video.md).
 - **Video:** the design system also drives the Remotion lesson videos; [`system/video/`](system/video/) holds the video theme and the frame-driven logo.
 

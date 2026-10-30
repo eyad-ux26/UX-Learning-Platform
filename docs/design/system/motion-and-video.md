@@ -17,3 +17,7 @@ Each has a `-white` twin for dark grounds and videos. They are self-contained an
 - Videos: `video/UXGateLogoRemotion.tsx` (frame-driven, for Remotion) and `video/uxgate-video-theme.ts` (colours, fonts, sizes on the 1080 canvas, safe areas, timings in frames).
 
 All animations use the original logo paths unchanged.
+
+## Example products in videos
+
+Videos have two layers. The UXGate layer (title card, captions, recap, logo, pointers, selection frames, highlights) is always UXGate style. The example product being discussed always has its own industry identity (fictional brand, its own colours and fonts), sits inside a device or browser frame, and is labelled "Example" on first appearance, so it is never mistaken for UXGate itself. Full rules and starter styles: [`../handoff/06-videos-and-example-products.md`](../handoff/06-videos-and-example-products.md).

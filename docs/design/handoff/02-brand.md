@@ -45,6 +45,12 @@ Turn these into a product palette with light and dark themes. Status colours (ri
 
 **Phosphor Icons** (free, MIT, 1,500+ icons, regular, fill and duotone weights); its rounded shapes match the rounded door of the logo. Use regular for interface icons and fill for active or status icons. If an icon is missing, use **Tabler Icons** outline at 1.5 stroke so it looks the same. No emoji as icons.
 
+## Playful layer and illustrations
+
+See `05-playful-style-and-illustrations.md`: raised ledge surfaces that sink when pressed, bouncy motion, bold type, and the soft 3D illustration set (33 stills, 9 animated).
+
 ## The same system drives videos
 
 Lesson videos (Remotion, 1080 × 1080 at 30 fps, and 1080 × 1920 for reels) use the night look, the white logo, cyan for key words, and the same fonts and icons. Keep this in mind when defining colours, type sizes and motion.
+
+Example products shown in videos and mock screens must **not** look like UXGate; they get their own industry style. See `06-videos-and-example-products.md`.

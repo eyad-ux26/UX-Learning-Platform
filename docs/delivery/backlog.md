@@ -40,7 +40,7 @@ Goal: a UXGate design system and the core learner screens, made and approved in 
 | DS-03 | Core components with all states: buttons, inputs, choice cards, progress, chips, nav, sheets, toasts | 5 |
 | DS-04 | Learning components: step frame, Check bar, feedback sheet, hint, confidence tap, mock-screen frame, XP and streak | 5 |
 | DS-05 | Key screens, mobile, EN and AR, light and dark: landing, sign-up, onboarding, home, path map, lesson step states, lesson end | 5 |
-| DS-09 | Logo motion review | 1 |
+| DS-09 | Logo motion and illustration review | 1 |
 | PM-01 | Technical files: spec, architecture, data model, backlog, user stories, DoD, templates (done) | 2 |
 
 ### Sprint 2 · 5 – 11 Nov · Full prototype and app skeleton

@@ -24,7 +24,7 @@ UXGate already exists as a brand (Instagram posts, articles, UI/UX courses). Thi
 - About 2 steps per lesson ask "How sure are you?" before Check.
 - Each unit ends with a **skill check**: new scenario, no hints, no per-step verdict, a summary at the end.
 - Skill states: **Practiced** → **Shown** (skill check passed) → **Kept** (passed again in review days later).
-- Step types: choose (with reason), predict, words (microcopy), fix, tune (live preview), sort, order, match, spot (tap the problem on a screen), compare (two screens), video clip, concept card. Many steps show a **mock screen** (a small UI the learner judges).
+- Step types: choose (with reason), predict, words (microcopy), fix, tune (live preview), sort, order, match, spot (tap the problem on a screen), compare (two screens), video clip, concept card. Many steps show a **mock screen** (a small UI the learner judges). Mock screens are example products in their own industry style, never UXGate's (see 06).
 - Some paths include short video clips (reels style) between steps.
 
 ## Motivation, calmly

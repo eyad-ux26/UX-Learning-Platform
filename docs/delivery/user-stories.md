@@ -36,6 +36,7 @@ As the team, I want the basic components with every state, so that any screen ca
 - Button (primary, secondary, ghost, icon, sizes), text field, select, checkbox, radio, switch, chip, tabs, bottom nav, top bar, sheet, dialog, toast, progress bar, avatar, badge, empty state, skeleton.
 - Each with default, hover, focus, pressed, selected, disabled, loading and error where they apply (U24).
 - Shown in light and dark, LTR and RTL. Touch targets at least 44 px.
+- Pressable components use the playful ledge (2px outline, solid 4px ledge, sinks when pressed) from the handoff pack.
 - Uses one free icon library throughout (Phosphor recommended), with one similar backup only for gaps.
 
 ### DS-04 Learning components · 5 pts
@@ -56,12 +57,13 @@ As a learner, I want the main journey designed end to end, so that the team can 
 - Real copy from the handoff pack, never lorem ipsum.
 - A clickable flow from landing to lesson end.
 
-### DS-09 Logo motion review · 1 pt
+### DS-09 Logo motion and illustration review · 1 pt
 
-As an admin, I want to approve the logo animations before the app uses them, so that the logo moves the way the brand should.
+As an admin, I want to approve the logo animations and the illustration set before the app uses them, so that the brand moves and looks the way it should.
 
 - The six animations in `docs/design/system/logo-motion/` (splash, gate opens, loading, checking, success, idle blink) are reviewed; each is approved, changed or dropped.
-- Approved animations are placed in the design system's motion page.
+- The 33 illustrations and 9 animated illustrations in `docs/design/system/illustrations/` are reviewed the same way.
+- Approved items are placed in the design system's motion and illustration pages.
 
 ### PM-01 Technical files · 2 pts · done
 
