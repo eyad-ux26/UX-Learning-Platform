@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson pages</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Barlow:wght@500;600;700;800&amp;family=Almarai:wght@400;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{is.player}}" hint-placeholder-val="{{true}}">
+    <header class="lp-head">
+      <a href="#exit" onClick="{{exit}}" class="{{headBtn}}" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+      <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+        <span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{c.lessonName}}</span>
+      </sc-if>
+      <div class="progress" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="{{stepNo}}" aria-valuemin="0" aria-valuemax="10"><i style="width: {{pct}};"></i></div>
+      <span class="t-label num ink-2 lp-count">{{countText}}</span>
+      <button class="{{headBtn}}" type="button" aria-label="{{soundLabel}}" aria-pressed="{{soundPressed}}" onClick="{{toggleSound}}"><span class="{{soundIcon}}" aria-hidden="true"></span></button>
+    </header>
+  </sc-if>
+
+  <sc-if value="{{is.result}}" hint-placeholder-val="{{false}}">
+    <header class="lp-head" style="justify-content: space-between;">
+      <a href="#close" onClick="{{exit}}" class="{{headBtn}}" aria-label="{{c.close}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+      <sc-if value="{{tag.show}}" hint-placeholder-val="{{false}}"><span class="{{tag.cls}}"><span class="{{tag.icon}}" aria-hidden="true"></span>{{tag.text}}</span></sc-if>
+      <button class="{{headBtn}}" type="button" aria-label="{{soundLabel}}" aria-pressed="{{soundPressed}}" onClick="{{toggleSound}}"><span class="{{soundIcon}}" aria-hidden="true"></span></button>
+    </header>
+  </sc-if>
+
+  <!-- Video step -->
+  <sc-if value="{{is.video}}" hint-placeholder-val="{{false}}">
+    <main class="{{videoMain}}" style="{{videoGrid}}">
+      <section class="lp-work" style="gap: 10px;">
+        <div class="lp-q">
+          <p class="t-over" style="color: var(--link);">{{c.vOver}}</p>
+          <h1 class="lp-qt">{{c.vTitle}}</h1>
+        </div>
+        <div class="lp-act" style="gap: 10px;">
+          <figure class="lp-video" style="margin: 0;" aria-label="{{c.vLabel}}">
+            <div class="stage"></div>
+            <img src="/_blob/5667904a660c43335758c7e0120ae2b8" alt="" style="position: absolute; top: 12px; inset-inline-start: 12px; width: 26px; height: 26px;">
+            <span class="cursor-tag" style="position: absolute; top: 12px; inset-inline-end: 12px; --c: #78E4FC; --c-ink: #012E4B;"><b style="margin: 0;">{{c.vChapter}}</b></span>
+            <div style="position: absolute; inset: 44px 0 96px; display: grid; place-items: center;">
+              <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                <span class="frame-label" style="color: #9CC3D3;"><span class="ph ph-device-mobile" aria-hidden="true"></span>{{c.vExample}}</span>
+                <div style="position: relative; width: {{vMock.boxW}}px; height: {{vMock.boxH}}px;">
+                  <div style="position: absolute; top: 0; left: 50%; width: {{vMock.outerW}}px; margin-left: -{{vMock.half}}px; transform: scale({{vMock.scale}}); transform-origin: top center;">
+                    <div style="border-radius: 22px; border: 6px solid #2B3338; background: #2B3338; overflow: hidden;">
+                      <dc-import name="MockForm" lang="{{lang}}" product="gym" variant="now" size="{{vMock.size}}" width="{{vMock.width}}" hint-size="200px,220px"></dc-import>
+                    </div>
+                    <sc-if value="{{vMarked}}" hint-placeholder-val="{{true}}">
+                      <span class="sel-frame" style="position: absolute; left: 14px; right: 14px; bottom: {{vMock.markBottom}}px; height: {{vMock.markH}}px; --sel-line: #78E4FC; background: rgba(120, 228, 252, 0.16);"></span>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{v.start}}" hint-placeholder-val="{{false}}">
+              <button class="lp-vplay" type="button" onClick="{{play}}" aria-label="{{c.vPlay}}"><span class="ph ph-play-fill" aria-hidden="true"></span></button>
+            </sc-if>
+            <sc-if value="{{v.end}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0, 18, 27, 0.72);">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                  <button class="lp-vplay" type="button" onClick="{{play}}" aria-label="{{c.vReplay}}" style="position: static; margin: 0;"><span class="ph ph-replay" aria-hidden="true"></span></button>
+                  <span style="font-weight: 700; font-size: 15px;">{{c.vReplay}}</span>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{showCap}}" hint-placeholder-val="{{true}}">
+              <div class="cap" lang="{{capLang}}" dir="{{capDir}}"><span style="font-family: {{capFont}};">{{capText}}</span></div>
+            </sc-if>
+            <div class="ctl" dir="ltr">
+              <button class="lp-vbtn" type="button" onClick="{{play}}" aria-label="{{playLabel}}"><span class="{{playIcon}}" aria-hidden="true"></span></button>
+              <div class="lp-vbar" role="slider" aria-label="{{c.vSeek}}" aria-valuemin="0" aria-valuemax="72" aria-valuenow="{{v.sec}}" aria-valuetext="{{timeText}}" tabindex="0"><i style="width: {{v.pctStr}};"></i><b style="left: {{v.pctStr}};"></b></div>
+              <span class="lp-vtime num">{{timeText}}</span>
+              <button class="{{ccCls}}" type="button" aria-pressed="{{ccOn}}" onClick="{{toggleCc}}" aria-label="{{c.vCc}}"><span class="ph ph-cc" aria-hidden="true"></span></button>
+              <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><button class="lp-vbtn" type="button" aria-label="{{c.vFull}}"><span class="ph ph-corners-out" aria-hidden="true"></span></button></sc-if>
+            </div>
+          </figure>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <span class="t-small" style="font-weight: 700;">{{c.vCaptions}}</span>
+            <div class="lp-seg" role="group" aria-label="{{c.vCaptions}}">
+              <button type="button" aria-pressed="{{capEn}}" onClick="{{capToEn}}" lang="en">English</button>
+              <button type="button" aria-pressed="{{capAr}}" onClick="{{capToAr}}" lang="ar">العربية</button>
+            </div>
+            <span style="flex: 1;"></span>
+            <sc-if value="{{showTxBtn}}" hint-placeholder-val="{{true}}">
+              <button class="btn btn-secondary btn-sm press" type="button" aria-expanded="{{txOpenStr}}" onClick="{{toggleTx}}"><span class="ph ph-article" aria-hidden="true"></span>{{c.vTranscript}}</button>
+            </sc-if>
+          </div>
+          <sc-if value="{{v.start}}" hint-placeholder-val="{{false}}">
+            <p class="lp-help" style="display: flex; align-items: center; gap: 6px;"><span class="ph ph-speaker-high" aria-hidden="true"></span>{{c.vNoAuto}}</p>
+          </sc-if>
+        </div>
+      </section>
+      <sc-if value="{{showTx}}" hint-placeholder-val="{{false}}">
+        <section class="lp-ctx" aria-label="{{c.vTranscript}}">
+          <div style="display: flex; align-items: center; gap: 8px;"><span class="ph ph-article" style="font-size: 18px; color: var(--ink-2);" aria-hidden="true"></span><h2 class="t-label" style="flex: 1;">{{c.vTranscript}}</h2><span class="t-small ink-3" style="font-weight: 700;">{{c.vTapLine}}</span></div>
+          <div class="lp-transcript" style="max-height: {{txMax}}px;">
+            <sc-for list="{{lines}}" as="ln" hint-placeholder-count="5">
+              <div class="{{ln.cls}}" lang="{{capLang}}" dir="{{capDir}}"><span class="tm num" dir="ltr">{{ln.t}}</span><span>{{ln.text}}</span></div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+    </main>
+    <footer style="padding: 12px 20px 18px; display: flex; justify-content: flex-end; border-top: 2px solid var(--line); background: var(--surface);">
+      <a href="#next" class="{{contCls}}" onClick="{{next}}">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+    </footer>
+  </sc-if>
+
+  <!-- Concept card -->
+  <sc-if value="{{is.concept}}" hint-placeholder-val="{{false}}">
+    <main class="lp-main" style="{{conceptMain}}">
+      <section class="lp-work" style="gap: 14px; max-width: 760px; margin: 0 auto; width: 100%;">
+        <div class="lp-q"><p class="t-over" style="color: var(--link);">{{c.kOver}}</p></div>
+        <article class="lp-concept">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="/_blob/96c6689c26461fd1dad4fccba5415c5e" alt="" style="width: {{kIll}}px; height: {{kIll}}px; flex: none;">
+            <h1 class="lp-qt">{{c.kTitle}}</h1>
+          </div>
+          <p class="t-body">{{c.kBody}}</p>
+          <div class="lp-qs" role="list">
+            <sc-for list="{{kQs}}" as="q" hint-placeholder-count="4">
+              <div role="listitem"><b>{{q.a}}</b><span>{{q.b}}</span></div>
+            </sc-for>
+          </div>
+          <p class="t-small ink-2" style="display: flex; align-items: center; gap: 6px;"><span class="ph ph-cursor" aria-hidden="true"></span>{{c.kNext}}</p>
+        </article>
+      </section>
+    </main>
+    <footer style="padding: 12px 20px 18px; display: flex; justify-content: flex-end; border-top: 2px solid var(--line); background: var(--surface);">
+      <a href="#next" class="{{contCls}}" onClick="{{next}}">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+    </footer>
+  </sc-if>
+
+  <!-- Result and intro pages: skill check, mastery round, offline end, guest end -->
+  <sc-if value="{{is.page}}" hint-placeholder-val="{{false}}">
+    <main class="lp-page">
+      <img class="lp-ill pop" src="{{pg.ill}}" alt="">
+      <div style="display: flex; flex-direction: column; gap: 6px; align-items: center; max-width: 560px;">
+        <h1 class="t-h1" style="font-size: {{h1Size}};">{{pg.title}}</h1>
+        <p class="t-body ink-2">{{pg.body}}</p>
+      </div>
+      <sc-if value="{{pg.hasPills}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+          <sc-for list="{{pg.pills}}" as="p" hint-placeholder-count="3"><span class="{{p.cls}}"><span class="{{p.icon}}" aria-hidden="true"></span>{{p.text}}</span></sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{pg.hasList}}" hint-placeholder-val="{{false}}">
+        <div class="lp-list">
+          <sc-if value="{{pg.listTitle}}" hint-placeholder-val="{{false}}"><p class="t-over" style="text-align: start;">{{pg.listTitle}}</p></sc-if>
+          <sc-for list="{{pg.rows}}" as="r" hint-placeholder-count="3">
+            <div class="{{r.cls}}">
+              <span class="{{r.icon}}" style="font-size: 22px; color: {{r.iconColor}}; flex: none;" aria-hidden="true"></span>
+              <div class="grow"><b>{{r.title}}</b><span>{{r.sub}}</span></div>
+              <span class="{{r.chipCls}}"><span class="{{r.chipIcon}}" aria-hidden="true"></span>{{r.chip}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{pg.hasNote}}" hint-placeholder-val="{{false}}">
+        <div class="comment" style="max-width: 560px; width: 100%; box-sizing: border-box; text-align: start; border-color: var(--line);">
+          <span class="pin pin-brand"><span class="ph ph-seal-fill" aria-hidden="true"></span></span>
+          <span class="t-small" style="color: var(--ink);">{{pg.note}}</span>
+        </div>
+      </sc-if>
+      <div class="lp-foot">
+        <a href="#primary" class="btn btn-primary btn-lg btn-block press" onClick="{{primary}}"><span class="{{pg.primaryIcon}}" aria-hidden="true"></span>{{pg.primary}}</a>
+        <sc-if value="{{pg.secondary}}" hint-placeholder-val="{{false}}">
+          <a href="#secondary" class="btn btn-ghost btn-block" onClick="{{secondary}}">{{pg.secondary}}</a>
+        </sc-if>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- Home with the resume prompt -->
+  <sc-if value="{{is.home}}" hint-placeholder-val="{{false}}">
+    <div style="flex: 1; min-height: 0; display: flex; flex-direction: {{homeDir}};">
+      <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+        <nav class="dk-rail" aria-label="{{c.navLabel}}" style="width: 248px; flex: none; box-sizing: border-box;">
+          <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+          <a class="dk-item is-on" href="#home" aria-current="page"><span class="ph ph-house-fill" aria-hidden="true"></span>{{c.navHome}}</a>
+          <a class="dk-item" href="#paths"><span class="ph ph-map" aria-hidden="true"></span>{{c.navPaths}}</a>
+          <a class="dk-item" href="#review"><span class="ph ph-review" aria-hidden="true"></span>{{c.navReview}}</a>
+          <a class="dk-item" href="#me"><span class="ph ph-user" aria-hidden="true"></span>{{c.navProfile}}</a>
+        </nav>
+      </sc-if>
+      <main style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: {{homePad}};">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><img src="{{mark}}" alt="UXGate" style="width: 34px; height: 34px;"></sc-if>
+          <div style="flex: 1; min-width: 0;"><p class="t-small ink-2" style="margin: 0; font-weight: 600;">{{c.hDate}}</p><h1 class="t-h2" style="margin: 0;">{{c.hGreeting}}</h1></div>
+          <span class="pill pill-soft"><span class="ph ph-flame-fill" style="color: var(--streak);" aria-hidden="true"></span><span class="num">12</span></span>
+        </div>
+        <section class="card press sel-frame" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; margin: 6px 4px 8px; max-width: 640px; box-shadow: 0 4px 0 var(--sel-line); border-color: var(--sel-line);" aria-labelledby="lp-resume-t">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="/_blob/5c8de666f75e9b797e0dbc0c15c327e3" alt="" style="width: 64px; height: 64px; flex: none;">
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+              <span class="t-over" style="color: var(--link);">{{c.hResumeOver}}</span>
+              <h2 id="lp-resume-t" class="t-h3" style="margin: 0;">{{c.hLesson}}</h2>
+              <span class="t-small ink-2"><span class="ltr">Forms That Flow</span> · {{c.hUnit}}</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;"><div class="progress progress-sm" style="flex: 1;"><i style="width: 36%;"></i></div><span class="t-small num ink-2" style="font-weight: 700;">{{c.hStep}}</span></div>
+          <p class="t-small ink-2" style="margin: 0; display: flex; align-items: center; gap: 6px;"><span class="ph ph-cloud-check-fill" style="color: var(--right-ink); font-size: 16px;" aria-hidden="true"></span>{{c.hSaved}}</p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="#resume" class="btn btn-primary btn-lg press" onClick="{{primary}}" style="flex: 1 1 200px;"><span class="ph ph-play" aria-hidden="true"></span>{{c.hResume}}</a>
+            <a href="#restart" class="btn btn-ghost" style="flex: 0 0 auto;">{{c.hRestart}}</a>
+          </div>
+        </section>
+        <section class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; max-width: 640px;">
+          <span class="ph ph-target" style="font-size: 26px; color: var(--link);" aria-hidden="true"></span>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;"><span class="t-label">{{c.hGoal}}</span><div class="progress progress-sm"><i style="width: 50%;"></i></div></div>
+          <span class="t-small num ink-2" style="font-weight: 700;">1/2</span>
+        </section>
+      </main>
+    </div>
+    <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+      <nav class="bnav" aria-label="{{c.navLabel}}" style="display: flex;">
+        <a href="#home" class="is-on" aria-current="page"><span class="ph ph-house-fill" aria-hidden="true"></span>{{c.navHome}}</a>
+        <a href="#paths"><span class="ph ph-map" aria-hidden="true"></span>{{c.navPaths}}</a>
+        <a href="#review"><span class="ph ph-review" aria-hidden="true"></span>{{c.navReview}}</a>
+        <a href="#profile"><span class="ph ph-user" aria-hidden="true"></span>{{c.navProfile}}</a>
+      </nav>
+    </sc-if>
+  </sc-if>
+
+  <!-- Guest: sign-up sheet over the result -->
+  <sc-if value="{{is.signup}}" hint-placeholder-val="{{false}}">
+    <div class="lp-scrim"></div>
+    <section class="sheet lp-over sheet-in" role="dialog" aria-modal="true" aria-labelledby="lp-su-t">
+      <div class="grab"></div>
+      <h2 id="lp-su-t">{{c.suTitle}}</h2>
+      <p class="t-small ink-2">{{c.suBody}}</p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span class="pill"><span class="ph ph-bolt-fill" aria-hidden="true"></span><span class="num ltr">+40 XP</span></span>
+        <span class="skill skill-practiced"><span class="ph ph-check" aria-hidden="true"></span>{{c.practiced}}</span>
+      </div>
+      <a href="#google" class="btn btn-secondary btn-block press" style="color: var(--ink);"><span class="ph ph-google" aria-hidden="true"></span>{{c.suGoogle}}</a>
+      <a href="#apple" class="btn btn-secondary btn-block press" style="color: var(--ink);"><span class="ph ph-apple" aria-hidden="true"></span>{{c.suApple}}</a>
+      <div class="field" style="display: flex; flex-direction: column; gap: 6px;">
+        <label for="lp-su-mail" class="t-small" style="font-weight: 700;">{{c.suEmail}}</label>
+        <div class="input"><span class="ph ph-mail" aria-hidden="true"></span><input id="lp-su-mail" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr"></div>
+      </div>
+      <a href="#create" class="btn btn-primary btn-lg btn-block press">{{c.suCreate}}</a>
+      <p class="t-small ink-2" style="text-align: center;">{{c.suHave}} <a href="#signin" style="font-weight: 700;">{{c.suSignin}}</a></p>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoTranscript","videoEnd","concept","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+/* Slice 2 lesson pages: video step, concept card, skill check and mastery pages, resume on home, offline end, guest end. */
+const IMG = { skillCheck: '/_blob/f92a3e6847a208fe460c2076565bb0b0', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', target: '/_blob/f339db60a2fdc85567ed1a06c7bf9515',
+  trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4', empty: '/_blob/db03534bd1e09763438142db3c0a865b', offline: '/_blob/15713cc29474a7a427354bd2c907f463', gate: '/_blob/940849193fa4b01dff04d73c95583da2' };
+const LINES = [
+  [0, '0:00', 'Hana wants to try a gym for free.', 'تريد هناء أن تجرّب ناديًا مجانًا.'],
+  [8, '0:08', 'The trial form asks her for seven things.', 'يطلب منها نموذج التجربة سبعة أشياء.'],
+  [17, '0:17', 'Each field costs her time, and a little trust.', 'كل حقل يكلّفها وقتًا، وقليلًا من الثقة.'],
+  [24, '0:24', "A national ID for a free trial? Nothing says why it's needed.", 'رقم قومي لتجربة مجانية؟ لا شيء يوضّح لماذا يحتاجونه.'],
+  [35, '0:35', 'Ask only what the trial needs today: her name, and a way to reach her.', 'اسأل فقط عمّا تحتاجه التجربة اليوم: اسمها، ووسيلة للتواصل معها.'],
+  [49, '0:49', 'Everything else can wait until she joins.', 'وكل ما عدا ذلك يمكن أن ينتظر حتى تشترك.']
+];
+const C = {
+  en: {
+    exit: 'Leave lesson', close: 'Close', progress: 'Lesson progress', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', cont: 'Continue',
+    soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
+    vOver: 'Watch · Step 3 · 1 min', vTitle: 'Why every field costs something', vLabel: 'Lesson video', vChapter: 'Every field costs something', vExample: "Example · Hana's Gym",
+    vPlay: 'Play video with sound', vReplay: 'Watch again', vPause: 'Pause', vSeek: 'Video position', vCc: 'Captions', vFull: 'Full screen', vCaptions: 'Captions',
+    vTranscript: 'Transcript', vTapLine: 'Tap a line to jump there', vNoAuto: 'Nothing plays until you tap. Captions are on.',
+    kOver: 'Concept · Step 4', kTitle: 'Every field costs something', kBody: 'Each field costs people time, effort and a little trust. Forms that feel quick get finished. Before you add a field, ask four questions:',
+    kQs: [['Essential?', "Can the task happen without it?"], ['Needed now?', 'Could it wait until later?'], ['Used?', 'Will anyone use the answer?'], ['Personal?', 'Then say why you ask.']],
+    kNext: 'Next, you use these questions on a real form.',
+    checkTag: 'Skill check', masteryTag: 'Mastery round', guestTag: 'Sample lesson',
+    navLabel: 'Main', navHome: 'Home', navPaths: 'Paths', navReview: 'Review', navProfile: 'Profile',
+    hDate: 'Friday · 30 October', hGreeting: 'Welcome back, Nour', hResumeOver: 'Pick up where you left off', hLesson: 'Ask only what you need', hUnit: 'Unit 1 · Lesson 1',
+    hStep: 'Step 4 of 10', hSaved: 'Your answers are saved · 2 hours ago', hResume: 'Resume at step 4', hRestart: 'Start over', hGoal: "Today's goal: 2 lessons",
+    suTitle: 'Keep what you just did', suBody: 'Create a free account and your XP and this practiced skill move into it. Unit 1 of every path is free.',
+    practiced: 'Practiced · تدرّبت', suGoogle: 'Continue with Google', suApple: 'Continue with Apple', suEmail: 'Or use your email', suCreate: 'Create free account', suHave: 'Have an account?', suSignin: 'Sign in',
+    pages: {
+      checkIntro: { tag: 'check', ill: 'skillCheck', title: 'Skill check', body: "A new case: Nour's clinic booking form. Show what you can do on your own.",
+        pills: [['pill pill-soft', 'ph ph-list', '4 questions'], ['pill pill-soft', 'ph ph-eye-slash', 'No hints'], ['pill pill-soft', 'ph ph-seal', 'Results at the end']],
+        listTitle: 'Skills in this check', rows: [['SK-01', 'practiced'], ['SK-02', 'practiced'], ['SK-04', 'practiced'], ['SK-05', 'practiced']],
+        primary: 'Start the skill check', primaryIcon: 'ph ph-play', secondary: 'Not now' },
+      checkSummary: { tag: 'check', ill: 'medal', title: 'Skill check done', body: '3 of 4 skills shown on a new case, with no hints.',
+        pills: [['pill', 'ph ph-bolt-fill', '+30 XP'], ['skill skill-shown', 'ph ph-seal-fill', '3 shown']],
+        listTitle: 'Your results', rows: [['SK-01', 'shown'], ['SK-02', 'shown'], ['SK-04', 'shown'], ['SK-05', 'retry', 'Answered differently in question 4']],
+        note: 'Next, a short mastery round brings back the skills that need one more try, with new examples.',
+        primary: 'Start the mastery round', primaryIcon: 'ph ph-target', secondary: 'Do it later' },
+      masteryIntro: { tag: 'mastery', ill: 'target', title: 'A few skills need one more try', body: 'Each one comes back with a new example. Get it right the first time and the skill is shown.',
+        pills: [['pill pill-soft', 'ph ph-list', '2 questions'], ['pill pill-soft', 'ph ph-clock', 'About 2 minutes']],
+        listTitle: 'Coming back', rows: [['SK-03', 'retry', 'Hint used in Lesson 1, step 6'], ['SK-05', 'retry', 'Missed in the skill check']],
+        primary: 'Start', primaryIcon: 'ph ph-play', secondary: 'Do it later' },
+      masteryDone: { tag: 'mastery', ill: 'trophy', title: 'Unit 1 complete', body: 'One more skill is shown. The other comes back in your review in 3 days, with a new example.',
+        pills: [['pill', 'ph ph-bolt-fill', '+20 XP'], ['skill skill-shown', 'ph ph-seal-fill', '7 of 8 shown']],
+        listTitle: 'This round', rows: [['SK-03', 'shown', 'Right the first time'], ['SK-05', 'later', 'Back in review on 2 November']],
+        note: 'Shown skills become Kept · أتقنت when you get them right again in review, 3 days or more later.',
+        primary: 'Back to the path', primaryIcon: 'ph ph-map' },
+      masteryNone: { tag: 'mastery', ill: 'empty', title: 'Nothing to retry', body: 'You got every skill in this unit right the first time, so there is no mastery round.',
+        pills: [['skill skill-shown', 'ph ph-seal-fill', '8 of 8 shown']],
+        primary: 'Back to the path', primaryIcon: 'ph ph-map' },
+      offlineEnd: { tag: null, ill: 'offline', title: 'Lesson done, offline', body: "Your answers and XP are kept on this device. They sync as soon as you're back online.",
+        pills: [['pill pill-soft', 'ph ph-bolt-fill', '+45 XP'], ['lp-save is-offline', 'ph ph-wifi-slash', 'Waiting to sync']],
+        primary: 'Continue', primaryIcon: 'ph ph-arrow flip' },
+      guestEnd: { tag: 'guest', ill: 'gate', title: 'Sample lesson done', body: 'You cut the fields a form doesn\'t need. Sign up to keep your XP and this skill, and carry on with Unit 1. It\'s free.',
+        pills: [['pill', 'ph ph-bolt-fill', '+40 XP'], ['skill skill-practiced', 'ph ph-check', 'Practiced · تدرّبت']],
+        primary: 'Sign up to keep it', primaryIcon: 'ph ph-user-plus', secondary: 'Not now' }
+    },
+    skills: { 'SK-01': "Cut the fields the form doesn't need", 'SK-02': 'Postpone what can wait', 'SK-03': 'Explain why you ask for personal details', 'SK-04': 'Mark required and optional fields', 'SK-05': 'Keep the check true to the label' },
+    chips: { practiced: 'Practiced', shown: 'Shown', retry: 'One more try', later: 'In review' }
+  },
+  ar: {
+    exit: 'الخروج من الدرس', close: 'إغلاق', progress: 'تقدّم الدرس', lessonName: 'Forms That Flow · الدرس 1 · كل حقل له تكلفة', cont: 'متابعة',
+    soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
+    vOver: 'شاهد · الخطوة 3 · دقيقة واحدة', vTitle: 'لماذا لكل حقل تكلفة', vLabel: 'فيديو الدرس', vChapter: 'كل حقل له تكلفة', vExample: 'مثال · نادي هناء',
+    vPlay: 'شغّل الفيديو بالصوت', vReplay: 'شاهد مرة أخرى', vPause: 'إيقاف مؤقت', vSeek: 'موضع الفيديو', vCc: 'الترجمة', vFull: 'ملء الشاشة', vCaptions: 'الترجمة',
+    vTranscript: 'النص المكتوب', vTapLine: 'اضغط سطرًا للانتقال إليه', vNoAuto: 'لا يعمل شيء حتى تضغط. الترجمة مفعّلة.',
+    kOver: 'الفكرة · الخطوة 4', kTitle: 'كل حقل له تكلفة', kBody: 'كل حقل يكلّف الناس وقتًا وجهدًا وقليلًا من الثقة. والنماذج التي تبدو سريعة يُكملها الناس. قبل أن تضيف حقلًا، اسأل أربعة أسئلة:',
+    kQs: [['ضروري؟', 'هل تتم المهمة بدونه؟'], ['مطلوب الآن؟', 'هل يمكن أن ينتظر؟'], ['مستخدَم؟', 'هل سيستخدم أحد الإجابة؟'], ['شخصي؟', 'إذن اشرح لماذا تسأل.']],
+    kNext: 'بعد ذلك ستطبّق هذه الأسئلة على نموذج حقيقي.',
+    checkTag: 'اختبار المهارة', masteryTag: 'جولة الإتقان', guestTag: 'درس نموذجي',
+    navLabel: 'الرئيسية', navHome: 'الرئيسية', navPaths: 'المسارات', navReview: 'المراجعة', navProfile: 'الملف',
+    hDate: 'الجمعة · 30 أكتوبر', hGreeting: 'أهلًا بعودتك يا نور', hResumeOver: 'أكمل من حيث توقّفت', hLesson: 'اسأل فقط عمّا تحتاجه', hUnit: 'الوحدة 1 · الدرس 1',
+    hStep: 'الخطوة 4 من 10', hSaved: 'إجاباتك محفوظة · قبل ساعتين', hResume: 'أكمل من الخطوة 4', hRestart: 'ابدأ من جديد', hGoal: 'هدف اليوم: درسان',
+    suTitle: 'احتفظ بما أنجزته', suBody: 'أنشئ حسابًا مجانيًا، وتنتقل إليه نقاط الخبرة (XP) والمهارة التي تدرّبت عليها. والوحدة الأولى من كل مسار مجانية.',
+    practiced: 'تدرّبت · Practiced', suGoogle: 'المتابعة بحساب Google', suApple: 'المتابعة بحساب Apple', suEmail: 'أو استخدم بريدك الإلكتروني', suCreate: 'أنشئ حسابًا مجانيًا', suHave: 'لديك حساب؟', suSignin: 'سجّل الدخول',
+    pages: {
+      checkIntro: { tag: 'check', ill: 'skillCheck', title: 'اختبار المهارة', body: 'حالة جديدة: نموذج حجز في عيادة نور. أظهر ما تستطيع فعله بنفسك.',
+        pills: [['pill pill-soft', 'ph ph-list', '4 أسئلة'], ['pill pill-soft', 'ph ph-eye-slash', 'بلا تلميحات'], ['pill pill-soft', 'ph ph-seal', 'النتائج في النهاية']],
+        listTitle: 'المهارات في هذا الاختبار', rows: [['SK-01', 'practiced'], ['SK-02', 'practiced'], ['SK-04', 'practiced'], ['SK-05', 'practiced']],
+        primary: 'ابدأ اختبار المهارة', primaryIcon: 'ph ph-play', secondary: 'ليس الآن' },
+      checkSummary: { tag: 'check', ill: 'medal', title: 'انتهى اختبار المهارة', body: 'أثبتّ 3 من 4 مهارات على حالة جديدة، بلا تلميحات.',
+        pills: [['pill', 'ph ph-bolt-fill', '+30 XP'], ['skill skill-shown', 'ph ph-seal-fill', '3 أثبتّها']],
+        listTitle: 'نتائجك', rows: [['SK-01', 'shown'], ['SK-02', 'shown'], ['SK-04', 'shown'], ['SK-05', 'retry', 'أجبت بشكل مختلف في السؤال 4']],
+        note: 'بعد ذلك، جولة إتقان قصيرة تعيد المهارات التي تحتاج محاولة أخرى، بأمثلة جديدة.',
+        primary: 'ابدأ جولة الإتقان', primaryIcon: 'ph ph-target', secondary: 'لاحقًا' },
+      masteryIntro: { tag: 'mastery', ill: 'target', title: 'بعض المهارات تحتاج محاولة أخرى', body: 'تعود كل مهارة بمثال جديد. أجب إجابة صحيحة من أول مرة، فتُثبت المهارة.',
+        pills: [['pill pill-soft', 'ph ph-list', 'سؤالان'], ['pill pill-soft', 'ph ph-clock', 'نحو دقيقتين']],
+        listTitle: 'تعود الآن', rows: [['SK-03', 'retry', 'استخدمت تلميحًا في الدرس 1، الخطوة 6'], ['SK-05', 'retry', 'لم تُصبها في اختبار المهارة']],
+        primary: 'ابدأ', primaryIcon: 'ph ph-play', secondary: 'لاحقًا' },
+      masteryDone: { tag: 'mastery', ill: 'trophy', title: 'أكملت الوحدة 1', body: 'أثبتّ مهارة أخرى. والمهارة الثانية تعود في مراجعتك بعد 3 أيام، بمثال جديد.',
+        pills: [['pill', 'ph ph-bolt-fill', '+20 XP'], ['skill skill-shown', 'ph ph-seal-fill', '7 من 8 أثبتّها']],
+        listTitle: 'هذه الجولة', rows: [['SK-03', 'shown', 'صحيحة من أول مرة'], ['SK-05', 'later', 'تعود في المراجعة يوم 2 نوفمبر']],
+        note: 'المهارة التي أثبتّها تصبح «أتقنت · Kept» حين تجيب عنها بشكل صحيح مرة أخرى في المراجعة، بعد 3 أيام أو أكثر.',
+        primary: 'العودة إلى المسار', primaryIcon: 'ph ph-map' },
+      masteryNone: { tag: 'mastery', ill: 'empty', title: 'لا شيء لإعادته', body: 'أجبت عن كل مهارات هذه الوحدة بشكل صحيح من أول مرة، لذا لا توجد جولة إتقان.',
+        pills: [['skill skill-shown', 'ph ph-seal-fill', '8 من 8 أثبتّها']],
+        primary: 'العودة إلى المسار', primaryIcon: 'ph ph-map' },
+      offlineEnd: { tag: null, ill: 'offline', title: 'انتهى الدرس دون اتصال', body: 'نحفظ إجاباتك ونقاطك على هذا الجهاز، وتُزامَن فور عودة الاتصال.',
+        pills: [['pill pill-soft', 'ph ph-bolt-fill', '+45 XP'], ['lp-save is-offline', 'ph ph-wifi-slash', 'في انتظار المزامنة']],
+        primary: 'متابعة', primaryIcon: 'ph ph-arrow flip' },
+      guestEnd: { tag: 'guest', ill: 'gate', title: 'أنهيت الدرس النموذجي', body: 'حذفت الحقول التي لا يحتاجها النموذج. سجّل لتحتفظ بنقاطك وهذه المهارة، وتكمل الوحدة 1 مجانًا.',
+        pills: [['pill', 'ph ph-bolt-fill', '+40 XP'], ['skill skill-practiced', 'ph ph-check', 'تدرّبت · Practiced']],
+        primary: 'سجّل لتحتفظ بها', primaryIcon: 'ph ph-user-plus', secondary: 'ليس الآن' }
+    },
+    skills: { 'SK-01': 'احذف الحقول التي لا يحتاجها النموذج', 'SK-02': 'أجّل ما يمكن أن ينتظر', 'SK-03': 'اشرح لماذا تطلب البيانات الشخصية', 'SK-04': 'وضّح الحقول المطلوبة والاختيارية', 'SK-05': 'اجعل التحقّق مطابقًا للعنوان' },
+    chips: { practiced: 'تدرّبت', shown: 'أثبتّ', retry: 'محاولة أخرى', later: 'في المراجعة' }
+  }
+};
+const CHIP = { practiced: ['skill skill-practiced', 'ph ph-check'], shown: ['skill skill-shown', 'ph ph-seal-fill'], retry: ['skill skill-retry', 'ph ph-target'], later: ['skill skill-later', 'ph ph-clock'] };
+const ROWICON = { practiced: ['ph ph-check-circle', 'var(--ink-3)'], shown: ['ph ph-seal-fill', 'var(--link)'], retry: ['ph ph-target', 'var(--warn-ink)'], later: ['ph ph-clock', 'var(--ink-3)'] };
+const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoEnd: { sec: 72, playing: false, end: true } };
+function fmt(sec) { return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = this.fresh(props); }
+  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || (p.device === 'desktop' && p.view !== 'videoStart'), cc: true, capLang: null }; }
+  componentDidUpdate(prev) { if (prev.view !== this.props.view || prev.device !== this.props.device) this.setState(this.fresh(this.props)); }
+  sfx(n) { if (this.state.sound && this.props.sfx) this.props.sfx(n); }
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const isDesk = this.props.device === 'desktop';
+    const view = C.en.pages[this.props.view] || VIDEO[this.props.view] || this.props.view === 'concept' || this.props.view === 'homeResume' || this.props.view === 'guestSignup' ? this.props.view : 'video';
+    const c = C[lang]; const s = this.state;
+    const nav = this.props.nav;
+    const go = (to) => (e) => { if (e) e.preventDefault(); if (nav) nav(to); };
+    const isVideo = !!VIDEO[view];
+    const pageKey = view === 'guestSignup' ? 'guestEnd' : view;
+    const raw = c.pages[pageKey];
+    const tags = { check: ['lp-mode is-check', 'ph ph-seal-fill', c.checkTag], mastery: ['lp-mode is-mastery', 'ph ph-target', c.masteryTag], guest: ['lp-mode is-guest', 'ph ph-user', c.guestTag] };
+    const tg = raw && raw.tag ? tags[raw.tag] : null;
+    const pg = raw ? {
+      ill: IMG[raw.ill], title: raw.title, body: raw.body,
+      hasPills: !!raw.pills, pills: (raw.pills || []).map(([cls, icon, text]) => ({ cls, icon, text })),
+      hasList: !!raw.rows, listTitle: raw.listTitle || '',
+      rows: (raw.rows || []).map(([id, st, sub]) => ({ title: c.skills[id], sub: sub || '', cls: 'lp-skillrow' + (st === 'retry' ? ' is-retry' : ''),
+        icon: ROWICON[st][0], iconColor: ROWICON[st][1], chip: c.chips[st], chipCls: CHIP[st][0], chipIcon: CHIP[st][1] })),
+      hasNote: !!raw.note, note: raw.note || '', primary: raw.primary, primaryIcon: raw.primaryIcon, secondary: raw.secondary || ''
+    } : null;
+
+    /* video */
+    const capLang = s.capLang || lang;
+    const sec = s.end ? 72 : s.sec;
+    const cur = LINES.reduce((a, l, i) => (l[0] <= sec ? i : a), 0);
+    const lines = LINES.map((l, i) => ({ t: l[1], text: capLang === 'ar' ? l[3] : l[2], cls: 'lp-line' + (i === cur && !s.end && s.sec > 0 ? ' is-now' : '') }));
+    const pctStr = Math.round((sec / 72) * 100) + '%';
+    const vMock = isDesk ? { size: 'sm', width: 230, outerW: 242, half: 121, scale: 1, boxW: 242, boxH: 270, markBottom: 50, markH: 40 } : { size: 'xs', width: 170, outerW: 182, half: 91, scale: 0.8, boxW: 146, boxH: 190, markBottom: 40, markH: 34 };
+
+    return {
+      lang, dir: lang === 'ar' ? 'rtl' : 'ltr', theme, c, isDesk, isMobile: !isDesk,
+      rootCls: 'ug lp lp-' + (isDesk ? 'desktop' : 'mobile'), headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
+      is: { player: isVideo || view === 'concept', result: !!raw, video: isVideo, concept: view === 'concept', page: !!raw, home: view === 'homeResume', signup: view === 'guestSignup' },
+      stepNo: view === 'concept' ? 4 : 3, pct: (view === 'concept' ? 34 : 24) + '%', countText: (view === 'concept' ? 4 : 3) + '/10',
+      tag: tg ? { show: true, cls: tg[0], icon: tg[1], text: tg[2] } : { show: false },
+      soundIcon: s.sound ? 'ph ph-speaker-high' : 'ph ph-speaker-slash', soundLabel: s.sound ? c.soundOn : c.soundOff, soundPressed: s.sound ? 'false' : 'true',
+      toggleSound: () => this.setState({ sound: !s.sound }),
+      exit: go('exit'), next: go('next'), primary: go('primary'), secondary: go('secondary'),
+      contCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'),
+      /* video */
+      videoMain: 'lp-main', videoGrid: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; padding-top: 20px;' : 'gap: 8px; padding-top: 8px;', v: { start: !s.playing && !s.end && s.sec === 0, end: s.end, sec, pctStr },
+      vMock, vMarked: sec >= 24 && !s.end,
+      showCap: s.cc && s.sec > 0 && !s.end, capText: (capLang === 'ar' ? LINES[cur][3] : LINES[cur][2]), capLang, capDir: capLang === 'ar' ? 'rtl' : 'ltr',
+      capFont: capLang === 'ar' ? 'var(--font-ar)' : 'var(--font-en)',
+      capEn: capLang === 'en' ? 'true' : 'false', capAr: capLang === 'ar' ? 'true' : 'false',
+      capToEn: () => this.setState({ capLang: 'en' }), capToAr: () => this.setState({ capLang: 'ar' }),
+      timeText: fmt(sec) + ' / 1:12',
+      playIcon: s.playing ? 'ph ph-pause-fill' : (s.end ? 'ph ph-replay' : 'ph ph-play-fill'), playLabel: s.playing ? c.vPause : (s.end ? c.vReplay : c.vPlay),
+      play: () => { if (s.end) { this.sfx('ui-tap'); this.setState({ end: false, sec: 1, playing: true }); } else { this.sfx('ui-tap'); this.setState({ playing: !s.playing, sec: s.sec === 0 ? 1 : s.sec }); } },
+      ccOn: s.cc ? 'true' : 'false', ccCls: 'lp-vbtn' + (s.cc ? ' is-on' : ''), toggleCc: () => this.setState({ cc: !s.cc }),
+      showTx: s.tx, showTxBtn: !isDesk, txOpenStr: s.tx ? 'true' : 'false', toggleTx: () => this.setState({ tx: !s.tx }), txMax: isDesk ? 600 : 150,
+      lines,
+      /* concept */
+      kQs: c.kQs.map(([a, b]) => ({ a, b })), conceptMain: isDesk ? 'display: flex; align-items: center; justify-content: center;' : '', kIll: isDesk ? 96 : 64,
+      /* pages */
+      pg: pg || { pills: [], rows: [] }, h1Size: isDesk ? '34px' : '26px',
+      /* home */
+      homeDir: isDesk ? 'row' : 'column', homePad: isDesk ? '32px 48px' : '14px 20px 0',
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      mark: theme === 'dark' ? '/_blob/5667904a660c43335758c7e0120ae2b8' : '/_blob/68b36b698602cc0ac59d5b87ca709073'
+    };
+  }
+}
+</script>
+</body>
+</html>

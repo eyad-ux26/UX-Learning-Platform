@@ -1,4 +1,4 @@
-# UXGate design system (Sprint 1)
+# UXGate design system (Sprint 1 and slice 2)
 
 The live design lives in the design canvas: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx (pages: Brand, Tokens, Components, Screens, Clickable flow, Screen parts). This folder holds the parts engineering and video need as files.
 
@@ -29,4 +29,8 @@ UXGate borrows ideas from design tools, never their look. Lessons sit on a 16 px
 
 Mobile (390 wide) and desktop (1440 wide), each in English light and Arabic night: landing, sign up, onboarding, home, path map, lesson step (selected, wrong with hint, right), tune step and compare step (selected, wrong with hint, right; compare also shows the reason question) and lesson end. The clickable flow switches device, language, theme and sound.
 
-Placeholders still open: `[PRICE]` on the landing, the copy for the second hint and the FAQ, and the Arabic labels for the Shown (أثبتّ) and Kept (حافظت) skill states.
+Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
+
+## Slice 2: the full lesson player
+
+Every state inside a lesson: the eight remaining step types, video, concept card, feedback variants, confidence, skill check, mastery round, exit and resume, saving and offline, the guest sample lesson and asking for a review. See `slice-2/README.md`. On the canvas they are on the page "6 · Slice 2 · Lesson player", and the two editable components are on "Screen parts".
