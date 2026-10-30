@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const dirs = ["app", "components", "lib"];
+const dirs = ["app", "components", "lib", "../../packages/player/src"];
 
 const CSS_RULES = [
   [/(^|[;{\s])(margin|padding)-(left|right)\s*:/, "use margin-inline-* / padding-inline-*"],
