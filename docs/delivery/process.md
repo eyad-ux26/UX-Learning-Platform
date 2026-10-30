@@ -33,15 +33,19 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 
 | Thread | Lifetime | Job |
 | --- | --- | --- |
-| **PM** (this thread) | Whole project | Plans, writes requirements and start prompts, checks every gate, tells Eyad what to do next |
-| **Design** | One thread for all slices, then the admin design | Designs each slice in Claude Design from the PM's design brief |
+| **PM** | Whole project (a fresh thread per sprint, started from a handoff file) | Plans, writes requirements and start prompts, checks every gate, tells Eyad what to do next |
+| **Design** | One role for all slices, then the admin design (a fresh thread per slice, started from a handoff file) | Designs each slice in Claude Design from the PM's design brief |
 | **Build slice N** | One new thread per slice | Builds the slice from the PM's build brief; one PR per slice (stories as commits) |
 | **Verify slice N** | One new thread per slice | Independent reviewer: writes automated tests, runs the security checklist, files bugs as GitHub issues |
 | **Content** (P01, P10, P14 …) | One per path, as today | Lessons and videos; independent of the sprints |
 
 Why separate build and verify threads: a fresh thread checks the work without the builder's assumptions, the way a QA team would. Why a new build thread per slice: each starts with a clean context and the repo as its memory, so it stays fast and cheap. Security and testing share one thread per slice because they use the same preview and the same checklist run; a dedicated security audit thread runs once more in sprint 7.
 
-Credits: every thread follows `/mnt/project-files/delivery/credits-policy.md` (model and effort per kind of work, small contexts, batched feedback). At most two heavy threads run at once (design and build). Start the verify thread when the build thread says the preview is ready.
+Handoff files: at each slice or sprint boundary, a long-lived role (PM, Design) writes `docs/delivery/sprint-N/handoff-<role>.md` with decisions, links and open items, then continues in a fresh thread.
+
+Models (from the credits policy): design and specs on Opus high; PM and fixes on Opus medium; build on Sonnet high; verify tests on Sonnet high, with the security review and verdict on Opus medium; admin requirements and design on Opus high, admin build on Sonnet high, admin audit on Opus medium plus Sonnet high for tests. Republish artifacts at milestones only.
+
+Credits: every thread follows `/mnt/project-files/delivery/credits-policy.md` (model and effort per kind of work, small contexts, batched feedback). At most two heavy threads run at once (design and build). A video thread counts as heavy while it renders; with three heavy threads, pause the lowest priority one. Start the verify thread when the build thread says the preview is ready.
 
 ## Handoffs
 

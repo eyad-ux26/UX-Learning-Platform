@@ -8,7 +8,7 @@ For the **Verify slice 1** thread. Start it when the build thread posts the slic
 - `docs/delivery/sprint-1/build-brief.md` (acceptance checks 1–10)
 - The design canvas https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx
 - `docs/tech/architecture.md` (security checklist), `docs/delivery/definition-of-done.md`
-- Credits: `/mnt/project-files/delivery/credits-policy.md` (verify on Opus medium, scoped to the slice's diff)
+- Credits: `/mnt/project-files/delivery/credits-policy.md` (tests on Sonnet high; security review and final verdict on Opus medium; scoped to the slice's diff)
 
 ## 1. Automated tests you add (to the build PR)
 
