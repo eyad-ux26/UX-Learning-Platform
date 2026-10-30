@@ -1,6 +1,6 @@
 # Backlog and sprint plan
 
-Version 1, 29 October 2026. GitHub Issues is the live backlog: one issue per epic (label `epic`) and one per story (label `story`), each tagged with its sprint label (`sprint-1` … `sprint-9`). This file is the planning snapshot; when they differ, the issues win. Epics are #10 to #19 and #21; Sprint 1 and 2 stories are open as sub-issues of their epics, and later sprints' stories are listed in each epic and opened at that sprint's planning.
+Version 2, 30 October 2026. GitHub Issues is the live backlog: one issue per epic (label `epic`) and one per story (label `story`), each tagged with its slice and sprint labels. This file is the planning snapshot; when they differ, the issues win. Epics are #10 to #19 and #21; Sprint 1 and 2 stories are open as sub-issues of their epics, and later sprints' stories are listed in each epic and opened at that sprint's planning.
 
 ## How we work
 
@@ -11,6 +11,7 @@ Version 1, 29 October 2026. GitHub Issues is the live backlog: one issue per epi
   - Thursday: sprint planning. Claude posts the proposed sprint; admins confirm or change it.
   - Daily: the progress checklist in the thread shows what moved.
   - Wednesday: review (demo link per story) and a short retro (keep, change, try).
+- **Pipeline:** design one sprint ahead; build, security and testing of a slice run in the following sprint. Threads and gates: [process.md](process.md).
 - **Content runs in parallel**: units of Paths 1 and 10, and the hybrid path, keep their one-PR-per-unit flow outside these sprints.
 - **Merging:** no PR is merged without admin approval. Content PRs stay open until one interactive path and one hybrid path are approved as the model.
 
@@ -18,106 +19,51 @@ See [definition-of-done.md](definition-of-done.md) for Ready and Done.
 
 ## Release plan
 
-| Milestone | Sprints | Outcome |
+Version 2 (30 October 2026) follows [process.md](process.md): each slice is designed in one sprint and built, secured and tested in the next. The learner web app comes first; the admin panel follows as one waterfall project.
+
+| Milestone | When | Outcome |
 | --- | --- | --- |
-| M1 Design ready | 1–2 | Design system, all core-loop screens and admin screens, clickable prototype, approved |
-| M2 Core loop works | 3–5 | Sign up, path map, lesson player with every step type, attempts saved, progress and streak |
-| M3 Business ready | 6–7 | Subscriptions in test mode (Paymob + Paddle), full admin panel v1 |
-| M4 Private beta | 8–9 | Notifications, review, certificates, self-review of security and accessibility, beta invites |
+| M1 Core loop live | End of sprint 2 (11 Nov) | Slice 1 built and verified: sign up to lesson end on a preview |
+| M2 Full learning experience | End of sprint 4 (25 Nov) | Slices 2 and 3: every step type, mastery, progress, review |
+| M3 Web app feature complete | End of sprint 6 (9 Dec) | Slices 4 and 5: settings, notifications, public pages, subscriptions in test mode |
+| M4 Web app release candidate | End of sprint 7 (16 Dec) | Full regression, accessibility and security audit passed |
+| M5 Admin panel | Sprints 8–13 (to about 27 Jan) | Waterfall: design, build, security and testing of the whole admin panel |
 
-Dates move with real velocity; we re-plan at each sprint review.
+Dates move with real velocity; the PM thread re-plans at each sprint review.
 
-## Sprint plan
+## Slices
 
-### Sprint 1 · 29 Oct – 4 Nov · Design foundations
+### Slice 1 · Core loop · design sprint 1 ✓ · build and verify sprint 2
 
-Goal: a UXGate design system and the core learner screens, made and approved in Claude Design from the [handoff pack](../design/handoff/). User stories with acceptance checks: [user-stories.md](user-stories.md).
+Landing, sign up and sign in, onboarding, home, path map, lesson player with the step types of one real unit, lesson end, sound effects. Stories: EN-01, EN-02, EN-03 (email and password, email link, Google), EN-04, EN-05 (landing only), EN-06 (one unit), EN-07 (card, choose, predict, hints and reveal), EN-09, EN-11 (basic states), EN-13 (XP and daily goal count only). Build brief: [sprint-1/build-brief.md](sprint-1/build-brief.md).
 
-| ID | Story | Pts |
-| --- | --- | --- |
-| DS-01 | Brand applied to the product: original logo, brand colours, Cairo and Titillium Web, voice | 3 |
-| DS-02 | Design tokens: colour (light, dark), type scale for Latin and Arabic, spacing, radius, elevation, motion | 3 |
-| DS-03 | Core components with all states: buttons, inputs, choice cards, progress, chips, nav, sheets, toasts | 5 |
-| DS-04 | Learning components: step frame, Check bar, feedback sheet, hint, confidence tap, mock-screen frame, XP and streak | 5 |
-| DS-05 | Key screens, mobile, EN and AR, light and dark: landing, sign-up, onboarding, home, path map, lesson step states, lesson end | 5 |
-| DS-09 | Logo motion and illustration review | 1 |
-| PM-01 | Technical files: spec, architecture, data model, backlog, user stories, DoD, templates (done) | 2 |
+### Slice 2 · Full lesson player · design sprint 2 · build sprint 3
 
-### Sprint 2 · 5 – 11 Nov · Full prototype and app skeleton
+Every remaining step type (words, fix, tune, sort, order, match, spot, compare, video), concept card, confidence tap, skill check, mastery round, exit and resume, guest sample lesson, offline and saving states inside a lesson. Stories: DS-06 (part), EN-07 (rest), EN-08, EN-10, EN-12, EN-14. Design brief: [sprint-2/design-brief.md](sprint-2/design-brief.md).
 
-| ID | Story | Pts |
-| --- | --- | --- |
-| DS-06 | Remaining learner screens: every step type, skill check, mastery round, review, profile, settings, paywall, certificate, achievement page, empty, error and offline states | 5 |
-| DS-07 | Admin panel screens: content browser, content quality, learner support, appeals, prices, settings, reports, roles and audit log | 5 |
-| DS-08 | Clickable prototype of the core loop, plus a desktop layout pass | 3 |
-| EN-01 | Monorepo and Next.js app: locales, RTL, theme tokens, lint rule for logical properties, CI | 5 |
-| EN-02 | Supabase projects (staging, prod), migrations folder, RLS test harness | 3 |
+### Slice 3 · Progress and motivation · design sprint 3 · build sprint 4
 
-### Sprint 3 · 12 – 18 Nov · Accounts and public site
+Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard. Stories: EN-11 (rest), EN-13 (rest), EN-20, EN-21, EN-23.
 
-| ID | Story | Pts |
-| --- | --- | --- |
-| EN-03 | Auth: email and password, magic link, Google, Apple; Resend templates in both languages | 5 |
-| EN-04 | Profiles, onboarding flow and path recommendation | 3 |
-| EN-05 | Public landing and path pages (SSG) with SEO in both languages | 5 |
-| EN-06 | Content compiler and publish job: YAML → `content_versions` | 5 |
+### Slice 4 · Account, notifications and public site · design sprint 4 · build sprint 5
 
-### Sprint 4 · 19 – 25 Nov · Lesson player
+Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, appeals (learner side).
 
-| ID | Story | Pts |
-| --- | --- | --- |
-| EN-07 | Port the player into `packages/player`: state machine and card, choose, predict, words, fix, tune | 8 |
-| EN-08 | Step types sort, order, match, spot, compare | 5 |
-| EN-09 | Offline-safe attempt queue (IndexedDB) and `POST /api/attempts` with server scoring | 5 |
-| EN-10 | Guest sample lesson and claiming guest attempts on sign-up | 3 |
+### Slice 5 · Subscriptions · design sprint 5 · build sprint 6
 
-### Sprint 5 · 26 Nov – 2 Dec · Progress and mastery
+Pricing, paywall, checkout result, billing and plan management, cancel and refund request, billing emails. Paymob and Paddle in test mode. Stories: EN-15 to EN-18.
 
-| ID | Story | Pts |
-| --- | --- | --- |
-| EN-11 | Home and path map with lesson and skill states, skill-based unlocking | 5 |
-| EN-12 | Skill checks, end-of-unit mastery round, skill states | 5 |
-| EN-13 | XP, daily goal, streak and freezes, badges | 5 |
-| EN-14 | Video step with Bunny Stream, signed playback, captions and transcript | 3 |
+### Sprint 7 · Web app release candidate
 
-### Sprint 6 · 3 – 9 Dec · Subscriptions
+QA-01 accessibility audit, QA-02 security audit, performance pass, full regression in both languages and themes, PM-02 beta plan. PM writes the admin panel requirements (sprint 6) so the admin design can start in sprint 8.
 
-| ID | Story | Pts |
-| --- | --- | --- |
-| EN-15 | Billing interface, entitlements, free-tier gating and paywall | 5 |
-| EN-16 | Paymob checkout, webhooks, renewals by token (test mode) | 5 |
-| EN-17 | Paddle checkout and webhooks (sandbox) | 5 |
-| EN-18 | Cancel, 7-day refund request, billing emails | 3 |
+### Admin panel · waterfall · sprints 8–13
 
-### Sprint 7 · 10 – 16 Dec · Admin panel v1
-
-| ID | Story | Pts |
-| --- | --- | --- |
-| AD-01 | Admin shell, roles, audit log | 5 |
-| AD-02 | Content browser with preview and publish, from the control board | 5 |
-| AD-03 | Content quality statistics per step and variant | 3 |
-| AD-04 | Learner lookup and support actions, appeals queue | 5 |
-| AD-05 | Prices, subscriptions and refunds | 3 |
-
-### Sprint 8 · 17 – 23 Dec · Engagement and trust
-
-| ID | Story | Pts |
-| --- | --- | --- |
-| EN-19 | Notifications: inbox, email, push, reminders cron | 5 |
-| EN-20 | Spaced review queue and review sessions | 5 |
-| EN-21 | Certificates and opt-in achievement pages | 3 |
-| EN-22 | Settings: data export, account deletion, notification choices | 3 |
-| AD-06 | Platform settings, feature flags, templates, media library | 3 |
-
-### Sprint 9 · 24 – 30 Dec · Beta readiness
-
-| ID | Story | Pts |
-| --- | --- | --- |
-| QA-01 | Accessibility self-review: axe in CI, keyboard and screen-reader pass on every step type | 5 |
-| QA-02 | Security self-review checklist, RLS tests, rate limits, CSP | 5 |
-| AD-07 | Reports: sign-ups, activity, completion, paying, correction and transfer | 3 |
-| PM-02 | Beta plan: invite list, feedback form, support inbox, launch checklist | 2 |
-| EN-23 | Opt-in weekly leaderboards behind a flag | 3 |
+1. Requirements (PM, sprint 6): every admin area from the spec §6, roles, audit log.
+2. Design (design thread, sprints 8–9): the whole admin panel, desktop first.
+3. Build (one build thread, sprints 10–12): AD-01 to AD-07.
+4. Security and testing (one verify thread, sprint 13).
+5. Release.
 
 ## Epics
 
