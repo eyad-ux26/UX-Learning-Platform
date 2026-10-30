@@ -1,0 +1,473 @@
+id: P01-U02-L02
+mode: lesson
+minutes: 8
+title:
+  en: "Type, pick, or step"
+  ar: "تكتب، أم تختار، أم تزيد وتنقص؟"
+sources:
+  - title: { en: "Date-Input Form Fields: UX Design Guidelines (NN/g)", ar: "حقول إدخال التاريخ: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/date-input/"
+  - title: { en: "Design Guidelines for Input Steppers (NN/g)", ar: "إرشادات تصميم الـ Stepper (NN/g)" }
+    url: "https://www.nngroup.com/articles/input-steppers/"
+  - title: { en: "Sliders, Knobs, and Matrices: Balancing Exploration and Precision (NN/g)", ar: "الـ Sliders والمقابض والمصفوفات: التوازن بين الاستكشاف والدقة (NN/g)" }
+    url: "https://www.nngroup.com/articles/sliders-knobs/"
+  - title: { en: "A Checklist for Designing Mobile Input Fields (NN/g)", ar: "قائمة تحقّق لتصميم حقول الإدخال على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/mobile-input-checklist/"
+review_labels:
+  MC-P01-012: { en: "Let people type what they know by heart", ar: "دع الناس يكتبون ما يحفظونه" }
+  MC-P01-013: { en: "Let people pick what only the system knows", ar: "دع الناس يختارون ما لا يعرفه إلا النظام" }
+  MC-P01-021: { en: "IDs and codes are text made of digits", ar: "الأرقام التعريفية والرموز نص مكوّن من أرقام" }
+  MC-P01-022: { en: "Sliders are for rough values", ar: "الـ Slider للقيم التقريبية" }
+  MC-P01-023: { en: "Small counts near a default: a stepper", ar: "الأعداد الصغيرة القريبة من قيمة شائعة: Stepper" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Nour's date of birth", ar: "تاريخ ميلاد نور" }
+    body:
+      en: "The clinic asks for Nour's date of birth. Tapping the field opens a calendar on today's month, October 2026.\n\nNour was born in March 1991."
+      ar: "تطلب العيادة تاريخ ميلاد نور. والضغط على الحقل يفتح تقويمًا على الشهر الحالي، أكتوبر 2026.\n\nونور مولودة في مارس 1991."
+    mock:
+      width: 300
+      blocks: &calnow
+        - { kind: small, weight: bold, text: "@F5dob" }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: text, text: "‹" }
+            - { kind: text, weight: bold, text: { en: "October 2026", ar: "أكتوبر 2026" } }
+            - { kind: text, text: "›" }
+        - kind: row
+          gap: xs
+          blocks:
+            - { kind: chip, tone: off, text: "1" }
+            - { kind: chip, tone: off, text: "2" }
+            - { kind: chip, tone: off, text: "3" }
+            - { kind: chip, tone: off, text: "4" }
+            - { kind: chip, tone: off, text: "5" }
+            - { kind: chip, tone: off, text: "6" }
+            - { kind: chip, tone: off, text: "7" }
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U02-04
+    part: try
+    rules: [R12]
+    value:
+      en: "Try first. Date input (NN/g): calendar pickers suit dates close to now, within a year. Split dropdowns for day, month and year take many unnecessary steps. Let people type a date they know."
+      ar: "جرّب أولًا. إدخال التاريخ (NN/g): التقويم يناسب التواريخ القريبة من الآن، خلال سنة. والقوائم المنسدلة المنفصلة لليوم والشهر والسنة تحتاج خطوات كثيرة غير ضرورية. دع الناس يكتبون تاريخًا يعرفونه."
+    ref: { url: "https://www.nngroup.com/articles/date-input/", quote: "Calendar pickers should be used for events close to the present time — within less than a year." }
+    prompt:
+      en: "Try each way of asking for her date of birth. Which one should ship?"
+      ar: "جرّب كل طريقة لطلب تاريخ ميلادها. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: *calnow
+    options:
+      - id: dropdowns
+        text: { en: "Three dropdowns: day, month, year", ar: "ثلاث قوائم منسدلة: اليوم، الشهر، السنة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: "@F5dob" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: select, label: { en: "Day", ar: "اليوم" }, text: "1" }
+                - { kind: select, label: { en: "Month", ar: "الشهر" }, text: { en: "Jan", ar: "يناير" } }
+                - { kind: select, label: { en: "Year", ar: "السنة" }, text: "2026" }
+            - { kind: small, text: { en: "Year list: 2026 down to 1926", ar: "قائمة السنوات: من 2026 حتى 1926" }, gap: xs }
+      - id: typed
+        text: { en: "Three short fields she types into", ar: "ثلاثة حقول قصيرة تكتب فيها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: "@F5dob" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: field, label: { en: "Day", ar: "اليوم" }, filled: true, text: "14" }
+                - { kind: field, label: { en: "Month", ar: "الشهر" }, filled: true, text: "3" }
+                - { kind: field, label: { en: "Year", ar: "السنة" }, filled: true, text: "1991" }
+      - id: year
+        text: { en: "Keep the calendar; add a year dropdown on top", ar: "أبقِ التقويم؛ وأضف قائمة منسدلة للسنة فوقه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: "@F5dob" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: select, text: { en: "October", ar: "أكتوبر" } }
+                - { kind: select, text: "2026" }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, tone: off, text: "1" }
+                - { kind: chip, tone: off, text: "2" }
+                - { kind: chip, tone: off, text: "3" }
+                - { kind: chip, tone: off, text: "4" }
+                - { kind: chip, tone: off, text: "5" }
+                - { kind: chip, tone: off, text: "6" }
+                - { kind: chip, tone: off, text: "7" }
+    answer: [typed]
+    misconceptions:
+      - id: MC-P01-012
+        when: [dropdowns]
+        feedback:
+          en: "Each dropdown is a tap, a scroll and another tap, and the year list is a hundred items long. She knows the answer; let her type it."
+          ar: "كل قائمة منسدلة ضغطة وتمرير وضغطة أخرى، وقائمة السنوات طولها مئة عنصر. وهي تعرف الإجابة؛ فدعها تكتبها."
+      - id: MC-P01-012
+        when: [year]
+        feedback:
+          en: "Better than going back 427 months, but she still scrolls 35 years, picks a month, then finds the day. Three typed numbers are faster."
+          ar: "أفضل من الرجوع 427 شهرًا، لكنها ما زالت تمرّر 35 سنة، وتختار الشهر، ثم تبحث عن اليوم. وثلاثة أرقام مكتوبة أسرع."
+    hints:
+      - { en: "Where does Nour's date of birth live: in the system, or in her head?", ar: "أين يوجد تاريخ ميلاد نور: في النظام، أم في ذهنها؟" }
+      - { en: "How many taps does each version need to reach March 1991?", ar: "كم ضغطة تحتاج كل نسخة للوصول إلى مارس 1991؟" }
+    correct:
+      en: "She knows it by heart: let her type it."
+      ar: "تحفظه عن ظهر قلب: فدعها تكتبه."
+    explain:
+      en: "Typing 14, 3, 1991 takes seconds. Labelled Day, Month and Year fields remove any doubt about the order. Calendars are for dates people don't know yet."
+      ar: "كتابة 14 و3 و1991 تأخذ ثواني. والحقول المسمّاة اليوم والشهر والسنة تُزيل أي شك في الترتيب. والتقويم للتواريخ التي لا يعرفها الناس بعد."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [form, clock, list, idea]
+    title: { en: "Who knows the answer?", ar: "من يعرف الإجابة؟" }
+    body:
+      en: "Choose the control by asking where the answer lives.\n\n- **In the person's head:** let them type. A date of birth fits three labelled fields.\n- **Only in the system:** let them pick, like free appointment days. Gray out and disable what isn't available.\n- **A small count with a usual value:** a **stepper** (− and +), starting at that value.\n- **Exact numbers:** a text field. A **slider** is for exploring a range, and pairs well with fields for exact values.\n- **IDs and codes:** a text field that opens the number pad. They're labels made of digits, not amounts."
+      ar: "اختر العنصر بسؤال: أين توجد الإجابة؟\n\n- **في رأس الشخص:** دعه يكتب. وتاريخ الميلاد يناسبه ثلاثة حقول مسمّاة.\n- **في النظام فقط:** دعه يختار، مثل أيام المواعيد المتاحة. واجعل غير المتاح رماديًا ومعطّلًا.\n- **عدد صغير له قيمة معتادة:** **Stepper** (− و+)، يبدأ من تلك القيمة.\n- **الأرقام الدقيقة:** حقل نص. والـ **Slider** لاستكشاف مدى، ويعمل جيدًا مع حقول للقيم الدقيقة.\n- **الأرقام التعريفية والرموز:** حقل نص يفتح لوحة الأرقام. فهي تسميات مكوّنة من أرقام، لا كميات."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U02-05
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Date input (NN/g): make choices clear by disabling and graying out options that aren't available. Only the clinic knows which days the doctor works."
+      ar: "إدخال التاريخ (NN/g): وضّح الاختيارات بتعطيل الخيارات غير المتاحة وجعلها رمادية. والعيادة وحدها تعرف الأيام التي يعمل فيها الطبيب."
+    ref: { url: "https://www.nngroup.com/articles/date-input/", quote: "Make the choices clear by disabling and graying out options that are not available or are illogical pairs." }
+    scenario:
+      en: "Nour needs a visit next week. Dr. Hany sees patients only on Sundays and Wednesdays."
+      ar: "تحتاج نور موعدًا الأسبوع القادم. ود. هاني يستقبل المرضى يومي الأحد والأربعاء فقط."
+    prompt:
+      en: "Try each way of picking the day. Which one should ship?"
+      ar: "جرّب كل طريقة لاختيار اليوم. أيّها يجب أن تُطلق؟"
+    start: field
+    options:
+      - id: field
+        text: { en: "A date field she types into", ar: "حقل تاريخ تكتب فيه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Visit date", ar: "تاريخ الزيارة" }, filled: true, text: { en: "Tue 3 November", ar: "الثلاثاء 3 نوفمبر" } }
+            - { kind: small, color: red, text: { en: "Dr. Hany isn't available on this day.", ar: "د. هاني غير متاح في هذا اليوم." }, gap: xs }
+      - id: all
+        text: { en: "A calendar with every day open; check after she picks", ar: "تقويم كل أيامه مفتوحة؛ والتحقق بعد أن تختار" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "November 2026", ar: "نوفمبر 2026" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, text: { en: "Sun 1", ar: "أحد 1" } }
+                - { kind: chip, text: { en: "Mon 2", ar: "اثنين 2" } }
+                - { kind: chip, tone: dark, text: { en: "Tue 3", ar: "ثلاثاء 3" } }
+                - { kind: chip, text: { en: "Wed 4", ar: "أربعاء 4" } }
+            - { kind: small, color: red, text: { en: "Dr. Hany isn't available on this day.", ar: "د. هاني غير متاح في هذا اليوم." }, gap: s }
+      - id: blocked
+        text: { en: "A calendar where only Sundays and Wednesdays can be picked", ar: "تقويم لا يمكن فيه اختيار إلا الأحد والأربعاء" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "November 2026", ar: "نوفمبر 2026" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, text: { en: "Sun 1", ar: "أحد 1" } }
+                - { kind: chip, tone: off, text: { en: "Mon 2", ar: "اثنين 2" } }
+                - { kind: chip, tone: off, text: { en: "Tue 3", ar: "ثلاثاء 3" } }
+                - { kind: chip, text: { en: "Wed 4", ar: "أربعاء 4" } }
+            - { kind: small, text: { en: "Dr. Hany sees patients on Sundays and Wednesdays.", ar: "يستقبل د. هاني المرضى يومي الأحد والأربعاء." }, gap: s }
+    answer: [blocked]
+    misconceptions:
+      - id: MC-P01-013
+        when: [field, all]
+        feedback:
+          en: "Nour can't know the doctor's days, so she guesses and gets an error. Show her what's possible before she picks."
+          ar: "لا تستطيع نور معرفة أيام الطبيب، فتخمّن وتحصل على خطأ. أرِها الممكن قبل أن تختار."
+    hints:
+      - { en: "Who knows which days Dr. Hany works: Nour or the system?", ar: "من يعرف أيام عمل د. هاني: نور أم النظام؟" }
+      - { en: "Should Nour find out a day is closed before she picks it, or after?", ar: "هل يجب أن تعرف نور أن اليوم غير متاح قبل أن تختاره، أم بعده؟" }
+    correct:
+      en: "Only the system knows: let her pick, and block the rest."
+      ar: "النظام وحده يعرف: دعها تختار، واحجب الباقي."
+    explain:
+      en: "Grayed-out days show the doctor's pattern at a glance, and one line says why, so the calendar doesn't look broken."
+      ar: "الأيام الرمادية تُظهر نمط عمل الطبيب بنظرة واحدة، وسطر واحد يوضّح السبب، فلا يبدو التقويم معطّلًا."
+
+  - id: S05
+    type: tune
+    skill: SK-P01-U02-06
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Input steppers (NN/g): use steppers for numeric fields with a clear most-frequent value, and set that value as the default. Most bookings are for two adults."
+      ar: "الـ Stepper (NN/g): استخدمه للحقول الرقمية التي لها قيمة شائعة واضحة، واجعل تلك القيمة هي الافتراضية. وأغلب الحجوزات لشخصين بالغين."
+    ref: { url: "https://www.nngroup.com/articles/input-steppers/", quote: "Use steppers for numerical fields with a clear most frequently selected value." }
+    scenario:
+      en: "Hossam is booking a holiday flat. Adults: 1 to 8, and almost always 2."
+      ar: "يحجز حسام شقة للعطلة. البالغون: من 1 إلى 8، وغالبًا 2."
+    prompt:
+      en: "Try each control for the number of adults. Which one should ship?"
+      ar: "جرّب كل عنصر لعدد البالغين. أيّها يجب أن يُطلق؟"
+    start: select
+    options:
+      - id: stepper
+        text: { en: "A stepper starting at 2", ar: "Stepper يبدأ من 2" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: stepper, label: { en: "Adults", ar: "البالغون" }, text: "2" }
+      - id: select
+        text: { en: "A dropdown from 1 to 8", ar: "قائمة منسدلة من 1 إلى 8" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: { en: "Adults", ar: "البالغون" }, text: { en: "Select…", ar: "اختر…" } }
+      - id: empty
+        text: { en: "An empty number field", ar: "حقل رقم فارغ" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Adults", ar: "البالغون" }, text: "" }
+    answer: [stepper]
+    misconceptions:
+      - id: MC-P01-023
+        when: [select, empty]
+        feedback:
+          en: "Almost everyone answers 2, yet each of them has to open a list or type it. Start at 2 and let the few adjust with one tap."
+          ar: "أغلب الناس يجيبون 2، ومع ذلك على كلٍّ منهم أن يفتح قائمة أو يكتب. ابدأ من 2 ودع القلّة يعدّلون بضغطة واحدة."
+    hints:
+      - { en: "Look at the usual answer: almost always 2.", ar: "انظر إلى الإجابة المعتادة: 2 في أغلب الأحيان." }
+      - { en: "Which control shows that usual value already, with a quick way to change it?", ar: "أي عنصر يعرض هذه القيمة المعتادة مسبقًا، مع طريقة سريعة لتغييرها؟" }
+    correct:
+      en: "Usual value showing, one tap to change."
+      ar: "القيمة المعتادة ظاهرة، وضغطة واحدة للتغيير."
+    explain:
+      en: "Most people don't touch it at all, and a family of three taps + once. A default is fine here because it's visible and harmless if left."
+      ar: "أغلب الناس لا يلمسونه أصلًا، والعائلة من ثلاثة أشخاص تضغط + مرة واحدة. والقيمة الافتراضية مناسبة هنا لأنها ظاهرة وغير ضارة إن تُركت."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U02-07
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Mobile input checklist (NN/g): what is the right keyboard for this field? A 14-digit national ID is a code: it needs the number pad, not a number field with arrows that treats it as an amount."
+      ar: "قائمة تحقّق حقول الهاتف (NN/g): ما لوحة المفاتيح المناسبة لهذا الحقل؟ والرقم القومي من 14 رقمًا رمز: يحتاج لوحة الأرقام، لا حقل رقم بأسهم يعامله ككمية."
+    ref: { url: "https://www.nngroup.com/articles/mobile-input-checklist/", quote: "What is the right keyboard for this field?" }
+    scenario:
+      en: "Abdelrahman's national ID has 14 digits. The library is choosing the field type."
+      ar: "الرقم القومي لعبد الرحمن من 14 رقمًا. والمكتبة تختار نوع الحقل."
+    prompt:
+      en: "Try each field. Which one should ship?"
+      ar: "جرّب كل حقل. أيّها يجب أن يُطلق؟"
+    start: number
+    options:
+      - id: number
+        text: { en: "A number field with ▲▼ arrows", ar: "حقل رقم بسهمي ▲▼" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1nid", filled: true, text: "29803121401234 ▲▼" }
+            - { kind: small, text: { en: "Treated as an amount: the arrows add or subtract 1.", ar: "يُعامَل ككمية: الأسهم تضيف 1 أو تطرحه." }, gap: xs }
+      - id: boxes
+        text: { en: "Fourteen one-digit boxes", ar: "أربع عشرة خانة، رقم في كل خانة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: "@F1nid" }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: field, text: "2" }
+                - { kind: field, text: "9" }
+                - { kind: field, text: "8" }
+                - { kind: field, text: "" }
+                - { kind: field, text: "" }
+                - { kind: field, text: "" }
+                - { kind: field, text: "" }
+      - id: text
+        text: { en: "A text field that opens the number pad", ar: "حقل نص يفتح لوحة الأرقام" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1nid", filled: true, text: "29803121401234" }
+            - { kind: small, text: { en: "Keyboard: 1 2 3 … 0", ar: "لوحة المفاتيح: 1 2 3 … 0" }, gap: xs }
+    answer: [text]
+    misconceptions:
+      - id: MC-P01-021
+        when: [number]
+        feedback:
+          en: "A number field treats the ID as an amount: it may round it, drop a leading zero, or change it with a stray scroll. It's a code."
+          ar: "حقل الرقم يعامل الرقم القومي ككمية: قد يقرّبه، أو يحذف صفرًا في أوله، أو يغيّره بتمرير عابر. إنه رمز."
+      - id: MC-P01-021
+        when: [boxes]
+        feedback:
+          en: "Boxes break pasting and make it easy to skip one. One text field with the number pad does the job."
+          ar: "الخانات تمنع اللصق وتجعل تخطّي خانة سهلًا. وحقل نص واحد مع لوحة الأرقام يؤدّي المهمة."
+    hints:
+      - { en: "Is the ID an amount you could add or round, or a code?", ar: "هل الرقم القومي كمية يمكن جمعها أو تقريبها، أم رمز؟" }
+      - { en: "Which field gives him the number pad without treating it as an amount?", ar: "أي حقل يعطيه لوحة الأرقام دون أن يعامله ككمية؟" }
+    correct:
+      en: "Digits, but not an amount: text with the number pad."
+      ar: "أرقام، لكنها ليست كمية: نص مع لوحة الأرقام."
+    explain:
+      en: "Use number fields only for amounts you'd count or add. IDs, codes and phone numbers are labels that happen to use digits."
+      ar: "استخدم حقول الأرقام فقط للكميات التي تُعدّ أو تُجمع. والأرقام التعريفية والرموز وأرقام الهواتف تسميات تتكوّن من أرقام."
+
+  - id: S07
+    type: compare
+    skill: SK-P01-U02-06
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S05: steppers aren't for every number. Input steppers (NN/g): they aren't suitable for large adjustments. A catering order of about 60 portions needs typing."
+      ar: "مقارنة مع الخطوة 5: الـ Stepper لا يناسب كل رقم. الـ Stepper (NN/g): لا يناسب التعديلات الكبيرة. وطلب ولائم من نحو 60 وجبة يحتاج إلى الكتابة."
+    ref: { url: "https://www.nngroup.com/articles/input-steppers/", quote: "Steppers are not suitable for a large number adjustments." }
+    scenario:
+      en: "Tamer is ordering lunch for his whole office: 60 portions. Orders on this page range from 20 to 200."
+      ar: "يطلب تامر غداءً لكل مكتبه: 60 وجبة. والطلبات في هذه الصفحة تتراوح بين 20 و200."
+    prompt:
+      en: "Which control should ship for the number of portions?"
+      ar: "أي عنصر يجب أن يُطلق لعدد الوجبات؟"
+    a:
+      mock:
+        width: 300
+        blocks:
+          - { kind: stepper, label: { en: "Portions", ar: "عدد الوجبات" }, text: "20" }
+    b:
+      mock:
+        width: 300
+        blocks:
+          - { kind: field, label: { en: "Portions", ar: "عدد الوجبات" }, filled: true, text: "60" }
+    answer: b
+    reason:
+      prompt: { en: "Why not a stepper this time?", ar: "لماذا لا نستخدم Stepper هذه المرة؟" }
+      options:
+        - { id: taps, text: { en: "There's no usual value, and reaching 60 would take 40 taps", ar: "لا توجد قيمة معتادة، والوصول إلى 60 يحتاج 40 ضغطة" } }
+        - { id: ugly, text: { en: "Steppers look old-fashioned", ar: "الـ Stepper يبدو قديم الطراز" } }
+        - { id: big, text: { en: "Big numbers need a dropdown", ar: "الأرقام الكبيرة تحتاج قائمة منسدلة" } }
+      answer: [taps]
+      misconceptions:
+        - id: MC-P01-023
+          when: [ugly, big]
+          feedback:
+            en: "It's about effort. A stepper shines when most people keep the default or change it by one or two. Here the value is far and varies a lot."
+            ar: "المسألة مسألة جهد. الـ Stepper ممتاز حين يُبقي أغلب الناس القيمة الافتراضية أو يغيّرونها بواحد أو اثنين. وهنا القيمة بعيدة وتتغيّر كثيرًا."
+    misconceptions:
+      - id: MC-P01-023
+        when: [a]
+        feedback:
+          en: "From 20 to 60 is forty taps on +. With no usual value and a wide range, typing is faster."
+          ar: "من 20 إلى 60 تعني أربعين ضغطة على +. ومع غياب قيمة معتادة ومدى واسع، الكتابة أسرع."
+    hints:
+      - { en: "Look at the range: 20 to 200, and Tamer needs 60.", ar: "انظر إلى المدى: من 20 إلى 200، وتامر يحتاج 60." }
+      - { en: "How many taps would it take to reach 60 one at a time?", ar: "كم ضغطة يحتاج للوصول إلى 60 واحدة تلو الأخرى؟" }
+    correct:
+      en: "Wide range, no usual value: type it."
+      ar: "مدى واسع بلا قيمة معتادة: اكتبه."
+    explain:
+      en: "A stepper is for small adjustments around a common value. When answers spread widely, a text field with the number pad wins."
+      ar: "الـ Stepper للتعديلات الصغيرة حول قيمة شائعة. وحين تتباعد الإجابات كثيرًا، يفوز حقل النص مع لوحة الأرقام."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U02-06
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Sliders (NN/g): a slider is good for exploring a range, but precise values are hard to hit; add a text box for fine control. Tamer has an exact budget."
+      ar: "حالة جديدة. الـ Sliders (NN/g): الـ Slider جيد لاستكشاف مدى، لكن الوصول إلى قيم دقيقة صعب؛ فأضف حقل نص للضبط الدقيق. ولدى تامر ميزانية محدّدة."
+    ref: { url: "https://www.nngroup.com/articles/sliders-knobs/", quote: "Then, a text box is added to allow for fine control — selecting a specific value." }
+    scenario:
+      en: "Tamer's budget per person is exactly 80 to 120 pounds. The restaurant filter uses a price slider from 0 to 500."
+      ar: "ميزانية تامر للفرد بالضبط من 80 إلى 120 جنيهًا. وفلتر المطعم يستخدم Slider للسعر من 0 إلى 500."
+    prompt:
+      en: "Try each filter. Which one should ship?"
+      ar: "جرّب كل فلتر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now (try to set 80 to 120)", ar: "الآن (جرّب أن تضبطه من 80 إلى 120)" }
+      width: 300
+      blocks:
+        - { kind: slider, label: { en: "Price per person", ar: "السعر للفرد" }, min: 0, max: 500, from: 100, to: 325, format: { en: "From {a} to {b} pounds", ar: "من {a} إلى {b} جنيهًا" } }
+    options:
+      - id: wide
+        text: { en: "Make the slider wider", ar: "اجعل الـ Slider أعرض" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 320
+          blocks:
+            - { kind: slider, label: { en: "Price per person", ar: "السعر للفرد" }, min: 0, max: 500, from: 100, to: 325, format: { en: "From {a} to {b} pounds", ar: "من {a} إلى {b} جنيهًا" } }
+      - id: both
+        text: { en: "Keep the slider, and add Min and Max fields", ar: "أبقِ الـ Slider، وأضف حقلين للأقل والأعلى" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: slider, label: { en: "Price per person", ar: "السعر للفرد" }, min: 0, max: 500, from: 80, to: 120, format: { en: "From {a} to {b} pounds", ar: "من {a} إلى {b} جنيهًا" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: field, label: { en: "Min", ar: "الأقل" }, filled: true, text: "80" }
+                - { kind: field, label: { en: "Max", ar: "الأعلى" }, filled: true, text: "120" }
+      - id: ranges
+        text: { en: "Replace it with fixed ranges", ar: "استبدله بنطاقات ثابتة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Price per person", ar: "السعر للفرد" } }
+            - { kind: radio, text: { en: "Under 100", ar: "أقل من 100" }, gap: xs }
+            - { kind: radio, text: { en: "100 to 200", ar: "من 100 إلى 200" }, gap: xs }
+            - { kind: radio, text: { en: "Over 200", ar: "أكثر من 200" }, gap: xs }
+    answer: [both]
+    misconceptions:
+      - id: MC-P01-022
+        when: [wide]
+        feedback:
+          en: "A few more pixels still means each step jumps a few pounds on a phone. He needs a place to type 80."
+          ar: "بضع نقاط إضافية تعني أن كل خطوة ما زالت تقفز بضعة جنيهات على الهاتف. يحتاج مكانًا يكتب فيه 80."
+      - id: MC-P01-022
+        when: [ranges]
+        feedback:
+          en: "His 80 to 120 crosses two ranges, so he can't express it at all. Let him set exact values."
+          ar: "نطاقه من 80 إلى 120 يقع بين نطاقين، فلا يستطيع التعبير عنه أصلًا. دعه يضبط قيمًا دقيقة."
+    hints:
+      - { en: "Tamer knows his exact numbers. Can he set exactly 80 and 120 by dragging?", ar: "تامر يعرف أرقامه بالضبط. هل يستطيع ضبط 80 و120 بالضبط بالسحب؟" }
+      - { en: "A slider is good for exploring. What's good for being exact?", ar: "الـ Slider مناسب للاستكشاف. ما المناسب للدقة؟" }
+    correct:
+      en: "Slider to explore, fields to be exact."
+      ar: "الـ Slider للاستكشاف، والحقول للدقة."
+    explain:
+      en: "The slider shows the whole price range at a glance; the fields let Tamer set exactly what he has. Linked together, each serves a different need."
+      ar: "الـ Slider يعرض مدى الأسعار كله بنظرة؛ والحقول تتيح لتامر ضبط ما لديه بالضبط. ومعًا، يخدم كلٌّ منهما حاجة مختلفة."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [form, clock, list, idea]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **Known by heart:** let Nour type her date of birth.\n- **Known only by the system:** showed the doctor's free days and blocked the rest.\n- **Small usual counts:** used a stepper starting at 2.\n- **Codes:** used a text field with the number pad for the ID.\n- **Large or exact numbers:** typed fields, with a slider only for exploring.\n\nNext lesson: long lists, and search that finds what people type."
+      ar: "- **ما يُحفظ عن ظهر قلب:** دع نور تكتب تاريخ ميلادها.\n- **ما لا يعرفه إلا النظام:** عرضت أيام الطبيب المتاحة وحجبت الباقي.\n- **الأعداد الصغيرة المعتادة:** استخدمت Stepper يبدأ من 2.\n- **الرموز:** استخدمت حقل نص مع لوحة الأرقام للرقم القومي.\n- **الأرقام الكبيرة أو الدقيقة:** حقول للكتابة، والـ Slider للاستكشاف فقط.\n\nالدرس التالي: القوائم الطويلة، والبحث الذي يجد ما يكتبه الناس."

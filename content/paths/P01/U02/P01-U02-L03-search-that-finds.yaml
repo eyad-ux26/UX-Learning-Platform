@@ -1,0 +1,473 @@
+id: P01-U02-L03
+mode: lesson
+minutes: 8
+title:
+  en: "Long lists: let people type"
+  ar: "القوائم الطويلة: دع الناس يكتبون"
+sources:
+  - title: { en: "Does Your Form Really Need a Dropdown List? (NN/g)", ar: "هل يحتاج نموذجك فعلًا إلى قائمة منسدلة؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/dropdown-list/"
+  - title: { en: "7 Ways to Improve Your Website's or Intranet's Built-In Search Engine (NN/g)", ar: "7 طرق لتحسين محرّك البحث في موقعك (NN/g)" }
+    url: "https://www.nngroup.com/articles/internal-website-search/"
+review_labels:
+  MC-P01-012: { en: "Let people type what they know by heart", ar: "دع الناس يكتبون ما يحفظونه" }
+  MC-P01-015: { en: "Don't preselect a guess for a personal answer", ar: "لا تحدّد تخمينًا مسبقًا لإجابة شخصية" }
+  MC-P01-016: { en: "Long lists need a way to search", ar: "القوائم الطويلة تحتاج طريقة للبحث" }
+  MC-P01-024: { en: "Search should accept how people really type", ar: "البحث يجب أن يقبل ما يكتبه الناس فعلًا" }
+  MC-P01-025: { en: "Pin common options; keep the full list", ar: "ثبّت الخيارات الشائعة في الأعلى، واحتفظ بالقائمة كاملة" }
+  MC-P01-031: { en: "Show a few options; don't hide them in a dropdown", ar: "اعرض الخيارات القليلة؛ لا تُخفِها في قائمة منسدلة" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Abdelrahman's nationality", ar: "جنسية عبد الرحمن" }
+    body:
+      en: "The library form asks for Abdelrahman's nationality. Tapping the field opens a list of about 195 countries, from A to Z.\n\nEgypt is about a quarter of the way down."
+      ar: "يسأل نموذج المكتبة عن جنسية عبد الرحمن. والضغط على الحقل يفتح قائمة بنحو 195 دولة، مرتّبة أبجديًا.\n\nومصر في مكان ما بعد ربع القائمة."
+    mock:
+      width: 300
+      blocks: &ddopen
+        - { kind: select, label: { en: "Nationality", ar: "الجنسية" }, text: { en: "Select…", ar: "اختر…" } }
+        - kind: group
+          tone: plain
+          gap: xs
+          blocks:
+            - { kind: text, text: { en: "Afghanistan", ar: "أفغانستان" } }
+            - { kind: text, text: { en: "Albania", ar: "ألبانيا" }, gap: xs }
+            - { kind: text, text: { en: "Algeria", ar: "الجزائر" }, gap: xs }
+            - { kind: text, text: { en: "Andorra", ar: "أندورا" }, gap: xs }
+            - { kind: small, text: { en: "… 191 more", ar: "… 191 دولة أخرى" }, gap: xs }
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U02-08
+    part: try
+    rules: [R12]
+    value:
+      en: "Try first. Dropdown lists (NN/g): when a list grows well beyond 15 options, consider a combobox; people type and the list narrows. It works well for long, predictable lists such as countries."
+      ar: "جرّب أولًا. القوائم المنسدلة (NN/g): حين تتجاوز القائمة 15 خيارًا بكثير، فكّر في Combobox؛ يكتب الناس فتضيق القائمة. وهو يعمل جيدًا مع القوائم الطويلة المتوقّعة مثل الدول."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "This pattern works well for long lists of predictable options such as countries, states, languages, and universities." }
+    prompt:
+      en: "Try each way of choosing a country. Which one should ship?"
+      ar: "جرّب كل طريقة لاختيار الدولة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: *ddopen
+    options:
+      - id: radios
+        text: { en: "Show all 195 as radio buttons", ar: "اعرض الـ 195 كلها كـ Radio buttons" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Nationality", ar: "الجنسية" } }
+            - { kind: radio, text: { en: "Afghanistan", ar: "أفغانستان" }, gap: xs }
+            - { kind: radio, text: { en: "Albania", ar: "ألبانيا" }, gap: xs }
+            - { kind: radio, text: { en: "Algeria", ar: "الجزائر" }, gap: xs }
+            - { kind: radio, text: { en: "Andorra", ar: "أندورا" }, gap: xs }
+            - { kind: small, text: { en: "… 191 more, about 12 screens", ar: "… 191 دولة أخرى، نحو 12 شاشة" }, gap: xs }
+      - id: split
+        text: { en: "Pick a continent first, then the country", ar: "اختر القارة أولًا، ثم الدولة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: select, label: { en: "Continent", ar: "القارة" }, text: { en: "Select…", ar: "اختر…" } }
+            - { kind: select, label: { en: "Nationality", ar: "الجنسية" }, text: { en: "Select…", ar: "اختر…" }, gap: s }
+      - id: combo
+        text: { en: "A field he types into; the list narrows as he types", ar: "حقل يكتب فيه؛ وتضيق القائمة مع الكتابة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Nationality", ar: "الجنسية" }, filled: true, text: { en: "Eg", ar: "مص" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Egypt", ar: "مصر" } }
+    answer: [combo]
+    misconceptions:
+      - id: MC-P01-016
+        when: [radios]
+        feedback:
+          en: "Now every choice is visible, but he scrolls through a dozen screens to find Egypt. A long list needs typing, not more scrolling."
+          ar: "الآن كل الخيارات ظاهرة، لكنه يمرّر عشرات الشاشات ليجد مصر. والقائمة الطويلة تحتاج كتابة، لا مزيدًا من التمرير."
+      - id: MC-P01-016
+        when: [split]
+        feedback:
+          en: "Two lists instead of one, and he has to know how the form groups countries. Typing two letters is faster than both."
+          ar: "قائمتان بدل واحدة، وعليه أن يعرف كيف يقسّم النموذج الدول. وكتابة حرفين أسرع من الاثنين."
+    hints:
+      - { en: "Abdelrahman already knows the answer. What's the quickest way to reach Egypt?", ar: "عبد الرحمن يعرف الإجابة مسبقًا. ما أسرع طريقة للوصول إلى مصر؟" }
+      - { en: "Scrolling 195 options or picking a continent first both take time. What lets him go straight there?", ar: "التمرير بين 195 خيارًا أو اختيار القارة أولًا كلاهما يأخذ وقتًا. ما الذي يوصله مباشرة؟" }
+    correct:
+      en: "Long, known list: type to filter."
+      ar: "قائمة طويلة معروفة: اكتب لتضييقها."
+    explain:
+      en: "Abdelrahman knows the answer. Two letters bring it to the top, and the list still guarantees a valid country."
+      ar: "عبد الرحمن يعرف الإجابة. وحرفان يُظهرانها في الأعلى، والقائمة تضمن مع ذلك اسم دولة صحيحًا."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [list, eye, form, idea]
+    title: { en: "Let the list come to them", ar: "دع القائمة تأتي إليهم" }
+    body:
+      en: "Dropdowns hide their options. That's fine for a short list, and slow for a long one.\n\n- **A handful of options:** show them, as radio buttons.\n- **Well over 15 options people know, like countries:** a field that filters as they type.\n- **Values people know by heart, like a year:** a plain text field.\n- **Forgive spelling:** people rarely type perfectly. Suggest close matches as they type.\n- **Pin, don't preselect:** put the most common choices at the top, but let each person choose. People often keep whatever is already selected."
+      ar: "القوائم المنسدلة تُخفي خياراتها. وهذا مناسب للقائمة القصيرة، وبطيء للطويلة.\n\n- **خيارات قليلة:** اعرضها، كـ Radio buttons.\n- **أكثر من 15 خيارًا بكثير يعرفها الناس، مثل الدول:** حقل يضيّق القائمة مع الكتابة.\n- **قيم يحفظها الناس، مثل سنة:** حقل نص عادي.\n- **سامح في الإملاء:** نادرًا ما يكتب الناس بدقة. فاقترح أقرب النتائج أثناء الكتابة.\n- **ثبّت ولا تحدّد مسبقًا:** ضع الخيارات الأكثر شيوعًا في الأعلى، لكن دع كل شخص يختار. فالناس كثيرًا ما يُبقون ما هو محدّد بالفعل."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U02-08
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Site search (NN/g): users often don't formulate perfect queries; spelling suggestions are critical. A filter that needs exact spelling turns a shortcut into a test."
+      ar: "البحث في الموقع (NN/g): كثيرًا ما لا يصوغ المستخدمون استعلامات مثالية؛ واقتراحات الإملاء ضرورية. والفلتر الذي يطلب إملاءً دقيقًا يحوّل الاختصار إلى اختبار."
+    ref: { url: "https://www.nngroup.com/articles/internal-website-search/", quote: "Users often don’t formulate perfect queries." }
+    scenario:
+      en: "Abdelrahman types quickly with one thumb: \"Egipt\"."
+      ar: "يكتب عبد الرحمن بسرعة بإبهام واحد: «مصرر»."
+    prompt:
+      en: "Try each way the field can respond. Which one should ship?"
+      ar: "جرّب كل طريقة يمكن أن يستجيب بها الحقل. أيّها يجب أن تُطلق؟"
+    start: none
+    options:
+      - id: close
+        text: { en: "Show the closest match", ar: "اعرض أقرب نتيجة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Nationality", ar: "الجنسية" }, filled: true, text: { en: "Egipt", ar: "مصرر" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: small, text: { en: "Did you mean:", ar: "هل تقصد:" } }
+                - { kind: text, weight: bold, text: { en: "Egypt", ar: "مصر" }, gap: xs }
+      - id: none
+        text: { en: "Show \"No results\"", ar: "اعرض «لا توجد نتائج»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Nationality", ar: "الجنسية" }, filled: true, text: { en: "Egipt", ar: "مصرر" } }
+            - { kind: small, text: { en: "No results.", ar: "لا توجد نتائج." }, gap: xs }
+      - id: all
+        text: { en: "Show the whole list again", ar: "اعرض القائمة كلها من جديد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Nationality", ar: "الجنسية" }, filled: true, text: { en: "Egipt", ar: "مصرر" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, text: { en: "Afghanistan", ar: "أفغانستان" } }
+                - { kind: text, text: { en: "Albania", ar: "ألبانيا" }, gap: xs }
+                - { kind: small, text: { en: "… 193 more", ar: "… 193 دولة أخرى" }, gap: xs }
+    answer: [close]
+    misconceptions:
+      - id: MC-P01-024
+        when: [none]
+        feedback:
+          en: "One wrong letter and a dead end. He has to spot the typo himself. The system can see that \"Egipt\" is almost certainly Egypt."
+          ar: "حرف خاطئ واحد وطريق مسدود. وعليه أن يكتشف الخطأ بنفسه. بينما يستطيع النظام أن يرى أن ما كتبه هو مصر على الأرجح."
+      - id: MC-P01-024
+        when: [all]
+        feedback:
+          en: "His typing is thrown away and he's back to scrolling 195 countries. Use what he typed to guess what he meant."
+          ar: "ضاعت كتابته وعاد إلى تمرير 195 دولة. استخدم ما كتبه لتخمين ما يقصده."
+    hints:
+      - { en: "He made one small typo. Is \"Egipt\" close to a country in the list?", ar: "أخطأ خطأً صغيرًا واحدًا. هل «Egipt» قريبة من دولة في القائمة؟" }
+      - { en: "Which response helps him without making him start again?", ar: "أي استجابة تساعده دون أن تجعله يبدأ من جديد؟" }
+    correct:
+      en: "Close enough should still land."
+      ar: "القريب يجب أن يصل أيضًا."
+    explain:
+      en: "Matching near misses, and saying so, rescues most typos in one tap. People don't need to type perfectly to get the right answer."
+      ar: "مطابقة الأخطاء القريبة، مع توضيح ذلك، تُنقذ أغلب الأخطاء الإملائية بضغطة واحدة. ولا يحتاج الناس إلى الكتابة بدقة ليصلوا إلى الإجابة الصحيحة."
+
+  - id: S05
+    type: tune
+    skill: SK-P01-U02-08
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Dropdown lists (NN/g): users may not explore options beyond the default. Preselecting the common country creates silent errors for everyone else; pinning gives the speed without the risk."
+      ar: "القوائم المنسدلة (NN/g): قد لا يستكشف المستخدمون خيارات غير الخيار الافتراضي. وتحديد الدولة الشائعة مسبقًا يصنع أخطاء صامتة لكل الآخرين؛ أما التثبيت في الأعلى فيعطي السرعة بلا خطر."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "Users may not interact with the control to explore additional options beyond the default." }
+    scenario:
+      en: "A sign-up form asks for a phone country code. Most users are in Egypt or Saudi Arabia. Ahmad lives in Jordan and is in a hurry."
+      ar: "يطلب نموذج تسجيل رمز الدولة للهاتف. وأغلب المستخدمين في مصر أو السعودية. وأحمد يعيش في الأردن ومستعجل."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: preset
+    options:
+      - id: preset
+        text: { en: "Preselect Egypt (⁦+20⁩)", ar: "حدّد مصر (‎⁦+20⁩) مسبقًا" }
+        mock:
+          width: 300
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: select, label: { en: "Code", ar: "الرمز" }, filled: true, text: "⁦+20⁩" }
+                - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "⁦79 123 4567⁩" }
+            - { kind: small, color: red, text: { en: "Saved as ⁦+20 79 123 4567⁩: not Ahmad's number", ar: "حُفظ هكذا: ‎⁦+20 79 123 4567⁩، وهو ليس رقم أحمد" }, gap: xs }
+      - id: pin
+        text: { en: "Pin Egypt and Saudi Arabia at the top; nothing selected", ar: "ثبّت مصر والسعودية في الأعلى؛ دون تحديد أي شيء" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: { en: "Country code", ar: "رمز الدولة" }, text: { en: "Choose or type a country", ar: "اختر دولة أو اكتب اسمها" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, text: { en: "Egypt ⁦+20⁩", ar: "مصر ‎⁦+20⁩" } }
+                - { kind: text, text: { en: "Saudi Arabia ⁦+966⁩", ar: "السعودية ‎⁦+966⁩" }, gap: xs }
+                - { kind: divider, gap: xs }
+                - { kind: text, text: { en: "Afghanistan ⁦+93⁩", ar: "أفغانستان ‎⁦+93⁩" }, gap: xs }
+                - { kind: small, text: { en: "… all countries, A to Z", ar: "… كل الدول، أبجديًا" }, gap: xs }
+      - id: az
+        text: { en: "Plain A to Z list, nothing pinned or selected", ar: "قائمة أبجدية عادية، دون تثبيت أو تحديد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: { en: "Country code", ar: "رمز الدولة" }, text: { en: "Select…", ar: "اختر…" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, text: { en: "Afghanistan ⁦+93⁩", ar: "أفغانستان ‎⁦+93⁩" } }
+                - { kind: text, text: { en: "Albania ⁦+355⁩", ar: "ألبانيا ‎⁦+355⁩" }, gap: xs }
+                - { kind: small, text: { en: "… Egypt is about 60 rows down", ar: "… مصر بعد نحو 60 سطرًا" }, gap: xs }
+    answer: [pin]
+    misconceptions:
+      - id: MC-P01-015
+        when: [preset]
+        feedback:
+          en: "Ahmad types his number and never notices ⁦+20⁩. The account gets a wrong number, and nobody knows until a code never arrives."
+          ar: "يكتب أحمد رقمه ولا يلاحظ ‎⁦+20⁩ أبدًا. فيُسجَّل في الحساب رقم خاطئ، ولا يعرف أحد حتى لا يصل رمز التحقق."
+      - id: MC-P01-025
+        when: [az]
+        feedback:
+          en: "Safe for Ahmad, but most users scroll past dozens of countries every time. Pin the common ones on top of the full list."
+          ar: "آمن لأحمد، لكن أغلب المستخدمين يمرّرون عشرات الدول في كل مرة. ثبّت الشائعة فوق القائمة الكاملة."
+    hints:
+      - { en: "Ahmad lives in Jordan. What happens if he doesn't notice a preselected code?", ar: "أحمد يعيش في الأردن. ماذا يحدث إن لم ينتبه إلى رمز محدّد مسبقًا؟" }
+      - { en: "How can most people save time without anyone getting a wrong answer by default?", ar: "كيف يوفّر أغلب الناس الوقت دون أن يحصل أحد على إجابة خاطئة تلقائيًا؟" }
+    correct:
+      en: "Pin the common ones; let each person choose."
+      ar: "ثبّت الشائعة؛ ودع كل شخص يختار."
+    explain:
+      en: "Pinning puts most people one tap away without choosing for anyone. Keep the pinned group small, two to five items, or it becomes another long list."
+      ar: "التثبيت يجعل أغلب الناس على بُعد ضغطة واحدة دون أن يختار عن أحد. واجعل المجموعة المثبّتة صغيرة، من اثنين إلى خمسة، وإلا صارت قائمة طويلة أخرى."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U02-04
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Dropdown lists (NN/g): for readily known values, typing is often faster than selecting from a dropdown. A year has 4 digits and everyone knows theirs."
+      ar: "القوائم المنسدلة (NN/g): للقيم المعروفة، الكتابة غالبًا أسرع من الاختيار من قائمة منسدلة. والسنة 4 أرقام والكل يعرف سنته."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "For readily known values — ages, birthdates, heights — typing is often faster than selecting from a dropdown." }
+    scenario:
+      en: "The library asks the year Abdelrahman finished school. The dropdown lists every year from 2026 back to 1950. He finished in 2009."
+      ar: "تسأل المكتبة عن السنة التي أنهى فيها عبد الرحمن الدراسة. والقائمة المنسدلة تعرض كل السنوات من 2026 حتى 1950. وقد أنهاها في 2009."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: list
+    options:
+      - id: list
+        text: { en: "Keep the dropdown of 77 years", ar: "أبقِ القائمة المنسدلة ذات الـ 77 سنة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: { en: "Year you finished school", ar: "سنة إنهاء الدراسة" }, text: { en: "Select…", ar: "اختر…" } }
+      - id: combo
+        text: { en: "A search field that filters the years", ar: "حقل بحث يضيّق قائمة السنوات" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Year you finished school", ar: "سنة إنهاء الدراسة" }, filled: true, text: "20" }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, text: "2026" }
+                - { kind: text, text: "2025", gap: xs }
+                - { kind: small, text: { en: "… 25 more", ar: "… 25 سنة أخرى" }, gap: xs }
+      - id: type
+        text: { en: "A short text field for the year", ar: "حقل نص قصير للسنة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Year you finished school", ar: "سنة إنهاء الدراسة" }, filled: true, text: "2009" }
+    answer: [type]
+    misconceptions:
+      - id: MC-P01-012
+        when: [list]
+        feedback:
+          en: "He knows the answer, yet has to scroll 17 years to reach it. Four keystrokes are faster than any list."
+          ar: "يعرف الإجابة، ومع ذلك عليه أن يمرّر 17 سنة ليصل إليها. وأربع ضغطات أسرع من أي قائمة."
+      - id: MC-P01-012
+        when: [combo]
+        feedback:
+          en: "Filtering helps with names people might spell differently. A year has one spelling; just let him type it."
+          ar: "التضييق يساعد مع الأسماء التي قد تُكتب بأشكال مختلفة. والسنة لها كتابة واحدة؛ فدعه يكتبها فقط."
+    hints:
+      - { en: "Does Abdelrahman need to search for 2009, or does he know it by heart?", ar: "هل يحتاج عبد الرحمن إلى البحث عن 2009، أم يعرفها جيدًا؟" }
+      - { en: "A year has one way to write it. What's the fewest steps to enter it?", ar: "السنة تُكتب بطريقة واحدة فقط. ما أقل عدد من الخطوات لإدخالها؟" }
+    correct:
+      en: "Known value, one spelling: type it."
+      ar: "قيمة معروفة بكتابة واحدة: تُكتب."
+    explain:
+      en: "Not every answer needs a list. When people know the value and it can only be written one way, a text field is the fastest control there is."
+      ar: "ليست كل إجابة تحتاج قائمة. وحين يعرف الناس القيمة ولا تُكتب إلا بطريقة واحدة، فحقل النص هو أسرع عنصر ممكن."
+
+  - id: S07
+    type: compare
+    skill: SK-P01-U02-02
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S02: search is for long lists. Dropdown lists (NN/g): for a handful of options, radio buttons are universally understood, show every choice and take one click."
+      ar: "مقارنة مع الخطوة 2: البحث للقوائم الطويلة. القوائم المنسدلة (NN/g): مع خيارات قليلة، الـ Radio buttons مفهومة للجميع، وتعرض كل الخيارات وتحتاج ضغطة واحدة."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "They are universally understood, expose all choices immediately, and require only a single click to select an option." }
+    scenario:
+      en: "The library has four branches. Abdelrahman picks the one where he'll collect his card."
+      ar: "للمكتبة أربعة فروع. ويختار عبد الرحمن الفرع الذي سيستلم منه بطاقته."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أي نسخة يجب أن تُطلق؟"
+    a:
+      mock:
+        width: 300
+        blocks:
+          - { kind: field, label: { en: "Branch", ar: "الفرع" }, text: { en: "Type a branch name", ar: "اكتب اسم الفرع" } }
+    b:
+      mock:
+        width: 300
+        blocks:
+          - { kind: small, weight: bold, text: { en: "Branch", ar: "الفرع" } }
+          - { kind: radio, text: { en: "Downtown", ar: "وسط البلد" }, gap: xs }
+          - { kind: radio, text: { en: "Heliopolis", ar: "مصر الجديدة" }, gap: xs }
+          - { kind: radio, text: { en: "Maadi", ar: "المعادي" }, gap: xs }
+          - { kind: radio, text: { en: "Nasr City", ar: "مدينة نصر" }, gap: xs }
+    answer: b
+    reason:
+      prompt: { en: "Why not a search field here, when it was right for countries?", ar: "لماذا لا نستخدم حقل بحث هنا، مع أنه كان صحيحًا للدول؟" }
+      options:
+        - { id: few, text: { en: "Four choices fit on screen, and he may not know their names", ar: "أربعة خيارات تتّسع على الشاشة، وقد لا يعرف أسماءها" } }
+        - { id: modern, text: { en: "Radio buttons look friendlier", ar: "الـ Radio buttons تبدو ألطف" } }
+        - { id: type, text: { en: "Typing is always slower", ar: "الكتابة أبطأ دائمًا" } }
+      answer: [few]
+      misconceptions:
+        - id: MC-P01-031
+          when: [modern, type]
+          feedback:
+            en: "Typing was faster for 195 countries he knows. Here there are four branches he may not know: showing them is faster and teaches him the options."
+            ar: "الكتابة كانت أسرع مع 195 دولة يعرفها. وهنا أربعة فروع قد لا يعرفها: وعرضها أسرع ويعرّفه بالخيارات."
+    misconceptions:
+      - id: MC-P01-031
+        when: [a]
+        feedback:
+          en: "He'd have to guess the branch names before he can type one. With four, just show them."
+          ar: "عليه أن يخمّن أسماء الفروع قبل أن يكتب أحدها. ومع أربعة فروع، اعرضها فقط."
+    hints:
+      - { en: "Count the branches.", ar: "عُدّ الفروع." }
+      - { en: "With only four choices, should he have to open anything to see them?", ar: "مع أربعة خيارات فقط، هل يجب أن يفتح شيئًا لكي يراها؟" }
+    correct:
+      en: "A handful: show them all."
+      ar: "خيارات قليلة: اعرضها كلها."
+    explain:
+      en: "The size of the list decides. A few options: show them. Dozens that people know: let them type. A value they know by heart: a plain field."
+      ar: "حجم القائمة هو ما يحدّد. خيارات قليلة: اعرضها. وعشرات يعرفها الناس: دعهم يكتبون. وقيمة يحفظونها: حقل عادي."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U02-08
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Site search (NN/g): query suggestions help people fix spelling errors while they are typing. Place names have many spellings across Arabic and English."
+      ar: "حالة جديدة. البحث في الموقع (NN/g): اقتراحات البحث تساعد الناس على تصحيح الأخطاء الإملائية أثناء الكتابة. وأسماء الأماكن لها كتابات كثيرة بين العربية والإنجليزية."
+    ref: { url: "https://www.nngroup.com/articles/internal-website-search/", quote: "Oftentimes query suggestions will assist users in adjusting spelling errors while they are typing the query." }
+    scenario:
+      en: "Tamer's restaurant delivers to about 300 areas. He types his area the way he says it: \"Zamalik\"."
+      ar: "يوصّل مطعم تامر إلى نحو 300 منطقة. ويكتب منطقته كما ينطقها: «زملك»."
+    prompt:
+      en: "Try each version of the area field. Which one should ship?"
+      ar: "جرّب كل نسخة من حقل المنطقة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, label: { en: "Delivery area", ar: "منطقة التوصيل" }, filled: true, text: { en: "Zamalik", ar: "زملك" } }
+        - { kind: small, text: { en: "No results.", ar: "لا توجد نتائج." }, gap: xs }
+    options:
+      - id: suggest
+        text: { en: "Suggest close matches as he types", ar: "اقترح أقرب النتائج أثناء الكتابة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Delivery area", ar: "منطقة التوصيل" }, filled: true, text: { en: "Zamal", ar: "زمل" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Zamalek", ar: "الزمالك" } }
+      - id: hint
+        text: { en: "Add \"Type the name exactly as on the map\"", ar: "أضف «اكتب الاسم كما هو على الخريطة تمامًا»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Delivery area", ar: "منطقة التوصيل" }, filled: true, text: { en: "Zamalik", ar: "زملك" }, hint: { en: "Type the name exactly as on the map.", ar: "اكتب الاسم كما هو على الخريطة تمامًا." } }
+            - { kind: small, text: { en: "No results.", ar: "لا توجد نتائج." }, gap: xs }
+      - id: list
+        text: { en: "Replace it with a dropdown of all 300 areas", ar: "استبدله بقائمة منسدلة لكل الـ 300 منطقة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: select, label: { en: "Delivery area", ar: "منطقة التوصيل" }, text: { en: "Select…", ar: "اختر…" } }
+            - { kind: small, text: { en: "300 areas, A to Z", ar: "300 منطقة، أبجديًا" }, gap: xs }
+    answer: [suggest]
+    misconceptions:
+      - id: MC-P01-024
+        when: [hint]
+        feedback:
+          en: "Tamer has no way to know the map's spelling. The hint blames him for a problem the search could solve."
+          ar: "لا يستطيع تامر معرفة كتابة الخريطة. والتلميح يلومه على مشكلة يستطيع البحث حلّها."
+      - id: MC-P01-016
+        when: [list]
+        feedback:
+          en: "He'd scroll through 300 areas to find Z. A long list needs a forgiving search, not a longer scroll."
+          ar: "سيمرّر 300 منطقة ليصل إلى الزاي. والقائمة الطويلة تحتاج بحثًا متسامحًا، لا تمريرًا أطول."
+    hints:
+      - { en: "Tamer typed the name the way he says it. Is it close to a real area?", ar: "كتب تامر الاسم كما ينطقه. هل هو قريب من منطقة حقيقية؟" }
+      - { en: "Should the field ask him to be exact, or help him get there?", ar: "هل يجب أن يطلب منه الحقل الدقة، أم يساعده للوصول؟" }
+    correct:
+      en: "Meet him halfway while he types."
+      ar: "قابِله في منتصف الطريق أثناء الكتابة."
+    explain:
+      en: "Suggestions appear before he finishes, so a near spelling still lands on Zamalek. Fewer dead ends, and no spelling test."
+      ar: "تظهر الاقتراحات قبل أن ينتهي من الكتابة، فتصل الكتابة القريبة إلى الزمالك. طرق مسدودة أقل، وبلا اختبار إملاء."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [list, eye, form, idea]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **Long, known lists:** let people type to filter, like countries.\n- **Forgiving search:** suggested close matches instead of \"No results\".\n- **Pin, don't preselect:** put common choices on top and let each person choose.\n- **Known values:** used a plain field for the year.\n- **A handful of options:** showed them as radio buttons.\n\nNext: the unit skill check."
+      ar: "- **القوائم الطويلة المعروفة:** دع الناس يكتبون لتضييقها، مثل الدول.\n- **بحث متسامح:** اقترحت أقرب النتائج بدل «لا توجد نتائج».\n- **ثبّت ولا تحدّد مسبقًا:** ضع الخيارات الشائعة في الأعلى ودع كل شخص يختار.\n- **القيم المعروفة:** استخدمت حقلًا عاديًا للسنة.\n- **خيارات قليلة:** عرضتها كـ Radio buttons.\n\nالتالي: اختبار المهارة للوحدة."

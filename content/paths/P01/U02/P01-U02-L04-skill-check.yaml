@@ -1,0 +1,439 @@
+id: P01-U02-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: pick the right control"
+  ar: "اختبار المهارة: اختر عنصر التحكّم المناسب"
+sources:
+  - title: { en: "Toggle-Switch Guidelines (NN/g)", ar: "إرشادات الـ Toggle switch (NN/g)" }
+    url: "https://www.nngroup.com/articles/toggle-switch-guidelines/"
+  - title: { en: "Checkboxes: Design Guidelines (NN/g)", ar: "الـ Checkboxes: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/"
+  - title: { en: "Design Guidelines for Input Steppers (NN/g)", ar: "إرشادات تصميم الـ Stepper (NN/g)" }
+    url: "https://www.nngroup.com/articles/input-steppers/"
+  - title: { en: "Date-Input Form Fields: UX Design Guidelines (NN/g)", ar: "حقول إدخال التاريخ: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/date-input/"
+  - title: { en: "Does Your Form Really Need a Dropdown List? (NN/g)", ar: "هل يحتاج نموذجك فعلًا إلى قائمة منسدلة؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/dropdown-list/"
+  - title: { en: "7 Ways to Improve Your Website's or Intranet's Built-In Search Engine (NN/g)", ar: "7 طرق لتحسين محرّك البحث في موقعك (NN/g)" }
+    url: "https://www.nngroup.com/articles/internal-website-search/"
+  - title: { en: "A Checklist for Designing Mobile Input Fields (NN/g)", ar: "قائمة تحقّق لتصميم حقول الإدخال على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/mobile-input-checklist/"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Laila's home cleaning booking", ar: "حجز تنظيف منزل ليلى" }
+    body:
+      en: "Laila lives in Heliopolis. She's booking a 4-hour cleaning with ironing and windows, on a day the company has a free team. Her building's door code is 0427.\n\nYour job: choose the right control for each part of the booking form.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "تعيش ليلى في مصر الجديدة. وهي تحجز تنظيفًا لمدة 4 ساعات مع كيّ الملابس والنوافذ، في يوم فيه فريق متاح لدى الشركة. ورمز باب عمارتها 0427.\n\nمهمّتك: اختر عنصر التحكّم المناسب لكل جزء من نموذج الحجز.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      width: 300
+      blocks:
+        - { kind: title, text: "@F6a" }
+        - { kind: select, label: "@F6addons", text: { en: "Select one…", ar: "اختر واحدًا…" }, gap: m }
+        - { kind: select, label: "@F6hours", text: { en: "Select…", ar: "اختر…" }, gap: s }
+        - { kind: select, label: "@F6area", filled: true, text: "@F6nasr", gap: s }
+        - { kind: toggle, text: "@F6sms", gap: m }
+        - { kind: button, text: "@F6btn", gap: m }
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U02-02
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, checkboxes (NN/g): a checkbox list lets people select one, several, all, or none. Add-ons are any number; a single-select dropdown loses Laila's second add-on."
+      ar: "اختبار مهارة، الـ Checkboxes (NN/g): قائمة الـ Checkboxes تتيح اختيار واحد أو عدة أو الكل أو لا شيء. والخدمات الإضافية أي عدد؛ والقائمة المنسدلة ذات الاختيار الواحد تُضيّع الخدمة الثانية لليلى."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/", quote: "A checkbox list allows users the unique ability to select one, several, all, or no items from a list." }
+    scenario:
+      en: "Laila wants both ironing and windows. The add-ons are a dropdown that takes one choice."
+      ar: "تريد ليلى كيّ الملابس والنوافذ معًا. والخدمات الإضافية قائمة منسدلة تقبل اختيارًا واحدًا."
+    prompt:
+      en: "Try each control for the add-ons. Which one should ship?"
+      ar: "جرّب كل عنصر للخدمات الإضافية. أيّها يجب أن يُطلق؟"
+    start: select
+    options:
+      - id: select
+        text: { en: "A dropdown, one choice", ar: "قائمة منسدلة، اختيار واحد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: "@F6addons", filled: true, text: "@F6iron" }
+      - id: radio
+        text: { en: "Radio buttons", ar: "Radio buttons" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: "@F6addons" }
+            - { kind: radio, selected: true, text: "@F6iron", gap: xs }
+            - { kind: radio, text: "@F6windows", gap: xs }
+      - id: check
+        text: { en: "Checkboxes", ar: "Checkboxes" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Add-ons (tick any)", ar: "خدمات إضافية (حدّد ما تريد)" } }
+            - { kind: check, selected: true, text: "@F6iron", gap: xs }
+            - { kind: check, selected: true, text: "@F6windows", gap: xs }
+    answer: [check]
+    misconceptions:
+      - id: MC-P01-032
+        when: [select, radio]
+        feedback:
+          en: "This control takes one answer, so Laila can't book both. Add-ons are any number, including none: checkboxes."
+          ar: "هذا العنصر يقبل إجابة واحدة، فلا تستطيع ليلى حجز الاثنين. والخدمات الإضافية أي عدد، حتى لا شيء: Checkboxes."
+    explain:
+      en: "From Lesson 1: one answer, radio buttons; any number, checkboxes."
+      ar: "من الدرس 1: إجابة واحدة، Radio buttons؛ وأي عدد، Checkboxes."
+
+  - id: S03
+    type: tune
+    skill: SK-P01-U02-01
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, toggle switches (NN/g): separate controls with instant results from ones that wait for a button. The text-me option is only saved when Laila books."
+      ar: "اختبار مهارة، الـ Toggle switches (NN/g): افصل العناصر ذات النتيجة الفورية عن تلك التي تنتظر زرًا. وخيار الرسالة لا يُحفظ إلا حين تحجز ليلى."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "Separate controls that produce instant results from those that require clicking a command button." }
+    scenario:
+      en: "\"Text me when the team is on the way\" is a toggle above Book cleaning. Nothing is saved until she books."
+      ar: "«أرسل لي رسالة حين يكون الفريق في الطريق» Toggle فوق «احجز التنظيف». ولا يُحفظ شيء حتى تحجز."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: &smsnow
+        - { kind: toggle, text: "@F6sms" }
+        - { kind: button, text: "@F6btn", gap: m }
+    options:
+      - id: keep
+        text: { en: "Keep the toggle", ar: "أبقِ الـ Toggle" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *smsnow
+      - id: check
+        text: { en: "A checkbox, saved with the booking", ar: "Checkbox يُحفظ مع الحجز" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: check, selected: true, text: "@F6sms" }
+            - { kind: button, text: "@F6btn", gap: m }
+      - id: segs
+        text: { en: "A segmented control: On / Off", ar: "Segmented control: تشغيل / إيقاف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: "@F6sms" }
+            - { kind: segmented, options: [{ en: "On", ar: "تشغيل" }, { en: "Off", ar: "إيقاف" }], value: 1, gap: xs }
+            - { kind: button, text: "@F6btn", gap: m }
+    answer: [check]
+    misconceptions:
+      - id: MC-P01-018
+        when: [keep]
+        feedback:
+          en: "A toggle looks like it works the moment it's flipped. In a form that waits for Book cleaning, use a checkbox."
+          ar: "الـ Toggle يبدو كأنه يعمل لحظة تحريكه. وفي نموذج ينتظر «احجز التنظيف»، استخدم Checkbox."
+      - id: MC-P01-018
+        when: [segs]
+        feedback:
+          en: "On / Off segments look like a live setting too, and take more space. A single checkbox says \"include this with my booking\"."
+          ar: "أزرار تشغيل/إيقاف تبدو أيضًا كإعداد يعمل فورًا، وتأخذ مساحة أكبر. وCheckbox واحد يقول «أضِف هذا إلى حجزي»."
+    explain:
+      en: "From Lesson 1: toggles act now; in a form that waits for a button, use a checkbox."
+      ar: "من الدرس 1: الـ Toggle يعمل فورًا؛ وفي نموذج ينتظر زرًا، استخدم Checkbox."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U02-06
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, input steppers (NN/g): use a stepper for numeric fields with a clear most-frequent value, set as the default. Most cleanings are 4 hours, from 2 to 8."
+      ar: "اختبار مهارة، الـ Stepper (NN/g): استخدمه للحقول الرقمية التي لها قيمة شائعة واضحة، واجعلها الافتراضية. وأغلب حجوزات التنظيف 4 ساعات، من 2 إلى 8."
+    ref: { url: "https://www.nngroup.com/articles/input-steppers/", quote: "Use steppers for numerical fields with a clear most frequently selected value." }
+    scenario:
+      en: "Cleanings last 2 to 8 hours. Most customers book 4."
+      ar: "يستمرّ التنظيف من 2 إلى 8 ساعات. وأغلب العملاء يحجزون 4."
+    prompt:
+      en: "Try each control for the hours. Which one should ship?"
+      ar: "جرّب كل عنصر لعدد الساعات. أيّها يجب أن يُطلق؟"
+    start: select
+    options:
+      - id: stepper
+        text: { en: "A stepper starting at 4", ar: "Stepper يبدأ من 4" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: stepper, label: "@F6hours", text: "4" }
+      - id: select
+        text: { en: "A dropdown from 2 to 8", ar: "قائمة منسدلة من 2 إلى 8" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: "@F6hours", text: { en: "Select…", ar: "اختر…" } }
+      - id: slider
+        text: { en: "A slider from 2 to 8", ar: "Slider من 2 إلى 8" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: slider, label: "@F6hours", min: 2, max: 8, from: 2, to: 5, text: { en: "Drag to choose", ar: "اسحب للاختيار" } }
+    answer: [stepper]
+    misconceptions:
+      - id: MC-P01-023
+        when: [select]
+        feedback:
+          en: "Most people want 4, yet everyone opens a list to say so. Start at 4 and let the rest adjust with a tap."
+          ar: "أغلب الناس يريدون 4، ومع ذلك يفتح الجميع قائمة ليقولوا ذلك. ابدأ من 4 ودع الباقين يعدّلون بضغطة."
+      - id: MC-P01-022
+        when: [slider]
+        feedback:
+          en: "Hours are exact whole numbers, and a slider makes her aim for one. A stepper lands on 4, 5 or 6 with no effort."
+          ar: "الساعات أرقام صحيحة دقيقة، والـ Slider يجعلها تصوّب نحو رقم. أما الـ Stepper فيصل إلى 4 أو 5 أو 6 بلا جهد."
+    explain:
+      en: "From Lesson 2: a small count with a usual value gets a stepper, starting at that value."
+      ar: "من الدرس 2: العدد الصغير ذو القيمة المعتادة يناسبه Stepper، يبدأ من تلك القيمة."
+
+  - id: S05
+    type: tune
+    skill: SK-P01-U02-05
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, date input (NN/g): disable and gray out options that aren't available. Only the company knows which days have a free team."
+      ar: "اختبار مهارة، إدخال التاريخ (NN/g): عطّل الخيارات غير المتاحة واجعلها رمادية. والشركة وحدها تعرف الأيام التي فيها فريق متاح."
+    ref: { url: "https://www.nngroup.com/articles/date-input/", quote: "Make the choices clear by disabling and graying out options that are not available or are illogical pairs." }
+    scenario:
+      en: "Next week, the company has free teams only on Monday and Thursday."
+      ar: "في الأسبوع القادم، لدى الشركة فرق متاحة يومي الاثنين والخميس فقط."
+    prompt:
+      en: "Try each way of choosing the day. Which one should ship?"
+      ar: "جرّب كل طريقة لاختيار اليوم. أيّها يجب أن تُطلق؟"
+    start: open
+    options:
+      - id: open
+        text: { en: "Every day open; an error if no team is free", ar: "كل الأيام مفتوحة؛ ورسالة خطأ إذا لم يكن هناك فريق" }
+        mock:
+          width: 300
+          blocks:
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, text: { en: "Sun 8", ar: "أحد 8" } }
+                - { kind: chip, text: { en: "Mon 9", ar: "اثنين 9" } }
+                - { kind: chip, tone: dark, text: { en: "Tue 10", ar: "ثلاثاء 10" } }
+                - { kind: chip, text: { en: "Wed 11", ar: "أربعاء 11" } }
+                - { kind: chip, text: { en: "Thu 12", ar: "خميس 12" } }
+            - { kind: small, color: red, text: { en: "No team is free on this day. Try another.", ar: "لا يوجد فريق متاح في هذا اليوم. جرّب يومًا آخر." }, gap: s }
+      - id: field
+        text: { en: "A date field she types into", ar: "حقل تاريخ تكتب فيه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Cleaning date", ar: "تاريخ التنظيف" }, text: { en: "e.g. 10 November", ar: "مثلًا: 10 نوفمبر" } }
+      - id: blocked
+        text: { en: "Only days with a free team can be picked", ar: "لا يمكن اختيار إلا الأيام التي فيها فريق متاح" }
+        mock:
+          width: 300
+          blocks:
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, tone: off, text: { en: "Sun 8", ar: "أحد 8" } }
+                - { kind: chip, text: { en: "Mon 9", ar: "اثنين 9" } }
+                - { kind: chip, tone: off, text: { en: "Tue 10", ar: "ثلاثاء 10" } }
+                - { kind: chip, tone: off, text: { en: "Wed 11", ar: "أربعاء 11" } }
+                - { kind: chip, text: { en: "Thu 12", ar: "خميس 12" } }
+            - { kind: small, text: { en: "Grayed-out days are fully booked.", ar: "الأيام الرمادية محجوزة بالكامل." }, gap: s }
+    answer: [blocked]
+    misconceptions:
+      - id: MC-P01-013
+        when: [open, field]
+        feedback:
+          en: "Laila can't know which days have a team, so she guesses until she stops getting errors. Show her before she picks."
+          ar: "لا تستطيع ليلى معرفة الأيام التي فيها فريق، فتخمّن حتى تتوقّف رسائل الخطأ. أرِها قبل أن تختار."
+    explain:
+      en: "From Lesson 2: when only the system knows the options, let people pick, and block what isn't possible, with a reason."
+      ar: "من الدرس 2: حين لا يعرف الخيارات إلا النظام، دع الناس يختارون، واحجب غير الممكن، مع ذكر السبب."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U02-08
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, dropdown lists (NN/g): people may not explore beyond the default. The area field preselects the most common area, so Laila may book in the wrong one."
+      ar: "اختبار مهارة، القوائم المنسدلة (NN/g): قد لا يستكشف الناس ما بعد الخيار الافتراضي. وحقل المنطقة يحدّد المنطقة الأكثر شيوعًا مسبقًا، فقد تحجز ليلى في المنطقة الخطأ."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "Users may not interact with the control to explore additional options beyond the default." }
+    scenario:
+      en: "The company covers about 50 areas. Most bookings come from Nasr City, so the area field starts on Nasr City. Laila lives in Heliopolis."
+      ar: "تغطّي الشركة نحو 50 منطقة. وأغلب الحجوزات من مدينة نصر، فيبدأ حقل المنطقة بمدينة نصر. وليلى تعيش في مصر الجديدة."
+    prompt:
+      en: "Try each version of the area field. Which one should ship?"
+      ar: "جرّب كل نسخة من حقل المنطقة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: &areanow
+        - { kind: select, label: "@F6area", filled: true, text: "@F6nasr" }
+    options:
+      - id: pin
+        text: { en: "Type to search, with Nasr City pinned on top; nothing selected", ar: "اكتب للبحث، مع تثبيت مدينة نصر في الأعلى؛ دون تحديد شيء" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F6area", text: { en: "Type your area", ar: "اكتب منطقتك" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: small, text: { en: "Most booked", ar: "الأكثر حجزًا" } }
+                - { kind: text, text: "@F6nasr", gap: xs }
+      - id: keep
+        text: { en: "Keep Nasr City preselected; it saves most people a step", ar: "أبقِ مدينة نصر محدّدة مسبقًا؛ فهي توفّر خطوة لأغلب الناس" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *areanow
+      - id: radios
+        text: { en: "Show all 50 areas as radio buttons", ar: "اعرض الـ 50 منطقة كلها كـ Radio buttons" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: "@F6area" }
+            - { kind: radio, text: { en: "Abbassia", ar: "العباسية" }, gap: xs }
+            - { kind: radio, text: { en: "Agouza", ar: "العجوزة" }, gap: xs }
+            - { kind: radio, text: { en: "Ain Shams", ar: "عين شمس" }, gap: xs }
+            - { kind: small, text: { en: "… 47 more", ar: "… 47 منطقة أخرى" }, gap: xs }
+    answer: [pin]
+    misconceptions:
+      - id: MC-P01-015
+        when: [keep]
+        feedback:
+          en: "A filled field looks answered. If Laila doesn't notice, the team goes to Nasr City. Pin the common area; don't choose it for her."
+          ar: "الحقل الممتلئ يبدو مُجابًا. وإذا لم تنتبه ليلى، يذهب الفريق إلى مدينة نصر. ثبّت المنطقة الشائعة؛ ولا تختَرها عنها."
+      - id: MC-P01-016
+        when: [radios]
+        feedback:
+          en: "Nothing is preselected now, but fifty radio buttons take several screens of scrolling. A long list needs typing."
+          ar: "لا شيء محدّد مسبقًا الآن، لكن خمسين Radio button تحتاج تمرير عدة شاشات. والقائمة الطويلة تحتاج كتابة."
+    explain:
+      en: "From Lesson 3: let people type to search a long list, and pin common choices without preselecting them."
+      ar: "من الدرس 3: دع الناس يكتبون للبحث في القائمة الطويلة، وثبّت الخيارات الشائعة دون تحديدها مسبقًا."
+
+  - id: S07
+    type: tune
+    skill: SK-P01-U02-08
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, site search (NN/g): users often don't formulate perfect queries. \"Heliopolice\" is one letter off; suggest the match."
+      ar: "اختبار مهارة، البحث في الموقع (NN/g): كثيرًا ما لا يصوغ المستخدمون استعلامات مثالية. وما كتبته ليلى قريب جدًا؛ فاقترح المطابقة."
+    ref: { url: "https://www.nngroup.com/articles/internal-website-search/", quote: "Users often don’t formulate perfect queries." }
+    scenario:
+      en: "Laila types her area quickly: \"Heliopolice\"."
+      ar: "تكتب ليلى منطقتها بسرعة: «مصر الجديده»، بالهاء بدل التاء المربوطة."
+    prompt:
+      en: "Try each response. Which one should ship?"
+      ar: "جرّب كل استجابة. أيّها يجب أن تُطلق؟"
+    start: none
+    options:
+      - id: none
+        text: { en: "\"No results\"", ar: "«لا توجد نتائج»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F6area", filled: true, text: { en: "Heliopolice", ar: "مصر الجديده" } }
+            - { kind: small, text: { en: "No results.", ar: "لا توجد نتائج." }, gap: xs }
+      - id: suggest
+        text: { en: "Suggest the closest area", ar: "اقترح أقرب منطقة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F6area", filled: true, text: { en: "Heliopolice", ar: "مصر الجديده" } }
+            - kind: group
+              tone: plain
+              gap: xs
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Heliopolis", ar: "مصر الجديدة" } }
+      - id: rule
+        text: { en: "Say \"Check your spelling\"", ar: "قل «تحقّق من الإملاء»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, tone: bad, label: "@F6area", filled: true, text: { en: "Heliopolice", ar: "مصر الجديده" }, error: { en: "Check your spelling.", ar: "تحقّق من الإملاء." } }
+    answer: [suggest]
+    misconceptions:
+      - id: MC-P01-024
+        when: [none, rule]
+        feedback:
+          en: "The system can tell what she meant; it's one letter away. Make her fix nothing: suggest Heliopolis."
+          ar: "يستطيع النظام معرفة ما تقصده؛ فالفرق حرف واحد. لا تجعلها تصلح شيئًا: اقترح مصر الجديدة."
+    explain:
+      en: "From Lesson 3: forgiving search suggests the closest match instead of a dead end."
+      ar: "من الدرس 3: البحث المتسامح يقترح أقرب نتيجة بدل الطريق المسدود."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U02-07
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, mobile input checklist (NN/g): what is the right keyboard for this field? A door code is a code: a number field would drop the leading zero of 0427."
+      ar: "اختبار مهارة، قائمة تحقّق حقول الهاتف (NN/g): ما لوحة المفاتيح المناسبة لهذا الحقل؟ ورمز الباب رمز: حقل الرقم سيحذف الصفر في أول 0427."
+    ref: { url: "https://www.nngroup.com/articles/mobile-input-checklist/", quote: "What is the right keyboard for this field?" }
+    scenario:
+      en: "The team needs the building's door code: 0427."
+      ar: "يحتاج الفريق رمز باب العمارة: 0427."
+    prompt:
+      en: "Try each field. Which one should ship?"
+      ar: "جرّب كل حقل. أيّها يجب أن يُطلق؟"
+    start: number
+    options:
+      - id: number
+        text: { en: "A number field", ar: "حقل رقم" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Door code", ar: "رمز الباب" }, filled: true, text: "427" }
+            - { kind: small, color: red, text: { en: "Saved as 427: the leading 0 is gone", ar: "حُفظ هكذا: 427، واختفى الصفر في أوله" }, gap: xs }
+      - id: steps
+        text: { en: "Four steppers, one per digit", ar: "أربعة Steppers، واحد لكل رقم" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Door code", ar: "رمز الباب" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: stepper, text: "0" }
+                - { kind: stepper, text: "0" }
+      - id: text
+        text: { en: "A text field that opens the number pad", ar: "حقل نص يفتح لوحة الأرقام" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Door code", ar: "رمز الباب" }, filled: true, text: "0427" }
+            - { kind: small, text: { en: "Keyboard: 1 2 3 … 0", ar: "لوحة المفاتيح: 1 2 3 … 0" }, gap: xs }
+    answer: [text]
+    misconceptions:
+      - id: MC-P01-021
+        when: [number]
+        feedback:
+          en: "A number field treats 0427 as the amount 427, and the team stands at the door with the wrong code. It's a code: text with the number pad."
+          ar: "حقل الرقم يعامل 0427 ككمية 427، فيقف الفريق أمام الباب برمز خاطئ. إنه رمز: نص مع لوحة الأرقام."
+      - id: MC-P01-023
+        when: [steps]
+        feedback:
+          en: "Steppers are for small changes around a usual value. A code has no usual value; typing four digits is fastest."
+          ar: "الـ Stepper للتغييرات الصغيرة حول قيمة معتادة. والرمز ليس له قيمة معتادة؛ وكتابة أربعة أرقام هي الأسرع."
+    explain:
+      en: "From Lesson 2: IDs and codes are text made of digits. Use a text field that opens the number pad."
+      ar: "من الدرس 2: الأرقام التعريفية والرموز نص مكوّن من أرقام. استخدم حقل نص يفتح لوحة الأرقام."

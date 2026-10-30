@@ -1,0 +1,1121 @@
+id: P01-U02-B01
+mode: bank
+title:
+  en: "Re-tests: pick the right control"
+  ar: "إعادة اختبار: اختر عنصر التحكّم المناسب"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Toggle-Switch Guidelines (NN/g)", ar: "إرشادات الـ Toggle switch (NN/g)" }
+    url: "https://www.nngroup.com/articles/toggle-switch-guidelines/"
+  - title: { en: "Checkboxes: Design Guidelines (NN/g)", ar: "الـ Checkboxes: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/"
+  - title: { en: "Does Your Form Really Need a Dropdown List? (NN/g)", ar: "هل يحتاج نموذجك فعلًا إلى قائمة منسدلة؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/dropdown-list/"
+  - title: { en: "Radio Buttons: Always Select One? (NN/g)", ar: "الـ Radio buttons: هل نحدّد واحدًا دائمًا؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/radio-buttons-default-selection/"
+  - title: { en: "Date-Input Form Fields: UX Design Guidelines (NN/g)", ar: "حقول إدخال التاريخ: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/date-input/"
+  - title: { en: "Design Guidelines for Input Steppers (NN/g)", ar: "إرشادات تصميم الـ Stepper (NN/g)" }
+    url: "https://www.nngroup.com/articles/input-steppers/"
+  - title: { en: "Sliders, Knobs, and Matrices: Balancing Exploration and Precision (NN/g)", ar: "الـ Sliders والمقابض والمصفوفات: التوازن بين الاستكشاف والدقة (NN/g)" }
+    url: "https://www.nngroup.com/articles/sliders-knobs/"
+  - title: { en: "A Checklist for Designing Mobile Input Fields (NN/g)", ar: "قائمة تحقّق لتصميم حقول الإدخال على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/mobile-input-checklist/"
+  - title: { en: "7 Ways to Improve Your Website's or Intranet's Built-In Search Engine (NN/g)", ar: "7 طرق لتحسين محرّك البحث في موقعك (NN/g)" }
+    url: "https://www.nngroup.com/articles/internal-website-search/"
+steps:
+  # SK-P01-U02-01: use a toggle only for instant settings
+  - id: S01
+    type: tune
+    skill: SK-P01-U02-01
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): a toggle inside a form with a Save button confuses people, because they can't be sure whether it took effect. Inside a form, use a checkbox."
+      ar: "إعادة اختبار، مفاتيح الـ Toggle (NN/g): الـ Toggle داخل نموذج فيه زر حفظ يُربك الناس، لأنهم لا يعرفون هل طُبّق اختيارهم. داخل النموذج، استخدم Checkbox."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect." }
+    scenario:
+      en: "Yehia edits his seller profile in a marketplace app. Nothing on the page is saved until he taps Save. Above the button there's a toggle: \"Show my phone number to buyers\"."
+      ar: "يعدّل يحيى ملفه كبائع في تطبيق بيع وشراء. لا شيء في الصفحة يُحفظ حتى يضغط «حفظ». وفوق الزر يوجد Toggle: «أظهر رقم هاتفي للمشترين»."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &yh_t { en: "Seller profile", ar: "ملف البائع" } }
+        - { kind: field, label: &yh_n { en: "Shop name", ar: "اسم المتجر" }, filled: true, text: { en: "Yehia's Bikes", ar: "دراجات يحيى" }, gap: m }
+        - { kind: toggle, text: &yh_s { en: "Show my phone number to buyers", ar: "أظهر رقم هاتفي للمشترين" }, gap: m }
+        - { kind: button, text: &yh_b { en: "Save", ar: "حفظ" }, gap: m }
+    options:
+      - id: keep
+        text: { en: "Keep the toggle; it's a clear on/off choice", ar: "أبقِ الـ Toggle؛ فهو اختيار تشغيل وإيقاف واضح" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *yh_t }
+            - { kind: field, label: *yh_n, filled: true, text: { en: "Yehia's Bikes", ar: "دراجات يحيى" }, gap: m }
+            - { kind: toggle, text: *yh_s, gap: m }
+            - { kind: button, text: *yh_b, gap: m }
+      - id: check
+        text: { en: "Use a checkbox, saved with the rest of the form", ar: "استخدم Checkbox، يُحفظ مع بقية النموذج" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *yh_t }
+            - { kind: field, label: *yh_n, filled: true, text: { en: "Yehia's Bikes", ar: "دراجات يحيى" }, gap: m }
+            - { kind: check, text: *yh_s, gap: m }
+            - { kind: button, text: *yh_b, gap: m }
+      - id: note
+        text: { en: "Keep the toggle, and add \"Changes apply when you save\" under it", ar: "أبقِ الـ Toggle، وأضف تحته «تُطبّق التغييرات عند الحفظ»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *yh_t }
+            - { kind: field, label: *yh_n, filled: true, text: { en: "Yehia's Bikes", ar: "دراجات يحيى" }, gap: m }
+            - { kind: toggle, text: *yh_s, gap: m }
+            - { kind: small, color: muted, text: { en: "Changes apply when you save.", ar: "تُطبّق التغييرات عند الحفظ." }, gap: xs }
+            - { kind: button, text: *yh_b, gap: m }
+    answer: [check]
+    misconceptions:
+      - id: MC-P01-018
+        when: [keep, note]
+        feedback:
+          en: "A toggle looks like it acts the moment you flip it. Yehia may flip it, leave the page, and think his number is hidden. A note fights the control instead of fixing it."
+          ar: "الـ Toggle يبدو كأنه يعمل لحظة تحريكه. قد يحرّكه يحيى ويغادر الصفحة، ويظن أن رقمه مخفي. والملاحظة تحارب العنصر بدل أن تصلحه."
+    correct:
+      en: "Right. A checkbox waits for Save, like the rest of the form."
+      ar: "صحيح. الـ Checkbox ينتظر الحفظ، مثل بقية النموذج."
+    explain:
+      en: "People expect a toggle to work instantly and a checkbox to wait for a button. In a form that saves together, the checkbox tells Yehia the truth."
+      ar: "يتوقّع الناس أن يعمل الـ Toggle فورًا، وأن ينتظر الـ Checkbox الضغط على زر. في نموذج يُحفظ دفعة واحدة، يقول الـ Checkbox ليحيى الحقيقة."
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U02-01
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): separate controls that produce instant results from those that require a button. A setting that can apply at once deserves a toggle, not a checkbox and an Apply button."
+      ar: "إعادة اختبار، مفاتيح الـ Toggle (NN/g): افصل العناصر التي تعطي نتيجة فورية عن التي تحتاج زرًا. الإعداد الذي يمكن تطبيقه فورًا يستحق Toggle، لا Checkbox وزر «تطبيق»."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "Separate controls that produce instant results from those that require clicking a command button." }
+    scenario:
+      en: "Nashwa reads news at night and wants dark mode. In the app's settings, every other option changes at once. Dark mode is a checkbox, with an Apply button at the bottom of the screen."
+      ar: "تقرأ نشوى الأخبار ليلًا وتريد الوضع الداكن. في إعدادات التطبيق، كل الخيارات الأخرى تتغيّر فورًا. أما الوضع الداكن فهو Checkbox، مع زر «تطبيق» في أسفل الشاشة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &nw_t { en: "Settings", ar: "الإعدادات" } }
+        - { kind: toggle, selected: true, text: &nw_n { en: "Breaking news alerts", ar: "تنبيهات الأخبار العاجلة" }, gap: m }
+        - { kind: check, text: &nw_d { en: "Dark mode", ar: "الوضع الداكن" }, gap: s }
+        - { kind: button, emphasis: low, text: &nw_a { en: "Apply", ar: "تطبيق" }, gap: xl }
+    options:
+      - id: toggle
+        text: { en: "Make dark mode a toggle that switches at once, and remove Apply", ar: "اجعل الوضع الداكن Toggle يتغيّر فورًا، واحذف «تطبيق»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *nw_t }
+            - { kind: toggle, selected: true, text: *nw_n, gap: m }
+            - { kind: toggle, text: *nw_d, gap: s }
+      - id: keep
+        text: { en: "Keep the checkbox and the Apply button", ar: "أبقِ الـ Checkbox وزر «تطبيق»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *nw_t }
+            - { kind: toggle, selected: true, text: *nw_n, gap: m }
+            - { kind: check, text: *nw_d, gap: s }
+            - { kind: button, emphasis: low, text: *nw_a, gap: xl }
+      - id: radios
+        text: { en: "Use On and Off radio buttons, with the Apply button", ar: "استخدم Radio buttons «تشغيل» و«إيقاف»، مع زر «تطبيق»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *nw_t }
+            - { kind: toggle, selected: true, text: *nw_n, gap: m }
+            - { kind: small, text: *nw_d, gap: s }
+            - { kind: radio, text: { en: "On", ar: "تشغيل" }, gap: xs }
+            - { kind: radio, selected: true, text: { en: "Off", ar: "إيقاف" }, gap: xs }
+            - { kind: button, emphasis: low, text: *nw_a, gap: xl }
+    answer: [toggle]
+    misconceptions:
+      - id: MC-P01-018
+        when: [keep, radios]
+        feedback:
+          en: "Everything else on this screen works at once, so Nashwa expects dark mode to as well. A control that waits for a far-away Apply button breaks that pattern, and she may never press it."
+          ar: "كل شيء آخر في هذه الشاشة يعمل فورًا، فتتوقّع نشوى أن يعمل الوضع الداكن كذلك. العنصر الذي ينتظر زر «تطبيق» بعيدًا يكسر هذا النمط، وقد لا تضغطه أبدًا."
+    correct:
+      en: "Right. An instant setting gets an instant control."
+      ar: "صحيح. الإعداد الفوري يأخذ عنصرًا فوريًا."
+    explain:
+      en: "Dark mode can change the moment Nashwa flips it, and she sees the result right away. A toggle says exactly that, and matches the other settings on the screen."
+      ar: "يمكن أن يتغيّر الوضع الداكن لحظة تحريكه، وترى نشوى النتيجة فورًا. والـ Toggle يقول ذلك بالضبط، ويتّفق مع بقية الإعدادات في الشاشة."
+
+  # SK-P01-U02-02: one answer or several, shown not hidden
+  - id: S03
+    type: tune
+    skill: SK-P01-U02-02
+    part: retest
+    value:
+      en: "Re-test, dropdowns (NN/g): when a handful of options fits on screen, a dropdown adds more friction than value. Three delivery slots, one answer: radio buttons."
+      ar: "إعادة اختبار، القوائم المنسدلة (NN/g): عندما تتّسع الشاشة لعدد قليل من الخيارات، تضيف القائمة المنسدلة عناءً أكثر من فائدتها. ثلاث فترات توصيل وإجابة واحدة: Radio buttons."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "When a handful of options can comfortably fit on screen, a dropdown adds more friction than real value." }
+    scenario:
+      en: "Galal orders groceries for tomorrow. He must pick one delivery slot out of three: morning, afternoon or evening. Right now they're inside a dropdown."
+      ar: "يطلب جلال بقالة لغد. يجب أن يختار فترة توصيل واحدة من ثلاث: صباحًا أو ظهرًا أو مساءً. والآن هي داخل قائمة منسدلة."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: &gl_t { en: "Delivery tomorrow", ar: "التوصيل غدًا" } }
+        - { kind: select, label: &gl_l { en: "Delivery slot", ar: "فترة التوصيل" }, text: { en: "Select…", ar: "اختر…" }, gap: m }
+        - { kind: button, text: &gl_b { en: "Continue", ar: "متابعة" }, gap: m }
+    options:
+      - id: dropdown
+        text: { en: "Keep the dropdown; it saves space", ar: "أبقِ القائمة المنسدلة؛ فهي توفّر المساحة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *gl_t }
+            - { kind: select, label: *gl_l, text: { en: "Select…", ar: "اختر…" }, gap: m }
+            - { kind: button, text: *gl_b, gap: m }
+      - id: checks
+        text: { en: "Three checkboxes, so every slot is visible", ar: "ثلاثة Checkboxes، حتى تظهر كل الفترات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *gl_t }
+            - { kind: small, text: *gl_l, gap: m }
+            - { kind: check, text: &gl_1 { en: "Morning, 9:00 to 12:00", ar: "صباحًا، من 9:00 إلى 12:00" }, gap: xs }
+            - { kind: check, text: &gl_2 { en: "Afternoon, 12:00 to 16:00", ar: "ظهرًا، من 12:00 إلى 16:00" }, gap: xs }
+            - { kind: check, text: &gl_3 { en: "Evening, 16:00 to 20:00", ar: "مساءً، من 16:00 إلى 20:00" }, gap: xs }
+            - { kind: button, text: *gl_b, gap: m }
+      - id: radios
+        text: { en: "Three radio buttons, all visible", ar: "ثلاثة Radio buttons، كلها ظاهرة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: *gl_t }
+            - { kind: small, text: *gl_l, gap: m }
+            - { kind: radio, text: *gl_1, gap: xs }
+            - { kind: radio, text: *gl_2, gap: xs }
+            - { kind: radio, text: *gl_3, gap: xs }
+            - { kind: button, text: *gl_b, gap: m }
+    answer: [radios]
+    misconceptions:
+      - id: MC-P01-031
+        when: [dropdown]
+        feedback:
+          en: "Three options fit easily on screen. Inside a dropdown, Galal must open it to see them, then tap again to choose. Show them."
+          ar: "ثلاثة خيارات تتّسع بسهولة في الشاشة. داخل القائمة المنسدلة، يجب أن يفتحها جلال ليراها، ثم يضغط مرة أخرى ليختار. اعرضها."
+      - id: MC-P01-032
+        when: [checks]
+        feedback:
+          en: "Checkboxes say \"pick any number\", but Galal can only have one slot. He may tick two and get an error. One answer means radio buttons."
+          ar: "الـ Checkboxes تقول «اختر أي عدد»، لكن جلال يمكنه اختيار فترة واحدة فقط. قد يختار اثنتين ويظهر له خطأ. الإجابة الواحدة تعني Radio buttons."
+    correct:
+      en: "Right. All three visible, one tap to choose."
+      ar: "صحيح. الثلاثة ظاهرة، وضغطة واحدة للاختيار."
+    explain:
+      en: "Radio buttons show every option and say \"pick one\". For a few choices, they're faster than a dropdown and clearer than checkboxes."
+      ar: "الـ Radio buttons تعرض كل الخيارات وتقول «اختر واحدًا». للخيارات القليلة، هي أسرع من القائمة المنسدلة وأوضح من الـ Checkboxes."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U02-02
+    part: retest
+    value:
+      en: "Re-test, checkboxes (NN/g): a checkbox list lets people select one, several, all or none. Class interests are any number; radio buttons lose answers."
+      ar: "إعادة اختبار، الـ Checkboxes (NN/g): قائمة الـ Checkboxes تتيح اختيار واحد أو عدة أو الكل أو لا شيء. الاهتمامات بالحصص أي عدد؛ والـ Radio buttons تُضيع إجابات."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/", quote: "A checkbox list allows users the unique ability to select one, several, all, or no items from a list." }
+    scenario:
+      en: "Amal joins a sports club. The form asks which classes interest her, so the club can send their timetables. She likes swimming and yoga. The question uses radio buttons."
+      ar: "تنضمّ آمال إلى نادٍ رياضي. يسأل النموذج عن الحصص التي تهمّها، حتى يرسل النادي مواعيدها. وهي تحب السباحة واليوغا. والسؤال يستخدم Radio buttons."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &am_q { en: "Which classes interest you?", ar: "أي الحصص تهمّك؟" } }
+        - { kind: radio, selected: true, text: &am_1 { en: "Swimming", ar: "السباحة" }, gap: s }
+        - { kind: radio, text: &am_2 { en: "Yoga", ar: "اليوغا" }, gap: xs }
+        - { kind: radio, text: &am_3 { en: "Boxing", ar: "الملاكمة" }, gap: xs }
+        - { kind: radio, text: &am_4 { en: "Spinning", ar: "الدرّاجات الثابتة" }, gap: xs }
+    options:
+      - id: dropdown
+        text: { en: "A dropdown with the four classes", ar: "قائمة منسدلة فيها الحصص الأربع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: select, label: *am_q, filled: true, text: *am_1 }
+      - id: checks
+        text: { en: "Four checkboxes", ar: "أربعة Checkboxes" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *am_q }
+            - { kind: check, selected: true, text: *am_1, gap: s }
+            - { kind: check, selected: true, text: *am_2, gap: xs }
+            - { kind: check, text: *am_3, gap: xs }
+            - { kind: check, text: *am_4, gap: xs }
+      - id: keep
+        text: { en: "Keep the radio buttons; she can pick her favourite", ar: "أبقِ الـ Radio buttons؛ يمكنها اختيار المفضّلة لديها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *am_q }
+            - { kind: radio, selected: true, text: *am_1, gap: s }
+            - { kind: radio, text: *am_2, gap: xs }
+            - { kind: radio, text: *am_3, gap: xs }
+            - { kind: radio, text: *am_4, gap: xs }
+    answer: [checks]
+    misconceptions:
+      - id: MC-P01-032
+        when: [dropdown, keep]
+        feedback:
+          en: "Both take only one answer, so Amal loses yoga and never gets its timetable. Interests can be several. Use checkboxes."
+          ar: "كلاهما يقبل إجابة واحدة فقط، فتخسر آمال اليوغا ولا تصلها مواعيدها أبدًا. الاهتمامات قد تكون عدة. استخدم Checkboxes."
+    correct:
+      en: "Right. Any number of classes, all visible."
+      ar: "صحيح. أي عدد من الحصص، وكلها ظاهرة."
+    explain:
+      en: "Ask yourself how many answers are possible. Interests can be none, one or all four, which is exactly what a checkbox list allows."
+      ar: "اسأل نفسك كم إجابة ممكنة. الاهتمامات قد تكون لا شيء أو واحدة أو الأربع، وهذا بالضبط ما تسمح به قائمة الـ Checkboxes."
+
+  # SK-P01-U02-03: choose defaults with care
+  - id: S05
+    type: tune
+    skill: SK-P01-U02-03
+    part: retest
+    value:
+      en: "Re-test, radio defaults (NN/g): a presumptuous or alienating choice is the most valid reason not to preselect. A guessed gender is personal, wrong for many, and easy to miss."
+      ar: "إعادة اختبار، القيم الافتراضية (NN/g): الاختيار المتسرّع أو المُنفّر هو أقوى سبب لعدم الاختيار المسبق. تخمين النوع أمر شخصي، وخطأ بالنسبة لكثيرين، ويسهل ألا يُلاحظ."
+    ref: { url: "https://www.nngroup.com/articles/radio-buttons-default-selection/", quote: "This is probably the most valid reason for not selecting a radio button by default." }
+    scenario:
+      en: "Hamdy's charity asks donors for their gender for a yearly report. Most past donors were men, so the form preselects \"Man\". Many women donate too."
+      ar: "تسأل جمعية حمدي الخيرية المتبرّعين عن نوعهم لتقرير سنوي. معظم المتبرّعين السابقين رجال، فيختار النموذج «رجل» مسبقًا. وكثير من النساء يتبرّعن أيضًا."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &hm_q { en: "Gender", ar: "النوع" } }
+        - { kind: radio, selected: true, text: &hm_m { en: "Man", ar: "رجل" }, gap: s }
+        - { kind: radio, text: &hm_w { en: "Woman", ar: "امرأة" }, gap: xs }
+        - { kind: radio, text: &hm_n { en: "Prefer not to say", ar: "أفضّل عدم الإجابة" }, gap: xs }
+    options:
+      - id: none
+        text: { en: "Nothing preselected; donors choose", ar: "لا شيء مختار مسبقًا؛ والمتبرّع يختار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *hm_q }
+            - { kind: radio, text: *hm_m, gap: s }
+            - { kind: radio, text: *hm_w, gap: xs }
+            - { kind: radio, text: *hm_n, gap: xs }
+      - id: keep
+        text: { en: "Keep \"Man\"; it's right for most donors", ar: "أبقِ «رجل»؛ فهو صحيح لمعظم المتبرّعين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *hm_q }
+            - { kind: radio, selected: true, text: *hm_m, gap: s }
+            - { kind: radio, text: *hm_w, gap: xs }
+            - { kind: radio, text: *hm_n, gap: xs }
+      - id: neutral
+        text: { en: "Preselect \"Prefer not to say\", to be neutral", ar: "اختر «أفضّل عدم الإجابة» مسبقًا، لتكون محايدًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *hm_q }
+            - { kind: radio, text: *hm_m, gap: s }
+            - { kind: radio, text: *hm_w, gap: xs }
+            - { kind: radio, selected: true, text: *hm_n, gap: xs }
+    answer: [none]
+    misconceptions:
+      - id: MC-P01-015
+        when: [keep, neutral]
+        feedback:
+          en: "Both guess something personal for the donor. Women who don't notice are counted as men, and \"Prefer not to say\" fills the report with answers nobody gave. Let each donor choose."
+          ar: "كلاهما يخمّن شيئًا شخصيًا عن المتبرّع. النساء اللواتي لا ينتبهن يُحسبن رجالًا، و«أفضّل عدم الإجابة» يملأ التقرير بإجابات لم يعطها أحد. دع كل متبرّع يختار."
+    correct:
+      en: "Right. A personal answer is the person's to give."
+      ar: "صحيح. الإجابة الشخصية يعطيها صاحبها."
+    explain:
+      en: "Defaults are great for safe, common settings. For facts about a person, a guess is presumptuous and quietly creates wrong data. Leave it empty."
+      ar: "القيم الافتراضية رائعة للإعدادات الآمنة الشائعة. أما للمعلومات عن الشخص، فالتخمين تسرّع ويصنع بيانات خطأ بهدوء. اتركه فارغًا."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U02-03
+    part: retest
+    value:
+      en: "Re-test, radio defaults (NN/g): select one radio button by default in most cases. Free standard shipping is safe and chosen by most; a paid default is not."
+      ar: "إعادة اختبار، القيم الافتراضية (NN/g): اختر Radio button افتراضيًا في معظم الحالات. الشحن العادي المجاني آمن ويختاره الأغلبية؛ أما الافتراضي المدفوع فلا."
+    ref: { url: "https://www.nngroup.com/articles/radio-buttons-default-selection/", quote: "Select a single radio button by default in most cases." }
+    scenario:
+      en: "Sahar buys a phone case. Nine out of ten people choose free standard shipping; express costs 60 EGP. Right now nothing is selected, and the form stops anyone who skips it."
+      ar: "تشتري سحر جراب هاتف. تسعة من كل عشرة يختارون الشحن العادي المجاني؛ والسريع بـ 60 جنيهًا. والآن لا شيء مختار، والنموذج يوقف كل من يتجاوزه."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: heading, text: &sh_q { en: "Shipping", ar: "الشحن" } }
+        - { kind: radio, text: &sh_s { en: "Standard, 3 to 5 days · Free", ar: "عادي، من 3 إلى 5 أيام · مجاني" }, gap: s }
+        - { kind: radio, text: &sh_e { en: "Express, next day · 60 EGP", ar: "سريع، اليوم التالي · 60 جنيهًا" }, gap: xs }
+        - { kind: small, color: red, text: { en: "Choose a shipping option.", ar: "اختر طريقة الشحن." }, gap: s }
+    options:
+      - id: none
+        text: { en: "Keep nothing selected; people should choose for themselves", ar: "أبقِ لا شيء مختارًا؛ يجب أن يختار الناس بأنفسهم" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *sh_q }
+            - { kind: radio, text: *sh_s, gap: s }
+            - { kind: radio, text: *sh_e, gap: xs }
+            - { kind: small, color: red, text: { en: "Choose a shipping option.", ar: "اختر طريقة الشحن." }, gap: s }
+      - id: express
+        text: { en: "Preselect Express, so more people get it faster", ar: "اختر السريع مسبقًا، حتى يحصل عليه عدد أكبر بسرعة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *sh_q }
+            - { kind: radio, text: *sh_s, gap: s }
+            - { kind: radio, selected: true, text: *sh_e, gap: xs }
+      - id: standard
+        text: { en: "Preselect Standard; anyone can switch to Express", ar: "اختر العادي مسبقًا؛ ويمكن لأي أحد التحويل إلى السريع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: heading, text: *sh_q }
+            - { kind: radio, selected: true, text: *sh_s, gap: s }
+            - { kind: radio, text: *sh_e, gap: xs }
+    answer: [standard]
+    misconceptions:
+      - id: MC-P01-033
+        when: [none]
+        feedback:
+          en: "Defaults aren't bad in general. Here most people want the free option, it's harmless and easy to change, so starting on it saves almost everyone a step and an error."
+          ar: "القيم الافتراضية ليست سيئة عمومًا. هنا معظم الناس يريدون الخيار المجاني، وهو آمن وسهل التغيير، فالبدء به يوفّر خطوة وخطأً على الجميع تقريبًا."
+      - id: MC-P01-015
+        when: [express]
+        feedback:
+          en: "A paid default guesses that Sahar wants to spend more. Many won't notice and will pay 60 EGP they didn't choose. A default should be safe."
+          ar: "الافتراضي المدفوع يخمّن أن سحر تريد أن تدفع أكثر. كثيرون لن ينتبهوا وسيدفعون 60 جنيهًا لم يختاروها. يجب أن يكون الافتراضي آمنًا."
+    correct:
+      en: "Right. The common, free choice is ready."
+      ar: "صحيح. الخيار الشائع المجاني جاهز."
+    explain:
+      en: "A good default is what most people want and costs nothing if left alone. Free standard shipping is both, and Express is still one tap away."
+      ar: "الافتراضي الجيد هو ما يريده معظم الناس ولا يكلّف شيئًا إذا تُرك. الشحن العادي المجاني كذلك، والسريع ما زال على بُعد ضغطة."
+
+  # SK-P01-U02-04: let people type what they know
+  - id: S07
+    type: tune
+    skill: SK-P01-U02-04
+    part: retest
+    value:
+      en: "Re-test, dropdowns (NN/g): for readily known values, typing is often faster than selecting from a dropdown. A car's model year is four digits its owner knows."
+      ar: "إعادة اختبار، القوائم المنسدلة (NN/g): للقيم المعروفة، الكتابة غالبًا أسرع من الاختيار من قائمة منسدلة. سنة صنع السيارة أربعة أرقام يعرفها صاحبها."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "For readily known values — ages, birthdates, heights — typing is often faster than selecting from a dropdown." }
+    scenario:
+      en: "Tawfik gets a car insurance quote. He's asked for his car's model year: 2014. The field is a dropdown that lists every year from 2027 back to 1970."
+      ar: "يطلب توفيق عرض سعر لتأمين سيارته. يُسأل عن سنة صنعها: 2014. والحقل قائمة منسدلة فيها كل السنوات من 2027 حتى 1970."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: select, label: &tw_l { en: "Model year", ar: "سنة الصنع" }, text: { en: "Select…", ar: "اختر…" } }
+        - kind: group
+          gap: xs
+          blocks:
+            - { kind: meta, text: "2027" }
+            - { kind: meta, text: "2026", gap: xs }
+            - { kind: meta, text: "2025", gap: xs }
+            - { kind: small, text: { en: "… 55 more", ar: "… 55 سنة أخرى" }, gap: xs }
+    options:
+      - id: type
+        text: { en: "A short field he types the year into, with the number pad", ar: "حقل قصير يكتب فيه السنة، بلوحة الأرقام" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: *tw_l, filled: true, text: "2014", hint: { en: "For example 2014", ar: "مثلًا 2014" } }
+      - id: oldest
+        text: { en: "Keep the dropdown, but start it from the oldest year", ar: "أبقِ القائمة المنسدلة، لكن ابدأها من أقدم سنة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: select, label: *tw_l, text: { en: "Select…", ar: "اختر…" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: meta, text: "1970" }
+                - { kind: meta, text: "1971", gap: xs }
+                - { kind: meta, text: "1972", gap: xs }
+                - { kind: small, text: { en: "… 55 more", ar: "… 55 سنة أخرى" }, gap: xs }
+      - id: calendar
+        text: { en: "A calendar picker", ar: "تقويم للاختيار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: *tw_l, text: { en: "Pick a date", ar: "اختر تاريخًا" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: small, weight: bold, text: { en: "‹ October 2026 ›", ar: "‹ أكتوبر 2026 ›" } }
+                - { kind: small, text: { en: "Tap ‹ to go back month by month", ar: "اضغط ‹ للرجوع شهرًا بعد شهر" }, gap: xs }
+    answer: [type]
+    misconceptions:
+      - id: MC-P01-012
+        when: [oldest, calendar]
+        feedback:
+          en: "Tawfik knows \"2014\" by heart. Scrolling through dozens of years, or flipping back 150 months, turns four keystrokes into a hunt."
+          ar: "توفيق يحفظ «2014». التمرير بين عشرات السنوات، أو الرجوع 150 شهرًا، يحوّل أربع ضغطات إلى بحث طويل."
+    correct:
+      en: "Right. Four digits, typed in a second."
+      ar: "صحيح. أربعة أرقام، تُكتب في ثانية."
+    explain:
+      en: "When people know the answer by heart, typing is the fastest route. Lists and calendars help people find what they don't know, not what they already do."
+      ar: "عندما يحفظ الناس الإجابة، تكون الكتابة أسرع طريق. القوائم والتقاويم تساعد الناس على إيجاد ما لا يعرفونه، لا ما يعرفونه بالفعل."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U02-04
+    part: retest
+    value:
+      en: "Re-test, date input (NN/g): calendar pickers suit events within less than a year. A passport expiry years away is a known date: let people type it."
+      ar: "إعادة اختبار، إدخال التاريخ (NN/g): التقاويم تناسب الأحداث خلال أقل من سنة. تاريخ انتهاء جواز سفر بعد سنوات تاريخ معروف: دع الناس يكتبونه."
+    ref: { url: "https://www.nngroup.com/articles/date-input/", quote: "Calendar pickers should be used for events close to the present time — within less than a year." }
+    scenario:
+      en: "Mervat books a flight and must enter her passport's expiry date. It's printed on the passport: 14 August 2031. The field opens a calendar on today's month."
+      ar: "تحجز ميرفت رحلة ويجب أن تُدخل تاريخ انتهاء جواز سفرها. وهو مطبوع على الجواز: 14 أغسطس 2031. والحقل يفتح تقويمًا على الشهر الحالي."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, label: &mv_l { en: "Passport expiry date", ar: "تاريخ انتهاء جواز السفر" }, text: { en: "Pick a date", ar: "اختر تاريخًا" } }
+        - kind: group
+          gap: xs
+          blocks:
+            - { kind: small, weight: bold, text: { en: "‹ October 2026 ›", ar: "‹ أكتوبر 2026 ›" } }
+            - { kind: small, text: { en: "Tap › to go forward month by month", ar: "اضغط › للتقدّم شهرًا بعد شهر" }, gap: xs }
+    options:
+      - id: calendar
+        text: { en: "Keep the calendar, and add a year jump at the top", ar: "أبقِ التقويم، وأضف قفزة للسنوات في الأعلى" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: *mv_l, text: { en: "Pick a date", ar: "اختر تاريخًا" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: small, weight: bold, text: { en: "‹ October 2026 › · Year ▾", ar: "‹ أكتوبر 2026 › · السنة ▾" } }
+                - { kind: small, text: { en: "Pick the year, then the month, then the day", ar: "اختر السنة، ثم الشهر، ثم اليوم" }, gap: xs }
+      - id: type
+        text: { en: "Three short typed fields: day, month and year", ar: "ثلاثة حقول قصيرة للكتابة: اليوم والشهر والسنة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: *mv_l }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: field, label: { en: "Day", ar: "اليوم" }, filled: true, text: "14" }
+                - { kind: field, label: { en: "Month", ar: "الشهر" }, filled: true, text: "08" }
+                - { kind: field, label: { en: "Year", ar: "السنة" }, filled: true, text: "2031" }
+            - { kind: small, color: muted, text: { en: "14 August 2031", ar: "14 أغسطس 2031" }, gap: xs }
+      - id: dropdowns
+        text: { en: "Three dropdowns: day, month and year", ar: "ثلاث قوائم منسدلة: اليوم والشهر والسنة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: *mv_l }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: select, label: { en: "Day", ar: "اليوم" }, text: "–" }
+                - { kind: select, label: { en: "Month", ar: "الشهر" }, text: "–" }
+                - { kind: select, label: { en: "Year", ar: "السنة" }, text: "–" }
+    answer: [type]
+    misconceptions:
+      - id: MC-P01-012
+        when: [calendar, dropdowns]
+        feedback:
+          en: "Mervat is copying a date she can see. A calendar or three dropdowns turn that into many taps and scrolls. Let her type it."
+          ar: "ميرفت تنقل تاريخًا تراه أمامها. التقويم أو القوائم الثلاث تحوّل ذلك إلى ضغطات وتمرير كثير. دعها تكتبه."
+    correct:
+      en: "Right. She types what's printed in front of her."
+      ar: "صحيح. تكتب ما هو مطبوع أمامها."
+    explain:
+      en: "Calendars help when people are choosing a date near today. For a known date years away, typed fields are faster, and showing the month as a word lets Mervat check it."
+      ar: "التقويم يساعد عندما يختار الناس تاريخًا قريبًا من اليوم. أما التاريخ المعروف البعيد بسنوات، فالحقول المكتوبة أسرع، وعرض الشهر بالكلمات يتيح لميرفت مراجعته."
+
+  # SK-P01-U02-05: show only the choices that are available
+  - id: S09
+    type: tune
+    skill: SK-P01-U02-05
+    part: retest
+    value:
+      en: "Re-test, date input (NN/g): make the choices clear by disabling and graying out options that aren't available. Only the shop knows which times are free."
+      ar: "إعادة اختبار، إدخال التاريخ (NN/g): وضّح الخيارات بتعطيل الخيارات غير المتاحة وجعلها باهتة. المحل وحده يعرف أي الأوقات متاحة."
+    ref: { url: "https://www.nngroup.com/articles/date-input/", quote: "Make the choices clear by disabling and graying out options that are not available or are illogical pairs." }
+    scenario:
+      en: "Adham books a haircut for Saturday. Only 10:00 and 13:00 are still free. The screen shows every half hour from 9:00 to 14:00 as if all were open."
+      ar: "يحجز أدهم موعد حلاقة يوم السبت. فقط 10:00 و13:00 ما زالا متاحين. والشاشة تعرض كل نصف ساعة من 9:00 إلى 14:00 كأنها كلها متاحة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: small, weight: bold, text: &ad_d { en: "Saturday", ar: "السبت" } }
+        - kind: row
+          gap: xs
+          blocks:
+            - { kind: chip, text: "9:00" }
+            - { kind: chip, text: "10:00" }
+            - { kind: chip, text: "11:00" }
+            - { kind: chip, text: "12:00" }
+            - { kind: chip, text: "13:00" }
+    options:
+      - id: after
+        text: { en: "Show every time, and say \"Taken\" after he picks one", ar: "اعرض كل الأوقات، وقل «محجوز» بعد أن يختار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: *ad_d }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, tone: dark, text: "9:00" }
+                - { kind: chip, text: "10:00" }
+                - { kind: chip, text: "11:00" }
+                - { kind: chip, text: "12:00" }
+                - { kind: chip, text: "13:00" }
+            - { kind: small, color: red, text: { en: "9:00 is taken. Choose another time.", ar: "9:00 محجوز. اختر وقتًا آخر." }, gap: s }
+      - id: type
+        text: { en: "A field where he types the time he wants", ar: "حقل يكتب فيه الوقت الذي يريده" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Time on Saturday", ar: "الوقت يوم السبت" }, filled: true, text: "11:00" }
+            - { kind: small, color: red, text: { en: "This time isn't available.", ar: "هذا الوقت غير متاح." }, gap: xs }
+      - id: grey
+        text: { en: "Grey out taken times; only free ones can be picked", ar: "اجعل الأوقات المحجوزة باهتة؛ ولا يمكن اختيار إلا المتاحة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: *ad_d }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, tone: off, text: "9:00" }
+                - { kind: chip, text: "10:00" }
+                - { kind: chip, tone: off, text: "11:00" }
+                - { kind: chip, tone: off, text: "12:00" }
+                - { kind: chip, text: "13:00" }
+            - { kind: small, text: { en: "2 times left on Saturday", ar: "باقي وقتان يوم السبت" }, gap: s }
+    answer: [grey]
+    misconceptions:
+      - id: MC-P01-013
+        when: [after, type]
+        feedback:
+          en: "Adham can't know which times are free; only the shop can. Making him guess and then rejecting him wastes his tries. Show him the free ones."
+          ar: "لا يستطيع أدهم معرفة الأوقات المتاحة؛ المحل وحده يعرف. جعله يخمّن ثم رفضه يضيّع محاولاته. اعرض له المتاح."
+    correct:
+      en: "Right. He can only pick what's really free."
+      ar: "صحيح. يمكنه اختيار المتاح فعلًا فقط."
+    explain:
+      en: "When the system knows the answer, it should show it. Greyed-out times tell Adham what's left before he taps, so his first choice works."
+      ar: "عندما يعرف النظام الإجابة، يجب أن يعرضها. الأوقات الباهتة تخبر أدهم بما تبقّى قبل أن يضغط، فينجح اختياره الأول."
+
+  - id: S10
+    type: tune
+    skill: SK-P01-U02-05
+    part: retest
+    value:
+      en: "Re-test, date input (NN/g): disable and grey out options that aren't available. The ferry runs only two days a week; the calendar should say so."
+      ar: "إعادة اختبار، إدخال التاريخ (NN/g): عطّل الخيارات غير المتاحة واجعلها باهتة. العبّارة تعمل يومين فقط في الأسبوع؛ ويجب أن يقول التقويم ذلك."
+    ref: { url: "https://www.nngroup.com/articles/date-input/", quote: "Make the choices clear by disabling and graying out options that are not available or are illogical pairs." }
+    scenario:
+      en: "Hend books a ferry trip next week. The ferry sails only on Friday and Monday. The booking page must let her pick a day."
+      ar: "تحجز هند رحلة بالعبّارة الأسبوع القادم. العبّارة تُبحر فقط يومي الجمعة والاثنين. وصفحة الحجز يجب أن تتيح لها اختيار يوم."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: field
+    options:
+      - id: field
+        text: { en: "A date field she types into, checked after", ar: "حقل تاريخ تكتب فيه، ويُتحقّق منه بعد ذلك" }
+        mock:
+          caption: { en: "Booking page", ar: "صفحة الحجز" }
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Travel date", ar: "تاريخ السفر" }, filled: true, text: { en: "Wed 4 November", ar: "الأربعاء 4 نوفمبر" } }
+            - { kind: small, color: red, text: { en: "No ferry on this day.", ar: "لا توجد عبّارة في هذا اليوم." }, gap: xs }
+      - id: grey
+        text: { en: "A calendar where only Friday and Monday can be picked", ar: "تقويم لا يمكن فيه اختيار إلا الجمعة والاثنين" }
+        mock:
+          caption: { en: "Booking page", ar: "صفحة الحجز" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: &hd_m { en: "November 2026", ar: "نوفمبر 2026" } }
+            - kind: row
+              blocks:
+                - { kind: chip, tone: off, text: { en: "Wed 4", ar: "أربعاء 4" } }
+                - { kind: chip, tone: off, text: { en: "Thu 5", ar: "خميس 5" } }
+                - { kind: chip, text: { en: "Fri 6", ar: "جمعة 6" } }
+                - { kind: chip, tone: off, text: { en: "Sat 7", ar: "سبت 7" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, tone: off, text: { en: "Sun 8", ar: "أحد 8" } }
+                - { kind: chip, text: { en: "Mon 9", ar: "اثنين 9" } }
+            - { kind: small, text: { en: "The ferry sails on Fridays and Mondays.", ar: "العبّارة تُبحر يومي الجمعة والاثنين." }, gap: s }
+      - id: all
+        text: { en: "A calendar with every day open; say \"No ferry\" after she picks", ar: "تقويم كل أيامه مفتوحة؛ وقل «لا توجد عبّارة» بعد أن تختار" }
+        mock:
+          caption: { en: "Booking page", ar: "صفحة الحجز" }
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: *hd_m }
+            - kind: row
+              blocks:
+                - { kind: chip, tone: dark, text: { en: "Wed 4", ar: "أربعاء 4" } }
+                - { kind: chip, text: { en: "Thu 5", ar: "خميس 5" } }
+                - { kind: chip, text: { en: "Fri 6", ar: "جمعة 6" } }
+                - { kind: chip, text: { en: "Sat 7", ar: "سبت 7" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: chip, text: { en: "Sun 8", ar: "أحد 8" } }
+                - { kind: chip, text: { en: "Mon 9", ar: "اثنين 9" } }
+            - { kind: small, color: red, text: { en: "No ferry on this day.", ar: "لا توجد عبّارة في هذا اليوم." }, gap: s }
+    answer: [grey]
+    misconceptions:
+      - id: MC-P01-013
+        when: [field, all]
+        feedback:
+          en: "Hend can't know the ferry's days, so she guesses and gets an error. The system knows; show only the days she can book."
+          ar: "لا تستطيع هند معرفة أيام العبّارة، فتخمّن ويظهر لها خطأ. النظام يعرف؛ اعرض فقط الأيام التي يمكنها حجزها."
+    correct:
+      en: "Right. Only real sailing days can be picked."
+      ar: "صحيح. يمكن اختيار أيام الإبحار الحقيقية فقط."
+    explain:
+      en: "A calendar with the closed days greyed out answers Hend's question before she asks it. She sees Friday and Monday, picks one, and it works."
+      ar: "التقويم الذي تكون فيه الأيام المغلقة باهتة يجيب عن سؤال هند قبل أن تسأله. ترى الجمعة والاثنين، وتختار أحدهما، وينجح الحجز."
+
+  # SK-P01-U02-06: pick the right control for numbers
+  - id: S11
+    type: tune
+    skill: SK-P01-U02-06
+    part: retest
+    value:
+      en: "Re-test, input steppers (NN/g): use steppers for numeric fields with a clear most frequent value, and start on that value. Most people buy two tickets."
+      ar: "إعادة اختبار، الـ Steppers (NN/g): استخدم الـ Stepper للحقول الرقمية التي لها قيمة شائعة واضحة، وابدأ بهذه القيمة. معظم الناس يشترون تذكرتين."
+    ref: { url: "https://www.nngroup.com/articles/input-steppers/", quote: "Use steppers for numerical fields with a clear most frequently selected value." }
+    scenario:
+      en: "Lotfy buys cinema tickets. People buy 1 to 10, and most buy 2. Right now the number of tickets is an empty text field."
+      ar: "يشتري لطفي تذاكر سينما. الناس يشترون من 1 إلى 10، ومعظمهم يشترون 2. والآن عدد التذاكر حقل نصّي فارغ."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, label: &lt_l { en: "Tickets", ar: "التذاكر" }, text: "" }
+        - { kind: button, text: &lt_b { en: "Choose seats", ar: "اختر المقاعد" }, gap: m }
+    options:
+      - id: stepper
+        text: { en: "A stepper that starts at 2", ar: "Stepper يبدأ من 2" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: stepper, label: *lt_l, text: "2" }
+            - { kind: button, text: *lt_b, gap: m }
+      - id: slider
+        text: { en: "A slider from 1 to 10", ar: "Slider من 1 إلى 10" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: slider, label: *lt_l, min: 1, max: 10, from: 1, to: 2, format: { en: "{b} tickets", ar: "{b} تذاكر" } }
+            - { kind: button, text: *lt_b, gap: m }
+      - id: dropdown
+        text: { en: "A dropdown from 1 to 10, with nothing selected", ar: "قائمة منسدلة من 1 إلى 10، بلا اختيار مسبق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: select, label: *lt_l, text: { en: "Select…", ar: "اختر…" } }
+            - { kind: button, text: *lt_b, gap: m }
+    answer: [stepper]
+    misconceptions:
+      - id: MC-P01-022
+        when: [slider]
+        feedback:
+          en: "Sliders are for rough values on a long range. Hitting exactly 2 on a thin track is fiddly, especially on a phone."
+          ar: "الـ Slider للقيم التقريبية على مدى طويل. الوصول إلى 2 بالضبط على مسار رفيع أمر مزعج، خصوصًا على الهاتف."
+      - id: MC-P01-023
+        when: [dropdown]
+        feedback:
+          en: "Most people want 2, yet everyone has to open the list and pick it. A stepper already on 2 lets most buyers move straight on."
+          ar: "معظم الناس يريدون 2، ومع ذلك يجب على الجميع فتح القائمة واختيارها. الـ Stepper الذي يبدأ من 2 يتيح لمعظم المشترين المتابعة مباشرة."
+    correct:
+      en: "Right. Most people don't touch it; the rest tap + or −."
+      ar: "صحيح. معظم الناس لا يلمسونه؛ والباقون يضغطون + أو −."
+    explain:
+      en: "A small range with a clear usual value is exactly what a stepper is for. Starting on 2 means no action for most buyers and one or two taps for everyone else."
+      ar: "المدى الصغير ذو القيمة المعتادة الواضحة هو بالضبط ما صُمّم له الـ Stepper. البدء من 2 يعني لا شيء لمعظم المشترين، وضغطة أو اثنتين للباقين."
+
+  - id: S12
+    type: tune
+    skill: SK-P01-U02-06
+    part: retest
+    value:
+      en: "Re-test, input steppers (NN/g): steppers aren't suitable for large adjustments. 150 cards need typing, not 100 taps."
+      ar: "إعادة اختبار، الـ Steppers (NN/g): الـ Stepper لا يناسب التغييرات الكبيرة. 150 بطاقة تحتاج الكتابة، لا 100 ضغطة."
+    ref: { url: "https://www.nngroup.com/articles/input-steppers/", quote: "Steppers are not suitable for a large number adjustments." }
+    scenario:
+      en: "Safaa orders printed wedding invitations. She needs exactly 150. Orders range from 50 to 1,000. Quantity is a stepper that starts at 50 and moves by 1."
+      ar: "تطلب صفاء دعوات زفاف مطبوعة. تحتاج 150 بالضبط. والطلبات من 50 إلى 1,000. والكمية Stepper يبدأ من 50 ويزيد واحدًا في كل ضغطة."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: stepper, label: &sf_l { en: "Number of cards", ar: "عدد البطاقات" }, text: "50" }
+        - { kind: small, color: muted, text: &sf_r { en: "50 to 1,000 cards", ar: "من 50 إلى 1,000 بطاقة" }, gap: xs }
+    options:
+      - id: keep
+        text: { en: "Keep the stepper; + and − are easy to use", ar: "أبقِ الـ Stepper؛ فـ + و− سهلان" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: stepper, label: *sf_l, text: "50" }
+            - { kind: small, color: muted, text: { en: "100 taps on + to reach 150", ar: "100 ضغطة على + للوصول إلى 150" }, gap: xs }
+      - id: slider
+        text: { en: "A slider from 50 to 1,000", ar: "Slider من 50 إلى 1,000" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: slider, label: *sf_l, min: 50, max: 1000, from: 50, to: 160, format: { en: "{b} cards", ar: "{b} بطاقة" } }
+      - id: type
+        text: { en: "A number field she types into, with the number pad", ar: "حقل رقم تكتب فيه، بلوحة الأرقام" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: *sf_l, filled: true, text: "150" }
+            - { kind: small, color: muted, text: *sf_r, gap: xs }
+    answer: [type]
+    misconceptions:
+      - id: MC-P01-023
+        when: [keep]
+        feedback:
+          en: "Going from 50 to 150 takes 100 taps. Steppers are for small changes around a usual value, not for large exact numbers."
+          ar: "الانتقال من 50 إلى 150 يحتاج 100 ضغطة. الـ Stepper للتغييرات الصغيرة حول قيمة معتادة، لا للأرقام الكبيرة الدقيقة."
+      - id: MC-P01-022
+        when: [slider]
+        feedback:
+          en: "On a track from 50 to 1,000, each pixel jumps several cards, so landing on exactly 150 is luck. Sliders are for rough values."
+          ar: "على مسار من 50 إلى 1,000، كل نقطة تقفز عدة بطاقات، فالوصول إلى 150 بالضبط مسألة حظ. الـ Slider للقيم التقريبية."
+    correct:
+      en: "Right. She types 150 and moves on."
+      ar: "صحيح. تكتب 150 وتتابع."
+    explain:
+      en: "Safaa knows her exact number and it's far from the start. Typing it takes three key presses; no other control comes close."
+      ar: "صفاء تعرف عددها بالضبط، وهو بعيد عن البداية. كتابته تحتاج ثلاث ضغطات؛ ولا يقترب أي عنصر آخر من ذلك."
+
+  # SK-P01-U02-07: treat codes as text made of digits
+  - id: S13
+    type: tune
+    skill: SK-P01-U02-07
+    part: retest
+    value:
+      en: "Re-test, mobile input checklist (NN/g): what's the right keyboard for this field? A verification code is text made of digits: a number field drops its leading zero."
+      ar: "إعادة اختبار، قائمة تحقّق حقول الهاتف (NN/g): ما لوحة المفاتيح المناسبة لهذا الحقل؟ رمز التحقّق نص من أرقام: حقل الأرقام يحذف الصفر الأول."
+    ref: { url: "https://www.nngroup.com/articles/mobile-input-checklist/", quote: "What is the right keyboard for this field?" }
+    scenario:
+      en: "Emad logs in to his bank app. A text message gives him a 6-digit code: 048213. The developer is choosing the field type."
+      ar: "يسجّل عماد الدخول في تطبيق البنك. تصله رسالة فيها رمز من 6 أرقام: 048213. والمطوّر يختار نوع الحقل."
+    prompt:
+      en: "Try each field. Which one should ship?"
+      ar: "جرّب كل حقل. أيّها يجب أن يُطلق؟"
+    start: number
+    options:
+      - id: number
+        text: { en: "A number field, with up and down arrows", ar: "حقل أرقام، بأسهم للأعلى والأسفل" }
+        mock:
+          caption: { en: "After Emad types 048213", ar: "بعد أن يكتب عماد 048213" }
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: field, label: &em_l { en: "Code from the text message", ar: "الرمز من الرسالة" }, filled: true, text: "48213" }
+                - { kind: small, text: "▲▼" }
+            - { kind: small, color: red, text: { en: "Wrong code.", ar: "رمز خطأ." }, gap: xs }
+      - id: pad
+        text: { en: "A text field that opens the number pad", ar: "حقل نصّي يفتح لوحة الأرقام" }
+        mock:
+          caption: { en: "After Emad types 048213", ar: "بعد أن يكتب عماد 048213" }
+          width: 300
+          blocks:
+            - { kind: field, label: *em_l, filled: true, text: "048213" }
+            - { kind: small, color: muted, text: { en: "Keyboard: 1 2 3 number pad", ar: "لوحة المفاتيح: لوحة أرقام 1 2 3" }, gap: xs }
+      - id: full
+        text: { en: "A plain text field with the full keyboard", ar: "حقل نصّي عادي بلوحة المفاتيح الكاملة" }
+        mock:
+          caption: { en: "After Emad types 048213", ar: "بعد أن يكتب عماد 048213" }
+          width: 300
+          blocks:
+            - { kind: field, label: *em_l, filled: true, text: "048213" }
+            - { kind: small, color: muted, text: { en: "Keyboard: letters first; tap 123 for digits", ar: "لوحة المفاتيح: الحروف أولًا؛ اضغط 123 للأرقام" }, gap: xs }
+    answer: [pad]
+    misconceptions:
+      - id: MC-P01-021
+        when: [number, full]
+        feedback:
+          en: "A number field treats the code as an amount and drops the 0, so Emad's correct code is rejected. The full keyboard keeps it, but hides the digits he needs behind an extra tap. A code is text made of digits: a text field with the number pad."
+          ar: "حقل الأرقام يتعامل مع الرمز كمبلغ ويحذف الصفر، فيُرفض رمز عماد الصحيح. ولوحة المفاتيح الكاملة تحافظ عليه، لكنها تُخفي الأرقام خلف ضغطة إضافية. الرمز نص من أرقام: حقل نصّي بلوحة أرقام."
+    correct:
+      en: "Right. Every digit kept, and the right keys ready."
+      ar: "صحيح. كل الأرقام محفوظة، والمفاتيح المناسبة جاهزة."
+    explain:
+      en: "Codes, IDs and card numbers are made of digits but aren't amounts. A text field keeps leading zeros, and asking for the number pad gives Emad big, easy keys."
+      ar: "الرموز والأرقام التعريفية وأرقام البطاقات مكوّنة من أرقام لكنها ليست مبالغ. الحقل النصّي يحافظ على الأصفار الأولى، وطلب لوحة الأرقام يعطي عماد مفاتيح كبيرة وسهلة."
+
+  - id: S14
+    type: tune
+    skill: SK-P01-U02-07
+    part: retest
+    value:
+      en: "Re-test, mobile input checklist (NN/g): what's the right keyboard for this field? A card number is 16 digits of text: number pad, no arrows, grouped for reading."
+      ar: "إعادة اختبار، قائمة تحقّق حقول الهاتف (NN/g): ما لوحة المفاتيح المناسبة لهذا الحقل؟ رقم البطاقة 16 رقمًا من النص: لوحة أرقام، بلا أسهم، ومقسّم ليسهل قراءته."
+    ref: { url: "https://www.nngroup.com/articles/mobile-input-checklist/", quote: "What is the right keyboard for this field?" }
+    scenario:
+      en: "Bahaa pays for a course with his card. He types the 16-digit number from the card in his hand. The team is choosing the field type."
+      ar: "يدفع بهاء ثمن دورة ببطاقته. يكتب الرقم المكوّن من 16 رقمًا من البطاقة التي في يده. والفريق يختار نوع الحقل."
+    prompt:
+      en: "Try each field. Which one should ship?"
+      ar: "جرّب كل حقل. أيّها يجب أن يُطلق؟"
+    start: number
+    options:
+      - id: pad
+        text: { en: "A text field with the number pad, shown in groups of four", ar: "حقل نصّي بلوحة الأرقام، يُعرض في مجموعات من أربعة" }
+        mock:
+          caption: { en: "After Bahaa types his number", ar: "بعد أن يكتب بهاء رقمه" }
+          width: 300
+          blocks:
+            - { kind: field, label: &bh_l { en: "Card number", ar: "رقم البطاقة" }, filled: true, text: "4417 1234 5678 9113" }
+            - { kind: small, color: muted, text: { en: "Keyboard: 1 2 3 number pad", ar: "لوحة المفاتيح: لوحة أرقام 1 2 3" }, gap: xs }
+      - id: number
+        text: { en: "A number field, with up and down arrows", ar: "حقل أرقام، بأسهم للأعلى والأسفل" }
+        mock:
+          caption: { en: "After Bahaa types his number", ar: "بعد أن يكتب بهاء رقمه" }
+          width: 300
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: field, label: *bh_l, filled: true, text: "\u20664.417123456789e15\u2069" }
+                - { kind: small, text: "▲▼" }
+      - id: full
+        text: { en: "A plain text field with the full keyboard, no spaces", ar: "حقل نصّي عادي بلوحة المفاتيح الكاملة، بلا مسافات" }
+        mock:
+          caption: { en: "After Bahaa types his number", ar: "بعد أن يكتب بهاء رقمه" }
+          width: 300
+          blocks:
+            - { kind: field, label: *bh_l, filled: true, text: "4417123456789113" }
+            - { kind: small, color: muted, text: { en: "Keyboard: letters first; tap 123 for digits", ar: "لوحة المفاتيح: الحروف أولًا؛ اضغط 123 للأرقام" }, gap: xs }
+    answer: [pad]
+    misconceptions:
+      - id: MC-P01-021
+        when: [number, full]
+        feedback:
+          en: "A number field can turn a long card number into a math value and offers arrows that make no sense. The full keyboard hides the digits and an unbroken 16-digit string is hard to check. A card number is text made of digits."
+          ar: "حقل الأرقام قد يحوّل رقم البطاقة الطويل إلى قيمة حسابية ويعرض أسهمًا بلا معنى. ولوحة المفاتيح الكاملة تُخفي الأرقام، وسلسلة من 16 رقمًا متّصلة يصعب مراجعتها. رقم البطاقة نص من أرقام."
+    correct:
+      en: "Right. Easy to type and easy to check."
+      ar: "صحيح. سهل الكتابة وسهل المراجعة."
+    explain:
+      en: "The number pad makes typing fast, and groups of four match how the number is printed on the card, so Bahaa can compare them at a glance."
+      ar: "لوحة الأرقام تجعل الكتابة سريعة، والمجموعات الرباعية تطابق طريقة طباعة الرقم على البطاقة، فيستطيع بهاء المقارنة بنظرة."
+
+  # SK-P01-U02-08: make long lists searchable and forgiving
+  - id: S15
+    type: tune
+    skill: SK-P01-U02-08
+    part: retest
+    value:
+      en: "Re-test, dropdowns (NN/g): a type-to-filter combobox works well for long lists of predictable options such as universities. Ninety names in a plain dropdown means scrolling."
+      ar: "إعادة اختبار، القوائم المنسدلة (NN/g): الـ Combobox الذي يُضيّق القائمة بالكتابة يعمل جيدًا مع القوائم الطويلة المتوقّعة مثل الجامعات. تسعون اسمًا في قائمة منسدلة عادية تعني تمريرًا طويلًا."
+    ref: { url: "https://www.nngroup.com/articles/dropdown-list/", quote: "This pattern works well for long lists of predictable options such as countries, states, languages, and universities." }
+    scenario:
+      en: "Soad applies for a scholarship. She must pick her university from a list of about 90. Most applicants come from two big universities; Soad studies at a smaller one in Assiut."
+      ar: "تتقدّم سعاد لمنحة دراسية. يجب أن تختار جامعتها من قائمة فيها نحو 90 جامعة. معظم المتقدّمين من جامعتين كبيرتين؛ وسعاد تدرس في جامعة أصغر في أسيوط."
+    prompt:
+      en: "Try each control. Which one should ship?"
+      ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
+    start: az
+    options:
+      - id: az
+        text: { en: "A plain dropdown, sorted A to Z", ar: "قائمة منسدلة عادية، مرتّبة أبجديًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: &so_l { en: "University", ar: "الجامعة" }, text: { en: "Select…", ar: "اختر…" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: meta, text: { en: "Al-Azhar University", ar: "جامعة الأزهر" } }
+                - { kind: meta, text: { en: "Alexandria University", ar: "جامعة الإسكندرية" }, gap: xs }
+                - { kind: small, text: { en: "… 88 more", ar: "… 88 جامعة أخرى" }, gap: xs }
+      - id: preselect
+        text: { en: "Preselect the most common university", ar: "اختر الجامعة الأكثر شيوعًا مسبقًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: select, label: *so_l, filled: true, text: { en: "Cairo University", ar: "جامعة القاهرة" } }
+      - id: search
+        text: { en: "A box she types into, and the list narrows as she types", ar: "مربع تكتب فيه، والقائمة تضيق مع الكتابة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *so_l, filled: true, text: { en: "Assi", ar: "أسيو" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: meta, weight: bold, text: { en: "Assiut University", ar: "جامعة أسيوط" } }
+                - { kind: meta, text: { en: "Assiut University, New Valley branch", ar: "جامعة أسيوط، فرع الوادي الجديد" }, gap: xs }
+    answer: [search]
+    misconceptions:
+      - id: MC-P01-016
+        when: [az]
+        feedback:
+          en: "With about 90 names, Soad has to scroll and scan a long list on a small screen. Let her type a few letters instead."
+          ar: "مع نحو 90 اسمًا، يجب أن تمرّر سعاد وتبحث في قائمة طويلة على شاشة صغيرة. دعها تكتب بضعة حروف بدلًا من ذلك."
+      - id: MC-P01-015
+        when: [preselect]
+        feedback:
+          en: "A preselected university is a guess about Soad. If she doesn't notice, her application goes in under the wrong university. Help her find hers; don't pick it for her."
+          ar: "الجامعة المختارة مسبقًا تخمين عن سعاد. إذا لم تنتبه، يُقدَّم طلبها باسم الجامعة الخطأ. ساعدها على إيجاد جامعتها؛ ولا تخترها نيابة عنها."
+    correct:
+      en: "Right. A few letters, and her university is on top."
+      ar: "صحيح. بضعة حروف، وجامعتها في الأعلى."
+    explain:
+      en: "For long, predictable lists, typing beats scrolling. People know the name they're looking for, so a box that narrows the list as they type gets them there fastest."
+      ar: "في القوائم الطويلة المتوقّعة، الكتابة أفضل من التمرير. الناس يعرفون الاسم الذي يبحثون عنه، فالمربع الذي يضيّق القائمة مع الكتابة يوصلهم أسرع."
+
+  - id: S16
+    type: tune
+    skill: SK-P01-U02-08
+    part: retest
+    value:
+      en: "Re-test, site search (NN/g): query suggestions help people fix spelling errors while typing. \"Alexandaria\" is one letter off; suggest the match."
+      ar: "إعادة اختبار، البحث في الموقع (NN/g): اقتراحات البحث تساعد الناس على تصحيح الأخطاء الإملائية أثناء الكتابة. «Alexandaria» تختلف بحرف واحد؛ اقترح النتيجة الصحيحة."
+    ref: { url: "https://www.nngroup.com/articles/internal-website-search/", quote: "Oftentimes query suggestions will assist users in adjusting spelling errors while they are typing the query." }
+    scenario:
+      en: "Nabil books a bus ticket. In the \"To\" field he types the city quickly with one thumb: \"Alexandaria\"."
+      ar: "يحجز نبيل تذكرة أتوبيس. في حقل «إلى» يكتب اسم المدينة بسرعة بإبهام واحد: «اسكندريه»."
+    prompt:
+      en: "Try each response. Which one should ship?"
+      ar: "جرّب كل استجابة. أيّها يجب أن تُطلق؟"
+    start: none
+    options:
+      - id: none
+        text: { en: "Show \"No results\"", ar: "اعرض «لا توجد نتائج»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: &nb_l { en: "To", ar: "إلى" }, filled: true, text: { en: "Alexandaria", ar: "اسكندريه" } }
+            - { kind: small, text: { en: "No results.", ar: "لا توجد نتائج." }, gap: xs }
+      - id: suggest
+        text: { en: "Suggest the closest match", ar: "اقترح أقرب نتيجة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *nb_l, filled: true, text: { en: "Alexandaria", ar: "اسكندريه" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: small, text: { en: "Did you mean:", ar: "هل تقصد:" } }
+                - { kind: text, weight: bold, text: { en: "Alexandria", ar: "الإسكندرية" }, gap: xs }
+      - id: list
+        text: { en: "Show the full list of cities, A to Z", ar: "اعرض قائمة المدن كاملة أبجديًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *nb_l, filled: true, text: { en: "Alexandaria", ar: "اسكندريه" } }
+            - kind: group
+              gap: xs
+              blocks:
+                - { kind: text, text: { en: "Abu Simbel", ar: "أبو سمبل" } }
+                - { kind: text, text: { en: "Al Arish", ar: "العريش" }, gap: xs }
+                - { kind: small, text: { en: "… 58 more", ar: "… 58 مدينة أخرى" }, gap: xs }
+    answer: [suggest]
+    misconceptions:
+      - id: MC-P01-024
+        when: [none, list]
+        feedback:
+          en: "Nabil is one letter away from the right city. \"No results\" makes him hunt for his typo, and the full list throws away what he typed. Suggest the match."
+          ar: "نبيل على بُعد حرف واحد من المدينة الصحيحة. «لا توجد نتائج» تجعله يبحث عن خطئه، والقائمة الكاملة تتجاهل ما كتبه. اقترح النتيجة الصحيحة."
+    correct:
+      en: "Right. One tap, and he's going to Alexandria."
+      ar: "صحيح. ضغطة واحدة، وهو ذاهب إلى الإسكندرية."
+    explain:
+      en: "People rarely type place names perfectly, especially names with several spellings. A close-match suggestion turns a typo into one tap instead of a dead end."
+      ar: "نادرًا ما يكتب الناس أسماء الأماكن بدقة، خصوصًا الأسماء التي لها أكثر من طريقة كتابة. اقتراح أقرب نتيجة يحوّل الخطأ الإملائي إلى ضغطة واحدة بدل طريق مسدود."
