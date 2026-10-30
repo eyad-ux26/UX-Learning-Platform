@@ -116,7 +116,7 @@ mock:
 | `code` | A left-to-right fragment, such as a booking code, isolated inside right-to-left text |
 | `region` | Makes the block tappable in a `spot` step |
 | `field`, `select` | Have `label`, `text`, optional `hint` and `error`. `text` looks like a placeholder unless `filled: true`. `hintFirst: true` puts the hint between the label and the box. `focus: true` draws a focus ring. A `select` shows a ▾ |
-| `radio`, `check` | One option with a round or square marker; `selected: true` fills it |
+| `radio`, `check` | One option with a round or square marker; `selected: true` fills it. `marker: round` or `square` swaps the marker shape (to show a non-standard control), and `hit: box` makes only the marker tappable (to show a small tap target) |
 | `toggle` | A switch with `text` beside it; `selected: true` turns it on |
 | `stepper` | `label` and a value in `text`, between − and + buttons |
 | `segmented` | `options` (a list of texts) and `value`, the index of the selected one |

@@ -1,0 +1,536 @@
+id: P14-U04-B01
+mode: bank
+title:
+  en: "Re-tests: choices people can trust"
+  ar: "إعادة اختبار: اختيارات يثق بها الناس"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Checkboxes vs. Radio Buttons (NN/g)", ar: "الـ Checkboxes مقابل الـ Radio buttons (NN/g)" }
+    url: "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/"
+  - title: { en: "Checkboxes: Design Guidelines (NN/g)", ar: "الـ Checkboxes: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/"
+  - title: { en: "Toggle-Switch Guidelines (NN/g)", ar: "إرشادات الـ Toggle switch (NN/g)" }
+    url: "https://www.nngroup.com/articles/toggle-switch-guidelines/"
+  - title: { en: "Radio Buttons: Select One by Default or Leave All Unselected? (NN/g)", ar: "الـ Radio buttons: نختار واحدًا مسبقًا أم نتركها كلها فارغة؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/radio-buttons-default-selection/"
+steps:
+  # SK-P14-U04-01: keep the standard look and layout
+  - id: S01
+    type: tune
+    skill: SK-P14-U04-01
+    part: retest
+    value:
+      en: "Re-test, checkboxes (NN/g): never use circles as checkboxes; they are easily confused with radio buttons. Readers can follow as many topics as they like."
+      ar: "إعادة اختبار، الـ Checkboxes (NN/g): لا تستخدم الدوائر كـ Checkboxes أبدًا؛ فمن السهل الخلط بينها وبين الـ Radio buttons. والقرّاء يستطيعون متابعة أي عدد من الموضوعات."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/", quote: "Never use circles as checkboxes." }
+    scenario:
+      en: "Sherif's news app asks new readers which topics they want to follow. Readers can follow any number of topics."
+      ar: "يسأل تطبيق الأخبار لشريف القرّاء الجدد عن الموضوعات التي يريدون متابعتها. ويستطيع القارئ متابعة أي عدد منها."
+    prompt:
+      en: "Try each list, and tap the topics. Which one should ship?"
+      ar: "جرّب كل قائمة، واضغط على الموضوعات. أيّها يجب أن تُطلق؟"
+    start: round
+    options:
+      - id: round
+        text: { en: "Round markers that allow many", ar: "علامات دائرية تسمح بأكثر من اختيار" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Topics to follow", ar: "موضوعات للمتابعة" } }
+            - { kind: check, marker: round, text: { en: "Sports", ar: "رياضة" }, selected: true, gap: s }
+            - { kind: check, marker: round, text: { en: "Economy", ar: "اقتصاد" } }
+            - { kind: check, marker: round, text: { en: "Technology", ar: "تكنولوجيا" } }
+            - { kind: check, marker: round, text: { en: "Health", ar: "صحة" } }
+      - id: square
+        text: { en: "Square checkboxes", ar: "Checkboxes مربعة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Topics to follow", ar: "موضوعات للمتابعة" } }
+            - { kind: check, text: { en: "Sports", ar: "رياضة" }, selected: true, gap: s }
+            - { kind: check, text: { en: "Economy", ar: "اقتصاد" } }
+            - { kind: check, text: { en: "Technology", ar: "تكنولوجيا" } }
+            - { kind: check, text: { en: "Health", ar: "صحة" } }
+    answer: [square]
+    misconceptions:
+      - id: MC-P14-033
+        when: [round]
+        feedback:
+          en: "Circles say \"pick one\", so many readers will follow a single topic and miss the rest."
+          ar: "الدوائر تقول «اختر واحدًا»، فكثير من القرّاء سيتابعون موضوعًا واحدًا ويفوتهم الباقي."
+    correct:
+      en: "Any number: square checkboxes."
+      ar: "أي عدد: Checkboxes مربعة."
+    explain:
+      en: "Squares tell readers at once that they can tick sports and health together."
+      ar: "المربعات تقول للقرّاء فورًا إنهم يستطيعون اختيار الرياضة والصحة معًا."
+
+  - id: S02
+    type: compare
+    skill: SK-P14-U04-01
+    part: retest
+    value:
+      en: "Re-test, checkboxes vs. radio buttons (NN/g): let users select an option by clicking on either the button itself or its label."
+      ar: "إعادة اختبار، الـ Checkboxes مقابل الـ Radio buttons (NN/g): اسمح للناس باختيار الخيار بالضغط على الزر نفسه أو على اسمه."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/", quote: "Let users select an option by clicking on either the button/box itself or its label" }
+    scenario:
+      en: "Lobna's banking app lets people pick the app's language from a short list of radio buttons."
+      ar: "يسمح تطبيق البنك للبنى للناس باختيار لغة التطبيق من قائمة قصيرة من الـ Radio buttons."
+    prompt:
+      en: "Tap the language names in each version, not the circles. Which version should ship?"
+      ar: "اضغط على أسماء اللغات في كل نسخة، لا على الدوائر. أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A", ar: "النسخة A" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Language", ar: "اللغة" } }
+          - { kind: radio, text: { en: "العربية", ar: "العربية" }, selected: true, gap: s }
+          - { kind: radio, text: { en: "English", ar: "English" } }
+          - { kind: radio, text: { en: "Français", ar: "Français" } }
+    b:
+      label: { en: "Version B", ar: "النسخة B" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Language", ar: "اللغة" } }
+          - { kind: radio, hit: box, text: { en: "العربية", ar: "العربية" }, selected: true, gap: s }
+          - { kind: radio, hit: box, text: { en: "English", ar: "English" } }
+          - { kind: radio, hit: box, text: { en: "Français", ar: "Français" } }
+    answer: a
+    misconceptions:
+      - id: MC-P14-039
+        when: [b]
+        feedback:
+          en: "In B only the small circle responds. People tap \"English\", nothing happens, and they try again."
+          ar: "في B تستجيب الدائرة الصغيرة وحدها. فيضغط الناس على «English»، ولا يحدث شيء، فيحاولون مرة أخرى."
+    correct:
+      en: "A: the whole row is tappable."
+      ar: "A: السطر كله قابل للضغط."
+    explain:
+      en: "In A the circle and the language name make one large target, easy to hit on a phone."
+      ar: "في A تشكّل الدائرة واسم اللغة هدفًا واحدًا كبيرًا، يسهل الضغط عليه في الموبايل."
+
+  # SK-P14-U04-02: word choices so they read at a glance
+  - id: S03
+    type: tune
+    skill: SK-P14-U04-02
+    part: retest
+    value:
+      en: "Re-test, checkboxes (NN/g): negatively worded statements force users to contemplate double negatives, leading to errors."
+      ar: "إعادة اختبار، الـ Checkboxes (NN/g): الصيغ المنفية تجبر الناس على التفكير في نفي النفي، وهذا يؤدي إلى أخطاء."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/", quote: "Negatively worded statements force users to contemplate double negatives, leading to errors." }
+    scenario:
+      en: "Before a ride starts, Aya's ride-hailing app asks whether riders want the driver to see their live location."
+      ar: "قبل بدء الرحلة، يسأل تطبيق طلب السيارات لآية الركّاب هل يريدون أن يرى السائق موقعهم مباشرة."
+    prompt:
+      en: "Try each label. Which one should ship?"
+      ar: "جرّب كل اسم. أيّها يجب أن يُطلق؟"
+    start: dont
+    options:
+      - id: dont
+        text: { en: "\"Don't hide my location from the driver\"", ar: "«لا تُخفِ موقعي عن السائق»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Pickup: Abbas El Akkad St", ar: "مكان الركوب: شارع عباس العقاد" } }
+            - { kind: check, text: { en: "Don't hide my location from the driver", ar: "لا تُخفِ موقعي عن السائق" }, gap: s }
+            - { kind: button, text: { en: "Request ride", ar: "اطلب السيارة" }, gap: m }
+      - id: share
+        text: { en: "\"Share my live location with the driver\"", ar: "«شارك موقعي المباشر مع السائق»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Pickup: Abbas El Akkad St", ar: "مكان الركوب: شارع عباس العقاد" } }
+            - { kind: check, text: { en: "Share my live location with the driver", ar: "شارك موقعي المباشر مع السائق" }, gap: s }
+            - { kind: button, text: { en: "Request ride", ar: "اطلب السيارة" }, gap: m }
+    answer: [share]
+    misconceptions:
+      - id: MC-P14-035
+        when: [dont]
+        feedback:
+          en: "Riders must work through \"don't hide\" to know whether a tick shares their location. A wrong guess is a privacy mistake."
+          ar: "يضطر الركّاب إلى فهم «لا تُخفِ» ليعرفوا هل الاختيار يشارك موقعهم. والتخمين الخطأ هنا خطأ في الخصوصية."
+    correct:
+      en: "Positive: \"Share my live location\"."
+      ar: "صيغة إيجابية: «شارك موقعي المباشر»."
+    explain:
+      en: "A tick means the driver sees the rider; an empty box means they don't. No double negative to untangle."
+      ar: "علامة الصح تعني أن السائق يرى الراكب؛ والمربع الفارغ يعني أنه لا يراه. بدون نفي نفي يحتاج إلى فكّ."
+
+  - id: S04
+    type: tune
+    skill: SK-P14-U04-02
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): keep labels for toggle switches short and direct. Say each one aloud with \"on\" after it."
+      ar: "إعادة اختبار، الـ Toggle switches (NN/g): اجعل أسماء الـ Toggles قصيرة ومباشرة. وقل كل اسم بصوت عالٍ وبعده «تشغيل»."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "Keep labels for toggle switches short and direct." }
+    scenario:
+      en: "In Bassem's video app settings, a toggle decides whether videos start playing by themselves when the phone is on mobile data. It works at once."
+      ar: "في إعدادات تطبيق الفيديو لباسم، يوجد Toggle يحدّد هل تبدأ الفيديوهات في العمل وحدها حين يكون الموبايل على باقة البيانات. ويعمل فورًا."
+    prompt:
+      en: "Try each label. Which one should ship?"
+      ar: "جرّب كل اسم. أيّها يجب أن يُطلق؟"
+    start: long
+    options:
+      - id: long
+        text: { en: "\"Prevent videos from not playing automatically on mobile data\"", ar: "«امنع عدم تشغيل الفيديوهات تلقائيًا على باقة البيانات»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: toggle, text: { en: "Prevent videos from not playing automatically on mobile data", ar: "امنع عدم تشغيل الفيديوهات تلقائيًا على باقة البيانات" } }
+      - id: short
+        text: { en: "\"Autoplay on mobile data\"", ar: "«تشغيل تلقائي على باقة البيانات»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: toggle, text: { en: "Autoplay on mobile data", ar: "تشغيل تلقائي على باقة البيانات" } }
+      - id: vague
+        text: { en: "\"Data behaviour\"", ar: "«سلوك البيانات»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: toggle, text: { en: "Data behaviour", ar: "سلوك البيانات" } }
+    answer: [short]
+    misconceptions:
+      - id: MC-P14-040
+        when: [long]
+        feedback:
+          en: "\"Prevent videos from not playing…: on\" stacks two negatives in a long line. People can't tell what On means without rereading."
+          ar: "«امنع عدم تشغيل الفيديوهات…: تشغيل» تجمع نفيين في سطر طويل. فلا يعرف الناس معنى التشغيل دون إعادة القراءة."
+      - id: MC-P14-040
+        when: [vague]
+        feedback:
+          en: "\"Data behaviour: on\" says nothing about videos. People must flip it and watch what happens."
+          ar: "«سلوك البيانات: تشغيل» لا تقول شيئًا عن الفيديوهات. فيضطر الناس إلى الضغط عليه ومراقبة ما يحدث."
+    correct:
+      en: "Short and direct."
+      ar: "قصير ومباشر."
+    explain:
+      en: "\"Autoplay on mobile data: on\" is a clear sentence, so people know what will use their data."
+      ar: "«تشغيل تلقائي على باقة البيانات: تشغيل» جملة واضحة، فيعرف الناس ما الذي سيستهلك باقتهم."
+
+  # SK-P14-U04-03: give radio buttons a complete set and a start
+  - id: S05
+    type: tune
+    skill: SK-P14-U04-03
+    part: retest
+    value:
+      en: "Re-test, checkboxes vs. radio buttons (NN/g): radio buttons require exactly one choice, so make sure the options are comprehensive and clearly distinct. A family with five rooms needs an answer too."
+      ar: "إعادة اختبار، الـ Checkboxes مقابل الـ Radio buttons (NN/g): الـ Radio buttons تحتاج إلى اختيار واحد بالضبط، فتأكّد أن الاختيارات تغطي كل الإجابات ومختلفة بوضوح. والأسرة التي عندها خمس غرف تحتاج إلى إجابة أيضًا."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/", quote: "Because radio buttons require exactly one choice, make sure that the options are both comprehensive and clearly distinct" }
+    scenario:
+      en: "Mai's home-cleaning app asks how many rooms the flat has, to price the visit. Some customers live in large flats."
+      ar: "يسأل تطبيق تنظيف المنازل لمي عن عدد غرف الشقة، ليحسب سعر الزيارة. وبعض العملاء يعيشون في شقق كبيرة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: three
+    options:
+      - id: three
+        text: { en: "1, 2 or 3 rooms", ar: "غرفة أو غرفتان أو 3 غرف" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Number of rooms", ar: "عدد الغرف" } }
+            - { kind: radio, text: { en: "1 room", ar: "غرفة واحدة" }, gap: s }
+            - { kind: radio, text: { en: "2 rooms", ar: "غرفتان" }, selected: true }
+            - { kind: radio, text: { en: "3 rooms", ar: "3 غرف" } }
+      - id: more
+        text: { en: "1, 2, 3, or 4 or more", ar: "غرفة أو غرفتان أو 3 غرف أو 4 غرف أو أكثر" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Number of rooms", ar: "عدد الغرف" } }
+            - { kind: radio, text: { en: "1 room", ar: "غرفة واحدة" }, gap: s }
+            - { kind: radio, text: { en: "2 rooms", ar: "غرفتان" }, selected: true }
+            - { kind: radio, text: { en: "3 rooms", ar: "3 غرف" } }
+            - { kind: radio, text: { en: "4 rooms or more", ar: "4 غرف أو أكثر" } }
+      - id: overlap
+        text: { en: "1–2, 2–3, or 3 or more", ar: "1–2 أو 2–3 أو 3 غرف أو أكثر" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Number of rooms", ar: "عدد الغرف" } }
+            - { kind: radio, text: { en: "1–2 rooms", ar: "1–2 غرفة" }, gap: s }
+            - { kind: radio, text: { en: "2–3 rooms", ar: "2–3 غرف" }, selected: true }
+            - { kind: radio, text: { en: "3 rooms or more", ar: "3 غرف أو أكثر" } }
+    answer: [more]
+    misconceptions:
+      - id: MC-P14-037
+        when: [three]
+        feedback:
+          en: "A customer with five rooms has no true answer. They'll pick 3 and get a price that doesn't match the visit."
+          ar: "العميل الذي عنده خمس غرف ليست له إجابة صحيحة. فسيختار 3 غرف ويحصل على سعر لا يناسب الزيارة."
+      - id: MC-P14-037
+        when: [overlap]
+        feedback:
+          en: "A two-room flat fits two choices, and so does a three-room one. The options must not overlap, or people can't tell which one is theirs."
+          ar: "الشقة ذات الغرفتين تناسب اختيارين، وكذلك ذات الثلاث غرف. ويجب ألا تتداخل الاختيارات، وإلا لن يعرف الناس أيّها لهم."
+    correct:
+      en: "Every flat has exactly one answer."
+      ar: "لكل شقة إجابة واحدة بالضبط."
+    explain:
+      en: "\"4 rooms or more\" catches every large flat, and no number fits two choices."
+      ar: "«4 غرف أو أكثر» تشمل كل الشقق الكبيرة، ولا يوجد عدد يناسب اختيارين."
+
+  - id: S06
+    type: tune
+    skill: SK-P14-U04-03
+    part: retest
+    value:
+      en: "Re-test, radio buttons (NN/g): select a single radio button by default in most cases. A free, common choice is a safe start; a paid one quietly costs people money."
+      ar: "إعادة اختبار، الـ Radio buttons (NN/g): ابدأ باختيار Radio button واحد في أغلب الحالات. والاختيار المجاني الشائع بداية آمنة؛ أما المدفوع فيكلّف الناس مالًا دون أن ينتبهوا."
+    ref: { url: "https://www.nngroup.com/articles/radio-buttons-default-selection/", quote: "Select a single radio button by default in most cases." }
+    scenario:
+      en: "Hisham's online bookshop offers two delivery options at checkout: standard, which is free, or express for EGP 50. Most customers choose standard."
+      ar: "يقدّم متجر الكتب الإلكتروني لهشام طريقتين للتوصيل في صفحة الدفع: العادي وهو مجاني، أو السريع مقابل 50 جنيهًا. وأغلب العملاء يختارون العادي."
+    prompt:
+      en: "Try each version, and try to clear a choice after picking it. Which one should ship?"
+      ar: "جرّب كل نسخة، وحاول إلغاء الاختيار بعد أن تختاره. أيّها يجب أن تُطلق؟"
+    start: empty
+    options:
+      - id: empty
+        text: { en: "Nothing selected", ar: "دون اختيار محدَّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Delivery", ar: "التوصيل" } }
+            - { kind: radio, text: { en: "Standard, 3–5 days · Free", ar: "عادي، 3–5 أيام · مجانًا" }, gap: s }
+            - { kind: radio, text: { en: "Express, next day · EGP 50", ar: "سريع، اليوم التالي · 50 جنيهًا" } }
+            - { kind: button, text: { en: "Pay", ar: "ادفع" }, gap: m }
+      - id: express
+        text: { en: "Express selected", ar: "«سريع» محدَّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Delivery", ar: "التوصيل" } }
+            - { kind: radio, text: { en: "Standard, 3–5 days · Free", ar: "عادي، 3–5 أيام · مجانًا" }, gap: s }
+            - { kind: radio, text: { en: "Express, next day · EGP 50", ar: "سريع، اليوم التالي · 50 جنيهًا" }, selected: true }
+            - { kind: button, text: { en: "Pay", ar: "ادفع" }, gap: m }
+      - id: standard
+        text: { en: "Standard selected", ar: "«عادي» محدَّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Delivery", ar: "التوصيل" } }
+            - { kind: radio, text: { en: "Standard, 3–5 days · Free", ar: "عادي، 3–5 أيام · مجانًا" }, selected: true, gap: s }
+            - { kind: radio, text: { en: "Express, next day · EGP 50", ar: "سريع، اليوم التالي · 50 جنيهًا" } }
+            - { kind: button, text: { en: "Pay", ar: "ادفع" }, gap: m }
+    answer: [standard]
+    misconceptions:
+      - id: MC-P14-036
+        when: [empty]
+        feedback:
+          en: "Customers who skip this hit an error at Pay, and the choice nearly everyone makes is one more tap for all of them."
+          ar: "العملاء الذين يتخطّون هذا الاختيار يظهر لهم خطأ عند «ادفع»، والاختيار الذي يختاره الجميع تقريبًا يصبح ضغطة إضافية لكل واحد منهم."
+      - id: MC-P14-036
+        when: [express]
+        feedback:
+          en: "People often keep the default, so many would pay EGP 50 they didn't mean to. A default should be the common, safe choice."
+          ar: "كثيرًا ما يُبقي الناس الاختيار الافتراضي، فسيدفع كثيرون 50 جنيهًا لم يقصدوها. والاختيار الافتراضي يجب أن يكون الشائع والآمن."
+    correct:
+      en: "Start on the common, free choice."
+      ar: "ابدأ بالاختيار الشائع المجاني."
+    explain:
+      en: "Most customers can pay right away, and anyone in a hurry switches to express in one tap."
+      ar: "يستطيع أغلب العملاء الدفع فورًا، ومن يستعجل ينتقل إلى السريع بضغطة واحدة."
+
+  # SK-P14-U04-04: match the control to when the change happens
+  - id: S07
+    type: tune
+    skill: SK-P14-U04-04
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): separate controls that produce instant results from those that require clicking a command button. Filters in this panel wait for Apply."
+      ar: "إعادة اختبار، الـ Toggle switches (NN/g): افصل العناصر التي تعطي نتيجة فورية عن العناصر التي تحتاج إلى الضغط على زر. والفلاتر في هذه اللوحة تنتظر «طبّق»."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "Separate controls that produce instant results from those that require clicking a command button." }
+    scenario:
+      en: "Noura's phone store has a filter panel. People choose brands and options, then tap Apply to update the results."
+      ar: "في متجر الموبايلات لنورا لوحة فلاتر. يختار الناس الماركات والخيارات، ثم يضغطون «طبّق» لتتغيّر النتائج."
+    prompt:
+      en: "Try each version of the \"In stock only\" filter. Which one should ship?"
+      ar: "جرّب كل نسخة من فلتر «المتوفّر فقط». أيّها يجب أن تُطلق؟"
+    start: toggle
+    options:
+      - id: toggle
+        text: { en: "A toggle", ar: "Toggle" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: check, text: { en: "Samsung", ar: "Samsung" }, selected: true, gap: s }
+            - { kind: check, text: { en: "Xiaomi", ar: "Xiaomi" } }
+            - { kind: toggle, text: { en: "In stock only", ar: "المتوفّر فقط" }, gap: s }
+            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: m }
+      - id: check
+        text: { en: "A checkbox", ar: "Checkbox" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: check, text: { en: "Samsung", ar: "Samsung" }, selected: true, gap: s }
+            - { kind: check, text: { en: "Xiaomi", ar: "Xiaomi" } }
+            - { kind: check, text: { en: "In stock only", ar: "المتوفّر فقط" }, gap: s }
+            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: m }
+    answer: [check]
+    misconceptions:
+      - id: MC-P14-038
+        when: [toggle]
+        feedback:
+          en: "A toggle promises an instant change, but nothing happens until Apply. People flip it, see the same results, and doubt it worked."
+          ar: "الـ Toggle يَعِد بتغيير فوري، لكن لا شيء يحدث حتى «طبّق». فيضغطه الناس، ويرون النتائج نفسها، ويشكّون أنه نجح."
+    correct:
+      en: "It waits for Apply: a checkbox."
+      ar: "ينتظر «طبّق»: Checkbox."
+    explain:
+      en: "Like the brand filters above it, the checkbox counts when people tap Apply, so the whole panel works the same way."
+      ar: "مثل فلاتر الماركات فوقه، يُحسب الـ Checkbox حين يضغط الناس «طبّق»، فتعمل اللوحة كلها بالطريقة نفسها."
+
+  - id: S08
+    type: tune
+    skill: SK-P14-U04-04
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): toggle switches should take immediate effect, and shouldn't need Save. Dark mode can switch the moment people flip it."
+      ar: "إعادة اختبار، الـ Toggle switches (NN/g): يجب أن يكون للـ Toggle أثر فوري، ولا يحتاج إلى «حفظ». والوضع الداكن يمكن أن يتغيّر لحظة الضغط."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "Toggle switches should take immediate effect" }
+    scenario:
+      en: "Rasha's reading app lets people switch to dark mode. The app can change its colours at once."
+      ar: "يسمح تطبيق القراءة لرشا للناس بالتحويل إلى الوضع الداكن. ويستطيع التطبيق تغيير ألوانه فورًا."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: radio
+    options:
+      - id: radio
+        text: { en: "Light and Dark radio buttons, then Save", ar: "Radio buttons «فاتح» و«داكن»، ثم «حفظ»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Appearance", ar: "المظهر" } }
+            - { kind: radio, text: { en: "Light", ar: "فاتح" }, selected: true, gap: s }
+            - { kind: radio, text: { en: "Dark", ar: "داكن" } }
+            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
+      - id: toggle
+        text: { en: "A \"Dark mode\" toggle that works at once", ar: "Toggle «الوضع الداكن» يعمل فورًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Appearance", ar: "المظهر" } }
+            - { kind: toggle, text: { en: "Dark mode", ar: "الوضع الداكن" }, gap: s }
+      - id: check
+        text: { en: "A \"Dark mode\" checkbox, then Save", ar: "Checkbox «الوضع الداكن»، ثم «حفظ»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Appearance", ar: "المظهر" } }
+            - { kind: check, text: { en: "Dark mode", ar: "الوضع الداكن" }, gap: s }
+            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
+    answer: [toggle]
+    misconceptions:
+      - id: MC-P14-038
+        when: [radio, check]
+        feedback:
+          en: "The change could happen at once, but people have to find and press Save first. Many will pick Dark, see nothing change, and leave."
+          ar: "التغيير يمكن أن يحدث فورًا، لكن الناس يضطرون إلى إيجاد «حفظ» والضغط عليه أولًا. وكثيرون سيختارون «داكن»، ولن يروا تغييرًا، ويغادرون."
+    correct:
+      en: "An instant change: a toggle."
+      ar: "تغيير فوري: Toggle."
+    explain:
+      en: "People flip it and the screen darkens right away, so they know at once whether they like it."
+      ar: "يضغط الناس عليه فتصبح الشاشة داكنة فورًا، فيعرفون في الحال هل تعجبهم."
+
+  # SK-P14-U04-05: make a toggle's state unmistakable
+  - id: S09
+    type: tune
+    skill: SK-P14-U04-05
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): stick to on/off and include both off and on, one on each side of the toggle, to avoid confusion."
+      ar: "إعادة اختبار، الـ Toggle switches (NN/g): التزم بكلمتي تشغيل وإيقاف، واكتبهما معًا، كل واحدة في جهة من الـ Toggle، حتى لا يحدث لبس."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "If only one descriptor is present beside a toggle, it can be taken for a toggle label." }
+    scenario:
+      en: "Ola's security app has a toggle for VPN protection, with its name, \"VPN protection\", above it. The designer wants a state word next to the switch. Protection is off right now."
+      ar: "في تطبيق الحماية لعُلا يوجد Toggle لحماية الـ VPN، واسمه «حماية VPN» مكتوب فوقه. ويريد المصمّم كلمة حالة بجانب المفتاح. والحماية الآن متوقّفة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: active
+    options:
+      - id: active
+        text: { en: "The word \"Active\" beside the switch", ar: "كلمة «نشطة» بجانب المفتاح" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "VPN protection", ar: "حماية VPN" } }
+            - { kind: toggle, text: { en: "Active", ar: "نشطة" }, gap: xs }
+      - id: both
+        text: { en: "\"Off\" and \"On\", one on each side", ar: "«إيقاف» و«تشغيل»، كل واحدة في جهة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "VPN protection", ar: "حماية VPN" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: meta, text: { en: "Off", ar: "إيقاف" } }
+                - { kind: toggle, text: "" }
+                - { kind: meta, text: { en: "On", ar: "تشغيل" } }
+    answer: [both]
+    misconceptions:
+      - id: MC-P14-041
+        when: [active]
+        feedback:
+          en: "The switch is off, but the only word beside it says \"Active\". People may believe they're protected when they aren't."
+          ar: "المفتاح متوقّف، لكن الكلمة الوحيدة بجانبه تقول «نشطة». فقد يظن الناس أنهم محميّون وهم ليسوا كذلك."
+    correct:
+      en: "Both words, one on each side."
+      ar: "الكلمتان معًا، كل واحدة في جهة."
+    explain:
+      en: "The knob sits on Off now and moves to On when flipped, so the state is never in doubt."
+      ar: "المفتاح عند «إيقاف» الآن، وينتقل إلى «تشغيل» عند الضغط، فلا يكون هناك شك في الحالة."
+
+  - id: S10
+    type: tune
+    skill: SK-P14-U04-05
+    part: retest
+    value:
+      en: "Re-test, toggle switches (NN/g): if only one descriptor is present beside a toggle, it can be taken for a toggle label. Put the setting's own name beside the switch instead."
+      ar: "إعادة اختبار، الـ Toggle switches (NN/g): إن كانت بجانب الـ Toggle كلمة وصف واحدة فقط، فقد تُفهم على أنها اسمه. ضع اسم الإعداد نفسه بجانب المفتاح بدلًا منها."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "If only one descriptor is present beside a toggle, it can be taken for a toggle label." }
+    scenario:
+      en: "In Osama's family-tracking app, a toggle shares your location with your family. Sharing is on right now."
+      ar: "في تطبيق متابعة العائلة لأسامة، يوجد Toggle يشارك موقعك مع عائلتك. والمشاركة تعمل الآن."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: off
+    options:
+      - id: off
+        text: { en: "Name above, the word \"Off\" beside the switch", ar: "الاسم فوق، وكلمة «إيقاف» بجانب المفتاح" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Location sharing", ar: "مشاركة الموقع" } }
+            - { kind: toggle, text: { en: "Off", ar: "إيقاف" }, selected: true, gap: xs }
+      - id: name
+        text: { en: "The name beside the switch, no state word", ar: "الاسم بجانب المفتاح، بدون كلمة حالة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: toggle, text: { en: "Share my location with family", ar: "شارك موقعي مع العائلة" }, selected: true }
+    answer: [name]
+    misconceptions:
+      - id: MC-P14-041
+        when: [off]
+        feedback:
+          en: "Sharing is on, yet the word beside the switch says \"Off\". Is that the state, or what the switch does? People may think their location is private."
+          ar: "المشاركة تعمل، لكن الكلمة بجانب المفتاح تقول «إيقاف». هل هذه الحالة، أم ما يفعله المفتاح؟ فقد يظن الناس أن موقعهم خاص."
+    correct:
+      en: "Name beside the switch; the switch shows the state."
+      ar: "الاسم بجانب المفتاح؛ والمفتاح يوضّح الحالة."
+    explain:
+      en: "\"Share my location with family\" next to a switch that's on reads plainly as \"I'm sharing\"."
+      ar: "«شارك موقعي مع العائلة» بجانب مفتاح يعمل تُقرأ ببساطة: «أنا أشارك موقعي»."
