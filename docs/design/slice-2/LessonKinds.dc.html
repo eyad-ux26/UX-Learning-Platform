@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson step types</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Barlow:wght@500;600;700;800&amp;family=Almarai:wght@400;700;800&amp;family=Rubik:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+  <header class="lp-head">
+    <a href="#home" onClick="{{askExit}}" class="{{headBtn}}" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+    <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+      <span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{c.lessonName}}</span>
+    </sc-if>
+    <div class="progress" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="{{stepNo}}" aria-valuemin="0" aria-valuemax="{{stepMax}}"><i style="width: {{pct}};"></i></div>
+    <span class="t-label num ink-2 lp-count">{{countText}}</span>
+    <sc-if value="{{save.show}}" hint-placeholder-val="{{false}}">
+      <span class="{{save.cls}}" role="status"><span class="{{save.icon}}" aria-hidden="true"></span>{{save.text}}</span>
+    </sc-if>
+    <button class="{{headBtn}}" type="button" aria-label="{{soundLabel}}" aria-pressed="{{soundPressed}}" onClick="{{toggleSound}}"><span class="{{soundIcon}}" aria-hidden="true"></span></button>
+  </header>
+
+  <sc-if value="{{banner.offline}}" hint-placeholder-val="{{false}}">
+    <div class="lp-banner" role="status"><span class="ph ph-wifi-slash" aria-hidden="true"></span><span>{{c.offlineBanner}}</span></div>
+  </sc-if>
+  <sc-if value="{{banner.guest}}" hint-placeholder-val="{{false}}">
+    <div class="lp-banner is-guest"><span class="ph ph-user" aria-hidden="true"></span><span>{{c.guestBanner}}</span></div>
+  </sc-if>
+  <sc-if value="{{banner.resume}}" hint-placeholder-val="{{false}}">
+    <div class="lp-banner is-resume" role="status"><span class="ph ph-replay" aria-hidden="true"></span><span>{{c.resumeBanner}}</span><a href="#restart" class="act" onClick="{{closeBanner}}">{{c.restart}}</a></div>
+  </sc-if>
+
+  <main class="{{mainCls}}">
+    <sc-if value="{{showCtx}}" hint-placeholder-val="{{true}}">
+      <section class="lp-ctx" aria-label="{{c.example}}">
+        <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+          <span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{k.frame}}</span>
+        </sc-if>
+        <div class="lp-stage">
+          <div style="{{ctx.wrap}}"><div style="{{ctx.inner}}">
+          <sc-if value="{{ctx.gym}}" hint-placeholder-val="{{false}}">
+            <dc-import name="MockForm" lang="{{lang}}" product="gym" variant="{{ctx.variant}}" size="{{ctx.size}}" width="{{ctx.width}}" hint-size="320px,300px"></dc-import>
+          </sc-if>
+          <sc-if value="{{ctx.gymStep}}" hint-placeholder-val="{{false}}">
+            <dc-import name="MockGym" lang="{{lang}}" theme="light" variant="form" size="{{ctx.size}}" width="{{ctx.width}}" hint-size="350px,250px"></dc-import>
+          </sc-if>
+
+          <sc-if value="{{ctx.words}}" hint-placeholder-val="{{false}}">
+            <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: hidden; border: 2px solid #C9D1D6; background: #DDE3E7;">
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.lunchCap}}</figcaption>
+              <div style="background: #FFF7EE; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; font-family: 'Rubik', sans-serif; color: #3B1F14;">
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: 11px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: 12px;">{{x.lunchBrand}}</span></div>
+                <span style="font-weight: 600; font-size: 15px;">{{x.lunchTitle}}</span>
+                <span style="font-size: 11px; color: #7A4A36; font-weight: 500;">{{x.addr}}</span>
+                <span style="display: block; height: 22px; border-radius: 10px; border: 1px solid #E9C9B2; background: #FFFFFF;"></span>
+                <span style="font-size: 11px; color: #7A4A36; font-weight: 500;">{{x.phone}}</span>
+                <span style="display: block; height: 22px; border-radius: 10px; border: 1px solid #E9C9B2; background: #FFFFFF;"></span>
+                <span class="sel-frame" style="align-self: flex-start; margin: 4px 0 2px; padding: 0 6px; font-size: 11px; font-weight: 600; color: #3B1F14; background: rgba(120, 228, 252, 0.35); min-width: 110px; min-height: 16px;">{{wordsLabel}}</span>
+                <span style="display: block; height: 34px; border-radius: 10px; border: 1px solid #E9C9B2; background: #FFFFFF;"></span>
+                <span style="display: grid; place-items: center; height: 28px; border-radius: 999px; background: #C8471F; color: #FFFFFF; font-weight: 600; font-size: 12px; margin-top: 2px;">{{x.placeOrder}}</span>
+              </div>
+            </figure>
+          </sc-if>
+
+          <sc-if value="{{ctx.fix}}" hint-placeholder-val="{{false}}">
+            <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: hidden; border: 2px solid #C9D1D6; background: #DDE3E7;">
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.gymCap}}</figcaption>
+              <div style="background: #FFFFFF; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; font-family: {{gymFont}}; color: #1F2328;">
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #B7E000; color: #1F2328; font-weight: 800; font-size: 11px;">{{x.gymMark}}</span><span style="font-weight: 800; font-size: 11px; letter-spacing: {{gymTrack}};">{{x.gymBrand}}</span></div>
+                <span style="font-weight: 700; font-size: 15px;">{{x.joinTitle}}</span>
+                <span style="font-size: 11px; font-weight: 600; color: #4A5560;">{{x.emailLabel}}</span>
+                <span style="display: block; height: 22px; border-radius: 6px; border: {{fixField}}; background: #F7F8F9;"></span>
+                <sc-if value="{{fixShowErr}}" hint-placeholder-val="{{true}}">
+                  <span style="font-size: 11px; font-weight: 700; color: #C0262D;">{{x.emailErr}}</span>
+                </sc-if>
+                <span style="display: grid; place-items: center; height: 28px; border-radius: 6px; background: #B7E000; color: #1F2328; font-weight: 800; font-size: 12px; margin-top: 2px;">{{x.joinBtn}}</span>
+                <sc-if value="{{fixShowOk}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 11px; font-weight: 700; color: #2E7D32;">{{x.welcome}}</span>
+                </sc-if>
+              </div>
+            </figure>
+          </sc-if>
+
+          <sc-if value="{{ctx.order}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+              <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="frame-label"><span class="ph ph-device-mobile" aria-hidden="true"></span>{{c.livePreview}}</span></sc-if>
+              <div class="lp-phone" role="img" aria-label="{{c.livePreview}}">
+                <div lang="{{lang}}" dir="{{dir}}" style="background: #FFF7EE; padding: {{ph.pad}}px; display: flex; flex-direction: column; gap: {{ph.gap}}px; font-family: 'Rubik', sans-serif; color: #3B1F14;">
+                  <div style="display: flex; align-items: center; gap: 6px;"><span style="display: grid; place-items: center; width: {{ph.logo}}px; height: {{ph.logo}}px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: {{ph.small}}px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: {{ph.small}}px;">{{x.lunchBrand}}</span></div>
+                  <sc-for list="{{preview}}" as="pb" hint-placeholder-count="4">
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                      <sc-if value="{{pb.photo}}" hint-placeholder-val="{{false}}">
+                        <div style="display: flex; flex-direction: column; gap: 4px;"><div style="height: {{ph.photo}}px; border-radius: 12px; background: #F3D9C4; display: grid; place-items: center;"><span style="width: {{ph.bowl}}px; height: {{ph.bowlH}}px; border-radius: 0 0 999px 999px; background: #C8471F; box-shadow: inset 0 6px 0 #E8A07F;"></span></div><span style="font-weight: 700; font-size: {{ph.title}}px; line-height: 1.2;">{{x.dish}}</span></div>
+                      </sc-if>
+                      <sc-if value="{{pb.price}}" hint-placeholder-val="{{false}}">
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: {{ph.small}}px;"><b style="font-size: {{ph.body}}px;">{{x.price}}</b><span style="padding: 1px 6px; border-radius: 999px; background: #F3D9C4;">{{x.time}}</span></div>
+                      </sc-if>
+                      <sc-if value="{{pb.ingr}}" hint-placeholder-val="{{false}}">
+                        <div style="display: flex; flex-direction: column; gap: 3px; font-size: {{ph.small}}px; color: #7A4A36;"><span>{{x.ingr}}</span><span style="align-self: flex-start; padding: 1px 6px; border-radius: 6px; border: 1px solid #C8471F; color: #A3391A; font-weight: 600;">{{x.allergen}}</span></div>
+                      </sc-if>
+                      <sc-if value="{{pb.add}}" hint-placeholder-val="{{false}}">
+                        <span style="display: grid; place-items: center; height: {{ph.btn}}px; border-radius: 999px; background: #C8471F; color: #FFFFFF; font-weight: 600; font-size: {{ph.small}}px;">{{x.addBtn}}</span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ctx.spot}}" hint-placeholder-val="{{false}}">
+            <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: visible; border: 2px solid #C9D1D6; background: #DDE3E7;">
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.lunchCap}}</figcaption>
+              <div style="background: #FFF7EE; padding: {{sp.pad}}px; display: flex; flex-direction: column; gap: {{sp.gap}}px; font-family: 'Rubik', sans-serif; color: #3B1F14; border-radius: 0 0 14px 14px;">
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: 11px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: 12px;">{{x.lunchBrand}}</span></div>
+                <span style="font-weight: 600; font-size: {{sp.title}}px;">{{x.checkout}}</span>
+                <sc-for list="{{regions}}" as="r" hint-placeholder-count="4">
+                  <button class="{{r.cls}}" type="button" aria-pressed="{{r.pressed}}" aria-label="{{r.aria}}" disabled="{{r.locked}}" onClick="{{r.pick}}">
+                    <sc-if value="{{r.tagRight}}" hint-placeholder-val="{{false}}"><span class="lp-spot-tag is-right">{{c.spotRight}}</span></sc-if>
+                    <sc-if value="{{r.tagWrong}}" hint-placeholder-val="{{false}}"><span class="lp-spot-tag is-wrong">{{c.spotWrong}}</span></sc-if>
+                    <sc-if value="{{r.isField}}" hint-placeholder-val="{{true}}">
+                      <span style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="font-size: {{sp.label}}px; color: #7A4A36; font-weight: 500;">{{r.label}}</span>
+                        <span style="display: flex; align-items: center; height: {{sp.field}}px; padding: 0 10px; border-radius: 10px; border: {{r.border}}; background: #FFFFFF; font-size: {{sp.label}}px; color: #3B1F14;"><bdi>{{r.value}}</bdi></span>
+                        <sc-if value="{{r.err}}" hint-placeholder-val="{{false}}"><span style="font-size: {{sp.label}}px; font-weight: 600; color: #B42318;">{{x.phoneErr}}</span></sc-if>
+                      </span>
+                    </sc-if>
+                    <sc-if value="{{r.isBtn}}" hint-placeholder-val="{{false}}">
+                      <span style="display: grid; place-items: center; height: {{sp.btn}}px; border-radius: 999px; background: #C8471F; color: #FFFFFF; font-weight: 600; font-size: {{sp.label}}px;">{{x.placeOrder}}</span>
+                    </sc-if>
+                  </button>
+                </sc-for>
+              </div>
+            </figure>
+          </sc-if>
+          </div></div>
+        </div>
+        <sc-if value="{{showHana}}" hint-placeholder-val="{{false}}">
+          <span class="cursor-tag" style="position: absolute; top: 130px; inset-inline-end: -18px; --c: #3DAA80; --c-ink: #FFFFFF;"><span class="ph ph-cursor-fill" aria-hidden="true"></span><b>{{k.who}}</b></span>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <section class="lp-work">
+      <div class="lp-q">
+        <sc-if value="{{modeTag.show}}" hint-placeholder-val="{{false}}">
+          <span class="{{modeTag.cls}}"><span class="{{modeTag.icon}}" aria-hidden="true"></span>{{modeTag.text}}</span>
+        </sc-if>
+        <p class="t-over" style="color: var(--link);">{{k.over}}</p>
+        <sc-if value="{{k.anyOk}}" hint-placeholder-val="{{false}}">
+          <span class="lp-tag" style="background: var(--mint); color: var(--right-ink);"><span class="ph ph-check" aria-hidden="true"></span>{{c.anyOk}}</span>
+        </sc-if>
+        <p class="lp-scn">{{k.scenario}}</p>
+        <h1 class="lp-qt">{{k.question}}</h1>
+      </div>
+
+      <div class="lp-act">
+        <sc-if value="{{mockCollapsed}}" hint-placeholder-val="{{false}}">
+          <button type="button" onClick="{{openMock}}" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border-radius: 14px; border: 2px solid #C9D1D6; background: #DDE3E7; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 13px; cursor: pointer;">
+            <span style="display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 10px; letter-spacing: 0.06em;">MOCK</span>
+            <span style="flex: 1; text-align: start;">{{c.mockAgain}}</span>
+            <span class="ph ph-eye" style="font-size: 18px;" aria-hidden="true"></span>
+          </button>
+        </sc-if>
+
+        <sc-if value="{{isReason}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="choice is-right" aria-disabled="true" style="min-height: 48px; padding: 6px 12px; gap: 10px; font-size: 15px; border-radius: 14px;"><span class="key" style="width: 28px; height: 28px; font-size: 14px; border-radius: 8px;">{{k.mainKey}}</span><span class="grow">{{k.mainLabel}}</span><span class="verdict"><span class="ph ph-check-circle-fill" aria-hidden="true"></span></span></div>
+            <h2 class="t-label" style="font-size: 16px; line-height: 1.35; margin-top: 4px;">{{k.reasonQ}}</h2>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showOpts}}" hint-placeholder-val="{{true}}">
+          <div class="lp-opts" role="radiogroup" aria-label="{{k.question}}">
+            <sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+              <button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.checked}}" aria-disabled="{{o.disabled}}" onClick="{{o.pick}}">
+                <span class="key">{{o.key}}</span>
+                <span class="grow">{{o.label}}</span>
+                <sc-if value="{{o.showRight}}" hint-placeholder-val="{{false}}"><span class="verdict"><span class="ph ph-check-circle-fill" aria-hidden="true"></span></span></sc-if>
+                <sc-if value="{{o.showAlso}}" hint-placeholder-val="{{false}}"><span class="verdict"><span class="ph ph-also-fill" aria-hidden="true"></span></span></sc-if>
+                <sc-if value="{{o.showWrong}}" hint-placeholder-val="{{false}}"><span class="verdict"><span class="ph ph-x-circle-fill" aria-hidden="true"></span></span></sc-if>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isSpot}}" hint-placeholder-val="{{false}}">
+          <sc-if value="{{spotSwitch}}" hint-placeholder-val="{{true}}">
+            <button class="lp-switch" type="button" onClick="{{toggleList}}"><span class="{{spotSwitchIcon}}" aria-hidden="true"></span>{{spotSwitchText}}</button>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{isSort}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <sc-if value="{{showTray}}" hint-placeholder-val="{{true}}">
+              <div class="lp-tray" role="group" aria-label="{{c.toPlace}}">
+                <sc-for list="{{tray}}" as="it" hint-placeholder-count="2">
+                  <button class="{{it.cls}}" type="button" aria-pressed="{{it.pressed}}" onClick="{{it.pick}}"><span class="ph ph-grip" aria-hidden="true"></span>{{it.label}}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <p class="lp-help">{{sortHelp}}</p>
+            <div class="lp-buckets">
+              <sc-for list="{{buckets}}" as="b" hint-placeholder-count="3">
+                <div class="{{b.cls}}" role="group" aria-label="{{b.name}}">
+                  <div class="hd"><span class="ph ph-tray" aria-hidden="true"></span><span>{{b.name}}</span><span class="num ink-3">{{b.count}}</span><span style="flex: 1;"></span>
+                    <sc-if value="{{b.canDrop}}" hint-placeholder-val="{{false}}"><button class="lp-drop" type="button" onClick="{{b.drop}}" aria-label="{{b.dropAria}}"><span class="ph ph-plus" aria-hidden="true"></span>{{b.dropText}}</button></sc-if>
+                  </div>
+                  <div class="its">
+                    <sc-for list="{{b.items}}" as="it" hint-placeholder-count="1">
+                      <button class="{{it.cls}}" type="button" aria-pressed="{{it.pressed}}" disabled="{{it.locked}}" onClick="{{it.pick}}">
+                        <span class="ph ph-grip" aria-hidden="true"></span>{{it.label}}
+                        <sc-if value="{{it.right}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill v" aria-hidden="true"></span></sc-if>
+                        <sc-if value="{{it.wrong}}" hint-placeholder-val="{{false}}"><span class="ph ph-x-circle-fill v" aria-hidden="true"></span></sc-if>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{isOrder}}" hint-placeholder-val="{{false}}">
+          <ol class="lp-order" aria-label="{{k.question}}" style="list-style: none; margin: 0; padding: 0;">
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+              <li class="{{r.cls}}">
+                <span class="n num">{{r.n}}</span>
+                <span class="grow">{{r.label}}</span>
+                <sc-if value="{{r.right}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="font-size: 22px; color: var(--right-ink); margin-inline-end: 8px;" aria-hidden="true"></span></sc-if>
+                <sc-if value="{{r.wrong}}" hint-placeholder-val="{{false}}"><span class="ph ph-x-circle-fill" style="font-size: 22px; color: var(--wrong-ink); margin-inline-end: 8px;" aria-hidden="true"></span></sc-if>
+                <sc-if value="{{canMove}}" hint-placeholder-val="{{true}}">
+                  <button class="lp-mv" type="button" aria-label="{{r.upLabel}}" disabled="{{r.upOff}}" onClick="{{r.up}}"><span class="ph ph-arrow-up" aria-hidden="true"></span></button>
+                  <button class="lp-mv" type="button" aria-label="{{r.downLabel}}" disabled="{{r.downOff}}" onClick="{{r.down}}"><span class="ph ph-arrow-down" aria-hidden="true"></span></button>
+                </sc-if>
+              </li>
+            </sc-for>
+          </ol>
+        </sc-if>
+
+        <sc-if value="{{isMatch}}" hint-placeholder-val="{{false}}">
+          <div class="lp-match">
+            <div class="side" role="group" aria-label="{{c.matchLeft}}">
+              <span class="hd">{{c.matchLeft}}</span>
+              <sc-for list="{{left}}" as="t" hint-placeholder-count="4">
+                <button class="{{t.cls}}" type="button" aria-pressed="{{t.pressed}}" disabled="{{t.locked}}" onClick="{{t.pick}}"><span class="{{t.pnoCls}}">{{t.pno}}</span><span class="grow">{{t.label}}</span><sc-if value="{{t.right}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="font-size: 20px; color: var(--right-ink);" aria-hidden="true"></span></sc-if><sc-if value="{{t.wrong}}" hint-placeholder-val="{{false}}"><span class="ph ph-x-circle-fill" style="font-size: 20px; color: var(--wrong-ink);" aria-hidden="true"></span></sc-if></button>
+              </sc-for>
+            </div>
+            <div class="side" role="group" aria-label="{{c.matchRight}}">
+              <span class="hd">{{c.matchRight}}</span>
+              <sc-for list="{{right}}" as="t" hint-placeholder-count="4">
+                <button class="{{t.cls}}" type="button" aria-pressed="{{t.pressed}}" disabled="{{t.locked}}" onClick="{{t.pick}}"><span class="{{t.pnoCls}}">{{t.pno}}</span><span class="grow">{{t.label}}</span></button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{showBar}}" hint-placeholder-val="{{true}}">
+        <div class="lp-bar">
+          <sc-if value="{{hasConf}}" hint-placeholder-val="{{false}}">
+            <div class="{{confCls}}" role="group" aria-label="{{c.sure}}">
+              <span class="lbl">{{c.sure}}</span>
+              <sc-for list="{{conf}}" as="q" hint-placeholder-count="3">
+                <button class="{{q.cls}}" type="button" aria-pressed="{{q.on}}" onClick="{{q.pick}}">{{q.label}}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{showConfHelp}}" hint-placeholder-val="{{false}}"><p class="lp-help">{{c.confHelp}}</p></sc-if>
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span style="flex: 1;"></span></sc-if>
+          <button class="{{checkCls}}" type="button" disabled="{{checkOff}}" onClick="{{check}}">{{checkText}}</button>
+        </div>
+      </sc-if>
+    </section>
+  </main>
+
+  <sc-if value="{{sh.wrong}}" hint-placeholder-val="{{false}}">
+    <section class="sheet sheet-wrong sheet-in lp-sheet" role="alert">
+      <div class="col">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <p class="verdict-row"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{c.wrongTitle}}</p>
+          <sc-if value="{{showTry}}" hint-placeholder-val="{{true}}"><span class="t-small num" style="font-weight: 700; color: var(--wrong-ink);">{{tryText}}</span></sc-if>
+        </div>
+        <p class="body">{{k.miscon}}</p>
+        <sc-if value="{{showSure}}" hint-placeholder-val="{{false}}"><span class="lp-sure"><span class="ph ph-target" aria-hidden="true"></span>{{c.confSure}}</span></sc-if>
+        <p class="note">{{wrongNote}}</p>
+      </div>
+      <div class="col">
+        <sc-for list="{{hints}}" as="h" hint-placeholder-count="1">
+          <div class="comment">
+            <span class="pin"><span class="ph ph-bulb-fill" aria-hidden="true"></span></span>
+            <div style="display: flex; flex-direction: column; gap: 2px;"><span class="t-small" style="font-weight: 800; color: var(--warn-ink); font-size: 13px;">{{h.title}}</span><span class="t-small" style="color: var(--ink);">{{h.text}}</span></div>
+          </div>
+        </sc-for>
+        <sc-if value="{{showFlag}}" hint-placeholder-val="{{false}}">
+          <button class="lp-flag" type="button" onClick="{{openReview}}"><span class="ph ph-flag" aria-hidden="true"></span>{{c.reviewLink}}</button>
+        </sc-if>
+      </div>
+      <div class="acts">
+        <sc-if value="{{canHint}}" hint-placeholder-val="{{true}}">
+          <button class="btn btn-secondary press" type="button" onClick="{{hint}}"><span class="ph ph-bulb" aria-hidden="true"></span>{{c.hint}}</button>
+        </sc-if>
+        <sc-if value="{{canReveal}}" hint-placeholder-val="{{false}}">
+          <button class="btn btn-secondary press" type="button" onClick="{{reveal}}"><span class="ph ph-eye" aria-hidden="true"></span>{{c.reveal}}</button>
+        </sc-if>
+        <sc-if value="{{canRetry}}" hint-placeholder-val="{{true}}">
+          <button class="btn btn-primary press" type="button" onClick="{{retry}}" style="min-width: 150px;">{{c.retry}}</button>
+        </sc-if>
+        <sc-if value="{{masteryMiss}}" hint-placeholder-val="{{false}}">
+          <a href="#next" class="btn btn-primary press" onClick="{{next}}" style="min-width: 180px;">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+        </sc-if>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{sh.right}}" hint-placeholder-val="{{false}}">
+    <section class="{{rightCls}}" role="status">
+      <div class="col">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <p class="verdict-row"><span class="{{rightIcon}}" aria-hidden="true"></span>{{rightTitle}}</p>
+          <sc-if value="{{showXp}}" hint-placeholder-val="{{true}}"><span class="pill pop" style="box-shadow: 0 3px 0 var(--hl-ledge);"><span class="ph ph-bolt-fill" aria-hidden="true"></span><span class="num ltr">{{xpText}}</span></span></sc-if>
+        </div>
+        <p class="body">{{rightBody}}</p>
+        <sc-if value="{{masteryShown}}" hint-placeholder-val="{{false}}"><span class="skill skill-shown" style="align-self: flex-start;"><span class="ph ph-seal-fill" aria-hidden="true"></span>{{c.shown}}</span></sc-if>
+      </div>
+      <div class="col">
+        <sc-if value="{{showSteps}}" hint-placeholder-val="{{false}}">
+          <ol class="lp-steps">
+            <sc-for list="{{k.steps}}" as="s" hint-placeholder-count="3"><li>{{s}}</li></sc-for>
+          </ol>
+        </sc-if>
+        <sc-if value="{{showWhy}}" hint-placeholder-val="{{false}}"><p class="lp-why">{{k.why}}</p></sc-if>
+      </div>
+      <div class="acts">
+        <sc-if value="{{showWhyBtn}}" hint-placeholder-val="{{true}}">
+          <button class="btn btn-secondary press" type="button" onClick="{{toggleWhy}}" aria-expanded="{{whyOpen}}">{{c.whyBtn}}</button>
+        </sc-if>
+        <a href="#next" class="btn btn-primary press" onClick="{{next}}" style="min-width: 160px;">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+      </div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{sh.note}}" hint-placeholder-val="{{false}}">
+    <section class="sheet sheet-note sheet-in lp-sheet" role="status">
+      <div class="col">
+        <p class="verdict-row"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.noted}}</p>
+        <p class="body">{{k.noted}}</p>
+      </div>
+      <div class="col"><p class="note">{{c.notScored}}</p></div>
+      <div class="acts"><a href="#next" class="btn btn-primary press" onClick="{{next}}" style="min-width: 160px;">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a></div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{sh.saved}}" hint-placeholder-val="{{false}}">
+    <section class="sheet sheet-saved sheet-in lp-sheet" role="status">
+      <div class="col">
+        <p class="verdict-row"><span class="ph ph-cloud-check-fill" aria-hidden="true"></span>{{c.answerSaved}}</p>
+        <p class="body">{{c.checkNoVerdict}}</p>
+      </div>
+      <div class="col"><div class="lp-dots" aria-label="{{countText}}"><sc-for list="{{dots}}" as="d" hint-placeholder-count="4"><i class="{{d}}"></i></sc-for></div></div>
+      <div class="acts"><a href="#next" class="btn btn-primary press" onClick="{{next}}" style="min-width: 160px;">{{c.nextQ}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a></div>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ov.synced}}" hint-placeholder-val="{{false}}">
+    <div class="toast lp-toast pop" role="status"><span class="ph ph-cloud-check-fill" style="color: #4CD69A;" aria-hidden="true"></span><span>{{c.synced}}</span></div>
+  </sc-if>
+  <sc-if value="{{ov.sent}}" hint-placeholder-val="{{false}}">
+    <div class="toast lp-toast pop" role="status"><span class="ph ph-send" style="color: #78E4FC;" aria-hidden="true"></span><span>{{c.reviewSent}}</span></div>
+  </sc-if>
+
+  <sc-if value="{{ov.exit}}" hint-placeholder-val="{{false}}">
+    <div class="lp-scrim" onClick="{{closeOverlay}}"></div>
+    <section class="sheet lp-over" role="dialog" aria-modal="true" aria-labelledby="lp-exit-t">
+      <div class="grab"></div>
+      <h2 id="lp-exit-t">{{c.exitTitle}}</h2>
+      <p class="t-body ink-2">{{c.exitBody}}</p>
+      <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--line);">
+        <span class="ph ph-cloud-check-fill" style="font-size: 22px; color: var(--right-ink);" aria-hidden="true"></span>
+        <span class="t-small" style="font-weight: 700;">{{c.exitSaved}}</span>
+      </div>
+      <button class="btn btn-primary btn-lg btn-block press" type="button" onClick="{{closeOverlay}}">{{c.keepGoing}}</button>
+      <a href="#home" class="btn btn-secondary btn-block press" onClick="{{leave}}">{{c.leave}}</a>
+    </section>
+  </sc-if>
+
+  <sc-if value="{{ov.review}}" hint-placeholder-val="{{false}}">
+    <div class="lp-scrim" onClick="{{closeOverlay}}"></div>
+    <section class="sheet lp-over" role="dialog" aria-modal="true" aria-labelledby="lp-rev-t">
+      <div class="grab"></div>
+      <h2 id="lp-rev-t">{{c.reviewTitle}}</h2>
+      <p class="t-small ink-2">{{c.reviewBody}}</p>
+      <div class="lp-reasons" role="radiogroup" aria-label="{{c.reviewTitle}}">
+        <sc-for list="{{reasons}}" as="rr" hint-placeholder-count="4">
+          <button class="{{rr.cls}}" type="button" role="radio" aria-checked="{{rr.on}}" onClick="{{rr.pick}}" style="font: inherit; color: var(--ink); cursor: pointer; text-align: start;"><span class="dot" aria-hidden="true"></span><span class="t-small" style="font-weight: 600;">{{rr.label}}</span></button>
+        </sc-for>
+      </div>
+      <label class="t-small" for="lp-rev-note" style="font-weight: 700;">{{c.reviewNote}}</label>
+      <textarea id="lp-rev-note" class="lp-text" maxlength="280">{{c.reviewSample}}</textarea>
+      <span class="t-small ink-3 num" style="margin-top: -6px; text-align: end;">{{reviewCount}}</span>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-secondary press" type="button" onClick="{{closeOverlay}}" style="flex: 1;">{{c.cancel}}</button>
+        <button class="btn btn-primary press" type="button" onClick="{{sendReview}}" style="flex: 1.4;"><span class="ph ph-send" aria-hidden="true"></span>{{c.send}}</button>
+      </div>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","tryfirst","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","right","why","also","confAsk","confWrong","list","noted","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+/* Slice 2 lesson player: every step type, its feedback and the sheets that sit over a step.
+   Props: kind (step type), state (preset to review), mode (lesson, skill check, mastery round, guest), overlay. */
+const C = {
+  en: {
+    exit: 'Leave lesson', progress: 'Lesson progress', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', example: 'Example',
+    soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
+    check: 'Check', cont: 'Continue', retry: 'Try again', hint: 'Hint', reveal: 'Show the answer', whyBtn: 'Why?', nextQ: 'Next question',
+    wrongTitle: 'Not quite', right: 'Right', also: 'Also works', revealed: 'The answer, step by step', noted: 'Noted',
+    tryOf: (n) => 'Try ' + n + ' of 3', hintOf: (n) => 'Hint ' + n + ' of 2', kept: 'Your first answer is kept.',
+    sure: 'How sure are you?', conf: ['Guessing', 'Fairly sure', 'Sure'], confHelp: 'Pick how sure you are, then Check.',
+    confSure: 'You were sure, so this one comes first in your review.',
+    reviewLink: 'Think your answer works too? Ask for a review',
+    saving: 'Saving', saved: 'Saved', offline: 'Offline',
+    offlineBanner: "You're offline. Answers are kept on this device and sync when you're back.",
+    synced: "You're back online. Every answer is synced.",
+    guestBanner: "You're trying a sample lesson. Sign up at the end to keep your progress.",
+    resumeBanner: 'Welcome back. You left off at this step.', restart: 'Start over',
+    mockAgain: 'Show the example again', anyOk: 'Any answer is fine', notScored: 'This one is not scored. It sets up what comes next.',
+    answerSaved: 'Answer saved', checkNoVerdict: "No right or wrong during a skill check. You'll see each skill's result at the end.",
+    toPlace: 'Fields to place', sortHelp: 'Tap a field, then tap a group.', sortHelpSel: (x) => 'Now tap the group for “' + x + '”.', dropHere: 'Put it here',
+    matchLeft: 'Field', matchRight: 'Used for', livePreview: 'Live preview',
+    up: (x) => 'Move up: ' + x, down: (x) => 'Move down: ' + x,
+    spotList: 'Use a list instead', spotTap: 'Tap on the screen instead', spotRight: 'Here', spotWrong: 'Not here',
+    masteryMiss: 'This skill comes back once more, with a new example.', shown: 'Shown · أثبتّ',
+    checkTag: 'Skill check · Question 2 of 4', masteryTag: 'Mastery round · Skill 1 of 2', guestTag: 'Sample lesson',
+    exitTitle: 'Leave this lesson?', exitBody: "You can come back any time. You'll pick up at this step.", exitSaved: 'Your answers are saved', keepGoing: 'Keep learning', leave: 'Leave lesson',
+    reviewTitle: 'Ask for a review', reviewBody: 'Tell us what is wrong with this question. A person on the team reads every request and replies in your notifications.',
+    reasons: ['My answer also works', 'The question is unclear', 'Something on the screen is broken', 'Something else'],
+    reviewNote: 'Add a short note (optional)', reviewSample: "'Notes' is what our delivery app uses, and drivers read it.", cancel: 'Cancel', send: 'Send',
+    reviewSent: "Sent. We'll let you know what we decide."
+  },
+  ar: {
+    exit: 'الخروج من الدرس', progress: 'تقدّم الدرس', lessonName: 'Forms That Flow · الدرس 1 · كل حقل له تكلفة', example: 'مثال',
+    soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
+    check: 'تحقّق', cont: 'متابعة', retry: 'حاول مرة أخرى', hint: 'تلميح', reveal: 'اعرض الإجابة', whyBtn: 'لماذا؟', nextQ: 'السؤال التالي',
+    wrongTitle: 'ليس تمامًا', right: 'صحيح', also: 'تصلح أيضًا', revealed: 'الإجابة خطوة بخطوة', noted: 'سجّلنا توقّعك',
+    tryOf: (n) => 'المحاولة ' + n + ' من 3', hintOf: (n) => 'تلميح ' + n + ' من 2', kept: 'نحتفظ بإجابتك الأولى.',
+    sure: 'ما مدى تأكدك؟', conf: ['أخمّن', 'متأكد نوعًا ما', 'متأكد'], confHelp: 'اختر مدى تأكدك، ثم اضغط «تحقّق».',
+    confSure: 'كنت متأكدًا، لذا يأتي هذا السؤال أولًا في مراجعتك.',
+    reviewLink: 'تظن أن إجابتك تصلح أيضًا؟ اطلب مراجعة',
+    saving: 'جارٍ الحفظ', saved: 'محفوظ', offline: 'بلا اتصال',
+    offlineBanner: 'أنت غير متصل. نحفظ إجاباتك على هذا الجهاز، وتُزامَن حين يعود الاتصال.',
+    synced: 'عاد الاتصال. تمت مزامنة كل إجاباتك.',
+    guestBanner: 'أنت تجرّب درسًا نموذجيًا. سجّل في النهاية لتحتفظ بتقدّمك.',
+    resumeBanner: 'أهلًا بعودتك. توقّفت عند هذه الخطوة.', restart: 'ابدأ من جديد',
+    mockAgain: 'اعرض المثال مرة أخرى', anyOk: 'أي إجابة مقبولة', notScored: 'لا تُحسب درجة لهذا السؤال. إنه يمهّد لما بعده.',
+    answerSaved: 'حُفظت إجابتك', checkNoVerdict: 'لا نقول صح أو خطأ أثناء اختبار المهارة. سترى نتيجة كل مهارة في النهاية.',
+    toPlace: 'حقول للتصنيف', sortHelp: 'اضغط حقلًا، ثم اضغط مجموعة.', sortHelpSel: (x) => 'الآن اضغط المجموعة المناسبة لـ«' + x + '».', dropHere: 'ضعه هنا',
+    matchLeft: 'الحقل', matchRight: 'يُستخدم في', livePreview: 'معاينة مباشرة',
+    up: (x) => 'انقل للأعلى: ' + x, down: (x) => 'انقل للأسفل: ' + x,
+    spotList: 'استخدم قائمة بدلًا من ذلك', spotTap: 'اضغط على الشاشة بدلًا من ذلك', spotRight: 'هنا', spotWrong: 'ليس هنا',
+    masteryMiss: 'ستعود هذه المهارة مرة أخرى، بمثال جديد.', shown: 'أثبتّ · Shown',
+    checkTag: 'اختبار المهارة · السؤال 2 من 4', masteryTag: 'جولة الإتقان · المهارة 1 من 2', guestTag: 'درس نموذجي',
+    exitTitle: 'هل تريد الخروج من الدرس؟', exitBody: 'يمكنك العودة في أي وقت، وستكمل من هذه الخطوة.', exitSaved: 'إجاباتك محفوظة', keepGoing: 'تابع التعلّم', leave: 'اخرج من الدرس',
+    reviewTitle: 'اطلب مراجعة', reviewBody: 'أخبرنا ما المشكلة في هذا السؤال. يقرأ شخص من الفريق كل طلب، ويردّ عليك في الإشعارات.',
+    reasons: ['إجابتي تصلح أيضًا', 'السؤال غير واضح', 'شيء في الشاشة لا يعمل', 'سبب آخر'],
+    reviewNote: 'أضف ملاحظة قصيرة (اختياري)', reviewSample: 'تطبيق التوصيل الذي نعمل به يستخدم «ملاحظات»، والسائقون يقرؤونها.', cancel: 'إلغاء', send: 'أرسل',
+    reviewSent: 'أُرسل طلبك. سنخبرك بما نقرّره.'
+  }
+};
+/* Example-product copy (kept in the example's own voice) */
+const X = {
+  en: { lunchCap: 'Example · Lunch To Go', lunchMark: 'L', lunchBrand: 'Lunch To Go', lunchTitle: 'Delivery details', addr: 'Delivery address', phone: 'Phone for the driver', placeOrder: 'Place order', checkout: 'Checkout',
+    gymCap: "Example · Hana's Gym", gymMark: 'H', gymBrand: "HANA'S GYM", joinTitle: 'Become a member', emailLabel: 'Email (optional)', emailErr: 'Email is required.', joinBtn: 'Join now', welcome: 'Welcome to the gym, Hana!',
+    dish: 'Chicken shawarma bowl', price: 'EGP 145', time: '35 min', ingr: 'Chicken, rice, garlic sauce, sesame', allergen: 'Contains sesame', addBtn: 'Add to order',
+    addrVal: 'Building 12, Street 9, Maadi', phoneVal: '⁦010 1234 5678⁩', phoneErr: 'Invalid phone number', noteLbl: 'Note for the driver (optional)', noteVal: 'Gate 2, 4th floor' },
+  ar: { lunchCap: 'مثال · غداء سريع', lunchMark: 'غ', lunchBrand: 'غداء سريع', lunchTitle: 'تفاصيل التوصيل', addr: 'عنوان التوصيل', phone: 'رقم هاتف للسائق', placeOrder: 'أكّد الطلب', checkout: 'الدفع',
+    gymCap: 'مثال · نادي هناء', gymMark: 'ه', gymBrand: 'نادي هناء', joinTitle: 'اشترك في النادي', emailLabel: 'البريد الإلكتروني (اختياري)', emailErr: 'البريد الإلكتروني إلزامي.', joinBtn: 'اشترك الآن', welcome: 'أهلًا بك في النادي يا هناء!',
+    dish: 'طبق شاورما دجاج', price: '145 ج.م', time: '35 دقيقة', ingr: 'دجاج، أرز، صلصة ثوم، سمسم', allergen: 'يحتوي على سمسم', addBtn: 'أضف إلى الطلب',
+    addrVal: 'مبنى 12، شارع 9، المعادي', phoneVal: '⁦010 1234 5678⁩', phoneErr: 'رقم الهاتف غير صحيح', noteLbl: 'ملاحظة للسائق (اختياري)', noteVal: 'البوابة 2، الطابق الرابع' }
+};
+/* Step content. Lunch To Go and Hana's Gym follow the P01 fixtures; fix comes from P01-U01-L02 S05. */
+const K = {
+  predict: { step: 2, ctx: 'gym', variant: 'now', conf: true, answer: 2,
+    en: { over: 'Predict · Step 2', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
+      scenario: "Hana's gym now asks for her date of birth and national ID on the free-trial form.",
+      question: 'Compared with a form that asks only for name and mobile, how many people will finish this one?',
+      opts: ['More: it looks more official', 'About the same: it is only two fields', 'Fewer: the fields are personal and unexplained'],
+      miscon: 'Two fields take little time, but a personal question with no reason costs trust. People start to wonder what the data is for, and some leave.',
+      hints: ['Think about how Hana feels when a free trial asks for her national ID.', 'Does anything on the form say why the gym needs it?'],
+      correct: 'Fewer finish. A personal field with no reason costs trust, not only time.',
+      why: "Every field costs time. A personal question the task doesn't explain also costs trust, and people start to wonder what the data is really for.",
+      steps: ['Count the cost in time: two short fields, a few seconds.', 'Count the cost in trust: a national ID for a free trial, with no reason given.', 'Trust is what makes people stop. Fewer people finish.'] },
+    ar: { over: 'توقّع · الخطوة 2', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
+      scenario: 'أصبح نادي هناء يطلب تاريخ الميلاد والرقم القومي في نموذج التجربة المجانية.',
+      question: 'مقارنةً بنموذج يطلب الاسم والموبايل فقط، كم شخصًا سيُكمل هذا النموذج؟',
+      opts: ['عدد أكبر: يبدو النموذج رسميًا أكثر', 'العدد نفسه تقريبًا: إنهما حقلان فقط', 'عدد أقل: الحقلان شخصيّان بلا سبب واضح'],
+      miscon: 'الحقلان لا يأخذان وقتًا كثيرًا، لكن السؤال الشخصي بلا سبب يكلّف الثقة. فيتساءل الناس عن الغرض من بياناتهم، ويغادر بعضهم.',
+      hints: ['فكّر في شعور هناء حين تطلب منها تجربة مجانية رقمها القومي.', 'هل يوضّح النموذج لماذا يحتاج النادي هذا الرقم؟'],
+      correct: 'عدد أقل. الحقل الشخصي بلا سبب يكلّف الثقة، لا الوقت فقط.',
+      why: 'كل حقل يكلّف وقتًا. والسؤال الشخصي الذي لا تشرحه المهمة يكلّف الثقة أيضًا، فيبدأ الناس في التساؤل عن الغرض الحقيقي من بياناتهم.',
+      steps: ['احسب التكلفة بالوقت: حقلان قصيران، بضع ثوانٍ.', 'احسب التكلفة بالثقة: رقم قومي لتجربة مجانية، بلا سبب.', 'الثقة هي ما يوقف الناس. فيُكمل عدد أقل.'] } },
+  tryfirst: { step: 1, ctx: 'gym', variant: 'full', anyOk: true,
+    en: { over: 'Try first · Step 1', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
+      scenario: "Hana taps 'Try it free' during her lunch break. The gym's trial form has 7 fields.",
+      question: 'How many of these fields do you think the gym needs today?',
+      opts: ['All 7', 'About 5', 'About 3', 'Just 2'],
+      noted: "Keep your guess in mind. By the end of this lesson you'll see that the gym needs just 2 today: her name and mobile number." },
+    ar: { over: 'جرّب أولًا · الخطوة 1', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
+      scenario: 'تضغط هناء «جرّبه مجانًا» في استراحة الغداء. في نموذج التجربة 7 حقول.',
+      question: 'كم حقلًا من هذه تظن أن النادي يحتاجه اليوم؟',
+      opts: ['كلها (7)', 'نحو 5', 'نحو 3', 'حقلان فقط'],
+      noted: 'احتفظ بتوقّعك في ذهنك. في نهاية الدرس سترى أن النادي يحتاج اليوم حقلين فقط: الاسم ورقم الموبايل.' } },
+  words: { step: 5, ctx: 'words', answer: 1, also: 3,
+    en: { over: 'Words · Step 5', frame: 'Example · Lunch To Go checkout', who: 'Driver · Example',
+      scenario: "Lunch To Go drivers keep calling customers: 'Which gate? Which floor?' Checkout has a free text field, but people leave it empty.",
+      question: 'Which label gets people to write what the driver needs?',
+      opts: ['Notes', 'Note for the driver (optional)', 'Additional information', 'Directions for the driver (optional)'],
+      miscon: "'Notes' doesn't say who will read it, so people skip it or write order changes the driver never sees. Name the reader.",
+      hints: ['Who reads this field, and when?', 'A label that names the reader tells people what to write.'],
+      correct: "Name the reader, and say it's optional.",
+      alsoText: "This works too: it names the reader and says it's optional. 'Note for the driver' is a little more familiar, so people spot it faster.",
+      why: "People fill a field when they know who reads it. 'For the driver' tells them to write the gate and the floor; '(optional)' tells them they can skip it.",
+      steps: ['Ask who reads the field: the driver.', 'Ask what the driver needs: the gate, the floor, a landmark.', 'Name the reader in the label, and mark it optional, because many orders need no note. That is B.'] },
+    ar: { over: 'الكلمات · الخطوة 5', frame: 'مثال · صفحة الدفع في غداء سريع', who: 'السائق · مثال',
+      scenario: 'يتصل سائقو «غداء سريع» بالعملاء كثيرًا: «أي بوابة؟ أي طابق؟». في صفحة الدفع حقل نصي حر، لكن الناس يتركونه فارغًا.',
+      question: 'أي تسمية تجعل الناس يكتبون ما يحتاجه السائق؟',
+      opts: ['ملاحظات', 'ملاحظة للسائق (اختياري)', 'معلومات إضافية', 'إرشادات للسائق (اختياري)'],
+      miscon: 'كلمة «ملاحظات» لا تقول مَن سيقرأ، فيتركها الناس أو يكتبون فيها تعديلات على الطلب لا يراها السائق. سمِّ القارئ.',
+      hints: ['مَن يقرأ هذا الحقل، ومتى؟', 'التسمية التي تذكر القارئ تخبر الناس بما يكتبون.'],
+      correct: 'سمِّ القارئ، ووضّح أن الحقل اختياري.',
+      alsoText: 'هذه تصلح أيضًا: تذكر القارئ وتوضّح أن الحقل اختياري. لكن «ملاحظة للسائق» مألوفة أكثر قليلًا، فيلاحظها الناس أسرع.',
+      why: 'يملأ الناس الحقل حين يعرفون مَن سيقرؤه. «للسائق» تخبرهم أن يكتبوا البوابة والطابق، و«اختياري» تخبرهم أن بإمكانهم تخطّيه.',
+      steps: ['اسأل: مَن يقرأ الحقل؟ السائق.', 'اسأل: ماذا يحتاج السائق؟ البوابة والطابق وعلامة مميّزة.', 'اذكر القارئ في التسمية، وضع «اختياري» لأن طلبات كثيرة لا تحتاج ملاحظة. هذه هي «ب».'] } },
+  fix: { step: 6, ctx: 'fix', answer: 2, conf: true,
+    en: { over: 'Fix · Step 6', frame: "Example · Hana's Gym membership form", who: 'Hana · Example',
+      scenario: "Hana leaves \"Email (optional)\" empty and presses Join now. The form stops her. The gym sends everything by text message; it never uses the email.",
+      question: 'Which fix should ship?',
+      opts: ['Change the label to "Email *"', 'Keep both; the error tells her what to do', 'Fix the check, so an empty email goes through'],
+      miscon: "Now the label matches the check, but the gym never uses the email. You'd be asking for a field it doesn't need. Fix the check instead.",
+      hints: ['The label and the check disagree. Which one matches what the gym needs?', 'The gym never uses the email. Should an empty email stop her, then?'],
+      correct: "Decide what's needed, then make both agree.",
+      why: 'This often happens when design and development set the required fields separately. Decide once, from the task, and write it in one place in the spec.',
+      steps: ['The label says optional; the check says required. One of them is wrong.', 'The gym never uses the email, so the label is right.', 'Fix the check, so an empty email goes through.'] },
+    ar: { over: 'أصلِح · الخطوة 6', frame: 'مثال · نموذج اشتراك نادي هناء', who: 'هناء · مثال',
+      scenario: 'تترك هناء «البريد الإلكتروني (اختياري)» فارغًا وتضغط «اشترك الآن». فيوقفها النموذج. والنادي يرسل كل شيء برسائل نصية؛ ولا يستخدم البريد أبدًا.',
+      question: 'أي إصلاح يجب أن يُطلق؟',
+      opts: ['غيّر التسمية إلى «البريد الإلكتروني *»', 'أبقِ الاثنين؛ فرسالة الخطأ تخبرها بما تفعل', 'أصلِح التحقق، ليمرّ البريد الفارغ'],
+      miscon: 'الآن تتّفق التسمية مع التحقق، لكن النادي لا يستخدم البريد أبدًا. فأنت تطلب حقلًا لا يحتاجه. أصلِح التحقق بدلًا من ذلك.',
+      hints: ['التسمية والتحقّق لا يتّفقان. أيهما يطابق ما يحتاجه النادي؟', 'النادي لا يستخدم البريد الإلكتروني أبدًا. فهل يجب أن يوقفها بريد فارغ؟'],
+      correct: 'قرّر ما تحتاجه، ثم اجعل الاثنين يتّفقان.',
+      why: 'يحدث هذا كثيرًا حين يحدّد التصميم والتطوير الحقول الإلزامية كلٌّ على حدة. قرّر مرة واحدة، بناءً على المهمة، واكتبه في مكان واحد في المواصفات.',
+      steps: ['التسمية تقول اختياري، والتحقق يقول إلزامي. أحدهما خطأ.', 'النادي لا يستخدم البريد أبدًا، إذن التسمية صحيحة.', 'أصلِح التحقق ليمرّ البريد الفارغ.'] } },
+  reason: { step: 4, ctx: 'gymStep', answer: 1,
+    en: { over: 'Choose, then why · Step 4', frame: "Example · Hana's Gym sign-up", who: 'Hana · Example',
+      scenario: 'Hana runs a small gym. Many people leave her sign-up form before they finish.',
+      question: "Which field can go without hurting Hana's business?", mainKey: 'C', mainLabel: 'Fax number',
+      reasonQ: 'Right. Now, why is the fax number the first to go?',
+      opts: ["It's the longest field to fill in", "Nobody uses the answer, so it's pure cost", 'Fax numbers are hard to type on a phone'],
+      miscon: 'Length and typing matter less than use. Even a short, easy field is a cost if nobody ever reads the answer.',
+      hints: ['Think about what the gym does with each answer after sign-up.', 'A field earns its place by being used.'],
+      correct: 'Pure cost goes first.',
+      why: 'Every field costs effort. A field nobody uses is pure cost, so it is the first to go.',
+      steps: ['List what the gym does with each answer.', 'The fax number has no use at all.', "So it's pure cost, and that is why it goes first."] },
+    ar: { over: 'اختر، ثم لماذا · الخطوة 4', frame: 'مثال · نموذج تسجيل نادي هناء', who: 'هناء · مثال',
+      scenario: 'تدير هناء ناديًا رياضيًا صغيرًا. كثير من الناس يتركون نموذج التسجيل قبل إكماله.',
+      question: 'أي حقل يمكن حذفه دون أن يضر عمل هناء؟', mainKey: 'ج', mainLabel: 'رقم الفاكس',
+      reasonQ: 'صحيح. والآن: لماذا يُحذف رقم الفاكس أولًا؟',
+      opts: ['لأنه أطول حقل في الكتابة', 'لأن أحدًا لا يستخدم الإجابة، فهو تكلفة بلا فائدة', 'لأن كتابة رقم الفاكس صعبة على الموبايل'],
+      miscon: 'الطول وصعوبة الكتابة أقل أهمية من الاستخدام. حتى الحقل القصير السهل تكلفة إذا لم يقرأ أحد إجابته.',
+      hints: ['فكّر: ماذا يفعل النادي بكل إجابة بعد التسجيل؟', 'الحقل يستحق مكانه حين يُستخدم.'],
+      correct: 'التكلفة بلا فائدة تُحذف أولًا.',
+      why: 'كل حقل يكلّف جهدًا. والحقل الذي لا يستخدمه أحد تكلفة بلا فائدة، لذا يُحذف أولًا.',
+      steps: ['اكتب ماذا يفعل النادي بكل إجابة.', 'رقم الفاكس لا يُستخدم أبدًا.', 'إذن هو تكلفة بلا فائدة، ولهذا يُحذف أولًا.'] } },
+  sort: { step: 7, ctx: 'gymDesk', variant: 'full',
+    items: ['name', 'mobile', 'nid', 'dob', 'fax'], buckets: ['trial', 'join', 'never'],
+    answer: { name: 'trial', mobile: 'trial', nid: 'join', dob: 'join', fax: 'never' },
+    en: { over: 'Sort · Step 7', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
+      scenario: 'Hana is signing up for the free trial. Some details are needed only if she joins later.',
+      question: 'Put each field where the gym should ask for it.',
+      items: { name: 'Full name', mobile: 'Mobile number', nid: 'National ID', dob: 'Date of birth', fax: 'Fax number' },
+      buckets: { trial: 'Trial form', join: 'When she joins', never: "Don't ask" },
+      miscon: 'The gym needs her date of birth only for the membership contract. On the trial form, every visitor answers it for nothing. Move it to when she joins.',
+      hints: ['For each field, ask: does the free trial need it today?', 'The membership contract needs the national ID and the date of birth.'],
+      correct: "Ask at the moment it's needed.",
+      why: 'Moving a question to the right moment loses nothing. The people who join answer it then, and now they have a reason to.',
+      steps: ['The trial needs only a name and a way to reach her.', 'The contract needs the national ID and date of birth, so ask when she joins.', 'Nobody uses a fax number, so don\'t ask.'] },
+    ar: { over: 'صنّف · الخطوة 7', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
+      scenario: 'تسجّل هناء في التجربة المجانية. بعض البيانات لا تُحتاج إلا إذا اشتركت لاحقًا.',
+      question: 'ضع كل حقل حيث يجب أن يسأل عنه النادي.',
+      items: { name: 'الاسم الكامل', mobile: 'رقم الموبايل', nid: 'الرقم القومي', dob: 'تاريخ الميلاد', fax: 'رقم الفاكس' },
+      buckets: { trial: 'نموذج التجربة', join: 'عند الاشتراك', never: 'لا تسأل' },
+      miscon: 'يحتاج النادي تاريخ ميلاد هناء لعقد الاشتراك فقط. وفي نموذج التجربة يجيب عنه كل زائر بلا فائدة. انقله إلى وقت الاشتراك.',
+      hints: ['اسأل عن كل حقل: هل تحتاجه التجربة المجانية اليوم؟', 'عقد الاشتراك يحتاج الرقم القومي وتاريخ الميلاد.'],
+      correct: 'اسأل في اللحظة التي تحتاج فيها الإجابة.',
+      why: 'نقل السؤال إلى وقته المناسب لا يُفقد شيئًا. فمن يشترك يجيب عنه حينها، ويكون لديه سبب للإجابة.',
+      steps: ['التجربة تحتاج الاسم ووسيلة للتواصل فقط.', 'العقد يحتاج الرقم القومي وتاريخ الميلاد، فاسأل عند الاشتراك.', 'لا أحد يستخدم رقم الفاكس، فلا تسأل عنه.'] } },
+  order: { step: 3, ctx: 'order', items: ['add', 'photo', 'ingr', 'price'], answers: [['photo', 'price', 'ingr', 'add'], ['photo', 'ingr', 'price', 'add']],
+    en: { over: 'Order · Step 3', frame: 'Example · Lunch To Go dish page', who: 'Mona · Example',
+      scenario: 'Mona orders lunch for the office. One colleague is allergic to sesame.',
+      question: 'Put the dish page in an order that lets Mona decide before she adds the dish.',
+      items: { photo: 'Dish photo and name', price: 'Price and delivery time', ingr: 'Ingredients and allergens', add: 'Add to order button' },
+      miscon: 'Mona reaches the button before she can check for sesame. Put the facts she decides with above the action.',
+      hints: ['What does Mona need to know before she can add this dish?', 'The button is the last step: everything she decides with comes first.'],
+      correct: 'Facts first, then the action.',
+      why: "People decide with the price, the time and the allergens. When these come before the button, Mona doesn't have to scroll back up, or order and hope.",
+      steps: ['Start with what the dish is: the photo and name.', 'Then the facts Mona decides with: price, time, allergens.', 'The button comes last, once she has decided.'] },
+    ar: { over: 'رتّب · الخطوة 3', frame: 'مثال · صفحة طبق في غداء سريع', who: 'منى · مثال',
+      scenario: 'تطلب منى الغداء للمكتب. وأحد زملائها لديه حساسية من السمسم.',
+      question: 'رتّب صفحة الطبق بحيث تقرّر منى قبل أن تضيفه.',
+      items: { photo: 'صورة الطبق واسمه', price: 'السعر ووقت التوصيل', ingr: 'المكوّنات ومسبّبات الحساسية', add: 'زر «أضف إلى الطلب»' },
+      miscon: 'تصل منى إلى الزر قبل أن تتأكد من وجود السمسم. ضع المعلومات التي تقرّر بها فوق الإجراء.',
+      hints: ['ماذا تحتاج منى أن تعرف قبل أن تضيف هذا الطبق؟', 'الزر هو الخطوة الأخيرة، وكل ما تقرّر به يأتي قبله.'],
+      correct: 'المعلومات أولًا، ثم الإجراء.',
+      why: 'يقرّر الناس بالسعر والوقت ومسبّبات الحساسية. وحين تأتي هذه قبل الزر، لا تحتاج منى إلى الرجوع للأعلى، أو الطلب على أمل.',
+      steps: ['ابدأ بما هو الطبق: الصورة والاسم.', 'ثم المعلومات التي تقرّر بها منى: السعر والوقت والحساسية.', 'الزر في النهاية، بعد أن تقرّر.'] } },
+  match: { step: 8, left: ['name', 'email', 'mobile', 'nid'], right: ['schedule', 'contract', 'greet', 'urgent'],
+    answer: { name: 'greet', email: 'schedule', mobile: 'urgent', nid: 'contract' },
+    en: { over: 'Match · Step 8', frame: "Example · Hana's Gym", who: 'Hana · Example',
+      scenario: 'Hana has joined. The membership form asks for four details, and each one should have a job.',
+      question: 'Pair each field with what the gym uses it for.',
+      left: { name: 'Full name', email: 'Email', mobile: 'Mobile number', nid: 'National ID' },
+      right: { schedule: 'Sending the weekly class schedule', contract: 'The membership contract', greet: 'Greeting her at the front desk', urgent: 'Texting her about urgent class changes' },
+      miscon: 'Urgent changes have to reach Hana in minutes, so the gym texts her mobile. Email suits the weekly schedule she reads at home.',
+      hints: ['Which detail does the gym need fast, and which can wait until she reads it at home?', 'A text message reaches her in minutes; an email waits until she checks it.'],
+      correct: 'Every field has a job.',
+      why: "When each field has a clear use, the form feels fair and Hana can see why it asks. A field you can't pair with a job is a field to cut.",
+      steps: ['Name is for the welcome at the desk.', 'Email is for the weekly schedule; the mobile is for urgent changes.', 'The national ID is for the contract.'] },
+    ar: { over: 'صِل · الخطوة 8', frame: 'مثال · نادي هناء', who: 'هناء · مثال',
+      scenario: 'اشتركت هناء. يطلب نموذج الاشتراك أربع معلومات، ولكل واحدة عمل.',
+      question: 'صِل كل حقل بما يستخدمه النادي فيه.',
+      left: { name: 'الاسم الكامل', email: 'البريد الإلكتروني', mobile: 'رقم الموبايل', nid: 'الرقم القومي' },
+      right: { schedule: 'إرسال جدول الحصص الأسبوعي', contract: 'عقد الاشتراك', greet: 'الترحيب بها في الاستقبال', urgent: 'إبلاغها برسالة بتغيير عاجل في الحصص' },
+      miscon: 'التغييرات العاجلة يجب أن تصل إلى هناء خلال دقائق، لذا يرسلها النادي برسالة إلى الموبايل. والبريد يناسب الجدول الأسبوعي الذي تقرؤه في البيت.',
+      hints: ['أي معلومة يحتاجها النادي بسرعة، وأيها يمكن أن ينتظر حتى تقرأه في البيت؟', 'الرسالة النصية تصلها خلال دقائق، أما البريد فينتظر حتى تفتحه.'],
+      correct: 'لكل حقل عمل.',
+      why: 'حين يكون لكل حقل استخدام واضح، يبدو النموذج عادلًا وترى هناء لماذا يسأل. والحقل الذي لا تجد له عملًا حقل يجب حذفه.',
+      steps: ['الاسم للترحيب في الاستقبال.', 'البريد لجدول الحصص، والموبايل للتغييرات العاجلة.', 'الرقم القومي لعقد الاشتراك.'] } },
+  spot: { step: 9, ctx: 'spot', regions: ['addr', 'phone', 'note', 'btn'], answer: 'phone',
+    en: { over: 'Spot · Step 9', frame: 'Example · Lunch To Go checkout', who: 'Mona · Example',
+      scenario: 'Mona types her mobile number the way it is printed on her card: ⁦010 1234 5678⁩. She can\'t place the order.',
+      question: 'Tap the part of the checkout that stops Mona.',
+      regions: { addr: 'Delivery address', phone: 'Phone for the driver', note: 'Note for the driver', btn: 'Place order button' },
+      miscon: "The button works. It's the phone field that refuses Mona's number because of the spaces, and its error doesn't say so.",
+      hints: ['Look for the place where Mona did nothing wrong, but the form says she did.', 'People write phone numbers with spaces. Does this form accept that?'],
+      correct: 'The phone field: it rejects a number written the normal way.',
+      why: 'People write numbers in groups so they can read them. The form should accept spaces and dashes and tidy them itself, instead of blaming Mona.',
+      steps: ["Mona's address and note are filled in, and the button is ready.", 'The phone field shows an error for a number she typed correctly.', 'The fault is the phone check: it should accept spaces.'] },
+    ar: { over: 'حدّد · الخطوة 9', frame: 'مثال · صفحة الدفع في غداء سريع', who: 'منى · مثال',
+      scenario: 'تكتب منى رقم موبايلها كما هو مطبوع في بطاقتها: ⁦010 1234 5678⁩. لكنها لا تستطيع إتمام الطلب.',
+      question: 'اضغط على الجزء الذي يوقف منى في صفحة الدفع.',
+      regions: { addr: 'عنوان التوصيل', phone: 'رقم هاتف للسائق', note: 'ملاحظة للسائق', btn: 'زر «أكّد الطلب»' },
+      miscon: 'الزر يعمل. حقل الهاتف هو الذي يرفض رقم منى بسبب المسافات، ورسالة الخطأ لا تقول ذلك.',
+      hints: ['ابحث عن مكان لم تخطئ فيه منى، لكن النموذج يقول إنها أخطأت.', 'يكتب الناس أرقام الهواتف بمسافات. هل يقبل هذا النموذج ذلك؟'],
+      correct: 'حقل الهاتف: يرفض رقمًا مكتوبًا بالطريقة المعتادة.',
+      why: 'يكتب الناس الأرقام في مجموعات ليسهل قراءتها. على النموذج أن يقبل المسافات والشَرطات وينظّمها بنفسه، بدلًا من لوم منى.',
+      steps: ['العنوان والملاحظة مكتوبان، والزر جاهز.', 'حقل الهاتف يُظهر خطأً في رقم كتبته منى بشكل صحيح.', 'الخلل في تحقّق الهاتف: يجب أن يقبل المسافات.'] } }
+};
+const KEYS = { en: ['A', 'B', 'C', 'D'], ar: ['أ', 'ب', 'ج', 'د'] };
+const CHOICE_KINDS = ['predict', 'tryfirst', 'words', 'fix', 'reason'];
+
+function preset(kind, st) {
+  const base = { phase: 'idle', picked: null, tries: 0, hints: 0, conf: null, tried: [], revealed: false, also: false, why: false,
+    place: {}, sel: null, order: null, moved: null, pairs: {}, selL: null, list: false, mockOpen: false };
+  const s = Object.assign({}, base);
+  const wrongish = ['wrong', 'hint2', 'reveal', 'confWrong'];
+  if (CHOICE_KINDS.indexOf(kind) >= 0) {
+    const ans = K[kind].answer;
+    const wrongPick = kind === 'words' ? 0 : (kind === 'reason' ? 0 : (kind === 'fix' ? 0 : 1));
+    if (st === 'select') Object.assign(s, { phase: 'selected', picked: kind === 'tryfirst' ? 2 : wrongPick, conf: 1 });
+    if (st === 'confAsk') Object.assign(s, { phase: 'selected', picked: wrongPick, conf: null });
+    if (st === 'noted') Object.assign(s, { phase: 'noted', picked: 2 });
+    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', picked: wrongPick, tries: 1, hints: 1, conf: st === 'confWrong' ? 2 : 1, tried: [wrongPick] });
+    if (st === 'hint2') Object.assign(s, { tries: 2, hints: 2, tried: [wrongPick, wrongPick === 0 ? 2 : 0] });
+    if (st === 'reveal') Object.assign(s, { phase: 'right', picked: ans, tries: 3, hints: 2, revealed: true, tried: [0, 2] });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', picked: ans, tries: 1, hints: 1, conf: 1, tried: [wrongPick], why: st === 'why' });
+    if (st === 'also') Object.assign(s, { phase: 'right', picked: K[kind].also != null ? K[kind].also : ans, also: K[kind].also != null, tries: 0, conf: 1 });
+    if (st === 'saved') Object.assign(s, { phase: 'saved', picked: wrongPick });
+  }
+  if (kind === 'sort') {
+    const a = K.sort.answer;
+    if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', place: { name: 'trial', mobile: 'trial', fax: 'never' }, sel: 'nid' });
+    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', place: Object.assign({}, a, { dob: 'trial' }), tries: 1, hints: 1 });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', place: Object.assign({}, a), tries: 1, hints: 1, why: st === 'why' });
+    if (st === 'saved') Object.assign(s, { phase: 'saved', place: Object.assign({}, a, { dob: 'trial' }) });
+  }
+  if (kind === 'order') {
+    s.order = K.order.items.slice();
+    if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', order: ['photo', 'add', 'price', 'ingr'], moved: 'photo' });
+    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', order: ['photo', 'price', 'add', 'ingr'], tries: 1, hints: 1 });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', order: K.order.answers[0].slice(), tries: 1, hints: 1, why: st === 'why' });
+    if (st === 'saved') Object.assign(s, { phase: 'saved', order: ['photo', 'price', 'add', 'ingr'] });
+  }
+  if (kind === 'match') {
+    if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', pairs: { name: 'greet', email: 'schedule' }, selL: 'mobile' });
+    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', pairs: { name: 'greet', email: 'urgent', mobile: 'schedule', nid: 'contract' }, tries: 1, hints: 1 });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', pairs: Object.assign({}, K.match.answer), tries: 1, hints: 1, why: st === 'why' });
+    if (st === 'saved') Object.assign(s, { phase: 'saved', pairs: { name: 'greet', email: 'urgent', mobile: 'schedule', nid: 'contract' } });
+  }
+  if (kind === 'spot') {
+    if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', picked: 'btn' });
+    if (st === 'list') Object.assign(s, { phase: 'selected', picked: 'btn', list: true });
+    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', picked: 'btn', tries: 1, hints: 1, tried: ['btn'] });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', picked: 'phone', tries: 1, hints: 1, tried: ['btn'], why: st === 'why' });
+    if (st === 'saved') Object.assign(s, { phase: 'saved', picked: 'btn' });
+  }
+  return s;
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({ sound: true, overlay: props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(props), this.stateName(props)));
+  }
+  kind(p) { return K[(p || this.props).kind] ? (p || this.props).kind : 'words'; }
+  stateName(p) { const m = (p || this.props).mode; const st = (p || this.props).state || 'select'; return m === 'check' && st !== 'select' && st !== 'idle' ? 'saved' : st; }
+  componentDidUpdate(prev) {
+    if (prev.kind !== this.props.kind || prev.state !== this.props.state || prev.mode !== this.props.mode || prev.overlay !== this.props.overlay) {
+      this.setState(Object.assign({ overlay: this.props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(), this.stateName())));
+    }
+  }
+  sfx(name) { if (this.state.sound && this.props.sfx) this.props.sfx(name); }
+
+  verdict() {
+    const kind = this.kind(); const s = this.state; const k = K[kind];
+    if (kind === 'sort') { const wrong = k.items.filter((i) => s.place[i] !== k.answer[i]); return { ok: wrong.length === 0, wrong }; }
+    if (kind === 'order') { const ok = k.answers.some((a) => a.join() === s.order.join()); return { ok, wrong: ok ? [] : ['add'] }; }
+    if (kind === 'match') { const wrong = k.left.filter((l) => s.pairs[l] !== k.answer[l]); return { ok: wrong.length === 0, wrong }; }
+    if (kind === 'spot') return { ok: s.picked === k.answer, wrong: [s.picked] };
+    if (s.picked === k.answer) return { ok: true };
+    if (k.also != null && s.picked === k.also) return { ok: true, also: true };
+    return { ok: false };
+  }
+  ready() {
+    const kind = this.kind(); const s = this.state; const k = K[kind];
+    if (kind === 'sort') return k.items.every((i) => s.place[i]);
+    if (kind === 'order') return true;
+    if (kind === 'match') return k.left.every((l) => s.pairs[l]);
+    return s.picked !== null;
+  }
+
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const isDesk = device === 'desktop';
+    const mode = ['check', 'mastery', 'guest'].indexOf(this.props.mode) >= 0 ? this.props.mode : 'lesson';
+    const kind = this.kind();
+    const c = C[lang]; const x = X[lang]; const spec = K[kind]; const k = spec[lang];
+    const s = this.state;
+    const nav = this.props.nav;
+    const go = (to) => (e) => { if (e) e.preventDefault(); if (nav) nav(to); };
+    const after = ['wrong', 'right', 'noted', 'saved'].indexOf(s.phase) >= 0;
+    const isChoice = CHOICE_KINDS.indexOf(kind) >= 0;
+    const isCheck = mode === 'check'; const isMastery = mode === 'mastery';
+    const ov = s.overlay;
+
+    /* header */
+    const stepNo = isCheck ? 2 : spec.step;
+    const stepMax = isCheck ? 4 : 10;
+    const save = ov === 'saving' ? { show: true, cls: 'lp-save is-saving', icon: 'ph ph-cloud-up', text: c.saving }
+      : ov === 'saved' || ov === 'synced' ? { show: true, cls: 'lp-save is-saved', icon: 'ph ph-cloud-check-fill', text: c.saved }
+      : ov === 'offline' ? { show: true, cls: 'lp-save is-offline', icon: 'ph ph-wifi-slash', text: c.offline }
+      : { show: false };
+    const modeTag = isCheck ? { show: true, cls: 'lp-mode is-check', icon: 'ph ph-seal-fill', text: c.checkTag }
+      : isMastery ? { show: true, cls: 'lp-mode is-mastery', icon: 'ph ph-target', text: c.masteryTag }
+      : mode === 'guest' && isDesk ? { show: true, cls: 'lp-mode is-guest', icon: 'ph ph-user', text: c.guestTag }
+      : { show: false };
+
+    /* example (context) */
+    const ctxKind = spec.ctx === 'gymDesk' ? (isDesk ? 'gym' : null) : spec.ctx;
+    const ctxHideAfter = !isDesk && after && isChoice && !s.mockOpen;
+    const showCtx = !!ctxKind && !(ctxHideAfter) && !(kind === 'order' && !isDesk && after) && !(!isDesk && kind === 'reason' && !s.mockOpen) && !(!isDesk && kind === 'spot' && s.list);
+    const ctx = { gym: ctxKind === 'gym', gymStep: ctxKind === 'gymStep', words: ctxKind === 'words', fix: ctxKind === 'fix', order: ctxKind === 'order', spot: ctxKind === 'spot',
+      variant: spec.variant || 'now', size: isDesk ? 'md' : 'sm', width: isDesk ? (ctxKind === 'spot' ? 420 : 400) : (ctxKind === 'spot' ? 330 : 300) };
+    if (ctxKind === 'gymStep') { ctx.width = isDesk ? 460 : 350; }
+    if (!isDesk && kind === 'tryfirst') ctx.size = 'xs';
+    const SCALE = { predict: [0.75, 212], tryfirst: [0.72, 262], words: [0.8, 226] };
+    ctx.wrap = ''; ctx.inner = '';
+    if (!isDesk && SCALE[kind]) { ctx.wrap = 'height: ' + SCALE[kind][1] + 'px; display: flex; justify-content: center; overflow: visible;'; ctx.inner = 'transform: scale(' + SCALE[kind][0] + '); transform-origin: top center;'; }
+
+    /* words: the label slot in the example shows the picked label */
+    const wordsLabel = kind === 'words' && s.picked !== null ? k.opts[s.picked] : '                ';
+    /* fix: the example shows the fix once the right answer is in */
+    const fixed = kind === 'fix' && s.phase === 'right';
+
+    /* choice options */
+    const keys = KEYS[lang];
+    const opts = isChoice ? k.opts.map((label, i) => {
+      let cls = 'choice press';
+      const picked = s.picked === i; const tried = s.tried.indexOf(i) >= 0;
+      const isAns = i === spec.answer;
+      if (s.phase === 'right' && picked && s.also) cls += ' is-right';
+      else if (s.phase === 'right' && isAns) cls += ' is-right';
+      else if (s.phase === 'wrong' && picked) cls += ' is-wrong';
+      else if (picked) cls += ' is-selected';
+      else if (tried && s.phase !== 'noted') cls += ' is-dim';
+      const locked = after || (tried && kind !== 'tryfirst');
+      return { key: keys[i], label, cls, checked: picked ? 'true' : 'false', disabled: locked ? 'true' : 'false',
+        showRight: s.phase === 'right' && ((isAns && !s.also) || (picked && s.also && !isAns)) ,
+        showAlso: false,
+        showWrong: s.phase === 'wrong' && picked,
+        pick: () => { if (!locked) { this.sfx('select-snap'); this.setState({ picked: i, phase: 'selected' }); } } };
+    }) : [];
+    if (isChoice && s.also) opts.forEach((o, i) => { if (i === s.picked) { o.showRight = false; o.showAlso = true; } });
+
+    /* sort */
+    const tray = []; let buckets = [];
+    if (kind === 'sort') {
+      const v = after ? this.verdict() : null;
+      spec.items.forEach((id) => { if (!s.place[id]) tray.push({ label: k.items[id], cls: 'lp-item press' + (s.sel === id ? ' is-selected sel-frame' : ''), pressed: s.sel === id ? 'true' : 'false',
+        pick: () => { if (!after) { this.sfx('select-snap'); this.setState({ sel: s.sel === id ? null : id, phase: 'selected' }); } } }); });
+      buckets = spec.buckets.map((b) => {
+        const items = spec.items.filter((id) => s.place[id] === b).map((id) => {
+          const wrong = v && v.wrong.indexOf(id) >= 0 && s.phase === 'wrong';
+          const right = s.phase === 'right';
+          return { label: k.items[id], right, wrong, locked: after, pressed: 'false',
+            cls: 'lp-item' + (wrong ? ' is-wrong' : right ? ' is-right' : ''),
+            pick: () => { if (!after) { const p = Object.assign({}, s.place); delete p[id]; this.sfx('ui-tap'); this.setState({ place: p, sel: id }); } } };
+        });
+        const canDrop = !after && !!s.sel;
+        return { name: k.buckets[b], items, count: items.length, canDrop, dropText: c.dropHere, dropAria: c.dropHere + ': ' + k.buckets[b],
+          cls: 'lp-bucket' + (canDrop ? ' is-target' : ''),
+          drop: () => { const p = Object.assign({}, s.place); p[s.sel] = b; this.sfx('select-snap'); this.setState({ place: p, sel: null }); } };
+      });
+    }
+    const sortHelp = s.sel ? c.sortHelpSel(k.items ? k.items[s.sel] : '') : c.sortHelp;
+
+    /* order */
+    let rows = []; let preview = [];
+    if (kind === 'order') {
+      const order = s.order || spec.items;
+      const wrongIds = s.phase === 'wrong' ? ['add'] : [];
+      rows = order.map((id, i) => {
+        const move = (d) => () => { const o = order.slice(); const j = i + d; if (j < 0 || j >= o.length) return; const t = o[i]; o[i] = o[j]; o[j] = t; this.sfx('ui-tap'); this.setState({ order: o, moved: id, phase: 'selected' }); };
+        const wrong = wrongIds.indexOf(id) >= 0; const right = s.phase === 'right';
+        return { n: i + 1, label: k.items[id], right, wrong,
+          cls: 'lp-row' + (wrong ? ' is-wrong' : right ? ' is-right' : (s.moved === id && !after ? ' is-moved' : '')),
+          upLabel: c.up(k.items[id]), downLabel: c.down(k.items[id]), upOff: i === 0, downOff: i === order.length - 1, up: move(-1), down: move(1) };
+      });
+      preview = order.map((id) => ({ photo: id === 'photo', price: id === 'price', ingr: id === 'ingr', add: id === 'add' }));
+    }
+    const ph = isDesk ? { pad: 14, gap: 12, logo: 22, small: 13, body: 15, title: 17, photo: 120, bowl: 84, bowlH: 42, btn: 36 }
+      : { pad: 8, gap: 6, logo: 14, small: 10, body: 12, title: 12, photo: 46, bowl: 40, bowlH: 20, btn: 24 };
+
+    /* match */
+    let left = []; let right = [];
+    if (kind === 'match') {
+      const pairNo = {}; let n = 0;
+      spec.left.forEach((l) => { if (s.pairs[l]) { n += 1; pairNo[l] = n; } });
+      const rightOwner = {}; Object.keys(s.pairs).forEach((l) => { rightOwner[s.pairs[l]] = l; });
+      const v = after ? this.verdict() : null;
+      left = spec.left.map((l) => {
+        const paired = !!s.pairs[l]; const wrong = v && s.phase === 'wrong' && v.wrong.indexOf(l) >= 0; const rt = s.phase === 'right';
+        return { label: k.left[l], pno: paired ? pairNo[l] : '·', pnoCls: 'lp-pno' + (paired ? '' : ' is-empty'), right: rt, wrong, locked: after,
+          pressed: s.selL === l ? 'true' : 'false',
+          cls: 'lp-tile press' + (wrong ? ' is-wrong' : rt ? ' is-right' : s.selL === l ? ' is-selected sel-frame' : paired ? ' is-paired' : ''),
+          pick: () => { if (after) return; const p = Object.assign({}, s.pairs); delete p[l]; this.sfx('select-snap'); this.setState({ selL: l, pairs: p, phase: 'selected' }); } };
+      });
+      right = spec.right.map((r) => {
+        const owner = rightOwner[r]; const paired = !!owner;
+        const wrong = paired && s.phase === 'wrong' && s.pairs[owner] !== spec.answer[owner]; const rt = s.phase === 'right';
+        return { label: k.right[r], pno: paired ? pairNo[owner] : '·', pnoCls: 'lp-pno' + (paired ? '' : ' is-empty'), locked: after, pressed: 'false',
+          cls: 'lp-tile press' + (wrong ? ' is-wrong' : rt ? ' is-right' : paired ? ' is-paired' : ''),
+          pick: () => { if (after || !s.selL) return; const p = Object.assign({}, s.pairs); Object.keys(p).forEach((l) => { if (p[l] === r) delete p[l]; }); p[s.selL] = r; this.sfx('select-snap'); this.setState({ pairs: p, selL: null }); } };
+      });
+    }
+
+    /* spot */
+    let regions = [];
+    const sp = isDesk ? { pad: 16, gap: 14, title: 18, label: 13, field: 34, btn: 40 } : { pad: 12, gap: 11, title: 15, label: 11, field: 26, btn: 32 };
+    if (kind === 'spot') {
+      const vals = { addr: x.addrVal, phone: x.phoneVal, note: x.noteVal };
+      regions = spec.regions.map((r) => {
+        const picked = s.picked === r;
+        const isRight = s.phase === 'right' && r === spec.answer; const isWrong = s.phase === 'wrong' && picked;
+        let cls = 'lp-region';
+        if (isRight) cls += ' is-right'; else if (isWrong) cls += ' is-wrong'; else if (picked && !after) cls += ' is-selected sel-frame'; else if (after) cls += ' is-dim';
+        return { cls, pressed: picked ? 'true' : 'false', aria: k.regions[r], locked: after,
+          isField: r !== 'btn', isBtn: r === 'btn', label: r === 'addr' ? x.addr : r === 'phone' ? x.phone : x.noteLbl, value: vals[r] || '',
+          err: r === 'phone', border: r === 'phone' ? '1.5px solid #B42318' : '1px solid #E9C9B2',
+          tagRight: isRight, tagWrong: isWrong,
+          pick: () => { if (!after) { this.sfx('select-snap'); this.setState({ picked: r, phase: 'selected' }); } } };
+      });
+    }
+    const spotOpts = kind === 'spot' && s.list ? spec.regions.map((r, i) => {
+      const picked = s.picked === r;
+      let cls = 'choice press';
+      if (s.phase === 'right' && r === spec.answer) cls += ' is-right'; else if (s.phase === 'wrong' && picked) cls += ' is-wrong'; else if (picked) cls += ' is-selected';
+      return { key: keys[i], label: k.regions[r], cls, checked: picked ? 'true' : 'false', disabled: after ? 'true' : 'false', showRight: s.phase === 'right' && r === spec.answer, showAlso: false, showWrong: s.phase === 'wrong' && picked,
+        pick: () => { if (!after) { this.sfx('select-snap'); this.setState({ picked: r, phase: 'selected' }); } } };
+    }) : [];
+
+    /* confidence */
+    const hasConf = !!spec.conf && !isCheck && !after;
+    const conf = c.conf.map((label, i) => ({ label, on: s.conf === i ? 'true' : 'false', cls: 'chip press' + (s.conf === i ? ' is-selected' : ''),
+      pick: () => { this.sfx('ui-toggle-on'); this.setState({ conf: i }); } }));
+    const confMissing = hasConf && s.picked !== null && s.conf === null;
+
+    /* feedback */
+    const v = this.verdict();
+    const triesShown = Math.max(1, s.tries);
+    const xp = s.revealed ? 0 : (s.tries === 0 ? 10 : 5);
+    const hints = isMastery || isCheck ? [] : k.hints ? k.hints.slice(0, s.hints).map((text, i) => ({ title: c.hintOf(i + 1), text })) : [];
+    const rightCls = 'sheet sheet-in lp-sheet ' + (s.also ? 'sheet-also' : 'sheet-right');
+
+    const check = () => {
+      if (!this.ready() || confMissing) return;
+      this.sfx('check-press');
+      if (isCheck) { this.setState({ phase: 'saved' }); return; }
+      if (kind === 'tryfirst') { this.setState({ phase: 'noted' }); return; }
+      const r = this.verdict();
+      if (r.ok) { this.sfx(r.also ? 'answer-also-works' : 'answer-right'); this.setState({ phase: 'right', also: !!r.also }); }
+      else { this.sfx('answer-wrong'); this.setState({ phase: 'wrong', tries: s.tries + 1, tried: s.tried.concat([s.picked]) }); }
+    };
+    const solved = () => {
+      if (kind === 'sort') return { place: Object.assign({}, spec.answer) };
+      if (kind === 'order') return { order: spec.answers[0].slice() };
+      if (kind === 'match') return { pairs: Object.assign({}, spec.answer) };
+      return { picked: spec.answer };
+    };
+
+    return {
+      lang, dir: lang === 'ar' ? 'rtl' : 'ltr', theme: this.props.theme === 'dark' ? 'dark' : 'light', c, k, x,
+      rootCls: 'ug lp lp-' + device, isDesk, headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
+      stepNo, stepMax, pct: Math.round(((stepNo - 1) / stepMax) * 100 + 4) + '%', countText: stepNo + '/' + stepMax,
+      save, modeTag,
+      soundIcon: s.sound ? 'ph ph-speaker-high' : 'ph ph-speaker-slash', soundLabel: s.sound ? c.soundOn : c.soundOff, soundPressed: s.sound ? 'false' : 'true',
+      toggleSound: () => { if (this.props.sfx && !s.sound) this.props.sfx('ui-toggle-on'); this.setState({ sound: !s.sound }); },
+      banner: { offline: ov === 'offline', guest: mode === 'guest' && !after && !s.bannerOff, resume: ov === 'resume' && !s.bannerOff },
+      closeBanner: (e) => { if (e) e.preventDefault(); this.setState({ bannerOff: true }); },
+      mainCls: 'lp-main' + (isDesk && (kind === 'sort' || kind === 'match') ? ' is-wide' : '') + (kind === 'order' ? ' ctx-after' : ''),
+      showCtx: showCtx && !(isDesk && (kind === 'sort' || kind === 'match')), ctx, showHana: isDesk && (ctxKind === 'gym' || ctxKind === 'gymStep'),
+      gymFont: lang === 'ar' ? "'Almarai', sans-serif" : "'Barlow', sans-serif", gymTrack: lang === 'ar' ? '0' : '0.08em',
+      wordsLabel, fixField: fixed ? '1px solid #C2C8CE' : '1.5px solid #C0262D', fixShowErr: !fixed, fixShowOk: fixed,
+      ph, preview, sp, regions,
+      mockCollapsed: !isDesk && ((after && isChoice) || kind === 'reason') && !s.mockOpen && !!ctxKind,
+      openMock: () => this.setState({ mockOpen: true }),
+      isReason: kind === 'reason', isSort: kind === 'sort', isOrder: kind === 'order', isMatch: kind === 'match', isSpot: kind === 'spot',
+      showOpts: isChoice || (kind === 'spot' && s.list), opts: kind === 'spot' ? spotOpts : opts,
+      spotSwitch: !after, spotSwitchIcon: s.list ? 'ph ph-hand-tap' : 'ph ph-list', spotSwitchText: s.list ? c.spotTap : c.spotList,
+      toggleList: () => this.setState({ list: !s.list }),
+      showTray: tray.length > 0 && !after, tray, buckets, sortHelp: after ? '' : sortHelp,
+      rows, canMove: !after, left, right,
+      showBar: !after, hasConf, conf, confCls: 'lp-conf' + (confMissing ? ' is-ask' : ''), showConfHelp: confMissing,
+      checkCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), checkText: c.check,
+      checkOff: !this.ready() || confMissing, check,
+      sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', note: s.phase === 'noted', saved: s.phase === 'saved' },
+      showTry: !isMastery, tryText: c.tryOf(triesShown),
+      showSure: s.phase === 'wrong' && s.conf === 2,
+      wrongNote: isMastery ? c.masteryMiss : c.kept,
+      hints, showFlag: !isMastery && !isCheck,
+      canHint: !isMastery && s.hints < 2 && s.tries < 3, canReveal: !isMastery && s.tries >= 2, canRetry: !isMastery, masteryMiss: isMastery,
+      rightCls, rightIcon: s.also ? 'ph ph-also-fill' : 'ph ph-check-circle-fill',
+      rightTitle: s.revealed ? c.revealed : s.also ? c.also : c.right,
+      rightBody: s.also ? k.alsoText : k.correct,
+      showXp: !s.revealed, xpText: '+' + xp + ' XP', masteryShown: isMastery,
+      showSteps: s.revealed, showWhy: s.why && !s.revealed, showWhyBtn: !s.revealed, whyOpen: s.why ? 'true' : 'false',
+      toggleWhy: () => this.setState({ why: !s.why }),
+      dots: [0, 1, 2, 3].map((i) => (i < 1 ? 'is-done' : i === 1 ? 'is-now' : '')),
+      hint: () => { this.sfx('hint-open'); this.setState({ hints: Math.min(2, s.hints + 1) }); },
+      retry: () => { this.sfx('ui-tap'); this.setState({ phase: 'idle', picked: kind === 'spot' ? null : null, sel: null, selL: null, mockOpen: false }); },
+      reveal: () => { this.sfx('reveal-answer'); this.setState(Object.assign({ phase: 'right', revealed: true, also: false }, solved())); },
+      next: go('next'),
+      ov: { exit: ov === 'exit', review: ov === 'review', synced: ov === 'synced', sent: ov === 'sent' },
+      askExit: (e) => { if (e) e.preventDefault(); this.sfx('sheet-up'); this.setState({ overlay: 'exit' }); },
+      closeOverlay: () => { this.sfx('sheet-down'); this.setState({ overlay: 'none' }); },
+      leave: go('home'),
+      openReview: () => { this.sfx('sheet-up'); this.setState({ overlay: 'review' }); },
+      sendReview: () => { this.sfx('ui-tap'); this.setState({ overlay: 'sent' }); },
+      reasons: c.reasons.map((label, i) => ({ label, on: s.reason === i ? 'true' : 'false', cls: 'radio' + (s.reason === i ? ' is-on' : ''), pick: () => this.setState({ reason: i }) })),
+      reviewCount: c.reviewSample.length + ' / 280'
+    };
+  }
+}
+</script>
+</body>
+</html>
