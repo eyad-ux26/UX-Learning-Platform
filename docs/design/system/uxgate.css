@@ -405,20 +405,28 @@
 @keyframes ug-sheet-in { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 /* ---- Design-tool layer: canvas, selection, toolbar, comment pins, cursors ---- */
-.ug .choice { position: relative; }
-.ug .choice.is-selected::after { content: ""; position: absolute; inset: -8px -8px -5px; border-radius: 3px; pointer-events: none;
-  border: 2px solid var(--sel-line); background-origin: border-box; background-clip: border-box; background-repeat: no-repeat;
-  background-image: linear-gradient(var(--surface), var(--surface)), linear-gradient(var(--surface), var(--surface)), linear-gradient(var(--surface), var(--surface)), linear-gradient(var(--surface), var(--surface)),
+/* Selection frame, as in a design tool: a thin line that keeps the same gap on all
+   four sides (the bottom gap starts below the ledge, so the frame never touches it),
+   and square handles centred on each corner where the lines cross. */
+.ug { --sel-gap: 6px; --sel-w: 1.5px; --sel-h: 9px; }
+.ug .choice, .ug .sel-frame { position: relative; }
+.ug .choice.is-selected::before, .ug .sel-frame::before,
+.ug .choice.is-selected::after, .ug .sel-frame::after { content: ""; position: absolute; pointer-events: none; }
+.ug .choice.is-selected::before, .ug .sel-frame::before {
+  inset: calc(-1 * var(--sel-gap)) calc(-1 * var(--sel-gap)) calc(-1 * var(--sel-gap) - var(--ledge-h));
+  border: var(--sel-w) solid var(--sel-line); border-radius: 0; }
+.ug .sel-frame::before { inset: calc(-1 * var(--sel-gap) - 2px); }
+.ug .choice.is-selected::after, .ug .sel-frame::after {
+  --o: calc(var(--sel-gap) + var(--sel-h) / 2 - var(--sel-w) / 2);
+  inset: calc(-1 * var(--o)) calc(-1 * var(--o)) calc(-1 * var(--o) - var(--ledge-h));
+  --i: calc(var(--sel-h) - 2 * var(--sel-w));
+  background-repeat: no-repeat;
+  background-image: linear-gradient(#FFFFFF, #FFFFFF), linear-gradient(#FFFFFF, #FFFFFF), linear-gradient(#FFFFFF, #FFFFFF), linear-gradient(#FFFFFF, #FFFFFF),
     linear-gradient(var(--sel-line), var(--sel-line)), linear-gradient(var(--sel-line), var(--sel-line)), linear-gradient(var(--sel-line), var(--sel-line)), linear-gradient(var(--sel-line), var(--sel-line));
-  background-size: 6px 6px, 6px 6px, 6px 6px, 6px 6px, 10px 10px, 10px 10px, 10px 10px, 10px 10px;
-  background-position: left 2px top 2px, right 2px top 2px, left 2px bottom 2px, right 2px bottom 2px, left 0 top 0, right 0 top 0, left 0 bottom 0, right 0 bottom 0;
-  animation: ug-frame-in var(--t-fast) var(--ease-out); }
-.ug .sel-frame { position: relative; }
-.ug .sel-frame::after { content: ""; position: absolute; inset: -8px; border-radius: 3px; pointer-events: none; border: 2px solid var(--sel-line); background-origin: border-box; background-repeat: no-repeat;
-  background-image: linear-gradient(var(--surface), var(--surface)), linear-gradient(var(--surface), var(--surface)), linear-gradient(var(--surface), var(--surface)), linear-gradient(var(--surface), var(--surface)),
-    linear-gradient(var(--sel-line), var(--sel-line)), linear-gradient(var(--sel-line), var(--sel-line)), linear-gradient(var(--sel-line), var(--sel-line)), linear-gradient(var(--sel-line), var(--sel-line));
-  background-size: 6px 6px, 6px 6px, 6px 6px, 6px 6px, 10px 10px, 10px 10px, 10px 10px, 10px 10px;
-  background-position: left 2px top 2px, right 2px top 2px, left 2px bottom 2px, right 2px bottom 2px, left 0 top 0, right 0 top 0, left 0 bottom 0, right 0 bottom 0; }
+  background-size: var(--i) var(--i), var(--i) var(--i), var(--i) var(--i), var(--i) var(--i), var(--sel-h) var(--sel-h), var(--sel-h) var(--sel-h), var(--sel-h) var(--sel-h), var(--sel-h) var(--sel-h);
+  background-position: left var(--sel-w) top var(--sel-w), right var(--sel-w) top var(--sel-w), left var(--sel-w) bottom var(--sel-w), right var(--sel-w) bottom var(--sel-w), left 0 top 0, right 0 top 0, left 0 bottom 0, right 0 bottom 0; }
+.ug .sel-frame::after { --o: calc(var(--sel-gap) + 2px + var(--sel-h) / 2 - var(--sel-w) / 2); inset: calc(-1 * var(--o)); }
+.ug .choice.is-selected::before, .ug .choice.is-selected::after { animation: ug-frame-in var(--t-fast) var(--ease-out); }
 @keyframes ug-frame-in { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
 
 /* Floating toolbar replaces a flat tab bar */
