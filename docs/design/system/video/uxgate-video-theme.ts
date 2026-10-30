@@ -41,10 +41,10 @@ export const gradient = {
 
 /** Load these with @remotion/google-fonts or a <link>. */
 export const font = {
-  display: '"Space Grotesk", "IBM Plex Sans Arabic", sans-serif', // Latin titles
-  sans: '"IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif',
-  arabic: '"IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif', // all Arabic text
-  mono: '"JetBrains Mono", monospace', // numbers, labels, clip ids
+  display: '"Titillium Web", "Cairo", sans-serif', // Latin titles
+  sans: '"Titillium Web", "Cairo", sans-serif', // Latin text
+  arabic: '"Cairo", "Titillium Web", sans-serif', // all Arabic text
+  mono: '"Titillium Web", "Cairo", sans-serif', // numbers and clip ids; use font-variant-numeric: tabular-nums
 } as const;
 
 /** Type sizes on the 1080 canvas. Arabic uses the same sizes with lineHeight +0.15. */

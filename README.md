@@ -36,8 +36,8 @@ Product and delivery:
 - [Metrics and events](docs/product/metrics.md)
 - [Decisions and risks](docs/product/decisions-and-risks.md)
 - [Architecture](docs/tech/architecture.md) and [data model](docs/tech/data-model.md)
-- [Backlog and sprint plan](docs/delivery/backlog.md), [Definition of Ready and Done](docs/delivery/definition-of-done.md)
-- [Design brief](docs/design/brief.md)
+- [Backlog and sprint plan](docs/delivery/backlog.md), [user stories](docs/delivery/user-stories.md), [Definition of Ready and Done](docs/delivery/definition-of-done.md)
+- [Design brief](docs/design/brief.md) and the [Sprint 1 design handoff](docs/design/handoff/)
 
 Content:
 

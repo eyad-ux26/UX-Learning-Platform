@@ -21,6 +21,8 @@ The plan doc "Learning Platform: Full Plan" holds the full history. This log kee
 | 30 Oct 2026 | The original UXGate logo stays unchanged; logo animations are added on top of it |
 | 30 Oct 2026 | Icons: Phosphor Icons, with Tabler Icons outline only where Phosphor has a gap |
 | 30 Oct 2026 | The design system also drives the lesson videos (Remotion theme and logo kit) |
+| 30 Oct 2026 | Type: Cairo for Arabic, Titillium Web for English |
+| 30 Oct 2026 | Sprint 1 design is run by the admins in Claude Design from the handoff pack in `docs/design/handoff/`; the earlier draft design system and screens are dropped |
 
 ## Open
 

@@ -31,16 +31,17 @@ Dates move with real velocity; we re-plan at each sprint review.
 
 ### Sprint 1 · 29 Oct – 4 Nov · Design foundations
 
-Goal: a UXGate design system and the core learner screens, approved in Claude Design.
+Goal: a UXGate design system and the core learner screens, made and approved in Claude Design from the [handoff pack](../design/handoff/). User stories with acceptance checks: [user-stories.md](user-stories.md).
 
 | ID | Story | Pts |
 | --- | --- | --- |
-| DS-01 | Brand direction: new logo mark, colour, type and voice for the relaunch | 3 |
+| DS-01 | Brand applied to the product: original logo, brand colours, Cairo and Titillium Web, voice | 3 |
 | DS-02 | Design tokens: colour (light, dark), type scale for Latin and Arabic, spacing, radius, elevation, motion | 3 |
 | DS-03 | Core components with all states: buttons, inputs, choice cards, progress, chips, nav, sheets, toasts | 5 |
 | DS-04 | Learning components: step frame, Check bar, feedback sheet, hint, confidence tap, mock-screen frame, XP and streak | 5 |
 | DS-05 | Key screens, mobile, EN and AR, light and dark: landing, sign-up, onboarding, home, path map, lesson step states, lesson end | 5 |
-| PM-01 | Technical files: spec, architecture, data model, backlog, DoD, templates | 2 |
+| DS-09 | Logo motion review | 1 |
+| PM-01 | Technical files: spec, architecture, data model, backlog, user stories, DoD, templates (done) | 2 |
 
 ### Sprint 2 · 5 – 11 Nov · Full prototype and app skeleton
 
@@ -122,7 +123,7 @@ Goal: a UXGate design system and the core learner screens, approved in Claude De
 
 | Epic | Stories |
 | --- | --- |
-| E1 Design system and prototype | DS-01 to DS-08 |
+| E1 Design system and prototype | DS-01 to DS-09 |
 | E2 Platform foundation | EN-01, EN-02, EN-06 |
 | E3 Accounts and onboarding | EN-03, EN-04, EN-22 |
 | E4 Public site | EN-05 |
