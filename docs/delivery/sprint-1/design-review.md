@@ -4,7 +4,9 @@
 
 ## Verdict
 
-**Ready to approve after three fixes.** All five design stories are delivered, plus extras Eyad asked for: desktop versions of every screen, 27 original sound effects with a CC0 licence, and a clickable flow with device, language, theme and sound switches. Contrast is measured in `tokens.json` and almost every pair passes. Two accessibility gaps must be fixed before the build starts, because the build copies the stylesheet, and two step types are missing that the first real unit needs.
+**Ready to approve.** The three blocking fixes below were done in canvas v23 and PR #34 (commits 88fdcfb, c602622, ed918e3) and re-checked by the PM thread on 30 October 2026: the selected line is now #1677C0 (4.74:1 on surface in light, 7.05:1 in night, 4.18:1 on the selected background); `uxgate.css` ends with a `prefers-reduced-motion` block; tune and compare are on the canvas (Mobile 6d and 6e, Desktop D6d and D6e) with images in `docs/design/steps/`.
+
+Original verdict before the fixes: **ready to approve after three fixes.** All five design stories are delivered, plus extras Eyad asked for: desktop versions of every screen, 27 original sound effects with a CC0 licence, and a clickable flow with device, language, theme and sound switches. Contrast is measured in `tokens.json` and almost every pair passes. Two accessibility gaps must be fixed before the build starts, because the build copies the stylesheet, and two step types are missing that the first real unit needs.
 
 ## Story check
 
@@ -27,6 +29,10 @@
 
 4. **Illustrations.** Use the UXGate illustration set on lesson end, empty states, onboarding and the path map intro, so the playful layer is consistent (handoff 05).
 5. **Placeholders.** `[PRICE]` waits for Eyad's price (needed by slice 5). The second hint, the FAQ answers and the Arabic skill-state labels are now written in [sprint-2/design-brief.md](../sprint-2/design-brief.md).
+
+## Content gap found
+
+P01 U01 L01 steps S04 and S07 have no hint text, so the canvas shows sample hints. The content side must write both hints (EN and AR) before the build seeds the lesson.
 
 ## Decisions for Eyad
 
