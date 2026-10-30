@@ -6,7 +6,7 @@ Slice 2 completes everything that happens inside a lesson. Build follows in spri
 
 ## Before you start
 
-Finish the Sprint 1 fixes from `docs/delivery/sprint-1/design-review.md`: the selected-frame contrast, the reduced-motion rules, and the tune and compare steps. These block the slice 1 build, so do them first and update PR #34.
+Sprint 1 design was approved by Eyad on 30 October 2026, with the three fixes done in canvas v23. Keep building on that canvas and PR #34.
 
 ## Deliver
 
@@ -32,7 +32,7 @@ Use real lesson content where you can: P01 Unit 1 and P10 Unit 1 (branches `cont
 ## Copy for the open Sprint 1 placeholders
 
 - **Second hint** (Hana's gym step): EN "Name is for the welcome, email for the schedule, phone for urgent changes. Which field is left with no job?" AR «الاسم للترحيب، والبريد لجدول الحصص، والهاتف للتغييرات العاجلة. أي حقل لا يبقى له عمل؟»
-- **Skill states:** Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (pending Eyad's approval).
+- **Skill states:** Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved by Eyad, 30 Oct).
 - **FAQ** (landing):
 
 | Question | Answer |
@@ -42,6 +42,13 @@ Use real lesson content where you can: P01 Unit 1 and P10 Unit 1 (branches `cont
 | What is free? · ما المجاني؟ | The first unit of every path, review, and your profile. The subscription unlocks every other unit and certificates. · الوحدة الأولى من كل مسار، والمراجعة، وملفك الشخصي. والاشتراك يفتح باقي الوحدات والشهادات. |
 | Can I cancel? · هل يمكنني الإلغاء؟ | Yes, any time. You keep access until the end of the month you paid for, and you can ask for a refund within 7 days of a charge. · نعم، في أي وقت. يبقى وصولك حتى نهاية الشهر المدفوع، ويمكنك طلب استرداد خلال 7 أيام من الدفع. |
 | Is it in Arabic? · هل المحتوى بالعربية؟ | Every lesson is in Arabic and English. Switch the language any time; UX terms stay in English with a short explanation. · كل درس بالعربية والإنجليزية. بدّل اللغة في أي وقت، وتبقى مصطلحات UX بالإنجليزية مع شرح قصير. |
+
+- **Sound:** on by default in lessons (approved by Eyad, 30 Oct). Show the mute button in the lesson header on every new lesson screen.
+- **Hints:** the content side is writing up to 2 hints for every graded step. Until then, use the sample hints already on the canvas.
+
+## Credits
+
+Follow `/mnt/project-files/delivery/credits-policy.md`: new screens on Opus high. Republish the canvas at milestones (for example after each group of step types), not after every small change. Take feedback in one batched message per review.
 
 ## Gate
 

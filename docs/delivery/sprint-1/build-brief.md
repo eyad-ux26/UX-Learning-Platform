@@ -25,6 +25,7 @@ All of it runs on a Vercel preview with real accounts and saved progress.
 | Stories and checks | `docs/delivery/user-stories.md` (PR #9) |
 | Content | P01 Unit 1 YAML on branch `content/p01-u01` (`content/paths/P01/`), format in `docs/content-format.md`; `preview/player.html` is the reference behaviour for every step type |
 | Done rules | `docs/delivery/definition-of-done.md` |
+| Credits | `/mnt/project-files/delivery/credits-policy.md`: build on Sonnet high; switch to Opus only after being stuck twice on the same problem |
 | Copy | Design canvas and `docs/design/handoff/04-screens-and-copy.md` |
 
 If two sources disagree, the approved canvas wins for looks, the spec and learning model win for behaviour. Ask the PM thread when unsure; do not guess silently.
@@ -43,7 +44,7 @@ If two sources disagree, the approved canvas wins for looks, the spec and learni
 | EN-09 | Answers never lost | Attempts queue in IndexedDB, sync with retries to `POST /api/attempts`, server scores and stores with the content version |
 | EN-11 | Home and path map (basic) | Next lesson as the main action, path map with lesson states (locked, available, in progress, done); skill states show Practiced only |
 | EN-13 | XP and goal (part) | XP 10 / 5 / 0 per independent, supported and revealed answer; today's goal count; streak shows the day count only (freezes are slice 3) |
-| — | Sound | The 27 sounds from `docs/design/sound/` mapped as in its README; mute in the lesson header and remembered; nothing plays before the first tap; see the open decision on the default |
+| — | Sound | The 27 sounds from `docs/design/sound/` mapped as in its README; mute in the lesson header and remembered; nothing plays before the first tap; sound is on by default in lessons (Eyad, 30 Oct) |
 
 ## Out of scope (later slices)
 

@@ -41,7 +41,7 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 
 Why separate build and verify threads: a fresh thread checks the work without the builder's assumptions, the way a QA team would. Why a new build thread per slice: each starts with a clean context and the repo as its memory, so it stays fast and cheap. Security and testing share one thread per slice because they use the same preview and the same checklist run; a dedicated security audit thread runs once more in sprint 7.
 
-Credits: run at most two heavy threads at once (design and build). Start the verify thread when the build thread says the preview is ready.
+Credits: every thread follows `/mnt/project-files/delivery/credits-policy.md` (model and effort per kind of work, small contexts, batched feedback). At most two heavy threads run at once (design and build). Start the verify thread when the build thread says the preview is ready.
 
 ## Handoffs
 
