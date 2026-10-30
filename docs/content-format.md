@@ -127,6 +127,8 @@ In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin lett
 
 A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), and `caption` (a small label such as "360 px").
 
+In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
+
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
 
 ## Player behaviour worth knowing

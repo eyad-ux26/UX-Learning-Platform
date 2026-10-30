@@ -1,0 +1,458 @@
+id: P10-U05-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: let real words stretch it"
+  ar: "اختبار المهارة: دع الكلمات الحقيقية تختبره"
+sources:
+  - title: { en: "Which Comes First? Layout or Content? (NN/g)", ar: "أيّهما أولًا: التخطيط أم المحتوى؟ (NN/g)" }
+    url: "https://www.nngroup.com/articles/layout-vs-content/"
+  - title: { en: "International Usability: Big Stuff the Same, Details Differ (NN/g)", ar: "سهولة الاستخدام عالميًا: الأساسيات واحدة والتفاصيل تختلف (NN/g)" }
+    url: "https://www.nngroup.com/articles/international-usability-details-differ/"
+  - title: { en: "Design Critiques: Encourage a Positive Culture to Improve Products (NN/g)", ar: "نقد التصميم: شجّع ثقافة إيجابية لتحسين المنتجات (NN/g)" }
+    url: "https://www.nngroup.com/articles/design-critiques/"
+  - title: { en: "Turn User Goals into Task Scenarios for Usability Testing (NN/g)", ar: "حوّل أهداف المستخدمين إلى سيناريوهات مهامّ لاختبار سهولة الاستخدام (NN/g)" }
+    url: "https://www.nngroup.com/articles/task-scenarios-usability-testing/"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Mostafa's concert ticket", ar: "تذكرة حفلة مصطفى" }
+    body:
+      en: "Mostafa is buying a ticket for a jazz night in Zamalek. The ticket card was designed with \"Jazz Night\" as the title, in a box of fixed height. Now the real event name and venue are in.\n\nYour job: help the team make the card work with real words, in English and Arabic.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "يشتري مصطفى تذكرة لليلة جاز في الزمالك. صُمّمت بطاقة التذكرة بعنوان «ليلة جاز»، داخل صندوق بارتفاع ثابت. والآن وُضع اسم الحفلة والمكان الحقيقيان.\n\nمهمّتك: ساعد الفريق على جعل البطاقة تعمل بالكلمات الحقيقية، بالعربية والإنجليزية.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      width: 280
+      caption: { en: "As designed", ar: "كما صُمّمت" }
+      blocks:
+        - kind: group
+          blocks:
+            - { kind: title, text: { en: "Jazz Night", ar: "ليلة جاز" } }
+            - { kind: meta, text: "@T1b", gap: s }
+            - { kind: meta, text: { en: "Garden Theatre", ar: "مسرح الحديقة" }, gap: xs }
+            - { kind: meta, weight: bold, text: "@T1d", gap: xs }
+            - { kind: button, text: "@T1e", gap: m }
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U05-01
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, layout vs content (NN/g): scaling issues appear when content doesn't match its space. Fix the box, not the words, and not by shrinking the type."
+      ar: "اختبار مهارة، التخطيط مقابل المحتوى (NN/g): تظهر مشاكل المقاس حين لا يناسب المحتوى مساحته. أصلِح الصندوق، لا الكلمات، ولا بتصغير الخط."
+    ref: { url: "https://www.nngroup.com/articles/layout-vs-content/", quote: "Scaling issues appear when the content size does not match the space that it needs to go into." }
+    scenario:
+      en: "With the real words, the title runs past the box and the venue is cut after \"Gate 3\". Mostafa can't see which street to go to."
+      ar: "مع الكلمات الحقيقية، يتجاوز العنوان الصندوق، وينقطع المكان بعد «البوابة 3». ولا يرى مصطفى إلى أي شارع يذهب."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 280
+      blocks:
+        - kind: group
+          height: 150
+          blocks:
+            - { kind: title, nowrap: true, text: "@T1a" }
+            - { kind: meta, text: "@T1b", gap: s }
+            - { kind: meta, nowrap: true, text: "@T1c", gap: xs }
+            - { kind: meta, weight: bold, text: "@T1d", gap: xs }
+            - { kind: button, text: "@T1e", gap: m }
+    options:
+      - id: short
+        text: { en: "Shorten them to \"Jazz Night\" and \"Garden Theatre\"", ar: "اختصرهما إلى «ليلة جاز» و«مسرح الحديقة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: title, text: { en: "Jazz Night", ar: "ليلة جاز" } }
+                - { kind: meta, text: "@T1b", gap: s }
+                - { kind: meta, text: { en: "Garden Theatre", ar: "مسرح الحديقة" }, gap: xs }
+                - { kind: meta, weight: bold, text: "@T1d", gap: xs }
+                - { kind: button, text: "@T1e", gap: m }
+      - id: small
+        text: { en: "Make the title and venue small enough to fit", ar: "صغّر العنوان والمكان حتى يتّسعا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - kind: group
+              height: 150
+              blocks:
+                - { kind: text, px: 9, weight: bold, nowrap: true, text: "@T1a" }
+                - { kind: meta, text: "@T1b", gap: s }
+                - { kind: text, px: 7, nowrap: true, text: "@T1c", gap: xs }
+                - { kind: meta, weight: bold, text: "@T1d", gap: xs }
+                - { kind: button, text: "@T1e", gap: m }
+      - id: grow
+        text: { en: "Let the lines wrap and the card grow", ar: "دع الأسطر تلتفّ والبطاقة تطول" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 280
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: title, text: "@T1a" }
+                - { kind: meta, text: "@T1b", gap: s }
+                - { kind: meta, text: "@T1c", gap: xs }
+                - { kind: meta, weight: bold, text: "@T1d", gap: xs }
+                - { kind: button, text: "@T1e", gap: m }
+    answer: [grow]
+    misconceptions:
+      - id: MC-P10-069
+        when: [short]
+        feedback:
+          en: "The short version drops the street and the gate, which Mostafa needs to get there. Change the box, not the words."
+          ar: "النسخة القصيرة تُسقط الشارع والبوابة، وهما ما يحتاجه مصطفى للوصول. غيّر الصندوق، لا الكلمات."
+      - id: MC-P10-078
+        when: [small]
+        feedback:
+          en: "It fits, but 7px can't be read on a phone. Fitting isn't the same as usable."
+          ar: "إنه يتّسع، لكن 7 بكسل لا تُقرأ على الهاتف. الاتّساع ليس هو سهولة الاستخدام."
+    explain:
+      en: "From Lesson 1: let long text wrap and the box follow its content. The card gets taller and every fact stays."
+      ar: "من الدرس 1: دع النص الطويل يلتفّ، والصندوق يتبع محتواه. تطول البطاقة وتبقى كل معلومة."
+
+  - id: S03
+    type: tune
+    skill: SK-P10-U05-02
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, international usability (NN/g): leave room for labels to grow by at least 50%. The Arabic label is longer than the English one the button was sized for."
+      ar: "اختبار مهارة، سهولة الاستخدام عالميًا (NN/g): اترك مساحة لتمدّد العناوين بنسبة 50% على الأقل. والعنوان العربي أطول من الإنجليزي الذي صُمّم الزر على مقاسه."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "leave room for labels and hints to grow by at least 50%" }
+    scenario:
+      en: "Next to the price, the button has a fixed width, sized for \"Buy ticket\". In the Arabic version, the label is cut."
+      ar: "بجانب السعر، للزر عرض ثابت صُمّم على مقاس العنوان الإنجليزي. وفي النسخة العربية، ينقطع العنوان."
+    prompt:
+      en: "Try each fix for the Arabic button. Which one should ship?"
+      ar: "جرّب كل إصلاح للزر العربي. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: rtl
+      width: 280
+      blocks:
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: meta, weight: bold, text: "450 جنيهًا" }
+            - { kind: button, text: "اشترِ التذك…" }
+    options:
+      - id: room
+        text: { en: "Let the button grow to fit the full label", ar: "دع الزر يتّسع للعنوان كاملًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, weight: bold, text: "450 جنيهًا" }
+                - { kind: button, text: "اشترِ التذكرة" }
+      - id: word
+        text: { en: "Change the Arabic label to just \"Buy\"", ar: "غيّر العنوان العربي إلى «اشترِ» فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, weight: bold, text: "450 جنيهًا" }
+                - { kind: button, text: "اشترِ" }
+      - id: tiny
+        text: { en: "Use a smaller font for the Arabic button", ar: "استخدم خطًا أصغر للزر العربي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, weight: bold, text: "450 جنيهًا" }
+                - { kind: button, px: 9, text: "اشترِ التذكرة" }
+    answer: [room]
+    misconceptions:
+      - id: MC-P10-069
+        when: [word]
+        feedback:
+          en: "\"Buy\" alone no longer says what Mostafa is buying, and it now differs from the English. Give the label room instead."
+          ar: "«اشترِ» وحدها لم تعد تقول ماذا يشتري مصطفى، وصارت تختلف عن الإنجليزية. أعطِ العنوان مساحة بدلًا من ذلك."
+      - id: MC-P10-078
+        when: [tiny]
+        feedback:
+          en: "It fits, but the main action is now the hardest thing to read. Arabic needs the same readable size."
+          ar: "إنه يتّسع، لكن الإجراء الرئيسي صار أصعب شيء في القراءة. العربية تحتاج الحجم المقروء نفسه."
+    explain:
+      en: "From Lesson 1: translated labels often run longer. Size buttons to their content so every language fits."
+      ar: "من الدرس 1: العناوين المترجمة كثيرًا ما تكون أطول. اجعل مقاس الأزرار يتبع محتواها لتتّسع كل لغة."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U05-04
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, RTL (NN/g): mirror-image the design patterns, and stay consistent. Translating the words while keeping a left-to-right layout is not enough."
+      ar: "اختبار مهارة، الاتجاه من اليمين لليسار (NN/g): اعكس أنماط التصميم، وكن متّسقًا. ترجمة الكلمات مع إبقاء تخطيط من اليسار لليمين لا يكفي."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "The team translated the ticket screen into Arabic but kept the English layout: the back arrow and text on the left, the price on the right."
+      ar: "ترجم الفريق شاشة التذكرة إلى العربية لكنه أبقى التخطيط الإنجليزي: سهم الرجوع والنص على اليسار، والسعر على اليمين."
+    prompt:
+      en: "Try each version of the Arabic screen. Which one should ship?"
+      ar: "جرّب كل نسخة من الشاشة العربية. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: ltr
+      width: 280
+      blocks: &ltrar
+        - { kind: link, text: "← رجوع" }
+        - { kind: title, text: "ليلة جاز النيل: أغانٍ عربية كلاسيكية بروح جديدة", gap: s }
+        - { kind: meta, text: "الخميس 3 ديسمبر، الساعة 20:00", gap: xs }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: meta, text: "الإجمالي" }
+            - { kind: meta, weight: bold, style: end, text: "450 جنيهًا" }
+        - { kind: button, text: "اشترِ التذكرة", gap: m }
+    options:
+      - id: words
+        text: { en: "Keep it; the words are already in Arabic", ar: "أبقِها؛ فالكلمات بالعربية بالفعل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 280
+          blocks: *ltrar
+      - id: whole
+        text: { en: "Mirror the whole screen: arrow, text and the total row", ar: "اعكس الشاشة كلها: السهم والنص وسطر الإجمالي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: link, text: "→ رجوع" }
+            - { kind: title, text: "ليلة جاز النيل: أغانٍ عربية كلاسيكية بروح جديدة", gap: s }
+            - { kind: meta, text: "الخميس 3 ديسمبر، الساعة 20:00", gap: xs }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "الإجمالي" }
+                - { kind: meta, weight: bold, style: end, text: "450 جنيهًا" }
+            - { kind: button, text: "اشترِ التذكرة", gap: m }
+      - id: align
+        text: { en: "Right-align the text only; leave the arrow and the total row", ar: "حاذِ النص لليمين فقط؛ واترك السهم وسطر الإجمالي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: ltr
+          width: 280
+          blocks:
+            - { kind: link, text: "← رجوع" }
+            - { kind: title, style: end, text: "ليلة جاز النيل: أغانٍ عربية كلاسيكية بروح جديدة", gap: s }
+            - { kind: meta, style: end, text: "الخميس 3 ديسمبر، الساعة 20:00", gap: xs }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: meta, text: "الإجمالي" }
+                - { kind: meta, weight: bold, style: end, text: "450 جنيهًا" }
+            - { kind: button, text: "اشترِ التذكرة", gap: m }
+    answer: [whole]
+    misconceptions:
+      - id: MC-P10-072
+        when: [words]
+        feedback:
+          en: "Arabic readers start on the right. With the back arrow and text on the left, the screen still flows the English way."
+          ar: "قارئ العربية يبدأ من اليمين. ومع سهم الرجوع والنص على اليسار، ما زالت الشاشة تسير بالاتجاه الإنجليزي."
+      - id: MC-P10-082
+        when: [align]
+        feedback:
+          en: "Now the text starts on the right but the arrow and the total still start on the left. Half-mirrored is the most confusing. Mirror it all."
+          ar: "الآن يبدأ النص من اليمين، لكن السهم والإجمالي ما زالا يبدآن من اليسار. والعكس الجزئي هو الأكثر إرباكًا. اعكسها كلها."
+    explain:
+      en: "From Lesson 2: in Arabic, mirror the whole layout the same way, so everything starts on the right."
+      ar: "من الدرس 2: في العربية، اعكس التخطيط كله بالطريقة نفسها، ليبدأ كل شيء من اليمين."
+
+  - id: S05
+    type: tune
+    skill: SK-P10-U05-05
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, RTL (NN/g): mirror the design patterns, not the content. A ticket code is a fact; reversing its characters makes a different code."
+      ar: "اختبار مهارة، الاتجاه من اليمين لليسار (NN/g): اعكس أنماط التصميم، لا المحتوى. ورمز التذكرة معلومة؛ وعكس حروفه يصنع رمزًا آخر."
+    ref: { url: "https://www.nngroup.com/articles/international-usability-details-differ/", quote: "mirror-image the design patterns" }
+    scenario:
+      en: "Mostafa's ticket code is NJ-3012. The gate staff will scan or type it. On the Arabic ticket, it shows reversed."
+      ar: "رمز تذكرة مصطفى هو NJ-3012. وسيمسحه موظف البوابة أو يكتبه. وفي التذكرة العربية، يظهر معكوسًا."
+    prompt:
+      en: "Try each version of the code line. Which one should ship?"
+      ar: "جرّب كل نسخة من سطر الرمز. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      dir: rtl
+      width: 280
+      blocks: &codenow
+        - { kind: meta, weight: bold, text: "@T1d" }
+        - { kind: meta, text: "رمز التذكرة:", code: "2103-JN", gap: s }
+    options:
+      - id: keep
+        text: { en: "Keep it; Arabic reads right to left", ar: "أبقِه؛ فالعربية تُقرأ من اليمين لليسار" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks: *codenow
+      - id: drop
+        text: { en: "Show the code only in the English version", ar: "اعرض الرمز في النسخة الإنجليزية فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: meta, weight: bold, text: "@T1d" }
+      - id: fact
+        text: { en: "The line flows right to left; the code stays NJ-3012", ar: "السطر من اليمين لليسار؛ والرمز يبقى NJ‑3012" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          dir: rtl
+          width: 280
+          blocks:
+            - { kind: meta, weight: bold, text: "@T1d" }
+            - { kind: meta, text: "رمز التذكرة:", code: "NJ-3012", gap: s }
+    answer: [fact]
+    misconceptions:
+      - id: MC-P10-070
+        when: [keep]
+        feedback:
+          en: "2103-JN is a different code, and it won't match at the gate. Mirror the layout, not the facts."
+          ar: "2103-JN رمز مختلف، ولن يتطابق عند البوابة. اعكس التخطيط، لا المعلومات."
+      - id: MC-P10-072
+        when: [drop]
+        feedback:
+          en: "Arabic readers need the code too. Keep it, exactly as written, inside the Arabic line."
+          ar: "القرّاء العرب يحتاجون الرمز أيضًا. أبقِه كما هو تمامًا، داخل السطر العربي."
+    explain:
+      en: "From Lesson 2: the sentence mirrors; codes, prices and times keep their characters in order."
+      ar: "من الدرس 2: الجملة تُعكس؛ والرموز والأسعار والأوقات تبقى حروفها بترتيبها."
+
+  - id: S06
+    type: tune
+    skill: SK-P10-U05-06
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, design critique (NN/g): relate feedback to the goals of the design. Here the goal is that Mostafa finds the right gate; answer with that goal and a quick check, not with rank or taste."
+      ar: "اختبار مهارة، نقد التصميم (NN/g): اربط الملاحظات بأهداف التصميم. والهدف هنا أن يجد مصطفى البوابة الصحيحة؛ فأجب بهذا الهدف وباختبار سريع، لا بالمنصب أو الذوق."
+    ref: { url: "https://www.nngroup.com/articles/design-critiques/", quote: "to relate them to the goals of the design." }
+    scenario:
+      en: "In the review, the marketing lead says: \"The card is too tall now. Put the venue back on one line; it looked cleaner.\""
+      ar: "في المراجعة، يقول مسؤول التسويق: «البطاقة صارت طويلة جدًا. أعِد المكان إلى سطر واحد؛ كان شكله أنظف»."
+    prompt:
+      en: "Try each reply. Which one should you give?"
+      ar: "جرّب كل ردّ. أيّها يجب أن تقدّمه؟"
+    start: agree
+    options:
+      - id: agree
+        text: { en: "Agree; marketing owns the look", ar: "وافِق؛ فالتسويق مسؤول عن الشكل" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Your reply", ar: "ردّك" } }
+                - { kind: text, text: { en: "\"Sure, I'll put the venue back on one line.\"", ar: "«حسنًا، سأعيد المكان إلى سطر واحد»." }, gap: xs }
+      - id: goal
+        text: { en: "Tie it to the goal, and offer a quick check", ar: "اربطه بالهدف، واقترح اختبارًا سريعًا" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Your reply", ar: "ردّك" } }
+                - { kind: text, text: { en: "\"The card has to get people to the right gate. On one line, the street and gate are cut. I can tighten the spacing, and we can ask a few people to find the gate from each version.\"", ar: "«البطاقة يجب أن توصل الناس إلى البوابة الصحيحة. وفي سطر واحد، ينقطع الشارع والبوابة. أستطيع تقليل المسافات، ويمكننا أن نطلب من بضعة أشخاص إيجاد البوابة في كل نسخة»." }, gap: xs }
+      - id: dismiss
+        text: { en: "Tell him looks don't matter here", ar: "أخبره أن الشكل لا يهمّ هنا" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Your reply", ar: "ردّك" } }
+                - { kind: text, text: { en: "\"Looks don't matter on a ticket. It stays as it is.\"", ar: "«الشكل لا يهمّ في التذكرة. ستبقى كما هي»." }, gap: xs }
+    answer: [goal]
+    misconceptions:
+      - id: MC-P10-076
+        when: [agree]
+        feedback:
+          en: "Who said it doesn't decide it. Cutting the venue again hides the street and gate Mostafa needs."
+          ar: "قائل الملاحظة لا يحسمها. وقطع المكان مرة أخرى يُخفي الشارع والبوابة اللذين يحتاجهما مصطفى."
+      - id: MC-P10-075
+        when: [dismiss]
+        feedback:
+          en: "His worry about a tidy card is fair. Answer it against the goal and offer a check, instead of shutting it down."
+          ar: "قلقه بشأن بطاقة مرتّبة في محلّه. أجب عنه بمقارنته بالهدف واقترح اختبارًا، بدل أن تُغلق النقاش."
+    explain:
+      en: "From Lesson 3: judge feedback against the goal, keep what's fair in it, and settle the rest with a quick check."
+      ar: "من الدرس 3: احكم على الملاحظة بمقارنتها بالهدف، وخذ ما هو معقول منها، واحسم الباقي باختبار سريع."
+
+  - id: S07
+    type: tune
+    skill: SK-P10-U05-07
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, task scenarios (NN/g): step descriptions hide clues, but avoiding clues does not mean being vague. Give a situation with a goal you can check."
+      ar: "اختبار مهارة، سيناريوهات المهامّ (NN/g): وصف الخطوات يحمل تلميحات، لكن تجنّبها لا يعني الغموض. قدّم موقفًا له هدف تستطيع التحقّق منه."
+    ref: { url: "https://www.nngroup.com/articles/task-scenarios-usability-testing/", quote: "Avoiding clues does not mean being vague." }
+    scenario:
+      en: "You'll test whether people can find where to go from the ticket card."
+      ar: "ستختبر هل يستطيع الناس معرفة إلى أين يذهبون من بطاقة التذكرة."
+    prompt:
+      en: "Try each task card. Which one should you give participants?"
+      ar: "جرّب كل بطاقة مهمّة. أيّها يجب أن تعطيها للمشاركين؟"
+    start: vague
+    options:
+      - id: goal
+        text: { en: "A short situation with a goal", ar: "موقف قصير له هدف" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Task", ar: "المهمّة" } }
+                - { kind: text, text: { en: "\"You've just bought this ticket and you're taking a taxi to the concert. Tell the driver where to drop you.\"", ar: "«اشتريت هذه التذكرة للتوّ وستركب سيارة أجرة إلى الحفلة. أخبر السائق أين ينزلك»." }, gap: xs }
+      - id: vague
+        text: { en: "Ask what they think of the card", ar: "اسألهم عن رأيهم في البطاقة" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Task", ar: "المهمّة" } }
+                - { kind: text, text: { en: "\"Have a look at this ticket. What do you think?\"", ar: "«ألقِ نظرة على هذه التذكرة. ما رأيك؟»" }, gap: xs }
+      - id: steps
+        text: { en: "Point them to the venue line", ar: "وجّههم إلى سطر المكان" }
+        mock:
+          blocks:
+            - kind: group
+              blocks:
+                - { kind: small, text: { en: "Task", ar: "المهمّة" } }
+                - { kind: text, text: { en: "\"Read the venue line under the date and tell me the gate number.\"", ar: "«اقرأ سطر المكان تحت التاريخ وأخبرني برقم البوابة»." }, gap: xs }
+    answer: [goal]
+    misconceptions:
+      - id: MC-P10-077
+        when: [steps]
+        feedback:
+          en: "It tells them where to look and what to find. You'd learn they can follow directions, not whether the card works on its own."
+          ar: "إنها تخبرهم أين ينظرون وماذا يجدون. ستعرف أنهم يتبعون التوجيهات، لا هل تعمل البطاقة وحدها."
+      - id: MC-P10-083
+        when: [vague]
+        feedback:
+          en: "There's no goal, so there's no right answer to check. Opinions won't show whether they can find the gate."
+          ar: "لا يوجد هدف، فلا توجد إجابة صحيحة تتحقّق منها. والآراء لن تُظهر هل يستطيعون إيجاد البوابة."
+    explain:
+      en: "From Lesson 3: give a realistic situation with a clear goal, no labels from the screen, and an answer you can check."
+      ar: "من الدرس 3: قدّم موقفًا واقعيًا بهدف واضح، دون أسماء عناصر من الشاشة، وبإجابة تستطيع التحقّق منها."
