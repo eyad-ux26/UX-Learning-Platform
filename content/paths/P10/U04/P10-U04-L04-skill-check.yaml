@@ -1,0 +1,477 @@
+id: P10-U04-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: keep the meaning on a small screen"
+  ar: "اختبار المهارة: حافظ على المعنى في الشاشة الصغيرة"
+sources:
+  - title: { en: "Responsive Web Design (RWD) and User Experience (NN/g)", ar: "التصميم المتجاوب (Responsive design) وتجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/responsive-web-design-definition/"
+  - title: { en: "Challenges for Screen-Reader Users on Mobile (NN/g)", ar: "صعوبات مستخدمي الـ Screen reader على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/"
+  - title: { en: "The Negative Impact of Mobile-First Web Design on Desktop (NN/g)", ar: "الأثر السلبي لتصميم «الهاتف أولًا» على الشاشات الكبيرة (NN/g)" }
+    url: "https://www.nngroup.com/articles/content-dispersion/"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Dalia's hotel", ar: "فندق داليا" }
+    body:
+      en: "Dalia is booking two nights at a hotel in Aswan. On a laptop, the page has a photo gallery and a rewards offer on one side, and the booking panel on the other.\n\nYour job: help the team make it work on her phone.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "تحجز داليا ليلتين في فندق بأسوان. على الـ Laptop، في الصفحة معرض صور وعرض مكافآت في جانب، ولوحة الحجز في الجانب الآخر.\n\nمهمّتك: ساعد الفريق على جعلها تعمل على هاتفها.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+    mock:
+      frame: wide
+      caption: { en: "Laptop", ar: "Laptop" }
+      blocks: &hlaptop
+        - { kind: title, text: "@H1a" }
+        - kind: row
+          gap: m
+          blocks:
+            - kind: group
+              tone: plain
+              blocks:
+                - { kind: image, size: m, text: "@H1f" }
+                - { kind: link, text: "@H1g", gap: s }
+            - kind: group
+              blocks:
+                - { kind: meta, text: "@H1b" }
+                - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+                - { kind: small, text: "@H1d", gap: s }
+                - { kind: button, text: "@H1e", gap: m }
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U04-01
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, responsive design (NN/g): page elements reshuffle as the viewport shrinks; columns end as one column on a phone."
+      ar: "اختبار مهارة، التصميم المتجاوب (NN/g): تُعاد ترتيب عناصر الصفحة كلما صغرت الشاشة؛ وتنتهي الأعمدة بعمود واحد على الهاتف."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "In responsive design, page elements reshuffle as the viewport grows or shrinks." }
+    prompt:
+      en: "Try each way of fitting the page on Dalia's phone. Which one should ship?"
+      ar: "جرّب كل طريقة لعرض الصفحة على هاتف داليا. أيّها يجب أن تُطلق؟"
+    start: squeeze
+    options:
+      - id: squeeze
+        text: { en: "Keep both columns, each half the phone's width", ar: "أبقِ العمودين، كلٌّ بنصف عرض الهاتف" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: image, size: s, text: "@H1f" }
+                    - { kind: link, text: "@H1g", gap: s }
+                - kind: group
+                  blocks:
+                    - { kind: meta, text: "@H1b" }
+                    - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+                    - { kind: button, text: "@H1e", gap: s }
+      - id: scale
+        text: { en: "Scale the whole laptop page down to fit", ar: "صغّر صفحة الـ Laptop كلها حتى تتّسع" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: text, px: 8, weight: bold, text: "@H1a" }
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: image, size: s, text: "" }
+                    - { kind: text, px: 5, text: "@H1g", gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: text, px: 5, text: "@H1b" }
+                    - { kind: text, px: 5, text: "@H1c", gap: xs }
+                    - { kind: text, px: 5, text: "@H1d", gap: xs }
+                    - { kind: text, px: 5, weight: bold, color: brand, text: "@H1e", gap: xs }
+      - id: stack
+        text: { en: "One column at full width, at normal text sizes", ar: "عمود واحد بكامل العرض، بأحجام النص العادية" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: meta, text: "@H1b", gap: s }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: small, text: "@H1d", gap: s }
+            - { kind: button, text: "@H1e", gap: m }
+    answer: [stack]
+    misconceptions:
+      - id: MC-P10-060
+        when: [squeeze, scale]
+        feedback:
+          en: "Squeezed columns and a scaled-down page both make the text too small or too broken to read. Rearrange into one column."
+          ar: "الأعمدة المعصورة والصفحة المصغّرة كلاهما يجعل النص صغيرًا جدًا أو مكسّرًا فلا يُقرأ. أعِد الترتيب في عمود واحد."
+    explain:
+      en: "From Lesson 1: on a phone, rearrange the same content into one readable column."
+      ar: "من الدرس 1: على الهاتف، أعِد ترتيب المحتوى نفسه في عمود واحد مقروء."
+
+  - id: S03
+    type: tune
+    skill: SK-P10-U04-02
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, prioritization (NN/g): on a small screen, put what people need first. Stacking the columns as they are puts the gallery and rewards before the booking."
+      ar: "اختبار مهارة، ترتيب الأولويات (NN/g): على الشاشة الصغيرة، ضع ما يحتاجه الناس أولًا. ورصّ الأعمدة كما هي يضع المعرض والمكافآت قبل الحجز."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "Smart content prioritization helps users find what they need more efficiently." }
+    scenario:
+      en: "The developer stacked the laptop columns as they were: the gallery side first, then the booking panel."
+      ar: "رصّ المطوّر أعمدة الـ Laptop كما هي: جانب المعرض أولًا، ثم لوحة الحجز."
+    prompt:
+      en: "Try each phone order. Which one should ship?"
+      ar: "جرّب كل ترتيب على الهاتف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: &hinherit
+        - { kind: title, text: "@H1a" }
+        - { kind: image, size: l, text: "@H1f", gap: s }
+        - { kind: link, text: "@H1g", gap: s }
+        - { kind: meta, text: "@H1b", gap: m }
+        - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+        - { kind: small, text: "@H1d", gap: s }
+        - { kind: button, text: "@H1e", gap: m }
+    options:
+      - id: book
+        text: { en: "Book now first, then everything else", ar: "زر «احجز الآن» أولًا، ثم كل شيء آخر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: button, text: "@H1e" }
+            - { kind: title, text: "@H1a", gap: m }
+            - { kind: image, size: l, text: "@H1f", gap: s }
+            - { kind: meta, text: "@H1b", gap: m }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: small, text: "@H1d", gap: s }
+      - id: decide
+        text: { en: "Dates, total and cancellation, then Book now; the gallery and rewards after", ar: "التواريخ والإجمالي والإلغاء، ثم «احجز الآن»؛ والمعرض والمكافآت بعدها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: meta, text: "@H1b", gap: s }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: small, text: "@H1d", gap: s }
+            - { kind: button, text: "@H1e", gap: m }
+            - { kind: image, size: m, text: "@H1f", gap: l }
+            - { kind: link, text: "@H1g", gap: s }
+      - id: keep
+        text: { en: "Keep it; it matches the laptop", ar: "أبقِه؛ فهو يطابق الـ Laptop" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *hinherit
+    answer: [decide]
+    misconceptions:
+      - id: MC-P10-062
+        when: [keep]
+        feedback:
+          en: "Stacked as is, a big gallery and an offer push the dates and total down. Plan the phone order."
+          ar: "بالرصّ كما هي، يدفع المعرض الكبير والعرض التواريخَ والإجمالي إلى الأسفل. خطّط ترتيب الهاتف."
+      - id: MC-P10-066
+        when: [book]
+        feedback:
+          en: "Dalia meets Book now before the total and the cancellation rule. The action follows the facts."
+          ar: "تلتقي داليا بزر «احجز الآن» قبل الإجمالي وشرط الإلغاء. الإجراء يأتي بعد المعلومات."
+    explain:
+      en: "From Lesson 1: choose the phone order on purpose: the facts, the action, then the extras."
+      ar: "من الدرس 1: اختر ترتيب الهاتف عن قصد: المعلومات، ثم الإجراء، ثم الإضافات."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U04-03
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, equivalent access (NN/g): give the same information on every device; shrink or hide only what's secondary."
+      ar: "اختبار مهارة، الوصول المتكافئ (NN/g): قدّم المعلومات نفسها في كل جهاز؛ وصغّر أو أخفِ الثانوي فقط."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "The goal of many responsive designs is to give equivalent access to information regardless of device." }
+    scenario:
+      en: "The phone page is long. The team wants to make it shorter on phones."
+      ar: "صفحة الهاتف طويلة. ويريد الفريق تقصيرها على الهاتف."
+    prompt:
+      en: "Try each change. Which one should ship?"
+      ar: "جرّب كل تغيير. أيّها يجب أن يُطلق؟"
+    start: hide
+    options:
+      - id: hide
+        text: { en: "Put the total and cancellation behind \"See price and cancellation\"", ar: "ضع الإجمالي والإلغاء خلف «اعرض السعر وشروط الإلغاء»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: meta, text: "@H1b", gap: s }
+            - { kind: link, text: "@H1h", gap: s }
+            - { kind: button, text: "@H1e", gap: m }
+            - { kind: image, size: l, text: "@H1f", gap: l }
+      - id: dates
+        text: { en: "Remove the dates line; Dalia already picked them", ar: "احذف سطر التواريخ؛ فداليا اختارتها بالفعل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: meta, weight: bold, text: "@H1c", gap: s }
+            - { kind: small, text: "@H1d", gap: s }
+            - { kind: button, text: "@H1e", gap: m }
+            - { kind: image, size: l, text: "@H1f", gap: l }
+      - id: thumbs
+        text: { en: "Turn the big gallery into a small row of thumbnails", ar: "حوّل المعرض الكبير إلى صف صغير من الصور المصغّرة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: meta, text: "@H1b", gap: s }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: small, text: "@H1d", gap: s }
+            - { kind: button, text: "@H1e", gap: m }
+            - kind: row
+              gap: l
+              blocks:
+                - { kind: image, size: s, text: "1" }
+                - { kind: image, size: s, text: "2" }
+                - { kind: image, size: s, text: "3" }
+    answer: [thumbs]
+    misconceptions:
+      - id: MC-P10-061
+        when: [hide, dates]
+        feedback:
+          en: "The total, the cancellation rule and the dates are what Dalia checks before booking, on any device. Shrink the optional gallery instead."
+          ar: "الإجمالي وشرط الإلغاء والتواريخ هي ما تتحقّق منه داليا قبل الحجز، على أي جهاز. صغّر المعرض الاختياري بدلًا من ذلك."
+    explain:
+      en: "From Lesson 1: a smaller screen changes how much fits, not what people need."
+      ar: "من الدرس 1: الشاشة الأصغر تغيّر كم يتّسع، لا ما يحتاجه الناس."
+
+  - id: S05
+    type: tune
+    skill: SK-P10-U04-06
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, reading order (NN/g): screen-reader users move through the sequence and can't jump around. Only the code order changes what they hear."
+      ar: "اختبار مهارة، ترتيب القراءة (NN/g): مستخدمو الـ Screen reader يتحرّكون في التسلسل ولا يستطيعون القفز. وترتيب الكود وحده يغيّر ما يسمعونه."
+    ref: { url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/", quote: "The user cannot jump around; they must move forward and backward through the sequence to access what they want." }
+    scenario:
+      en: "In the code, the gallery and rewards still come first. Dalia's friend Mona uses a screen reader to book the same hotel."
+      ar: "في الكود، ما زال المعرض والمكافآت أولًا. وصديقة داليا، منى، تستخدم الـ Screen reader لحجز الفندق نفسه."
+    prompt:
+      en: "Each version shows what Dalia sees and what Mona hears. Try each fix. Which one should ship?"
+      ar: "كل نسخة تُظهر ما تراه داليا وما تسمعه منى. جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    start: visual
+    options:
+      - id: code
+        text: { en: "Put the booking panel first in the code", ar: "ضع لوحة الحجز أولًا في الكود" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: { en: "Dalia sees", ar: "ترى داليا" } }
+                    - { kind: meta, text: { en: "Dates, total", ar: "التواريخ، الإجمالي" }, gap: xs }
+                    - { kind: meta, text: { en: "Book now", ar: "احجز الآن" }, gap: xs }
+                    - { kind: meta, text: { en: "Gallery, rewards", ar: "المعرض، المكافآت" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: { en: "Mona hears", ar: "تسمع منى" } }
+                    - { kind: meta, text: { en: "Dates, total", ar: "التواريخ، الإجمالي" }, gap: xs }
+                    - { kind: meta, text: { en: "Book now", ar: "احجز الآن" }, gap: xs }
+                    - { kind: meta, text: { en: "Gallery, rewards", ar: "المعرض، المكافآت" }, gap: xs }
+      - id: visual
+        text: { en: "Keep the code; move the gallery down on screen with layout code", ar: "أبقِ الكود؛ وانقل المعرض إلى الأسفل على الشاشة بكود التخطيط" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: { en: "Dalia sees", ar: "ترى داليا" } }
+                    - { kind: meta, text: { en: "Dates, total", ar: "التواريخ، الإجمالي" }, gap: xs }
+                    - { kind: meta, text: { en: "Book now", ar: "احجز الآن" }, gap: xs }
+                    - { kind: meta, text: { en: "Gallery, rewards", ar: "المعرض، المكافآت" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: { en: "Mona hears", ar: "تسمع منى" } }
+                    - { kind: meta, text: { en: "Gallery, rewards", ar: "المعرض، المكافآت" }, gap: xs }
+                    - { kind: meta, text: { en: "Dates, total", ar: "التواريخ، الإجمالي" }, gap: xs }
+                    - { kind: meta, text: { en: "Book now", ar: "احجز الآن" }, gap: xs }
+      - id: alt
+        text: { en: "Keep the code, and hide the gallery from screen readers", ar: "أبقِ الكود، وأخفِ المعرض عن الـ Screen reader" }
+        mock:
+          blocks:
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  blocks:
+                    - { kind: small, text: { en: "Dalia sees", ar: "ترى داليا" } }
+                    - { kind: meta, text: { en: "Gallery, rewards", ar: "المعرض، المكافآت" }, gap: xs }
+                    - { kind: meta, text: { en: "Dates, total", ar: "التواريخ، الإجمالي" }, gap: xs }
+                    - { kind: meta, text: { en: "Book now", ar: "احجز الآن" }, gap: xs }
+                - kind: group
+                  tone: tint
+                  blocks:
+                    - { kind: small, text: { en: "Mona hears", ar: "تسمع منى" } }
+                    - { kind: meta, text: { en: "Rewards", ar: "المكافآت" }, gap: xs }
+                    - { kind: meta, text: { en: "Dates, total", ar: "التواريخ، الإجمالي" }, gap: xs }
+                    - { kind: meta, text: { en: "Book now", ar: "احجز الآن" }, gap: xs }
+    answer: [code]
+    misconceptions:
+      - id: MC-P10-067
+        when: [visual, alt]
+        feedback:
+          en: "One of the two still gets the wrong order: Mona hears the extras first, or Dalia's phone still stacks the gallery on top. Fix it once, in the code."
+          ar: "ما زالت إحداهما تحصل على الترتيب الخطأ: تسمع منى الإضافات أولًا، أو يرصّ هاتف داليا المعرض في الأعلى. أصلِحه مرة واحدة، في الكود."
+    explain:
+      en: "From Lesson 3: the code order is what phones stack and screen readers read. Fix it there, and both agree."
+      ar: "من الدرس 3: ترتيب الكود هو ما ترصّه الهواتف ويقرؤه الـ Screen reader. أصلِحه هناك، فيتّفق الاثنان."
+
+  - id: S06
+    type: tune
+    skill: SK-P10-U04-04
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, content dispersion (NN/g): a phone layout scaled up to desktop becomes large and dispersed; keep critical, related content grouped in the same viewport."
+      ar: "اختبار مهارة، تشتّت المحتوى (NN/g): تخطيط الهاتف المكبّر على الكمبيوتر يصبح ضخمًا ومتفرّقًا؛ أبقِ المحتوى المهم والمترابط مجموعًا في الشاشة نفسها."
+    ref: { url: "https://www.nngroup.com/articles/content-dispersion/", quote: "Keep critical, related content grouped together in the same viewport." }
+    scenario:
+      en: "The phone page is done. A teammate proposes using the same single column on the laptop, stretched to full width."
+      ar: "انتهت صفحة الهاتف. ويقترح أحد الزملاء استخدام العمود الواحد نفسه على الـ Laptop، ممطوطًا بكامل العرض."
+    prompt:
+      en: "Try each laptop layout. Which one should ship?"
+      ar: "جرّب كل تخطيط للـ Laptop. أيّها يجب أن يُطلق؟"
+    start: stretch
+    options:
+      - id: stretch
+        text: { en: "The phone column, stretched to full width", ar: "عمود الهاتف، ممطوطًا بكامل العرض" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: image, size: l, height: 200, text: "@H1f" }
+            - { kind: title, text: "@H1a", gap: m }
+            - { kind: meta, text: "@H1b", gap: s }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: button, text: "@H1e", gap: m }
+      - id: cols
+        text: { en: "Two columns: the gallery beside the booking panel", ar: "عمودان: المعرض بجانب لوحة الحجز" }
+        mock:
+          frame: wide
+          blocks: *hlaptop
+      - id: narrow
+        text: { en: "The phone column, centred at phone width, with empty space on both sides", ar: "عمود الهاتف في المنتصف بعرض الهاتف، مع مساحة فارغة على الجانبين" }
+        mock:
+          frame: wide
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: divider }
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: title, text: "@H1a" }
+                    - { kind: image, size: m, text: "@H1f", gap: s }
+                    - { kind: meta, text: "@H1b", gap: s }
+                    - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+                    - { kind: small, text: "@H1d", gap: s }
+                    - { kind: button, text: "@H1e", gap: m }
+                - { kind: divider }
+    answer: [cols]
+    misconceptions:
+      - id: MC-P10-065
+        when: [stretch, narrow]
+        feedback:
+          en: "Both reuse the phone layout. Stretched, the gallery fills the screen and the booking falls far below; centred, the page is long and the laptop's width is wasted. Rearrange for the wide screen."
+          ar: "كلاهما يعيد استخدام تخطيط الهاتف. ممطوطًا، يملأ المعرض الشاشة ويسقط الحجز بعيدًا في الأسفل؛ وفي المنتصف، تصبح الصفحة طويلة ويضيع عرض الـ Laptop. أعِد الترتيب للشاشة العريضة."
+    explain:
+      en: "From Lesson 1: responsive works both ways. On a wide screen, put related things side by side."
+      ar: "من الدرس 1: التصميم المتجاوب يعمل في الاتجاهين. على الشاشة العريضة، ضع الأشياء المترابطة جنبًا إلى جنب."
+
+  - id: S07
+    type: tune
+    skill: SK-P10-U04-05
+    part: check
+    rules: [R19]
+    value:
+      en: "Skill check, fitting isn't enough (NN/g): ensuring elements fit within a page is not enough; they must stay usable."
+      ar: "اختبار مهارة، الاتّساع لا يكفي (NN/g): التأكّد من أن العناصر تتّسع في الصفحة لا يكفي؛ يجب أن تبقى سهلة الاستخدام."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "However, ensuring that elements fit within a page is not enough." }
+    scenario:
+      en: "On the narrowest phone, the dates line is cut off: Dalia can't see which nights she's booking."
+      ar: "على أضيق هاتف، سطر التواريخ مقطوع: لا ترى داليا أي ليالٍ تحجز."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now, narrowest phone", ar: "الآن، أضيق هاتف" }
+      width: 250
+      blocks:
+        - { kind: title, text: "@H1a" }
+        - { kind: meta, nowrap: true, text: "@H1i", gap: s }
+        - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+        - { kind: button, text: "@H1e", gap: m }
+    options:
+      - id: wrap
+        text: { en: "Let the dates line wrap onto two lines", ar: "اسمح لسطر التواريخ بالالتفاف على سطرين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: meta, text: "@H1i", gap: s }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: button, text: "@H1e", gap: m }
+      - id: small
+        text: { en: "Shrink the dates line until it fits", ar: "صغّر سطر التواريخ حتى يتّسع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - { kind: text, px: 9, nowrap: true, text: "@H1i", gap: s }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: button, text: "@H1e", gap: m }
+      - id: scroll
+        text: { en: "Let the line scroll sideways", ar: "اسمح للسطر بالتحرّك جانبيًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 250
+          blocks:
+            - { kind: title, text: "@H1a" }
+            - kind: group
+              tone: plain
+              scroll: true
+              colw: 330
+              gap: s
+              blocks:
+                - kind: row
+                  blocks:
+                    - { kind: meta, text: "@H1i" }
+            - { kind: meta, weight: bold, text: "@H1c", gap: xs }
+            - { kind: button, text: "@H1e", gap: m }
+    answer: [wrap]
+    misconceptions:
+      - id: MC-P10-078
+        when: [small, scroll]
+        feedback:
+          en: "Tiny text fits but can't be read, and a sideways-scrolling line hides half the dates. Let it wrap."
+          ar: "النص الصغير جدًا يتّسع لكنه لا يُقرأ، والسطر الذي يتحرّك جانبيًا يُخفي نصف التواريخ. اسمح له بالالتفاف."
+    explain:
+      en: "From Lesson 2: at the narrow end, let lines wrap. Everything stays readable and on screen."
+      ar: "من الدرس 2: عند العرض الأضيق، دع الأسطر تلتفّ. فيبقى كل شيء مقروءًا وداخل الشاشة."

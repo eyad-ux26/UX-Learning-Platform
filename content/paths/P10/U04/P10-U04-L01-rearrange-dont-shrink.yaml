@@ -1,0 +1,463 @@
+id: P10-U04-L01
+mode: lesson
+minutes: 9
+title:
+  en: "Rearrange, don't shrink"
+  ar: "أعِد الترتيب، لا تصغّر"
+sources:
+  - title: { en: "Responsive Web Design (RWD) and User Experience (NN/g)", ar: "التصميم المتجاوب (Responsive design) وتجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/responsive-web-design-definition/"
+  - title: { en: "The Negative Impact of Mobile-First Web Design on Desktop (NN/g)", ar: "الأثر السلبي لتصميم «الهاتف أولًا» على الشاشات الكبيرة (NN/g)" }
+    url: "https://www.nngroup.com/articles/content-dispersion/"
+review_labels:
+  MC-P10-060: { en: "Responsive isn't scaling everything down", ar: "الـ Responsive design ليس تصغير كل شيء" }
+  MC-P10-061: { en: "Hide what's optional, never what decides", ar: "أخفِ الاختياري، لا ما يحسم القرار" }
+  MC-P10-062: { en: "Plan the phone order; don't inherit it", ar: "خطّط ترتيب الهاتف؛ لا ترثه" }
+  MC-P10-065: { en: "Don't just stretch the phone layout on a big screen", ar: "لا تمطّ تخطيط الهاتف على الشاشة الكبيرة" }
+  MC-P10-066: { en: "Facts come before the action in the reading order", ar: "المعلومات قبل الإجراء في ترتيب القراءة" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "The laptop layout", ar: "تخطيط الـ Laptop" }
+    body:
+      en: "On a laptop, Sara's page has two columns: the session details on one side, and a booking panel with Reserve on the other.\n\nOn her phone, the screen is about a third as wide. Something has to give."
+      ar: "على الـ Laptop، صفحة سارة فيها عمودان: تفاصيل الجلسة في جانب، ولوحة الحجز مع زر الحجز في الجانب الآخر.\n\nأما على هاتفها، فعرض الشاشة نحو الثلث. يجب أن يتغيّر شيء ما."
+    mock:
+      frame: wide
+      caption: { en: "Laptop", ar: "Laptop" }
+      blocks: &laptop
+        - { kind: title, text: "@W1a" }
+        - kind: row
+          gap: m
+          blocks:
+            - kind: group
+              tone: plain
+              blocks:
+                - { kind: image, size: m, text: "@W1i" }
+                - { kind: meta, text: "@W1b", gap: m }
+                - { kind: meta, text: "@W1c", gap: xs }
+                - { kind: small, text: "@W1g", gap: s }
+            - kind: group
+              blocks:
+                - { kind: meta, text: "@W1d" }
+                - { kind: chip, text: "@W1e", gap: s }
+                - { kind: button, text: "@W1f", gap: m }
+                - { kind: link, text: "@W1h", gap: s }
+
+  - id: S02
+    type: tune
+    skill: SK-P10-U04-01
+    part: try
+    rules: [R12]
+    value:
+      en: "Responsive design (NN/g): page elements reshuffle as the viewport shrinks; a multi-column desktop design ends as a single column on a phone."
+      ar: "التصميم المتجاوب (NN/g): تُعاد ترتيب عناصر الصفحة كلما صغرت الشاشة؛ والتصميم متعدّد الأعمدة على الكمبيوتر ينتهي بعمود واحد على الهاتف."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "In responsive design, page elements reshuffle as the viewport grows or shrinks." }
+    prompt:
+      en: "Try each way of fitting the page on Sara's phone. Which one should ship?"
+      ar: "جرّب كل طريقة لعرض الصفحة على هاتف سارة. أيّها يجب أن تُطلق؟"
+    start: scale
+    options:
+      - id: scale
+        text: { en: "Scale the whole laptop page down to fit", ar: "صغّر صفحة الـ Laptop كلها حتى تتّسع" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: text, px: 8, weight: bold, text: "@W1a" }
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: image, size: s, text: "" }
+                    - { kind: text, px: 5, text: "@W1b", gap: xs }
+                    - { kind: text, px: 5, text: "@W1c", gap: xs }
+                    - { kind: text, px: 5, text: "@W1g", gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: text, px: 5, text: "@W1d" }
+                    - { kind: text, px: 5, text: "@W1e", gap: xs }
+                    - { kind: text, px: 5, weight: bold, color: brand, text: "@W1f", gap: xs }
+      - id: squeeze
+        text: { en: "Keep both columns, each half the phone's width", ar: "أبقِ العمودين، كلٌّ بنصف عرض الهاتف" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - kind: row
+              gap: s
+              blocks:
+                - kind: group
+                  tone: plain
+                  blocks:
+                    - { kind: image, size: s, text: "@W1i" }
+                    - { kind: meta, text: "@W1b", gap: s }
+                    - { kind: meta, text: "@W1c", gap: xs }
+                - kind: group
+                  blocks:
+                    - { kind: meta, text: "@W1d" }
+                    - { kind: chip, text: "@W1e", gap: s }
+                    - { kind: button, text: "@W1f", gap: s }
+      - id: stack
+        text: { en: "One column at full width: details, then the booking panel, at normal text sizes", ar: "عمود واحد بكامل العرض: التفاصيل، ثم لوحة الحجز، بأحجام النص العادية" }
+        mock:
+          caption: { en: "Phone", ar: "الهاتف" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: meta, text: "@W1d", gap: xs }
+            - { kind: chip, text: "@W1e", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: small, text: "@W1g", gap: s }
+    answer: [stack]
+    misconceptions:
+      - id: MC-P10-060
+        when: [scale, squeeze]
+        feedback:
+          en: "Shrinking makes the text tiny, and squeezing two columns breaks every line into a few words. The phone needs a new arrangement, not a smaller copy."
+          ar: "التصغير يجعل النص صغيرًا جدًا، وعصر العمودين يكسر كل سطر إلى بضع كلمات. الهاتف يحتاج ترتيبًا جديدًا، لا نسخة أصغر."
+    hints:
+      - { en: "Try reading the text in each version. Is it still a normal size?", ar: "جرّب قراءة النص في كل نسخة. هل ما زال بحجم طبيعي؟" }
+      - { en: "The screen is narrower. Should the page shrink, or rearrange?", ar: "الشاشة أضيق. هل يجب أن تتقلّص الصفحة، أم أن يُعاد ترتيبها؟" }
+    correct:
+      en: "Rearrange into one column; keep the text readable."
+      ar: "أعِد الترتيب في عمود واحد؛ وأبقِ النص مقروءًا."
+    explain:
+      en: "A phone is about a third as wide, so a scaled-down page has text about a third the size. Responsive layouts rearrange: the columns stack, and every line stays at a size people can read."
+      ar: "الهاتف بنحو ثلث العرض، فالصفحة المصغّرة يصبح نصها بنحو ثلث الحجم. أما التخطيط المتجاوب فيُعيد الترتيب: تتراصّ الأعمدة، ويبقى كل سطر بحجم يستطيع الناس قراءته."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [phone, list, eye, layers]
+    title: { en: "Same content, new arrangement", ar: "المحتوى نفسه، بترتيب جديد" }
+    body:
+      en: "**Responsive design** means the layout reshuffles to fit the screen. It doesn't mean shrinking.\n\n- **Stack, don't shrink:** columns go one under the other on a phone, at readable sizes.\n- **Plan the phone order:** a phone shows less at once, so put what matters most first. Don't just inherit the laptop's columns.\n- **Same information everywhere:** hide or shrink only what's optional; keep every fact people decide with.\n- **Both directions:** a phone layout stretched across a big screen spreads related things too far apart."
+      ar: "**التصميم المتجاوب (Responsive design)** يعني أن التخطيط يُعاد ترتيبه ليناسب الشاشة. ولا يعني التصغير.\n\n- **رُصّ ولا تصغّر:** تصبح الأعمدة واحدًا تحت الآخر على الهاتف، بأحجام مقروءة.\n- **خطّط ترتيب الهاتف:** الهاتف يعرض أقل في المرة الواحدة، فضع الأهم أولًا. لا ترث أعمدة الـ Laptop كما هي.\n- **المعلومات نفسها في كل جهاز:** أخفِ أو صغّر الاختياري فقط؛ وأبقِ كل معلومة يقرّر بها الناس.\n- **في الاتجاهين:** تخطيط الهاتف الممطوط على شاشة كبيرة يُبعد الأشياء المترابطة عن بعضها كثيرًا."
+
+  - id: S04
+    type: tune
+    skill: SK-P10-U04-02
+    part: guided
+    rules: [R06, R13]
+    value:
+      en: "Responsive design (NN/g): smart content prioritization helps users find what they need on a small screen. Stacking the laptop columns as they are puts the price and Reserve after the photo and the rule."
+      ar: "التصميم المتجاوب (NN/g): ترتيب أولويات المحتوى بذكاء يساعد المستخدمين على إيجاد ما يحتاجونه على الشاشة الصغيرة. ورصّ أعمدة الـ Laptop كما هي يضع السعر وزر الحجز بعد الصورة والشرط."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "Smart content prioritization helps users find what they need more efficiently." }
+    scenario:
+      en: "The developer stacked the laptop columns as they were: the left column first, then the right one."
+      ar: "رصّ المطوّر أعمدة الـ Laptop كما هي: العمود الأيسر أولًا، ثم الأيمن."
+    prompt:
+      en: "Try each phone order. Which one should ship?"
+      ar: "جرّب كل ترتيب على الهاتف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      height: 420
+      blocks: &inherit
+        - { kind: title, text: "@W1a" }
+        - { kind: image, size: l, text: "@W1i", gap: s }
+        - { kind: meta, text: "@W1b", gap: s }
+        - { kind: meta, text: "@W1c", gap: xs }
+        - { kind: small, text: "@W1g", gap: s }
+        - { kind: meta, text: "@W1d", gap: m }
+        - { kind: chip, text: "@W1e", gap: s }
+        - { kind: button, text: "@W1f", gap: s }
+    options:
+      - id: keep
+        text: { en: "Keep it; it's the same order as the laptop, so it's consistent", ar: "أبقِه؛ إنه ترتيب الـ Laptop نفسه، فهو متّسق" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          height: 420
+          blocks: *inherit
+      - id: first
+        text: { en: "Reserve first, so it's on screen at once", ar: "زر الحجز أولًا، حتى يظهر فورًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          height: 420
+          blocks:
+            - { kind: button, text: "@W1f" }
+            - { kind: title, text: "@W1a", gap: m }
+            - { kind: image, size: l, text: "@W1i", gap: s }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: meta, text: "@W1d", gap: xs }
+      - id: decide
+        text: { en: "Title, time, place, price, places left, Reserve; then the rule and a small photo", ar: "العنوان، الموعد، المكان، السعر، الأماكن المتبقية، زر الحجز؛ ثم الشرط وصورة صغيرة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          height: 420
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: meta, text: "@W1d", gap: xs }
+            - { kind: chip, text: "@W1e", gap: s }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: small, text: "@W1g", gap: s }
+            - { kind: image, size: s, text: "@W1i", gap: m }
+    answer: [decide]
+    misconceptions:
+      - id: MC-P10-062
+        when: [keep]
+        feedback:
+          en: "On the laptop, the booking panel sat beside the details, visible at once. Stacked as is, the price and Reserve fall below a big photo. Plan the phone order on purpose."
+          ar: "على الـ Laptop كانت لوحة الحجز بجانب التفاصيل، ظاهرة فورًا. أما بالرصّ كما هي، فيسقط السعر وزر الحجز تحت صورة كبيرة. خطّط ترتيب الهاتف عن قصد."
+      - id: MC-P10-066
+        when: [first]
+        feedback:
+          en: "Now Sara meets Reserve before she knows the price. On a phone too, the action follows the facts it depends on."
+          ar: "الآن تلتقي سارة بزر الحجز قبل أن تعرف السعر. وعلى الهاتف أيضًا، يأتي الإجراء بعد المعلومات التي يعتمد عليها."
+    hints:
+      - { en: "Follow Sara's question from the top: what does she need to know before she reserves?", ar: "تابع سؤال سارة من الأعلى: ماذا تحتاج أن تعرف قبل أن تحجز؟" }
+      - { en: "Is the laptop order or the order of her decision what matters on the phone?", ar: "هل ما يهم على الهاتف هو ترتيب اللابتوب، أم ترتيب قرارها؟" }
+    correct:
+      en: "Stacked in the order Sara decides."
+      ar: "مرصوصة بترتيب قرار سارة."
+    explain:
+      en: "Side-by-side columns don't have a natural stacking order. Choose one: the facts Sara decides with, then Reserve, then what supports or decorates."
+      ar: "الأعمدة المتجاورة ليس لها ترتيب رصّ طبيعي. اختر أنت: المعلومات التي تقرّر بها سارة، ثم زر الحجز، ثم ما يساند أو يزيّن."
+
+  - id: S05
+    type: tune
+    skill: SK-P10-U04-03
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Responsive design (NN/g): the goal is equivalent access to information on every device. Some secondary items may be hidden on small screens, based on what users need."
+      ar: "التصميم المتجاوب (NN/g): الهدف وصول متكافئ إلى المعلومات في كل جهاز. ويمكن إخفاء بعض العناصر الثانوية على الشاشات الصغيرة، حسب حاجة المستخدمين."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "The goal of many responsive designs is to give equivalent access to information regardless of device." }
+    scenario:
+      en: "The phone page is still long. The team wants to cut something on phones only."
+      ar: "ما زالت صفحة الهاتف طويلة. ويريد الفريق حذف شيء على الهاتف فقط."
+    prompt:
+      en: "Try each cut. Which one should ship?"
+      ar: "جرّب كل حذف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: &phone
+        - { kind: title, text: "@W1a" }
+        - { kind: meta, text: "@W1b", gap: s }
+        - { kind: meta, text: "@W1c", gap: xs }
+        - { kind: meta, text: "@W1d", gap: xs }
+        - { kind: button, text: "@W1f", gap: m }
+        - { kind: small, text: "@W1g", gap: s }
+        - { kind: link, text: "@W1h", gap: s }
+        - { kind: image, size: m, text: "@W1i", gap: m }
+    options:
+      - id: access
+        text: { en: "Remove the step-free access link; few people use it", ar: "احذف رابط الدخول دون سلالم؛ قليلون يستخدمونه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: meta, text: "@W1d", gap: xs }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: small, text: "@W1g", gap: s }
+            - { kind: image, size: m, text: "@W1i", gap: m }
+      - id: photo
+        text: { en: "Shrink the decorative photo to a small thumbnail", ar: "صغّر الصورة التزيينية إلى صورة مصغّرة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: meta, text: "@W1d", gap: xs }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: small, text: "@W1g", gap: s }
+            - { kind: link, text: "@W1h", gap: s }
+            - { kind: image, size: s, text: "@W1i", gap: m }
+      - id: rule
+        text: { en: "Move the price and the cancellation rule behind \"Details\"", ar: "انقل السعر وشرط الإلغاء خلف «التفاصيل»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@W1a" }
+            - { kind: meta, text: "@W1b", gap: s }
+            - { kind: meta, text: "@W1c", gap: xs }
+            - { kind: button, text: "@W1f", gap: m }
+            - { kind: link, text: { en: "Details", ar: "التفاصيل" }, gap: s }
+            - { kind: link, text: "@W1h", gap: s }
+            - { kind: image, size: m, text: "@W1i", gap: m }
+    answer: [photo]
+    misconceptions:
+      - id: MC-P10-061
+        when: [access, rule]
+        feedback:
+          en: "A phone user needs the same facts as a laptop user: the price, the rule, and step-free access for those who need it. Cut only what's decorative."
+          ar: "مستخدم الهاتف يحتاج المعلومات نفسها التي يحتاجها مستخدم الـ Laptop: السعر، والشرط، والدخول دون سلالم لمن يحتاجه. احذف فقط ما هو للزينة."
+    hints:
+      - { en: "Which of these does Sara need to decide or to come?", ar: "أيّ هذه تحتاجها سارة لتقرّر أو لتحضر؟" }
+      - { en: "Every fact stays. What on the page is only decoration?", ar: "كل المعلومات تبقى. ما الشيء في الصفحة الذي هو مجرد زينة؟" }
+    correct:
+      en: "Shrink what's optional; keep every fact."
+      ar: "صغّر الاختياري؛ وأبقِ كل معلومة."
+    explain:
+      en: "A smaller screen changes how much fits at once, not what people need. The few people who need step-free access need it just as much on a phone."
+      ar: "الشاشة الأصغر تغيّر كم يتّسع في المرة الواحدة، لا ما يحتاجه الناس. والقليلون الذين يحتاجون الدخول دون سلالم يحتاجونه على الهاتف بالقدر نفسه."
+
+  - id: S06
+    type: compare
+    skill: SK-P10-U04-04
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast: responsive works in both directions. NN/g on content dispersion: a mobile-first page scaled up to desktop becomes large and overly dispersed; keep critical, related content grouped in the same viewport."
+      ar: "مقارنة: التصميم المتجاوب يعمل في الاتجاهين. NN/g عن تشتّت المحتوى: صفحة «الهاتف أولًا» المكبّرة على الكمبيوتر تصبح ضخمة ومتفرّقة؛ أبقِ المحتوى المهم والمترابط مجموعًا في الشاشة نفسها."
+    ref: { url: "https://www.nngroup.com/articles/content-dispersion/", quote: "Keep critical, related content grouped together in the same viewport." }
+    scenario:
+      en: "The team designed the phone page first. Now they're making the laptop version of the same page."
+      ar: "صمّم الفريق صفحة الهاتف أولًا. والآن يصنعون نسخة الـ Laptop من الصفحة نفسها."
+    prompt:
+      en: "Which laptop version should ship?"
+      ar: "أي نسخة للـ Laptop يجب أن تُطلق؟"
+    a:
+      mock:
+        frame: wide
+        height: 300
+        blocks:
+          - { kind: image, size: l, height: 200, text: "@W1i" }
+          - { kind: title, text: "@W1a", gap: m }
+          - { kind: meta, text: "@W1b", gap: s }
+          - { kind: meta, text: "@W1c", gap: xs }
+          - { kind: meta, text: "@W1d", gap: xs }
+          - { kind: button, text: "@W1f", gap: m }
+    b:
+      mock:
+        frame: wide
+        height: 300
+        blocks: *laptop
+    answer: b
+    reason:
+      prompt: { en: "Why is B better on a laptop?", ar: "لماذا B أفضل على الـ Laptop؟" }
+      options:
+        - { id: wide, text: { en: "Wide screens should always use two columns", ar: "الشاشات العريضة يجب أن تستخدم عمودين دائمًا" } }
+        - { id: together, text: { en: "The facts and Reserve are seen together, without scrolling past a huge photo", ar: "المعلومات وزر الحجز يظهران معًا، دون تمرير بعد صورة ضخمة" } }
+        - { id: same, text: { en: "Layouts should look different on every device", ar: "يجب أن يبدو التخطيط مختلفًا في كل جهاز" } }
+      answer: [together]
+      misconceptions:
+        - id: MC-P10-065
+          when: [wide, same]
+          feedback:
+            en: "The number of columns isn't the point. A stretches the phone layout, so the photo fills the screen and the facts and Reserve end up far below."
+            ar: "عدد الأعمدة ليس المقصود. A تمطّ تخطيط الهاتف، فتملأ الصورة الشاشة وينتهي الأمر بالمعلومات وزر الحجز بعيدًا في الأسفل."
+    misconceptions:
+      - id: MC-P10-065
+        when: [a]
+        feedback:
+          en: "A is the phone layout stretched wide: one huge photo, then everything else far below. Use the extra width to keep related things together."
+          ar: "A هي تخطيط الهاتف ممطوطًا: صورة ضخمة واحدة، ثم كل شيء آخر بعيدًا في الأسفل. استخدم العرض الإضافي لتُبقي الأشياء المترابطة معًا."
+    hints:
+      - { en: "The laptop has much more room. What does each version do with it?", ar: "اللابتوب فيه مساحة أكبر بكثير. ماذا تفعل كل نسخة بهذه المساحة؟" }
+      - { en: "Does a stretched phone layout use a wide screen well?", ar: "هل تخطيط الهاتف الممدود يستخدم الشاشة العريضة جيدًا؟" }
+    correct:
+      en: "Rearrange for the big screen too."
+      ar: "أعِد الترتيب للشاشة الكبيرة أيضًا."
+    explain:
+      en: "Stacking was right for the phone because the screen is narrow. On a laptop the same stack spreads out, and people scroll for what used to sit side by side. Each width gets its own arrangement of the same content."
+      ar: "كان الرصّ صحيحًا للهاتف لأن الشاشة ضيّقة. أما على الـ Laptop فالرصّ نفسه يتفرّق، ويمرّر الناس بحثًا عمّا كان متجاورًا. لكل عرض ترتيبه الخاص للمحتوى نفسه."
+
+  - id: S07
+    type: tune
+    skill: SK-P10-U04-02
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Responsive design (NN/g): on a smartphone, users may have to scroll a long way to discover the content they need; prioritize it."
+      ar: "حالة جديدة. التصميم المتجاوب (NN/g): على الهاتف قد يضطر المستخدمون إلى تمرير طويل ليجدوا المحتوى الذي يحتاجونه؛ فرتّب الأولويات."
+    ref: { url: "https://www.nngroup.com/articles/responsive-web-design-definition/", quote: "On a smartphone, users may have to scroll endlessly to discover the content of interest." }
+    scenario:
+      en: "Mariam is picking up medicine from a pharmacy. On a laptop, the pickup page shows a big map beside the pickup details. On her phone, the map now comes first, and it's taller than the screen."
+      ar: "تستلم مريم دواءً من صيدلية. على الـ Laptop، تعرض صفحة الاستلام خريطة كبيرة بجانب تفاصيل الاستلام. وعلى هاتفها، تأتي الخريطة الآن أولًا، وهي أطول من الشاشة."
+    prompt:
+      en: "Try each phone layout. Which one should ship?"
+      ar: "جرّب كل تخطيط للهاتف. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      height: 380
+      blocks: &pharm
+        - { kind: image, size: l, height: 330, text: { en: "Map", ar: "خريطة" } }
+        - { kind: title, text: { en: "Ready for pickup", ar: "جاهز للاستلام" }, gap: m }
+        - { kind: meta, text: { en: "Pickup code: 4417", ar: "رمز الاستلام: 4417" }, gap: s }
+    options:
+      - id: details
+        text: { en: "Pickup code, address and hours first, then a \"Get directions\" button; a small map after", ar: "رمز الاستلام والعنوان والمواعيد أولًا، ثم زر «اعرف الطريق»؛ وخريطة صغيرة بعدها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          height: 380
+          blocks:
+            - { kind: title, text: { en: "Ready for pickup", ar: "جاهز للاستلام" } }
+            - { kind: meta, weight: bold, text: { en: "Pickup code: 4417", ar: "رمز الاستلام: 4417" }, gap: s }
+            - { kind: meta, text: { en: "12 Tahrir Street, ground floor", ar: "12 شارع التحرير، الطابق الأرضي" }, gap: xs }
+            - { kind: meta, text: { en: "Open today until 22:00", ar: "مفتوح اليوم حتى الساعة 22:00" }, gap: xs }
+            - { kind: button, text: { en: "Get directions", ar: "اعرف الطريق" }, gap: m }
+            - { kind: image, size: m, text: { en: "Map", ar: "خريطة" }, gap: m }
+      - id: shrink
+        text: { en: "Keep the map first, but make it half as tall", ar: "أبقِ الخريطة أولًا، لكن اجعل طولها النصف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          height: 380
+          blocks:
+            - { kind: image, size: l, height: 165, text: { en: "Map", ar: "خريطة" } }
+            - { kind: title, text: { en: "Ready for pickup", ar: "جاهز للاستلام" }, gap: m }
+            - { kind: meta, text: { en: "Pickup code: 4417", ar: "رمز الاستلام: 4417" }, gap: s }
+            - { kind: meta, text: { en: "12 Tahrir Street, ground floor", ar: "12 شارع التحرير، الطابق الأرضي" }, gap: xs }
+            - { kind: meta, text: { en: "Open today until 22:00", ar: "مفتوح اليوم حتى الساعة 22:00" }, gap: xs }
+      - id: maponly
+        text: { en: "Show only the map on phones, with the pharmacy as a pin", ar: "اعرض الخريطة فقط على الهاتف، والصيدلية علامة عليها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          height: 380
+          blocks:
+            - { kind: image, size: l, height: 360, text: { en: "Map with a pin", ar: "خريطة عليها علامة" } }
+    answer: [details]
+    misconceptions:
+      - id: MC-P10-062
+        when: [shrink]
+        feedback:
+          en: "A smaller map still pushes the pickup code down. Mariam needs the code and the address first; the map supports them."
+          ar: "الخريطة الأصغر ما زالت تدفع رمز الاستلام إلى الأسفل. مريم تحتاج الرمز والعنوان أولًا؛ والخريطة تساندهما."
+      - id: MC-P10-061
+        when: [maponly]
+        feedback:
+          en: "Now the pickup code and opening hours are gone on phones, and Mariam needs them at the counter. Keep every fact."
+          ar: "الآن اختفى رمز الاستلام ومواعيد العمل على الهاتف، ومريم تحتاجهما عند الشبّاك. أبقِ كل معلومة."
+    hints:
+      - { en: "What does Mariam need to collect her medicine?", ar: "ماذا تحتاج مريم لاستلام دوائها؟" }
+      - { en: "The map helps her get there. Should it come before the facts?", ar: "الخريطة تساعدها على الوصول. هل يجب أن تأتي قبل المعلومات؟" }
+    correct:
+      en: "The facts first; the map supports them."
+      ar: "المعلومات أولًا؛ والخريطة تساندها."
+    explain:
+      en: "Same move as Sara's page: on a phone, choose the order. The code, address and hours are what Mariam needs; the map and directions help her get there."
+      ar: "الخطوة نفسها في صفحة سارة: على الهاتف، اختر الترتيب. الرمز والعنوان والمواعيد هي ما تحتاجه مريم؛ والخريطة والطريق يساعدانها على الوصول."
+
+  - id: S08
+    type: card
+    part: recap
+    icons: [phone, list, eye, layers]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **Stack, don't shrink:** one readable column on the phone.\n- **Plan the order:** the facts, then the action, then the extras.\n- **Same facts everywhere:** shrank the photo; kept every fact.\n- **Both directions:** gave the laptop its own arrangement too.\n\nNext lesson: checking a layout at every width, not just one."
+      ar: "- **رُصّ ولا تصغّر:** عمود واحد مقروء على الهاتف.\n- **خطّط الترتيب:** المعلومات، ثم الإجراء، ثم الإضافات.\n- **المعلومات نفسها في كل مكان:** صغّرت الصورة؛ وأبقيت كل معلومة.\n- **في الاتجاهين:** أعطيت الـ Laptop ترتيبه الخاص أيضًا.\n\nالدرس التالي: فحص التخطيط على كل عرض، لا على عرض واحد."
