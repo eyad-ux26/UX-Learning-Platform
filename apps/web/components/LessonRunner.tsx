@@ -8,12 +8,16 @@ import { startLesson, type LessonState, type TryEvent } from "@uxgate/player/eng
 import { kvDel, kvGet, kvSet } from "@/lib/idb";
 import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
+import { kick, startSync, useSyncStatus } from "@/lib/sync";
+import { useTranslations } from "next-intl";
 import { LessonEnd } from "./LessonEnd";
 
 type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; unitId: string };
 
 export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props) {
   const router = useRouter();
+  const t = useTranslations("sync");
+  const sync = useSyncStatus();
   const [state, setState] = useState<LessonState | null>(null);
   const [finished, setFinished] = useState<LessonState | null>(null);
   const [muted, setMutedState] = useState(false);
@@ -22,6 +26,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
 
   useEffect(() => {
     initSound();
+    startSync();
     setMutedState(readMuted());
     let alive = true;
     (async () => {
@@ -35,7 +40,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
   }, [lesson, hash, key]);
 
   const onState = useCallback((s: LessonState) => { kvSet(key, s).catch(() => {}); }, [key]);
-  const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(attemptId.current, e).catch(() => {}); }, []);
+  const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(attemptId.current, e).then(kick).catch(() => {}); }, []);
   const onFinish = useCallback((s: LessonState) => {
     kvDel(key).catch(() => {});
     play("lesson-complete");
@@ -46,6 +51,8 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
   if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} onContinue={() => router.push("/app")} />;
 
   return (
+    <>
+    {!sync.online ? <p className="offline-bar" role="status"><span className="ph ph-lock" aria-hidden="true" />{t("offline")}</p> : null}
     <LessonPlayer
       lesson={lesson} locale={locale} initial={state} pathLabel={pathLabel}
       muted={muted}
@@ -54,5 +61,6 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
       onExit={() => router.push("/app")}
       onFinish={onFinish}
     />
+    </>
   );
 }

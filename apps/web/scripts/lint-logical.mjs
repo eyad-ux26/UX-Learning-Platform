@@ -29,7 +29,7 @@ const walk = (d) => {
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, e.name);
     if (e.isDirectory()) walk(p);
-    else if (/\.(css|tsx?)$/.test(e.name)) files.push(p);
+    else if (/\.(css|tsx?)$/.test(e.name) && !/\.test\./.test(e.name)) files.push(p);
   }
 };
 for (const d of dirs) if (fs.existsSync(path.join(root, d))) walk(path.join(root, d));
