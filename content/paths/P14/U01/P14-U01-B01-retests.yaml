@@ -1,0 +1,649 @@
+id: P14-U01-B01
+mode: bank
+title:
+  en: "Re-tests: interrupt only when it's worth it"
+  ar: "إعادة اختبار: لا تقاطع إلا حين يستحق الأمر"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Modal & Nonmodal Dialogs: When (& When Not) to Use Them (NN/g)", ar: "النوافذ الـ Modal والـ Nonmodal: متى نستخدمها ومتى لا (NN/g)" }
+    url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/"
+  - title: { en: "Confirmation Dialogs Can Prevent User Errors (NN/g)", ar: "نوافذ التأكيد تمنع أخطاء المستخدمين (NN/g)" }
+    url: "https://www.nngroup.com/articles/confirmation-dialog/"
+  - title: { en: "Bottom Sheets: Definition and UX Guidelines (NN/g)", ar: "الـ Bottom sheets: التعريف وإرشادات تجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/bottom-sheet/"
+  - title: { en: "Tooltip Guidelines (NN/g)", ar: "إرشادات الـ Tooltip (NN/g)" }
+    url: "https://www.nngroup.com/articles/tooltip-guidelines/"
+  - title: { en: "Indicators, Validations, and Notifications (NN/g)", ar: "المؤشرات والتحقّق والإشعارات (NN/g)" }
+    url: "https://www.nngroup.com/articles/indicators-validations-notifications/"
+steps:
+  # SK-P14-U01-01: block the screen only when the task needs it
+  - id: S01
+    type: tune
+    skill: SK-P14-U01-01
+    part: retest
+    value:
+      en: "Re-test, modal dialogs (NN/g): use them for important warnings that prevent critical errors. Closing a file with unsaved edits loses work, so it's worth a dialog with clear choices."
+      ar: "إعادة اختبار، النوافذ الـ Modal (NN/g): استخدمها للتحذيرات المهمة التي تمنع أخطاء كبيرة. وإغلاق ملف فيه تعديلات غير محفوظة يُضيّع العمل، فيستحق Dialog بخيارات واضحة."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Use modal dialogs for important warnings, as a way to prevent or correct critical errors." }
+    scenario:
+      en: "Hany edits photos on a website. He has spent 20 minutes on one photo and hasn't saved. He clicks the ✕ to close it."
+      ar: "يعدّل هاني الصور على موقع. قضى 20 دقيقة على صورة واحدة ولم يحفظ. ثم ضغط ✕ ليغلقها."
+    prompt:
+      en: "Try each version of what happens. Which one should ship?"
+      ar: "جرّب كل نسخة لما يحدث. أيّها يجب أن تُطلق؟"
+    start: close
+    options:
+      - id: close
+        text: { en: "Close the photo at once", ar: "أغلق الصورة فورًا" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: title, text: { en: "My photos", ar: "صوري" } }
+            - { kind: meta, text: { en: "beach.jpg · last saved 20 minutes ago", ar: "beach.jpg · آخر حفظ قبل 20 دقيقة" }, gap: m }
+      - id: ask
+        text: { en: "A dialog: \"Save changes to beach.jpg?\" with Save, Don't save and Cancel", ar: "Dialog: «حفظ التغييرات في beach.jpg؟» مع «احفظ» و«لا تحفظ» و«إلغاء»" }
+        mock:
+          frame: wide
+          blocks: &editor
+            - { kind: title, text: { en: "beach.jpg", ar: "beach.jpg" } }
+            - { kind: image, size: l, gap: m }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Save changes to beach.jpg?", ar: "حفظ التغييرات في beach.jpg؟" } }
+              - { kind: small, text: { en: "20 minutes of edits will be lost if you don't save.", ar: "ستضيع تعديلات 20 دقيقة إن لم تحفظ." }, gap: s }
+              - kind: row
+                gap: m
+                blocks:
+                  - { kind: button, text: { en: "Save", ar: "احفظ" } }
+                  - { kind: button, text: { en: "Don't save", ar: "لا تحفظ" }, style: plain }
+                  - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: plain }
+      - id: snack
+        text: { en: "Close it, with a snackbar: \"Unsaved changes were discarded\"", ar: "أغلقها، مع Snackbar: «تم تجاهل التغييرات غير المحفوظة»" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: title, text: { en: "My photos", ar: "صوري" } }
+            - { kind: meta, text: { en: "beach.jpg · last saved 20 minutes ago", ar: "beach.jpg · آخر حفظ قبل 20 دقيقة" }, gap: m }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Unsaved changes were discarded.", ar: "تم تجاهل التغييرات غير المحفوظة." } }
+    answer: [ask]
+    misconceptions:
+      - id: MC-P14-003
+        when: [close, snack]
+        feedback:
+          en: "If Hany clicked ✕ by habit, 20 minutes of work are gone. A message afterwards can't bring them back."
+          ar: "إن ضغط هاني ✕ بحكم العادة، ضاع عمل 20 دقيقة. والرسالة بعد ذلك لا تعيده."
+    correct:
+      en: "Work would be lost: warn first, in a dialog."
+      ar: "سيضيع عمل: حذّر أولًا، في Dialog."
+    explain:
+      en: "Losing unsaved work is a critical mistake. The dialog stops it and labels each button with what it does."
+      ar: "ضياع العمل غير المحفوظ خطأ كبير. والـ Dialog يمنعه، وعلى كل زر ما يفعله."
+
+  - id: S02
+    type: tune
+    skill: SK-P14-U01-01
+    part: retest
+    value:
+      en: "Re-test, modal dialogs (NN/g): don't use them for nonessential information unrelated to the current flow. A newsletter offer while typing passenger details is unrelated; an unticked checkbox on the confirmation page is not in the way."
+      ar: "إعادة اختبار، النوافذ الـ Modal (NN/g): لا تستخدمها لمعلومات غير ضرورية ولا علاقة لها بالمهمة الحالية. وعرض النشرة البريدية أثناء كتابة بيانات المسافر لا علاقة له بالمهمة؛ أما Checkbox غير محدّد في صفحة التأكيد فلا يعترض الطريق."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Do not use modal dialogs for nonessential information that is not related to the current user flow." }
+    scenario:
+      en: "Lobna is typing passenger details for a flight. Halfway through, a dialog asks her to sign up for the airline's newsletter."
+      ar: "تكتب لبنى بيانات المسافرين لرحلة طيران. وفي منتصف ذلك، يظهر Dialog يطلب منها الاشتراك في النشرة البريدية لشركة الطيران."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: keep
+    options:
+      - id: keep
+        text: { en: "Keep the newsletter dialog", ar: "أبقِ Dialog النشرة البريدية" }
+        mock:
+          width: 300
+          blocks: &pax
+            - { kind: title, text: { en: "Passenger 1 of 2", ar: "المسافر 1 من 2" } }
+            - { kind: field, label: { en: "Full name as on passport", ar: "الاسم كاملًا كما في جواز السفر" }, filled: true, text: "Lobna Adel", gap: m }
+            - { kind: field, label: { en: "Passport number", ar: "رقم جواز السفر" }, text: "", gap: s }
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Never miss a deal!", ar: "لا تفوّتي أي عرض!" } }
+              - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "", gap: s }
+              - { kind: button, text: { en: "Subscribe", ar: "اشتركي" }, gap: m }
+      - id: box
+        text: { en: "Remove the dialog; add an unticked newsletter checkbox on the booking-confirmed page", ar: "احذف الـ Dialog؛ وأضف Checkbox غير محدّد للنشرة في صفحة تأكيد الحجز" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Booking confirmed", ar: "تم تأكيد الحجز" } }
+            - { kind: meta, text: { en: "Cairo → Jeddah · 14 Nov", ar: "القاهرة ← جدة · 14 نوفمبر" }, gap: s }
+            - { kind: check, text: { en: "Email me deals on this route", ar: "أرسلوا لي عروض هذا الخط بالبريد" }, gap: l }
+      - id: end
+        text: { en: "Keep the dialog, but show it after passenger 2", ar: "أبقِ الـ Dialog، لكن اعرضه بعد المسافر الثاني" }
+        mock:
+          caption: { en: "After passenger 2, before payment", ar: "بعد المسافر الثاني، قبل الدفع" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Payment", ar: "الدفع" } }
+            - { kind: meta, text: { en: "2 passengers · EGP 18,400", ar: "مسافران · 18400 جنيه" }, gap: s }
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Never miss a deal!", ar: "لا تفوّتي أي عرض!" } }
+              - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "", gap: s }
+              - { kind: button, text: { en: "Subscribe", ar: "اشتركي" }, gap: m }
+    answer: [box]
+    misconceptions:
+      - id: MC-P14-001
+        when: [keep]
+        feedback:
+          en: "The newsletter has nothing to do with the passenger details, and it stops Lobna halfway through typing them."
+          ar: "النشرة البريدية لا علاقة لها ببيانات المسافرين، وهي توقف لبنى في منتصف كتابتها."
+      - id: MC-P14-002
+        when: [end]
+        feedback:
+          en: "Now it blocks the payment step instead. It's still unrelated and still in the middle of booking."
+          ar: "الآن يحجب خطوة الدفع بدلًا من ذلك. وما زال غير مرتبط بالمهمة، وما زال في منتصف الحجز."
+    correct:
+      en: "Unrelated: take it out of the flow."
+      ar: "غير مرتبط: أخرِجه من المسار."
+    explain:
+      en: "After the booking, an unticked checkbox offers the newsletter without stopping anything, and only people who want it tick it."
+      ar: "بعد الحجز، يعرض Checkbox غير محدّد النشرة دون أن يوقف شيئًا، ولا يحدّده إلا من يريدها."
+
+  # SK-P14-U01-02: keep decisions that need more information out of a modal
+  - id: S03
+    type: compare
+    skill: SK-P14-U01-02
+    part: retest
+    value:
+      en: "Re-test, modal dialogs (NN/g): avoid them for decisions that need information the modal doesn't show. Choosing coverage depends on the car's value and age."
+      ar: "إعادة اختبار، النوافذ الـ Modal (NN/g): تجنّبها للقرارات التي تحتاج معلومات لا تعرضها النافذة. واختيار التغطية يعتمد على قيمة السيارة وعمرها."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs for complex decision making that requires additional sources of information unavailable in the modal." }
+    scenario:
+      en: "Aya is choosing car insurance. Which plan makes sense depends on her car's value (EGP 650,000) and age (9 years), shown on the car's page."
+      ar: "تختار آية تأمينًا لسيارتها. والخطة المناسبة تعتمد على قيمة السيارة (650 ألف جنيه) وعمرها (9 سنوات)، الظاهرين في صفحة السيارة."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: the plans on a page with her car's details", ar: "النسخة A: الخطط في صفحة مع بيانات سيارتها" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Insure your car", ar: "أمّن سيارتك" } }
+          - { kind: banner, text: { en: "Your car: 9 years old · value EGP 650,000", ar: "سيارتك: عمرها 9 سنوات · قيمتها 650 ألف جنيه" }, gap: s }
+          - { kind: radio, text: { en: "Full cover · EGP 21,000/year", ar: "تغطية شاملة · 21000 جنيه/سنة" }, gap: m }
+          - { kind: radio, text: { en: "Third party · EGP 4,500/year", ar: "ضد الغير · 4500 جنيه/سنة" }, gap: xs }
+    b:
+      label: { en: "Version B: the plans in a dialog over the car's page", ar: "النسخة B: الخطط في Dialog فوق صفحة السيارة" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "My car", ar: "سيارتي" } }
+          - { kind: meta, text: { en: "9 years old · value EGP 650,000", ar: "عمرها 9 سنوات · قيمتها 650 ألف جنيه" }, gap: s }
+        overlay:
+          type: dialog
+          blocks:
+            - { kind: heading, text: { en: "Choose a plan", ar: "اختاري خطة" } }
+            - { kind: radio, text: { en: "Full cover · EGP 21,000/year", ar: "تغطية شاملة · 21000 جنيه/سنة" }, gap: s }
+            - { kind: radio, text: { en: "Third party · EGP 4,500/year", ar: "ضد الغير · 4500 جنيه/سنة" }, gap: xs }
+    answer: a
+    misconceptions:
+      - id: MC-P14-005
+        when: [b]
+        feedback:
+          en: "The dialog hides the car's value and age, the two facts Aya needs to weigh the price."
+          ar: "الـ Dialog يُخفي قيمة السيارة وعمرها، وهما المعلومتان اللتان تحتاجهما آية لتقدير السعر."
+    correct:
+      en: "A: the facts sit next to the choice."
+      ar: "A: المعلومات بجانب الاختيار."
+    explain:
+      en: "On the page, Aya sees her car's value and age right above the plans, so she can judge whether full cover is worth it."
+      ar: "في الصفحة، ترى آية قيمة سيارتها وعمرها فوق الخطط مباشرة، فتقدّر هل تستحق التغطية الشاملة سعرها."
+
+  - id: S04
+    type: tune
+    skill: SK-P14-U01-02
+    part: retest
+    value:
+      en: "Re-test, modal dialogs (NN/g): a decision that needs the map can't happen in a list that covers the map."
+      ar: "إعادة اختبار، النوافذ الـ Modal (NN/g): القرار الذي يحتاج الخريطة لا يمكن أن يتم في قائمة تغطّي الخريطة."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs for complex decision making that requires additional sources of information unavailable in the modal." }
+    scenario:
+      en: "Sherif picks up a parcel from a collection point. He wants the one closest to his office, so he needs to see where each point is on the map. The points are listed in a dialog."
+      ar: "يستلم شريف طردًا من نقطة استلام. ويريد أقربها إلى مكتبه، لذلك يحتاج أن يرى مكان كل نقطة على الخريطة. والنقاط معروضة في Dialog."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: dialog
+    options:
+      - id: dialog
+        text: { en: "Keep the list in the dialog", ar: "أبقِ القائمة في الـ Dialog" }
+        mock:
+          width: 300
+          blocks: &mapbg
+            - { kind: heading, text: { en: "Collection points", ar: "نقاط الاستلام" } }
+            - { kind: image, size: l, gap: s }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: radio, text: { en: "Point A · Tahrir St", ar: "النقطة A · شارع التحرير" } }
+              - { kind: radio, text: { en: "Point B · Nile Corniche", ar: "النقطة B · كورنيش النيل" }, gap: xs }
+              - { kind: radio, text: { en: "Point C · Ramses Sq", ar: "النقطة C · ميدان رمسيس" }, gap: xs }
+      - id: page
+        text: { en: "Show the map with the points marked, and the list under it", ar: "اعرض الخريطة وعليها النقاط، والقائمة تحتها" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Collection points", ar: "نقاط الاستلام" } }
+            - { kind: image, size: m, gap: s }
+            - { kind: radio, text: { en: "A · Tahrir St · 0.4 km from your office", ar: "A · شارع التحرير · 0.4 كم من مكتبك" }, gap: m }
+            - { kind: radio, text: { en: "B · Nile Corniche · 1.8 km", ar: "B · كورنيش النيل · 1.8 كم" }, gap: xs }
+            - { kind: radio, text: { en: "C · Ramses Sq · 3.1 km", ar: "C · ميدان رمسيس · 3.1 كم" }, gap: xs }
+      - id: half
+        text: { en: "Keep the dialog, but make it see-through", ar: "أبقِ الـ Dialog، لكن اجعله شفافًا" }
+        mock:
+          width: 300
+          blocks: *mapbg
+          overlay:
+            type: dialog
+            scrim: false
+            blocks:
+              - { kind: radio, text: { en: "Point A · Tahrir St", ar: "النقطة A · شارع التحرير" } }
+              - { kind: radio, text: { en: "Point B · Nile Corniche", ar: "النقطة B · كورنيش النيل" }, gap: xs }
+              - { kind: radio, text: { en: "Point C · Ramses Sq", ar: "النقطة C · ميدان رمسيس" }, gap: xs }
+    answer: [page]
+    misconceptions:
+      - id: MC-P14-005
+        when: [dialog, half]
+        feedback:
+          en: "The list still sits on top of the map Sherif needs, so he can't match each point to a place."
+          ar: "ما زالت القائمة فوق الخريطة التي يحتاجها شريف، فلا يستطيع ربط كل نقطة بمكانها."
+    correct:
+      en: "The map and the list, side by side on a page."
+      ar: "الخريطة والقائمة معًا في صفحة."
+    explain:
+      en: "With the map visible and the distances in the list, Sherif can see at once that point A is closest to his office."
+      ar: "حين تظهر الخريطة والمسافات في القائمة، يرى شريف فورًا أن النقطة A الأقرب إلى مكتبه."
+
+  # SK-P14-U01-03: keep bottom sheets short, single and easy to close
+  - id: S05
+    type: tune
+    skill: SK-P14-U01-03
+    part: retest
+    value:
+      en: "Re-test, bottom sheets (NN/g): provide a clear Close button at the top and support Back for dismissing the sheet; a swipe alone isn't enough."
+      ar: "إعادة اختبار، الـ Bottom sheets (NN/g): ضع زر إغلاق واضحًا في الأعلى، واجعل زر الرجوع يغلق الـ Sheet؛ فالسحب وحده لا يكفي."
+    ref: { url: "https://www.nngroup.com/articles/bottom-sheet/", quote: "You can prevent this issue by supporting the use of Back for dismissing the bottom sheet" }
+    scenario:
+      en: "Mai adds a note for the restaurant in a food app. The note opens in a bottom sheet that closes only with a swipe. Pressing Back leaves the restaurant's menu and empties her cart."
+      ar: "تضيف مي ملاحظة للمطعم في تطبيق طعام. والملاحظة تُفتح في Bottom sheet لا يُغلق إلا بالسحب. والضغط على زر الرجوع يخرج من قائمة المطعم ويُفرغ سلّتها."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: swipe
+    options:
+      - id: swipe
+        text: { en: "Keep it as it is", ar: "أبقِه كما هو" }
+        mock:
+          width: 300
+          blocks: &menu
+            - { kind: title, text: { en: "Koshary House", ar: "بيت الكشري" } }
+            - { kind: meta, text: { en: "Cart: 2 items", ar: "السلّة: منتجان" }, gap: s }
+          overlay:
+            type: sheet
+            blocks: &note
+              - { kind: heading, text: { en: "Note for the restaurant", ar: "ملاحظة للمطعم" } }
+              - { kind: field, label: "", text: { en: "e.g. extra crispy onions", ar: "مثال: بصل مقرمش زيادة" }, gap: s }
+      - id: fixed
+        text: { en: "Add an ✕ Close and Done, and make Back close the sheet", ar: "أضف ✕ للإغلاق و«تم»، واجعل زر الرجوع يغلق الـ Sheet" }
+        mock:
+          width: 300
+          blocks: *menu
+          overlay:
+            type: sheet
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Note for the restaurant", ar: "ملاحظة للمطعم" } }
+              - { kind: field, label: "", text: { en: "e.g. extra crispy onions", ar: "مثال: بصل مقرمش زيادة" }, gap: s }
+              - { kind: button, text: { en: "Done", ar: "تم" }, gap: m }
+      - id: warn
+        text: { en: "Keep the swipe; warn \"Back will empty your cart\"", ar: "أبقِ السحب؛ ونبّه «زر الرجوع سيُفرغ سلّتك»" }
+        mock:
+          width: 300
+          blocks: *menu
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: small, color: red, text: { en: "Back will empty your cart.", ar: "زر الرجوع سيُفرغ سلّتك." } }
+              - { kind: heading, text: { en: "Note for the restaurant", ar: "ملاحظة للمطعم" }, gap: s }
+              - { kind: field, label: "", text: { en: "e.g. extra crispy onions", ar: "مثال: بصل مقرمش زيادة" }, gap: s }
+    answer: [fixed]
+    misconceptions:
+      - id: MC-P14-007
+        when: [swipe, warn]
+        feedback:
+          en: "Closing still depends on a swipe, and Back still throws Mai's cart away. A warning doesn't fix a button that does the wrong thing."
+          ar: "ما زال الإغلاق يعتمد على السحب، وما زال زر الرجوع يُضيّع سلّة مي. والتنبيه لا يُصلح زرًا يفعل الشيء الخطأ."
+    correct:
+      en: "Visible ways out, and Back closes only the sheet."
+      ar: "طرق خروج ظاهرة، وزر الرجوع يغلق الـ Sheet فقط."
+    explain:
+      en: "✕ and Done work for everyone, and Back now does what Mai expects: it closes the note and keeps her cart."
+      ar: "زرّا ✕ و«تم» يعملان مع الجميع، وزر الرجوع يفعل الآن ما تتوقّعه مي: يغلق الملاحظة ويحفظ سلّتها."
+
+  - id: S06
+    type: tune
+    skill: SK-P14-U01-03
+    part: retest
+    value:
+      en: "Re-test, bottom sheets (NN/g): a sheet is a transient element for quick interactions; don't use it for a typical page-to-page flow. Opening an account takes six steps."
+      ar: "إعادة اختبار، الـ Bottom sheets (NN/g): الـ Sheet عنصر مؤقت للتفاعلات السريعة؛ فلا تستخدمه لمسار عادي من صفحة إلى صفحة. وفتح الحساب يأخذ ست خطوات."
+    ref: { url: "https://www.nngroup.com/articles/bottom-sheet/", quote: "We strongly recommend not using a bottom sheet to replace typical page-to-page user flows." }
+    scenario:
+      en: "Bassem opens a savings account in his bank app. It takes six steps: amount, period, interest payout, account to link, terms and a code. The team built all six inside a bottom sheet."
+      ar: "يفتح باسم حساب توفير في تطبيق البنك. ويأخذ ذلك ست خطوات: المبلغ، والمدة، وصرف العائد، والحساب المرتبط، والشروط، ورمز التأكيد. وبنى الفريق الخطوات الست داخل Bottom sheet."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: sheet
+    options:
+      - id: sheet
+        text: { en: "Keep the six steps in the sheet", ar: "أبقِ الخطوات الست في الـ Sheet" }
+        mock:
+          width: 300
+          blocks: &acc
+            - { kind: title, text: { en: "Accounts", ar: "الحسابات" } }
+            - { kind: meta, text: { en: "Current · EGP 42,300", ar: "جاري · 42300 جنيه" }, gap: m }
+          overlay:
+            type: sheet
+            close: true
+            blocks:
+              - { kind: small, text: { en: "Step 3 of 6", ar: "الخطوة 3 من 6" } }
+              - { kind: heading, text: { en: "Interest payout", ar: "صرف العائد" }, gap: s }
+              - { kind: radio, text: { en: "Monthly", ar: "شهريًا" }, gap: s }
+              - { kind: radio, text: { en: "At the end", ar: "في النهاية" }, gap: xs }
+      - id: pages
+        text: { en: "Make it a flow of pages, one step each", ar: "اجعله مسارًا من الصفحات، خطوة في كل صفحة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Step 3 of 6", ar: "الخطوة 3 من 6" } }
+            - { kind: title, text: { en: "Interest payout", ar: "صرف العائد" }, gap: s }
+            - { kind: radio, text: { en: "Monthly", ar: "شهريًا" }, gap: m }
+            - { kind: radio, text: { en: "At the end", ar: "في النهاية" }, gap: xs }
+            - { kind: button, text: { en: "Next", ar: "التالي" }, gap: l }
+      - id: sheets
+        text: { en: "Give each step its own sheet, one after another", ar: "اجعل لكل خطوة Sheet خاصًا، واحدًا بعد الآخر" }
+        mock:
+          width: 300
+          blocks: *acc
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "Interest payout", ar: "صرف العائد" } }
+              - { kind: radio, text: { en: "Monthly", ar: "شهريًا" }, gap: s }
+              - { kind: radio, text: { en: "At the end", ar: "في النهاية" }, gap: xs }
+              - { kind: small, text: { en: "(sheet 3, on top of sheets 1 and 2)", ar: "(الـ Sheet الثالث، فوق الأول والثاني)" }, gap: s }
+    answer: [pages]
+    misconceptions:
+      - id: MC-P14-008
+        when: [sheet]
+        feedback:
+          en: "Six steps is a flow, not a quick task. One swipe can close the sheet and lose everything Bassem entered."
+          ar: "ست خطوات مسار، لا مهمة سريعة. وسحبة واحدة قد تغلق الـ Sheet وتُضيّع كل ما أدخله باسم."
+      - id: MC-P14-006
+        when: [sheets]
+        feedback:
+          en: "Now the sheets stack up, one on another, and closing one can close them all."
+          ar: "الآن تتكدّس الـ Sheets فوق بعضها، وإغلاق واحد قد يغلقها كلها."
+    correct:
+      en: "A flow of steps belongs on pages."
+      ar: "المسار متعدّد الخطوات مكانه الصفحات."
+    explain:
+      en: "Pages show the progress, keep each answer when Bassem goes back, and can't be swiped away by accident."
+      ar: "الصفحات تُظهر التقدّم، وتحفظ كل إجابة حين يرجع باسم، ولا يمكن أن تُغلق بسحبة بالخطأ."
+
+  # SK-P14-U01-04: put only extra help in a tooltip
+  - id: S07
+    type: tune
+    skill: SK-P14-U01-04
+    part: retest
+    value:
+      en: "Re-test, tooltips (NN/g): users shouldn't need to find a tooltip to complete their task, or hold its content in working memory. Password rules decide whether sign-up works."
+      ar: "إعادة اختبار، الـ Tooltips (NN/g): لا يجب أن يحتاج الناس إلى البحث عن Tooltip لإكمال مهمتهم، أو حفظ محتواه في الذاكرة. وشروط كلمة المرور تحدّد هل ينجح التسجيل."
+    ref: { url: "https://www.nngroup.com/articles/tooltip-guidelines/", quote: "Users shouldn't need to find a tooltip in order to complete their task." }
+    scenario:
+      en: "Noura signs up for a gym app. Her password must have at least 8 characters and one number. Those rules are in a tooltip on the ⓘ next to the field."
+      ar: "تسجّل نورا في تطبيق نادٍ رياضي. ويجب أن تكون كلمة المرور 8 أحرف على الأقل وفيها رقم واحد. وهذه الشروط في Tooltip على ⓘ بجانب الحقل."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: tip
+    options:
+      - id: tip
+        text: { en: "Keep the rules in the tooltip", ar: "أبقِ الشروط في الـ Tooltip" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Create account", ar: "أنشئي حسابًا" } }
+            - { kind: field, label: { en: "Password ⓘ", ar: "كلمة المرور ⓘ" }, text: "", gap: m }
+            - { kind: button, text: { en: "Sign up", ar: "سجّلي" }, gap: m }
+      - id: hint
+        text: { en: "Show the rules under the field", ar: "اعرض الشروط تحت الحقل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Create account", ar: "أنشئي حسابًا" } }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "", hint: { en: "At least 8 characters, including a number.", ar: "8 أحرف على الأقل، منها رقم." }, gap: m }
+            - { kind: button, text: { en: "Sign up", ar: "سجّلي" }, gap: m }
+      - id: error
+        text: { en: "Remove the tooltip; show the rules only after a wrong password", ar: "احذف الـ Tooltip؛ واعرض الشروط فقط بعد كلمة مرور خاطئة" }
+        mock:
+          caption: { en: "After she taps Sign up", ar: "بعد أن تضغط «سجّلي»" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Create account", ar: "أنشئي حسابًا" } }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••", error: { en: "Use at least 8 characters, including a number.", ar: "استخدمي 8 أحرف على الأقل، منها رقم." }, gap: m }
+            - { kind: button, text: { en: "Sign up", ar: "سجّلي" }, gap: m }
+    answer: [hint]
+    misconceptions:
+      - id: MC-P14-009
+        when: [tip, error]
+        feedback:
+          en: "Noura needs the rules before she types. Hidden behind ⓘ, or shown only after she fails, they make her guess first."
+          ar: "تحتاج نورا الشروط قبل أن تكتب. وإخفاؤها خلف ⓘ، أو عرضها فقط بعد الفشل، يجعلها تخمّن أولًا."
+    correct:
+      en: "Needed to finish: on the screen, before she types."
+      ar: "ضروري للإنهاء: على الشاشة، قبل أن تكتب."
+    explain:
+      en: "Under the field, the rules are in view while Noura makes up her password, so she gets it right the first time."
+      ar: "تحت الحقل، تكون الشروط ظاهرة وهي تختار كلمة المرور، فتصيب من المرة الأولى."
+
+  - id: S08
+    type: compare
+    skill: SK-P14-U01-04
+    part: retest
+    value:
+      en: "Re-test, tooltips (NN/g): tooltips need a mouse or keyboard hover, and most icons are ambiguous enough that they need text labels. A phone tab bar of bare icons fails both."
+      ar: "إعادة اختبار، الـ Tooltips (NN/g): الـ Tooltip يحتاج Hover بالفأرة أو لوحة المفاتيح، وأغلب الأيقونات غامضة بما يكفي لتحتاج تسمية نصية. وشريط تبويب على الهاتف بأيقونات فقط يفشل في الأمرين."
+    ref: { url: "https://www.nngroup.com/articles/tooltip-guidelines/", quote: "Most icons have some level of ambiguity, which is why we recommend text labels for all icons." }
+    scenario:
+      en: "Hisham's banking app has five tabs at the bottom of the screen. On the website they show tooltips on hover; the app uses the same icons."
+      ar: "في تطبيق البنك لهشام خمسة تبويبات أسفل الشاشة. وفي الموقع تُظهر Tooltips عند الـ Hover؛ والتطبيق يستخدم الأيقونات نفسها."
+    prompt:
+      en: "Which version should ship in the app?"
+      ar: "أيّ نسخة يجب أن تُطلق في التطبيق؟"
+    a:
+      label: { en: "Version A: icons with labels", ar: "النسخة A: أيقونات مع تسميات" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Home", ar: "الرئيسية" } }
+          - kind: row
+            gap: xl
+            blocks:
+              - { kind: small, text: { en: "⌂ Home", ar: "⌂ الرئيسية" } }
+              - { kind: small, text: { en: "⇄ Transfer", ar: "⇄ تحويل" } }
+              - { kind: small, text: { en: "▤ Bills", ar: "▤ فواتير" } }
+              - { kind: small, text: { en: "☰ More", ar: "☰ المزيد" } }
+    b:
+      label: { en: "Version B: icons only", ar: "النسخة B: أيقونات فقط" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Home", ar: "الرئيسية" } }
+          - kind: row
+            gap: xl
+            blocks:
+              - { kind: iconbtn, text: "⌂" }
+              - { kind: iconbtn, text: "⇄" }
+              - { kind: iconbtn, text: "▤" }
+              - { kind: iconbtn, text: "☰" }
+    answer: a
+    misconceptions:
+      - id: MC-P14-010
+        when: [b]
+        feedback:
+          en: "On a phone there's no hover, so the tooltips never show, and ⇄ or ▤ can mean several things."
+          ar: "لا يوجد Hover على الهاتف، فلا تظهر الـ Tooltips أبدًا، و⇄ أو ▤ قد تعني أشياء كثيرة."
+    correct:
+      en: "A: on a touch screen, labels have to be visible."
+      ar: "A: على شاشة اللمس، يجب أن تظهر التسميات."
+    explain:
+      en: "Labels under the icons work without hover and tell Hisham exactly where each tab goes."
+      ar: "التسميات تحت الأيقونات تعمل دون Hover، وتخبر هشام بالضبط إلى أين يأخذه كل تبويب."
+
+  # SK-P14-U01-05: match the message to how much it matters
+  - id: S09
+    type: tune
+    skill: SK-P14-U01-05
+    part: retest
+    value:
+      en: "Re-test, notifications (NN/g): passive notifications aren't urgent and should be less intrusive. A finished upload needs nothing from Rasha."
+      ar: "إعادة اختبار، الإشعارات (NN/g): الإشعارات التي لا تحتاج إجراءً ليست عاجلة ويجب أن تكون أقل إزعاجًا. والرفع الذي اكتمل لا يحتاج شيئًا من رشا."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications are typically not urgent and should be less intrusive." }
+    scenario:
+      en: "Rasha adds 12 photos to a shared family album. When the upload finishes, a dialog says \"Upload complete\" with an OK button."
+      ar: "تضيف رشا 12 صورة إلى ألبوم عائلي مشترك. وحين ينتهي الرفع، يظهر Dialog يقول «اكتمل الرفع» مع زر «حسنًا»."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: dialog
+    options:
+      - id: dialog
+        text: { en: "Keep the dialog", ar: "أبقِ الـ Dialog" }
+        mock:
+          width: 300
+          blocks: &album
+            - { kind: title, text: { en: "Family · Summer", ar: "العائلة · الصيف" } }
+            - { kind: meta, text: { en: "48 photos", ar: "48 صورة" }, gap: s }
+            - { kind: image, size: m, gap: m }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Upload complete", ar: "اكتمل الرفع" } }
+              - { kind: button, text: { en: "OK", ar: "حسنًا" }, gap: m }
+      - id: banner
+        text: { en: "A banner that stays until she closes it", ar: "Banner يبقى حتى تغلقه" }
+        mock:
+          width: 300
+          blocks: *album
+          overlay:
+            type: banner
+            close: true
+            blocks:
+              - { kind: text, text: { en: "12 photos added.", ar: "أُضيفت 12 صورة." } }
+      - id: snack
+        text: { en: "A snackbar: \"12 photos added\"", ar: "Snackbar: «أُضيفت 12 صورة»" }
+        mock:
+          width: 300
+          blocks: *album
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "12 photos added.", ar: "أُضيفت 12 صورة." } }
+    answer: [snack]
+    misconceptions:
+      - id: MC-P14-013
+        when: [dialog, banner]
+        feedback:
+          en: "The upload worked and needs nothing from Rasha, yet this makes her stop or close something."
+          ar: "نجح الرفع ولا يحتاج شيئًا من رشا، ومع ذلك يجعلها هذا تتوقّف أو تغلق شيئًا."
+    correct:
+      en: "Good news, no action: a snackbar."
+      ar: "خبر جيد بلا إجراء: Snackbar."
+    explain:
+      en: "A snackbar confirms the upload and disappears, and the new photos are already in the album for her to see."
+      ar: "الـ Snackbar يؤكّد الرفع ويختفي، والصور الجديدة موجودة في الألبوم لتراها."
+
+  - id: S10
+    type: tune
+    skill: SK-P14-U01-05
+    part: retest
+    value:
+      en: "Re-test, notifications (NN/g): passive notifications are easily missed. A failed renewal that will cut off access in 3 days needs a message that stays until it's fixed, but it doesn't need to block today's lessons."
+      ar: "إعادة اختبار، الإشعارات (NN/g): الإشعارات التي لا تحتاج إجراءً يسهل أن تفوت الناس. وفشل التجديد الذي سيوقف الوصول بعد 3 أيام يحتاج رسالة تبقى حتى يُحلّ، لكنه لا يحتاج أن يحجب دروس اليوم."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications can easily be missed, since they require no user action." }
+    scenario:
+      en: "Ola's monthly subscription to a language app didn't renew; her card was declined. She keeps access for 3 more days, then loses it."
+      ar: "لم يتجدّد اشتراك علا الشهري في تطبيق لتعلّم اللغات؛ فقد رُفضت بطاقتها. وسيبقى لها الوصول 3 أيام أخرى، ثم تفقده."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: snack
+    options:
+      - id: snack
+        text: { en: "A snackbar when she opens the app", ar: "Snackbar حين تفتح التطبيق" }
+        mock:
+          width: 300
+          blocks: &lessons
+            - { kind: title, text: { en: "Today's lesson", ar: "درس اليوم" } }
+            - { kind: meta, text: { en: "Ordering at a café · 6 min", ar: "الطلب في مقهى · 6 دقائق" }, gap: s }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Your payment didn't go through.", ar: "لم يتم الدفع." } }
+      - id: dialog
+        text: { en: "A dialog that blocks lessons until she pays", ar: "Dialog يحجب الدروس حتى تدفع" }
+        mock:
+          width: 300
+          blocks: *lessons
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Update your payment", ar: "حدّثي طريقة الدفع" } }
+              - { kind: button, text: { en: "Update card", ar: "حدّثي البطاقة" }, gap: m }
+      - id: banner
+        text: { en: "A banner with \"Update card\" until it's paid", ar: "Banner فيه «حدّثي البطاقة» حتى يتم الدفع" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: banner, text: { en: "Your card was declined. Update it within 3 days to keep your lessons.", ar: "رُفضت بطاقتك. حدّثيها خلال 3 أيام لتحتفظي بدروسك." } }
+            - { kind: link, text: { en: "Update card", ar: "حدّثي البطاقة" }, gap: s }
+            - { kind: title, text: { en: "Today's lesson", ar: "درس اليوم" }, gap: m }
+            - { kind: meta, text: { en: "Ordering at a café · 6 min", ar: "الطلب في مقهى · 6 دقائق" }, gap: s }
+    answer: [banner]
+    misconceptions:
+      - id: MC-P14-014
+        when: [snack]
+        feedback:
+          en: "The deadline lasts 3 days, but the message lasts a few seconds. Ola may only find out when her lessons lock."
+          ar: "المهلة 3 أيام، لكن الرسالة تبقى ثوانٍ. وقد لا تعرف علا إلا حين تُغلق دروسها."
+      - id: MC-P14-013
+        when: [dialog]
+        feedback:
+          en: "Ola still has 3 days of access. Blocking today's lesson takes away something she has already paid for."
+          ar: "ما زال لعلا 3 أيام من الوصول. وحجب درس اليوم يأخذ منها شيئًا دفعت ثمنه."
+    correct:
+      en: "Matters and lasts: a banner until it's fixed."
+      ar: "مهم ومستمر: Banner حتى يُحلّ."
+    explain:
+      en: "The banner says what happened, gives the deadline and the fix, and stays until the card is updated, while Ola keeps learning."
+      ar: "الـ Banner يقول ما حدث، ويذكر المهلة والحل، ويبقى حتى تُحدَّث البطاقة، بينما تستمر علا في التعلّم."

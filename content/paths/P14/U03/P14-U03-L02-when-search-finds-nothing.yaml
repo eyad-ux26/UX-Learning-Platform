@@ -1,0 +1,407 @@
+id: P14-U03-L02
+mode: lesson
+minutes: 8
+title:
+  en: "When search finds nothing"
+  ar: "حين لا يجد البحث شيئًا"
+sources:
+  - title: { en: "3 Guidelines for Search Engine \"No Results\" Pages (NN/g)", ar: "3 إرشادات لصفحات «لا توجد نتائج» في محركات البحث (NN/g)" }
+    url: "https://www.nngroup.com/articles/search-no-results-serp/"
+review_labels:
+  MC-P14-027: { en: "Say clearly that nothing matched", ar: "قل بوضوح إنه لا توجد نتائج مطابقة" }
+  MC-P14-028: { en: "A no-results page needs a way forward", ar: "صفحة «لا توجد نتائج» تحتاج طريقًا للمتابعة" }
+  MC-P14-029: { en: "Never joke about or blame the person", ar: "لا تمزح ولا تلُم الشخص أبدًا" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Hazem's electronics store", ar: "متجر الإلكترونيات لحازم" }
+    body:
+      en: "Hazem works on an electronics store. A customer searched for **wireles charger**, with one letter missing, and nothing matched.\n\nThis is the page they got: two big offers at the top, a small grey line further down, and a joke at the bottom."
+      ar: "يعمل حازم على متجر إلكترونيات. بحث عميل عن **شاحن لاسكي**، بحرف ناقص، ولم يتطابق شيء.\n\nوهذه هي الصفحة التي ظهرت له: عرضان كبيران في الأعلى، وسطر رمادي صغير تحتهما، ونكتة في الأسفل."
+    mock:
+      width: 300
+      blocks: &hazem
+        - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+        - { kind: image, size: m, gap: m }
+        - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+        - { kind: image, size: s, gap: m }
+        - { kind: small, color: pale, text: { en: "0 results for \"wireles charger\"", ar: "0 نتيجة لـ«شاحن لاسكي»" }, gap: m }
+        - { kind: meta, text: { en: "Oops! Our search robot got lost too 🤖", ar: "عفوًا! روبوت البحث تاه هو كمان 🤖" }, gap: m }
+
+  - id: S02
+    type: tune
+    part: try
+    skill: SK-P14-U03-03
+    rules: [R12]
+    confidence: true
+    value:
+      en: "Try first. No-results pages (NN/g): they must clearly state that nothing matched, offer starting points for moving forward, and avoid mocking people. A spelling fix gets Hazem's customer to the chargers in one tap."
+      ar: "جرّب أولًا. صفحات «لا توجد نتائج» (NN/g): يجب أن تقول بوضوح إنه لا يوجد تطابق، وأن تعرض نقاط بداية للمتابعة، وأن تتجنّب السخرية من الناس. وتصحيح الإملاء يوصل عميل حازم إلى الشواحن بضغطة واحدة."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "No Results pages must clearly state that no results have been found to match the user’s search terms." }
+    prompt:
+      en: "Try each version of the page. Which one should ship?"
+      ar: "جرّب كل نسخة من الصفحة. أيّها يجب أن تُطلق؟"
+    start: keep
+    options:
+      - id: keep
+        text: { en: "Keep the page as it is", ar: "أبقِ الصفحة كما هي" }
+        mock:
+          width: 300
+          blocks: *hazem
+      - id: clear
+        text: { en: "Clear message at the top, a spelling fix and similar searches", ar: "رسالة واضحة في الأعلى، وتصحيح للإملاء، وعمليات بحث مشابهة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: m }
+            - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
+            - { kind: meta, text: { en: "Similar searches:", ar: "عمليات بحث مشابهة:" }, gap: m }
+            - kind: row
+              blocks:
+                - { kind: chip, text: { en: "phone charger", ar: "شاحن موبايل" } }
+                - { kind: chip, text: { en: "power bank", ar: "باور بانك" } }
+      - id: home
+        text: { en: "Send people straight back to the home page", ar: "أعد الناس مباشرة إلى الصفحة الرئيسية" }
+        mock:
+          width: 300
+          caption: { en: "The search silently opens the home page", ar: "البحث يفتح الصفحة الرئيسية بدون أي رسالة" }
+          blocks:
+            - { kind: title, text: { en: "Hazem Electronics", ar: "حازم للإلكترونيات" } }
+            - { kind: image, size: m, gap: m }
+            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+    answer: [clear]
+    misconceptions:
+      - id: MC-P14-027
+        when: [keep, home]
+        feedback:
+          en: "The customer can't tell that their search failed: the grey line is easy to miss under the offers, and the home page says nothing at all. They also get no hint that one letter is missing."
+          ar: "لا يستطيع العميل أن يعرف أن بحثه لم ينجح: السطر الرمادي سهل التجاهل تحت العروض، والصفحة الرئيسية لا تقول شيئًا أصلًا. ولا يحصل أيضًا على أي تلميح بأن هناك حرفًا ناقصًا."
+    hints:
+      - en: "How would the customer learn that a letter is missing?"
+        ar: "كيف سيعرف العميل أن هناك حرفًا ناقصًا؟"
+    correct:
+      en: "Say it clearly, then show the way forward."
+      ar: "قلها بوضوح، ثم اعرض طريق المتابعة."
+    explain:
+      en: "The heading tells the customer at once that nothing matched, and \"Did you mean wireless charger?\" fixes the typo in one tap."
+      ar: "العنوان يخبر العميل فورًا بأنه لا يوجد تطابق، و«هل تقصد شاحن لاسلكي؟» تصحّح الخطأ بضغطة واحدة."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [eye, idea, list, warn]
+    video:
+      src: clips/P14-C08.mp4
+      captions: { ar: P14-C08.ar.vtt, en: P14-C08.en.vtt }
+      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
+      transcript:
+        en: "One very important thing in search: if the user types a query, searches, and sees that there are no results related to it, there's a high risk they leave the website. So here I need to try to keep the user on my website, to help them, so they don't lose hope and leave right away just because they found nothing related to their query. So let's think about what to do when there are no search results. The most important guideline for a no-results page is to tell the user clearly that there are no results, so they understand it right away and don't keep looking. In this example the screen has a lot going on and gives it a strong hierarchy, but the message that there are no results is small, up at the top, so the user doesn't notice it and doesn't realize right away that there are none. The user has to understand immediately that there are no results for exactly the query they wrote. Second: I don't block the user; I offer another path. I suggest edits to the query itself, or things close to what they wrote that may return results, or a different way of phrasing it they hadn't thought of. So they see the suggestions, pick one, and get results. I can also give them a button to go back: cancel the search, browse the whole website, or return to the home page or the page before the search. I offer other ways so the user doesn't feel they searched, found nothing, and have nothing left to do, so they leave and get no value from the product. Third: I don't joke or make fun of the user. Humor at these moments can backfire: the user may leave the website, get annoyed by the joke and not come back, or find it silly. When the user is failing at a goal, we don't need to joke or sound sarcastic. Let's look at this example, which is a great search example with all the guidelines we covered. It's clear there are no search results, the page has a good hierarchy, and there are suggestions below. They can edit the query, check the spelling, try more general words or fewer words, and there are suggested queries to tap to see their results, with no sarcasm anywhere. So this is an excellent example that applies every guideline we discussed for the no-results page."
+        ar: "من الحاجات المهمة جدًا في السيرش إن اليوزر لو كتب الكويري بتاعه وعمل Search، وظهر له إن مفيش أي نتايج ليها علاقة بالسيرش ده، فهنا فيه Risk عالي إن اليوزر يسيب الـ Website. ففي الحالة دي محتاج أحاول أخلّي اليوزر يفضل في الـ Website بتاعي، وأفيده وأساعده، وماينفقدش الأمل ويمشي على طول لمجرد إنه ماقاش نتايج ليها علاقة بالكويري. فنبدأ نفكّر نعمل إيه في حالة No search results. أهم Guideline في الـ No search results page إننا نبيّن لليوزر بوضوح إن مفيش نتايج، عشان يفهم ده من الأول ومايفضلش يدوّر. في المثال اللي قدامنا، الـ Screen فيها حاجات كتير وبتاخد Hierarchy كبيرة، لكن الرسالة إن مفيش نتايج مكتوبة بـ Hierarchy صغيرة فوق، فاليوزر مايلاحظهاش، وده بيخلّيه مايفهمش من الأول إن مفيش نتايج أصلًا. لازم اليوزر يفهم على طول من الأول إن مفيش نتايج للكويري المكتوب ده بالضبط. تاني حاجة: ماأعطّلش اليوزر، أوفّر له Path تاني. أقترح عليه يعدّل الكويري نفسه، أو أقترح حاجات قريبة من اللي كتبه ممكن تطلع له نتايج، أو ممكن يكتب الكويري بشكل تاني ماجاش في باله. فيشوف الاقتراحات ويختار منها وتطلع له نتايج. وممكن أوفّر له زرار يرجع بيه: يلغي السيرش ويشوف نتايج الـ Website كله، أو يرجع للصفحة الرئيسية أو للصفحة اللي قبل السيرش. فأوفّر طرق تانية، عشان اليوزر ماحسّش إنه دخل ولقاش نتايج وماعادش فيه حاجة يعملها فيمشي ومايستفيدش من الـ Product. تالت حاجة: ماهزّرش ولا أسخر من اليوزر. الكوميديا في الأوقات دي ممكن تنقلب عكسها: اليوزر ممكن يمشي من الـ Website أو يضايق من الهزار وماجيش تاني، أو يشوفه سخيف. في الحالات اللي اليوزر بيفشل فيها في هدف معيّن مش محتاجين نهزّر ولا نتكلم بسخرية. فخلّينا نشوف المثال اللي قدامنا، ده Example ممتاز للسيرش فيه كل الـ Guidelines اللي قلناها. واضح إن مفيش Search results، وفيه Hierarchy كويسة في الصفحة، وفيه اقتراحات تحت. ممكن يعدّل الكويري، نتشيك السبيلنج، ممكن يجرّب كلمات أعم أو أقل، وفيه اقتراحات لكويريز تانية يضغط عليها يشوف نتايجها، ومفيش أي سخرية في الموضوع. فده من الأمثلة الممتازة اللي بتطبّق كل الـ Guidelines اللي اتكلمنا عنها في صفحة الـ No search results."
+    title: { en: "Turn no results into a next step", ar: "حوّل «لا توجد نتائج» إلى خطوة تالية" }
+    body:
+      en: "When a search finds nothing, people are close to leaving, even when the site has something related. The page has to keep them going.\n\n- **Say it clearly:** a large heading near the top, such as \"No results for …\", so nobody misses it among offers and other content.\n- **Offer ways forward:** a spelling fix, similar searches that do find results, a tip to use fewer or more general words, or links back to the main sections.\n- **Keep the tone plain:** people who just failed at their goal are already frustrated. A joke or a hint that they typed it wrong pushes them away."
+      ar: "حين لا يجد البحث شيئًا، يكون الناس قريبين من المغادرة، حتى لو كان في الموقع شيء مرتبط بما يريدون. ويجب أن تجعلهم الصفحة يكملون.\n\n- **قلها بوضوح:** عنوان كبير قرب الأعلى، مثل «لا توجد نتائج لـ…»، حتى لا يفوت أحدًا وسط العروض والمحتوى الآخر.\n- **اعرض طرقًا للمتابعة:** تصحيح الإملاء، وعمليات بحث مشابهة تجد نتائج فعلًا، ونصيحة باستخدام كلمات أقل أو أعمّ، أو روابط للأقسام الرئيسية.\n- **أبقِ الأسلوب بسيطًا:** من فشل للتو في الوصول إلى هدفه متضايق أصلًا. والنكتة أو التلميح بأنه كتب خطأ يُبعده."
+
+  - id: S04
+    type: tune
+    part: guided
+    skill: SK-P14-U03-03
+    rules: [R06, R15]
+    value:
+      en: "No-results pages (NN/g): appropriate typography and spacing are essential; otherwise, users can easily overlook or misunderstand the message. A small grey line under two offers is exactly what gets overlooked."
+      ar: "صفحات «لا توجد نتائج» (NN/g): الخط والمسافات المناسبة ضرورية؛ وإلا قد يتجاهل الناس الرسالة أو يسيئون فهمها بسهولة. والسطر الرمادي الصغير تحت عرضين هو بالضبط ما يتجاهله الناس."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "Appropriate typography and spacing are essential; otherwise, users can easily overlook or misunderstand the message." }
+    scenario:
+      en: "Hazem starts with the message itself. The offers have to stay on the page, because the marketing team asked for them."
+      ar: "يبدأ حازم بالرسالة نفسها. والعروض يجب أن تبقى في الصفحة، لأن فريق التسويق طلبها."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: line
+    options:
+      - id: line
+        text: { en: "Small grey line under the offers", ar: "سطر رمادي صغير تحت العروض" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: image, size: m, gap: m }
+            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: small, color: pale, text: { en: "0 results for \"wireles charger\"", ar: "0 نتيجة لـ«شاحن لاسكي»" }, gap: m }
+      - id: heading
+        text: { en: "Heading at the top, offers below it", ar: "عنوان في الأعلى، والعروض تحته" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: m }
+            - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
+            - { kind: image, size: s, gap: l }
+            - { kind: meta, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+      - id: dialog
+        text: { en: "A dialog people have to close first", ar: "نافذة Dialog يجب على الناس إغلاقها أولًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: image, size: m, gap: m }
+            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "No results", ar: "لا توجد نتائج" } }
+              - { kind: button, text: { en: "OK", ar: "حسنًا" }, gap: m }
+    answer: [heading]
+    misconceptions:
+      - id: MC-P14-027
+        when: [line]
+        feedback:
+          en: "The message is the smallest, palest thing on the page, below two offers. Many customers will scroll past it and think the offers are their results."
+          ar: "الرسالة أصغر وأبهت شيء في الصفحة، تحت عرضين. وكثير من العملاء سيمرّون عليها ويظنّون أن العروض هي نتائجهم."
+      - id: MC-P14-028
+        when: [dialog]
+        feedback:
+          en: "The dialog says it, but once it's closed, the customer is left with offers and nothing to try next. The message belongs on the page, with the way forward next to it."
+          ar: "النافذة تقولها، لكن بعد إغلاقها يبقى العميل أمام العروض بلا شيء يجرّبه. ومكان الرسالة هو الصفحة نفسها، وبجانبها طريق المتابعة."
+    hints:
+      - en: "What does the customer see first on each version?"
+        ar: "ما أول شيء يراه العميل في كل نسخة؟"
+    correct:
+      en: "A clear heading at the top."
+      ar: "عنوان واضح في الأعلى."
+    explain:
+      en: "The heading is the first thing on the page, so nobody mistakes the offers for results. The offers still show, just lower down."
+      ar: "العنوان أول شيء في الصفحة، فلا يظنّ أحد أن العروض هي النتائج. والعروض ما زالت ظاهرة، لكن في الأسفل."
+
+  - id: S05
+    type: tune
+    part: guided
+    skill: SK-P14-U03-03
+    rules: [R06, R15]
+    confidence: true
+    value:
+      en: "No-results pages (NN/g): all too often they are dead ends that don't offer any suggestions about what to do next. Advice to use fewer words, plus similar searches that do return results, gives Ehab's shopper somewhere to go."
+      ar: "صفحات «لا توجد نتائج» (NN/g): كثيرًا ما تكون طرقًا مسدودة لا تقدّم أي اقتراح عمّا يمكن فعله بعدها. والنصيحة باستخدام كلمات أقل، مع عمليات بحث مشابهة تأتي بنتائج فعلًا، تعطي متسوّق إيهاب مكانًا يذهب إليه."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "No Results pages are dead ends that don’t offer any suggestions about what to do next." }
+    scenario:
+      en: "Ehab runs a sports shop. A shopper searched for **red waterproof running shoes size 47**. The shop has red running shoes and waterproof ones, but nothing that matches all of it."
+      ar: "يدير إيهاب متجرًا رياضيًا. وبحث متسوّق عن **حذاء جري أحمر مقاوم للماء مقاس 47**. وفي المتجر أحذية جري حمراء، وأخرى مقاومة للماء، لكن لا شيء يطابق كل هذا معًا."
+    prompt:
+      en: "The page already says \"No results\" clearly. Try each version of what comes under it. Which one should ship?"
+      ar: "الصفحة تقول «لا توجد نتائج» بوضوح أصلًا. جرّب كل نسخة لما يأتي تحتها. أيّها يجب أن تُطلق؟"
+    start: again
+    options:
+      - id: again
+        text: { en: "\"Please try again\" and the search box", ar: "«حاول مرة أخرى» ومربع البحث" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
+            - { kind: meta, text: { en: "Please try again.", ar: "حاول مرة أخرى." }, gap: s }
+            - { kind: field, text: { en: "Search the shop", ar: "ابحث في المتجر" }, gap: m }
+      - id: ways
+        text: { en: "A tip to use fewer words, and similar searches with results", ar: "نصيحة باستخدام كلمات أقل، وعمليات بحث مشابهة لها نتائج" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
+            - { kind: meta, text: { en: "Try fewer words. These searches have results:", ar: "جرّب كلمات أقل. عمليات البحث هذه لها نتائج:" }, gap: s }
+            - { kind: link, text: { en: "red running shoes (14)", ar: "حذاء جري أحمر (14)" }, gap: s }
+            - { kind: link, text: { en: "waterproof running shoes (9)", ar: "حذاء جري مقاوم للماء (9)" }, gap: s }
+            - { kind: link, text: { en: "running shoes size 47 (6)", ar: "حذاء جري مقاس 47 (6)" }, gap: s }
+      - id: contact
+        text: { en: "A form to contact customer service", ar: "نموذج للتواصل مع خدمة العملاء" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
+            - { kind: meta, text: { en: "Tell us what you were looking for.", ar: "أخبرنا بما كنت تبحث عنه." }, gap: s }
+            - { kind: field, label: { en: "Your message", ar: "رسالتك" }, text: "", gap: m }
+            - { kind: button, text: { en: "Send", ar: "أرسل" }, gap: m }
+    answer: [ways]
+    misconceptions:
+      - id: MC-P14-028
+        when: [again, contact]
+        feedback:
+          en: "The shopper doesn't know what to change, and a form only promises an answer later. Meanwhile the shop has red running shoes they could be looking at now."
+          ar: "المتسوّق لا يعرف ماذا يغيّر، والنموذج لا يعد إلا بردّ لاحقًا. وفي الوقت نفسه في المتجر أحذية جري حمراء يمكن أن يراها الآن."
+    hints:
+      - en: "What could the shopper tap right now to see shoes?"
+        ar: "ماذا يمكن أن يضغط المتسوّق الآن ليرى أحذية؟"
+    correct:
+      en: "Show the way forward: fewer words, searches with results."
+      ar: "اعرض طريق المتابعة: كلمات أقل، وعمليات بحث لها نتائج."
+    explain:
+      en: "Each link drops one part of the search and shows how many shoes it finds. The shopper picks the part that matters most to them."
+      ar: "كل رابط يحذف جزءًا من البحث ويعرض عدد الأحذية التي يجدها. فيختار المتسوّق الجزء الأهم بالنسبة له."
+
+  - id: S06
+    type: tune
+    part: guided
+    skill: SK-P14-U03-03
+    rules: [R06, R15]
+    value:
+      en: "No-results pages (NN/g): exercise extreme caution when trying to use humor on no-results pages; most people don't enjoy being mocked, especially when they are already frustrated. A plain message with something to try respects the person."
+      ar: "صفحات «لا توجد نتائج» (NN/g): كن حذرًا جدًا حين تستخدم الفكاهة في هذه الصفحات؛ فأغلب الناس لا يحبّون السخرية منهم، خاصة حين يكونون متضايقين أصلًا. والرسالة البسيطة مع شيء يمكن تجربته تحترم الشخص."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "But exercise extreme caution when trying to use humor on No Results pages (or other error pages)." }
+    scenario:
+      en: "Back to Hazem's store. The marketing team wants the no-results message to sound fun, like the rest of the brand."
+      ar: "نعود إلى متجر حازم. فريق التسويق يريد رسالة «لا توجد نتائج» أن تبدو مرحة، مثل باقي العلامة التجارية."
+    prompt:
+      en: "Try each message. Which one should ship?"
+      ar: "جرّب كل رسالة. أيّها يجب أن تُطلق؟"
+    start: joke
+    options:
+      - id: joke
+        text: { en: "\"Oops! Our search is as lost as you are 😅\"", ar: "«عفوًا! البحث تايه زيّك بالظبط 😅»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Oops! Our search is as lost as you are 😅", ar: "عفوًا! البحث تايه زيّك بالظبط 😅" } }
+            - { kind: meta, text: { en: "Nothing for \"wireles charger\".", ar: "لا شيء لـ«شاحن لاسكي»." }, gap: s }
+      - id: plain
+        text: { en: "\"No results for … Check the spelling or try other words.\"", ar: "«لا توجد نتائج لـ… تأكّد من الإملاء أو جرّب كلمات أخرى.»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" } }
+            - { kind: meta, text: { en: "Check the spelling or try other words.", ar: "تأكّد من الإملاء أو جرّب كلمات أخرى." }, gap: s }
+            - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
+      - id: blame
+        text: { en: "\"You must have typed it wrong.\"", ar: "«أكيد كتبتها غلط.»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "You must have typed it wrong.", ar: "أكيد كتبتها غلط." } }
+            - { kind: meta, text: { en: "Nothing for \"wireles charger\".", ar: "لا شيء لـ«شاحن لاسكي»." }, gap: s }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P14-029
+        when: [joke, blame]
+        feedback:
+          en: "The customer just failed to find what they came for. A joke at their expense, or being told they got it wrong, makes them more likely to leave than to try again."
+          ar: "فشل العميل للتو في إيجاد ما جاء من أجله. والنكتة على حسابه، أو إخباره بأنه أخطأ، تجعله أقرب إلى المغادرة من المحاولة مرة أخرى."
+    correct:
+      en: "Plain, kind and useful."
+      ar: "بسيطة ولطيفة ومفيدة."
+    explain:
+      en: "The brand can be playful elsewhere. Here, a clear message and a spelling fix get the customer to the chargers."
+      ar: "يمكن أن تكون العلامة التجارية مرحة في أماكن أخرى. أما هنا، فالرسالة الواضحة وتصحيح الإملاء يوصلان العميل إلى الشواحن."
+
+  - id: S07
+    type: compare
+    part: contrast
+    skill: SK-P14-U03-03
+    rules: [R11]
+    value:
+      en: "No-results pages (NN/g): offer starting points for moving forward, such as spelling corrections and suggestions for similar queries that do return results. Version B states the problem clearly but stops there."
+      ar: "صفحات «لا توجد نتائج» (NN/g): اعرض نقاط بداية للمتابعة، مثل تصحيح الإملاء واقتراح عمليات بحث مشابهة تأتي بنتائج. والنسخة B تقول المشكلة بوضوح لكنها تتوقّف عندها."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "Suggestions for similar queries that do return results" }
+    scenario:
+      en: "A pharmacy app. Someone searched for **fluzal day night** and nothing matched. The app sells Fluzal Day and Fluzal Night as separate products."
+      ar: "تطبيق صيدلية. بحث شخص عن **فلوزال داي نايت** ولم يتطابق شيء. والتطبيق يبيع فلوزال داي وفلوزال نايت كمنتجين منفصلين."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: clear message and similar searches", ar: "النسخة A: رسالة واضحة وعمليات بحث مشابهة" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" } }
+          - { kind: meta, text: { en: "Did you mean one of these?", ar: "هل تقصد أحد هذين؟" }, gap: s }
+          - { kind: link, text: { en: "Fluzal Day", ar: "فلوزال داي" }, gap: s }
+          - { kind: link, text: { en: "Fluzal Night", ar: "فلوزال نايت" }, gap: s }
+    b:
+      label: { en: "Version B: clear message only", ar: "النسخة B: رسالة واضحة فقط" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" } }
+          - { kind: meta, text: { en: "We couldn't find any products matching your search.", ar: "لم نجد أي منتجات تطابق بحثك." }, gap: s }
+    answer: a
+    misconceptions:
+      - id: MC-P14-028
+        when: [b]
+        feedback:
+          en: "B is honest but leaves the person stuck. They don't know the two products exist separately, so they may leave without the medicine they need."
+          ar: "النسخة B صادقة لكنها تترك الشخص عالقًا. فهو لا يعرف أن المنتجين موجودان بشكل منفصل، وقد يغادر بدون الدواء الذي يحتاجه."
+    correct:
+      en: "A: clear, and it leads somewhere."
+      ar: "A: واضحة، وتوصل إلى شيء."
+    explain:
+      en: "Both pages say nothing matched. A also shows the two real products, so the person picks the right one in a tap."
+      ar: "الصفحتان تقولان إنه لا يوجد تطابق. لكن A تعرض أيضًا المنتجين الحقيقيين، فيختار الشخص المناسب بضغطة."
+
+  - id: S08
+    type: tune
+    part: independent
+    skill: SK-P14-U03-03
+    rules: [R14]
+    value:
+      en: "No-results pages (NN/g): they must clearly state that nothing matched, and can give advice about how to modify queries, using different words or fewer words. A list of best sellers with no message hides the failure."
+      ar: "صفحات «لا توجد نتائج» (NN/g): يجب أن تقول بوضوح إنه لا يوجد تطابق، ويمكن أن تنصح بتعديل البحث بكلمات مختلفة أو أقل. وقائمة الأكثر مبيعًا بدون رسالة تُخفي الفشل."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "Advice about how to modify queries, using different words or fewer words" }
+    scenario:
+      en: "Sherine designs a book app. Someone searched for **Naguib Mahfouz audiobooks**. The app has 12 of his books, but no audiobooks."
+      ar: "تصمّم شيرين تطبيقًا للكتب. وبحث شخص عن **كتب صوتية لنجيب محفوظ**. وفي التطبيق 12 كتابًا له، لكن بدون كتب صوتية."
+    prompt:
+      en: "Try each version of the results page. Which one should ship?"
+      ar: "جرّب كل نسخة من صفحة النتائج. أيّها يجب أن تُطلق؟"
+    start: best
+    options:
+      - id: best
+        text: { en: "Show the week's best sellers, with no message", ar: "اعرض الأكثر مبيعًا هذا الأسبوع، بدون رسالة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: text, weight: bold, text: { en: "Ten Small Habits", ar: "عشر عادات صغيرة" }, gap: m }
+            - { kind: meta, text: { en: "Omar Fathy", ar: "عمر فتحي" }, gap: xs }
+            - { kind: text, weight: bold, text: { en: "The Quiet River", ar: "النهر الهادئ" }, gap: m }
+            - { kind: meta, text: { en: "Salma Adel", ar: "سلمى عادل" }, gap: xs }
+      - id: drop
+        text: { en: "Clear message, and a link without \"audiobooks\"", ar: "رسالة واضحة، ورابط بدون كلمة «صوتية»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: heading, text: { en: "No audiobooks by Naguib Mahfouz yet", ar: "لا توجد كتب صوتية لنجيب محفوظ بعد" }, gap: m }
+            - { kind: link, text: { en: "See his 12 books (print and e-book)", ar: "اعرض كتبه الـ12 (ورقية وإلكترونية)" }, gap: s }
+      - id: joke
+        text: { en: "A sad cartoon and \"This page is empty, like our shelves\"", ar: "رسمة حزينة و«الصفحة فاضية زي رفوفنا»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: image, size: m, gap: m }
+            - { kind: heading, text: { en: "This page is empty, like our shelves", ar: "الصفحة فاضية زي رفوفنا" }, gap: s }
+    answer: [drop]
+    misconceptions:
+      - id: MC-P14-027
+        when: [best]
+        feedback:
+          en: "Without a message, the reader may think these are the results and wonder why the search failed. They never learn that the app has 12 Mahfouz books."
+          ar: "بدون رسالة، قد يظنّ القارئ أن هذه هي النتائج ويتساءل لماذا لم ينجح البحث. ولن يعرف أبدًا أن في التطبيق 12 كتابًا لمحفوظ."
+      - id: MC-P14-029
+        when: [joke]
+        feedback:
+          en: "The joke doesn't help, and it's wrong: the shelves have 12 of his books. The reader gets a laugh at best, and no way to them."
+          ar: "النكتة لا تساعد، وهي خاطئة: ففي الرفوف 12 كتابًا له. وفي أحسن الأحوال يضحك القارئ، بدون أي طريق إليها."
+    correct:
+      en: "Say what's missing, and link to what exists."
+      ar: "قل ما الناقص، واربط بما هو موجود."
+    explain:
+      en: "The reader learns there are no audiobooks, and one tap shows the 12 books the app does have."
+      ar: "يعرف القارئ أنه لا توجد كتب صوتية، وضغطة واحدة تعرض الكتب الـ12 الموجودة فعلًا في التطبيق."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [eye, idea, warn]
+    title: { en: "What you practised", ar: "ما تدرّبت عليه" }
+    body:
+      en: "- **Say it clearly:** a heading at the top that nothing matched.\n- **Show the way forward:** a spelling fix, similar searches with results, fewer words.\n- **Keep it plain:** no jokes about the failure, no blame.\n\nNext: filters people can understand."
+      ar: "- **قلها بوضوح:** عنوان في الأعلى بأنه لا يوجد تطابق.\n- **اعرض طريق المتابعة:** تصحيح الإملاء، وعمليات بحث مشابهة لها نتائج، وكلمات أقل.\n- **أبقِها بسيطة:** لا نكات عن الفشل، ولا لوم.\n\nالتالي: فلاتر يفهمها الناس."

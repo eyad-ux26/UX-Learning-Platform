@@ -1,0 +1,316 @@
+id: P14-U04-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: choices people can trust"
+  ar: "اختبار المهارة: اختيارات يثق بها الناس"
+sources:
+  - title: { en: "Checkboxes vs. Radio Buttons (NN/g)", ar: "الـ Checkboxes مقابل الـ Radio buttons (NN/g)" }
+    url: "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/"
+  - title: { en: "Checkboxes: Design Guidelines (NN/g)", ar: "الـ Checkboxes: إرشادات التصميم (NN/g)" }
+    url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/"
+  - title: { en: "Toggle-Switch Guidelines (NN/g)", ar: "إرشادات الـ Toggle switch (NN/g)" }
+    url: "https://www.nngroup.com/articles/toggle-switch-guidelines/"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Nada's gym app", ar: "تطبيق النادي الرياضي لندى" }
+    body:
+      en: "Nada's team is about to launch an app for a chain of gyms. Members book classes, pick a trainer and manage their membership. You're reviewing its choices before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "فريق ندى على وشك إطلاق تطبيق لسلسلة نوادٍ رياضية. يحجز فيه الأعضاء الحصص، ويختارون المدرّب، ويديرون اشتراكهم. وأنت تراجع الاختيارات فيه قبل الإطلاق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+
+  - id: S02
+    type: tune
+    part: check
+    skill: SK-P14-U04-03
+    value:
+      en: "Check, checkboxes vs. radio buttons (NN/g): always offer a default selection for radio button lists, and when people may not want to choose, provide a choice for that, such as \"None\"."
+      ar: "اختبار، الـ Checkboxes مقابل الـ Radio buttons (NN/g): ابدأ قائمة الـ Radio buttons دائمًا باختيار محدَّد، وحين قد لا يريد الناس الاختيار، أضف اختيارًا لذلك، مثل «لا شيء»."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/", quote: "Always offer a default selection for radio button lists." }
+    scenario:
+      en: "When booking a personal-training session, members can ask for a female or a male trainer. Most members don't mind which."
+      ar: "عند حجز حصة تدريب شخصي، يمكن للأعضاء أن يطلبوا مدرّبة أو مدرّبًا. وأغلب الأعضاء لا يهمّهم ذلك."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: empty
+    options:
+      - id: empty
+        text: { en: "Female or male trainer, nothing selected", ar: "مدرّبة أو مدرّب، دون اختيار محدَّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Trainer", ar: "المدرّب" } }
+            - { kind: radio, text: { en: "Female trainer", ar: "مدرّبة" }, gap: s }
+            - { kind: radio, text: { en: "Male trainer", ar: "مدرّب" } }
+            - { kind: button, text: { en: "Book session", ar: "احجز الحصة" }, gap: m }
+      - id: nopref
+        text: { en: "Add \"No preference\", selected", ar: "أضف «لا يهم»، وهو محدَّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Trainer", ar: "المدرّب" } }
+            - { kind: radio, text: { en: "No preference", ar: "لا يهم" }, selected: true, gap: s }
+            - { kind: radio, text: { en: "Female trainer", ar: "مدرّبة" } }
+            - { kind: radio, text: { en: "Male trainer", ar: "مدرّب" } }
+            - { kind: button, text: { en: "Book session", ar: "احجز الحصة" }, gap: m }
+      - id: female
+        text: { en: "Female or male trainer, Female selected", ar: "مدرّبة أو مدرّب، و«مدرّبة» محدَّد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Trainer", ar: "المدرّب" } }
+            - { kind: radio, text: { en: "Female trainer", ar: "مدرّبة" }, selected: true, gap: s }
+            - { kind: radio, text: { en: "Male trainer", ar: "مدرّب" } }
+            - { kind: button, text: { en: "Book session", ar: "احجز الحصة" }, gap: m }
+    answer: [nopref]
+    misconceptions:
+      - id: MC-P14-036
+        when: [empty]
+        feedback:
+          en: "Members who don't mind have no true answer, and once they tap one they can't clear it."
+          ar: "الأعضاء الذين لا يهمّهم ذلك ليست لهم إجابة صحيحة، وبعد أن يضغطوا على اختيار لا يستطيعون إلغاءه."
+      - id: MC-P14-036
+        when: [female]
+        feedback:
+          en: "Most members keep the default, so the gym would book female trainers for people who never asked for one."
+          ar: "أغلب الأعضاء يُبقون الاختيار الافتراضي، فسيحجز النادي مدرّبات لأشخاص لم يطلبوا ذلك."
+    correct:
+      en: "\"No preference\", selected."
+      ar: "«لا يهم»، وهو محدَّد."
+    explain:
+      en: "The most common answer is the start, and anyone with a preference changes it in one tap."
+      ar: "الإجابة الأكثر شيوعًا هي البداية، ومن عنده تفضيل يغيّره بضغطة واحدة."
+
+  - id: S03
+    type: tune
+    part: check
+    skill: SK-P14-U04-01
+    value:
+      en: "Check, checkboxes (NN/g): display your list vertically. Side by side in one tight line, it's hard to align the labels with the right checkbox."
+      ar: "اختبار، الـ Checkboxes (NN/g): اعرض القائمة رأسيًا. فجنبًا إلى جنب في سطر واحد ضيّق، يصعب ربط كل اسم بالـ Checkbox الصحيح."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/", quote: "Display your list vertically." }
+    scenario:
+      en: "Members tick the days they can come to class, as many as they like."
+      ar: "يختار الأعضاء الأيام التي يستطيعون فيها حضور الحصص، بالعدد الذي يريدونه."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: line
+    options:
+      - id: line
+        text: { en: "All days in one line", ar: "كل الأيام في سطر واحد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Days you can come", ar: "الأيام المتاحة لك" } }
+            - { kind: text, text: { en: "☑ Sat ☐ Sun ☑ Mon ☐ Tue ☐ Wed", ar: "☑ السبت ☐ الأحد ☑ الاثنين ☐ الثلاثاء ☐ الأربعاء" }, gap: s }
+      - id: round
+        text: { en: "One day per line, with round markers", ar: "يوم واحد في كل سطر، بعلامات دائرية" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Days you can come", ar: "الأيام المتاحة لك" } }
+            - { kind: check, marker: round, text: { en: "Saturday", ar: "السبت" }, selected: true, gap: s }
+            - { kind: check, marker: round, text: { en: "Sunday", ar: "الأحد" } }
+            - { kind: check, marker: round, text: { en: "Monday", ar: "الاثنين" }, selected: true }
+            - { kind: check, marker: round, text: { en: "Tuesday", ar: "الثلاثاء" } }
+            - { kind: check, marker: round, text: { en: "Wednesday", ar: "الأربعاء" } }
+      - id: list
+        text: { en: "One day per line, with square checkboxes", ar: "يوم واحد في كل سطر، بـ Checkboxes مربعة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Days you can come", ar: "الأيام المتاحة لك" } }
+            - { kind: check, text: { en: "Saturday", ar: "السبت" }, selected: true, gap: s }
+            - { kind: check, text: { en: "Sunday", ar: "الأحد" } }
+            - { kind: check, text: { en: "Monday", ar: "الاثنين" }, selected: true }
+            - { kind: check, text: { en: "Tuesday", ar: "الثلاثاء" } }
+            - { kind: check, text: { en: "Wednesday", ar: "الأربعاء" } }
+    answer: [list]
+    misconceptions:
+      - id: MC-P14-034
+        when: [line]
+        feedback:
+          en: "In one line each box sits between two days, so members can't tell which day they ticked."
+          ar: "في سطر واحد يقع كل مربع بين يومين، فلا يعرف الأعضاء أي يوم اختاروه."
+      - id: MC-P14-033
+        when: [round]
+        feedback:
+          en: "Round markers say \"pick one\", so members may choose a single day though they can come on several."
+          ar: "العلامات الدائرية تقول «اختر واحدًا»، فقد يختار الأعضاء يومًا واحدًا مع أنهم يستطيعون الحضور في أكثر من يوم."
+    correct:
+      en: "One per line, square checkboxes."
+      ar: "يوم في كل سطر، بـ Checkboxes مربعة."
+    explain:
+      en: "Each box sits next to its own day, and the square says members can tick as many as they like."
+      ar: "كل مربع بجانب يومه، والشكل المربع يقول إن الأعضاء يستطيعون اختيار ما يريدون من الأيام."
+
+  - id: S04
+    type: tune
+    part: check
+    skill: SK-P14-U04-04
+    value:
+      en: "Check, checkboxes vs. radio buttons (NN/g): use checkboxes and radio buttons only to change settings, not as action buttons that make something happen. Cancelling a class is an action."
+      ar: "اختبار، الـ Checkboxes مقابل الـ Radio buttons (NN/g): استخدم الـ Checkboxes والـ Radio buttons لتغيير الإعدادات فقط، لا كأزرار تجعل شيئًا يحدث. وإلغاء الحصة فعل."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/", quote: "Use checkboxes and radio buttons only to change settings, not as action buttons that make something happen." }
+    scenario:
+      en: "On a booked class, members need a way to cancel their place, so someone on the waiting list can take it."
+      ar: "في صفحة الحصة المحجوزة، يحتاج الأعضاء إلى طريقة لإلغاء مكانهم، حتى يأخذه شخص من قائمة الانتظار."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: radio
+    options:
+      - id: radio
+        text: { en: "Radio buttons, Keep or Cancel, that act as soon as one is picked", ar: "Radio buttons، «احتفظ» أو «ألغِ»، تعمل بمجرد اختيار أحدها" }
+        mock:
+          width: 300
+          caption: { en: "Picking Cancel cancels at once", ar: "اختيار «ألغِ» يلغي فورًا" }
+          blocks:
+            - { kind: heading, text: { en: "Spinning · Mon 7:00 pm", ar: "Spinning · الاثنين 7:00 م" } }
+            - { kind: radio, text: { en: "Keep my place", ar: "احتفظ بمكاني" }, selected: true, gap: s }
+            - { kind: radio, text: { en: "Cancel my place", ar: "ألغِ مكاني" } }
+      - id: check
+        text: { en: "A checkbox that cancels as soon as it's ticked", ar: "Checkbox يلغي بمجرد اختياره" }
+        mock:
+          width: 300
+          caption: { en: "Ticking cancels at once", ar: "الاختيار يلغي فورًا" }
+          blocks:
+            - { kind: heading, text: { en: "Spinning · Mon 7:00 pm", ar: "Spinning · الاثنين 7:00 م" } }
+            - { kind: check, text: { en: "Cancel my place", ar: "ألغِ مكاني" }, gap: s }
+      - id: button
+        text: { en: "A \"Cancel my place\" button", ar: "زر «ألغِ مكاني»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Spinning · Mon 7:00 pm", ar: "Spinning · الاثنين 7:00 م" } }
+            - { kind: button, style: dangerlink, text: { en: "Cancel my place", ar: "ألغِ مكاني" }, gap: s }
+    answer: [button]
+    misconceptions:
+      - id: MC-P14-038
+        when: [radio, check]
+        feedback:
+          en: "This looks like a setting, so members tap it to explore. One tap gives their place away to someone on the waiting list."
+          ar: "هذا يبدو كإعداد، فيضغط عليه الأعضاء ليستكشفوا. وضغطة واحدة تعطي مكانهم لشخص في قائمة الانتظار."
+    correct:
+      en: "An action: a button."
+      ar: "فعل: زر."
+    explain:
+      en: "A button says pressing it makes something happen, so members only cancel when they mean to."
+      ar: "الزر يقول إن الضغط عليه يجعل شيئًا يحدث، فلا يلغي الأعضاء إلا حين يقصدون ذلك."
+
+  - id: S05
+    type: tune
+    part: check
+    skill: SK-P14-U04-05
+    value:
+      en: "Check, toggle switches (NN/g): if only one descriptor is present beside a toggle, it can be taken for a toggle label. Put the setting's name right beside the switch, and let the switch show the state."
+      ar: "اختبار، الـ Toggle switches (NN/g): إن كانت بجانب الـ Toggle كلمة وصف واحدة فقط، فقد تُفهم على أنها اسمه. ضع اسم الإعداد بجانب المفتاح مباشرة، واترك المفتاح يوضّح الحالة."
+    ref: { url: "https://www.nngroup.com/articles/toggle-switch-guidelines/", quote: "If only one descriptor is present beside a toggle, it can be taken for a toggle label." }
+    scenario:
+      en: "A toggle sends members a reminder an hour before each class. Reminders are off right now."
+      ar: "يوجد Toggle يرسل للأعضاء تذكيرًا قبل كل حصة بساعة. والتذكير الآن متوقّف."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: enabled
+    options:
+      - id: enabled
+        text: { en: "Name above, the word \"Enabled\" beside the switch", ar: "الاسم فوق، وكلمة «مفعّل» بجانب المفتاح" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Class reminders", ar: "تذكير بالحصص" } }
+            - { kind: toggle, text: { en: "Enabled", ar: "مفعّل" }, gap: xs }
+      - id: name
+        text: { en: "The name beside the switch, no state word", ar: "الاسم بجانب المفتاح، بدون كلمة حالة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: toggle, text: { en: "Class reminders", ar: "تذكير بالحصص" } }
+      - id: disabled
+        text: { en: "Name above, the word \"Disabled\" beside the switch", ar: "الاسم فوق، وكلمة «غير مفعّل» بجانب المفتاح" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Class reminders", ar: "تذكير بالحصص" } }
+            - { kind: toggle, text: { en: "Disabled", ar: "غير مفعّل" }, gap: xs }
+    answer: [name]
+    misconceptions:
+      - id: MC-P14-041
+        when: [enabled]
+        feedback:
+          en: "The switch is off, yet the only word beside it says \"Enabled\". Members may think reminders already work."
+          ar: "المفتاح متوقّف، لكن الكلمة الوحيدة بجانبه تقول «مفعّل». فقد يظن الأعضاء أن التذكير يعمل بالفعل."
+      - id: MC-P14-041
+        when: [disabled]
+        feedback:
+          en: "One word beside a switch reads like its name: does flipping it turn \"Disabled\" on? Members can't be sure what they're switching."
+          ar: "الكلمة الوحيدة بجانب المفتاح تُقرأ كأنها اسمه: هل الضغط عليه يشغّل «غير مفعّل»؟ فلا يتأكّد الأعضاء ماذا يغيّرون."
+    correct:
+      en: "Name beside the switch; the switch shows the state."
+      ar: "الاسم بجانب المفتاح؛ والمفتاح يوضّح الحالة."
+    explain:
+      en: "\"Class reminders\" next to the switch can only be read as the setting, and the switch's position and colour say whether it's on."
+      ar: "«تذكير بالحصص» بجانب المفتاح لا يمكن أن تُقرأ إلا كاسم للإعداد، ووضع المفتاح ولونه يقولان هل هو يعمل."
+
+  - id: S06
+    type: tune
+    part: check
+    skill: SK-P14-U04-02
+    value:
+      en: "Check, checkboxes (NN/g): ensure that all your label statements are worded positively; negative statements force users to contemplate double negatives."
+      ar: "اختبار، الـ Checkboxes (NN/g): تأكّد أن كل الأسماء مكتوبة بصيغة إيجابية؛ فالصيغ المنفية تجبر الناس على التفكير في نفي النفي."
+    ref: { url: "https://www.nngroup.com/articles/checkboxes-design-guidelines/", quote: "Ensure that all your label statements are worded positively." }
+    scenario:
+      en: "On the membership page, one checkbox decides whether the membership renews by itself at the end of the month."
+      ar: "في صفحة الاشتراك، يوجد Checkbox واحد يحدّد هل يتجدّد الاشتراك تلقائيًا في نهاية الشهر."
+    prompt:
+      en: "Try each label. Which one should ship?"
+      ar: "جرّب كل اسم. أيّها يجب أن يُطلق؟"
+    start: dont
+    options:
+      - id: dont
+        text: { en: "\"Don't renew my membership automatically\"", ar: "«لا تجدّد اشتراكي تلقائيًا»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Monthly membership", ar: "الاشتراك الشهري" } }
+            - { kind: check, text: { en: "Don't renew my membership automatically", ar: "لا تجدّد اشتراكي تلقائيًا" }, gap: s }
+            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
+      - id: auto
+        text: { en: "\"Auto-renewal\"", ar: "«التجديد التلقائي»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Monthly membership", ar: "الاشتراك الشهري" } }
+            - { kind: check, text: { en: "Auto-renewal", ar: "التجديد التلقائي" }, gap: s }
+            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
+      - id: renew
+        text: { en: "\"Renew my membership each month\"", ar: "«جدّد اشتراكي كل شهر»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Monthly membership", ar: "الاشتراك الشهري" } }
+            - { kind: check, text: { en: "Renew my membership each month", ar: "جدّد اشتراكي كل شهر" }, gap: s }
+            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
+    answer: [renew]
+    misconceptions:
+      - id: MC-P14-035
+        when: [dont]
+        feedback:
+          en: "A tick means \"don't\", so members must work through a negative to know whether they'll be charged next month."
+          ar: "علامة الصح تعني «لا»، فيضطر الأعضاء إلى فهم صيغة منفية ليعرفوا هل سيُخصم منهم الشهر القادم."
+      - id: MC-P14-035
+        when: [auto]
+        feedback:
+          en: "\"Auto-renewal\" names a topic, not what the tick does. Members may tick it to read more, or to turn it off."
+          ar: "«التجديد التلقائي» تذكر موضوعًا، لا ما يفعله الاختيار. فقد يختاره الأعضاء ليعرفوا أكثر، أو ليوقفوه."
+    correct:
+      en: "Positive and active: say what ticking does."
+      ar: "صيغة إيجابية: قل ما يفعله الاختيار."
+    explain:
+      en: "A tick means the membership renews, an empty box means it ends. No one is charged by surprise."
+      ar: "علامة الصح تعني أن الاشتراك يتجدّد، والمربع الفارغ يعني أنه ينتهي. فلا يُخصم من أحد دون أن يتوقّع."

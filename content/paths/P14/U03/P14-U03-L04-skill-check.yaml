@@ -1,0 +1,326 @@
+id: P14-U03-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: help people find it"
+  ar: "اختبار المهارة: ساعد الناس على إيجاد ما يبحثون عنه"
+sources:
+  - title: { en: "Site Search Suggestions (NN/g)", ar: "اقتراحات البحث في الموقع (NN/g)" }
+    url: "https://www.nngroup.com/articles/site-search-suggestions/"
+  - title: { en: "3 Guidelines for Search Engine \"No Results\" Pages (NN/g)", ar: "3 إرشادات لصفحات «لا توجد نتائج» في محركات البحث (NN/g)" }
+    url: "https://www.nngroup.com/articles/search-no-results-serp/"
+  - title: { en: "Defining Helpful Filter Categories and Values for Better UX (NN/g)", ar: "تحديد فئات وقيم فلاتر مفيدة لتجربة أفضل (NN/g)" }
+    url: "https://www.nngroup.com/articles/filter-categories-values/"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Nahla's grocery app", ar: "تطبيق البقالة لنهلة" }
+    body:
+      en: "Nahla's team is about to launch a grocery delivery app. You're reviewing its search and filters before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "فريق نهلة على وشك إطلاق تطبيق لتوصيل البقالة. وأنت تراجع البحث والفلاتر فيه قبل الإطلاق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+
+  - id: S02
+    type: tune
+    part: check
+    skill: SK-P14-U03-02
+    value:
+      en: "Check, search suggestions (NN/g): when suggestions contain the query anywhere, it's best to highlight the user's query. \"Milk\" sits at the start, middle or end of each product name."
+      ar: "اختبار، اقتراحات البحث (NN/g): حين تحتوي الاقتراحات على البحث في أي مكان، الأفضل إبراز ما كتبه المستخدم. و«لبن» تقع في أول اسم كل منتج أو وسطه أو آخره."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "it’s best to highlight the user’s query." }
+    scenario:
+      en: "The suggestions show product names that contain the typed word anywhere. Someone types \"milk\"."
+      ar: "تعرض الاقتراحات أسماء منتجات تحتوي على الكلمة المكتوبة في أي مكان. وكتب شخص «لبن»."
+    prompt:
+      en: "Try each style. Which one should ship?"
+      ar: "جرّب كل شكل. أيّها يجب أن يُطلق؟"
+    start: rest
+    options:
+      - id: rest
+        text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "milk", ar: "لبن" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**Full-cream** milk **1 L**", ar: "لبن **كامل الدسم 1 لتر**" }, gap: s }
+            - { kind: text, text: { en: "milk **chocolate bar**", ar: "**شوكولاتة بالـ**لبن" }, gap: s }
+            - { kind: text, text: { en: "**Coconut** milk", ar: "لبن **جوز الهند**" }, gap: s }
+      - id: plain
+        text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "milk", ar: "لبن" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Full-cream milk 1 L", ar: "لبن كامل الدسم 1 لتر" }, gap: s }
+            - { kind: text, text: { en: "Milk chocolate bar", ar: "شوكولاتة باللبن" }, gap: s }
+            - { kind: text, text: { en: "Coconut milk", ar: "لبن جوز الهند" }, gap: s }
+      - id: query
+        text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "milk", ar: "لبن" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Full-cream **milk** 1 L", ar: "**لبن** كامل الدسم 1 لتر" }, gap: s }
+            - { kind: text, text: { en: "**Milk** chocolate bar", ar: "شوكولاتة بالـ**لبن**" }, gap: s }
+            - { kind: text, text: { en: "Coconut **milk**", ar: "**لبن** جوز الهند" }, gap: s }
+    answer: [query]
+    misconceptions:
+      - id: MC-P14-026
+        when: [rest, plain]
+        feedback:
+          en: "\"Milk\" sits in a different place in each name, so shoppers have to look for it line by line."
+          ar: "«لبن» في مكان مختلف في كل اسم، فيضطر المتسوّقون إلى البحث عنها سطرًا بسطر."
+    correct:
+      en: "Bold the typed word."
+      ar: "أبرز الكلمة المكتوبة."
+    explain:
+      en: "Shoppers spot \"milk\" in every line at once and compare the rest: full-cream, chocolate, coconut."
+      ar: "يلاحظ المتسوّقون «لبن» في كل سطر فورًا، ويقارنون الباقي: كامل الدسم، والشوكولاتة، وجوز الهند."
+
+  - id: S03
+    type: tune
+    part: check
+    skill: SK-P14-U03-05
+    value:
+      en: "Check, filter categories (NN/g): relevance to users is the ultimate prioritization criterion. Shoppers filter by aisle and price; country of origin and packaging matter to few."
+      ar: "اختبار، فئات الفلاتر (NN/g): ما يهمّ الناس هو المعيار الأول في ترتيب الأولوية. والمتسوّقون يفلترون حسب القسم والسعر؛ وبلد المنشأ والتغليف يهمّان قلّة."
+    ref: { url: "https://www.nngroup.com/articles/filter-categories-values/", quote: "Relevance to users is the ultimate prioritization criterion." }
+    scenario:
+      en: "The app's data shows most shoppers filter by **Aisle** and **Price**. Few ever use **Country of origin** or **Packaging**, which are at the top of the list right now."
+      ar: "تُظهر بيانات التطبيق أن أغلب المتسوّقين يفلترون حسب **القسم** و**السعر**. وقليلون يستخدمون **بلد المنشأ** أو **التغليف**، وهما في أعلى القائمة الآن."
+    prompt:
+      en: "Try each order. Which one should ship?"
+      ar: "جرّب كل ترتيب. أيّها يجب أن يُطلق؟"
+    start: now
+    options:
+      - id: now
+        text: { en: "Keep Country of origin and Packaging first", ar: "أبقِ بلد المنشأ والتغليف أولًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Country of origin ▾", ar: "بلد المنشأ ▾" }, gap: m }
+            - { kind: heading, text: { en: "Packaging ▾", ar: "التغليف ▾" }, gap: m }
+            - { kind: heading, text: { en: "Aisle ▾", ar: "القسم ▾" }, gap: m }
+            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+      - id: used
+        text: { en: "Aisle and Price first, the rest below", ar: "القسم والسعر أولًا، والباقي تحتهما" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Aisle ▾", ar: "القسم ▾" }, gap: m }
+            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+            - { kind: heading, text: { en: "Country of origin ▾", ar: "بلد المنشأ ▾" }, gap: m }
+            - { kind: heading, text: { en: "Packaging ▾", ar: "التغليف ▾" }, gap: m }
+      - id: hide
+        text: { en: "Aisle and Price only; remove the other two", ar: "القسم والسعر فقط؛ واحذف الآخرين" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Aisle ▾", ar: "القسم ▾" }, gap: m }
+            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+    answer: [used]
+    misconceptions:
+      - id: MC-P14-032
+        when: [now]
+        feedback:
+          en: "Most shoppers have to pass two filters they never use before reaching the ones they need."
+          ar: "على أغلب المتسوّقين أن يمرّوا على فلترين لا يستخدمونهما قبل الوصول إلى ما يحتاجونه."
+      - id: MC-P14-030
+        when: [hide]
+        feedback:
+          en: "Some shoppers do filter by origin or packaging, for example for allergies or recycling. Lower in the list, the filters cost the others nothing; removed, they're gone for everyone."
+          ar: "بعض المتسوّقين يفلترون فعلًا حسب المنشأ أو التغليف، مثلًا بسبب الحساسية أو إعادة التدوير. وفي أسفل القائمة لا يكلّف الفلتران الآخرين شيئًا؛ أما حذفهما فيلغيهما للجميع."
+    correct:
+      en: "Most used first, the rest still there."
+      ar: "الأكثر استخدامًا أولًا، والباقي موجود."
+    explain:
+      en: "Most shoppers start with the two filters they use, and the few who care about origin or packaging still find them."
+      ar: "يبدأ أغلب المتسوّقين بالفلترين اللذين يستخدمونهما، والقلّة التي تهتمّ بالمنشأ أو التغليف تجدهما مع ذلك."
+
+  - id: S04
+    type: tune
+    part: check
+    skill: SK-P14-U03-03
+    value:
+      en: "Check, no-results pages (NN/g): they must clearly state that nothing matched, and offer starting points like spelling corrections. A page of offers with no message hides both."
+      ar: "اختبار، صفحات «لا توجد نتائج» (NN/g): يجب أن تقول بوضوح إنه لا يوجد تطابق، وأن تعرض نقاط بداية مثل تصحيح الإملاء. وصفحة العروض بدون رسالة تُخفي الاثنين."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "Spelling corrections" }
+    scenario:
+      en: "A shopper searched for **basmati rise**. Nothing matched. The app sells basmati rice."
+      ar: "بحث متسوّق عن **أرز بسمتى**. ولم يتطابق شيء. والتطبيق يبيع أرز بسمتي."
+    prompt:
+      en: "Try each version of the page. Which one should ship?"
+      ar: "جرّب كل نسخة من الصفحة. أيّها يجب أن تُطلق؟"
+    start: offers
+    options:
+      - id: offers
+        text: { en: "Show today's offers, with no message", ar: "اعرض عروض اليوم، بدون رسالة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
+            - { kind: text, weight: bold, text: { en: "Today's offers", ar: "عروض اليوم" }, gap: m }
+            - { kind: meta, text: { en: "Sunflower oil 1 L · EGP 85", ar: "زيت عباد الشمس 1 لتر · 85 جنيه" }, gap: s }
+            - { kind: meta, text: { en: "Pasta 400 g · EGP 22", ar: "مكرونة 400 جم · 22 جنيه" }, gap: s }
+      - id: fix
+        text: { en: "\"No results for basmati rise\", and \"Did you mean basmati rice?\"", ar: "«لا توجد نتائج لأرز بسمتى»، و«هل تقصد أرز بسمتي؟»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
+            - { kind: heading, text: { en: "No results for \"basmati rise\"", ar: "لا توجد نتائج لـ«أرز بسمتى»" }, gap: m }
+            - { kind: text, text: { en: "Did you mean **basmati rice**? (8 products)", ar: "هل تقصد **أرز بسمتي**؟ (8 منتجات)" }, gap: s }
+      - id: oops
+        text: { en: "\"Oops! Nothing here but crumbs 🍞\"", ar: "«عفوًا! مافيش هنا غير الفتافيت 🍞»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
+            - { kind: heading, text: { en: "Oops! Nothing here but crumbs 🍞", ar: "عفوًا! مافيش هنا غير الفتافيت 🍞" }, gap: m }
+    answer: [fix]
+    misconceptions:
+      - id: MC-P14-027
+        when: [offers]
+        feedback:
+          en: "The shopper isn't told the search failed, and may think the store has no basmati rice."
+          ar: "لا يُخبَر المتسوّق بأن البحث لم ينجح، وقد يظنّ أن المتجر ليس فيه أرز بسمتي."
+      - id: MC-P14-029
+        when: [oops]
+        feedback:
+          en: "The joke leaves the shopper with nothing to do next, and the rice is one letter away."
+          ar: "النكتة تترك المتسوّق بلا شيء يفعله بعدها، والأرز على بُعد حرف واحد."
+    correct:
+      en: "Clear message, and the spelling fix."
+      ar: "رسالة واضحة، وتصحيح الإملاء."
+    explain:
+      en: "One tap on the corrected spelling shows 8 kinds of basmati rice."
+      ar: "ضغطة واحدة على الإملاء الصحيح تعرض 8 أنواع من أرز البسمتي."
+
+  - id: S05
+    type: tune
+    part: check
+    skill: SK-P14-U03-04
+    value:
+      en: "Check, filter values (NN/g): unintelligible jargon has no place in filters. GF, LF, V and VG are shorthand from the product database, not words shoppers use."
+      ar: "اختبار، قيم الفلاتر (NN/g): المصطلحات غير المفهومة لا مكان لها في الفلاتر. وGF وLF وV وVG اختصارات من قاعدة بيانات المنتجات، لا كلمات يستخدمها المتسوّقون."
+    ref: { url: "https://www.nngroup.com/articles/filter-categories-values/", quote: "Unintelligible jargon has no place in filters." }
+    scenario:
+      en: "The **Diet** filter shows **GF**, **LF**, **V** and **VG**, copied from the product database."
+      ar: "يعرض فلتر **النظام الغذائي** القيم **GF** و**LF** و**V** و**VG**، منسوخة من قاعدة بيانات المنتجات."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: codes
+    options:
+      - id: codes
+        text: { en: "Keep the short codes", ar: "أبقِ الاختصارات" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Diet", ar: "النظام الغذائي" }, gap: m }
+            - kind: row
+              blocks:
+                - { kind: chip, text: "GF" }
+                - { kind: chip, text: "LF" }
+                - { kind: chip, text: "V" }
+                - { kind: chip, text: "VG" }
+      - id: words
+        text: { en: "Gluten-free, Lactose-free, Vegetarian, Vegan", ar: "خالٍ من الجلوتين، خالٍ من اللاكتوز، نباتي، نباتي صرف" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Diet", ar: "النظام الغذائي" }, gap: m }
+            - { kind: check, text: { en: "Gluten-free", ar: "خالٍ من الجلوتين" }, gap: s }
+            - { kind: check, text: { en: "Lactose-free", ar: "خالٍ من اللاكتوز" }, gap: s }
+            - { kind: check, text: { en: "Vegetarian", ar: "نباتي" }, gap: s }
+            - { kind: check, text: { en: "Vegan (no animal products)", ar: "نباتي صرف (بدون أي منتج حيواني)" }, gap: s }
+      - id: icons
+        text: { en: "Replace the codes with small icons", ar: "استبدل الاختصارات بأيقونات صغيرة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Diet", ar: "النظام الغذائي" }, gap: m }
+            - kind: row
+              blocks:
+                - { kind: chip, text: "🌾⃠" }
+                - { kind: chip, text: "🥛⃠" }
+                - { kind: chip, text: "🥕" }
+                - { kind: chip, text: "🌱" }
+    answer: [words]
+    misconceptions:
+      - id: MC-P14-031
+        when: [codes, icons]
+        feedback:
+          en: "Shoppers have to guess what each code or icon means, and for someone with an allergy, a wrong guess matters."
+          ar: "على المتسوّقين أن يخمّنوا معنى كل اختصار أو أيقونة، ولمن لديه حساسية، التخمين الخطأ مهمّ."
+    correct:
+      en: "Plain words."
+      ar: "كلمات بسيطة."
+    explain:
+      en: "Each value says exactly what it filters, so shoppers with an allergy or a diet pick it without guessing."
+      ar: "كل قيمة تقول بالضبط ما تفلتره، فيختارها من لديه حساسية أو نظام غذائي دون تخمين."
+
+  - id: S06
+    type: tune
+    part: check
+    skill: SK-P14-U03-01
+    value:
+      en: "Check, search suggestions (NN/g): make sure every suggested query actually has good, relevant results. The app has never sold cherry tomatoes, so that suggestion only leads to an empty page."
+      ar: "اختبار، اقتراحات البحث (NN/g): تأكّد أن كل بحث مقترح له فعلًا نتائج جيدة ومرتبطة. والتطبيق لم يبع طماطم شيري أبدًا، فهذا الاقتراح لا يوصل إلا إلى صفحة فارغة."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "Make sure every suggested query actually has good, relevant results." }
+    scenario:
+      en: "The team copied a list of popular grocery searches from another country. It includes **cherry tomatoes**, which Nahla's app doesn't sell. Someone types \"tomato\"."
+      ar: "نسخ الفريق قائمة بأشهر عمليات البحث عن البقالة من بلد آخر. وفيها **طماطم شيري**، وتطبيق نهلة لا يبيعها. وكتب شخص «طماطم»."
+    prompt:
+      en: "Try each list. Which one should ship?"
+      ar: "جرّب كل قائمة. أيّها يجب أن تُطلق؟"
+    start: copied
+    options:
+      - id: copied
+        text: { en: "The copied list, as it is", ar: "القائمة المنسوخة، كما هي" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "tomato", ar: "طماطم" }, filled: true, focus: true }
+            - { kind: text, text: { en: "tomatoes **cherry**", ar: "طماطم **شيري**" }, gap: s }
+            - { kind: text, text: { en: "tomatoes **peeled, canned**", ar: "طماطم **مقشّرة معلّبة**" }, gap: s }
+            - { kind: text, text: { en: "tomatoes **1 kg**", ar: "طماطم **بلدي 1 كيلو**" }, gap: s }
+      - id: stock
+        text: { en: "Only searches that find products in the app", ar: "فقط عمليات البحث التي تجد منتجات في التطبيق" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "tomato", ar: "طماطم" }, filled: true, focus: true }
+            - { kind: text, text: { en: "tomatoes **peeled, canned**", ar: "طماطم **مقشّرة معلّبة**" }, gap: s }
+            - { kind: text, text: { en: "tomatoes **1 kg**", ar: "طماطم **بلدي 1 كيلو**" }, gap: s }
+            - { kind: text, text: { en: "tomatoes **sun-dried**", ar: "طماطم **مجفّفة**" }, gap: s }
+      - id: none
+        text: { en: "No suggestions until the list is fixed", ar: "بدون اقتراحات حتى تُصلَح القائمة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "tomato", ar: "طماطم" }, filled: true, focus: true }
+    answer: [stock]
+    misconceptions:
+      - id: MC-P14-025
+        when: [copied]
+        feedback:
+          en: "\"Cherry\" is the first suggestion and finds nothing in this app."
+          ar: "«شيري» هو أول اقتراح، ولا يجد شيئًا في هذا التطبيق."
+      - id: MC-P14-025
+        when: [none]
+        feedback:
+          en: "The fix is simple: keep the suggestions that find products. Removing them all makes every shopper type more."
+          ar: "الحل بسيط: أبقِ الاقتراحات التي تجد منتجات. وحذفها كلها يجعل كل متسوّق يكتب أكثر."
+    correct:
+      en: "Only suggestions that find products."
+      ar: "فقط الاقتراحات التي تجد منتجات."
+    explain:
+      en: "Every line opens real products, so shoppers type less and never land on an empty page."
+      ar: "كل سطر يفتح منتجات حقيقية، فيكتب المتسوّقون أقل ولا يصلون أبدًا إلى صفحة فارغة."

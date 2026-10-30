@@ -100,6 +100,28 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .cmp .cap{font-weight:600;margin:0 0 6px}
 .conf{margin:6px 0 12px}
 .conf p{margin:0 0 8px;color:var(--muted);font-size:.92rem}
+.vsum{font-size:18px;margin:18px 0 2px}.vsum-note{margin:0 0 10px;color:var(--muted);font-size:14px}
+.clip{margin:4px 0 14px}.clip.loading video{aspect-ratio:1;opacity:.6}.clip video{width:100%;max-height:60vh;border-radius:12px;background:#000;display:block}
+.clip .who{font-size:13px;color:var(--muted);margin:6px 0 0}.clip details{margin-top:8px}.clip details p{font-size:14px;line-height:1.7}
+.mock.has-ov{position:relative;overflow:hidden;min-height:400px}
+.mock.has-fab{position:relative;padding-bottom:84px}
+.mock .k-fab{position:absolute;inset-inline-end:16px;bottom:16px;height:56px;min-width:56px;border-radius:18px;background:var(--mock-brand);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px rgba(0,0,0,.22);font-size:22px;line-height:1}
+.mock .k-fab.ext{padding:0 18px}.mock .k-fab b{font-size:15px;font-weight:600}
+.mock .k-fab.n2{bottom:84px}.mock .k-fab.n3{bottom:152px}
+.mock .scrim{position:absolute;inset:0;background:rgba(20,20,30,.45)}
+.mock .ov{position:absolute;background:var(--mock-bg);color:var(--mock-ink);box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px}
+.mock .ov-dialog{left:8%;right:8%;top:50%;transform:translateY(-50%);border-radius:16px}
+.mock .ov-sheet{left:0;right:0;bottom:0;border-radius:18px 18px 0 0;max-height:78%;padding-top:10px}
+.mock .ov-sheet.tall{top:6%}
+.mock .ov-full{inset:0;border-radius:0;box-shadow:none}
+.mock .ov-toast{left:12px;right:12px;bottom:14px;border-radius:10px;background:#2B2B33;color:#fff;padding:10px 14px;font-size:.88rem}
+.mock .ov-toast .k-link{color:#B9AEFF}
+.mock .ov-banner{left:0;right:0;top:0;border-radius:0;box-shadow:none;background:#FFF4D6;color:#5C4300;padding:12px 16px;font-size:.88rem}
+.mock .grab{width:40px;height:4px;border-radius:2px;background:#C9C9D1;margin:0 auto 10px}
+.mock .ovx{position:absolute;top:10px;inset-inline-end:14px;font-size:.95rem;color:var(--mock-muted)}
+.mock .k-tip{display:inline-block;width:auto;max-width:85%;background:#2B2B33;color:#fff;font-size:.8rem;border-radius:8px;padding:7px 10px;position:relative;margin-top:8px}
+.mock .k-tip::before{content:"";position:absolute;top:-6px;inset-inline-start:16px;border:6px solid transparent;border-top:0;border-bottom-color:#2B2B33}
+.mock .k-iconbtn{display:inline-flex;width:auto;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:13px;border:1px solid var(--line);font-size:.85rem;color:var(--mock-muted)}
 .recall{background:var(--note-soft);color:var(--ink);border-radius:10px;padding:10px 14px;margin:0 0 14px}
 
 /* Mock screens: their own neutral product palette, independent of the app theme */
@@ -165,6 +187,7 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .k-radio,.mock .k-check{display:flex;align-items:center;gap:10px;font-size:.92rem;min-height:32px}
 .mock .k-radio .mk,.mock .k-check .mk{flex:none;width:20px;height:20px;border:2px solid #6B6B70;background:#fff}
 .mock .k-radio .mk{border-radius:50%}.mock .k-check .mk{border-radius:5px}
+.mock .mk.mk-round{border-radius:50%}.mock .mk.mk-square{border-radius:5px}.mock .mk.act{cursor:pointer}
 .mock .k-radio .mk.on{border-color:#5B3FD1;box-shadow:inset 0 0 0 4px #fff;background:#5B3FD1}
 .mock .k-check .mk.on{border-color:#5B3FD1;background:#5B3FD1 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3C/svg%3E") center/14px no-repeat}
 .mock .size-xl{font-size:1.6rem}.mock .size-l{font-size:1.25rem}.mock .size-s{font-size:.8rem}
@@ -325,7 +348,7 @@ const UI = {
       free:"Free", check_tag:"Skill check", min:m=>`${m} min`, steps:n=>`${n} steps`, stepOf:(a,b)=>`Step ${a} of ${b}`,
       done:"Lesson complete", checkDone:"Skill check complete", indep:"On your own", supp:"With help", rev:"Answer shown", xp:"XP",
       review:"Worth reviewing", nothingToReview:"Nothing to review from this lesson.", next:"Next lesson", back:"Back to lessons",
-      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pickPreview:"Pick an option to apply it to the screen.", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
+      yourFirst:"Your first answer:", scen:"Show the scenario", live:"Live preview", place:"Place each item", pickFor:"Choose for", moveUp:"Move up", moveDown:"Move down", valueQ:"ⓘ What this question teaches", transcript:"Read the transcript", vidSum:"Video summary", vidSumNote:"Can’t watch the video? This summary covers the same points.", sources:"Sources", nowWhy:"Now, why?", dragItem:"draggable item", srcQ:"Source:", pickPreview:"Pick an option to apply it to the screen.", pathRefs:"References for this path", unitRefs:"References for this unit", usedBy:n => `${n} question${n===1?"":"s"}`, revNav:"Reviewer navigation", revPrev:"‹ Previous step", revNext:"Next step ›", revJump:"Jump to step", dragHint:"Drag the blocks on the screen into place. With a keyboard, use the arrow keys.",
       pick:"Choose…", genericWrong:"Look again at what the scenario needs, then try again.", tapRegions:"Tap the part of the screen, or pick it from the list.",
       optionA:"Version A", optionB:"Version B", choose:"Choose one", score:(a,b)=>`${a} of ${b} right`, devnote:"Preview build",
       mastery:"Mastery round", masteryIntro:"Each skill you missed in this unit comes back as a new case. Get it right on the first try and the skill is mastered.", masteryGo:n=>`Start the mastery round (${n === 1 ? "1 skill" : `${n} skills`})`,
@@ -337,7 +360,7 @@ const UI = {
       free:"مجاني", check_tag:"اختبار مهارة", min:m=>`${m} دقائق`, steps:n=>`${n} خطوات`, stepOf:(a,b)=>`الخطوة ${a} من ${b}`,
       done:"اكتمل الدرس", checkDone:"اكتمل اختبار المهارة", indep:"بمفردك", supp:"بمساعدة", rev:"عُرضت الإجابة", xp:"نقاط XP",
       review:"يستحق المراجعة", nothingToReview:"لا يوجد ما يحتاج مراجعة من هذا الدرس.", next:"الدرس التالي", back:"العودة إلى الدروس",
-      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pickPreview:"اختر خيارًا لتطبّقه على الشاشة.", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
+      yourFirst:"إجابتك الأولى:", scen:"اعرض القصة من جديد", live:"معاينة مباشرة", place:"ضع كل عنصر في مكانه", pickFor:"اختر لـ", moveUp:"تحريك لأعلى", moveDown:"تحريك لأسفل", valueQ:"ⓘ ماذا يعلّم هذا السؤال", transcript:"اقرأ نص الفيديو", vidSum:"ملخص الفيديو", vidSumNote:"لا تستطيع مشاهدة الفيديو؟ هذا الملخص فيه النقاط نفسها.", sources:"المصادر", nowWhy:"والآن، لماذا؟", dragItem:"عنصر قابل للسحب", srcQ:"المصدر:", pickPreview:"اختر خيارًا لتطبّقه على الشاشة.", pathRefs:"مراجع هذا المسار", unitRefs:"مراجع هذه الوحدة", usedBy:n => n===1 ? "سؤال واحد" : n===2 ? "سؤالان" : n<=10 ? `${n} أسئلة` : `${n} سؤالًا`, revNav:"تنقّل المراجِع", revPrev:"‹ الخطوة السابقة", revNext:"الخطوة التالية ›", revJump:"انتقل إلى خطوة", dragHint:"اسحب العناصر على الشاشة إلى أماكنها. وبلوحة المفاتيح، استخدم الأسهم.",
       pick:"اختر…", genericWrong:"راجع ما يحتاجه السيناريو، ثم حاول مرة أخرى.", tapRegions:"اضغط على الجزء في الشاشة، أو اختره من القائمة.",
       optionA:"النسخة A", optionB:"النسخة B", choose:"اختر واحدة", score:(a,b)=>`${a} من ${b} صحيحة`, devnote:"نسخة معاينة",
       mastery:"جولة الإتقان", masteryIntro:"كل مهارة أخطأت فيها في هذه الوحدة تعود إليك بحالة جديدة. أجب عنها صحيحًا من أول محاولة لتُتقن المهارة.", masteryGo:n=>`ابدأ جولة الإتقان (${n === 1 ? "مهارة واحدة" : n === 2 ? "مهارتان" : `${n} مهارات`})`,
@@ -429,7 +452,7 @@ function mockBlocks(blocks, opts){
     if (b.kind === "group") { inner = mockBlocks(b.blocks, opts); if (b.scroll) return `<div class="${cls} scroll${b.sticky?" sticky":""}"${b.colw?` style="--colw:${b.colw}px"`:""}>${inner}</div>`; }
     else if (b.kind === "row") return `<div class="row2 ${b.gap?`gap-${b.gap}`:""}">${mockBlocks(b.blocks, opts)}</div>`;
     else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div${/\d/.test(tx(b.text)||"") && /^[\s\d+\-()\u2066\u2069]+$/.test(tx(b.text)) ? ' dir="ltr"' : ""} class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
-    else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
+    else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}${b.marker?` mk-${b.marker}`:""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
     else if (b.kind === "toggle") inner = `<span>${esc(tx(b.text))}</span><span class="sw${b.selected?" on":""}" aria-hidden="true"></span>`;
     else if (b.kind === "stepper") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="stp"><span aria-hidden="true">−</span><b>${esc(tx(b.text))}</b><span aria-hidden="true">+</span></div>`;
     else if (b.kind === "segmented") inner = (b.options||[]).map((o, k) => `<span class="sg${k===(b.value??0)?" on":""}">${esc(tx(o))}</span>`).join("");
@@ -439,10 +462,12 @@ function mockBlocks(blocks, opts){
       inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="sl${b.format?" act-slide":""}" data-min="${lo}" data-max="${hi}" data-fmt="${b.format?esc(tx(b.format)):""}" aria-hidden="true"><i style="inset-inline-start:${f(a)}%" data-v="${a}"></i><i style="inset-inline-start:${f(z)}%" data-v="${z}"></i></div><div class="fh">${b.format ? fmt(a, z) : esc(tx(b.text))}</div>`;
     }
     else if (b.kind === "divider") inner = "";
-    else inner = esc(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
+    else inner = inl(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
     const live = !(opts && opts.regions);
     if (live && (b.kind === "toggle" || b.kind === "check" || b.kind === "radio")) {
       const role = b.kind === "toggle" ? "switch" : b.kind === "check" ? "checkbox" : "radio";
+      /* hit: box makes only the marker tappable, to feel a small tap target */
+      if (b.hit === "box") return `<div class="${cls}"${st} role="${role}" aria-checked="${!!b.selected}">${inner.replace('class="mk', 'tabindex="0" class="act mk')}</div>`;
       return `<div class="${cls} act"${st} role="${role}" tabindex="0" aria-checked="${!!b.selected}">${inner}</div>`;
     }
     if (live && b.kind === "stepper") inner = inner.replace('<span aria-hidden="true">−</span>', `<span class="act" role="button" tabindex="0" data-step="-1" aria-label="−">−</span>`).replace('<span aria-hidden="true">+</span>', `<span class="act" role="button" tabindex="0" data-step="1" aria-label="+">+</span>`);
@@ -456,7 +481,11 @@ function mockBlocks(blocks, opts){
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
-const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
+/* an overlay on top of the screen: a dialog, a bottom sheet or a snackbar (toast) */
+const overlay = o => !o ? "" : `${(o.scrim ?? (o.type === "dialog" || o.type === "sheet")) ? `<div class="scrim" aria-hidden="true"></div>` : ""}<div class="ov ov-${o.type}" role="${o.type === "toast" ? "status" : "dialog"}">${o.type === "sheet" && o.handle !== false ? `<div class="grab" aria-hidden="true"></div>` : ""}${o.close ? `<span class="ovx" aria-label="Close">✕</span>` : ""}${mockBlocks(o.blocks)}</div>`;
+/* floating action buttons: one or more, stacked from the bottom corner; `text` makes it an extended FAB */
+const fabs = f => !f ? "" : [].concat(f).map((x, i) => `<div class="k-fab${x.text ? " ext" : ""}${i ? ` n${i + 1}` : ""}" aria-hidden="true"><span>${esc(x.icon || "+")}</span>${x.text ? `<b>${esc(tx(x.text))}</b>` : ""}</div>`).join("");
+const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}${m.overlay?" has-ov":""}${m.fab?" has-fab":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}${fabs(m.fab)}${overlay(m.overlay)}</div>` : "";
 /* a source link that opens the article with the supporting passage highlighted (URL text fragment) */
 const fragUrl = r => r.quote ? `${r.url}#:~:text=${encodeURIComponent(r.quote).replace(/-/g, "%2D")}` : r.url;
 const srcTitle = (url, lessons) => { for (const l of lessons) { const x = (l.sources||[]).find(x => x.url === url); if (x) return tx(x.title); } return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]; };
@@ -639,6 +668,8 @@ function renderStep(){
   if (s.type === "card"){
     const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
     if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
+    /* an instructor clip: captions in both languages, the learner's language on by default, transcript underneath */
+    if (s.video) h += clip(s.video) + `<h2 class="vsum">${u().vidSum}</h2><p class="vsum-note">${u().vidSumNote}</p>`;
     h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
   } else {
     if (s.recall){
@@ -660,7 +691,25 @@ function renderStep(){
   $("#main").innerHTML = h;
   $("#fb").innerHTML = st.fb || "";
   wire(s, st, locked);
+  loadClips();
   renderActions(s, st, check);
+}
+
+/* The Artifact media store answers without byte ranges, which Safari needs to stream a video. So each clip is
+   downloaded once and played from a blob: URL, which every browser can seek. */
+const clipBlobs = {};
+function loadClips(){
+  for (const el of document.querySelectorAll("video[data-src]")){
+    const src = el.dataset.src;
+    clipBlobs[src] = clipBlobs[src] || fetch(src).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); }).then(b => URL.createObjectURL(b)).catch(() => src);
+    clipBlobs[src].then(url => { if (el.isConnected) { el.src = url; el.closest(".clip")?.classList.remove("loading"); } });
+  }
+}
+
+function clip(v){
+  const on = lang === "ar" ? "ar" : "en";
+  const tracks = ["ar","en"].filter(k => v.captions && v.captions[k]).map(k => `<track kind="captions" srclang="${k}" label="${k === "ar" ? "العربية" : "English"}" src="${esc(v.captions[k])}"${k === on ? " default" : ""}>`).join("");
+  return `<figure class="clip loading"><video controls playsinline preload="metadata"${v.poster ? ` poster="${esc(v.poster)}"` : ""} data-src="${esc(v.src)}">${tracks}</video>${v.who ? `<p class="who">${esc(tx(v.who))}</p>` : ""}${v.transcript ? `<details><summary>${u().transcript}</summary>${para(v.transcript)}</details>` : ""}</figure>`;
 }
 
 function optionList(s, st, locked, name){
@@ -729,6 +778,7 @@ function renderReason(s, st, locked){
 
 /* mock screens respond to taps, so learners can try the controls they read about */
 function mockAct(el){
+  if (el.matches(".mk")) el = el.parentElement;
   if (el.matches(".k-toggle,.k-check")) { const on = el.getAttribute("aria-checked") !== "true"; el.setAttribute("aria-checked", on); el.querySelector(".sw,.mk").classList.toggle("on", on); }
   else if (el.matches(".k-radio")) {
     let g = [el], n = el; while ((n = n.previousElementSibling) && n.matches(".k-radio")) g.push(n); n = el; while ((n = n.nextElementSibling) && n.matches(".k-radio")) g.push(n);

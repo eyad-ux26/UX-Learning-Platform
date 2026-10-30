@@ -1,0 +1,507 @@
+id: P14-U03-B01
+mode: bank
+title:
+  en: "Re-tests: help people find it"
+  ar: "إعادة اختبار: ساعد الناس على إيجاد ما يبحثون عنه"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Site Search Suggestions (NN/g)", ar: "اقتراحات البحث في الموقع (NN/g)" }
+    url: "https://www.nngroup.com/articles/site-search-suggestions/"
+  - title: { en: "3 Guidelines for Search Engine \"No Results\" Pages (NN/g)", ar: "3 إرشادات لصفحات «لا توجد نتائج» في محركات البحث (NN/g)" }
+    url: "https://www.nngroup.com/articles/search-no-results-serp/"
+  - title: { en: "Defining Helpful Filter Categories and Values for Better UX (NN/g)", ar: "تحديد فئات وقيم فلاتر مفيدة لتجربة أفضل (NN/g)" }
+    url: "https://www.nngroup.com/articles/filter-categories-values/"
+steps:
+  # SK-P14-U03-01: suggest only searches that find something
+  - id: S01
+    type: tune
+    skill: SK-P14-U03-01
+    part: retest
+    value:
+      en: "Re-test, search suggestions (NN/g): suggested terms that return zero results are worse than unhelpful. No airline flies to that city this season, so the suggestion opens an empty list."
+      ar: "إعادة اختبار، اقتراحات البحث (NN/g): الاقتراحات التي تُرجع صفر نتائج أسوأ من عديمة الفائدة. ولا توجد رحلات إلى هذه المدينة هذا الموسم، فالاقتراح يفتح قائمة فارغة."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "Suggested terms that return zero results, or irrelevant results, are worse than unhelpful" }
+    scenario:
+      en: "Sameh's flight app suggests destinations as people type. Right now there are no flights to **Sharm El Sheikh** in the app; the route stopped for the season. Someone types \"Sh\"."
+      ar: "يقترح تطبيق الطيران لسامح وجهات أثناء الكتابة. ولا توجد الآن رحلات إلى **شرم الشيخ** في التطبيق؛ فقد توقّف الخط لهذا الموسم. وكتب شخص «شـ»."
+    prompt:
+      en: "Try each list. Which one should ship?"
+      ar: "جرّب كل قائمة. أيّها يجب أن تُطلق؟"
+    start: all
+    options:
+      - id: all
+        text: { en: "Every city the app has ever flown to", ar: "كل مدينة سافر إليها التطبيق من قبل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Sh", ar: "شـ" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**Sh**arm El Sheikh", ar: "**ش**رم الشيخ" }, gap: s }
+            - { kind: text, text: { en: "**Sh**arjah", ar: "ال**ش**ارقة" }, gap: s }
+      - id: flights
+        text: { en: "Only cities with flights right now", ar: "فقط المدن التي لها رحلات الآن" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Sh", ar: "شـ" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**Sh**arjah", ar: "ال**ش**ارقة" }, gap: s }
+            - { kind: text, text: { en: "**Sh**anghai", ar: "**ش**نغهاي" }, gap: s }
+    answer: [flights]
+    misconceptions:
+      - id: MC-P14-025
+        when: [all]
+        feedback:
+          en: "Sharm El Sheikh is offered first and leads to no flights at all. The suggestion sends travellers to a dead end."
+          ar: "شرم الشيخ تُعرض أولًا ولا توصل إلى أي رحلة. فالاقتراح يرسل المسافرين إلى طريق مسدود."
+    correct:
+      en: "Only destinations with flights."
+      ar: "فقط الوجهات التي لها رحلات."
+    explain:
+      en: "Any city a traveller picks shows flights they can book today."
+      ar: "أي مدينة يختارها المسافر تعرض رحلات يمكنه حجزها اليوم."
+
+  - id: S02
+    type: tune
+    skill: SK-P14-U03-01
+    part: retest
+    value:
+      en: "Re-test, search suggestions (NN/g): make sure every suggested query actually has good, relevant results. The doctor who left has no appointments, so suggesting her name leads nowhere."
+      ar: "إعادة اختبار، اقتراحات البحث (NN/g): تأكّد أن كل بحث مقترح له فعلًا نتائج جيدة ومرتبطة. والطبيبة التي غادرت ليس لها مواعيد، فاقتراح اسمها لا يوصل إلى شيء."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "Make sure every suggested query actually has good, relevant results." }
+    scenario:
+      en: "Inas works on a clinic booking app. **Dr. Hala Fawzy** left the clinic last month and has no appointments, but her name is still in the suggestion list. Someone types \"Dr. Ha\"."
+      ar: "تعمل إيناس على تطبيق لحجز مواعيد عيادة. وقد غادرت **د. هالة فوزي** العيادة الشهر الماضي وليس لها مواعيد، لكن اسمها ما زال في قائمة الاقتراحات. وكتب شخص «د. ها»."
+    prompt:
+      en: "Try each list. Which one should ship?"
+      ar: "جرّب كل قائمة. أيّها يجب أن تُطلق؟"
+    start: old
+    options:
+      - id: old
+        text: { en: "Keep every doctor in the list", ar: "أبقِ كل الأطباء في القائمة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Dr. Ha", ar: "د. ها" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Dr. Ha**la Fawzy** · Dermatology", ar: "د. ها**لة فوزي** · جلدية" }, gap: s }
+            - { kind: text, text: { en: "Dr. Ha**ny Selim** · Dermatology", ar: "د. ها**ني سليم** · جلدية" }, gap: s }
+      - id: now
+        text: { en: "Only doctors with appointments", ar: "فقط الأطباء الذين لهم مواعيد" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Dr. Ha", ar: "د. ها" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Dr. Ha**ny Selim** · Dermatology", ar: "د. ها**ني سليم** · جلدية" }, gap: s }
+            - { kind: text, text: { en: "Dr. Ha**zem Nour** · Cardiology", ar: "د. ها**زم نور** · قلب" }, gap: s }
+    answer: [now]
+    misconceptions:
+      - id: MC-P14-025
+        when: [old]
+        feedback:
+          en: "Patients who pick Dr. Hala find no appointments and may think the clinic is fully booked."
+          ar: "المرضى الذين يختارون د. هالة لا يجدون مواعيد، وقد يظنّون أن العيادة محجوزة بالكامل."
+    correct:
+      en: "Only doctors people can book."
+      ar: "فقط الأطباء الذين يمكن حجزهم."
+    explain:
+      en: "Every suggested name opens free appointments, so picking one always moves the patient forward."
+      ar: "كل اسم مقترح يفتح مواعيد متاحة، فاختيار أي واحد ينقل المريض إلى الأمام دائمًا."
+
+  # SK-P14-U03-02: show what the suggestion adds
+  - id: S03
+    type: tune
+    skill: SK-P14-U03-02
+    part: retest
+    value:
+      en: "Re-test, search suggestions (NN/g): when suggestions only add text to the end of the query, you should highlight the suggested characters. Every line starts with \"laptop\"; the endings are what differ."
+      ar: "إعادة اختبار، اقتراحات البحث (NN/g): حين تضيف الاقتراحات نصًا في نهاية البحث فقط، أبرز الحروف المقترحة. فكل سطر يبدأ بـ«لابتوب»؛ والنهايات هي المختلفة."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "you should highlight the suggested characters" }
+    scenario:
+      en: "Waleed's office supplies store suggests searches that start with exactly what people typed. Someone types \"laptop\"."
+      ar: "يقترح متجر الأدوات المكتبية لوليد عمليات بحث تبدأ بما كتبه الناس بالضبط. وكتب شخص «لابتوب»."
+    prompt:
+      en: "Try each style. Which one should ship?"
+      ar: "جرّب كل شكل. أيّها يجب أن يُطلق؟"
+    start: typed
+    options:
+      - id: typed
+        text: { en: "Bold the typed word", ar: "الكلمة المكتوبة بخط عريض" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "laptop", ar: "لابتوب" }, filled: true, focus: true }
+            - { kind: text, text: { en: "**laptop** bag", ar: "**لابتوب** شنطة" }, gap: s }
+            - { kind: text, text: { en: "**laptop** stand", ar: "**لابتوب** ستاند" }, gap: s }
+            - { kind: text, text: { en: "**laptop** cooling pad", ar: "**لابتوب** مروحة تبريد" }, gap: s }
+      - id: added
+        text: { en: "Bold the suggested words", ar: "الكلمات المقترحة بخط عريض" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "laptop", ar: "لابتوب" }, filled: true, focus: true }
+            - { kind: text, text: { en: "laptop **bag**", ar: "لابتوب **شنطة**" }, gap: s }
+            - { kind: text, text: { en: "laptop **stand**", ar: "لابتوب **ستاند**" }, gap: s }
+            - { kind: text, text: { en: "laptop **cooling pad**", ar: "لابتوب **مروحة تبريد**" }, gap: s }
+    answer: [added]
+    misconceptions:
+      - id: MC-P14-026
+        when: [typed]
+        feedback:
+          en: "Every line starts with the same bold word, so the bold says nothing new. Bag, stand and cooling pad are what the shopper compares."
+          ar: "كل سطر يبدأ بالكلمة العريضة نفسها، فالخط العريض لا يقول شيئًا جديدًا. والشنطة والستاند ومروحة التبريد هي ما يقارن بينه المتسوّق."
+    correct:
+      en: "Completion only: bold the added words."
+      ar: "إكمال فقط: أبرز الكلمات المضافة."
+    explain:
+      en: "The shopper reads down the bold endings and taps the one they need."
+      ar: "يقرأ المتسوّق النهايات العريضة من أعلى لأسفل، ويضغط على ما يحتاجه."
+
+  - id: S04
+    type: tune
+    skill: SK-P14-U03-02
+    part: retest
+    value:
+      en: "Re-test, search suggestions (NN/g): when suggestions contain the query anywhere, it's best to highlight the user's query. \"Moon\" sits in a different place in each song title."
+      ar: "إعادة اختبار، اقتراحات البحث (NN/g): حين تحتوي الاقتراحات على البحث في أي مكان، الأفضل إبراز ما كتبه المستخدم. و«قمر» تقع في مكان مختلف في كل اسم أغنية."
+    ref: { url: "https://www.nngroup.com/articles/site-search-suggestions/", quote: "it’s best to highlight the user’s query." }
+    scenario:
+      en: "Nahed's music app suggests song titles that contain the typed word anywhere. Someone types \"moon\"."
+      ar: "يقترح تطبيق الموسيقى لناهد أسماء أغانٍ تحتوي على الكلمة المكتوبة في أي مكان. وكتب شخص «قمر»."
+    prompt:
+      en: "Try each style. Which one should ship?"
+      ar: "جرّب كل شكل. أيّها يجب أن يُطلق؟"
+    start: plain
+    options:
+      - id: plain
+        text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "moon", ar: "قمر" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Under the Cairo moon", ar: "تحت قمر القاهرة" }, gap: s }
+            - { kind: text, text: { en: "Moonlight on the Nile", ar: "قمر على النيل" }, gap: s }
+            - { kind: text, text: { en: "Half moon, full heart", ar: "نص قمر وقلب كامل" }, gap: s }
+      - id: query
+        text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "moon", ar: "قمر" }, filled: true, focus: true }
+            - { kind: text, text: { en: "Under the Cairo **moon**", ar: "تحت **قمر** القاهرة" }, gap: s }
+            - { kind: text, text: { en: "**Moon**light on the Nile", ar: "**قمر** على النيل" }, gap: s }
+            - { kind: text, text: { en: "Half **moon**, full heart", ar: "نص **قمر** وقلب كامل" }, gap: s }
+    answer: [query]
+    misconceptions:
+      - id: MC-P14-026
+        when: [plain]
+        feedback:
+          en: "With nothing marked, people read every title in full to find the word they typed."
+          ar: "بدون أي تمييز، يقرأ الناس كل اسم كاملًا ليجدوا الكلمة التي كتبوها."
+    correct:
+      en: "Match anywhere: bold the typed word."
+      ar: "الكلمة في أي مكان: أبرز الكلمة المكتوبة."
+    explain:
+      en: "\"Moon\" stands out in every title, so listeners judge each song by the words around it."
+      ar: "«قمر» تبرز في كل اسم، فيحكم المستمعون على كل أغنية بالكلمات حولها."
+
+  # SK-P14-U03-03: turn no results into a next step
+  - id: S05
+    type: tune
+    skill: SK-P14-U03-03
+    part: retest
+    value:
+      en: "Re-test, no-results pages (NN/g): give advice about how to modify queries, using different words or fewer words. Each link drops one part of a long search and still finds sofas."
+      ar: "إعادة اختبار، صفحات «لا توجد نتائج» (NN/g): انصح بتعديل البحث بكلمات مختلفة أو أقل. وكل رابط يحذف جزءًا من بحث طويل ويجد كنبًا مع ذلك."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "Advice about how to modify queries, using different words or fewer words" }
+    scenario:
+      en: "Abeer's furniture store. Someone searched for **green velvet 3-seater sofa bed**. Nothing matches all of it, but the store has green sofas, velvet sofas and sofa beds."
+      ar: "متجر الأثاث لعبير. بحث شخص عن **كنبة سرير قطيفة خضراء 3 مقاعد**. ولا شيء يطابق كل هذا، لكن في المتجر كنب أخضر، وكنب قطيفة، وكنب سرير."
+    prompt:
+      en: "The page already says \"No results\" clearly. Try each version of what comes under it. Which one should ship?"
+      ar: "الصفحة تقول «لا توجد نتائج» بوضوح أصلًا. جرّب كل نسخة لما يأتي تحتها. أيّها يجب أن تُطلق؟"
+    start: back
+    options:
+      - id: back
+        text: { en: "A \"Back to home\" button", ar: "زر «العودة للرئيسية»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "No results for \"green velvet 3-seater sofa bed\"", ar: "لا توجد نتائج لـ«كنبة سرير قطيفة خضراء 3 مقاعد»" } }
+            - { kind: button, text: { en: "Back to home", ar: "العودة للرئيسية" }, gap: m }
+      - id: fewer
+        text: { en: "Searches with fewer words that do find sofas", ar: "عمليات بحث بكلمات أقل تجد كنبًا فعلًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "No results for \"green velvet 3-seater sofa bed\"", ar: "لا توجد نتائج لـ«كنبة سرير قطيفة خضراء 3 مقاعد»" } }
+            - { kind: meta, text: { en: "Try fewer words:", ar: "جرّب كلمات أقل:" }, gap: s }
+            - { kind: link, text: { en: "green velvet sofa (7)", ar: "كنبة قطيفة خضراء (7)" }, gap: s }
+            - { kind: link, text: { en: "3-seater sofa bed (11)", ar: "كنبة سرير 3 مقاعد (11)" }, gap: s }
+    answer: [fewer]
+    misconceptions:
+      - id: MC-P14-028
+        when: [back]
+        feedback:
+          en: "Home is a step back, not forward. The customer starts over without knowing which part of the search to drop."
+          ar: "الرئيسية خطوة إلى الوراء، لا إلى الأمام. ويبدأ العميل من جديد دون أن يعرف أي جزء من البحث يحذفه."
+    correct:
+      en: "Show searches that find something."
+      ar: "اعرض عمليات بحث تجد شيئًا."
+    explain:
+      en: "The customer sees how many sofas each shorter search finds and picks what matters most to them."
+      ar: "يرى العميل عدد الكنب الذي يجده كل بحث أقصر، ويختار ما يهمّه أكثر."
+
+  - id: S06
+    type: tune
+    skill: SK-P14-U03-03
+    part: retest
+    value:
+      en: "Re-test, no-results pages (NN/g): appropriate typography and spacing are essential; otherwise, users can easily overlook or misunderstand the message. Popular courses at the top look like results."
+      ar: "إعادة اختبار، صفحات «لا توجد نتائج» (NN/g): الخط والمسافات المناسبة ضرورية؛ وإلا قد يتجاهل الناس الرسالة أو يسيئون فهمها بسهولة. والدورات الشائعة في الأعلى تبدو كأنها النتائج."
+    ref: { url: "https://www.nngroup.com/articles/search-no-results-serp/", quote: "Appropriate typography and spacing are essential; otherwise, users can easily overlook or misunderstand the message." }
+    scenario:
+      en: "Galal's online course site. Someone searched for **Figma for kids** and nothing matched. Right now the page shows popular courses first, then a small line: \"0 results\"."
+      ar: "موقع الدورات لجلال. بحث شخص عن **Figma للأطفال** ولم يتطابق شيء. والصفحة الآن تعرض الدورات الشائعة أولًا، ثم سطرًا صغيرًا: «0 نتيجة»."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: now
+    options:
+      - id: now
+        text: { en: "Popular courses first, then the small line", ar: "الدورات الشائعة أولًا، ثم السطر الصغير" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Figma for kids", ar: "Figma للأطفال" }, filled: true }
+            - { kind: text, weight: bold, text: { en: "UX basics in 4 weeks", ar: "أساسيات UX في 4 أسابيع" }, gap: m }
+            - { kind: text, weight: bold, text: { en: "Drawing for beginners", ar: "الرسم للمبتدئين" }, gap: s }
+            - { kind: small, color: pale, text: { en: "0 results", ar: "0 نتيجة" }, gap: m }
+      - id: top
+        text: { en: "A clear heading first, popular courses under it", ar: "عنوان واضح أولًا، والدورات الشائعة تحته" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, text: { en: "Figma for kids", ar: "Figma للأطفال" }, filled: true }
+            - { kind: heading, text: { en: "No courses match \"Figma for kids\"", ar: "لا توجد دورات تطابق «Figma للأطفال»" }, gap: m }
+            - { kind: link, text: { en: "See all Figma courses (5)", ar: "اعرض كل دورات Figma (5)" }, gap: s }
+            - { kind: meta, text: { en: "Popular courses", ar: "دورات شائعة" }, gap: l }
+            - { kind: text, weight: bold, text: { en: "UX basics in 4 weeks", ar: "أساسيات UX في 4 أسابيع" }, gap: s }
+    answer: [top]
+    misconceptions:
+      - id: MC-P14-027
+        when: [now]
+        feedback:
+          en: "The visitor sees two courses under their search and may think that's what matched. The real message is small and below them."
+          ar: "يرى الزائر دورتين تحت بحثه، وقد يظنّ أنهما ما تطابق. والرسالة الحقيقية صغيرة وتحتهما."
+    correct:
+      en: "Say it first, clearly."
+      ar: "قلها أولًا، وبوضوح."
+    explain:
+      en: "The heading makes the outcome clear, and the link to all Figma courses gives a way forward."
+      ar: "العنوان يوضّح النتيجة، ورابط كل دورات Figma يعطي طريقًا للمتابعة."
+
+  # SK-P14-U03-04: name filters so people can predict them
+  - id: S07
+    type: tune
+    skill: SK-P14-U03-04
+    part: retest
+    value:
+      en: "Re-test, filter values (NN/g): unintelligible jargon has no place in filters. \"SF\" and \"UF\" are the sales team's shorthand; buyers know the plain words for how finished a flat is."
+      ar: "إعادة اختبار، قيم الفلاتر (NN/g): المصطلحات غير المفهومة لا مكان لها في الفلاتر. وSF وUF اختصارات فريق المبيعات؛ والمشترون يعرفون الكلمات البسيطة لحالة تشطيب الشقة."
+    ref: { url: "https://www.nngroup.com/articles/filter-categories-values/", quote: "Unintelligible jargon has no place in filters." }
+    scenario:
+      en: "Reham's property app. The **Finishing** filter shows **UF**, **SF** and **FF**, the codes the sales team uses."
+      ar: "تطبيق العقارات لريهام. يعرض فلتر **التشطيب** القيم **UF** و**SF** و**FF**، وهي الرموز التي يستخدمها فريق المبيعات."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: codes
+    options:
+      - id: codes
+        text: { en: "Keep UF, SF and FF", ar: "أبقِ UF وSF وFF" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Finishing", ar: "التشطيب" }, gap: m }
+            - { kind: check, text: "UF", gap: s }
+            - { kind: check, text: "SF", gap: s }
+            - { kind: check, text: "FF", gap: s }
+      - id: words
+        text: { en: "Not finished, Semi-finished, Fully finished", ar: "بدون تشطيب، نصف تشطيب، تشطيب كامل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Finishing", ar: "التشطيب" }, gap: m }
+            - { kind: check, text: { en: "Not finished (bare walls)", ar: "بدون تشطيب (على الطوب)" }, gap: s }
+            - { kind: check, text: { en: "Semi-finished", ar: "نصف تشطيب" }, gap: s }
+            - { kind: check, text: { en: "Fully finished", ar: "تشطيب كامل" }, gap: s }
+    answer: [words]
+    misconceptions:
+      - id: MC-P14-031
+        when: [codes]
+        feedback:
+          en: "Buyers have to guess what the letters stand for, and a wrong guess shows them flats they'd never buy."
+          ar: "على المشترين أن يخمّنوا معنى الحروف، والتخمين الخطأ يعرض لهم شققًا لن يشتروها أبدًا."
+    correct:
+      en: "The words buyers use."
+      ar: "الكلمات التي يستخدمها المشترون."
+    explain:
+      en: "Each value describes the flat in plain words, so buyers filter without a key."
+      ar: "كل قيمة تصف الشقة بكلمات بسيطة، فيفلتر المشترون بدون شرح."
+
+  - id: S08
+    type: tune
+    skill: SK-P14-U03-04
+    part: retest
+    value:
+      en: "Re-test, filter categories (NN/g): as much as possible, avoid filter categories with vague labels like Item Type. \"Details\" hides storage, the filter phone buyers look for."
+      ar: "إعادة اختبار، فئات الفلاتر (NN/g): قدر الإمكان، تجنّب الفئات ذات الأسماء المبهمة مثل «نوع العنصر». و«تفاصيل» تُخفي سعة التخزين، وهي الفلتر الذي يبحث عنه مشترو الهواتف."
+    ref: { url: "https://www.nngroup.com/articles/filter-categories-values/", quote: "As much as possible, avoid filter categories with vague labels like Item Type." }
+    scenario:
+      en: "Mohsen's phone store. Storage options (128 GB, 256 GB, 512 GB) sit inside a filter called **Details**. Buyers often ask support how to filter by storage."
+      ar: "متجر الهواتف لمحسن. خيارات سعة التخزين (128 GB، و256 GB، و512 GB) موجودة داخل فلتر اسمه **تفاصيل**. وكثيرًا ما يسأل المشترون الدعم عن طريقة الفلترة حسب السعة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: details
+    options:
+      - id: details
+        text: { en: "Keep \"Details\"", ar: "أبقِ «تفاصيل»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Brand ▾", ar: "الماركة ▾" }, gap: m }
+            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+            - { kind: heading, text: { en: "Details ▾", ar: "تفاصيل ▾" }, gap: m }
+      - id: storage
+        text: { en: "A \"Storage\" filter with its values shown", ar: "فلتر «سعة التخزين» وقيمه ظاهرة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Brand ▾", ar: "الماركة ▾" }, gap: m }
+            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+            - { kind: heading, text: { en: "Storage", ar: "سعة التخزين" }, gap: m }
+            - kind: row
+              blocks:
+                - { kind: chip, text: "128 GB" }
+                - { kind: chip, text: "256 GB" }
+                - { kind: chip, text: "512 GB" }
+    answer: [storage]
+    misconceptions:
+      - id: MC-P14-031
+        when: [details]
+        feedback:
+          en: "\"Details\" could mean anything, so buyers don't open it, and they contact support instead."
+          ar: "«تفاصيل» قد تعني أي شيء، فلا يفتحها المشترون، ويتواصلون مع الدعم بدلًا من ذلك."
+    correct:
+      en: "Name it after what's inside."
+      ar: "سمِّه بما بداخله."
+    explain:
+      en: "\"Storage\" is the word buyers already use, and the values are right there to tap."
+      ar: "«سعة التخزين» هي الكلمة التي يستخدمها المشترون أصلًا، والقيم أمامهم للضغط عليها."
+
+  # SK-P14-U03-05: offer the filters people need, in their order
+  - id: S09
+    type: tune
+    skill: SK-P14-U03-05
+    part: retest
+    value:
+      en: "Re-test, filter categories (NN/g): they must cover the most important aspects of whatever users will be filtering. Hungry customers choose by how fast the food arrives."
+      ar: "إعادة اختبار، فئات الفلاتر (NN/g): يجب أن تغطّي أهم جوانب ما سيفلتره الناس. والعميل الجائع يختار حسب سرعة وصول الأكل."
+    ref: { url: "https://www.nngroup.com/articles/filter-categories-values/", quote: "must cover the most important aspects of whatever users will be filtering" }
+    scenario:
+      en: "Soha's food delivery app. Interviews show that most people order when they're already hungry and care most about how soon the food arrives. The app can add one filter."
+      ar: "تطبيق توصيل الطعام لسها. وتُظهر المقابلات أن أغلب الناس يطلبون وهم جائعون أصلًا، وأن أكثر ما يهمّهم هو موعد وصول الأكل. ويستطيع التطبيق إضافة فلتر واحد."
+    prompt:
+      en: "Try each filter. Which one should ship?"
+      ar: "جرّب كل فلتر. أيّها يجب أن يُطلق؟"
+    start: year
+    options:
+      - id: year
+        text: { en: "Year the restaurant opened", ar: "سنة افتتاح المطعم" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Opened in", ar: "سنة الافتتاح" }, gap: m }
+            - kind: row
+              blocks:
+                - { kind: chip, text: { en: "Before 2010", ar: "قبل 2010" } }
+                - { kind: chip, text: { en: "2010–2020", ar: "2010–2020" } }
+                - { kind: chip, text: { en: "After 2020", ar: "بعد 2020" } }
+      - id: time
+        text: { en: "Delivery time", ar: "وقت التوصيل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Delivery time", ar: "وقت التوصيل" }, gap: m }
+            - kind: row
+              blocks:
+                - { kind: chip, text: { en: "Under 30 min", ar: "أقل من 30 دقيقة" } }
+                - { kind: chip, text: { en: "Under 45 min", ar: "أقل من 45 دقيقة" } }
+    answer: [time]
+    misconceptions:
+      - id: MC-P14-030
+        when: [year]
+        feedback:
+          en: "Almost nobody chooses dinner by when the restaurant opened. The filter people need, delivery time, is still missing."
+          ar: "لا أحد تقريبًا يختار عشاءه حسب سنة افتتاح المطعم. والفلتر الذي يحتاجه الناس، وقت التوصيل، ما زال غير موجود."
+    correct:
+      en: "Delivery time: what hungry people decide on."
+      ar: "وقت التوصيل: ما يقرّر به الجائعون."
+    explain:
+      en: "With \"Under 30 min\", people see only the places that can feed them soon."
+      ar: "مع «أقل من 30 دقيقة»، لا يرى الناس إلا الأماكن التي توصل الأكل قريبًا."
+
+  - id: S10
+    type: tune
+    skill: SK-P14-U03-05
+    part: retest
+    value:
+      en: "Re-test, filter categories (NN/g): consider placing the most general, high-level filter categories at the top of the list. Job seekers start with where and what kind of job."
+      ar: "إعادة اختبار، فئات الفلاتر (NN/g): فكّر في وضع الفئات الأعمّ والأشمل في أعلى القائمة. والباحثون عن عمل يبدؤون بالمكان ونوع الوظيفة."
+    ref: { url: "https://www.nngroup.com/articles/filter-categories-values/", quote: "consider placing the most general, high-level filter categories at the top of the list" }
+    scenario:
+      en: "Tamer's jobs site. Most visitors first choose a city and full-time or part-time. The filter list starts with **Company legal type** and **Company size**."
+      ar: "موقع الوظائف لتامر. وأغلب الزوار يختارون أولًا مدينة، ودوامًا كاملًا أو جزئيًا. وقائمة الفلاتر تبدأ بـ**الشكل القانوني للشركة** و**حجم الشركة**."
+    prompt:
+      en: "Try each order. Which one should ship?"
+      ar: "جرّب كل ترتيب. أيّها يجب أن يُطلق؟"
+    start: company
+    options:
+      - id: company
+        text: { en: "Keep the company filters first", ar: "أبقِ فلاتر الشركة أولًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "Company legal type ▾", ar: "الشكل القانوني للشركة ▾" }, gap: m }
+            - { kind: heading, text: { en: "Company size ▾", ar: "حجم الشركة ▾" }, gap: m }
+            - { kind: heading, text: { en: "City ▾", ar: "المدينة ▾" }, gap: m }
+            - { kind: heading, text: { en: "Job type ▾", ar: "نوع الدوام ▾" }, gap: m }
+      - id: general
+        text: { en: "City and Job type first", ar: "المدينة ونوع الدوام أولًا" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: heading, text: { en: "City ▾", ar: "المدينة ▾" }, gap: m }
+            - { kind: heading, text: { en: "Job type ▾", ar: "نوع الدوام ▾" }, gap: m }
+            - { kind: heading, text: { en: "Company size ▾", ar: "حجم الشركة ▾" }, gap: m }
+            - { kind: heading, text: { en: "Company legal type ▾", ar: "الشكل القانوني للشركة ▾" }, gap: m }
+    answer: [general]
+    misconceptions:
+      - id: MC-P14-032
+        when: [company]
+        feedback:
+          en: "Most job seekers pass two filters they rarely need before reaching city and job type."
+          ar: "يمرّ أغلب الباحثين عن عمل على فلترين نادرًا ما يحتاجونهما قبل الوصول إلى المدينة ونوع الدوام."
+    correct:
+      en: "General and most used first."
+      ar: "الأعمّ والأكثر استخدامًا أولًا."
+    explain:
+      en: "Visitors narrow by city and job type first, then by company details if they care."
+      ar: "يضيّق الزوار البحث بالمدينة ونوع الدوام أولًا، ثم بتفاصيل الشركة إن كانت تهمّهم."

@@ -1,0 +1,480 @@
+id: P14-U01-L02
+mode: lesson
+minutes: 9
+title:
+  en: "Small helpers: sheets and tooltips"
+  ar: "مساعدات صغيرة: الـ Sheets والـ Tooltips"
+sources:
+  - title: { en: "Bottom Sheets: Definition and UX Guidelines (NN/g)", ar: "الـ Bottom sheets: التعريف وإرشادات تجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/bottom-sheet/"
+  - title: { en: "Tooltip Guidelines (NN/g)", ar: "إرشادات الـ Tooltip (NN/g)" }
+    url: "https://www.nngroup.com/articles/tooltip-guidelines/"
+review_labels:
+  MC-P14-006: { en: "One sheet at a time", ar: "Sheet واحد في كل مرة" }
+  MC-P14-007: { en: "A swipe isn't a Close button", ar: "السحب ليس زر إغلاق" }
+  MC-P14-008: { en: "A long flow belongs on pages, not in a sheet", ar: "المسار الطويل مكانه الصفحات، لا الـ Sheet" }
+  MC-P14-009: { en: "What people need to finish goes on the screen", ar: "ما يحتاجه الناس للإنهاء يكون على الشاشة" }
+  MC-P14-010: { en: "Hover doesn't exist on a phone", ar: "لا يوجد Hover على الهاتف" }
+  MC-P14-011: { en: "A tooltip must add something", ar: "الـ Tooltip يجب أن يضيف شيئًا" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Yara's medicine search", ar: "بحث يارا عن الدواء" }
+    body:
+      en: "Yara is looking for a cough syrup in a pharmacy app. She taps **Sort**, and a bottom sheet slides up. She taps **More options**, and a second sheet opens on top of the first.\n\nShe swipes down to close it. Both sheets disappear, and her sort choice is gone."
+      ar: "تبحث يارا عن شراب للكحة في تطبيق صيدلية. ضغطت **ترتيب**، فظهر Bottom sheet من أسفل الشاشة. ثم ضغطت **خيارات أخرى**، ففُتح Sheet ثانٍ فوق الأول.\n\nسحبت للأسفل لتغلقه. فاختفى الاثنان معًا، وضاع اختيار الترتيب."
+    mock:
+      width: 300
+      blocks: &list
+        - { kind: title, text: { en: "Cough syrup", ar: "شراب كحة" } }
+        - { kind: meta, text: { en: "24 results", ar: "24 نتيجة" }, gap: s }
+        - { kind: meta, text: { en: "Syrup A · EGP 65", ar: "شراب A · 65 جنيه" }, gap: m }
+        - { kind: meta, text: { en: "Syrup B · EGP 48", ar: "شراب B · 48 جنيه" }, gap: s }
+        - { kind: meta, text: { en: "Syrup C · EGP 90", ar: "شراب C · 90 جنيه" }, gap: s }
+      overlay:
+        type: sheet
+        blocks:
+          - { kind: heading, text: { en: "More options", ar: "خيارات أخرى" } }
+          - { kind: radio, text: { en: "Sugar-free first", ar: "الخالي من السكر أولًا" }, gap: s }
+          - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: xs }
+          - { kind: small, text: { en: "(on top of the Sort sheet)", ar: "(فوق Sheet الترتيب)" }, gap: s }
+
+  - id: S02
+    type: tune
+    part: try
+    skill: SK-P14-U01-03
+    rules: [R12]
+    value:
+      en: "Try first. Bottom sheets (NN/g): one of the biggest problems is stacking several sheets on top of each other. Keep the related options in one sheet."
+      ar: "جرّب أولًا. الـ Bottom sheets (NN/g): من أكبر المشكلات تكديس عدة Sheets فوق بعضها. أبقِ الخيارات المرتبطة في Sheet واحد."
+    ref: { url: "https://www.nngroup.com/articles/bottom-sheet/", quote: "One of the biggest issues with bottom sheets occurs when an app stacks several such sheets on top of each other." }
+    prompt:
+      en: "Try each version of the Sort options. Which one should ship?"
+      ar: "جرّب كل نسخة من خيارات الترتيب. أيّها يجب أن تُطلق؟"
+    start: two
+    options:
+      - id: two
+        text: { en: "Two sheets: Sort, then More options on top", ar: "Sheetان: الترتيب، ثم «خيارات أخرى» فوقه" }
+        mock:
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "More options", ar: "خيارات أخرى" } }
+              - { kind: radio, text: { en: "Sugar-free first", ar: "الخالي من السكر أولًا" }, gap: s }
+              - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: xs }
+              - { kind: small, text: { en: "(on top of the Sort sheet)", ar: "(فوق Sheet الترتيب)" }, gap: s }
+      - id: one
+        text: { en: "One sheet with all five ways to sort", ar: "Sheet واحد فيه طرق الترتيب الخمس" }
+        mock:
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Sort by", ar: "رتّب حسب" } }
+              - { kind: radio, selected: true, text: { en: "Best match", ar: "الأنسب" }, gap: s }
+              - { kind: radio, text: { en: "Price: low to high", ar: "السعر: من الأقل للأعلى" }, gap: xs }
+              - { kind: radio, text: { en: "Price: high to low", ar: "السعر: من الأعلى للأقل" }, gap: xs }
+              - { kind: radio, text: { en: "Sugar-free first", ar: "الخالي من السكر أولًا" }, gap: xs }
+              - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: xs }
+      - id: three
+        text: { en: "Three smaller sheets, one per group of options", ar: "ثلاثة Sheets أصغر، واحد لكل مجموعة خيارات" }
+        mock:
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "Availability", ar: "التوفّر" } }
+              - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: s }
+              - { kind: small, text: { en: "(on top of the Price sheet, on top of the Sort sheet)", ar: "(فوق Sheet السعر، فوق Sheet الترتيب)" }, gap: s }
+    answer: [one]
+    misconceptions:
+      - id: MC-P14-006
+        when: [two, three]
+        feedback:
+          en: "Each sheet on top hides the one below, and one swipe can close them all. Yara loses track of where she is."
+          ar: "كل Sheet فوق غيره يُخفي ما تحته، وسحبة واحدة قد تغلقها كلها. فتفقد يارا مكانها."
+    correct:
+      en: "One short sheet holds all the sort options."
+      ar: "Sheet واحد قصير يجمع كل خيارات الترتيب."
+    explain:
+      en: "Five options fit easily in one sheet. With nothing stacked, Yara sees every choice at once, and closing the sheet can't throw away a choice she made in another one."
+      ar: "خمسة خيارات تتّسع بسهولة في Sheet واحد. ومن دون تكديس، ترى يارا كل الخيارات مرة واحدة، ولا يمكن لإغلاق الـ Sheet أن يُضيّع اختيارًا قامت به في Sheet آخر."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [layers, ok, cut, list]
+    video:
+      src: clips/P14-C02.mp4
+      captions: { ar: P14-C02.ar.vtt, en: P14-C02.en.vtt }
+      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
+      transcript:
+        en: "The next component under mode handlers and system messages is the bottom sheet. It exists on mobile only, not on desktop, and usually not on tablets either. It looks like this: a window too, but stuck to the bottom of the screen, anchored there. It slides up from the bottom and slides back down. Sometimes it shows details about what I'm looking at, or gives me other actions I can take. It's a common component; most of us have surely used it. Its types, as you'd expect: the modal bottom sheet isolates the background, so as a user I can't interact with the content behind it; I use only the sheet, or close it and go back. As usual, a scrim can go with it: the slightly transparent layer that separates the content in the background. The second type, as you'd expect, is the non-modal bottom sheet, like in map apps: I can still use the map itself, and there's a bottom sheet with actions and other data, about something I selected in the product. So I can use the bottom sheet and the rest of the page content; I'm not cut off from it. Some bottom sheets are expandable: they start as a strip at the bottom showing the title of what I'm listening to, and tapping it expands it into a full bottom sheet with more actions and more details about the same thing. It can even expand to full screen as a whole page, and I can go back from it to the previous state. Now some guidelines for bottom sheets. In the example in front of us, if we look for the problem, we'll notice the bottom sheet is rather large, reaching almost to the top of the phone. So if I want to close it and pull it down, I may pull down the phone's notification drawer or control panel instead, which comes down like this, and the bottom sheet stays open. So I get a bit confused: I wanted to close it, and the notification bar came down. Here I need another way to close it besides dragging the handle down. So I can add a close button with an X that lets me close it easily without dragging, especially when the bottom sheet is large, like this example. Another common mistake: using a bottom sheet for a whole flow, like pages one after another or a full process. It isn't made for that; the user can tap outside at any moment and close it by mistake, or tap the close button and close it. Moving between several steps in it isn't easy, and all the steps can be lost by one mistake. It isn't designed for that. A bottom sheet is usually designed for short interactions: simple things, like viewing details, taking an action, or writing a post. But it isn't designed for going through a flow inside it, like viewing a product's details and then checking out. It doesn't fit that, nor, say, a calendar where I pick a date and a time and go on through a process. That isn't a good use of bottom sheets."
+        ar: "تاني Component معانا تحت عنوان الـ Mode handlers والـ System messages هو الـ Bottom sheet. الـ Bottom sheet موجودة في الموبايل بس، ومش موجودة على الـ Desktop، وعادةً مش موجودة على الـ Tablet. وهي بالشكل اللي قدامنا: Window برضه بتظهر، لكنها لازقة في الشاشة من تحت، Anchored في الجزء اللي تحت، بتطلع من تحت وبتنزل تاني لتحت. بتظهر لي أحيانًا Details عن الحاجة اللي بشوفها دلوقتي، أو تدّيني Actions تانية ممكن أعملها. وهي Component منتشرة، وأغلبنا أكيد اتعامل معاها قبل كده. وأنواعها زي ما هو متوقع: الـ Modal bottom sheet اللي بتعزل الخلفية، وبتخلّيني كيوزر مش قادر أتفاعل مع المحتوى اللي ورا، أتفاعل بس معاها، أو أنزّلها وأرجع للمحتوى. وكالعادة ممكن يُستخدم معاها الـ Scrim، الطبقة اللي ليها شفافية خفيفة وبتعزل المحتوى اللي في الخلفية. والنوع التاني زي ما هو متوقع الـ Non-modal bottom sheet، زي اللي في تطبيقات الخرايط: عندي الخريطة نفسها أقدر أتفاعل معاها، وعندي Bottom sheet فيها Actions وداتا تانية، عن حاجة معينة حددتها في المنتج. فأقدر أتفاعل مع الـ Bottom sheet نفسها ومع بقية المحتوى اللي في الصفحة، ماتعزلتش عنه. وفيه Bottom sheets تكون Expandable، بتتّسع: تظهر على شكل شريط تحت فيه عنوان الحاجة اللي بسمعها دلوقتي، ولو ضغطت عليه يعمل Expand لـ Bottom sheet كاملة فيها Actions أكتر، وتفاصيل أكتر عن نفس الحاجة. وممكن كمان تتّسع لحد ما تاخد الـ Full screen وتبقى صفحة كاملة، وأرجع منها للحالة اللي قبلها. طب لو جينا نشوف بعض الـ Guidelines عن الـ Bottom sheets: في المثال اللي قدامنا، لو حاولنا نلاحظ إيه المشكلة، هنلاحظ إن الـ Bottom sheet كبيرة إلى حد ما، تقريبًا لحد آخر الموبايل. فلو عايز أقفلها وحاولت أشدّها لتحت، ممكن أشدّ معايا الـ Notification drawer أو الـ Control panel بتاعة الموبايل نفسه، تنزل لي بالشكل ده، وماقفلتش الـ Bottom sheet. فأتشتّت شوية: أنا عايز أقفلها، فنزل الـ Notification bar. في الحالة دي محتاج Option تاني أقفل بيه الـ Bottom sheet غير إني أشدّها لتحت من الـ Handle. فهنا ممكن أضيف لها Close button، فيه X، يساعدني أقفلها بسهولة من غير السحب، بالذات لو كانت الـ Bottom sheet كبيرة زي المثال اللي قدامنا. ومن الأخطاء الشائعة كمان: استخدام الـ Bottom sheet في Flow كامل، كأني بعمل صفحات ورا بعض أو ماشي في Process كاملة. الـ Bottom sheet مش معمولة لكده؛ اليوزر ممكن يضغط برّه في أي وقت فيقفلها بالغلط، أو يضغط على الـ Close button فيقفلها. والتنقّل فيها بين أكتر من خطوة مش سهل، والخطوات كلها ممكن تضيع بغلطة. فهي مش مصمّمة للاستخدام ده. الـ Bottom sheet عادةً مصمّمة للـ Short interactions: حاجات بسيطة، زي إني أشوف Details، أو أعمل Action معين، أو أكتب Post. لكن مش مصمّمة إني أمشي فيها جوّه Flow: أشوف تفاصيل Product وأعمل Checkout مثلًا. مش مناسب أستخدمها في ده، ولا مثلًا Calendar أحدّد فيها تاريخ ووقت وأكمّل Process. ده مش استخدام مناسب للـ Bottom sheets."
+    title: { en: "Two small helpers", ar: "مساعدان صغيران" }
+    body:
+      en: "A **bottom sheet** is a panel anchored to the bottom of a phone screen. It slides up to show details or more actions, and slides back down.\n\n- **Three types:** a *modal* sheet blocks the content behind it, often with a dimmed layer; a *non-modal* sheet lets people keep using the screen, like a map; an *expandable* sheet starts as a small strip and opens to a bigger sheet or a full screen.\n- **Easy to close:** a tall sheet needs a clear Close button (✕), because dragging it down near the top can pull down the phone's notifications instead. The phone's Back button closes it too.\n- **Short interactions only:** see details, take one action, write a post. A flow of several steps, like product details then checkout, belongs on pages: one tap outside closes the sheet and loses every step. And never stack a sheet on another sheet.\n- **Tooltips are extra:** a **tooltip** is a short note that appears when people point at something. What people need to finish the task stays on the screen; a tooltip adds a short tip, and needs another way to open on a phone."
+      ar: "الـ **Bottom sheet** لوحة مثبّتة في أسفل شاشة الهاتف. تظهر من الأسفل لتعرض تفاصيل أو إجراءات أخرى، ثم تنزل مرة أخرى.\n\n- **ثلاثة أنواع:** الـ *Modal* sheet يحجب المحتوى خلفه، وغالبًا معه طبقة معتمة؛ والـ *Non-modal* sheet يترك الناس يستخدمون الشاشة، مثل الخريطة؛ والـ *Expandable* sheet يبدأ شريطًا صغيرًا ثم يتّسع إلى Sheet أكبر أو شاشة كاملة.\n- **سهل الإغلاق:** الـ Sheet الطويل يحتاج زر إغلاق واضحًا (✕)، لأن سحبه لأسفل قرب أعلى الشاشة قد يُنزل إشعارات الهاتف بدلًا منه. وزر الرجوع في الهاتف يغلقه أيضًا.\n- **للتفاعلات القصيرة فقط:** رؤية تفاصيل، أو إجراء واحد، أو كتابة منشور. أما المسار ذو الخطوات الكثيرة، مثل تفاصيل منتج ثم إتمام الشراء، فمكانه الصفحات: ضغطة واحدة خارج الـ Sheet تغلقه وتضيع كل الخطوات. ولا تفتح Sheet فوق Sheet آخر.\n- **الـ Tooltip إضافة:** الـ **Tooltip** ملاحظة قصيرة تظهر حين يشير الناس إلى شيء. ما يحتاجه الناس لإنهاء المهمة يبقى على الشاشة؛ والـ Tooltip يضيف نصيحة قصيرة، ويحتاج طريقة أخرى ليُفتح على الهاتف."
+
+  - id: S04
+    type: tune
+    part: guided
+    skill: SK-P14-U01-03
+    rules: [R06, R15]
+    confidence: true
+    value:
+      en: "Bottom sheets (NN/g): even though most sheets close with a swipe on the grab handle, provide a clear Close button at the top and support Back. A swipe can open the notification drawer, and screen-reader and keyboard users can't swipe."
+      ar: "الـ Bottom sheets (NN/g): حتى لو كانت أغلب الـ Sheets تُغلق بالسحب من مقبض الأعلى، ضع زر إغلاق واضحًا في الأعلى، واجعل زر الرجوع يغلقه. فالسحب قد يفتح لوحة الإشعارات، ومن يستخدمون قارئ الشاشة أو لوحة المفاتيح لا يستطيعون السحب."
+    ref: { url: "https://www.nngroup.com/articles/bottom-sheet/", quote: "We recommend providing a clear Close button (usually styled as an X or the word Close) at the top of bottom sheets" }
+    scenario:
+      en: "The new Sort sheet can only be closed by swiping down on the small bar at its top. When Yara presses her phone's Back button, the app leaves the search page."
+      ar: "الـ Sheet الجديد للترتيب لا يُغلق إلا بالسحب للأسفل من الشريط الصغير في أعلاه. وحين تضغط يارا زر الرجوع في هاتفها، يخرج التطبيق من صفحة البحث."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: *list
+      overlay:
+        type: sheet
+        blocks: &sortsheet
+          - { kind: heading, text: { en: "Sort by", ar: "رتّب حسب" } }
+          - { kind: radio, selected: true, text: { en: "Best match", ar: "الأنسب" }, gap: s }
+          - { kind: radio, text: { en: "Price: low to high", ar: "السعر: من الأقل للأعلى" }, gap: xs }
+          - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: xs }
+    options:
+      - id: text
+        text: { en: "Add the line \"Swipe down to close\"", ar: "أضف سطر «اسحب للأسفل للإغلاق»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: small, text: { en: "Swipe down to close", ar: "اسحب للأسفل للإغلاق" } }
+              - { kind: heading, text: { en: "Sort by", ar: "رتّب حسب" }, gap: s }
+              - { kind: radio, selected: true, text: { en: "Best match", ar: "الأنسب" }, gap: s }
+              - { kind: radio, text: { en: "Price: low to high", ar: "السعر: من الأقل للأعلى" }, gap: xs }
+              - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: xs }
+      - id: close
+        text: { en: "Add an ✕ Close button, and make Back close the sheet", ar: "أضف زر إغلاق ✕، واجعل زر الرجوع يغلق الـ Sheet" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            close: true
+            blocks: *sortsheet
+      - id: bigger
+        text: { en: "Make the bar at the top bigger, so it's easier to swipe", ar: "كبّر الشريط في الأعلى، ليصبح السحب أسهل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: divider }
+              - { kind: heading, text: { en: "Sort by", ar: "رتّب حسب" }, gap: m }
+              - { kind: radio, selected: true, text: { en: "Best match", ar: "الأنسب" }, gap: s }
+              - { kind: radio, text: { en: "Price: low to high", ar: "السعر: من الأقل للأعلى" }, gap: xs }
+              - { kind: radio, text: { en: "Available today first", ar: "المتوفّر اليوم أولًا" }, gap: xs }
+    answer: [close]
+    misconceptions:
+      - id: MC-P14-007
+        when: [text, bigger]
+        feedback:
+          en: "Closing still depends on a swipe, which can pull down the phone's notifications instead. People using a screen reader or a keyboard can't swipe at all, and Back still leaves the page."
+          ar: "ما زال الإغلاق يعتمد على السحب، وقد يُنزل لوحة إشعارات الهاتف بدلًا منه. ومن يستخدمون قارئ الشاشة أو لوحة المفاتيح لا يستطيعون السحب أصلًا، وزر الرجوع ما زال يخرج من الصفحة."
+    hints:
+      - en: "How would someone close the sheet if they can't swipe?"
+        ar: "كيف يغلق شخص الـ Sheet إن كان لا يستطيع السحب؟"
+    correct:
+      en: "A visible Close, and Back closes the sheet."
+      ar: "زر إغلاق ظاهر، وزر الرجوع يغلق الـ Sheet."
+    explain:
+      en: "An ✕ button works for everyone, including screen-reader and keyboard users. Making Back close the sheet matches what Yara expects, instead of throwing her out of her search."
+      ar: "زر ✕ يعمل مع الجميع، بمن فيهم مستخدمو قارئ الشاشة ولوحة المفاتيح. وجعل زر الرجوع يغلق الـ Sheet يطابق ما تتوقّعه يارا، بدل أن يُخرجها من بحثها."
+
+  - id: S05
+    type: tune
+    part: guided
+    skill: SK-P14-U01-03
+    rules: [R06, R15]
+    value:
+      en: "Bottom sheets (NN/g): don't use a sheet to replace a typical page-to-page flow. Expanding it to full screen makes it look like a page that behaves differently, which is its own problem."
+      ar: "الـ Bottom sheets (NN/g): لا تستخدم الـ Sheet بدل مسار عادي من صفحة إلى صفحة. وتكبيره إلى ملء الشاشة يجعله يشبه صفحة تتصرّف بطريقة مختلفة، وهذه مشكلة أخرى."
+    ref: { url: "https://www.nngroup.com/articles/bottom-sheet/", quote: "We strongly recommend not using a bottom sheet to replace typical page-to-page user flows." }
+    scenario:
+      en: "Yara found her syrup. Checkout has three steps: delivery address, delivery time, and payment. The team put all three in one bottom sheet that scrolls."
+      ar: "وجدت يارا الشراب. والدفع ثلاث خطوات: عنوان التوصيل، ووقت التوصيل، والدفع. ووضع الفريق الخطوات الثلاث في Bottom sheet واحد يتمرّر."
+    prompt:
+      en: "Try each version of checkout. Which one should ship?"
+      ar: "جرّب كل نسخة من خطوات الدفع. أيّها يجب أن تُطلق؟"
+    start: sheet
+    options:
+      - id: sheet
+        text: { en: "Keep all three steps in the scrolling sheet", ar: "أبقِ الخطوات الثلاث في الـ Sheet المتمرّر" }
+        mock:
+          width: 300
+          blocks: *list
+          overlay:
+            type: sheet
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "1. Delivery address", ar: "1. عنوان التوصيل" } }
+              - { kind: field, label: { en: "Street and building", ar: "الشارع والعمارة" }, text: "", gap: s }
+              - { kind: heading, text: { en: "2. Delivery time", ar: "2. وقت التوصيل" }, gap: m }
+              - { kind: small, text: { en: "Scroll for step 3: payment…", ar: "مرّر لترى الخطوة 3: الدفع…" }, gap: s }
+      - id: full
+        text: { en: "Keep the sheet, but open it to full screen", ar: "أبقِ الـ Sheet، لكن افتحه بملء الشاشة" }
+        mock:
+          width: 300
+          blocks: *list
+          overlay:
+            type: full
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "1. Delivery address", ar: "1. عنوان التوصيل" } }
+              - { kind: field, label: { en: "Street and building", ar: "الشارع والعمارة" }, text: "", gap: s }
+              - { kind: heading, text: { en: "2. Delivery time", ar: "2. وقت التوصيل" }, gap: m }
+              - { kind: small, text: { en: "Scroll for step 3: payment…", ar: "مرّر لترى الخطوة 3: الدفع…" }, gap: s }
+              - { kind: small, text: { en: "(Back closes this and empties it)", ar: "(زر الرجوع يغلقه ويُفرغه)" }, gap: l }
+      - id: pages
+        text: { en: "Make checkout a flow of normal pages, one step each", ar: "اجعل الدفع مسارًا من صفحات عادية، خطوة في كل صفحة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "Step 1 of 3", ar: "الخطوة 1 من 3" } }
+            - { kind: title, text: { en: "Delivery address", ar: "عنوان التوصيل" }, gap: s }
+            - { kind: field, label: { en: "Street and building", ar: "الشارع والعمارة" }, text: "", gap: m }
+            - { kind: field, label: { en: "Floor and flat", ar: "الدور والشقة" }, text: "", gap: s }
+            - { kind: button, text: { en: "Next: delivery time", ar: "التالي: وقت التوصيل" }, gap: l }
+    answer: [pages]
+    misconceptions:
+      - id: MC-P14-008
+        when: [sheet, full]
+        feedback:
+          en: "Checkout is a flow of several steps, not a quick task. In a sheet, one swipe or Back can close it and lose what Yara typed. Full screen makes it look like a page that doesn't behave like one."
+          ar: "الدفع مسار من عدة خطوات، لا مهمة سريعة. وفي Sheet، قد تغلقه سحبة واحدة أو زر الرجوع فيضيع ما كتبته يارا. وملء الشاشة يجعله يشبه صفحة لا تتصرّف كصفحة."
+    correct:
+      en: "A flow of steps belongs on pages."
+      ar: "المسار متعدّد الخطوات مكانه الصفحات."
+    explain:
+      en: "Pages show where Yara is (step 1 of 3), keep what she typed when she goes back, and behave the way every other screen does. A sheet is for a quick choice, like Sort."
+      ar: "الصفحات تُظهر أين يارا (الخطوة 1 من 3)، وتحفظ ما كتبته حين ترجع، وتتصرّف مثل أي شاشة أخرى. أما الـ Sheet فلاختيار سريع، مثل الترتيب."
+
+  - id: S06
+    type: tune
+    part: guided
+    skill: SK-P14-U01-04
+    rules: [R06, R15]
+    value:
+      en: "Tooltips (NN/g): users shouldn't need to find a tooltip to complete their task. A rule that decides whether the upload is accepted is needed information, so it goes on the screen."
+      ar: "الـ Tooltips (NN/g): لا يجب أن يحتاج الناس إلى البحث عن Tooltip لإكمال مهمتهم. والشرط الذي يحدّد هل تُقبل الصورة معلومة ضرورية، فمكانها الشاشة."
+    ref: { url: "https://www.nngroup.com/articles/tooltip-guidelines/", quote: "Users shouldn't need to find a tooltip in order to complete their task." }
+    scenario:
+      en: "Yara must upload a photo of her prescription. The pharmacy rejects any photo that doesn't show the doctor's stamp. Right now, that rule only appears if she taps the small ⓘ."
+      ar: "يجب أن ترفع يارا صورة الروشتة. والصيدلية ترفض أي صورة لا يظهر فيها ختم الطبيب. والآن، لا يظهر هذا الشرط إلا إذا ضغطت على ⓘ الصغيرة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: title, text: { en: "Upload prescription", ar: "ارفع الروشتة" } }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: meta, text: { en: "Prescription photo", ar: "صورة الروشتة" } }
+            - { kind: iconbtn, text: "ⓘ" }
+        - { kind: button, text: { en: "Take a photo", ar: "التقط صورة" }, gap: m }
+    options:
+      - id: bold
+        text: { en: "Keep the tooltip, but make the ⓘ bigger and colored", ar: "أبقِ الـ Tooltip، لكن كبّر ⓘ ولوّنها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Upload prescription", ar: "ارفع الروشتة" } }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, text: { en: "Prescription photo", ar: "صورة الروشتة" } }
+                - { kind: chip, text: "ⓘ" }
+            - { kind: button, text: { en: "Take a photo", ar: "التقط صورة" }, gap: m }
+      - id: hint
+        text: { en: "Show the rule under the label, always visible", ar: "اعرض الشرط تحت العنوان، ظاهرًا دائمًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Upload prescription", ar: "ارفع الروشتة" } }
+            - { kind: meta, text: { en: "Prescription photo", ar: "صورة الروشتة" }, gap: m }
+            - { kind: small, text: { en: "The doctor's stamp must be clear in the photo.", ar: "يجب أن يظهر ختم الطبيب بوضوح في الصورة." }, gap: xs }
+            - { kind: button, text: { en: "Take a photo", ar: "التقط صورة" }, gap: m }
+      - id: auto
+        text: { en: "Open the tooltip by itself for 3 seconds when the screen loads", ar: "افتح الـ Tooltip وحده لمدة 3 ثوانٍ عند فتح الشاشة" }
+        mock:
+          caption: { en: "After this change (first 3 seconds)", ar: "بعد هذا التغيير (أول 3 ثوانٍ)" }
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Upload prescription", ar: "ارفع الروشتة" } }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: meta, text: { en: "Prescription photo", ar: "صورة الروشتة" } }
+                - { kind: iconbtn, text: "ⓘ" }
+            - { kind: tip, text: { en: "The doctor's stamp must be clear in the photo.", ar: "يجب أن يظهر ختم الطبيب بوضوح في الصورة." } }
+            - { kind: button, text: { en: "Take a photo", ar: "التقط صورة" }, gap: m }
+    answer: [hint]
+    misconceptions:
+      - id: MC-P14-009
+        when: [bold, auto]
+        feedback:
+          en: "The rule decides whether her photo is accepted, but Yara still has to find it, or read it in 3 seconds and remember it while she takes the photo."
+          ar: "الشرط يحدّد هل تُقبل صورتها، لكن ما زال على يارا أن تجده، أو تقرأه في 3 ثوانٍ وتتذكّره وهي تلتقط الصورة."
+    correct:
+      en: "Needed to finish: keep it on the screen."
+      ar: "ضروري للإنهاء: أبقِه على الشاشة."
+    explain:
+      en: "Without the stamp, the photo is rejected, so the rule is part of the task. Shown under the label, Yara sees it right before she takes the photo, with nothing to find or remember."
+      ar: "بدون الختم تُرفض الصورة، لذلك الشرط جزء من المهمة. وحين يظهر تحت العنوان، تراه يارا قبل أن تلتقط الصورة مباشرة، دون أن تبحث عنه أو تتذكّره."
+
+  - id: S07
+    type: compare
+    part: contrast
+    skill: SK-P14-U01-04
+    rules: [R11]
+    value:
+      en: "Tooltips (NN/g): tooltips open on hover, so they work only on devices with a mouse or keyboard, and most icons are ambiguous enough that they need text labels. An icon-only bar that depends on tooltips fails on a phone."
+      ar: "الـ Tooltips (NN/g): الـ Tooltip يُفتح بالـ Hover، لذلك لا يعمل إلا على أجهزة فيها فأرة أو لوحة مفاتيح، وأغلب الأيقونات غامضة بما يكفي لتحتاج تسمية نصية. والشريط الذي فيه أيقونات فقط ويعتمد على الـ Tooltips يفشل على الهاتف."
+    ref: { url: "https://www.nngroup.com/articles/tooltip-guidelines/", quote: "Because tooltips are initiated by a hover gesture, they can be used only on devices with a mouse or keyboard." }
+    scenario:
+      en: "The pharmacy app has a bar of four icons on each medicine: save, compare, set a reminder and ask a pharmacist. On the website, each icon shows a tooltip on hover. The same bar is used in the phone app."
+      ar: "في تطبيق الصيدلية شريط من أربع أيقونات على كل دواء: حفظ، ومقارنة، وضبط تذكير، وسؤال صيدلي. وفي الموقع، تُظهر كل أيقونة Tooltip عند الـ Hover. والشريط نفسه مستخدم في تطبيق الهاتف."
+    prompt:
+      en: "Which version should ship in the phone app?"
+      ar: "أيّ نسخة يجب أن تُطلق في تطبيق الهاتف؟"
+    a:
+      label: { en: "Version A: icons with tooltips", ar: "النسخة A: أيقونات مع Tooltips" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Syrup B · EGP 48", ar: "شراب B · 48 جنيه" } }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: iconbtn, text: "♡" }
+              - { kind: iconbtn, text: "⇄" }
+              - { kind: iconbtn, text: "⏰" }
+              - { kind: iconbtn, text: "?" }
+          - { kind: small, text: { en: "(labels appear on hover)", ar: "(التسميات تظهر عند الـ Hover)" }, gap: s }
+    b:
+      label: { en: "Version B: icons with text labels", ar: "النسخة B: أيقونات مع تسميات" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: heading, text: { en: "Syrup B · EGP 48", ar: "شراب B · 48 جنيه" } }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: chip, text: { en: "♡ Save", ar: "♡ حفظ" } }
+              - { kind: chip, text: { en: "⇄ Compare", ar: "⇄ قارن" } }
+          - kind: row
+            gap: s
+            blocks:
+              - { kind: chip, text: { en: "⏰ Remind me", ar: "⏰ ذكّرني" } }
+              - { kind: chip, text: { en: "? Ask a pharmacist", ar: "? اسأل صيدليًا" } }
+    answer: b
+    misconceptions:
+      - id: MC-P14-010
+        when: [a]
+        feedback:
+          en: "A phone has no hover, so these tooltips never appear. People are left guessing what the clock or the arrows do."
+          ar: "لا يوجد Hover في الهاتف، فهذه الـ Tooltips لا تظهر أبدًا. ويبقى الناس يخمّنون ماذا تفعل الساعة أو الأسهم."
+    correct:
+      en: "B: on a phone, an icon that can be unclear needs its label on the screen."
+      ar: "B: على الهاتف، الأيقونة التي قد تكون غير واضحة تحتاج تسميتها على الشاشة."
+    explain:
+      en: "Most icons can be read more than one way: the arrows could mean compare or share, and the clock could mean a reminder or delivery time. Text labels work without hover and remove that guessing. A tooltip can't stand in for a label on a touch screen."
+      ar: "أغلب الأيقونات يمكن فهمها بأكثر من طريقة: الأسهم قد تعني المقارنة أو المشاركة، والساعة قد تعني تذكيرًا أو وقت التوصيل. والتسميات النصية تعمل دون Hover وتُزيل هذا التخمين. والـ Tooltip لا يمكن أن يحلّ محلّ التسمية على شاشة لمس."
+
+  - id: S08
+    type: tune
+    part: independent
+    skill: SK-P14-U01-04
+    rules: [R14]
+    value:
+      en: "Tooltips (NN/g): tooltips with obvious or redundant text don't help; they're best for extra explanation of a field some people don't know. \"Enter your tax number\" repeats the label; the format and where to find it is real help."
+      ar: "الـ Tooltips (NN/g): الـ Tooltip الذي يكرّر الواضح لا يفيد؛ وأفضل استخدام له شرح إضافي لحقل لا يعرفه بعض الناس. «أدخل رقمك الضريبي» تكرار للعنوان؛ أما الشكل ومكان العثور عليه فمساعدة حقيقية."
+    ref: { url: "https://www.nngroup.com/articles/tooltip-guidelines/", quote: "Tooltips with obvious or redundant text are not beneficial to users." }
+    scenario:
+      en: "Adel runs a small shop and uses an invoicing website on his laptop. Most invoices don't need a tax number, but some customers ask for it. The field has a tooltip."
+      ar: "يدير عادل محلًا صغيرًا ويستخدم موقعًا للفواتير على اللابتوب. أغلب الفواتير لا تحتاج رقمًا ضريبيًا، لكن بعض العملاء يطلبونه. والحقل عليه Tooltip."
+    prompt:
+      en: "Try each tooltip. Which one should ship?"
+      ar: "جرّب كل Tooltip. أيّه يجب أن يُطلق؟"
+    start: repeat
+    options:
+      - id: repeat
+        text: { en: "\"Enter your tax number\"", ar: "«أدخل رقمك الضريبي»" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: heading, text: { en: "New invoice", ar: "فاتورة جديدة" } }
+            - { kind: field, label: { en: "Tax number (optional) ⓘ", ar: "الرقم الضريبي (اختياري) ⓘ" }, text: "", gap: m }
+            - { kind: tip, text: { en: "Enter your tax number.", ar: "أدخل رقمك الضريبي." } }
+      - id: useful
+        text: { en: "\"9 digits, on your tax card. Only needed if the customer asks.\"", ar: "«9 أرقام، تجدها في البطاقة الضريبية. مطلوب فقط إن طلبه العميل.»" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: heading, text: { en: "New invoice", ar: "فاتورة جديدة" } }
+            - { kind: field, label: { en: "Tax number (optional) ⓘ", ar: "الرقم الضريبي (اختياري) ⓘ" }, text: "", gap: m }
+            - { kind: tip, text: { en: "9 digits, on your tax card. Only needed if the customer asks.", ar: "9 أرقام، تجدها في البطاقة الضريبية. مطلوب فقط إن طلبه العميل." } }
+      - id: long
+        text: { en: "A full paragraph on tax law and when invoices need a number", ar: "فقرة كاملة عن قانون الضرائب ومتى تحتاج الفواتير رقمًا" }
+        mock:
+          frame: wide
+          blocks:
+            - { kind: heading, text: { en: "New invoice", ar: "فاتورة جديدة" } }
+            - { kind: field, label: { en: "Tax number (optional) ⓘ", ar: "الرقم الضريبي (اختياري) ⓘ" }, text: "", gap: m }
+            - { kind: tip, text: { en: "Under the current tax rules, registered sellers may be asked to include their tax registration number on invoices issued to business customers, especially for amounts above certain limits, and in some cases for exports. Check with your accountant to know which of your invoices need it and how the number must be shown.", ar: "وفق قواعد الضرائب الحالية، قد يُطلب من البائعين المسجّلين ذكر رقم التسجيل الضريبي في الفواتير الصادرة لعملاء من الشركات، خاصة للمبالغ التي تتجاوز حدودًا معيّنة، وفي بعض الحالات للتصدير. راجع محاسبك لتعرف أي فواتيرك تحتاجه وكيف يجب أن يظهر الرقم." } }
+    answer: [useful]
+    misconceptions:
+      - id: MC-P14-011
+        when: [repeat]
+        feedback:
+          en: "It only repeats the label. Adel opens it and learns nothing he didn't already know."
+          ar: "إنه يكرّر العنوان فقط. فيفتحه عادل ولا يعرف شيئًا جديدًا."
+      - id: MC-P14-011
+        when: [long]
+        feedback:
+          en: "This is no longer a tip. A long paragraph covers the form and gives Adel more to read than he needs to fill one field."
+          ar: "لم يعد هذا نصيحة قصيرة. فالفقرة الطويلة تغطّي النموذج، وتعطي عادل أكثر مما يحتاجه لملء حقل واحد."
+    correct:
+      en: "Short, and it adds what the label can't."
+      ar: "قصير، ويضيف ما لا يقوله العنوان."
+    explain:
+      en: "The field is optional, and many people don't know where to find the number. The tooltip tells Adel the format, where to find it and when it's needed, in one short line."
+      ar: "الحقل اختياري، وكثيرون لا يعرفون أين يجدون الرقم. والـ Tooltip يخبر عادل بشكله، ومكانه، ومتى يُحتاج، في سطر واحد قصير."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [layers, cut, eye]
+    title: { en: "What you practised", ar: "ما تدرّبت عليه" }
+    body:
+      en: "- **Bottom sheets:** one at a time, for quick tasks, with a Close button that Back respects.\n- **Long flows go on pages,** even when a full-screen sheet looks like one.\n- **Tooltips add, never hold, what's needed:** keep required rules and labels on the screen, and make each tooltip short and useful.\n\nNext: how loud should a message be? Snackbar, banner or dialog."
+      ar: "- **الـ Bottom sheets:** واحد في كل مرة، للمهام السريعة، مع زر إغلاق يحترمه زر الرجوع.\n- **المسارات الطويلة مكانها الصفحات،** حتى لو بدا الـ Sheet بملء الشاشة مثل صفحة.\n- **الـ Tooltip يضيف، ولا يحمل الضروري:** أبقِ الشروط والتسميات المطلوبة على الشاشة، واجعل كل Tooltip قصيرًا ومفيدًا.\n\nالتالي: ما مدى علوّ صوت الرسالة؟ Snackbar أم Banner أم Dialog."

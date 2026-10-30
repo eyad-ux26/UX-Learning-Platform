@@ -1,0 +1,351 @@
+id: P14-U01-L04
+mode: check
+minutes: 7
+title:
+  en: "Skill check: interrupt only when it's worth it"
+  ar: "اختبار المهارة: لا تقاطع إلا حين يستحق الأمر"
+sources:
+  - title: { en: "Modal & Nonmodal Dialogs: When (& When Not) to Use Them (NN/g)", ar: "النوافذ الـ Modal والـ Nonmodal: متى نستخدمها ومتى لا (NN/g)" }
+    url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/"
+  - title: { en: "Bottom Sheets: Definition and UX Guidelines (NN/g)", ar: "الـ Bottom sheets: التعريف وإرشادات تجربة المستخدم (NN/g)" }
+    url: "https://www.nngroup.com/articles/bottom-sheet/"
+  - title: { en: "Tooltip Guidelines (NN/g)", ar: "إرشادات الـ Tooltip (NN/g)" }
+    url: "https://www.nngroup.com/articles/tooltip-guidelines/"
+  - title: { en: "Indicators, Validations, and Notifications (NN/g)", ar: "المؤشرات والتحقّق والإشعارات (NN/g)" }
+    url: "https://www.nngroup.com/articles/indicators-validations-notifications/"
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Tarek's grocery app", ar: "تطبيق البقالة لطارق" }
+    body:
+      en: "Tarek's team is about to launch a grocery delivery app. You're reviewing five moments in it before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "فريق طارق على وشك إطلاق تطبيق لتوصيل البقالة. وأنت تراجع خمس لحظات فيه قبل الإطلاق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+
+  - id: S02
+    type: tune
+    part: check
+    skill: SK-P14-U01-01
+    value:
+      en: "Check, modal dialogs (NN/g): don't interrupt high-stakes flows like checkout with something unrelated. Asking later in the same window doesn't change that; asking after delivery does."
+      ar: "اختبار، النوافذ الـ Modal (NN/g): لا تقاطع العمليات المهمة مثل الدفع بشيء غير مرتبط بها. والسؤال لاحقًا في النافذة نفسها لا يغيّر ذلك؛ أما السؤال بعد التوصيل فيغيّره."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs that interrupt high-stake processes such as checkout flows." }
+    scenario:
+      en: "When people tap **Place order**, a dialog asks them to rate the app before the order goes through. The team wants more ratings."
+      ar: "حين يضغط الناس **أرسل الطلب**، يظهر Dialog يطلب منهم تقييم التطبيق قبل أن يُرسل الطلب. والفريق يريد تقييمات أكثر."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: keep
+    options:
+      - id: keep
+        text: { en: "Keep the rating dialog when people place an order", ar: "أبقِ Dialog التقييم عند إرسال الطلب" }
+        mock:
+          width: 300
+          blocks: &checkout
+            - { kind: title, text: { en: "Checkout", ar: "الدفع" } }
+            - { kind: meta, text: { en: "12 items · EGP 1,140", ar: "12 منتجًا · 1140 جنيه" }, gap: s }
+            - { kind: button, text: { en: "Place order", ar: "أرسل الطلب" }, gap: xl }
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Enjoying the app?", ar: "هل يعجبك التطبيق؟" } }
+              - { kind: text, text: "★ ★ ★ ★ ★", gap: s }
+              - { kind: button, text: { en: "Rate us", ar: "قيّمنا" }, gap: m }
+      - id: third
+        text: { en: "Show the same dialog only from the third order", ar: "اعرض الـ Dialog نفسه بدءًا من الطلب الثالث فقط" }
+        mock:
+          caption: { en: "Third order", ar: "الطلب الثالث" }
+          width: 300
+          blocks: *checkout
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Enjoying the app?", ar: "هل يعجبك التطبيق؟" } }
+              - { kind: text, text: "★ ★ ★ ★ ★", gap: s }
+              - { kind: button, text: { en: "Rate us", ar: "قيّمنا" }, gap: m }
+      - id: after
+        text: { en: "Ask for a rating on the order screen once it's delivered", ar: "اطلب التقييم في شاشة الطلب بعد توصيله" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Delivered", ar: "تم التوصيل" } }
+            - { kind: meta, text: { en: "12 items · Today 6:40 pm", ar: "12 منتجًا · اليوم 6:40 مساءً" }, gap: s }
+            - { kind: divider, gap: l }
+            - { kind: small, text: { en: "How was this order?", ar: "كيف كان هذا الطلب؟" }, gap: m }
+            - { kind: text, text: "★ ★ ★ ★ ★", gap: s }
+    answer: [after]
+    misconceptions:
+      - id: MC-P14-001
+        when: [keep]
+        feedback:
+          en: "The rating has nothing to do with placing the order, and it blocks the most important tap in the app."
+          ar: "التقييم لا علاقة له بإرسال الطلب، وهو يحجب أهم ضغطة في التطبيق."
+      - id: MC-P14-002
+        when: [third]
+        feedback:
+          en: "Fewer people see it, but it still blocks checkout for them. Waiting doesn't make it part of the task."
+          ar: "عدد أقل يراه، لكنه ما زال يحجب الدفع عنهم. والانتظار لا يجعله جزءًا من المهمة."
+    correct:
+      en: "Ask after the task, not in the middle of it."
+      ar: "اسأل بعد المهمة، لا في منتصفها."
+    explain:
+      en: "Once the order has arrived, a rating interrupts nothing, and people have something real to rate."
+      ar: "بعد وصول الطلب، لا يقاطع التقييم شيئًا، ويكون لدى الناس شيء حقيقي يقيّمونه."
+
+  - id: S03
+    type: tune
+    part: check
+    skill: SK-P14-U01-02
+    value:
+      en: "Check, modal dialogs (NN/g): avoid them for decisions that need information unavailable in the modal. Picking a slot depends on the frozen-items rule shown on the page behind it."
+      ar: "اختبار، النوافذ الـ Modal (NN/g): تجنّبها للقرارات التي تحتاج معلومات غير موجودة في النافذة. واختيار الموعد يعتمد على شرط المجمّدات الظاهر في الصفحة خلفها."
+    ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs for complex decision making that requires additional sources of information unavailable in the modal." }
+    scenario:
+      en: "The cart warns: \"Frozen items must be delivered within 2 hours of packing.\" People choose a delivery time in a dialog."
+      ar: "السلّة تنبّه: «المنتجات المجمّدة يجب أن تُوصَّل خلال ساعتين من تجهيزها.» والناس يختارون وقت التوصيل في Dialog."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: modal
+    options:
+      - id: modal
+        text: { en: "Keep the times in the dialog", ar: "أبقِ المواعيد في الـ Dialog" }
+        mock:
+          width: 300
+          blocks: &cartfz
+            - { kind: title, text: { en: "Cart", ar: "السلّة" } }
+            - { kind: banner, text: { en: "Frozen items must be delivered within 2 hours of packing.", ar: "المنتجات المجمّدة يجب أن تُوصَّل خلال ساعتين من تجهيزها." }, gap: m }
+            - { kind: button, text: { en: "Choose delivery time", ar: "اختر وقت التوصيل" }, gap: xl }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Delivery time", ar: "وقت التوصيل" } }
+              - { kind: radio, text: { en: "Today, 7–9 pm", ar: "اليوم، من 7 إلى 9 مساءً" }, gap: s }
+              - { kind: radio, text: { en: "Tomorrow, 10 am–12 pm", ar: "غدًا، من 10 صباحًا إلى 12 ظهرًا" }, gap: xs }
+      - id: link
+        text: { en: "Keep the dialog; add a \"See cart\" link that closes it", ar: "أبقِ الـ Dialog؛ وأضف رابط «اعرض السلّة» يغلقه" }
+        mock:
+          width: 300
+          blocks: *cartfz
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Delivery time", ar: "وقت التوصيل" } }
+              - { kind: radio, text: { en: "Today, 7–9 pm", ar: "اليوم، من 7 إلى 9 مساءً" }, gap: s }
+              - { kind: radio, text: { en: "Tomorrow, 10 am–12 pm", ar: "غدًا، من 10 صباحًا إلى 12 ظهرًا" }, gap: xs }
+              - { kind: link, text: { en: "See cart", ar: "اعرض السلّة" }, gap: m }
+      - id: page
+        text: { en: "Choose the time on the checkout page, under the frozen-items note", ar: "اختر الوقت في صفحة الدفع، تحت ملاحظة المجمّدات" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Delivery time", ar: "وقت التوصيل" } }
+            - { kind: banner, text: { en: "You have frozen items: pick a time within 2 hours of packing.", ar: "لديك منتجات مجمّدة: اختر وقتًا خلال ساعتين من التجهيز." }, gap: m }
+            - { kind: radio, text: { en: "Today, 7–9 pm", ar: "اليوم، من 7 إلى 9 مساءً" }, gap: m }
+            - { kind: radio, text: { en: "Tomorrow, 10 am–12 pm", ar: "غدًا، من 10 صباحًا إلى 12 ظهرًا" }, gap: xs }
+    answer: [page]
+    misconceptions:
+      - id: MC-P14-005
+        when: [modal, link]
+        feedback:
+          en: "The rule that decides the time is still hidden behind the dialog while people choose."
+          ar: "الشرط الذي يحسم الوقت ما زال مخفيًا خلف الـ Dialog وهم يختارون."
+    correct:
+      en: "The choice sits next to the rule it depends on."
+      ar: "الاختيار بجانب الشرط الذي يعتمد عليه."
+    explain:
+      en: "On the page, the frozen-items note sits right above the times, so people pick a slot that keeps their food frozen."
+      ar: "في الصفحة، تكون ملاحظة المجمّدات فوق المواعيد مباشرة، فيختار الناس موعدًا يحفظ طعامهم مجمّدًا."
+
+  - id: S04
+    type: tune
+    part: check
+    skill: SK-P14-U01-03
+    value:
+      en: "Check, bottom sheets (NN/g): one of the biggest problems is stacking sheets. The replacement list fits in the same sheet."
+      ar: "اختبار، الـ Bottom sheets (NN/g): من أكبر المشكلات تكديس الـ Sheets. وقائمة البدائل تتّسع في الـ Sheet نفسه."
+    ref: { url: "https://www.nngroup.com/articles/bottom-sheet/", quote: "One of the biggest issues with bottom sheets occurs when an app stacks several such sheets on top of each other." }
+    scenario:
+      en: "When an item is out of stock, a bottom sheet says so. Tapping **Choose a replacement** opens a second sheet on top with three similar items."
+      ar: "حين ينفد منتج، يظهر Bottom sheet يقول ذلك. والضغط على **اختر بديلًا** يفتح Sheet ثانيًا فوقه فيه ثلاثة منتجات مشابهة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: stack
+    options:
+      - id: stack
+        text: { en: "Keep the second sheet on top", ar: "أبقِ الـ Sheet الثاني فوق الأول" }
+        mock:
+          width: 300
+          blocks: &aisle
+            - { kind: title, text: { en: "Dairy", ar: "الألبان" } }
+            - { kind: meta, text: { en: "Yogurt · EGP 18", ar: "زبادي · 18 جنيه" }, gap: m }
+            - { kind: meta, text: { en: "Cheese · EGP 75", ar: "جبنة · 75 جنيه" }, gap: s }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "Choose a replacement", ar: "اختر بديلًا" } }
+              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" }, gap: s }
+              - { kind: small, text: { en: "(on top of the \"Out of stock\" sheet)", ar: "(فوق Sheet «نفد المنتج»)" }, gap: s }
+      - id: one
+        text: { en: "One sheet: the message and the three replacements together", ar: "Sheet واحد: الرسالة والبدائل الثلاثة معًا" }
+        mock:
+          width: 300
+          blocks: *aisle
+          overlay:
+            type: sheet
+            close: true
+            blocks:
+              - { kind: heading, text: { en: "Low-fat milk is out of stock", ar: "نفد اللبن قليل الدسم" } }
+              - { kind: small, text: { en: "Pick a replacement:", ar: "اختر بديلًا:" }, gap: s }
+              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" }, gap: s }
+              - { kind: radio, text: { en: "Skimmed milk, 1 L", ar: "لبن خالي الدسم، 1 لتر" }, gap: xs }
+              - { kind: radio, text: { en: "No replacement", ar: "بدون بديل" }, gap: xs }
+      - id: full
+        text: { en: "Open the replacements in a full-screen sheet on top", ar: "افتح البدائل في Sheet بملء الشاشة فوقه" }
+        mock:
+          width: 300
+          blocks: *aisle
+          overlay:
+            type: full
+            blocks:
+              - { kind: heading, text: { en: "Choose a replacement", ar: "اختر بديلًا" } }
+              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" }, gap: s }
+              - { kind: radio, text: { en: "Skimmed milk, 1 L", ar: "لبن خالي الدسم، 1 لتر" }, gap: xs }
+              - { kind: small, text: { en: "(still on top of the \"Out of stock\" sheet)", ar: "(ما زال فوق Sheet «نفد المنتج»)" }, gap: s }
+    answer: [one]
+    misconceptions:
+      - id: MC-P14-006
+        when: [stack, full]
+        feedback:
+          en: "It's still a sheet on top of a sheet. One swipe or Back can close both, and people lose track of which one they're in."
+          ar: "ما زال Sheet فوق Sheet. وسحبة واحدة أو زر الرجوع قد يغلق الاثنين، ويفقد الناس معرفة في أيّهما هم."
+    correct:
+      en: "One sheet, nothing stacked."
+      ar: "Sheet واحد، دون تكديس."
+    explain:
+      en: "Three replacements and a short message fit in one sheet, with a Close button, so the choice stays quick."
+      ar: "ثلاثة بدائل ورسالة قصيرة تتّسع في Sheet واحد، مع زر إغلاق، فيبقى الاختيار سريعًا."
+
+  - id: S05
+    type: tune
+    part: check
+    skill: SK-P14-U01-04
+    value:
+      en: "Check, tooltips (NN/g): users shouldn't need to find a tooltip to complete their task. Whether a code works with the delivery discount decides what people pay."
+      ar: "اختبار، الـ Tooltips (NN/g): لا يجب أن يحتاج الناس إلى البحث عن Tooltip لإكمال مهمتهم. وهل يعمل الكود مع خصم التوصيل يحدّد ما يدفعه الناس."
+    ref: { url: "https://www.nngroup.com/articles/tooltip-guidelines/", quote: "Users shouldn't need to find a tooltip in order to complete their task." }
+    scenario:
+      en: "A promo code replaces the free-delivery offer; the two can't be used together. That rule is only in a tooltip on the ⓘ next to the code field."
+      ar: "كود الخصم يحلّ محلّ عرض التوصيل المجاني؛ ولا يمكن استخدامهما معًا. وهذا الشرط موجود فقط في Tooltip على ⓘ بجانب حقل الكود."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: tip
+    options:
+      - id: tip
+        text: { en: "Keep the rule in the tooltip", ar: "أبقِ الشرط في الـ Tooltip" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: meta, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" } }
+            - { kind: field, label: { en: "Promo code ⓘ", ar: "كود الخصم ⓘ" }, text: "", gap: m }
+            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: s }
+      - id: shown
+        text: { en: "Show the rule under the code field", ar: "اعرض الشرط تحت حقل الكود" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: meta, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" } }
+            - { kind: field, label: { en: "Promo code", ar: "كود الخصم" }, text: "", hint: { en: "A code replaces free delivery. You can't use both.", ar: "الكود يحلّ محلّ التوصيل المجاني. لا يمكن استخدامهما معًا." }, gap: m }
+            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: s }
+      - id: longtip
+        text: { en: "Keep the tooltip, and add the full promo terms to it", ar: "أبقِ الـ Tooltip، وأضف إليه كل شروط العروض" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: meta, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" } }
+            - { kind: field, label: { en: "Promo code ⓘ", ar: "كود الخصم ⓘ" }, text: "", gap: m }
+            - { kind: tip, text: { en: "Codes are valid once per customer, for orders over EGP 300, until the end date shown, and can't be combined with other offers, including free delivery.", ar: "الأكواد صالحة مرة واحدة لكل عميل، للطلبات فوق 300 جنيه، حتى تاريخ الانتهاء الظاهر، ولا تُجمع مع عروض أخرى، ومنها التوصيل المجاني." } }
+    answer: [shown]
+    misconceptions:
+      - id: MC-P14-009
+        when: [tip, longtip]
+        feedback:
+          en: "The rule changes what people pay, but they still have to find it behind the ⓘ, and on a phone they may never open it."
+          ar: "الشرط يغيّر ما يدفعه الناس، لكن ما زال عليهم أن يجدوه خلف ⓘ، وعلى الهاتف قد لا يفتحونه أبدًا."
+    correct:
+      en: "It decides the price, so it goes on the screen."
+      ar: "يحدّد السعر، فمكانه الشاشة."
+    explain:
+      en: "Shown under the field, the rule is read at the moment people decide whether to use a code."
+      ar: "حين يظهر تحت الحقل، يُقرأ الشرط في اللحظة التي يقرّر فيها الناس هل يستخدمون كودًا."
+
+  - id: S06
+    type: tune
+    part: check
+    skill: SK-P14-U01-05
+    value:
+      en: "Check, notifications (NN/g): passive notifications are easily missed. A card that expires this month is a lasting issue with an action, so it needs a message that stays until it's fixed, without blocking the app."
+      ar: "اختبار، الإشعارات (NN/g): الإشعارات التي لا تحتاج إجراءً يسهل أن تفوت الناس. والبطاقة التي تنتهي هذا الشهر مشكلة مستمرة لها إجراء، فتحتاج رسالة تبقى حتى تُحلّ، دون أن تحجب التطبيق."
+    ref: { url: "https://www.nngroup.com/articles/indicators-validations-notifications/", quote: "Passive notifications can easily be missed, since they require no user action." }
+    scenario:
+      en: "A customer's saved card expires at the end of this month. Orders still work until then, but after that they'll fail unless the card is updated."
+      ar: "بطاقة أحد العملاء المحفوظة تنتهي آخر هذا الشهر. والطلبات تعمل حتى ذلك الحين، لكنها ستفشل بعده إن لم تُحدَّث البطاقة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: snack
+    options:
+      - id: snack
+        text: { en: "A snackbar the next time they open the app", ar: "Snackbar في المرة القادمة التي يفتحون فيها التطبيق" }
+        mock:
+          width: 300
+          blocks: &home2
+            - { kind: title, text: { en: "Good evening", ar: "مساء الخير" } }
+            - { kind: meta, text: { en: "Reorder: your usual basket", ar: "أعد الطلب: سلّتك المعتادة" }, gap: m }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: text, text: { en: "Your card expires soon.", ar: "بطاقتك تنتهي قريبًا." } }
+      - id: banner
+        text: { en: "A banner with \"Update card\" that stays until it's updated", ar: "Banner فيه «حدّث البطاقة» يبقى حتى تُحدَّث" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: banner, text: { en: "Your Visa ending 1177 expires on 31 October.", ar: "بطاقة Visa التي تنتهي بـ 1177 تنتهي صلاحيتها في 31 أكتوبر." } }
+            - { kind: link, text: { en: "Update card", ar: "حدّث البطاقة" }, gap: s }
+            - { kind: title, text: { en: "Good evening", ar: "مساء الخير" }, gap: m }
+            - { kind: meta, text: { en: "Reorder: your usual basket", ar: "أعد الطلب: سلّتك المعتادة" }, gap: m }
+      - id: dialog
+        text: { en: "A dialog that blocks the app until the card is updated", ar: "Dialog يحجب التطبيق حتى تُحدَّث البطاقة" }
+        mock:
+          width: 300
+          blocks: *home2
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Update your card", ar: "حدّث بطاقتك" } }
+              - { kind: small, text: { en: "Your card expires on 31 October.", ar: "بطاقتك تنتهي في 31 أكتوبر." }, gap: s }
+              - { kind: button, text: { en: "Update card", ar: "حدّث البطاقة" }, gap: m }
+    answer: [banner]
+    misconceptions:
+      - id: MC-P14-014
+        when: [snack]
+        feedback:
+          en: "The problem lasts all month, but the message disappears in seconds and may never be seen."
+          ar: "المشكلة تستمر طوال الشهر، لكن الرسالة تختفي في ثوانٍ وقد لا تُرى أبدًا."
+      - id: MC-P14-013
+        when: [dialog]
+        feedback:
+          en: "Orders still work, so nothing has to stop people now. Blocking the app keeps them from shopping today."
+          ar: "الطلبات ما زالت تعمل، فلا شيء يستدعي إيقاف الناس الآن. وحجب التطبيق يمنعهم من التسوّق اليوم."
+    correct:
+      en: "Matters and lasts: a banner until it's fixed."
+      ar: "مهم ومستمر: Banner حتى يُحلّ."
+    explain:
+      en: "The banner names the card and the date, carries the action, and stays until the card is updated, while people can keep ordering."
+      ar: "الـ Banner يذكر البطاقة والتاريخ، ويحمل الإجراء، ويبقى حتى تُحدَّث البطاقة، بينما يستمر الناس في الطلب."

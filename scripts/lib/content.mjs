@@ -26,7 +26,7 @@ export function loadContent() {
     p.units = [];
     for (const uName of fs.readdirSync(pDir).sort()) {
       const uDir = path.join(pDir, uName);
-      if (!fs.statSync(uDir).isDirectory()) continue;
+      if (!/^U\d{2}$/.test(uName) || !fs.statSync(uDir).isDirectory()) continue; // e.g. captions/ is not a unit
       const u = readYaml(path.join(uDir, "unit.yaml"));
       u._file = path.relative(ROOT, path.join(uDir, "unit.yaml"));
       const files = fs.readdirSync(uDir).filter((f) => f.endsWith(".yaml") && f !== "unit.yaml").sort();

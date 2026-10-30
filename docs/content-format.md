@@ -107,6 +107,7 @@ mock:
 | `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text), `plain` or `tint` (group) |
 | `color` | Exact text colors on white, for contrast lessons: `ink` 16.8:1, `muted` 5.3:1, `pale` 3.0:1, `faint` 2.3:1, `brand` 6.8:1, plus `green`, `red`, `orange` |
 | `weight` | `regular` or `bold` |
+| `**…**` | Inside a text block, marks part of the text bold (such as the suggested part of a search suggestion) |
 | `px` | Exact font size in pixels, when the size itself is being taught |
 | `style` | Buttons: `plain` (text only), `danger` (filled red), `dangerlink` (red text) |
 | `nowrap` | Cuts the text to one line with an ellipsis (to show truncation) |
@@ -115,17 +116,52 @@ mock:
 | `code` | A left-to-right fragment, such as a booking code, isolated inside right-to-left text |
 | `region` | Makes the block tappable in a `spot` step |
 | `field`, `select` | Have `label`, `text`, optional `hint` and `error`. `text` looks like a placeholder unless `filled: true`. `hintFirst: true` puts the hint between the label and the box. `focus: true` draws a focus ring. A `select` shows a ▾ |
-| `radio`, `check` | One option with a round or square marker; `selected: true` fills it |
+| `radio`, `check` | One option with a round or square marker; `selected: true` fills it. `marker: round` or `square` swaps the marker shape (to show a non-standard control), and `hit: box` makes only the marker tappable (to show a small tap target) |
 | `toggle` | A switch with `text` beside it; `selected: true` turns it on |
 | `stepper` | `label` and a value in `text`, between − and + buttons |
 | `segmented` | `options` (a list of texts) and `value`, the index of the selected one |
 | `slider` | `label`, a two-handle range track, and the chosen range in `text`. With `min`, `max`, `from`, `to` and a `format` such as "From {a} to {b}", learners can drag it |
 
-A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
+A mock can also set `fab`, a floating action button in the bottom corner: `{ icon: "✎" }`, or `{ icon: "✎", text: … }` for an extended one with a label; a list stacks several (to show too many). It can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
 
 In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) and space-separated numbers (such as `010 1234 5678`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
 
 Use YAML anchors (`&name` / `*name`) to reuse a mock in the same lesson.
+
+## Instructor clips
+
+A `card` can carry a short video from the UXGate course recordings:
+
+```yaml
+- id: S03
+  type: card
+  part: concept
+  video:
+    src: clips/P14-C03.mp4          # the clip id; the .mp4 lives outside git in media/clips/
+    captions: { ar: P14-C03.ar.vtt, en: P14-C03.en.vtt }   # in content/paths/P14/captions/
+    who: { en: "Eyad, UX designer", ar: "إياد، مصمم UX" }
+    transcript: { en: "...", ar: "..." }
+  title: { en: "...", ar: "..." }
+  body: { en: "...", ar: "..." }     # the rule in a few lines, under the clip
+```
+
+Rules: at most one clip per lesson, only in lessons (never in a skill check or re-test bank), and never before the try-first step, so learners decide before they watch. A **concept clip** (up to about 3 minutes) explains the idea; an **example clip** (30 to 120 seconds) works a case. The clip is a card, so it is never graded and never counts as a skill version. The spoken Arabic is Egyptian; captions keep the speaker's words in Arabic, and the English captions are a translation. `npm run preview` puts the captions inside the page and copies the clip into `preview/dist/clips/`, which is published with the page. Supporting files don't play for every viewer of a shared preview, so upload each clip to the preview Artifact's asset store and list it in `preview/clip-urls/<unit id>.json` (`{"clips": {"P14-C01.mp4": "/_blob/<id>"}}`); the preview then plays it from there. The card under a clip is shown as the video summary, so it must cover the same points as the clip.
+
+## Overlays
+
+A mock can carry one `overlay` drawn on top of the screen, for lessons about dialogs, sheets and messages:
+
+```yaml
+mock:
+  blocks: [ ... ]            # the screen underneath
+  overlay:
+    type: dialog             # dialog, sheet, full (a full-screen sheet), toast (a snackbar) or banner (pinned to the top)
+    close: true              # draws an ✕ in the corner
+    scrim: false             # dialogs and sheets dim the screen by default; false keeps it bright (a nonmodal sheet)
+    blocks: [ ... ]          # what the overlay holds
+```
+
+Two block kinds go with it: `tip` (a dark tooltip bubble with an arrow, placed under the block it explains) and `iconbtn` (a small round icon-only button, such as ⓘ).
 
 ## Player behaviour worth knowing
 
