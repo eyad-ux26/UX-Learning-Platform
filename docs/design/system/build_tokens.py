@@ -21,7 +21,7 @@ C={ # name: (light, dark, usage)
 'highlight-ledge':('#2BB5DE','#2BB5DE','Ledge under highlight'),
 'on-highlight':('#012E4B','#012E4B','Text on cyan'),
 'selected-bg':('#E0F4FD','#08384A','Selected choice fill (never a verdict)'),
-'selected-line':('#4CC3E8','#4CC3E8','Selected outline and ledge'),
+'selected-line':('#1677C0','#4CC3E8','Selected outline, ledge and selection frame (3:1)'),
 'right-bg':('#DDF5E8','#0D3326','Right feedback'),
 'right-line':('#3DAA80','#4CD69A','Right outline and ledge'),
 'right-text':('#1F7A52','#4CD69A','Right word and icon'),
@@ -42,7 +42,7 @@ C={ # name: (light, dark, usage)
 def L(h):
   h=h.lstrip('#');c=[int(h[i:i+2],16)/255 for i in (0,2,4)];c=[v/12.92 if v<=0.03928 else ((v+0.055)/1.055)**2.4 for v in c];return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2]
 def cr(a,b):x,y=L(a),L(b);return round((max(x,y)+0.05)/(min(x,y)+0.05),2)
-P=[('text','surface',4.5),('text','ground',4.5),('text-2','surface',4.5),('text-2','ground',4.5),('text-3','surface',4.5),('text-3','ground',4.5),('link','surface',4.5),('on-brand','brand',4.5),('on-highlight','highlight',4.5),('text','panel',4.5),('text','selected-bg',4.5),('right-text','right-bg',4.5),('wrong-text','wrong-bg',4.5),('warn-text','warn-bg',4.5),('on-reward','reward',4.5),('wrong-text','surface',4.5),('sky','ground',3.0),('line-field','surface',3.0),('focus','ground',3.0),('selected-line','surface',None)]
+P=[('text','surface',4.5),('text','ground',4.5),('text-2','surface',4.5),('text-2','ground',4.5),('text-3','surface',4.5),('text-3','ground',4.5),('link','surface',4.5),('on-brand','brand',4.5),('on-highlight','highlight',4.5),('text','panel',4.5),('text','selected-bg',4.5),('right-text','right-bg',4.5),('wrong-text','wrong-bg',4.5),('warn-text','warn-bg',4.5),('on-reward','reward',4.5),('wrong-text','surface',4.5),('sky','ground',3.0),('line-field','surface',3.0),('focus','ground',3.0),('selected-line','surface',3.0),('selected-line','selected-bg',3.0),('right-line','right-bg',None)]
 rows=[]
 for a,b,need in P:
   l=cr(C[a][0],C[b][0]);d=cr(C[a][1],C[b][1])
@@ -60,7 +60,7 @@ T={'$description':'UXGate design tokens v0.1 (Sprint 1). Same names in tokens.cs
 'radius':{'xs':8,'sm':10,'md':14,'lg':16,'xl':20,'2xl':28,'pill':999},
 'size':{'touch':44,'button-sm':44,'button':52,'button-lg':56,'choice':60,'progress':16,'progress-sm':10,'ledge':4,'outline':2,'focus-ring':3},
 'elevation':{'ledge':'0 4px 0 {ledge}','ledge-sm':'0 3px 0 {ledge}','pressed':'0 0 0 {ledge} + translateY(4px)','soft':{'light':'0 12px 32px -12px rgba(1,46,75,0.18)','dark':'0 12px 32px -12px rgba(0,0,0,0.6)'},'sheet':{'light':'0 -10px 40px -10px rgba(1,46,75,0.25)','dark':'0 -10px 40px -10px rgba(0,0,0,0.7)'}},
-'motion':{'duration':{'press':80,'fast':140,'base':220,'slow':360,'count-up':600},'easing':{'linear':'linear','out':'cubic-bezier(.2,.8,.2,1)','pop':'cubic-bezier(.2,.8,.3,1.25)'},'rules':['Press: translateY(4px), ledge to 0, 80ms linear','Select: scale .97 to 1, 220ms pop','Reward: scale .6 to 1 with overshoot, 360ms pop; XP counts up over 600ms','Wrong: no shake, no flash','prefers-reduced-motion: no transforms, still frames']}}
+'motion':{'duration':{'press':80,'fast':140,'base':220,'slow':360,'count-up':600},'easing':{'linear':'linear','out':'cubic-bezier(.2,.8,.2,1)','pop':'cubic-bezier(.2,.8,.3,1.25)'},'rules':['Press: translateY(4px), ledge to 0, 80ms linear','Select: scale .97 to 1, 220ms pop','Reward: scale .6 to 1 with overshoot, 360ms pop; XP counts up over 600ms','Wrong: no shake, no flash','prefers-reduced-motion: press still sinks with no bounce; selection frame appears at once; rewards, XP and trophies fade in (140ms); confetti and loops (flame, bell) show still frames; sound unchanged']}}
 json.dump(T,open('tokens.json','w'),indent=2,ensure_ascii=False)
 css=['/* UXGate design tokens v0.1 · generated from tokens.json */',':root, [data-theme="light"] {']
 for k,v in C.items(): css.append(f'  --ug-color-{k}: {v[0]};')
