@@ -11,6 +11,9 @@ import { C06, C06_FRAMES } from "./clips/C06";
 import { C07, C07_FRAMES } from "./clips/C07";
 import { C08, C08_FRAMES } from "./clips/C08";
 import { C09, C09_FRAMES } from "./clips/C09";
+import { C10, C10_FRAMES } from "./clips/C10";
+import { C11, C11_FRAMES } from "./clips/C11";
+import { C12, C12_FRAMES } from "./clips/C12";
 
 const meta = async () => {
   await fontsReady;
@@ -26,6 +29,9 @@ const clips: [string, React.FC, number][] = [
   ["P14-C07", C07, C07_FRAMES],
   ["P14-C08", C08, C08_FRAMES],
   ["P14-C09", C09, C09_FRAMES],
+  ["P14-C10", C10, C10_FRAMES],
+  ["P14-C11", C11, C11_FRAMES],
+  ["P14-C12", C12, C12_FRAMES],
 ];
 
 /** Every clip runs in the UXGate night look; the example product inside resets to its own light palette. */
