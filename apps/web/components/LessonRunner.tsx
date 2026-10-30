@@ -8,7 +8,7 @@ import { startLesson, type LessonState, type TryEvent } from "@uxgate/player/eng
 import { kvDel, kvGet, kvSet } from "@/lib/idb";
 import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
-import { kick, startSync, useSyncStatus } from "@/lib/sync";
+import { flush, kick, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
 import { LessonEnd } from "./LessonEnd";
 
@@ -47,8 +47,15 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
     setFinished(s);
   }, [key]);
 
+  // Give the last answers a moment to reach the server so Home shows the new XP and streak; offline, leave anyway.
+  const leave = async () => {
+    await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
+    router.push("/app");
+    router.refresh();
+  };
+
   if (!state) return <div className="player-loading" aria-busy="true" />;
-  if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} onContinue={() => router.push("/app")} />;
+  if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} onContinue={leave} />;
 
   return (
     <>
@@ -58,7 +65,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
       muted={muted}
       onToggleMute={() => { const v = !muted; setMuted(v); setMutedState(v); if (!v) play("ui-toggle-on"); }}
       onSound={play} onState={onState} onEvent={onEvent}
-      onExit={() => router.push("/app")}
+      onExit={leave}
       onFinish={onFinish}
     />
     </>

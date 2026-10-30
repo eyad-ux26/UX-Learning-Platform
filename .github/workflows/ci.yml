@@ -13,6 +13,12 @@ jobs:
       - run: npm ci
       - run: npm run tokens
       - run: npm run validate
+      - name: Content bundle is up to date
+        run: |
+          npm run build -w @uxgate/content
+          git diff --exit-code -- packages/content/dist
+      - name: Generated tokens are up to date
+        run: git diff --exit-code -- packages/tokens/dist
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test

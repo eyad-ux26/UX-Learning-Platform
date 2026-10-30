@@ -1,6 +1,7 @@
 import { redirect } from "@/i18n/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgress } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
 
@@ -31,6 +32,7 @@ const fixture = (): Learner => ({
  */
 export async function getLearner(): Promise<Learner | null> {
   if (process.env.UG_DEV_FIXTURE === "1") return fixture();
+  if (!hasSupabase()) return null; // not connected to Supabase yet: everyone is signed out
   const db = await createClient();
   const { data } = await db.auth.getUser();
   if (!data.user) return null;

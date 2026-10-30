@@ -17,7 +17,9 @@ const RENAME = {
   search: "magnifying-glass",
 };
 
-const names = [...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]);
+// Icons the app needs that the design canvas does not use (yet).
+const EXTRA = ["ph-eye-slash"];
+const names = [...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]).concat(EXTRA);
 const rules = names.map((cls) => {
   let base = cls.slice(3);
   const fill = base.endsWith("-fill");
