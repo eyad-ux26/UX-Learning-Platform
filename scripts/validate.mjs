@@ -1,9 +1,9 @@
 // Checks every path, unit and lesson against the content format in docs/content-format.md.
 // Exits with code 1 when anything is wrong, so CI and the preview build stop on bad content.
 import path from "node:path";
-import { loadContent, resolveRefs, CHOICE_TYPES, STEP_TYPES } from "./lib/content.mjs";
+import { loadContent, resolveRefs, scenarioOf, CHOICE_TYPES, STEP_TYPES } from "./lib/content.mjs";
 
-const PARTS = ["hook", "try", "concept", "guided", "contrast", "independent", "recap", "check"];
+const PARTS = ["hook", "try", "concept", "guided", "contrast", "independent", "recap", "check", "retest"];
 const RULE_RE = /^(R(0[1-9]|[1-3]\d|40)|U(0[1-9]|[1-5]\d|60))$/;
 const MC_RE = /^MC-P\d{2}-\d{3}$/;
 
@@ -65,19 +65,36 @@ export function validate(paths) {
       need(u.title && u.skill, `${uw}: title and skill are required`);
       need(typeof u.free === "boolean", `${uw}: free must be true or false`);
       checkText(u, uw);
-      unique(u.lessons.map((l) => l.id), uw);
-      for (const raw of u.lessons) {
+      unique([...u.lessons, ...u.bank].map((l) => l.id), uw);
+      const skillIds = (u.skills || []).map((k) => k.id);
+      unique(skillIds, `${uw} skills`);
+      for (const k of u.skills || []) {
+        need(new RegExp(`^SK-${u.id}-\\d{2}$`).test(k.id || ""), `${uw}: skill id must look like SK-${u.id}-01`);
+        need(k.title && k.can_do, `${uw} ${k.id}: skill needs title and can_do`);
+      }
+      if (!skillIds.length) warnings.push(`${uw}: no skills listed yet`);
+      const versions = Object.fromEntries(skillIds.map((id) => [id, []]));
+      for (const raw of [...u.lessons, ...u.bank]) {
         const lw = raw._file;
         const l = resolveRefs(raw, p.fixtures, errors, lw);
-        need(new RegExp(`^${u.id}-L\\d{2}$`).test(l.id || ""), `${lw}: id must look like ${u.id}-L01`);
+        const bank = l.mode === "bank";
+        need(new RegExp(`^${u.id}-${bank ? "B" : "L"}\\d{2}$`).test(l.id || ""), `${lw}: id must look like ${u.id}-${bank ? "B" : "L"}01`);
         need(path.basename(lw, ".yaml").startsWith(l.id || "?"), `${lw}: file name must start with the lesson id`);
-        need(["lesson", "check"].includes(l.mode), `${lw}: mode must be lesson or check`);
-        need(l.title && l.minutes, `${lw}: title and minutes are required`);
+        need(["lesson", "check", "bank"].includes(l.mode), `${lw}: mode must be lesson, check or bank`);
+        need(l.title && (bank || l.minutes), `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
         checkText(l, lw);
+        for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
         const steps = l.steps || [];
         unique(steps.map((s) => s.id), lw);
         const graded = steps.filter((s) => s.type !== "card" && !s.any_ok).length;
+        for (const s of steps.filter((s) => s.type !== "card" && !s.any_ok)) {
+          if (!skillIds.length) continue;
+          if (!s.skill) errors.push(`${lw} ${s.id}: graded steps need a skill from unit.yaml`);
+          else if (!versions[s.skill]) errors.push(`${lw} ${s.id}: unknown skill ${s.skill}`);
+          else versions[s.skill].push({ bank, scenario: scenarioOf(l, s) });
+          if (bank) need(s.scenario && s.part === "retest", `${lw} ${s.id}: a re-test version needs its own scenario and part: retest`);
+        }
         if (l.mode === "lesson" && (steps.length < 8 || steps.length > 12)) warnings.push(`${lw}: ${steps.length} steps (aim for 8 to 12)`);
         if (l.mode === "check" && graded < 4) warnings.push(`${lw}: a skill check should have at least 4 graded steps`);
         const conf = steps.filter((s) => s.confidence).length;
@@ -95,6 +112,10 @@ export function validate(paths) {
             continue;
           }
           need(s.prompt, `${sw}: prompt is required`);
+          if (s.ref) {
+            need(typeof s.ref.url === "string" && typeof s.ref.quote === "string" && s.ref.quote.trim(), `${sw}: ref needs url and quote`);
+            need((l.sources || []).some((x) => x.url === s.ref.url), `${sw}: ref.url must be one of the lesson's sources`);
+          }
           if (!s.any_ok) need(s.explain, `${sw}: explain is required on graded steps`);
           if (l.mode === "check" && (s.hints || []).length) warnings.push(`${sw}: hints are hidden in skill checks`);
 
@@ -154,6 +175,11 @@ export function validate(paths) {
             checkReason(s.reason, sw);
           }
         }
+      }
+      // Mastery: every skill needs 4+ versions in 4+ different scenarios, 2+ of them held back for re-tests.
+      for (const [id, v] of Object.entries(versions)) {
+        const sc = new Set(v.map((x) => x.scenario)).size, re = v.filter((x) => x.bank).length;
+        if (v.length < 4 || sc < 4 || re < 2) warnings.push(`${uw} ${id}: ${v.length} versions, ${sc} scenarios, ${re} re-tests (needs 4, 4 and 2)`);
       }
     }
   }
