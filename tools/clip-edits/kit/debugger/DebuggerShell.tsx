@@ -15,6 +15,9 @@ const EXAMPLES: Record<string, Example> = {
   chat: { name: "حكاوي", brand: "#5B3CC4", brandSoft: "#ECE8FB", onBrand: "#FFFFFF" },
   mail: { name: "بريدي", brand: "#7A1F5C", brandSoft: "#F6E6F0", onBrand: "#FFFFFF" },
   rides: { name: "مشوار", brand: "#E8590C", brandSoft: "#FFF0E6", onBrand: "#FFFFFF" },
+  volt: { name: "فولت", brand: "#C62828", brandSoft: "#FDE7E7", onBrand: "#FFFFFF" },
+  tabkha: { name: "طبخة", brand: "#6B7A1F", brandSoft: "#F1F4DC", onBrand: "#FFFFFF" },
+  khatwa: { name: "خطوة", brand: "#0F766E", brandSoft: "#DDF3F0", onBrand: "#FFFFFF" },
 };
 export const exampleFor = (address: string): Example => EXAMPLES[address.split(/[./]/)[0]] ?? EXAMPLES.shop;
 /** Light product palette plus the example's brand, for the product subtree only. */
