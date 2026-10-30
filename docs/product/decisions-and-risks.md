@@ -17,6 +17,10 @@ The plan doc "Learning Platform: Full Plan" holds the full history. This log kee
 | 29 Oct 2026 | Payments: assume Paymob (Egypt) and Paddle (elsewhere); can change later |
 | 29 Oct 2026 | Design in Claude Design; own identity, never copying Duolingo or Brilliant |
 | 29 Oct 2026 | Content PRs stay open until one interactive and one hybrid path are approved as the model |
+| 30 Oct 2026 | Colours follow the UXGate Brand Resources (navy, UXGate blue, cyan, ice, mint, night); the earlier ultraviolet and coral palette is dropped |
+| 30 Oct 2026 | The original UXGate logo stays unchanged; logo animations are added on top of it |
+| 30 Oct 2026 | Icons: Phosphor Icons, with Tabler Icons outline only where Phosphor has a gap |
+| 30 Oct 2026 | The design system also drives the lesson videos (Remotion theme and logo kit) |
 
 ## Open
 
