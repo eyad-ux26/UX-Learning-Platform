@@ -55,4 +55,4 @@ Credits: run at most two heavy threads at once (design and build). Start the ver
 
 ## Merging
 
-Content PRs stay open until one interactive and one hybrid path are approved (Eyad, 29 Oct). Product PRs (docs, design system, app code) need a merge policy so each slice builds on the last; see the open decision in the PM thread.
+Decided by Eyad on 30 October 2026: product PRs (docs, design system, app code) merge to `main` after their gate passes. Eyad merges; Claude never does. Content PRs stay open until one interactive and one hybrid path are approved as the model (29 Oct).
