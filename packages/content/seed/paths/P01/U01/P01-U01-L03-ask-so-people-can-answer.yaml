@@ -1,0 +1,463 @@
+id: P01-U01-L03
+mode: lesson
+minutes: 8
+title:
+  en: "Ask so people can answer"
+  ar: "اسأل بطريقة يستطيع الناس الإجابة عنها"
+sources:
+  - title: { en: "International Sites: Minimum Requirements (NN/g)", ar: "المواقع الدولية: الحد الأدنى من المتطلبات (NN/g)" }
+    url: "https://www.nngroup.com/articles/international-sites-requirements/"
+  - title: { en: "A Checklist for Designing Mobile Input Fields (NN/g)", ar: "قائمة تحقّق لتصميم حقول الإدخال على الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/mobile-input-checklist/"
+  - title: { en: "Few Guesses, More Success: 4 Principles to Reduce Cognitive Load in Forms (NN/g)", ar: "تخمين أقل ونجاح أكثر: 4 مبادئ لتخفيف العبء الذهني في النماذج (NN/g)" }
+    url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/"
+review_labels:
+  MC-P01-006: { en: "Not everyone's name has a first and last part", ar: "ليس لكل اسم جزء أول وجزء أخير" }
+  MC-P01-007: { en: "Let the system clean up the format, not the person", ar: "دع النظام ينظّف الصيغة، لا الشخص" }
+  MC-P01-008: { en: "Ask about the real need, in everyday words", ar: "اسأل عن الحاجة الفعلية بكلمات يومية" }
+  MC-P01-030: { en: "Write the month as a word", ar: "اكتب الشهر بالحروف" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Abdelrahman's library card", ar: "بطاقة مكتبة عبد الرحمن" }
+    body:
+      en: "Abdelrahman Mohamed El-Sayed Hassan is getting a library card. His ID shows four names: his own, his father's, his grandfather's and the family name.\n\nThe form gives him two boxes."
+      ar: "يستخرج عبد الرحمن محمد السيد حسن بطاقة مكتبة. وبطاقة هويته فيها أربعة أسماء: اسمه، واسم أبيه، واسم جدّه، واسم العائلة.\n\nوالنموذج يعطيه خانتين."
+    mock:
+      width: 300
+      blocks: &namenow
+        - { kind: title, text: "@F4a" }
+        - { kind: field, label: "@F4first", text: "", gap: m }
+        - { kind: field, label: "@F4last", text: "", gap: s }
+        - { kind: button, text: "@F4btn", gap: m }
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U01-06
+    part: try
+    rules: [R12]
+    value:
+      en: "Try first. International sites (NN/g): separate first-name and last-name fields are a prescription for confusion; some people have one name, others several. One full-name field fits every pattern."
+      ar: "جرّب أولًا. المواقع الدولية (NN/g): الحقول المنفصلة للاسم الأول واسم العائلة وصفة للارتباك؛ فبعض الناس لهم اسم واحد، وآخرون عدة أسماء. وحقل واحد للاسم الكامل يناسب كل الأنماط."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "Offering separate fields for first name and last name is a prescription for confusion." }
+    prompt:
+      en: "Try each way of asking for his name. Which one should ship?"
+      ar: "جرّب كل طريقة لطلب اسمه. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks: *namenow
+    options:
+      - id: four
+        text: { en: "Four boxes: name, father, grandfather, family", ar: "أربع خانات: الاسم، الأب، الجد، العائلة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@F4a" }
+            - { kind: field, label: { en: "First name", ar: "الاسم الأول" }, text: "", gap: m }
+            - { kind: field, label: { en: "Father's name", ar: "اسم الأب" }, text: "", gap: s }
+            - { kind: field, label: { en: "Grandfather's name", ar: "اسم الجد" }, text: "", gap: s }
+            - { kind: field, label: { en: "Family name", ar: "اسم العائلة" }, text: "", gap: s }
+            - { kind: button, text: "@F4btn", gap: m }
+      - id: full
+        text: { en: "One field: \"Full name, as on your ID\"", ar: "حقل واحد: «الاسم الكامل، كما في بطاقتك»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@F4a" }
+            - { kind: field, label: { en: "Full name, as on your ID", ar: "الاسم الكامل، كما في بطاقتك" }, filled: true, text: { en: "Abdelrahman Mohamed El-Sayed Hassan", ar: "عبد الرحمن محمد السيد حسن" }, gap: m }
+            - { kind: button, text: "@F4btn", gap: m }
+      - id: rename
+        text: { en: "Keep two boxes, renamed \"Given name\" and \"Family name\"", ar: "أبقِ خانتين، باسم «الاسم» و«اسم العائلة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: title, text: "@F4a" }
+            - { kind: field, label: { en: "Given name", ar: "الاسم" }, text: "", gap: m }
+            - { kind: field, label: { en: "Family name", ar: "اسم العائلة" }, text: "", gap: s }
+            - { kind: button, text: "@F4btn", gap: m }
+    answer: [full]
+    misconceptions:
+      - id: MC-P01-006
+        when: [four]
+        feedback:
+          en: "Four boxes fit Abdelrahman, and break for the next person: someone with two names, or five. One field fits everyone."
+          ar: "أربع خانات تناسب عبد الرحمن، وتفشل مع الشخص التالي: من له اسمان، أو خمسة. والحقل الواحد يناسب الجميع."
+      - id: MC-P01-006
+        when: [rename]
+        feedback:
+          en: "New names, same problem. Where do \"Mohamed El-Sayed\" go? He has to guess, and may not match his ID."
+          ar: "أسماء جديدة، والمشكلة نفسها. أين يكتب «محمد السيد»؟ عليه أن يخمّن، وقد لا يطابق ما يكتبه بطاقته."
+    hints:
+      - { en: "Count the names on his ID, then count the boxes.", ar: "عُدّ الأسماء في بطاقته، ثم عُدّ المربعات." }
+      - { en: "People have different numbers of names. What fits them all?", ar: "يختلف عدد الأسماء من شخص لآخر. ما الذي يناسبهم جميعًا؟" }
+    correct:
+      en: "One field, typed as on his ID."
+      ar: "حقل واحد، يُكتب كما في بطاقته."
+    explain:
+      en: "Names come in many shapes. One field lets each person write theirs exactly, and the library can still ask \"What should we call you?\" if it wants a short name."
+      ar: "الأسماء تأتي بأشكال كثيرة. والحقل الواحد يتيح لكل شخص كتابة اسمه كما هو تمامًا، وتستطيع المكتبة مع ذلك أن تسأل «بماذا نناديك؟» إذا أرادت اسمًا قصيرًا."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [form, idea, eye, clock]
+    title: { en: "Fit the question to the answer people have", ar: "اجعل السؤال يناسب الإجابة التي لدى الناس" }
+    body:
+      en: "A question is easy when it matches how people already hold the answer.\n\n- **Names:** one \"Full name\" field fits every naming pattern.\n- **Formats:** let people type a phone number the way they write it, with spaces, dashes or a country code. The system tidies it.\n- **Words:** labels should make sense at first read. If someone has to look a word up, change the word.\n- **Dates:** write the month as a word. 03/04 could be March or April."
+      ar: "يكون السؤال سهلًا حين يطابق الطريقة التي يحمل بها الناس الإجابة.\n\n- **الأسماء:** حقل واحد «الاسم الكامل» يناسب كل أنماط الأسماء.\n- **الصيغ:** دع الناس يكتبون رقم الهاتف كما يكتبونه عادة، بمسافات أو شرطات أو رمز الدولة. والنظام يرتّبه.\n- **الكلمات:** يجب أن تُفهم التسميات من أول قراءة. إذا احتاج أحد أن يبحث عن معنى كلمة، فغيّر الكلمة.\n- **التواريخ:** اكتب الشهر بالحروف. فـ 03/04 قد تعني مارس أو أبريل."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U01-07
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Mobile input checklist (NN/g): let users enter a phone number in whatever format they like, and autoformat it for them. Rejecting spaces makes people do the system's work."
+      ar: "قائمة تحقّق حقول الهاتف (NN/g): دع المستخدمين يُدخلون رقم الهاتف بأي صيغة يريدونها، ونسّقه لهم تلقائيًا. ورفض المسافات يجعل الناس يقومون بعمل النظام."
+    ref: { url: "https://www.nngroup.com/articles/mobile-input-checklist/", quote: "Do you allow users to enter it in whatever format they like?" }
+    scenario:
+      en: "Abdelrahman copies his number from his contacts: ⁦010 1234 5678⁩. The form rejects it because of the spaces."
+      ar: "ينسخ عبد الرحمن رقمه من جهات الاتصال: ⁦010 1234 5678⁩. فيرفضه النموذج بسبب المسافات."
+    prompt:
+      en: "Try each fix. Which one should ship?"
+      ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, tone: bad, label: "@F1phone", filled: true, text: "⁦010 1234 5678⁩", error: { en: "Invalid number.", ar: "رقم غير صالح." } }
+    options:
+      - id: hint
+        text: { en: "Add a hint: \"Digits only, no spaces\"", ar: "أضف تلميحًا: «أرقام فقط، بدون مسافات»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1phone", text: "", hint: { en: "Digits only, no spaces.", ar: "أرقام فقط، بدون مسافات." } }
+      - id: boxes
+        text: { en: "Split it into three boxes: 3, 4 and 4 digits", ar: "قسّمه إلى ثلاث خانات: 3 و4 و4 أرقام" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: small, text: "@F1phone" }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: field, text: "010" }
+                - { kind: field, text: "" }
+                - { kind: field, text: "" }
+      - id: accept
+        text: { en: "Accept it as typed; the system removes the spaces", ar: "اقبله كما كُتب؛ والنظام يحذف المسافات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1phone", filled: true, text: "⁦010 1234 5678⁩" }
+            - { kind: small, color: green, text: { en: "✓ Saved as 01012345678", ar: "✓ حُفظ هكذا: 01012345678" }, gap: xs }
+    answer: [accept]
+    misconceptions:
+      - id: MC-P01-007
+        when: [hint]
+        feedback:
+          en: "The number was never wrong. Now Abdelrahman has to delete the spaces by hand, on a phone keyboard. Let the system do it."
+          ar: "الرقم لم يكن خاطئًا أصلًا. والآن على عبد الرحمن أن يحذف المسافات بيده، على لوحة مفاتيح الهاتف. دع النظام يفعل ذلك."
+      - id: MC-P01-007
+        when: [boxes]
+        feedback:
+          en: "He can't paste the number in one go any more, and he has to jump between boxes. One field, any format."
+          ar: "لم يعد يستطيع لصق الرقم دفعة واحدة، وعليه أن يتنقّل بين الخانات. حقل واحد، بأي صيغة."
+    hints:
+      - { en: "Who should remove the spaces: Abdelrahman or the system?", ar: "من يجب أن يزيل المسافات: عبد الرحمن أم النظام؟" }
+      - { en: "A hint or extra boxes still make him change the way he writes it.", ar: "التلميح أو المربعات الإضافية ما زالت تجبره على تغيير طريقة كتابته." }
+    correct:
+      en: "Accept the way people write it."
+      ar: "اقبل الطريقة التي يكتب بها الناس."
+    explain:
+      en: "People copy numbers from contacts and messages, spaces included. Removing spaces is a simple job for the system and an annoying one for a person."
+      ar: "ينسخ الناس الأرقام من جهات الاتصال والرسائل، بالمسافات. وحذف المسافات مهمة بسيطة للنظام ومزعجة للإنسان."
+
+  - id: S05
+    type: tune
+    skill: SK-P01-U01-08
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Cognitive load in forms (NN/g): labels and instructions should be immediately understandable; plain language helps everyone. Internal terms need a translation, not a tooltip."
+      ar: "العبء الذهني في النماذج (NN/g): يجب أن تُفهم التسميات والتعليمات فورًا؛ واللغة البسيطة تساعد الجميع. والمصطلحات الداخلية تحتاج إلى ترجمة، لا إلى تلميح منبثق."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "Form labels and instructions should be immediately understandable." }
+    scenario:
+      en: "The library's form asks for a \"Patron classification\": A, B or C. Staff know that B means students and under-18s, who get the card free."
+      ar: "يطلب نموذج المكتبة «تصنيف المستفيد»: A أو B أو C. ويعرف الموظفون أن B تعني الطلاب ومن هم دون 18 عامًا، وهؤلاء يحصلون على البطاقة مجانًا."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: code
+    options:
+      - id: plain
+        text: { en: "Ask the real question in everyday words", ar: "اطرح السؤال الحقيقي بكلمات يومية" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Are you a student, or under 18?", ar: "هل أنت طالب، أو عمرك أقل من 18 عامًا؟" } }
+            - { kind: small, text: { en: "If yes, your card is free.", ar: "إذا كانت الإجابة نعم، فبطاقتك مجانية." }, gap: xs }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: chip, text: { en: "Yes", ar: "نعم" } }
+                - { kind: chip, text: { en: "No", ar: "لا" } }
+      - id: code
+        text: { en: "Keep the classification, with an ⓘ that explains it", ar: "أبقِ التصنيف، مع ⓘ يشرحه" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Patron classification ⓘ", ar: "تصنيف المستفيد ⓘ" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: chip, text: "A" }
+                - { kind: chip, text: "B" }
+                - { kind: chip, text: "C" }
+      - id: table
+        text: { en: "Keep it, with a table of the categories above", ar: "أبقِه، مع جدول للتصنيفات في الأعلى" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, text: { en: "A: adults · B: students and under-18s · C: visitors from other cities", ar: "A: البالغون · B: الطلاب ومن هم دون 18 · C: الزوّار من مدن أخرى" } }
+            - { kind: small, weight: bold, text: { en: "Patron classification", ar: "تصنيف المستفيد" }, gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: chip, text: "A" }
+                - { kind: chip, text: "B" }
+                - { kind: chip, text: "C" }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P01-008
+        when: [code]
+        feedback:
+          en: "The label still means nothing until Abdelrahman finds and opens the ⓘ. Ask in words he already understands."
+          ar: "التسمية ما زالت بلا معنى حتى يجد عبد الرحمن الـ ⓘ ويفتحه. اسأل بكلمات يفهمها بالفعل."
+      - id: MC-P01-008
+        when: [table]
+        feedback:
+          en: "Now he reads a table, translates it, and remembers the letter. The library only needs to know one thing: student or under 18?"
+          ar: "الآن يقرأ جدولًا، ويترجمه، ويتذكّر الحرف. والمكتبة تحتاج معرفة شيء واحد فقط: طالب أو دون 18؟"
+    hints:
+      - { en: "Would Abdelrahman understand this classification at first read?", ar: "هل سيفهم عبد الرحمن هذا التصنيف من أول قراءة؟" }
+      - { en: "What does the library really want to know about him?", ar: "ما الذي تريد المكتبة معرفته عنه فعلًا؟" }
+    correct:
+      en: "Ask what you need to know, in his words."
+      ar: "اسأل عمّا تحتاج معرفته، بكلماته هو."
+    explain:
+      en: "Internal codes make sense to staff. A plain question gets the same answer, faster, and tells him why it matters: the card is free."
+      ar: "الرموز الداخلية مفهومة للموظفين. والسؤال البسيط يحصل على الإجابة نفسها، أسرع، ويخبره لماذا يهم: البطاقة مجانية."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U01-08
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "International sites (NN/g): for dates, always spell out the name of the month. A numeric date like 03/04 reads as March or April depending on where you're from."
+      ar: "المواقع الدولية (NN/g): في التواريخ، اكتب اسم الشهر دائمًا. فالتاريخ الرقمي مثل 03/04 يُقرأ مارس أو أبريل حسب بلدك."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "For dates, the main guideline is: Always spell out the name of the month." }
+    scenario:
+      en: "Abdelrahman picks his date of birth, 3 April 2005, from a calendar. The field then shows the date he picked so he can check it."
+      ar: "يختار عبد الرحمن تاريخ ميلاده، 3 أبريل 2005، من تقويم. ثم يعرض الحقل التاريخ الذي اختاره ليتحقّق منه."
+    prompt:
+      en: "Try each way of showing the date. Which one should ship?"
+      ar: "جرّب كل طريقة لعرض التاريخ. أيّها يجب أن تُطلق؟"
+    start: slash
+    options:
+      - id: slash
+        text: { en: "03/04/2005", ar: "03/04/2005" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1dob", filled: true, text: "03/04/2005" }
+      - id: iso
+        text: { en: "2005-04-03", ar: "2005-04-03" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1dob", filled: true, text: "2005-04-03" }
+      - id: words
+        text: { en: "3 April 2005", ar: "3 أبريل 2005" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1dob", filled: true, text: { en: "3 April 2005", ar: "3 أبريل 2005" } }
+    answer: [words]
+    misconceptions:
+      - id: MC-P01-030
+        when: [slash]
+        feedback:
+          en: "Is that 3 April or 4 March? It depends on the country the reader learned dates in. He can't be sure he picked the right day."
+          ar: "هل هو 3 أبريل أم 4 مارس؟ يعتمد ذلك على البلد الذي تعلّم فيه القارئ التواريخ. فلا يستطيع التأكّد أنه اختار اليوم الصحيح."
+      - id: MC-P01-030
+        when: [iso]
+        feedback:
+          en: "Clear to a database, but most people don't read dates that way, and the middle number still needs decoding. Write the month."
+          ar: "واضح لقاعدة البيانات، لكن أغلب الناس لا يقرؤون التواريخ هكذا، والرقم الأوسط ما زال يحتاج إلى فكّ. اكتب الشهر."
+    hints:
+      - { en: "Read 03/04/2005 the way someone from another country might.", ar: "اقرأ 03/04/2005 كما قد يقرؤها شخص من بلد آخر." }
+      - { en: "Which format can be read only one way?", ar: "أي صيغة لا تُقرأ إلا بطريقة واحدة؟" }
+    correct:
+      en: "Write the month as a word."
+      ar: "اكتب الشهر بالحروف."
+    explain:
+      en: "\"3 April 2005\" has only one reading, in any country. It costs a few more characters and removes all doubt."
+      ar: "«3 أبريل 2005» لها قراءة واحدة فقط، في أي بلد. وتكلّف حروفًا قليلة إضافية وتُزيل كل شك."
+
+  - id: S07
+    type: compare
+    skill: SK-P01-U01-07
+    part: contrast
+    confidence: true
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S04: accepting spaces is not the whole job. International sites (NN/g): allow international phone numbers with a varying number of digits and a country code."
+      ar: "مقارنة مع الخطوة 4: قبول المسافات ليس كل المطلوب. المواقع الدولية (NN/g): اسمح بأرقام الهواتف الدولية بعدد أرقام متغيّر ورمز دولة."
+    ref: { url: "https://www.nngroup.com/articles/international-sites-requirements/", quote: "For phone numbers, allow for international numbers containing a varying number of digits and a country code." }
+    scenario:
+      en: "The library asks for an emergency contact. Abdelrahman's brother works abroad, and his number starts with a country code. Both forms accept spaces."
+      ar: "تطلب المكتبة رقمًا للطوارئ. وأخو عبد الرحمن يعمل في الخارج، ورقمه يبدأ برمز دولة. والنموذجان يقبلان المسافات."
+    prompt:
+      en: "Which emergency contact field should ship?"
+      ar: "أي حقل لرقم الطوارئ يجب أن يُطلق؟"
+    a:
+      mock:
+        width: 300
+        blocks:
+          - { kind: field, tone: bad, label: "@F1emerg", filled: true, text: "⁦+971 50 123 4567⁩", error: { en: "Use 11 digits starting with 0.", ar: "استخدم 11 رقمًا تبدأ بـ 0." } }
+    b:
+      mock:
+        width: 300
+        blocks:
+          - { kind: field, label: "@F1emerg", filled: true, text: "⁦+971 50 123 4567⁩" }
+          - { kind: small, color: green, text: { en: "✓ Saved", ar: "✓ تم الحفظ" }, gap: xs }
+    answer: b
+    reason:
+      prompt: { en: "What does A get wrong, even though it accepts spaces?", ar: "ما خطأ A، مع أنه يقبل المسافات؟" }
+      options:
+        - { id: local, text: { en: "It assumes every number is a local mobile", ar: "يفترض أن كل رقم موبايل محلي" } }
+        - { id: plus, text: { en: "The + sign is not a digit", ar: "علامة + ليست رقمًا" } }
+        - { id: long, text: { en: "The error message is too long", ar: "رسالة الخطأ طويلة جدًا" } }
+      answer: [local]
+      misconceptions:
+        - id: MC-P01-007
+          when: [plus, long]
+          feedback:
+            en: "The real problem is the rule: 11 digits starting with 0 fits only local numbers. Real contacts can be anywhere."
+            ar: "المشكلة الحقيقية هي القاعدة: 11 رقمًا تبدأ بـ 0 تناسب الأرقام المحلية فقط. وجهات الاتصال الحقيقية قد تكون في أي مكان."
+    misconceptions:
+      - id: MC-P01-007
+        when: [a]
+        feedback:
+          en: "A is flexible about spaces but still rejects a real number. Abdelrahman can't give the contact he actually has."
+          ar: "A مرن مع المسافات لكنه ما زال يرفض رقمًا حقيقيًا. فلا يستطيع عبد الرحمن إعطاء جهة الاتصال التي لديه فعلًا."
+    hints:
+      - { en: "Look at his brother's number: how does it start, and how long is it?", ar: "انظر إلى رقم أخيه: بماذا يبدأ، وكم طوله؟" }
+      - { en: "Both accept spaces. What else does a number from abroad need?", ar: "كلا النموذجين يقبل المسافات. ماذا يحتاج الرقم من الخارج أيضًا؟" }
+    correct:
+      en: "Flexible format and flexible length."
+      ar: "صيغة مرنة وطول مرن."
+    explain:
+      en: "Check that a number is a phone number, not that it looks like yours. Country codes and different lengths are normal."
+      ar: "تحقّق من أن الرقم رقم هاتف، لا من أنه يشبه أرقام بلدك. فرموز الدول والأطوال المختلفة أمر طبيعي."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U01-08
+    part: independent
+    rules: [R14, R19]
+    value:
+      en: "New case. Cognitive load in forms (NN/g): ambiguity slows users down. Laila's booking form mixes an internal term, a strict phone format and split name fields."
+      ar: "حالة جديدة. العبء الذهني في النماذج (NN/g): الغموض يُبطئ المستخدمين. ونموذج حجز ليلى يجمع مصطلحًا داخليًا وصيغة هاتف صارمة وحقلين منفصلين للاسم."
+    ref: { url: "https://www.nngroup.com/articles/4-principles-reduce-cognitive-load/", quote: "Ambiguity slows users down." }
+    scenario:
+      en: "Laila is booking a home cleaning. The company needs her name, her phone, and the size of her flat to send the right team."
+      ar: "تحجز ليلى خدمة تنظيف منزلي. وتحتاج الشركة اسمها وهاتفها وحجم شقتها لترسل الفريق المناسب."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      width: 300
+      blocks:
+        - { kind: field, label: "@F4first", text: "" }
+        - { kind: field, label: "@F4last", text: "", gap: s }
+        - { kind: field, label: "@F1phone", text: "", hint: { en: "Format: 01XXXXXXXXX", ar: "الصيغة: 01XXXXXXXXX" }, gap: s }
+        - { kind: field, label: { en: "Unit typology", ar: "تصنيف الوحدة" }, text: "", gap: s }
+    options:
+      - id: help
+        text: { en: "Keep the fields; add help text under each one", ar: "أبقِ الحقول؛ وأضف نصًا توضيحيًا تحت كل واحد" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F4first", text: "", hint: { en: "Your first given name", ar: "اسمك الأول" } }
+            - { kind: field, label: "@F4last", text: "", hint: { en: "Your family name only", ar: "اسم العائلة فقط" }, gap: s }
+            - { kind: field, label: "@F1phone", text: "", hint: { en: "Format: 01XXXXXXXXX, no spaces", ar: "الصيغة: 01XXXXXXXXX، بدون مسافات" }, gap: s }
+            - { kind: field, label: { en: "Unit typology", ar: "تصنيف الوحدة" }, text: "", hint: { en: "S1, S2 or S3, by floor area", ar: "S1 أو S2 أو S3، حسب المساحة" }, gap: s }
+      - id: name
+        text: { en: "Fix only the name; one Full name field", ar: "أصلِح الاسم فقط؛ حقل واحد للاسم الكامل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1name", text: "" }
+            - { kind: field, label: "@F1phone", text: "", hint: { en: "Format: 01XXXXXXXXX", ar: "الصيغة: 01XXXXXXXXX" }, gap: s }
+            - { kind: field, label: { en: "Unit typology", ar: "تصنيف الوحدة" }, text: "", gap: s }
+      - id: plain
+        text: { en: "One name field, any phone format, and ask how many bedrooms", ar: "حقل اسم واحد، وأي صيغة للهاتف، واسأل عن عدد غرف النوم" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          width: 300
+          blocks:
+            - { kind: field, label: "@F1name", text: "" }
+            - { kind: field, label: "@F1phone", text: "", gap: s }
+            - { kind: small, weight: bold, text: { en: "How many bedrooms?", ar: "كم عدد غرف النوم؟" }, gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: chip, text: "1" }
+                - { kind: chip, text: "2" }
+                - { kind: chip, text: "3" }
+                - { kind: chip, text: "4+" }
+    answer: [plain]
+    misconceptions:
+      - id: MC-P01-008
+        when: [help]
+        feedback:
+          en: "Help text explains the problems instead of removing them. Laila still has to split her name, strip spaces and decode \"S2\"."
+          ar: "النص التوضيحي يشرح المشكلات بدل أن يُزيلها. فما زال على ليلى أن تقسم اسمها، وتحذف المسافات، وتفكّ «S2»."
+      - id: MC-P01-008
+        when: [name]
+        feedback:
+          en: "The name is fixed, but \"Unit typology\" still means nothing to her, and the phone still has to be typed the system's way."
+          ar: "الاسم أُصلح، لكن «تصنيف الوحدة» ما زال بلا معنى لها، والهاتف ما زال يجب أن يُكتب بطريقة النظام."
+    hints:
+      - { en: "Check all three questions, not just one: name, phone and flat size.", ar: "افحص الأسئلة الثلاثة لا سؤالًا واحدًا: الاسم والهاتف ومساحة الشقة." }
+      - { en: "Help text explains a hard question. Could the questions be easy instead?", ar: "النص المساعد يشرح سؤالًا صعبًا. هل يمكن أن تكون الأسئلة سهلة بدلًا من ذلك؟" }
+    correct:
+      en: "Every question in her words."
+      ar: "كل سؤال بكلماتها هي."
+    explain:
+      en: "Laila knows her name, her number and how many bedrooms she has. The company turns that into its own codes behind the scenes."
+      ar: "تعرف ليلى اسمها ورقمها وعدد غرف نومها. والشركة تحوّل ذلك إلى رموزها الخاصة في الخلفية."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [form, idea, eye, clock]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **One name field:** let every name fit, as written on the ID.\n- **Any format:** accepted the phone number as typed, and let the system tidy it.\n- **Everyday words:** replaced an internal code with the real question.\n- **Months in words:** wrote dates that have only one reading.\n- **Any country:** accepted country codes and different lengths.\n\nNext: the unit skill check."
+      ar: "- **حقل اسم واحد:** جعلت كل اسم يتّسع، كما هو مكتوب في البطاقة.\n- **أي صيغة:** قبلت رقم الهاتف كما كُتب، وتركت النظام يرتّبه.\n- **كلمات يومية:** استبدلت رمزًا داخليًا بالسؤال الحقيقي.\n- **الشهر بالحروف:** كتبت تواريخ لها قراءة واحدة فقط.\n- **أي بلد:** قبلت رموز الدول والأطوال المختلفة.\n\nالتالي: اختبار المهارة للوحدة."
