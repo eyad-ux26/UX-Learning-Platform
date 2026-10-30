@@ -23,3 +23,14 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - name: Accessibility and keyboard checks
+        working-directory: apps/web
+        env:
+          UG_DEV_FIXTURE: "1"
+        run: |
+          npm i --no-save --no-package-lock playwright@1.63.0 > /dev/null
+          npx playwright install --with-deps chromium
+          npx next start -p 3100 &
+          npx wait-on -t 60000 http://localhost:3100/en
+          node scripts/a11y.mjs
+          node scripts/keyboard.mjs
