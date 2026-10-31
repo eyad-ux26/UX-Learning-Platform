@@ -29,6 +29,8 @@ UXGate borrows ideas from design tools, never their look. Lessons sit on a 16 px
 
 Mobile (390 wide) and desktop (1440 wide), each in English light and Arabic night: landing, sign up, onboarding, home, path map, lesson step (selected, wrong with hint, right), tune step and compare step (selected, wrong with hint, right; compare also shows the reason question) and lesson end. The clickable flow switches device, language, theme and sound.
 
+The lesson preview card on the landing works: the visitor picks B or C and taps Check (disabled until a pick), sees the right or wrong feedback in the card, and on a right answer gets +10 XP and "Keep going" into the free sample lesson; a wrong answer offers Try again.
+
 Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
 
 ## Slice 2: the full lesson player
