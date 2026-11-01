@@ -31,6 +31,8 @@ Mobile (390 wide) and desktop (1440 wide), each in English light and Arabic nigh
 
 The lesson preview card on the landing works: the visitor picks B or C and taps Check (disabled until a pick), sees the right or wrong feedback in the card, and on a right answer gets +10 XP and "Keep going" into the free sample lesson; a wrong answer offers Try again.
 
+Landing header and hero (approved 1 November): Sign in uses the neutral outline button (`.btn-neutral`), the language switch the quiet neutral button (`.btn-quiet`), and the hero title the neutral ink (`--ink-neutral`), in both themes; a "You" cursor tag sits in the mobile hero. The main call to action stays brand blue.
+
 The desktop home has no search bar: learner search is not planned yet, so it was removed rather than shipped as a box that does nothing.
 
 Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
