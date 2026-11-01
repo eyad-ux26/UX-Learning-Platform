@@ -130,7 +130,7 @@ As a guest, I want to create an account the way I prefer, so that my progress is
 
 As a new learner, I want a quick start that picks a path for me, so that I begin practising in under a minute.
 
-- Three questions (goal, level, weekly time), skippable; a recommended path with the reason; any path can be chosen. The chosen path is joined and becomes the current path (spec §4.4b).
+- Three questions (goal, level, weekly time), skippable; a recommended path with the reason; any path with content can be chosen through "See all paths" (same list as the Paths tab). The chosen path is joined and becomes the current path; a guest arrives with P01 preselected (spec §4.4b).
 - Daily goal (1, 2 or 3 lessons) and reminder time saved to the profile.
 
 ### EN-05 Public landing and path pages · 5 pts

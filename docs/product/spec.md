@@ -82,7 +82,7 @@ A learner can join any number of paths. One of them is the **current path**, and
 | --- | --- |
 | Paths tab | Lists all 13 paths: name, subtitle, interactive or hybrid, unit count, and my progress. Joined paths come first. Paths without content show "Coming soon" and can't be started. |
 | Choosing a path | Opening a path shows its map. "Start this path" joins it and makes it current; "Continue" on a joined path makes it current. Nothing is lost on other paths. |
-| Onboarding and guest | The path the learner picks in onboarding is joined and made current. A guest who signs up after the sample lesson gets P01 as current, with the sample's result kept. |
+| Onboarding and guest | The recommendation picks only from paths that have content, and says why. "See all paths" opens the same list as the Paths tab, where Coming soon paths can't be picked. The learner picks one path to start, and it is joined and made current; they can add more paths later from the Paths tab. A learner who already has paths and skips onboarding keeps their current path. A guest who signs up after the sample lesson goes through onboarding with P01 preselected and the sample's result kept. |
 | Home | The main action is the next lesson in the current path, with the path's name. A "Your paths" row shows the other joined paths with progress and a one-tap switch. The resume card names the lesson's path and can be in any path. Review due counts skills from all paths. |
 | Path map | Shows the path that was opened. Its header has a path switcher. |
 | Lesson end | "Next lesson" stays in the same path. Finishing a path's last unit suggests choosing a next path. |
