@@ -35,6 +35,8 @@
 
 ## Round 2: full visual review (1 November 2026, canvas v33)
 
+Screenshots: https://claude.ai/artifact/MNTp13Ua11fr7PQKKLp5Fg. **Eyad's decision (1 Nov):** apply 1–7 and 10, and drop the ungraded try-first (option A for 5). Leave 8 and 9 as designed. Sent to the design thread as one batch.
+
 Eyad asked for every comment. I rendered all 17 slice 2 rows (mobile EN light and AR night for every state, plus desktop samples) and went through them screen by screen. The local render can't load the canvas's uploaded images, illustrations or icon font, so those weren't checked here.
 
 ### Fix before the build
