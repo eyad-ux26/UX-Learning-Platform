@@ -1,7 +1,7 @@
 // Plays a lesson using only the keyboard (Tab, Space, Enter) to prove it can be done without a mouse.
 // Start the app first (UG_DEV_FIXTURE=1 npx next start -p 3100), then: node scripts/keyboard.mjs [baseUrl] [locale]
 import { createRequire } from "node:module";
-const { chromium } = createRequire(import.meta.url)("playwright");
+const { chromium } = createRequire(import.meta.url)("playwright-core");
 
 const base = process.argv[2] ?? "http://localhost:3100";
 const locale = process.argv[3] ?? "en";
