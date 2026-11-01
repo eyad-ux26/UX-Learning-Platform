@@ -37,7 +37,7 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 
 - Production on Supabase Pro with daily backups, and a Vercel spend cap set.
 - Check every service price against its official price page, because the stack review's numbers come from memory and third-party summaries.
-- **Budget decision for Eyad:** running costs are estimated at about $60–70 a month in beta and about $150–250 a month at 1k–10k learners, above the $100 budget. Eyad decides, tied to the revenue plan, before the beta opens.
+- **Budget decision for Eyad:** running costs depend on active learners: about $60–100 a month below about 3,000 learners and about $120–200 a month at about 10k learners, which can pass the $100 budget. Eyad decides, tied to the revenue plan, before the beta opens.
 
 ### Admin start
 
