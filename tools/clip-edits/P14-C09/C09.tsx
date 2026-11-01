@@ -6,14 +6,16 @@ import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { FocusDim, Selection } from "../debugger/Inspect";
 import { IconAlert, IconCheck, IconEye, IconSearch, IconText, IconUser } from "../components/Icons";
 import { enter, exit, span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, L, ListCard, PH, PhoneFrame, phoneRect, Presenter, RecapCard, SideNote, TitleBand, v, Voice, wi } from "./p14";
+import { CaseChip, clipFrames, Header, IntroCard, L, ListCard, PH, PhoneFrame, phoneRect, Presenter, RecapCard, SideNote, TitleBand, Voice, wi, cutSec, cutsOf, vCut } from "./p14";
 
 /*
  * P14-C09 re-edit: WP 24 "filter categories and values" (90.95–458.72 s). A shoe store's filter panel shows what a
  * category and a value are, then each of the four rules: appropriate, predictable, free of jargon, prioritized.
  */
 const VOICE = 367.77;
-export const C09_FRAMES = clipFrames(VOICE);
+const v = vCut("c09");
+const VOICE_CUT = cutSec(VOICE, cutsOf("c09"));
+export const C09_FRAMES = clipFrames(VOICE_CUT);
 
 type Sec = { t: string; vals: string[]; open: number; o?: number; bad?: boolean; info?: boolean; struck?: number[] };
 const HEAD = 46;
@@ -210,7 +212,7 @@ export const C09: React.FC = () => {
       <Voice src="c09/voice.m4a" />
       <IntroCard title="أسماء Filters واضحة، والأهم أولًا" sub="Filters" points={["Category و Value", "4 قواعد"]} />
       <RecapCard
-        voiceSec={VOICE}
+        voiceSec={VOICE_CUT}
         title="Filters يحتاجها الناس ويفهمونها"
         items={[
           { text: "Categories و Values يحتاجها الناس فعلًا" },

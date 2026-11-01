@@ -155,5 +155,18 @@ export const CUTS: Record<string, { cuts: Cuts; covers: Cover[] }> = {
     "c12/still4.png"
    ]
   ]
+ },
+ "c09": {
+  "cuts": [
+   [
+    65.05,
+    69.8
+   ],
+   [
+    81.02,
+    83.41
+   ]
+  ],
+  "covers": []
  }
 };
