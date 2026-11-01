@@ -193,6 +193,15 @@ As a learner, I want to see my next lesson and where I am in the path, so that I
 - Home: next lesson as the main action, today's goal, streak, review due, current path.
 - Path map: units, lesson states, skill states; locked units say why and how to unlock them.
 
+### EN-11b Browse and switch paths · 3 pts
+
+As a learner, I want to see every path and choose which one I'm working on, so that I can follow what I need now.
+
+- The Paths tab lists all 13 paths with name, subtitle, interactive or hybrid, unit count and my progress on each. Paths without content yet show "Coming soon" and can't be started.
+- Opening a path shows its map. "Start this path" or "Continue" makes it my current path; home then follows it. Progress on other paths is kept.
+- Unit 1 of every path is free. Units after that follow the subscription rule.
+- Works in both languages and directions, on mobile and desktop. The design is in slice 3 and the build in sprint 4.
+
 ### EN-12 Skill checks and mastery round · 5 pts
 
 As a learner, I want to prove a skill on a new case, so that my progress means I can really do it.
