@@ -36,6 +36,10 @@ All of these run in CI and must pass.
 - [ ] Dependencies: `npm audit` with no high or critical issues; lockfile committed
 - [ ] Secrets only in Vercel and Supabase settings; none in the repo or its history
 
+## 2b. Tech gate
+
+Run the tech gate in `docs/delivery/definition-of-done.md`: Next.js on a patched release with Dependabot on, no access control in middleware alone, RLS cross-learner tests passing, page load under 2.5 s on a mid-range Android phone on 4G (Vercel Speed Insights), Supabase in eu-central-1 and Vercel functions in `fra1`.
+
 ## 3. Manual checks
 
 - Keyboard-only and screen-reader (VoiceOver or NVDA) run through sign up → lesson end, in both languages

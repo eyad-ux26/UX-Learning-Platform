@@ -55,7 +55,7 @@ Pricing, paywall, checkout result, billing and plan management, cancel and refun
 
 ### Sprint 7 · Web app release candidate
 
-QA-01 accessibility audit, QA-02 security audit, performance pass, full regression in both languages and themes, PM-02 beta plan. PM writes the admin panel requirements (sprint 6) so the admin design can start in sprint 8.
+QA-01 accessibility audit, QA-02 security audit, performance pass, full regression in both languages and themes, PM-02 beta plan. PM writes the admin panel requirements (sprint 6), starting with a Payload CMS versus custom admin comparison for Eyad, so the admin design can start in sprint 8. Beta gate: Supabase Pro with daily backups, a Vercel spend cap, prices checked against the official pages, and Eyad's budget decision (see process.md).
 
 ### Admin panel · waterfall · sprints 8–13
 

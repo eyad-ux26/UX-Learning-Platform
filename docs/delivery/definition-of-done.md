@@ -17,3 +17,13 @@
 - Learner data is protected by RLS, with a test when a new table is added.
 - Docs updated where behaviour changed (spec, architecture or data model).
 - An admin reviewed and approved the PR. Claude never merges on its own.
+
+## Tech gate (every slice, checked by the verify thread)
+
+Added 1 November 2026 from the stack review (https://claude.ai/artifact/9g1GkaEXm2mip4BsMPof8F).
+
+- Next.js is on a patched release and Dependabot is on.
+- No access control lives in middleware alone; every protected route and API checks the session on the server, and RLS backs it.
+- RLS cross-learner tests pass: one learner cannot read or write another's rows.
+- Performance: page load under 2.5 s on a mid-range Android phone on 4G, measured with Vercel Speed Insights on the preview.
+- Infra: Supabase in Frankfurt (eu-central-1) and Vercel functions in `fra1`.
