@@ -160,6 +160,7 @@ As a learner, I want to play a lesson step by step, so that I practise one decis
 - Step types: card, choose (with reason), predict, words, fix, tune.
 - Confidence tap on the steps that ask for it.
 - Keyboard and screen reader work for every step; step change under 100 ms on a mid-range Android phone.
+- Closing a lesson after the first answer opens a confirmation (sheet on mobile, dialog on desktop): "Leave this lesson?", "Your answers are saved", Keep learning (primary) and Leave lesson. Before any answer, close leaves at once. Esc or back closes the confirmation. Design: canvas page 6, S2-8 Exit and resume (slice 2).
 
 ### EN-08 More step types · 5 pts
 
