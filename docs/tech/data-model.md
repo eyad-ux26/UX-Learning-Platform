@@ -19,9 +19,9 @@ Postgres on Supabase. All tables have `created_at` and, where they change, `upda
 
 | Table | Key columns | Notes |
 | --- | --- | --- |
-| `profiles` | `user_id` (auth.users), `display_name`, `handle`, `locale`, `theme`, `time_zone`, `daily_goal`, `reminder_time`, `achievement_page` bool, `deleted_at` | Created by trigger |
+| `profiles` | `user_id` (auth.users), `display_name`, `handle`, `locale`, `theme`, `time_zone`, `daily_goal`, `reminder_time`, `achievement_page` bool, `current_path_id`, `deleted_at` | Created by trigger. `current_path_id` must match one of the learner's `enrollments` (spec §4.4b) |
 | `onboarding` | `user_id`, `goal`, `experience`, `weekly_time`, `recommended_path_id` | |
-| `enrollments` | `user_id`, `path_id`, `started_at`, `current_lesson_id` | |
+| `enrollments` | `user_id`, `path_id`, `started_at`, `current_lesson_id`, `last_active_at` | One row per joined path; unique (`user_id`, `path_id`) |
 | `attempts` | `id`, `user_id` (nullable for guest until claimed), `guest_key`, `lesson_id`, `content_version_id`, `started_at`, `finished_at`, `kind` (lesson, check, mastery, review) | |
 | `step_results` | `id`, `attempt_id`, `step_id`, `skill_id`, `try_no`, `answer` jsonb, `correct` bool, `confidence`, `hints_used`, `revealed` bool, `outcome` (independent, supported, revealed), `misconception_id`, `client_ts`, `idempotency_key` unique | First try always kept |
 | `skill_states` | `user_id`, `skill_id`, `state` (practiced, shown, kept), `shown_at`, `kept_at`, `next_review_at` | |

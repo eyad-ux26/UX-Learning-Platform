@@ -130,7 +130,7 @@ As a guest, I want to create an account the way I prefer, so that my progress is
 
 As a new learner, I want a quick start that picks a path for me, so that I begin practising in under a minute.
 
-- Three questions (goal, level, weekly time), skippable; a recommended path with the reason; any path can be chosen.
+- Three questions (goal, level, weekly time), skippable; a recommended path with the reason; any path can be chosen. The chosen path is joined and becomes the current path (spec §4.4b).
 - Daily goal (1, 2 or 3 lessons) and reminder time saved to the profile.
 
 ### EN-05 Public landing and path pages · 5 pts
@@ -193,14 +193,21 @@ As a learner, I want to see my next lesson and where I am in the path, so that I
 - Home: next lesson as the main action, today's goal, streak, review due, current path.
 - Path map: units, lesson states, skill states; locked units say why and how to unlock them.
 
-### EN-11b Browse and switch paths · 3 pts
+### EN-11b Browse and switch paths · 5 pts
 
 As a learner, I want to see every path and choose which one I'm working on, so that I can follow what I need now.
 
-- The Paths tab lists all 13 paths with name, subtitle, interactive or hybrid, unit count and my progress on each. Paths without content yet show "Coming soon" and can't be started.
-- Opening a path shows its map. "Start this path" or "Continue" makes it my current path; home then follows it. Progress on other paths is kept.
-- Unit 1 of every path is free. Units after that follow the subscription rule.
-- Works in both languages and directions, on mobile and desktop. The design is in slice 3 and the build in sprint 4.
+Follows the rules in spec §4.4b (Several paths). Checks:
+
+- The Paths tab lists all 13 paths with name, subtitle, interactive or hybrid, unit count and my progress. Joined paths come first. Paths without content show "Coming soon" and can't be started.
+- "Start this path" joins the path and makes it current. "Continue" on a joined path makes it current. Progress on other paths is kept.
+- Home follows the current path, and its "Your paths" row switches with one tap. The resume card names its path. The path map header has a switcher.
+- Lesson end's "Next lesson" stays in the same path. The last unit of a path suggests choosing a next path.
+- Profile shows totals across paths, one card per joined path, and certificates per path.
+- XP, goal and streak count lessons from any path. The review queue mixes paths and labels each card with its path.
+- The daily reminder points to the current path's next lesson.
+- `profiles.current_path_id` and one `enrollments` row per path, with RLS. Switching is logged.
+- Works in both languages and directions, on mobile and desktop. Design in slice 3, build in sprint 4.
 
 ### EN-12 Skill checks and mastery round · 5 pts
 
@@ -215,7 +222,7 @@ As a learner, I want to prove a skill on a new case, so that my progress means I
 As a learner, I want calm rewards for real effort, so that I keep coming back without pressure.
 
 - XP 10 / 5 / 0 for independent, supported and revealed answers.
-- Daily goal and streak; up to 2 freezes earned; no loss-framed messages.
+- Daily goal and streak; up to 2 freezes earned; no loss-framed messages. XP, goal and streak count lessons from any path.
 - Skill badges at Shown and Kept. Each number explains why it changed.
 
 ### EN-14 Video steps · 3 pts
@@ -281,7 +288,7 @@ As a content editor, I want statistics per step and variant, so that I can fix w
 
 As a support agent, I want to find a learner and fix their problem, so that support is fast.
 
-- Search by email or name; see account, progress, attempts, subscription and emails sent.
+- Search by email or name; see account, joined paths with the current one and progress per path, attempts, subscription and emails sent.
 - Reset progress, restore streak, grant access; answer appeals, with accepted appeals re-scoring the attempt.
 
 ### AD-05 Prices and refunds · 3 pts
@@ -298,19 +305,19 @@ As an owner, I want to manage prices and refunds, so that billing matches our ru
 
 As a learner, I want reminders I chose, so that I keep my habit without spam.
 
-- Inbox, email and push; each kind can be turned off; daily reminder at the learner's time; streak-at-risk sent once and never loss-framed.
+- Inbox, email and push; each kind can be turned off; daily reminder at the learner's time, pointing to the next lesson in the current path; streak-at-risk sent once and never loss-framed.
 
 ### EN-20 Spaced review · 5 pts
 
 As a learner, I want skills to come back before I forget them, so that I keep what I learned.
 
-- Review queue from 3 days after Shown, confident errors first; review sessions use new scenarios.
+- Review queue from 3 days after Shown, confident errors first; review sessions use new scenarios. The queue mixes skills from all joined paths, and each card shows its path.
 
 ### EN-21 Certificates and achievement pages · 3 pts
 
 As a learner, I want a certificate and an optional public page, so that I can show my skills.
 
-- Certificate when all units' skills are Shown; public page off by default with name, path, skills and date only.
+- One certificate per path, when all that path's skills are Shown; public page off by default with name, path, skills and date only. Profile lists certificates per path.
 
 ### EN-22 Data and account settings · 3 pts
 

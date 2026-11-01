@@ -74,6 +74,28 @@ Each feature lists its acceptance checks. UI rules (U01–U60) come from the UI/
 - Locked paid units explain why and what unlocks them (U26).
 - **Done when:** the map is readable at 360 px, works with a keyboard and a screen reader, and shows the same state in both languages.
 
+### 4.4b Several paths (added 1 November 2026)
+
+A learner can join any number of paths. One of them is the **current path**, and it drives what the app suggests next. These rules apply on every screen:
+
+| Area | Rule |
+| --- | --- |
+| Paths tab | Lists all 13 paths: name, subtitle, interactive or hybrid, unit count, and my progress. Joined paths come first. Paths without content show "Coming soon" and can't be started. |
+| Choosing a path | Opening a path shows its map. "Start this path" joins it and makes it current; "Continue" on a joined path makes it current. Nothing is lost on other paths. |
+| Onboarding and guest | The path the learner picks in onboarding is joined and made current. A guest who signs up after the sample lesson gets P01 as current, with the sample's result kept. |
+| Home | The main action is the next lesson in the current path, with the path's name. A "Your paths" row shows the other joined paths with progress and a one-tap switch. The resume card names the lesson's path and can be in any path. Review due counts skills from all paths. |
+| Path map | Shows the path that was opened. Its header has a path switcher. |
+| Lesson end | "Next lesson" stays in the same path. Finishing a path's last unit suggests choosing a next path. |
+| XP, daily goal, streak | Account-wide: a lesson in any path counts. |
+| Skill states and review | Skill states belong to each path's skills. The review queue mixes skills from all joined paths, and each review card shows its path. |
+| Profile | Totals (XP, streak, skills Shown and Kept) across all paths, then one card per joined path with progress and skill counts, then certificates per path. |
+| Certificates | One per path, when all of that path's skills are Shown. |
+| Reminders and notifications | The daily reminder points to the next lesson in the current path. |
+| Subscription | One subscription opens every path. Unit 1 of every path stays free. |
+| Leaderboards | Weekly XP from all paths. |
+| Admin | Learner detail lists joined paths, the current path and progress per path. Reports can be filtered by path. |
+| Data | `profiles.current_path_id`; `enrollments` holds one row per joined path. Switching is logged as an event. |
+
 ### 4.5 Lesson player
 
 - All step types: card, choose (with reason), predict, words, fix, tune (live preview), sort, order, match, spot, compare, and video.

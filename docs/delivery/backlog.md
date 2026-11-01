@@ -43,7 +43,7 @@ Every remaining step type (words, fix, tune, sort, order, match, spot, compare, 
 
 ### Slice 3 · Progress and motivation · design sprint 3 · build sprint 4
 
-Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard, and the Paths tab to browse all paths and switch the current one. Stories: EN-11 (rest), EN-11b, EN-13 (rest), EN-20, EN-21, EN-23.
+Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard, and the Paths tab to browse all paths and switch the current one, with every screen it touches (home, path map, lesson end, review, profile, certificates, reminders) following spec §4.4b. Stories: EN-11 (rest), EN-11b, EN-13 (rest), EN-20, EN-21, EN-23.
 
 ### Slice 4 · Account, notifications and public site · design sprint 4 · build sprint 5
 
