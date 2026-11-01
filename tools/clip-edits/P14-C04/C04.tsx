@@ -7,14 +7,16 @@ import { FocusDim, Selection, Tag } from "../debugger/Inspect";
 import { UserTouch } from "../debugger/Pointers";
 import { IconAlert, IconCheck, IconEye, IconHash, IconLoop } from "../components/Icons";
 import { enter, exit, Key, span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, L, ListCard, mid, PH, PhoneFrame, phoneRect, Presenter, RecapCard, s, SideNote, TitleBand, v, Voice, wi } from "./p14";
+import { CaseChip, clipFrames, Header, IntroCard, L, ListCard, mid, PH, PhoneFrame, phoneRect, Presenter, RecapCard, s, SideNote, TitleBand, cutSec, cutsOf, vCut, Voice, wi } from "./p14";
 
 /*
  * P14-C04 re-edit: WP 14 "accordion: drawbacks and when to use it" (118.45–287.92 s). An illustrative shop app acts out
  * each point; Eyad's voice and camera are kept (his camera ends 5.6 s before the clip, so the card fades out there).
  */
 const VOICE = 169.47;
-export const C04_FRAMES = clipFrames(VOICE);
+const vc = vCut("c04");
+const VOICE_CUT = cutSec(VOICE, cutsOf("c04"));
+export const C04_FRAMES = clipFrames(VOICE_CUT);
 
 type Sec = { t: string; body: string[]; p: number; done?: boolean; warn?: number };
 const HEAD = 52;
@@ -62,14 +64,14 @@ const Accordion: React.FC<{ secs: Sec[] }> = ({ secs }) => {
 export const C04: React.FC = () => {
   const f = useCurrentFrame();
   const B = {
-    split: v(0.5), many: v(6.0), open1: v(10.4), open2: v(12.0), open3: v(13.6), open4: v(15.2), cost: v(16.68), cost2: v(22.5),
-    disc: v(31.4), hidden: v(38.58), never: v(44.0),
-    when: v(46.74), recapCons: v(51.22),
-    c1: v(60.9), c1Open: v(68.0), c1Note: v(72.68), c1No: v(78.38),
-    c2: v(87.1), c2Next1: v(99.0), c2Back: v(107.0), c2Ex: v(109.98), c2Next2: v(117.0), c2Fit: v(121.3),
-    c3: v(126.02), c3Ind: v(131.44), c3Open: v(150.0), c3Open2: v(156.5), c3Avoid: v(160.28),
+    split: vc(0.5), many: vc(6.0), open1: vc(10.4), open2: vc(12.0), open3: vc(13.6), open4: vc(15.2), cost: vc(16.68), cost2: vc(22.5),
+    disc: vc(31.4), hidden: vc(38.58), never: vc(44.0),
+    when: vc(46.74), recapCons: vc(51.22),
+    c1: vc(60.9), c1Open: vc(68.0), c1Note: vc(72.68), c1No: vc(78.38),
+    c2: vc(87.1), c2Next1: vc(99.0), c2Back: vc(107.0), c2Ex: vc(109.98), c2Next2: vc(117.0), c2Fit: vc(121.3),
+    c3: vc(126.02), c3Ind: vc(131.44), c3Open: vc(150.0), c3Open2: vc(156.5), c3Avoid: vc(160.28),
   };
-  const END = v(VOICE) + 6;
+  const END = vc(VOICE) + 6;
   const tw = (a: number, b: number) => span(f, a, b, 12);
 
   // ---- product state ------------------------------------------------------------------------
@@ -202,7 +204,7 @@ export const C04: React.FC = () => {
       <Voice src="c04/voice.m4a" />
       <IntroCard title="الـ Accordion: عيوبه، ومتى يناسبك" sub="Accordion" points={["3 عيوب", "3 حالات مناسبة"]} />
       <RecapCard
-        voiceSec={VOICE}
+        voiceSec={VOICE_CUT}
         title="اطوِ ما لا يحتاجه أغلب الناس"
         items={[
           { text: "حين يحتاجون جزءًا قليلًا من صفحة طويلة" },

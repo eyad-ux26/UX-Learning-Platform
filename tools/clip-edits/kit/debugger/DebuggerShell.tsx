@@ -15,9 +15,19 @@ const EXAMPLES: Record<string, Example> = {
   chat: { name: "حكاوي", brand: "#5B3CC4", brandSoft: "#ECE8FB", onBrand: "#FFFFFF" },
   mail: { name: "بريدي", brand: "#7A1F5C", brandSoft: "#F6E6F0", onBrand: "#FFFFFF" },
   rides: { name: "مشوار", brand: "#E8590C", brandSoft: "#FFF0E6", onBrand: "#FFFFFF" },
-  volt: { name: "فولت", brand: "#C62828", brandSoft: "#FDE7E7", onBrand: "#FFFFFF" },
+  volt: { name: "فولت", brand: "#1E40AF", brandSoft: "#E4EAFB", onBrand: "#FFFFFF" },
   tabkha: { name: "طبخة", brand: "#6B7A1F", brandSoft: "#F1F4DC", onBrand: "#FFFFFF" },
   khatwa: { name: "خطوة", brand: "#0F766E", brandSoft: "#DDF3F0", onBrand: "#FFFFFF" },
+  design: { name: "لوحة", brand: "#0D99FF", brandSoft: "#E1F1FF", onBrand: "#FFFFFF" },
+  settings: { name: "الإعدادات", brand: "#2563EB", brandSoft: "#E3ECFD", onBrand: "#FFFFFF" },
+  calendar: { name: "موعد", brand: "#7C3AED", brandSoft: "#EFE7FD", onBrand: "#FFFFFF" },
+  lokma: { name: "لقمة", brand: "#B45309", brandSoft: "#FDEBD3", onBrand: "#FFFFFF" },
+  masar: { name: "مسار", brand: "#4338CA", brandSoft: "#E5E3F8", onBrand: "#FFFFFF" },
+  ghayma: { name: "غيمة", brand: "#0369A1", brandSoft: "#DCEEF8", onBrand: "#FFFFFF" },
+  malab: { name: "ملعب", brand: "#155E75", brandSoft: "#DDF0F4", onBrand: "#FFFFFF" },
+  rafiq: { name: "رفيق", brand: "#15803D", brandSoft: "#DCF2E3", onBrand: "#FFFFFF" },
+  suwar: { name: "صُوَر", brand: "#6D28D9", brandSoft: "#EDE5FB", onBrand: "#FFFFFF" },
+  dalil: { name: "دليل", brand: "#334155", brandSoft: "#E6EAF0", onBrand: "#FFFFFF" },
 };
 export const exampleFor = (address: string): Example => EXAMPLES[address.split(/[./]/)[0]] ?? EXAMPLES.shop;
 /** Light product palette plus the example's brand, for the product subtree only. */

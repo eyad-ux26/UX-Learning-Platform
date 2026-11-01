@@ -38,3 +38,27 @@ Each clip cut starts and ends at a topic boundary in the source video. Clips bui
 with a 2.5 s title card (`INTRO`) before the voice starts and close with a 6 s recap card (`OUTRO`). Beat times in a
 scene are voice times, wrapped in `v()`, so the captions in `content/paths/<path>/captions/` are the voice timings
 shifted by +2.5 s.
+
+## Gap cuts and white flashes
+
+The source course pauses for discussion between some slides: the voice goes silent and the trainer's camera turns
+white for a few seconds. `cut-gaps.py` cuts those gaps (silence found with `silencedetect`, trimmed by 0.15 s each
+side) from both `voice.m4a` and `cam.mp4`, writing `voice.cut.m4a` and `cam.cut.mp4`, and adds camera stills that
+cover the few white frames left at each cut. It also takes `extra` cuts for a stumble or a repeated sentence
+(C07 34.69–37.95 s). Run it only for the clips you change (`python3 cut-gaps.py c07`), since it re-encodes them.
+
+The result is `cuts.ts`. `Presenter` and `Voice` switch to the `.cut` files by themselves when a clip has cuts, and a
+clip that has cuts uses `vCut("cxx")` in place of `v()` for its beat times, so beats stay written in raw voice time.
+The composition is `2.5 + cutSec(voice)` long. Captions are remapped through the same cuts.
+
+## Warnings
+
+Wrong examples use a calm amber, never red on the night frame: the warning note is a light note with an amber bar
+(#E8A93A) and a pale amber icon tile; a "wrong" verdict badge is #3A2A06 with an #E8A93A border. The night tokens
+set `warning` to #FFC970 and `warningSoft` to #3A2A06. Example products avoid red brand colours for the same reason.
+
+## Follow the source
+
+Every scene must show what the trainer is saying at that moment, using his own examples (the queries he names,
+"right and left" when he compares two screens, the values on his slides). Study the source slides frame by frame
+(a contact sheet every 4 to 5 s) before writing a scene, and change only brand names and screenshots.

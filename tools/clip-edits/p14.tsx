@@ -5,6 +5,7 @@ import { C, D, FONT, PRODUCT_FONT, T } from "../brand/theme";
 import { Rect } from "../debugger/camera";
 import { IconCheck, IconClose } from "../components/Icons";
 import { enter, exit } from "../lib/timeline";
+import { CUTS, Cuts } from "./cuts";
 
 /*
  * Shared parts of the P14 clip re-edits. Every clip opens with a short title card before the trainer speaks and ends
@@ -17,6 +18,17 @@ export const s = (sec: number) => Math.round(sec * FPS);
 /** Frame for a time in the trainer's voice track (seconds from the start of the cut clip). */
 export const v = (sec: number) => s(INTRO + sec);
 export const clipFrames = (voiceSec: number) => s(INTRO + voiceSec + OUTRO);
+/** Voice time once the silent gaps of a clip's folder (see cuts.ts) are removed. */
+export const cutSec = (sec: number, cuts: Cuts) => {
+  let d = 0;
+  for (const [a, b] of cuts) d += sec >= b ? b - a : sec > a ? sec - a : 0;
+  return sec - d;
+};
+export const cutsOf = (key: string): Cuts => CUTS[key]?.cuts ?? [];
+/** Like v(), for scene beats written against the uncut voice of `key` (e.g. "c10"). */
+export const vCut = (key: string) => (sec: number) => v(cutSec(sec, cutsOf(key)));
+const mediaKey = (src: string) => src.split("/")[0];
+const cutMedia = (src: string) => (CUTS[mediaKey(src)] ? src.replace(/\.(mp4|m4a)$/, ".cut.$1") : src);
 
 export type IconC = React.FC<{ color: string; size?: number; stroke?: number }>;
 export const wi = (I: IconC) => <I color="#012E4B" size={30} stroke={2.4} />;
@@ -80,12 +92,15 @@ export const Strike: React.FC<{ r: Rect; p: number }> = ({ r, p }) =>
   ) : null;
 
 // ---- notes on the free (left) side of the content area ------------------------------------------------
+/** Problem marks stay calm on the night frame: amber accent on the light note, never a red block (design system warn tokens). */
+const WARN = { line: "#E8A93A", tile: "#FFF1D6" };
+
 export const SideNote: React.FC<{ y: number; text: string; p: number; icon?: React.ReactNode; big?: boolean; warn?: boolean; w?: number }> = ({ y, text, p, icon, big, warn, w = 420 }) => {
   if (p <= 0) return null;
   return (
-    <div dir="rtl" style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, background: warn ? C.warning : C.note, color: C.noteText, borderRadius: T.radius.md, boxShadow: T.shadow.note, padding: big ? "22px 26px" : "18px 24px", fontFamily: FONT, display: "flex", alignItems: "center", gap: 14, boxSizing: "border-box" }}>
-      {icon ? <span style={{ width: 48, height: 48, borderRadius: 14, background: warn ? "rgba(255,255,255,0.22)" : C.select, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</span> : null}
-      <span style={{ fontSize: big ? 34 : 29, fontWeight: 600, lineHeight: 1.35 }}>{text}</span>
+    <div dir="rtl" style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, background: C.note, color: C.noteText, borderRadius: T.radius.md, boxShadow: warn ? `inset -8px 0 0 ${WARN.line}, ${T.shadow.note}` : T.shadow.note, padding: big ? "22px 26px" : "18px 24px", fontFamily: FONT, display: "flex", alignItems: "center", gap: 14, boxSizing: "border-box" }}>
+      {icon ? <span style={{ width: 48, height: 48, borderRadius: 14, background: warn ? WARN.tile : C.select, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</span> : null}
+      <span style={{ fontSize: w < 400 ? (big ? 30 : 26) : big ? 34 : 29, fontWeight: 600, lineHeight: 1.35 }}>{text}</span>
     </div>
   );
 };
@@ -118,8 +133,13 @@ export const ListCard: React.FC<{ y?: number; title?: string; p: number; items: 
 export const Presenter: React.FC<{ cam: string; hide?: number }> = ({ cam, hide = 0 }) => (
   <div style={{ position: "absolute", left: 40, top: 24, width: 236, height: 160, borderRadius: 20, overflow: "hidden", boxShadow: T.shadow.viewport, border: `2px solid ${C.border}`, background: "#1E2129", opacity: 1 - hide }}>
     <Sequence from={s(INTRO)} layout="none">
-      <OffthreadVideo src={staticFile(cam)} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      <OffthreadVideo src={staticFile(cutMedia(cam))} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />
     </Sequence>
+    {(CUTS[mediaKey(cam)]?.covers ?? []).map(([a, b, img]) => (
+      <Sequence key={img} from={v(a)} durationInFrames={Math.max(1, v(b) - v(a))} layout="none">
+        <Img src={staticFile(img)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      </Sequence>
+    ))}
     <div dir="rtl" style={{ position: "absolute", right: 8, bottom: 8, height: 30, padding: "0 12px", borderRadius: 999, background: "rgba(23,26,33,0.78)", color: "#FFFFFF", fontSize: 17, fontWeight: 600, display: "flex", alignItems: "center", fontFamily: FONT }}>إياد محمود</div>
   </div>
 );
@@ -133,7 +153,7 @@ export const TitleBand: React.FC<{ title: string; sub: string }> = ({ title, sub
 
 export const Voice: React.FC<{ src: string }> = ({ src }) => (
   <Sequence from={s(INTRO)} layout="none">
-    <Audio src={staticFile(src)} />
+    <Audio src={staticFile(cutMedia(src))} />
   </Sequence>
 );
 

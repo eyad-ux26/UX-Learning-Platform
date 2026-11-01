@@ -41,7 +41,7 @@ const Panel: React.FC<{ secs: Sec[]; strikeP?: number }> = ({ secs, strikeP = 0 
         if (o <= 0) return null;
         return (
           <div key={s.t} style={{ opacity: o }}>
-            <div style={{ position: "absolute", left: head.x - PH.x, top: head.y - PH.y, width: head.w, height: head.h, borderBottom: `1.5px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 17, fontWeight: 700, color: C.text, boxSizing: "border-box" }}>
+            <div style={{ position: "absolute", left: head.x - PH.x, top: head.y - PH.y, width: head.w, height: head.h, borderBottom: `1.5px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 18, fontWeight: 700, color: C.text, boxSizing: "border-box" }}>
               <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 {s.t}
                 {s.info ? <span style={{ width: 20, height: 20, borderRadius: 10, border: `1.5px solid ${C.textMuted}`, fontSize: 12, display: "inline-flex", alignItems: "center", justifyContent: "center", color: C.textMuted }}>i</span> : null}
@@ -53,7 +53,7 @@ const Panel: React.FC<{ secs: Sec[]; strikeP?: number }> = ({ secs, strikeP = 0 
                 {s.vals.map((val, k) => {
                   const st = s.struck?.includes(k);
                   return (
-                    <span key={val} style={{ height: 32, padding: "0 10px", borderRadius: 16, border: `1.5px solid ${st && strikeP > 0 ? C.warning : C.border}`, display: "inline-flex", alignItems: "center", fontSize: 13, fontWeight: 600, color: C.text, whiteSpace: "nowrap", textDecoration: st && strikeP > 0.5 ? "line-through" : undefined, opacity: st ? 1 - strikeP * 0.5 : 1 }}>{val}</span>
+                    <span key={val} style={{ height: 32, padding: "0 10px", borderRadius: 16, border: `1.5px solid ${st && strikeP > 0 ? C.warning : C.border}`, display: "inline-flex", alignItems: "center", fontSize: 15, fontWeight: 600, color: C.text, whiteSpace: "nowrap", textDecoration: st && strikeP > 0.5 ? "line-through" : undefined, opacity: st ? 1 - strikeP * 0.5 : 1 }}>{val}</span>
                   );
                 })}
               </div>
@@ -88,7 +88,7 @@ export const C09: React.FC = () => {
   if (scene === "def" || scene === "four") {
     secs = [
       { t: "السعر", vals: ["أقل من 500", "500–1000", "+1000"], open: scene === "four" ? 1 : enter(f, B.price, 12) },
-      { t: "اللون", vals: ["أسود", "أبيض", "أحمر", "أخضر"], open: scene === "four" ? 1 : enter(f, B.colors, 12) },
+      { t: "اللون", vals: ["أحمر", "أخضر", "أصفر"], open: scene === "four" ? 1 : enter(f, B.colors, 12) },
       { t: "المقاس", vals: ["40", "41", "42", "43"], open: 0 },
     ];
   } else if (scene === "a") {
@@ -103,26 +103,26 @@ export const C09: React.FC = () => {
     const all = tw(B.pOpen + 20, END + 999);
     const fixed = enter(f, B.pClosed, 14);
     secs = [
-      { t: fixed > 0.5 ? "النوع: رياضي، رسمي…" : "نوع المنتج", vals: ["رياضي", "رسمي", "كاجوال"], open: all, bad: fixed < 0.5 },
+      { t: fixed > 0.5 ? "نوع الحذاء" : "نوع المنتج", vals: ["رياضي", "رسمي", "كاجوال"], open: all, bad: fixed < 0.5 },
       { t: "الطراز", vals: ["بأربطة", "بدون أربطة"], open: Math.max(all, tw(B.pStyle, B.pClosed)) },
       { t: "السعر", vals: ["أقل من 500", "500–1000"], open: all },
     ];
   } else if (scene === "j") {
     const fix = enter(f, B.jFix + 40, 14);
     secs = [
-      { t: fix > 0.5 ? "مستوى الدعم" : "السلوك", vals: fix > 0.5 ? ["دعم خفيف", "متوسط", "قوي"] : ["بنفسجي", "برتقالي", "أخضر"], open: enter(f, B.jVals - 20, 12) },
-      { t: "المقاس", vals: ["40", "41"], open: 0 },
-      { t: "السعر", vals: ["أقل من 500"], open: 0 },
+      { t: "السلوك", vals: fix > 0.5 ? ["هادئ", "نشيط", "يحتاج تدريبًا"] : ["بنفسجي", "برتقالي", "أخضر"], open: enter(f, B.jVals - 20, 12) },
+      { t: "العمر", vals: ["صغير"], open: 0 },
+      { t: "الحجم", vals: ["صغير"], open: 0 },
     ];
   } else {
     const added = enter(f, B.oNew + 10, 14);
     secs = [
-      { t: "مواد معاد تدويرها", vals: ["نعم"], open: 0, info: true, o: added },
-      { t: "النوع", vals: ["رياضي", "رسمي", "كاجوال"], open: 1 },
-      { t: "المقاس", vals: ["40", "41", "42", "43"], open: 1 },
-      { t: "السعر", vals: ["أقل من 500", "500–1000"], open: 1 },
-      { t: "اللون", vals: ["أسود", "أبيض"], open: 0 },
-      { t: "نوع النعل", vals: ["مطاط"], open: 0 },
+      { t: "AI Generated", vals: ["نعم"], open: 0, info: true, o: added },
+      { t: "نوع الملف", vals: ["صور", "Vectors", "فيديو", "أيقونات"], open: 1 },
+      { t: "License", vals: ["Free", "Premium"], open: 1 },
+      { t: "الاتجاه", vals: ["أفقي", "رأسي", "مربع"], open: 1 },
+      { t: "اللون", vals: ["أحمر"], open: 0 },
+      { t: "الحجم", vals: ["كبير"], open: 0 },
     ];
   }
   const rs = layout(secs);
@@ -181,7 +181,8 @@ export const C09: React.FC = () => {
 
       <CaseChip y={40} text="4 · Prioritized" p={span(f, B.o, END)} />
       <SideNote y={110} text="رتّبها حسب استخدام الناس وأهميتها" p={span(f, B.o, B.oNew)} icon={wi(IconCheck)} />
-      <SideNote y={250} text="واعرف الترتيب من الـ Research" p={span(f, B.oResearch, B.oFew)} icon={wi(IconSearch)} />
+      <SideNote y={250} text="واعرف الترتيب من الـ Research" p={span(f, B.oResearch, B.oEx)} icon={wi(IconSearch)} />
+      <SideNote y={250} text="أولًا نوع الملف، ثم الترخيص (License)" p={span(f, B.oEx, B.oFew)} />
       <Selection r={camRect(top3, cam)} hover={sel(B.oFew, B.oNew)} selected={sel(B.oFew, B.oNew)} label="أول 2 أو 3" />
       <SideNote y={250} text="أغلب الناس يستخدم أول 2 أو 3 Filters" p={span(f, B.oFew, B.oNew)} big />
       <Selection r={r(0, "head")} hover={sel(B.oNew + 30, END)} selected={sel(B.oNew + 30, END)} label="جديد · في الأعلى" />
@@ -193,13 +194,13 @@ export const C09: React.FC = () => {
   const tip = span(f, B.oTip + 20, END);
   return (
     <AbsoluteFill>
-      <DebuggerShell mode={mode} address="khatwa.app/shoes" illustrative overlay={overlay}>
+      <DebuggerShell mode={mode} address={scene === "j" ? "rafiq.app/adopt" : scene === "o" ? "suwar.app/search" : "khatwa.app/shoes"} illustrative overlay={overlay}>
         <div style={camStyle(cam)}>
           <PhoneFrame fade={fade}>
             <Header title="الفلاتر" />
             <Panel secs={secs} strikeP={strikeP} />
             {scene === "o" && tip > 0 ? (
-              <div style={{ position: "absolute", top: TOP + HEAD + 4, right: 20, width: 200, borderRadius: 10, background: "#1F2328", color: "#FFFFFF", fontSize: 13, lineHeight: 1.5, padding: "8px 12px", opacity: tip }}>أحذية مصنوعة من مواد معاد تدويرها</div>
+              <div style={{ position: "absolute", top: TOP + HEAD + 4, right: 20, width: 200, borderRadius: 10, background: "#1F2328", color: "#FFFFFF", fontSize: 13, lineHeight: 1.5, padding: "8px 12px", opacity: tip }}>ملفات صنعها الذكاء الاصطناعي</div>
             ) : null}
           </PhoneFrame>
         </div>
