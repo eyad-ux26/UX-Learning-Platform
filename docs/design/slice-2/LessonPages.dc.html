@@ -373,7 +373,7 @@ function fmt(sec) { return Math.floor(sec / 60) + ':' + String(sec % 60).padStar
 
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = this.fresh(props); }
-  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || (p.device === 'desktop' && p.view !== 'videoStart'), cc: true, capLang: null }; }
+  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null }; }
   componentDidUpdate(prev) { if (prev.view !== this.props.view || prev.device !== this.props.device) this.setState(this.fresh(this.props)); }
   sfx(n) { if (this.state.sound && this.props.sfx) this.props.sfx(n); }
   renderVals() {

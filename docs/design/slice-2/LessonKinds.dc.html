@@ -9,7 +9,7 @@
 <body>
 <x-dc>
 <helmet>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Barlow:wght@500;600;700;800&amp;family=Almarai:wght@400;700;800&amp;family=Rubik:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Barlow:wght@500;600;700;800&amp;family=Almarai:wght@400;700;800&amp;family=Rubik:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
 a{color:#005F99}a:hover{color:#003F66}
@@ -90,6 +90,25 @@ a{color:#005F99}a:hover{color:#003F66}
             </figure>
           </sc-if>
 
+          <sc-if value="{{ctx.clinic}}" hint-placeholder-val="{{false}}">
+            <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: hidden; border: 2px solid #C9D1D6; background: #DDE3E7;">
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.clinicCap}}</figcaption>
+              <div style="background: #F3F8F7; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; font-family: {{clinicFont}}; color: #17302C;">
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #0E7C6B; color: #0E7C6B; font-weight: 700; font-size: 10px; box-sizing: border-box;">{{x.clinicMark}}</span><span style="font-weight: 600; font-size: 12px; color: #0E7C6B;">{{x.clinicBrand}}</span></div>
+                <span style="font-weight: 700; font-size: 15px;">{{x.bookTitle}}</span>
+                <span style="font-size: 11px; font-weight: 500; color: #4D6662;">{{x.insLabel}}</span>
+                <span style="display: block; height: 22px; border-radius: 4px; border: {{clinicField}}; background: #FFFFFF;"></span>
+                <sc-if value="{{fixShowErr}}" hint-placeholder-val="{{true}}">
+                  <span style="font-size: 11px; font-weight: 600; color: #C0262D;">{{x.insErr}}</span>
+                </sc-if>
+                <span style="display: grid; place-items: center; height: 28px; border-radius: 4px; background: #0E7C6B; color: #FFFFFF; font-weight: 600; font-size: 12px; margin-top: 2px;">{{x.bookBtn}}</span>
+                <sc-if value="{{fixShowOk}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 11px; font-weight: 600; color: #0E7C6B;">{{x.booked}}</span>
+                </sc-if>
+              </div>
+            </figure>
+          </sc-if>
+
           <sc-if value="{{ctx.order}}" hint-placeholder-val="{{false}}">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
               <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="frame-label"><span class="ph ph-device-mobile" aria-hidden="true"></span>{{c.livePreview}}</span></sc-if>
@@ -131,7 +150,6 @@ a{color:#005F99}a:hover{color:#003F66}
                       <span style="display: flex; flex-direction: column; gap: 4px;">
                         <span style="font-size: {{sp.label}}px; color: #7A4A36; font-weight: 500;">{{r.label}}</span>
                         <span style="display: flex; align-items: center; height: {{sp.field}}px; padding: 0 10px; border-radius: 10px; border: {{r.border}}; background: #FFFFFF; font-size: {{sp.label}}px; color: #3B1F14;"><bdi>{{r.value}}</bdi></span>
-                        <sc-if value="{{r.err}}" hint-placeholder-val="{{false}}"><span style="font-size: {{sp.label}}px; font-weight: 600; color: #B42318;">{{x.phoneErr}}</span></sc-if>
                       </span>
                     </sc-if>
                     <sc-if value="{{r.isBtn}}" hint-placeholder-val="{{false}}">
@@ -155,10 +173,7 @@ a{color:#005F99}a:hover{color:#003F66}
         <sc-if value="{{modeTag.show}}" hint-placeholder-val="{{false}}">
           <span class="{{modeTag.cls}}"><span class="{{modeTag.icon}}" aria-hidden="true"></span>{{modeTag.text}}</span>
         </sc-if>
-        <p class="t-over" style="color: var(--link);">{{k.over}}</p>
-        <sc-if value="{{k.anyOk}}" hint-placeholder-val="{{false}}">
-          <span class="lp-tag" style="background: var(--mint); color: var(--right-ink);"><span class="ph ph-check" aria-hidden="true"></span>{{c.anyOk}}</span>
-        </sc-if>
+        <p class="t-over" style="color: var(--link);">{{over}}</p>
         <p class="lp-scn">{{k.scenario}}</p>
         <h1 class="lp-qt">{{k.question}}</h1>
       </div>
@@ -349,17 +364,6 @@ a{color:#005F99}a:hover{color:#003F66}
     </section>
   </sc-if>
 
-  <sc-if value="{{sh.note}}" hint-placeholder-val="{{false}}">
-    <section class="sheet sheet-note sheet-in lp-sheet" role="status">
-      <div class="col">
-        <p class="verdict-row"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.noted}}</p>
-        <p class="body">{{k.noted}}</p>
-      </div>
-      <div class="col"><p class="note">{{c.notScored}}</p></div>
-      <div class="acts"><a href="#next" class="btn btn-primary press" onClick="{{next}}" style="min-width: 160px;">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a></div>
-    </section>
-  </sc-if>
-
   <sc-if value="{{sh.saved}}" hint-placeholder-val="{{false}}">
     <section class="sheet sheet-saved sheet-in lp-sheet" role="status">
       <div class="col">
@@ -405,7 +409,8 @@ a{color:#005F99}a:hover{color:#003F66}
         </sc-for>
       </div>
       <label class="t-small" for="lp-rev-note" style="font-weight: 700;">{{c.reviewNote}}</label>
-      <textarea id="lp-rev-note" class="lp-text" maxlength="280">{{c.reviewSample}}</textarea>
+      <sc-if value="{{isEn}}" hint-placeholder-val="{{true}}"><textarea id="lp-rev-note" class="lp-text" maxlength="280">'Notes' is what our delivery app uses, and drivers read it.</textarea></sc-if>
+      <sc-if value="{{isAr}}" hint-placeholder-val="{{false}}"><textarea id="lp-rev-note" class="lp-text" maxlength="280">تطبيق التوصيل الذي نعمل به يستخدم «ملاحظات»، والسائقون يقرؤونها.</textarea></sc-if>
       <span class="t-small ink-3 num" style="margin-top: -6px; text-align: end;">{{reviewCount}}</span>
       <div style="display: flex; gap: 10px;">
         <button class="btn btn-secondary press" type="button" onClick="{{closeOverlay}}" style="flex: 1;">{{c.cancel}}</button>
@@ -415,15 +420,16 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","tryfirst","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","right","why","also","confAsk","confWrong","list","noted","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson player: every step type, its feedback and the sheets that sit over a step.
-   Props: kind (step type), state (preset to review), mode (lesson, skill check, mastery round, guest), overlay. */
+   Props: kind (step type), state (preset to review), mode (lesson, skill check, mastery round, guest), overlay.
+   The mastery round uses its own new case (M below), never the lesson's own examples. */
 const C = {
   en: {
     exit: 'Leave lesson', progress: 'Lesson progress', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', example: 'Example',
     soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
     check: 'Check', cont: 'Continue', retry: 'Try again', hint: 'Hint', reveal: 'Show the answer', whyBtn: 'Why?', nextQ: 'Next question',
-    wrongTitle: 'Not quite', right: 'Right', also: 'Also works', revealed: 'The answer, step by step', noted: 'Noted',
+    wrongTitle: 'Not quite', right: 'Right', also: 'Also works', revealed: 'The answer, step by step', 
     tryOf: (n) => 'Try ' + n + ' of 3', hintOf: (n) => 'Hint ' + n + ' of 2', kept: 'Your first answer is kept.',
     sure: 'How sure are you?', conf: ['Guessing', 'Fairly sure', 'Sure'], confHelp: 'Pick how sure you are, then Check.',
     confSure: 'You were sure, so this one comes first in your review.',
@@ -433,25 +439,25 @@ const C = {
     synced: "You're back online. Every answer is synced.",
     guestBanner: "You're trying a sample lesson. Sign up at the end to keep your progress.",
     resumeBanner: 'Welcome back. You left off at this step.', restart: 'Start over',
-    mockAgain: 'Show the example again', anyOk: 'Any answer is fine', notScored: 'This one is not scored. It sets up what comes next.',
+    mockAgain: 'Show the example again',
     answerSaved: 'Answer saved', checkNoVerdict: "No right or wrong during a skill check. You'll see each skill's result at the end.",
     toPlace: 'Fields to place', sortHelp: 'Tap a field, then tap a group.', sortHelpSel: (x) => 'Now tap the group for “' + x + '”.', dropHere: 'Put it here',
     matchLeft: 'Field', matchRight: 'Used for', livePreview: 'Live preview',
     up: (x) => 'Move up: ' + x, down: (x) => 'Move down: ' + x,
     spotList: 'Use a list instead', spotTap: 'Tap on the screen instead', spotRight: 'Here', spotWrong: 'Not here',
     masteryMiss: 'This skill comes back once more, with a new example.', shown: 'Shown · أثبتّ',
-    checkTag: 'Skill check · Question 2 of 4', masteryTag: 'Mastery round · Skill 1 of 2', guestTag: 'Sample lesson',
+    checkTag: 'Skill check · Question 2 of 4', masteryTag: 'Mastery round', qOf: (n, m) => 'Question ' + n + ' of ' + m, guestTag: 'Sample lesson',
     exitTitle: 'Leave this lesson?', exitBody: "You can come back any time. You'll pick up at this step.", exitSaved: 'Your answers are saved', keepGoing: 'Keep learning', leave: 'Leave lesson',
     reviewTitle: 'Ask for a review', reviewBody: 'Tell us what is wrong with this question. A person on the team reads every request and replies in your notifications.',
     reasons: ['My answer also works', 'The question is unclear', 'Something on the screen is broken', 'Something else'],
-    reviewNote: 'Add a short note (optional)', reviewSample: "'Notes' is what our delivery app uses, and drivers read it.", cancel: 'Cancel', send: 'Send',
+    reviewNote: 'Add a short note (optional)', reviewSample: "'Notes' is what our delivery app uses, and drivers read it.", reviewCount: (n) => n + ' / 280', cancel: 'Cancel', send: 'Send',
     reviewSent: "Sent. We'll let you know what we decide."
   },
   ar: {
     exit: 'الخروج من الدرس', progress: 'تقدّم الدرس', lessonName: 'Forms That Flow · الدرس 1 · كل حقل له تكلفة', example: 'مثال',
     soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
     check: 'تحقّق', cont: 'متابعة', retry: 'حاول مرة أخرى', hint: 'تلميح', reveal: 'اعرض الإجابة', whyBtn: 'لماذا؟', nextQ: 'السؤال التالي',
-    wrongTitle: 'ليس تمامًا', right: 'صحيح', also: 'تصلح أيضًا', revealed: 'الإجابة خطوة بخطوة', noted: 'سجّلنا توقّعك',
+    wrongTitle: 'ليس تمامًا', right: 'صحيح', also: 'تصلح أيضًا', revealed: 'الإجابة خطوة بخطوة', 
     tryOf: (n) => 'المحاولة ' + n + ' من 3', hintOf: (n) => 'تلميح ' + n + ' من 2', kept: 'نحتفظ بإجابتك الأولى.',
     sure: 'ما مدى تأكدك؟', conf: ['أخمّن', 'متأكد نوعًا ما', 'متأكد'], confHelp: 'اختر مدى تأكدك، ثم اضغط «تحقّق».',
     confSure: 'كنت متأكدًا، لذا يأتي هذا السؤال أولًا في مراجعتك.',
@@ -461,18 +467,18 @@ const C = {
     synced: 'عاد الاتصال. تمت مزامنة كل إجاباتك.',
     guestBanner: 'أنت تجرّب درسًا نموذجيًا. سجّل في النهاية لتحتفظ بتقدّمك.',
     resumeBanner: 'أهلًا بعودتك. توقّفت عند هذه الخطوة.', restart: 'ابدأ من جديد',
-    mockAgain: 'اعرض المثال مرة أخرى', anyOk: 'أي إجابة مقبولة', notScored: 'لا تُحسب درجة لهذا السؤال. إنه يمهّد لما بعده.',
+    mockAgain: 'اعرض المثال مرة أخرى',
     answerSaved: 'حُفظت إجابتك', checkNoVerdict: 'لا نقول صح أو خطأ أثناء اختبار المهارة. سترى نتيجة كل مهارة في النهاية.',
     toPlace: 'حقول للتصنيف', sortHelp: 'اضغط حقلًا، ثم اضغط مجموعة.', sortHelpSel: (x) => 'الآن اضغط المجموعة المناسبة لـ«' + x + '».', dropHere: 'ضعه هنا',
     matchLeft: 'الحقل', matchRight: 'يُستخدم في', livePreview: 'معاينة مباشرة',
     up: (x) => 'انقل للأعلى: ' + x, down: (x) => 'انقل للأسفل: ' + x,
     spotList: 'استخدم قائمة بدلًا من ذلك', spotTap: 'اضغط على الشاشة بدلًا من ذلك', spotRight: 'هنا', spotWrong: 'ليس هنا',
     masteryMiss: 'ستعود هذه المهارة مرة أخرى، بمثال جديد.', shown: 'أثبتّ · Shown',
-    checkTag: 'اختبار المهارة · السؤال 2 من 4', masteryTag: 'جولة الإتقان · المهارة 1 من 2', guestTag: 'درس نموذجي',
+    checkTag: 'اختبار المهارة · السؤال 2 من 4', masteryTag: 'جولة الإتقان', qOf: (n, m) => 'السؤال ' + n + ' من ' + m, guestTag: 'درس نموذجي',
     exitTitle: 'هل تريد الخروج من الدرس؟', exitBody: 'يمكنك العودة في أي وقت، وستكمل من هذه الخطوة.', exitSaved: 'إجاباتك محفوظة', keepGoing: 'تابع التعلّم', leave: 'اخرج من الدرس',
     reviewTitle: 'اطلب مراجعة', reviewBody: 'أخبرنا ما المشكلة في هذا السؤال. يقرأ شخص من الفريق كل طلب، ويردّ عليك في الإشعارات.',
     reasons: ['إجابتي تصلح أيضًا', 'السؤال غير واضح', 'شيء في الشاشة لا يعمل', 'سبب آخر'],
-    reviewNote: 'أضف ملاحظة قصيرة (اختياري)', reviewSample: 'تطبيق التوصيل الذي نعمل به يستخدم «ملاحظات»، والسائقون يقرؤونها.', cancel: 'إلغاء', send: 'أرسل',
+    reviewNote: 'أضف ملاحظة قصيرة (اختياري)', reviewSample: 'تطبيق التوصيل الذي نعمل به يستخدم «ملاحظات»، والسائقون يقرؤونها.', reviewCount: (n) => n + ' من 280', cancel: 'إلغاء', send: 'أرسل',
     reviewSent: 'أُرسل طلبك. سنخبرك بما نقرّره.'
   }
 };
@@ -481,44 +487,35 @@ const X = {
   en: { lunchCap: 'Example · Lunch To Go', lunchMark: 'L', lunchBrand: 'Lunch To Go', lunchTitle: 'Delivery details', addr: 'Delivery address', phone: 'Phone for the driver', placeOrder: 'Place order', checkout: 'Checkout',
     gymCap: "Example · Hana's Gym", gymMark: 'H', gymBrand: "HANA'S GYM", joinTitle: 'Become a member', emailLabel: 'Email (optional)', emailErr: 'Email is required.', joinBtn: 'Join now', welcome: 'Welcome to the gym, Hana!',
     dish: 'Chicken shawarma bowl', price: 'EGP 145', time: '35 min', ingr: 'Chicken, rice, garlic sauce, sesame', allergen: 'Contains sesame', addBtn: 'Add to order',
-    addrVal: 'Building 12, Street 9, Maadi', phoneVal: '⁦010 1234 5678⁩', phoneErr: 'Invalid phone number', noteLbl: 'Note for the driver (optional)', noteVal: 'Gate 2, 4th floor' },
+    addrVal: 'Building 12, Street 9, Maadi', phoneVal: '⁦010 1234 5678⁩', noteLbl: 'Note for the driver (optional)', noteVal: 'Gate 2, 4th floor',
+    clinicCap: "Example · Nour's clinic", clinicMark: 'N', clinicBrand: 'Nour Family Clinic', bookTitle: 'Book a visit', insLabel: 'Insurance number (optional)', insErr: 'Insurance number is required.', bookBtn: 'Book visit', booked: 'Your visit is booked for Sunday, 10:30.' },
   ar: { lunchCap: 'مثال · غداء سريع', lunchMark: 'غ', lunchBrand: 'غداء سريع', lunchTitle: 'تفاصيل التوصيل', addr: 'عنوان التوصيل', phone: 'رقم هاتف للسائق', placeOrder: 'أكّد الطلب', checkout: 'الدفع',
     gymCap: 'مثال · نادي هناء', gymMark: 'ه', gymBrand: 'نادي هناء', joinTitle: 'اشترك في النادي', emailLabel: 'البريد الإلكتروني (اختياري)', emailErr: 'البريد الإلكتروني إلزامي.', joinBtn: 'اشترك الآن', welcome: 'أهلًا بك في النادي يا هناء!',
     dish: 'طبق شاورما دجاج', price: '145 ج.م', time: '35 دقيقة', ingr: 'دجاج، أرز، صلصة ثوم، سمسم', allergen: 'يحتوي على سمسم', addBtn: 'أضف إلى الطلب',
-    addrVal: 'مبنى 12، شارع 9، المعادي', phoneVal: '⁦010 1234 5678⁩', phoneErr: 'رقم الهاتف غير صحيح', noteLbl: 'ملاحظة للسائق (اختياري)', noteVal: 'البوابة 2، الطابق الرابع' }
+    addrVal: 'مبنى 12، شارع 9، المعادي', phoneVal: '⁦010 1234 5678⁩', noteLbl: 'ملاحظة للسائق (اختياري)', noteVal: 'البوابة 2، الطابق الرابع',
+    clinicCap: 'مثال · عيادة نور', clinicMark: 'ن', clinicBrand: 'عيادة نور للأسرة', bookTitle: 'احجز زيارة', insLabel: 'رقم التأمين (اختياري)', insErr: 'رقم التأمين إلزامي.', bookBtn: 'احجز الزيارة', booked: 'حُجزت زيارتك يوم الأحد، 10:30.' }
 };
 /* Step content. Lunch To Go and Hana's Gym follow the P01 fixtures; fix comes from P01-U01-L02 S05. */
 const K = {
-  predict: { step: 2, ctx: 'gym', variant: 'now', conf: true, answer: 2,
-    en: { over: 'Predict · Step 2', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
-      scenario: "Hana's gym now asks for her date of birth and national ID on the free-trial form.",
-      question: 'Compared with a form that asks only for name and mobile, how many people will finish this one?',
-      opts: ['More: it looks more official', 'About the same: it is only two fields', 'Fewer: the fields are personal and unexplained'],
-      miscon: 'Two fields take little time, but a personal question with no reason costs trust. People start to wonder what the data is for, and some leave.',
-      hints: ['Think about how Hana feels when a free trial asks for her national ID.', 'Does anything on the form say why the gym needs it?'],
-      correct: 'Fewer finish. A personal field with no reason costs trust, not only time.',
+  predict: { step: 1, ctx: 'gym', variant: 'now', conf: true, answer: 2,
+    en: { over: 'Predict · Step 1', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
+      scenario: "Hana's gym added date of birth and national ID to its free-trial form. Nothing on the form says why.",
+      question: 'Which change will get more people to finish the trial form?',
+      opts: ['Mark both fields as required with a red star', 'Keep both, and split the form into two short pages', 'Take both off the trial form, and ask when people join'],
+      miscon: 'Two short pages take the same few seconds. The cost is trust: a personal question with no reason makes people wonder what the data is for, and some leave.',
+      hints: ['Think about how a visitor feels when a free trial asks for a national ID.', 'Does the free trial need either field today?'],
+      correct: 'Take them off. A personal field the trial does not need costs trust, not only time.',
       why: "Every field costs time. A personal question the task doesn't explain also costs trust, and people start to wonder what the data is really for.",
-      steps: ['Count the cost in time: two short fields, a few seconds.', 'Count the cost in trust: a national ID for a free trial, with no reason given.', 'Trust is what makes people stop. Fewer people finish.'] },
-    ar: { over: 'توقّع · الخطوة 2', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
-      scenario: 'أصبح نادي هناء يطلب تاريخ الميلاد والرقم القومي في نموذج التجربة المجانية.',
-      question: 'مقارنةً بنموذج يطلب الاسم والموبايل فقط، كم شخصًا سيُكمل هذا النموذج؟',
-      opts: ['عدد أكبر: يبدو النموذج رسميًا أكثر', 'العدد نفسه تقريبًا: إنهما حقلان فقط', 'عدد أقل: الحقلان شخصيّان بلا سبب واضح'],
-      miscon: 'الحقلان لا يأخذان وقتًا كثيرًا، لكن السؤال الشخصي بلا سبب يكلّف الثقة. فيتساءل الناس عن الغرض من بياناتهم، ويغادر بعضهم.',
-      hints: ['فكّر في شعور هناء حين تطلب منها تجربة مجانية رقمها القومي.', 'هل يوضّح النموذج لماذا يحتاج النادي هذا الرقم؟'],
-      correct: 'عدد أقل. الحقل الشخصي بلا سبب يكلّف الثقة، لا الوقت فقط.',
+      steps: ['Count the cost in time: two short fields, a few seconds.', 'Count the cost in trust: a national ID for a free trial, with no reason given.', 'The trial needs neither, so take them off. More people finish.'] },
+    ar: { over: 'توقّع · الخطوة 1', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
+      scenario: 'أضاف نادي هناء تاريخ الميلاد والرقم القومي إلى نموذج التجربة المجانية. ولا شيء في النموذج يوضّح السبب.',
+      question: 'أي تغيير يجعل عددًا أكبر من الناس يُكملون نموذج التجربة؟',
+      opts: ['ضع نجمة حمراء على الحقلين ليصبحا إلزاميين', 'أبقِ الحقلين، وقسّم النموذج إلى صفحتين قصيرتين', 'احذف الحقلين من نموذج التجربة، واسأل عنهما عند الاشتراك'],
+      miscon: 'الصفحتان القصيرتان تأخذان الثواني نفسها. التكلفة هنا هي الثقة: السؤال الشخصي بلا سبب يجعل الناس يتساءلون عن الغرض من بياناتهم، فيغادر بعضهم.',
+      hints: ['فكّر في شعور الزائر حين تطلب منه تجربة مجانية رقمه القومي.', 'هل تحتاج التجربة المجانية أيًّا من الحقلين اليوم؟'],
+      correct: 'احذفهما. الحقل الشخصي الذي لا تحتاجه التجربة يكلّف الثقة، لا الوقت فقط.',
       why: 'كل حقل يكلّف وقتًا. والسؤال الشخصي الذي لا تشرحه المهمة يكلّف الثقة أيضًا، فيبدأ الناس في التساؤل عن الغرض الحقيقي من بياناتهم.',
-      steps: ['احسب التكلفة بالوقت: حقلان قصيران، بضع ثوانٍ.', 'احسب التكلفة بالثقة: رقم قومي لتجربة مجانية، بلا سبب.', 'الثقة هي ما يوقف الناس. فيُكمل عدد أقل.'] } },
-  tryfirst: { step: 1, ctx: 'gym', variant: 'full', anyOk: true,
-    en: { over: 'Try first · Step 1', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
-      scenario: "Hana taps 'Try it free' during her lunch break. The gym's trial form has 7 fields.",
-      question: 'How many of these fields do you think the gym needs today?',
-      opts: ['All 7', 'About 5', 'About 3', 'Just 2'],
-      noted: "Keep your guess in mind. By the end of this lesson you'll see that the gym needs just 2 today: her name and mobile number." },
-    ar: { over: 'جرّب أولًا · الخطوة 1', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
-      scenario: 'تضغط هناء «جرّبه مجانًا» في استراحة الغداء. في نموذج التجربة 7 حقول.',
-      question: 'كم حقلًا من هذه تظن أن النادي يحتاجه اليوم؟',
-      opts: ['كلها (7)', 'نحو 5', 'نحو 3', 'حقلان فقط'],
-      noted: 'احتفظ بتوقّعك في ذهنك. في نهاية الدرس سترى أن النادي يحتاج اليوم حقلين فقط: الاسم ورقم الموبايل.' } },
+      steps: ['احسب التكلفة بالوقت: حقلان قصيران، بضع ثوانٍ.', 'احسب التكلفة بالثقة: رقم قومي لتجربة مجانية، بلا سبب.', 'التجربة لا تحتاج أيًّا منهما، فاحذفهما. فيُكمل عدد أكبر.'] } },
   words: { step: 5, ctx: 'words', answer: 1, also: 3,
     en: { over: 'Words · Step 5', frame: 'Example · Lunch To Go checkout', who: 'Driver · Example',
       scenario: "Lunch To Go drivers keep calling customers: 'Which gate? Which floor?' Checkout has a free text field, but people leave it empty.",
@@ -624,6 +621,7 @@ const K = {
       steps: ['ابدأ بما هو الطبق: الصورة والاسم.', 'ثم المعلومات التي تقرّر بها منى: السعر والوقت والحساسية.', 'الزر في النهاية، بعد أن تقرّر.'] } },
   match: { step: 8, left: ['name', 'email', 'mobile', 'nid'], right: ['schedule', 'contract', 'greet', 'urgent'],
     answer: { name: 'greet', email: 'schedule', mobile: 'urgent', nid: 'contract' },
+    selPairs: { name: 'greet', email: 'schedule' }, selL: 'mobile', wrongPairs: { name: 'greet', email: 'urgent', mobile: 'schedule', nid: 'contract' },
     en: { over: 'Match · Step 8', frame: "Example · Hana's Gym", who: 'Hana · Example',
       scenario: 'Hana has joined. The membership form asks for four details, and each one should have a job.',
       question: 'Pair each field with what the gym uses it for.',
@@ -646,64 +644,111 @@ const K = {
       steps: ['الاسم للترحيب في الاستقبال.', 'البريد لجدول الحصص، والموبايل للتغييرات العاجلة.', 'الرقم القومي لعقد الاشتراك.'] } },
   spot: { step: 9, ctx: 'spot', regions: ['addr', 'phone', 'note', 'btn'], answer: 'phone',
     en: { over: 'Spot · Step 9', frame: 'Example · Lunch To Go checkout', who: 'Mona · Example',
-      scenario: 'Mona types her mobile number the way it is printed on her card: ⁦010 1234 5678⁩. She can\'t place the order.',
+      scenario: 'Mona types her mobile number the way it is printed on her card: ⁦010 1234 5678⁩. She taps Place order, and nothing happens.',
       question: 'Tap the part of the checkout that stops Mona.',
       regions: { addr: 'Delivery address', phone: 'Phone for the driver', note: 'Note for the driver', btn: 'Place order button' },
-      miscon: "The button works. It's the phone field that refuses Mona's number because of the spaces, and its error doesn't say so.",
-      hints: ['Look for the place where Mona did nothing wrong, but the form says she did.', 'People write phone numbers with spaces. Does this form accept that?'],
+      miscon: "The button works. It's the phone field that refuses Mona's number because of the spaces, and nothing tells her so.",
+      hints: ['Look for the place where Mona did nothing wrong, but the form still refuses it.', 'People write phone numbers with spaces. Does this form accept that?'],
       correct: 'The phone field: it rejects a number written the normal way.',
       why: 'People write numbers in groups so they can read them. The form should accept spaces and dashes and tidy them itself, instead of blaming Mona.',
-      steps: ["Mona's address and note are filled in, and the button is ready.", 'The phone field shows an error for a number she typed correctly.', 'The fault is the phone check: it should accept spaces.'] },
+      steps: ["Mona's address and note are filled in, and the button is ready.", 'Her phone number has spaces, the normal way to write it, and the form refuses it without saying so.', 'The fault is the phone check: it should accept spaces.'] },
     ar: { over: 'حدّد · الخطوة 9', frame: 'مثال · صفحة الدفع في غداء سريع', who: 'منى · مثال',
-      scenario: 'تكتب منى رقم موبايلها كما هو مطبوع في بطاقتها: ⁦010 1234 5678⁩. لكنها لا تستطيع إتمام الطلب.',
+      scenario: 'تكتب منى رقم موبايلها كما هو مطبوع في بطاقتها: ⁦010 1234 5678⁩. تضغط «أكّد الطلب»، ولا يحدث شيء.',
       question: 'اضغط على الجزء الذي يوقف منى في صفحة الدفع.',
       regions: { addr: 'عنوان التوصيل', phone: 'رقم هاتف للسائق', note: 'ملاحظة للسائق', btn: 'زر «أكّد الطلب»' },
-      miscon: 'الزر يعمل. حقل الهاتف هو الذي يرفض رقم منى بسبب المسافات، ورسالة الخطأ لا تقول ذلك.',
-      hints: ['ابحث عن مكان لم تخطئ فيه منى، لكن النموذج يقول إنها أخطأت.', 'يكتب الناس أرقام الهواتف بمسافات. هل يقبل هذا النموذج ذلك؟'],
+      miscon: 'الزر يعمل. حقل الهاتف هو الذي يرفض رقم منى بسبب المسافات، ولا شيء يخبرها بذلك.',
+      hints: ['ابحث عن مكان لم تخطئ فيه منى، لكن النموذج يرفضه مع ذلك.', 'يكتب الناس أرقام الهواتف بمسافات. هل يقبل هذا النموذج ذلك؟'],
       correct: 'حقل الهاتف: يرفض رقمًا مكتوبًا بالطريقة المعتادة.',
       why: 'يكتب الناس الأرقام في مجموعات ليسهل قراءتها. على النموذج أن يقبل المسافات والشَرطات وينظّمها بنفسه، بدلًا من لوم منى.',
-      steps: ['العنوان والملاحظة مكتوبان، والزر جاهز.', 'حقل الهاتف يُظهر خطأً في رقم كتبته منى بشكل صحيح.', 'الخلل في تحقّق الهاتف: يجب أن يقبل المسافات.'] } }
+      steps: ['العنوان والملاحظة مكتوبان، والزر جاهز.', 'في رقم منى مسافات، وهي الطريقة المعتادة لكتابته، والنموذج يرفضه دون أن يقول ذلك.', 'الخلل في تحقّق الهاتف: يجب أن يقبل المسافات.'] } }
 };
+/* Mastery round: the same skills on a new case, never the lesson's own example. */
+const M = {
+  match: { q: 1, left: ['name', 'dob', 'mobile', 'ins'], right: ['file', 'bill', 'call', 'remind'],
+    answer: { name: 'call', dob: 'file', mobile: 'remind', ins: 'bill' },
+    selPairs: { name: 'call', ins: 'bill' }, selL: 'mobile', wrongPairs: { name: 'call', dob: 'remind', mobile: 'file', ins: 'bill' },
+    en: { over: 'Match', frame: "Example · Nour's clinic", who: 'Nour · Example',
+      scenario: 'Nour runs a small family clinic. Her booking form asks for four details, and each one should have a job.',
+      question: 'Pair each field with what the clinic uses it for.',
+      left: { name: 'Full name', dob: 'Date of birth', mobile: 'Mobile number', ins: 'Insurance number' },
+      right: { file: "Finding the patient's medical file", bill: 'Sending the bill to the insurer', call: 'Calling the patient in from the waiting room', remind: 'Texting a reminder the day before' },
+      miscon: "A reminder has to reach the patient's phone, so the clinic texts the mobile. The date of birth tells one patient's file apart from another with the same name.",
+      hints: ['Which detail does the clinic need to reach the patient, and which to find the file?', 'Two patients can share a name, but rarely a name and a date of birth.'],
+      correct: 'Every field has a job.',
+      why: "When each field has a clear use, patients can see why the clinic asks. A field you can't pair with a job is a field to cut.",
+      steps: ['The name is for calling the patient in.', 'The date of birth finds the file; the mobile gets the reminder.', 'The insurance number is for the bill.'] },
+    ar: { over: 'صِل', frame: 'مثال · عيادة نور', who: 'نور · مثال',
+      scenario: 'تدير نور عيادة صغيرة للأسرة. يطلب نموذج الحجز أربع معلومات، ولكل واحدة عمل.',
+      question: 'صِل كل حقل بما تستخدمه العيادة فيه.',
+      left: { name: 'الاسم الكامل', dob: 'تاريخ الميلاد', mobile: 'رقم الموبايل', ins: 'رقم التأمين' },
+      right: { file: 'إيجاد الملف الطبي للمريض', bill: 'إرسال الفاتورة إلى شركة التأمين', call: 'مناداة المريض من غرفة الانتظار', remind: 'رسالة تذكير قبل الموعد بيوم' },
+      miscon: 'التذكير يجب أن يصل إلى هاتف المريض، لذا ترسله العيادة برسالة إلى الموبايل. وتاريخ الميلاد يميّز ملف المريض عن ملف آخر بالاسم نفسه.',
+      hints: ['أي معلومة تحتاجها العيادة لتصل إلى المريض، وأيها لتجد ملفه؟', 'قد يتشابه اسما مريضين، لكن نادرًا ما يتشابه الاسم وتاريخ الميلاد معًا.'],
+      correct: 'لكل حقل عمل.',
+      why: 'حين يكون لكل حقل استخدام واضح، يرى المرضى لماذا تسأل العيادة. والحقل الذي لا تجد له عملًا حقل يجب حذفه.',
+      steps: ['الاسم لمناداة المريض.', 'تاريخ الميلاد لإيجاد الملف، والموبايل للتذكير.', 'رقم التأمين للفاتورة.'] } },
+  fix: { q: 2, ctx: 'clinic', answer: 2,
+    en: { over: 'Fix', frame: "Example · Nour's clinic booking form", who: 'Nour · Example',
+      scenario: 'Nour\'s clinic form says "Insurance number (optional)". Karim pays cash, so he leaves it empty and taps Book visit. The form stops him.',
+      question: 'Which fix should ship?',
+      opts: ['Change the label to "Insurance number *"', 'Keep both; the error tells him what to do', 'Fix the check, so a visit books without insurance'],
+      miscon: 'Now the label matches the check, but patients who pay cash have no insurance number. They could never book. Fix the check instead.',
+      hints: ['The label and the check disagree. Which one matches what the clinic needs?', 'Can a patient who pays cash fill this field at all?'],
+      correct: 'The label was right, so fix the check.',
+      why: 'Patients who pay cash have no insurance number. The label already says the field is optional, so the check has to agree.',
+      steps: ['The label says optional; the check says required. One of them is wrong.', 'Patients who pay cash have no insurance number, so the label is right.', 'Fix the check, so a visit books without insurance.'] },
+    ar: { over: 'أصلِح', frame: 'مثال · نموذج الحجز في عيادة نور', who: 'نور · مثال',
+      scenario: 'في نموذج عيادة نور حقل «رقم التأمين (اختياري)». كريم يدفع نقدًا، فيتركه فارغًا ويضغط «احجز الزيارة». فيوقفه النموذج.',
+      question: 'أي إصلاح يجب أن يُطلق؟',
+      opts: ['غيّر التسمية إلى «رقم التأمين *»', 'أبقِ الاثنين؛ فرسالة الخطأ تخبره بما يفعل', 'أصلِح التحقق، لتُحجز الزيارة بلا تأمين'],
+      miscon: 'الآن تتّفق التسمية مع التحقق، لكن من يدفع نقدًا ليس لديه رقم تأمين، فلن يستطيع الحجز أبدًا. أصلِح التحقق بدلًا من ذلك.',
+      hints: ['التسمية والتحقّق لا يتّفقان. أيهما يطابق ما تحتاجه العيادة؟', 'هل يستطيع مريض يدفع نقدًا أن يملأ هذا الحقل أصلًا؟'],
+      correct: 'التسمية صحيحة، فأصلِح التحقق.',
+      why: 'من يدفع نقدًا ليس لديه رقم تأمين. والتسمية تقول إن الحقل اختياري، فيجب أن يتّفق التحقق معها.',
+      steps: ['التسمية تقول اختياري، والتحقق يقول إلزامي. أحدهما خطأ.', 'من يدفع نقدًا ليس لديه رقم تأمين، إذن التسمية صحيحة.', 'أصلِح التحقق لتُحجز الزيارة بلا تأمين.'] } }
+};
+const M_TOTAL = 2;
+const specFor = (kind, mode) => (mode === 'mastery' && M[kind]) ? M[kind] : K[kind];
 const KEYS = { en: ['A', 'B', 'C', 'D'], ar: ['أ', 'ب', 'ج', 'د'] };
-const CHOICE_KINDS = ['predict', 'tryfirst', 'words', 'fix', 'reason'];
+const CHOICE_KINDS = ['predict', 'words', 'fix', 'reason'];
 
-function preset(kind, st) {
+function preset(kind, stIn, sp) {
+  const st = stIn === 'rightFirst' ? 'right' : stIn;
   const base = { phase: 'idle', picked: null, tries: 0, hints: 0, conf: null, tried: [], revealed: false, also: false, why: false,
     place: {}, sel: null, order: null, moved: null, pairs: {}, selL: null, list: false, mockOpen: false };
   const s = Object.assign({}, base);
   const wrongish = ['wrong', 'hint2', 'reveal', 'confWrong'];
   if (CHOICE_KINDS.indexOf(kind) >= 0) {
-    const ans = K[kind].answer;
+    const ans = sp.answer;
     const wrongPick = kind === 'words' ? 0 : (kind === 'reason' ? 0 : (kind === 'fix' ? 0 : 1));
-    if (st === 'select') Object.assign(s, { phase: 'selected', picked: kind === 'tryfirst' ? 2 : wrongPick, conf: 1 });
+    if (st === 'select') Object.assign(s, { phase: 'selected', picked: wrongPick, conf: 1 });
     if (st === 'confAsk') Object.assign(s, { phase: 'selected', picked: wrongPick, conf: null });
-    if (st === 'noted') Object.assign(s, { phase: 'noted', picked: 2 });
     if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', picked: wrongPick, tries: 1, hints: 1, conf: st === 'confWrong' ? 2 : 1, tried: [wrongPick] });
     if (st === 'hint2') Object.assign(s, { tries: 2, hints: 2, tried: [wrongPick, wrongPick === 0 ? 2 : 0] });
     if (st === 'reveal') Object.assign(s, { phase: 'right', picked: ans, tries: 3, hints: 2, revealed: true, tried: [0, 2] });
     if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', picked: ans, tries: 1, hints: 1, conf: 1, tried: [wrongPick], why: st === 'why' });
-    if (st === 'also') Object.assign(s, { phase: 'right', picked: K[kind].also != null ? K[kind].also : ans, also: K[kind].also != null, tries: 0, conf: 1 });
+    if (st === 'also') Object.assign(s, { phase: 'right', picked: sp.also != null ? sp.also : ans, also: sp.also != null, tries: 0, conf: 1 });
     if (st === 'saved') Object.assign(s, { phase: 'saved', picked: wrongPick });
   }
   if (kind === 'sort') {
-    const a = K.sort.answer;
+    const a = sp.answer;
     if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', place: { name: 'trial', mobile: 'trial', fax: 'never' }, sel: 'nid' });
     if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', place: Object.assign({}, a, { dob: 'trial' }), tries: 1, hints: 1 });
     if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', place: Object.assign({}, a), tries: 1, hints: 1, why: st === 'why' });
     if (st === 'saved') Object.assign(s, { phase: 'saved', place: Object.assign({}, a, { dob: 'trial' }) });
   }
   if (kind === 'order') {
-    s.order = K.order.items.slice();
+    s.order = sp.items.slice();
     if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', order: ['photo', 'add', 'price', 'ingr'], moved: 'photo' });
     if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', order: ['photo', 'price', 'add', 'ingr'], tries: 1, hints: 1 });
-    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', order: K.order.answers[0].slice(), tries: 1, hints: 1, why: st === 'why' });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', order: sp.answers[0].slice(), tries: 1, hints: 1, why: st === 'why' });
     if (st === 'saved') Object.assign(s, { phase: 'saved', order: ['photo', 'price', 'add', 'ingr'] });
   }
   if (kind === 'match') {
-    if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', pairs: { name: 'greet', email: 'schedule' }, selL: 'mobile' });
-    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', pairs: { name: 'greet', email: 'urgent', mobile: 'schedule', nid: 'contract' }, tries: 1, hints: 1 });
-    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', pairs: Object.assign({}, K.match.answer), tries: 1, hints: 1, why: st === 'why' });
-    if (st === 'saved') Object.assign(s, { phase: 'saved', pairs: { name: 'greet', email: 'urgent', mobile: 'schedule', nid: 'contract' } });
+    if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', pairs: Object.assign({}, sp.selPairs), selL: sp.selL });
+    if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', pairs: Object.assign({}, sp.wrongPairs), tries: 1, hints: 1 });
+    if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', pairs: Object.assign({}, sp.answer), tries: 1, hints: 1, why: st === 'why' });
+    if (st === 'saved') Object.assign(s, { phase: 'saved', pairs: Object.assign({}, sp.wrongPairs) });
   }
   if (kind === 'spot') {
     if (st === 'select' || st === 'idle') Object.assign(s, { phase: 'selected', picked: 'btn' });
@@ -712,25 +757,27 @@ function preset(kind, st) {
     if (st === 'right' || st === 'why') Object.assign(s, { phase: 'right', picked: 'phone', tries: 1, hints: 1, tried: ['btn'], why: st === 'why' });
     if (st === 'saved') Object.assign(s, { phase: 'saved', picked: 'btn' });
   }
+  /* first try: right with no wrong try and no hint (+10 XP) */
+  if (stIn === 'rightFirst') Object.assign(s, { tries: 0, hints: 0, tried: [] });
   return s;
 }
 
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = Object.assign({ sound: true, overlay: props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(props), this.stateName(props)));
+    this.state = Object.assign({ sound: true, overlay: props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(props), this.stateName(props), specFor(this.kind(props), props.mode)));
   }
   kind(p) { return K[(p || this.props).kind] ? (p || this.props).kind : 'words'; }
   stateName(p) { const m = (p || this.props).mode; const st = (p || this.props).state || 'select'; return m === 'check' && st !== 'select' && st !== 'idle' ? 'saved' : st; }
   componentDidUpdate(prev) {
     if (prev.kind !== this.props.kind || prev.state !== this.props.state || prev.mode !== this.props.mode || prev.overlay !== this.props.overlay) {
-      this.setState(Object.assign({ overlay: this.props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(), this.stateName())));
+      this.setState(Object.assign({ overlay: this.props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(), this.stateName(), specFor(this.kind(), this.props.mode))));
     }
   }
   sfx(name) { if (this.state.sound && this.props.sfx) this.props.sfx(name); }
 
   verdict() {
-    const kind = this.kind(); const s = this.state; const k = K[kind];
+    const kind = this.kind(); const s = this.state; const k = specFor(kind, this.props.mode);
     if (kind === 'sort') { const wrong = k.items.filter((i) => s.place[i] !== k.answer[i]); return { ok: wrong.length === 0, wrong }; }
     if (kind === 'order') { const ok = k.answers.some((a) => a.join() === s.order.join()); return { ok, wrong: ok ? [] : ['add'] }; }
     if (kind === 'match') { const wrong = k.left.filter((l) => s.pairs[l] !== k.answer[l]); return { ok: wrong.length === 0, wrong }; }
@@ -740,7 +787,7 @@ class Component extends DCLogic {
     return { ok: false };
   }
   ready() {
-    const kind = this.kind(); const s = this.state; const k = K[kind];
+    const kind = this.kind(); const s = this.state; const k = specFor(kind, this.props.mode);
     if (kind === 'sort') return k.items.every((i) => s.place[i]);
     if (kind === 'order') return true;
     if (kind === 'match') return k.left.every((l) => s.pairs[l]);
@@ -753,18 +800,19 @@ class Component extends DCLogic {
     const isDesk = device === 'desktop';
     const mode = ['check', 'mastery', 'guest'].indexOf(this.props.mode) >= 0 ? this.props.mode : 'lesson';
     const kind = this.kind();
-    const c = C[lang]; const x = X[lang]; const spec = K[kind]; const k = spec[lang];
+    const c = C[lang]; const x = X[lang]; const spec = specFor(kind, mode); const k = spec[lang];
     const s = this.state;
     const nav = this.props.nav;
     const go = (to) => (e) => { if (e) e.preventDefault(); if (nav) nav(to); };
-    const after = ['wrong', 'right', 'noted', 'saved'].indexOf(s.phase) >= 0;
+    const after = ['wrong', 'right', 'saved'].indexOf(s.phase) >= 0;
     const isChoice = CHOICE_KINDS.indexOf(kind) >= 0;
     const isCheck = mode === 'check'; const isMastery = mode === 'mastery';
     const ov = s.overlay;
 
     /* header */
-    const stepNo = isCheck ? 2 : spec.step;
-    const stepMax = isCheck ? 4 : 10;
+    const stepNo = isCheck ? 2 : isMastery && spec.q ? spec.q : spec.step;
+    const stepMax = isCheck ? 4 : isMastery && spec.q ? M_TOTAL : 10;
+    const over = isMastery && spec.q ? k.over + ' · ' + c.qOf(spec.q, M_TOTAL) : k.over;
     const save = ov === 'saving' ? { show: true, cls: 'lp-save is-saving', icon: 'ph ph-cloud-up', text: c.saving }
       : ov === 'saved' || ov === 'synced' ? { show: true, cls: 'lp-save is-saved', icon: 'ph ph-cloud-check-fill', text: c.saved }
       : ov === 'offline' ? { show: true, cls: 'lp-save is-offline', icon: 'ph ph-wifi-slash', text: c.offline }
@@ -778,11 +826,10 @@ class Component extends DCLogic {
     const ctxKind = spec.ctx === 'gymDesk' ? (isDesk ? 'gym' : null) : spec.ctx;
     const ctxHideAfter = !isDesk && after && isChoice && !s.mockOpen;
     const showCtx = !!ctxKind && !(ctxHideAfter) && !(kind === 'order' && !isDesk && after) && !(!isDesk && kind === 'reason' && !s.mockOpen) && !(!isDesk && kind === 'spot' && s.list);
-    const ctx = { gym: ctxKind === 'gym', gymStep: ctxKind === 'gymStep', words: ctxKind === 'words', fix: ctxKind === 'fix', order: ctxKind === 'order', spot: ctxKind === 'spot',
+    const ctx = { gym: ctxKind === 'gym', gymStep: ctxKind === 'gymStep', words: ctxKind === 'words', fix: ctxKind === 'fix', clinic: ctxKind === 'clinic', order: ctxKind === 'order', spot: ctxKind === 'spot',
       variant: spec.variant || 'now', size: isDesk ? 'md' : 'sm', width: isDesk ? (ctxKind === 'spot' ? 420 : 400) : (ctxKind === 'spot' ? 330 : 300) };
     if (ctxKind === 'gymStep') { ctx.width = isDesk ? 460 : 350; }
-    if (!isDesk && kind === 'tryfirst') ctx.size = 'xs';
-    const SCALE = { predict: [0.75, 212], tryfirst: [0.72, 262], words: [0.8, 226] };
+    const SCALE = { predict: [0.75, 212], words: [0.8, 226] };
     ctx.wrap = ''; ctx.inner = '';
     if (!isDesk && SCALE[kind]) { ctx.wrap = 'height: ' + SCALE[kind][1] + 'px; display: flex; justify-content: center; overflow: visible;'; ctx.inner = 'transform: scale(' + SCALE[kind][0] + '); transform-origin: top center;'; }
 
@@ -801,8 +848,8 @@ class Component extends DCLogic {
       else if (s.phase === 'right' && isAns) cls += ' is-right';
       else if (s.phase === 'wrong' && picked) cls += ' is-wrong';
       else if (picked) cls += ' is-selected';
-      else if (tried && s.phase !== 'noted') cls += ' is-dim';
-      const locked = after || (tried && kind !== 'tryfirst');
+      else if (tried) cls += ' is-dim';
+      const locked = after || tried;
       return { key: keys[i], label, cls, checked: picked ? 'true' : 'false', disabled: locked ? 'true' : 'false',
         showRight: s.phase === 'right' && ((isAns && !s.also) || (picked && s.also && !isAns)) ,
         showAlso: false,
@@ -885,7 +932,7 @@ class Component extends DCLogic {
         if (isRight) cls += ' is-right'; else if (isWrong) cls += ' is-wrong'; else if (picked && !after) cls += ' is-selected sel-frame'; else if (after) cls += ' is-dim';
         return { cls, pressed: picked ? 'true' : 'false', aria: k.regions[r], locked: after,
           isField: r !== 'btn', isBtn: r === 'btn', label: r === 'addr' ? x.addr : r === 'phone' ? x.phone : x.noteLbl, value: vals[r] || '',
-          err: r === 'phone', border: r === 'phone' ? '1.5px solid #B42318' : '1px solid #E9C9B2',
+          border: '1px solid #E9C9B2',
           tagRight: isRight, tagWrong: isWrong,
           pick: () => { if (!after) { this.sfx('select-snap'); this.setState({ picked: r, phase: 'selected' }); } } };
       });
@@ -899,7 +946,8 @@ class Component extends DCLogic {
     }) : [];
 
     /* confidence */
-    const hasConf = !!spec.conf && !isCheck && !after;
+    /* no confidence tap for guests: there is no review queue to order yet */
+    const hasConf = !!spec.conf && !isCheck && !after && mode !== 'guest';
     const conf = c.conf.map((label, i) => ({ label, on: s.conf === i ? 'true' : 'false', cls: 'chip press' + (s.conf === i ? ' is-selected' : ''),
       pick: () => { this.sfx('ui-toggle-on'); this.setState({ conf: i }); } }));
     const confMissing = hasConf && s.picked !== null && s.conf === null;
@@ -907,7 +955,8 @@ class Component extends DCLogic {
     /* feedback */
     const v = this.verdict();
     const triesShown = Math.max(1, s.tries);
-    const xp = s.revealed ? 0 : (s.tries === 0 ? 10 : 5);
+    /* 10 first try, 5 after a wrong try or hint, 0 when revealed. The mastery round has no hints or retries, so a right answer there is always a first try. */
+    const xp = s.revealed ? 0 : (isMastery || s.tries === 0 ? 10 : 5);
     const hints = isMastery || isCheck ? [] : k.hints ? k.hints.slice(0, s.hints).map((text, i) => ({ title: c.hintOf(i + 1), text })) : [];
     const rightCls = 'sheet sheet-in lp-sheet ' + (s.also ? 'sheet-also' : 'sheet-right');
 
@@ -915,7 +964,6 @@ class Component extends DCLogic {
       if (!this.ready() || confMissing) return;
       this.sfx('check-press');
       if (isCheck) { this.setState({ phase: 'saved' }); return; }
-      if (kind === 'tryfirst') { this.setState({ phase: 'noted' }); return; }
       const r = this.verdict();
       if (r.ok) { this.sfx(r.also ? 'answer-also-works' : 'answer-right'); this.setState({ phase: 'right', also: !!r.also }); }
       else { this.sfx('answer-wrong'); this.setState({ phase: 'wrong', tries: s.tries + 1, tried: s.tried.concat([s.picked]) }); }
@@ -939,7 +987,8 @@ class Component extends DCLogic {
       mainCls: 'lp-main' + (isDesk && (kind === 'sort' || kind === 'match') ? ' is-wide' : '') + (kind === 'order' ? ' ctx-after' : ''),
       showCtx: showCtx && !(isDesk && (kind === 'sort' || kind === 'match')), ctx, showHana: isDesk && (ctxKind === 'gym' || ctxKind === 'gymStep'),
       gymFont: lang === 'ar' ? "'Almarai', sans-serif" : "'Barlow', sans-serif", gymTrack: lang === 'ar' ? '0' : '0.08em',
-      wordsLabel, fixField: fixed ? '1px solid #C2C8CE' : '1.5px solid #C0262D', fixShowErr: !fixed, fixShowOk: fixed,
+      wordsLabel, fixField: fixed ? '1px solid #C2C8CE' : '1.5px solid #C0262D', clinicField: fixed ? '1px solid #B9CCC8' : '1.5px solid #C0262D',
+      clinicFont: lang === 'ar' ? "'IBM Plex Sans Arabic', sans-serif" : "'IBM Plex Sans', sans-serif", fixShowErr: !fixed, fixShowOk: fixed,
       ph, preview, sp, regions,
       mockCollapsed: !isDesk && ((after && isChoice) || kind === 'reason') && !s.mockOpen && !!ctxKind,
       openMock: () => this.setState({ mockOpen: true }),
@@ -952,7 +1001,7 @@ class Component extends DCLogic {
       showBar: !after, hasConf, conf, confCls: 'lp-conf' + (confMissing ? ' is-ask' : ''), showConfHelp: confMissing,
       checkCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), checkText: c.check,
       checkOff: !this.ready() || confMissing, check,
-      sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', note: s.phase === 'noted', saved: s.phase === 'saved' },
+      sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', saved: s.phase === 'saved' },
       showTry: !isMastery, tryText: c.tryOf(triesShown),
       showSure: s.phase === 'wrong' && s.conf === 2,
       wrongNote: isMastery ? c.masteryMiss : c.kept,
@@ -976,7 +1025,7 @@ class Component extends DCLogic {
       openReview: () => { this.sfx('sheet-up'); this.setState({ overlay: 'review' }); },
       sendReview: () => { this.sfx('ui-tap'); this.setState({ overlay: 'sent' }); },
       reasons: c.reasons.map((label, i) => ({ label, on: s.reason === i ? 'true' : 'false', cls: 'radio' + (s.reason === i ? ' is-on' : ''), pick: () => this.setState({ reason: i }) })),
-      reviewCount: c.reviewSample.length + ' / 280'
+      isEn: lang === 'en', isAr: lang === 'ar', reviewCount: c.reviewCount(c.reviewSample.length), over
     };
   }
 }

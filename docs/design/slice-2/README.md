@@ -12,8 +12,8 @@ Styles are in `../system/uxgate.css`, in the block that starts at `.ug.lp`. Same
 | --- | --- |
 | `lang`, `theme` | `en`/`ar`, `light`/`night` |
 | `device` | `mobile` (390×844), `desktop` (1440×900) |
-| `kind` | `predict`, `tryfirst`, `words`, `fix`, `reason`, `sort`, `order`, `match`, `spot` |
-| `state` | `idle`, `select`, `wrong`, `hint2`, `reveal`, `right`, `why`, `also`, `confAsk`, `confWrong`, `list`, `noted`, `saved` |
+| `kind` | `predict`, `words`, `fix`, `reason`, `sort`, `order`, `match`, `spot` |
+| `state` | `idle`, `select`, `wrong`, `hint2`, `reveal`, `rightFirst` (right on the first try), `right` (right after a hint), `why`, `also`, `confAsk`, `confWrong`, `list`, `saved` |
 | `mode` | `lesson`, `check` (skill check), `mastery` (mastery round), `guest` (sample lesson) |
 | `overlay` | `none`, `exit`, `resume`, `saving`, `saved`, `offline`, `synced`, `review`, `sent` |
 
@@ -25,27 +25,26 @@ Layout: on mobile the order is question, example, answer area, bottom bar. On de
 
 ## Step types
 
-- **Predict (graded):** pick what will happen, then Check. Confidence chips (Guessing, Fairly sure, Sure) next to Check when the step asks for them.
-- **Predict (try-first):** no right answer yet. "Any answer is fine" and "This one is not scored" sit under the options; after Check the sheet is a neutral "Noted" note that tells the learner to keep the guess in mind, never red.
+- **Predict:** always graded, with one logical answer. It asks what the designer should change ("Which change will get more people to finish the trial form?"), never what people will do or think. It is also the try-first opener of a lesson (step 1); there is no ungraded version. Confidence chips (Guessing, Fairly sure, Sure) next to Check when the step asks for them, but not for guests, who have no review queue yet.
 - **Words:** pick the wording for a label. An answer in `also_ok` gets the right sheet titled "Also works" with a seal, and the main answer shown under it.
 - **Fix:** the example has a problem; pick the change that fixes it.
 - **Choose with reason:** the pick first, then the reason question under it, as in Sprint 1 compare. On mobile the example folds away for the reason part.
 - **Sort:** tap an item, then tap a bucket (or "Put it here" in the bucket header). Drag also works on desktop. Items are cards with a grip; buckets show a dashed target when an item is held.
 - **Order:** rows with up and down buttons and a grip. After Check each row is marked right or wrong with its number. A small live preview of the example follows the order.
 - **Match:** tap a left tile, then a right tile; matched pairs share a number badge.
-- **Spot:** tap a region of the example. Regions have a dashed outline at rest, the selection frame when picked and solid green or red after Check. "Use a list instead" switches to a plain radio list of the same regions (screen readers and small screens); in list mode the example is hidden.
+- **Spot:** tap a region of the example. The example shows the problem without marking it (no error text on the faulty field), so the answer isn't given away. Regions have a dashed outline at rest, the selection frame when picked and solid green or red after Check. "Use a list instead" switches to a plain radio list of the same regions (screen readers and small screens); in list mode the example is hidden.
 
 ## Feedback
 
 - **Wrong:** a neutral sheet (no red background; red stays on the picked answer and the verdict icon and word) titled "Not quite" with "Try n of 3", the misconception line, hints as comment pins ("Hint 1 of 2", then 2, in the light `.hint-title` style), Try again. After the third wrong try, Try again goes away and "Show the answer" appears (hint 1, then hint 2, then the answer). When confidence was Sure: "You were sure, so this one comes first in your review." A flag link "Think your answer works too? Ask for a review" on every wrong sheet.
 - **Revealed:** "The answer, step by step" with numbered worked steps; no XP.
-- **Right:** XP, the answer and a "Why?" button that opens the explanation.
+- **Right:** XP, the answer and a "Why?" button that opens the explanation. XP is 10 on the first try, 5 after a wrong try or a hint, 0 when the answer was shown. The S2-4 row shows both: "Right, first try" (+10) and "Right after a hint" (+5).
 - **Skill check:** no hints, no verdict per step. Check leads to a quiet "Answer saved" sheet with progress dots and "No right or wrong during a skill check". The summary page lists each skill as Shown أثبتّ or "Try again later".
-- **Mastery round:** only steps from skills missed in the unit. Wrong says "This skill comes back once more, with a new example" and shows only Continue; the end page shows which skills moved to Kept أتقنت. If nothing was missed, the round is skipped with its own page.
+- **Mastery round:** only steps from skills missed in the unit, each on a new case that the lesson never used (on the boards, Nour's family clinic: a match step on what each booking field is for, and a fix step where "Insurance number (optional)" is blocked by the check). Steps are numbered within the round, "Match · Question 1 of 2", and the header counts 1/2, never the lesson's step number. No hints and no retry, so a right answer is always a first try: +10 XP. Wrong says "This skill comes back once more, with a new example" and shows only Continue; the end page shows which skills moved to Kept أتقنت. If nothing was missed, the round is skipped with its own page.
 
 ## Video and concept
 
-- Video: night stage with the white mark, captions with an English/Arabic switch, CC, a scrubbable bar, a transcript where the current line is highlighted, and a replay page at the end. Never autoplays; the play button is the first focus.
+- Video: on desktop the player is 16:9 (at most 500 px tall) and the transcript panel is open next to it from the start, so the whole step fits 900 px above the bottom bar. Night stage with the white mark, captions with an English/Arabic switch, CC, a scrubbable bar, a transcript where the current line is highlighted, and a replay page at the end. Never autoplays; the play button is the first focus.
 - Concept card: illustration, one-line idea and up to four question cards, each with a short answer.
 
 ## Exit, saving, offline, guest, review
@@ -54,7 +53,7 @@ Layout: on mobile the order is question, example, answer area, bottom bar. On de
 - **Resume:** the home card "Pick up where you left off" with step count; inside the lesson a banner "Welcome back. You left off at this step." with Start over.
 - **Saving:** a small chip in the header: Saving (turning sync icon), Saved (cloud check), Offline (wifi slash) with a banner "Answers are kept on this device and sync when you're back". When the connection returns, a toast says every answer is synced. Offline end page keeps the result and says it will sync.
 - **Guest:** from the landing, with the banner "You're trying a sample lesson. Sign up at the end to keep your progress." on top and no XP saved. End page offers sign up to keep the result; sign up sheet over it.
-- **Review:** form with four reasons (my answer also works, the question is unclear, something on the screen is broken, something else), an optional note (280 characters) and Send. A toast confirms: "Sent. We'll let you know what we decide." The reply arrives in notifications.
+- **Review:** form with four reasons (my answer also works, the question is unclear, something on the screen is broken, something else), an optional note (280 characters, counter "64 / 280", in Arabic «64 من 280») and Send. A toast confirms: "Sent. We'll let you know what we decide." The reply arrives in notifications.
 
 ## Icons (Phosphor names for the app)
 
@@ -66,7 +65,7 @@ Uploaded on the canvas and reused from the illustration set: skill check, medal 
 
 ## Content used
 
-Sample content only. Fix uses P01-U01-L02 step 5; the rest use Hana's Gym and Lunch To Go examples written for the boards. Hints are sample hints until the content thread delivers the real ones. Field names follow `docs/content-format.md` (`also_ok`, `reason`, `confidence`, mastery round, skill check).
+Sample content only. Fix uses P01-U01-L02 step 5; the rest use Hana's Gym and Lunch To Go examples written for the boards, and the mastery round uses Nour's clinic (its own mock, in IBM Plex Sans and teal) so it never repeats a lesson example. Hints are sample hints until the content thread delivers the real ones. Field names follow `docs/content-format.md` (`also_ok`, `reason`, `confidence`, mastery round, skill check).
 
 ## Sprint 1 copy fixes in this change
 
