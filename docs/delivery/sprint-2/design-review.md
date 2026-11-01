@@ -67,3 +67,16 @@ The build copies these examples, so they should follow the content rules (memory
 - The skill check has no verdicts, the summary is clear, and the mastery "nothing to retry" page exists.
 - Exit, resume, saving, offline and sync states are clear and calm.
 - The guest banner and the sign-up sheet keep the earned XP and the skill.
+
+### Round 2 re-check (1 November 2026, canvas v34)
+
+I re-rendered the changed rows. Fixes 1–7 and 10 are done:
+- The review note shows its text, and the Arabic counter reads «64 من 280».
+- The desktop video is 16:9, with the transcript beside it, and nothing sits under the bar.
+- The mastery round uses Nour's clinic, with "Question 1 of 2" and +10 XP.
+- The ungraded try-first is removed, and the guest lesson opens with the graded predict.
+- The predict step asks "Which change will get more people to finish the trial form?"
+- The spot mock no longer shows the error.
+- The feedback row has a first-try Right at +10 XP before Right after a hint at +5 XP.
+
+**Ready for Eyad's approval.**
