@@ -74,7 +74,7 @@ export const C19: React.FC = () => {
   const sel = (a: number, b: number) => enter(f, a, 10) * (f < b - 8 ? 1 : Math.max(0, (b - f) / 8));
   const address: Record<Scene, string> = {
     def: "lokma.app/review", times: "tazkara.app/movie", btns: "shop.app/product", mail: "mail.app/compose", types: "chips.guide/types", assist: "lokma.app/place",
-    filter: "shop.app/search", site: "suwar.com/search", mail2: "mail.app/compose", trans: "kalima.app", chat: "chat.app/mona", guide: "lokma.app/review", flow: "lokma.app/review",
+    filter: "shop.app/search", site: "suwar.com/search", mail2: "mail.app/compose", trans: "kalima.app", chat: "chat.app/dina", guide: "lokma.app/review", flow: "lokma.app/review",
   };
   const mode: DebugMode = scene === "def" || scene === "times" || scene === "assist" || scene === "trans" || scene === "chat" ? "live" : scene === "guide" && f >= B.single ? "compare" : "inspect";
 
@@ -96,7 +96,7 @@ export const C19: React.FC = () => {
     </>
   );
 
-  // mail To field: [Mona] [Karim] typing…
+  // mail To field: [Dina] [Yasser] typing…
   const mailTo = (list: { n: string; tap?: number; o?: number }[], typing: string, caret: boolean) => (
     <>
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", minHeight: 58, borderBottom: `1.5px solid ${LINE}`, padding: "8px 0" }}>
@@ -114,19 +114,19 @@ export const C19: React.FC = () => {
     </>
   );
 
-  // mail (usage): Mona is there; Karim is typed and becomes a chip; Mona is removed; Salma is typed and added
-  const monaGone = f >= B.tapRm + 18;
+  // mail (usage): Dina is there; Yasser is typed and becomes a chip; Dina is removed; Salma is typed and added
+  const dinaGone = f >= B.tapRm + 18;
   const mailList = [
-    ...(monaGone ? [] : [{ n: "منى", tap: tap(B.tapRm) }]),
-    ...(f >= B.chip1 ? [{ n: "كريم" }] : []),
+    ...(dinaGone ? [] : [{ n: "دينا", tap: tap(B.tapRm) }]),
+    ...(f >= B.chip1 ? [{ n: "ياسر" }] : []),
     ...(f >= B.chip2 ? [{ n: "سلمى" }] : []),
   ];
-  const mailTyping = f < B.chip1 ? typed("كريم", B.mail + 20, 9) : f >= B.add2 && f < B.chip2 ? typed("سلمى", B.add2 + 10, 9) : "";
+  const mailTyping = f < B.chip1 ? typed("ياسر", B.mail + 20, 9) : f >= B.add2 && f < B.chip2 ? typed("سلمى", B.add2 + 10, 9) : "";
 
   // mail2 (input): type "Hossam", Enter turns it into a chip; tapping it removes it
   const h2chip = f >= B.enter2;
   const h2gone = f >= B.tapRm2 + 18;
-  const mail2List = [{ n: "كريم" }, { n: "سلمى" }, ...(h2chip && !h2gone ? [{ n: "حسام", tap: tap(B.tapRm2) }] : [])];
+  const mail2List = [{ n: "ياسر" }, { n: "سلمى" }, ...(h2chip && !h2gone ? [{ n: "حسام", tap: tap(B.tapRm2) }] : [])];
 
   // filters
   const saleOn = f >= B.tapF;
@@ -318,7 +318,7 @@ export const C19: React.FC = () => {
       ) : null}
 
       {scene === "chat" ? (
-        <Panel r={ONE} head="حكاوي · منى">
+        <Panel r={ONE} head="حكاوي · دينا">
           <div style={{ height: 300, display: "flex", flexDirection: "column", justifyContent: "flex-end", gap: 10 }}>
             <div style={{ alignSelf: "flex-start", background: "#F1F2F5", borderRadius: 16, padding: "12px 16px", fontSize: 20, maxWidth: 340 }}>خلّصت الملف أخيرًا 🎉</div>
             <div style={{ alignSelf: "flex-start", background: "#F1F2F5", borderRadius: 16, padding: "12px 16px", fontSize: 20, maxWidth: 340 }}>هنتقابل بكرة الساعة 7؟</div>

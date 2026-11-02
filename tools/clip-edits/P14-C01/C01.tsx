@@ -242,7 +242,7 @@ export const C01: React.FC = () => {
         </Card>
         {login > 0 ? (
           <div style={{ opacity: login }}>
-            <Field r={L(38, 120 + 118, PH.w - 76, 44)} value={typed(f, B.c2Type, B.c2Type + 40, "mona@mail.com") || "البريد الإلكتروني"} caret={f >= B.c2Type && f < B.c2Type + 42} ltr={f >= B.c2Type} />
+            <Field r={L(38, 120 + 118, PH.w - 76, 44)} value={typed(f, B.c2Type, B.c2Type + 40, "dina@mail.com") || "البريد الإلكتروني"} caret={f >= B.c2Type && f < B.c2Type + 42} ltr={f >= B.c2Type} />
             <Field r={L(38, 120 + 172, PH.w - 76, 44)} value={f >= B.c2Type + 50 ? "••••••••".slice(0, Math.min(8, Math.round((f - B.c2Type - 50) / 3))) : "كلمة المرور"} caret={f >= B.c2Type + 50 && f < B.c2Login} ltr={f >= B.c2Type + 50} />
             <Btn r={loginBtn} text="تسجيل الدخول" filled />
           </div>
@@ -259,7 +259,7 @@ export const C01: React.FC = () => {
           ))}
         </div>
         <div style={{ position: "absolute", top: 122, left: 14, right: 14, fontSize: 15, fontWeight: 700, color: D.brand, display: "flex", alignItems: "center", gap: 6 }}>
-          <IconCheck color={D.brand} size={20} stroke={2.6} /> مرحبًا منى، أكمل طلبك
+          <IconCheck color={D.brand} size={20} stroke={2.6} /> مرحبًا دينا، أكمل طلبك
         </div>
         <Field r={L(18, 190, PH.w - 36, 48)} label="عنوان الشحن" value="" />
         <Field r={L(18, 270, PH.w - 36, 48)} label="رقم الهاتف" value="" />

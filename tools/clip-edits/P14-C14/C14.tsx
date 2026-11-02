@@ -49,7 +49,7 @@ export const C14: React.FC = () => {
   const flVal = f < B.up ? "" : typed("mariam.hassan@mail.com", f, B.up, 10);
 
   // search: placeholder until the tap
-  const q = f < B.tap ? "" : typed("كريم شمس", f, B.tap + 10, 5);
+  const q = f < B.tap ? "" : typed("ياسر شمس", f, B.tap + 10, 5);
 
   // required/optional phases
   const reqPhase = f < B.opt ? "star" : f < B.both ? "opt" : "both";
@@ -98,7 +98,7 @@ export const C14: React.FC = () => {
             <span style={{ fontSize: 22, color: q ? INK : "#8A929E" }}>{q || "ابحث عن جهة اتصال أو رقم"}</span>
           </div>
           <Small text="الأخيرة" muted />
-          {["كريم شمس", "منى سعد", "خالد عمر"].map((n) => (
+          {["ياسر شمس", "دينا سعد", "خالد عمر"].map((n) => (
             <div key={n} style={{ display: "flex", alignItems: "center", gap: 12, height: 52, fontSize: 21 }}>
               <span style={{ width: 38, height: 38, borderRadius: 19, background: D.brandSoft }} />
               {n}
