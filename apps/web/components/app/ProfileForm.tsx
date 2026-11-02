@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
+import { ReminderField } from "@/components/app/ReminderField";
 import { play } from "@/lib/sound";
 import { flush, setSyncUser } from "@/lib/sync";
 import { saveProfile, signOut } from "@/app/[locale]/app/(shell)/profile/actions";
@@ -45,11 +46,7 @@ export function ProfileForm({ initial, email, userId }: { initial: { displayName
             ))}
           </div>
         </div>
-        <div className="field">
-          <label htmlFor="pf-reminder">{o("reminder")}</label>
-          <div className="input" style={{ maxInlineSize: 200 }}><span className="ph ph-bell" aria-hidden="true" /><input id="pf-reminder" type="time" value={reminder} onChange={(e) => { setReminder(e.target.value); setStatus("idle"); }} /></div>
-          <span className="help">{o("reminderNote")}</span>
-        </div>
+        <ReminderField value={reminder || null} onChange={(v) => { setReminder(v ?? ""); setStatus("idle"); }} />
         <button type="button" className="btn btn-primary btn-lg press" onClick={save} disabled={pending || !name.trim()}>{t("save")}</button>
         {status === "saved" ? <p className="t-small" role="status" style={{ color: "var(--right-ink)", fontWeight: 700 }}>{t("saved")}</p> : null}
         {status === "failed" ? <p className="ob-err" role="alert">{t("failed")}</p> : null}

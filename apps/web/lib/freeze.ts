@@ -70,5 +70,5 @@ export function weekGoalProgress(today: string, activity: Record<string, DayActi
     const d = shiftDay(monday, i);
     if (d <= today && activity[d]?.goalMet) goalDays++;
   }
-  return { goalDays, needed: FREEZE_GOAL_DAYS, left: Math.max(0, FREEZE_GOAL_DAYS - goalDays), monday };
+  return { goalDays, needed: FREEZE_GOAL_DAYS, more: Math.max(0, FREEZE_GOAL_DAYS - goalDays), monday };
 }

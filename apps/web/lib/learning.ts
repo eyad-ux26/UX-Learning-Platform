@@ -18,6 +18,14 @@ export function pickPath(recommendedId: string | null | undefined, b: Bundle = d
   return playable.find((p) => p.id === recommendedId) ?? playable[0];
 }
 
+/** The current path when it is joined and playable; otherwise the first joined playable path; otherwise the recommended one. */
+export function pickCurrent(currentId: string | null | undefined, joined: readonly string[], recommendedId: string | null | undefined, b: Bundle = defaultBundle): PathMeta | undefined {
+  const ok = (id: string | null | undefined) => (id ? pickPath(id, b)?.id === id : false);
+  if (ok(currentId) && (joined.length === 0 || joined.includes(currentId!))) return pickPath(currentId, b);
+  const first = joined.find(ok);
+  return pickPath(first ?? recommendedId, b);
+}
+
 export function buildPathView(pathId: string, progress: Pick<Progress, "finishedLessons" | "startedLessons" | "xpByLesson">, practicedSkills: ReadonlySet<string>, b: Bundle = defaultBundle): PathView | null {
   const path = b.paths.find((p) => p.id === pathId);
   if (!path) return null;

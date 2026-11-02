@@ -10,7 +10,7 @@ export async function loadProgress(db: SupabaseClient, userId: string, now = new
   const [attempts, xp, activity] = await Promise.all([
     db.from("attempts").select("id, lesson_id, finished_at").eq("user_id", userId),
     db.from("xp_events").select("attempt_id, amount").eq("user_id", userId),
-    db.from("daily_activity").select("day, lessons_done").eq("user_id", userId).gte("day", since),
+    db.from("daily_activity").select("day, lessons_done, goal_met, freeze_used").eq("user_id", userId).gte("day", since),
   ]);
 
   const lessonOfAttempt = new Map<string, string>();
@@ -29,14 +29,19 @@ export async function loadProgress(db: SupabaseClient, userId: string, now = new
     if (lesson) xpByLesson[lesson] = (xpByLesson[lesson] ?? 0) + e.amount;
   }
   const days = (activity.data ?? []).filter((d) => d.lessons_done > 0).map((d) => d.day as string);
+  const frozenDays = (activity.data ?? []).filter((d) => d.freeze_used).map((d) => d.day as string);
+  const week: Record<string, { lessons: number; goalMet: boolean }> = {};
+  for (const d of activity.data ?? []) if (d.day >= lastDays(today, 14)[0]) week[d.day as string] = { lessons: d.lessons_done, goalMet: !!d.goal_met };
 
   return {
     displayName: profile?.display_name ?? null,
     dailyGoal: profile?.daily_goal ?? 1,
     xpTotal,
     lessonsToday: (activity.data ?? []).find((d) => d.day === today)?.lessons_done ?? 0,
-    streak: streakDays(days, today),
+    streak: streakDays(days, today, frozenDays),
     activeDays: days.filter((d) => lastDays(today).includes(d)),
+    frozenDays: frozenDays.filter((d) => lastDays(today).includes(d)),
+    recentActivity: week,
     today,
     finishedLessons: [...finished],
     startedLessons: [...started],

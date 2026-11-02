@@ -65,6 +65,8 @@ export type Progress = {
   lessonsToday: number;
   streak: number;
   activeDays: string[]; // last 7 days with a finished lesson, YYYY-MM-DD
+  frozenDays: string[]; // last 7 days a streak freeze covered
+  recentActivity: Record<string, { lessons: number; goalMet: boolean }>; // last 14 days
   today: string;
   finishedLessons: string[];
   startedLessons: string[];

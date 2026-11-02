@@ -8,7 +8,7 @@ import { initSound, play, readMuted, setMuted } from "@/lib/sound";
 
 function useActive() {
   const pathname = usePathname();
-  return (id: Item["id"]) => (id === "home" ? pathname === "/app" : id === "paths" ? pathname.startsWith("/app/path") : pathname.startsWith("/app/profile"));
+  return (id: Item["id"]) => (id === "home" ? pathname === "/app" : id === "paths" ? pathname.startsWith("/app/path") : id === "review" ? pathname.startsWith("/app/review") : pathname.startsWith("/app/profile"));
 }
 
 /** Phone: the floating toolbar at the bottom. */

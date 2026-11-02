@@ -1,8 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
 import { Shell } from "@/components/app/Shell";
 import { ProfileForm } from "@/components/app/ProfileForm";
-import { buildPathView, pickPath } from "@/lib/learning";
+import { ProfileMain } from "@/components/app/ProfileMain";
 import { requireLearner } from "@/lib/server/learner";
+import { ensureCertificates } from "@/lib/server/certificates";
 
 export const dynamic = "force-dynamic";
 
@@ -10,17 +11,22 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
-  const path = pickPath(me.currentPathId ?? me.recommendedPathId)!;
-  const view = buildPathView(path.id, me.progress, me.practicedSkills)!;
   let email = "";
   let reminder = "";
+  let boardOpen = false;
   if (me.db) {
     email = (await me.db.auth.getUser()).data.user?.email ?? "";
-    const { data } = await me.db.from("profiles").select("reminder_time").eq("user_id", me.userId).maybeSingle();
+    const [{ data }, { data: flag }] = await Promise.all([
+      me.db.from("profiles").select("reminder_time").eq("user_id", me.userId).maybeSingle(),
+      me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
+    ]);
     reminder = data?.reminder_time?.slice(0, 5) ?? "";
+    boardOpen = !!flag?.enabled;
   } else email = "nour@example.com";
+  const certificates = me.db ? await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : [];
   return (
-    <Shell pathId={path.id} pathTitle={path.title.en} units={view.units.map((u) => ({ id: u.unit.id, title: u.unit.title[locale as "en" | "ar"] }))}>
+    <Shell me={me}>
+      <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} />
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
     </Shell>
   );

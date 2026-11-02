@@ -67,7 +67,7 @@ describe("streak with freezes", () => {
 describe("week goal progress", () => {
   it("counts goal days of this Monday to Sunday week only", () => {
     const a = act({ "2026-11-01": [1, true], "2026-11-02": [1, true], "2026-11-03": [1, true] });
-    expect(weekGoalProgress("2026-11-04", a)).toMatchObject({ goalDays: 2, left: 3, monday: "2026-11-02" });
+    expect(weekGoalProgress("2026-11-04", a)).toMatchObject({ goalDays: 2, more: 3, monday: "2026-11-02" });
   });
   it("mondayOf finds Monday from any day", () => {
     expect(["2026-11-02", "2026-11-05", "2026-11-08"].map(mondayOf)).toEqual(["2026-11-02", "2026-11-02", "2026-11-02"]);

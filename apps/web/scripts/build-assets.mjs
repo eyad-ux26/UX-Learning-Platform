@@ -39,7 +39,9 @@ const rules = names.map((cls) => {
 // The design file also carries the canvas-only lesson-player frames (.ug.lp, .lp-*: fixed 390 and 1440 wide boards, slice 2).
 // The app's own player lays itself out, so those rules are left out of the app stylesheet.
 const LP_RULE = /^[^{\n]*(\.ug\.lp\b|\.lp\b|\.lp-|lp-(?:mobile|desktop))[^{\n]*\{.*\}\n/gm;
-const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "");
+// Likewise the slice 3 canvas frames (.ug.pg, .pg-mobile, .pg-desktop, the .pg-over sheets): fixed 390 and 1440 wide boards.
+const PG_RULE = /^[^{\n]*(\.ug\.pg\b|\.pg-over|\.pg-mobile|\.pg-desktop)[^{\n]*\{.*\}\n/gm;
+const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "").replace(PG_RULE, "");
 if (/_blob/.test(css)) throw new Error("uxgate.css still references /_blob");
 const out = path.resolve(here, "../app/styles");
 fs.mkdirSync(out, { recursive: true });

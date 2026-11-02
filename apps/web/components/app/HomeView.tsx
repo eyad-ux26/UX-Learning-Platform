@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { IconMark } from "@/components/Logo";
@@ -5,9 +6,15 @@ import type { PathView } from "@/lib/learning";
 import type { Progress } from "@/lib/progress";
 import type { Locale } from "@uxgate/content";
 import { GoalRing, Week } from "./Goal";
+import { FreezeNote } from "./FreezeNote";
+import { PathChips } from "./PathChips";
+import { catalogEntry, pathArtUrl } from "@/lib/catalog";
+import { buildPathView } from "@/lib/learning";
+import { reviewDue } from "@/lib/skill-state";
+import { pathOfId } from "@/lib/review";
+import type { Learner } from "@/lib/server/learner";
 
-const ART: Record<string, string> = { P01: "path-forms", P02: "path-hierarchy", P03: "path-usability" };
-export const pathArt = (id: string) => `/ill/uxgate-ill-${ART[id] ?? "path-forms"}.png`;
+export const pathArt = pathArtUrl;
 
 export async function greeting(hour: number, name: string | null) {
   const t = await getTranslations("home");
@@ -15,7 +22,8 @@ export async function greeting(hour: number, name: string | null) {
   return name ? t("greetName", { greeting: g, name }) : g;
 }
 
-export async function HomeMain({ progress, view, hour }: { progress: Progress; view: PathView; hour: number }) {
+export async function HomeMain({ me, view }: { me: Learner; view: PathView }) {
+  const { progress, hour } = me;
   const t = await getTranslations("home");
   const locale = (await getLocale()) as Locale;
   const next = view.next;
@@ -23,6 +31,22 @@ export async function HomeMain({ progress, view, hour }: { progress: Progress; v
   const lang = next?.lesson.body.title[locale];
   const unitLessons = next ? view.units.find((u) => u.unit.id === next.unit.id)!.lessons : [];
   const unitNumber = next ? view.units.find((u) => u.unit.id === next.unit.id)!.number : 1;
+
+  // A lesson started in another joined path, offered as "pick up where you left off" (it names its path).
+  let resume: { lessonId: string; title: string; pathId: string; pathName: string } | null = null;
+  for (const j of me.joined) {
+    if (j.pathId === view.path.id) continue;
+    const other = buildPathView(j.pathId, progress, me.practicedSkills);
+    const l = other?.next;
+    if (other && l?.state === "in_progress") { resume = { lessonId: l.lesson.lessonId, title: l.lesson.body.title[locale], pathId: j.pathId, pathName: catalogEntry(j.pathId)?.name ?? j.pathId }; break; }
+  }
+  const chips = me.joined.map((j) => {
+    const v = buildPathView(j.pathId, progress, me.practicedSkills);
+    return { id: j.pathId, name: catalogEntry(j.pathId)?.name ?? j.pathId, art: pathArt(j.pathId), pct: v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0, current: j.pathId === view.path.id };
+  });
+  const now = new Date();
+  const dueSkills = [...me.skillStates].filter(([, r]) => reviewDue(r, now));
+  const due = { count: dueSkills.length, paths: new Set(dueSkills.map(([id]) => pathOfId(id))).size };
 
   return (
     <>
@@ -33,10 +57,11 @@ export async function HomeMain({ progress, view, hour }: { progress: Progress; v
         <span className="stat" aria-label={t("xpLabel", { count: progress.xpTotal })}><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>
       </div>
       <h1 className="t-h1 h1-s">{await greeting(hour, progress.displayName)}</h1>
+      {me.freezeNote ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
 
       {next ? (
         <section className="card-panel next-card" aria-label={t("nextLabel")}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+          
           <img className="next-art" src={pathArt(view.path.id)} alt="" />
           <div className="stack">
             <div className="row"><span className="tag" style={{ background: "var(--surface)" }}><span className="ltr">{view.path.title.en}</span> · {t("unit", { n: unitNumber })}</span>{next.unit.free ? <span className="tag tag-free">{t("free")}</span> : null}</div>
@@ -61,6 +86,33 @@ export async function HomeMain({ progress, view, hour }: { progress: Progress; v
         </section>
       )}
 
+      {resume ? (
+        <section className="card resume-card" aria-label={t("resumeOver")}>
+          
+          <img src={pathArt(resume.pathId)} alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none" }} />
+          <div style={{ flex: 1, minInlineSize: 0 }}>
+            <p className="t-over">{t("resumeOver")}</p>
+            <p className="t-label">{resume.title}</p>
+            <p className="t-small ink-2">{t("from", { path: resume.pathName })}</p>
+          </div>
+          <Link href={`/app/lesson/${resume.lessonId}`} className="btn btn-secondary btn-sm press">{t("continue")}</Link>
+        </section>
+      ) : null}
+
+      {chips.length > 1 ? <PathChips chips={chips} label={t("yourPaths")} addLabel={t("addPath")} /> : null}
+
+      {due.count > 0 ? (
+        <Link href="/app/review" className="card press review-card">
+          
+          <img src="/ill/uxgate-ill-review.png" alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none" }} />
+          <div style={{ flex: 1, minInlineSize: 0 }}>
+            <p className="t-label">{t("reviewTitle", { count: due.count })}</p>
+            <p className="t-small ink-2">{t("reviewBody", { paths: due.paths, minutes: Math.max(2, Math.round(due.count * 1.2)) })}</p>
+          </div>
+          <span className="btn btn-secondary btn-sm" aria-hidden="true">{t("review")}</span>
+        </Link>
+      ) : null}
+
       <section className="card goal-card only-mobile" style={{ display: undefined }}>
         <div className="goal-row">
           <GoalRing done={progress.lessonsToday} goal={progress.dailyGoal} />
@@ -73,6 +125,7 @@ export async function HomeMain({ progress, view, hour }: { progress: Progress; v
         <div className="streak-row">
           <span className="ph ph-flame-fill" style={{ fontSize: 20, color: "#F59E2B" }} aria-hidden="true" />
           <p className="t-label" style={{ fontSize: 15, flex: 1 }}>{progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone")}</p>
+          <Link href="/app/streak" className="kind"><span className="ph ph-freeze-fill" aria-hidden="true" />{me.freezes > 0 ? t("freezeReady", { count: me.freezes }) : t("freezeNone")}</Link>
         </div>
         <Week today={progress.today} activeDays={progress.activeDays} />
       </section>
