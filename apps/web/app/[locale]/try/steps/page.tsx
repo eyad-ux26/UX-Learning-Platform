@@ -13,7 +13,7 @@ const lesson: Lesson = {
       items: [{ id: "a", text: T("Email", "البريد الإلكتروني") }, { id: "b", text: T("Favourite colour", "اللون المفضّل") }, { id: "c", text: T("Phone", "الهاتف") }],
       buckets: [{ id: "keep", title: T("Keep", "أبقِ") }, { id: "drop", title: T("Remove", "احذف") }], answer: { keep: ["a", "c"], drop: ["b"] } },
     { ...base, id: "S02", type: "match", prompt: T("Match each field to its purpose.", "طابق كل حقل بغرضه."),
-      left: [{ id: "l1", text: T("Email", "البريد") }, { id: "l2", text: T("Phone", "الهاتف") }], right: [{ id: "r1", text: T("Send the receipt", "إرسال الإيصال") }, { id: "r2", text: T("Call about a class change", "الاتصال عند تغيير حصة") }], answer: { l1: "r1", l2: "r2" } },
+      left: [{ id: "l1", text: T("Email", "البريد") }, { id: "l2", text: T("Phone", "الهاتف") }], right: [{ id: "r1", text: T("Send the receipt", "إرسال الإيصال") }, { id: "r2", text: T("Call about a class change", "الاتصال عند تغيير حصة") }], answer: { l1: "r1", l2: "r2" } }, // lint-logical-ignore: match steps name their lists left and right
     { ...base, id: "S03", type: "spot", prompt: T("Tap the part that blocks people.", "اضغط على الجزء الذي يعيق الناس."),
       mock: { caption: T("Join form", "نموذج الانضمام"), blocks: [{ kind: "title", text: T("Join Hana's Gym", "انضم إلى نادي هنا") }, { kind: "field", label: T("Insurance number", "رقم التأمين"), text: "", region: "ins" }, { kind: "button", text: T("Join", "انضم"), region: "btn" }] },
       regions: [{ id: "ins", label: T("Insurance number field", "حقل رقم التأمين") }, { id: "btn", label: T("Join button", "زر الانضمام") }], answer: ["ins"] },
