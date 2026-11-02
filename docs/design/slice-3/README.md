@@ -1,6 +1,6 @@
 # Slice 3: progress across several paths
 
-Live boards: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx, page "7 · Slice 3 · Progress" (canvas v40, 10 rows and the moments board). Each row shows every state of one part in four frames: mobile 390 English light, mobile 390 Arabic night, desktop 1440 English light and desktop 1440 Arabic night (desktop shown at half size). The three components below are on "Screen parts" and are clickable there.
+Live boards: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx, page "7 · Slice 3 · Progress" (canvas v42, 10 rows and the moments board). Each row shows every state of one part in four frames: mobile 390 English light, mobile 390 Arabic night, desktop 1440 English light and desktop 1440 Arabic night (desktop shown at half size). The three components below are on "Screen parts" and are clickable there.
 
 Rules come from spec §4.4b (several paths), §4.6 (XP, freezes, replay, review, leaderboard) and §4.7 (certificate and achievement page). Styles are in `../system/uxgate.css`, in the blocks that start with "Slice 3". Same tokens, Cairo and Titillium Web, no hearts, lives, energy, timers or loss-framed copy, and freezes are never sold.
 
@@ -29,7 +29,7 @@ All three take `lang` (`en`, `ar`), `theme` (`light`, `dark`), `device` (`mobile
 | `endShown` | Skill check passed: each skill Practiced → Shown, Unit 3 open, 5 new badges |
 | `endBadge` | Badge earned dialog: blue badge at Shown, and what turns it gold (Kept) |
 | `endPath` | End of a path: certificate ready, then the next path to pick (continue a joined one or start a new one) |
-| `streak`, `freezeEarned` | Streak detail: this week, freezes held (2 slots), steps to the next freeze, how freezes work; the earned-freeze dialog |
+| `streak`, `streakFull`, `freezeEarned` | Streak detail: this week, freezes held (2 slots), steps to the next freeze, how freezes work. `streakFull` is the state when the learner already holds 2: no progress bar, it says they hold the most and that goal days this week won't add a third. The earned-freeze dialog that reaches 2 says the same |
 | `numbers` | Why each number changed today: XP (with its events), goal, streak, skills, next freeze, leaderboard rank |
 | `skills` | Skill states in one path, by unit, with what each state means |
 | `badges` | Badge gallery by path: gold Kept, blue Shown, outlined not yet; detail panel on desktop |
@@ -67,7 +67,7 @@ Every new moment is mapped to an illustration and a sound from `../sound/`; no n
 
 - The learner is **Yasmin** (ياسمين), so she does not clash with the cast member Nour, who was the learner on the Sprint 1 and slice 2 boards.
 - Forms That Flow: current path, Unit 2 of 5, 30%, 40 skills (8 a unit; Unit 1: 6 Shown and 2 Kept, Unit 2: 5 Practiced). Visual Hierarchy in Action: joined, Unit 1 skill check passed, Unit 2, 20%, 35 skills (7 Shown). Skill totals per path are assumed until the content thread fixes them.
-- 14 paths are listed (P01 to P14, with P14 Patterns That Fit as the hybrid path). Spec §4.4b still says 13.
+- 14 paths are listed (P01 to P14, with P14 Patterns That Fit as the hybrid path); the spec now says 14.
 - Leaderboard names are sample learners, not cast members.
 
 ## Fixes to earlier boards in this change
