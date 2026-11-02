@@ -4,7 +4,7 @@
 
 ## Verdict
 
-**Ready for Eyad's approval.** All 11 brief items are delivered in mobile and desktop, EN light and AR night. The Google button now follows Google's own brand style, which Google requires.
+**Ready for Eyad's approval** (canvas v52, PR #67 commit 1d73c60, with calls 5 and 6 and the delete undo copy applied). All 11 brief items are delivered in mobile and desktop, EN light and AR night. The Google button now follows Google's own brand style, which Google requires.
 
 ## Product calls on the design's assumptions (PM, 2 Nov)
 
