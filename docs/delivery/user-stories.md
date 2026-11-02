@@ -359,6 +359,14 @@ As an owner, I want a launch checklist and invite plan, so that the beta starts 
 
 - Invite list, feedback form, support inbox, launch checklist.
 
+### EN-24 Privacy and terms pages · 2 pts
+
+As a learner, I want to read how my data is used and the terms of the subscription, so that I can trust UXGate.
+
+- Privacy policy and terms of use at /privacy and /terms, in both languages, linked from the footer, sign up and settings.
+- The content follows the plan's data rules (no ad trackers, data export and deletion, refunds within 7 days). Eyad approves the text, and legal review is his call.
+- The pages are needed for Google OAuth brand verification before the beta (process.md, beta gate). Design and build in slice 4.
+
 ### EN-23 Opt-in leaderboards · 3 pts
 
 As a learner who likes competition, I want an opt-in weekly leaderboard, so that I can compare progress without pressure on others.

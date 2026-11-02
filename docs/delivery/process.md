@@ -36,6 +36,11 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 ### Beta gate (before the private beta, sprint 7)
 
 - Production on Supabase Pro with daily backups, and a Vercel spend cap set.
+- Google sign-in shows UXGate, not the Supabase project address (Eyad, 2 Nov):
+  - finish Google OAuth brand verification, with the name UXGate, the logo, uxgate.org, and links to the privacy and terms pages;
+  - set up the Supabase Custom Domain add-on (for example auth.uxgate.org), which needs Pro and costs about $10 a month;
+  - update the Google and Apple redirect URLs to the new domain.
+- The privacy and terms pages (EN-24) are live in both languages.
 - Check every service price against its official price page, because the stack review's numbers come from memory and third-party summaries.
 - **Budget decision for Eyad:** running costs depend on active learners: about $60–100 a month below about 3,000 learners and about $120–200 a month at about 10k learners, which can pass the $100 budget. Eyad decides, tied to the revenue plan, before the beta opens.
 

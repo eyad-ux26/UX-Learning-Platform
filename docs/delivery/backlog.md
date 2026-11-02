@@ -47,7 +47,7 @@ Daily goal and streak with freezes, skill states and badges, review queue and re
 
 ### Slice 4 · Account, notifications and public site · design sprint 4 · build sprint 5
 
-Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, appeals (learner side).
+Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), privacy and terms pages (needed for Google brand verification), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, appeals (learner side).
 
 ### Slice 5 · Subscriptions · design sprint 5 · build sprint 6
 
