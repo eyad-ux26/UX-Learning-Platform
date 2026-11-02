@@ -1,4 +1,4 @@
-# UXGate design system (Sprint 1 and slice 2)
+# UXGate design system (Sprint 1, slice 2 and slice 3)
 
 The live design lives in the design canvas: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx (pages: Brand, Tokens, Components, Screens, Clickable flow, Screen parts). This folder holds the parts engineering and video need as files.
 
@@ -55,3 +55,7 @@ Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym
 ## Slice 2: the full lesson player
 
 Every state inside a lesson: the eight remaining step types, video, concept card, feedback variants, confidence, skill check, mastery round, exit and resume, saving and offline, the guest sample lesson and asking for a review. See `slice-2/README.md`. On the canvas they are on the page "6 · Slice 2 · Lesson player", and the two editable components are on "Screen parts".
+
+## Slice 3: progress across several paths
+
+Paths tab, choosing and switching paths, home with several paths, onboarding changes, lesson end variants (next lesson, replay at half XP, skills reaching Shown, badge earned, end of a path), streak and freezes, why each number changed, skill states and badges, review across paths, profile with the reminder time picker, certificate and public achievement page, the opt-in leaderboard, and the illustration and sound map. See `slice-3/README.md`. On the canvas they are on the page "7 · Slice 3 · Progress", and the three editable components are on "Screen parts".

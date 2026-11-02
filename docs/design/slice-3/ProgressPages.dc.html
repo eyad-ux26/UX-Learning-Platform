@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 3 · Lesson end, streak, skills and review</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Rubik:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
+        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+      </sc-for>
+      <a class="dk-layer" href="#paths" style="color: var(--link);"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addPath}}</a>
+      <div style="flex: 1;"></div>
+      <a class="dk-layer" href="#sound"><span class="ph ph-speaker-high" aria-hidden="true"></span>{{c.sound}}<span style="flex: 1;"></span><span class="switch is-on" aria-hidden="true"><span class="track"></span></span></a>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <!-- ============ Review session: a step with a new case ============ -->
+  <sc-if value="{{is.rs}}" hint-placeholder-val="{{false}}">
+    <header class="lp-head">
+      <a href="#review" class="{{headBtn}}" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+      <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+        <span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{c.reviewWord}}</span>
+      </sc-if>
+      <div class="progress" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="1" aria-valuemin="0" aria-valuemax="5"><i style="width: 12%;"></i></div>
+      <span class="t-label num ink-2 lp-count">{{c.rsCount}}</span>
+      <button class="{{headBtn}}" type="button" aria-label="{{c.soundOn}}" aria-pressed="true"><span class="ph ph-speaker-high" aria-hidden="true"></span></button>
+    </header>
+    <main class="lp-main">
+      <section class="lp-work">
+        <div class="lp-q">
+          <span class="lp-mode" style="align-self: flex-start;"><span class="ph ph-review" aria-hidden="true"></span>{{c.reviewWord}} · <span class="ltr">Forms That Flow</span></span>
+          <p class="t-over" style="color: var(--link);">{{c.rsSkill}}</p>
+          <div class="say">
+            <img class="say-face" src="{{img.youssef}}" alt="{{c.youssef}}" width="64" height="64">
+            <div class="say-bubble"><span class="say-name">{{c.youssefWho}}</span><p class="lp-scn">{{c.rsSays}}</p></div>
+          </div>
+          <h1 class="lp-qt">{{c.rsQ}}</h1>
+        </div>
+        <div class="lp-act">
+          <div class="lp-opts" role="radiogroup" aria-label="{{c.rsQ}}">
+            <sc-for list="{{rsOpts}}" as="o" hint-placeholder-count="3">
+              <button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}"><span class="key">{{o.key}}</span><span class="grow">{{o.label}}</span></button>
+            </sc-for>
+          </div>
+        </div>
+        <div class="lp-bar">
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><p class="lp-help" style="margin: 0;">{{c.rsHelp}}</p><span style="flex: 1;"></span></sc-if>
+          <button class="{{rsCheckCls}}" type="button">{{c.check}}</button>
+        </div>
+      </section>
+      <section class="lp-ctx" aria-label="{{c.example}}">
+        <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{c.rsFrame}}</span></sc-if>
+        <div class="lp-stage">
+          <figure class="rv-mock" style="width: {{rsMockW}};">
+            <figcaption><span>MOCK</span>{{c.rsMockCap}}</figcaption>
+            <div class="m">
+              <h4>{{c.rsMockTitle}}</h4>
+              <label>{{c.rsF1}}<i></i></label>
+              <label>{{c.rsF2}}<i></i></label>
+              <label>{{c.rsF3}}<i></i></label>
+              <b>{{c.rsMockBtn}}</b>
+            </div>
+          </figure>
+        </div>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{isPage}}" hint-placeholder-val="{{true}}">
+  <div class="pg-col">
+
+    <!-- ============ Lesson end variants ============ -->
+    <sc-if value="{{is.end}}" hint-placeholder-val="{{true}}">
+      <main class="end">
+        <div class="end-hero">
+          <sc-if value="{{e.hasMode}}" hint-placeholder-val="{{false}}"><span class="lp-mode"><span class="ph ph-replay" aria-hidden="true"></span>{{c.replayTag}}</span></sc-if>
+          <img class="ill pop" src="{{e.ill}}" alt="">
+          <h1>{{e.title}}</h1>
+          <p>{{e.sub}}</p>
+          <div class="rc-row" style="{{e.tilesStyle}}">
+            <sc-for list="{{e.tiles}}" as="t" hint-placeholder-count="3">
+              <div class="{{t.cls}}"><span class="{{t.icon}}" style="{{t.iconStyle}}" aria-hidden="true"></span><b class="ltr">{{t.v}}</b><small>{{t.l}}</small></div>
+            </sc-for>
+          </div>
+        </div>
+        <div class="end-side">
+          <sc-if value="{{e.hasXpw}}" hint-placeholder-val="{{true}}">
+            <section class="xpw" aria-label="{{c.xpWhyTitle}}">
+              <sc-for list="{{e.xpw}}" as="r" hint-placeholder-count="3">
+                <div class="{{r.cls}}"><span>{{r.l}}</span><b class="ltr">{{r.v}}</b></div>
+              </sc-for>
+            </section>
+          </sc-if>
+          <sc-if value="{{e.hasSkills}}" hint-placeholder-val="{{true}}">
+            <section class="card" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
+              <p class="t-over">{{e.skillsTitle}}</p>
+              <div class="sk-list">
+                <sc-for list="{{e.skills}}" as="s" hint-placeholder-count="2">
+                  <div class="sk-row"><span class="grow">{{s.name}}</span><sc-if value="{{s.hasFrom}}" hint-placeholder-val="{{false}}"><span class="from">{{s.from}}<span class="ph ph-arrow flip" aria-hidden="true" style="font-size: 12px;"></span></span></sc-if><span class="{{s.cls}}"><span class="{{s.icon}}" aria-hidden="true"></span>{{s.state}}</span></div>
+                </sc-for>
+              </div>
+              <sc-if value="{{e.more}}" hint-placeholder-val="{{false}}"><p class="t-small ink-2" style="font-weight: 700; margin: -2px 0 2px;">{{e.more}}</p></sc-if>
+              <sc-if value="{{e.skillsNote}}" hint-placeholder-val="{{false}}"><p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{e.skillsNote}}</span></p></sc-if>
+            </section>
+          </sc-if>
+          <sc-if value="{{e.hasBadges}}" hint-placeholder-val="{{false}}">
+            <a href="#badges" class="card" style="padding: 10px 14px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);">
+              <span class="bdg-strip" aria-hidden="true"><sc-for list="{{e.badges}}" as="b" hint-placeholder-count="4"><span class="{{b.cls}}"><span class="{{b.icon}}"></span></span></sc-for></span>
+              <span class="t-label" style="flex: 1; font-size: 15px;">{{e.badgesText}}</span>
+              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+            </a>
+          </sc-if>
+          <sc-if value="{{e.hasNext}}" hint-placeholder-val="{{true}}">
+            <section class="card-panel" style="padding: 14px 16px; border-radius: 20px; display: flex; align-items: center; gap: 12px;">
+              <img src="{{img.forms}}" alt="" style="width: 56px; height: 56px; flex: none;">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                <span class="t-over" style="color: var(--link);">{{e.nextOver}}</span>
+                <b style="font-size: 17px; line-height: 1.3; color: var(--panel-ink);">{{e.nextTitle}}</b>
+                <span class="t-small ink-2" style="font-weight: 600;">{{e.nextMeta}}</span>
+              </div>
+            </section>
+          </sc-if>
+          <sc-if value="{{e.hasPaths}}" hint-placeholder-val="{{false}}">
+            <a href="#certificate" class="card" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); border-color: var(--gold); box-shadow: 0 4px 0 var(--gold-ledge);">
+              <img src="{{img.cert}}" alt="" style="width: 52px; height: 52px; flex: none;">
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px;"><b style="font-size: 16px;">{{c.certReady}}</b><span class="t-small ink-2">{{c.certReadyBody}}</span></span>
+              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+            </a>
+            <p class="t-over" style="margin-top: 4px;">{{c.pickNext}}</p>
+            <sc-for list="{{e.paths}}" as="p" hint-placeholder-count="2">
+              <a href="#path" class="path-card press" style="padding: 10px 12px;">
+                <span class="pc-ill" style="width: 52px; height: 52px; border-radius: 14px;"><img src="{{p.img}}" alt="" style="width: 56px; height: 56px;"></span>
+                <span class="pc-text"><span class="pc-name" style="font-size: 16px;"><span class="ltr">{{p.name}}</span></span><span class="t-small ink-2">{{p.why}}</span></span>
+                <span class="btn btn-secondary btn-sm" style="flex: none;">{{p.act}}</span>
+              </a>
+            </sc-for>
+          </sc-if>
+        </div>
+      </main>
+      <footer class="end-foot">
+        <a href="#next" class="btn btn-primary btn-lg btn-block press">{{e.primary}}</a>
+        <a href="#home" class="btn btn-ghost btn-block" style="min-height: 44px;">{{e.ghost}}</a>
+      </footer>
+    </sc-if>
+
+    <!-- ============ Streak and freezes ============ -->
+    <sc-if value="{{is.streak}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#home" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1;">{{c.streakTitle}}</h1>
+      </header>
+      <main class="pg-body" style="gap: 12px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 12px;">
+            <section class="card-panel" style="padding: 16px 18px; border-radius: 24px; display: flex; align-items: center; gap: 16px;">
+              <img src="{{img.flame}}" alt="" style="width: {{st.flameSize}}; height: {{st.flameSize}}; flex: none;">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                <b style="font-size: {{st.numSize}}; line-height: 1.1; color: var(--panel-ink);">{{c.days16}}</b>
+                <span class="t-small" style="color: var(--ink-2); line-height: 1.45;">{{c.streakLead}}</span>
+              </div>
+            </section>
+            <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;"><p class="t-over">{{c.thisWeek}}</p><span class="t-small ink-2" style="font-weight: 700;">{{st.weekText}}</span></div>
+              <div class="wk">
+                <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
+                  <div class="wk-d"><span class="{{d.cls}}"><span class="{{d.icon}}" aria-hidden="true"></span></span><span class="wk-l">{{d.label}}</span></div>
+                </sc-for>
+              </div>
+              <div class="wk-key">
+                <span><i style="background: var(--hl);"></i>{{c.keyGoal}}</span>
+                <span><i style="background: var(--panel);"></i>{{c.keyPart}}</span>
+                <span><i style="background: var(--sel-bg); box-shadow: inset 0 0 0 2px var(--sel-line);"></i>{{c.keyFreeze}}</span>
+              </div>
+            </section>
+            <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+              <section class="card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: baseline; justify-content: space-between;"><p class="t-over">{{c.lastWeeks}}</p><span class="t-small ink-2" style="font-weight: 700;">{{c.longest}}</span></div>
+                <div class="mo" style="max-width: 300px;" aria-hidden="true">
+                  <sc-for list="{{month}}" as="m" hint-placeholder-count="28"><i class="{{m.c}}"></i></sc-for>
+                </div>
+              </section>
+            </sc-if>
+          </div>
+          <div class="pg-stack" style="gap: 12px;">
+            <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="fz" aria-hidden="true"><sc-for list="{{slots}}" as="s" hint-placeholder-count="2"><span class="{{s.cls}}"><span class="{{s.icon}}"></span></span></sc-for></div>
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px;"><b style="font-size: 16px;">{{st.heldTitle}}</b><span class="t-small ink-2">{{c.heldBody}}</span></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; gap: 8px;"><span class="t-small" style="font-weight: 700;">{{c.nextFreeze}}</span><span class="t-small num ink-2" style="font-weight: 700;">{{st.stepsText}}</span></div>
+                <div class="fz-steps" aria-hidden="true"><sc-for list="{{steps}}" as="s" hint-placeholder-count="5"><i class="{{s.c}}"></i></sc-for></div>
+              </div>
+            </section>
+            <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.howTitle}}</p>
+              <sc-for list="{{c.how}}" as="h" hint-placeholder-count="4">
+                <p class="pg-note" style="font-size: 14px;"><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p>
+              </sc-for>
+            </section>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Why each number changed ============ -->
+    <sc-if value="{{is.numbers}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#home" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1;">{{c.numTitle}}</h1>
+      </header>
+      <main class="pg-body" style="gap: 10px;">
+        <p class="t-small ink-2" style="margin-top: -6px;">{{c.numLead}}</p>
+        <div class="{{numGridCls}}" style="align-items: start;">
+          <sc-for list="{{changes}}" as="g" hint-placeholder-count="4">
+            <section class="chg">
+              <span class="chg-ic" style="{{g.icStyle}}"><span class="{{g.icon}}" aria-hidden="true"></span></span>
+              <div class="grow">
+                <div class="chg-top"><b>{{g.title}}</b><span class="chg-v ltr">{{g.v}}</span></div>
+                <p>{{g.why}}</p>
+                <sc-if value="{{g.hasItems}}" hint-placeholder-val="{{false}}"><ul><sc-for list="{{g.items}}" as="i" hint-placeholder-count="2"><li><span>{{i.l}}</span><span class="ltr">{{i.v}}</span></li></sc-for></ul></sc-if>
+              </div>
+            </section>
+          </sc-for>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Skill states in one path ============ -->
+    <sc-if value="{{is.skills}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#map" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column;"><span class="t-over ltr" style="text-align: start;">Forms That Flow</span><h1 class="pg-title">{{c.skillsTitle}}</h1></div>
+      </header>
+      <main class="pg-body" style="gap: 10px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 10px;">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>2 · {{c.kept}}</span>
+              <span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>6 · {{c.shown}}</span>
+              <span class="skill skill-practiced"><span class="ph ph-check-circle" aria-hidden="true"></span>5 · {{c.practiced}}</span>
+              <span class="skill skill-later">27 · {{c.notYet}}</span>
+            </div>
+            <sc-for list="{{units}}" as="u" hint-placeholder-count="2">
+              <section class="card" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px;"><p class="t-over">{{u.title}}</p><span class="t-small ink-2" style="font-weight: 700;">{{u.meta}}</span></div>
+                <div class="sk-list">
+                  <sc-for list="{{u.skills}}" as="s" hint-placeholder-count="4">
+                    <div class="sk-row"><span class="grow">{{s.name}}</span><span class="{{s.cls}}"><span class="{{s.icon}}" aria-hidden="true"></span>{{s.state}}</span></div>
+                  </sc-for>
+                </div>
+              </section>
+            </sc-for>
+          </div>
+          <aside class="pg-stack">
+            <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.statesTitle}}</p>
+              <sc-for list="{{c.states}}" as="s" hint-placeholder-count="3">
+                <div style="display: flex; gap: 10px; align-items: flex-start;"><span class="{{s.cls}}" style="flex: none;"><span class="{{s.icon}}" aria-hidden="true"></span>{{s.name}}</span><span class="t-small ink-2" style="line-height: 1.45; padding-top: 3px;">{{s.text}}</span></div>
+              </sc-for>
+            </section>
+          </aside>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Badge gallery ============ -->
+    <sc-if value="{{is.badges}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#profile" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1;">{{c.badgesTitle}}</h1>
+        <span class="t-small ink-2" style="font-weight: 700;">{{c.badgesCount}}</span>
+      </header>
+      <main class="pg-body" style="gap: 12px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 12px;">
+            <div class="bdg-key">
+              <span><span class="bdg-face is-kept"></span>{{c.keyKept}}</span>
+              <span><span class="bdg-face is-shown"></span>{{c.keyShown}}</span>
+              <span><span class="bdg-face is-locked"></span>{{c.keyLocked}}</span>
+            </div>
+            <sc-for list="{{bpaths}}" as="g" hint-placeholder-count="2">
+              <section class="card" style="padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;"><img src="{{g.img}}" alt="" style="width: 30px; height: 30px;"><b class="ltr" style="flex: 1; font-size: 16px; text-align: start;">{{g.name}}</b><span class="t-small ink-2" style="font-weight: 700;">{{g.count}}</span></div>
+                <div class="bdg-grid" role="list">
+                  <sc-for list="{{g.items}}" as="b" hint-placeholder-count="8">
+                    <button class="{{b.cls}}" type="button" role="listitem" aria-label="{{b.aria}}"><span class="{{b.face}}"><span class="{{b.icon}}" aria-hidden="true"></span></span><span class="bdg-name">{{b.name}}</span></button>
+                  </sc-for>
+                </div>
+              </section>
+            </sc-for>
+          </div>
+          <aside class="pg-stack" style="{{asideStyle}}">
+            <section class="card" style="padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;">
+              <span class="bdg-face is-big is-kept"><span class="ph ph-star-fill" aria-hidden="true"></span></span>
+              <b style="font-size: 20px;">{{c.selName}}</b>
+              <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>{{c.kept}}</span>
+              <span class="path-lbl"><img src="{{img.forms}}" alt=""><span class="ltr">Forms That Flow</span> · {{c.unitN1}}</span>
+              <div style="align-self: stretch; display: flex; flex-direction: column; gap: 8px; margin-top: 6px; text-align: start;">
+                <p class="pg-note" style="font-size: 13px;"><span class="ph ph-seal-fill" aria-hidden="true" style="color: var(--brand);"></span><span>{{c.selShown}}</span></p>
+                <p class="pg-note" style="font-size: 13px;"><span class="ph ph-star-fill" aria-hidden="true" style="color: var(--gold-ledge);"></span><span>{{c.selKept}}</span></p>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Review queue, done, empty ============ -->
+    <sc-if value="{{is.rq}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top"><h1 class="pg-title" style="flex: 1;">{{c.reviewTitle}}</h1></header>
+      <main class="pg-body" style="gap: 10px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 10px;">
+            <section class="card-panel" style="padding: 14px 16px; border-radius: 22px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="{{img.review}}" alt="" style="width: 64px; height: 64px; flex: none;">
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><b style="font-size: 20px; color: var(--panel-ink);">{{c.rqDue}}</b><span class="t-small ink-2">{{c.rqLead}}</span></div>
+              </div>
+              <a href="#session" class="{{startCls}}"><span class="ph ph-play" aria-hidden="true"></span>{{c.rqStart}}</a>
+            </section>
+            <p class="t-over" style="margin-top: 2px;">{{c.rqOrder}}</p>
+            <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{queue}}" as="q" hint-placeholder-count="5">
+                <li class="{{q.cls}}">
+                  <span class="num" style="width: 22px; flex: none; text-align: center; font-weight: 700; color: var(--ink-3);">{{q.n}}</span>
+                  <span class="grow">
+                    <b>{{q.name}}</b>
+                    <span class="rv-meta"><span class="rv-path"><img src="{{q.img}}" alt=""><span class="ltr">{{q.path}}</span></span><span class="rv-path">· {{q.when}}</span></span>
+                    <sc-if value="{{q.sure}}" hint-placeholder-val="{{false}}"><span class="tag-sure" style="align-self: flex-start;"><span class="ph ph-target" aria-hidden="true"></span>{{c.sureTag}}</span></sc-if>
+                  </span>
+                  <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+                </li>
+              </sc-for>
+            </ol>
+          </div>
+          <aside class="pg-stack" style="{{asideStyle}}">
+            <section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.rqHowTitle}}</p>
+              <sc-for list="{{c.rqHow}}" as="h" hint-placeholder-count="3"><p class="pg-note" style="font-size: 14px;"><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for>
+            </section>
+          </aside>
+        </div>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{is.rd}}" hint-placeholder-val="{{false}}">
+      <main class="end">
+        <div class="end-hero">
+          <img class="ill pop" src="{{img.medal}}" alt="">
+          <h1>{{c.rdTitle}}</h1>
+          <p>{{c.rdSub}}</p>
+          <div class="rc-row">
+            <div class="rc is-xp"><span class="ph ph-bolt-fill" aria-hidden="true"></span><b class="ltr">+40</b><small>XP</small></div>
+            <div class="rc"><span class="ph ph-star-fill" style="color: var(--gold-ledge);" aria-hidden="true"></span><b>4</b><small>{{c.rdKept}}</small></div>
+            <div class="rc"><span class="ph ph-replay" style="color: var(--link);" aria-hidden="true"></span><b>1</b><small>{{c.rdAgain}}</small></div>
+          </div>
+        </div>
+        <div class="end-side">
+          <section class="card" style="padding: 12px 16px; display: flex; flex-direction: column; gap: 6px;">
+            <p class="t-over">{{c.rdSkills}}</p>
+            <div class="sk-list">
+              <sc-for list="{{rdSkills}}" as="s" hint-placeholder-count="5">
+                <div class="sk-row"><span class="grow" style="display: flex; flex-direction: column; gap: 0;"><span>{{s.name}}</span><span class="path-lbl" style="font-size: 11.5px;"><img src="{{s.img}}" alt="" style="width: 16px; height: 16px;"><span class="ltr">{{s.path}}</span></span></span><span class="{{s.cls}}"><span class="{{s.icon}}" aria-hidden="true"></span>{{s.state}}</span></div>
+              </sc-for>
+            </div>
+            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.rdNote}}</span></p>
+          </section>
+          <a href="#badges" class="card" style="padding: 10px 14px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);">
+            <span class="bdg-strip" aria-hidden="true"><span class="bdg-face is-kept"><span class="ph ph-star-fill"></span></span><span class="bdg-face is-kept"><span class="ph ph-star-fill"></span></span><span class="bdg-face is-kept"><span class="ph ph-star-fill"></span></span><span class="bdg-face is-kept"><span class="ph ph-star-fill"></span></span></span>
+            <span class="t-label" style="flex: 1; font-size: 15px;">{{c.rdBadges}}</span>
+            <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+          </a>
+        </div>
+      </main>
+      <footer class="end-foot">
+        <a href="#home" class="btn btn-primary btn-lg btn-block press">{{c.rdHome}}</a>
+        <a href="#badges" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.seeBadges}}</a>
+      </footer>
+    </sc-if>
+
+    <sc-if value="{{is.re}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top"><h1 class="pg-title" style="flex: 1;">{{c.reviewTitle}}</h1></header>
+      <main class="pg-body" style="{{reBodyStyle}}">
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; max-width: 460px; margin: 0 auto; width: 100%;">
+          <img class="pop" src="{{img.empty}}" alt="" style="width: {{reIll}}; height: {{reIll}};">
+          <h2 class="t-h2" style="margin: 0;">{{c.reTitle}}</h2>
+          <p class="t-body ink-2" style="margin: 0;">{{c.reBody}}</p>
+          <section class="card" style="align-self: stretch; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; text-align: start; margin-top: 4px;">
+            <p class="t-over">{{c.reSoon}}</p>
+            <sc-for list="{{c.reDays}}" as="d" hint-placeholder-count="2">
+              <div style="display: flex; align-items: center; gap: 10px; min-height: 36px;"><span class="ph ph-calendar ink-2" style="font-size: 20px;" aria-hidden="true"></span><span style="flex: 1; font-weight: 700; font-size: 15px;">{{d.day}}</span><span class="t-small ink-2" style="font-weight: 600;">{{d.what}}</span></div>
+            </sc-for>
+          </section>
+          <a href="#next" class="{{startCls}}" style="align-self: stretch; margin-top: 6px;"><span class="ph ph-play" aria-hidden="true"></span>{{c.reGo}}</a>
+        </div>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{showNav}}" hint-placeholder-val="{{false}}">
+      <nav class="bnav" aria-label="{{c.navLabel}}">
+        <sc-for list="{{bnav}}" as="n" hint-placeholder-count="4">
+          <a href="#{{n.id}}" class="{{n.cls}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+        </sc-for>
+      </nav>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ============ Overlays: badge earned, freeze earned ============ -->
+  <sc-if value="{{ov.any}}" hint-placeholder-val="{{false}}">
+    <div class="pg-scrim"></div>
+    <section class="pg-over sheet-in" role="dialog" aria-modal="true" aria-labelledby="pr-ov-{{lang}}-{{theme}}-{{device}}" style="align-items: center; text-align: center;">
+      <div class="grab" aria-hidden="true"></div>
+      <sc-if value="{{ov.badge}}" hint-placeholder-val="{{false}}">
+        <span class="pop" style="display: block;"><span class="bdg-face is-big is-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span></span></span>
+        <p class="t-over" style="color: var(--link);">{{c.newBadge}}</p>
+        <h2 id="pr-ov-{{lang}}-{{theme}}-{{device}}">{{c.bName}}</h2>
+        <span class="path-lbl"><img src="{{img.forms}}" alt=""><span class="ltr">Forms That Flow</span> · {{c.unitN2}}</span>
+        <p class="t-small ink-2" style="max-width: 40ch;">{{c.bWhy}}</p>
+        <div class="why-row is-todo" style="align-self: stretch; text-align: start;"><span class="bdg-face is-kept" style="width: 22px; height: 22px; border-radius: 6px; margin: 4px; box-shadow: none; opacity: 0.6;"></span><span class="grow"><b>{{c.bNextTitle}}</b><span>{{c.bNext}}</span></span></div>
+        <a href="#continue" class="btn btn-primary btn-lg btn-block press">{{c.cont}}</a>
+        <a href="#badges" class="btn btn-ghost btn-block" style="min-height: 44px; margin-top: -6px;">{{c.seeBadges}}</a>
+      </sc-if>
+      <sc-if value="{{ov.freeze}}" hint-placeholder-val="{{false}}">
+        <img class="pg-over-ill pop" src="{{img.freeze}}" alt="">
+        <h2 id="pr-ov-{{lang}}-{{theme}}-{{device}}">{{c.feTitle}}</h2>
+        <p class="t-small ink-2" style="max-width: 40ch;">{{c.feBody}}</p>
+        <div class="fz" aria-hidden="true" style="margin: 4px 0;"><span class="fz-slot"><span class="ph ph-freeze-fill"></span></span><span class="fz-slot is-new"><span class="ph ph-freeze-fill"></span></span></div>
+        <p class="pg-note" style="font-size: 13px; text-align: start; align-self: stretch;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.feNote}}</span></p>
+        <a href="#continue" class="btn btn-primary btn-lg btn-block press">{{c.nice}}</a>
+      </sc-if>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["endNext","endPath","endReplay","endShown","endBadge","streak","freezeEarned","numbers","skills","badges","reviewQueue","reviewSession","reviewDone","reviewEmpty"],"default":"endNext"},"$preview":{"width":390,"height":844}}'>
+/* Slice 3 · lesson end variants, streak and freezes, why numbers changed, skill states, badges, review. Spec §4.4b, §4.6. */
+const IMG = {
+  forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', video: '/_blob/a60ce1789f905176f32c4553b2802acc',
+  check: '/_blob/f92a3e6847a208fe460c2076565bb0b0', freeze: '/_blob/169f6b75bfa541dd0163f10731990da3', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4',
+  empty: '/_blob/db03534bd1e09763438142db3c0a865b', flame: '/_blob/ef2b9cc307685520ab2b815707ec327f', star: '/_blob/3188767135187eed2b0a1e299b88b38d', end: '/_blob/54daac1136dd65086f58f73b440ed1a9',
+  review: '/_blob/27529cb276100eb41db22c17bdf85470', cert: '/_blob/d9eda267550722d49fbe378d64d9eb01', youssef: '/_blob/659e0166483e45503815dc16418cf48b'
+};
+const SK = {
+  kept: { cls: 'skill skill-kept', icon: 'ph ph-star-fill' }, shown: { cls: 'skill skill-shown', icon: 'ph ph-seal-fill' },
+  practiced: { cls: 'skill skill-practiced', icon: 'ph ph-check-circle' }, none: { cls: 'skill skill-later', icon: '' }, again: { cls: 'skill skill-retry', icon: 'ph ph-replay' }
+};
+/* Skills: [en, ar, state] */
+const P01U1 = [['Ask only what you need', 'اطلب ما تحتاجه فقط', 'shown'], ['Group related fields', 'اجمع الحقول المترابطة', 'kept'], ['One column, top to bottom', 'عمود واحد من الأعلى للأسفل', 'kept'], ['Labels above fields', 'العناوين فوق الحقول', 'shown'],
+  ['Mark what is optional', 'وضّح ما هو اختياري', 'shown'], ['The right field for the data', 'الحقل المناسب للبيانات', 'shown'], ['Field width shows the answer', 'عرض الحقل يدلّ على الإجابة', 'shown'], ['Name the button for the result', 'سمِّ الزر بنتيجته', 'shown']];
+const P01U2 = [['Pick the right control', 'اختر عنصر التحكم المناسب', 'practiced'], ['Type, pick, or step', 'اكتب أو اختر أو تدرّج', 'practiced'], ['Long lists: let people type', 'القوائم الطويلة: دع الناس يكتبون', 'practiced'], ['Defaults that help', 'قيم افتراضية تساعد', 'practiced'], ['Toggles act at once', 'المفاتيح تعمل فورًا', 'practiced']];
+const P10U1 = [['Put what decides it first', 'ضع ما يحسم القرار أولًا', 'shown'], ['What you can hide', 'ما يمكنك إخفاؤه', 'shown'], ['Size shows importance', 'الحجم يدلّ على الأهمية', 'shown'], ['Space shows what belongs together', 'المسافة تُظهر ما يترابط', 'shown'],
+  ['Contrast for the main action', 'التباين للإجراء الرئيسي', 'shown'], ['Scan paths on a busy screen', 'مسار العين في شاشة مزدحمة', 'shown'], ['One message per card', 'رسالة واحدة لكل بطاقة', 'shown']];
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', addPath: 'Add a path', sound: 'Sound', otherLang: 'العربية', back: 'Back', cont: 'Continue', exit: 'Leave review', soundOn: 'Sound on', progress: 'Review progress',
+    kept: 'Kept', shown: 'Shown', practiced: 'Practiced', notYet: 'Not started', unitN1: 'Unit 1', unitN2: 'Unit 2', days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    xpWhyTitle: 'Why this XP', replayTag: 'Replay: half XP', seeBadges: 'See all badges', home: 'Back to home',
+    /* lesson end: next lesson in the same path */
+    nxTitle: 'Lesson done', nxSub: 'Type, pick, or step', nxGoal: 'Goal 1 of 2', nxXpw: [['4 steps on your own × 10', '+40'], ['2 steps with a hint × 5', '+10'], ['Lesson total', '+50']],
+    nxSkills: 'Skill progress', nxSkill: 'Type, pick, or step', nxNote: 'Shown comes next, from the Unit 2 skill check.', nxOver: 'Next in Forms That Flow', nxLesson: 'Long lists: let people type', nxMeta: 'Unit 2 · Lesson 3 · 6 min', nxGo: 'Next lesson', firstTry: 'First try', goal: 'Goal',
+    /* end of a path */
+    epTitle: 'You finished Forms That Flow', epSub: 'All 5 units, and every skill Shown on a new case.', epSkills: 'Skills Shown', epLessons: 'Lessons', epDays: 'Days', certReady: 'Your certificate is ready', certReadyBody: 'Forms That Flow · 40 skills Shown', pickNext: 'Pick your next path',
+    epP10: 'You are in Unit 2 · 20%', epP14: 'Patterns with short video clips · Unit 1 free', act10: 'Continue', act14: 'Start', epGo: 'See your certificate', epAll: 'See all paths',
+    /* replay */
+    rpTitle: 'Replay done', rpSub: 'Ask only what you need', rpXpw: [['5 steps on your own × 5', '+25'], ['Replay total (half XP)', '+25'], ['First replay today, so it counts for your goal and streak.', '']],
+    rpSkills: 'Skill states', rpNote: 'A replay never changes a skill state. Shown comes only from a skill check.', rpNow: 'Goal 2 of 2', rpGo: 'Back to home', rpGhost: 'Replay again (no XP today)',
+    /* skill check passed */
+    shTitle: 'Unit 2 skill check passed', shSub: 'New cases and no hints, and you got them right.', shXpw: [['7 steps on your own × 10', '+70']], shSkills: '5 skills are now Shown', shNote: 'In 3 days they come back in review. Right again, and they become Kept.',
+    shOpen: 'Unit 3 open', andMore: (n) => '+ ' + n + ' more, all Shown', shBadges: '5 new badges', shGo: 'Start Unit 3',
+    /* badge overlay */
+    newBadge: 'New badge', bName: 'Pick the right control', bWhy: 'You picked the right control on a new case, with no hints, in the Unit 2 skill check.', bNextTitle: 'Next: Kept', bNext: 'Right again in review, 3 or more days from now, and this badge turns gold.',
+    /* streak */
+    streakTitle: 'Streak', days16: '16 days', streakLead: 'Your goal is 2 lessons a day. A lesson in any path counts.', thisWeek: 'This week', keyGoal: 'Goal met', keyPart: 'Some practice', keyFreeze: 'Freeze used', lastWeeks: 'Last 4 weeks', longest: 'Longest: 21 days',
+    held1: 'You hold 1 freeze', held2: 'You hold 2 freezes', heldBody: 'You can hold up to 2.', nextFreeze: 'Your next freeze', stepsOf: (n) => n + ' of 5 goal days', weekGoal: (n) => n + ' goal days so far',
+    howTitle: 'How freezes work', how: [{ icon: 'ph ph-check-circle', text: 'Meet your daily goal on 5 days in a week (Monday to Sunday) and you earn 1 freeze.' }, { icon: 'ph ph-freeze', text: 'If you miss a day, a freeze is used for you and your streak stays.' }, { icon: 'ph ph-stack', text: 'You hold 2 at most. Freezes are never sold.' }],
+    feTitle: 'You earned a freeze', feBody: 'You met your goal on 5 days this week. Now you hold 2 freezes.', feNote: '2 is the most you can hold. A new one waits until you use one.', nice: 'Nice',
+    /* numbers */
+    numTitle: 'Why your numbers changed', numLead: 'Today, Friday. Every number shows what moved it.',
+    chXp: 'XP', chXpWhy: 'You earn 10 for a step on your own, 5 with a hint, 0 when the answer is shown.', chXpItems: [['Lesson · Type, pick, or step', '+50'], ['Replay · Ask only what you need (half XP)', '+25']],
+    chGoal: 'Daily goal', chGoalWhy: 'Your lesson and your first replay today both count.', chStreak: 'Streak', chStreakWhy: 'You met your goal today, so the streak grows by one day.',
+    chSkill: 'Skills Practiced', chSkillWhy: 'Type, pick, or step was right in a lesson. Shown comes from the skill check.', chFreeze: 'Next freeze', chFreezeWhy: 'Goal days this week: Monday, Wednesday, Thursday and today. One more day earns a freeze.',
+    chRank: 'Weekly leaderboard', chRankWhy: 'You joined it. Your weekly XP from all paths went up by 75.',
+    /* skills */
+    skillsTitle: 'Skills', unitT: (n, t) => 'Unit ' + n + ' · ' + t, u1t: 'Ask only what you need', u2t: 'Pick the right control', u1m: 'Skill check passed', u2m: 'In progress', statesTitle: 'What the states mean',
+    states: [{ name: 'Practiced', text: 'Right in a lesson.', cls: 'skill skill-practiced', icon: 'ph ph-check-circle' }, { name: 'Shown', text: 'Right on a new case in a skill check, with no hints.', cls: 'skill skill-shown', icon: 'ph ph-seal-fill' }, { name: 'Kept', text: 'Right again in review, 3 or more days later.', cls: 'skill skill-kept', icon: 'ph ph-star-fill' }],
+    /* badges */
+    badgesTitle: 'Badges', badgesCount: '15 earned', keyKept: 'Kept', keyShown: 'Shown', keyLocked: 'Not yet', earned: (n, t) => n + ' of ' + t, lockedName: 'Not yet', selName: 'Group related fields',
+    selShown: 'Shown on 21 October, in the Unit 1 skill check.', selKept: 'Kept on 27 October: right again in review, 6 days later.',
+    /* review */
+    reviewTitle: 'Review', reviewWord: 'Review', rqDue: '5 skills to review', rqLead: 'From 2 paths · about 6 min · new cases every time', rqStart: 'Start review', rqOrder: 'In this order', sureTag: 'You were sure, then missed it',
+    rqHowTitle: 'How review works', rqHow: [{ icon: 'ph ph-calendar', text: 'A skill comes back 3 days after you show it in a skill check.' }, { icon: 'ph ph-target', text: 'Skills you were sure about but missed come first.' }, { icon: 'ph ph-star', text: 'Right again: the skill is Kept. Missed: it comes back sooner, with a new case.' }],
+    whenOverdue: 'Due 2 days ago', whenToday: 'Due today',
+    rsCount: '1 of 5', rsSkill: 'Ask only what you need', youssef: 'Youssef', youssefWho: 'Youssef · Shop owner', rsSays: 'My newsletter sign-up asks for email, birthday and home address. The newsletter is one email a week about new stock. Maybe one day I will send birthday coupons.',
+    rsQ: 'Which sign-up should I launch now?', rsOpts: ['Email only', 'Email and birthday, for the coupons later', 'All three, split over 3 short steps'], rsHelp: 'Pick one, then check.', check: 'Check', example: 'Example', rsFrame: 'Youssef’s sign-up today',
+    rsMockCap: 'Shop newsletter', rsMockTitle: 'Get our weekly news', rsF1: 'Email', rsF2: 'Birthday', rsF3: 'Home address', rsMockBtn: 'Subscribe',
+    rdTitle: 'Review done', rdSub: '5 skills, each on a new case.', rdKept: 'Now Kept', rdAgain: 'Back tomorrow', rdSkills: 'What changed', rdNote: 'Missed skills come back tomorrow with a new case. Nothing you earned is taken away.', rdBadges: '4 badges turned gold', rdHome: 'Back to home',
+    reTitle: 'Nothing to review today', reBody: 'Skills come back here 3 days after you show them in a skill check.', reSoon: 'Coming up', reDays: [{ day: 'Monday', what: '3 skills' }, { day: 'Wednesday', what: '2 skills' }], reGo: 'Continue Forms That Flow'
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', addPath: 'أضف مسارًا', sound: 'الصوت', otherLang: 'English', back: 'رجوع', cont: 'متابعة', exit: 'اخرج من المراجعة', soundOn: 'الصوت يعمل', progress: 'تقدّم المراجعة',
+    kept: 'أتقنت', shown: 'أثبتّ', practiced: 'تدرّبت', notYet: 'لم تبدأ', unitN1: 'الوحدة 1', unitN2: 'الوحدة 2', days: ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح'],
+    xpWhyTitle: 'سبب هذه النقاط', replayTag: 'إعادة: نصف النقاط', seeBadges: 'اعرض كل الشارات', home: 'عُد إلى الرئيسية',
+    nxTitle: 'أنهيت الدرس', nxSub: 'اكتب أو اختر أو تدرّج', nxGoal: 'الهدف 1 من 2', nxXpw: [['4 خطوات وحدك × 10', '+40'], ['خطوتان بتلميح × 5', '+10'], ['مجموع الدرس', '+50']],
+    nxSkills: 'تقدّم المهارة', nxSkill: 'اكتب أو اختر أو تدرّج', nxNote: '«أثبتّ» تأتي بعد ذلك، من اختبار مهارة الوحدة 2.', nxOver: 'التالي في Forms That Flow', nxLesson: 'القوائم الطويلة: دع الناس يكتبون', nxMeta: 'الوحدة 2 · الدرس 3 · 6 دقائق', nxGo: 'الدرس التالي', firstTry: 'من أول محاولة', goal: 'الهدف',
+    epTitle: 'أنهيت Forms That Flow', epSub: 'الوحدات الخمس كلها، وأثبتّ كل مهارة في حالة جديدة.', epSkills: 'مهارات أثبتّها', epLessons: 'درسًا', epDays: 'يومًا', certReady: 'شهادتك جاهزة', certReadyBody: 'Forms That Flow · أثبتّ 40 مهارة', pickNext: 'اختر مسارك التالي',
+    epP10: 'أنت في الوحدة 2 · 20%', epP14: 'أنماط مع مقاطع فيديو قصيرة · الوحدة 1 مجانية', act10: 'تابع', act14: 'ابدأ', epGo: 'اعرض شهادتك', epAll: 'اعرض كل المسارات',
+    rpTitle: 'أنهيت الإعادة', rpSub: 'اطلب ما تحتاجه فقط', rpXpw: [['5 خطوات وحدك × 5', '+25'], ['مجموع الإعادة (نصف النقاط)', '+25'], ['هذه أول إعادة اليوم، لذا تُحسب لهدفك وسلسلتك.', '']],
+    rpSkills: 'حالات المهارات', rpNote: 'الإعادة لا تغيّر حالة أي مهارة. «أثبتّ» تأتي فقط من اختبار المهارة.', rpNow: 'الهدف 2 من 2', rpGo: 'عُد إلى الرئيسية', rpGhost: 'أعد مرة أخرى (بدون نقاط اليوم)',
+    shTitle: 'نجحت في اختبار مهارة الوحدة 2', shSub: 'حالات جديدة بدون تلميحات، وأجبت عنها بشكل صحيح.', shXpw: [['7 خطوات وحدك × 10', '+70']], shSkills: '5 مهارات أصبحت «أثبتّ»', shNote: 'بعد 3 أيام تعود في المراجعة. إن أجبت عنها صحيحًا مرة أخرى تصبح «أتقنت».',
+    shOpen: 'الوحدة 3 مفتوحة', andMore: (n) => '+ ' + n + ' أخرى، كلها «أثبتّ»', shBadges: '5 شارات جديدة', shGo: 'ابدأ الوحدة 3',
+    newBadge: 'شارة جديدة', bName: 'اختر عنصر التحكم المناسب', bWhy: 'اخترت عنصر التحكم المناسب في حالة جديدة، بدون تلميحات، في اختبار مهارة الوحدة 2.', bNextTitle: 'التالي: أتقنت', bNext: 'أجب عنها صحيحًا مرة أخرى في المراجعة بعد 3 أيام أو أكثر، فتصبح الشارة ذهبية.',
+    streakTitle: 'السلسلة', days16: '16 يومًا', streakLead: 'هدفك درسان في اليوم. الدرس في أي مسار يُحسب.', thisWeek: 'هذا الأسبوع', keyGoal: 'حققت الهدف', keyPart: 'تدرّبت قليلًا', keyFreeze: 'استُخدم تجميد', lastWeeks: 'آخر 4 أسابيع', longest: 'الأطول: 21 يومًا',
+    held1: 'لديك تجميد واحد', held2: 'لديك تجميدان', heldBody: 'يمكنك الاحتفاظ بتجميدين كحد أقصى.', nextFreeze: 'تجميدك التالي', stepsOf: (n) => n + ' من 5 أيام', weekGoal: (n) => n + ' أيام حققت فيها الهدف',
+    howTitle: 'كيف يعمل التجميد', how: [{ icon: 'ph ph-check-circle', text: 'حقّق هدفك اليومي في 5 أيام من الأسبوع (من الاثنين إلى الأحد) لتحصل على تجميد واحد.' }, { icon: 'ph ph-freeze', text: 'إن فاتك يوم، يُستخدم تجميد تلقائيًا وتبقى سلسلتك.' }, { icon: 'ph ph-stack', text: 'تحتفظ بتجميدين على الأكثر. ولا يُباع التجميد أبدًا.' }],
+    feTitle: 'حصلت على تجميد', feBody: 'حققت هدفك في 5 أيام هذا الأسبوع. لديك الآن تجميدان.', feNote: 'تجميدان هما الحد الأقصى. التجميد الجديد ينتظر حتى تستخدم واحدًا.', nice: 'رائع',
+    numTitle: 'لماذا تغيّرت أرقامك', numLead: 'اليوم، الجمعة. كل رقم يوضّح ما الذي غيّره.',
+    chXp: 'النقاط XP', chXpWhy: 'تحصل على 10 للخطوة التي تحلّها وحدك، و5 مع تلميح، و0 عند عرض الإجابة.', chXpItems: [['درس · اكتب أو اختر أو تدرّج', '+50'], ['إعادة · اطلب ما تحتاجه فقط (نصف النقاط)', '+25']],
+    chGoal: 'الهدف اليومي', chGoalWhy: 'درسك وأول إعادة لك اليوم يُحسبان معًا.', chStreak: 'السلسلة', chStreakWhy: 'حققت هدفك اليوم، فزادت السلسلة يومًا.',
+    chSkill: 'مهارات تدرّبت عليها', chSkillWhy: 'أجبت عن «اكتب أو اختر أو تدرّج» صحيحًا في درس. و«أثبتّ» تأتي من اختبار المهارة.', chFreeze: 'التجميد التالي', chFreezeWhy: 'أيام الهدف هذا الأسبوع: الاثنين والأربعاء والخميس واليوم. يوم واحد آخر يمنحك تجميدًا.',
+    chRank: 'لوحة الصدارة الأسبوعية', chRankWhy: 'انضممت إليها. وزادت نقاطك الأسبوعية من كل المسارات 75 نقطة.',
+    skillsTitle: 'المهارات', unitT: (n, t) => 'الوحدة ' + n + ' · ' + t, u1t: 'اطلب ما تحتاجه فقط', u2t: 'اختر عنصر التحكم المناسب', u1m: 'نجحت في اختبار المهارة', u2m: 'قيد التقدّم', statesTitle: 'معنى الحالات',
+    states: [{ name: 'تدرّبت', text: 'أجبت صحيحًا في درس.', cls: 'skill skill-practiced', icon: 'ph ph-check-circle' }, { name: 'أثبتّ', text: 'أجبت صحيحًا في حالة جديدة في اختبار المهارة، بدون تلميحات.', cls: 'skill skill-shown', icon: 'ph ph-seal-fill' }, { name: 'أتقنت', text: 'أجبت صحيحًا مرة أخرى في المراجعة، بعد 3 أيام أو أكثر.', cls: 'skill skill-kept', icon: 'ph ph-star-fill' }],
+    badgesTitle: 'الشارات', badgesCount: '15 شارة', keyKept: 'أتقنت', keyShown: 'أثبتّ', keyLocked: 'ليس بعد', earned: (n, t) => n + ' من ' + t, lockedName: 'ليس بعد', selName: 'اجمع الحقول المترابطة',
+    selShown: 'أثبتّها في 21 أكتوبر، في اختبار مهارة الوحدة 1.', selKept: 'أتقنتها في 27 أكتوبر: أجبت صحيحًا مرة أخرى في المراجعة بعد 6 أيام.',
+    reviewTitle: 'المراجعة', reviewWord: 'مراجعة', rqDue: '5 مهارات للمراجعة', rqLead: 'من مسارين · نحو 6 دقائق · حالات جديدة في كل مرة', rqStart: 'ابدأ المراجعة', rqOrder: 'بهذا الترتيب', sureTag: 'كنت متأكدًا ثم أخطأت',
+    rqHowTitle: 'كيف تعمل المراجعة', rqHow: [{ icon: 'ph ph-calendar', text: 'تعود المهارة بعد 3 أيام من إثباتها في اختبار المهارة.' }, { icon: 'ph ph-target', text: 'المهارات التي كنت متأكدًا منها ثم أخطأت تأتي أولًا.' }, { icon: 'ph ph-star', text: 'إن أجبت صحيحًا تصبح «أتقنت». وإن أخطأت تعود أسرع، بحالة جديدة.' }],
+    whenOverdue: 'منذ يومين', whenToday: 'اليوم',
+    rsCount: '1 من 5', rsSkill: 'اطلب ما تحتاجه فقط', youssef: 'يوسف', youssefWho: 'يوسف · صاحب متجر', rsSays: 'نموذج الاشتراك في نشرة متجري يطلب البريد الإلكتروني وتاريخ الميلاد وعنوان المنزل. والنشرة رسالة واحدة كل أسبوع عن البضاعة الجديدة. وربما أرسل يومًا ما كوبونات لأعياد الميلاد.',
+    rsQ: 'أي نموذج اشتراك أُطلقه الآن؟', rsOpts: ['البريد الإلكتروني فقط', 'البريد وتاريخ الميلاد، من أجل الكوبونات لاحقًا', 'الثلاثة كلها، مقسّمة على 3 خطوات قصيرة'], rsHelp: 'اختر إجابة، ثم تحقّق.', check: 'تحقّق', example: 'مثال', rsFrame: 'نموذج يوسف الآن',
+    rsMockCap: 'نشرة المتجر', rsMockTitle: 'اشترك في أخبارنا الأسبوعية', rsF1: 'البريد الإلكتروني', rsF2: 'تاريخ الميلاد', rsF3: 'عنوان المنزل', rsMockBtn: 'اشترك',
+    rdTitle: 'أنهيت المراجعة', rdSub: '5 مهارات، كل واحدة في حالة جديدة.', rdKept: 'أصبحت «أتقنت»', rdAgain: 'تعود غدًا', rdSkills: 'ما الذي تغيّر', rdNote: 'المهارة التي أخطأت فيها تعود غدًا بحالة جديدة. ولا يُؤخذ منك شيء حصلت عليه.', rdBadges: '4 شارات أصبحت ذهبية', rdHome: 'عُد إلى الرئيسية',
+    reTitle: 'لا شيء للمراجعة اليوم', reBody: 'تعود المهارات إلى هنا بعد 3 أيام من إثباتها في اختبار المهارة.', reSoon: 'قريبًا', reDays: [{ day: 'الاثنين', what: '3 مهارات' }, { day: 'الأربعاء', what: 'مهارتان' }], reGo: 'تابع Forms That Flow'
+  }
+};
+
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = this.props.view || 'endNext';
+    const c = C[lang];
+    const isDesk = device === 'desktop';
+    const L = lang === 'ar' ? 1 : 0;
+    const st = (k) => ({ state: c[k], cls: SK[k].cls, icon: SK[k].icon });
+
+    const isEnd = ['endNext', 'endPath', 'endReplay', 'endShown', 'endBadge'].indexOf(view) >= 0;
+    const is = { end: isEnd, streak: view === 'streak' || view === 'freezeEarned', numbers: view === 'numbers', skills: view === 'skills', badges: view === 'badges',
+      rq: view === 'reviewQueue', rs: view === 'reviewSession', rd: view === 'reviewDone', re: view === 'reviewEmpty' };
+    const tab = is.streak || is.numbers ? 'home' : (is.skills ? 'paths' : (is.badges ? 'profile' : 'review'));
+    const lessonLike = isEnd || is.rs || is.rd;
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: tab === id ? 'page' : 'false', icon: 'ph ' + (tab === id ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+
+    /* lesson end variants */
+    const tile = (icon, v, l, xp, color) => ({ cls: 'rc' + (xp ? ' is-xp' : ''), icon: 'ph ' + icon, v, l, iconStyle: color ? 'color: ' + color + ';' : '' });
+    const xpw = (rows) => rows.map(([l, v], i) => ({ l, v, cls: 'xpw-row' + (v === '' ? ' is-note' : (i === rows.length - 1 && rows.length > 1 && rows[rows.length - 1][1] !== '' ? ' is-total' : '')) }));
+    let e = {};
+    if (view === 'endNext') {
+      e = { ill: IMG.end, title: c.nxTitle, sub: c.nxSub, tiles: [tile('ph-bolt-fill', '+50', 'XP', true), tile('ph-target', '4/6', c.firstTry, false, 'var(--link)'), tile('ph-flame-fill', '1/2', c.goal, false, '#F59E2B')],
+        hasXpw: true, xpw: xpw(c.nxXpw), hasSkills: true, skillsTitle: c.nxSkills, skills: [Object.assign({ name: c.nxSkill, hasFrom: false }, st('practiced'))], skillsNote: c.nxNote,
+        hasNext: true, nextOver: c.nxOver, nextTitle: c.nxLesson, nextMeta: c.nxMeta, primary: c.nxGo, ghost: c.home };
+    } else if (view === 'endPath') {
+      e = { ill: IMG.trophy, title: c.epTitle, sub: c.epSub, tiles: [tile('ph-seal-fill', '40', c.epSkills, false, 'var(--brand)'), tile('ph-book', '20', c.epLessons, false, 'var(--link)'), tile('ph-flame-fill', '34', c.epDays, false, '#F59E2B')],
+        hasPaths: true, paths: [{ name: 'Visual Hierarchy in Action', img: IMG.hier, why: c.epP10, act: c.act10 }, { name: 'Patterns That Fit', img: IMG.video, why: c.epP14, act: c.act14 }],
+        primary: c.epGo, ghost: c.epAll };
+    } else if (view === 'endReplay') {
+      e = { hasMode: true, ill: IMG.end, title: c.rpTitle, sub: c.rpSub, tiles: [tile('ph-bolt-fill', '+25', 'XP', true), tile('ph-target', '5/5', c.firstTry, false, 'var(--link)'), tile('ph-flame-fill', '2/2', c.goal, false, '#F59E2B')],
+        hasXpw: true, xpw: xpw(c.rpXpw), hasSkills: true, skillsTitle: c.rpSkills, skills: [Object.assign({ name: P01U1[0][L], hasFrom: false }, st('shown'))], skillsNote: c.rpNote,
+        primary: c.rpGo, ghost: c.rpGhost };
+    } else {
+      const sk = P01U2.map((s) => Object.assign({ name: s[L], hasFrom: true, from: c.practiced }, st('shown')));
+      e = { ill: IMG.check, title: c.shTitle, sub: c.shSub, tiles: [tile('ph-bolt-fill', '+70', 'XP', true), tile('ph-seal-fill', '5', c.shown, false, 'var(--brand)'), tile('ph-lock', '3', c.shOpen, false, 'var(--link)')],
+        hasXpw: false, hasSkills: true, skillsTitle: c.shSkills, skills: isDesk ? sk : sk.slice(0, 3), more: isDesk ? '' : c.andMore(2), skillsNote: c.shNote,
+        hasBadges: true, badges: [1, 2, 3, 4, 5].map(() => ({ cls: 'bdg-face is-shown', icon: 'ph ph-seal-fill' })), badgesText: c.shBadges, primary: c.shGo, ghost: c.home };
+    }
+    e.tilesStyle = isDesk ? 'max-width: 520px; margin-top: 8px;' : '';
+    ['hasMode', 'hasXpw', 'hasSkills', 'hasBadges', 'hasNext', 'hasPaths'].forEach((k) => { e[k] = !!e[k]; });
+    e.skillsNote = e.skillsNote || ''; e.more = e.more || '';
+
+    /* streak */
+    const fe = view === 'freezeEarned';
+    const weekStates = fe ? ['goal', 'goal', 'goal', 'goal', 'goal', 'today', 'next'] : ['goal', 'part', 'goal', 'goal', 'today', 'next', 'next'];
+    const wkIcon = { goal: 'ph ph-check', part: 'ph ph-check', freeze: 'ph ph-freeze-fill', today: 'ph ph-flame-fill', next: '' };
+    const goalDays = fe ? 5 : 3;
+    const stv = { flameSize: isDesk ? '96px' : '72px', numSize: isDesk ? '44px' : '34px', weekText: c.weekGoal(goalDays), heldTitle: fe ? c.held2 : c.held1, stepsText: c.stepsOf(goalDays) };
+    const MONTH = 'ggpgggg' + 'gfgggpg' + 'ggggggg' + 'gpgggt.';
+    const month = MONTH.split('').map((ch) => ({ c: ch === '.' ? '' : ch }));
+
+    /* numbers */
+    const ch = (icon, icStyle, title, v, why, items) => ({ icon: 'ph ' + icon, icStyle, title, v, why, hasItems: !!items, items: (items || []).map(([l, v2]) => ({ l, v: v2 })) });
+    const changes = [
+      ch('ph-bolt-fill', 'background: var(--hl); color: var(--on-hl);', c.chXp, '1,785 → 1,860', c.chXpWhy, c.chXpItems),
+      ch('ph-target', '', c.chGoal, '0 → 2/2', c.chGoalWhy),
+      ch('ph-flame-fill', 'background: #FDE9CF; color: #B05F00;', c.chStreak, '16 → 17', c.chStreakWhy),
+      ch('ph-check-circle', '', c.chSkill, '4 → 5', c.chSkillWhy),
+      ch('ph-freeze-fill', 'background: var(--sel-bg); color: var(--link);', c.chFreeze, '3/5 → 4/5', c.chFreezeWhy),
+      ch('ph-ranking', '', c.chRank, '#5 → #3', c.chRankWhy)
+    ];
+
+    /* skills by unit */
+    const units = [
+      { title: c.unitT(1, c.u1t), meta: c.u1m, skills: P01U1.map((s) => Object.assign({ name: s[L] }, st(s[2]))) },
+      { title: c.unitT(2, c.u2t), meta: c.u2m, skills: P01U2.map((s) => Object.assign({ name: s[L] }, st(s[2]))) }
+    ];
+
+    /* badges */
+    const bitem = (s, sel) => {
+      const k = s[2]; const earned = k === 'kept' || k === 'shown';
+      return { name: s[L], aria: s[L] + ' · ' + (earned ? c[k] : c.lockedName), cls: 'bdg' + (sel ? ' is-sel' : ''),
+        face: 'bdg-face ' + (k === 'kept' ? 'is-kept' : (k === 'shown' ? 'is-shown' : 'is-locked')), icon: k === 'kept' ? 'ph ph-star-fill' : (k === 'shown' ? 'ph ph-seal-fill' : 'ph ph-lock') };
+    };
+    const bpaths = [
+      { name: 'Forms That Flow', img: IMG.forms, count: c.earned(8, 40), items: P01U1.map((s, i) => bitem(s, i === 1 && isDesk)).concat(P01U2.slice(0, isDesk ? 8 : 4).map((s) => bitem(s))) },
+      { name: 'Visual Hierarchy in Action', img: IMG.hier, count: c.earned(7, 35), items: P10U1.map((s) => bitem(s)).concat([['', '', 'none']].map(() => bitem([c.lockedName, c.lockedName, 'none']))) }
+    ];
+
+    /* review */
+    const q = (n, s, path, img, sure, when) => ({ n, name: s[L], path, img, sure, cls: 'rv' + (sure ? ' is-sure' : ''), when });
+    const queue = [
+      q(1, P01U1[0], 'Forms That Flow', IMG.forms, true, c.whenOverdue), q(2, P10U1[1], 'Visual Hierarchy in Action', IMG.hier, true, c.whenToday),
+      q(3, P01U1[3], 'Forms That Flow', IMG.forms, false, c.whenOverdue), q(4, P10U1[0], 'Visual Hierarchy in Action', IMG.hier, false, c.whenToday), q(5, P01U1[4], 'Forms That Flow', IMG.forms, false, c.whenToday)
+    ];
+    const rd = (s, path, img, k) => Object.assign({ name: s[L], path, img }, st(k));
+    const rdSkills = [rd(P01U1[0], 'Forms That Flow', IMG.forms, 'kept'), rd(P10U1[1], 'Visual Hierarchy in Action', IMG.hier, 'kept'), rd(P01U1[3], 'Forms That Flow', IMG.forms, 'kept'), rd(P10U1[0], 'Visual Hierarchy in Action', IMG.hier, 'kept'),
+      Object.assign(rd(P01U1[4], 'Forms That Flow', IMG.forms, 'again'), { state: c.rdAgain })];
+
+    const ov = { badge: view === 'endBadge', freeze: fe };
+    ov.any = ov.badge || ov.freeze;
+
+    return {
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG, is,
+      rootCls: is.rs ? 'ug lp lp-' + device : 'ug pg pg-' + device, isPage: !is.rs,
+      headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
+      showRail: isDesk && !lessonLike, showNav: !isDesk && !lessonLike,
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
+      railPaths: [{ name: 'Forms That Flow', img: IMG.forms, pct: '30%', cls: 'dk-layer is-on' }, { name: 'Visual Hierarchy in Action', img: IMG.hier, pct: '20%', cls: 'dk-layer' }],
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 400px;' : '', asideStyle: isDesk ? '' : 'display: none;',
+      startCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'),
+      e, st: stv, week: weekStates.map((s, i) => ({ label: c.days[i], cls: 'wk-dot is-' + s, icon: wkIcon[s] })), month,
+      slots: [{ cls: 'fz-slot', icon: 'ph ph-freeze-fill' }, fe ? { cls: 'fz-slot is-new', icon: 'ph ph-freeze-fill' } : { cls: 'fz-slot is-empty', icon: 'ph ph-freeze' }],
+      steps: [1, 2, 3, 4, 5].map((n) => ({ c: n <= goalDays ? 'on' : '' })),
+      changes, numGridCls: isDesk ? 'pg-grid two' : 'pg-stack', units, bpaths, queue, rdSkills,
+      rsOpts: c.rsOpts.map((label, i) => ({ key: 'ABC'[i], label, on: i === 0 ? 'true' : 'false', cls: 'choice press' + (i === 0 ? ' is-selected' : '') })),
+      rsCheckCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), rsMockW: isDesk ? '360px' : '100%',
+      reBodyStyle: isDesk ? 'justify-content: center; padding-bottom: 80px;' : 'gap: 10px; padding-top: 24px;', reIll: isDesk ? '160px' : '120px',
+      ov
+    };
+  }
+}
+</script>
+</body>
+</html>

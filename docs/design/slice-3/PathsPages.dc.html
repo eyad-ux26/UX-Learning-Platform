@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 3 · Paths, home and onboarding</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
+        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+      </sc-for>
+      <a class="dk-layer" href="#paths" style="color: var(--link);"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addPath}}</a>
+      <div style="flex: 1;"></div>
+      <a class="dk-layer" href="#sound"><span class="ph ph-speaker-high" aria-hidden="true"></span>{{c.sound}}<span style="flex: 1;"></span><span class="switch is-on" aria-hidden="true"><span class="track"></span></span></a>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <div class="pg-col">
+
+    <!-- ============ Paths tab ============ -->
+    <sc-if value="{{is.paths}}" hint-placeholder-val="{{true}}">
+      <header class="pg-top">
+        <h1 class="pg-title" style="flex: 1;">{{c.pathsTitle}}</h1>
+        <span class="stat"><span class="ph ph-flame-fill" style="color: #F59E2B;" aria-hidden="true"></span><span class="num">16</span></span>
+      </header>
+      <main class="pg-body" style="gap: 10px;">
+        <p class="t-small ink-2" style="margin-top: -6px;">{{c.pathsLead}}</p>
+        <div class="pg-sec"><p class="t-over">{{c.secJoined}}</p></div>
+        <div class="pg-grid two">
+          <sc-for list="{{joined}}" as="p" hint-placeholder-count="2">
+            <a href="#path" class="{{p.cls}}" aria-label="{{p.aria}}">
+              <span class="pc-ill"><img src="{{p.img}}" alt=""></span>
+              <span class="pc-text">
+                <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
+                <span class="pc-meta"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><span class="kind">{{p.unitNow}}</span></span>
+                <span class="pc-prog"><span class="progress progress-sm" role="progressbar" aria-label="{{c.pathProgress}}" aria-valuenow="{{p.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{p.pct}};"></i></span><span class="num">{{p.pct}}</span></span>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+        <div class="pg-sec"><p class="t-over">{{c.secNew}}</p></div>
+        <div class="pg-grid two">
+          <sc-for list="{{fresh}}" as="p" hint-placeholder-count="1">
+            <a href="#path" class="{{p.cls}}">
+              <span class="pc-ill"><img src="{{p.img}}" alt=""></span>
+              <span class="pc-text">
+                <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
+                <span class="pc-sub">{{p.sub}}</span>
+                <span class="pc-meta"><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><span class="kind">{{p.units}}</span><span class="kind kind-free">{{c.free1}}</span></span>
+              </span>
+              <span class="pc-end"><span class="ph ph-caret flip" aria-hidden="true"></span></span>
+            </a>
+          </sc-for>
+        </div>
+        <div class="pg-sec"><p class="t-over"><span class="ph ph-hourglass" aria-hidden="true"></span>{{c.secSoon}}</p></div>
+        <div class="pg-grid">
+          <sc-for list="{{soon}}" as="p" hint-placeholder-count="4">
+            <div class="path-card is-soon" aria-disabled="true" style="padding: 10px 12px;">
+              <span class="pc-ill" style="width: 44px; height: 44px; border-radius: 12px;"><img src="{{p.img}}" alt="" style="width: 48px; height: 48px;"></span>
+              <span class="pc-text">
+                <span class="pc-name" style="font-size: 15px;"><span class="ltr">{{p.name}}</span></span>
+                <span class="pc-sub" style="-webkit-line-clamp: 1;">{{p.sub}}</span>
+              </span>
+              <span class="kind kind-soon">{{c.soon}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Path detail: a new path or a joined one ============ -->
+    <sc-if value="{{is.detail}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <a href="#paths" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a>
+        <span class="t-label ink-2" style="flex: 1;">{{c.pathsTitle}}</span>
+      </header>
+      <main class="pg-body" style="gap: 12px;">
+        <div class="pg-split">
+          <div class="pg-stack">
+            <section class="card-panel" style="position: relative; padding: 16px; border-radius: 24px; display: flex; gap: 14px; align-items: center;">
+              <img src="{{d.img}}" alt="" style="width: {{d.illSize}}px; height: {{d.illSize}}px; flex: none; margin: -6px 0;">
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+                <h1 class="t-h2 ltr" style="color: var(--panel-ink); text-align: start; display: block;">{{d.name}}</h1>
+                <p class="t-small" style="color: var(--ink-2);">{{d.sub}}</p>
+                <div class="pc-meta">
+                  <sc-if value="{{d.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if>
+                  <span class="{{d.kindCls}}" style="background: var(--surface);"><span class="{{d.kindIcon}}" aria-hidden="true"></span>{{d.kind}}</span>
+                  <span class="kind" style="background: var(--surface);">{{d.units}}</span>
+                  <span class="kind kind-free">{{c.free1}}</span>
+                </div>
+              </div>
+            </section>
+            <sc-if value="{{d.joined}}" hint-placeholder-val="{{false}}">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline;"><span class="t-label">{{c.pathProgress}}</span><span class="t-small num" style="font-weight: 700;">{{d.pct}}</span></div>
+                <div class="progress progress-sm" role="progressbar" aria-label="{{c.pathProgress}}" aria-valuenow="{{d.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{d.pct}};"></i></div>
+                <span class="t-small ink-2">{{d.progressText}}</span>
+              </div>
+            </sc-if>
+            <p class="t-over" style="margin-top: 2px;">{{d.listTitle}}</p>
+            <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{d.rows}}" as="r" hint-placeholder-count="5">
+                <li class="{{r.cls}}" style="{{r.style}}">
+                  <span style="{{r.dot}}"><span class="{{r.icon}}" style="font-size: 18px;" aria-hidden="true"></span><sc-if value="{{r.hasNum}}" hint-placeholder-val="{{false}}"><span class="num" style="font-weight: 700; font-size: 15px;">{{r.num}}</span></sc-if></span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px;">
+                    <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{r.over}}</span>
+                    <span class="t-label" style="font-size: 15px;">{{r.title}}</span>
+                    <sc-if value="{{r.note}}" hint-placeholder-val="{{false}}"><span class="t-small ink-2" style="font-size: 13px;">{{r.note}}</span></sc-if>
+                  </span>
+                  <sc-if value="{{r.chip}}" hint-placeholder-val="{{false}}"><span class="{{r.chipCls}}">{{r.chip}}</span></sc-if>
+                </li>
+              </sc-for>
+            </ol>
+          </div>
+          <aside class="pg-stack" style="{{d.asideStyle}}">
+            <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+              <section class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                <p class="t-over">{{d.asideTitle}}</p>
+                <sc-for list="{{d.facts}}" as="f" hint-placeholder-count="3">
+                  <p class="pg-note"><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p>
+                </sc-for>
+                <a href="#start" class="btn btn-primary btn-lg btn-block press" style="margin-top: 6px;"><span class="{{d.ctaIcon}}" aria-hidden="true"></span>{{d.cta}}</a>
+                <p class="pg-note" style="font-size: 13px;"><span class="ph ph-check-circle" aria-hidden="true"></span><span>{{d.keep}}</span></p>
+              </section>
+            </sc-if>
+          </aside>
+        </div>
+      </main>
+      <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+        <footer style="padding: 12px 20px 18px; display: flex; flex-direction: column; gap: 8px; border-top: 2px solid var(--line); background: var(--surface);">
+          <p class="pg-note" style="font-size: 13px;"><span class="ph ph-check-circle" aria-hidden="true"></span><span>{{d.keep}}</span></p>
+          <a href="#start" class="btn btn-primary btn-lg btn-block press"><span class="{{d.ctaIcon}}" aria-hidden="true"></span>{{d.cta}}</a>
+        </footer>
+      </sc-if>
+    </sc-if>
+
+    <!-- ============ Home with several paths ============ -->
+    <sc-if value="{{is.home}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><img src="{{mark}}" alt="UXGate" style="height: 30px; width: auto;"></sc-if>
+        <div style="flex: 1;"></div>
+        <a href="#streak" class="stat" style="text-decoration: none;" aria-label="{{c.streakAria}}"><span class="ph ph-flame-fill" style="color: #F59E2B;" aria-hidden="true"></span><span class="num">16</span></a>
+        <a href="#xp" class="stat" style="text-decoration: none;"><span class="ph ph-bolt-fill" style="color: var(--hl-ledge);" aria-hidden="true"></span><span class="num ltr">1,860 XP</span></a>
+        <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="avatar" aria-hidden="true">{{c.initial}}</span></sc-if>
+      </header>
+      <main class="pg-body" style="gap: 14px;">
+        <h1 class="pg-title">{{c.greeting}}</h1>
+        <sc-if value="{{h.freeze}}" hint-placeholder-val="{{false}}">
+          <div class="calm" role="status">
+            <img src="{{img.freeze}}" alt="">
+            <div class="grow"><b>{{c.fzKept}}</b><span>{{c.fzKeptBody}}</span></div>
+            <button class="icon-btn plain" type="button" aria-label="{{c.dismiss}}" style="width: 44px; height: 44px;"><span class="ph ph-x" aria-hidden="true"></span></button>
+          </div>
+        </sc-if>
+        <div class="pg-split" style="{{h.splitStyle}}">
+          <div class="pg-stack" style="gap: 14px;">
+            <sc-if value="{{h.next}}" hint-placeholder-val="{{true}}">
+              <section class="card-panel" aria-labelledby="pg-next-{{lang}}-{{theme}}-{{device}}" style="position: relative; padding: {{h.cardPad}}; display: flex; flex-direction: column; gap: 12px; border-radius: 24px; overflow: hidden;">
+                <img src="{{img.forms}}" alt="" style="position: absolute; width: {{h.illSize}}px; height: {{h.illSize}}px; top: {{h.illTop}}; inset-inline-end: -8px;">
+                <span class="tag" style="background: var(--surface); align-self: flex-start; position: relative;"><span class="ltr">Forms That Flow</span> · {{c.unit2}}</span>
+                <div style="display: flex; flex-direction: column; gap: 4px; max-width: {{h.textMax}}; position: relative;">
+                  <p class="t-over" style="color: var(--link);">{{c.nextUp}}</p>
+                  <h2 id="pg-next-{{lang}}-{{theme}}-{{device}}" class="t-h2" style="font-size: {{h.titleSize}}; color: var(--panel-ink);">{{c.nextLesson}}</h2>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; position: relative; flex-wrap: wrap;">
+                  <span class="t-small ink-2" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;"><span class="ph ph-book" aria-hidden="true"></span>{{c.lessonOf}}</span>
+                  <span class="t-small ink-2" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600;"><span class="ph ph-clock" aria-hidden="true"></span>{{c.min6}}</span>
+                </div>
+                <div style="display: flex; gap: 6px; position: relative; max-width: 360px;" aria-hidden="true">
+                  <span style="flex: 1; height: 8px; border-radius: 8px; background: var(--hl); box-shadow: inset 0 -3px 0 var(--hl-ledge);"></span>
+                  <span style="flex: 1; height: 8px; border-radius: 8px; background: var(--hl); box-shadow: inset 0 -3px 0 var(--hl-ledge);"></span>
+                  <span style="flex: 1; height: 8px; border-radius: 8px; background: var(--surface);"></span>
+                  <span style="flex: 1; height: 8px; border-radius: 8px; background: var(--surface);"></span>
+                </div>
+                <a href="#step" class="{{h.startCls}}" style="position: relative;"><span class="ph ph-play" aria-hidden="true"></span>{{c.start}}</a>
+              </section>
+            </sc-if>
+            <sc-if value="{{h.resume}}" hint-placeholder-val="{{false}}">
+              <section class="card sel-frame" aria-labelledby="pg-res-{{lang}}-{{theme}}-{{device}}" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; margin: 6px 4px 8px; border-color: var(--sel-line); box-shadow: 0 4px 0 var(--sel-line);">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <img src="{{img.hier}}" alt="" style="width: 64px; height: 64px; flex: none;">
+                  <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                    <span class="t-over" style="color: var(--link);">{{c.resumeOver}}</span>
+                    <h2 id="pg-res-{{lang}}-{{theme}}-{{device}}" class="t-h3" style="margin: 0;">{{c.resumeLesson}}</h2>
+                    <span class="t-small ink-2" style="font-weight: 600;"><span class="ltr">Visual Hierarchy in Action</span> · {{c.resumeWhere}}</span>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;"><div class="progress progress-sm" style="flex: 1;"><i style="width: 36%;"></i></div><span class="t-small num ink-2" style="font-weight: 700;">{{c.resumeStep}}</span></div>
+                <p class="t-small ink-2" style="margin: 0; display: flex; align-items: center; gap: 6px;"><span class="ph ph-cloud-check-fill" style="color: var(--right-ink); font-size: 16px;" aria-hidden="true"></span>{{c.resumeSaved}}</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <a href="#resume" class="btn btn-primary btn-lg press" style="flex: 1 1 200px;"><span class="ph ph-play" aria-hidden="true"></span>{{c.resumeBtn}}</a>
+                  <a href="#restart" class="btn btn-ghost" style="flex: 0 0 auto;">{{c.restart}}</a>
+                </div>
+              </section>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="pg-sec" style="margin-top: -4px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 32px;">{{c.allPaths}}</a></div>
+              <div class="prow">
+                <sc-for list="{{chips}}" as="p" hint-placeholder-count="2">
+                  <a href="#switch" class="{{p.cls}}" aria-label="{{p.aria}}" aria-current="{{p.cur}}">
+                    <span class="pchip-top"><img src="{{p.img}}" alt=""><span class="pchip-name ltr">{{p.name}}</span></span>
+                    <div class="progress progress-sm" aria-hidden="true"><i style="width: {{p.pct}};"></i></div>
+                    <span class="pchip-sub"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="color: var(--link);" aria-hidden="true"></span></sc-if><span>{{p.sub}}</span></span>
+                  </a>
+                </sc-for>
+                <sc-if value="{{isDesk}}" hint-placeholder-val="{{true}}"><a href="#paths" class="pchip is-add press"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addShort}}</a></sc-if>
+              </div>
+            </div>
+          </div>
+          <div class="pg-stack" style="gap: 14px;">
+            <section class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 14px;">
+              <span style="display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--mint); color: var(--right-ink); flex: none;"><span class="ph ph-review" style="font-size: 26px;" aria-hidden="true"></span></span>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                <p class="t-label" style="font-size: 16px;">{{c.reviewTitle}}</p>
+                <p class="t-small ink-2">{{c.reviewBody}}</p>
+              </div>
+              <a href="#review" class="btn btn-secondary btn-sm press">{{c.review}}</a>
+            </section>
+            <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="position: relative; width: 52px; height: 52px; flex: none;">
+                  <svg viewBox="0 0 58 58" width="52" height="52" aria-hidden="true" style="display: block;"><circle cx="29" cy="29" r="24" fill="none" stroke="var(--track)" stroke-width="8"></circle><circle cx="29" cy="29" r="24" fill="none" stroke="var(--hl)" stroke-width="8" stroke-linecap="round" stroke-dasharray="75.4 150.8" transform="rotate(-90 29 29)"></circle></svg>
+                  <span class="num" style="position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; font-size: 14px;">1/2</span>
+                </div>
+                <div style="flex: 1; min-width: 0;"><p class="t-label" style="font-size: 16px;">{{c.goalTitle}}</p><p class="t-small ink-2">{{c.goalBody}}</p></div>
+              </div>
+              <div style="height: 2px; background: var(--line); border-radius: 2px;"></div>
+              <a href="#streak" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); min-height: 32px;">
+                <span class="ph ph-flame-fill" style="font-size: 20px; color: #F59E2B;" aria-hidden="true"></span>
+                <span class="t-label" style="font-size: 15px; flex: 1;">{{c.streak16}}</span>
+                <span class="t-small" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--link);"><span class="ph ph-freeze-fill" aria-hidden="true"></span>{{h.freezeText}}</span>
+                <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+              </a>
+              <div class="wk">
+                <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
+                  <div class="wk-d"><span class="{{d.cls}}" style="width: 32px; height: 32px;"><span class="{{d.icon}}" aria-hidden="true"></span></span><span class="wk-l">{{d.label}}</span></div>
+                </sc-for>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Path map with the header switcher ============ -->
+    <sc-if value="{{is.map}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 6px; position: relative;">
+        <button class="{{m.swCls}}" type="button" aria-haspopup="dialog" aria-expanded="{{m.swOpen}}">
+          <img src="{{img.forms}}" alt="">
+          <span class="sw-name"><span class="ltr">Forms That Flow</span><small>{{c.unit2of5}}</small></span>
+          <span class="ph ph-caret-down caret" aria-hidden="true"></span>
+        </button>
+        <div style="flex: 1;"></div>
+        <span class="stat"><span class="ph ph-bolt-fill" style="color: var(--hl-ledge);" aria-hidden="true"></span><span class="num ltr">1,860 XP</span></span>
+        <sc-if value="{{m.pop}}" hint-placeholder-val="{{false}}">
+          <div class="pg-pop" role="dialog" aria-label="{{c.switchTitle}}" style="top: 80px; inset-inline-start: 36px;">
+            <p class="t-over" style="padding: 6px 10px 2px;">{{c.switchTitle}}</p>
+            <div class="sw-list">
+              <sc-for list="{{swRows}}" as="r" hint-placeholder-count="2">
+                <a href="#switch" class="{{r.cls}}" aria-current="{{r.cur}}"><img src="{{r.img}}" alt=""><span class="grow"><b class="ltr" style="text-align: start;">{{r.name}}</b><span class="progress progress-sm" aria-hidden="true"><i style="width: {{r.pct}};"></i></span><span class="t-small ink-2" style="font-size: 12px; font-weight: 700;">{{r.where}}</span></span><span class="{{r.endIcon}}" style="font-size: 22px; color: var(--link);" aria-hidden="true"></span></a>
+              </sc-for>
+            </div>
+            <a href="#paths" class="pg-link" style="padding: 0 10px; border-top: 2px solid var(--line);"><span class="ph ph-squares-four" aria-hidden="true"></span>{{c.seeAll}}</a>
+          </div>
+        </sc-if>
+      </header>
+      <main class="pg-body" style="gap: 12px;">
+        <div class="pg-split" style="{{m.splitStyle}}">
+          <div class="pg-stack" style="gap: 12px;">
+            <a href="#unit1" class="card press" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);">
+              <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--right-line); color: #01241A; flex: none; box-shadow: 0 3px 0 #2A7F5F;"><span class="ph ph-check" style="font-size: 22px;" aria-hidden="true"></span></span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unit1}} · {{c.done}}</span>
+                <span class="t-label" style="font-size: 15px;">{{c.u1Title}}</span>
+                <span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="skill skill-shown" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-seal-fill" style="font-size: 13px;" aria-hidden="true"></span>6 · {{c.shown}}</span><span class="skill skill-kept" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-star-fill" style="font-size: 13px;" aria-hidden="true"></span>2 · {{c.kept}}</span></span>
+              </span>
+              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+            </a>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span class="t-over">{{c.unit2}}</span>
+                <span class="skill skill-practiced" style="height: 22px; font-size: 12px; padding: 0 9px;"><span class="ph ph-check-circle" style="font-size: 13px;" aria-hidden="true"></span>5 · {{c.practiced}}</span>
+                <span class="skill" style="height: 22px; font-size: 12px; padding: 0 9px; box-shadow: inset 0 0 0 1.5px var(--line-field); color: var(--ink-2);">3 · {{c.notYet}}</span>
+              </div>
+              <h2 class="t-h2" style="font-size: 22px;">{{c.u2Title}}</h2>
+            </div>
+            <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; position: relative;">
+              <span aria-hidden="true" style="position: absolute; top: 24px; bottom: 30px; inset-inline-start: 21px; width: 4px; border-radius: 4px; background: linear-gradient(180deg, var(--right-line) 0 46%, var(--sel-line) 46% 70%, var(--line) 70% 100%);"></span>
+              <sc-for list="{{lessons}}" as="l" hint-placeholder-count="4">
+                <li style="display: flex; align-items: center; gap: 12px; position: relative;">
+                  <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
+                  <div class="{{l.cardCls}}" style="{{l.cardStyle}}">
+                    <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
+                    <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
+                  </div>
+                </li>
+              </sc-for>
+            </ol>
+            <button class="card" type="button" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-style: dashed; text-align: start; font: inherit; color: var(--ink); cursor: pointer;">
+              <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--disabled-bg); color: var(--disabled-ink); flex: none;"><span class="ph ph-lock-fill" style="font-size: 22px;" aria-hidden="true"></span></span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unit3}}</span>
+                <span class="t-label">{{c.u3Title}}</span>
+                <span class="t-small ink-2" style="font-size: 13px; display: inline-flex; gap: 6px; align-items: center;"><span class="ph ph-info" aria-hidden="true"></span>{{c.u3Why}}</span>
+              </span>
+            </button>
+          </div>
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+            <aside class="pg-stack">
+              <section class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                <p class="t-over">{{c.pathProgress}}</p>
+                <div style="display: flex; align-items: baseline; gap: 8px;"><b class="num" style="font-size: 30px;">30%</b><span class="t-small ink-2">{{c.p01Progress}}</span></div>
+                <div class="progress progress-sm"><i style="width: 30%;"></i></div>
+                <p class="t-over" style="margin-top: 6px;">{{c.skillsTitle}}</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                  <span class="skill skill-practiced"><span class="ph ph-check-circle" aria-hidden="true"></span>5 · {{c.practiced}}</span>
+                  <span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>6 · {{c.shown}}</span>
+                  <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>2 · {{c.kept}}</span>
+                </div>
+                <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.statesNote}}</span></p>
+              </section>
+            </aside>
+          </sc-if>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Onboarding: recommend only from paths with content ============ -->
+    <sc-if value="{{is.ob}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 12px; padding-top: 12px;">
+        <img src="{{mark}}" alt="UXGate" style="height: 30px; width: auto;">
+        <div class="progress progress-sm" style="flex: 1; max-width: 420px;" role="progressbar" aria-label="{{c.obStep}}" aria-valuenow="2" aria-valuemin="0" aria-valuemax="3"><i style="width: 66%;"></i></div>
+        <span class="t-small num ink-2" style="font-weight: 700;">{{c.obStep}}</span>
+        <div style="flex: 1;"></div>
+        <a href="#lang" class="btn btn-quiet btn-sm" style="min-height: 44px; padding: 0 8px;"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+      </header>
+      <main class="pg-body" style="{{o.mainStyle}}">
+        <div class="pg-split" style="{{o.splitStyle}}">
+          <section class="pg-stack" style="gap: 12px;">
+            <sc-if value="{{o.guest}}" hint-placeholder-val="{{false}}">
+              <div class="calm" style="background: var(--mint); border-color: var(--right-line);">
+                <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--surface); color: var(--right-ink); flex: none;"><span class="ph ph-cloud-check-fill" style="font-size: 24px;" aria-hidden="true"></span></span>
+                <div class="grow"><b>{{c.gKept}}</b><span>{{c.gKeptBody}}</span></div>
+              </div>
+            </sc-if>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <h1 class="t-h1" style="font-size: {{o.qSize}};">{{c.obQ}}</h1>
+              <p class="t-small ink-2">{{c.obSub}}</p>
+            </div>
+            <div role="radiogroup" aria-label="{{c.obQ}}" style="display: flex; flex-direction: column; gap: 8px;">
+              <sc-for list="{{opts}}" as="op" hint-placeholder-count="4">
+                <button class="{{op.cls}}" type="button" role="radio" aria-checked="{{op.on}}" style="min-height: 58px; padding: 8px 14px; gap: 12px;">
+                  <span class="grow" style="display: flex; flex-direction: column; gap: 0;"><span style="font-weight: 700; font-size: 16px;">{{op.label}}</span><span class="t-small ink-2" style="font-weight: 400; font-size: 13px;">{{op.note}}</span></span>
+                  <span class="{{op.radio}}" aria-hidden="true" style="min-height: 0;"><span class="dot"></span></span>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+          <aside class="pg-stack" style="gap: 8px;">
+            <span class="frame-label"><span class="ph ph-hash" aria-hidden="true"></span>{{c.weSuggest}}</span>
+            <section class="card-panel" style="border-radius: 22px; padding: {{o.recPad}}; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="{{o.recImg}}" alt="" style="width: {{o.recIll}}px; height: {{o.recIll}}px; flex: none;">
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                  <p class="t-h3 ltr" style="color: var(--panel-ink); text-align: start;">{{o.recName}}</p>
+                  <div class="pc-meta"><span class="kind" style="background: var(--surface);"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span><span class="kind" style="background: var(--surface);">{{c.units5}}</span><span class="kind kind-free">{{c.free1}}</span></div>
+                </div>
+              </div>
+              <div class="comment" style="border-color: var(--line);"><span class="pin pin-brand"><span class="ph ph-sparkle" aria-hidden="true"></span></span><span class="t-small"><b>{{c.whyTitle}}</b> {{o.recWhy}}</span></div>
+            </section>
+            <a href="#all" class="pg-link"><span class="ph ph-squares-four" aria-hidden="true"></span>{{c.seeAll}}</a>
+          </aside>
+        </div>
+      </main>
+      <footer style="padding: 12px 20px 18px; display: flex; gap: 10px; border-top: 2px solid var(--line); background: var(--surface); justify-content: {{o.footJustify}};">
+        <a href="#back" class="btn btn-secondary press" style="{{o.backStyle}}"><span class="ph ph-arrow back" aria-hidden="true"></span>{{c.back}}</a>
+        <a href="#next" class="btn btn-primary btn-lg press" style="{{o.nextStyle}}">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+      </footer>
+    </sc-if>
+
+    <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+      <nav class="bnav" aria-label="{{c.navLabel}}">
+        <sc-for list="{{bnav}}" as="n" hint-placeholder-count="4">
+          <a href="#{{n.id}}" class="{{n.cls}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+        </sc-for>
+      </nav>
+    </sc-if>
+  </div>
+
+  <!-- ============ Overlays ============ -->
+  <sc-if value="{{ov.any}}" hint-placeholder-val="{{false}}">
+    <div class="pg-scrim"></div>
+    <section class="pg-over sheet-in" role="dialog" aria-modal="true" aria-labelledby="pg-ov-{{lang}}-{{theme}}-{{device}}">
+      <div class="grab"></div>
+
+      <sc-if value="{{ov.started}}" hint-placeholder-val="{{false}}">
+        <img class="pg-over-ill pop" src="{{img.gate}}" alt="">
+        <h2 id="pg-ov-{{lang}}-{{theme}}-{{device}}" style="text-align: center;">{{c.stTitle}}</h2>
+        <p class="t-small ink-2" style="text-align: center;">{{c.stBody}}</p>
+        <div class="why-list">
+          <sc-for list="{{kept}}" as="k" hint-placeholder-count="2">
+            <div class="why-row is-done"><img src="{{k.img}}" alt="" style="width: 36px; height: 36px; flex: none;"><span class="grow"><b class="ltr" style="text-align: start;">{{k.name}}</b><span>{{k.where}}</span></span><span class="t-small" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--right-ink);"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.keptChip}}</span></div>
+          </sc-for>
+        </div>
+        <a href="#lesson" class="btn btn-primary btn-lg btn-block press"><span class="ph ph-play" aria-hidden="true"></span>{{c.stGo}}</a>
+        <a href="#map" class="btn btn-ghost btn-block">{{c.stMap}}</a>
+      </sc-if>
+
+      <sc-if value="{{ov.locked}}" hint-placeholder-val="{{false}}">
+        <img class="pg-over-ill" src="{{img.lock}}" alt="" style="width: 76px; height: 76px;">
+        <div style="display: flex; flex-direction: column; gap: 2px; text-align: center;"><span class="t-small ink-3" style="font-weight: 700;">{{c.unit3}}</span><h2 id="pg-ov-{{lang}}-{{theme}}-{{device}}">{{c.u3Title}}</h2></div>
+        <p class="t-small ink-2" style="text-align: center;">{{c.lkBody}}</p>
+        <div class="why-list">
+          <div class="why-row is-todo"><span class="ph ph-seal" aria-hidden="true"></span><span class="grow"><b>{{c.lkCheck}}</b><span>{{c.lkCheckSub}}</span></span><span class="kind">{{c.lkLeft}}</span></div>
+          <div class="why-row is-done"><span class="ph ph-check-circle-fill" aria-hidden="true"></span><span class="grow"><b>{{c.lkSub}}</b><span>{{c.lkSubSub}}</span></span></div>
+        </div>
+        <a href="#continue" class="btn btn-primary btn-lg btn-block press"><span class="ph ph-play" aria-hidden="true"></span>{{c.lkGo}}</a>
+        <a href="#testout" class="btn btn-ghost btn-block">{{c.lkTest}}</a>
+      </sc-if>
+
+      <sc-if value="{{ov.switcher}}" hint-placeholder-val="{{false}}">
+        <h2 id="pg-ov-{{lang}}-{{theme}}-{{device}}">{{c.switchTitle}}</h2>
+        <p class="t-small ink-2">{{c.switchBody}}</p>
+        <div class="sw-list">
+          <sc-for list="{{swRows}}" as="r" hint-placeholder-count="2">
+            <a href="#switch" class="{{r.cls}}" aria-current="{{r.cur}}"><img src="{{r.img}}" alt=""><span class="grow"><b class="ltr" style="text-align: start;">{{r.name}}</b><span class="progress progress-sm" aria-hidden="true"><i style="width: {{r.pct}};"></i></span><span class="t-small ink-2" style="font-size: 12px; font-weight: 700;">{{r.where}}</span></span><span class="{{r.endIcon}}" style="font-size: 22px; color: var(--link);" aria-hidden="true"></span></a>
+          </sc-for>
+        </div>
+        <a href="#paths" class="btn btn-secondary btn-block press"><span class="ph ph-squares-four" aria-hidden="true"></span>{{c.seeAll}}</a>
+      </sc-if>
+
+      <sc-if value="{{ov.all}}" hint-placeholder-val="{{false}}">
+        <h2 id="pg-ov-{{lang}}-{{theme}}-{{device}}">{{c.allTitle}}</h2>
+        <p class="t-small ink-2">{{c.allBody}}</p>
+        <div role="radiogroup" aria-label="{{c.allTitle}}" class="pg-over-scroll" style="display: flex; flex-direction: column; gap: 8px;">
+          <sc-for list="{{allList}}" as="p" hint-placeholder-count="5">
+            <div class="{{p.cls}}" role="radio" aria-checked="{{p.on}}" aria-disabled="{{p.dis}}" tabindex="{{p.tab}}" style="padding: 8px 12px;">
+              <span class="pc-ill" style="width: 42px; height: 42px; border-radius: 12px;"><img src="{{p.img}}" alt="" style="width: 46px; height: 46px;"></span>
+              <span class="pc-text"><span class="pc-name" style="font-size: 15px;"><span class="ltr">{{p.name}}</span></span><span class="pc-meta" style="margin-top: 0;"><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><sc-if value="{{p.hasUnits}}" hint-placeholder-val="{{true}}"><span class="kind">{{p.units}}</span></sc-if></span></span>
+              <sc-if value="{{p.pickable}}" hint-placeholder-val="{{true}}"><span class="{{p.radio}}" aria-hidden="true" style="min-height: 0;"><span class="dot"></span></span></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <a href="#choose" class="btn btn-primary btn-lg btn-block press">{{c.allChoose}}</a>
+      </sc-if>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","obRecommend","obAll","obGuest"],"default":"paths"},"$preview":{"width":390,"height":844}}'>
+/* Slice 3 · several paths: Paths tab, path detail, home, path map switcher, onboarding. Spec §4.4b, EN-11, EN-11b. */
+const IMG = {
+  forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
+  video: '/_blob/a60ce1789f905176f32c4553b2802acc', map: '/_blob/f6e00f674b6512115c3a1032554cf9cf', lock: '/_blob/7cbe7a77e505c37be737172ca25dd102',
+  gate: '/_blob/940849193fa4b01dff04d73c95583da2', freeze: '/_blob/169f6b75bfa541dd0163f10731990da3'
+};
+/* id, name, image, kind, units, state (current, joined, new, soon) */
+const PATHS = [
+  ['P01', 'Forms That Flow', 'forms', 'interactive', 5, 'current', 30],
+  ['P10', 'Visual Hierarchy in Action', 'hier', 'interactive', 5, 'joined', 20],
+  ['P14', 'Patterns That Fit', 'video', 'hybrid', 6, 'new', 0],
+  ['P02', 'Find and Fix Usability', 'usab', 'interactive', 0, 'soon'],
+  ['P03', 'Frame the Right Problem', 'map', 'interactive', 0, 'soon'],
+  ['P04', 'User Flows That Work', 'map', 'interactive', 0, 'soon'],
+  ['P05', 'Make UX Accessible', 'map', 'interactive', 0, 'soon'],
+  ['P06', 'Better User Interviews', 'map', 'interactive', 0, 'soon'],
+  ['P07', 'Turn Research into Decisions', 'map', 'interactive', 0, 'soon'],
+  ['P08', 'Test and Improve Usability', 'map', 'interactive', 0, 'soon'],
+  ['P09', 'Make Content Easy to Find', 'map', 'interactive', 0, 'soon'],
+  ['P11', 'Design Systems in Action', 'map', 'interactive', 0, 'soon'],
+  ['P12', 'Design Better AI Experiences', 'map', 'interactive', 0, 'soon'],
+  ['P13', 'AI Tools for Better UX', 'map', 'interactive', 0, 'soon']
+];
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', addPath: 'Add a path', addShort: 'Add a path', sound: 'Sound', otherLang: 'العربية',
+    back: 'Back', cont: 'Continue', free1: 'Unit 1 free', current: 'Current', soon: 'Coming soon', interactive: 'Interactive', hybrid: 'Hybrid · Video', units: (n) => n + ' units', units5: '5 units',
+    pathProgress: 'Path progress', seeAll: 'See all 14 paths', allPaths: 'All paths',
+    pathsTitle: 'Paths', pathsLead: 'Join as many paths as you like. The current one sets your next lesson.', secJoined: 'Your paths · 2', secNew: 'Start a new path', secSoon: 'Coming soon · 11',
+    sub: { P01: 'Design forms people can finish, understand and recover from, in English and Arabic.', P10: 'Help people see what matters first, on any screen and in any language.', P14: 'Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.',
+      P02: 'Spot where people get stuck, and fix that first.', P03: 'Make sure you solve the problem that matters.', P04: 'Plan the steps people take, from start to done.', P05: 'Design that works for every ability and device.', P06: 'Ask, listen and learn what people really need.',
+      P07: 'Go from findings to clear design choices.', P08: 'Run quick tests and fix what they find.', P09: 'Menus and labels that lead to the right page.', P11: 'Build components that stay consistent.', P12: 'AI features people understand and trust.', P13: 'Use AI tools to research and design faster.' },
+    where: { P01: 'Unit 2 of 5', P10: 'Unit 2 of 5' }, whereShort: { P01: 'Unit 2 · 30%', P10: 'Unit 2 · 20%' },
+    switchTo: (n) => 'Switch to ' + n, isCurrentAria: (n) => n + ', your current path',
+    /* detail */
+    whatYouPractise: 'Units in this path', yourUnits: 'Unit 2 · Guide the eye',
+    detailNew: { cta: 'Start this path', keep: 'Your other paths keep all their progress. You can switch back any time.', aside: 'Before you start', facts: [['ph ph-video', 'Short video clips inside the lessons, with English and Arabic captions.'], ['ph ph-cursor-click', 'You practise each pattern right after the clip.'], ['ph ph-seal', 'A skill check ends every unit.']] },
+    detailJoined: { cta: 'Continue this path', keep: 'Forms That Flow stays at Unit 2, Lesson 3. Switch back any time.', aside: 'Continue where you are', progress: 'Unit 1 done · 4 of 20 lessons done',
+      facts: [['ph ph-book', 'Next: What people skip without reading, 6 min.'], ['ph ph-flame', 'Lessons in any path count for your goal and streak.']] },
+    p14Units: [['Interrupt only when it’s worth it', '4 lessons'], ['Show what’s needed, make the next step obvious', '5 lessons'], ['Help people find it', '4 lessons'], ['Choices people can trust', '4 lessons'], ['Forms people finish', '4 lessons'], ['Numbers and dates, set fast', '4 lessons']],
+    p10Lessons: [['Make the main action stand out', 'done'], ['What people skip without reading', 'next'], ['One focal point per screen', 'todo'], ['Skill check: guide the eye', 'check']],
+    unitN: (n) => 'Unit ' + n, lessonN: (n) => 'Lesson ' + n, opensAfter: 'Opens after the Unit 1 skill check', freeChip: 'Free', doneChip: 'Done', nextChip: 'Next', checkNote: 'New case, no hints',
+    /* started */
+    stTitle: 'Patterns That Fit is your current path', stBody: 'Your next lesson now comes from this path. Your other paths keep all their progress.', keptChip: 'Saved', initial: 'Y', stGo: 'Start Unit 1, Lesson 1', stMap: 'See the path map',
+    keptWhere: { P01: 'Unit 2 · 30%', P10: 'Unit 2 · 20%' },
+    /* home */
+    greeting: 'Good evening, Yasmin', streakAria: '16 day streak', unit2: 'Unit 2', nextUp: 'Next lesson', nextLesson: 'Long lists: let people type', lessonOf: 'Lesson 3 of 4', min6: '6 min', start: 'Start lesson',
+    resumeOver: 'Pick up where you left off', resumeLesson: 'What people skip without reading', resumeWhere: 'Unit 2 · Lesson 2', resumeStep: 'Step 4 of 10', resumeSaved: 'Your answers are saved · 2 hours ago', resumeBtn: 'Resume at step 4', restart: 'Start over',
+    reviewTitle: '5 skills to review', reviewBody: 'From 2 paths · about 6 min', review: 'Review',
+    goalTitle: "Today's goal", goalBody: 'One more lesson, in any path.', streak16: '16 day streak', freezes1: '1 freeze ready', freezes0: 'Earn a freeze this week',
+    fzKept: 'A freeze kept your streak', fzKeptBody: 'You missed yesterday, so a freeze covered it. Your streak is still 16 days.', dismiss: 'Dismiss',
+    days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    /* map */
+    unit2of5: 'Unit 2 of 5', switchTitle: 'Switch path', switchBody: 'Your next lesson follows the path you pick. Nothing is lost on the others.',
+    unit1: 'Unit 1', unit3: 'Unit 3', done: 'Done', u1Title: 'Ask only what you need', u2Title: 'Pick the right control', u3Title: 'Labels and hints that stay visible',
+    u3Why: 'Opens after the Unit 2 skill check', shown: 'Shown', kept: 'Kept', practiced: 'Practiced', notYet: 'Not started',
+    lessonsP01: [['One, many, or a toggle', 'done', '+60 XP'], ['Type, pick, or step', 'done', '+50 XP'], ['Long lists: let people type', 'next', '6 min'], ['Skill check: pick the right control', 'check', 'New case, no hints']],
+    p01Progress: 'Unit 2 of 5 · 6 of 20 lessons', skillsTitle: 'Skills in this path', statesNote: 'Practiced: right in a lesson. Shown: right on a new case in a skill check. Kept: right again in review, 3 or more days later.',
+    /* locked */
+    lkBody: 'This unit opens when both of these are done:', lkCheck: 'Pass the Unit 2 skill check', lkCheckSub: 'Finish Lesson 3, then take the check', lkLeft: '2 to go',
+    lkSub: 'Subscription', lkSubSub: 'Units 2 to 5 are included. Yours is active.', lkGo: 'Continue Unit 2', lkTest: 'Take the Unit 2 skill check now',
+    /* onboarding */
+    obStep: 'Question 2 of 3', obQ: 'What do you want to get better at first?', obSub: 'We suggest a path that is ready now. You can add more later.',
+    opts: [['Forms people finish', 'Sign-ups, checkouts, settings', 'P01'], ['Clear visual hierarchy', 'Make the next step obvious', 'P10'], ['The right UI pattern', 'Dialogs, sheets, search, filters', 'P14'], ['Not sure yet', 'We suggest a good first path', 'none']],
+    weSuggest: 'We suggest', whyTitle: 'Why:', why: { P10: 'you want screens where the next step is obvious. This path practises that on real screens, in 5 units.', P01: 'you started it in the sample lesson, and your result is kept. Forms are in almost every product you will work on.' },
+    gKept: 'Your sample lesson is saved', gKeptBody: '+40 XP and one Practiced skill are now in your account.',
+    allTitle: 'All paths', allBody: 'Pick one path to start. You can add more later from the Paths tab.', allChoose: 'Choose Visual Hierarchy in Action'
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', addPath: 'أضف مسارًا', addShort: 'أضف مسارًا', sound: 'الصوت', otherLang: 'English',
+    back: 'رجوع', cont: 'متابعة', free1: 'الوحدة 1 مجانية', current: 'الحالي', soon: 'قريبًا', interactive: 'تفاعلي', hybrid: 'مختلط · فيديو', units: (n) => n + ' وحدات', units5: '5 وحدات',
+    pathProgress: 'تقدّم المسار', seeAll: 'اعرض كل المسارات الـ14', allPaths: 'كل المسارات',
+    pathsTitle: 'المسارات', pathsLead: 'انضمّ إلى أي عدد من المسارات. المسار الحالي هو الذي يحدّد درسك التالي.', secJoined: 'مساراتك · 2', secNew: 'ابدأ مسارًا جديدًا', secSoon: 'قريبًا · 11',
+    sub: { P01: 'صمّم نماذج يستطيع الناس إكمالها وفهمها والتعافي من أخطائها، بالعربية والإنجليزية.', P10: 'ساعد الناس على رؤية الأهم أولًا، على أي شاشة وبأي لغة.', P14: 'اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر.',
+      P02: 'اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.', P03: 'تأكّد أنك تحلّ المشكلة التي تهمّ فعلًا.', P04: 'خطّط للخطوات التي يمرّ بها الناس من البداية حتى النهاية.', P05: 'تصميم يناسب كل القدرات وكل الأجهزة.', P06: 'اسأل واستمع، واعرف ما يحتاجه الناس فعلًا.',
+      P07: 'انتقل من النتائج إلى قرارات تصميم واضحة.', P08: 'أجرِ اختبارات سريعة وأصلح ما تكشفه.', P09: 'قوائم وعناوين تقود إلى الصفحة الصحيحة.', P11: 'ابنِ مكوّنات تبقى متّسقة.', P12: 'ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.', P13: 'استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.' },
+    where: { P01: 'الوحدة 2 من 5', P10: 'الوحدة 2 من 5' }, whereShort: { P01: 'الوحدة 2 · 30%', P10: 'الوحدة 2 · 20%' },
+    switchTo: (n) => 'انتقل إلى ' + n, isCurrentAria: (n) => n + '، مسارك الحالي',
+    whatYouPractise: 'وحدات هذا المسار', yourUnits: 'الوحدة 2 · وجّه العين',
+    detailNew: { cta: 'ابدأ هذا المسار', keep: 'تبقى مساراتك الأخرى بكل تقدّمها، ويمكنك العودة إليها في أي وقت.', aside: 'قبل أن تبدأ', facts: [['ph ph-video', 'مقاطع فيديو قصيرة داخل الدروس، مع ترجمة بالعربية والإنجليزية.'], ['ph ph-cursor-click', 'تتدرّب على كل نمط مباشرة بعد المقطع.'], ['ph ph-seal', 'اختبار مهارة في نهاية كل وحدة.']] },
+    detailJoined: { cta: 'تابع هذا المسار', keep: 'يبقى Forms That Flow عند الوحدة 2، الدرس 3. ويمكنك العودة إليه في أي وقت.', aside: 'تابع من حيث وصلت', progress: 'أنهيت الوحدة 1 · أنجزت 4 دروس من 20',
+      facts: [['ph ph-book', 'التالي: ما يتخطّاه الناس دون قراءة، 6 دقائق.'], ['ph ph-flame', 'الدروس في أي مسار تُحسب لهدفك اليومي وسلسلتك.']] },
+    p14Units: [['لا تقاطع إلا حين يستحق الأمر', '4 دروس'], ['أظهر المطلوب، ووضّح الخطوة التالية', '5 دروس'], ['ساعد الناس على إيجاد ما يبحثون عنه', '4 دروس'], ['اختيارات يثق بها الناس', '4 دروس'], ['نماذج يكملها الناس', '4 دروس'], ['أرقام وتواريخ تُضبط بسرعة', '4 دروس']],
+    p10Lessons: [['اجعل الإجراء الرئيسي بارزًا', 'done'], ['ما يتخطّاه الناس دون قراءة', 'next'], ['نقطة تركيز واحدة لكل شاشة', 'todo'], ['اختبار المهارة: وجّه العين', 'check']],
+    unitN: (n) => 'الوحدة ' + n, lessonN: (n) => 'الدرس ' + n, opensAfter: 'تُفتح بعد اختبار مهارة الوحدة 1', freeChip: 'مجانية', doneChip: 'مكتمل', nextChip: 'التالي', checkNote: 'حالة جديدة بدون تلميحات',
+    stTitle: 'أصبح Patterns That Fit مسارك الحالي', stBody: 'درسك التالي يأتي الآن من هذا المسار، وتبقى مساراتك الأخرى بكل تقدّمها.', keptChip: 'محفوظ', initial: 'ي', stGo: 'ابدأ الوحدة 1، الدرس 1', stMap: 'اعرض خريطة المسار',
+    keptWhere: { P01: 'الوحدة 2 · 30%', P10: 'الوحدة 2 · 20%' },
+    greeting: 'مساء الخير يا ياسمين', streakAria: '16 يومًا متتاليًا', unit2: 'الوحدة 2', nextUp: 'الدرس التالي', nextLesson: 'القوائم الطويلة: دع الناس يكتبون', lessonOf: 'الدرس 3 من 4', min6: '6 دقائق', start: 'ابدأ الدرس',
+    resumeOver: 'أكمل من حيث توقّفت', resumeLesson: 'ما يتخطّاه الناس دون قراءة', resumeWhere: 'الوحدة 2 · الدرس 2', resumeStep: 'الخطوة 4 من 10', resumeSaved: 'إجاباتك محفوظة · قبل ساعتين', resumeBtn: 'أكمل من الخطوة 4', restart: 'ابدأ من جديد',
+    reviewTitle: '5 مهارات للمراجعة', reviewBody: 'من مسارين · نحو 6 دقائق', review: 'راجع',
+    goalTitle: 'هدف اليوم', goalBody: 'درس واحد آخر، في أي مسار.', streak16: '16 يومًا متتاليًا', freezes1: 'تجميد واحد متاح', freezes0: 'اكسب تجميدًا هذا الأسبوع',
+    fzKept: 'حافظ التجميد على سلسلتك', fzKeptBody: 'فاتك يوم أمس، فغطّاه تجميد. وما زالت سلسلتك 16 يومًا.', dismiss: 'إغلاق',
+    days: ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح'],
+    unit2of5: 'الوحدة 2 من 5', switchTitle: 'غيّر المسار', switchBody: 'درسك التالي يتبع المسار الذي تختاره، ولا يضيع شيء من المسارات الأخرى.',
+    unit1: 'الوحدة 1', unit3: 'الوحدة 3', done: 'مكتملة', u1Title: 'اسأل فقط عمّا تحتاجه', u2Title: 'اختر عنصر التحكّم المناسب', u3Title: 'عناوين وتلميحات تبقى ظاهرة',
+    u3Why: 'تُفتح بعد اختبار مهارة الوحدة 2', shown: 'أثبتّ', kept: 'أتقنت', practiced: 'تدرّبت', notYet: 'لم تبدأ',
+    lessonsP01: [['خيار واحد، أم عدة خيارات، أم Toggle؟', 'done', '+60 XP'], ['تكتب، أم تختار، أم تزيد وتنقص؟', 'done', '+50 XP'], ['القوائم الطويلة: دع الناس يكتبون', 'next', '6 دقائق'], ['اختبار المهارة: اختر عنصر التحكّم المناسب', 'check', 'حالة جديدة بدون تلميحات']],
+    p01Progress: 'الوحدة 2 من 5 · 6 دروس من 20', skillsTitle: 'مهارات هذا المسار', statesNote: 'تدرّبت: أجبت صحيحًا في درس. أثبتّ: أجبت صحيحًا على حالة جديدة في اختبار المهارة. أتقنت: أجبت صحيحًا مرة أخرى في المراجعة بعد 3 أيام أو أكثر.',
+    lkBody: 'تُفتح هذه الوحدة عند اكتمال الأمرين:', lkCheck: 'اجتز اختبار مهارة الوحدة 2', lkCheckSub: 'أنهِ الدرس 3، ثم ابدأ الاختبار', lkLeft: 'بقي 2',
+    lkSub: 'الاشتراك', lkSubSub: 'الوحدات من 2 إلى 5 ضمن الاشتراك، واشتراكك فعّال.', lkGo: 'تابع الوحدة 2', lkTest: 'ابدأ اختبار مهارة الوحدة 2 الآن',
+    obStep: 'السؤال 2 من 3', obQ: 'بماذا تريد أن تبدأ؟', obSub: 'نقترح مسارًا جاهزًا الآن، ويمكنك إضافة مسارات أخرى لاحقًا.',
+    opts: [['نماذج يُكملها الناس', 'التسجيل والدفع والإعدادات', 'P01'], ['تسلسل بصري واضح', 'اجعل الخطوة التالية واضحة', 'P10'], ['نمط الواجهة المناسب', 'النوافذ والـ Bottom sheets والبحث والفلاتر', 'P14'], ['لست متأكدًا بعد', 'نقترح عليك مسارًا جيدًا للبداية', 'none']],
+    weSuggest: 'نقترح عليك', whyTitle: 'لماذا:', why: { P10: 'تريد شاشات تكون فيها الخطوة التالية واضحة. وهذا المسار يدرّبك على ذلك في شاشات حقيقية، في 5 وحدات.', P01: 'بدأته في الدرس النموذجي، ونتيجتك محفوظة. والنماذج موجودة في كل منتج تقريبًا ستعمل عليه.' },
+    gKept: 'درسك النموذجي محفوظ', gKeptBody: 'أُضيفت إلى حسابك +40 XP ومهارة واحدة «تدرّبت».',
+    allTitle: 'كل المسارات', allBody: 'اختر مسارًا واحدًا لتبدأ به، ويمكنك إضافة مسارات أخرى لاحقًا من تبويب المسارات.', allChoose: 'اختر Visual Hierarchy in Action'
+  }
+};
+const DOT = 'display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; flex: none; ';
+const VIEWS = ['paths', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'obRecommend', 'obAll', 'obGuest'];
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const isDesk = device === 'desktop';
+    const view = VIEWS.indexOf(this.props.view) >= 0 ? this.props.view : 'paths';
+    const c = C[lang];
+    const kindOf = (k) => k === 'hybrid' ? { kind: c.hybrid, kindCls: 'kind kind-hybrid', kindIcon: 'ph ph-video' } : { kind: c.interactive, kindCls: 'kind', kindIcon: 'ph ph-cursor-click' };
+    const card = (p) => {
+      const [id, name, img, kind, units, state, pct] = p;
+      return Object.assign({ id, name, img: IMG[img], sub: c.sub[id], units: c.units(units), state, pct: (pct || 0) + '%', pctNum: pct || 0,
+        isCurrent: state === 'current', unitNow: c.where[id] || '', where: c.whereShort[id] || '',
+        cls: 'path-card press' + (state === 'current' ? ' is-current sel-frame' : ''), aria: state === 'current' ? c.isCurrentAria(name) : name }, kindOf(kind));
+    };
+    const all = PATHS.map(card);
+    const tab = { paths: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths' }[view];
+    const isOb = view.indexOf('ob') === 0;
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: tab === id ? 'page' : 'false', icon: 'ph ' + (tab === id ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+    const isDetail = view === 'pathNew' || view === 'pathJoined' || view === 'pathStarted';
+    const isHome = view === 'home' || view === 'homeResume' || view === 'homeFreeze';
+    const isMap = view === 'mapSwitch' || view === 'mapLocked';
+
+    /* path detail */
+    let d = {};
+    if (isDetail) {
+      const joined = view === 'pathJoined';
+      const src = joined ? all[1] : all[2];
+      const dd = joined ? c.detailJoined : c.detailNew;
+      const rows = joined
+        ? c.p10Lessons.map(([title, st], i) => {
+            const done = st === 'done', next = st === 'next', check = st === 'check';
+            return { title, over: check ? c.unitN(2) : c.lessonN(i + 1), note: check ? c.checkNote : '', chip: done ? c.doneChip : (next ? c.nextChip : ''), chipCls: done ? 'kind kind-free' : 'kind kind-current',
+              icon: done ? 'ph ph-check' : (next ? 'ph ph-play' : 'ph ph-lock-fill'), hasNum: false, num: '',
+              cls: '', style: 'display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 16px; border: 2px ' + (check ? 'dashed' : 'solid') + ' var(--line); background: ' + (next ? 'var(--sel-bg)' : 'var(--surface)') + ';' + (next ? ' border-color: var(--sel-line);' : ''),
+              dot: DOT.replace('44px; height: 44px', '36px; height: 36px') + (done ? 'background: var(--right-line); color: #01241A;' : next ? 'background: var(--brand); color: var(--on-brand);' : 'background: var(--disabled-bg); color: var(--disabled-ink);') };
+          })
+        : c.p14Units.map(([title, n], i) => ({ title, over: c.unitN(i + 1) + ' · ' + n, note: i === 0 ? '' : c.opensAfter.replace('1', String(i)).replace('1', String(i)), chip: i === 0 ? c.freeChip : '', chipCls: 'kind kind-free',
+            icon: i === 0 ? 'ph ph-play' : 'ph ph-lock-fill', hasNum: false, num: '', cls: '',
+            style: 'display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 16px; border: 2px ' + (i === 0 ? 'solid var(--sel-line)' : 'dashed var(--line)') + '; background: ' + (i === 0 ? 'var(--sel-bg)' : 'transparent') + ';',
+            dot: DOT.replace('44px; height: 44px', '36px; height: 36px') + (i === 0 ? 'background: var(--brand); color: var(--on-brand);' : 'background: var(--disabled-bg); color: var(--disabled-ink);') }));
+      d = Object.assign({}, src, { joined, illSize: isDesk ? 120 : 76, listTitle: joined ? c.yourUnits : c.whatYouPractise, rows, cta: dd.cta, keep: dd.keep, ctaIcon: joined ? 'ph ph-play' : 'ph ph-plus',
+        asideTitle: dd.aside, facts: dd.facts.map(([icon, text]) => ({ icon, text })), progressText: dd.progress || '', asideStyle: isDesk ? '' : 'display: none;' });
+    }
+
+    /* home */
+    const freezeView = view === 'homeFreeze';
+    const weekStates = freezeView ? ['goal', 'goal', 'freeze', 'today', 'next', 'next', 'next'] : ['goal', 'part', 'goal', 'goal', 'today', 'next', 'next'];
+    const wkIcon = { goal: 'ph ph-check', part: 'ph ph-check', freeze: 'ph ph-freeze-fill', today: 'ph ph-flame-fill', next: '' };
+    const h = { next: view !== 'homeResume', resume: view === 'homeResume', freeze: freezeView, freezeText: freezeView ? c.freezes0 : c.freezes1,
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 400px;' : '', cardPad: isDesk ? '28px 32px' : '16px 16px 14px', illSize: isDesk ? 180 : 120, illTop: isDesk ? '20px' : '-4px',
+      textMax: isDesk ? '520px' : '230px', titleSize: isDesk ? '30px' : '22px', startCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), };
+    const chips = [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, pct: p.pct, where: p.where, isCurrent: p.isCurrent, cur: p.isCurrent ? 'true' : 'false',
+      sub: p.isCurrent ? c.current + ' · ' + p.where : p.where, cls: 'pchip press' + (p.isCurrent ? ' is-current' : ''), aria: p.isCurrent ? c.isCurrentAria(p.name) : c.switchTo(p.name) }));
+
+    /* map */
+    const lessons = c.lessonsP01.map(([title, st, meta]) => {
+      const done = st === 'done', next = st === 'next';
+      return { title, over: done ? (c.doneChip + ' · ' + meta) : meta, overColor: done ? 'var(--right-ink)' : (next ? 'var(--link)' : 'var(--ink-3)'),
+        icon: done ? 'ph ph-check' : (next ? 'ph ph-play' : 'ph ph-lock-fill'),
+        dot: DOT + (done ? 'background: var(--right-line); color: #01241A; box-shadow: 0 4px 0 #2A7F5F;' : next ? 'background: var(--brand); color: var(--on-brand); box-shadow: 0 4px 0 var(--brand-ledge);' : 'background: var(--disabled-bg); color: var(--disabled-ink);'),
+        cardCls: next ? 'card' : 'card',
+        cardStyle: 'flex: 1; min-width: 0; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; border-radius: 16px;' + (next ? ' background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 4px 0 var(--sel-line);' : (st === 'check' ? ' border-style: dashed; background: transparent;' : '')) };
+    });
+    const swOpen = view === 'mapSwitch';
+    const m = { swCls: 'sw-btn' + (swOpen ? ' is-open' : ''), swOpen: swOpen ? 'true' : 'false', pop: swOpen && isDesk, splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px;' : '' };
+    const swRows = [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, pct: p.pct, where: c.where[p.id] + ' · ' + p.pct, cls: 'sw-row' + (p.isCurrent ? ' is-on' : ''), cur: p.isCurrent ? 'true' : 'false', endIcon: p.isCurrent ? 'ph ph-check-circle-fill' : '' }));
+
+    /* onboarding */
+    const guest = view === 'obGuest';
+    const picked = guest ? 'P01' : 'P10';
+    const opts = c.opts.map(([label, note, id]) => ({ label, note, on: id === picked ? 'true' : 'false', cls: 'choice press' + (id === picked ? ' is-selected' : ''), radio: 'radio' + (id === picked ? ' is-on' : '') }));
+    const o = { guest, recImg: picked === 'P01' ? IMG.forms : IMG.hier, recName: picked === 'P01' ? 'Forms That Flow' : 'Visual Hierarchy in Action', recWhy: c.why[picked],
+      recIll: isDesk ? 96 : 64, recPad: isDesk ? '22px' : '14px', qSize: isDesk ? '34px' : '24px',
+      mainStyle: isDesk ? 'padding: 40px 0 24px; align-items: center;' : 'gap: 12px;', splitStyle: isDesk ? 'width: 1040px; grid-template-columns: minmax(0, 1fr) 380px; gap: 48px;' : '',
+      footJustify: isDesk ? 'center' : 'stretch', backStyle: isDesk ? '' : 'flex: 0 0 auto;', nextStyle: isDesk ? 'min-width: 260px;' : 'flex: 1;' };
+    const allList = all.map((p) => { const soonP = p.state === 'soon'; const on = p.id === picked;
+      return Object.assign({}, p, { cls: 'path-card' + (soonP ? ' is-soon' : ' press') + (on ? ' is-picked' : ''), on: on ? 'true' : 'false', dis: soonP ? 'true' : 'false', tab: soonP ? '-1' : '0',
+        pickable: !soonP, radio: 'radio' + (on ? ' is-on' : ''), hasUnits: !soonP, kind: soonP ? c.soon : p.kind, kindCls: soonP ? 'kind kind-soon' : p.kindCls, kindIcon: soonP ? 'ph ph-hourglass' : p.kindIcon }); });
+
+    const ov = { started: view === 'pathStarted', locked: view === 'mapLocked', switcher: swOpen && !isDesk, all: view === 'obAll' };
+    ov.any = ov.started || ov.locked || ov.switcher || ov.all;
+
+    return {
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG,
+      rootCls: 'ug pg pg-' + device,
+      showRail: isDesk && !isOb, showNav: !isDesk && !isOb && !isDetail,
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
+      railPaths: (view === 'pathStarted' ? [Object.assign({}, all[2], { isCurrent: true, pct: '0%' }), Object.assign({}, all[0], { isCurrent: false }), all[1]] : [all[0], all[1]]).map((p) => ({ name: p.name, img: p.img, pct: p.pct, cls: 'dk-layer' + (p.isCurrent ? ' is-on' : '') })),
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      mark: theme === 'dark' ? '/_blob/5667904a660c43335758c7e0120ae2b8' : '/_blob/68b36b698602cc0ac59d5b87ca709073',
+      is: { paths: view === 'paths', detail: isDetail, home: isHome, map: isMap, ob: isOb },
+      joined: [all[0], all[1]], fresh: [all[2]], soon: all.slice(3),
+      d, h, chips, week: weekStates.map((s, i) => ({ label: c.days[i], cls: 'wk-dot is-' + s, icon: wkIcon[s] })),
+      m, lessons, swRows, o, opts, allList, ov,
+      kept: [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, where: c.keptWhere[p.id] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

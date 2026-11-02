@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 3 · Profile, certificate and leaderboard</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
+        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+      </sc-for>
+      <a class="dk-layer" href="#paths" style="color: var(--link);"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addPath}}</a>
+      <div style="flex: 1;"></div>
+      <a class="dk-layer" href="#sound"><span class="ph ph-speaker-high" aria-hidden="true"></span>{{c.sound}}<span style="flex: 1;"></span><span class="switch is-on" aria-hidden="true"><span class="track"></span></span></a>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <!-- ============ Public achievement page (what a visitor sees) ============ -->
+  <sc-if value="{{is.pub}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="pub-head">
+        <img src="{{logo}}" alt="UXGate" style="height: 30px; width: auto;">
+        <a href="#start" class="btn btn-secondary btn-sm press">{{c.pubJoin}}</a>
+      </header>
+      <main class="pub-body">
+        <div class="me">
+          <span class="avatar" aria-hidden="true">{{c.initial}}</span>
+          <div class="grow"><b>{{c.fullName}}</b><span>{{c.pubSub}}</span></div>
+        </div>
+        <section class="card" style="padding: 0; overflow: hidden;">
+          <div style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--panel); color: var(--panel-ink);">
+            <img src="{{img.cert}}" alt="" style="width: {{pubIll}}; height: {{pubIll}}; flex: none;">
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+              <span class="t-over" style="color: var(--link);">{{c.certWord}}</span>
+              <b class="ltr" style="font-size: 20px; text-align: start;">Forms That Flow</b>
+              <span class="t-small ink-2" style="font-weight: 600;">{{c.pubWhen}}</span>
+              <span class="skill skill-shown" style="align-self: flex-start; margin-top: 4px;"><span class="ph ph-seal-fill" aria-hidden="true"></span>40 · {{c.shown}}</span>
+            </div>
+          </div>
+          <sc-for list="{{pubUnits}}" as="u" hint-placeholder-count="5">
+            <div class="pub-unit"><span class="ph ph-seal-check-fill" style="font-size: 22px; color: var(--brand);" aria-hidden="true"></span><span class="grow"><b>{{u.name}}</b><small>{{u.meta}}</small></span></div>
+          </sc-for>
+        </section>
+        <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.pubNote}}</span></p>
+      </main>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isApp}}" hint-placeholder-val="{{true}}">
+  <div class="pg-col">
+
+    <!-- ============ Profile ============ -->
+    <sc-if value="{{is.profile}}" hint-placeholder-val="{{true}}">
+      <header class="pg-top">
+        <h1 class="pg-title" style="flex: 1;">{{c.profileTitle}}</h1>
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#settings" class="icon-btn plain" aria-label="{{c.settings}}"><span class="ph ph-gear" aria-hidden="true"></span></a></sc-if>
+      </header>
+      <main class="pg-body" style="gap: 14px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 14px;">
+            <div class="me">
+              <span class="avatar" aria-hidden="true">{{c.initial}}</span>
+              <div class="grow"><b>{{c.fullName}}</b><span>{{c.joined}}</span></div>
+              <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><a href="#edit" class="btn btn-ghost btn-sm"><span class="ph ph-pencil" aria-hidden="true"></span>{{c.edit}}</a></sc-if>
+            </div>
+            <div class="tiles four">
+              <sc-for list="{{tiles}}" as="t" hint-placeholder-count="4">
+                <a href="#why" class="tile press" aria-label="{{t.aria}}">
+                  <span class="tile-top"><span class="{{t.icon}}" style="{{t.iconStyle}}" aria-hidden="true"></span><span class="ph ph-info why" aria-hidden="true"></span></span>
+                  <b class="ltr">{{t.v}}</b><small>{{t.l}}</small>
+                </a>
+              </sc-for>
+            </div>
+            <div class="pg-sec"><p class="t-over">{{c.yourPaths}} · 2</p><a href="#paths" class="pg-link">{{c.allPaths}}</a></div>
+            <div class="pg-grid two">
+              <sc-for list="{{pps}}" as="p" hint-placeholder-count="2">
+                <a href="#path" class="{{p.cls}}" style="text-decoration: none; color: var(--ink);">
+                  <span class="pp-top"><img src="{{p.img}}" alt=""><span class="grow"><b class="ltr" style="text-align: start;">{{p.name}}</b><small>{{p.where}}</small></span><sc-if value="{{p.current}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if></span>
+                  <span class="progress progress-sm" aria-hidden="true"><i style="width: {{p.pct}};"></i></span>
+                  <span style="display: flex; gap: 6px; flex-wrap: wrap;"><sc-for list="{{p.chips}}" as="k" hint-placeholder-count="3"><span class="{{k.cls}}"><span class="{{k.icon}}" aria-hidden="true"></span>{{k.text}}</span></sc-for></span>
+                </a>
+              </sc-for>
+            </div>
+            <p class="t-over">{{c.certsTitle}}</p>
+            <div class="pg-grid two">
+              <sc-for list="{{certs}}" as="r" hint-placeholder-count="2">
+                <div class="cr">
+                  <img src="{{img.cert}}" alt="" style="filter: grayscale(0.7); opacity: 0.75;">
+                  <span class="grow"><b class="ltr" style="text-align: start;">{{r.name}}</b><span class="progress progress-sm" aria-hidden="true"><i style="width: {{r.pct}};"></i></span><small>{{r.text}}</small></span>
+                </div>
+              </sc-for>
+            </div>
+            <div class="pg-grid two">
+              <a href="#badges" class="card" style="padding: 10px 14px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);">
+                <span class="bdg-strip" aria-hidden="true"><span class="bdg-face is-kept"><span class="ph ph-star-fill"></span></span><span class="bdg-face is-shown"><span class="ph ph-seal-fill"></span></span><span class="bdg-face is-shown"><span class="ph ph-seal-fill"></span></span></span>
+                <span class="t-label" style="flex: 1; font-size: 15px;">{{c.badgesLink}}</span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+              </a>
+              <a href="#board" class="card" style="padding: 10px 14px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-height: 60px;">
+                <span class="ph ph-ranking" style="font-size: 26px; color: var(--link);" aria-hidden="true"></span>
+                <span class="t-label" style="flex: 1; font-size: 15px;">{{c.boardTitle}}</span><span class="t-small ink-2" style="font-weight: 700;">{{c.off}}</span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+              </a>
+            </div>
+          </div>
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+            <aside class="pg-stack" style="gap: 10px;">
+              <p class="t-over">{{c.settings}}</p>
+              <div class="set">
+                <div class="set-row is-rem">
+                  <span class="set-l" id="pf-rem-{{lang}}-{{theme}}">{{c.reminder}}<small>{{c.remSub}}</small></span>
+                  <div class="rem">
+                    <button class="switch sw-only {{remSw}}" type="button" role="switch" aria-checked="{{remAria}}" aria-label="{{c.remindMe}}" onClick="{{toggleRem}}"><span class="track" aria-hidden="true"></span></button>
+                    <div class="rem-wrap" style="flex: 1;">
+                      <button class="time-btn {{timeCls}}" type="button" aria-haspopup="dialog" aria-expanded="{{openAria}}" aria-disabled="{{offAria}}" aria-labelledby="pf-rem-{{lang}}-{{theme}}" onClick="{{toggleOpen}}" style="width: 100%;"><span class="ph ph-bell" aria-hidden="true"></span><span class="time-val" style="flex: 1; text-align: start;">{{timeText}}</span><span class="ph ph-caret caret" aria-hidden="true"></span></button>
+                      <sc-if value="{{isOpen}}" hint-placeholder-val="{{false}}">
+                        <div class="tp is-down" role="dialog" aria-label="{{c.pickTitle}}" style="width: 380px;">
+                          <div class="tp-head"><p class="tp-title">{{c.pickTitle}}</p><span class="tp-now">{{timeText}}</span></div>
+                          <div class="tp-presets" role="radiogroup" aria-label="{{c.quick}}">
+                            <sc-for list="{{presets}}" as="o" hint-placeholder-count="4">
+                              <button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}"><small>{{o.name}}</small><b>{{o.time}}</b></button>
+                            </sc-for>
+                          </div>
+                          <div class="tp-cols">
+                            <div class="tp-col" role="listbox" aria-label="{{c.hour}}"><span class="tp-col-name" aria-hidden="true">{{c.hour}}</span><sc-for list="{{hours}}" as="h" hint-placeholder-count="5"><button class="{{h.cls}}" type="button" role="option" aria-selected="{{h.on}}" onClick="{{h.pick}}">{{h.label}}</button></sc-for></div>
+                            <div class="tp-col" role="listbox" aria-label="{{c.minute}}"><span class="tp-col-name" aria-hidden="true">{{c.minute}}</span><sc-for list="{{mins}}" as="h" hint-placeholder-count="4"><button class="{{h.cls}}" type="button" role="option" aria-selected="{{h.on}}" onClick="{{h.pick}}">{{h.label}}</button></sc-for></div>
+                            <div class="tp-col" role="listbox" aria-label="{{c.period}}"><span class="tp-col-name" aria-hidden="true">{{c.period}}</span><sc-for list="{{periods}}" as="h" hint-placeholder-count="2"><button class="{{h.cls}}" type="button" role="option" aria-selected="{{h.on}}" onClick="{{h.pick}}">{{h.label}}</button></sc-for></div>
+                          </div>
+                          <div class="tp-foot"><button class="btn btn-ghost btn-sm" type="button" onClick="{{closeOpen}}">{{c.cancel}}</button><button class="btn btn-primary btn-sm press" type="button" onClick="{{closeOpen}}">{{c.setTime}}</button></div>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                  <span class="t-small ink-2">{{remHelp}}</span>
+                </div>
+                <sc-for list="{{setRows}}" as="s" hint-placeholder-count="6">
+                  <a href="#set" class="set-row"><span class="{{s.icon}}" aria-hidden="true"></span><span class="set-l">{{s.l}}<sc-if value="{{s.sub}}" hint-placeholder-val="{{false}}"><small>{{s.sub}}</small></sc-if></span><span class="set-v">{{s.v}}<span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+                </sc-for>
+              </div>
+            </aside>
+          </sc-if>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Settings on a phone: reminder uses the phone's own picker ============ -->
+    <sc-if value="{{is.settings}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <a href="#profile" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a>
+        <h1 class="pg-title" style="flex: 1;">{{c.settings}}</h1>
+      </header>
+      <main class="pg-body" style="gap: 10px;">
+        <p class="t-over">{{c.secLearning}}</p>
+        <div class="set">
+          <div class="set-row is-rem">
+            <span class="set-l" id="pf-rem-{{lang}}-{{theme}}">{{c.reminder}}<small>{{c.remSub}}</small></span>
+            <div class="rem">
+              <button class="switch sw-only {{remSw}}" type="button" role="switch" aria-checked="{{remAria}}" aria-label="{{c.remindMe}}" onClick="{{toggleRem}}"><span class="track" aria-hidden="true"></span></button>
+              <button class="time-btn is-open" type="button" aria-labelledby="pf-rem-{{lang}}-{{theme}}" style="flex: 1;"><span class="ph ph-bell" aria-hidden="true"></span><span class="time-val" style="flex: 1; text-align: start;">{{timeText}}</span><span class="ph ph-caret caret" aria-hidden="true"></span></button>
+            </div>
+            <span class="t-small ink-2">{{remHelp}}</span>
+          </div>
+          <sc-for list="{{setRows}}" as="s" hint-placeholder-count="4">
+            <a href="#set" class="set-row"><span class="{{s.icon}}" aria-hidden="true"></span><span class="set-l">{{s.l}}<sc-if value="{{s.sub}}" hint-placeholder-val="{{false}}"><small>{{s.sub}}</small></sc-if></span><span class="set-v">{{s.v}}<span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+          </sc-for>
+        </div>
+      </main>
+      <div class="pg-scrim" style="background: rgba(0, 0, 0, 0.28);"></div>
+      <div class="native" role="dialog" aria-label="{{c.pickTitle}}">
+        <p class="native-cap"><span>MOCK</span>{{c.nativeCap}}</p>
+        <div class="native-bar"><span>{{c.cancel}}</span><b>{{c.pickTitle}}</b><span>{{c.done}}</span></div>
+        <div class="native-wheel" aria-hidden="true">
+          <div><span>6</span><span>7</span><b>8</b><span>9</span><span>10</span></div>
+          <div><span>50</span><span>55</span><b>00</b><span>05</span><span>10</span></div>
+          <div><span></span><span>AM</span><b>PM</b><span></span><span></span></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ============ Certificate ============ -->
+    <sc-if value="{{is.cert}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#profile" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1;">{{c.certTitle}}</h1>
+      </header>
+      <main class="pg-body" style="gap: 12px;">
+        <div class="pg-split" style="{{certSplit}}">
+          <div class="cert-wrap">
+            <span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span><span class="ltr">Forms That Flow</span> · {{c.certWord}}</span>
+            <div class="cert" lang="{{lang}}" dir="{{dir}}" style="{{certStyle}}">
+              <img class="c-logo" src="/_blob/577b148919a127340777a66135b4d694" alt="UXGate" style="{{certLogo}}">
+              <span class="c-over">{{c.cOver}}</span>
+              <span class="c-name" style="{{certName}}">{{c.fullName}}</span>
+              <span class="c-body">{{c.cBody1}}</span>
+              <span class="c-path ltr" style="{{certPath}}">Forms That Flow</span>
+              <span class="c-body">{{c.cBody2}}</span>
+              <span class="c-foot"><span>{{c.cDate}}</span><span class="ltr">uxgate.org/c/7K3Q</span></span>
+              <img class="c-seal" src="/_blob/68b36b698602cc0ac59d5b87ca709073" alt="" style="{{certSeal}}">
+            </div>
+          </div>
+          <div class="pg-stack" style="gap: 10px;">
+            <div class="cert-acts">
+              <a href="#pdf" class="btn btn-primary press"><span class="ph ph-download" aria-hidden="true"></span>{{c.download}}</a>
+              <a href="#share" class="btn btn-secondary press"><span class="ph ph-share" aria-hidden="true"></span>{{c.share}}</a>
+            </div>
+            <div class="set">
+              <div class="set-row"><span class="ph ph-globe" aria-hidden="true"></span><span class="set-l">{{c.pubTitle}}<small>{{pubState}}</small></span><button class="{{pubSwCls}}" type="button" role="switch" aria-checked="{{pubAria}}" aria-label="{{c.pubTitle}}"><span class="track" aria-hidden="true"></span></button></div>
+              <div class="set-row"><span class="ph ph-seal-check-fill" aria-hidden="true"></span><span class="set-l">{{c.verify}}<small class="ltr" style="text-align: start;">{{c.certId}}</small></span></div>
+            </div>
+            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.certRule}}</span></p>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Weekly leaderboard: opt in, board ============ -->
+    <sc-if value="{{is.optin}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#profile" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1;">{{c.boardTitle}}</h1>
+      </header>
+      <main class="pg-body" style="{{optBody}}">
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; max-width: 480px; margin: 0 auto; width: 100%;">
+          <img class="pop" src="{{img.trophy}}" alt="" style="width: {{optIll}}; height: {{optIll}};">
+          <h2 class="t-h2" style="margin: 0;">{{c.optTitle}}</h2>
+          <p class="t-body ink-2" style="margin: 0;">{{c.optBody}}</p>
+          <section class="card" style="align-self: stretch; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; text-align: start;">
+            <p class="t-over">{{c.othersSee}}</p>
+            <div class="shows">
+              <span class="yes"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.showName}}</span>
+              <span class="yes"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.showXp}}</span>
+              <span class="no"><span class="ph ph-eye-slash" aria-hidden="true"></span>{{c.hideStreak}}</span>
+              <span class="no"><span class="ph ph-eye-slash" aria-hidden="true"></span>{{c.hideAnswers}}</span>
+            </div>
+          </section>
+          <a href="#join" class="{{bigBtn}}" style="align-self: stretch; margin-top: 4px;">{{c.join}}</a>
+          <a href="#profile" class="btn btn-ghost" style="align-self: stretch;">{{c.notNow}}</a>
+          <p class="t-small ink-2" style="margin: 0;">{{c.optFoot}}</p>
+        </div>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{is.board}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#profile" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1;">{{c.boardTitle}}</h1>
+        <a href="#leave" class="pg-link" style="min-height: 44px;">{{c.leave}}</a>
+      </header>
+      <main class="pg-body" style="gap: 10px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 10px;">
+            <section class="card-panel" style="padding: 12px 16px; border-radius: 20px; display: flex; align-items: center; gap: 12px;">
+              <span class="ph ph-ranking" style="font-size: 30px; color: var(--link);" aria-hidden="true"></span>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px;"><b style="font-size: 17px; color: var(--panel-ink);">{{c.myWeek}}</b><span class="t-small ink-2">{{c.weekEnds}}</span></div>
+            </section>
+            <ol class="lb" style="list-style: none; margin: 0; padding: 0;" aria-label="{{c.boardTitle}}">
+              <sc-for list="{{board}}" as="r" hint-placeholder-count="7">
+                <li class="{{r.cls}}"><span class="lb-rank">{{r.rank}}</span><span class="lb-av" style="--c: {{r.c}}; --c-ink: {{r.ink}};" aria-hidden="true">{{r.ini}}</span><span class="lb-name">{{r.name}}</span><span class="lb-xp ltr">{{r.xp}}</span></li>
+              </sc-for>
+            </ol>
+          </div>
+          <aside class="pg-stack" style="{{asideStyle}}">
+            <section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.boardHow}}</p>
+              <sc-for list="{{c.boardRules}}" as="h" hint-placeholder-count="3"><p class="pg-note" style="font-size: 14px;"><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for>
+            </section>
+          </aside>
+        </div>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+      <nav class="bnav" aria-label="{{c.navLabel}}">
+        <sc-for list="{{bnav}}" as="n" hint-placeholder-count="4">
+          <a href="#{{n.id}}" class="{{n.cls}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+        </sc-for>
+      </nav>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ============ Overlays: share the achievement page, leave the leaderboard ============ -->
+  <sc-if value="{{ov.any}}" hint-placeholder-val="{{false}}">
+    <div class="pg-scrim"></div>
+    <section class="pg-over sheet-in" role="dialog" aria-modal="true" aria-labelledby="pf-ov-{{lang}}-{{theme}}-{{device}}">
+      <div class="grab" aria-hidden="true"></div>
+      <sc-if value="{{ov.share}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <h2 id="pf-ov-{{lang}}-{{theme}}-{{device}}" style="flex: 1;">{{c.pubTitle}}</h2>
+          <button class="switch sw-only is-on" type="button" role="switch" aria-checked="true" aria-label="{{c.pubTitle}}"><span class="track" aria-hidden="true"></span></button>
+        </div>
+        <p class="t-small ink-2">{{c.shareBody}}</p>
+        <div class="url-field"><span class="ph ph-link" aria-hidden="true" style="color: var(--link);"></span><span class="ltr" style="flex: 1; min-width: 0; text-align: start;">uxgate.org/u/yasmin</span><button class="btn btn-secondary btn-sm press" type="button" style="flex: none;"><span class="ph ph-copy" aria-hidden="true"></span>{{c.copy}}</button></div>
+        <section style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 16px; background: var(--surface-2); border: 2px solid var(--line);">
+          <p class="t-over">{{c.visitorsSee}}</p>
+          <div class="shows">
+            <span class="yes"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.showName}}</span>
+            <span class="yes"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.showPath}}</span>
+            <span class="yes"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.showSkills}}</span>
+            <span class="yes"><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.showDate}}</span>
+            <span class="no"><span class="ph ph-eye-slash" aria-hidden="true"></span>{{c.hideXp}}</span>
+            <span class="no"><span class="ph ph-eye-slash" aria-hidden="true"></span>{{c.hideEmail}}</span>
+          </div>
+        </section>
+        <a href="#share" class="btn btn-primary btn-lg btn-block press"><span class="ph ph-share" aria-hidden="true"></span>{{c.shareLink}}</a>
+        <p class="pg-note" style="font-size: 13px;"><span class="ph ph-eye-slash" aria-hidden="true"></span><span>{{c.turnOffNote}}</span></p>
+      </sc-if>
+      <sc-if value="{{ov.leave}}" hint-placeholder-val="{{false}}">
+        <h2 id="pf-ov-{{lang}}-{{theme}}-{{device}}">{{c.leaveTitle}}</h2>
+        <p class="t-small ink-2">{{c.leaveBody}}</p>
+        <div class="why-list">
+          <div class="why-row is-done"><span class="ph ph-check-circle-fill" aria-hidden="true"></span><span class="grow"><b>{{c.leaveKeep}}</b><span>{{c.leaveKeepBody}}</span></span></div>
+          <div class="why-row is-done"><span class="ph ph-eye-slash" aria-hidden="true"></span><span class="grow"><b>{{c.leaveHide}}</b><span>{{c.leaveHideBody}}</span></span></div>
+        </div>
+        <a href="#leave" class="btn btn-neutral btn-lg btn-block press">{{c.leaveGo}}</a>
+        <a href="#stay" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.stay}}</a>
+      </sc-if>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["profile","profileReminder","certificate","publicShare","publicPage","boardOptIn","board","boardLeave"],"default":"profile"},"$preview":{"width":390,"height":844}}'>
+/* Slice 3 · profile across paths, reminder with the time picker, certificate, public achievement page, opt-in leaderboard. Spec §4.2, §4.4b, §4.6, §4.7. */
+const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', cert: '/_blob/d9eda267550722d49fbe378d64d9eb01', trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4' };
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', allPaths: 'All paths', addPath: 'Add a path', sound: 'Sound', otherLang: 'العربية', back: 'Back', current: 'Current', off: 'Off', on: 'On',
+    initial: 'Y', fullName: 'Yasmin Adel', joined: '@yasmin · learning since October 2026', edit: 'Edit', profileTitle: 'Profile', settings: 'Settings', secLearning: 'Learning',
+    tiles: [['ph-bolt-fill', '1,860', 'XP, all paths', 'var(--hl-ledge)'], ['ph-flame-fill', '16', 'Day streak', '#F59E2B'], ['ph-seal-fill', '13', 'Skills Shown', 'var(--brand)'], ['ph-star-fill', '2', 'Skills Kept', 'var(--gold-ledge)']], whyAria: (l) => l + '. See why it changed',
+    p01Where: 'Unit 2 of 5 · 30%', p10Where: 'Unit 2 of 5 · 20%', shown: 'Shown', kept: 'Kept', practiced: 'Practiced',
+    certsTitle: 'Certificates', certText: (n, t) => n + ' of ' + t + ' skills Shown. All ' + t + ' earn the certificate.', badgesLink: '15 badges', boardTitle: 'Weekly leaderboard',
+    reminder: 'Daily reminder', remSub: 'Points to your next lesson in the current path.', remindMe: 'Remind me', remOn: 'One reminder a day at this time.', remOff: 'No reminders.',
+    pickTitle: 'Reminder time', quick: 'Quick picks', hour: 'Hour', minute: 'Minute', period: 'AM/PM', ampm: ['AM', 'PM'], cancel: 'Cancel', setTime: 'Set time', done: 'Done',
+    presets: [['Morning', 8, 0, 0], ['Midday', 1, 0, 1], ['Evening', 8, 0, 1], ['Night', 10, 0, 1]], nativeCap: 'Your phone’s own time picker',
+    setRows: [['ph ph-target', 'Daily goal', '', '2 lessons'], ['ph ph-globe', 'Achievement page', 'Only you can see your progress', 'Off'], ['ph ph-ranking', 'Weekly leaderboard', '', 'Off'], ['ph ph-moon', 'Theme', '', 'System'], ['ph ph-download', 'Download my data', '', ''], ['ph ph-x-circle', 'Delete my account', '', '']],
+    certTitle: 'Certificate', certWord: 'Certificate', cOver: 'Certificate of skill', cBody1: 'showed every skill of the path', cBody2: 'on new cases, with no hints, in 5 UXGate skill checks. 40 skills, 20 lessons.', cDate: '2 November 2026',
+    download: 'Download PDF', share: 'Share', pubTitle: 'Achievement page', pubOff: 'Off · only you can see this', pubOn: 'On · anyone with the link', verify: 'Check this certificate', certId: 'uxgate.org/c/7K3Q · ID UXG-P01-7K3Q', certRule: 'You get one certificate for each path, when all of its skills are Shown.',
+    shareBody: 'Anyone with the link can see this page. Search engines do not list it.', copy: 'Copy', visitorsSee: 'Visitors see', othersSee: 'Others see', showName: 'Your name', showPath: 'The path', showSkills: 'Skills Shown', showDate: 'The date', hideXp: 'Not your XP or streak', hideEmail: 'Not your email',
+    shareLink: 'Share the link', turnOffNote: 'Turn it off here any time. The link stops working at once.',
+    pubJoin: 'Learn on UXGate', pubSub: 'Achievements on UXGate', pubWhen: 'Certificate · 2 November 2026', pubNote: 'This page shows only the name, path, skills and date. Yasmin chose to share it.',
+    pubUnits: [['Ask only what you need', 8], ['Pick the right control', 8], ['Labels and hints that stay visible', 8], ['Errors people can fix', 8], ['Forms people finish', 8]], unitMeta: (n, k) => 'Unit ' + n + ' · ' + k + ' skills Shown',
+    optTitle: 'Join the weekly leaderboard?', optBody: 'See your weekly XP next to about 30 learners. XP from all your paths counts, and it starts again each Monday.', showXp: 'Your weekly XP', hideStreak: 'Not your streak', hideAnswers: 'Not your answers',
+    join: 'Join the leaderboard', notNow: 'Not now', optFoot: 'It is off until you join. You can leave any time.',
+    leave: 'Leave', myWeek: 'You: 315 XP this week · 3rd', weekEnds: 'Ends Sunday night. Lessons, replays and reviews in any path count.', you: 'You', boardHow: 'How it works', boardRules: [{ icon: 'ph ph-calendar', text: 'One week, Monday to Sunday. Then everyone starts at 0.' }, { icon: 'ph ph-stack', text: 'XP from every path you joined counts.' }, { icon: 'ph ph-eye-slash', text: 'Others see only your name and weekly XP.' }],
+    leaveTitle: 'Leave the leaderboard?', leaveBody: 'You can join again later from Profile.', leaveKeep: 'Your progress stays', leaveKeepBody: 'XP, streak, skills and badges do not change.', leaveHide: 'Your name stops showing', leaveHideBody: 'Others no longer see your name or weekly XP.', leaveGo: 'Leave the leaderboard', stay: 'Stay'
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', allPaths: 'كل المسارات', addPath: 'أضف مسارًا', sound: 'الصوت', otherLang: 'English', back: 'رجوع', current: 'الحالي', off: 'متوقّف', on: 'يعمل',
+    initial: 'ي', fullName: 'ياسمين عادل', joined: '@yasmin · تتعلّم منذ أكتوبر 2026', edit: 'تعديل', profileTitle: 'حسابي', settings: 'الإعدادات', secLearning: 'التعلّم',
+    tiles: [['ph-bolt-fill', '1,860', 'نقاط XP، كل المسارات', 'var(--hl-ledge)'], ['ph-flame-fill', '16', 'يومًا متتاليًا', '#F59E2B'], ['ph-seal-fill', '13', 'مهارة أثبتّها', 'var(--brand)'], ['ph-star-fill', '2', 'مهارتان أتقنتهما', 'var(--gold-ledge)']], whyAria: (l) => l + '. اعرف سبب التغيّر',
+    p01Where: 'الوحدة 2 من 5 · 30%', p10Where: 'الوحدة 2 من 5 · 20%', shown: 'أثبتّ', kept: 'أتقنت', practiced: 'تدرّبت',
+    certsTitle: 'الشهادات', certText: (n, t) => 'أثبتّ ' + n + ' من ' + t + ' مهارة. إثبات الـ' + t + ' كلها يمنحك الشهادة.', badgesLink: '15 شارة', boardTitle: 'لوحة الصدارة الأسبوعية',
+    reminder: 'تذكير يومي', remSub: 'يأخذك إلى درسك التالي في مسارك الحالي.', remindMe: 'ذكّرني', remOn: 'تذكير واحد في اليوم في هذا الوقت.', remOff: 'بدون تذكيرات.',
+    pickTitle: 'وقت التذكير', quick: 'اختيارات سريعة', hour: 'الساعة', minute: 'الدقيقة', period: 'الفترة', ampm: ['ص', 'م'], cancel: 'إلغاء', setTime: 'حفظ الوقت', done: 'تم',
+    presets: [['صباحًا', 8, 0, 0], ['ظهرًا', 1, 0, 1], ['مساءً', 8, 0, 1], ['ليلًا', 10, 0, 1]], nativeCap: 'منتقي الوقت الخاص بهاتفك',
+    setRows: [['ph ph-target', 'الهدف اليومي', '', 'درسان'], ['ph ph-globe', 'صفحة الإنجازات', 'أنت فقط ترى تقدّمك', 'متوقّفة'], ['ph ph-ranking', 'لوحة الصدارة الأسبوعية', '', 'متوقّفة'], ['ph ph-moon', 'المظهر', '', 'حسب الجهاز'], ['ph ph-download', 'نزّل بياناتي', '', ''], ['ph ph-x-circle', 'احذف حسابي', '', '']],
+    certTitle: 'الشهادة', certWord: 'شهادة', cOver: 'شهادة مهارة', cBody1: 'أثبتت كل مهارات المسار', cBody2: 'في حالات جديدة، بدون تلميحات، في 5 اختبارات مهارة على UXGate. 40 مهارة و20 درسًا.', cDate: '2 نوفمبر 2026',
+    download: 'نزّل PDF', share: 'شارك', pubTitle: 'صفحة الإنجازات', pubOff: 'متوقّفة · أنت فقط ترى هذا', pubOn: 'تعمل · لكل من لديه الرابط', verify: 'تحقّق من هذه الشهادة', certId: 'uxgate.org/c/7K3Q · ID UXG-P01-7K3Q', certRule: 'تحصل على شهادة لكل مسار، عندما تُثبت كل مهاراته.',
+    shareBody: 'يستطيع كل من لديه الرابط رؤية هذه الصفحة. ولا تظهر في محركات البحث.', copy: 'انسخ', visitorsSee: 'ما يراه الزوّار', othersSee: 'ما يراه الآخرون', showName: 'اسمك', showPath: 'المسار', showSkills: 'المهارات التي أثبتّها', showDate: 'التاريخ', hideXp: 'لا نقاطك ولا سلسلتك', hideEmail: 'لا بريدك الإلكتروني',
+    shareLink: 'شارك الرابط', turnOffNote: 'يمكنك إيقافها من هنا في أي وقت، فيتوقف الرابط فورًا.',
+    pubJoin: 'تعلّم على UXGate', pubSub: 'الإنجازات على UXGate', pubWhen: 'شهادة · 2 نوفمبر 2026', pubNote: 'تعرض هذه الصفحة الاسم والمسار والمهارات والتاريخ فقط. ياسمين اختارت مشاركتها.',
+    pubUnits: [['اطلب ما تحتاجه فقط', 8], ['اختر عنصر التحكم المناسب', 8], ['عناوين وتلميحات تبقى ظاهرة', 8], ['أخطاء يستطيع الناس إصلاحها', 8], ['نماذج يُكملها الناس', 8]], unitMeta: (n, k) => 'الوحدة ' + n + ' · أثبتت ' + k + ' مهارات',
+    optTitle: 'هل تنضم إلى لوحة الصدارة الأسبوعية؟', optBody: 'شاهد نقاطك الأسبوعية بجانب نحو 30 متعلّمًا. تُحسب النقاط من كل مساراتك، وتبدأ من جديد كل اثنين.', showXp: 'نقاطك الأسبوعية', hideStreak: 'لا سلسلتك', hideAnswers: 'لا إجاباتك',
+    join: 'انضم إلى اللوحة', notNow: 'ليس الآن', optFoot: 'اللوحة متوقّفة حتى تنضم. ويمكنك المغادرة في أي وقت.',
+    leave: 'غادر', myWeek: 'أنت: 315 XP هذا الأسبوع · الثالث', weekEnds: 'ينتهي ليلة الأحد. الدروس والإعادات والمراجعة في أي مسار تُحسب.', you: 'أنت', boardHow: 'كيف تعمل', boardRules: [{ icon: 'ph ph-calendar', text: 'أسبوع واحد، من الاثنين إلى الأحد. ثم يبدأ الجميع من 0.' }, { icon: 'ph ph-stack', text: 'تُحسب النقاط من كل مسار انضممت إليه.' }, { icon: 'ph ph-eye-slash', text: 'يرى الآخرون اسمك ونقاطك الأسبوعية فقط.' }],
+    leaveTitle: 'هل تغادر لوحة الصدارة؟', leaveBody: 'يمكنك الانضمام مرة أخرى لاحقًا من حسابي.', leaveKeep: 'تقدّمك باقٍ', leaveKeepBody: 'لا تتغيّر نقاطك ولا سلسلتك ولا مهاراتك ولا شاراتك.', leaveHide: 'يتوقف ظهور اسمك', leaveHideBody: 'لن يرى الآخرون اسمك ولا نقاطك الأسبوعية.', leaveGo: 'غادر لوحة الصدارة', stay: 'ابقَ'
+  }
+};
+const BOARD = [['Lina S.', 'لينا س.', 420, '#78E4FC', '#012E4B'], ['Omar K.', 'عمر ك.', 365, '#F5B83D', '#3A2A06'], ['me', 'me', 315, '#005F99', '#FFFFFF'], ['Hadi T.', 'هادي ت.', 290, '#9BE0B9', '#0C3B24'],
+  ['Salma M.', 'سلمى م.', 240, '#F7A8C4', '#4A0F25'], ['Ahmed R.', 'أحمد ر.', 180, '#C9B6F5', '#2A1657'], ['Dina F.', 'دينا ف.', 95, '#FFC9A3', '#4A2208']];
+const remVals = (self, t, open) => {
+  const s = self.state; const on = s.rem !== false;
+  const fmt = (h, m, p) => h + ':' + String(m).padStart(2, '0') + ' ' + t.ampm[p];
+  const set = (patch) => () => self.setState(patch);
+  const hrs = [-2, -1, 0, 1, 2].map((d) => ((s.h - 1 + d + 12) % 12) + 1);
+  const cell = (label, isOn, pick, far) => ({ label, on: isOn ? 'true' : 'false', cls: 'tp-cell' + (isOn ? ' is-on' : '') + (far ? ' is-far' : ''), pick });
+  return {
+    remSw: on ? 'is-on' : '', remAria: on ? 'true' : 'false', offAria: on ? 'false' : 'true',
+    toggleRem: () => self.setState({ rem: !on, open: false }),
+    timeCls: !on ? 'is-disabled' : open ? 'is-open' : '', openAria: open ? 'true' : 'false', isOpen: on && open,
+    toggleOpen: () => { if (on) self.setState({ open: !open }); }, closeOpen: () => self.setState({ open: false }),
+    timeText: fmt(s.h, s.m, s.p), remHelp: on ? t.remOn : t.remOff,
+    presets: t.presets.map(([name, h, m, p]) => { const sel = s.h === h && s.m === m && s.p === p;
+      return { name, time: fmt(h, m, p), on: sel ? 'true' : 'false', cls: 'tp-preset' + (sel ? ' is-on' : ''), pick: set({ h, m, p }) }; }),
+    hours: hrs.map((h, i) => cell(String(h), h === s.h, set({ h }), i === 0 || i === 4)),
+    mins: [0, 15, 30, 45].map((m) => cell(String(m).padStart(2, '0'), m === s.m, set({ m }))),
+    periods: [0, 1].map((p) => cell(t.ampm[p], p === s.p, set({ p })))
+  };
+};
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { rem: true, h: 8, m: 0, p: 1, open: null }; }
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = this.props.view || 'profile';
+    const c = C[lang];
+    const isDesk = device === 'desktop';
+    const L = lang === 'ar' ? 1 : 0;
+
+    const remView = view === 'profileReminder';
+    const is = { profile: view === 'profile' || (remView && isDesk), settings: remView && !isDesk, cert: view === 'certificate' || view === 'publicShare',
+      pub: view === 'publicPage', optin: view === 'boardOptIn', board: view === 'board' || view === 'boardLeave' };
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: id === 'profile' ? 'page' : 'false', icon: 'ph ' + (id === 'profile' ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+    const open = this.state.open === null ? (remView && isDesk) : this.state.open;
+
+    const chip = (k, n) => ({ cls: 'skill skill-' + k, icon: 'ph ' + ({ kept: 'ph-star-fill', shown: 'ph-seal-fill', practiced: 'ph-check-circle' })[k], text: n + ' · ' + c[k] });
+    const pps = [
+      { name: 'Forms That Flow', img: IMG.forms, where: c.p01Where, pct: '30%', current: true, cls: 'pp is-current', chips: [chip('kept', 2), chip('shown', 6), chip('practiced', 5)] },
+      { name: 'Visual Hierarchy in Action', img: IMG.hier, where: c.p10Where, pct: '20%', current: false, cls: 'pp', chips: [chip('shown', 7)] }
+    ];
+    const certs = [{ name: 'Forms That Flow', pct: '20%', text: c.certText(8, 40) }, { name: 'Visual Hierarchy in Action', pct: '20%', text: c.certText(7, 35) }];
+    const setRows = c.setRows.slice(0, isDesk ? 6 : 6).map(([icon, l, sub, v]) => ({ icon, l, sub, v }));
+
+    const shareOn = view === 'publicShare';
+    const ov = { share: shareOn, leave: view === 'boardLeave' };
+    ov.any = ov.share || ov.leave;
+    const bigCert = isDesk;
+
+    return Object.assign({
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG, is,
+      rootCls: 'ug pg pg-' + device, isApp: !is.pub,
+      showRail: isDesk && !is.pub, showNav: !isDesk && !is.pub && !is.settings,
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
+      railPaths: [{ name: 'Forms That Flow', img: IMG.forms, pct: '30%', cls: 'dk-layer is-on' }, { name: 'Visual Hierarchy in Action', img: IMG.hier, pct: '20%', cls: 'dk-layer' }],
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 420px;' : '', asideStyle: isDesk ? '' : 'display: none;',
+      tiles: c.tiles.map(([icon, v, l, color]) => ({ icon: 'ph ' + icon, v, l, iconStyle: 'color: ' + color + ';', aria: v + ' ' + l + '. ' + c.whyAria('') })),
+      pps, certs, setRows,
+      certSplit: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px; gap: 32px;' : '',
+      certStyle: bigCert ? 'gap: 8px;' : 'gap: 2px; padding: 6% 6%;',
+      certLogo: bigCert ? 'height: 34px;' : 'height: 18px;', certName: bigCert ? 'font-size: 44px;' : 'font-size: 22px;', certPath: bigCert ? 'font-size: 26px;' : 'font-size: 15px;', certSeal: bigCert ? 'width: 72px; height: 72px;' : 'width: 34px; height: 34px;',
+      pubState: shareOn ? c.pubOn : c.pubOff, pubSwCls: 'switch sw-only' + (shareOn ? ' is-on' : ''), pubAria: shareOn ? 'true' : 'false',
+      pubIll: isDesk ? '72px' : '52px', pubUnits: c.pubUnits.map(([name, k], i) => ({ name, meta: c.unitMeta(i + 1, k) })),
+      optBody: isDesk ? 'justify-content: center; padding-bottom: 60px;' : 'gap: 10px; padding-top: 8px;', optIll: isDesk ? '150px' : '110px',
+      bigBtn: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'),
+      board: BOARD.map(([en, ar, xp, col, ink], i) => { const me = en === 'me'; const name = me ? (c.fullName.split(' ')[0] + ' · ' + c.you) : (L ? ar : en);
+        return { rank: String(i + 1), name, ini: me ? c.initial : name.charAt(0), xp: xp + ' XP', c: col, ink, cls: 'lb-row' + (me ? ' is-me' : '') }; }),
+      ov
+    }, remVals(this, c, open));
+  }
+}
+</script>
+</body>
+</html>
