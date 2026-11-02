@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getLessonVersion } from "@uxgate/content";
+import { getLessonVersion, getUnit } from "@uxgate/content";
 import type { Lesson } from "@uxgate/content/types";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -9,6 +9,8 @@ import { buildPathView } from "@/lib/learning";
 import { loadProgress } from "@/lib/server/load-progress";
 import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
 import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
+import { markPracticed, markShown } from "@/lib/server/skill-states";
+import { isQuestion } from "@uxgate/player/engine";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
 const PER_MINUTE = 60;
@@ -46,10 +48,25 @@ export async function POST(req: Request) {
   const lesson: Lesson = current.hash === body.hash ? current.body : (versionRow.body as Lesson);
   if (!Array.isArray(lesson?.steps)) return NextResponse.json({ error: "content_not_published" }, { status: 409 });
 
+  const mastery = lesson.mode === "bank";
+  const kind = mastery ? "mastery" : lesson.mode === "check" ? "check" : "lesson";
   // A first send for a play: it must be a lesson the learner has unlocked, and a learner can only start so many plays a day.
-  const { data: known } = await db.from("attempts").select("id").eq("user_id", userId).eq("client_attempt_id", body.attemptId).maybeSingle();
+  const { data: known } = await db.from("attempts").select("id, plan").eq("user_id", userId).eq("client_attempt_id", body.attemptId).maybeSingle();
+  let plan: string[] | null = (known?.plan as string[] | null | undefined) ?? null;
   let replay: ReplayKind | null = null;
-  if (known) {
+  if (mastery) {
+    // The mastery round of a unit opens once its skill check is finished, and asks only questions of that unit's bank.
+    if (!known) {
+      const bankSteps = new Set(lesson.steps.filter(isQuestion).map((s) => s.id));
+      if (!body.plan || body.plan.some((id) => !bankSteps.has(id)) || new Set(body.plan).size !== body.plan.length) return NextResponse.json({ error: "bad_request" }, { status: 400 });
+      const unit = getUnit(current.unitId);
+      const checkId = unit?.lessons.find((id) => getLessonVersion(id)?.mode === "check");
+      const progress = await loadProgress(db, userId);
+      if (!checkId || !progress.finishedLessons.includes(checkId)) return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
+      if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
+      plan = body.plan;
+    }
+  } else if (known) {
     // Its own query: if migration 0004 is not applied yet this just reads as a first play.
     const { data: r } = await db.from("attempts").select("replay_kind").eq("id", known.id).maybeSingle();
     replay = (r?.replay_kind as ReplayKind | null | undefined) ?? null;
@@ -68,7 +85,7 @@ export async function POST(req: Request) {
 
   // The attempt is created once per play; the client's attempt id makes repeated sends land on the same row.
   const { data: attempt, error: aerr } = await db.from("attempts").upsert(
-    { client_attempt_id: body.attemptId, user_id: userId, lesson_id: body.lessonId, content_version_id: versionRow.id, started_at: new Date(body.startedAt).toISOString() },
+    { client_attempt_id: body.attemptId, user_id: userId, lesson_id: body.lessonId, content_version_id: versionRow.id, started_at: new Date(body.startedAt).toISOString(), kind, ...(plan ? { plan } : {}) },
     { onConflict: "user_id,client_attempt_id" },
   ).select("id, finished_at").single();
   if (aerr || !attempt) return NextResponse.json({ error: "save_failed" }, { status: 500 });
@@ -77,7 +94,7 @@ export async function POST(req: Request) {
   const { data: stored } = await db.from("step_results").select("step_id, try_no, kind, answer, hints_used").eq("attempt_id", attempt.id).eq("user_id", userId);
   const prior = (stored ?? []).map((r) => ({ stepId: r.step_id, tryNo: r.try_no, kind: r.kind as "check" | "main_ok" | "reveal", answer: r.answer as { sel: string[]; reason?: string[] }, hintsUsed: r.hints_used }));
 
-  const out = processEvents(lesson, body, prior);
+  const out = processEvents(lesson, body, prior, plan);
 
   if (out.results.length) {
     const { error } = await db.from("step_results").upsert(
@@ -98,14 +115,19 @@ export async function POST(req: Request) {
     const now = new Date();
     // Only the request that actually flips finished_at counts the lesson, so a double send cannot count it twice.
     const { data: flipped } = await db.from("attempts").update({ finished_at: now.toISOString() }).eq("id", attempt.id).is("finished_at", null).select("id");
-    if (flipped?.length) await recordFinish(db, userId, body.lessonId, replay, lesson.steps.flatMap((s) => ("skill" in s ? [s.skill] : [])), now);
+    if (flipped?.length) await recordFinish(db, userId, body.lessonId, replay, kind, attempt.id, lesson.steps.flatMap((s) => ("skill" in s && (!plan || plan.includes(s.id)) ? [s.skill] : [])), now);
   }
 
   return NextResponse.json({ saved: out.results.length, xp: xpRows, replay, finished: out.finished, rejected: out.rejected });
 }
 
 /** A lesson was finished for the first time in this attempt: count it for today and mark its skills Practiced. */
-async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, skillIds: string[], now: Date) {
+async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, kind: "lesson" | "check" | "mastery", attemptId: string, skillIds: string[], now: Date) {
+  if (kind === "mastery") {
+    // The mastery round is not a lesson: it does not count toward the daily goal. A right first try moves the skill to Shown.
+    await markShown(db, userId, await firstTryRight(db, attemptId, userId), now);
+    return;
+  }
   const { data: profile } = await db.from("profiles").select("time_zone, daily_goal").eq("user_id", userId).maybeSingle();
   const day = localDay(now, profile?.time_zone);
   const goal = profile?.daily_goal ?? 1;
@@ -121,6 +143,21 @@ async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: st
   }
   // Lesson ids start with their path id (P01-U01-L01); mark that path as active just now.
   await db.from("enrollments").update({ last_active_at: now.toISOString() }).eq("user_id", userId).eq("path_id", lessonId.split("-")[0]);
-  const unique = replay ? [] : [...new Set(skillIds)];
-  if (unique.length) await db.from("skill_states").upsert(unique.map((skill_id) => ({ user_id: userId, skill_id, state: "practiced" })), { onConflict: "user_id,skill_id", ignoreDuplicates: true });
+  if (replay) return;
+  await markPracticed(db, userId, skillIds);
+  // Skill check passed unaided (right on its one try): that skill is Shown, with its first review in 3 days.
+  if (kind === "check") await markShown(db, userId, await firstTryRight(db, attemptId, userId), now);
+}
+
+/** Skills whose step in this attempt was right on the first judged try. A skill with several steps needs all of them right. */
+async function firstTryRight(db: ReturnType<typeof createAdminClient>, attemptId: string, userId: string): Promise<string[]> {
+  const { data } = await db.from("step_results").select("step_id, skill_id, try_no, kind, correct").eq("attempt_id", attemptId).eq("user_id", userId).eq("kind", "check");
+  const first = new Map<string, { skill: string; correct: boolean; tryNo: number }>();
+  for (const r of data ?? []) {
+    const cur = first.get(r.step_id as string);
+    if (r.skill_id && (!cur || (r.try_no as number) < cur.tryNo)) first.set(r.step_id as string, { skill: r.skill_id as string, correct: r.correct as boolean, tryNo: r.try_no as number });
+  }
+  const bySkill = new Map<string, boolean>();
+  for (const f of first.values()) bySkill.set(f.skill, (bySkill.get(f.skill) ?? true) && f.correct);
+  return [...bySkill].filter(([, ok]) => ok).map(([skill]) => skill);
 }
