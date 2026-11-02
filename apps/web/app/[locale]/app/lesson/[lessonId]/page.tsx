@@ -20,6 +20,6 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   const state = view?.units.flatMap((u) => u.lessons).find((l) => l.lesson.lessonId === lessonId)?.state;
   if (state === "locked") return redirect({ href: `/app/path/${version.pathId}`, locale }) as never;
   const unit = getUnit(version.unitId);
-  const pathTitle = getPath(version.pathId)?.title[locale as Locale] ?? version.pathId;
+  const pathTitle = getPath(version.pathId)?.title.en ?? version.pathId;
   return <LessonRunner lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} streak={me.progress.streak + (me.progress.lessonsToday > 0 ? 0 : 1)} />;
 }
