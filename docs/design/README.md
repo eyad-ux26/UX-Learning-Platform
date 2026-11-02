@@ -35,7 +35,14 @@ Landing header and hero (approved 1 November): Sign in uses the neutral outline 
 
 Language switch before sign-in: the same quiet globe button ("عربي" on English pages, "English" on Arabic pages) is on the landing, sign up and onboarding, mobile and desktop. On sign up and onboarding it sits at the top, next to Skip or opposite the logo.
 
-Onboarding has all three questions on the canvas (prop `q` on `ScreenOnboarding` and `DeskOnboarding`): 1, why you want to learn UX (four goals); 2, what to get better at first, with the suggested path; 3, time each week, a daily goal of 1 to 3 lessons and an optional reminder time. Question 1 has no Back; question 3 ends with Finish. The copy matches the slice 1 build.
+Onboarding has all three questions on the canvas (prop `q` on `ScreenOnboarding` and `DeskOnboarding`): 1, why you want to learn UX (four goals); 2, what to get better at first, with the suggested path; 3, time each week, a daily goal of 1 to 3 lessons and a daily reminder. Question 1 has no Back; question 3 ends with "Start learning" / «ابدأ التعلّم» (was Finish / إنهاء).
+
+Reminder on question 3 (canvas v39, classes `.rem`, `.time-btn`, `.tp*` in `system/uxgate.css`):
+
+- Label "Daily reminder" / «تذكير يومي». Row: a `.switch` (role switch, on by default) labelled "Remind me at" / «ذكّرني الساعة», then a `.time-btn` pre-filled with **8:00 PM** / «8:00 م» (bell icon, value, caret).
+- Help when on: "One reminder a day at this time. Your browser will ask to allow it." / «تذكير واحد في اليوم في هذا الوقت. سيطلب المتصفح إذنك أولًا.» Help when off: "No reminders. You can turn them on in Settings." / «بدون تذكيرات. يمكنك تفعيلها من الإعدادات.» When off, the time button gets `.is-disabled` and `aria-disabled="true"`.
+- Phone: the time button opens the native time picker (`input type="time"`), no custom picker.
+- Desktop: the time button (`aria-haspopup="dialog"`, `.is-open` while open) opens the `.tp` popover above it (400 wide). Inside: title "Reminder time" / «وقت التذكير» with the current value; four `.tp-preset` quick picks, Morning 8:00 AM, Midday 1:00 PM, Evening 8:00 PM, Night 10:00 PM (صباحًا، ظهرًا، مساءً، ليلًا); three `.tp-col` listboxes, Hour (1 to 12, five visible, outer two `.is-far`), Minute (00, 15, 30, 45), AM/PM (ص / م), selected cell `.tp-cell.is-on`; footer Cancel / «إلغاء» (ghost) and Set time / «حفظ الوقت» (primary). Esc and Cancel close without saving. The open state is on the board `RowDeskOnboarding` (4th column), prop `picker="open"`.
 
 Scenario text (the line above a question, such as "Hana runs a small gym…") uses the `.scn` class: full ink, weight 500, 15 px on mobile and 18 px on desktop (`.scn-lg`), with a taller line height in Arabic. It used to be small, light and grey, which was hard to read in Arabic. The lesson player's `.lp-scn` uses the same style.
 
