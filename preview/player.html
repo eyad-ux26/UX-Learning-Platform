@@ -525,7 +525,7 @@ function skillState(un, sk){
 const toRetest = un => (un.skills||[]).filter(sk => skillState(un, sk) === "retest");
 function startMastery(pi, ui){
   const un = CONTENT.paths[pi].units[ui];
-  const steps = toRetest(un).map(sk => untriedRetest(un, sk)).filter(Boolean).map(x => ({...x.s, _lid: x.l.id}));
+  const steps = toRetest(un).map(sk => untriedRetest(un, sk)).filter(Boolean).map(x => ({...x.s, speaker: x.s.speaker || x.l.speaker, _lid: x.l.id}));
   const lesson = {id: `${un.id}-M`, mode: "lesson", title: {en: UI.en.mastery, ar: UI.ar.mastery}, sources: (un.bank||[]).flatMap(b => b.sources||[]),
     steps: [{id: "S00", type: "card", part: "hook", title: {en: UI.en.mastery, ar: UI.ar.mastery}, body: {en: UI.en.masteryIntro, ar: UI.ar.masteryIntro}}, ...steps]};
   runLesson(pi, ui, -1, lesson, {kind: "mastery"});
@@ -535,7 +535,7 @@ function moreRetests(s, st){
   if (L.kind !== "mastery" || st.status === "independent" || !s.skill) return;
   const sk = (L.unit.skills||[]).find(k => k.id === s.skill), inRound = L.lesson.steps.map(x => `${x._lid}-${x.id}`);
   const nx = sk && untriedRetest(L.unit, sk, inRound);
-  if (nx){ L.lesson.steps.push({...nx.s, _lid: nx.l.id}); L.steps.push(newSt(nx.s)); }
+  if (nx){ L.lesson.steps.push({...nx.s, speaker: nx.s.speaker || nx.l.speaker, _lid: nx.l.id}); L.steps.push(newSt(nx.s)); }
 }
 const stateTag = st => `<span class="stt stt-${st}">${u()["st_" + st]}</span>`;
 function skillsBox(un){
@@ -1115,7 +1115,7 @@ function playOne(key){
     const x = unitVersions(un).find(y => y.key === key);
     if (!x) return;
     const hook = !x.s.scenario && x.l.steps.find(y => y.type === "card" && y.part === "hook");
-    const steps = [...(hook ? [hook] : []), {...x.s, _lid: x.l.id}];
+    const steps = [...(hook ? [{...hook, speaker: hook.speaker || x.l.speaker}] : []), {...x.s, speaker: x.s.speaker || x.l.speaker, _lid: x.l.id}];
     runLesson(pi, ui, -1, {id: x.l.id, mode: x.role === "check" ? "check" : "lesson", title: x.l.title, sources: x.l.sources, review_labels: x.l.review_labels, steps}, {kind: "single", back: "board", route: view.route});
     if (hook) { L.i = 1; render(); }
   }));
