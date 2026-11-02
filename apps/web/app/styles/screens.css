@@ -14,6 +14,7 @@
 .next-card .stack { display: flex; flex-direction: column; gap: 12px; position: relative; }
 .next-card .row { display: flex; gap: 6px; flex-wrap: wrap; position: relative; }
 .next-card .copy { display: flex; flex-direction: column; gap: 4px; max-inline-size: 220px; position: relative; }
+.next-card .lesson-body { display: none; }
 .next-card .meta { display: flex; align-items: center; gap: 12px; position: relative; flex-wrap: wrap; }
 .meta-i { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
 .segs { display: flex; gap: 6px; position: relative; }
@@ -104,8 +105,9 @@
   .next-card .stack { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; gap: 14px; }
   .next-card .copy { max-inline-size: none; }
   .next-card h2 { font-size: 26px !important; }
+  .next-card .lesson-body { display: block; max-inline-size: 460px; margin: 0; }
   .next-card .segs { max-inline-size: 360px; }
-  .next-card .btn { align-self: flex-start; min-inline-size: 240px; }
+  .ug .next-card .btn-block { inline-size: auto; align-self: flex-start; min-inline-size: 240px; }
   .map-head { display: none; }
   .lessons { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 0; }
   .lessons::before { inset-block: 34px auto; inset-inline: 12.5%; inline-size: auto; block-size: 4px; background: linear-gradient(90deg, var(--right-line) var(--done, 0%), var(--line) var(--done, 0%)); }
@@ -128,11 +130,13 @@
 .ob-side-card { border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
 .ob-side-card img { inline-size: 150px; block-size: 150px; align-self: center; }
 @media (min-width: 1024px) {
-  .ob-main .ob-body { flex: none; inline-size: 100%; margin: 0; padding-inline: 0; }
+  .ob-main .ob-body { flex: none; inline-size: 100%; margin: 0; padding-inline: 0; max-inline-size: none; }
   .ob-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; }
   .ob-opts .radio { display: none; }
-  .ob-main { flex: none; margin-block-start: auto; display: grid; grid-template-columns: minmax(0, 640px); justify-content: center; align-content: center; padding: 0 48px 24px; }
-  .ob-foot { display: grid; grid-template-columns: minmax(0, 640px); justify-content: center; max-inline-size: none; padding: 8px 48px 40px; margin: 0; margin-block-end: auto; }
+  .ob-main { flex: none; margin-block-start: auto; display: grid; grid-template-columns: minmax(0, 720px); justify-content: center; align-content: center; padding: 0 48px 24px; }
+  .ob-main[data-side] { grid-template-columns: minmax(0, 640px); }
+  .ob-foot { display: grid; grid-template-columns: minmax(0, 720px); justify-content: center; max-inline-size: none; padding: 8px 48px 40px; margin: 0; margin-block-end: auto; }
+  .ob-foot[data-side] { grid-template-columns: minmax(0, 640px); }
   .ob-foot-btns { gap: 12px; }
   .ob-foot-btns .btn:first-child { flex: none; }
   .ob-foot-btns .btn:last-child, .ob-foot-btns .btn:only-child { flex: none; min-inline-size: 220px; }
@@ -143,12 +147,15 @@
   .shell { grid-template-columns: 248px minmax(0, 1fr) 320px; }
   .shell.no-panel { grid-template-columns: 248px minmax(0, 1fr); }
   .shell-main { padding: 28px 40px 40px; }
+  /* The canvas boards are 1440 wide; on wider screens the content stays that size, centred between the rail and the right panel. */
+  .shell-main { max-inline-size: 872px; margin-inline: auto; }
+  .shell.no-panel .shell-main { max-inline-size: 1192px; }
   .next-card { padding: 28px 32px; grid-template-columns: minmax(0, 1fr) 200px; gap: 24px; }
   .next-card .next-art { inline-size: 200px; block-size: 200px; }
   .next-card h2 { font-size: 32px !important; }
   .ob-side { display: flex; flex-direction: column; gap: 8px; inline-size: 360px; }
-  .ob-main { grid-template-columns: minmax(0, 640px) 360px; column-gap: 48px; }
-  .ob-foot { grid-template-columns: minmax(0, 640px) 360px; column-gap: 48px; }
+  .ob-main[data-side] { grid-template-columns: minmax(0, 640px) 360px; column-gap: 48px; }
+  .ob-foot[data-side] { grid-template-columns: minmax(0, 640px) 360px; column-gap: 48px; }
 }
 
 /* sign up and sign in */

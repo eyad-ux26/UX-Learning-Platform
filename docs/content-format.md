@@ -42,7 +42,8 @@ id: P10-U01-L01          # must match the file name
 mode: lesson             # or "check" for a skill check
 minutes: 7
 title: { en: "...", ar: "..." }
-speaker: hana            # the cast member who tells the scenarios, from content/cast.yaml
+summary: { en: "...", ar: "..." }   # optional, one sentence on what the learner will do; shown under the title on the desktop home card
+speaker: hana            # the cast member who tells the scenarios, from cast.yaml (compiled into the bundle)
 review_labels:           # optional short names for misconceptions, shown in the recap
   MC-P10-001: { en: "...", ar: "..." }
 steps: [ ... ]

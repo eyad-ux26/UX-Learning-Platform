@@ -146,6 +146,7 @@ export function compileTree(dir) {
           if (s.scenario && (s.speaker ?? body.speaker)) s.speaker = s.speaker ?? body.speaker;
         }
         if (!isText(body.title)) errors.push(`${where}: title needs en and ar`);
+        if (body.summary !== undefined && !isText(body.summary)) errors.push(`${where}: summary needs en and ar`);
         const seen = new Set();
         body.steps.forEach((s) => { if (seen.has(s.id)) errors.push(`${where}: duplicate step id ${s.id}`); seen.add(s.id); checkStep(s, `${where}/${s.id}`, errors); });
         const skills = new Set((unit.skills ?? []).map((k) => k.id));
