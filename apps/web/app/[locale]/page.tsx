@@ -147,8 +147,12 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
 
       <footer className="land-foot">
         <Logo height={22} />
+        <nav className="land-foot-links" aria-label={t("navPaths")}>
+          <a href="#paths">{t("navPaths")}</a>
+          <a href="#plan">{t("navPricing")}</a>
+        </nav>
         <ThemeSwitch />
-        <span className="t-small ink-2 ltr">www.uxgate.org</span>
+        <span className="land-domain t-small ltr"><span className="ph ph-globe" aria-hidden="true" /><span><span className="only-mobile">www.</span>uxgate.org</span></span>
       </footer>
     </div>
   );
