@@ -116,7 +116,7 @@ export function GuestEnd({ lesson, state, locale }: { lesson: Lesson; state: Les
   void locale;
   const mark = () => { try { localStorage.setItem("ug-guest-handoff", "1"); } catch { /* private mode: the result is simply not carried over */ } };
   return (
-    <Page art="gate" title={t("guestTitle")} sub={t("guestBody", { right: sum.independent, total: sum.questions })}
+    <Page art="gate" title={t("guestTitle")} sub={t("guestBody", { n: sum.independent, total: sum.questions })}
       foot={<><Link href="/signup" className="btn btn-primary btn-lg press" onClick={mark}><span className="ph ph-user-plus" aria-hidden="true" />{t("guestKeep")}</Link><Link href="/" className="btn btn-secondary btn-lg press">{t("notNow")}</Link></>}>
       <p className="t-small ink-2">{t("guestNote")}</p>
     </Page>

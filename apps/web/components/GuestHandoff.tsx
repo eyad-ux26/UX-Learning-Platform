@@ -3,8 +3,6 @@
 import { useEffect } from "react";
 import { queueAll, queuePut } from "@/lib/idb";
 import type { QueuedAttempt } from "@/lib/attempts";
-import { createClient } from "@/lib/supabase/browser";
-import { hasSupabase } from "@/lib/supabase/env";
 import { kick, setSyncUser, startSync } from "@/lib/sync";
 
 const FLAG = "ug-guest-handoff";
@@ -18,10 +16,10 @@ export function GuestHandoff() {
   useEffect(() => {
     let flag: string | null = null;
     try { flag = localStorage.getItem(FLAG); } catch { return; }
-    if (flag !== "1" || !hasSupabase()) return;
+    if (flag !== "1") return;
     (async () => {
-      const { data } = await createClient().auth.getUser();
-      const id = data.user?.id;
+      // The session is HttpOnly, so ask the server who is signed in.
+      const id = ((await (await fetch("/api/auth/whoami", { cache: "no-store" })).json()) as { id: string | null }).id;
       if (!id) return; // not signed up yet: keep waiting
       const guest = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter((i) => i.userId === "guest");
       await Promise.all(guest.map((i) => queuePut({ ...i, userId: id } as { key: string })));

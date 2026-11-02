@@ -106,7 +106,7 @@ export function evaluate(step: QuestionStep, answer: Answer): Evaluation {
     const s = step as MatchStep;
     const pairs = new Map(sel.map((v) => pairOf(v) as readonly [string, string]));
     mainCorrect = sel.length === Object.keys(s.answer).length && Object.entries(s.answer).every(([l, r]) => pairs.get(l) === r);
-    if (!mainCorrect) mc = (s.misconceptions ?? []).find((m) => whenList(m).some((w) => { const x = w as { left: string; right: string }; return pairs.get(x.left) === x.right; })) ?? null;
+    if (!mainCorrect) mc = (s.misconceptions ?? []).find((m) => whenList(m).some((w) => { const x = w as Record<"left" | "right", string>; return pairs.get(x.left) === x.right; })) ?? null;
   } else {
     const s = step as ChooseStep | TuneStep | SpotStep;
     mainCorrect = sameSet(sel, s.answer);
