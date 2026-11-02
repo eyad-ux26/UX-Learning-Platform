@@ -3,10 +3,12 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { useRouter } from "@/i18n/navigation";
 import { FOCUSES, GOALS, TIMES, type OnboardingInput } from "@/lib/onboarding";
+import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
 
@@ -27,13 +29,13 @@ export function Onboarding() {
   const [focus, setFocus] = useState<Focus | null>(null);
   const [time, setTime] = useState<Time | null>(null);
   const [dailyGoal, setDailyGoal] = useState<1 | 2 | 3>(1);
-  const [reminder, setReminder] = useState("20:00");
+  const [reminder, setReminder] = useState<string | null>(DEFAULT_REMINDER);
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
 
   const submit = (skipped: boolean) => {
     const input: OnboardingInput = {
-      goal, focus, weeklyTime: time, dailyGoal, reminder: skipped ? null : reminder || null, skipped,
+      goal, focus, weeklyTime: time, dailyGoal, reminder: skipped ? null : reminder, skipped,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     };
     setFailed(false);
@@ -120,14 +122,7 @@ export function Onboarding() {
                   </button>
                 ))}
               </div>
-              <div className="field">
-                <label htmlFor="ob-reminder">{t("reminder")}</label>
-                <div className="ob-time">
-                  <div className="input" style={{ maxInlineSize: 200 }}><span className="ph ph-bell" aria-hidden="true" /><input id="ob-reminder" type="time" value={reminder} onChange={(e) => setReminder(e.target.value)} aria-describedby="ob-reminder-help" /></div>
-                  {reminder ? <button type="button" className="btn btn-ghost btn-sm" onClick={() => setReminder("")}>{t("reminderNone")}</button> : null}
-                </div>
-                <span id="ob-reminder-help" className="help">{t("reminderNote")}</span>
-              </div>
+              <ReminderField value={reminder} onChange={setReminder} />
             </>
           ) : null}
           {failed ? <p className="ob-err" role="alert">{t("saveFailed")}</p> : null}
@@ -148,7 +143,7 @@ export function Onboarding() {
       <footer className="ob-foot">
         <div className="ob-foot-btns">
           {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}><span className="ph ph-arrow back only-desk" aria-hidden="true" />{t("back")}</button> : null}
-          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("finish") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
+          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("startLearning") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
         </div>
       </footer>
     </div>
