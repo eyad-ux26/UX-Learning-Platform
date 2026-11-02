@@ -6,9 +6,10 @@ import { useRouter } from "@/i18n/navigation";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { play } from "@/lib/sound";
+import { flush, setSyncUser } from "@/lib/sync";
 import { saveProfile, signOut } from "@/app/[locale]/app/(shell)/profile/actions";
 
-export function ProfileForm({ initial, email }: { initial: { displayName: string; dailyGoal: 1 | 2 | 3; reminder: string }; email: string }) {
+export function ProfileForm({ initial, email, userId }: { initial: { displayName: string; dailyGoal: 1 | 2 | 3; reminder: string }; email: string; userId: string }) {
   const t = useTranslations("profile");
   const o = useTranslations("onboarding");
   const router = useRouter();
@@ -57,7 +58,7 @@ export function ProfileForm({ initial, email }: { initial: { displayName: string
         <div className="field"><span className="label-like">{t("theme")}</span><ThemeSwitch /></div>
         <div className="field only-mobile"><span className="label-like">{t("language")}</span><LocaleSwitch /></div>
       </section>
-      <button type="button" className="btn btn-secondary press" onClick={() => start(async () => { await signOut(); router.push("/"); router.refresh(); })} disabled={pending}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
+      <button type="button" className="btn btn-secondary press" onClick={() => start(async () => { setSyncUser(userId); await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]); await signOut(); router.push("/"); router.refresh(); })} disabled={pending}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
     </div>
   );
 }

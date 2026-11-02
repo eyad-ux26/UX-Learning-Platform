@@ -2,7 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { createServerClient } from "@supabase/ssr";
 import type { NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
-import { hasSupabase, supabaseAnonKey, supabaseUrl } from "./lib/supabase/env";
+import { cookieSecure, hasSupabase, supabaseAnonKey, supabaseUrl } from "./lib/supabase/env";
 
 const intl = createMiddleware(routing);
 // Only screens that know who the learner is need their session kept fresh.
@@ -12,6 +12,7 @@ export default async function middleware(req: NextRequest) {
   const res = intl(req);
   if (hasSupabase() && SIGNED_IN_AREA.test(req.nextUrl.pathname)) {
     const supabase = createServerClient(supabaseUrl(), supabaseAnonKey(), {
+      cookieOptions: { secure: cookieSecure() },
       cookies: {
         getAll: () => req.cookies.getAll(),
         setAll: (list) => list.forEach(({ name, value, options }) => { req.cookies.set(name, value); res.cookies.set(name, value, options); }),

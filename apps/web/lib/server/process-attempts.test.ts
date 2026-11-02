@@ -54,3 +54,15 @@ describe("processEvents", () => {
     expect(bodySchema.safeParse(body([ev({ hintsUsed: 9 })])).success).toBe(false);
   });
 });
+
+describe("bodySchema times", () => {
+  const ok = { attemptId: "A@1", lessonId: lv.lessonId, hash: "a".repeat(64), startedAt: Date.now(), events: [ev({ clientTs: Date.now() })] };
+  it("accepts real times", () => { expect(bodySchema.safeParse(ok).success).toBe(true); });
+  it("rejects a startedAt that cannot be a date (it used to crash the route with a 500)", () => {
+    expect(bodySchema.safeParse({ ...ok, startedAt: 9e15 }).success).toBe(false);
+  });
+  it("rejects a clientTs far in the future or before the product existed", () => {
+    expect(bodySchema.safeParse({ ...ok, events: [ev({ clientTs: 9e15 })] }).success).toBe(false);
+    expect(bodySchema.safeParse({ ...ok, events: [ev({ clientTs: 1000 })] }).success).toBe(false);
+  });
+});

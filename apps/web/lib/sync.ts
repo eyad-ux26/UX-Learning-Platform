@@ -9,6 +9,13 @@ let status: Status = { online: true, pending: 0, signedOut: false };
 const listeners = new Set<() => void>();
 const set = (patch: Partial<Status>) => { status = { ...status, ...patch }; listeners.forEach((l) => l()); };
 
+// Who is signed in on this device. Set by the lesson screen; items of any other learner stay in the queue untouched.
+let currentUser: string | undefined;
+export function setSyncUser(userId: string | undefined) { if (currentUser !== userId) { currentUser = userId; delay = 2000; void flush(); } }
+
+// The server will never accept these answers (bad data, locked lesson, content it no longer has), so retrying is pointless.
+const DROP = new Set([400, 403, 404, 409, 413, 422]);
+
 let started = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
 let delay = 2000;
@@ -18,7 +25,9 @@ export async function flush(): Promise<void> {
   if (running) return;
   running = true;
   try {
-    const items = await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[]);
+    if (!currentUser) return; // not known yet: sending now could put one learner's answers on another account
+    const mine = (it: QueuedAttempt) => it.userId === currentUser;
+    const items = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter(mine);
     set({ pending: items.length });
     if (!items.length) { delay = 2000; return; }
     const groups = new Map<string, QueuedAttempt[]>();
@@ -37,11 +46,11 @@ export async function flush(): Promise<void> {
         });
         if (res.ok) { await Promise.all(list.map((i) => queueDel(i.key))); set({ signedOut: false }); }
         else if (res.status === 401) { set({ signedOut: true }); failed = true; } // guest: keep for sign-up
-        else if (res.status >= 500 || res.status === 429) failed = true;
-        else failed = true; // 4xx other than auth: keep, a newer app version may accept it
+        else if (DROP.has(res.status)) await Promise.all(list.map((i) => queueDel(i.key))); // never acceptable: stop retrying
+        else failed = true; // 429, 5xx and anything unknown: try again later
       } catch { failed = true; set({ online: false }); }
     }
-    const left = await queueAll().catch(() => []);
+    const left = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter(mine);
     set({ pending: left.length });
     if (failed && left.length) schedule(); else delay = 2000;
   } finally { running = false; }

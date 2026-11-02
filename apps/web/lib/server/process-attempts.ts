@@ -3,6 +3,10 @@ import { z } from "zod";
 import type { Lesson, QuestionStep } from "@uxgate/content/types";
 import { evaluate, isQuestion, scoreStep, type Outcome } from "@uxgate/player/engine";
 
+// Real times only: after the product existed, and not more than a day ahead of the server clock (phones can be a little off).
+const EARLIEST = Date.UTC(2025, 0, 1);
+const realTime = () => z.number().int().min(EARLIEST).refine((v) => v <= Date.now() + 86_400_000, "in the future");
+
 export const eventSchema = z.object({
   stepId: z.string().min(1).max(40),
   tryNo: z.number().int().min(0).max(50),
@@ -10,14 +14,14 @@ export const eventSchema = z.object({
   answer: z.object({ sel: z.array(z.string().max(60)).max(10), reason: z.array(z.string().max(60)).max(10).optional() }),
   hintsUsed: z.number().int().min(0).max(2),
   confidence: z.number().int().min(0).max(2).nullable(),
-  clientTs: z.number().int(),
+  clientTs: realTime(),
 });
 
 export const bodySchema = z.object({
   attemptId: z.string().min(1).max(120),
   lessonId: z.string().min(1).max(60),
   hash: z.string().length(64),
-  startedAt: z.number().int(),
+  startedAt: realTime(),
   events: z.array(eventSchema).min(1).max(200),
 });
 export type AttemptBody = z.infer<typeof bodySchema>;

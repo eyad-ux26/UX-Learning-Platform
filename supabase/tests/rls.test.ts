@@ -149,3 +149,31 @@ describe("deleting an account", () => {
     expect((await db.query(`select 1 from profiles where user_id = $1`, [id])).rows).toHaveLength(0);
   });
 });
+
+describe("server guards (migration 0003)", () => {
+  it("the rate limiter allows `limit` hits per window and then says no, per user and key", async () => {
+    const hit = async (u: string, key = "k") => (await db.query<{ ok: boolean }>(`select public.hit_rate_limit($1, $2, 2, 60) as ok`, [u, key])).rows[0].ok;
+    expect([await hit(A), await hit(A), await hit(A)]).toEqual([true, true, false]);
+    expect(await hit(B)).toBe(true);
+    expect(await hit(A, "other")).toBe(true);
+  });
+  it("a new window starts the count again", async () => {
+    await db.query(`update rate_limits set window_start = now() - interval '2 minutes' where user_id = $1 and key = 'k'`, [A]);
+    expect((await db.query<{ ok: boolean }>(`select public.hit_rate_limit($1, 'k', 2, 60) as ok`, [A])).rows[0].ok).toBe(true);
+  });
+  it("two lessons finished together are both counted", async () => {
+    const day = "2031-01-01";
+    const [a, b] = await Promise.all([1, 2].map(() => db.query<{ n: number }>(`select public.bump_lessons_done($1, $2, 2) as n`, [A, day])));
+    expect([a.rows[0].n, b.rows[0].n].sort()).toEqual([1, 2]);
+    expect((await db.query<{ lessons_done: number; goal_met: boolean }>(`select lessons_done, goal_met from daily_activity where user_id = $1 and day = $2`, [A, day])).rows[0]).toEqual({ lessons_done: 2, goal_met: true });
+  });
+  it("learners and visitors cannot call the guards or read the counters", async () => {
+    await expect(as("authenticated", A, `select public.hit_rate_limit($1, 'x', 1, 60)`, [A])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", A, `select public.bump_lessons_done($1, current_date, 1)`, [A])).rejects.toThrow(/permission denied/);
+    await expect(as("anon", null, `select public.hit_rate_limit($1, 'x', 1, 60)`, [A])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", A, `select * from rate_limits`)).rejects.toThrow(/permission denied/);
+  });
+  it("the service role can call them", async () => {
+    expect(await as("service_role", null, `select public.hit_rate_limit($1, 'svc', 5, 60) as ok`, [A])).toHaveLength(1);
+  });
+});

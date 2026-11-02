@@ -8,13 +8,13 @@ import { startLesson, type LessonState, type TryEvent } from "@uxgate/player/eng
 import { kvDel, kvGet, kvSet } from "@/lib/idb";
 import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
-import { flush, kick, startSync, useSyncStatus } from "@/lib/sync";
+import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
 import { LessonEnd } from "./LessonEnd";
 
-type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number };
+type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number; userId: string };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId }: Props) {
   const router = useRouter();
   const t = useTranslations("sync");
   const sync = useSyncStatus();
@@ -22,10 +22,12 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   const [finished, setFinished] = useState<LessonState | null>(null);
   const [muted, setMutedState] = useState(false);
   const attemptId = useRef("");
-  const key = `lesson:${lesson.id}`;
+  // Saved position is kept per learner, so the next person on a shared device starts fresh.
+  const key = `lesson:${userId}:${lesson.id}`;
 
   useEffect(() => {
     initSound();
+    setSyncUser(userId);
     startSync();
     setMutedState(readMuted());
     let alive = true;
@@ -37,10 +39,10 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       if (alive) setState(fresh);
     })();
     return () => { alive = false; };
-  }, [lesson, hash, key]);
+  }, [lesson, hash, key, userId]);
 
   const onState = useCallback((s: LessonState) => { kvSet(key, s).catch(() => {}); }, [key]);
-  const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(attemptId.current, e).then(kick).catch(() => {}); }, []);
+  const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(userId, attemptId.current, e).then(kick).catch(() => {}); }, [userId]);
   const onFinish = useCallback((s: LessonState) => {
     kvDel(key).catch(() => {});
     play("lesson-complete");
