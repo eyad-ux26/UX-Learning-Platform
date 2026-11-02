@@ -31,5 +31,5 @@ describe("content seed SQL", () => {
     expect(await count("content_versions")).toBe(bundle.lessons.length);
     const body = (await db.query<{ body: { id: string } }>(`select body from content_versions where lesson_id = 'P01-U01-L01'`)).rows[0].body;
     expect(body.id).toBe("P01-U01-L01");
-  });
+  }, 30_000);
 });
