@@ -9,6 +9,8 @@ export type Phase = "answering" | "wrong" | "main_ok" | "right" | "revealed";
 export type StepState = {
   sel: string[];
   reason: string[];
+  /** Options already tried and judged wrong on a single-answer step: dimmed, and they can't be picked again. Absent in older saved lessons. */
+  tried?: string[];
   conf: number | null;
   phase: Phase;
   /** Number of Checks that were judged (a compare step's "main answer is right" check is not counted). */
@@ -105,6 +107,7 @@ const withStep = (state: LessonState, i: number, patch: Partial<StepState>): Les
 export function select(lesson: Lesson, state: LessonState, optionId: string): LessonState {
   const step = lesson.steps[state.i]; const st = state.steps[state.i];
   if (!isQuestion(step) || st.phase !== "answering") return state;
+  if ((st.tried ?? []).includes(optionId)) return state;
   const multi = step.type === "choose" && step.multi;
   const sel = multi ? (st.sel.includes(optionId) ? st.sel.filter((x) => x !== optionId) : [...st.sel, optionId]) : [optionId];
   return withStep(state, state.i, { sel });
@@ -150,7 +153,8 @@ export function check(lesson: Lesson, state: LessonState, now = Date.now()): Tra
 }
 
 export const hintsAvailable = (step: Step) => (isQuestion(step) ? Math.min(MAX_HINTS, step.hints?.length ?? 0) : 0);
-export const canHint = (step: Step, st: StepState) => st.phase === "wrong" && st.hints < hintsAvailable(step);
+/** Hints end once Show the answer is offered (after the third try), so the sheet keeps two buttons. */
+export const canHint = (step: Step, st: StepState) => st.phase === "wrong" && st.tries < REVEAL_AFTER_TRIES && st.hints < hintsAvailable(step);
 export const canReveal = (st: StepState) => st.phase === "wrong" && st.tries >= REVEAL_AFTER_TRIES;
 
 export function hint(lesson: Lesson, state: LessonState): LessonState {
@@ -158,11 +162,14 @@ export function hint(lesson: Lesson, state: LessonState): LessonState {
   return canHint(step, st) ? withStep(state, state.i, { hints: st.hints + 1 }) : state;
 }
 
-export function retry(state: LessonState): LessonState {
-  const st = state.steps[state.i];
+export function retry(lesson: Lesson, state: LessonState): LessonState {
+  const step = lesson.steps[state.i]; const st = state.steps[state.i];
   if (st.phase !== "wrong") return state;
   // After a wrong reason the learner stays on the reason question.
-  return withStep(state, state.i, { phase: st.reason.length ? "main_ok" : "answering", reason: [] });
+  if (st.reason.length) return withStep(state, state.i, { phase: "main_ok", reason: [] });
+  // After a wrong main answer the choice is cleared. On a single-answer step the option just tried is dimmed for good.
+  const single = isQuestion(step) && !(step.type === "choose" && step.multi);
+  return withStep(state, state.i, { phase: "answering", sel: [], reason: [], tried: single ? [...(st.tried ?? []), ...st.sel] : st.tried ?? [] });
 }
 
 export function reveal(lesson: Lesson, state: LessonState, now = Date.now()): Transition {

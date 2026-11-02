@@ -47,23 +47,39 @@ describe("tries, hints, reveal", () => {
     s = E.check(lesson, s).state;
     s = E.hint(lesson, s); s = E.hint(lesson, s); s = E.hint(lesson, s);
     expect(s.steps[idx("S02")].hints).toBe(2);
-    s = E.retry(s);
+    s = E.retry(lesson, s);
     s = E.select(lesson, s, tune.answer[0]);
     const r = E.check(lesson, s);
     expect(r.state.steps[idx("S02")]).toMatchObject({ phase: "right", outcome: "supported", xp: 5, tries: 2, first: { sel: [wrongId] } });
   });
   it("Show the answer appears only after 3 tries and scores 0", () => {
-    let s = at(start(), "S02");
+    // a single-answer step with at least three wrong options, because tried options cannot be picked again
+    const big = lesson.steps.find((x) => (x.type === "choose" && !x.multi || x.type === "tune") && (x as TuneStep).options.filter((o) => !(x as TuneStep).answer.includes(o.id)).length >= 3) as TuneStep | undefined;
+    const target = big ?? tune;
+    const wrongs = target.options.filter((o) => !target.answer.includes(o.id)).map((o) => o.id);
+    let s = at(start(), target.id);
     for (let k = 0; k < 3; k++) {
-      s = E.select(lesson, s, wrongId);
+      s = E.select(lesson, s, wrongs[k % wrongs.length]);
       expect(E.canReveal(s.steps[s.i])).toBe(false);
       s = E.check(lesson, s).state;
-      if (k < 2) s = E.retry(s);
+      if (k < 2) s = E.retry(lesson, s);
     }
+    if (!big) return; // no step with three wrong options in this lesson: the retry rule below covers the rest
     expect(E.canReveal(s.steps[s.i])).toBe(true);
+    expect(E.canHint(target, s.steps[s.i])).toBe(false); // the sheet then holds two buttons
     const r = E.reveal(lesson, s);
-    expect(r.state.steps[idx("S02")]).toMatchObject({ phase: "revealed", outcome: "revealed", xp: 0 });
+    expect(r.state.steps[r.state.i]).toMatchObject({ phase: "revealed", outcome: "revealed", xp: 0 });
     expect(r.event?.kind).toBe("reveal");
+  });
+  it("retry clears the choice and dims the option just tried", () => {
+    let s = E.select(lesson, at(start(), "S02"), wrongId);
+    s = E.check(lesson, s).state;
+    s = E.retry(lesson, s);
+    const st = s.steps[idx("S02")];
+    expect(st).toMatchObject({ phase: "answering", sel: [], tried: [wrongId] });
+    expect(E.canCheck(tune, st)).toBe(false);
+    expect(E.select(lesson, s, wrongId).steps[idx("S02")].sel).toEqual([]); // cannot be picked again
+    expect(E.select(lesson, s, tune.answer[0]).steps[idx("S02")].sel).toEqual([tune.answer[0]]);
   });
   it("cannot advance past an unanswered question", () => {
     const s = at(start(), "S02");
@@ -88,7 +104,7 @@ describe("compare with a reason", () => {
     s = E.selectReason(lesson, s, bad);
     s = E.check(lesson, s).state;
     expect(s.steps[idx("S07")]).toMatchObject({ phase: "wrong", tries: 1 });
-    s = E.retry(s);
+    s = E.retry(lesson, s);
     expect(s.steps[idx("S07")].phase).toBe("main_ok");
     s = E.selectReason(lesson, s, cmp.reason!.answer[0]);
     s = E.check(lesson, s).state;
@@ -106,7 +122,7 @@ describe("server scoring matches the client", () => {
     const events: E.TryEvent[] = [];
     const run = (t: E.Transition) => { s = t.state; if (t.event) events.push(t.event); };
     s = E.select(lesson, s, wrongId); run(E.check(lesson, s));
-    s = E.hint(lesson, s); s = E.retry(s); s = E.select(lesson, s, tune.answer[0]); run(E.check(lesson, s));
+    s = E.hint(lesson, s); s = E.retry(lesson, s); s = E.select(lesson, s, tune.answer[0]); run(E.check(lesson, s));
     const scored = E.scoreStep(tune, events);
     expect(scored.outcome).toBe(s.steps[idx("S02")].outcome);
     expect(scored.xp).toBe(s.steps[idx("S02")].xp);

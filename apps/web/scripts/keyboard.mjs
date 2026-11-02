@@ -11,7 +11,7 @@ await page.goto(`${base}/${locale}/app/lesson/P01-U01-L01`);
 await page.waitForSelector(".ug");
 await page.waitForTimeout(500);
 
-const active = () => page.evaluate(() => { const e = document.activeElement; return e ? { tag: e.tagName, role: e.getAttribute("role"), cls: e.className, text: (e.textContent || "").trim().slice(0, 40) } : null; });
+const active = () => page.evaluate(() => { const e = document.activeElement; return e ? { tag: e.tagName, role: e.getAttribute("role"), cls: e.className, locked: e.getAttribute("aria-disabled") === "true", text: (e.textContent || "").trim().slice(0, 40) } : null; });
 const tabUntil = async (test, max = 40) => { for (let i = 0; i < max; i++) { await page.keyboard.press("Tab"); const a = await active(); if (a && test(a)) return a; } return null; };
 
 let steps = 0, checks = 0;
@@ -22,8 +22,8 @@ for (let guard = 0; guard < 60; guard++) {
   const label = ((await primary.textContent()) || "").trim();
   const isCheck = /^(Check|تحقق)$/.test(label);
   if (isCheck) {
-    // pick the first answer with the keyboard, then press Check with the keyboard
-    const first = await tabUntil((a) => a.cls.includes("choice") || a.role === "radio" || a.role === "checkbox" || a.cls.includes("opt"));
+    // pick the first open answer (dimmed or locked ones are skipped) with the keyboard, then press Check with the keyboard
+    const first = await tabUntil((a) => !a.locked && (a.cls.includes("choice") || a.role === "radio" || a.role === "checkbox" || a.cls.includes("opt")));
     if (first) { await page.keyboard.press("Space"); }
     await page.evaluate(() => (document.activeElement)?.blur?.());
     const c = await tabUntil((a) => /^(Check|تحقق)$/.test(a.text));

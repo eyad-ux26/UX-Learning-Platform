@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { lastDays, lessonStates, localDay, streakDays } from "./progress";
+import { lastDays, lessonStates, localDay, streakDays, weekOf } from "./progress";
 
 describe("streakDays", () => {
   it("counts back from today", () => expect(streakDays(["2026-10-28", "2026-10-29", "2026-10-30"], "2026-10-30")).toBe(3));
@@ -30,4 +30,17 @@ describe("lessonStates", () => {
     expect(lessonStates(ids, new Set(["L1"]), new Set(["L1"]))).toEqual({ L1: "done", L2: "available", L3: "locked" }));
   it("marks a started lesson in progress", () =>
     expect(lessonStates(ids, new Set(["L1"]), new Set(["L1", "L2"]))).toEqual({ L1: "done", L2: "in_progress", L3: "locked" }));
+});
+
+describe("weekOf", () => {
+  it("English weeks run Monday to Sunday and hold today", () => {
+    // 2026-11-04 is a Wednesday
+    expect(weekOf("2026-11-04", 1)).toEqual(["2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08"]);
+    expect(weekOf("2026-11-08", 1)[0]).toBe("2026-11-02"); // Sunday is the last day
+    expect(weekOf("2026-11-02", 1)[0]).toBe("2026-11-02"); // Monday is the first
+  });
+  it("Arabic weeks run Saturday to Friday", () => {
+    expect(weekOf("2026-11-04", 6)).toEqual(["2026-10-31", "2026-11-01", "2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06"]);
+    expect(weekOf("2026-10-31", 6)[0]).toBe("2026-10-31"); // Saturday is the first
+  });
 });

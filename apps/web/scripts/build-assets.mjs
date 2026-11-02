@@ -12,7 +12,7 @@ const src = fs.readFileSync(path.resolve(here, "../../../docs/design/system/uxga
 // Design name -> Phosphor name, where they differ.
 const RENAME = {
   arrow: "arrow-right", review: "arrows-clockwise", caret: "caret-down", freeze: "snowflake",
-  signout: "sign-out", google: "google-logo", apple: "apple-logo", comment: "chat-text",
+  signout: "sign-out", google: "google-logo", apple: "apple-logo", comment: "chat-teardrop",
   chat: "chat-circle", bolt: "lightning", bulb: "lightbulb", map: "map-trifold", mail: "envelope-simple",
   search: "magnifying-glass",
 };

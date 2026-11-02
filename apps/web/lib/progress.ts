@@ -32,6 +32,16 @@ export function lastDays(today: string, count = 7): string[] {
 }
 
 /**
+ * The calendar week that holds today, as the Home streak row shows it: Monday to Sunday in English,
+ * Saturday to Friday in Arabic (weekStart is the weekday number, 0 = Sunday). Days after today stay empty.
+ */
+export function weekOf(today: string, weekStart: number): string[] {
+  const dow = new Date(`${today}T00:00:00Z`).getUTCDay();
+  const back = (dow - weekStart + 7) % 7;
+  return Array.from({ length: 7 }, (_, i) => shiftDay(today, i - back));
+}
+
+/**
  * Lessons play in order. A finished lesson is done; the first unfinished one is open (in progress when the
  * learner has started it); everything after it waits. Finished lessons stay open for replay.
  */

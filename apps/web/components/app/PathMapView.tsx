@@ -63,12 +63,12 @@ export async function PathMapMain({ view, progress }: { view: PathView; progress
         <span className="stat"><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>
       </header>
 
-      <div className="only-desk" style={{ alignItems: "flex-end", gap: 24 }}>
-        <div style={{ flex: 1, minInlineSize: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+      <div className="only-desk" style={{ alignItems: "flex-end", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ flex: "1 1 320px", minInlineSize: 0, display: "flex", flexDirection: "column", gap: 6 }}>
           <h1 className="t-h1" style={{ fontSize: 34, lineHeight: 1.15 }}><bdi>{view.path.title.en}</bdi></h1>
           <p className="t-body ink-2">{view.path.subtitle[locale]}</p>
         </div>
-        <div style={{ inlineSize: 260, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ flex: "1 1 220px", maxInlineSize: 280, display: "flex", flexDirection: "column", gap: 8 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}><span className="t-label">{t("pathProgress")}</span><span className="t-small num" style={{ fontWeight: 700 }}>{pct}%</span></div>
           <div className="progress progress-sm" aria-hidden="true"><i style={{ inlineSize: `${pct}%` }} /></div>
         </div>
@@ -94,7 +94,7 @@ export async function PathMapMain({ view, progress }: { view: PathView; progress
             </div>
             <h2 className="t-h2" style={{ fontSize: 22 }}>{u.unit.title[locale]}</h2>
           </div>
-          <ol className="lessons" style={{ ["--cols" as string]: u.lessons.length }}>
+          <ol className="lessons" style={{ ["--cols" as string]: u.lessons.length, ["--done" as string]: `${u.lessons.length > 1 ? (Math.min(u.lessons.filter((x) => x.state === "done").length, u.lessons.length - 1) / (u.lessons.length - 1)) * 100 : 0}%` }}>
             {u.lessons.map((l) => <Row key={l.lesson.lessonId} l={l} t={t} locale={locale} />)}
           </ol>
         </div>

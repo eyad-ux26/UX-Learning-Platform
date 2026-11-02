@@ -45,7 +45,7 @@
 .unit-h { display: flex; flex-direction: column; gap: 4px; }
 .unit-h .tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .lessons { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; position: relative; }
-.lessons::before { content: ""; position: absolute; inset-block: 24px 30px; inset-inline-start: 21px; inline-size: 4px; border-radius: 4px; background: var(--line); }
+.lessons::before { content: ""; position: absolute; inset-block: 24px 30px; inset-inline-start: 21px; inline-size: 4px; border-radius: 4px; background: linear-gradient(180deg, var(--right-line) var(--done, 0%), var(--line) var(--done, 0%)); }
 .lessons > li { display: flex; align-items: center; gap: 12px; position: relative; }
 .node { display: grid; place-items: center; inline-size: 46px; block-size: 46px; border-radius: 50%; flex: none; font-weight: 700; font-size: 17px; }
 .node.done { background: var(--right-line); color: #01241A; box-shadow: 0 4px 0 #2A7F5F; }
@@ -81,18 +81,19 @@
 .ob-foot-btns { display: flex; gap: 10px; }
 .ob-foot-btns .btn:first-child { flex: 1; }
 .ob-foot-btns .btn:last-child { flex: 2; }
+.ob-foot-btns .btn:only-child { flex: 1; }
 .ob-label { font-weight: 700; font-size: 15px; margin-block-start: 4px; }
 .ob-time { display: flex; align-items: center; gap: 12px; }
 .ob-err { color: var(--wrong-ink, #B3261E); font-weight: 600; }
 .ob-side { display: none; }
 
 @media (min-width: 1024px) {
-  .shell { display: grid; grid-template-columns: 248px minmax(0, 1fr) 320px; }
-  .shell.no-panel { grid-template-columns: 248px minmax(0, 1fr); }
+  .shell { display: grid; grid-template-columns: 216px minmax(0, 1fr) 280px; }
+  .shell.no-panel { grid-template-columns: 216px minmax(0, 1fr); }
   .shell-rail { display: flex; flex-direction: column; gap: 4px; position: sticky; inset-block-start: 0; block-size: 100dvh; background: var(--surface); border-inline-end: 2px solid var(--line); padding: 20px 14px; overflow-y: auto; }
   .shell-rail .logo-mark { block-size: 34px; inline-size: auto; align-self: flex-start; margin: 2px 8px 18px; }
   .shell-panel { display: flex; flex-direction: column; gap: 20px; position: sticky; inset-block-start: 0; block-size: 100dvh; overflow-y: auto; background: var(--surface); border-inline-start: 2px solid var(--line); padding: 22px 20px; }
-  .shell-main { max-inline-size: none; margin: 0; padding: 28px 40px 40px; gap: 20px; }
+  .shell-main { max-inline-size: none; margin: 0; padding: 28px 28px 40px; gap: 20px; }
   .ug .app-bnav, .ug .only-mobile { display: none; }
   .ug .only-desk { display: flex; }
   .h1-s { font-size: 34px; line-height: 1.2; }
@@ -105,7 +106,8 @@
   .next-card .btn { align-self: flex-start; min-inline-size: 240px; }
   .map-head { display: none; }
   .lessons { display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); gap: 0; }
-  .lessons::before { inset-block: 34px auto; inset-inline: 12.5%; inline-size: auto; block-size: 4px; }
+  .lessons::before { inset-block: 34px auto; inset-inline: 12.5%; inline-size: auto; block-size: 4px; background: linear-gradient(90deg, var(--right-line) var(--done, 0%), var(--line) var(--done, 0%)); }
+  .ug[dir="rtl"] .lessons::before { background: linear-gradient(270deg, var(--right-line) var(--done, 0%), var(--line) var(--done, 0%)); }
   .lessons > li { flex-direction: column; text-align: center; gap: 10px; padding-inline: 8px; }
   .node { inline-size: 72px; block-size: 72px; border-radius: 22px; }
   .ug .lcard, .ug .lcard.next, .ug .lcard.locked { align-items: center; background: transparent; border: 0; box-shadow: none; padding: 0; }
@@ -124,14 +126,23 @@
 .ob-side-card { border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
 .ob-side-card img { inline-size: 150px; block-size: 150px; align-self: center; }
 @media (min-width: 1024px) {
-  .ob-main .ob-body { flex: none; inline-size: 640px; margin: 0; padding-inline: 0; }
-  .ob-side { display: flex; flex-direction: column; gap: 8px; inline-size: 360px; }
+  .ob-main .ob-body { flex: none; inline-size: 100%; margin: 0; padding-inline: 0; }
   .ob-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; }
-  .ob-main { display: grid; grid-template-columns: 640px 360px; column-gap: 48px; justify-content: center; align-content: center; padding: 0 48px 24px; }
-  .ob-foot { display: grid; grid-template-columns: 640px 360px; column-gap: 48px; justify-content: center; max-inline-size: none; padding: 0 48px 40px; margin: 0; }
+  .ob-main { display: grid; grid-template-columns: minmax(0, 640px); justify-content: center; align-content: center; padding: 0 48px 24px; }
+  .ob-foot { display: grid; grid-template-columns: minmax(0, 640px); justify-content: center; max-inline-size: none; padding: 0 48px 40px; margin: 0; }
   .ob-foot-btns { gap: 12px; }
   .ob-foot-btns .btn:first-child { flex: none; }
-  .ob-foot-btns .btn:last-child { flex: none; min-inline-size: 220px; }
+  .ob-foot-btns .btn:last-child, .ob-foot-btns .btn:only-child { flex: none; min-inline-size: 220px; }
+}
+
+/* wide laptops and up: the onboarding side card and a roomier shell */
+@media (min-width: 1280px) {
+  .shell { grid-template-columns: 248px minmax(0, 1fr) 320px; }
+  .shell.no-panel { grid-template-columns: 248px minmax(0, 1fr); }
+  .shell-main { padding: 28px 40px 40px; }
+  .ob-side { display: flex; flex-direction: column; gap: 8px; inline-size: 360px; }
+  .ob-main { grid-template-columns: minmax(0, 640px) 360px; column-gap: 48px; }
+  .ob-foot { grid-template-columns: minmax(0, 640px) 360px; column-gap: 48px; }
 }
 
 /* sign up and sign in */
@@ -152,7 +163,7 @@
   .auth-art-mid img { inline-size: 380px; block-size: 380px; object-fit: contain; }
   .auth-tag { margin: 0; font-weight: 700; font-size: 22px; }
   .auth-form { justify-content: center; align-items: center; padding: 40px; }
-  .auth-top { inline-size: 440px; justify-content: flex-end; padding: 0 0 16px; min-block-size: 0; }
+  .auth-top { inline-size: 440px; justify-content: flex-end; gap: 12px; padding: 0 0 16px; min-block-size: 0; }
   .auth-box { padding: 0; }
 }
 

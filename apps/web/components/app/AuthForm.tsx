@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { createClient } from "@/lib/supabase/browser";
 import { authErrorKey, isEmail, MIN_PASSWORD, type AuthErrorKey } from "@/lib/auth";
@@ -79,6 +80,7 @@ export function AuthForm({ mode, linkError }: { mode: Mode; linkError?: boolean 
         <header className="auth-top">
           <Link href="/" className="icon-btn plain only-mobile" aria-label={t("close")}><span className="ph ph-x" aria-hidden="true" /></Link>
           <span className="only-mobile"><Logo height={22} /></span>
+          <span className="only-desk"><LocaleSwitch /></span>
           <span className="auth-switch only-desk t-small">
             <span className="ink-2">{signup ? t("have") : t("haveNot")}</span>{" "}
             <Link href={signup ? "/signin" : "/signup"} style={{ fontWeight: 700, color: "var(--link)" }}>{signup ? t("signinLink") : t("signupLink")}</Link>

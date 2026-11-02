@@ -63,7 +63,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, muted, onTogg
     if (verdict) setTimeout(() => onSound(verdict), VERDICT_DELAY);
   };
   const doHint = () => { onSound("hint-open"); commit({ state: E.hint(lesson, state) }); };
-  const doRetry = () => commit({ state: E.retry(state) });
+  const doRetry = () => commit({ state: E.retry(lesson, state) });
   const doReveal = () => { onSound("reveal-answer"); commit(E.reveal(lesson, state)); };
   const doNext = () => {
     const next = E.advance(lesson, state);
@@ -162,6 +162,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   const answerIds = step.type === "compare" ? [(step as CompareStep).answer] : (step as TuneStep).answer;
   const cls = (id: string) => {
     const picked = st.sel.includes(id);
+    if (st.phase === "answering" && (st.tried ?? []).includes(id)) return "is-dim";
     if (st.phase === "revealed") return answerIds.includes(id) ? "is-right" : "is-dim";
     if (st.phase === "right") return picked ? "is-right" : "is-dim";
     if (st.phase === "wrong" && picked && !(step.type === "compare" && (step as CompareStep).reason && st.reason.length)) return "is-wrong";
@@ -185,6 +186,8 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   const showMock = live && (mockOpen || step.type === "tune" || step.type === "compare");
   const reason = step.type === "compare" ? (step as CompareStep).reason : undefined;
   const ids = options.map((o) => o.id);
+  const tried = (id: string) => (st.tried ?? []).includes(id);
+  const firstOpen = options.findIndex((o) => !tried(o.id));
 
   return (
     <section className="player-grid">
@@ -220,9 +223,9 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
             return (
               <button
                 key={o.id} type="button" role="radio" data-id={o.id}
-                className={`choice press ${cls(o.id)}`} aria-checked={checked} aria-disabled={locked || undefined}
-                tabIndex={checked || (!st.sel.length && n === 0) ? 0 : -1}
-                onClick={() => !locked && onSelect(o.id)}
+                className={`choice press ${cls(o.id)}`} aria-checked={checked} aria-disabled={locked || tried(o.id) || undefined}
+                tabIndex={checked || (!st.sel.length && n === firstOpen) ? 0 : -1}
+                onClick={() => !locked && !tried(o.id) && onSelect(o.id)}
               >
                 <span className="key">{KEYS[locale][n]}</span>
                 <span className="grow">{o.text}</span>

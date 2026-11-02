@@ -3,6 +3,7 @@
 
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
+import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { useRouter } from "@/i18n/navigation";
 import { FOCUSES, GOALS, TIMES, type OnboardingInput } from "@/lib/onboarding";
@@ -63,6 +64,7 @@ export function Onboarding() {
         <div className="ob-bars" role="progressbar" aria-label={t("step", { n: step })} aria-valuenow={step} aria-valuemin={1} aria-valuemax={3}>
           {[1, 2, 3].map((n) => <span key={n} className={n <= step ? "on" : undefined} />)}
         </div>
+        <LocaleSwitch />
         <button type="button" className="btn btn-ghost btn-sm" style={{ paddingInline: 12 }} onClick={() => submit(true)} disabled={pending}>{t("skip")}</button>
       </header>
 
@@ -148,7 +150,7 @@ export function Onboarding() {
 
       <footer className="ob-foot">
         <div className="ob-foot-btns">
-          <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={step === 1 || pending}>{t("back")}</button>
+          {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}>{t("back")}</button> : null}
           <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("finish") : t("cont")}</button>
         </div>
       </footer>

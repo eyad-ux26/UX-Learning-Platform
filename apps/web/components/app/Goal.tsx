@@ -1,5 +1,5 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { lastDays } from "@/lib/progress";
+import { weekOf } from "@/lib/progress";
 
 export async function GoalRing({ done, goal, size = 52 }: { done: number; goal: number; size?: number }) {
   const t = await getTranslations("home");
@@ -23,7 +23,7 @@ export async function Week({ today, activeDays, small = false }: { today: string
   const fmt = new Intl.DateTimeFormat(locale, { weekday: "narrow", timeZone: "UTC" });
   return (
     <div className="week" aria-hidden="true">
-      {lastDays(today).map((d) => {
+      {weekOf(today, locale === "ar" ? 6 : 1).map((d) => {
         const state = d === today ? "today" : active.has(d) ? "done" : "next";
         return (
           <div key={d}>
