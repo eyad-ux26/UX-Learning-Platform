@@ -4,7 +4,7 @@ import crypto from "node:crypto";
 import yaml from "js-yaml";
 
 const CHOICE = ["choose", "words", "predict", "fix", "tune"];
-const STEP_TYPES = ["card", ...CHOICE, "compare", "sort", "order", "match", "spot"];
+const STEP_TYPES = ["card", "video", ...CHOICE, "compare", "sort", "order", "match", "spot"];
 const BANK_RE = /^P\d{2}-U\d{2}-B\d{2}-/;
 const readYaml = (f) => yaml.load(fs.readFileSync(f, "utf8"));
 
@@ -37,6 +37,17 @@ function checkMock(m, where, errors) {
 
 function checkStep(s, where, errors) {
   if (!STEP_TYPES.includes(s.type)) { errors.push(`${where}: step type "${s.type}" is not supported in this build`); return; }
+  if (s.type === "video") {
+    if (typeof s.video !== "string" || !s.video) errors.push(`${where}: video needs a video id`);
+    if (!(s.duration > 0)) errors.push(`${where}: video needs a duration in seconds`);
+    const tr = s.transcript ?? [];
+    if (!tr.length) errors.push(`${where}: video needs a transcript`);
+    tr.forEach((l, k) => {
+      if (typeof l.t !== "number" || (k > 0 && l.t <= tr[k - 1].t)) errors.push(`${where}: transcript times must increase`);
+      if (!isText(l)) errors.push(`${where}: transcript line ${k + 1} needs en and ar`);
+    });
+    return;
+  }
   if (s.type === "card") {
     if (!isText(s.body)) errors.push(`${where}: card needs body in en and ar`);
     checkMock(s.mock, where, errors);

@@ -87,8 +87,16 @@ export type SpotStep = QuestionBase & {
   regions: { id: string; label: Text }[];
   answer: string[];
 };
-export type Step = CardStep | ChooseStep | WordsStep | PredictStep | FixStep | TuneStep | CompareStep | SortStep | OrderStep | MatchStep | SpotStep;
-export type QuestionStep = Exclude<Step, CardStep>;
+/** A short clip. Not graded. `video` is the Bunny Stream video id; captions are drawn from `transcript`, so they exist in both languages. */
+export type VideoStep = StepBase & {
+  type: "video";
+  title?: Text;
+  video: string;
+  duration: number;
+  transcript: { t: number; en: string; ar: string }[];
+};
+export type Step = VideoStep | CardStep | ChooseStep | WordsStep | PredictStep | FixStep | TuneStep | CompareStep | SortStep | OrderStep | MatchStep | SpotStep;
+export type QuestionStep = Exclude<Step, CardStep | VideoStep>;
 
 export type Lesson = {
   id: string;

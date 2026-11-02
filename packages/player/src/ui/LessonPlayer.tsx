@@ -7,6 +7,7 @@ import { getCast } from "@uxgate/content/cast";
 import * as E from "../engine";
 import { faceSrc, sayFace } from "../say";
 import { MockView } from "./MockView";
+import { VideoStepView, type VideoSource } from "./VideoStepView";
 import { MatchAnswer, OrderAnswer, SortAnswer, SpotList } from "./Structured";
 import { Rich } from "./Rich";
 
@@ -34,6 +35,8 @@ export type PlayerProps = {
   saveStatus?: "saving" | "saved" | "offline";
   /** Sends "ask for a review". Resolves true when it was stored. Without it the link is hidden. */
   onReview?: (r: { stepId: string; answer: E.Answer; reason: string; note: string }) => Promise<boolean>;
+  /** Asks the app for a signed address for a clip. Without it video steps show the "could not load" state. */
+  videoSource?: (id: string) => Promise<VideoSource>;
   /** "Start over" in the welcome-back banner. Without it the banner has no button. */
   onStartOver?: () => void;
   /** The mastery round counts its steps in the header ("Question n of m"). */
@@ -42,7 +45,7 @@ export type PlayerProps = {
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -146,7 +149,9 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
       <main className="player-main">
         <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant === "mastery" ? t("masteryQ", { n: state.i + 1, total }) : part}</p>
 
-        {step.type === "card" ? (
+        {step.type === "video" ? (
+          <VideoStepView step={step} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
+        ) : step.type === "card" ? (
           <section className="player-col">
             {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : null}
             <Rich text={step.body} locale={locale} className="card-body" />
@@ -531,3 +536,4 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
 }
 
 export type { Step };
+export type { VideoSource };

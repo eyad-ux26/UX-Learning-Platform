@@ -74,6 +74,7 @@ By type:
 | Type | Fields | `when` in a misconception |
 | --- | --- | --- |
 | `card` | `title`, `body` | none |
+| `video` | `title`, `video` (Bunny Stream id), `duration` (seconds), `transcript` (list of `{ t, en, ar }`, `t` in seconds, increasing). Not graded. The captions are the transcript lines, so they exist in both languages. Never autoplays | none |
 | `choose`, `words`, `fix` | `options`, `answer: [ids]`, optional `multi`, `also_ok`, `reason` | `[option ids]`, matches if any was picked |
 | `predict` | as `choose`; with `any_ok: true` it's ungraded and needs `reveal`; `recall: S02` shows the learner's earlier answer | as `choose` |
 | `tune` | as `choose`, each option has a `mock`; `start` is the option previewed first | as `choose` |

@@ -54,7 +54,7 @@ export const XP = { independent: 10, supported: 5, revealed: 0, missed: 0 } as c
 export const MAX_HINTS = 2;
 export const REVEAL_AFTER_TRIES = 3;
 
-export const isQuestion = (s: Step): s is QuestionStep => s.type !== "card";
+export const isQuestion = (s: Step): s is QuestionStep => s.type !== "card" && s.type !== "video";
 
 /** Skill checks and the mastery round give one try per step: no hints, no retry. */
 export const isSingleTry = (lesson: Pick<Lesson, "mode">) => lesson.mode === "check" || lesson.mode === "bank";

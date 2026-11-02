@@ -78,6 +78,13 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     setTimeout(() => setState(fresh), 0);
   }, [key, lesson, hash]);
 
+  // A signed address for a clip, asked for when the step opens.
+  const videoSource = useCallback(async (id: string) => {
+    const res = await fetch(`/api/video/${encodeURIComponent(id)}`, { cache: "no-store" });
+    if (!res.ok) throw new Error(String(res.status));
+    return (await res.json()) as { src: string; kind: "hls" | "mp4" };
+  }, []);
+
   // Ask for a human review of a graded answer. Stored on the server for the admin side.
   const onReview = useCallback(async (r: { stepId: string; answer: { sel: string[]; reason?: string[] }; reason: string; note: string }) => {
     try {
@@ -113,6 +120,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       variant={variant} guest={guest} saveStatus={saveStatus}
       onReview={guest ? undefined : onReview}
       onStartOver={startOver}
+      videoSource={videoSource}
     />
     </>
   );

@@ -92,8 +92,8 @@ export function validate(paths) {
         for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
         const steps = l.steps || [];
         unique(steps.map((s) => s.id), lw);
-        const graded = steps.filter((s) => s.type !== "card" && !s.any_ok).length;
-        for (const s of steps.filter((s) => s.type !== "card" && !s.any_ok)) {
+        const graded = steps.filter((s) => s.type !== "card" && s.type !== "video" && !s.any_ok).length;
+        for (const s of steps.filter((s) => s.type !== "card" && s.type !== "video" && !s.any_ok)) {
           if (!skillIds.length) continue;
           if (!s.skill) errors.push(`${lw} ${s.id}: graded steps need a skill from unit.yaml`);
           else if (!versions[s.skill]) errors.push(`${lw} ${s.id}: unknown skill ${s.skill}`);
@@ -115,6 +115,12 @@ export function validate(paths) {
           if (s.speaker !== undefined) need(castIds.includes(s.speaker), `${sw}: unknown speaker ${s.speaker}`);
           if (s.type === "card") {
             need(s.body || s.mock, `${sw}: a card needs a body or a mock`);
+            continue;
+          }
+          if (s.type === "video") {
+            need(typeof s.video === "string" && s.video, `${sw}: a video needs a video id`);
+            need(s.duration > 0, `${sw}: a video needs a duration in seconds`);
+            need(Array.isArray(s.transcript) && s.transcript.length, `${sw}: a video needs a transcript`);
             continue;
           }
           need(s.prompt, `${sw}: prompt is required`);
