@@ -72,7 +72,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
                 <span className="you-cursor"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 3l16 7-7 2.5L10 20z" fill="#F59E2B" stroke="#fff" strokeWidth="1.6" strokeLinejoin="round" /></svg><span className="you-tag">{t("you")}</span></span>
               </span>
               <p className="t-small ink-2 try-it"><span className="ph ph-cursor" />{t("tryIt")}</p>
-              <span className="btn btn-primary btn-block is-disabled">{t("check")}</span>
+              <button type="button" disabled tabIndex={-1} className="btn btn-primary btn-block">{t("check")}</button>
             </div>
             <div className="comment preview-hint" aria-hidden="true"><span className="pin"><span className="ph ph-bulb-fill" /></span><span className="t-small">{t("previewHint")}</span></div>
           </div>
