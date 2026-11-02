@@ -21,7 +21,7 @@ const RENAME = {
 };
 
 // Icons the app needs that the design canvas does not use (yet).
-const EXTRA = ["ph-eye-slash"];
+const EXTRA = ["ph-eye-slash", "ph-arrow-counter-clockwise", "ph-arrows-clockwise", "ph-circle", "ph-closed-captioning", "ph-cloud-arrow-up", "ph-cloud-check", "ph-dots-six-vertical", "ph-hand-waving", "ph-list-bullets", "ph-paper-plane-tilt", "ph-radio-button-fill", "ph-seal-check", "ph-warning-circle"];
 const names = [...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]).concat(EXTRA);
 const rules = names.map((cls) => {
   let base = cls.slice(3);

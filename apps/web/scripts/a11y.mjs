@@ -6,12 +6,12 @@ import AxeBuilder from "@axe-core/playwright";
 const { chromium } = createRequire(import.meta.url)("playwright-core"); // comes with @axe-core/playwright; the browser is installed by `npx playwright-core install chromium`
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/profile", "/app/lesson/P01-U01-L01"];
+const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video"];
 const views = [
   ["en", "light", { width: 1440, height: 900 }],
   ["ar", "dark", { width: 390, height: 844 }],
 ];
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });
 let bad = 0;
 for (const [locale, scheme, viewport] of views) {
   for (const p of pages) {

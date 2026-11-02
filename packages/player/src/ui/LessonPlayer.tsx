@@ -37,6 +37,8 @@ export type PlayerProps = {
   onReview?: (r: { stepId: string; answer: E.Answer; reason: string; note: string }) => Promise<boolean>;
   /** Asks the app for a signed address for a clip. Without it video steps show the "could not load" state. */
   videoSource?: (id: string) => Promise<VideoSource>;
+  /** A short message from the app (for example "every answer is synced"), shown as a toast. */
+  notice?: string | null;
   /** "Start over" in the welcome-back banner. Without it the banner has no button. */
   onStartOver?: () => void;
   /** The mastery round counts its steps in the header ("Question n of m"). */
@@ -45,7 +47,7 @@ export type PlayerProps = {
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource, notice }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -205,7 +207,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
           return ok;
         }} />
       ) : null}
-      {toast ? <p className="lp-toast" role="status">{toast}</p> : null}
+      {toast || notice ? <p className="lp-toast" role="status">{toast ?? notice}</p> : null}
     </div>
   );
 }

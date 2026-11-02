@@ -93,6 +93,20 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     } catch { return false; }
   }, [lesson.id, hash]);
 
+  // After a stretch offline, say once that everything reached the server.
+  const [notice, setNotice] = useState<string | null>(null);
+  const wasOffline = useRef(false);
+  useEffect(() => {
+    if (guest) return;
+    if (!sync.online) { wasOffline.current = true; return; }
+    if (wasOffline.current && sync.pending === 0) {
+      wasOffline.current = false;
+      setNotice(t("synced"));
+      const id = setTimeout(() => setNotice(null), 4000);
+      return () => clearTimeout(id);
+    }
+  }, [guest, sync.online, sync.pending, t]);
+
   const saveStatus = useMemo(() => {
     if (guest) return undefined;
     if (!sync.online) return "offline" as const;
@@ -104,7 +118,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} onContinue={() => leave(`/app`)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} onContinue={leave} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} />;
   }
 
   return (
@@ -120,7 +134,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       variant={variant} guest={guest} saveStatus={saveStatus}
       onReview={guest ? undefined : onReview}
       onStartOver={startOver}
-      videoSource={videoSource}
+      videoSource={videoSource} notice={notice}
     />
     </>
   );

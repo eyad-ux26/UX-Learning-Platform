@@ -5,7 +5,7 @@ const { chromium } = createRequire(import.meta.url)("playwright-core");
 
 const base = process.argv[2] ?? "http://localhost:3100";
 const locale = process.argv[3] ?? "en";
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });
 const page = await (await browser.newContext({ viewport: { width: Number(process.env.W ?? 1440), height: Number(process.env.H ?? 900) } })).newPage();
 await page.goto(`${base}/${locale}/app/lesson/P01-U01-L01`);
 await page.waitForSelector(".ug");

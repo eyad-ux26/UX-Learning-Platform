@@ -110,9 +110,9 @@ export function MatchAnswer({ step, st, locale, t, onChange }: Props<MatchStep>)
   const tapRight = (r: string) => {
     if (!open(st)) return;
     const owner = leftOf(r);
-    if (owner) { unpair(owner); return; }
-    if (!leftHeld) return;
-    onChange([...st.sel.filter((v) => pairOf(v)[0] !== leftHeld), `${leftHeld}:${r}`]);
+    // Holding an item: pair it here, taking this tile over from its earlier partner if it had one. Holding nothing: a paired tile is undone.
+    if (!leftHeld) { if (owner) unpair(owner); return; }
+    onChange([...st.sel.filter((v) => pairOf(v)[0] !== leftHeld && pairOf(v)[1] !== r), `${leftHeld}:${r}`]);
     setLeftHeld(null);
   };
   const ok = (l: string) => (judged(st) ? step.answer[l] === rightOf(l) : null);

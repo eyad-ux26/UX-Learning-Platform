@@ -5,7 +5,7 @@ import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 
-export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; onContinue: () => void }) {
+export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void }) {
   const t = useTranslations("end");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
   // A skill counts as practised once a step on it was answered (not just shown).
@@ -29,6 +29,7 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
             <p className="t-body ink-2">{t("sub", { count: sum.questions, minutes })}</p>
             {replay ? <p className="t-small replay-note"><span className="ph ph-review" aria-hidden="true" />{replay === "paid" ? t("replayHalf") : t("replayNone")}</p> : null}
           </div>
+          {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{t("syncLater")}</p> : null}
           <div className="end-stats">
             <div className="stat-tile stat-xp pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr big" data-testid="xp">+{sum.xp} XP</span><span className="lbl">{t("xpLabel")}</span></div>
             <div className="stat-tile pop"><span className="ph ph-target" aria-hidden="true" /><span className="num ltr big" data-testid="first-try">{sum.independent}/{sum.questions}</span><span className="lbl ink-2">{t("firstTry")}</span></div>

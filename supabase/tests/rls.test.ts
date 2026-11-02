@@ -129,6 +129,38 @@ describe("answers and XP can only be written by the server", () => {
   });
 });
 
+describe("review requests", () => {
+  const insert = `insert into review_requests (user_id, lesson_id, step_id, answer, reason, note) values ($1, 'P01-U01-L01', 'S02', '{"sel":["x"]}', 'answer_works', 'because') returning id`;
+  it("only the server writes them; a learner cannot insert, edit or delete", async () => {
+    await expect(as("authenticated", A, insert, [A])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", A, `update review_requests set status = 'accepted'`)).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", A, `delete from review_requests`)).rejects.toThrow(/permission denied/);
+  });
+  it("a learner reads only their own, and anon reads none", async () => {
+    await db.query(insert, [A]); await db.query(insert, [B]);
+    const rows = await as<{ user_id: string }>("authenticated", A, `select user_id from review_requests`);
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((r) => r.user_id === A)).toBe(true);
+    await expect(as("anon", null, `select * from review_requests`)).rejects.toThrow(/permission denied/);
+  });
+  it("the reason must be one of four and the note at most 280 characters", async () => {
+    await expect(db.query(`insert into review_requests (user_id, lesson_id, step_id, answer, reason) values ($1, 'P01-U01-L01', 'S02', '{}', 'whatever')`, [A])).rejects.toThrow();
+    await expect(db.query(`insert into review_requests (user_id, lesson_id, step_id, answer, reason, note) values ($1, 'P01-U01-L01', 'S02', '{}', 'other', $2)`, [A, "x".repeat(281)])).rejects.toThrow();
+  });
+});
+
+describe("mastery rounds", () => {
+  it("a bank can be stored as a lesson and a mastery attempt can carry its plan; a missed step can be scored", async () => {
+    await db.transaction(async (tx) => {
+      await tx.exec(`insert into lessons (id, unit_id, mode, sort) values ('P01-U01-B01', 'P01-U01', 'bank', 100); insert into content_versions (lesson_id, hash, body) values ('P01-U01-B01', 'hb', '{}');`);
+      const v = (await tx.query<{ id: string }>(`select id from content_versions where lesson_id = 'P01-U01-B01'`)).rows[0].id;
+      const att = (await tx.query<{ id: string }>(`insert into attempts (client_attempt_id, user_id, lesson_id, content_version_id, kind, plan) values ('m1', $1, 'P01-U01-B01', $2, 'mastery', '["S01","S02"]') returning id`, [A, v])).rows[0].id;
+      expect((await tx.query(`insert into xp_events (user_id, attempt_id, step_id, outcome, amount) values ($1, $2, 'S01', 'missed', 0) returning id`, [A, att])).rows).toHaveLength(1);
+      await tx.rollback();
+    });
+  });
+});
+
 describe("content", () => {
   it("visitors read published content only", async () => {
     expect((await as<{ id: string }>("anon", null, `select id from paths`)).map((r) => r.id)).toEqual(["P01"]);
