@@ -73,7 +73,7 @@ export function Onboarding() {
         <button type="button" className="btn btn-ghost btn-sm" style={{ paddingInline: 12 }} onClick={() => submit(true)} disabled={pending}>{t("skip")}</button>
       </header>
 
-      <div className="ob-main">
+      <div className="ob-main" data-side={step === 2 ? "1" : undefined}>
         <main className="ob-body">
           <p className="t-over num" style={{ color: "var(--link)" }}>{t("step", { n: step })}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBlockStart: -6 }}>
@@ -162,7 +162,7 @@ export function Onboarding() {
         ) : null}
       </div>
 
-      <footer className="ob-foot">
+      <footer className="ob-foot" data-side={step === 2 ? "1" : undefined}>
         <div className="ob-foot-btns">
           {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}><span className="ph ph-arrow back only-desk" aria-hidden="true" />{t("back")}</button> : null}
           <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus && !pathChoice)}>{step === 3 ? t("startLearning") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
