@@ -1,6 +1,6 @@
 # Slice 4: account, notifications and public pages
 
-Live boards: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx, page "8 · Slice 4 · Account and public" (canvas v52, reviewed by the PM, 10 rows and the moments board). Each row shows every state of one part in four frames: mobile 390 English light, mobile 390 Arabic night, desktop 1440 English light and desktop 1440 Arabic night (desktop shown at half size). Email rows show a 390 phone and a 760 desktop mail window instead; public path pages are shown at full length. The five components below are on "Screen parts" and are clickable there.
+Live boards: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx, page "8 · Slice 4 · Account and public" (canvas v53, reviewed by the PM, 10 rows and the moments board). Each row shows every state of one part in four frames: mobile 390 English light, mobile 390 Arabic night, desktop 1440 English light and desktop 1440 Arabic night (desktop shown at half size). Email rows show a 390 phone and a 760 desktop mail window instead; public path pages are shown at full length. The five components below are on "Screen parts" and are clickable there.
 
 Brief: `delivery/sprint-4/design-brief.md` in project files. Styles are in `../system/uxgate.css`, in the block that starts with "Slice 4". Same tokens, Cairo and Titillium Web, no loss-framed copy, `[PRICE]`, `[DATE]` and `[TIME]` stay placeholders.
 
@@ -13,7 +13,7 @@ All take `lang` (`en`, `ar`), `theme` (`light`, `dark`), `device` (`mobile` 390�
 | `view` | What it shows |
 | --- | --- |
 | `settings`, `settingsMore` | Settings as one list on a phone (the second view is the same list scrolled), two columns on desktop. Account; language, theme (System, Light, Dark), daily goal (1, 2, 3 lessons), the daily reminder with the same picker as onboarding and Profile (`remVals` is a copy of ProfilePages, keep them in step), sound; notification choices; sharing switches for the achievement page and the leaderboard (both off by default); your data; help, privacy, terms; sign out |
-| `notifs`, `notifsBlocked` | Notification choices as kind × channel (In app, Email, Push). Five kinds: daily reminder (one a day at most), review due, badges and certificates, answers to your requests, billing (email always on). The push column turns off when push is off or blocked in the browser, with how to fix it |
+| `notifs`, `notifsBlocked` | Notification choices as kind × channel (In app, Email, Push). Five kinds: daily reminder (one a day at most), review due, badges and certificates, answers to your requests, billing (email always on). The push column turns off when push is off or blocked in the browser, with how to fix it. Changes are not kept until the learner presses Save changes; a bar at the bottom counts unsaved changes, Cancel puts every switch back, and both buttons stay disabled while nothing has changed (`notifs` shows one unsaved change, `notifsBlocked` shows none) |
 | `data` | Download my data as one JSON file (what it holds) and Delete my account |
 | `deleteAsk` | What happens first (signed out everywhere, removed within 30 days and "sign in before <date> to undo", shared links stop, a subscription stops renewing), "Download your data first", one tick to confirm, then the red button. "Keep my account" is the easy way out |
 | `deleteDone` | Signed out, removal scheduled for a date, and "Sign in before <date> to undo" (the same line is in the deletion email) |
@@ -40,7 +40,7 @@ Takes `pageh` for the full-length path pages.
 | `path` | Interactive path page (Forms That Flow): facts, what you will be able to do, units with Unit 1 free, a sample step the visitor can answer and check without an account, how the path teaches, the `[PRICE]` band, footer |
 | `pathHybrid` | Hybrid path page (Patterns That Fit): the same page with a sample clip and the clip-then-practice explanation |
 | `pathSoon` | Coming soon path (Make UX Accessible): says it is not open yet and points to paths that are |
-| `privacy`, `privacyToc`, `terms` | Reading pages with last updated `[DATE]`, the other language, and a table of contents (a collapsible button on a phone, a side list on desktop). The text is SAMPLE TEXT from the spec; the final text comes from the admins |
+| `privacy`, `privacyToc`, `terms` | Reading pages with last updated `[DATE]`, the other language, and a table of contents (a collapsible button on a phone, a side list on desktop). The text is a suggested draft in English and Arabic, with placeholders such as `[COMPANY LEGAL NAME]` and `[GOVERNING LAW]`. It is not legal advice: the admins review it, fill the placeholders and have it checked before launch. The full draft and the open decisions are in the doc "UXGate privacy policy and terms · draft for review" (https://claude.ai/artifact/7J7vyELaFbJkptMRc13zBc) |
 
 ### `SystemPages.dc.html`
 

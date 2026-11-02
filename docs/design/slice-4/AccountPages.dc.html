@@ -171,6 +171,13 @@ a{color:#005F99}a:hover{color:#003F66}
           </aside>
         </div>
       </main>
+      <footer class="save-bar">
+        <span class="grow" role="status"><span class="{{saveIcon}}" aria-hidden="true"></span>{{saveMsg}}</span>
+        <div class="acts">
+          <button class="btn btn-secondary press" type="button" onClick="{{cancelCells}}" disabled="{{noChanges}}">{{c.cancel}}</button>
+          <button class="btn btn-primary press" type="button" onClick="{{saveCells}}" disabled="{{noChanges}}">{{c.saveChanges}}</button>
+        </div>
+      </footer>
     </sc-if>
 
     <!-- ============ Your data: download, delete ============ -->
@@ -263,7 +270,7 @@ const C = {
     secData: 'Your data', download: 'Download my data', downloadSub: 'One JSON file', delete: 'Delete my account',
     secHelp: 'Help', helpLong: 'Help and support', privacy: 'Privacy policy', terms: 'Terms of use', signOut: 'Sign out', version: 'UXGate · version 1.0',
     /* notification choices */
-    nLead: 'Choose how each kind reaches you. Turn off anything you don’t want.', nKind: 'Kind', chans: [['ph ph-app-window', 'In app'], ['ph ph-mail', 'Email'], ['ph ph-device-mobile', 'Push']],
+    nLead: 'Choose how each kind reaches you. Turn off anything you don’t want.', saveChanges: 'Save changes', unsaved: (n) => n === 1 ? '1 change not saved' : n + ' changes not saved', noUnsaved: 'No changes yet', savedMsg: 'Changes saved', nKind: 'Kind', chans: [['ph ph-app-window', 'In app'], ['ph ph-mail', 'Email'], ['ph ph-device-mobile', 'Push']],
     kinds: [['Daily reminder', 'At 8:00 PM, one a day at most'], ['Review due', 'Skills ready to check again'], ['Badges and certificates', 'When you earn one'], ['Answers to your requests', 'When the team replies'], ['Billing', 'Receipts and payment problems']],
     always: 'Always sent by email', on: 'on', off: 'off',
     pushHereT: 'Push is on for this device', pushHereB: 'Chrome on Windows. Each device asks once.',
@@ -298,7 +305,7 @@ const C = {
     secSharing: 'المشاركة', pubTitle: 'صفحة الإنجازات', pubOff: 'متوقّفة · أنت فقط ترى تقدّمك', boardTitle: 'لوحة الصدارة الأسبوعية', boardOff: 'متوقّفة · انضم لتقارن نقاطك الأسبوعية',
     secData: 'بياناتك', download: 'نزّل بياناتي', downloadSub: 'ملف JSON واحد', delete: 'احذف حسابي',
     secHelp: 'المساعدة', helpLong: 'المساعدة والدعم', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام', signOut: 'تسجيل الخروج', version: 'UXGate · الإصدار 1.0',
-    nLead: 'اختر كيف يصلك كل نوع، وأوقف ما لا تريده.', nKind: 'النوع', chans: [['ph ph-app-window', 'التطبيق'], ['ph ph-mail', 'البريد'], ['ph ph-device-mobile', 'الجهاز']],
+    nLead: 'اختر كيف يصلك كل نوع، وأوقف ما لا تريده.', saveChanges: 'احفظ التغييرات', unsaved: (n) => n === 1 ? 'تغيير واحد لم يُحفظ' : (n === 2 ? 'تغييران لم يُحفظا' : n + ' تغييرات لم تُحفظ'), noUnsaved: 'لا تغييرات بعد', savedMsg: 'حُفظت التغييرات', nKind: 'النوع', chans: [['ph ph-app-window', 'التطبيق'], ['ph ph-mail', 'البريد'], ['ph ph-device-mobile', 'الجهاز']],
     kinds: [['التذكير اليومي', 'الساعة 8:00 م، مرة واحدة يوميًا على الأكثر'], ['موعد المراجعة', 'مهارات جاهزة لتتحقّق منها مجددًا'], ['الشارات والشهادات', 'عندما تحصل على واحدة'], ['الردود على طلباتك', 'عندما يردّ الفريق'], ['الفواتير', 'الإيصالات ومشكلات الدفع']],
     always: 'يُرسل بالبريد دائمًا', on: 'يعمل', off: 'متوقّف',
     pushHereT: 'إشعارات الجهاز تعمل هنا', pushHereB: 'Chrome على Windows. كل جهاز يسألك مرة واحدة.',
@@ -340,7 +347,7 @@ const remVals = (self, t, open) => {
 };
 
 class Component extends DCLogic {
-  constructor(props) { super(props); this.state = { rem: true, h: 8, m: 0, p: 1, open: null, sound: true, themePick: 0, goal: 2, cells: null, confirm: null, asked: false }; }
+  constructor(props) { super(props); this.state = { rem: true, h: 8, m: 0, p: 1, open: null, sound: true, themePick: 0, goal: 2, cells: null, base: null, saved: false, confirm: null, asked: false }; }
   renderVals() {
     const lang = this.props.lang === 'ar' ? 'ar' : 'en';
     const theme = this.props.theme === 'dark' ? 'dark' : 'light';
@@ -360,14 +367,17 @@ class Component extends DCLogic {
     const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
     const open = s.open === null ? false : s.open;
 
-    const cells = s.cells || DEFAULTS.map((r) => r.slice());
+    const base = s.base || DEFAULTS.map((r) => r.slice());
+    // The notifs board opens with one unsaved change (Review due by email), so Save and Cancel show their active state.
+    const cells = s.cells || (view === 'notifs' && !s.base ? base.map((r, i) => r.map((v, j) => (i === 1 && j === 1 ? 1 : v))) : base.map((r) => r.slice()));
+    let changes = 0; cells.forEach((r, i) => r.forEach((v, j) => { if (v !== base[i][j]) changes += 1; }));
     const pushOff = pushState !== 'on';
     const kinds = c.kinds.map(([label, sub], i) => ({ label, sub, cls: 'nmx-k' + (i === c.kinds.length - 1 ? ' nmx-last' : ''),
       cells: [0, 1, 2].map((j) => {
         const v = cells[i][j]; const lock = v === 'lock'; const dis = j === 2 && pushOff; const isOn = !lock && !!v && !dis;
         return { lock, box: !lock, on: isOn ? 'true' : 'false', wrap: i === c.kinds.length - 1 ? 'nmx-last' : '',
           cls: 'check' + (isOn ? ' is-on' : '') + (dis ? ' is-disabled' : ''), aria: label + ', ' + c.chans[j][1] + ', ' + (isOn ? c.on : c.off),
-          toggle: () => { if (lock || dis) return; const nx = cells.map((r) => r.slice()); nx[i][j] = v ? 0 : 1; this.setState({ cells: nx }); } };
+          toggle: () => { if (lock || dis) return; const nx = cells.map((r) => r.slice()); nx[i][j] = v ? 0 : 1; this.setState({ cells: nx, saved: false }); } };
       }) }));
     const pushNote = pushState === 'on' ? { icon: 'ph ph-check-circle-fill', title: c.pushHereT, body: c.pushHereB, act: false }
       : pushState === 'blocked' ? { icon: 'ph ph-bell-slash', title: c.pushBlockT, body: c.pushBlockB, act: false }
@@ -394,6 +404,10 @@ class Component extends DCLogic {
       pushLine: pushState === 'on' ? c.pushOn : c.pushOff,
       chans: c.chans.map(([icon, label]) => ({ icon, label })), kinds, pushNote,
       splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px; max-width: 1080px;' : '', asideStyle: isDesk ? '' : 'display: none;',
+      noChanges: changes === 0, saveMsg: changes ? c.unsaved(changes) : (s.saved ? c.savedMsg : c.noUnsaved),
+      saveIcon: changes ? 'ph ph-pencil' : (s.saved ? 'ph ph-check-circle-fill' : 'ph ph-check'),
+      saveCells: () => this.setState({ base: cells.map((r) => r.slice()), cells: null, saved: true }),
+      cancelCells: () => this.setState({ base: base.map((r) => r.slice()), cells: null, saved: false }),
       confirmCls: 'confirm' + (confirm ? ' is-on' : ''), confirmOn: confirm ? 'true' : 'false', confirmChk: confirm ? 'is-on' : '', toggleConfirm: () => this.setState({ confirm: !confirm }),
       delGoCls: 'btn btn-wrong btn-lg btn-block press' + (confirm ? '' : ' is-disabled'), delGoOff: confirm ? 'false' : 'true',
       toastStyle: isDesk ? 'position: absolute; z-index: 6; left: 50%; width: 520px; margin-left: -260px; bottom: 40px;' : 'position: absolute; z-index: 6; inset-inline: 16px; bottom: 24px;',
