@@ -27,8 +27,8 @@ describe("content seed SQL", () => {
     await db.exec(sql);
     const count = async (t: string) => Number((await db.query<{ n: string }>(`select count(*)::int as n from ${t}`)).rows[0].n);
     expect(await count("paths")).toBe(bundle.paths.length);
-    expect(await count("lessons")).toBe(bundle.lessons.length);
-    expect(await count("content_versions")).toBe(bundle.lessons.length);
+    expect(await count("lessons")).toBe(bundle.lessons.length + bundle.banks.length);
+    expect(await count("content_versions")).toBe(bundle.lessons.length + bundle.banks.length);
     const body = (await db.query<{ body: { id: string } }>(`select body from content_versions where lesson_id = 'P01-U01-L01'`)).rows[0].body;
     expect(body.id).toBe("P01-U01-L01");
   }, 30_000);

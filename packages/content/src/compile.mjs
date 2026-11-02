@@ -3,8 +3,8 @@ import path from "node:path";
 import crypto from "node:crypto";
 import yaml from "js-yaml";
 
-const STEP_TYPES = ["card", "choose", "tune", "compare"];
-const CHOICE = ["choose", "tune"];
+const CHOICE = ["choose", "words", "predict", "fix", "tune"];
+const STEP_TYPES = ["card", ...CHOICE, "compare", "sort", "order", "match", "spot"];
 const BANK_RE = /^P\d{2}-U\d{2}-B\d{2}-/;
 const readYaml = (f) => yaml.load(fs.readFileSync(f, "utf8"));
 
@@ -48,6 +48,33 @@ function checkStep(s, where, errors) {
   for (const h of s.hints ?? []) if (!isText(h)) errors.push(`${where}: hint needs en and ar`);
   if ((s.hints ?? []).length > 2) errors.push(`${where}: at most 2 hints`);
   checkMock(s.mock, where, errors);
+  if (s.any_ok) errors.push(`${where}: ungraded predictions are not supported (predict is always graded)`);
+  const idsOf = (a) => (a ?? []).map((x) => x.id);
+  const subset = (xs, all, label) => { for (const x of [].concat(xs ?? [])) if (!all.includes(x)) errors.push(`${where}: ${label} names unknown id ${x}`); };
+  for (const o of [...(s.items ?? []), ...(s.left ?? []), ...(s.right ?? []), ...(s.buckets ?? [])]) {
+    if (!isText(o.text ?? o.title)) errors.push(`${where}: ${o.id} needs en and ar`);
+  }
+  if (s.type === "sort") {
+    const items = idsOf(s.items), buckets = idsOf(s.buckets);
+    const placed = Object.values(s.answer ?? {}).flat();
+    subset(Object.keys(s.answer ?? {}), buckets, "answer");
+    if (placed.length !== items.length || !items.every((i) => placed.includes(i))) errors.push(`${where}: sort answer must place every item once`);
+  }
+  if (s.type === "order") {
+    const items = idsOf(s.items);
+    for (const o of [s.answer, ...(s.also_ok ?? []).map((a) => a.answer)]) if (!Array.isArray(o) || o.length !== items.length || !items.every((i) => o.includes(i))) errors.push(`${where}: every order must list every item once`);
+  }
+  if (s.type === "match") {
+    const left = idsOf(s.left), right = idsOf(s.right);
+    if (Object.keys(s.answer ?? {}).length !== left.length) errors.push(`${where}: match answer must pair every left item`);
+    subset(Object.keys(s.answer ?? {}), left, "answer"); subset(Object.values(s.answer ?? {}), right, "answer");
+  }
+  if (s.type === "spot") {
+    const regions = idsOf(s.regions);
+    if (!s.mock) errors.push(`${where}: spot needs a mock`);
+    subset(s.answer, regions, "answer");
+    for (const r of s.regions ?? []) if (!isText(r.label)) errors.push(`${where}: region ${r.id} needs a label in en and ar`);
+  }
   if (CHOICE.includes(s.type)) {
     const ids = (s.options ?? []).map((o) => o.id);
     if (new Set(ids).size !== ids.length) errors.push(`${where}: duplicate option ids`);
@@ -67,8 +94,8 @@ function checkStep(s, where, errors) {
 
 // The scenario characters, from cast.yaml next to the paths. Each tells the scenarios of a lesson in first person.
 function loadCast(dir, errors) {
-  const file = path.join(dir, "cast.yaml");
-  if (!fs.existsSync(file)) return [];
+  const file = [path.join(dir, "cast.yaml"), path.join(dir, "..", "cast.yaml")].find((f) => fs.existsSync(f));
+  if (!file) return [];
   return (readYaml(file) ?? []).map((c) => {
     if (!c?.id || !isText(c.name) || !isText(c.role)) errors.push(`cast.yaml: ${c?.id ?? "an entry"} needs id, name and role in en and ar`);
     return { id: c.id, en: c.name?.en, ar: c.name?.ar, role_en: c.role?.en, role_ar: c.role?.ar };
@@ -79,7 +106,7 @@ export function compileTree(dir) {
   const errors = [];
   const cast = loadCast(dir, errors);
   const castIds = cast.map((c) => c.id);
-  const bundle = { cast, paths: [], units: [], lessons: [] };
+  const bundle = { cast, paths: [], units: [], lessons: [], banks: [] };
   for (const p of fs.readdirSync(dir).sort()) {
     const pDir = path.join(dir, p);
     if (!fs.statSync(pDir).isDirectory()) continue;
@@ -91,7 +118,9 @@ export function compileTree(dir) {
       const uDir = path.join(pDir, u);
       if (!fs.statSync(uDir).isDirectory()) continue;
       const unit = readYaml(path.join(uDir, "unit.yaml"));
-      const files = fs.readdirSync(uDir).filter((f) => f.endsWith(".yaml") && f !== "unit.yaml" && !BANK_RE.test(f)).sort();
+      const all = fs.readdirSync(uDir).filter((f) => f.endsWith(".yaml") && f !== "unit.yaml").sort();
+      const files = all.filter((f) => !BANK_RE.test(f));
+      const bankFiles = all.filter((f) => BANK_RE.test(f));
       const lessonIds = [];
       files.forEach((f, order) => {
         const raw = readYaml(path.join(uDir, f));
@@ -112,6 +141,23 @@ export function compileTree(dir) {
         body.steps.forEach((s) => { if (s.skill && !skills.has(s.skill)) errors.push(`${where}/${s.id}: unknown skill ${s.skill}`); });
         lessonIds.push(body.id);
         bundle.lessons.push({ lessonId: body.id, unitId: unit.id, pathId: pathDoc.id, order, mode: body.mode, minutes: body.minutes, hash: crypto.createHash("sha256").update(canonical(body)).digest("hex"), body });
+      });
+      // Re-test banks: held-back steps for the mastery round. Same step checks; the player picks the steps it needs.
+      bankFiles.forEach((f, order) => {
+        const raw = readYaml(path.join(uDir, f));
+        const where = raw.id;
+        if (f.split("-").slice(0, 3).join("-") !== raw.id) errors.push(`${where}: id must match file name ${f}`);
+        if (raw.mode !== "bank") errors.push(`${where}: a bank needs mode: bank`);
+        const body = resolveRefs(raw, fixtures, errors, where);
+        delete body.sources;
+        for (const s of body.steps) {
+          if (s.speaker !== undefined && !castIds.includes(s.speaker)) errors.push(`${where}/${s.id}: unknown speaker ${s.speaker}`);
+          if (s.scenario && (s.speaker ?? body.speaker)) s.speaker = s.speaker ?? body.speaker;
+          checkStep(s, `${where}/${s.id}`, errors);
+          if (s.type === "card") errors.push(`${where}/${s.id}: a bank holds graded steps only`);
+          if (s.skill && !(unit.skills ?? []).some((k) => k.id === s.skill)) errors.push(`${where}/${s.id}: unknown skill ${s.skill}`);
+        }
+        bundle.banks.push({ lessonId: body.id, unitId: unit.id, pathId: pathDoc.id, order: 100 + order, mode: "bank", minutes: 0, hash: crypto.createHash("sha256").update(canonical(body)).digest("hex"), body });
       });
       bundle.units.push({ id: unit.id, pathId: pathDoc.id, title: unit.title, skill: unit.skill, free: !!unit.free, skills: unit.skills ?? [], lessons: lessonIds });
     }

@@ -54,12 +54,45 @@ export type CompareStep = QuestionBase & {
   answer: "a" | "b";
   reason?: ReasonQuestion;
 };
-export type Step = CardStep | ChooseStep | TuneStep | CompareStep;
+/** words, predict and fix play exactly like choose: one option (or several with multi). */
+export type WordsStep = Omit<ChooseStep, "type"> & { type: "words" };
+export type PredictStep = Omit<ChooseStep, "type"> & { type: "predict" };
+export type FixStep = Omit<ChooseStep, "type"> & { type: "fix" };
+/** Items go into buckets: `answer` maps a bucket id to the item ids that belong in it. */
+export type SortStep = QuestionBase & {
+  type: "sort";
+  items: { id: string; text: Text }[];
+  buckets: { id: string; title: Text }[];
+  answer: Record<string, string[]>;
+};
+/** `items` come in their starting order; the learner moves them up and down. `answer` is the right order of ids. */
+export type OrderStep = QuestionBase & {
+  type: "order";
+  items: { id: string; text: Text; kind?: string; emphasis?: string }[];
+  answer: string[];
+  onscreen?: boolean;
+  caption?: Text;
+  also_ok?: { answer: string[]; feedback: Text }[];
+};
+/** `answer` maps a left id to its right id. */
+export type MatchStep = QuestionBase & {
+  type: "match";
+  left: { id: string; text: Text }[];
+  right: { id: string; text: Text }[];
+  answer: Record<string, string>;
+};
+/** The learner taps a `region` of the mock (or picks it from the list). */
+export type SpotStep = QuestionBase & {
+  type: "spot";
+  regions: { id: string; label: Text }[];
+  answer: string[];
+};
+export type Step = CardStep | ChooseStep | WordsStep | PredictStep | FixStep | TuneStep | CompareStep | SortStep | OrderStep | MatchStep | SpotStep;
 export type QuestionStep = Exclude<Step, CardStep>;
 
 export type Lesson = {
   id: string;
-  mode: "lesson" | "check";
+  mode: "lesson" | "check" | "bank";
   minutes: number;
   title: Text;
   speaker?: string;
@@ -70,6 +103,7 @@ export type LessonVersion = { lessonId: string; unitId: string; pathId: string; 
 export type Skill = { id: string; title: Text; can_do: Text };
 export type UnitMeta = { id: string; pathId: string; title: Text; skill: Text; free: boolean; skills: Skill[]; lessons: string[] };
 export type PathMeta = { id: string; title: Text; subtitle: Text };
-export type Bundle = { cast: CastMember[]; paths: PathMeta[]; units: UnitMeta[]; lessons: LessonVersion[] };
+/** `lessons` are the playable lessons; `banks` hold each unit's held-back re-test steps for the mastery round (mode "bank"). */
+export type Bundle = { cast: CastMember[]; paths: PathMeta[]; units: UnitMeta[]; lessons: LessonVersion[]; banks: LessonVersion[] };
 
 export type CastMember = { id: string; en: string; ar: string; role_en: string; role_ar: string; age?: string };
