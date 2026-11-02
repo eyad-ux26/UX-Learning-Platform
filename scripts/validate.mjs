@@ -1,13 +1,14 @@
 // Checks every path, unit and lesson against the content format in docs/content-format.md.
 // Exits with code 1 when anything is wrong, so CI and the preview build stop on bad content.
 import path from "node:path";
-import { loadContent, resolveRefs, scenarioOf, CHOICE_TYPES, STEP_TYPES } from "./lib/content.mjs";
+import { loadContent, loadCast, resolveRefs, scenarioOf, CHOICE_TYPES, STEP_TYPES } from "./lib/content.mjs";
 
 const PARTS = ["hook", "try", "concept", "guided", "contrast", "independent", "recap", "check", "retest"];
 const RULE_RE = /^(R(0[1-9]|[1-3]\d|40)|U(0[1-9]|[1-5]\d|60))$/;
 const MC_RE = /^MC-P\d{2}-\d{3}$/;
 
 export function validate(paths) {
+  const castIds = loadCast().map((c) => c.id);
   const errors = [];
   const warnings = [];
 
@@ -84,6 +85,10 @@ export function validate(paths) {
         need(l.title && (bank || l.minutes), `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
         checkText(l, lw);
+        // Every scenario is told by a cast member: the lesson's speaker, or a step's own.
+        if (l.speaker !== undefined) need(castIds.includes(l.speaker), `${lw}: unknown speaker ${l.speaker}`);
+        const told = (l.steps || []).filter((s) => s.part === "hook" || s.scenario);
+        if (told.some((s) => !(s.speaker || l.speaker))) warnings.push(`${lw}: scenarios with no speaker yet`);
         for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
         const steps = l.steps || [];
         unique(steps.map((s) => s.id), lw);
@@ -109,6 +114,7 @@ export function validate(paths) {
           need(PARTS.includes(s.part), `${sw}: part must be one of ${PARTS.join(", ")}`);
           for (const r of s.rules || []) need(RULE_RE.test(r), `${sw}: unknown rule ${r}`);
           need((s.hints || []).length <= 2, `${sw}: at most 2 hints`);
+          if (s.speaker !== undefined) need(castIds.includes(s.speaker), `${sw}: unknown speaker ${s.speaker}`);
           if (s.type === "card") {
             need(s.body || s.mock || s.video, `${sw}: a card needs a body, a mock or a video`);
             if (s.video) {

@@ -54,6 +54,7 @@ h2{font-size:1.15rem;margin:28px 0 10px;font-weight:600}
 .lessonlink .m{color:var(--muted);font-size:.85rem;white-space:nowrap}
 .part{font-size:.85rem;color:var(--muted);margin:22px 0 4px}
 .prompt{font-size:1.2rem;font-weight:600;line-height:1.4;margin:0 0 14px}
+.say-name{margin:0 0 6px;font-size:.85rem;font-weight:600;color:var(--muted,#555)}
 .scenario{background:var(--surface);border-inline-start:4px solid var(--accent);border-radius:8px;padding:12px 14px;margin:0 0 14px}
 .qref{font-size:.85rem;color:var(--muted);margin:6px 0 0}.qref a{color:var(--accent)}
 .refs{margin:8px 0 12px;font-size:.9rem}.refs summary{cursor:pointer;font-weight:600;color:var(--accent);min-height:32px;display:flex;align-items:center}.refs ul{margin:6px 0 0;padding-inline-start:20px}.refs li{margin:4px 0}.refs a{color:var(--accent)}.refs .m{color:var(--muted);font-size:.8rem}
@@ -709,6 +710,11 @@ function renderHome(){
   document.querySelectorAll("[data-mastery]").forEach(b => b.onclick = () => startMastery(...b.dataset.mastery.split(",").map(Number)));
 }
 
+/* who tells this scenario: a step's own speaker, else the lesson's; shown as "Name · Role" */
+function sayName(l, s){
+  const c = (CONTENT.cast || []).find(x => x.id === ((s && s.speaker) || l.speaker));
+  return c ? `<p class="say-name">${esc(tx(c.name))} · ${esc(tx(c.role))}</p>` : "";
+}
 function renderStep(){
   const s = L.lesson.steps[L.i], st = L.steps[L.i], check = L.lesson.mode === "check";
   $("#homeBtn").hidden = false; $("#barWrap").hidden = false; $("#actions").hidden = false;
@@ -716,13 +722,13 @@ function renderStep(){
   $("#bar").style.width = `${(L.i / L.lesson.steps.length) * 100}%`;
   const locked = st.done;
   let h = revNav();
-  if (s.scenario) h += `<div class="scenario">${para(s.scenario)}</div>`;
+  if (s.scenario) h += `<div class="scenario">${sayName(L.lesson, s)}${para(s.scenario)}</div>`;
   if (s.type === "card"){
     const tag = s.part === "concept" ? "idea" : s.part === "recap" ? "list" : "";
     if (s.title) h += `<h1 class="${tag ? "ct" : ""}">${tag ? icon(tag) : ""}${esc(tx(s.title))}</h1>`;
     /* an instructor clip: captions in both languages, the learner's language on by default, transcript underneath */
     if (s.video) h += clip(s.video) + `<h2 class="vsum">${u().vidSum}</h2><p class="vsum-note">${u().vidSumNote}</p>`;
-    h += `<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
+    h += `${s.part === "hook" ? sayName(L.lesson, s) : ""}<div class="body${tag ? ` card-${s.part}` : ""}">${para(s.body, s.icons)}</div>${mock(s.mock)}`;
   } else {
     if (s.recall){
       const k = L.lesson.steps.findIndex(x => x.id === s.recall), prev = L.lesson.steps[k];
@@ -731,7 +737,7 @@ function renderStep(){
     }
     const hook = L.lesson.steps.find(x => x.type === "card" && x.part === "hook");
     /* a step with its own scenario is a new case, so don't offer the old hook */
-    if (hook && hook !== s && !s.scenario) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
+    if (hook && hook !== s && !s.scenario) h += `<details class="scen"${L.scenOpen?" open":""}><summary>${u().scen}</summary>${hook.title?`<h2>${esc(tx(hook.title))}</h2>`:""}${sayName(L.lesson, hook)}<div class="body">${para(hook.body)}</div>${mock(hook.mock)}</details>`;
     h += `<p class="prompt">${esc(tx(s.prompt))}</p>`;
     /* reviewer-only: what the question teaches and its source; learners see references only on the path page */
     if (s.value || s.ref) h += `<details class="why"><summary>${u().valueQ}</summary>${s.value ? `<p>${esc(tx(s.value))}</p>` : ""}${refLink(s, L.lesson)}</details>`;
