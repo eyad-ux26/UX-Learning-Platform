@@ -18,7 +18,7 @@ All three take `lang` (`en`, `ar`), `theme` (`light`, `dark`), `device` (`mobile
 | `home`, `homeResume`, `homeFreeze` | Home: the next lesson in the current path names its path; "Your paths" row with one-tap switch; resume card that names its path (here in Visual Hierarchy while the current path is Forms That Flow); review due "From 2 paths"; streak and goal. `homeFreeze` adds the calm note "A freeze kept your streak" |
 | `mapSwitch` | Path map with the header switcher open (sheet on mobile, popover on desktop) |
 | `mapLocked` | Locked unit sheet: every condition with its state (skill check to pass, subscription) and the way to open it now (test out) |
-| `obRecommend`, `obAll`, `obGuest` | Onboarding: the suggestion only picks paths with content and says why; "See all paths" lists all 14 with Coming soon ones disabled; a guest from the sample lesson starts with P01 picked and a "Your sample lesson is saved" note |
+| `obRecommend`, `obAll`, `obGuest` | Onboarding: "Your starting path" comes from the Q2 answer and says so (Eyad, 2026-11-02: no goal-based suggestion); only when that path has no content yet do we offer one that does, with the reason; "See all paths" lists all 14 with Coming soon ones disabled; a guest from the sample lesson starts with P01 picked and a "Your sample lesson is saved" note |
 
 ### `ProgressPages.dc.html`
 
