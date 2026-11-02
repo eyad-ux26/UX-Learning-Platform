@@ -19,6 +19,22 @@
 .end-skill > .ph { font-size: 22px; color: var(--link); }
 .end-skill .grow { flex: 1; font-weight: 600; }
 .end-foot { padding: 12px 20px 18px; max-inline-size: 560px; inline-size: 100%; margin-inline: auto; }
+.end-panel { display: flex; justify-content: center; position: relative; }
+.end-left { display: flex; flex-direction: column; align-items: center; gap: 14px; inline-size: 100%; min-inline-size: 0; }
+.end-tag, .end-actions { display: none; }
+@media (min-width: 1024px) {
+  .end-main { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 480px); align-items: center; justify-content: center; gap: 72px; max-inline-size: 1200px; padding: 56px 64px; }
+  .end-left { align-items: stretch; }
+  .end-title { align-items: flex-start; text-align: start; }
+  .end-title h1 { font-size: 44px; }
+  .end-panel { order: 2; min-block-size: 380px; align-items: center; border: 2px dashed var(--line); border-radius: 28px; background: var(--surface); }
+  .end-art { inline-size: 220px; block-size: 220px; }
+  .end-tag { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 13px; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12); }
+  .end-tag-xp { inset-block-start: 22%; inset-inline-end: 12%; background: var(--hl); color: var(--on-hl); }
+  .end-tag-streak { inset-block-end: 18%; inset-inline-start: 10%; background: #F59E2B; color: #3A2A06; }
+  .end-actions { display: flex; gap: 12px; margin-block-start: 6px; }
+  .end-foot { display: none; }
+}
 
 .offline-bar { position: sticky; inset-block-start: 0; z-index: 5; margin: 0; padding: 8px 16px; display: flex; align-items: center; gap: 8px; justify-content: center; background: var(--warn-bg); color: var(--warn-ink); font-weight: 700; font-size: 13px; border-block-end: 2px solid var(--warn-line); }
 
@@ -35,6 +51,8 @@
 .hero-cta { display: flex; flex-direction: column; gap: 6px; inline-size: 100%; margin-block-start: 4px; }
 .hero-cta .btn { inline-size: 100%; }
 .hero-note { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.ug .preview-hint { display: none; }
+.hero-label, .hero-mock, .free-card, .plan-cta-d, .faq-side .help-link { display: none; }
 .hero-preview { position: relative; padding: 18px 20px 26px; }
 .hero-preview::before { content: ""; position: absolute; inset: 0 0 6px; margin-inline: 10px; background: var(--panel); border-radius: 36px; }
 .hero-ill { position: absolute; inline-size: 112px; block-size: 112px; inset-block-start: -24px; inset-inline-end: 0; }
@@ -44,7 +62,17 @@
 .preview-q { font-size: 16px; line-height: 1.35; }
 .preview-card .choice { min-height: 48px; font-size: 15px; padding: 6px 12px; }
 .preview-card .choice .key { inline-size: 26px; block-size: 26px; font-size: 13px; }
-.preview-xp { position: absolute; inset-block-end: 4px; inset-inline-start: 26px; box-shadow: 0 3px 0 var(--hl-ledge); }
+.preview-card .choice.is-hover { border-color: var(--link); position: relative; overflow: visible; }
+.you-cursor { position: absolute; inset-block-end: -16px; inset-inline-end: 22px; display: inline-flex; align-items: flex-start; pointer-events: none; }
+.ug[dir="rtl"] .you-cursor svg, [dir="rtl"] .you-cursor svg { transform: scaleX(-1); }
+.you-tag { margin-block-start: 14px; margin-inline-start: -4px; padding: 2px 8px; border-radius: 8px; border-start-start-radius: 2px; background: #F59E2B; color: #3A2A06; font-weight: 800; font-size: 12px; }
+.try-it { margin: 2px 0 0; display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.preview-card .btn.is-disabled { pointer-events: none; }
+.how-item { display: flex; flex-direction: column; gap: 8px; }
+.how-step { margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: var(--ink-3); }
+.plan-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.faq-side { display: flex; flex-direction: column; gap: 14px; }
+.faq-main { display: flex; flex-direction: column; gap: 10px; min-inline-size: 0; }
 .land-sec { display: flex; flex-direction: column; gap: 14px; padding: 28px 20px 8px; max-inline-size: 1280px; inline-size: 100%; margin-inline: auto; }
 .how-grid, .paths-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
 .how-card { padding: 14px 16px; display: flex; gap: 14px; align-items: flex-start; }
@@ -58,7 +86,7 @@
 .path-name { font-size: 16px; align-self: flex-start; }
 .path-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .path-tags .tag { block-size: 22px; font-size: 12px; }
-.path-new { position: absolute; inset-block-start: -14px; inset-inline-end: -8px; inline-size: 54px; block-size: 54px; font-size: 12px; }
+.ug .path-card .path-new { position: absolute; inset-block-start: -14px; inset-inline-end: -8px; inline-size: 54px; block-size: 54px; font-size: 12px; }
 .paths-note { text-align: center; font-weight: 600; }
 .plan-card { position: relative; border-radius: 28px; padding: 22px 20px 20px; background: linear-gradient(160deg, #032E3B 0%, #00121B 100%); color: #EAF7FC; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
 [data-theme="dark"] .plan-card { background: linear-gradient(160deg, #0B4A63 0%, #032E3B 100%); }
@@ -95,13 +123,48 @@
   .land-nav a:hover { color: var(--link); }
   .land-hero { display: grid; grid-template-columns: minmax(0, 1fr) 560px; gap: 64px; align-items: center; padding: 72px 80px 64px; }
   .hero-title { font-size: 64px; line-height: 1.1; }
+  .hero-preview { padding: 40px 0 70px; min-block-size: 440px; }
+  .hero-preview::before { display: none; }
+  .hero-label { display: inline-flex; align-items: center; gap: 6px; position: absolute; inset-block-start: 0; inset-inline-start: 0; font-size: 12px; font-weight: 700; color: var(--ink-3); }
+  .hero-ill { inset-block-start: 6px; inset-inline-end: 8px; inline-size: 96px; block-size: 96px; }
+  .hero-mock { display: block; position: absolute; inset-block-start: 56px; inset-inline-start: 0; inline-size: 310px; border-radius: 18px; border: 2px solid #C9D1D6; background: #EEF1F3; overflow: hidden; transform: rotate(-3deg); box-shadow: var(--shadow-soft); }
+  [dir="rtl"] .hero-mock { transform: rotate(3deg); }
+  .hero-mock .mock-bar { display: flex; align-items: center; gap: 8px; block-size: 30px; padding-inline: 12px; background: #DDE3E7; color: #3C4A52; font-weight: 700; font-size: 12px; }
+  .hero-mock .lbl { padding: 0 8px; block-size: 20px; display: inline-flex; align-items: center; border-radius: 6px; background: var(--hl); color: var(--navy); font-size: 11px; letter-spacing: 0.06em; }
+  .hero-mock .cap { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hero-mock .dots { display: inline-flex; gap: 4px; } .hero-mock .dots i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: currentColor; opacity: 0.35; }
+  .hm-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; color: #1F2A30; }
+  .hm-brand { margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12px; }
+  .hm-logo { display: inline-grid; place-items: center; inline-size: 18px; block-size: 18px; border-radius: 5px; background: #B7E02A; font-size: 11px; }
+  .hm-title { margin: 0; font-weight: 800; font-size: 18px; }
+  .hm-field { display: block; } .hm-field i { display: block; font-style: normal; font-size: 11px; color: #5A6870; margin-block-end: 3px; }
+  .hm-field::after { content: ""; display: block; block-size: 24px; border-radius: 6px; border: 1.5px solid #C9D1D6; background: #fff; }
+  .hm-btn { margin-block-start: 4px; padding: 8px; text-align: center; border-radius: 8px; background: #B7E02A; font-weight: 800; font-size: 12px; }
+  .preview-card { margin: 0; inline-size: 340px; margin-inline-start: auto; margin-block-start: 76px; }
+  .ug .preview-hint { display: flex; position: absolute; inset-block-end: 4px; inset-inline-start: 60px; max-inline-size: 280px; box-shadow: var(--shadow-soft); }
   .hero-copy .t-lead { font-size: 20px; max-inline-size: 560px; }
   .hero-cta { flex-direction: row; inline-size: auto; gap: 14px; }
   .hero-cta .btn { inline-size: auto; min-inline-size: 220px; }
   .land-sec { padding: 40px 80px 8px; gap: 24px; }
   .land-sec h2 { font-size: 36px; }
   .how-grid, .paths-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-  .how-card { flex-direction: column; padding: 24px; min-block-size: 180px; }
-  .plan-card { padding: 36px; max-inline-size: 560px; margin-inline: auto; inline-size: 100%; }
+  .how-card { flex-direction: column; padding: 24px; min-block-size: 180px; flex: 1; }
+  .path-card { flex-direction: column; align-items: flex-start; padding: 22px 24px; gap: 10px; }
+  .path-art { inline-size: auto; block-size: auto; background: none; border-radius: 0; }
+  .path-art img { inline-size: 104px; block-size: 104px; }
+  .path-body { inline-size: 100%; }
+  .path-name { font-size: 18px; }
+  .plan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+  .free-card { display: flex; flex-direction: column; gap: 12px; padding: 28px; }
+  .free-card .btn { margin-block-start: auto; }
+  .free-amount { margin: 0; font-weight: 700; font-size: 38px; }
+  .free-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+  .free-list li { display: flex; gap: 8px; align-items: center; } .free-list .ph { font-size: 18px; color: var(--right-line); }
+  .plan-card { padding: 28px; max-inline-size: none; margin-inline: 0; inline-size: 100%; }
+  .plan-card .plan-price { order: 2; } .plan-card .plan-title { order: 3; max-inline-size: none; } .plan-card .plan-list { order: 4; } .plan-card .btn { order: 5; margin-block-start: auto; }
+  .plan-cta-m { display: none; } .plan-cta-d { display: inline; }
+  .faq-sec { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 40px; align-items: start; }
+  .faq-side .help-link { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--link); text-decoration: underline; }
+  .faq-main .help-card { display: none; }
   .land-foot { padding-inline: 80px; }
 }

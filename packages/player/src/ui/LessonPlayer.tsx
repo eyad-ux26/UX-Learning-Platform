@@ -12,6 +12,8 @@ export type PlayerProps = {
   locale: Locale;
   initial: E.LessonState;
   pathLabel: string;
+  /** 1-based place of the lesson in its unit, for the header label. */
+  lessonNo?: number;
   muted: boolean;
   onToggleMute: () => void;
   onSound: (name: string) => void;
@@ -26,7 +28,7 @@ export type PlayerProps = {
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -80,13 +82,23 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, muted, onTogg
   const finished = E.isFinished(step, st);
   const showSheet = question && (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed");
 
+  // Enter checks the answer from the answers list (the desktop hint on the Check button).
+  const onEnter = (e: React.KeyboardEvent) => {
+    if (e.key !== "Enter" || e.nativeEvent.isComposing || !question || st.phase !== "answering") return;
+    const el = e.target as HTMLElement;
+    if (!el.closest(".choices") || !E.canCheck(step, st)) return;
+    e.preventDefault();
+    doCheck();
+  };
+
   return (
-    <div className="player" data-phase={st.phase}>
+    <div className="player" data-phase={st.phase} onKeyDown={onEnter}>
       <header className="player-head">
         <button type="button" className="icon-btn plain" onClick={onExit} aria-label={t("exit")}><span className="ph ph-x" aria-hidden="true" /></button>
         <div className="progress" role="progressbar" aria-label={t("progress")} aria-valuenow={state.i + (finished ? 1 : 0)} aria-valuemin={0} aria-valuemax={total}>
           <i style={{ width: `${((state.i + (finished ? 1 : 0)) / total) * 100}%` }} />
         </div>
+        {lessonNo ? <span className="t-small ink-3 player-label" title={t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}</span> : null}
         <span className="t-label num ink-2 player-count">{state.i + 1}/{total}</span>
         <button type="button" className="icon-btn plain" onClick={onToggleMute} aria-pressed={!muted} aria-label={muted ? t("soundOff") : t("soundOn")}>
           <span className={`ph ${muted ? "ph-speaker-slash" : "ph-speaker-high"}`} aria-hidden="true" />
@@ -100,7 +112,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, muted, onTogg
           <section className="player-col">
             {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : null}
             <Rich text={step.body} locale={locale} className="card-body" />
-            {step.mock ? <MockView mock={step.mock} locale={locale} label={mockLabel} tag={t("exampleTag")} /> : null}
+            {step.mock ? <MockView mock={step.mock} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} /> : null}
           </section>
         ) : (
           <Question
@@ -130,7 +142,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, muted, onTogg
           {question ? (
             <>
               {st.phase === "main_ok" ? <p className="t-small ink-2 foot-note">{t("reasonNote")}</p> : null}
-              <button type="button" className="btn btn-primary btn-lg btn-block press" disabled={!E.canCheck(step, st)} onClick={doCheck}>{t("check")}</button>
+              <button type="button" className="btn btn-primary btn-lg btn-block press" disabled={!E.canCheck(step, st)} onClick={doCheck}>{t("check")}<kbd className="key-hint" aria-hidden="true">{t("enterKey")}</kbd></button>
             </>
           ) : (
             <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={doNext}>{state.i === total - 1 ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
@@ -200,23 +212,23 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
     <section className="player-grid">
       <div className="player-visual">
         {step.scenario ? <p className="scn">{step.scenario[locale]}</p> : null}
-        {source ? <MockView mock={source} locale={locale} label={mockLabel} tag={t("exampleTag")} /> : null}
+        {source ? <MockView mock={source} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} /> : null}
         {step.type === "compare" ? (
           <div className="cmp">
             {(["a", "b"] as const).map((k, n) => (
               <figure key={k} className="cmp-item">
                 <figcaption className="frame-label"><span className="ph ph-frame-corners" aria-hidden="true" />{options[n].text}</figcaption>
-                <MockView mock={(step as CompareStep)[k].mock} locale={locale} label={`${mockLabel}: ${options[n].text}`} tag={t("exampleTag")} />
+                <MockView mock={(step as CompareStep)[k].mock} locale={locale} label={`${mockLabel}: ${options[n].text}`} tag={t("exampleTag")} chip={t("mockChip")} />
               </figure>
             ))}
           </div>
         ) : showMock && live ? (
           <div aria-live={step.type === "tune" ? "polite" : undefined}>
             {step.type === "tune" ? <span className="frame-label"><span className="ph ph-play-circle" aria-hidden="true" />{t("livePreview")}</span> : null}
-            <MockView mock={live} locale={locale} label={mockLabel} tag={t("exampleTag")} />
+            <MockView mock={live} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} />
           </div>
         ) : live ? (
-          <button type="button" className="mock-again" onClick={() => setMockOpen(true)}><span className="mock-tag">{t("exampleTag")}</span><span>{t("mockAgain")}</span><span className="ph ph-eye" aria-hidden="true" /></button>
+          <button type="button" className="mock-again" onClick={() => setMockOpen(true)}><span className="mock-tag">{t("mockChip")}</span><span>{t("mockAgain")}</span><span className="ph ph-eye" aria-hidden="true" /></button>
         ) : null}
       </div>
 
@@ -295,14 +307,16 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
     const mcList = partial ? reasonStep!.misconceptions : step.misconceptions;
     const mc = (mcList ?? []).find((m) => m.id === st.mc);
     return (
-      <section className="sheet sheet-wrong sheet-in player-sheet" role="alert">
-        <div className="sheet-row">
-          <p className="verdict-row"><span className="ph ph-x-circle-fill" aria-hidden="true" />{partial ? t("partialTitle") : t("wrongTitle")}</p>
-          <span className="t-small num try-count">{t("tryOf", { n: Math.min(st.tries, 3) })}</span>
+      <section className={`sheet sheet-wrong sheet-in player-sheet${st.hints > 0 ? " has-hints" : ""}`} role="alert">
+        <div className="sheet-main">
+          <div className="sheet-row">
+            <p className="verdict-row"><span className="ph ph-x-circle-fill" aria-hidden="true" />{partial ? t("partialTitle") : t("wrongTitle")}</p>
+            <span className="t-small num try-count">{t("tryOf", { n: Math.min(st.tries, 3) })}</span>
+          </div>
+          <p className="t-body sheet-text">{mc ? mc.feedback[locale] : t("genericWrong")}</p>
+          <p className="t-small ink-2">{t("kept")}</p>
         </div>
-        <p className="t-body sheet-text">{mc ? mc.feedback[locale] : t("genericWrong")}</p>
-        <p className="t-small ink-2">{t("kept")}</p>
-        <Hints step={step} count={st.hints} locale={locale} t={t} />
+        {st.hints > 0 ? <div className="sheet-hints"><Hints step={step} count={st.hints} locale={locale} t={t} /></div> : null}
         <div className="sheet-actions">
           {E.canHint(step, st) ? <button type="button" className="btn btn-secondary press" onClick={onHint}><span className="ph ph-bulb" aria-hidden="true" />{t("hint")}</button> : null}
           {E.canReveal(st) ? <button type="button" className="btn btn-secondary press" onClick={onReveal}><span className="ph ph-eye" aria-hidden="true" />{t("reveal")}</button> : null}
@@ -314,12 +328,14 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
   if (st.phase === "right") {
     return (
       <section className="sheet sheet-right sheet-in player-sheet" role="status">
-        <div className="sheet-row">
-          <p className="verdict-row"><span className="ph ph-check-circle-fill" aria-hidden="true" />{st.alsoOk ? t("alsoTitle") : t("rightTitle")}</p>
-          <span className="pill pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+{st.xp} XP</span></span>
+        <div className="sheet-main">
+          <div className="sheet-row">
+            <p className="verdict-row"><span className="ph ph-check-circle-fill" aria-hidden="true" />{st.alsoOk ? t("alsoTitle") : t("rightTitle")}</p>
+            <span className="pill pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+{st.xp} XP</span></span>
+          </div>
+          <p className="t-body sheet-text strong">{st.alsoOk ? st.alsoOk[locale] : step.correct[locale]}</p>
+          {whyOpen ? <p className="t-small why-text">{step.explain[locale]}</p> : null}
         </div>
-        <p className="t-body sheet-text strong">{st.alsoOk ? st.alsoOk[locale] : step.correct[locale]}</p>
-        {whyOpen ? <p className="t-small why-text">{step.explain[locale]}</p> : null}
         <div className="sheet-actions">
           <button type="button" className="btn btn-secondary press" aria-expanded={whyOpen} onClick={() => setWhyOpen(!whyOpen)}>{t("why")}</button>
           <button type="button" ref={btnRef} className="btn btn-primary press" onClick={onNext}>{last ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
@@ -329,8 +345,10 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
   }
   return (
     <section className="sheet sheet-warn sheet-in player-sheet" role="status">
-      <div className="sheet-row"><p className="verdict-row"><span className="ph ph-eye" aria-hidden="true" />{t("revealedTitle")}</p></div>
-      <p className="t-body sheet-text">{step.explain[locale]}</p>
+      <div className="sheet-main">
+        <div className="sheet-row"><p className="verdict-row"><span className="ph ph-eye" aria-hidden="true" />{t("revealedTitle")}</p></div>
+        <p className="t-body sheet-text">{step.explain[locale]}</p>
+      </div>
       <div className="sheet-actions">
         <button type="button" ref={btnRef} className="btn btn-primary press" onClick={onNext}>{last ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
       </div>

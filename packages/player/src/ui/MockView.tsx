@@ -52,13 +52,12 @@ function Block({ b, locale }: { b: MockBlock; locale: Locale }) {
 }
 
 /** An example screen, drawn from the content's mock blocks, inside the design system's frame with an EXAMPLE tag so it is never mistaken for UXGate. */
-export function MockView({ mock, locale, label, tag }: { mock: Mock; locale: Locale; label: string; tag: string }) {
+export function MockView({ mock, locale, label, tag, chip }: { mock: Mock; locale: Locale; label: string; tag: string; chip: string }) {
   const blocks = mock.blocks.map((b, i) => <Block key={i} b={b} locale={locale} />);
   return (
     <div className="mock" role="group" aria-label={label}>
-      <div className="mock-bar" aria-hidden="true"><span className="lbl">{tag}</span></div>
+      <div className="mock-bar" aria-hidden="true"><span className="lbl">{chip}</span><span className="cap">{tag}{mock.caption ? ` · ${mock.caption[locale]}` : ""}</span><span className="dots"><i /><i /></span></div>
       <div className={`exmock${mock.frame === "wide" ? " wide" : ""}${mock.gray ? " gray" : ""}`} dir={mock.dir ?? (locale === "ar" ? "rtl" : "ltr")} style={mock.width ? { maxWidth: mock.width, marginInline: "auto" } : undefined}>
-        {mock.caption ? <div className="mcap">{mock.caption[locale]}</div> : null}
         {mock.blur ? <div style={{ filter: `blur(${mock.blur}px)` }} aria-hidden="true">{blocks}</div> : blocks}
       </div>
     </div>

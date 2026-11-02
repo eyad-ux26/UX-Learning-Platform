@@ -4,6 +4,9 @@
 .player [tabindex="-1"]:focus-visible { outline: none; } /* the step title takes focus for screen readers; it needs no ring */
 .player-head .progress { flex: 1; }
 .player-count { min-width: 36px; text-align: end; }
+.player-label { display: none; }
+.sheet-main, .sheet-hints { display: flex; flex-direction: column; gap: 10px; min-inline-size: 0; }
+.key-hint { display: none; }
 .player-main { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px 20px 24px; max-inline-size: 760px; inline-size: 100%; margin-inline: auto; }
 .player-over { color: var(--link); }
 .player-col, .player-grid, .player-visual, .player-ask { display: flex; flex-direction: column; gap: 12px; min-inline-size: 0; }
@@ -56,7 +59,11 @@
 
 @media (min-width: 1024px) {
   .player-head { padding: 18px 40px; border-block-end: 2px solid var(--line); background: var(--surface); }
-  .player-head .progress { max-inline-size: 640px; margin-inline: auto; }
+  .player-head .progress { flex: 0 1 480px; margin-inline-start: 24px; }
+  .player-label { display: inline-flex; align-items: center; gap: 6px; flex: 1; min-inline-size: 0; margin-inline-start: 24px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .player-label .hash { color: var(--link); font-weight: 800; }
+  .key-hint { display: inline-flex; align-items: center; margin-inline-start: 10px; padding: 1px 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.22); font: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; }
+  .btn:disabled .key-hint { background: transparent; border: 1px solid currentColor; opacity: 0.6; }
   .player-main { max-inline-size: 1240px; padding: 36px 64px 40px; }
   .player-visual, .player-ask { display: flex; }
   .player-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 56px; align-items: start; }
@@ -65,6 +72,18 @@
   .prompt { font-size: 28px; line-height: 1.3; }
   .choices { margin-block-start: 8px; }
   .choice { min-height: 64px; }
-  .player-foot, .player-sheet { padding-inline: 64px; }
+  .player-foot { padding-inline: 64px; }
+  /* Feedback is one low bar on desktop: verdict and text | hint | buttons. */
+  .player-sheet { padding: 20px max(64px, calc((100% - 1240px) / 2 + 64px)); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px 40px; }
+  .player-sheet.has-hints { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) auto; }
+  .player-sheet > * { max-inline-size: none; margin-inline: 0; }
+  .player-sheet .sheet-actions { flex-wrap: nowrap; margin: 0; }
+  .player-sheet .sheet-actions .btn { flex: 0 0 auto; padding-inline: 22px; white-space: nowrap; }
 }
 @media (min-width: 560px) and (max-width: 1023px) { .cmp { grid-template-columns: 1fr 1fr; } }
+
+/* Example screen caption bar: MOCK chip, "Example · brand" caption, window dots. */
+.ug .mock .mock-bar .lbl { margin-inline-start: 0; padding: 0 8px; letter-spacing: 0.06em; }
+.ug .mock .mock-bar .cap { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.ug .mock .mock-bar .dots { display: inline-flex; gap: 4px; margin-inline-start: auto; }
+.ug .mock .mock-bar .dots i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: currentColor; opacity: 0.35; }

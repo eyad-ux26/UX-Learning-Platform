@@ -50,27 +50,44 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             <p className="t-small ink-2 hero-note"><span className="ph ph-clock" aria-hidden="true" />{t("note")}</p>
           </div>
           <div className="hero-preview" role="img" aria-label={t("previewLabel")}>
+            <span className="hero-label" aria-hidden="true"><span className="ph ph-frame-corners" />{t("previewLabel")}</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ill/uxgate-ill-bulb.png" alt="" className="hero-ill" width={112} height={112} />
+            <img src="/ill/uxgate-ill-gate.png" alt="" className="hero-ill" width={112} height={112} />
+            <div className="hero-mock" aria-hidden="true">
+              <div className="mock-bar"><span className="lbl">{t("mockChip")}</span><span className="cap">{t("mockCap")}</span><span className="dots"><i /><i /></span></div>
+              <div className="hm-body">
+                <p className="hm-brand"><span className="hm-logo">H</span>{t("gymName")}</p>
+                <p className="hm-title">{t("gymJoin")}</p>
+                {[t("gymFull"), t("gymEmail"), t("gymPhone"), t("gymFax")].map((x) => <span key={x} className="hm-field"><i>{x}</i></span>)}
+                <span className="hm-btn">{t("gymBtn")}</span>
+              </div>
+            </div>
             <div className="card preview-card" aria-hidden="true">
               <div className="preview-top"><div className="progress progress-sm"><i style={{ width: "40%" }} /></div><span className="t-small num ink-3">4/10</span></div>
               <p className="t-over" style={{ color: "var(--link)" }}>{t("pOver")}</p>
               <p className="t-label preview-q">{t("pQ")}</p>
               <span className="choice"><span className="key">{locale === "ar" ? "ب" : "B"}</span><span className="grow">{t("optB")}</span></span>
-              <span className="choice is-selected"><span className="key">{locale === "ar" ? "ج" : "C"}</span><span className="grow">{t("optC")}</span></span>
-              <span className="btn btn-primary btn-block">{t("check")}</span>
+              <span className="choice is-hover">
+                <span className="key">{locale === "ar" ? "ج" : "C"}</span><span className="grow">{t("optC")}</span>
+                <span className="you-cursor"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 3l16 7-7 2.5L10 20z" fill="#F59E2B" stroke="#fff" strokeWidth="1.6" strokeLinejoin="round" /></svg><span className="you-tag">{t("you")}</span></span>
+              </span>
+              <p className="t-small ink-2 try-it"><span className="ph ph-cursor" />{t("tryIt")}</p>
+              <span className="btn btn-primary btn-block is-disabled">{t("check")}</span>
             </div>
-            <span className="pill pop preview-xp"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+10 XP</span></span>
+            <div className="comment preview-hint" aria-hidden="true"><span className="pin"><span className="ph ph-bulb-fill" /></span><span className="t-small">{t("previewHint")}</span></div>
           </div>
         </section>
 
         <section id="how" className="land-sec">
           <h2 className="t-h2">{t("howTitle")}</h2>
           <div className="how-grid">
-            {how.map((h) => (
-              <div key={h.t} className="card how-card">
-                <span className="how-icon"><span className={`ph ${h.icon}`} aria-hidden="true" /></span>
-                <div><p className="t-label how-t">{h.t}</p><p className="t-small ink-2">{h.b}</p></div>
+            {how.map((h, n) => (
+              <div key={h.t} className="how-item">
+                <p className="how-step"><span className="ph ph-frame-corners" aria-hidden="true" />{t("step", { n: n + 1 })}</p>
+                <div className="card how-card">
+                  <span className="how-icon"><span className={`ph ${h.icon}`} aria-hidden="true" /></span>
+                  <div><p className="t-label how-t">{h.t}</p><p className="t-small ink-2">{h.b}</p></div>
+                </div>
               </div>
             ))}
           </div>
@@ -98,25 +115,40 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
         </section>
 
         <section id="plan" className="land-sec">
-          <div className="plan-card">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ill/uxgate-ill-key.png" alt="" className="plan-art" width={120} height={120} />
-            <p className="plan-over">{t("planOver")}</p>
-            <h2 className="t-h2 plan-title">{t("planTitle")}</h2>
-            <p className="plan-price"><span className="plan-amount ltr">[PRICE]</span><span className="plan-per">{t("perMonth")}</span></p>
-            <ul className="plan-list">
-              {[t("plan1"), t("plan2"), t("plan3")].map((x) => <li key={x}><span className="ph ph-check-circle-fill" aria-hidden="true" />{x}</li>)}
-            </ul>
-            <Link href="/signup" className="btn btn-highlight btn-block press">{t("try")}</Link>
+          <div className="plan-grid">
+            <div className="card free-card">
+              <p className="t-over">{t("freeOver")}</p>
+              <p className="free-amount num">{t("freeAmount")}</p>
+              <ul className="free-list">
+                {[t("free1"), t("free2")].map((x) => <li key={x}><span className="ph ph-check-circle-fill" aria-hidden="true" />{x}</li>)}
+              </ul>
+              <Link href="/signup" className="btn btn-secondary btn-block press">{t("try")}</Link>
+            </div>
+            <div className="plan-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/ill/uxgate-ill-key.png" alt="" className="plan-art" width={120} height={120} />
+              <p className="plan-over">{t("planOver")}</p>
+              <h2 className="t-h2 plan-title">{t("planTitle")}</h2>
+              <p className="plan-price"><span className="plan-amount ltr">[PRICE]</span><span className="plan-per">{t("perMonth")}</span></p>
+              <ul className="plan-list">
+                {[t("plan1"), t("plan2"), t("plan3")].map((x) => <li key={x}><span className="ph ph-check-circle-fill" aria-hidden="true" />{x}</li>)}
+              </ul>
+              <Link href="/signup" className="btn btn-highlight btn-block press"><span className="plan-cta-m">{t("try")}</span><span className="plan-cta-d">{t("startSub")}</span></Link>
+            </div>
           </div>
         </section>
 
-        <section id="faq" className="land-sec">
-          <h2 className="t-h2">{t("faqTitle")}</h2>
-          <Faq items={[{ q: t("q1"), a: t("a1") }, { q: t("q2"), a: t("a2") }, { q: t("q3"), a: t("a3") }]} />
-          <div className="card-mint help-card">
-            <span className="help-icon"><span className="ph ph-chat" aria-hidden="true" /></span>
-            <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail">support@uxgate.org</a></div>
+        <section id="faq" className="land-sec faq-sec">
+          <div className="faq-side">
+            <h2 className="t-h2">{t("faqTitle")}</h2>
+            <a href="mailto:support@uxgate.org" className="help-link"><span className="ph ph-chat" aria-hidden="true" />{t("help")}</a>
+          </div>
+          <div className="faq-main">
+            <Faq items={[{ q: t("q1"), a: t("a1") }, { q: t("q4"), a: t("a4") }, { q: t("q2"), a: t("a2") }, { q: t("q3"), a: t("a3") }, { q: t("q5"), a: t("a5") }]} />
+            <div className="card-mint help-card">
+              <span className="help-icon"><span className="ph ph-chat" aria-hidden="true" /></span>
+              <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail">support@uxgate.org</a></div>
+            </div>
           </div>
         </section>
       </main>

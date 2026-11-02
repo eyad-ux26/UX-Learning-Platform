@@ -12,9 +12,9 @@ import { flush, kick, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
 import { LessonEnd } from "./LessonEnd";
 
-type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; unitId: string; streak: number };
+type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, unitId, streak }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak }: Props) {
   const router = useRouter();
   const t = useTranslations("sync");
   const sync = useSyncStatus();
@@ -61,7 +61,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId, streak }
     <>
     {!sync.online ? <p className="offline-bar" role="status"><span className="ph ph-lock" aria-hidden="true" />{t("offline")}</p> : null}
     <LessonPlayer
-      lesson={lesson} locale={locale} initial={state} pathLabel={pathLabel}
+      lesson={lesson} locale={locale} initial={state} pathLabel={pathLabel} lessonNo={lessonNo}
       muted={muted}
       onToggleMute={() => { const v = !muted; setMuted(v); setMutedState(v); if (!v) play("ui-toggle-on"); }}
       onSound={play} onState={onState} onEvent={onEvent}
