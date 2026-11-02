@@ -63,4 +63,4 @@ Paths tab, choosing and switching paths, home with several paths, onboarding cha
 
 ## Slice 4: account, notifications and public pages
 
-Settings with notification choices per kind and channel, download and delete account, our push ask before the browser’s, the notifications inbox, help and review requests, six email templates, public path pages (interactive, hybrid, coming soon), privacy and terms, 404, error, offline and maintenance pages, sign in with Apple, and the illustration and sound map. See `slice-4/README.md`. On the canvas they are on the page "8 · Slice 4 · Account and public", and the five editable components are on "Screen parts".
+Settings with notification choices per kind and channel, download and delete account, our push ask before the browser’s, the notifications inbox, help and review requests, seven email templates, public path pages (interactive, hybrid, coming soon), privacy and terms, 404, error, offline and maintenance pages, sign in with Apple, and the illustration and sound map. See `slice-4/README.md`. On the canvas they are on the page "8 · Slice 4 · Account and public", and the five editable components are on "Screen parts".

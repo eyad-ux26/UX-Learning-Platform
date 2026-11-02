@@ -1,6 +1,6 @@
 # Slice 4: account, notifications and public pages
 
-Live boards: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx, page "8 · Slice 4 · Account and public" (canvas v51, 10 rows and the moments board). Each row shows every state of one part in four frames: mobile 390 English light, mobile 390 Arabic night, desktop 1440 English light and desktop 1440 Arabic night (desktop shown at half size). Email rows show a 390 phone and a 760 desktop mail window instead; public path pages are shown at full length. The five components below are on "Screen parts" and are clickable there.
+Live boards: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx, page "8 · Slice 4 · Account and public" (canvas v52, reviewed by the PM, 10 rows and the moments board). Each row shows every state of one part in four frames: mobile 390 English light, mobile 390 Arabic night, desktop 1440 English light and desktop 1440 Arabic night (desktop shown at half size). Email rows show a 390 phone and a 760 desktop mail window instead; public path pages are shown at full length. The five components below are on "Screen parts" and are clickable there.
 
 Brief: `delivery/sprint-4/design-brief.md` in project files. Styles are in `../system/uxgate.css`, in the block that starts with "Slice 4". Same tokens, Cairo and Titillium Web, no loss-framed copy, `[PRICE]`, `[DATE]` and `[TIME]` stay placeholders.
 
@@ -13,10 +13,10 @@ All take `lang` (`en`, `ar`), `theme` (`light`, `dark`), `device` (`mobile` 390�
 | `view` | What it shows |
 | --- | --- |
 | `settings`, `settingsMore` | Settings as one list on a phone (the second view is the same list scrolled), two columns on desktop. Account; language, theme (System, Light, Dark), daily goal (1, 2, 3 lessons), the daily reminder with the same picker as onboarding and Profile (`remVals` is a copy of ProfilePages, keep them in step), sound; notification choices; sharing switches for the achievement page and the leaderboard (both off by default); your data; help, privacy, terms; sign out |
-| `notifs`, `notifsBlocked` | Notification choices as kind × channel (In app, Email, Push). Six kinds: daily reminder, review due, "Today’s goal still open" (once, in the evening), badges and certificates, answers to your requests, billing (email always on). The push column turns off when push is off or blocked in the browser, with how to fix it |
+| `notifs`, `notifsBlocked` | Notification choices as kind × channel (In app, Email, Push). Five kinds: daily reminder (one a day at most), review due, badges and certificates, answers to your requests, billing (email always on). The push column turns off when push is off or blocked in the browser, with how to fix it |
 | `data` | Download my data as one JSON file (what it holds) and Delete my account |
-| `deleteAsk` | What happens first (signed out everywhere, removed within 30 days, shared links stop, a subscription stops renewing), "Download your data first", one tick to confirm, then the red button. "Keep my account" is the easy way out |
-| `deleteDone` | Signed out, removal scheduled for a date, and how to undo it before then |
+| `deleteAsk` | What happens first (signed out everywhere, removed within 30 days and "sign in before <date> to undo", shared links stop, a subscription stops renewing), "Download your data first", one tick to confirm, then the red button. "Keep my account" is the easy way out |
+| `deleteDone` | Signed out, removal scheduled for a date, and "Sign in before <date> to undo" (the same line is in the deletion email) |
 | `pushAsk` | Our own ask, shown only after a reminder is set: what push brings, "Turn on notifications" or "Not now". "Your browser asks next. We ask once on each device." |
 | `pushBrowser` | The browser’s own prompt after Turn on (drawn as a MOCK) |
 | `pushLater` | Not now: a toast that says email reminders still come |
@@ -29,7 +29,7 @@ All take `lang` (`en`, `ar`), `theme` (`light`, `dark`), `device` (`mobile` 390�
 | `inboxEmpty` | Nothing yet, and what will arrive here |
 | `help` | support@uxgate.org with "Email support", My requests, notification choices, five quick answers, privacy and terms |
 | `requests` | Every "Ask for a review" sent from a lesson, with status: Accepted, Waiting for a reply, Kept as is |
-| `requestAnswer`, `requestKept` | The step as the learner saw it, their answer, the reason they gave, the reply, and what changed (accepted: XP added and the skill counts) |
+| `requestAnswer`, `requestKept` | The step as the learner saw it, their answer, the reason they gave, the reply signed "The UXGate team", and what changed (accepted: XP added and the skill counts) |
 
 ### `PublicPages.dc.html`
 
@@ -53,20 +53,21 @@ Takes `pageh` for the full-length path pages.
 
 ### `EmailPages.dc.html`
 
-`device` is `mobile` (390) or `desktop` (760 mail window). Views: `reminder`, `goal` (today’s goal still open, sent once), `link` (sign-in link), `reset`, `welcome`, `badge`. The mail-app bar on top is a MOCK; below it is the email: one 600 px column, solid colours, the button ledge drawn as a bottom border, a copyable link under every button that signs in. Reminder-type emails have one-click "turn off" links in the footer. Sign-in and reset emails always arrive and say so.
+`device` is `mobile` (390) or `desktop` (760 mail window). Views: `reminder`, `goal`, `link` (sign-in link), `reset`, `welcome`, `badge`, `deleted` (account set to be deleted, with the undo date). There is at most one reminder email a day, sent at the learner’s time. When today’s goal is still open and the streak is 3 days or more, that day’s reminder uses the `goal` copy instead; it is never a second email. The mail-app bar on top is a MOCK; below it is the email: one 600 px column, solid colours, the button ledge drawn as a bottom border, a copyable link under every button that signs in. Reminder-type emails have one-click "turn off" links in the footer. Sign-in and reset emails always arrive and say so.
 
 ### `RowS4Moments.dc.html`
 
 Every slice 4 moment with its illustration and sound. All illustrations are from `../system/illustrations/`. No new sound files.
 
-## Assumptions to confirm
+## Assumptions
+
+The PM accepted these on 2026-11-02 (`docs/delivery/sprint-4/design-review.md`, PR #60). Two were changed on review: the goal-still-open copy is a variant of the one daily reminder, and support replies are signed "The UXGate team".
+
 
 - Deleting an account can be undone by signing in within the 30 days.
 - Deleting an account stops a subscription from renewing.
 - Billing emails can’t be turned off.
 - After onboarding, the push ask waits until the first lesson ends. After "Not now" we never ask again on that device.
-- The streak-at-risk email is called "Today’s goal still open" and is sent once, in the evening, only on days the learner has started.
-- The support reply is signed by a named team member (sample: Laila).
 - The P14 path counts (6 units, 25 lessons, 48 skills) are placeholders.
 - The sender is `UXGate <hello@uxgate.org>`.
 - Coming soon paths have no "notify me" yet.

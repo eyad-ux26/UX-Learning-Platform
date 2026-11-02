@@ -46,7 +46,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge","deleted"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
 const IMG = { lesson: '/_blob/54daac1136dd65086f58f73b440ed1a9', forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', flame: '/_blob/ef2b9cc307685520ab2b815707ec327f', mail: '/_blob/b8ff95a8c2f1c68111476aaf1b979bca', key: '/_blob/c1a5e232b4681719bddf8f85963a691d', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', review: '/_blob/27529cb276100eb41db22c17bdf85470' };
 const LINK = 'https://uxgate.org/auth/link?token=8f2c…e41a';
 const RESET = 'https://uxgate.org/auth/reset?token=b71d…09c3';
@@ -58,9 +58,9 @@ const C = {
         box: ['forms', 'Pick the right control · Lesson 2', 'Radio buttons or a dropdown?'], btn: 'Start the lesson', notes: ['You set this reminder for 8:00 PM.'],
         why: 'You get this because you turned on the daily reminder.', links: [['time', 'Change the time'], ['off', 'Turn off the daily reminder email']] },
       goal: { subj: 'One short lesson finishes today’s goal', pre: 'About 5 minutes. Your review is ready too.', ill: 'flame', illAlt: '',
-        h1: 'One lesson finishes today’s goal', ps: ['You did 1 of your 2 lessons today. The next one takes about 5 minutes.'],
-        box: ['review', '3 skills ready to review', 'A quick review also counts toward your goal.'], btn: 'Do one more lesson', notes: ['We send this once, in the evening, only on days you have started.'],
-        why: 'You get this because “Today’s goal still open” emails are on.', links: [['off', 'Turn off these emails'], ['all', 'All notification choices']] },
+        h1: 'One lesson finishes today’s goal', ps: ['You did 1 of your 2 lessons today. The next one takes about 5 minutes, and makes 12 days in a row.'],
+        box: ['review', '3 skills ready to review', 'A quick review also counts toward your goal.'], btn: 'Do one more lesson', notes: ['This is today’s reminder at 8:00 PM. When your goal is still open and you have a streak of 3 days or more, it says so. Still one reminder email a day at most.'],
+        why: 'You get this because you turned on the daily reminder.', links: [['time', 'Change the time'], ['off', 'Turn off the daily reminder email']] },
       link: { subj: 'Your UXGate sign-in link', pre: 'It works once, for 1 hour.', ill: 'mail', illAlt: '',
         h1: 'Sign in to UXGate', ps: ['Use the button to sign in as yasmin.adel@example.com.'],
         btn: 'Sign in', notes: ['The link works once, for 1 hour. If the button doesn’t work, copy this link into your browser:'], code: LINK,
@@ -78,7 +78,12 @@ const C = {
       badge: { subj: 'Your badge turned gold', pre: 'Cut fields you do not need · Kept', ill: 'medal', illAlt: 'Gold badge',
         h1: 'Your badge turned gold', ps: ['You got this skill right again in review, on a new case. It now counts as Kept.'],
         box: ['forms', 'Cut fields you do not need', 'Forms That Flow · Unit 1'], btn: 'See your badges',
-        why: 'You get this because badge and certificate emails are on.', links: [['off', 'Turn off badge emails'], ['all', 'All notification choices']] }
+        why: 'You get this because badge and certificate emails are on.', links: [['off', 'Turn off badge emails'], ['all', 'All notification choices']] },
+      deleted: { subj: 'Your UXGate account is set to be deleted', pre: 'Sign in before 2 December 2026 to undo.', ill: 'gate', illAlt: '',
+        h1: 'Your account is set to be deleted', ps: ['We signed you out on every device. Your personal data, progress and certificates will be removed by 2 December 2026.'],
+        btn: 'Sign in to undo', notes: ['Sign in before 2 December 2026 to undo. After that date, the account can’t come back.'],
+        safety: 'Didn’t ask for this? Sign in now, change your password and write to support@uxgate.org.',
+        why: 'This email is about your account, so it always arrives.' }
     } },
   ar: { addr: 'UXGate · uxgate.org · لديك سؤال؟ ردّ على هذه الرسالة أو راسلنا على support@uxgate.org.',
     E: {
@@ -87,9 +92,9 @@ const C = {
         box: ['forms', 'اختر عنصر التحكم المناسب · الدرس 2', 'أزرار اختيار (radio buttons) أم قائمة منسدلة؟'], btn: 'ابدأ الدرس', notes: ['ضبطت هذا التذكير على الساعة 8:00 م.'],
         why: 'تصلك هذه الرسالة لأنك فعّلت التذكير اليومي.', links: [['time', 'غيّر الوقت'], ['off', 'أوقف بريد التذكير اليومي']] },
       goal: { subj: 'درس قصير واحد يُكمل هدف اليوم', pre: 'حوالي 5 دقائق. ومراجعتك جاهزة أيضًا.', ill: 'flame', illAlt: '',
-        h1: 'درس واحد يُكمل هدف اليوم', ps: ['أنهيت درسًا من درسين اليوم. الدرس التالي يستغرق حوالي 5 دقائق.'],
-        box: ['review', '3 مهارات جاهزة للمراجعة', 'المراجعة السريعة تُحسب أيضًا ضمن هدفك.'], btn: 'درس واحد آخر', notes: ['نرسل هذه الرسالة مرة واحدة في المساء، فقط في الأيام التي بدأت فيها.'],
-        why: 'تصلك هذه الرسالة لأن رسائل «هدف اليوم لم يكتمل بعد» مفعّلة.', links: [['off', 'أوقف هذه الرسائل'], ['all', 'كل اختيارات الإشعارات']] },
+        h1: 'درس واحد يُكمل هدف اليوم', ps: ['أنهيت درسًا من درسين اليوم. الدرس التالي يستغرق حوالي 5 دقائق، وبه تصل إلى 12 يومًا متتاليًا.'],
+        box: ['review', '3 مهارات جاهزة للمراجعة', 'المراجعة السريعة تُحسب أيضًا ضمن هدفك.'], btn: 'درس واحد آخر', notes: ['هذا تذكير اليوم في الساعة 8:00 م. عندما يكون هدفك لم يكتمل بعد ولديك سلسلة من 3 أيام أو أكثر، يذكر ذلك. وتبقى رسالة تذكير واحدة يوميًا على الأكثر.'],
+        why: 'تصلك هذه الرسالة لأنك فعّلت التذكير اليومي.', links: [['time', 'غيّر الوقت'], ['off', 'أوقف بريد التذكير اليومي']] },
       link: { subj: 'رابط الدخول إلى UXGate', pre: 'يعمل مرة واحدة، لمدة ساعة.', ill: 'mail', illAlt: '',
         h1: 'سجّل الدخول إلى UXGate', ps: ['استخدم الزر لتسجيل الدخول بحساب yasmin.adel@example.com.'],
         btn: 'تسجيل الدخول', notes: ['الرابط يعمل مرة واحدة، لمدة ساعة. إن لم يعمل الزر، انسخ هذا الرابط في المتصفح:'], code: LINK,
@@ -107,7 +112,12 @@ const C = {
       badge: { subj: 'شارتك أصبحت ذهبية', pre: 'احذف الحقول غير اللازمة · أتقنت', ill: 'medal', illAlt: 'شارة ذهبية',
         h1: 'شارتك أصبحت ذهبية', ps: ['أجبت عن هذه المهارة بشكل صحيح مرة أخرى في المراجعة، على حالة جديدة. أصبحت الآن ضمن «أتقنت».'],
         box: ['forms', 'احذف الحقول غير اللازمة', 'Forms That Flow · الوحدة 1'], btn: 'شاهد شاراتك',
-        why: 'تصلك هذه الرسالة لأن رسائل الشارات والشهادات مفعّلة.', links: [['off', 'أوقف رسائل الشارات'], ['all', 'كل اختيارات الإشعارات']] }
+        why: 'تصلك هذه الرسالة لأن رسائل الشارات والشهادات مفعّلة.', links: [['off', 'أوقف رسائل الشارات'], ['all', 'كل اختيارات الإشعارات']] },
+      deleted: { subj: 'سيُحذف حسابك على UXGate', pre: 'سجّل الدخول قبل 2 ديسمبر 2026 للتراجع.', ill: 'gate', illAlt: '',
+        h1: 'سيُحذف حسابك', ps: ['سجّلنا خروجك من كل الأجهزة. ستُحذف بياناتك الشخصية وتقدّمك وشهاداتك قبل 2 ديسمبر 2026.'],
+        btn: 'سجّل الدخول للتراجع', notes: ['سجّل الدخول قبل 2 ديسمبر 2026 للتراجع. بعد هذا التاريخ لا يمكن استعادة الحساب.'],
+        safety: 'لم تطلب هذا؟ سجّل الدخول الآن وغيّر كلمة المرور وراسلنا على support@uxgate.org.',
+        why: 'هذه الرسالة تخص حسابك، لذلك تصل دائمًا.' }
     } }
 };
 class Component extends DCLogic {
