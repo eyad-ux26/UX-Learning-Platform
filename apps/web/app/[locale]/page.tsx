@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthErrorRedirect } from "@/components/AuthErrorRedirect";
+import { LandingPreview } from "@/components/LandingPreview";
 import { Faq } from "@/components/Faq";
 import { Logo } from "@/components/Logo";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
@@ -35,7 +36,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
         </nav>
         <span className="grow" />
         <LocaleSwitch />
-        <Link href="/signin" className="btn btn-secondary btn-sm">{t("signin")}</Link>
+        <Link href="/signin" className="btn btn-neutral btn-sm">{t("signin")}</Link>
         <Link href="/signup" className="btn btn-primary btn-sm land-try">{t("try")}</Link>
       </header>
 
@@ -51,7 +52,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             </div>
             <p className="t-small ink-2 hero-note"><span className="ph ph-clock" aria-hidden="true" />{t("note")}</p>
           </div>
-          <div className="hero-preview" role="img" aria-label={t("previewLabel")}>
+          <div className="hero-preview">
             <span className="hero-label" aria-hidden="true"><span className="ph ph-frame-corners" />{t("previewLabel")}</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/ill/uxgate-ill-gate.png" alt="" className="hero-ill" width={112} height={112} />
@@ -64,19 +65,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
                 <span className="hm-btn">{t("gymBtn")}</span>
               </div>
             </div>
-            <div className="card preview-card" aria-hidden="true">
-              <div className="preview-top"><div className="progress progress-sm"><i style={{ width: "40%" }} /></div><span className="t-small num ink-3">4/10</span></div>
-              <p className="t-over" style={{ color: "var(--link)" }}>{t("pOver")}</p>
-              <p className="t-label preview-q">{t("pQ")}</p>
-              <span className="choice"><span className="key">{locale === "ar" ? "ب" : "B"}</span><span className="grow">{t("optB")}</span></span>
-              <span className="choice is-hover">
-                <span className="key">{locale === "ar" ? "ج" : "C"}</span><span className="grow">{t("optC")}</span>
-                <span className="you-cursor"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 3l16 7-7 2.5L10 20z" fill="#F59E2B" stroke="#fff" strokeWidth="1.6" strokeLinejoin="round" /></svg><span className="you-tag">{t("you")}</span></span>
-              </span>
-              <p className="t-small ink-2 try-it"><span className="ph ph-cursor" />{t("tryIt")}</p>
-              <button type="button" disabled tabIndex={-1} className="btn btn-primary btn-block">{t("check")}</button>
-            </div>
-            <div className="comment preview-hint" aria-hidden="true"><span className="pin"><span className="ph ph-bulb-fill" /></span><span className="t-small">{t("previewHint")}</span></div>
+            <LandingPreview />
           </div>
         </section>
 

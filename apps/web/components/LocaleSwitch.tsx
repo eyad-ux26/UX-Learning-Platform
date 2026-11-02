@@ -14,7 +14,7 @@ export function LocaleSwitch() {
       locale={other}
       hrefLang={other}
       lang={other}
-      className="btn btn-ghost btn-sm"
+      className="btn btn-quiet btn-sm"
     >
       <span className="ph ph-globe" aria-hidden="true" />
       {t("switchToOther")}

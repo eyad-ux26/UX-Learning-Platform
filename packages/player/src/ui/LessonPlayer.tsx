@@ -305,7 +305,7 @@ function Hints({ step, count, locale, t }: { step: QuestionStep; count: number; 
       {(step.hints ?? []).slice(0, count).map((h, k) => (
         <div key={k} className="comment">
           <span className="pin"><span className="ph ph-bulb-fill" aria-hidden="true" /></span>
-          <div className="comment-body"><span className="comment-title">{t("hintN", { n: k + 1, total: Math.min(2, step.hints?.length ?? 0) })}</span><span className="t-small">{h[locale]}</span></div>
+          <div className="comment-body"><span className="comment-title hint-title">{t("hintN", { n: k + 1, total: Math.min(2, step.hints?.length ?? 0) })}</span><span className="t-small">{h[locale]}</span></div>
         </div>
       ))}
     </>

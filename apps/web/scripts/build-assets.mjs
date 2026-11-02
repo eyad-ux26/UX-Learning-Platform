@@ -15,6 +15,9 @@ const RENAME = {
   signout: "sign-out", google: "google-logo", apple: "apple-logo", comment: "chat-teardrop",
   chat: "chat-circle", bolt: "lightning", bulb: "lightbulb", map: "map-trifold", mail: "envelope-simple",
   search: "magnifying-glass",
+  // Slice 2 lesson player icons (carried in the design file; unused until slice 2).
+  replay: "arrow-counter-clockwise", sync: "arrows-clockwise", cc: "closed-captioning", "cloud-up": "cloud-arrow-up",
+  "corners-out": "arrows-out", grip: "dots-six-vertical", send: "paper-plane-tilt", also: "check-circle",
 };
 
 // Icons the app needs that the design canvas does not use (yet).
@@ -33,7 +36,10 @@ const rules = names.map((cls) => {
   return `.${cls} { --i: url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}"); }`;
 });
 
-const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "");
+// The design file also carries the canvas-only lesson-player frames (.ug.lp, .lp-*: fixed 390 and 1440 wide boards, slice 2).
+// The app's own player lays itself out, so those rules are left out of the app stylesheet.
+const LP_RULE = /^[^{\n]*(\.ug\.lp\b|\.lp\b|\.lp-|lp-(?:mobile|desktop))[^{\n]*\{.*\}\n/gm;
+const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "");
 if (/_blob/.test(css)) throw new Error("uxgate.css still references /_blob");
 const out = path.resolve(here, "../app/styles");
 fs.mkdirSync(out, { recursive: true });

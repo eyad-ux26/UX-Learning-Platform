@@ -11,6 +11,7 @@ import "@fontsource/titillium-web/400.css";
 import "@fontsource/titillium-web/600.css";
 import "@fontsource/titillium-web/700.css";
 import "../globals.css";
+import { ThemeSync } from "@/components/ThemeSync";
 import { routing, isRtl } from "@/i18n/routing";
 import { themeBootScript } from "@/lib/theme";
 
@@ -35,7 +36,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={isRtl(locale) ? "rtl" : "ltr"}
-      data-theme="light"
+      // data-theme is set only by the boot script and applyTheme, so a client-side language switch does not reset it to light.
       className="ug"
       suppressHydrationWarning
     >
@@ -44,7 +45,7 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider><ThemeSync />{children}</NextIntlClientProvider>
         <SpeedInsights />
       </body>
     </html>

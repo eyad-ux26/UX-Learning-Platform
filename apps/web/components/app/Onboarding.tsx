@@ -27,7 +27,7 @@ export function Onboarding() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [goal, setGoal] = useState<Goal | null>(null);
   const [focus, setFocus] = useState<Focus | null>(null);
-  const [time, setTime] = useState<Time | null>(null);
+  const [time, setTime] = useState<Time | null>("t2"); // the canvas starts on "2 to 4 hours"
   const [dailyGoal, setDailyGoal] = useState<1 | 2 | 3>(1);
   const [reminder, setReminder] = useState<string | null>(DEFAULT_REMINDER);
   const [failed, setFailed] = useState(false);
@@ -35,7 +35,7 @@ export function Onboarding() {
 
   const submit = (skipped: boolean) => {
     const input: OnboardingInput = {
-      goal, focus, weeklyTime: time, dailyGoal, reminder: skipped ? null : reminder, skipped,
+      goal, focus, weeklyTime: skipped ? null : time, dailyGoal, reminder: skipped ? null : reminder, skipped,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     };
     setFailed(false);
@@ -114,7 +114,7 @@ export function Onboarding() {
                 ))}
               </div>
               <p className="ob-label">{t("goal")}</p>
-              <div className="ob-opts" role="radiogroup" aria-label={t("goal")}>
+              <div className="ob-opts ob-goals" role="radiogroup" aria-label={t("goal")}>
                 {([1, 2, 3] as const).map((n) => (
                   <button key={n} type="button" role="radio" aria-checked={dailyGoal === n} className={`choice press sm${dailyGoal === n ? " is-selected" : ""}`} onClick={() => { setDailyGoal(n); play("select-snap"); }}>
                     <span className="grow ob-opt-t" style={{ paddingInlineStart: 8 }}>{t(`goal${n}`)}<small>{t(`goalNote${n}`)}</small></span>

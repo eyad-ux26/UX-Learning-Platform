@@ -31,6 +31,7 @@
   --track: #E2F0F5;
   --ink: #012E4B;
   --ink-2: #3D5D73;
+  --ink-neutral: #1C2329; --ink-neutral-2: #4B555E; --line-neutral: #D3D9DE;
   --ink-3: #4F7287;
   --brand: #005F99;
   --brand-ledge: #003F66;
@@ -99,6 +100,7 @@
   --track: #0B3445;
   --ink: #EAF7FC;
   --ink-2: #9CC3D3;
+  --ink-neutral: #F2F5F7; --ink-neutral-2: #C3CCD2; --line-neutral: rgba(242, 245, 247, 0.24);
   --ink-3: #7FA3B5;
   --brand: #4CC3E8;
   --brand-ledge: #1E7FA6;
@@ -174,7 +176,7 @@
 .ug .btn .ph { font-size: 20px; }
 .ug .btn-block { display: flex; width: 100%; }
 .ug .btn-lg { min-height: 56px; font-size: 18px; padding: 0 26px; }
-.ug .btn-sm { min-height: 44px; font-size: 15px; padding: 0 16px; border-radius: 12px; }
+.ug .btn-sm { min-height: 44px; font-size: 15px; padding: 0 16px; border-radius: var(--r-md); }
 .ug .btn-primary { background: var(--brand); color: var(--on-brand); --ledge-c: var(--brand-ledge); }
 .ug .btn-primary:hover, .ug .btn-primary.is-hover { background: color-mix(in srgb, var(--brand) 88%, white); }
 .ug .btn-secondary { background: var(--surface); color: var(--link); border-color: var(--line); --ledge-c: var(--ledge); }
@@ -185,13 +187,18 @@
 .ug[data-theme="dark"] .btn-right, .ug [data-theme="dark"] .btn-right { --ledge-c: #2E9C6E; }
 .ug .btn-wrong { background: var(--wrong-ink); color: #FFFFFF; --ledge-c: #7E1426; }
 .ug[data-theme="dark"] .btn-wrong, .ug [data-theme="dark"] .btn-wrong { background: var(--wrong-line); color: #2A0710; --ledge-c: #B8364A; }
+/* Neutral header actions (landing trial): no brand colour. */
+.ug .btn-neutral { background: transparent; color: var(--ink-neutral); border-color: var(--line-neutral); box-shadow: none; margin-bottom: 0; }
+.ug .btn-neutral:hover, .ug .btn-neutral.is-hover { background: var(--surface-2); }
+.ug .btn-quiet { background: transparent; color: var(--ink-neutral-2); box-shadow: none; margin-bottom: 0; }
+.ug .btn-quiet:hover, .ug .btn-quiet.is-hover { color: var(--ink-neutral); }
 .ug .btn-ghost { background: transparent; color: var(--link); box-shadow: none; margin-bottom: 0; }
 .ug .btn-ghost:hover, .ug .btn-ghost.is-hover { background: var(--sel-bg); }
 .ug .btn-ghost:active, .ug .btn-ghost.is-pressed { transform: scale(0.97); }
 .ug .btn[disabled], .ug .btn.is-disabled { background: var(--disabled-bg); color: var(--disabled-ink); border-color: transparent; --ledge-c: var(--disabled-ledge); cursor: not-allowed; transform: none; }
 .ug .btn-ghost[disabled], .ug .btn-ghost.is-disabled { background: transparent; box-shadow: none; }
 .ug .btn.is-loading { cursor: progress; }
-.ug .icon-btn { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink-2); margin-bottom: var(--ledge-h); }
+.ug .icon-btn { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); border: 2px solid var(--line); background: var(--surface); color: var(--ink-2); margin-bottom: var(--ledge-h); }
 .ug .icon-btn .ph { font-size: 22px; }
 .ug .icon-btn.plain { border-color: transparent; background: transparent; box-shadow: none; margin-bottom: 0; }
 
@@ -309,7 +316,8 @@
 .ug .sheet { background: var(--surface); border-radius: 28px 28px 0 0; box-shadow: var(--shadow-sheet); padding: 10px 20px 20px; }
 .ug .sheet .grab { width: 44px; height: 5px; border-radius: 4px; background: var(--line); margin: 0 auto 14px; }
 .ug .sheet-right { background: var(--right-bg); box-shadow: inset 0 3px 0 var(--right-line), var(--shadow-sheet); }
-.ug .sheet-wrong { background: var(--wrong-bg); box-shadow: inset 0 3px 0 var(--wrong-line), var(--shadow-sheet); }
+/* Wrong stays calm: neutral sheet; red only on the answer and the verdict icon and word. */
+.ug .sheet-wrong { background: var(--surface); box-shadow: var(--shadow-sheet); }
 .ug .sheet-warn { background: var(--warn-bg); box-shadow: inset 0 3px 0 var(--warn-line), var(--shadow-sheet); }
 .ug .verdict-row { margin: 0; display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 22px; }
 .ug .verdict-row .ph { font-size: 30px; }
@@ -386,6 +394,8 @@
 .ug .pin { display: inline-grid; place-items: center; width: 30px; height: 30px; flex: none; border-radius: 50%; border-end-start-radius: 4px; background: var(--warn-line); color: #3A2A06; box-shadow: 0 0 0 2px var(--surface); }
 .ug .pin .ph { font-size: 17px; }
 .ug .pin-brand { background: var(--brand); color: var(--on-brand); }
+.ug .hint-title { font-weight: 600; font-size: 12px; letter-spacing: 0.02em; color: var(--ink-2); }
+.ug[lang="ar"] .hint-title, .ug [lang="ar"] .hint-title { letter-spacing: 0; }
 .ug .comment { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 16px; border-end-start-radius: 4px; background: var(--surface); border: 2px solid var(--warn-line); }
 
 /* Multiplayer cursor tag */
@@ -399,6 +409,8 @@
 .ug .frame-label .ph { font-size: 13px; }
 
 /* Extra Phosphor icons for the design-tool layer */
+
+/* Slice 2 icons: lesson player */
 
 /* ---- Desktop app shell: layers rail, canvas, properties panel ---- */
 .ug .dk { width: 1440px; height: 900px; box-sizing: border-box; display: grid; grid-template-columns: 248px minmax(0, 1fr) 320px; background: var(--ground-grad); color: var(--ink); overflow: hidden; }
@@ -417,10 +429,66 @@
 .ug .dk-prop { display: flex; flex-direction: column; gap: 10px; padding-bottom: 18px; border-bottom: 2px solid var(--line); }
 .ug .dk-prop:last-child { border-bottom: 0; }
 .ug .dk-top { display: flex; align-items: center; gap: 12px; }
-.ug .dk-search { flex: 1; max-width: 360px; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink-3); font-size: 14px; }
 .ug .kbd { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 6px; background: var(--track); color: var(--ink-2); font-size: 12px; font-weight: 700; box-shadow: inset 0 -2px 0 var(--line); }
 .ug .sheet-in { animation: ug-sheet-in var(--t-base) var(--ease-out) both; }
 @keyframes ug-sheet-in { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ---- Slice 2: lesson player ----
+   One screen root: class="ug lp lp-mobile" (390 x 844) or "ug lp lp-desktop" (1440 x 900).
+   Mobile stacks prompt, example and task; desktop puts the example on the left and the task on the right.
+   The UXGate layer (frames, pins, cursor tags, selection handles) may sit on top of an example, never inside its style. */
+
+/* Header: leave, progress, save state, sound */
+
+/* Save state, next to the progress bar */
+@keyframes lp-lift { from { transform: translateY(1px); } to { transform: translateY(-2px); } }
+
+/* Banners under the header: offline, guest, resume */
+
+/* Body: prompt, example (ctx) and task (act) */
+/* Scenario line above a question: read before the question, so it is body text in full ink, one step below the question.
+   Cairo needs weight 500 and more line height to read well at these sizes. */
+/* Scenario character speaking: avatar + speech bubble (static, no ledge) */
+.ug .say { display: flex; align-items: flex-end; gap: 8px; margin-top: -2px; }
+.ug .say-face { width: 64px; height: 64px; flex: none; }
+.ug .say-bubble { position: relative; flex: 1; min-width: 0; padding: 8px 12px 9px; border-radius: 16px; background: var(--surface); border: 2px solid var(--line); }
+.ug .say-bubble::before { content: ""; position: absolute; inset-inline-start: -8px; bottom: 14px; width: 12px; height: 12px; background: var(--surface);
+  border-inline-start: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg); }
+.ug[dir="rtl"] .say-bubble::before { transform: rotate(-45deg); }
+.ug .say-name { display: block; font-size: 12px; font-weight: 700; color: var(--ink-2); line-height: 1.4; }
+/* Lesson player on a phone: same pattern, tighter so the answer area keeps its room */
+
+/* Options list (predict, words, fix, reason): one column, text can wrap */
+
+/* Check bar: confidence, then Check */
+
+/* Feedback sheet layout; colours come from .sheet-right / .sheet-wrong / .sheet-warn */
+.ug .sheet-also { background: var(--right-bg); box-shadow: inset 0 3px 0 var(--right-line), var(--shadow-sheet); }
+.ug .sheet-also .verdict-row { color: var(--right-ink); }
+.ug .sheet-note { background: var(--panel); box-shadow: inset 0 3px 0 var(--sel-line), var(--shadow-sheet); }
+.ug .sheet-note .verdict-row { color: var(--ink); }
+.ug .sheet-saved { background: var(--surface); box-shadow: inset 0 3px 0 var(--line-field), var(--shadow-sheet); }
+.ug .sheet-saved .verdict-row { color: var(--ink); font-size: 19px; }
+
+/* Tiles: items you place in sort, pair in match, move in order */
+
+/* Order: numbered rows with move up and move down */
+
+/* Match: two lists, tap one on each side to pair them; the pair number shows on both */
+
+/* Spot: tap the faulty area on the example. The frame is the UXGate layer on top of the example. */
+
+/* Order: live preview phone */
+
+/* Video step: the clip is the UXGate layer (night stage); the example inside keeps its own style */
+
+/* Concept card: one idea, under about 60 words */
+
+/* Result pages: skill check, mastery round, guest end */
+.ug .skill-retry { background: var(--warn-bg); color: var(--warn-ink); box-shadow: inset 0 0 0 1.5px var(--warn-line); }
+.ug .skill-later { background: var(--disabled-bg); color: var(--disabled-ink); }
+
+/* Sheets over a step: exit, ask for review, sign up */
 
 /* ---- Reminder time (onboarding Q3, Settings) ----
    Pre-filled: reminders start ON at 8:00 PM, so the learner only changes it if they want.
