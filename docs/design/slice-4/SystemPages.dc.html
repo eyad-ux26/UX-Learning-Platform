@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 4 · System pages and sign in with Apple</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+  <!-- Minimal header: system and sign-in pages keep only the logo and the language switch -->
+  <header class="pub-nav" style="{{navStyle}}">
+    <sc-if value="{{showClose}}" hint-placeholder-val="{{false}}"><a href="#back" class="icon-btn plain" aria-label="{{c.close}}" style="margin-inline-start: -8px;"><span class="ph ph-x" aria-hidden="true"></span></a></sc-if>
+    <img src="{{logo}}" alt="UXGate" style="{{logoStyle}}">
+    <span style="flex: 1;"></span>
+    <a href="#lang" class="btn btn-quiet btn-sm" lang="{{otherCode}}" style="padding: 0 8px; gap: 6px;"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+  </header>
+
+  <!-- ============ 404 / error / offline / maintenance ============ -->
+  <sc-if value="{{is.sys}}" hint-placeholder-val="{{true}}">
+    <main class="sys">
+      <img src="{{s.img}}" alt="">
+      <span class="code ltr">{{s.code}}</span>
+      <h1>{{s.title}}</h1>
+      <p>{{s.body}}</p>
+      <sc-if value="{{s.hasSafe}}" hint-placeholder-val="{{true}}"><span class="safe"><span class="ph ph-cloud-check-fill" aria-hidden="true"></span>{{s.safe}}</span></sc-if>
+      <div class="acts">
+        <sc-for list="{{s.acts}}" as="a" hint-placeholder-count="2"><a href="#{{a.id}}" class="{{a.cls}}"><span class="{{a.icon}}" aria-hidden="true"></span>{{a.label}}</a></sc-for>
+      </div>
+      <p class="t-small ink-3" style="font-size: 13px; margin-top: 6px;">{{s.foot}} <a href="#help" class="ltr" style="color: var(--link); font-weight: 700;">support@uxgate.org</a></p>
+    </main>
+  </sc-if>
+
+  <!-- ============ Sign up / sign in ============ -->
+  <sc-if value="{{is.auth}}" hint-placeholder-val="{{false}}">
+    <main class="auth">
+      <div class="pg-stack" style="gap: 4px;">
+        <h1 class="t-h1" style="font-size: 28px;">{{a.title}}</h1>
+        <p class="t-small ink-2" style="font-size: 15px;">{{a.lead}}</p>
+      </div>
+      <div class="pg-stack" style="gap: 10px;">
+        <button class="btn btn-block btn-apple" type="button"><span class="ph ph-apple" aria-hidden="true"></span>{{a.apple}}</button>
+        <button class="btn btn-block btn-google" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>{{a.google}}</button>
+      </div>
+      <div class="auth-or" aria-hidden="true"><i></i><span class="t-small ink-3" style="font-weight: 700;">{{c.or}}</span><i></i></div>
+      <div class="field"><label for="au-email-{{lang}}-{{device}}-{{view}}">{{c.email}}</label><div class="input"><span class="ph ph-mail" aria-hidden="true"></span><input id="au-email-{{lang}}-{{device}}-{{view}}" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr"></div></div>
+      <div class="field"><label for="au-pw-{{lang}}-{{device}}-{{view}}">{{c.password}}</label><div class="input"><span class="ph ph-lock" aria-hidden="true"></span><input id="au-pw-{{lang}}-{{device}}-{{view}}" type="password" autocomplete="{{a.pwAuto}}"><button class="icon-btn plain" type="button" aria-label="{{c.show}}" style="width: 40px; height: 40px; margin-inline-end: -8px;"><span class="ph ph-eye" aria-hidden="true"></span></button></div>
+        <sc-if value="{{a.isUp}}" hint-placeholder-val="{{true}}"><span class="help">{{c.pwHelp}}</span></sc-if>
+        <sc-if value="{{a.isIn}}" hint-placeholder-val="{{false}}"><a href="#forgot" style="align-self: flex-end; font-weight: 700; font-size: 14px; color: var(--link); min-height: 32px; display: inline-flex; align-items: center;">{{c.forgotQ}}</a></sc-if>
+      </div>
+      <a href="#go" class="btn btn-primary btn-lg btn-block press">{{a.submit}}</a>
+      <button class="btn btn-ghost btn-block" type="button" style="min-height: 44px; margin-top: -4px;"><span class="ph ph-mail" aria-hidden="true"></span>{{c.magic}}</button>
+      <div style="margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding-top: 8px;">
+        <sc-if value="{{a.isUp}}" hint-placeholder-val="{{true}}"><p class="t-small ink-3" style="font-size: 13px;">{{c.terms1}} <a href="#terms" style="color: var(--link);">{{c.terms}}</a> {{c.and}} <a href="#privacy" style="color: var(--link);">{{c.privacy}}</a>.</p></sc-if>
+        <p class="t-small ink-2">{{a.swapQ}} <a href="#swap" style="font-weight: 700; color: var(--link);">{{a.swap}}</a></p>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- ============ Forgot password ============ -->
+  <sc-if value="{{is.forgot}}" hint-placeholder-val="{{false}}">
+    <main class="auth">
+      <img src="/_blob/c1a5e232b4681719bddf8f85963a691d" alt="" style="width: 120px; height: 120px; align-self: center;">
+      <div class="pg-stack" style="gap: 4px; text-align: center; align-items: center;">
+        <h1 class="t-h1" style="font-size: 28px;">{{c.fTitle}}</h1>
+        <p class="t-small ink-2" style="font-size: 15px; max-width: 34ch;">{{c.fLead}}</p>
+      </div>
+      <div class="field"><label for="fp-email-{{lang}}-{{device}}">{{c.email}}</label><div class="input"><span class="ph ph-mail" aria-hidden="true"></span><input id="fp-email-{{lang}}-{{device}}" type="email" autocomplete="email" value="yasmin.adel@example.com" dir="ltr"></div></div>
+      <a href="#sent" class="btn btn-primary btn-lg btn-block press">{{c.fSend}}</a>
+      <p class="pg-note"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.fNote}}</span></p>
+      <a href="#signin" class="btn btn-ghost btn-block" style="min-height: 44px; margin-top: auto;"><span class="ph ph-arrow" aria-hidden="true" style="{{backFlip}}"></span>{{c.backIn}}</a>
+    </main>
+  </sc-if>
+
+  <!-- ============ Check your email ============ -->
+  <sc-if value="{{is.sent}}" hint-placeholder-val="{{false}}">
+    <main class="auth" style="align-items: stretch;">
+      <img src="/_blob/b8ff95a8c2f1c68111476aaf1b979bca" alt="" style="width: 132px; height: 132px; align-self: center;">
+      <div class="pg-stack" style="gap: 6px; text-align: center; align-items: center;">
+        <h1 class="t-h1" style="font-size: 28px;">{{c.sTitle}}</h1>
+        <p class="t-small ink-2" style="font-size: 15px; max-width: 34ch;">{{c.sLead}} <b class="ltr" style="color: var(--ink);">yasmin.adel@example.com</b></p>
+      </div>
+      <div class="card" style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+        <p class="pg-note"><span class="ph ph-clock" aria-hidden="true"></span><span>{{c.sOnce}}</span></p>
+        <p class="pg-note"><span class="ph ph-search" aria-hidden="true"></span><span>{{c.sSpam}}</span></p>
+      </div>
+      <button class="btn btn-secondary btn-block" type="button" disabled aria-disabled="true"><span class="ph ph-sync" aria-hidden="true"></span>{{c.sAgain}} <span class="num ltr">0:42</span></button>
+      <a href="#edit" class="btn btn-ghost btn-block" style="min-height: 44px; margin-top: -4px;">{{c.sOther}}</a>
+    </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["notFound","error","offline","maintenance","signup","signin","forgot","linkSent"],"default":"notFound"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+const IMG = { search: '/_blob/45dca903fb1d2f855f86e5ed32a2a286', error: '/_blob/d7554f850e27653fedf6b88760ca689d', offline: '/_blob/c60e7e4f9deb062a72ad9940cfd42918', rocket: '/_blob/e594bb3a340eff88e5cb77c7f6aeb364' };
+const C = {
+  en: { otherLang: 'عربي', close: 'Close', or: 'or', email: 'Email', password: 'Password', show: 'Show password', pwHelp: 'At least 8 characters.',
+    forgotQ: 'Forgot password?', magic: 'Email me a sign-in link', terms1: 'By creating an account you agree to the', terms: 'Terms', and: 'and', privacy: 'Privacy Policy',
+    sys: {
+      notFound: { img: 'search', code: '404', title: 'We can’t find that page', body: 'The link may be old or mistyped. Your paths and progress are where you left them.', acts: [['home', 'Go to Home', 'house', 1], ['paths', 'See all paths', 'map', 0]], foot: 'Think a link is broken? Tell us at' },
+      error: { img: 'error', code: 'ERROR 500 · REF 7F3K-29', title: 'Something broke on our side', body: 'It isn’t something you did. Try again in a moment.', safe: 'Your answers up to the last step are saved', acts: [['retry', 'Try again', 'sync', 1], ['home', 'Go to Home', 'house', 0]], foot: 'If it keeps happening, send the ref above to' },
+      offline: { img: 'offline', code: 'NO CONNECTION', title: 'You’re offline', body: 'Check your Wi-Fi or mobile data. This page opens as soon as you’re back.', safe: 'Your progress is saved on this device', acts: [['retry', 'Try again', 'sync', 1]], foot: 'Still stuck? Write to' },
+      maintenance: { img: 'rocket', code: 'MAINTENANCE', title: 'We’re making UXGate better', body: 'We’ll be back by [TIME] Cairo time.', safe: 'Your progress and streak are safe', acts: [['status', 'Check again', 'sync', 1]], foot: 'Questions? Write to' }
+    },
+    signup: { title: 'Create your account', lead: 'Unit 1 of every path is free. No card needed.', apple: 'Sign up with Apple', google: 'Sign up with Google', submit: 'Create account', swapQ: 'Have an account?', swap: 'Sign in', pwAuto: 'new-password' },
+    signin: { title: 'Welcome back', lead: 'Sign in to pick up where you left off.', apple: 'Sign in with Apple', google: 'Sign in with Google', submit: 'Sign in', swapQ: 'New to UXGate?', swap: 'Create an account', pwAuto: 'current-password' },
+    fTitle: 'Reset your password', fLead: 'Enter the email you signed up with. We’ll send a link to set a new password.', fSend: 'Send reset link',
+    fNote: 'Signed up with Apple or Google? Use that button on the sign-in page. There’s no password to reset.', backIn: 'Back to sign in',
+    sTitle: 'Check your email', sLead: 'We sent a sign-in link to', sOnce: 'The link works once, for 1 hour.', sSpam: 'Not there? Check spam or promotions.',
+    sAgain: 'Send again in', sOther: 'Use a different email' },
+  ar: { otherLang: 'English', close: 'إغلاق', or: 'أو', email: 'البريد الإلكتروني', password: 'كلمة المرور', show: 'إظهار كلمة المرور', pwHelp: '8 أحرف على الأقل.',
+    forgotQ: 'نسيت كلمة المرور؟', magic: 'أرسل لي رابط دخول بالبريد', terms1: 'بإنشاء حساب، أنت توافق على', terms: 'الشروط', and: 'و', privacy: 'سياسة الخصوصية',
+    sys: {
+      notFound: { img: 'search', code: '404', title: 'لم نجد هذه الصفحة', body: 'ربما الرابط قديم أو مكتوب بشكل خاطئ. مساراتك وتقدّمك كما تركتها.', acts: [['home', 'اذهب إلى الرئيسية', 'house', 1], ['paths', 'شاهد كل المسارات', 'map', 0]], foot: 'تظن أن رابطًا معطّل؟ أخبرنا على' },
+      error: { img: 'error', code: 'ERROR 500 · REF 7F3K-29', title: 'حدث عطل من جهتنا', body: 'ليس بسبب شيء فعلته. حاول مرة أخرى بعد لحظة.', safe: 'إجاباتك حتى آخر خطوة محفوظة', acts: [['retry', 'حاول مرة أخرى', 'sync', 1], ['home', 'اذهب إلى الرئيسية', 'house', 0]], foot: 'إن تكرّر الأمر، أرسل الرقم المرجعي أعلاه إلى' },
+      offline: { img: 'offline', code: 'لا يوجد اتصال', title: 'أنت غير متصل', body: 'تحقّق من الواي فاي أو بيانات الجوال. تفتح هذه الصفحة فور عودة الاتصال.', safe: 'تقدّمك محفوظ على هذا الجهاز', acts: [['retry', 'حاول مرة أخرى', 'sync', 1]], foot: 'ما زالت المشكلة قائمة؟ راسلنا على' },
+      maintenance: { img: 'rocket', code: 'صيانة', title: 'نعمل على تحسين UXGate', body: 'نعود قبل [TIME] بتوقيت القاهرة.', safe: 'تقدّمك وسلسلة أيامك (streak) في أمان', acts: [['status', 'تحقّق مرة أخرى', 'sync', 1]], foot: 'لديك سؤال؟ راسلنا على' }
+    },
+    signup: { title: 'أنشئ حسابك', lead: 'الوحدة الأولى من كل مسار مجانية. بدون بطاقة دفع.', apple: 'التسجيل باستخدام Apple', google: 'التسجيل باستخدام Google', submit: 'إنشاء حساب', swapQ: 'لديك حساب؟', swap: 'سجّل الدخول', pwAuto: 'new-password' },
+    signin: { title: 'أهلًا بعودتك', lead: 'سجّل الدخول لتكمل من حيث توقفت.', apple: 'تسجيل الدخول باستخدام Apple', google: 'تسجيل الدخول باستخدام Google', submit: 'تسجيل الدخول', swapQ: 'جديد على UXGate؟', swap: 'أنشئ حسابًا', pwAuto: 'current-password' },
+    fTitle: 'أعد تعيين كلمة المرور', fLead: 'اكتب البريد الذي سجّلت به. سنرسل رابطًا لتضع كلمة مرور جديدة.', fSend: 'أرسل رابط إعادة التعيين',
+    fNote: 'سجّلت باستخدام Apple أو Google؟ استخدم الزر نفسه في صفحة الدخول. لا توجد كلمة مرور لإعادة تعيينها.', backIn: 'العودة لتسجيل الدخول',
+    sTitle: 'افتح بريدك', sLead: 'أرسلنا رابط دخول إلى', sOnce: 'الرابط يعمل مرة واحدة، لمدة ساعة.', sSpam: 'لم تجده؟ ابحث في الرسائل غير المرغوب فيها (spam) أو العروض.',
+    sAgain: 'أعد الإرسال بعد', sOther: 'استخدم بريدًا آخر' }
+};
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = this.props.view || 'notFound';
+    const c = C[lang];
+    const isDesk = device === 'desktop';
+    const isSys = ['notFound', 'error', 'offline', 'maintenance'].indexOf(view) >= 0;
+    const S = c.sys[isSys ? view : 'notFound'];
+    const s = { img: IMG[S.img], code: S.code, title: S.title, body: S.body, safe: S.safe || '', hasSafe: !!S.safe, foot: S.foot,
+      acts: S.acts.map(([id, label, icon, primary]) => ({ id, label, icon: 'ph ph-' + icon, cls: 'btn ' + (primary ? 'btn-primary' : 'btn-secondary') + ' btn-lg press' + (isDesk ? '' : ' btn-block') })) };
+    const A = c[view === 'signin' ? 'signin' : 'signup'];
+    const a = Object.assign({}, A, { isUp: view === 'signup', isIn: view === 'signin' });
+    return {
+      lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, s, a,
+      is: { sys: isSys, auth: view === 'signup' || view === 'signin', forgot: view === 'forgot', sent: view === 'linkSent' },
+      rootCls: 'ug pg pg-pub pg-' + device,
+      showClose: !isSys && !isDesk,
+      navStyle: isSys || isDesk ? '' : 'border-bottom: 0; background: transparent;',
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      logoStyle: isDesk ? 'height: 34px; width: auto;' : 'height: 26px; width: auto;',
+      otherCode: lang === 'ar' ? 'en' : 'ar',
+      backFlip: lang === 'ar' ? '' : 'transform: scaleX(-1);'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 4 · Public path pages, privacy and terms</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}" style="{{rootStyle}}">
+  <header class="pub-nav">
+    <img src="{{logo}}" alt="UXGate" style="{{logoStyle}}">
+    <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+      <nav class="links" aria-label="{{c.siteNav}}"><sc-for list="{{links}}" as="l" hint-placeholder-count="4"><a href="#{{l.id}}" class="{{l.cls}}" aria-current="{{l.cur}}">{{l.label}}</a></sc-for></nav>
+    </sc-if>
+    <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><span style="flex: 1;"></span></sc-if>
+    <a href="#lang" class="btn btn-quiet btn-sm" lang="{{otherCode}}" style="padding: 0 8px; gap: 6px;"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><a href="#signin" class="btn btn-neutral btn-sm">{{c.signin}}</a></sc-if>
+    <a href="#signup" class="btn btn-primary btn-sm press" style="{{navCtaStyle}}">{{navCta}}</a>
+  </header>
+
+  <!-- ============ Path page (interactive or hybrid) ============ -->
+  <sc-if value="{{is.path}}" hint-placeholder-val="{{true}}">
+    <main style="display: flex; flex-direction: column;">
+      <section class="pp-hero">
+        <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0;">
+          <p class="crumb"><a href="#paths">{{c.paths}}</a><span class="ph ph-caret flip" aria-hidden="true"></span><span class="ltr">{{p.name}}</span></p>
+          <div class="pp-facts"><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><span class="kind">{{p.units}}</span><span class="kind">{{p.lessons}}</span><span class="kind">{{p.skills}}</span><span class="kind kind-free">{{c.free1}}</span></div>
+          <h1 class="ltr" style="text-align: start;">{{p.name}}</h1>
+          <p class="lead">{{p.sub}}</p>
+          <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><div class="pp-art"><img src="{{p.img}}" alt=""></div></sc-if>
+          <div class="pp-cta">
+            <a href="#signup" class="{{ctaCls}}"><span class="ph ph-play" aria-hidden="true"></span>{{c.startFree}}</a>
+            <a href="#sample" class="{{cta2Cls}}">{{c.trySample}}</a>
+          </div>
+          <p class="t-small ink-2" style="display: flex; align-items: center; gap: 6px;"><span class="ph ph-clock" aria-hidden="true"></span>{{p.note}}</p>
+        </div>
+        <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><div class="pp-art"><span class="frame-label" style="position: absolute; top: -22px; inset-inline-start: 4px;"><span class="ph ph-frame-corners" aria-hidden="true"></span><span class="ltr">{{p.name}}</span></span><img src="{{p.img}}" alt=""></div></sc-if>
+      </section>
+
+      <section class="pp-sec" aria-labelledby="pp-can-{{lang}}-{{device}}">
+        <h2 id="pp-can-{{lang}}-{{device}}">{{c.canTitle}}</h2>
+        <div class="can"><sc-for list="{{p.can}}" as="x" hint-placeholder-count="5"><p><span class="ph ph-check-circle-fill" aria-hidden="true"></span><span>{{x}}</span></p></sc-for></div>
+      </section>
+
+      <div style="{{twoCol}}">
+        <section class="pp-sec" aria-labelledby="pp-units-{{lang}}-{{device}}">
+          <h2 id="pp-units-{{lang}}-{{device}}">{{c.unitsTitle}}</h2>
+          <div class="unit-list">
+            <sc-for list="{{p.unitRows}}" as="u" hint-placeholder-count="5">
+              <div class="{{u.cls}}"><span class="unit-n">{{u.n}}</span><span class="grow"><b>{{u.name}}</b><small>{{u.meta}}</small></span><span class="{{u.tagCls}}">{{u.tag}}</span></div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="pp-sec" id="sample" aria-labelledby="pp-sample-{{lang}}-{{device}}">
+          <h2 id="pp-sample-{{lang}}-{{device}}">{{p.sampleTitle}}</h2>
+          <sc-if value="{{p.isVideo}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{c.p14SampleWhere}}</span>
+              <div style="position: relative; border-radius: 20px; overflow: hidden; background: #00121B; aspect-ratio: 16 / 9; display: grid; place-items: center; box-shadow: 0 0 0 1.5px var(--sel-line);">
+                <img src="{{img.video}}" alt="" style="position: absolute; inset-inline-end: 6%; bottom: 10%; width: 34%; opacity: 0.9;">
+                <div style="position: absolute; inset-inline-start: 6%; top: 12%; display: flex; flex-direction: column; gap: 6px; max-width: 56%; color: #EAF7FC; text-align: start;">
+                  <span style="font-size: 12px; font-weight: 700; color: #78E4FC;">{{c.p14ClipOver}}</span>
+                  <b style="font-size: 20px; line-height: 1.25;">{{c.p14ClipTitle}}</b>
+                </div>
+                <a href="#play" class="btn btn-highlight press" aria-label="{{c.playClip}}" style="width: 64px; height: 64px; min-height: 0; padding: 0; border-radius: 50%; position: relative;"><span class="ph ph-play-fill" style="font-size: 26px;" aria-hidden="true"></span></a>
+                <span style="position: absolute; inset-inline-start: 14px; bottom: 12px; display: inline-flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 700; color: #BBD9E6;"><span class="ph ph-cc" aria-hidden="true"></span><span class="ltr">0:48 · CC English, العربية</span></span>
+              </div>
+              <p class="pg-note"><span class="ph ph-cursor-click" aria-hidden="true"></span><span>{{c.p14After}}</span></p>
+            </div>
+          </sc-if>
+          <sc-if value="{{p.isStep}}" hint-placeholder-val="{{true}}">
+            <section class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 10px; border-radius: 24px; box-shadow: 0 6px 0 var(--ledge);">
+              <span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{c.sampleWhere}}</span>
+              <div class="say" style="margin: 0;"><img class="say-face" src="{{img.hana}}" alt="" style="width: 56px; height: 56px;"><div class="say-bubble"><span class="say-name">{{c.hana}}</span><p class="scn">{{c.sScn}}</p></div></div>
+              <p style="margin: 0; font-weight: 700; font-size: 18px; line-height: 1.35;">{{c.sQ}}</p>
+              <div class="lp-opts" style="display: grid; gap: 8px;">
+                <sc-for list="{{sampleOpts}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="min-height: 52px; padding: 8px 12px; gap: 10px; font-size: 15px; border-radius: 14px;"><span class="key" style="width: 28px; height: 28px; font-size: 14px; border-radius: 8px;">{{o.k}}</span><span class="grow">{{o.label}}</span></button></sc-for>
+              </div>
+              <sc-if value="{{sNotChecked}}" hint-placeholder-val="{{true}}">
+                <button type="button" class="btn btn-primary btn-block press" onClick="{{checkSample}}">{{c.checkInLesson}}</button>
+                <p class="t-small ink-2" style="text-align: center;">{{c.sampleNote}}</p>
+              </sc-if>
+              <sc-if value="{{sChecked}}" hint-placeholder-val="{{false}}">
+                <p role="status" style="margin: 0; padding: 12px 14px; border-radius: 16px; background: {{sFbBg}}; font-size: 15px; line-height: 1.5;"><b>{{sFbHead}}</b> {{c.sWhy}}</p>
+                <a href="#signup" class="btn btn-primary btn-block press">{{c.startFree}}</a>
+              </sc-if>
+            </section>
+          </sc-if>
+        </section>
+      </div>
+
+      <section class="pp-sec" aria-labelledby="pp-how-{{lang}}-{{device}}">
+        <h2 id="pp-how-{{lang}}-{{device}}">{{p.howTitle}}</h2>
+        <div class="can"><sc-for list="{{p.how}}" as="h" hint-placeholder-count="3"><p><span class="{{h.icon}}" style="color: var(--link);" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for></div>
+      </section>
+
+      <section class="pp-band">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px;">
+          <b style="font-size: 20px; line-height: 1.3;">{{c.bandTitle}}</b>
+          <span class="t-small" style="font-size: 15px;">{{c.bandBody}}</span>
+        </div>
+        <a href="#signup" class="btn btn-primary btn-lg press" style="{{bandBtn}}">{{c.startFree}}</a>
+      </section>
+    </main>
+  </sc-if>
+
+  <!-- ============ Coming soon path ============ -->
+  <sc-if value="{{is.soon}}" hint-placeholder-val="{{false}}">
+    <main style="display: flex; flex-direction: column;">
+      <section class="pp-hero">
+        <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0;">
+          <p class="crumb"><a href="#paths">{{c.paths}}</a><span class="ph ph-caret flip" aria-hidden="true"></span><span class="ltr">Make UX Accessible</span></p>
+          <div class="pp-facts"><span class="kind kind-soon"><span class="ph ph-hourglass" aria-hidden="true"></span>{{c.soon}}</span></div>
+          <h1 class="ltr" style="text-align: start;">Make UX Accessible</h1>
+          <p class="lead">{{c.p05Sub}}</p>
+          <p class="pg-note" style="font-size: 15px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.soonBody}}</span></p>
+        </div>
+        <div class="pp-art" style="border-style: dashed;"><img src="{{img.map}}" alt="" style="filter: grayscale(0.6); opacity: 0.6;"></div>
+      </section>
+      <section class="pp-sec">
+        <h2>{{c.readyTitle}}</h2>
+        <div class="pg-grid">
+          <sc-for list="{{ready}}" as="r" hint-placeholder-count="3">
+            <a href="#path" class="path-card press">
+              <span class="pc-ill"><img src="{{r.img}}" alt=""></span>
+              <span class="pc-text"><span class="pc-name ltr" style="text-align: start;">{{r.name}}</span><span class="pc-sub">{{r.sub}}</span><span class="pc-meta"><span class="{{r.kindCls}}">{{r.kind}}</span><span class="kind kind-free">{{c.free1}}</span></span></span>
+              <span class="pc-end"><span class="ph ph-caret flip" aria-hidden="true"></span></span>
+            </a>
+          </sc-for>
+        </div>
+        <div class="pp-cta" style="margin-top: 6px;"><a href="#sample" class="{{ctaCls}}"><span class="ph ph-play" aria-hidden="true"></span>{{c.tryLesson}}</a><a href="#paths" class="{{cta2Cls}}">{{c.allPaths}}</a></div>
+      </section>
+    </main>
+  </sc-if>
+
+  <!-- ============ Privacy and terms ============ -->
+  <sc-if value="{{is.legal}}" hint-placeholder-val="{{false}}">
+    <main class="legal">
+      <div class="pg-stack" style="gap: 12px;">
+        <div class="legal-head">
+          <h1>{{doc.title}}</h1>
+          <p class="legal-meta"><span>{{c.updated}} [DATE]</span><a href="#other" lang="{{otherCode}}" style="color: var(--link);">{{c.readOther}}</a></p>
+        </div>
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+          <button class="toc-btn" type="button" aria-expanded="{{tocAria}}" onClick="{{toggleToc}}"><span class="ph ph-list" aria-hidden="true"></span><span class="grow">{{c.onPage}}</span><span class="ph ph-caret" style="transform: rotate({{tocRot}}deg);" aria-hidden="true"></span></button>
+        </sc-if>
+        <nav class="{{tocCls}}" aria-label="{{c.onPage}}">
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><p class="t-over">{{c.onPage}}</p></sc-if>
+          <sc-for list="{{doc.toc}}" as="t" hint-placeholder-count="8"><a href="#s{{t.n}}" class="{{t.cls}}" aria-current="{{t.cur}}"><span class="n">{{t.n}}</span>{{t.label}}</a></sc-for>
+        </nav>
+        <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><p class="pg-note" style="font-size: 13px;"><span class="ph ph-mail" aria-hidden="true"></span><span>{{c.qs}} <span class="ltr">support@uxgate.org</span></span></p></sc-if>
+      </div>
+      <article class="doc">
+        <sc-for list="{{doc.secs}}" as="s" hint-placeholder-count="4">
+          <h2 id="s{{s.n}}">{{s.n}}. {{s.h}}</h2>
+          <sc-for list="{{s.ps}}" as="x" hint-placeholder-count="1"><p>{{x}}</p></sc-for>
+          <sc-if value="{{s.hasList}}" hint-placeholder-val="{{false}}"><ul><sc-for list="{{s.list}}" as="x" hint-placeholder-count="3"><li>{{x}}</li></sc-for></ul></sc-if>
+          <sc-if value="{{s.hasKey}}" hint-placeholder-val="{{false}}"><p class="key">{{s.key}}</p></sc-if>
+        </sc-for>
+      </article>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{showFoot}}" hint-placeholder-val="{{true}}">
+    <footer class="pub-foot">
+      <img src="/_blob/6ef1217443643f56706d5f2cf459ec0b" alt="UXGate" style="height: 28px; width: auto; align-self: flex-start;">
+      <span style="flex: 1;"></span>
+      <nav aria-label="{{c.footNav}}"><sc-for list="{{c.foot}}" as="l" hint-placeholder-count="5"><a href="#f">{{l}}</a></sc-for></nav>
+      <a href="mailto:support@uxgate.org" class="mail ltr">support@uxgate.org</a>
+    </footer>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["path","pathHybrid","pathSoon","privacy","privacyToc","terms"],"default":"path"},"pageh":{"editor":null},"$preview":{"width":390,"height":844}}'>
+/* Slice 4 · Public path pages (EN-05, spec §4.1), privacy and terms (EN-24). Path facts come from the content: P01 has 5 units, 20 lessons, 40 skills. */
+const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', video: '/_blob/a60ce1789f905176f32c4553b2802acc', map: '/_blob/f6e00f674b6512115c3a1032554cf9cf', hana: '/_blob/c1775b64148da406fd932a1b2f2ecab9' };
+const C = {
+  en: {
+    siteNav: 'Site', links: [['paths', 'Paths'], ['how', 'How it works'], ['pricing', 'Pricing'], ['faq', 'Questions']], otherLang: 'عربي', signin: 'Sign in', tryShort: 'Try free', tryLesson: 'Try a free lesson',
+    paths: 'Paths', free1: 'Unit 1 free', startFree: 'Start Unit 1 free', trySample: 'Try the sample step',
+    interactive: 'Interactive', hybrid: 'Hybrid · Video', unitsN: (n) => n + ' units', lessonsN: (n) => n + ' lessons', skillsN: (n) => n + ' skills',
+    noteInt: 'Lessons of 5 to 10 minutes. No card needed for Unit 1.', noteHyb: 'Short clips, then practice. No card needed for Unit 1.',
+    canTitle: 'What you’ll be able to do', unitsTitle: 'Units', freeTag: 'Free', subTag: 'Subscription', unitMeta: (l, s) => l + ' lessons · ' + s + ' skills',
+    sampleTitle: 'A sample step', sampleWhere: 'From Unit 2 · Lesson 1', hana: 'Hana · Gym owner',
+    sScn: 'New members pick one of my 3 plans when they sign up: Basic, Plus or Family.', sQ: 'Which control fits the plan choice?',
+    sOpts: [['A', 'Three checkboxes'], ['B', 'Three radio buttons'], ['C', 'A dropdown list']], checkInLesson: 'Check my answer', sampleNote: 'No account needed. Lessons explain every answer like this.', sRight: 'Yes, that works.', sWrong: 'Not quite.', sWhy: 'One choice from a few visible options is a radio button job: people see all 3 plans and pick one.',
+    howInt: 'How this path teaches', howHyb: 'How this hybrid path teaches',
+    hInt: [['ph ph-cursor-click', 'Every step is a decision on a real screen.'], ['ph ph-chat', 'Feedback explains why, right or wrong.'], ['ph ph-seal', 'A skill check on a new case ends each unit.']],
+    hHyb: [['ph ph-video', 'Short clips with English and Arabic captions and a transcript.'], ['ph ph-cursor-click', 'You practise each pattern right after its clip.'], ['ph ph-seal', 'A skill check on a new case ends each unit.']],
+    p14SampleTitle: 'A sample clip', p14SampleWhere: 'Unit 1 · Lesson 1 · clip', p14ClipOver: 'Interrupt only when it’s worth it', p14ClipTitle: 'Dialog, toast or banner?', playClip: 'Play the sample clip',
+    p14After: 'After the clip, you pick the right pattern for three new screens.',
+    bandTitle: 'Unit 1 is free in every path.', bandBody: 'The subscription opens every unit of every path, skill checks and certificates: [PRICE] a month, in your currency.',
+    soon: 'Coming soon', p05Sub: 'Design that works for every ability and device.', soonBody: 'We’re writing this path now. It isn’t open yet, so there’s nothing to sign up for here.',
+    readyTitle: 'Paths you can start today', allPaths: 'See all 14 paths',
+    sampleCap: 'final text comes from the UXGate admins', updated: 'Last updated', readOther: 'اقرأها بالعربية', onPage: 'On this page', qs: 'Questions?',
+    footNav: 'Footer', foot: ['Paths', 'Pricing', 'Help', 'Terms', 'Privacy']
+  },
+  ar: {
+    siteNav: 'الموقع', links: [['paths', 'المسارات'], ['how', 'كيف يعمل'], ['pricing', 'الأسعار'], ['faq', 'الأسئلة']], otherLang: 'English', signin: 'سجّل الدخول', tryShort: 'جرّب مجانًا', tryLesson: 'جرّب درسًا مجانيًا',
+    paths: 'المسارات', free1: 'الوحدة 1 مجانية', startFree: 'ابدأ الوحدة 1 مجانًا', trySample: 'جرّب الخطوة النموذجية',
+    interactive: 'تفاعلي', hybrid: 'مختلط · فيديو', unitsN: (n) => n + ' وحدات', lessonsN: (n) => n + ' درسًا', skillsN: (n) => n + ' مهارة',
+    noteInt: 'دروس من 5 إلى 10 دقائق. لا تحتاج بطاقة دفع للوحدة 1.', noteHyb: 'مقاطع قصيرة ثم تدريب. لا تحتاج بطاقة دفع للوحدة 1.',
+    canTitle: 'ما الذي ستقدر على فعله', unitsTitle: 'الوحدات', freeTag: 'مجانية', subTag: 'بالاشتراك', unitMeta: (l, s) => l + ' دروس · ' + s + ' مهارات',
+    sampleTitle: 'خطوة نموذجية', sampleWhere: 'من الوحدة 2 · الدرس 1', hana: 'هناء · صاحبة نادٍ رياضي',
+    sScn: 'يختار الأعضاء الجدد باقة واحدة من باقاتي الثلاث عند التسجيل: أساسية أو بلس أو عائلية.', sQ: 'أي عنصر تحكم يناسب اختيار الباقة؟',
+    sOpts: [['أ', 'ثلاثة مربعات اختيار (checkboxes)'], ['ب', 'ثلاثة أزرار اختيار (radio buttons)'], ['ج', 'قائمة منسدلة (dropdown)']], checkInLesson: 'تحقّق من إجابتي', sampleNote: 'بدون حساب. الدروس تشرح كل إجابة بهذه الطريقة.', sRight: 'نعم، هذا صحيح.', sWrong: 'ليس تمامًا.', sWhy: 'اختيار واحد من خيارات قليلة ظاهرة هو عمل أزرار الاختيار (radio buttons): يرى الناس الباقات الثلاث ويختارون واحدة.',
+    howInt: 'كيف يعلّمك هذا المسار', howHyb: 'كيف يعلّمك هذا المسار المختلط',
+    hInt: [['ph ph-cursor-click', 'كل خطوة قرار على شاشة حقيقية.'], ['ph ph-chat', 'ملاحظات تشرح السبب، أصبت أم لا.'], ['ph ph-seal', 'اختبار مهارة على حالة جديدة يُنهي كل وحدة.']],
+    hHyb: [['ph ph-video', 'مقاطع قصيرة بترجمة إنجليزية وعربية ونص مكتوب.'], ['ph ph-cursor-click', 'تتدرّب على كل نمط بعد مقطعه مباشرة.'], ['ph ph-seal', 'اختبار مهارة على حالة جديدة يُنهي كل وحدة.']],
+    p14SampleTitle: 'مقطع نموذجي', p14SampleWhere: 'الوحدة 1 · الدرس 1 · مقطع', p14ClipOver: 'قاطِع الناس فقط حين يستحق الأمر', p14ClipTitle: 'نافذة حوار أم رسالة عابرة أم شريط تنبيه؟', playClip: 'شغّل المقطع النموذجي',
+    p14After: 'بعد المقطع، تختار النمط المناسب لثلاث شاشات جديدة.',
+    bandTitle: 'الوحدة 1 مجانية في كل مسار.', bandBody: 'الاشتراك يفتح كل وحدات كل المسارات واختبارات المهارة والشهادات: [PRICE] شهريًا بعملتك المحلية.',
+    soon: 'قريبًا', p05Sub: 'تصميم يناسب كل القدرات وكل الأجهزة.', soonBody: 'نكتب هذا المسار الآن. لم يُفتح بعد، لذلك لا يوجد ما تشترك فيه هنا.',
+    readyTitle: 'مسارات يمكنك بدؤها اليوم', allPaths: 'شاهد المسارات الـ14',
+    sampleCap: 'النص النهائي يأتي من مسؤولي UXGate', updated: 'آخر تحديث', readOther: 'Read it in English', onPage: 'في هذه الصفحة', qs: 'لديك سؤال؟',
+    footNav: 'التذييل', foot: ['المسارات', 'الأسعار', 'المساعدة', 'الشروط', 'الخصوصية']
+  }
+};
+const PATHS = {
+  en: {
+    P01: { name: 'Forms That Flow', sub: 'Design forms people can finish, understand and recover from, in English and Arabic.', units: 5, lessons: 20, skills: 40,
+      unitList: [['Ask only what you need', 4, 8], ['Pick the right control', 4, 8], ['Keep labels and hints in sight', 4, 8], ['Errors people can fix', 4, 8], ['Forms everyone can finish', 4, 8]],
+      can: ['Cut the fields a form doesn’t need, and say why the rest stay.', 'Pick the right control: one choice, many, a switch or a long list.', 'Keep labels and hints visible while people type.', 'Write error messages people can fix, in English and Arabic.', 'Make long forms everyone can finish, on a phone too.'] },
+    P14: { name: 'Patterns That Fit', sub: 'Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.', units: 6, lessons: 25, skills: 48,
+      unitList: [['Interrupt only when it’s worth it', 4, 8], ['Show what’s needed, make the next step obvious', 5, 8], ['Help people find it', 4, 8], ['Choices people can trust', 4, 8], ['Forms people finish', 4, 8], ['Numbers and dates, set fast', 4, 8]],
+      can: ['Choose between a dialog, a toast and a banner.', 'Show only what’s needed and make the next step obvious.', 'Set up search and filters people can use.', 'Offer choices people can trust.', 'Build forms people finish.', 'Let people set numbers and dates fast.'] }
+  },
+  ar: {
+    P01: { name: 'Forms That Flow', sub: 'صمّم نماذج يستطيع الناس إكمالها وفهمها وتصحيح أخطائها، بالعربية والإنجليزية.', units: 5, lessons: 20, skills: 40,
+      unitList: [['اطلب ما تحتاجه فقط', 4, 8], ['اختر عنصر التحكم المناسب', 4, 8], ['أبقِ العناوين والتلميحات ظاهرة', 4, 8], ['أخطاء يستطيع الناس إصلاحها', 4, 8], ['نماذج يستطيع الجميع إكمالها', 4, 8]],
+      can: ['تحذف الحقول التي لا يحتاجها النموذج، وتشرح لماذا يبقى الباقي.', 'تختار عنصر التحكم المناسب: اختيار واحد أو عدة اختيارات أو مفتاح أو قائمة طويلة.', 'تُبقي العناوين والتلميحات ظاهرة أثناء الكتابة.', 'تكتب رسائل خطأ يستطيع الناس إصلاحها، بالعربية والإنجليزية.', 'تصمّم نماذج طويلة يُكملها الجميع، على الهاتف أيضًا.'] },
+    P14: { name: 'Patterns That Fit', sub: 'اختر نمط الواجهة المناسب للموقف: نوافذ الحوار والقوائم السفلية والرسائل والبحث والفلاتر.', units: 6, lessons: 25, skills: 48,
+      unitList: [['قاطِع الناس فقط حين يستحق الأمر', 4, 8], ['اعرض ما يلزم واجعل الخطوة التالية واضحة', 5, 8], ['ساعد الناس على إيجاد ما يريدون', 4, 8], ['اختيارات يثق بها الناس', 4, 8], ['نماذج يُكملها الناس', 4, 8], ['أرقام وتواريخ تُضبط بسرعة', 4, 8]],
+      can: ['تختار بين نافذة الحوار والرسالة العابرة وشريط التنبيه.', 'تعرض ما يلزم فقط وتجعل الخطوة التالية واضحة.', 'تبني بحثًا وفلاتر يستطيع الناس استخدامها.', 'تقدّم اختيارات يثق بها الناس.', 'تبني نماذج يُكملها الناس.', 'تتيح ضبط الأرقام والتواريخ بسرعة.'] }
+  }
+};
+const READY = { en: [['Forms That Flow', 'Forms people finish, in English and Arabic.', 'forms', 0], ['Visual Hierarchy in Action', 'Help people see what matters first.', 'hier', 0], ['Patterns That Fit', 'The right pattern for the moment.', 'video', 1]],
+  ar: [['Forms That Flow', 'نماذج يُكملها الناس، بالعربية والإنجليزية.', 'forms', 0], ['Visual Hierarchy in Action', 'ساعد الناس على رؤية الأهم أولًا.', 'hier', 0], ['Patterns That Fit', 'النمط المناسب للموقف.', 'video', 1]] };
+const DOCS = {
+ "en": {
+  "privacy": {
+   "title": "Privacy policy",
+   "secs": [
+    [
+     "Who we are",
+     [
+      "UXGate (uxgate.org) is a place to practise UX design in Arabic and English. It is run by [COMPANY LEGAL NAME], [ADDRESS]. This policy explains what we keep about you, why we keep it, and how you control it."
+     ],
+     null,
+     null
+    ],
+    [
+     "What we collect",
+     [
+      "We keep only what the service needs:"
+     ],
+     [
+      "Your account: your name, your email, and how you sign in (email and password, an email link, Google or Apple). We never see your Google or Apple password.",
+      "Your learning: your answers, attempts, hints used, XP, goal, streak and freezes, skill states, badges and certificates.",
+      "Your settings: language, theme, daily goal, reminder time, sound, and your notification choices.",
+      "What you send us: review requests on a step, the reason you give, and emails to support.",
+      "Payments: your plan, its status and dates. Our payment providers handle your card; we never see or keep your full card number.",
+      "Technical data: browser type, device type, language and time zone, and error reports. Error reports never include your name or email."
+     ],
+     null
+    ],
+    [
+     "How we use it",
+     [
+      "We use your data to:"
+     ],
+     [
+      "run your lessons, save your progress and plan your reviews;",
+      "send the reminders and emails you chose, and the account emails that keep your account safe;",
+      "answer your support emails and review requests;",
+      "improve lessons using answer counts that don’t name you, for example how many people picked each choice;",
+      "keep UXGate safe and working, for example by stopping abuse and fixing errors."
+     ],
+     null
+    ],
+    [
+     "What we never do",
+     [],
+     null,
+     "We never show ads and never use advertising trackers. We never sell your data or share it for advertising. Our analytics count visits without third-party cookies."
+    ],
+    [
+     "Cookies",
+     [
+      "We use only the cookies the service needs: one to keep you signed in, and small ones that remember your language and theme. There are no advertising or social media cookies, so there is nothing to accept or refuse."
+     ],
+     null,
+     null
+    ],
+    [
+     "Who else handles it",
+     [
+      "These services run parts of UXGate for us. Each one gets only what its job needs, and may use it only for that job:"
+     ],
+     [
+      "Supabase: database and sign-in, hosted in Frankfurt, Germany.",
+      "Vercel: website hosting, in its Frankfurt region.",
+      "Resend: sending our emails.",
+      "Bunny Stream: playing lesson videos.",
+      "Sentry: error reports, without your name or email.",
+      "Paymob (in Egypt) and Paddle (elsewhere): payments.",
+      "Google and Apple: only if you choose to sign in with them."
+     ],
+     null
+    ],
+    [
+     "What other people can see",
+     [
+      "Your profile is private. Two things are off until you turn them on in Settings:"
+     ],
+     [
+      "Achievement page: visitors see your name, your path, your skills Shown and the date. Never your email, answers or mistakes.",
+      "Leaderboard: other learners see your name and your XP this week.",
+      "Certificate links: anyone with the link can check that the certificate is real."
+     ],
+     null
+    ],
+    [
+     "Your choices and rights",
+     [],
+     [
+      "See and download all your data as one JSON file from Settings.",
+      "Correct your name and email in Settings.",
+      "Turn off any notification, the achievement page or the leaderboard at any time.",
+      "Delete your account from Settings. We remove your personal data within 30 days. Sign in before then to undo.",
+      "Ask us any question about your data, or object to how we use it, at support@uxgate.org. You can also complain to your data protection authority."
+     ],
+     null
+    ],
+    [
+     "How long we keep it",
+     [
+      "We keep your data while your account is open. After you delete it, your personal data is removed within 30 days. We keep payment records for as long as tax law requires ([PERIOD]). Backups are deleted on a rolling basis within [N] days."
+     ],
+     null,
+     null
+    ],
+    [
+     "How we protect it",
+     [
+      "Every connection uses HTTPS. Our providers encrypt stored data. Your sign-in session cookie can’t be read by page scripts. Only a few team members can reach learner data, and only to run the service or answer you."
+     ],
+     null,
+     null
+    ],
+    [
+     "Age",
+     [
+      "UXGate is for people aged [MINIMUM AGE] or older. If you think a younger child has an account, write to us and we will delete it."
+     ],
+     null,
+     null
+    ],
+    [
+     "Changes to this policy",
+     [
+      "If we change something important, we tell you by email before it applies. The date at the top shows the last change."
+     ],
+     null,
+     null
+    ],
+    [
+     "Contact us",
+     [
+      "Write to support@uxgate.org. A person reads every email."
+     ],
+     null,
+     null
+    ]
+   ]
+  },
+  "terms": {
+   "title": "Terms of use",
+   "secs": [
+    [
+     "About these terms",
+     [
+      "These terms are an agreement between you and [COMPANY LEGAL NAME], which runs UXGate. By creating an account or using UXGate, you agree to them."
+     ],
+     null,
+     null
+    ],
+    [
+     "The service",
+     [
+      "UXGate gives you short practice lessons in UX design, skill checks, reviews and certificates, in Arabic and English. Some paths include short videos."
+     ],
+     null,
+     null
+    ],
+    [
+     "Your account",
+     [],
+     [
+      "You must be [MINIMUM AGE] or older.",
+      "One account per person. Keep your sign-in safe; you are responsible for what happens in your account.",
+      "Use your real name if you want it on a certificate."
+     ],
+     null
+    ],
+    [
+     "Free and paid parts",
+     [
+      "Unit 1 of every path, review and your profile are free. A subscription opens every other unit and the certificates."
+     ],
+     null,
+     null
+    ],
+    [
+     "Subscription, cancelling and refunds",
+     [],
+     null,
+     "One monthly plan at [PRICE], shown in your currency. No trial. It renews every month until you cancel. Payments go through Paymob in Egypt and Paddle elsewhere. Cancel any time in Settings and keep access until the end of the month you paid for. Ask for a refund within 7 days of a charge."
+    ],
+    [
+     "Fair use",
+     [
+      "Use UXGate to learn. Please don’t:"
+     ],
+     [
+      "share your account or sell access to it;",
+      "copy lessons, videos or questions to publish them elsewhere;",
+      "use bots or scripts to answer lessons or collect content;",
+      "try to break, overload or get around the security of the service."
+     ],
+     null
+    ],
+    [
+     "Our content and yours",
+     [
+      "Lessons, videos, illustrations and characters belong to UXGate or to the instructors who made them. You may use them for your own learning. Your answers and messages stay yours; you let us store and use them to run the service, as the privacy policy explains."
+     ],
+     null,
+     null
+    ],
+    [
+     "Certificates",
+     [
+      "A certificate says you passed every skill check in a path, on new cases with no hints. Anyone with its link can check it. We may withdraw a certificate earned by breaking these terms."
+     ],
+     null,
+     null
+    ],
+    [
+     "Changes to the service",
+     [
+      "We improve lessons and features over time. We may pause UXGate for maintenance and say when it will be back. If we remove something you pay for, we tell you first and you can cancel."
+     ],
+     null,
+     null
+    ],
+    [
+     "Ending your account",
+     [
+      "You can delete your account in Settings at any time. We may suspend or close an account that breaks these terms, and we tell you why. You can reply to us if you think we made a mistake."
+     ],
+     null,
+     null
+    ],
+    [
+     "Our responsibility",
+     [
+      "UXGate is a learning service. We work hard to keep it accurate and available, but we can’t promise it will never have errors or downtime. As far as the law allows, our responsibility to you is limited to what you paid us in the last 12 months. Nothing here limits rights you have by law."
+     ],
+     null,
+     null
+    ],
+    [
+     "Law",
+     [
+      "These terms follow the laws of [GOVERNING LAW]. Disputes go to the courts of [PLACE], unless the law of your country gives you another choice."
+     ],
+     null,
+     null
+    ],
+    [
+     "Changes to these terms",
+     [
+      "If we change something important, we tell you by email before it applies."
+     ],
+     null,
+     null
+    ],
+    [
+     "Contact",
+     [
+      "Write to support@uxgate.org."
+     ],
+     null,
+     null
+    ]
+   ]
+  }
+ },
+ "ar": {
+  "privacy": {
+   "title": "سياسة الخصوصية",
+   "secs": [
+    [
+     "من نحن",
+     [
+      "UXGate ‏(uxgate.org) مكان للتدرّب على تصميم UX بالعربية والإنجليزية، وتديره شركة [اسم الشركة القانوني]، ‏[العنوان]. توضّح هذه السياسة ما نحتفظ به عنك ولماذا، وكيف تتحكم فيه."
+     ],
+     null,
+     null
+    ],
+    [
+     "ما الذي نجمعه",
+     [
+      "نحتفظ فقط بما تحتاجه الخدمة:"
+     ],
+     [
+      "حسابك: اسمك وبريدك الإلكتروني وطريقة دخولك (البريد وكلمة المرور، أو رابط بالبريد، أو Google، أو Apple). لا نرى أبدًا كلمة مرورك في Google أو Apple.",
+      "تعلّمك: إجاباتك ومحاولاتك والتلميحات التي استخدمتها ونقاط XP والهدف والسلسلة (streak) وأيام التجميد وحالات المهارات والشارات والشهادات.",
+      "إعداداتك: اللغة والمظهر والهدف اليومي ووقت التذكير والصوت واختيارات الإشعارات.",
+      "ما ترسله لنا: طلبات المراجعة على خطوة، والسبب الذي تكتبه، ورسائلك إلى الدعم.",
+      "الدفع: باقتك وحالتها وتواريخها. يتولّى مزوّدو الدفع بطاقتك، ولا نرى رقمها كاملًا ولا نحتفظ به أبدًا.",
+      "بيانات تقنية: نوع المتصفح والجهاز واللغة والمنطقة الزمنية وتقارير الأخطاء. تقارير الأخطاء لا تتضمن اسمك أو بريدك أبدًا."
+     ],
+     null
+    ],
+    [
+     "كيف نستخدمه",
+     [
+      "نستخدم بياناتك من أجل:"
+     ],
+     [
+      "تشغيل دروسك وحفظ تقدّمك وتنظيم مراجعاتك؛",
+      "إرسال التذكيرات والرسائل التي اخترتها، ورسائل الحساب التي تحافظ على أمانه؛",
+      "الردّ على رسائلك إلى الدعم وطلبات المراجعة؛",
+      "تحسين الدروس بأرقام إجابات لا تذكر اسمك، مثل عدد من اختار كل إجابة؛",
+      "الحفاظ على أمان UXGate وعمله، مثل منع إساءة الاستخدام وإصلاح الأخطاء."
+     ],
+     null
+    ],
+    [
+     "ما لا نفعله أبدًا",
+     [],
+     null,
+     "لا نعرض إعلانات ولا نستخدم متتبّعات إعلانية. لا نبيع بياناتك ولا نشاركها لأغراض إعلانية. أدوات التحليل لدينا تحسب الزيارات بدون ملفات تعريف ارتباط (cookies) من طرف ثالث."
+    ],
+    [
+     "ملفات تعريف الارتباط (cookies)",
+     [
+      "نستخدم فقط ما تحتاجه الخدمة: ملفًا يُبقيك مسجّل الدخول، وملفات صغيرة تتذكّر لغتك ومظهرك. لا توجد ملفات إعلانية أو لمواقع التواصل، لذلك لا يوجد ما تقبله أو ترفضه."
+     ],
+     null,
+     null
+    ],
+    [
+     "من يتعامل معها أيضًا",
+     [
+      "هذه الخدمات تشغّل أجزاء من UXGate لنا. كل خدمة تحصل فقط على ما يحتاجه عملها، ولا تستخدمه إلا لهذا العمل:"
+     ],
+     [
+      "Supabase: قاعدة البيانات وتسجيل الدخول، في فرانكفورت بألمانيا.",
+      "Vercel: استضافة الموقع، في منطقة فرانكفورت.",
+      "Resend: إرسال رسائلنا بالبريد.",
+      "Bunny Stream: تشغيل فيديوهات الدروس.",
+      "Sentry: تقارير الأخطاء، بدون اسمك أو بريدك.",
+      "Paymob (في مصر) وPaddle (خارجها): الدفع.",
+      "Google وApple: فقط إن اخترت الدخول بهما."
+     ],
+     null
+    ],
+    [
+     "ما يراه الآخرون",
+     [
+      "ملفك الشخصي خاص. شيئان متوقفان حتى تفعّلهما من الإعدادات:"
+     ],
+     [
+      "صفحة الإنجازات: يرى الزوّار اسمك ومسارك ومهاراتك التي أثبتّها والتاريخ. لا يرون أبدًا بريدك أو إجاباتك أو أخطاءك.",
+      "لوحة المتصدّرين (leaderboard): يرى المتعلّمون الآخرون اسمك ونقاطك هذا الأسبوع.",
+      "روابط الشهادات: يستطيع أي شخص لديه الرابط التأكّد من أن الشهادة حقيقية."
+     ],
+     null
+    ],
+    [
+     "اختياراتك وحقوقك",
+     [],
+     [
+      "شاهد كل بياناتك ونزّلها في ملف JSON واحد من الإعدادات.",
+      "صحّح اسمك وبريدك من الإعدادات.",
+      "أوقف أي إشعار أو صفحة الإنجازات أو لوحة المتصدّرين في أي وقت.",
+      "احذف حسابك من الإعدادات، ونحذف بياناتك الشخصية خلال 30 يومًا. سجّل الدخول قبلها للتراجع.",
+      "اسألنا أي سؤال عن بياناتك، أو اعترض على طريقة استخدامها، على support@uxgate.org. ويمكنك أيضًا تقديم شكوى إلى جهة حماية البيانات في بلدك."
+     ],
+     null
+    ],
+    [
+     "مدة الاحتفاظ",
+     [
+      "نحتفظ ببياناتك طالما حسابك مفتوح. بعد حذفه، تُحذف بياناتك الشخصية خلال 30 يومًا. نحتفظ بسجلات الدفع للمدة التي يطلبها قانون الضرائب ([المدة]). وتُحذف النسخ الاحتياطية تباعًا خلال [عدد] يومًا."
+     ],
+     null,
+     null
+    ],
+    [
+     "كيف نحميها",
+     [
+      "كل اتصال يستخدم HTTPS. ومزوّدونا يشفّرون البيانات المخزّنة. وملف جلسة الدخول لا تستطيع سكربتات الصفحة قراءته. وعدد قليل فقط من الفريق يصل إلى بيانات المتعلّمين، فقط لتشغيل الخدمة أو الردّ عليك."
+     ],
+     null,
+     null
+    ],
+    [
+     "العمر",
+     [
+      "UXGate لمن عمره [الحد الأدنى للعمر] عامًا أو أكثر. إن ظننت أن لطفل أصغر حسابًا، راسلنا وسنحذفه."
+     ],
+     null,
+     null
+    ],
+    [
+     "تغيير هذه السياسة",
+     [
+      "إن غيّرنا شيئًا مهمًا، نخبرك بالبريد قبل أن يبدأ العمل به. ويُظهر التاريخ أعلى الصفحة آخر تغيير."
+     ],
+     null,
+     null
+    ],
+    [
+     "تواصل معنا",
+     [
+      "راسلنا على support@uxgate.org، ويقرأ شخص من الفريق كل رسالة."
+     ],
+     null,
+     null
+    ]
+   ]
+  },
+  "terms": {
+   "title": "شروط الاستخدام",
+   "secs": [
+    [
+     "عن هذه الشروط",
+     [
+      "هذه الشروط اتفاق بينك وبين شركة [اسم الشركة القانوني] التي تدير UXGate. بإنشاء حساب أو استخدام UXGate، أنت توافق عليها."
+     ],
+     null,
+     null
+    ],
+    [
+     "الخدمة",
+     [
+      "يقدّم لك UXGate دروس تدريب قصيرة في تصميم UX واختبارات مهارة ومراجعات وشهادات، بالعربية والإنجليزية. وبعض المسارات تتضمن فيديوهات قصيرة."
+     ],
+     null,
+     null
+    ],
+    [
+     "حسابك",
+     [],
+     [
+      "يجب أن يكون عمرك [الحد الأدنى للعمر] عامًا أو أكثر.",
+      "حساب واحد لكل شخص. حافظ على أمان بيانات دخولك، فأنت مسؤول عمّا يحدث في حسابك.",
+      "استخدم اسمك الحقيقي إن أردته على الشهادة."
+     ],
+     null
+    ],
+    [
+     "الجزء المجاني والمدفوع",
+     [
+      "الوحدة الأولى من كل مسار والمراجعة وملفك الشخصي مجانية. الاشتراك يفتح باقي الوحدات والشهادات."
+     ],
+     null,
+     null
+    ],
+    [
+     "الاشتراك والإلغاء والاسترداد",
+     [],
+     null,
+     "باقة شهرية واحدة بسعر [PRICE] بعملتك المحلية. بدون فترة تجريبية. تتجدّد كل شهر حتى تلغيها. يتم الدفع عبر Paymob في مصر وPaddle خارجها. ألغِ متى شئت من الإعدادات ويبقى وصولك حتى نهاية الشهر المدفوع. اطلب استرداد المبلغ خلال 7 أيام من الدفع."
+    ],
+    [
+     "الاستخدام العادل",
+     [
+      "استخدم UXGate لتتعلّم. ونرجو ألا:"
+     ],
+     [
+      "تشارك حسابك أو تبيع الوصول إليه؛",
+      "تنسخ الدروس أو الفيديوهات أو الأسئلة لنشرها في مكان آخر؛",
+      "تستخدم برامج آلية للإجابة عن الدروس أو جمع المحتوى؛",
+      "تحاول تعطيل الخدمة أو إثقالها أو تجاوز حمايتها."
+     ],
+     null
+    ],
+    [
+     "محتوانا ومحتواك",
+     [
+      "الدروس والفيديوهات والرسوم والشخصيات ملك لـUXGate أو للمدرّبين الذين صنعوها، ويمكنك استخدامها لتعلّمك الشخصي. إجاباتك ورسائلك تبقى لك، وتسمح لنا بتخزينها واستخدامها لتشغيل الخدمة كما توضّح سياسة الخصوصية."
+     ],
+     null,
+     null
+    ],
+    [
+     "الشهادات",
+     [
+      "الشهادة تعني أنك اجتزت كل اختبارات المهارة في المسار، على حالات جديدة وبدون تلميحات. يستطيع أي شخص لديه رابطها التحقّق منها. وقد نسحب شهادة حُصل عليها بمخالفة هذه الشروط."
+     ],
+     null,
+     null
+    ],
+    [
+     "تغييرات الخدمة",
+     [
+      "نطوّر الدروس والمزايا باستمرار. وقد نوقف UXGate مؤقتًا للصيانة ونخبرك متى يعود. وإن أزلنا شيئًا تدفع مقابله، نخبرك أولًا ويمكنك الإلغاء."
+     ],
+     null,
+     null
+    ],
+    [
+     "إنهاء حسابك",
+     [
+      "يمكنك حذف حسابك من الإعدادات في أي وقت. وقد نوقف أو نغلق حسابًا يخالف هذه الشروط، ونخبرك بالسبب. ويمكنك الردّ علينا إن ظننت أننا أخطأنا."
+     ],
+     null,
+     null
+    ],
+    [
+     "مسؤوليتنا",
+     [
+      "UXGate خدمة تعليمية. نعمل جاهدين ليبقى دقيقًا ومتاحًا، لكن لا نستطيع أن نعد بأنه لن تحدث أخطاء أو توقفات أبدًا. وفي حدود ما يسمح به القانون، تقتصر مسؤوليتنا تجاهك على ما دفعته لنا في آخر 12 شهرًا. ولا شيء هنا يقيّد حقوقك التي يمنحها لك القانون."
+     ],
+     null,
+     null
+    ],
+    [
+     "القانون",
+     [
+      "تخضع هذه الشروط لقوانين [الدولة]. وتُنظر النزاعات أمام محاكم [المدينة]، ما لم يمنحك قانون بلدك خيارًا آخر."
+     ],
+     null,
+     null
+    ],
+    [
+     "تغيير الشروط",
+     [
+      "إن غيّرنا شيئًا مهمًا، نخبرك بالبريد قبل أن يبدأ العمل به."
+     ],
+     null,
+     null
+    ],
+    [
+     "التواصل",
+     [
+      "راسلنا على support@uxgate.org."
+     ],
+     null,
+     null
+    ]
+   ]
+  }
+ }
+};
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { pick: 1, toc: null, checked: false }; }
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = this.props.view || 'path';
+    const c = C[lang];
+    const isDesk = device === 'desktop';
+    const tall = view === 'path' || view === 'pathHybrid' || view === 'pathSoon';
+    const pageh = parseInt(this.props.pageh, 10) || (isDesk ? 900 : 844);
+    const is = { path: view === 'path' || view === 'pathHybrid', soon: view === 'pathSoon', legal: view === 'privacy' || view === 'privacyToc' || view === 'terms' };
+    const hyb = view === 'pathHybrid';
+    const P = PATHS[lang][hyb ? 'P14' : 'P01'];
+    const p = Object.assign({}, P, {
+      img: hyb ? IMG.video : IMG.forms, kind: hyb ? c.hybrid : c.interactive, kindCls: 'kind' + (hyb ? ' kind-hybrid' : ''), kindIcon: hyb ? 'ph ph-video' : 'ph ph-cursor-click',
+      units: c.unitsN(P.units), lessons: c.lessonsN(P.lessons), skills: c.skillsN(P.skills), note: hyb ? c.noteHyb : c.noteInt,
+      unitRows: P.unitList.map(([name, l, s], i) => ({ n: String(i + 1), name, meta: c.unitMeta(l, s), cls: 'unit-row' + (i === 0 ? ' is-free' : ''), tag: i === 0 ? c.freeTag : c.subTag, tagCls: 'kind' + (i === 0 ? ' kind-free' : '') })),
+      sampleTitle: hyb ? c.p14SampleTitle : c.sampleTitle, isVideo: hyb, isStep: !hyb,
+      howTitle: hyb ? c.howHyb : c.howInt, how: (hyb ? c.hHyb : c.hInt).map(([icon, text]) => ({ icon, text }))
+    });
+    const docKey = view === 'terms' ? 'terms' : 'privacy';
+    const D = DOCS[lang][docKey];
+    const showN = isDesk ? D.secs.length : 4;
+    const doc = { title: D.title,
+      toc: D.secs.map(([h], i) => ({ n: String(i + 1), label: h, cls: i === 0 ? 'is-on' : '', cur: i === 0 ? 'location' : 'false' })),
+      secs: D.secs.slice(0, showN).map(([h, ps, list, key], i) => ({ n: String(i + 1), h, ps, list: list || [], hasList: !!list, key: key || '', hasKey: !!key })) };
+    const tocOpen = this.state.toc === null ? view === 'privacyToc' : this.state.toc;
+    return {
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG, is, p, doc,
+      rootCls: 'ug pg pg-pub pg-' + device + (tall ? ' pg-page' : ''), rootStyle: tall ? 'height: ' + pageh + 'px;' : '',
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694', logoStyle: isDesk ? 'height: 34px; width: auto;' : 'height: 26px; width: auto;',
+      links: c.links.map(([id, label]) => ({ id, label, cls: id === 'paths' && !is.legal ? 'is-on' : '', cur: id === 'paths' && !is.legal ? 'page' : 'false' })),
+      otherCode: lang === 'ar' ? 'en' : 'ar', navCta: isDesk ? c.tryLesson : c.tryShort, navCtaStyle: isDesk ? '' : 'padding: 0 12px;',
+      ctaCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), cta2Cls: 'btn btn-secondary btn-lg press' + (isDesk ? '' : ' btn-block'),
+      twoCol: isDesk ? 'display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start;' : '',
+      bandBtn: isDesk ? 'flex: none;' : '',
+      sampleOpts: c.sOpts.map(([k, label], i) => { const on = this.state.pick === i, ck = this.state.checked; return { k, label, on: on ? 'true' : 'false', cls: 'choice press' + (ck ? (i === 1 ? ' is-right' : (on ? ' is-wrong' : '')) : (on ? ' is-selected' : '')), pick: () => this.setState({ pick: i, checked: false }) }; }),
+      sChecked: this.state.checked, sNotChecked: !this.state.checked, checkSample: () => this.setState({ checked: true }),
+      sFbHead: this.state.pick === 1 ? c.sRight : c.sWrong, sFbBg: this.state.pick === 1 ? 'var(--right-bg)' : 'var(--wrong-bg)',
+      ready: READY[lang].map(([name, sub, img, h]) => ({ name, sub, img: IMG[img], kind: h ? c.hybrid : c.interactive, kindCls: 'kind' + (h ? ' kind-hybrid' : '') })),
+      showFoot: tall,
+      tocCls: 'toc' + (!isDesk && !tocOpen ? ' is-closed' : ''), tocAria: tocOpen ? 'true' : 'false', tocRot: tocOpen ? -90 : 90, toggleToc: () => this.setState({ toc: !tocOpen })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 4 · Settings, notifications, data and account</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
+        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+      </sc-for>
+      <div style="flex: 1;"></div>
+      <a class="dk-layer" href="#help"><span class="ph ph-lifebuoy" aria-hidden="true"></span>{{c.help}}</a>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <!-- ============ Account deleted: signed out, removal scheduled ============ -->
+  <sc-if value="{{is.bye}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="pub-head">
+        <img src="{{logo}}" alt="UXGate" style="height: 30px; width: auto;">
+        <a href="#lang" class="btn btn-quiet btn-sm" style="padding: 0 10px; gap: 6px;"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+      </header>
+      <main class="bye">
+        <img src="{{img.gate}}" alt="" style="width: {{byeIll}}; height: {{byeIll}};">
+        <h1>{{c.byeTitle}}</h1>
+        <p>{{c.byeBody}}</p>
+        <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+          <div class="why-row is-done" style="border: 0; padding: 0; min-height: 0;"><span class="ph ph-signout" aria-hidden="true"></span><span class="grow"><b>{{c.byeOut}}</b><span>{{c.byeOutBody}}</span></span></div>
+          <div class="why-row is-done" style="border: 0; padding: 0; min-height: 0;"><span class="ph ph-mail" aria-hidden="true"></span><span class="grow"><b>{{c.byeMail}}</b><span class="ltr" style="text-align: start;">y•••••@example.com</span></span></div>
+          <div class="why-row" style="border: 0; padding: 0; min-height: 0;"><span class="ph ph-calendar" style="color: var(--link);" aria-hidden="true"></span><span class="grow"><b>{{c.byeWhen}}</b><span>{{c.byeWhenBody}}</span></span></div>
+        </section>
+        <p class="t-small" style="font-size: 14px;"><b>{{c.byeUndoT}}</b> {{c.byeUndo}}</p>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 340px;">
+          <a href="#signin" class="btn btn-secondary btn-block press">{{c.signInKeep}}</a>
+          <a href="#home" class="btn btn-ghost btn-block">{{c.toSite}}</a>
+        </div>
+      </main>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isApp}}" hint-placeholder-val="{{true}}">
+  <div class="pg-col">
+    <header class="pg-top" style="gap: 4px;">
+      <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#back" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+      <h1 class="pg-title" style="flex: 1;">{{title}}</h1>
+    </header>
+
+    <!-- ============ Settings (one list; on a phone the second frame shows it scrolled) ============ -->
+    <sc-if value="{{is.settings}}" hint-placeholder-val="{{true}}">
+      <main class="pg-scroll" style="{{scrollStyle}}">
+        <div class="pg-cols">
+          <div class="pg-stack" style="gap: 10px;">
+            <p class="t-over set-sec">{{c.secAccount}}</p>
+            <div class="set">
+              <a href="#name" class="set-row"><span class="ph ph-user" aria-hidden="true"></span><span class="set-l">{{c.name}}<small>{{c.fullName}}</small></span><span class="set-v">{{c.edit}}<span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+              <div class="set-row"><span class="ph ph-mail" aria-hidden="true"></span><span class="set-l">{{c.email}}<small class="ltr" style="text-align: start;">yasmin@example.com</small></span><span class="set-v" style="font-weight: 600;">{{c.viaGoogle}}</span></div>
+            </div>
+            <p class="t-over set-sec">{{c.secLearning}}</p>
+            <div class="set">
+              <div class="set-row"><span class="ph ph-globe" aria-hidden="true"></span><span class="set-l">{{c.language}}</span>
+                <div class="tabs" role="radiogroup" aria-label="{{c.language}}" style="width: 200px;"><sc-for list="{{langTabs}}" as="o" hint-placeholder-count="2"><button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}" lang="{{o.lang}}">{{o.label}}</button></sc-for></div></div>
+              <div class="set-row"><span class="ph ph-moon" aria-hidden="true"></span><span class="set-l">{{c.theme}}</span>
+                <div class="tabs" role="radiogroup" aria-label="{{c.theme}}" style="width: 232px;"><sc-for list="{{themeTabs}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="padding: 0 4px;">{{o.label}}</button></sc-for></div></div>
+              <div class="set-row"><span class="ph ph-target" aria-hidden="true"></span><span class="set-l">{{c.goal}}<small>{{c.goalSub}}</small></span>
+                <div class="tabs" role="radiogroup" aria-label="{{c.goal}}" style="width: 156px;"><sc-for list="{{goalTabs}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}" aria-label="{{o.aria}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+              <div class="set-row is-rem">
+                <span class="set-l" id="st-rem-{{lang}}-{{theme}}-{{device}}">{{c.reminder}}<small>{{c.remSub}}</small></span>
+                <div class="rem">
+                  <button class="switch sw-only {{remSw}}" type="button" role="switch" aria-checked="{{remAria}}" aria-label="{{c.remindMe}}" onClick="{{toggleRem}}"><span class="track" aria-hidden="true"></span></button>
+                  <div class="rem-wrap" style="flex: 1;">
+                    <button class="time-btn {{timeCls}}" type="button" aria-haspopup="dialog" aria-expanded="{{openAria}}" aria-disabled="{{offAria}}" aria-labelledby="st-rem-{{lang}}-{{theme}}-{{device}}" onClick="{{toggleOpen}}" style="width: 100%;"><span class="ph ph-bell" aria-hidden="true"></span><span class="time-val" style="flex: 1; text-align: start;">{{timeText}}</span><span class="ph ph-caret caret" aria-hidden="true"></span></button>
+                    <sc-if value="{{isOpen}}" hint-placeholder-val="{{false}}">
+                      <div class="tp is-down" role="dialog" aria-label="{{c.pickTitle}}" style="width: 380px;">
+                        <div class="tp-head"><p class="tp-title">{{c.pickTitle}}</p><span class="tp-now">{{timeText}}</span></div>
+                        <div class="tp-presets" role="radiogroup" aria-label="{{c.quick}}">
+                          <sc-for list="{{presets}}" as="o" hint-placeholder-count="4"><button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}"><small>{{o.name}}</small><b>{{o.time}}</b></button></sc-for>
+                        </div>
+                        <div class="tp-cols">
+                          <div class="tp-col" role="listbox" aria-label="{{c.hour}}"><span class="tp-col-name" aria-hidden="true">{{c.hour}}</span><sc-for list="{{hours}}" as="h" hint-placeholder-count="5"><button class="{{h.cls}}" type="button" role="option" aria-selected="{{h.on}}" onClick="{{h.pick}}">{{h.label}}</button></sc-for></div>
+                          <div class="tp-col" role="listbox" aria-label="{{c.minute}}"><span class="tp-col-name" aria-hidden="true">{{c.minute}}</span><sc-for list="{{mins}}" as="h" hint-placeholder-count="4"><button class="{{h.cls}}" type="button" role="option" aria-selected="{{h.on}}" onClick="{{h.pick}}">{{h.label}}</button></sc-for></div>
+                          <div class="tp-col" role="listbox" aria-label="{{c.period}}"><span class="tp-col-name" aria-hidden="true">{{c.period}}</span><sc-for list="{{periods}}" as="h" hint-placeholder-count="2"><button class="{{h.cls}}" type="button" role="option" aria-selected="{{h.on}}" onClick="{{h.pick}}">{{h.label}}</button></sc-for></div>
+                        </div>
+                        <div class="tp-foot"><button class="btn btn-ghost btn-sm" type="button" onClick="{{closeOpen}}">{{c.cancel}}</button><button class="btn btn-primary btn-sm press" type="button" onClick="{{setTime}}">{{c.setTimeBtn}}</button></div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+                <span class="t-small ink-2">{{remHelp}}</span>
+              </div>
+              <div class="set-row"><span class="ph ph-speaker-high" aria-hidden="true"></span><span class="set-l">{{c.sound}}<small>{{c.soundSub}}</small></span><button class="{{soundSw}}" type="button" role="switch" aria-checked="{{soundAria}}" aria-label="{{c.sound}}" onClick="{{toggleSound}}"><span class="track" aria-hidden="true"></span></button></div>
+            </div>
+          </div>
+          <div class="pg-stack" style="gap: 10px;">
+            <p class="t-over set-sec">{{c.secNotif}}</p>
+            <div class="set">
+              <a href="#notifs" class="set-row"><span class="ph ph-bell" aria-hidden="true"></span><span class="set-l">{{c.notifChoices}}<small>{{pushLine}}</small></span><span class="set-v"><span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+            </div>
+            <p class="t-over set-sec">{{c.secSharing}}</p>
+            <div class="set">
+              <div class="set-row"><span class="ph ph-globe" aria-hidden="true"></span><span class="set-l">{{c.pubTitle}}<small>{{c.pubOff}}</small></span><button class="switch sw-only" type="button" role="switch" aria-checked="false" aria-label="{{c.pubTitle}}"><span class="track" aria-hidden="true"></span></button></div>
+              <div class="set-row"><span class="ph ph-ranking" aria-hidden="true"></span><span class="set-l">{{c.boardTitle}}<small>{{c.boardOff}}</small></span><button class="switch sw-only" type="button" role="switch" aria-checked="false" aria-label="{{c.boardTitle}}"><span class="track" aria-hidden="true"></span></button></div>
+            </div>
+            <p class="t-over set-sec">{{c.secData}}</p>
+            <div class="set">
+              <a href="#data" class="set-row"><span class="ph ph-download" aria-hidden="true"></span><span class="set-l">{{c.download}}<small>{{c.downloadSub}}</small></span><span class="set-v"><span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+              <a href="#data" class="set-row is-danger"><span class="ph ph-trash" aria-hidden="true"></span><span class="set-l">{{c.delete}}</span><span class="set-v"><span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+            </div>
+            <p class="t-over set-sec">{{c.secHelp}}</p>
+            <div class="set">
+              <a href="#help" class="set-row"><span class="ph ph-lifebuoy" aria-hidden="true"></span><span class="set-l">{{c.helpLong}}<small class="ltr" style="text-align: start;">support@uxgate.org</small></span><span class="set-v"><span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+              <a href="#privacy" class="set-row"><span class="ph ph-shield-check" aria-hidden="true"></span><span class="set-l">{{c.privacy}}</span><span class="set-v"><span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+              <a href="#terms" class="set-row"><span class="ph ph-article" aria-hidden="true"></span><span class="set-l">{{c.terms}}</span><span class="set-v"><span class="ph ph-caret flip" aria-hidden="true"></span></span></a>
+            </div>
+            <a href="#signout" class="btn btn-secondary btn-block press" style="margin-top: 6px;"><span class="ph ph-signout" aria-hidden="true"></span>{{c.signOut}}</a>
+            <p class="t-small ink-3" style="text-align: center; font-size: 12px;">{{c.version}}</p>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Notification choices: kind × channel ============ -->
+    <sc-if value="{{is.notifs}}" hint-placeholder-val="{{false}}">
+      <main class="pg-scroll">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 12px;">
+            <p class="t-body ink-2" style="font-size: 15px;">{{c.nLead}}</p>
+            <div class="nmx" role="table" aria-label="{{c.notifChoices}}">
+              <span class="nmx-h" role="columnheader" style="justify-content: flex-start; padding-inline-start: 14px; align-items: flex-start;">{{c.nKind}}</span>
+              <sc-for list="{{chans}}" as="h" hint-placeholder-count="3"><span class="nmx-h" role="columnheader"><span class="{{h.icon}}" aria-hidden="true"></span>{{h.label}}</span></sc-for>
+              <sc-for list="{{kinds}}" as="k" hint-placeholder-count="5">
+                <span class="{{k.cls}}" role="rowheader">{{k.label}}<small>{{k.sub}}</small></span>
+                <sc-for list="{{k.cells}}" as="x" hint-placeholder-count="3">
+                  <span class="{{x.wrap}}" role="cell">
+                    <sc-if value="{{x.lock}}" hint-placeholder-val="{{false}}"><span class="lock-on" title="{{c.always}}" aria-label="{{c.always}}"><span class="ph ph-lock-fill" aria-hidden="true"></span></span></sc-if>
+                    <sc-if value="{{x.box}}" hint-placeholder-val="{{true}}"><button class="{{x.cls}}" type="button" role="checkbox" aria-checked="{{x.on}}" aria-label="{{x.aria}}" onClick="{{x.toggle}}" style="background: none; border: 0; padding: 0;"><span class="box" aria-hidden="true"><span class="ph ph-check"></span></span></button></sc-if>
+                  </span>
+                </sc-for>
+              </sc-for>
+            </div>
+            <div class="note-row">
+              <span class="{{pushNote.icon}}" aria-hidden="true"></span>
+              <span class="grow"><b>{{pushNote.title}}</b><span>{{pushNote.body}}</span></span>
+              <sc-if value="{{pushNote.act}}" hint-placeholder-val="{{false}}"><a href="#push" class="btn btn-secondary btn-sm press" style="flex: none;">{{c.turnOn}}</a></sc-if>
+            </div>
+          </div>
+          <aside class="pg-stack" style="{{asideStyle}}">
+            <section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.rulesTitle}}</p>
+              <sc-for list="{{c.rules}}" as="h" hint-placeholder-count="4"><p class="pg-note" style="font-size: 14px;"><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for>
+            </section>
+          </aside>
+        </div>
+      </main>
+      <footer class="save-bar">
+        <span class="grow" role="status"><span class="{{saveIcon}}" aria-hidden="true"></span>{{saveMsg}}</span>
+        <div class="acts">
+          <button class="btn btn-secondary press" type="button" onClick="{{cancelCells}}" disabled="{{noChanges}}">{{c.cancel}}</button>
+          <button class="btn btn-primary press" type="button" onClick="{{saveCells}}" disabled="{{noChanges}}">{{c.saveChanges}}</button>
+        </div>
+      </footer>
+    </sc-if>
+
+    <!-- ============ Your data: download, delete ============ -->
+    <sc-if value="{{is.data}}" hint-placeholder-val="{{false}}">
+      <main class="pg-scroll">
+        <div class="pg-cols">
+          <section class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;"><span class="chg-ic"><span class="ph ph-brackets-curly" aria-hidden="true"></span></span><h2 class="t-h3" style="flex: 1;">{{c.download}}</h2></div>
+            <p class="t-small ink-2" style="font-size: 14px;">{{c.dlBody}}</p>
+            <div class="holds"><sc-for list="{{c.holds}}" as="h" hint-placeholder-count="6"><span><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{h}}</span></sc-for></div>
+            <a href="#json" class="btn btn-primary btn-block press"><span class="ph ph-download" aria-hidden="true"></span>{{c.dlBtn}}</a>
+            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.dlNote}}</span></p>
+          </section>
+          <section class="card danger-card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;"><span class="chg-ic" style="background: var(--wrong-bg); color: var(--wrong-ink);"><span class="ph ph-trash" aria-hidden="true"></span></span><h2 class="t-h3" style="flex: 1;">{{c.delete}}</h2></div>
+            <p class="t-small ink-2" style="font-size: 14px;">{{c.delBody}}</p>
+            <a href="#delete" class="btn btn-secondary btn-block press" style="color: var(--wrong-ink);">{{c.delBtn}}</a>
+          </section>
+        </div>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{showNav}}" hint-placeholder-val="{{false}}">
+      <nav class="bnav" aria-label="{{c.navLabel}}">
+        <sc-for list="{{bnav}}" as="n" hint-placeholder-count="4"><a href="#{{n.id}}" class="{{n.cls}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a></sc-for>
+      </nav>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ============ Toast: after "Not now" on the push ask ============ -->
+  <sc-if value="{{ov.later}}" hint-placeholder-val="{{false}}">
+    <div class="toast pop" role="status" style="{{toastStyle}}"><span class="ph ph-mail" aria-hidden="true"></span><span style="flex: 1;">{{c.laterToast}}</span></div>
+  </sc-if>
+
+  <!-- ============ Browser's own permission prompt (drawn as a neutral MOCK) ============ -->
+  <sc-if value="{{ov.browser}}" hint-placeholder-val="{{false}}">
+    <div class="pg-scrim" style="background: rgba(0, 0, 0, 0.18);"></div>
+    <div class="bprompt" role="dialog" aria-label="Browser permission prompt (mock)">
+      <p class="native-cap"><span>MOCK</span>The browser's own prompt</p>
+      <p><b>uxgate.org</b> wants to</p>
+      <div class="bp-row"><span class="ph ph-bell" aria-hidden="true"></span>Show notifications</div>
+      <div class="bp-acts"><span>Block</span><span>Allow</span></div>
+    </div>
+  </sc-if>
+
+  <!-- ============ Sheets / dialogs: push ask, delete ============ -->
+  <sc-if value="{{ov.sheet}}" hint-placeholder-val="{{false}}">
+    <div class="pg-scrim"></div>
+    <section class="pg-over sheet-in" role="dialog" aria-modal="true" aria-labelledby="ac-ov-{{lang}}-{{theme}}-{{device}}">
+      <div class="grab" aria-hidden="true"></div>
+      <sc-if value="{{ov.push}}" hint-placeholder-val="{{false}}">
+        <img class="pg-over-ill pop" src="{{img.bell}}" alt="">
+        <h2 id="ac-ov-{{lang}}-{{theme}}-{{device}}" style="text-align: center;">{{c.pushTitle}}</h2>
+        <p class="t-small ink-2" style="text-align: center; font-size: 15px;">{{c.pushBody}}</p>
+        <div class="ask-list"><sc-for list="{{c.pushList}}" as="h" hint-placeholder-count="3"><p><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for></div>
+        <a href="#allow" class="btn btn-primary btn-lg btn-block press" style="margin-top: 4px;"><span class="ph ph-bell" aria-hidden="true"></span>{{c.pushYes}}</a>
+        <a href="#later" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.notNow}}</a>
+        <p class="t-small ink-3" style="text-align: center; font-size: 12.5px;">{{c.pushFoot}}</p>
+      </sc-if>
+      <sc-if value="{{ov.del}}" hint-placeholder-val="{{false}}">
+        <h2 id="ac-ov-{{lang}}-{{theme}}-{{device}}">{{c.delTitle}}</h2>
+        <div class="why-list">
+          <sc-for list="{{c.delRows}}" as="r" hint-placeholder-count="4"><div class="why-row" style="min-height: 52px;"><span class="{{r.icon}}" style="color: var(--ink-2);" aria-hidden="true"></span><span class="grow"><b>{{r.title}}</b><span>{{r.body}}</span></span></div></sc-for>
+        </div>
+        <a href="#json" class="pg-link" style="min-height: 36px;"><span class="ph ph-download" aria-hidden="true"></span>{{c.delFirst}}</a>
+        <button class="{{confirmCls}}" type="button" role="checkbox" aria-checked="{{confirmOn}}" onClick="{{toggleConfirm}}" style="font: inherit; color: inherit; text-align: start; cursor: pointer;"><span class="check {{confirmChk}}" style="min-height: 0;"><span class="box" aria-hidden="true"><span class="ph ph-check"></span></span></span><span>{{c.delConfirm}}</span></button>
+        <button class="{{delGoCls}}" type="button" aria-disabled="{{delGoOff}}">{{c.delGo}}</button>
+        <a href="#keep" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.keep}}</a>
+      </sc-if>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["settings","settingsMore","notifs","notifsBlocked","data","deleteAsk","deleteDone","pushAsk","pushBrowser","pushLater"],"default":"settings"},"$preview":{"width":390,"height":844}}'>
+/* Slice 4 · Settings (EN-22, spec §4.2), notification choices (EN-19, §4.9), download and delete (EN-22), push ask (EN-19). */
+const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', bell: '/_blob/9cfcf6d42ebe588ededd0ee8ea4eea6a', gate: '/_blob/940849193fa4b01dff04d73c95583da2' };
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', help: 'Help', otherLang: 'العربية', back: 'Back',
+    settings: 'Settings', notifTitle: 'Notifications', dataTitle: 'Your data',
+    secAccount: 'Account', name: 'Name', fullName: 'Yasmin Adel', edit: 'Edit', email: 'Email', viaGoogle: 'Google sign-in',
+    secLearning: 'Learning', language: 'Language', theme: 'Theme', themes: ['System', 'Light', 'Dark'], goal: 'Daily goal', goalSub: 'Lessons a day', goalAria: (n) => n + (n === 1 ? ' lesson' : ' lessons') + ' a day',
+    reminder: 'Daily reminder', remSub: 'Points to your next lesson in the current path.', remindMe: 'Remind me', remOn: 'One reminder a day at this time.', remOff: 'No reminders.',
+    pickTitle: 'Reminder time', quick: 'Quick picks', hour: 'Hour', minute: 'Minute', period: 'AM/PM', ampm: ['AM', 'PM'], cancel: 'Cancel', setTimeBtn: 'Set time',
+    presets: [['Morning', 8, 0, 0], ['Midday', 1, 0, 1], ['Evening', 8, 0, 1], ['Night', 10, 0, 1]],
+    sound: 'Sound', soundSub: 'Taps, right answers and wins',
+    secNotif: 'Notifications', notifChoices: 'Notification choices', pushOn: 'In app, email and push on this device', pushOff: 'In app and email · push is off on this device',
+    secSharing: 'Sharing', pubTitle: 'Achievement page', pubOff: 'Off · only you can see your progress', boardTitle: 'Weekly leaderboard', boardOff: 'Off · join to compare weekly XP',
+    secData: 'Your data', download: 'Download my data', downloadSub: 'One JSON file', delete: 'Delete my account',
+    secHelp: 'Help', helpLong: 'Help and support', privacy: 'Privacy policy', terms: 'Terms of use', signOut: 'Sign out', version: 'UXGate · version 1.0',
+    /* notification choices */
+    nLead: 'Choose how each kind reaches you. Turn off anything you don’t want.', saveChanges: 'Save changes', unsaved: (n) => n === 1 ? '1 change not saved' : n + ' changes not saved', noUnsaved: 'No changes yet', savedMsg: 'Changes saved', nKind: 'Kind', chans: [['ph ph-app-window', 'In app'], ['ph ph-mail', 'Email'], ['ph ph-device-mobile', 'Push']],
+    kinds: [['Daily reminder', 'At 8:00 PM, one a day at most'], ['Review due', 'Skills ready to check again'], ['Badges and certificates', 'When you earn one'], ['Answers to your requests', 'When the team replies'], ['Billing', 'Receipts and payment problems']],
+    always: 'Always sent by email', on: 'on', off: 'off',
+    pushHereT: 'Push is on for this device', pushHereB: 'Chrome on Windows. Each device asks once.',
+    pushBlockT: 'Push is blocked in this browser', pushBlockB: 'You chose Block. Allow notifications for uxgate.org in the browser’s site settings, then come back.',
+    pushNotT: 'Push is off on this device', pushNotB: 'Turn it on to get reminders even when UXGate is closed.', turnOn: 'Turn on',
+    rulesTitle: 'Rules we keep', rules: [{ icon: 'ph ph-bell', text: 'At most one reminder a day, at the time you set.' }, { icon: 'ph ph-flame', text: 'We never send a message about losing your streak.' }, { icon: 'ph ph-lock', text: 'Sign-in links, password resets and receipts always arrive. They are not notifications.' }, { icon: 'ph ph-mail', text: 'Every email has a link to turn its kind off.' }],
+    /* data */
+    dlBody: 'Everything we keep about you, in one file you can open or move to another service:', holds: ['Profile and settings', 'Paths and progress', 'Every answer and attempt', 'XP, streak and badges', 'Review requests and replies', 'Notifications we sent'],
+    dlBtn: 'Download my data (JSON)', dlNote: 'The file downloads to this device. Nothing changes in your account.',
+    delBody: 'We sign you out on every device and remove your personal data within 30 days. Your progress, certificates and achievement page go with it.', delBtn: 'Delete my account…',
+    delTitle: 'Delete your account?', delRows: [{ icon: 'ph ph-signout', title: 'Signed out now', body: 'On this device and every other one.' }, { icon: 'ph ph-calendar', title: 'Removed within 30 days', body: 'Name, email, answers, progress, badges and certificates. Sign in before 2 December 2026 to undo.' }, { icon: 'ph ph-link', title: 'Shared links stop working', body: 'Your achievement page and certificate links, at once.' }, { icon: 'ph ph-sync', title: 'A subscription stops renewing', body: 'If you have one, it ends with the account.' }],
+    delFirst: 'Download your data first', delConfirm: 'I understand that my progress and certificates will be removed.', delGo: 'Delete my account', keep: 'Keep my account',
+    /* bye */
+    byeTitle: 'Your account will be deleted', byeBody: 'Thank you for learning with UXGate, Yasmin.', byeOut: 'You are signed out', byeOutBody: 'On every device.', byeMail: 'We sent a confirmation to',
+    byeWhen: 'Removed by 2 December 2026', byeWhenBody: 'Your personal data, progress and certificates.', byeUndoT: 'Changed your mind?', byeUndo: 'Sign in before 2 December 2026 to undo. We also sent this to your email.', signInKeep: 'Sign in to keep my account', toSite: 'Go to uxgate.org',
+    /* push */
+    pushTitle: 'Get your reminder on this device?', pushBody: 'You set a reminder for 8:00 PM. Push brings it here, even when UXGate is closed.',
+    pushList: [{ icon: 'ph ph-bell', text: 'One reminder a day, at the time you chose' }, { icon: 'ph ph-chat-text', text: 'Answers to your review requests' }, { icon: 'ph ph-gear', text: 'Change or turn off any kind in Settings' }],
+    pushYes: 'Turn on notifications', notNow: 'Not now', pushFoot: 'Your browser asks next. We ask once on each device.',
+    laterToast: 'OK. Your reminder still comes by email. You can turn on push in Settings.'
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', help: 'المساعدة', otherLang: 'English', back: 'رجوع',
+    settings: 'الإعدادات', notifTitle: 'الإشعارات', dataTitle: 'بياناتك',
+    secAccount: 'الحساب', name: 'الاسم', fullName: 'ياسمين عادل', edit: 'تعديل', email: 'البريد الإلكتروني', viaGoogle: 'الدخول عبر Google',
+    secLearning: 'التعلّم', language: 'اللغة', theme: 'المظهر', themes: ['تلقائي', 'فاتح', 'ليلي'], goal: 'الهدف اليومي', goalSub: 'عدد الدروس في اليوم', goalAria: (n) => n + ' دروس في اليوم',
+    reminder: 'تذكير يومي', remSub: 'يأخذك إلى درسك التالي في مسارك الحالي.', remindMe: 'ذكّرني', remOn: 'تذكير واحد في اليوم في هذا الوقت.', remOff: 'بدون تذكيرات.',
+    pickTitle: 'وقت التذكير', quick: 'اختيارات سريعة', hour: 'الساعة', minute: 'الدقيقة', period: 'الفترة', ampm: ['ص', 'م'], cancel: 'إلغاء', setTimeBtn: 'حفظ الوقت',
+    presets: [['صباحًا', 8, 0, 0], ['ظهرًا', 1, 0, 1], ['مساءً', 8, 0, 1], ['ليلًا', 10, 0, 1]],
+    sound: 'الصوت', soundSub: 'اللمسات والإجابات الصحيحة والإنجازات',
+    secNotif: 'الإشعارات', notifChoices: 'اختيارات الإشعارات', pushOn: 'داخل التطبيق والبريد والإشعارات على هذا الجهاز', pushOff: 'داخل التطبيق والبريد · إشعارات الجهاز متوقّفة هنا',
+    secSharing: 'المشاركة', pubTitle: 'صفحة الإنجازات', pubOff: 'متوقّفة · أنت فقط ترى تقدّمك', boardTitle: 'لوحة الصدارة الأسبوعية', boardOff: 'متوقّفة · انضم لتقارن نقاطك الأسبوعية',
+    secData: 'بياناتك', download: 'نزّل بياناتي', downloadSub: 'ملف JSON واحد', delete: 'احذف حسابي',
+    secHelp: 'المساعدة', helpLong: 'المساعدة والدعم', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام', signOut: 'تسجيل الخروج', version: 'UXGate · الإصدار 1.0',
+    nLead: 'اختر كيف يصلك كل نوع، وأوقف ما لا تريده.', saveChanges: 'احفظ التغييرات', unsaved: (n) => n === 1 ? 'تغيير واحد لم يُحفظ' : (n === 2 ? 'تغييران لم يُحفظا' : n + ' تغييرات لم تُحفظ'), noUnsaved: 'لا تغييرات بعد', savedMsg: 'حُفظت التغييرات', nKind: 'النوع', chans: [['ph ph-app-window', 'التطبيق'], ['ph ph-mail', 'البريد'], ['ph ph-device-mobile', 'الجهاز']],
+    kinds: [['التذكير اليومي', 'الساعة 8:00 م، مرة واحدة يوميًا على الأكثر'], ['موعد المراجعة', 'مهارات جاهزة لتتحقّق منها مجددًا'], ['الشارات والشهادات', 'عندما تحصل على واحدة'], ['الردود على طلباتك', 'عندما يردّ الفريق'], ['الفواتير', 'الإيصالات ومشكلات الدفع']],
+    always: 'يُرسل بالبريد دائمًا', on: 'يعمل', off: 'متوقّف',
+    pushHereT: 'إشعارات الجهاز تعمل هنا', pushHereB: 'Chrome على Windows. كل جهاز يسألك مرة واحدة.',
+    pushBlockT: 'الإشعارات محظورة في هذا المتصفح', pushBlockB: 'اخترت «حظر». اسمح بالإشعارات لموقع uxgate.org من إعدادات الموقع في المتصفح، ثم ارجع هنا.',
+    pushNotT: 'إشعارات الجهاز متوقّفة هنا', pushNotB: 'شغّلها ليصلك التذكير حتى عندما يكون UXGate مغلقًا.', turnOn: 'شغّلها',
+    rulesTitle: 'قواعد نلتزم بها', rules: [{ icon: 'ph ph-bell', text: 'تذكير واحد في اليوم على الأكثر، في الوقت الذي تختاره.' }, { icon: 'ph ph-flame', text: 'لا نرسل أبدًا رسالة عن خسارة سلسلتك.' }, { icon: 'ph ph-lock', text: 'روابط الدخول وإعادة تعيين كلمة المرور والإيصالات تصل دائمًا، فهي ليست إشعارات.' }, { icon: 'ph ph-mail', text: 'في كل رسالة بريد رابط لإيقاف نوعها.' }],
+    dlBody: 'كل ما نحتفظ به عنك، في ملف واحد يمكنك فتحه أو نقله إلى خدمة أخرى:', holds: ['الملف الشخصي والإعدادات', 'المسارات والتقدّم', 'كل إجابة ومحاولة', 'النقاط والسلسلة والشارات', 'طلبات المراجعة والردود', 'الإشعارات التي أرسلناها'],
+    dlBtn: 'نزّل بياناتي (JSON)', dlNote: 'يُنزَّل الملف على هذا الجهاز، ولا يتغيّر شيء في حسابك.',
+    delBody: 'نُخرجك من كل الأجهزة ونحذف بياناتك الشخصية خلال 30 يومًا، ومعها تقدّمك وشهاداتك وصفحة إنجازاتك.', delBtn: 'احذف حسابي…',
+    delTitle: 'هل تحذف حسابك؟', delRows: [{ icon: 'ph ph-signout', title: 'تسجيل خروج فوري', body: 'من هذا الجهاز ومن كل الأجهزة الأخرى.' }, { icon: 'ph ph-calendar', title: 'الحذف خلال 30 يومًا', body: 'الاسم والبريد والإجابات والتقدّم والشارات والشهادات. سجّل الدخول قبل 2 ديسمبر 2026 للتراجع.' }, { icon: 'ph ph-link', title: 'الروابط المشتركة تتوقف', body: 'رابط صفحة إنجازاتك وروابط الشهادات، فورًا.' }, { icon: 'ph ph-sync', title: 'الاشتراك لا يتجدّد', body: 'إن كان لديك اشتراك، ينتهي مع الحساب.' }],
+    delFirst: 'نزّل بياناتك أولًا', delConfirm: 'أفهم أن تقدّمي وشهاداتي ستُحذف.', delGo: 'احذف حسابي', keep: 'أبقِ حسابي',
+    byeTitle: 'سيُحذف حسابك', byeBody: 'شكرًا لأنك تعلّمت مع UXGate يا ياسمين.', byeOut: 'سجّلنا خروجك', byeOutBody: 'من كل الأجهزة.', byeMail: 'أرسلنا تأكيدًا إلى',
+    byeWhen: 'الحذف قبل 2 ديسمبر 2026', byeWhenBody: 'بياناتك الشخصية وتقدّمك وشهاداتك.', byeUndoT: 'غيّرت رأيك؟', byeUndo: 'سجّل الدخول قبل 2 ديسمبر 2026 للتراجع. أرسلنا هذا إلى بريدك أيضًا.', signInKeep: 'سجّل الدخول لتُبقي حسابك', toSite: 'اذهب إلى uxgate.org',
+    pushTitle: 'هل يصلك التذكير على هذا الجهاز؟', pushBody: 'ضبطت تذكيرًا الساعة 8:00 م. وإشعارات الجهاز تُوصله إليك حتى عندما يكون UXGate مغلقًا.',
+    pushList: [{ icon: 'ph ph-bell', text: 'تذكير واحد في اليوم، في الوقت الذي اخترته' }, { icon: 'ph ph-chat-text', text: 'الردود على طلبات المراجعة' }, { icon: 'ph ph-gear', text: 'غيّر أي نوع أو أوقفه من الإعدادات' }],
+    pushYes: 'شغّل الإشعارات', notNow: 'ليس الآن', pushFoot: 'سيسألك المتصفح بعدها. نسأل مرة واحدة على كل جهاز.',
+    laterToast: 'حسنًا. سيصلك التذكير بالبريد، ويمكنك تشغيل إشعارات الجهاز من الإعدادات.'
+  }
+};
+const DEFAULTS = [[1, 1, 1], [1, 0, 1], [1, 1, 0], [1, 1, 1], [1, 'lock', 0]];
+const remVals = (self, t, open) => {
+  const s = self.state; const on = s.rem !== false;
+  const fmt = (h, m, p) => h + ':' + String(m).padStart(2, '0') + ' ' + t.ampm[p];
+  const set = (patch) => () => self.setState(patch);
+  const hrs = [-2, -1, 0, 1, 2].map((d) => ((s.h - 1 + d + 12) % 12) + 1);
+  const cell = (label, isOn, pick, far) => ({ label, on: isOn ? 'true' : 'false', cls: 'tp-cell' + (isOn ? ' is-on' : '') + (far ? ' is-far' : ''), pick });
+  return {
+    remSw: on ? 'is-on' : '', remAria: on ? 'true' : 'false', offAria: on ? 'false' : 'true',
+    toggleRem: () => self.setState({ rem: !on, open: false }),
+    timeCls: !on ? 'is-disabled' : open ? 'is-open' : '', openAria: open ? 'true' : 'false', isOpen: on && open,
+    toggleOpen: () => { if (on) self.setState({ open: !open }); }, closeOpen: () => self.setState({ open: false }),
+    timeText: fmt(s.h, s.m, s.p), remHelp: on ? t.remOn : t.remOff,
+    presets: t.presets.map(([name, h, m, p]) => { const sel = s.h === h && s.m === m && s.p === p;
+      return { name, time: fmt(h, m, p), on: sel ? 'true' : 'false', cls: 'tp-preset' + (sel ? ' is-on' : ''), pick: set({ h, m, p }) }; }),
+    hours: hrs.map((h, i) => cell(String(h), h === s.h, set({ h }), i === 0 || i === 4)),
+    mins: [0, 15, 30, 45].map((m) => cell(String(m).padStart(2, '0'), m === s.m, set({ m }))),
+    periods: [0, 1].map((p) => cell(t.ampm[p], p === s.p, set({ p })))
+  };
+};
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { rem: true, h: 8, m: 0, p: 1, open: null, sound: true, themePick: 0, goal: 2, cells: null, base: null, saved: false, confirm: null, asked: false }; }
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = this.props.view || 'settings';
+    const c = C[lang];
+    const isDesk = device === 'desktop';
+    const s = this.state;
+
+    const onSettings = ['settings', 'settingsMore', 'pushAsk', 'pushBrowser', 'pushLater'].indexOf(view) >= 0;
+    const is = { settings: onSettings, notifs: view === 'notifs' || view === 'notifsBlocked', data: view === 'data' || view === 'deleteAsk', bye: view === 'deleteDone' };
+    const pushState = view === 'notifsBlocked' ? 'blocked' : (view === 'pushLater' ? 'off' : (view === 'notifs' ? 'on' : (s.asked ? 'on' : 'off')));
+    const ov = { push: view === 'pushAsk', browser: view === 'pushBrowser', later: view === 'pushLater', del: view === 'deleteAsk' };
+    ov.sheet = ov.push || ov.del;
+
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: id === 'profile' ? 'page' : 'false', icon: 'ph ' + (id === 'profile' ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+    const open = s.open === null ? false : s.open;
+
+    const base = s.base || DEFAULTS.map((r) => r.slice());
+    // The notifs board opens with one unsaved change (Review due by email), so Save and Cancel show their active state.
+    const cells = s.cells || (view === 'notifs' && !s.base ? base.map((r, i) => r.map((v, j) => (i === 1 && j === 1 ? 1 : v))) : base.map((r) => r.slice()));
+    let changes = 0; cells.forEach((r, i) => r.forEach((v, j) => { if (v !== base[i][j]) changes += 1; }));
+    const pushOff = pushState !== 'on';
+    const kinds = c.kinds.map(([label, sub], i) => ({ label, sub, cls: 'nmx-k' + (i === c.kinds.length - 1 ? ' nmx-last' : ''),
+      cells: [0, 1, 2].map((j) => {
+        const v = cells[i][j]; const lock = v === 'lock'; const dis = j === 2 && pushOff; const isOn = !lock && !!v && !dis;
+        return { lock, box: !lock, on: isOn ? 'true' : 'false', wrap: i === c.kinds.length - 1 ? 'nmx-last' : '',
+          cls: 'check' + (isOn ? ' is-on' : '') + (dis ? ' is-disabled' : ''), aria: label + ', ' + c.chans[j][1] + ', ' + (isOn ? c.on : c.off),
+          toggle: () => { if (lock || dis) return; const nx = cells.map((r) => r.slice()); nx[i][j] = v ? 0 : 1; this.setState({ cells: nx, saved: false }); } };
+      }) }));
+    const pushNote = pushState === 'on' ? { icon: 'ph ph-check-circle-fill', title: c.pushHereT, body: c.pushHereB, act: false }
+      : pushState === 'blocked' ? { icon: 'ph ph-bell-slash', title: c.pushBlockT, body: c.pushBlockB, act: false }
+      : { icon: 'ph ph-bell-slash', title: c.pushNotT, body: c.pushNotB, act: true };
+
+    const confirm = s.confirm === null ? true : s.confirm;
+    const scrollStyle = (!isDesk && view === 'settingsMore') ? 'justify-content: flex-end;' : '';
+    const title = is.notifs ? c.notifTitle : is.data ? c.dataTitle : c.settings;
+
+    return Object.assign({
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG, is, ov, title,
+      rootCls: 'ug pg pg-' + device, isApp: !is.bye,
+      showRail: isDesk && !is.bye, showNav: false,
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
+      railPaths: [{ name: 'Forms That Flow', img: IMG.forms, pct: '30%', cls: 'dk-layer is-on' }, { name: 'Visual Hierarchy in Action', img: IMG.hier, pct: '20%', cls: 'dk-layer' }],
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      scrollStyle,
+      langTabs: [['en', 'English'], ['ar', 'العربية']].map(([code, label]) => ({ label, lang: code, on: code === lang ? 'true' : 'false', cls: 'tab' + (code === lang ? ' is-on' : '') })),
+      themeTabs: c.themes.map((label, i) => ({ label, on: i === s.themePick ? 'true' : 'false', cls: 'tab' + (i === s.themePick ? ' is-on' : ''), pick: () => this.setState({ themePick: i }) })),
+      goalTabs: [1, 2, 3].map((n) => ({ label: String(n), aria: c.goalAria(n), on: n === s.goal ? 'true' : 'false', cls: 'tab' + (n === s.goal ? ' is-on' : ''), pick: () => this.setState({ goal: n }) })),
+      soundSw: 'switch sw-only' + (s.sound ? ' is-on' : ''), soundAria: s.sound ? 'true' : 'false', toggleSound: () => this.setState({ sound: !s.sound }),
+      setTime: () => this.setState({ open: false, asked: true }),
+      pushLine: pushState === 'on' ? c.pushOn : c.pushOff,
+      chans: c.chans.map(([icon, label]) => ({ icon, label })), kinds, pushNote,
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px; max-width: 1080px;' : '', asideStyle: isDesk ? '' : 'display: none;',
+      noChanges: changes === 0, saveMsg: changes ? c.unsaved(changes) : (s.saved ? c.savedMsg : c.noUnsaved),
+      saveIcon: changes ? 'ph ph-pencil' : (s.saved ? 'ph ph-check-circle-fill' : 'ph ph-check'),
+      saveCells: () => this.setState({ base: cells.map((r) => r.slice()), cells: null, saved: true }),
+      cancelCells: () => this.setState({ base: base.map((r) => r.slice()), cells: null, saved: false }),
+      confirmCls: 'confirm' + (confirm ? ' is-on' : ''), confirmOn: confirm ? 'true' : 'false', confirmChk: confirm ? 'is-on' : '', toggleConfirm: () => this.setState({ confirm: !confirm }),
+      delGoCls: 'btn btn-wrong btn-lg btn-block press' + (confirm ? '' : ' is-disabled'), delGoOff: confirm ? 'false' : 'true',
+      toastStyle: isDesk ? 'position: absolute; z-index: 6; left: 50%; width: 520px; margin-left: -260px; bottom: 40px;' : 'position: absolute; z-index: 6; inset-inline: 16px; bottom: 24px;',
+      byeIll: isDesk ? '150px' : '104px'
+    }, remVals(this, c, open));
+  }
+}
+</script>
+</body>
+</html>
