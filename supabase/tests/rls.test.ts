@@ -190,3 +190,20 @@ describe("replays (migration 0004)", () => {
     await expect(as("authenticated", A, `update attempts set replay_kind = 'paid'`)).rejects.toThrow(/permission denied/);
   });
 });
+
+describe("email language (migration 0005)", () => {
+  it("saves the page's language on the account and profile, for that email only", async () => {
+    await db.query(`update auth.users set email = 'A@Example.com' where id = $1`, [A]);
+    await as("service_role", null, `select public.set_locale_by_email('a@example.com', 'ar')`);
+    expect((await db.query<{ l: string }>(`select raw_user_meta_data->>'locale' as l from auth.users where id = $1`, [A])).rows[0].l).toBe("ar");
+    expect((await db.query<{ l: string }>(`select locale as l from profiles where user_id = $1`, [A])).rows[0].l).toBe("ar");
+    expect((await db.query<{ l: string | null }>(`select raw_user_meta_data->>'locale' as l from auth.users where id = $1`, [B])).rows[0].l).not.toBe("ar");
+    await as("service_role", null, `select public.set_locale_by_email('nobody@example.com', 'en')`); // no account: no error
+    await as("service_role", null, `select public.set_locale_by_email('a@example.com', 'xx')`); // unknown language: ignored
+    expect((await db.query<{ l: string }>(`select locale as l from profiles where user_id = $1`, [A])).rows[0].l).toBe("ar");
+  });
+  it("is not callable by learners or visitors", async () => {
+    await expect(as("authenticated", A, `select public.set_locale_by_email('a@example.com', 'en')`)).rejects.toThrow(/permission denied/);
+    await expect(as("anon", null, `select public.set_locale_by_email('a@example.com', 'en')`)).rejects.toThrow(/permission denied/);
+  });
+});

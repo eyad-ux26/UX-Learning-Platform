@@ -57,6 +57,8 @@ export function AuthForm({ mode, linkError }: { mode: Mode; linkError?: boolean 
     setError(null);
     if (!isEmail(email)) return setError(email.trim() ? "emailInvalid" : "needEmail");
     setBusy(true);
+    // The email follows the language saved on the account, so save this page's language first (best effort).
+    await fetch("/api/auth/email-locale", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: email.trim(), locale }) }).catch(() => null);
     const { error: e } = await createClient().auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: callback(), data: { locale } } });
     if (e) return fail(e);
     setSent("magic"); setBusy(false);
