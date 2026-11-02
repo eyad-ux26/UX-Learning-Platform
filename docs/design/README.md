@@ -1,4 +1,4 @@
-# UXGate design system (Sprint 1)
+# UXGate design system (Sprint 1 and slice 2)
 
 The live design lives in the design canvas: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx (pages: Brand, Tokens, Components, Screens, Clickable flow, Screen parts). This folder holds the parts engineering and video need as files.
 
@@ -29,4 +29,29 @@ UXGate borrows ideas from design tools, never their look. Lessons sit on a 16 px
 
 Mobile (390 wide) and desktop (1440 wide), each in English light and Arabic night: landing, sign up, onboarding, home, path map, lesson step (selected, wrong with hint, right), tune step and compare step (selected, wrong with hint, right; compare also shows the reason question) and lesson end. The clickable flow switches device, language, theme and sound.
 
-Placeholders still open: `[PRICE]` on the landing, the copy for the second hint and the FAQ, and the Arabic labels for the Shown (أثبتّ) and Kept (حافظت) skill states.
+The lesson preview card on the landing works: the visitor picks B or C and taps Check (disabled until a pick), sees the right or wrong feedback in the card, and on a right answer gets +10 XP and "Keep going" into the free sample lesson; a wrong answer offers Try again.
+
+Landing header and hero (approved 1 November): Sign in uses the neutral outline button (`.btn-neutral`), the language switch the quiet neutral button (`.btn-quiet`), and the hero title the neutral ink (`--ink-neutral`), in both themes; a "You" cursor tag sits in the mobile hero. The main call to action stays brand blue.
+
+Language switch before sign-in: the same quiet globe button ("عربي" on English pages, "English" on Arabic pages) is on the landing, sign up and onboarding, mobile and desktop. On sign up and onboarding it sits at the top, next to Skip or opposite the logo.
+
+Onboarding has all three questions on the canvas (prop `q` on `ScreenOnboarding` and `DeskOnboarding`): 1, why you want to learn UX (four goals); 2, what to get better at first, with the suggested path; 3, time each week, a daily goal of 1 to 3 lessons and a daily reminder. Question 1 has no Back; question 3 ends with "Start learning" / «ابدأ التعلّم» (was Finish / إنهاء).
+
+Reminder on question 3 (canvas v39, classes `.rem`, `.time-btn`, `.tp*` in `system/uxgate.css`):
+
+- Label "Daily reminder" / «تذكير يومي». Row: a `.switch` (role switch, on by default) labelled "Remind me at" / «ذكّرني الساعة», then a `.time-btn` pre-filled with **8:00 PM** / «8:00 م» (bell icon, value, caret).
+- Help when on: "One reminder a day at this time. Your browser will ask to allow it." / «تذكير واحد في اليوم في هذا الوقت. سيطلب المتصفح إذنك أولًا.» Help when off: "No reminders. You can turn them on in Settings." / «بدون تذكيرات. يمكنك تفعيلها من الإعدادات.» When off, the time button gets `.is-disabled` and `aria-disabled="true"`.
+- Phone: the time button opens the native time picker (`input type="time"`), no custom picker.
+- Desktop: the time button (`aria-haspopup="dialog"`, `.is-open` while open) opens the `.tp` popover above it (400 wide). Inside: title "Reminder time" / «وقت التذكير» with the current value; four `.tp-preset` quick picks, Morning 8:00 AM, Midday 1:00 PM, Evening 8:00 PM, Night 10:00 PM (صباحًا، ظهرًا، مساءً، ليلًا); three `.tp-col` listboxes, Hour (1 to 12, five visible, outer two `.is-far`), Minute (00, 15, 30, 45), AM/PM (ص / م), selected cell `.tp-cell.is-on`; footer Cancel / «إلغاء» (ghost) and Set time / «حفظ الوقت» (primary). Esc and Cancel close without saving. The open state is on the board `RowDeskOnboarding` (4th column), prop `picker="open"`.
+
+Scenario text (the line above a question, such as "Hana runs a small gym…") uses the `.scn` class: full ink, weight 500, 15 px on mobile and 18 px on desktop (`.scn-lg`), with a taller line height in Arabic. It used to be small, light and grey, which was hard to read in Arabic. The lesson player's `.lp-scn` uses the same style.
+
+On every question screen a scenario character now tells the scenario in first person: an avatar next to a speech bubble with "Name · Role". Their face changes with the answer: talking, then happy after a right answer, thinking after a wrong one. See `system/characters/README.md` for the cast, files and sizes. Hana always owns the gym. The visitor who signs up is Salma, and the clinic patient is Ahmed, so no cast member plays two people.
+
+The desktop home has no search bar: learner search is not planned yet, so it was removed rather than shipped as a box that does nothing.
+
+Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
+
+## Slice 2: the full lesson player
+
+Every state inside a lesson: the eight remaining step types, video, concept card, feedback variants, confidence, skill check, mastery round, exit and resume, saving and offline, the guest sample lesson and asking for a review. See `slice-2/README.md`. On the canvas they are on the page "6 · Slice 2 · Lesson player", and the two editable components are on "Screen parts".
