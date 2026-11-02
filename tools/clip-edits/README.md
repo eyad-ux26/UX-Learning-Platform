@@ -32,6 +32,8 @@ chips in the clip file.
 - Draw a selection with `SelectionOn target="key"` around an element marked `data-sel="key"` in the product. It
   measures the real layout each frame, so the box always wraps exactly what the trainer points at. Avoid hand-measured
   `Selection r={...}` boxes in new clips. Put the name tag (`labelSide`) where it covers no text the scene is about.
+- Never leave "و" standing alone between English words ("Checkbox و Radio"): in Cairo it looks like a Latin "g", and
+  glued to the word ("وRadio") it breaks the bidi order. Write "Checkbox والـ Radio" instead.
 
 ## Look (design system)
 

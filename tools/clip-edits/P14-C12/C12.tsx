@@ -146,7 +146,7 @@ export const C12: React.FC = () => {
 
       {scene === "sides" ? (
         <Panel r={ONE}>
-          <Small text="اكتب Off و On على الجانبين" muted />
+          <Small text="اكتب Off والـ On على الجانبين" muted />
           <div dir="ltr" style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 40, fontSize: 21, justifyContent: "center" }}>
             <span style={{ fontWeight: 700 }}>Off</span><Toggle on={0} w={70} /><span style={{ color: "#9CA3AF" }}>On</span>
           </div>
@@ -167,7 +167,7 @@ export const C12: React.FC = () => {
       <CaseChip y={40} text="Toggle switch" p={span(f, B.rep, B.air)} />
       <SideNote w={360} y={110} text="Digital on/off switch" p={span(f, B.def, B.bulb)} big icon={wi(IconCheck)} />
       <SideNote w={360} y={110} text="مثل مفتاح النور: يتغيّر الشيء لحظة الضغط" p={span(f, B.bulb, B.unlike)} />
-      <SideNote w={360} y={110} text="بخلاف Checkbox و Radio: لا زر بعده" p={span(f, B.unlike, B.air)} icon={wi(IconEye)} />
+      <SideNote w={360} y={110} text="بخلاف Checkbox والـ Radio: لا زر بعده" p={span(f, B.unlike, B.air)} icon={wi(IconEye)} />
       <SideNote w={360} y={250} text="ينفّذ في النظام فورًا" p={span(f, B.now, B.air)} />
       <SideNote w={360} y={390} text="الفرق الأهم: التنفيذ اللحظي" p={span(f, B.diff, B.air)} icon={wi(IconCheck)} />
 
@@ -189,11 +189,11 @@ export const C12: React.FC = () => {
       <SideNote w={360} y={250} text="يحتاج وقتًا ليُقرأ ويُفهم" p={span(f, B.neg, B.fix)} warn />
       <SideNote w={360} y={110} text="Label قصير ومباشر يُفهم أسرع" p={span(f, B.fix, B.state)} big icon={wi(IconCheck)} />
 
-      <CaseChip y={40} text="3 · حالة On و Off" p={span(f, B.state, END)} />
+      <CaseChip y={40} text="3 · حالة On والـ Off" p={span(f, B.state, END)} />
       <SelectionOn target="offstate" labelSide="below" hover={sel(B.which, B.sides)} selected={sel(B.which, B.sides)} label="Off؟" />
       <SideNote w={360} y={110} text="هل هو Off الآن، أم Off هو اسمه؟" p={span(f, B.which, B.sides)} warn icon={wi(IconAlert)} />
       <SideNote w={360} y={250} text="أضغط لأشغّله أم لأطفئه؟" p={span(f, B.which + 90, B.sides)} warn />
-      <SideNote w={360} y={110} text="العنوان فوق؟ اكتب Off و On على الجانبين" p={span(f, B.sides, B.beside)} big icon={wi(IconCheck)} />
+      <SideNote w={360} y={110} text="العنوان فوق؟ اكتب Off والـ On على الجانبين" p={span(f, B.sides, B.beside)} big icon={wi(IconCheck)} />
       <SideNote w={360} y={110} text="أو Label بجانبه، واللون يدلّ على الحالة" p={span(f, B.beside, B.both)} icon={wi(IconCheck)} />
       <SideNote w={360} y={250} text="رمادي = Off، لون الـ Primary = On" p={span(f, B.color, B.both)} />
       <SideNote w={360} y={110} text="لا تكتب Off وحدها أو On وحدها" p={span(f, B.both, END)} warn icon={wi(IconAlert)} />
@@ -213,7 +213,7 @@ export const C12: React.FC = () => {
       <Presenter cam="c12/cam.mp4" />
       <TitleBand title="Toggle switch" sub="Input controls" />
       <Voice src="c12/voice.m4a" />
-      <IntroCard title="Toggle switch: أثره فوري" sub="Toggle switch" points={["الفرق عن Checkbox", "Label قصير", "حالة On و Off"]} />
+      <IntroCard title="Toggle switch: أثره فوري" sub="Toggle switch" points={["الفرق عن Checkbox", "Label قصير", "حالة On والـ Off"]} />
       <RecapCard
         voiceSec={VOICE_CUT}
         title="Toggle switch واضح وفوري"
@@ -221,7 +221,7 @@ export const C12: React.FC = () => {
           { text: "أثره لحظي، دون زر بعده" },
           { text: "لا يصلح لـ Setting يظهر أثره بعد البحث" },
           { text: "Label قصير ومباشر" },
-          { text: "Off و On واضحان، أو Label ولون" },
+          { text: "Off والـ On واضحان، أو Label ولون" },
         ]}
       />
     </AbsoluteFill>

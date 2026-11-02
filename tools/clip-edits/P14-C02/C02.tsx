@@ -330,7 +330,7 @@ export const C02: React.FC = () => {
       <CaseChip y={40} text="Expandable bottom sheet" p={span(f, B.exp, B.g)} />
       <Selection r={camRect(stripRect, cam)} hover={sel(B.exp + 20, B.expTap)} selected={sel(B.exp + 20, B.expTap)} label="شريط صغير" />
       <SideNote y={110} text="تبدأ شريطًا صغيرًا في الأسفل" p={span(f, B.exp + 10, B.g)} />
-      <SideNote y={250} text="وتتّسع عند الضغط لتفاصيل و Actions أكثر" p={span(f, B.expTap + 10, B.g)} />
+      <SideNote y={250} text="وتتّسع عند الضغط لتفاصيل والـ Actions أكثر" p={span(f, B.expTap + 10, B.g)} />
       <SideNote y={390} text="وقد تأخذ الشاشة كلها" p={span(f, B.expFull, B.g)} />
 
       <CaseChip y={40} text="Guideline 1" p={span(f, B.g, B.flow)} />

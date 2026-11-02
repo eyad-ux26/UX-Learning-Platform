@@ -235,7 +235,7 @@ export const C18: React.FC = () => {
       <Presenter cam="c18/cam.mp4" />
       <TitleBand title="إدخال التاريخ" sub="Date input" />
       <Voice src="c18/voice.m4a" />
-      <IntroCard title="أي طريقة لإدخال التاريخ؟" sub="Date input" points={["Calendar وRange", "Scrolling picker", "الكتابة أسهل"]} />
+      <IntroCard title="أي طريقة لإدخال التاريخ؟" sub="Date input" points={["Calendar والـ Range", "Scrolling picker", "الكتابة أسهل"]} />
       <RecapCard
         voiceSec={VOICE_CUT}
         title="طابق إدخال التاريخ مع الحاجة"

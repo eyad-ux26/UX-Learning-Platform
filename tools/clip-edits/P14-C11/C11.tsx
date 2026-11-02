@@ -172,7 +172,7 @@ export const C11: React.FC = () => {
 
       <CaseChip y={40} text="4 · لا Radios متداخلة" p={span(f, B.nest, B.act)} />
       <SideNote w={360} y={110} text="Nested: اختيار داخل اختيار" p={span(f, B.pc, B.radnest)} />
-      <Selection r={sub(ONE, ONE.w - 330, 56, 316, 176)} hover={sel(B.radnest, B.chkok)} selected={sel(B.confuse, B.chkok)} label="Parent و Children" />
+      <Selection r={sub(ONE, ONE.w - 330, 56, 316, 176)} hover={sel(B.radnest, B.chkok)} selected={sel(B.confuse, B.chkok)} label="Parent والـ Children" />
       <SideNote w={360} y={110} text="Radio لا يختار أكثر من واحد أصلًا" p={span(f, B.radnest, B.chkok)} warn icon={wi(IconAlert)} />
       <SideNote w={360} y={250} text="هل اخترت الأب فقط أم كل ما تحته؟" p={span(f, B.confuse, B.chkok)} warn />
       <SideNote w={360} y={110} text="Checkboxes تسمح بذلك" p={span(f, B.chkok, B.act)} icon={wi(IconCheck)} />
@@ -181,7 +181,7 @@ export const C11: React.FC = () => {
       <SideNote w={360} y={110} text="أين الخطأ؟ فكّر قبل أن تكمل" p={span(f, B.act, B.mistake)} icon={wi(IconEye)} />
       <Selection r={sub(ONE, 12, 60, 496, 56)} hover={sel(B.mistake, B.setting)} selected={sel(B.tap, B.setting)} label="ينفّذ فورًا" />
       <SideNote w={360} y={110} text="الضغط على الـ Radio شغّل وضع الطيران فورًا" p={span(f, B.mistake, B.setting)} warn icon={wi(IconAlert)} />
-      <SideNote w={360} y={110} text="Radio و Checkbox يغيّران Setting فقط" p={span(f, B.setting, B.only)} icon={wi(IconCheck)} />
+      <SideNote w={360} y={110} text="Radio والـ Checkbox يغيّران Setting فقط" p={span(f, B.setting, B.only)} icon={wi(IconCheck)} />
       <SideNote w={360} y={250} text="ويتنفّذ التغيير بزر مثل «التالي»" p={span(f, B.flow, B.area)} icon={wi(IconCheck)} />
       <SideNote w={360} y={110} text="الاستثناء: Checkbox مستقل في الـ Desktop" p={span(f, B.only, B.area)} />
 

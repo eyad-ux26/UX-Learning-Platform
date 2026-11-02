@@ -170,7 +170,7 @@ export const C10: React.FC = () => {
 
   const overlay = (
     <>
-      <CaseChip y={40} text="Checkbox و Radio button" p={span(f, 0, B.radio)} />
+      <CaseChip y={40} text="Checkbox والـ Radio button" p={span(f, 0, B.radio)} />
 
       <CaseChip y={40} text="متى نستخدم أيّهما؟" p={span(f, B.radio, B.single)} />
       <SelectionOn target="radios" pad={8} labelSide="below" hover={sel(B.radio, B.chk)} selected={sel(B.burgers, B.chk)} label="نوع واحد فقط" />
@@ -222,12 +222,12 @@ export const C10: React.FC = () => {
         {product}
       </DebuggerShell>
       <Presenter cam="c10/cam.mp4" />
-      <TitleBand title="Checkboxes و Radio buttons" sub="Input controls" />
+      <TitleBand title="Checkboxes والـ Radio buttons" sub="Input controls" />
       <Voice src="c10/voice.m4a" />
       <IntroCard title="متى Checkbox ومتى Radio؟" sub="Input controls" points={["الاختيار الواحد والمتعدد", "الشكل المعتاد", "الترتيب والكلمات"]} />
       <RecapCard
         voiceSec={VOICE_CUT}
-        title="Checkboxes و Radio buttons بلا حيرة"
+        title="Checkboxes والـ Radio buttons بلا حيرة"
         items={[
           { text: "Radio لاختيار واحد، Checkbox لأي عدد" },
           { text: "الشكل المعتاد: مربع وعلامة، دائرة في داخلها دائرة" },

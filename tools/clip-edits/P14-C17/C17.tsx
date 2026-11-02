@@ -214,7 +214,7 @@ export const C17: React.FC = () => {
           { text: "المساحة ضيقة؟ الأرقام تحت مقبولة إن كانت واضحة", p: enter(f, B.below, 10) },
         ]}
       />
-      <Selection r={{ x: T.x + 20, y: T.y + 56 + 16 + 30 + 18 + 56 + 33, w: 490, h: 196 }} hover={sel(B.down - 20, B.below)} selected={sel(B.down + 20, B.below)} label="الإصبع تحت المقبض" labelSide="below" />
+      <Selection r={{ x: T.x + 20, y: T.y + 56 + 16 + 30 + 18 + 56 + 33, w: 490, h: 196 }} hover={sel(B.down - 20, B.below)} selected={sel(B.down + 20, B.below)} label="الإصبع تحت المقبض" labelSide="left" />
     </>
   );
 
@@ -226,12 +226,12 @@ export const C17: React.FC = () => {
       <Presenter cam="c17/cam.mp4" />
       <TitleBand title="الـ Sliders" sub="Sliders" />
       <Voice src="c17/voice.m4a" />
-      <IntroCard title="متى يكفي الـ Slider؟" sub="Sliders" points={["Continuous وDiscrete", "القيمة التقريبية", "إصبعك يغطي الرقم"]} />
+      <IntroCard title="متى يكفي الـ Slider؟" sub="Sliders" points={["Continuous والـ Discrete", "القيمة التقريبية", "إصبعك يغطي الرقم"]} />
       <RecapCard
         voiceSec={VOICE_CUT}
         title="Slider للقيمة التقريبية"
         items={[
-          { text: "Continuous لأي قيمة، وDiscrete لخطوات محددة" },
+          { text: "Continuous لأي قيمة، والـ Discrete لخطوات محددة" },
           { text: "يناسب ما يُحكم عليه بالعين أو الأذن: اللون، السطوع، الصوت" },
           { text: "للرقم الدقيق: Stepper أو اكتب الرقم" },
           { text: "اعرض القيمة حيث لا يغطيها الإصبع" },

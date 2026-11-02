@@ -141,7 +141,7 @@ export const C09: React.FC = () => {
   const overlay = (
     <>
       <FocusDim r={camRect(phoneRect, cam)} amount={dim} pad={8} />
-      <SideNote y={110} text="أولًا: Category و Value" p={span(f, B.defs, B.four)} big />
+      <SideNote y={110} text="أولًا: Category والـ Value" p={span(f, B.defs, B.four)} big />
       <Selection r={r(0, "head")} hover={sel(B.cat, B.four)} selected={sel(B.cat, B.val)} label="Filter category" />
       <SideNote y={250} text="Category: العنوان الرئيسي" p={span(f, B.cat, B.four)} icon={wi(IconText)} />
       <Selection r={r(0, "body")} hover={sel(B.ranges, B.colors)} selected={sel(B.ranges, B.colors)} label="Filter values" />
@@ -210,12 +210,12 @@ export const C09: React.FC = () => {
       <Presenter cam="c09/cam.mp4" />
       <TitleBand title="Filters يفهمها الناس" sub="Filter categories · values" />
       <Voice src="c09/voice.m4a" />
-      <IntroCard title="أسماء Filters واضحة، والأهم أولًا" sub="Filters" points={["Category و Value", "4 قواعد"]} />
+      <IntroCard title="أسماء Filters واضحة، والأهم أولًا" sub="Filters" points={["Category والـ Value", "4 قواعد"]} />
       <RecapCard
         voiceSec={VOICE_CUT}
         title="Filters يحتاجها الناس ويفهمونها"
         items={[
-          { text: "Categories و Values يحتاجها الناس فعلًا" },
+          { text: "Categories والـ Values يحتاجها الناس فعلًا" },
           { text: "اسم Category يُفهم منه ما تحته" },
           { text: "كلمات بسيطة بلا Jargon" },
           { text: "الأهم والأكثر استخدامًا في الأعلى" },

@@ -238,7 +238,7 @@ export const C13: React.FC = () => {
       <SideNote w={360} y={110} text="الحقول تحت بعضها أفضل من عمودين" p={span(f, B.col, B.exc)} big icon={wi(IconCheck)} />
       <SideNote w={360} y={290} text="العمودان يقطعان النزول الطبيعي لأسفل" p={span(f, B.zig, B.exc)} warn icon={wi(IconAlert)} />
       <SideNote w={360} y={110} text="الاستثناء: حقول مرتبطة منطقيًا" p={span(f, B.exc, B.seq)} icon={wi(IconEye)} />
-      <Selection r={{ x: ONE.x + 20, y: ONE.y + 56 + 16 + 38 + 82 + 14, w: 480, h: 84 }} hover={sel(B.cvv, B.seq)} selected={sel(B.cvv + 20, B.seq)} label="الانتهاء و CVV" labelSide="below" />
+      <Selection r={{ x: ONE.x + 20, y: ONE.y + 56 + 16 + 38 + 82 + 14, w: 480, h: 84 }} hover={sel(B.cvv, B.seq)} selected={sel(B.cvv + 20, B.seq)} label="الانتهاء والـ CVV" labelSide="below" />
       <SideNote w={360} y={250} text="CVV رقم قصير، فيجلس بجانب تاريخ الانتهاء" p={span(f, B.small, B.seq)} />
 
       <CaseChip y={40} text="4 · ترتيب منطقي" p={span(f, B.seq, END)} />
