@@ -7,6 +7,7 @@ const STEP_TYPES = ["card", "choose", "tune", "compare"];
 const CHOICE = ["choose", "tune"];
 const BANK_RE = /^P\d{2}-U\d{2}-B\d{2}-/;
 const readYaml = (f) => yaml.load(fs.readFileSync(f, "utf8"));
+const CAST_IDS = JSON.parse(fs.readFileSync(new URL("./cast.json", import.meta.url), "utf8")).map((c) => c.id);
 
 // Replaces "@ID" strings with the bilingual text from the path's fixtures.
 export function resolveRefs(node, fixtures, errors, where) {
@@ -36,6 +37,10 @@ function checkMock(m, where, errors) {
 }
 
 function checkStep(s, where, errors) {
+  if (s.say !== undefined) {
+    if (!CAST_IDS.includes(s.say)) errors.push(`${where}: say "${s.say}" is not a cast id (${CAST_IDS.join(", ")})`);
+    else if (!isText(s.scenario)) errors.push(`${where}: say needs a scenario in en and ar`);
+  }
   if (!STEP_TYPES.includes(s.type)) { errors.push(`${where}: step type "${s.type}" is not supported in this build`); return; }
   if (s.type === "card") {
     if (!isText(s.body)) errors.push(`${where}: card needs body in en and ar`);

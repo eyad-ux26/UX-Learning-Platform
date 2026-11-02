@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { CompareStep, Lesson, Locale, Mock, Option, QuestionStep, Step, TuneStep } from "@uxgate/content/types";
+import { getCast } from "@uxgate/content/cast";
 import * as E from "../engine";
+import { faceSrc, sayFace } from "../say";
 import { MockView } from "./MockView";
 import { Rich } from "./Rich";
 
@@ -161,6 +163,8 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   onSelect: (id: string) => void; onReason: (id: string) => void;
 }) {
   const locked = st.phase !== "answering";
+  const speaker = getCast(step.say);
+  const face = sayFace(st);
   const options: { id: string; text: string; mock?: Mock }[] =
     step.type === "compare"
       ? (["a", "b"] as const).map((k) => ({ id: k, text: (step as CompareStep)[k].label?.[locale] ?? t(k === "a" ? "optionA" : "optionB") }))
@@ -211,7 +215,18 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   return (
     <section className="player-grid">
       <div className="player-visual">
-        {step.scenario ? <p className="scn">{step.scenario[locale]}</p> : null}
+        {step.scenario ? (
+          speaker ? (
+            <div className="say">
+              {/* The picture only repeats the speaker's name, so it has no alt text. */}
+              <img className="say-face" key={face} data-face={face} src={faceSrc(speaker, face)} alt="" width={88} height={88} />
+              <div className="say-bubble">
+                <span className="say-name">{locale === "ar" ? speaker.ar : speaker.en} · {locale === "ar" ? speaker.role_ar : speaker.role_en}</span>
+                <p className="scn">{step.scenario[locale]}</p>
+              </div>
+            </div>
+          ) : <p className="scn">{step.scenario[locale]}</p>
+        ) : null}
         {source ? <MockView mock={source} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} /> : null}
         {step.type === "compare" ? (
           <div className="cmp">

@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 // @ts-expect-error plain JS module
 import { compileTree } from "../src/compile.mjs";
-import { bundle } from "../src/index";
+import { bundle, cast } from "../src/index";
 
 const seed = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../seed/paths");
 
@@ -36,5 +36,21 @@ describe("content compiler", () => {
     const f = path.join(tmp, "P01/U01/P01-U01-L01-every-field-costs-something.yaml");
     fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace("answer: [nid]", "answer: [nope]"));
     expect(compileTree(tmp).errors.join("\n")).toMatch(/P01-U01-L01\/S02: answer must list option ids/);
+  });
+  it("accepts a cast id in say and rejects an unknown one", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "uxg-"));
+    fs.cpSync(seed, tmp, { recursive: true });
+    const f = path.join(tmp, "P01/U01/P01-U01-L01-every-field-costs-something.yaml");
+    const text = fs.readFileSync(f, "utf8");
+    const withScenario = text.match(/^(\s*)scenario:/m);
+    expect(withScenario).toBeTruthy();
+    fs.writeFileSync(f, text.replace(/^(\s*)scenario:/m, "$1say: nobody\n$1scenario:"));
+    expect(compileTree(tmp).errors.join("\n")).toMatch(/say "nobody" is not a cast id/);
+    fs.writeFileSync(f, text.replace(/^(\s*)scenario:/m, "$1say: hana\n$1scenario:"));
+    expect(compileTree(tmp).errors).toEqual([]);
+  });
+  it("has all three faces for every cast member", () => {
+    const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../apps/web/public/char");
+    for (const c of cast) for (const face of ["talk", "smile", "think"]) expect(fs.existsSync(path.join(pub, `uxgate-char-${c.id}-${face}-avatar.svg`)), `${c.id} ${face}`).toBe(true);
   });
 });

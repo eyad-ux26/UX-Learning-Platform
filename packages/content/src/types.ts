@@ -32,7 +32,8 @@ export type Option = { id: string; text: Text; mock?: Mock };
 export type Misconception = { id: string; when: string | string[]; feedback: Text };
 export type ReasonQuestion = { prompt: Text; options: { id: string; text: Text }[]; answer: string[]; misconceptions?: Misconception[] };
 
-type StepBase = { id: string; part: string; scenario?: Text; mock?: Mock };
+/** `say` is a cast id (see cast.ts): that character tells `scenario` in first person. Without it the scenario shows as a plain line. */
+type StepBase = { id: string; part: string; scenario?: Text; say?: string; mock?: Mock };
 export type CardStep = StepBase & { type: "card"; title?: Text; body: Text; icons?: string[] };
 type QuestionBase = StepBase & {
   skill: string;
@@ -69,3 +70,5 @@ export type Skill = { id: string; title: Text; can_do: Text };
 export type UnitMeta = { id: string; pathId: string; title: Text; skill: Text; free: boolean; skills: Skill[]; lessons: string[] };
 export type PathMeta = { id: string; title: Text; subtitle: Text };
 export type Bundle = { paths: PathMeta[]; units: UnitMeta[]; lessons: LessonVersion[] };
+
+export type CastMember = { id: string; en: string; ar: string; role_en: string; role_ar: string; age?: string };

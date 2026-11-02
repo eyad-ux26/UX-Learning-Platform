@@ -41,6 +41,7 @@ Fields every step can have:
 | `type` | `card`, `choose`, `predict`, `words`, `fix`, `tune`, `sort`, `order`, `match`, `spot`, `compare` |
 | `part` | `hook`, `try`, `concept`, `guided`, `contrast`, `independent`, `recap`, `check` |
 | `scenario` | Optional text shown in a box above the prompt |
+| `say` | Optional cast id (`sara`, `hana`, `nour`, `mona`, `karim`, `tarek`, `youssef`, `rami`; see `packages/content/src/cast.json`). That character tells `scenario` in first person, in an avatar and speech bubble labelled "Name · Role". The face follows the answer. Needs a `scenario`. Without `say` the scenario is a plain line |
 | `prompt` | The question (not on cards) |
 | `mock` | Optional screen to show (see Mocks) |
 | `hints` | Up to 2, shown only after a wrong answer, never in skill checks |

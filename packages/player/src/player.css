@@ -12,9 +12,9 @@
 .player-col, .player-grid, .player-visual, .player-ask { display: flex; flex-direction: column; gap: 12px; min-inline-size: 0; }
 /* Phone: scenario, then the question, then the example screen, then the answers, so the question is on screen first. */
 .player-visual, .player-ask { display: contents; }
-.player-visual > .scn { order: 1; }
+.player-visual > .scn, .player-visual > .say { order: 1; }
 .player-ask > .prompt { order: 2; }
-.player-visual > :not(.scn) { order: 3; }
+.player-visual > :not(.scn):not(.say) { order: 3; }
 .player-ask > :not(.prompt) { order: 4; }
 .choices.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .player-col h1, .player-ask h1 { outline: none; }
@@ -26,6 +26,26 @@
 @media (min-width: 1024px) {
   .scn { font-size: 18px; line-height: 1.55; }
   .ug[lang="ar"] .scn { line-height: 1.75; }
+}
+/* Scenario character: avatar beside a speech bubble. The tail points at the avatar on either side (logical offsets, mirrored in RTL). */
+.say { display: flex; align-items: flex-end; gap: 10px; }
+.say-face { inline-size: 52px; block-size: 52px; flex: none; }
+.say-bubble { position: relative; flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 2px; padding: 6px 10px 7px; border-radius: 14px; background: var(--surface); border: 2px solid var(--line); }
+.say-bubble::before { content: ""; position: absolute; inset-inline-start: -8px; inset-block-end: 12px; inline-size: 12px; block-size: 12px; background: var(--surface); border-inline-start: 2px solid var(--line); border-block-end: 2px solid var(--line); transform: rotate(45deg); }
+.ug[dir="rtl"] .say-bubble::before, [dir="rtl"] .say-bubble::before { transform: rotate(-45deg); }
+.say-name { font-size: 11.5px; font-weight: 700; color: var(--ink-2); line-height: 1.4; }
+.say-bubble .scn { font-size: 14px; }
+@media (min-width: 1024px) {
+  .say { gap: 14px; }
+  .say-face { inline-size: 88px; block-size: 88px; }
+  .say-bubble { padding: 10px 16px 12px; border-radius: 18px; }
+  .say-bubble::before { inset-block-end: 22px; }
+  .say-name { font-size: 13px; }
+  .say-bubble .scn { font-size: 18px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .say-face { animation: say-pop 240ms ease-out; }
+  @keyframes say-pop { from { transform: scale(0.92); } to { transform: scale(1); } }
 }
 .prompt { font-size: 19px; }
 .choices { display: flex; flex-direction: column; gap: 6px; margin-block-start: 2px; }

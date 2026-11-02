@@ -2,6 +2,7 @@ import raw from "../dist/bundle.json";
 import type { Bundle, LessonVersion, UnitMeta, PathMeta } from "./types";
 
 export * from "./types";
+export * from "./cast";
 export const bundle = raw as unknown as Bundle;
 
 export const getLessonVersion = (lessonId: string): LessonVersion | undefined => bundle.lessons.find((l) => l.lessonId === lessonId);
