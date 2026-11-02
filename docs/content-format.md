@@ -42,11 +42,14 @@ id: P10-U01-L01          # must match the file name
 mode: lesson             # or "check" for a skill check
 minutes: 7
 title: { en: "...", ar: "..." }
+summary: { en: "...", ar: "..." }   # optional, one line for the next-lesson card
 speaker: hana            # the cast member who tells the scenarios, from content/cast.yaml
 review_labels:           # optional short names for misconceptions, shown in the recap
   MC-P10-001: { en: "...", ar: "..." }
 steps: [ ... ]
 ```
+
+`summary` is one line of about 15 words (the validator allows 6 to 22 in each language) shown on the home screen's next-lesson card. Say what the learner will **do**, not what they will learn about. For example: "Three real sign-up forms. Decide which fields go, which wait, and which need a reason." Both `en` and `ar` are required when it is present. Lessons and skill checks without one get a warning; bank files don't need one.
 
 ## Steps
 
