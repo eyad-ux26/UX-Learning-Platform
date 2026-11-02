@@ -1,4 +1,4 @@
-# UXGate design system (Sprint 1 and slice 2)
+# UXGate design system (Sprint 1, slice 2 and slice 3)
 
 The live design lives in the design canvas: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx (pages: Brand, Tokens, Components, Screens, Clickable flow, Screen parts). This folder holds the parts engineering and video need as files.
 
@@ -16,6 +16,7 @@ UXGate borrows ideas from design tools, never their look. Lessons sit on a 16 px
 ## Accessibility rules the build must keep
 
 - **Selected state:** `selected-line` is #1677C0 in light (4.74:1 on surface, 4.18:1 on selected-bg) and #4CC3E8 in night (7.05:1). The selection frame and its corner handles use it, so the state reads at 3:1 or more (WCAG 1.4.11).
+- **Night text:** `text-2` is #BBD9E6 (9.73:1 on surface) and `text-3` is #A3C2D0 (7.67:1), lighter than the AA minimum so long reading stays comfortable. Regular secondary and meta text on night steps up one weight: semi-bold (600) in Titillium Web, medium (500) in Cairo, never bold (rule near the end of `uxgate.css`).
 - **Reduced motion** (`prefers-reduced-motion: reduce`, end of `uxgate.css`): the press still sinks onto the ledge, at once and with no bounce; the selection frame and fill appear at once; rewards, XP, trophies and sheets use a 140 ms fade; confetti and loops (flame, bell, pulse) show one still frame; spinners keep turning, slower. Sound does not change.
 
 ## Step types
@@ -55,3 +56,7 @@ Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym
 ## Slice 2: the full lesson player
 
 Every state inside a lesson: the eight remaining step types, video, concept card, feedback variants, confidence, skill check, mastery round, exit and resume, saving and offline, the guest sample lesson and asking for a review. See `slice-2/README.md`. On the canvas they are on the page "6 · Slice 2 · Lesson player", and the two editable components are on "Screen parts".
+
+## Slice 3: progress across several paths
+
+Paths tab, choosing and switching paths, home with several paths, onboarding changes, lesson end variants (next lesson, replay at half XP, skills reaching Shown, badge earned, end of a path), streak and freezes, why each number changed, skill states and badges, review across paths, profile with the reminder time picker, certificate and public achievement page, the opt-in leaderboard, and the illustration and sound map. See `slice-3/README.md`. On the canvas they are on the page "7 · Slice 3 · Progress", and the three editable components are on "Screen parts".

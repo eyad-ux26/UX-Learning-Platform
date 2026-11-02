@@ -21,7 +21,7 @@ Layout: on mobile the order is question, example, answer area, bottom bar. On de
 
 ### `LessonPages.dc.html`: full pages around steps
 
-`view`: `videoStart`, `video`, `videoTranscript`, `videoEnd`, `concept`, `checkIntro`, `checkSummary`, `masteryIntro`, `masteryDone`, `masteryNone`, `homeResume`, `offlineEnd`, `guestEnd`, `guestSignup`. Same `lang`, `theme`, `device` props.
+`view`: `videoStart`, `video`, `videoTranscript`, `videoSpeed` (playback speed menu open: 0.75×, Normal, 1.25×, 1.5×, 2×, kept for later videos), `videoEnd`, `concept`, `checkIntro`, `checkSummary`, `masteryIntro`, `masteryDone`, `masteryNone`, `homeResume`, `offlineEnd`, `guestEnd`, `guestSignup`. Same `lang`, `theme`, `device` props.
 
 ## Step types
 
