@@ -163,7 +163,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   onSelect: (id: string) => void; onReason: (id: string) => void;
 }) {
   const locked = st.phase !== "answering";
-  const speaker = getCast(step.say);
+  const speaker = getCast(step.speaker);
   const face = sayFace(st);
   const options: { id: string; text: string; mock?: Mock }[] =
     step.type === "compare"

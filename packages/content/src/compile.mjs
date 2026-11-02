@@ -7,7 +7,6 @@ const STEP_TYPES = ["card", "choose", "tune", "compare"];
 const CHOICE = ["choose", "tune"];
 const BANK_RE = /^P\d{2}-U\d{2}-B\d{2}-/;
 const readYaml = (f) => yaml.load(fs.readFileSync(f, "utf8"));
-const CAST_IDS = JSON.parse(fs.readFileSync(new URL("./cast.json", import.meta.url), "utf8")).map((c) => c.id);
 
 // Replaces "@ID" strings with the bilingual text from the path's fixtures.
 export function resolveRefs(node, fixtures, errors, where) {
@@ -37,10 +36,6 @@ function checkMock(m, where, errors) {
 }
 
 function checkStep(s, where, errors) {
-  if (s.say !== undefined) {
-    if (!CAST_IDS.includes(s.say)) errors.push(`${where}: say "${s.say}" is not a cast id (${CAST_IDS.join(", ")})`);
-    else if (!isText(s.scenario)) errors.push(`${where}: say needs a scenario in en and ar`);
-  }
   if (!STEP_TYPES.includes(s.type)) { errors.push(`${where}: step type "${s.type}" is not supported in this build`); return; }
   if (s.type === "card") {
     if (!isText(s.body)) errors.push(`${where}: card needs body in en and ar`);
@@ -70,9 +65,21 @@ function checkStep(s, where, errors) {
   }
 }
 
+// The scenario characters, from cast.yaml next to the paths. Each tells the scenarios of a lesson in first person.
+function loadCast(dir, errors) {
+  const file = path.join(dir, "cast.yaml");
+  if (!fs.existsSync(file)) return [];
+  return (readYaml(file) ?? []).map((c) => {
+    if (!c?.id || !isText(c.name) || !isText(c.role)) errors.push(`cast.yaml: ${c?.id ?? "an entry"} needs id, name and role in en and ar`);
+    return { id: c.id, en: c.name?.en, ar: c.name?.ar, role_en: c.role?.en, role_ar: c.role?.ar };
+  });
+}
+
 export function compileTree(dir) {
   const errors = [];
-  const bundle = { paths: [], units: [], lessons: [] };
+  const cast = loadCast(dir, errors);
+  const castIds = cast.map((c) => c.id);
+  const bundle = { cast, paths: [], units: [], lessons: [] };
   for (const p of fs.readdirSync(dir).sort()) {
     const pDir = path.join(dir, p);
     if (!fs.statSync(pDir).isDirectory()) continue;
@@ -92,6 +99,12 @@ export function compileTree(dir) {
         if (f.split("-").slice(0, 3).join("-") !== raw.id) errors.push(`${where}: id must match file name ${f}`);
         const body = resolveRefs(raw, fixtures, errors, where);
         delete body.sources;
+        // The lesson's speaker tells every scenario unless a step names its own. The player reads the resolved speaker on the step.
+        if (body.speaker !== undefined && !castIds.includes(body.speaker)) errors.push(`${where}: unknown speaker ${body.speaker}`);
+        for (const s of body.steps) {
+          if (s.speaker !== undefined && !castIds.includes(s.speaker)) errors.push(`${where}/${s.id}: unknown speaker ${s.speaker}`);
+          if (s.scenario && (s.speaker ?? body.speaker)) s.speaker = s.speaker ?? body.speaker;
+        }
         if (!isText(body.title)) errors.push(`${where}: title needs en and ar`);
         const seen = new Set();
         body.steps.forEach((s) => { if (seen.has(s.id)) errors.push(`${where}: duplicate step id ${s.id}`); seen.add(s.id); checkStep(s, `${where}/${s.id}`, errors); });

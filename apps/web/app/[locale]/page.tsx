@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { AuthErrorRedirect } from "@/components/AuthErrorRedirect";
 import { Faq } from "@/components/Faq";
 import { Logo } from "@/components/Logo";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
@@ -23,6 +24,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
 
   return (
     <div className="landing">
+      <AuthErrorRedirect />
       <header className="land-head">
         <Logo height={28} />
         <nav className="land-nav" aria-label="UXGate">
