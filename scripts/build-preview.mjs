@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
-import { ROOT, loadContent, resolveRefs } from "./lib/content.mjs";
+import { ROOT, loadContent, loadCast, resolveRefs } from "./lib/content.mjs";
 import { validate } from "./validate.mjs";
 
 const board = process.argv.includes("--board");
@@ -20,6 +20,7 @@ if (errors.length) {
 
 const strip = (node) => JSON.parse(JSON.stringify(node, (k, v) => (k.startsWith("_") || k === "fixtures" ? undefined : v)));
 const bundle = {
+  cast: loadCast(),
   paths: paths
     .map((p) => {
       const refErrors = [];
