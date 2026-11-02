@@ -19,8 +19,9 @@ export async function GET(req: NextRequest) {
   const { data, error } = await db.auth.exchangeCodeForSession(code);
   if (error || !data.user) return fail;
 
-  // Google sign-ups cannot carry a language through the redirect, so set it here once.
-  if (!data.user.user_metadata?.locale) {
+  // Emails follow the language the learner last signed in with. Google sign-ups and existing learners cannot carry a language
+  // into the email request itself, so it is kept up to date here.
+  if (data.user.user_metadata?.locale !== locale) {
     await db.auth.updateUser({ data: { locale } });
     await db.from("profiles").update({ locale }).eq("user_id", data.user.id);
   }

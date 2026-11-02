@@ -246,7 +246,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
                 tabIndex={checked || (!st.sel.length && n === firstOpen) ? 0 : -1}
                 onClick={() => !locked && !tried(o.id) && onSelect(o.id)}
               >
-                <span className="key">{KEYS[locale][n]}</span>
+                <span className="key" aria-hidden="true">{KEYS[locale][n]}</span>
                 <span className="grow">{o.text}</span>
                 {icon ? <span className="verdict"><span className={`ph ${icon}`} aria-hidden="true" /></span> : null}
               </button>
@@ -269,7 +269,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
                     aria-checked={checked} aria-disabled={st.phase !== "main_ok" || undefined}
                     tabIndex={checked || (!st.reason.length && n === 0) ? 0 : -1}
                     onClick={() => st.phase === "main_ok" && onReason(o.id)}>
-                    <span className="key">{KEYS[locale][n]}</span>
+                    <span className="key" aria-hidden="true">{KEYS[locale][n]}</span>
                     <span className="grow">{o.text[locale]}</span>
                     {done && checked ? <span className="verdict"><span className="ph ph-check-circle-fill" aria-hidden="true" /></span> : null}
                     {st.phase === "wrong" && checked ? <span className="verdict"><span className="ph ph-x-circle-fill" aria-hidden="true" /></span> : null}
