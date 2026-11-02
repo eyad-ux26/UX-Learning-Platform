@@ -107,6 +107,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
                   <span className="t-small ink-2">{p.sub}</span>
                   <span className="path-tags"><span className="tag">{t("units")}</span><span className="tag tag-free">{t("unitFree")}</span></span>
                 </span>
+                {p.isNew ? <span className="path-pill" aria-hidden="true">{t("isNew")}</span> : null}
                 {p.isNew ? <span className="sticker path-new"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6 L67.6 27.7 L93.7 37.8 L78.5 61.3 L77 89.2 L50 82 L23 89.2 L21.5 61.3 L6.3 37.8 L32.4 27.7 Z" strokeWidth="10" strokeLinejoin="round" /></svg><span>{t("isNew")}</span></span> : null}
               </Link>
             ))}
