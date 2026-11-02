@@ -177,3 +177,16 @@ describe("server guards (migration 0003)", () => {
     expect(await as("service_role", null, `select public.hit_rate_limit($1, 'svc', 5, 60) as ok`, [A])).toHaveLength(1);
   });
 });
+
+describe("replays (migration 0004)", () => {
+  it("an attempt can be marked as a paid or unpaid replay, nothing else", async () => {
+    const ins = (kind: string | null) => as("service_role", null, `insert into attempts (client_attempt_id, user_id, lesson_id, content_version_id, replay_kind) values ('r-' || gen_random_uuid(), $1, 'P01-U01-L01', $2, $3) returning replay_kind`, [A, versionId, kind]);
+    expect(await ins("paid")).toHaveLength(1);
+    expect(await ins("unpaid")).toHaveLength(1);
+    expect(await ins(null)).toHaveLength(1);
+    await expect(ins("free")).rejects.toThrow(/check/);
+  });
+  it("learners cannot mark their own attempts", async () => {
+    await expect(as("authenticated", A, `update attempts set replay_kind = 'paid'`)).rejects.toThrow(/permission denied/);
+  });
+});

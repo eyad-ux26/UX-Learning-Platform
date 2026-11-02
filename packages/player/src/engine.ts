@@ -192,13 +192,14 @@ export function advance(lesson: Lesson, state: LessonState): LessonState {
 
 export type Summary = { xp: number; questions: number; independent: number; supported: number; revealed: number };
 
-export function summarize(lesson: Lesson, state: LessonState): Summary {
+/** `xpFactor` turns each question's XP into what the learner earns (replays pay half, rounded down, or nothing). */
+export function summarize(lesson: Lesson, state: LessonState, xpFactor: (amount: number) => number = (n) => n): Summary {
   const out: Summary = { xp: 0, questions: 0, independent: 0, supported: 0, revealed: 0 };
   lesson.steps.forEach((s, k) => {
     if (!isQuestion(s)) return;
     out.questions++;
     const o = state.steps[k].outcome;
-    if (o) { out[o]++; out.xp += XP[o]; }
+    if (o) { out[o]++; out.xp += xpFactor(XP[o]); }
   });
   return out;
 }

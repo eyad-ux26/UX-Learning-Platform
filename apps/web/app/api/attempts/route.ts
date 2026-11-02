@@ -8,6 +8,7 @@ import { localDay } from "@/lib/progress";
 import { buildPathView } from "@/lib/learning";
 import { loadProgress } from "@/lib/server/load-progress";
 import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
+import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
 const PER_MINUTE = 60;
@@ -47,11 +48,22 @@ export async function POST(req: Request) {
 
   // A first send for a play: it must be a lesson the learner has unlocked, and a learner can only start so many plays a day.
   const { data: known } = await db.from("attempts").select("id").eq("user_id", userId).eq("client_attempt_id", body.attemptId).maybeSingle();
-  if (!known) {
+  let replay: ReplayKind | null = null;
+  if (known) {
+    // Its own query: if migration 0004 is not applied yet this just reads as a first play.
+    const { data: r } = await db.from("attempts").select("replay_kind").eq("id", known.id).maybeSingle();
+    replay = (r?.replay_kind as ReplayKind | null | undefined) ?? null;
+  } else {
     const progress = await loadProgress(db, userId);
     const state = buildPathView(current.pathId, progress, new Set())?.units.flatMap((u) => u.lessons).find((l) => l.lesson.lessonId === body.lessonId)?.state;
     if (state === "locked") return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
     if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
+    // Playing a finished lesson again is a replay: half XP the first time each day, nothing after that.
+    if (progress.finishedLessons.includes(body.lessonId)) {
+      const { data: paid, error: perr } = await db.from("attempts").select("started_at").eq("user_id", userId).eq("lesson_id", body.lessonId).eq("replay_kind", "paid");
+      const { data: prof } = await db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle();
+      if (!perr) replay = decideReplay(true, (paid ?? []).map((p) => p.started_at as string), new Date(), prof?.time_zone);
+    }
   }
 
   // The attempt is created once per play; the client's attempt id makes repeated sends land on the same row.
@@ -60,6 +72,7 @@ export async function POST(req: Request) {
     { onConflict: "user_id,client_attempt_id" },
   ).select("id, finished_at").single();
   if (aerr || !attempt) return NextResponse.json({ error: "save_failed" }, { status: 500 });
+  if (!known && replay) await db.from("attempts").update({ replay_kind: replay }).eq("id", attempt.id);
 
   const { data: stored } = await db.from("step_results").select("step_id, try_no, kind, answer, hints_used").eq("attempt_id", attempt.id).eq("user_id", userId);
   const prior = (stored ?? []).map((r) => ({ stepId: r.step_id, tryNo: r.try_no, kind: r.kind as "check" | "main_ok" | "reveal", answer: r.answer as { sel: string[]; reason?: string[] }, hintsUsed: r.hints_used }));
@@ -73,9 +86,10 @@ export async function POST(req: Request) {
     );
     if (error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
   }
-  if (out.xp.length) {
+  const xpRows = replay === "unpaid" ? [] : out.xp.map((x) => ({ ...x, amount: replayXp(x.amount, replay) }));
+  if (xpRows.length) {
     const { error } = await db.from("xp_events").upsert(
-      out.xp.map((x) => ({ user_id: userId, attempt_id: attempt.id, step_id: x.step_id, outcome: x.outcome, amount: x.amount })),
+      xpRows.map((x) => ({ user_id: userId, attempt_id: attempt.id, step_id: x.step_id, outcome: x.outcome, amount: x.amount })),
       { onConflict: "attempt_id,step_id", ignoreDuplicates: true },
     );
     if (error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
@@ -84,17 +98,19 @@ export async function POST(req: Request) {
     const now = new Date();
     // Only the request that actually flips finished_at counts the lesson, so a double send cannot count it twice.
     const { data: flipped } = await db.from("attempts").update({ finished_at: now.toISOString() }).eq("id", attempt.id).is("finished_at", null).select("id");
-    if (flipped?.length) await recordFinish(db, userId, body.lessonId, lesson.steps.flatMap((s) => ("skill" in s ? [s.skill] : [])), now);
+    if (flipped?.length) await recordFinish(db, userId, body.lessonId, replay, lesson.steps.flatMap((s) => ("skill" in s ? [s.skill] : [])), now);
   }
 
-  return NextResponse.json({ saved: out.results.length, xp: out.xp, finished: out.finished, rejected: out.rejected });
+  return NextResponse.json({ saved: out.results.length, xp: xpRows, replay, finished: out.finished, rejected: out.rejected });
 }
 
 /** A lesson was finished for the first time in this attempt: count it for today and mark its skills Practiced. */
-async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, skillIds: string[], now: Date) {
+async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, skillIds: string[], now: Date) {
   const { data: profile } = await db.from("profiles").select("time_zone, daily_goal").eq("user_id", userId).maybeSingle();
   const day = localDay(now, profile?.time_zone);
   const goal = profile?.daily_goal ?? 1;
+  // A replay counts toward the day only when it is the paid one; it never changes skills.
+  if (replay === "unpaid") return;
   // One atomic statement, so two lessons finishing together are both counted.
   const bump = await db.rpc("bump_lessons_done", { p_user: userId, p_day: day, p_goal: goal });
   if (bump.error) {
@@ -105,6 +121,6 @@ async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: st
   }
   // Lesson ids start with their path id (P01-U01-L01); mark that path as active just now.
   await db.from("enrollments").update({ last_active_at: now.toISOString() }).eq("user_id", userId).eq("path_id", lessonId.split("-")[0]);
-  const unique = [...new Set(skillIds)];
+  const unique = replay ? [] : [...new Set(skillIds)];
   if (unique.length) await db.from("skill_states").upsert(unique.map((skill_id) => ({ user_id: userId, skill_id, state: "practiced" })), { onConflict: "user_id,skill_id", ignoreDuplicates: true });
 }
