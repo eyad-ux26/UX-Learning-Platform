@@ -131,8 +131,8 @@ export function Onboarding() {
         </main>
 
         {step === 2 && focus ? (
-          <aside className="ob-side" aria-label={t("weSuggest")}>
-            <span className="frame-label"><span className="ph ph-hash" aria-hidden="true" />{t("weSuggest")}</span>
+          <aside className="ob-side" aria-label={t("startPath")}>
+            <span className="frame-label"><span className="ph ph-hash" aria-hidden="true" />{t("startPath")}</span>
             <section className="card-panel ob-side-card">
               {FOCUS_IMG[focus] ? <img src={`/ill/uxgate-ill-${FOCUS_IMG[focus]}.png`} alt="" /> : null}
               {FOCUS_NAME[focus] ? <p className="t-h3 ltr" style={{ color: "var(--panel-ink)" }}>{FOCUS_NAME[focus]}</p> : null}
