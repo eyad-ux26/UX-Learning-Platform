@@ -1,6 +1,6 @@
 # Slice 2 build brief: full lesson player
 
-For the **Build slice 2** thread (a new thread). Written by the PM thread, 2 November 2026, after Eyad approved the slice 2 design. Build in sprint 3, on top of slice 1 (PR #36). Start when PR #36 has passed the slice 1 verify.
+For the **Build slice 2** thread (a new thread). Written by the PM thread, 2 November 2026, after Eyad approved the slice 2 design. Build in sprint 3, on top of slice 1 (PR #36). Eyad asked on 2 November 2026 to start now, in parallel with the slice 1 verify and the slice 3 build. Branch from `build/slice-1` and merge its later fixes in as they land.
 
 ## Goal
 
@@ -57,6 +57,6 @@ Streak freezes, badges, review queue, Kept, profile design, Paths tab and multi-
 
 ## How to work
 
-- Branch `build/slice-2` from `build/slice-1`, one PR, commits per story, the PR body lists each story with its checks ticked.
+- Branch `build/slice-2` from `build/slice-1`, one PR (based on `build/slice-1` until PR #36 merges), commits per story, the PR body lists each story with its checks ticked.
 - Post the preview link when checks 1–12 pass, then stop for the verify thread. Fix every `bug` + `slice-2` issue on the same PR.
 - Do not merge. Eyad merges after the gate.
