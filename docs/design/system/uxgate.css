@@ -99,9 +99,9 @@
   --ledge: #1A4F63;
   --track: #0B3445;
   --ink: #EAF7FC;
-  --ink-2: #9CC3D3;
+  --ink-2: #BBD9E6;
   --ink-neutral: #F2F5F7; --ink-neutral-2: #C3CCD2; --line-neutral: rgba(242, 245, 247, 0.24);
-  --ink-3: #7FA3B5;
+  --ink-3: #A3C2D0;
   --brand: #4CC3E8;
   --brand-ledge: #1E7FA6;
   --on-brand: #00121B;
@@ -836,11 +836,11 @@
 .ug.pg-desktop { width: 1440px; height: 900px; flex-direction: row; }
 .ug.pg-desktop > .dk-rail { width: 248px; flex: none; }
 .ug .pg-col { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
-.ug .pg-top { display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 8px 14px 0 20px; }
-.ug[dir="rtl"] .pg-top { padding: 8px 20px 0 14px; }
-.ug.pg-desktop .pg-top { min-height: 72px; padding: 16px 40px 0; gap: 12px; }
+.ug .pg-top { display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 20px 14px 0 20px; }
+.ug[dir="rtl"] .pg-top { padding: 20px 20px 0 14px; }
+.ug.pg-desktop .pg-top { min-height: 72px; padding: 32px 40px 0; gap: 12px; }
 .ug .pg-body { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 8px 20px 16px; }
-.ug.pg-desktop .pg-body { padding: 16px 40px 32px; gap: 20px; }
+.ug.pg-desktop .pg-body { padding: 24px 40px 32px; gap: 20px; }
 .ug .pg-title { margin: 0; font-weight: 700; font-size: 26px; line-height: var(--lh-tight); }
 .ug.pg-desktop .pg-title { font-size: 32px; }
 .ug .pg-sec { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 2px; }
@@ -1220,3 +1220,23 @@
   .ug .lp-save.is-saving .ph { animation: none !important; }
   .ug .lp-over, .ug .lp-toast { animation: ug-fade 140ms linear both !important; animation-duration: 140ms !important; }
 }
+
+/* Dark theme text weight (Nov 2): light text on night grounds reads thinner than dark text on light grounds,
+   so secondary and meta text that is regular (400) steps up one weight on dark. English: Titillium semi-bold (600),
+   it has no medium. Arabic: Cairo medium (500). Never bold. Inline font-weight still wins. */
+.ug[data-theme="dark"] :is(.t-small.ink-2, .t-small.ink-3, .t-body.ink-2, .t-body.ink-3, .t-lead, .help, .lp-scn, .lp-help, .lp-sheet .note, .lp-line, .lp-tray-empty, .pg-note, .t-small[style*="color: var(--ink-2)"], .t-small[style*="color: var(--ink-3)"]),
+.ug [data-theme="dark"] :is(.t-small.ink-2, .t-small.ink-3, .t-body.ink-2, .t-body.ink-3, .t-lead, .help, .lp-scn, .lp-help, .lp-sheet .note, .lp-line, .lp-tray-empty, .pg-note, .t-small[style*="color: var(--ink-2)"], .t-small[style*="color: var(--ink-3)"]) { font-weight: 600; }
+.ug[data-theme="dark"] :is(.t-small.ink-2, .t-small.ink-3, .t-body.ink-2, .t-body.ink-3, .t-lead, .help, .lp-scn, .lp-help, .lp-sheet .note, .lp-line, .lp-tray-empty, .pg-note, .t-small[style*="color: var(--ink-2)"], .t-small[style*="color: var(--ink-3)"]):lang(ar),
+.ug [data-theme="dark"] :is(.t-small.ink-2, .t-small.ink-3, .t-body.ink-2, .t-body.ink-3, .t-lead, .help, .lp-scn, .lp-help, .lp-sheet .note, .lp-line, .lp-tray-empty, .pg-note, .t-small[style*="color: var(--ink-2)"], .t-small[style*="color: var(--ink-3)"]):lang(ar) { font-weight: 500; }
+
+/* Video playback speed (Nov 2): a text button in the control bar opens a short menu above it. */
+.ug .lp-vspd { width: auto; min-width: 48px; padding: 0 8px; font-weight: 700; font-size: 14px; }
+.ug .lp-vmenu { position: absolute; right: 8px; bottom: 58px; z-index: 3; width: 184px; padding: 6px; border-radius: 16px; background: #062A36; border: 2px solid #1A4F63; box-shadow: 0 12px 32px -12px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 2px; color: #EAF7FC; }
+.ug .lp-vmenu .hd { margin: 0; padding: 6px 10px 4px; font-size: 12px; font-weight: 700; color: #A3C2D0; }
+.ug .lp-vmenu .ft { margin: 2px 0 0; padding: 6px 10px 4px; border-top: 1px solid #1A4F63; font-size: 12px; font-weight: 600; line-height: 1.4; color: #A3C2D0; }
+.ug .lp-vmenu-it { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #EAF7FC; font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; text-align: start; }
+.ug .lp-vmenu-it .ph { font-size: 18px; color: #78E4FC; visibility: hidden; }
+.ug .lp-vmenu-it:hover { background: rgba(120, 228, 252, 0.08); }
+.ug .lp-vmenu-it.is-on { background: rgba(120, 228, 252, 0.16); color: #78E4FC; font-weight: 700; }
+.ug .lp-vmenu-it.is-on .ph { visibility: visible; }
+.ug.lp-desktop .lp-vmenu { right: 60px; }

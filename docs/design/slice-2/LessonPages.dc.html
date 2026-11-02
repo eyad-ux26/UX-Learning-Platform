@@ -52,7 +52,7 @@ a{color:#005F99}a:hover{color:#003F66}
             <span class="cursor-tag" style="position: absolute; top: 12px; inset-inline-end: 12px; --c: #78E4FC; --c-ink: #012E4B;"><b style="margin: 0;">{{c.vChapter}}</b></span>
             <div style="position: absolute; inset: 44px 0 96px; display: grid; place-items: center;">
               <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                <span class="frame-label" style="color: #9CC3D3;"><span class="ph ph-device-mobile" aria-hidden="true"></span>{{c.vExample}}</span>
+                <span class="frame-label" style="color: #BBD9E6;"><span class="ph ph-device-mobile" aria-hidden="true"></span>{{c.vExample}}</span>
                 <div style="position: relative; width: {{vMock.boxW}}px; height: {{vMock.boxH}}px;">
                   <div style="position: absolute; top: 0; left: 50%; width: {{vMock.outerW}}px; margin-left: -{{vMock.half}}px; transform: scale({{vMock.scale}}); transform-origin: top center;">
                     <div style="border-radius: 22px; border: 6px solid #2B3338; background: #2B3338; overflow: hidden;">
@@ -79,10 +79,20 @@ a{color:#005F99}a:hover{color:#003F66}
             <sc-if value="{{showCap}}" hint-placeholder-val="{{true}}">
               <div class="cap" lang="{{capLang}}" dir="{{capDir}}"><span style="font-family: {{capFont}};">{{capText}}</span></div>
             </sc-if>
+            <sc-if value="{{spdOpen}}" hint-placeholder-val="{{false}}">
+              <div class="lp-vmenu" role="menu" aria-label="{{c.vSpeed}}">
+                <p class="hd">{{c.vSpeed}}</p>
+                <sc-for list="{{speeds}}" as="o" hint-placeholder-count="5">
+                  <button class="{{o.cls}}" type="button" role="menuitemradio" aria-checked="{{o.on}}" onClick="{{o.pick}}"><span class="num" dir="{{o.dir}}">{{o.label}}</span><span class="ph ph-check" aria-hidden="true"></span></button>
+                </sc-for>
+                <p class="ft">{{c.vSpeedNote}}</p>
+              </div>
+            </sc-if>
             <div class="ctl" dir="ltr">
               <button class="lp-vbtn" type="button" onClick="{{play}}" aria-label="{{playLabel}}"><span class="{{playIcon}}" aria-hidden="true"></span></button>
               <div class="lp-vbar" role="slider" aria-label="{{c.vSeek}}" aria-valuemin="0" aria-valuemax="72" aria-valuenow="{{v.sec}}" aria-valuetext="{{timeText}}" tabindex="0"><i style="width: {{v.pctStr}};"></i><b style="left: {{v.pctStr}};"></b></div>
               <span class="lp-vtime num">{{timeText}}</span>
+              <button class="{{spdCls}}" type="button" aria-haspopup="menu" aria-expanded="{{spdOpenStr}}" onClick="{{toggleSpd}}" aria-label="{{spdLabel}}"><span class="num">{{spdText}}</span></button>
               <button class="{{ccCls}}" type="button" aria-pressed="{{ccOn}}" onClick="{{toggleCc}}" aria-label="{{c.vCc}}"><span class="ph ph-cc" aria-hidden="true"></span></button>
               <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><button class="lp-vbtn" type="button" aria-label="{{c.vFull}}"><span class="ph ph-corners-out" aria-hidden="true"></span></button></sc-if>
             </div>
@@ -258,7 +268,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoTranscript","videoEnd","concept","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoTranscript","videoSpeed","videoEnd","concept","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson pages: video step, concept card, skill check and mastery pages, resume on home, offline end, guest end. */
 const IMG = { skillCheck: '/_blob/f92a3e6847a208fe460c2076565bb0b0', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', target: '/_blob/f339db60a2fdc85567ed1a06c7bf9515',
   trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4', empty: '/_blob/db03534bd1e09763438142db3c0a865b', offline: '/_blob/15713cc29474a7a427354bd2c907f463', gate: '/_blob/940849193fa4b01dff04d73c95583da2' };
@@ -276,6 +286,7 @@ const C = {
     soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
     vOver: 'Watch · Step 3 · 1 min', vTitle: 'Why every field costs something', vLabel: 'Lesson video', vChapter: 'Every field costs something', vExample: "Example · Hana's Gym",
     vPlay: 'Play video with sound', vReplay: 'Watch again', vPause: 'Pause', vSeek: 'Video position', vCc: 'Captions', vFull: 'Full screen', vCaptions: 'Captions',
+    vSpeed: 'Playback speed', vSpeedBtn: 'Playback speed', vSpeeds: ['0.75×', 'Normal', '1.25×', '1.5×', '2×'], vSpeedNote: 'Kept for your next videos.',
     vTranscript: 'Transcript', vTapLine: 'Tap a line to jump there', vNoAuto: 'Nothing plays until you tap. Captions are on.',
     kOver: 'Concept · Step 4', kTitle: 'Every field costs something', kBody: 'Each field costs people time, effort and a little trust. Forms that feel quick get finished. Before you add a field, ask four questions:',
     kQs: [['Essential?', "Can the task happen without it?"], ['Needed now?', 'Could it wait until later?'], ['Used?', 'Will anyone use the answer?'], ['Personal?', 'Then say why you ask.']],
@@ -323,6 +334,7 @@ const C = {
     soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
     vOver: 'شاهد · الخطوة 3 · دقيقة واحدة', vTitle: 'لماذا لكل حقل تكلفة', vLabel: 'فيديو الدرس', vChapter: 'كل حقل له تكلفة', vExample: 'مثال · نادي هناء',
     vPlay: 'شغّل الفيديو بالصوت', vReplay: 'شاهد مرة أخرى', vPause: 'إيقاف مؤقت', vSeek: 'موضع الفيديو', vCc: 'الترجمة', vFull: 'ملء الشاشة', vCaptions: 'الترجمة',
+    vSpeed: 'سرعة التشغيل', vSpeedBtn: 'سرعة التشغيل', vSpeeds: ['0.75×', 'عادية', '1.25×', '1.5×', '2×'], vSpeedNote: 'نحتفظ بها لفيديوهاتك التالية.',
     vTranscript: 'النص المكتوب', vTapLine: 'اضغط سطرًا للانتقال إليه', vNoAuto: 'لا يعمل شيء حتى تضغط. الترجمة مفعّلة.',
     kOver: 'الفكرة · الخطوة 4', kTitle: 'كل حقل له تكلفة', kBody: 'كل حقل يكلّف الناس وقتًا وجهدًا وقليلًا من الثقة. والنماذج التي تبدو سريعة يُكملها الناس. قبل أن تضيف حقلًا، اسأل أربعة أسئلة:',
     kQs: [['ضروري؟', 'هل تتم المهمة بدونه؟'], ['مطلوب الآن؟', 'هل يمكن أن ينتظر؟'], ['مستخدَم؟', 'هل سيستخدم أحد الإجابة؟'], ['شخصي؟', 'إذن اشرح لماذا تسأل.']],
@@ -368,12 +380,12 @@ const C = {
 };
 const CHIP = { practiced: ['skill skill-practiced', 'ph ph-check'], shown: ['skill skill-shown', 'ph ph-seal-fill'], retry: ['skill skill-retry', 'ph ph-target'], later: ['skill skill-later', 'ph ph-clock'] };
 const ROWICON = { practiced: ['ph ph-check-circle', 'var(--ink-3)'], shown: ['ph ph-seal-fill', 'var(--link)'], retry: ['ph ph-target', 'var(--warn-ink)'], later: ['ph ph-clock', 'var(--ink-3)'] };
-const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoEnd: { sec: 72, playing: false, end: true } };
+const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoSpeed: { sec: 27, playing: true, spd: true, speed: 1.25 }, videoEnd: { sec: 72, playing: false, end: true } };
 function fmt(sec) { return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = this.fresh(props); }
-  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null }; }
+  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null, spd: !!v.spd, speed: v.speed || 1 }; }
   componentDidUpdate(prev) { if (prev.view !== this.props.view || prev.device !== this.props.device) this.setState(this.fresh(this.props)); }
   sfx(n) { if (this.state.sound && this.props.sfx) this.props.sfx(n); }
   renderVals() {
@@ -426,6 +438,10 @@ class Component extends DCLogic {
       timeText: fmt(sec) + ' / 1:12',
       playIcon: s.playing ? 'ph ph-pause-fill' : (s.end ? 'ph ph-replay' : 'ph ph-play-fill'), playLabel: s.playing ? c.vPause : (s.end ? c.vReplay : c.vPlay),
       play: () => { if (s.end) { this.sfx('ui-tap'); this.setState({ end: false, sec: 1, playing: true }); } else { this.sfx('ui-tap'); this.setState({ playing: !s.playing, sec: s.sec === 0 ? 1 : s.sec }); } },
+      spdOpen: s.spd, spdOpenStr: s.spd ? 'true' : 'false', toggleSpd: () => { this.sfx('ui-tap'); this.setState({ spd: !s.spd }); },
+      spdText: (s.speed === 1 ? '1' : String(s.speed)) + '×', spdLabel: c.vSpeedBtn + ', ' + (s.speed === 1 ? c.vSpeeds[1] : s.speed + '×'),
+      spdCls: 'lp-vbtn lp-vspd' + (s.speed !== 1 || s.spd ? ' is-on' : ''),
+      speeds: [0.75, 1, 1.25, 1.5, 2].map((x, i) => ({ label: c.vSpeeds[i], on: s.speed === x ? 'true' : 'false', cls: 'lp-vmenu-it' + (s.speed === x ? ' is-on' : ''), dir: x === 1 ? (lang === 'ar' ? 'rtl' : 'ltr') : 'ltr', pick: () => { this.sfx('ui-tap'); this.setState({ speed: x, spd: false }); } })),
       ccOn: s.cc ? 'true' : 'false', ccCls: 'lp-vbtn' + (s.cc ? ' is-on' : ''), toggleCc: () => this.setState({ cc: !s.cc }),
       showTx: s.tx, showTxBtn: !isDesk, txOpenStr: s.tx ? 'true' : 'false', toggleTx: () => this.setState({ tx: !s.tx }), txMax: isDesk ? 600 : 150,
       lines,

@@ -16,6 +16,7 @@ UXGate borrows ideas from design tools, never their look. Lessons sit on a 16 px
 ## Accessibility rules the build must keep
 
 - **Selected state:** `selected-line` is #1677C0 in light (4.74:1 on surface, 4.18:1 on selected-bg) and #4CC3E8 in night (7.05:1). The selection frame and its corner handles use it, so the state reads at 3:1 or more (WCAG 1.4.11).
+- **Night text:** `text-2` is #BBD9E6 (9.73:1 on surface) and `text-3` is #A3C2D0 (7.67:1), lighter than the AA minimum so long reading stays comfortable. Regular secondary and meta text on night steps up one weight: semi-bold (600) in Titillium Web, medium (500) in Cairo, never bold (rule near the end of `uxgate.css`).
 - **Reduced motion** (`prefers-reduced-motion: reduce`, end of `uxgate.css`): the press still sinks onto the ledge, at once and with no bounce; the selection frame and fill appear at once; rewards, XP, trophies and sheets use a 140 ms fade; confetti and loops (flame, bell, pulse) show one still frame; spinners keep turning, slower. Sound does not change.
 
 ## Step types
