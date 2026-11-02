@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 4 · Notifications inbox, help and review requests</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
+        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+      </sc-for>
+      <div style="flex: 1;"></div>
+      <a class="{{helpCls}}" href="#help"><span class="ph ph-lifebuoy" aria-hidden="true"></span>{{c.help}}</a>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <div class="pg-col">
+    <header class="pg-top" style="gap: 4px;">
+      <sc-if value="{{showBack}}" hint-placeholder-val="{{true}}"><a href="#back" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+      <h1 class="pg-title" style="flex: 1;">{{title}}</h1>
+      <sc-if value="{{is.inbox}}" hint-placeholder-val="{{true}}"><a href="#read" class="pg-link"><span class="ph ph-checks" aria-hidden="true"></span>{{c.markAll}}</a></sc-if>
+      <sc-if value="{{is.inboxEmpty}}" hint-placeholder-val="{{false}}"><a href="#choices" class="icon-btn plain" aria-label="{{c.choices}}"><span class="ph ph-gear" aria-hidden="true"></span></a></sc-if>
+    </header>
+
+    <!-- ============ Inbox ============ -->
+    <sc-if value="{{is.inbox}}" hint-placeholder-val="{{true}}">
+      <main class="pg-scroll">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 10px;">
+            <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+              <p class="t-over set-sec">{{g.title}}</p>
+              <div class="inb">
+                <sc-for list="{{g.items}}" as="m" hint-placeholder-count="3">
+                  <a href="#{{m.to}}" class="{{m.cls}}" aria-label="{{m.aria}}">
+                    <span class="{{m.icCls}}" aria-hidden="true"><span class="{{m.icon}}"></span></span>
+                    <span class="grow"><b>{{m.title}}</b><span>{{m.body}}</span><span class="inb-meta"><span class="to">{{m.go}}<span class="ph ph-caret flip" style="font-size: 11px;" aria-hidden="true"></span></span></span></span>
+                    <span class="inb-end"><span class="inb-time">{{m.time}}</span><sc-if value="{{m.isNew}}" hint-placeholder-val="{{false}}"><span class="inb-dot" aria-hidden="true"></span></sc-if></span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <aside class="pg-stack" style="{{asideStyle}}">
+            <section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.whereTitle}}</p>
+              <sc-for list="{{c.where}}" as="h" hint-placeholder-count="4"><p class="pg-note" style="font-size: 14px;"><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for>
+              <a href="#choices" class="btn btn-secondary btn-sm press" style="align-self: flex-start; margin-top: 4px;"><span class="ph ph-gear" aria-hidden="true"></span>{{c.choices}}</a>
+            </section>
+          </aside>
+        </div>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{is.inboxEmpty}}" hint-placeholder-val="{{false}}">
+      <main class="empty">
+        <img class="pop" src="{{img.empty}}" alt="">
+        <h2>{{c.emptyTitle}}</h2>
+        <p>{{c.emptyBody}}</p>
+        <a href="#choices" class="btn btn-secondary btn-sm press" style="margin-top: 6px;"><span class="ph ph-gear" aria-hidden="true"></span>{{c.choices}}</a>
+      </main>
+    </sc-if>
+
+    <!-- ============ Help ============ -->
+    <sc-if value="{{is.help}}" hint-placeholder-val="{{false}}">
+      <main class="pg-scroll">
+        <div class="pg-cols">
+          <div class="pg-stack" style="gap: 12px;">
+            <section class="mail-card">
+              <img src="{{img.support}}" alt="">
+              <div class="grow">
+                <b style="font-size: 17px;">{{c.writeUs}}</b>
+                <span class="ltr" style="text-align: start; font-weight: 700; color: var(--link); font-size: 15px;">support@uxgate.org</span>
+                <span class="t-small" style="font-size: 13px;">{{c.writeNote}}</span>
+              </div>
+            </section>
+            <a href="mailto:support@uxgate.org" class="btn btn-primary btn-block press"><span class="ph ph-mail" aria-hidden="true"></span>{{c.emailBtn}}</a>
+            <div class="set">
+              <a href="#requests" class="set-row"><span class="ph ph-chat-text" aria-hidden="true"></span><span class="set-l">{{c.myRequests}}<small>{{c.myReqSub}}</small></span><span class="badge" style="background: var(--brand); color: var(--on-brand);">1</span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
+              <a href="#choices" class="set-row"><span class="ph ph-bell" aria-hidden="true"></span><span class="set-l">{{c.choices}}</span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
+            </div>
+          </div>
+          <div class="pg-stack" style="gap: 10px;">
+            <p class="t-over set-sec">{{c.quick}}</p>
+            <div class="faq">
+              <sc-for list="{{faq}}" as="f" hint-placeholder-count="5">
+                <div class="faq-q"><span class="grow">{{f.q}}</span><span class="ph ph-caret" style="transform: rotate({{f.rot}}deg);" aria-hidden="true"></span></div>
+                <sc-if value="{{f.open}}" hint-placeholder-val="{{false}}"><p class="faq-a">{{f.a}}</p></sc-if>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 18px; flex-wrap: wrap;">
+              <a href="#privacy" class="pg-link"><span class="ph ph-shield-check" aria-hidden="true"></span>{{c.privacy}}</a>
+              <a href="#terms" class="pg-link"><span class="ph ph-article" aria-hidden="true"></span>{{c.terms}}</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ My requests ============ -->
+    <sc-if value="{{is.requests}}" hint-placeholder-val="{{false}}">
+      <main class="pg-scroll">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 10px;">
+            <p class="t-body ink-2" style="font-size: 15px;">{{c.reqLead}}</p>
+            <sc-for list="{{reqs}}" as="r" hint-placeholder-count="3">
+              <a href="#answer" class="{{r.cls}}">
+                <span class="req-top">
+                  <span class="grow"><span class="path-lbl"><img src="{{r.img}}" alt=""><span><span class="ltr">{{r.path}}</span> · {{r.where}}</span></span><b>{{r.q}}</b></span>
+                </span>
+                <p class="req-why"><b>{{c.yourReason}}</b> {{r.reason}}</p>
+                <span class="inb-meta" style="flex-wrap: wrap;"><span class="{{r.stCls}}"><span class="{{r.stIcon}}" aria-hidden="true"></span>{{r.st}}</span><span>{{r.when}}</span><sc-if value="{{r.isNew}}" hint-placeholder-val="{{false}}"><span class="to">{{c.readAnswer}}<span class="ph ph-caret flip" style="font-size: 11px;" aria-hidden="true"></span></span></sc-if></span>
+              </a>
+            </sc-for>
+          </div>
+          <aside class="pg-stack" style="{{asideStyle}}">
+            <section class="card" style="padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+              <p class="t-over">{{c.howTitle}}</p>
+              <sc-for list="{{c.how}}" as="h" hint-placeholder-count="4"><p class="pg-note" style="font-size: 14px;"><span class="{{h.icon}}" aria-hidden="true"></span><span>{{h.text}}</span></p></sc-for>
+            </section>
+          </aside>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ One answer ============ -->
+    <sc-if value="{{is.answer}}" hint-placeholder-val="{{false}}">
+      <main class="pg-scroll" style="gap: 12px;">
+        <div class="pg-cols">
+          <div class="pg-stack" style="gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span class="path-lbl"><img src="{{img.forms}}" alt=""><span class="ltr">Forms That Flow</span> · {{ans.where}}</span><span class="{{ans.stCls}}"><span class="{{ans.stIcon}}" aria-hidden="true"></span>{{ans.st}}</span></div>
+            <section class="snap" aria-label="{{c.theStep}}">
+              <p class="t-over">{{c.theStep}}</p>
+              <div class="say" style="margin: 0;"><img class="say-face" src="{{img.hana}}" alt="" style="width: 48px; height: 48px;"><div class="say-bubble" style="padding: 6px 10px 7px;"><span class="say-name">{{c.hana}}</span><p class="scn" style="font-size: 14px;">{{ans.scn}}</p></div></div>
+              <p style="margin: 0; font-weight: 700; font-size: 16px; line-height: 1.35;">{{ans.q}}</p>
+              <sc-for list="{{ansOpts}}" as="o" hint-placeholder-count="3"><div class="{{o.cls}}"><span class="key">{{o.k}}</span><span class="grow">{{o.label}}</span><sc-if value="{{o.mine}}" hint-placeholder-val="{{false}}"><span class="verdict" style="font-size: 12px; color: var(--ink-2);">{{c.yourAnswer}}</span></sc-if></div></sc-for>
+            </section>
+            <p class="req-why" style="font-size: 14px;"><b>{{c.yourReason}}</b> {{c.reasonAlso}} · “{{ans.note}}”</p>
+          </div>
+          <div class="pg-stack" style="gap: 10px;">
+            <section class="reply">
+              <span class="reply-who"><span class="avatar" aria-hidden="true">{{c.agentIni}}</span><span>{{c.agent}} · {{ans.when}}</span></span>
+              <p class="t-body" style="font-size: 15px;">{{ans.reply}}</p>
+            </section>
+            <sc-if value="{{ans.yes}}" hint-placeholder-val="{{true}}">
+              <p class="t-over set-sec">{{c.changed}}</p>
+              <div class="chg"><span class="chg-ic" style="background: var(--mint); color: var(--right-ink);"><span class="ph ph-also-fill" aria-hidden="true"></span></span><span class="grow"><span class="chg-top"><b>{{c.chg1}}</b><span class="chg-v ltr">+10 XP</span></span><p>{{c.chg1b}}</p></span></div>
+              <div class="chg"><span class="chg-ic"><span class="ph ph-check-circle" aria-hidden="true"></span></span><span class="grow"><span class="chg-top"><b>{{c.chg2}}</b></span><p>{{c.chg2b}}</p></span></div>
+            </sc-if>
+            <sc-if value="{{ans.no}}" hint-placeholder-val="{{false}}">
+              <p class="pg-note"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.keptNote}}</span></p>
+            </sc-if>
+            <a href="#lesson" class="btn btn-secondary btn-block press"><span class="ph ph-replay" aria-hidden="true"></span>{{c.seeStep}}</a>
+          </div>
+        </div>
+      </main>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["inbox","inboxEmpty","help","requests","requestAnswer","requestKept"],"default":"inbox"},"$preview":{"width":390,"height":844}}'>
+/* Slice 4 · Notifications inbox (EN-19, spec §4.9), help (§4.10) and the learner side of review requests (AD-04). */
+const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', bell: '/_blob/9cfcf6d42ebe588ededd0ee8ea4eea6a', support: '/_blob/486ffbf7e732e072819afb66eac6fffe', hana: '/_blob/c1775b64148da406fd932a1b2f2ecab9', empty: '/_blob/db6a5d241fa793b5ddcb7f309e09ab8a' };
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', help: 'Help', otherLang: 'العربية', back: 'Back',
+    inboxTitle: 'Notifications', markAll: 'Mark all as read', choices: 'Notification choices', gNew: 'New · 3', gOld: 'Earlier',
+    items: [
+      ['new', 'answer', 'ph ph-chat-text', 'is-mint', 'Your review request was accepted', 'Forms That Flow, step 6: your answer now counts as right. +10 XP.', 'Opens the answer', '2 h'],
+      ['new', 'lesson', 'ph ph-bell', '', 'Your next lesson is ready', 'Long lists: let people type · 6 min · Forms That Flow', 'Opens the lesson', '3 h'],
+      ['new', 'badges', 'ph ph-star-fill', 'is-gold', 'A badge turned gold: Cut fields you do not need', 'Right again in review, 4 days later. This skill is Kept.', 'Opens your badges', '5 h'],
+      ['old', 'review', 'ph ph-review', '', '5 skills to review', 'From 2 paths · about 6 min', 'Opens review', 'Yesterday'],
+      ['old', 'home', 'ph ph-flame', 'is-warm', 'Today’s goal is still open', 'One short lesson in any path counts.', 'Opens Home', 'Yesterday'],
+      ['old', 'billing', 'ph ph-check-circle', '', 'Payment received · [PRICE]', 'Your receipt for November is in your email.', 'Opens billing', '1 Nov']
+    ],
+    whereTitle: 'Where each one goes', where: [{ icon: 'ph ph-bell', text: 'Reminder: the next lesson in your current path.' }, { icon: 'ph ph-review', text: 'Review due: your review queue.' }, { icon: 'ph ph-star', text: 'Badge or certificate: the badge or the certificate.' }, { icon: 'ph ph-chat-text', text: 'Answer to a request: that answer.' }],
+    emptyTitle: 'No notifications yet', emptyBody: 'Reminders, answers to your review requests and new badges show up here.',
+    helpTitle: 'Help', writeUs: 'Write to us', writeNote: 'A person on the team reads every email.', emailBtn: 'Email support', myRequests: 'My requests', myReqSub: 'Reviews you asked for from a lesson · 1 new answer',
+    quick: 'Quick answers', privacy: 'Privacy policy', terms: 'Terms of use',
+    faq: [['How do I change my reminder time?', 'Open Profile, then Settings, then Daily reminder. Pick a new time or turn it off.'], ['Why is a unit locked?', 'Tap the lock. It lists what opens the unit, like a skill check to pass.'], ['I think my answer was right. What can I do?', 'On the step, tap “Ask for a review” and say why. A person replies here and in your notifications.'], ['How do I cancel my subscription?', 'In Profile, then Subscription. You keep access until the end of the period you paid for.'], ['How do I delete my account?', 'Settings, then Delete my account. Personal data is removed within 30 days.']],
+    reqTitle: 'My requests', reqLead: 'Every time you ask for a review from a lesson, it shows here with its answer.', yourReason: 'Your reason:', readAnswer: 'Read the answer',
+    reqs: [
+      ['P01', 'Forms That Flow', 'Unit 2 · step 6', 'Which control fits the plan choice?', 'My answer also works', 'yes', 'Answered today', true],
+      ['P10', 'Visual Hierarchy in Action', 'Unit 2 · step 4', 'What do people read first on this card?', 'The question is unclear', 'wait', 'Sent yesterday', false],
+      ['P01', 'Forms That Flow', 'Unit 1 · step 8', 'Which field can go without hurting Hana’s business?', 'My answer also works', 'kept', 'Answered 28 Oct', false]
+    ],
+    st: { yes: 'Accepted', wait: 'Waiting for a reply', kept: 'Kept as is' },
+    howTitle: 'How reviews work', how: [{ icon: 'ph ph-flag', text: 'Ask from any graded step with “Ask for a review”.' }, { icon: 'ph ph-user', text: 'A person on the team reads it and replies.' }, { icon: 'ph ph-also-fill', text: 'If your answer works, it counts as right and you get the XP.' }, { icon: 'ph ph-bell', text: 'The answer arrives in your notifications.' }],
+    ansTitle: 'Your review request', aWhere: 'Unit 2 · Lesson 1 · step 6', theStep: 'The step', hana: 'Hana · Gym owner',
+    aScn: 'New members pick one of my 3 plans when they sign up: Basic, Plus or Family.', aQ: 'Which control fits the plan choice?',
+    opts: [['A', 'Three checkboxes', ''], ['B', 'Three radio buttons', 'right'], ['C', 'Three cards you tap, one at a time', 'mine']], yourAnswer: 'Your answer',
+    reasonAlso: 'My answer also works', aNote: 'Cards allow only one pick, like radio buttons, and show every plan.',
+    agent: 'Laila from the UXGate team', agentIni: 'L', aWhen: 'today, 6:12 PM',
+    replyYes: 'You’re right. Cards that let people pick only one work like radio buttons, and with 3 plans they show every option at once. We now accept this answer and updated the feedback on this step.',
+    replyNo: 'Thanks for asking. The fax number is still the one to cut: Hana sends the class schedule by email, so the email field has a job. We kept the answer as it is and made the hint clearer.',
+    changed: 'What changed', chg1: 'This step counts as right', chg1b: 'Your first try now counts, on your own.', chg2: 'Pick the right control', chg2b: 'This step now counts toward Practiced.',
+    k: { where: 'Unit 1 · Lesson 2 · step 8', scn: 'My free-trial form asks for name, email, phone and fax. Fewer people finish it than I hoped.', q: 'Which field can go without hurting Hana’s business?', opts: [['A', 'Email', 'mine'], ['B', 'Fax number', 'right'], ['C', 'Name', '']], note: 'People can give their phone instead of email.', when: '28 Oct, 11:40 AM' },
+    keptNote: 'Nothing changes in your progress. You can ask again on another step any time.', seeStep: 'See the step again'
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', help: 'المساعدة', otherLang: 'English', back: 'رجوع',
+    inboxTitle: 'الإشعارات', markAll: 'اجعلها كلها مقروءة', choices: 'اختيارات الإشعارات', gNew: 'جديدة · 3', gOld: 'أقدم',
+    items: [
+      ['new', 'answer', 'ph ph-chat-text', 'is-mint', 'قُبل طلب المراجعة الذي أرسلته', 'Forms That Flow، الخطوة 6: إجابتك تُحسب الآن صحيحة. +10 XP.', 'يفتح الرد', 'قبل ساعتين'],
+      ['new', 'lesson', 'ph ph-bell', '', 'درسك التالي جاهز', 'القوائم الطويلة: دع الناس يكتبون · 6 دقائق · Forms That Flow', 'يفتح الدرس', 'قبل 3 ساعات'],
+      ['new', 'badges', 'ph ph-star-fill', 'is-gold', 'شارة أصبحت ذهبية: احذف الحقول غير اللازمة', 'أصبت مرة أخرى في المراجعة بعد 4 أيام. أتقنت هذه المهارة.', 'يفتح شاراتك', 'قبل 5 ساعات'],
+      ['old', 'review', 'ph ph-review', '', '5 مهارات للمراجعة', 'من مسارين · نحو 6 دقائق', 'يفتح المراجعة', 'أمس'],
+      ['old', 'home', 'ph ph-flame', 'is-warm', 'هدف اليوم لم يكتمل بعد', 'درس قصير واحد في أي مسار يكفي.', 'يفتح الرئيسية', 'أمس'],
+      ['old', 'billing', 'ph ph-check-circle', '', 'تمّ الدفع · [PRICE]', 'إيصال شهر نوفمبر في بريدك الإلكتروني.', 'يفتح الفواتير', '1 نوفمبر']
+    ],
+    whereTitle: 'إلى أين يأخذك كل إشعار', where: [{ icon: 'ph ph-bell', text: 'التذكير: الدرس التالي في مسارك الحالي.' }, { icon: 'ph ph-review', text: 'موعد المراجعة: قائمة المراجعة.' }, { icon: 'ph ph-star', text: 'الشارة أو الشهادة: الشارة أو الشهادة نفسها.' }, { icon: 'ph ph-chat-text', text: 'الرد على طلب: ذلك الرد.' }],
+    emptyTitle: 'لا إشعارات بعد', emptyBody: 'تظهر هنا التذكيرات والردود على طلبات المراجعة والشارات الجديدة.',
+    helpTitle: 'المساعدة', writeUs: 'راسلنا', writeNote: 'يقرأ شخص من الفريق كل رسالة.', emailBtn: 'راسل الدعم', myRequests: 'طلباتي', myReqSub: 'المراجعات التي طلبتها من الدروس · رد جديد واحد',
+    quick: 'إجابات سريعة', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام',
+    faq: [['كيف أغيّر وقت التذكير؟', 'افتح «حسابي» ثم «الإعدادات» ثم «التذكير اليومي»، واختر وقتًا جديدًا أو أوقفه.'], ['لماذا الوحدة مقفلة؟', 'اضغط على القفل لترى ما يفتح الوحدة، مثل اختبار مهارة عليك اجتيازه.'], ['أظن أن إجابتي صحيحة. ماذا أفعل؟', 'في الخطوة نفسها اضغط «اطلب مراجعة» واكتب السبب. يردّ عليك شخص من الفريق هنا وفي الإشعارات.'], ['كيف ألغي اشتراكي؟', 'من «حسابي» ثم «الاشتراك». يبقى وصولك حتى نهاية المدة التي دفعت ثمنها.'], ['كيف أحذف حسابي؟', 'من «الإعدادات» ثم «احذف حسابي». تُحذف بياناتك الشخصية خلال 30 يومًا.']],
+    reqTitle: 'طلباتي', reqLead: 'كلما طلبت مراجعة من درس، يظهر الطلب هنا مع الرد عليه.', yourReason: 'سببك:', readAnswer: 'اقرأ الرد',
+    reqs: [
+      ['P01', 'Forms That Flow', 'الوحدة 2 · الخطوة 6', 'أي عنصر تحكم يناسب اختيار الباقة؟', 'إجابتي تصلح أيضًا', 'yes', 'جاء الرد اليوم', true],
+      ['P10', 'Visual Hierarchy in Action', 'الوحدة 2 · الخطوة 4', 'ماذا يقرأ الناس أولًا في هذه البطاقة؟', 'السؤال غير واضح', 'wait', 'أُرسل أمس', false],
+      ['P01', 'Forms That Flow', 'الوحدة 1 · الخطوة 8', 'أي حقل يمكن حذفه دون أن يضر عمل هناء؟', 'إجابتي تصلح أيضًا', 'kept', 'جاء الرد 28 أكتوبر', false]
+    ],
+    st: { yes: 'قُبل', wait: 'في انتظار الرد', kept: 'بقيت كما هي' },
+    howTitle: 'كيف تعمل المراجعة', how: [{ icon: 'ph ph-flag', text: 'اطلبها من أي خطوة مُقيَّمة عبر «اطلب مراجعة».' }, { icon: 'ph ph-user', text: 'يقرؤها شخص من الفريق ويردّ عليك.' }, { icon: 'ph ph-also-fill', text: 'إن كانت إجابتك تصلح، تُحسب صحيحة وتحصل على النقاط.' }, { icon: 'ph ph-bell', text: 'يصلك الرد في الإشعارات.' }],
+    ansTitle: 'طلب المراجعة', aWhere: 'الوحدة 2 · الدرس 1 · الخطوة 6', theStep: 'الخطوة', hana: 'هناء · صاحبة نادٍ رياضي',
+    aScn: 'يختار الأعضاء الجدد باقة واحدة من باقاتي الثلاث عند التسجيل: أساسية أو بلس أو عائلية.', aQ: 'أي عنصر تحكم يناسب اختيار الباقة؟',
+    opts: [['أ', 'ثلاثة مربعات اختيار (checkboxes)', ''], ['ب', 'ثلاثة أزرار اختيار (radio buttons)', 'right'], ['ج', 'ثلاث بطاقات تختار منها واحدة فقط', 'mine']], yourAnswer: 'إجابتك',
+    reasonAlso: 'إجابتي تصلح أيضًا', aNote: 'البطاقات تسمح باختيار واحد فقط مثل أزرار الاختيار، وتعرض كل الباقات.',
+    agent: 'ليلى من فريق UXGate', agentIni: 'ل', aWhen: 'اليوم، 6:12 م',
+    replyYes: 'معك حق. البطاقات التي تسمح باختيار واحد فقط تعمل مثل أزرار الاختيار، ومع 3 باقات تعرض كل الخيارات مرة واحدة. أصبحنا نقبل هذه الإجابة، وحدّثنا الملاحظات في هذه الخطوة.',
+    replyNo: 'شكرًا لسؤالك. رقم الفاكس ما زال الحقل الذي يُحذف: هناء ترسل جدول الحصص بالبريد الإلكتروني، فلحقل البريد عمل. أبقينا الإجابة كما هي وجعلنا التلميح أوضح.',
+    changed: 'ما الذي تغيّر', chg1: 'الخطوة تُحسب صحيحة', chg1b: 'محاولتك الأولى تُحسب الآن، وبدون مساعدة.', chg2: 'اختر عنصر التحكم المناسب', chg2b: 'هذه الخطوة تُحسب الآن ضمن «تدرّبت».',
+    k: { where: 'الوحدة 1 · الدرس 2 · الخطوة 8', scn: 'نموذج التجربة المجانية عندي يطلب الاسم والبريد والهاتف والفاكس، ومن يُكملونه أقل مما توقعت.', q: 'أي حقل يمكن حذفه دون أن يضر عمل هناء؟', opts: [['أ', 'البريد الإلكتروني', 'mine'], ['ب', 'رقم الفاكس', 'right'], ['ج', 'الاسم', '']], note: 'يمكن للناس إعطاء رقم الهاتف بدل البريد.', when: '28 أكتوبر، 11:40 ص' },
+    keptNote: 'لا يتغيّر شيء في تقدّمك، ويمكنك طلب مراجعة في أي خطوة أخرى متى شئت.', seeStep: 'شاهد الخطوة مرة أخرى'
+  }
+};
+const ST = { yes: ['st st-yes', 'ph ph-also-fill'], wait: ['st st-wait', 'ph ph-hourglass'], kept: ['st st-kept', 'ph ph-check'] };
+
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = this.props.view || 'inbox';
+    const c = C[lang];
+    const isDesk = device === 'desktop';
+    const is = { inbox: view === 'inbox', inboxEmpty: view === 'inboxEmpty', help: view === 'help', requests: view === 'requests', answer: view === 'requestAnswer' || view === 'requestKept' };
+    const helpSide = is.help || is.requests || is.answer;
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: (id === 'profile' && !helpSide) ? 'page' : 'false', icon: 'ph ' + ((id === 'profile' && !helpSide) ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+    const mk = (g) => c.items.filter((it) => it[0] === g).map(([grp, to, icon, tone, title, body, go, time], i, arr) => ({
+      to, icon, title, body, go, time, isNew: grp === 'new', icCls: 'inb-ic ' + tone, cls: 'inb-row' + (grp === 'new' ? ' is-new' : ''), aria: title + '. ' + body + '. ' + go }));
+    const kept = view === 'requestKept';
+    const st = ST[kept ? 'kept' : 'yes'];
+    const title = is.help ? c.helpTitle : is.requests ? c.reqTitle : is.answer ? c.ansTitle : c.inboxTitle;
+    return {
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, img: IMG, is, title,
+      rootCls: 'ug pg pg-' + device, showBack: !isDesk || is.answer,
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      railPaths: [{ name: 'Forms That Flow', img: IMG.forms, pct: '30%', cls: 'dk-layer is-on' }, { name: 'Visual Hierarchy in Action', img: IMG.hier, pct: '20%', cls: 'dk-layer' }],
+      helpCls: 'dk-layer' + (helpSide ? ' is-on' : ''),
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      groups: [{ title: c.gNew, items: mk('new') }, { title: c.gOld, items: mk('old') }],
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px; max-width: 1080px;' : '', asideStyle: isDesk ? '' : 'display: none;',
+      faq: c.faq.map(([q, a], i) => ({ q, a, open: i === 2, rot: i === 2 ? -90 : 90 })),
+      reqs: c.reqs.map(([pid, path, where, q, reason, s, when, isNew]) => ({ img: pid === 'P10' ? IMG.hier : IMG.forms, path, where, q, reason, when, isNew,
+        st: c.st[s], stCls: ST[s][0], stIcon: ST[s][1], cls: 'req' + (isNew ? ' is-new' : '') })),
+      ans: { yes: !kept, no: kept, st: c.st[kept ? 'kept' : 'yes'], stCls: st[0], stIcon: st[1], reply: kept ? c.replyNo : c.replyYes,
+        where: kept ? c.k.where : c.aWhere, scn: kept ? c.k.scn : c.aScn, q: kept ? c.k.q : c.aQ, note: kept ? c.k.note : c.aNote, when: kept ? c.k.when : c.aWhen },
+      ansOpts: (kept ? c.k.opts : c.opts).map(([k, label, role]) => ({ k, label, mine: role === 'mine', cls: 'choice' + (role === 'mine' ? (kept ? ' is-wrong' : ' is-right') : role === 'right' ? ' is-right' : ' is-dim') }))
+    };
+  }
+}
+</script>
+</body>
+</html>

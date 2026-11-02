@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 4 · Email templates</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<!-- The mail client bar is a MOCK. Below it is the email itself: one 600px column, solid colours, the button ledge drawn as a bottom border, every image with alt text, no web fonts required (system fallback). -->
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+  <div class="em-client">
+    <span class="native-cap"><span>MOCK</span>Mail app</span>
+    <span class="from">UXGate &lt;hello@uxgate.org&gt;</span>
+    <span class="{{subjCls}}">{{e.subj}}</span>
+    <span class="{{preCls}}">{{e.pre}}</span>
+  </div>
+  <div style="flex: 1; overflow: hidden;">
+    <div class="em" role="article" aria-label="{{e.subj}}">
+      <div class="em-head"><img src="{{logo}}" alt="UXGate"></div>
+      <div class="em-card">
+        <img class="em-ill" src="{{e.ill}}" alt="{{e.illAlt}}">
+        <h1>{{e.h1}}</h1>
+        <sc-for list="{{e.ps}}" as="p" hint-placeholder-count="1"><p>{{p}}</p></sc-for>
+        <sc-if value="{{e.hasBox}}" hint-placeholder-val="{{true}}">
+          <div class="em-box"><img src="{{e.boxImg}}" alt=""><div class="grow"><b>{{e.boxT}}</b><span>{{e.boxS}}</span></div></div>
+        </sc-if>
+        <a href="#{{view}}" class="em-btn">{{e.btn}}</a>
+        <sc-for list="{{e.notes}}" as="n" hint-placeholder-count="1"><p class="muted">{{n}}</p></sc-for>
+        <sc-if value="{{e.hasCode}}" hint-placeholder-val="{{false}}"><p class="em-code">{{e.code}}</p></sc-if>
+        <sc-if value="{{e.hasSafety}}" hint-placeholder-val="{{false}}"><p class="muted">{{e.safety}}</p></sc-if>
+      </div>
+      <div class="em-foot">
+        <span>{{e.why}}</span>
+        <sc-if value="{{e.hasLinks}}" hint-placeholder-val="{{true}}">
+          <span><sc-for list="{{e.links}}" as="l" hint-placeholder-count="2"><a href="#{{l.id}}">{{l.label}}</a>{{l.sep}}</sc-for></span>
+        </sc-if>
+        <span>{{c.addr}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+const IMG = { lesson: '/_blob/54daac1136dd65086f58f73b440ed1a9', forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', flame: '/_blob/ef2b9cc307685520ab2b815707ec327f', mail: '/_blob/b8ff95a8c2f1c68111476aaf1b979bca', key: '/_blob/c1a5e232b4681719bddf8f85963a691d', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', review: '/_blob/27529cb276100eb41db22c17bdf85470' };
+const LINK = 'https://uxgate.org/auth/link?token=8f2c…e41a';
+const RESET = 'https://uxgate.org/auth/reset?token=b71d…09c3';
+const C = {
+  en: { addr: 'UXGate · uxgate.org · Questions? Reply to this email or write to support@uxgate.org.',
+    E: {
+      reminder: { subj: 'Your next lesson is ready', pre: 'Pick the right control · Lesson 2 · about 6 minutes', ill: 'lesson', illAlt: '',
+        h1: 'Ready for today’s lesson, Yasmin?', ps: ['Your next lesson takes about 6 minutes.'],
+        box: ['forms', 'Pick the right control · Lesson 2', 'Radio buttons or a dropdown?'], btn: 'Start the lesson', notes: ['You set this reminder for 8:00 PM.'],
+        why: 'You get this because you turned on the daily reminder.', links: [['time', 'Change the time'], ['off', 'Turn off the daily reminder email']] },
+      goal: { subj: 'One short lesson finishes today’s goal', pre: 'About 5 minutes. Your review is ready too.', ill: 'flame', illAlt: '',
+        h1: 'One lesson finishes today’s goal', ps: ['You did 1 of your 2 lessons today. The next one takes about 5 minutes.'],
+        box: ['review', '3 skills ready to review', 'A quick review also counts toward your goal.'], btn: 'Do one more lesson', notes: ['We send this once, in the evening, only on days you have started.'],
+        why: 'You get this because “Today’s goal still open” emails are on.', links: [['off', 'Turn off these emails'], ['all', 'All notification choices']] },
+      link: { subj: 'Your UXGate sign-in link', pre: 'It works once, for 1 hour.', ill: 'mail', illAlt: '',
+        h1: 'Sign in to UXGate', ps: ['Use the button to sign in as yasmin.adel@example.com.'],
+        btn: 'Sign in', notes: ['The link works once, for 1 hour. If the button doesn’t work, copy this link into your browser:'], code: LINK,
+        safety: 'Didn’t ask for this? You can ignore this email. No one can sign in without this link.',
+        why: 'This email is about your account, so it always arrives.' },
+      reset: { subj: 'Reset your UXGate password', pre: 'The link works once, for 1 hour.', ill: 'key', illAlt: '',
+        h1: 'Set a new password', ps: ['Someone asked to reset the password for yasmin.adel@example.com. If it was you, use the button.'],
+        btn: 'Set a new password', notes: ['The link works once, for 1 hour. If the button doesn’t work, copy this link into your browser:'], code: RESET,
+        safety: 'Didn’t ask for this? Ignore this email. Your password stays the same.',
+        why: 'This email is about your account, so it always arrives.' },
+      welcome: { subj: 'Welcome to UXGate, Yasmin', pre: 'Your starting path is Forms That Flow. Unit 1 is free.', ill: 'gate', illAlt: '',
+        h1: 'Welcome, Yasmin', ps: ['Every lesson is a few real decisions, with feedback that explains why. Most take 5 to 10 minutes.'],
+        box: ['forms', 'Your starting path: Forms That Flow', 'Unit 1 · Ask only what you need · free'], btn: 'Start Unit 1', notes: ['Your daily reminder is set for 8:00 PM. You can change it in Settings.'],
+        why: 'You get this once, when you create an account.', links: [['all', 'Notification choices']] },
+      badge: { subj: 'Your badge turned gold', pre: 'Cut fields you do not need · Kept', ill: 'medal', illAlt: 'Gold badge',
+        h1: 'Your badge turned gold', ps: ['You got this skill right again in review, on a new case. It now counts as Kept.'],
+        box: ['forms', 'Cut fields you do not need', 'Forms That Flow · Unit 1'], btn: 'See your badges',
+        why: 'You get this because badge and certificate emails are on.', links: [['off', 'Turn off badge emails'], ['all', 'All notification choices']] }
+    } },
+  ar: { addr: 'UXGate · uxgate.org · لديك سؤال؟ ردّ على هذه الرسالة أو راسلنا على support@uxgate.org.',
+    E: {
+      reminder: { subj: 'درسك التالي جاهز', pre: 'اختر عنصر التحكم المناسب · الدرس 2 · حوالي 6 دقائق', ill: 'lesson', illAlt: '',
+        h1: 'هل أنت جاهز لدرس اليوم يا ياسمين؟', ps: ['درسك التالي يستغرق حوالي 6 دقائق.'],
+        box: ['forms', 'اختر عنصر التحكم المناسب · الدرس 2', 'أزرار اختيار (radio buttons) أم قائمة منسدلة؟'], btn: 'ابدأ الدرس', notes: ['ضبطت هذا التذكير على الساعة 8:00 م.'],
+        why: 'تصلك هذه الرسالة لأنك فعّلت التذكير اليومي.', links: [['time', 'غيّر الوقت'], ['off', 'أوقف بريد التذكير اليومي']] },
+      goal: { subj: 'درس قصير واحد يُكمل هدف اليوم', pre: 'حوالي 5 دقائق. ومراجعتك جاهزة أيضًا.', ill: 'flame', illAlt: '',
+        h1: 'درس واحد يُكمل هدف اليوم', ps: ['أنهيت درسًا من درسين اليوم. الدرس التالي يستغرق حوالي 5 دقائق.'],
+        box: ['review', '3 مهارات جاهزة للمراجعة', 'المراجعة السريعة تُحسب أيضًا ضمن هدفك.'], btn: 'درس واحد آخر', notes: ['نرسل هذه الرسالة مرة واحدة في المساء، فقط في الأيام التي بدأت فيها.'],
+        why: 'تصلك هذه الرسالة لأن رسائل «هدف اليوم لم يكتمل بعد» مفعّلة.', links: [['off', 'أوقف هذه الرسائل'], ['all', 'كل اختيارات الإشعارات']] },
+      link: { subj: 'رابط الدخول إلى UXGate', pre: 'يعمل مرة واحدة، لمدة ساعة.', ill: 'mail', illAlt: '',
+        h1: 'سجّل الدخول إلى UXGate', ps: ['استخدم الزر لتسجيل الدخول بحساب yasmin.adel@example.com.'],
+        btn: 'تسجيل الدخول', notes: ['الرابط يعمل مرة واحدة، لمدة ساعة. إن لم يعمل الزر، انسخ هذا الرابط في المتصفح:'], code: LINK,
+        safety: 'لم تطلب هذا؟ تجاهل الرسالة. لا يستطيع أحد الدخول بدون هذا الرابط.',
+        why: 'هذه الرسالة تخص حسابك، لذلك تصل دائمًا.' },
+      reset: { subj: 'إعادة تعيين كلمة مرور UXGate', pre: 'الرابط يعمل مرة واحدة، لمدة ساعة.', ill: 'key', illAlt: '',
+        h1: 'ضع كلمة مرور جديدة', ps: ['طلب أحدهم إعادة تعيين كلمة المرور لحساب yasmin.adel@example.com. إن كنت أنت، استخدم الزر.'],
+        btn: 'ضع كلمة مرور جديدة', notes: ['الرابط يعمل مرة واحدة، لمدة ساعة. إن لم يعمل الزر، انسخ هذا الرابط في المتصفح:'], code: RESET,
+        safety: 'لم تطلب هذا؟ تجاهل الرسالة. تبقى كلمة مرورك كما هي.',
+        why: 'هذه الرسالة تخص حسابك، لذلك تصل دائمًا.' },
+      welcome: { subj: 'أهلًا بك في UXGate يا ياسمين', pre: 'مسارك الأول: Forms That Flow. الوحدة 1 مجانية.', ill: 'gate', illAlt: '',
+        h1: 'أهلًا يا ياسمين', ps: ['كل درس عبارة عن بضعة قرارات حقيقية، مع ملاحظات تشرح السبب. معظم الدروس تستغرق من 5 إلى 10 دقائق.'],
+        box: ['forms', 'مسارك الأول: Forms That Flow', 'الوحدة 1 · اطلب ما تحتاجه فقط · مجانية'], btn: 'ابدأ الوحدة 1', notes: ['تذكيرك اليومي مضبوط على الساعة 8:00 م. يمكنك تغييره من الإعدادات.'],
+        why: 'تصلك هذه الرسالة مرة واحدة، عند إنشاء حسابك.', links: [['all', 'اختيارات الإشعارات']] },
+      badge: { subj: 'شارتك أصبحت ذهبية', pre: 'احذف الحقول غير اللازمة · أتقنت', ill: 'medal', illAlt: 'شارة ذهبية',
+        h1: 'شارتك أصبحت ذهبية', ps: ['أجبت عن هذه المهارة بشكل صحيح مرة أخرى في المراجعة، على حالة جديدة. أصبحت الآن ضمن «أتقنت».'],
+        box: ['forms', 'احذف الحقول غير اللازمة', 'Forms That Flow · الوحدة 1'], btn: 'شاهد شاراتك',
+        why: 'تصلك هذه الرسالة لأن رسائل الشارات والشهادات مفعّلة.', links: [['off', 'أوقف رسائل الشارات'], ['all', 'كل اختيارات الإشعارات']] }
+    } }
+};
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = C.en.E[this.props.view] ? this.props.view : 'reminder';
+    const c = C[lang];
+    const E = c.E[view];
+    const links = (E.links || []).map(([id, label], i, arr) => ({ id, label, sep: i < arr.length - 1 ? ' · ' : '' }));
+    const e = Object.assign({}, E, { ill: IMG[E.ill], hasBox: !!E.box, boxImg: E.box ? IMG[E.box[0]] : '', boxT: E.box ? E.box[1] : '', boxS: E.box ? E.box[2] : '',
+      notes: E.notes || [], hasCode: !!E.code, code: E.code || '', hasSafety: !!E.safety, safety: E.safety || '', links, hasLinks: links.length > 0 });
+    return {
+      lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, e,
+      rootCls: 'ug em-frame' + (device === 'desktop' ? ' em-desk' : ''),
+      subjCls: 'subj' + (lang === 'ar' ? ' rtl' : ''), preCls: 'pre' + (lang === 'ar' ? ' rtl' : ''),
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694'
+    };
+  }
+}
+</script>
+</body>
+</html>

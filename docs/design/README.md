@@ -60,3 +60,7 @@ Every state inside a lesson: the eight remaining step types, video, concept card
 ## Slice 3: progress across several paths
 
 Paths tab, choosing and switching paths, home with several paths, onboarding changes, lesson end variants (next lesson, replay at half XP, skills reaching Shown, badge earned, end of a path), streak and freezes, why each number changed, skill states and badges, review across paths, profile with the reminder time picker, certificate and public achievement page, the opt-in leaderboard, and the illustration and sound map. See `slice-3/README.md`. On the canvas they are on the page "7 · Slice 3 · Progress", and the three editable components are on "Screen parts".
+
+## Slice 4: account, notifications and public pages
+
+Settings with notification choices per kind and channel, download and delete account, our push ask before the browser’s, the notifications inbox, help and review requests, six email templates, public path pages (interactive, hybrid, coming soon), privacy and terms, 404, error, offline and maintenance pages, sign in with Apple, and the illustration and sound map. See `slice-4/README.md`. On the canvas they are on the page "8 · Slice 4 · Account and public", and the five editable components are on "Screen parts".
