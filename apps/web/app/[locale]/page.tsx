@@ -26,14 +26,15 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
       <header className="land-head">
         <Logo height={28} />
         <nav className="land-nav" aria-label="UXGate">
-          <a href="#how">{t("navHow")}</a>
           <a href="#paths">{t("navPaths")}</a>
+          <a href="#how">{t("navHow")}</a>
           <a href="#plan">{t("navPricing")}</a>
           <a href="#faq">{t("navFaq")}</a>
         </nav>
         <span className="grow" />
         <LocaleSwitch />
-        <Link href="/signin" className="btn btn-ghost btn-sm">{t("signin")}</Link>
+        <Link href="/signin" className="btn btn-secondary btn-sm">{t("signin")}</Link>
+        <Link href="/signup" className="btn btn-primary btn-sm only-desk">{t("try")}</Link>
       </header>
 
       <main>

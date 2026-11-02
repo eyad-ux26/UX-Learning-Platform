@@ -12,9 +12,9 @@ import { flush, kick, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
 import { LessonEnd } from "./LessonEnd";
 
-type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; unitId: string };
+type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; unitId: string; streak: number };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, unitId, streak }: Props) {
   const router = useRouter();
   const t = useTranslations("sync");
   const sync = useSyncStatus();
@@ -55,7 +55,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, unitId }: Props)
   };
 
   if (!state) return <div className="player-loading" aria-busy="true" />;
-  if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} onContinue={leave} />;
+  if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} streak={streak} onContinue={leave} />;
 
   return (
     <>

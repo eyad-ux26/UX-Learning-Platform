@@ -5,7 +5,7 @@ import type { Lesson, Locale } from "@uxgate/content/types";
 import { getUnit } from "@uxgate/content";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 
-export function LessonEnd({ lesson, state, locale, unitId, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitId: string; onContinue: () => void }) {
+export function LessonEnd({ lesson, state, locale, unitId, streak, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitId: string; streak: number; onContinue: () => void }) {
   const t = useTranslations("end");
   const sum = summarize(lesson, state);
   const unit = getUnit(unitId);
@@ -27,6 +27,7 @@ export function LessonEnd({ lesson, state, locale, unitId, onContinue }: { lesso
         <div className="end-stats">
           <div className="stat-tile stat-xp pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr big" data-testid="xp">+{sum.xp} XP</span><span className="lbl">{t("xpLabel")}</span></div>
           <div className="stat-tile pop"><span className="ph ph-target" aria-hidden="true" /><span className="num ltr big" data-testid="first-try">{sum.independent}/{sum.questions}</span><span className="lbl ink-2">{t("firstTry")}</span></div>
+          <div className="stat-tile pop"><span className="ph ph-flame-fill" aria-hidden="true" /><span className="num ltr big" data-testid="streak">{streak}</span><span className="lbl ink-2">{t("streakLabel")}</span></div>
         </div>
         {skills.length ? (
           <section className="card end-skills" aria-label={t("skills")}>
