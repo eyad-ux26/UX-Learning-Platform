@@ -20,7 +20,8 @@ To rebuild a clip:
 6. For the preview, re-encode at `-crf 24 -preset slow -c:a aac -b:a 96k -ac 1 -movflags +faststart` so each clip
    stays under the 20 MiB asset limit, and upload it to the unit's preview artifact (see `docs/content-format.md`).
 
-Done so far: P14-C01 to P14-C12. `ctl.tsx` holds the checkbox, radio and toggle drawings used by C10 to C12.
+Done so far: P14-C01 to P14-C18. `ctl.tsx` holds the checkbox, radio and toggle drawings used by C10 to C12; `form.tsx`
+holds the form fields, steppers, sliders, calendar month and scroll wheel drawn in C13 to C18.
 
 ## Look (design system)
 

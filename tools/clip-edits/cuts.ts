@@ -168,5 +168,14 @@ export const CUTS: Record<string, { cuts: Cuts; covers: Cover[] }> = {
    ]
   ],
   "covers": []
+ },
+ "c17": {
+  "cuts": [
+   [
+    67.171,
+    71.023
+   ]
+  ],
+  "covers": []
  }
 };
