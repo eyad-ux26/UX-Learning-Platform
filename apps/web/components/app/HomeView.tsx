@@ -43,6 +43,7 @@ export async function HomeMain({ progress, view, hour }: { progress: Progress; v
             <div className="copy">
               <p className="t-over" style={{ color: "var(--link)" }}>{next.state === "in_progress" ? t("continueUp") : t("nextUp")}</p>
               <h2 className="t-h2" style={{ fontSize: 24, color: "var(--panel-ink)" }}>{lang}</h2>
+              {next.lesson.body.summary?.[locale] ? <p className="t-body ink-2 lesson-body">{next.lesson.body.summary[locale]}</p> : null}
             </div>
             <div className="meta">
               <span className="t-small ink-2 meta-i"><span className="ph ph-book" aria-hidden="true" />{t("lessonOf", { n: next.indexInUnit, total: next.unitLessons })}</span>

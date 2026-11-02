@@ -62,6 +62,7 @@ export type Lesson = {
   mode: "lesson" | "check";
   minutes: number;
   title: Text;
+  summary?: Text;
   speaker?: string;
   review_labels?: Record<string, Text>;
   steps: Step[];
