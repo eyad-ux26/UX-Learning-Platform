@@ -19,7 +19,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   // Lessons play in order: a locked lesson sends the learner back to the path map.
   const view = buildPathView(version.pathId, me.progress, me.practicedSkills);
   const state = view?.units.flatMap((u) => u.lessons).find((l) => l.lesson.lessonId === lessonId)?.state;
-  if (state === "locked") return redirect({ href: `/app/path/${version.pathId}`, locale }) as never;
+  if (state === "locked" && process.env.UG_DEV_FIXTURE !== "1") return redirect({ href: `/app/path/${version.pathId}`, locale }) as never;
   const unit = getUnit(version.unitId);
   const pathTitle = getPath(version.pathId)?.title.en ?? version.pathId;
   // Playing a finished lesson again is a replay: half XP the first time each day, nothing after that.

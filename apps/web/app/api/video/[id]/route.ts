@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { signBunnyUrl, bunnyConfigured } from "@/lib/server/bunny";
 
 /** Test clip used until the real clips are ready. It is a public file, so it needs no signature. */
-export const TEST_CLIP = "test-clip";
+const TEST_CLIP = "test-clip";
 
 const videoIds = new Set(bundle.lessons.flatMap((l) => l.body.steps.flatMap((s) => (s.type === "video" ? [s.video] : []))));
 
