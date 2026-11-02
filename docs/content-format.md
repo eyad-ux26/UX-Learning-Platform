@@ -99,7 +99,7 @@ mock:
     - { kind: button, text: "@W1f", gap: m, region: button }
 ```
 
-| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `field`, `select`, `radio`, `check`, `toggle`, `stepper`, `segmented`, `slider`, `divider`, `group`, `row` |
+| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `field`, `select`, `radio`, `check`, `toggle`, `stepper`, `segmented`, `slider`, `calendar`, `wheel`, `divider`, `group`, `row` |
 | --- | --- |
 | `gap` | Space above the block: `xs` (none), `s`, `m`, `l`, `xl` |
 | `size` | `s`, `m`, `l`, `xl` (images: height) |
@@ -118,9 +118,11 @@ mock:
 | `field`, `select` | Have `label`, `text`, optional `hint` and `error`. `text` looks like a placeholder unless `filled: true`. `hintFirst: true` puts the hint between the label and the box. `focus: true` draws a focus ring. A `select` shows a ▾ |
 | `radio`, `check` | One option with a round or square marker; `selected: true` fills it. `marker: round` or `square` swaps the marker shape (to show a non-standard control), and `hit: box` makes only the marker tappable (to show a small tap target) |
 | `toggle` | A switch with `text` beside it; `selected: true` turns it on |
-| `stepper` | `label` and a value in `text`, between − and + buttons |
+| `stepper` | `label` and a value in `text`, between − and + buttons. `min` and `max` grey out − or + at the limit (and stop the live buttons there); the number changes inside the text, so a unit such as "2 adults" stays. `editable: true` lets learners type the value. Optional `hint` below. `size: s` draws small buttons (to show a hard target) |
 | `segmented` | `options` (a list of texts) and `value`, the index of the selected one |
-| `slider` | `label`, a two-handle range track, and the chosen range in `text`. With `min`, `max`, `from`, `to` and a `format` such as "From {a} to {b}", learners can drag it |
+| `slider` | `label`, a two-handle range track, and the chosen range in `text`. With `min`, `max`, `from`, `to` and a `format` such as "From {a} to {b}", learners can drag it. `value` instead of `from`/`to` draws one handle (format uses `{a}`); `step` sets the drag step (such as `0.1`). `bubble: above` shows the value over the handle, `bubble: thumb` prints it on the handle; `finger: true` draws a fingertip on the handle (to show a covered value); on a range, `finger: 0` or `1` picks one handle. `ticks` is a list of labels under the track |
+| `calendar` | A month grid. `months` is a list of `{ title, start, days }` (`start` = empty cells before day 1); two months sit side by side. `from`/`to` (`[month index, day]`) mark a range, `pick` one day, `today` rings a day |
+| `wheel` | A scrolling picker: `columns` is a list of 5-value lists; the middle row is the chosen value |
 
 A mock can also set `fab`, a floating action button in the bottom corner: `{ icon: "✎" }`, or `{ icon: "✎", text: … }` for an extended one with a label; a list stacks several (to show too many). It can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
 

@@ -1,0 +1,271 @@
+id: P14-U06-L02
+mode: lesson
+minutes: 7
+title:
+  en: "Sliders, when close enough is fine"
+  ar: "الـ Sliders، حين تكفي القيمة التقريبية"
+sources:
+  - title: { en: "Slider Design: Rules of Thumb (NN/g)", ar: "تصميم الـ Slider: قواعد عامة (NN/g)" }
+    url: "https://www.nngroup.com/articles/gui-slider-controls/"
+review_labels:
+  MC-P14-062: { en: "Sliders fit values where close enough is fine", ar: "الـ Slider يناسب القيم التي تكفي فيها القيمة التقريبية" }
+  MC-P14-063: { en: "Keep the slider's value visible above the finger", ar: "اجعل قيمة الـ Slider ظاهرة فوق الإصبع" }
+  MC-P14-064: { en: "Exact values need typing or a stepper, not a slider", ar: "القيم الدقيقة تحتاج إلى الكتابة أو Stepper، لا Slider" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Rasha's smart-home app", ar: "تطبيق المنزل الذكي لرشا" }
+    body:
+      en: "Rasha designs an app that controls smart lights and the air conditioner at home. People open it in the evening to make the living room feel right: a bit dimmer, a bit warmer, a degree cooler.\n\nShe has to pick the right control for each setting."
+      ar: "تصمّم رشا تطبيقًا يتحكم في الإضاءة الذكية والتكييف في المنزل. ويفتحه الناس في المساء ليجعلوا غرفة المعيشة مريحة: إضاءة أخفّ قليلًا، ولون أدفأ قليلًا، ودرجة حرارة أبرد بدرجة.\n\nوعليها أن تختار العنصر المناسب لكل إعداد."
+    mock:
+      width: 300
+      blocks:
+        - { kind: heading, text: { en: "Living room", ar: "غرفة المعيشة" } }
+        - { kind: toggle, text: { en: "Ceiling light", ar: "إضاءة السقف" }, selected: true, gap: s }
+        - { kind: line, text: { en: "Brightness · Warmth · Air conditioner", ar: "الإضاءة · دفء اللون · التكييف" }, gap: s }
+
+  - id: S02
+    type: tune
+    part: try
+    skill: SK-P14-U06-03
+    rules: [R12]
+    confidence: true
+    value:
+      en: "Try first. Sliders (NN/g): sliders work best when the specific value does not matter to the user, but an approximate value is good enough. People dim a light until it looks right, not to an exact number."
+      ar: "جرّب أولًا. الـ Sliders (NN/g): الـ Slider يعمل أفضل حين لا تهمّ الناس القيمة بالضبط، وتكفيهم قيمة تقريبية. فالناس يخفّفون الإضاءة حتى تبدو مناسبة، لا حتى رقم محدد."
+    ref: { url: "https://www.nngroup.com/articles/gui-slider-controls/", quote: "Sliders work best when the specific value does not matter to the user, but an approximate value is good enough." }
+    prompt:
+      en: "Try each version of the brightness control. Which one should ship?"
+      ar: "جرّب كل نسخة من التحكم في الإضاءة. أيّها يجب أن تُطلق؟"
+    start: field
+    options:
+      - id: field
+        text: { en: "A field to type a percentage", ar: "حقل لكتابة نسبة مئوية" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Ceiling light", ar: "إضاءة السقف" } }
+            - { kind: field, label: { en: "Brightness (%)", ar: "الإضاءة (%)" }, text: "70", filled: true, gap: s }
+            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: m }
+      - id: stepper
+        text: { en: "A stepper, 1% per tap", ar: "Stepper، و1% في كل ضغطة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Ceiling light", ar: "إضاءة السقف" } }
+            - { kind: stepper, label: { en: "Brightness", ar: "الإضاءة" }, text: "70%", min: 0, max: 100, gap: s }
+      - id: slider
+        text: { en: "A slider from dim to bright", ar: "Slider من خافت إلى ساطع" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Ceiling light", ar: "إضاءة السقف" } }
+            - { kind: slider, label: { en: "Brightness", ar: "الإضاءة" }, min: 0, max: 100, value: 70, format: "{a}%", ticks: [{ en: "Dim", ar: "خافت" }, { en: "Bright", ar: "ساطع" }], gap: s }
+    answer: [slider]
+    misconceptions:
+      - id: MC-P14-062
+        when: [field, stepper]
+        feedback:
+          en: "Nobody knows whether they want 62% or 65%; they want the room to look right. Typing or tapping a number makes them guess, check the room, and try again."
+          ar: "لا أحد يعرف هل يريد 62% أم 65%؛ بل يريد أن تبدو الغرفة مناسبة. والكتابة أو الضغط على رقم يجعلهم يخمّنون، ثم ينظرون إلى الغرفة، ثم يحاولون مرة أخرى."
+    hints:
+      - en: "Does anyone care about the exact number here, or only how the room looks?"
+        ar: "هل يهتم أحد هنا بالرقم بالضبط، أم فقط بشكل الغرفة؟"
+    correct:
+      en: "A slider: drag until it looks right."
+      ar: "Slider: اسحب حتى تبدو مناسبة."
+    explain:
+      en: "People drag and watch the light change, and stop when it feels right. One smooth gesture replaces a guess-and-check loop."
+      ar: "يسحب الناس ويشاهدون الإضاءة تتغيّر، ويتوقفون حين تبدو مريحة. وحركة واحدة سلسة تحلّ محل التخمين والمراجعة المتكررين."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [eye, ok, layers, list]
+    title: { en: "Sliders", ar: "الـ Sliders" }
+    body:
+      en: "A slider lets people drag a handle along a track to change a value, such as brightness or volume. The value can be a number, or just \"more\" and \"less\".\n\n- **Two kinds:** a continuous slider moves to any value, a discrete one jumps in fixed steps.\n- **Close enough is fine:** use sliders when people judge by look or feel, such as brightness, volume, or a light from warm to cold.\n- **Not for exact values:** entering a weight such as 80.4 kg on a slider takes many careful drags. Use a stepper or, usually best, typing.\n- **Keep the value in view:** a finger on the handle can hide the number. Show it above the handle, or let people drag the handle from below."
+      ar: "الـ Slider يسمح للناس بسحب مقبض على مسار لتغيير قيمة، مثل الإضاءة أو الصوت. وقد تكون القيمة رقمًا، أو فقط «أكثر» و«أقل».\n\n- **نوعان:** الـ Slider المستمر يتحرك إلى أي قيمة، والمتدرّج يقفز بخطوات ثابتة.\n- **القيمة التقريبية تكفي:** استخدم الـ Slider حين يحكم الناس بالشكل أو الإحساس، مثل الإضاءة، أو الصوت، أو لون إضاءة من دافئ إلى بارد.\n- **ليس للقيم الدقيقة:** إدخال وزن مثل 80.4 كجم بـ Slider يحتاج إلى سحب حذر مرات كثيرة. استخدم Stepper، أو الكتابة، وهي غالبًا الأفضل.\n- **اجعل القيمة ظاهرة:** الإصبع على المقبض قد يغطي الرقم. اعرضه فوق المقبض، أو اسمح للناس بسحب المقبض من أسفل."
+
+  - id: S04
+    type: compare
+    part: guided
+    skill: SK-P14-U06-03
+    rules: [R06]
+    value:
+      en: "Sliders (NN/g): labels describing the slider's currently selected value must appear beside or above the thumb; below it, they may be obscured by the user's finger while they are interacting with the control."
+      ar: "الـ Sliders (NN/g): يجب أن تظهر القيمة المختارة بجانب المقبض أو فوقه؛ لأنها إن كانت أسفله، قد يغطيها إصبع المستخدم أثناء التحكم فيه."
+    ref: { url: "https://www.nngroup.com/articles/gui-slider-controls/", quote: "the labels may be obscured by the users' finger while they are interacting with the control." }
+    scenario:
+      en: "The air-conditioner fan has a slider from 1 to 5. Here is what people see while their finger is on the handle."
+      ar: "لمروحة التكييف Slider من 1 إلى 5. وهذا ما يراه الناس بينما إصبعهم على المقبض."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: the value on the handle", ar: "النسخة A: القيمة على المقبض" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: heading, text: { en: "Air conditioner", ar: "التكييف" } }
+          - { kind: slider, label: { en: "Fan speed", ar: "سرعة المروحة" }, min: 1, max: 5, value: 3, format: { en: "Level {a}", ar: "مستوى {a}" }, bubble: thumb, finger: true, gap: m }
+    b:
+      label: { en: "Version B: the value above the handle", ar: "النسخة B: القيمة فوق المقبض" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: heading, text: { en: "Air conditioner", ar: "التكييف" } }
+          - { kind: slider, label: { en: "Fan speed", ar: "سرعة المروحة" }, min: 1, max: 5, value: 3, format: { en: "Level {a}", ar: "مستوى {a}" }, bubble: above, finger: true, gap: m }
+    answer: b
+    misconceptions:
+      - id: MC-P14-063
+        when: [a]
+        feedback:
+          en: "The finger sits exactly where the number is. People drag blind, lift their finger to check, and drag again."
+          ar: "الإصبع موجود بالضبط فوق الرقم. فيسحب الناس دون أن يروا، ثم يرفعون إصبعهم ليتأكدوا، ثم يسحبون مرة أخرى."
+    correct:
+      en: "B: the value stays above the finger."
+      ar: "B: القيمة تبقى فوق الإصبع."
+    explain:
+      en: "The bubble rides above the handle, so people see the level change as they drag and stop at the one they want."
+      ar: "الفقاعة تتحرك فوق المقبض، فيرى الناس المستوى يتغيّر أثناء السحب ويتوقفون عند المستوى الذي يريدونه."
+
+  - id: S05
+    type: compare
+    part: contrast
+    skill: SK-P14-U06-03
+    rules: [R11]
+    confidence: true
+    value:
+      en: "Sliders (NN/g): whenever the exact value matters, sliders are not okay. If picking an exact value is important, choose an alternate UI element."
+      ar: "الـ Sliders (NN/g): كلما كانت القيمة الدقيقة مهمة، لا يصلح الـ Slider. وإن كان اختيار قيمة دقيقة مهمًا، فاختر عنصرًا آخر."
+    ref: { url: "https://www.nngroup.com/articles/gui-slider-controls/", quote: "But whenever the exact value matters, sliders are not okay." }
+    scenario:
+      en: "Now the air conditioner's temperature, from 16 to 30 °C. People know their number: \"set it to 23\"."
+      ar: "والآن درجة حرارة التكييف، من 16 إلى 30 درجة. والناس يعرفون الرقم الذي يريدونه: «اضبطه على 23»."
+    prompt:
+      en: "Which version should ship?"
+      ar: "أيّ نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Version A: a slider, like the lights", ar: "النسخة A: Slider، مثل الإضاءة" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: heading, text: { en: "Air conditioner", ar: "التكييف" } }
+          - { kind: slider, label: { en: "Temperature", ar: "درجة الحرارة" }, min: 16, max: 30, value: 24, step: 0.5, format: "{a} °C", bubble: above, gap: m }
+    b:
+      label: { en: "Version B: a stepper, 1 °C per tap", ar: "النسخة B: Stepper، ودرجة واحدة في كل ضغطة" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: heading, text: { en: "Air conditioner", ar: "التكييف" } }
+          - { kind: stepper, label: { en: "Temperature", ar: "درجة الحرارة" }, text: "24 °C", min: 16, max: 30, gap: s }
+    answer: b
+    misconceptions:
+      - id: MC-P14-064
+        when: [a]
+        feedback:
+          en: "Try landing exactly on 23 in A: the handle slides past to 23.5 or 22.5. When people know the exact number, the slider fights them."
+          ar: "جرّب أن تصل بالضبط إلى 23 في A: المقبض ينزلق إلى 23.5 أو 22.5. وحين يعرف الناس الرقم الدقيق، يصبح الـ Slider عائقًا."
+    correct:
+      en: "B: an exact number needs exact steps."
+      ar: "B: الرقم الدقيق يحتاج إلى خطوات دقيقة."
+    explain:
+      en: "The deciding factor is whether the exact value matters. Light is judged by eye, so close enough is fine. Temperature is a number people know, so one tap per degree gets them there exactly."
+      ar: "العامل الحاسم هو هل القيمة الدقيقة مهمة. الإضاءة يحكم عليها الناس بالعين، فتكفي القيمة التقريبية. أما الحرارة فرقم يعرفه الناس، وضغطة لكل درجة توصلهم إليه بالضبط."
+
+  - id: S06
+    type: choose
+    part: guided
+    skill: SK-P14-U06-03
+    rules: [R06]
+    multi: true
+    value:
+      en: "Sliders (NN/g): use a slider only when the precise value won't matter to the user, but rather only the approximate range."
+      ar: "الـ Sliders (NN/g): استخدم الـ Slider فقط حين لا تهمّ الناس القيمة الدقيقة، بل المدى التقريبي فقط."
+    ref: { url: "https://www.nngroup.com/articles/gui-slider-controls/", quote: "Use a slider only when the precise value won't matter to the user, but rather only the approximate range." }
+    scenario:
+      en: "Rasha is adding four more settings to the app."
+      ar: "تضيف رشا أربعة إعدادات أخرى إلى التطبيق."
+    prompt:
+      en: "Which settings should use a slider? Choose all that fit."
+      ar: "أيّ الإعدادات يجب أن تستخدم Slider؟ اختر كل ما يناسب."
+    options:
+      - { id: warmth, text: { en: "Light colour, from warm yellow to cool white", ar: "لون الإضاءة، من أصفر دافئ إلى أبيض بارد" } }
+      - { id: alarm, text: { en: "The time the bedroom lights turn on, such as 6:45", ar: "موعد تشغيل إضاءة غرفة النوم، مثل 6:45" } }
+      - { id: volume, text: { en: "Speaker volume", ar: "صوت السمّاعة" } }
+      - { id: pin, text: { en: "The 4-digit code that unlocks the front door", ar: "الرمز المكوّن من 4 أرقام لفتح الباب الأمامي" } }
+    answer: [warmth, volume]
+    misconceptions:
+      - id: MC-P14-064
+        when: [alarm, pin]
+        feedback:
+          en: "6:45 and a door code are exact: one step off is simply wrong. Exact values need typing or a picker made for them, not dragging."
+          ar: "الساعة 6:45 ورمز الباب قيمتان دقيقتان: خطوة واحدة خطأ تعني نتيجة خطأ. والقيم الدقيقة تحتاج إلى الكتابة أو عنصر مصمم لها، لا إلى السحب."
+    hints:
+      - en: "For which settings would \"a little more\" be a perfectly good answer?"
+        ar: "في أيّ الإعدادات تكون «أكثر قليلًا» إجابة جيدة تمامًا؟"
+    correct:
+      en: "Warmth and volume."
+      ar: "دفء اللون والصوت."
+    explain:
+      en: "People adjust warmth and volume by feel, so sliders fit. The wake-up time and the door code must be exact, so they need other inputs."
+      ar: "يضبط الناس دفء اللون والصوت بالإحساس، فيناسبهما الـ Slider. أما موعد التشغيل ورمز الباب فيجب أن يكونا دقيقين، فيحتاجان إلى عناصر أخرى."
+
+  - id: S07
+    type: tune
+    part: independent
+    skill: SK-P14-U06-03
+    rules: [R14]
+    value:
+      en: "Sliders (NN/g): if picking an exact value is important to the goal of the interface, choose an alternate UI element; consider one that allows users to tap or even type to specify their choice."
+      ar: "الـ Sliders (NN/g): إن كان اختيار قيمة دقيقة مهمًا لهدف الواجهة، فاختر عنصرًا آخر؛ عنصرًا يسمح للناس بالضغط أو حتى الكتابة لتحديد اختيارهم."
+    ref: { url: "https://www.nngroup.com/articles/gui-slider-controls/", quote: "If picking an exact value is important to the goal of the interface, choose an alternate UI element." }
+    scenario:
+      en: "Tamer designs a fitness app. Every morning, people log their weight from the bathroom scale, such as 80.4 kg, to follow their progress. The first draft copies the look of a real scale: a ruler you drag."
+      ar: "يصمّم تامر تطبيقًا للياقة البدنية. وكل صباح، يسجّل الناس وزنهم من ميزان الحمّام، مثل 80.4 كجم، لكي يتابعوا تقدّمهم. والمسودة الأولى تقلّد شكل الميزان الحقيقي: مسطرة تُسحب."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: ruler
+    options:
+      - id: ruler
+        text: { en: "A scale-like slider from 30 to 200 kg", ar: "Slider يشبه الميزان من 30 إلى 200 كجم" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Today's weight", ar: "وزن اليوم" } }
+            - { kind: slider, min: 30, max: 200, value: 80, step: 0.1, format: "{a} kg", bubble: above, ticks: ["30", "100", "200"], gap: m }
+            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+      - id: type
+        text: { en: "A number field with \"kg\", yesterday's weight shown", ar: "حقل رقمي مع «كجم»، ووزن الأمس ظاهر" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: heading, text: { en: "Today's weight", ar: "وزن اليوم" } }
+            - { kind: field, label: { en: "Weight (kg)", ar: "الوزن (كجم)" }, hint: { en: "Yesterday: 80.7 kg", ar: "أمس: 80.7 كجم" }, text: "", gap: s }
+            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+    answer: [type]
+    misconceptions:
+      - id: MC-P14-064
+        when: [ruler]
+        feedback:
+          en: "Drag the ruler to 80.4: each pixel jumps by several tenths, so people nudge back and forth every single morning. Looking like a real scale doesn't make it work like one."
+          ar: "اسحب المسطرة إلى 80.4: كل نقطة على الشاشة تقفز عدة أعشار، فيحرّك الناس المقبض ذهابًا وإيابًا كل صباح. وأن يبدو مثل الميزان الحقيقي لا يجعله يعمل مثله."
+    correct:
+      en: "Type the exact weight."
+      ar: "اكتب الوزن بالضبط."
+    explain:
+      en: "People read 80.4 off the scale and type it in a second. Yesterday's weight below the label helps them spot a typo."
+      ar: "يقرأ الناس 80.4 من الميزان ويكتبونه في ثانية. ووزن الأمس تحت اسم الحقل يساعدهم على ملاحظة أي خطأ في الكتابة."
+
+  - id: S08
+    type: card
+    part: recap
+    icons: [eye, ok, list]
+    title: { en: "What you practised", ar: "ما تدرّبت عليه" }
+    body:
+      en: "- **Sliders for close-enough values**, judged by eye or ear: brightness, warmth, volume.\n- **The value above the finger**, never hidden under it.\n- **Exact values need exact inputs:** a stepper or typing.\n\nNext: picking the right way to enter a date."
+      ar: "- **الـ Slider للقيم التقريبية**، التي يحكم عليها الناس بالعين أو الأذن: الإضاءة، ودفء اللون، والصوت.\n- **القيمة فوق الإصبع**، لا تحته أبدًا.\n- **القيم الدقيقة تحتاج إلى عناصر دقيقة:** Stepper أو الكتابة.\n\nالتالي: اختيار الطريقة المناسبة لإدخال التاريخ."

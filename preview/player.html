@@ -178,6 +178,29 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .stp{display:inline-flex;align-items:center;border:1.5px solid #B9B9BF;border-radius:10px;overflow:hidden}
 .mock .stp span{width:38px;height:36px;display:grid;place-items:center;font-size:1.1rem;color:#5B3FD1;background:#F4F2FB}
 .mock .stp b{min-width:44px;text-align:center}
+.mock .stp .sb.off{color:#C4C4CA;background:#F4F4F6}
+.mock .stp b.ed{border-inline:1.5px solid #B9B9BF;align-self:stretch;display:grid;place-items:center;padding:0 8px;background:#fff;cursor:text}
+.mock .stp-s span{width:24px;height:24px;font-size:.85rem}.mock .stp-s b{min-width:32px;font-size:.85rem}
+.mock .sl.one{background:#D9D9DE}.mock .sl.one s{position:absolute;inset-inline-start:0;top:0;bottom:0;background:#5B3FD1;border-radius:2px}
+.mock .sl.bb-above{margin-top:44px}
+.mock .sl .bub{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#fff;font-style:normal;font-size:.8rem;font-weight:600;padding:3px 8px;border-radius:7px;white-space:nowrap}
+.mock .sl.bb-thumb i{width:46px;height:28px;top:-12px;margin-inline-start:-23px;border-radius:14px;display:grid;place-items:center}
+.mock .sl .onth{font-style:normal;font-size:.72rem;font-weight:700;color:#1C1C1E;white-space:nowrap}
+.mock .sl .finger{position:absolute;left:50%;top:50%;width:46px;height:58px;transform:translate(-42%,-22%);border-radius:23px 23px 20px 20px;background:rgba(222,168,128,.93);border:1.5px solid rgba(150,98,62,.55);z-index:2}
+.mock .cal{display:flex;gap:10px}.mock .cm{flex:1;min-width:0}
+.mock .ct{font-weight:700;font-size:.82rem;text-align:center;margin-bottom:4px}
+.mock .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:1px 0;text-align:center;font-style:normal}
+.mock .cg i{font-style:normal;font-size:.74rem;line-height:1.85;color:#1C1C1E}
+.mock .cal.two .cg i{font-size:.62rem;line-height:1.75}
+.mock .cg .cw{color:#8A8A90;font-weight:600}
+.mock .cg .cr{background:#E6E0FF}.mock .cg .ce{background:#5B3FD1;color:#fff;border-radius:50%;font-weight:700}
+.mock .cg .ctd{outline:1.5px solid #5B3FD1;outline-offset:-2px;border-radius:50%}
+.mock .whl{display:flex;justify-content:center;gap:6px;background:#F4F4F6;border-radius:12px;padding:6px 8px;position:relative}
+.mock .wc{display:flex;flex-direction:column;align-items:center;min-width:44px}
+.mock .wc span{line-height:1.7;min-height:1.7em;font-size:.9rem;color:#1C1C1E;white-space:nowrap}
+.mock .wc .wm{font-weight:700;background:#fff;border-radius:6px;padding:0 8px;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mock .wc .w1{opacity:.55;font-size:.82rem}.mock .wc .w2{opacity:.25;font-size:.74rem}
+.mock .ticks{display:flex;justify-content:space-between;font-size:.72rem;color:#6B6B70;margin:0 2px}
 .mock .k-segmented{display:flex;background:#EFEFF2;border-radius:10px;padding:3px;gap:3px}
 .mock .sg{flex:1;text-align:center;padding:6px 4px;border-radius:8px;font-size:.85rem;color:#4A4A50}
 .mock .sg.on{background:#fff;color:#1C1C1E;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.15)}
@@ -454,12 +477,30 @@ function mockBlocks(blocks, opts){
     else if (b.kind === "field" || b.kind === "select") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}${b.hint && b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}<div${/\d/.test(tx(b.text)||"") && /^[\s\d+\-()\u2066\u2069]+$/.test(tx(b.text)) ? ' dir="ltr"' : ""} class="fi${b.filled?" filled":""}${b.focus?" focus":""}">${esc(tx(b.text))}${b.kind==="select"?`<span class="chev" aria-hidden="true">▾</span>`:""}</div>${b.hint && !b.hintFirst?`<div class="fh">${esc(tx(b.hint))}</div>`:""}${b.error?`<div class="fe">${esc(tx(b.error))}</div>`:""}`;
     else if (b.kind === "radio" || b.kind === "check") inner = `<span class="mk${b.selected?" on":""}${b.marker?` mk-${b.marker}`:""}" aria-hidden="true"></span><span>${esc(tx(b.text))}</span>`;
     else if (b.kind === "toggle") inner = `<span>${esc(tx(b.text))}</span><span class="sw${b.selected?" on":""}" aria-hidden="true"></span>`;
-    else if (b.kind === "stepper") inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="stp"><span aria-hidden="true">−</span><b>${esc(tx(b.text))}</b><span aria-hidden="true">+</span></div>`;
+    else if (b.kind === "stepper") {
+      /* min/max grey out − or + at the limit; editable lets people type the value */
+      const n = parseInt(String(tx(b.text)).replace(/[^0-9]/g, "")), lim = (v, k) => v !== undefined && n === v ? ` off` : "";
+      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="stp${b.size?` stp-${b.size}`:""}" data-min="${b.min ?? 0}" data-max="${b.max ?? ""}"><span class="sb${lim(b.min)}" aria-hidden="true">−</span><b${b.editable?' class="ed"':""}>${esc(tx(b.text))}</b><span class="sb${lim(b.max)}" aria-hidden="true">+</span></div>${b.hint?`<div class="fh">${esc(tx(b.hint))}</div>`:""}`;
+    }
     else if (b.kind === "segmented") inner = (b.options||[]).map((o, k) => `<span class="sg${k===(b.value??0)?" on":""}">${esc(tx(o))}</span>`).join("");
     else if (b.kind === "slider") {
       const lo = b.min ?? 0, hi = b.max ?? 100, f = v => (v - lo) / (hi - lo) * 100, a = b.from ?? lo + (hi - lo) * .2, z = b.to ?? lo + (hi - lo) * .65;
-      const fmt = (x, y) => esc(tx(b.format || b.text).replace("{a}", x).replace("{b}", y));
-      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="sl${b.format?" act-slide":""}" data-min="${lo}" data-max="${hi}" data-fmt="${b.format?esc(tx(b.format)):""}" aria-hidden="true"><i style="inset-inline-start:${f(a)}%" data-v="${a}"></i><i style="inset-inline-start:${f(z)}%" data-v="${z}"></i></div><div class="fh">${b.format ? fmt(a, z) : esc(tx(b.text))}</div>`;
+      const fmt = (x, y) => esc(tx(b.format || b.text || "").replace("{a}", x).replace("{b}", y));
+      /* value: one thumb. bubble: "above" shows the value over the thumb, "thumb" prints it on the thumb. finger: a fingertip over the thumb. ticks: labels under the track */
+      const one = b.value !== undefined, thumbs = one ? [b.value] : [a, z];
+      const bub = v => b.bubble === "above" ? `<em class="bub">${fmt(v, v)}</em>` : b.bubble === "thumb" ? `<em class="onth">${fmt(v, v)}</em>` : "";
+      const below = b.bubble ? (b.format ? "" : esc(tx(b.text || ""))) : (b.format ? (one ? fmt(b.value, b.value) : fmt(a, z)) : esc(tx(b.text || "")));
+      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="sl${one?" one":""}${b.bubble?` bb-${b.bubble}`:""}${b.format?" act-slide":""}" data-min="${lo}" data-max="${hi}" data-step="${b.step ?? 1}" data-fmt="${b.format?esc(tx(b.format)):""}" aria-hidden="true">${one?`<s style="width:${f(b.value)}%"></s>`:""}${thumbs.map((v, k) => `<i style="inset-inline-start:${f(v)}%" data-v="${v}">${bub(v)}${b.finger === true || b.finger === k ? '<u class="finger"></u>' : ""}</i>`).join("")}</div>${b.ticks?`<div class="ticks">${b.ticks.map(t => `<span>${esc(tx(t))}</span>`).join("")}</div>`:""}${below?`<div class="fh">${below}</div>`:""}`;
+    }
+    else if (b.kind === "calendar") {
+      /* months: [{title, start (0 = first column), days}], from/to: [month index, day] marks a range, pick: [month index, day] one day, today: [m, d] */
+      const ms = b.months || [], key = (m, d) => m * 100 + d, lo = b.from ? key(...b.from) : b.pick ? key(...b.pick) : -1, hi = b.to ? key(...b.to) : lo;
+      const wd = tx(b.weekdays || {en: "S M T W T F S", ar: "ح ن ث ر خ ج س"}).split(" ");
+      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="cal${ms.length > 1 ? " two" : ""}">${ms.map((m, mi) => `<div class="cm"><div class="ct">${esc(tx(m.title))}</div><div class="cg">${wd.map(w => `<i class="cw">${esc(w)}</i>`).join("")}${"<i></i>".repeat(m.start || 0)}${Array.from({length: m.days || 30}, (_, k) => { const d = k + 1, v = key(mi, d), on = v >= lo && v <= hi && lo >= 0, end = v === lo || v === hi, td = b.today && b.today[0] === mi && b.today[1] === d; return `<i class="cd${on ? (end ? " ce" : " cr") : ""}${td ? " ctd" : ""}">${d}</i>`; }).join("")}</div></div>`).join("")}</div>${b.text?`<div class="fh">${esc(tx(b.text))}</div>`:""}`;
+    }
+    else if (b.kind === "wheel") {
+      /* columns: lists of 5 values; the middle row is the chosen one */
+      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="whl">${(b.columns || []).map(c => `<div class="wc">${c.map((v, k) => `<span class="${k === 2 ? "wm" : Math.abs(k - 2) === 1 ? "w1" : "w2"}">${esc(tx(v))}</span>`).join("")}</div>`).join("")}</div>`;
     }
     else if (b.kind === "divider") inner = "";
     else inner = inl(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");
@@ -470,7 +511,7 @@ function mockBlocks(blocks, opts){
       if (b.hit === "box") return `<div class="${cls}"${st} role="${role}" aria-checked="${!!b.selected}">${inner.replace('class="mk', 'tabindex="0" class="act mk')}</div>`;
       return `<div class="${cls} act"${st} role="${role}" tabindex="0" aria-checked="${!!b.selected}">${inner}</div>`;
     }
-    if (live && b.kind === "stepper") inner = inner.replace('<span aria-hidden="true">−</span>', `<span class="act" role="button" tabindex="0" data-step="-1" aria-label="−">−</span>`).replace('<span aria-hidden="true">+</span>', `<span class="act" role="button" tabindex="0" data-step="1" aria-label="+">+</span>`);
+    if (live && b.kind === "stepper") inner = inner.replace(/<span class="sb([^"]*)" aria-hidden="true">−<\/span>/, (m, c) => `<span class="sb${c} act" role="button" tabindex="0" data-step="-1" aria-label="−">−</span>`).replace(/<span class="sb([^"]*)" aria-hidden="true">\+<\/span>/, (m, c) => `<span class="sb${c} act" role="button" tabindex="0" data-step="1" aria-label="+">+</span>`).replace('<b class="ed">', '<b class="ed" contenteditable="plaintext-only" spellcheck="false" role="textbox">');
     if (live && b.kind === "segmented") inner = inner.replace(/<span class="sg( on)?">/g, (m, on) => `<span class="sg${on||""} act" role="radio" tabindex="0" aria-checked="${!!on}">`);
     if (live && b.kind === "field" && !b.focus) inner = inner.replace(/<div( dir="ltr")? class="fi([^"]*)">([^<]*)/, (m, d, c, t) => `<div${d||""} class="fi${c} act-type" contenteditable="plaintext-only" spellcheck="false" data-ph="${t}" role="textbox" aria-label="${esc(tx(b.label))}">${b.filled ? t : ""}`);
     if (opts && opts.regions && b.region){
@@ -785,18 +826,27 @@ function mockAct(el){
     g.forEach(r => { r.setAttribute("aria-checked", r === el); r.querySelector(".mk").classList.toggle("on", r === el); });
   }
   else if (el.matches(".sg")) el.parentElement.querySelectorAll(".sg").forEach(x => { x.classList.toggle("on", x === el); x.setAttribute("aria-checked", x === el); });
-  else if (el.dataset.step) { const v = el.parentElement.querySelector("b"), n = (parseInt(v.textContent.replace(/[^0-9]/g, "")) || 0) + +el.dataset.step; if (n >= 0) v.textContent = n; }
+  else if (el.dataset.step) {
+    const box = el.parentElement, v = box.querySelector("b"), lo = +box.dataset.min || 0, hi = box.dataset.max === "" ? Infinity : +box.dataset.max;
+    const n = (parseInt(v.textContent.replace(/[^0-9]/g, "")) || 0) + +el.dataset.step;
+    if (n < lo || n > hi) return;
+    v.textContent = /\d/.test(v.textContent) ? v.textContent.replace(/\d[\d,]*/, n) : n;
+    const [m, p] = box.querySelectorAll("[data-step]"); m.classList.toggle("off", n <= lo); p.classList.toggle("off", n >= hi);
+  }
 }
 /* a slider in a mock can be dragged, to feel how hard an exact value is */
 let slideDrag = null;
 function slideTo(sl, e){
   const r = sl.getBoundingClientRect(), rtl = getComputedStyle(sl).direction === "rtl";
   let fr = (e.clientX - r.left) / r.width; if (rtl) fr = 1 - fr; fr = Math.min(1, Math.max(0, fr));
-  const lo = +sl.dataset.min, hi = +sl.dataset.max, v = Math.round(lo + fr * (hi - lo)), ks = [...sl.querySelectorAll("i")];
+  const lo = +sl.dataset.min, hi = +sl.dataset.max, st = +sl.dataset.step || 1, v = +(Math.round((lo + fr * (hi - lo)) / st) * st).toFixed(3), ks = [...sl.querySelectorAll("i")];
   if (!slideDrag.k) slideDrag.k = ks.reduce((m, k) => Math.abs(+k.dataset.v - v) < Math.abs(+m.dataset.v - v) ? k : m);
-  const k = slideDrag.k, other = ks.find(x => x !== k), cl = k === ks[0] ? Math.min(v, +other.dataset.v) : Math.max(v, +other.dataset.v);
+  const k = slideDrag.k, other = ks.find(x => x !== k), cl = !other ? v : k === ks[0] ? Math.min(v, +other.dataset.v) : Math.max(v, +other.dataset.v);
   k.dataset.v = cl; k.style.insetInlineStart = (cl - lo) / (hi - lo) * 100 + "%";
-  const [a, z] = ks.map(x => x.dataset.v); sl.nextElementSibling.textContent = sl.dataset.fmt.replace("{a}", a).replace("{b}", z);
+  const fill = sl.querySelector("s"); if (fill) fill.style.width = (cl - lo) / (hi - lo) * 100 + "%";
+  const [a, z = a] = ks.map(x => x.dataset.v), t = sl.dataset.fmt.replace("{a}", a).replace("{b}", z);
+  const em = k.querySelector("em"); if (em) em.textContent = t;
+  const fh = sl.parentElement.querySelector(".fh"); if (fh && !em) fh.textContent = t;
 }
 document.addEventListener("pointerdown", e => { const sl = e.target.closest(".mock .act-slide"); if (!sl) return; slideDrag = {sl}; sl.setPointerCapture?.(e.pointerId); slideTo(sl, e); e.preventDefault(); });
 document.addEventListener("pointermove", e => { if (slideDrag) slideTo(slideDrag.sl, e); });
