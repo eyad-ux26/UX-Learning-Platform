@@ -15,6 +15,10 @@ sources:
     url: "https://www.nngroup.com/articles/ui-elements-glossary/"
   - title: { en: "Icon Usability (NN/g)", ar: "سهولة استخدام الأيقونات (NN/g)" }
     url: "https://www.nngroup.com/articles/icon-usability/"
+  - title: { en: "Applying Filters: Batch vs. Interactive (NN/g)", ar: "تطبيق الفلاتر: دفعة واحدة أم تفاعليًا (NN/g)" }
+    url: "https://www.nngroup.com/articles/applying-filters/"
+  - title: { en: "10 Usability Heuristics for User Interface Design (NN/g)", ar: "10 مبادئ لسهولة استخدام الواجهات (NN/g)" }
+    url: "https://www.nngroup.com/articles/ten-usability-heuristics/"
 steps:
   # SK-P14-U02-01: collapse only what most people skip
   - id: S01
@@ -639,3 +643,135 @@ steps:
     explain:
       en: "Adding is what Nermeen does all week, so it floats. Sharing and deleting can live in the menu."
       ar: "الإضافة هي ما تفعله نرمين طوال الأسبوع، لذلك هي العائمة. ويمكن أن تكون المشاركة والحذف في القائمة."
+
+  # SK-P14-U02-06: chips for a group of related choices
+  - id: S11
+    type: tune
+    skill: SK-P14-U02-06
+    part: retest
+    value:
+      en: "Re-test, filters (NN/g): use interactive filters if people are exploring. People browsing recipes try a diet, look, and try another, so filter chips that apply on tap and show ✓ beat a long Filters page."
+      ar: "إعادة اختبار، الفلاتر (NN/g): استخدم الفلاتر التفاعلية إذا كان الناس يستكشفون. ومن يتصفّح الوصفات يجرّب نظامًا غذائيًا، وينظر، ثم يجرّب غيره، لذلك فالـ Filter chips التي تُطبَّق عند الضغط وتعرض ✓ أفضل من صفحة «فلاتر» طويلة."
+    ref: { url: "https://www.nngroup.com/articles/applying-filters/", quote: "Use interactive filters if your users are exploratory in their search." }
+    scenario:
+      en: "Ehsan's recipe app. People browse dinner ideas and often switch between **Vegetarian**, **Quick** and **Low sugar** to see what they can cook tonight."
+      ar: "تطبيق الوصفات لإحسان. يتصفّح الناس أفكارًا للعشاء، وكثيرًا ما يتنقّلون بين **نباتي** و**سريع** و**قليل السكر** ليروا ما يمكنهم طبخه الليلة."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: page
+    options:
+      - id: page
+        text: { en: "A Filters button that opens a page with Apply", ar: "زر «فلاتر» يفتح صفحة فيها «طبّق»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Dinner ideas", ar: "أفكار للعشاء" } }
+            - { kind: button, emphasis: low, text: { en: "Filters", ar: "فلاتر" }, gap: s }
+            - { kind: image, size: m, text: { en: "Recipes", ar: "وصفات" }, gap: s }
+      - id: chips
+        text: { en: "Filter chips above the list, applied on tap", ar: "Filter chips فوق القائمة، تُطبَّق عند الضغط" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Dinner ideas", ar: "أفكار للعشاء" } }
+            - kind: chips
+              gap: s
+              items:
+                - { text: { en: "Vegetarian", ar: "نباتي" }, on: true }
+                - { text: { en: "Quick", ar: "سريع" } }
+                - { text: { en: "Low sugar", ar: "قليل السكر" } }
+            - { kind: image, size: m, text: { en: "Vegetarian recipes", ar: "وصفات نباتية" }, gap: s }
+      - id: loud
+        text: { en: "Three filled buttons above the list", ar: "ثلاثة أزرار ممتلئة فوق القائمة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Dinner ideas", ar: "أفكار للعشاء" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: button, text: { en: "Vegetarian", ar: "نباتي" } }
+                - { kind: button, text: { en: "Quick", ar: "سريع" } }
+                - { kind: button, text: { en: "Low sugar", ar: "قليل السكر" } }
+            - { kind: image, size: m, text: { en: "Recipes", ar: "وصفات" }, gap: s }
+    answer: [chips]
+    misconceptions:
+      - id: MC-P14-070
+        when: [loud]
+        feedback:
+          en: "Three filled buttons look like three main actions, and none shows which diet is on now."
+          ar: "ثلاثة أزرار ممتلئة تبدو كثلاثة إجراءات رئيسية، ولا يوضّح أيٌّ منها النظام المختار الآن."
+    correct:
+      en: "Filter chips, applied on tap."
+      ar: "Filter chips، تُطبَّق عند الضغط."
+    explain:
+      en: "Every diet is in sight, one tap switches, and the ✓ shows what's on while the recipes change at once."
+      ar: "كل الأنظمة ظاهرة، وضغطة واحدة تغيّر، وعلامة ✓ توضّح المختار بينما تتغيّر الوصفات فورًا."
+
+  - id: S12
+    type: tune
+    skill: SK-P14-U02-06
+    part: retest
+    value:
+      en: "Re-test, user control and freedom (NN/g): people often act by mistake and need a clear way out. Each skill people add becomes an input chip with its own ✕, so a wrong one goes in one tap."
+      ar: "إعادة اختبار، تحكّم المستخدم وحرّيته (NN/g): كثيرًا ما يخطئ الناس، ويحتاجون إلى مخرج واضح. وكل مهارة يضيفها الناس تصبح Input chip عليها ✕ خاصة بها، فتُحذف المهارة الخطأ بضغطة واحدة."
+    ref: { url: "https://www.nngroup.com/articles/ten-usability-heuristics/", quote: "Users often perform actions by mistake." }
+    scenario:
+      en: "Lamia's job app. People type their skills one by one in their profile, like **Excel**, **Arabic** and **Sales**. Some pick a wrong suggestion while typing and want to take it out."
+      ar: "تطبيق الوظائف للمياء. يكتب الناس مهاراتهم واحدة تلو الأخرى في ملفهم، مثل **Excel** و**العربية** و**المبيعات**. وبعضهم يختار اقتراحًا خطأ أثناء الكتابة ويريد إزالته."
+    prompt:
+      en: "Try each version of the skills field. Which one should ship?"
+      ar: "جرّب كل نسخة من حقل المهارات. أيّها يجب أن تُطلق؟"
+    start: locked
+    options:
+      - id: locked
+        text: { en: "Chips without ✕; Edit profile to change them", ar: "Chips بدون ✕؛ وللتغيير «عدّل الملف»" }
+        mock:
+          width: 300
+          blocks:
+            - kind: chips
+              label: { en: "Skills", ar: "المهارات" }
+              boxed: true
+              items:
+                - { text: { en: "Excel", ar: "Excel" } }
+                - { text: { en: "Arabic", ar: "العربية" } }
+                - { text: { en: "Sales", ar: "المبيعات" } }
+                - { text: { en: "Salsa", ar: "السالسا" } }
+            - { kind: link, text: { en: "Edit profile", ar: "عدّل الملف" }, gap: xs }
+            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+      - id: chips
+        text: { en: "Each skill is a chip with ✕", ar: "كل مهارة Chip عليها ✕" }
+        mock:
+          width: 300
+          blocks:
+            - kind: chips
+              label: { en: "Skills", ar: "المهارات" }
+              boxed: true
+              after: { en: "Add a skill…", ar: "أضف مهارة…" }
+              items:
+                - { text: { en: "Excel", ar: "Excel" }, x: true }
+                - { text: { en: "Arabic", ar: "العربية" }, x: true }
+                - { text: { en: "Sales", ar: "المبيعات" }, x: true }
+                - { text: { en: "Salsa", ar: "السالسا" }, x: true }
+            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+      - id: text
+        text: { en: "One text box, skills separated by commas", ar: "مربع نص واحد، والمهارات تفصلها فواصل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: { en: "Skills", ar: "المهارات" }, text: { en: "Excel, Arabic, Sales, Salsa", ar: "Excel، العربية، المبيعات، السالسا" }, filled: true }
+            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+    answer: [chips]
+    misconceptions:
+      - id: MC-P14-071
+        when: [locked, text]
+        feedback:
+          en: "Taking out the wrong skill means leaving the screen or editing letters by hand. Some people will leave Salsa on their CV."
+          ar: "إزالة المهارة الخطأ تعني مغادرة الشاشة أو تعديل الحروف يدويًا. وبعض الناس سيتركون «السالسا» في سيرتهم الذاتية."
+    correct:
+      en: "Input chips, each with ✕."
+      ar: "Input chips، لكل منها ✕."
+    explain:
+      en: "Each skill is its own unit, and one tap on ✕ removes exactly the wrong one, right where people typed it."
+      ar: "كل مهارة وحدة مستقلة، وضغطة واحدة على ✕ تحذف الخطأ بالضبط، في المكان الذي كتبها فيه الناس."

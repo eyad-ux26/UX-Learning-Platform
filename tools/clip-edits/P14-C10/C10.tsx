@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
-import { Selection } from "../debugger/Inspect";
+import { SelectionOn } from "../debugger/Inspect";
 import { IconAlert, IconCheck, IconEye, IconUser } from "../components/Icons";
 import { enter, exit, span } from "../lib/timeline";
 import { CaseChip, clipFrames, cutSec, cutsOf, IntroCard, Presenter, RecapCard, SideNote, TitleBand, vCut, Voice, wi } from "./p14";
@@ -42,10 +42,7 @@ export const C10: React.FC = () => {
   // one-line radios: 7 items; the selection boxes sit on the two radios beside «أربعة»
   // equal gaps everywhere, so a radio sits as close to the word after it as to the word before it
   const ROW = sub(WIDE, 18, 100, 546, 44);
-  const CELL = 78, RAD = 22, GAP = 6, WORD = 44;
-  const right = ROW.x + ROW.w;
-  const radioAt = (i: number): R => ({ x: right - i * CELL - RAD, y: ROW.y + 11, w: RAD, h: RAD });
-  const wordAt = (i: number): R => ({ x: right - i * CELL - RAD - GAP - WORD, y: ROW.y + 4, w: WORD, h: 32 });
+  const RAD = 22, GAP = 6, WORD = 44;
 
   const product = (
     <div style={{ position: "absolute", inset: 0, opacity: fade }}>
@@ -65,16 +62,20 @@ export const C10: React.FC = () => {
           <Panel r={LEFT} head="لقمة" dim={span(f, B.chk, B.single) * 0.7}>
             <Small text="Radio buttons" muted />
             <Small text="أي برجر تريد؟" />
-            <Opt label="برجر لحم" kind="radio" on={f < B.swap ? 1 : 0} />
-            <Opt label="برجر دجاج" kind="radio" on={on(B.swap)} />
-            <Opt label="برجر نباتي" kind="radio" />
+            <div data-sel="radios">
+              <Opt label="برجر لحم" kind="radio" on={f < B.swap ? 1 : 0} />
+              <Opt label="برجر دجاج" kind="radio" on={on(B.swap)} />
+              <Opt label="برجر نباتي" kind="radio" />
+            </div>
           </Panel>
           <Panel r={RIGHT} head="لقمة" dim={span(f, B.radio, B.chk) * 0.7}>
             <Small text="Checkboxes" muted />
             <Small text="ماذا تضيف إلى البرجر؟" />
-            <Opt label="جبنة" kind="check" on={on(B.t1)} />
-            <Opt label="طماطم" kind="check" on={on(B.t2)} />
-            <Opt label="خس" kind="check" on={on(B.t3)} />
+            <div data-sel="checks">
+              <Opt label="جبنة" kind="check" on={on(B.t1)} />
+              <Opt label="طماطم" kind="check" on={on(B.t2)} />
+              <Opt label="خس" kind="check" on={on(B.t3)} />
+            </div>
           </Panel>
         </>
       ) : null}
@@ -125,8 +126,8 @@ export const C10: React.FC = () => {
             <div style={{ position: "absolute", left: ROW.x - WIDE.x, top: ROW.y - WIDE.y, width: ROW.w, height: ROW.h, display: "flex", alignItems: "center", gap: GAP }}>
               {WORDS.map((w, i) => (
                 <React.Fragment key={w}>
-                  <Marker kind="radio" on={i === 0 ? 1 : 0} size={RAD} />
-                  <span style={{ width: WORD, textAlign: "center", fontSize: 20, flexShrink: 0 }}>{w}</span>
+                  <span data-sel={`r${i}`} style={{ display: "inline-flex" }}><Marker kind="radio" on={i === 0 ? 1 : 0} size={RAD} /></span>
+                  <span data-sel={`w${i}`} style={{ width: WORD, textAlign: "center", fontSize: 20, flexShrink: 0 }}>{w}</span>
                 </React.Fragment>
               ))}
             </div>
@@ -172,10 +173,10 @@ export const C10: React.FC = () => {
       <CaseChip y={40} text="Checkbox و Radio button" p={span(f, 0, B.radio)} />
 
       <CaseChip y={40} text="متى نستخدم أيّهما؟" p={span(f, B.radio, B.single)} />
-      <Selection r={sub(LEFT, 8, 56, 234, 170)} hover={sel(B.radio, B.chk)} selected={sel(B.burgers, B.chk)} label="نوع واحد فقط" />
+      <SelectionOn target="radios" pad={8} labelSide="below" hover={sel(B.radio, B.chk)} selected={sel(B.burgers, B.chk)} label="نوع واحد فقط" />
       <SideNote w={360} y={110} text="Radio buttons: اختيار واحد فقط" p={span(f, B.radio, B.chk)} big icon={wi(IconCheck)} />
       <SideNote w={360} y={250} text="Mutually exclusive: اختيار أحدها يلغي الآخر" p={span(f, B.excl, B.chk)} />
-      <Selection r={sub(RIGHT, 8, 56, 234, 170)} hover={sel(B.chk, B.single)} selected={sel(B.tops, B.single)} label="أي عدد" />
+      <SelectionOn target="checks" pad={8} labelSide="below" hover={sel(B.chk, B.single)} selected={sel(B.tops, B.single)} label="أي عدد" />
       <SideNote w={360} y={110} text="Checkboxes: أكثر من اختيار، أو لا شيء" p={span(f, B.chk, B.single)} big icon={wi(IconCheck)} />
       <SideNote w={360} y={250} text="يمكن إضافة الثلاثة معًا، أو لا شيء" p={span(f, B.tops, B.single)} />
 
@@ -196,11 +197,11 @@ export const C10: React.FC = () => {
       <SideNote w={360} y={110} text="Radio: دائرة في داخلها دائرة" p={span(f, B.rd, B.lay)} icon={wi(IconCheck)} />
 
       <CaseChip y={40} text="2 · ترتيب الاختيارات" p={span(f, B.lay, B.word)} />
-      <Selection r={wordAt(3)} hover={sel(B.four, B.start)} selected={sel(B.four, B.back)} label="أربعة" />
-      <Selection r={radioAt(3)} hover={sel(B.back - 30, B.start)} selected={0} pad={4} />
-      <Selection r={radioAt(4)} hover={sel(B.back - 30, B.start)} selected={0} pad={4} />
+      <SelectionOn target="w3" labelSide="below" hover={sel(B.four, B.start)} selected={sel(B.four, B.back)} label="أربعة" />
+      <SelectionOn target="r3" hover={sel(B.back - 30, B.start)} selected={0} pad={4} />
+      <SelectionOn target="r4" hover={sel(B.back - 30, B.start)} selected={0} pad={4} />
       <SideNote w={360} y={110} text="أضغط الدائرة قبل «أربعة» أم بعدها؟" p={span(f, B.four, B.start)} warn icon={wi(IconAlert)} />
-      <Selection r={radioAt(0)} hover={sel(B.start, B.end)} selected={sel(B.start, B.end)} pad={4} label="البداية" />
+      <SelectionOn target="r0" labelSide="below" hover={sel(B.start, B.end)} selected={sel(B.start, B.end)} pad={4} label="البداية" />
       <SideNote w={360} y={110} text="أرجع للبداية: الدائرة الأولى قبل «واحد»" p={span(f, B.start, B.end)} />
       <SideNote w={360} y={110} text="أو للنهاية: لا دائرة بعد «سبعة»" p={span(f, B.end, B.prob)} />
       <SideNote w={360} y={250} text="المسافات متساوية، فلا يظهر لمن الدائرة" p={span(f, B.prob, B.stack)} warn icon={wi(IconAlert)} />

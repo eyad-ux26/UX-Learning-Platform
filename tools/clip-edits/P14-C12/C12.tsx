@@ -1,7 +1,7 @@
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
-import { Selection } from "../debugger/Inspect";
+import { SelectionOn } from "../debugger/Inspect";
 import { IconAlert, IconCheck, IconEye } from "../components/Icons";
 import { enter, exit, span } from "../lib/timeline";
 import { CaseChip, clipFrames, cutSec, cutsOf, IntroCard, Presenter, RecapCard, SideNote, TitleBand, vCut, Voice, wi } from "./p14";
@@ -17,8 +17,8 @@ const vc = vCut("c12");
 const VOICE_CUT = cutSec(VOICE, cutsOf("c12"));
 export const C12_FRAMES = clipFrames(VOICE_CUT);
 
-const Row: React.FC<{ label: string; on: number; grey?: boolean; fs?: number; end?: React.ReactNode }> = ({ label, on, grey, fs = 21, end }) => (
-  <div style={{ display: "flex", alignItems: "center", gap: 10, minHeight: 54, borderBottom: "1px solid #E5E7EB", fontSize: fs, color: grey ? "#9CA3AF" : "#1F2328" }}>
+const Row: React.FC<{ label: string; on: number; grey?: boolean; fs?: number; end?: React.ReactNode; sel?: string }> = ({ label, on, grey, fs = 21, end, sel }) => (
+  <div data-sel={sel} style={{ display: "flex", alignItems: "center", gap: 10, minHeight: 54, borderBottom: "1px solid #E5E7EB", fontSize: fs, color: grey ? "#9CA3AF" : "#1F2328" }}>
     <span style={{ flex: 1, lineHeight: 1.4 }}>{label}</span>
     {end ?? <Toggle on={on} w={44} />}
   </div>
@@ -40,15 +40,14 @@ export const C12: React.FC = () => {
   const fade = Math.min(...cuts.map((c) => (f >= c - 8 && f < c ? exit(f, c - 8, 8) : f >= c && f < c + 10 ? enter(f, c, 10) : 1)));
   const mode: DebugMode = f < B.rep ? "live" : scene === "air" || scene === "imm" || scene === "beside" ? "compare" : "inspect";
   const sel = (a: number, b: number) => enter(f, a, 10) * exit(f, b, 8);
-  const sub = (r: R, dx: number, dy: number, w: number, h: number): R => ({ x: r.x + dx, y: r.y + dy, w, h });
   // the demo toggle switches on and back off while the trainer says it "turns on and off like this"
   const demo = enter(f, B.flip, 8) * exit(f, B.flip + 45, 8);
   const address = scene === "air" ? "ghayma.app/flights" : scene === "imm" ? "settings.app" : scene === "label" ? "shop.app/filters" : scene === "fix" ? "calendar.app/settings" : "settings.app/privacy";
 
-  const flight = (r: R, onState: number) => (
+  const flight = (r: R, onState: number, key?: string) => (
     <Panel r={r} head="اختر مطار المغادرة">
       <div style={{ height: 44, borderRadius: 8, background: "#F3F4F6", display: "flex", alignItems: "center", padding: "0 10px", fontSize: 20, color: "#6B7280", marginBottom: 6 }}>من</div>
-      <Row label="ابحث في المطارات القريبة (160 كم)" on={onState} fs={19} />
+      <Row label="ابحث في المطارات القريبة (160 كم)" on={onState} fs={19} sel={key} />
       <div style={{ height: 150, borderRadius: 10, background: "#F3F4F6", marginTop: 10 }} />
     </Panel>
   );
@@ -104,8 +103,8 @@ export const C12: React.FC = () => {
 
       {scene === "air" ? (
         <>
-          {flight(LEFT, 0)}
-          {flight(RIGHT, 1)}
+          {flight(LEFT, 0, "nearL")}
+          {flight(RIGHT, 1, "nearR")}
         </>
       ) : null}
 
@@ -119,7 +118,7 @@ export const C12: React.FC = () => {
       {scene === "label" ? (
         <Panel r={ONE} head="سوق لين">
           <Q text="أين الخطأ؟" />
-          <Row label="هل تريد تضمين المنتجات غير المخصّصة للحوامل؟" on={1} />
+          <Row label="هل تريد تضمين المنتجات غير المخصّصة للحوامل؟" on={1} sel="longlabel" />
           <Small text="ترتيب حسب" muted />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
             {["الأحدث", "الأعلى تقييمًا", "السعر"].map((t, i) => (<span key={t} style={{ height: 30, padding: "0 12px", borderRadius: 15, border: "1.5px solid #D5DAE1", display: "inline-flex", alignItems: "center", fontSize: 19, background: i === 1 ? "#FDE7C4" : "#FFFFFF" }}>{t}</span>))}
@@ -141,7 +140,7 @@ export const C12: React.FC = () => {
           <div style={{ fontSize: 22, fontWeight: 700 }}>عام</div>
           <div style={{ fontSize: 20, margin: "8px 0" }}>خيارات الخصوصية</div>
           <div style={{ fontSize: 20, lineHeight: 1.6, color: "#374151" }}>اسمح للتطبيقات باستخدام معرّف الإعلانات لعرض إعلانات تناسبك (إيقافه يعيد ضبط المعرّف)</div>
-          <div dir="ltr" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: 21 }}><Toggle on={0} w={44} />Off</div>
+          <div dir="ltr" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: 21 }}><span data-sel="offstate" style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><Toggle on={0} w={44} />Off</span></div>
         </Panel>
       ) : null}
 
@@ -174,8 +173,8 @@ export const C12: React.FC = () => {
 
       <CaseChip y={40} text="1 · أثر فوري" p={span(f, B.air, B.label)} />
       <SideNote w={360} y={110} text="يسار: Off · يمين: On" p={span(f, B.nearby, B.q)} icon={wi(IconEye)} />
-      <Selection r={sub(LEFT, 10, 112, 230, 52)} hover={sel(B.tgl, B.wrong)} selected={0} />
-      <Selection r={sub(RIGHT, 10, 112, 230, 52)} hover={sel(B.tgl, B.wrong)} selected={sel(B.tgl, B.wrong)} label="المطارات القريبة" />
+      <SelectionOn target="nearL" hover={sel(B.tgl, B.wrong)} selected={0} />
+      <SelectionOn target="nearR" hover={sel(B.tgl, B.wrong)} selected={sel(B.tgl, B.wrong)} label="المطارات القريبة" labelSide="below" />
       <SideNote w={360} y={110} text="صح أم خطأ؟ فكّر قبل أن تكمل" p={span(f, B.q, B.wrong)} icon={wi(IconEye)} />
       <SideNote w={360} y={110} text="لا يحدث شيء لحظة الضغط" p={span(f, B.wrong, B.imm)} warn icon={wi(IconAlert)} />
       <SideNote w={360} y={250} text="هو Setting، مثل Checkbox" p={span(f, B.setting, B.imm)} warn />
@@ -184,14 +183,14 @@ export const C12: React.FC = () => {
       <SideNote w={360} y={250} text="وضع الطيران يغيّر الشبكة فورًا" p={span(f, B.plane, B.label)} icon={wi(IconCheck)} />
 
       <CaseChip y={40} text="2 · Label قصير ومباشر" p={span(f, B.label, B.state)} />
-      <Selection r={sub(ONE, 10, 104, 420, 56)} hover={sel(B.long, B.fix)} selected={sel(B.long, B.fix)} label="طويل وفيه نفي" />
+      <SelectionOn target="longlabel" labelSide="below" hover={sel(B.long, B.fix)} selected={sel(B.long, B.fix)} label="طويل وفيه نفي" />
       <SideNote w={360} y={110} text="الناس يقرؤون ما يحتاجونه فقط" p={span(f, B.reads, B.long)} icon={wi(IconEye)} />
       <SideNote w={360} y={110} text="Label طويل وفيه نفي" p={span(f, B.long, B.fix)} warn icon={wi(IconAlert)} />
       <SideNote w={360} y={250} text="يحتاج وقتًا ليُقرأ ويُفهم" p={span(f, B.neg, B.fix)} warn />
       <SideNote w={360} y={110} text="Label قصير ومباشر يُفهم أسرع" p={span(f, B.fix, B.state)} big icon={wi(IconCheck)} />
 
       <CaseChip y={40} text="3 · حالة On و Off" p={span(f, B.state, END)} />
-      <Selection r={sub(ONE, 10, 214, 110, 40)} hover={sel(B.which, B.sides)} selected={sel(B.which, B.sides)} label="Off؟" />
+      <SelectionOn target="offstate" labelSide="below" hover={sel(B.which, B.sides)} selected={sel(B.which, B.sides)} label="Off؟" />
       <SideNote w={360} y={110} text="هل هو Off الآن، أم Off هو اسمه؟" p={span(f, B.which, B.sides)} warn icon={wi(IconAlert)} />
       <SideNote w={360} y={250} text="أضغط لأشغّله أم لأطفئه؟" p={span(f, B.which + 90, B.sides)} warn />
       <SideNote w={360} y={110} text="العنوان فوق؟ اكتب Off و On على الجانبين" p={span(f, B.sides, B.beside)} big icon={wi(IconCheck)} />

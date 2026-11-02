@@ -229,6 +229,13 @@ select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10p
 .mock .mcap{font-size:.72rem;color:var(--mock-muted);margin:-6px 0 10px;font-weight:600}
 .mock .nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mock .row2{display:flex;gap:10px}.mock .row2>*{flex:1}
+.mock .cps{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mock .cps.boxed{border:1.5px solid #B9B9BF;border-radius:10px;padding:7px 9px;min-height:44px;gap:6px}
+.mock .cp{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid #B9B9BF;font-size:.85rem;font-weight:500;color:var(--mock-ink);background:var(--mock-bg);white-space:nowrap}
+.mock .cp.on{background:#ECE8FB;border-color:#ECE8FB;color:#3A2A9A}
+.mock .cp.rm{padding-inline-end:8px;background:#F1F1F4;border-color:#F1F1F4}
+.mock .cp i{font-style:normal;font-size:.8rem}.mock .cp .cx{color:var(--mock-muted);font-size:.75rem}
+.mock .cpl,.mock .cpa{font-size:.85rem;color:var(--mock-muted)}
 .mock .k-group.scroll{overflow-x:auto;padding:0;border:0;border-radius:0}.mock .k-group.scroll .row2>*{flex:none;width:var(--colw,120px)}
 .mock .k-group.scroll.sticky .row2>:first-child{position:sticky;inset-inline-start:0;background:var(--mock-bg);z-index:1;box-shadow:1px 0 0 var(--mock-line)}
 .mock .drag{cursor:grab;touch-action:none;position:relative;padding-inline-end:26px;border-radius:8px;outline-offset:2px}
@@ -501,6 +508,10 @@ function mockBlocks(blocks, opts){
     else if (b.kind === "wheel") {
       /* columns: lists of 5 values; the middle row is the chosen one */
       inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="whl">${(b.columns || []).map(c => `<div class="wc">${c.map((v, k) => `<span class="${k === 2 ? "wm" : Math.abs(k - 2) === 1 ? "w1" : "w2"}">${esc(tx(v))}</span>`).join("")}</div>`).join("")}</div>`;
+    }
+    else if (b.kind === "chips") {
+      /* a wrapping row of UI chips. items: [{text, on (selected, shows ✓), x (removable, shows ✕), icon}]; boxed draws a field around them (input chips in a To field) */
+      inner = `${b.label?`<div class="fl">${esc(tx(b.label))}</div>`:""}<div class="cps${b.boxed?" boxed":""}">${b.lead?`<span class="cpl">${esc(tx(b.lead))}</span>`:""}${(b.items||[]).map(c => `<span class="cp${c.on?" on":""}${c.x?" rm":""}">${c.on?`<i aria-hidden="true">✓</i>`:c.icon?`<i aria-hidden="true">${esc(c.icon)}</i>`:""}${esc(tx(c.text))}${c.x?`<i class="cx" aria-hidden="true">✕</i>`:""}</span>`).join("")}${b.after?`<span class="cpa">${esc(tx(b.after))}</span>`:""}</div>`;
     }
     else if (b.kind === "divider") inner = "";
     else inner = inl(tx(b.text)) + (b.code ? ` <bdi dir="ltr">${esc(b.code)}</bdi>` : "");

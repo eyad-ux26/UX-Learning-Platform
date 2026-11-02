@@ -20,8 +20,18 @@ To rebuild a clip:
 6. For the preview, re-encode at `-crf 24 -preset slow -c:a aac -b:a 96k -ac 1 -movflags +faststart` so each clip
    stays under the 20 MiB asset limit, and upload it to the unit's preview artifact (see `docs/content-format.md`).
 
-Done so far: P14-C01 to P14-C18. `ctl.tsx` holds the checkbox, radio and toggle drawings used by C10 to C12; `form.tsx`
-holds the form fields, steppers, sliders, calendar month and scroll wheel drawn in C13 to C18.
+Done so far: P14-C01 to P14-C19. `ctl.tsx` holds the checkbox, radio and toggle drawings used by C10 to C12; `form.tsx`
+holds the form fields, steppers, sliders, calendar month and scroll wheel drawn in C13 to C18. C19 (chips) draws its
+chips in the clip file.
+
+## Notes and selections never drift
+
+- Left-hand notes (`SideNote`, `ListCard`, `CaseChip`) keep their authored `y` as a minimum. `NoteStacker` (in
+  `kit/debugger/Inspect.tsx`, mounted by `DebuggerShell`) pushes a note down below the visible note above it every
+  frame, so a note that wraps to three lines never covers the next one.
+- Draw a selection with `SelectionOn target="key"` around an element marked `data-sel="key"` in the product. It
+  measures the real layout each frame, so the box always wraps exactly what the trainer points at. Avoid hand-measured
+  `Selection r={...}` boxes in new clips. Put the name tag (`labelSide`) where it covers no text the scene is about.
 
 ## Look (design system)
 

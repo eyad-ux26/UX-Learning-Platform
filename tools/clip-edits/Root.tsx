@@ -19,6 +19,7 @@ import { C15, C15_FRAMES } from "./clips/C15";
 import { C16, C16_FRAMES } from "./clips/C16";
 import { C17, C17_FRAMES } from "./clips/C17";
 import { C18, C18_FRAMES } from "./clips/C18";
+import { C19, C19_FRAMES } from "./clips/C19";
 import { C14, C14_FRAMES } from "./clips/C14";
 
 const meta = async () => {
@@ -43,6 +44,7 @@ const clips: [string, React.FC, number][] = [
   ["P14-C16", C16, C16_FRAMES],
   ["P14-C17", C17, C17_FRAMES],
   ["P14-C18", C18, C18_FRAMES],
+  ["P14-C19", C19, C19_FRAMES],
   ["P14-C14", C14, C14_FRAMES],
 ];
 

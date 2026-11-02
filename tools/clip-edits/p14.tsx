@@ -98,7 +98,7 @@ const WARN = { line: "#E8A93A", tile: "#FFF1D6" };
 export const SideNote: React.FC<{ y: number; text: string; p: number; icon?: React.ReactNode; big?: boolean; warn?: boolean; w?: number }> = ({ y, text, p, icon, big, warn, w = 420 }) => {
   if (p <= 0) return null;
   return (
-    <div dir="rtl" style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, background: C.note, color: C.noteText, borderRadius: T.radius.md, boxShadow: warn ? `inset -8px 0 0 ${WARN.line}, ${T.shadow.note}` : T.shadow.note, padding: big ? "22px 26px" : "18px 24px", fontFamily: FONT, display: "flex", alignItems: "center", gap: 14, boxSizing: "border-box" }}>
+    <div dir="rtl" data-note={y} style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, background: C.note, color: C.noteText, borderRadius: T.radius.md, boxShadow: warn ? `inset -8px 0 0 ${WARN.line}, ${T.shadow.note}` : T.shadow.note, padding: big ? "22px 26px" : "18px 24px", fontFamily: FONT, display: "flex", alignItems: "center", gap: 14, boxSizing: "border-box" }}>
       {icon ? <span style={{ width: 48, height: 48, borderRadius: 14, background: warn ? WARN.tile : C.select, display: "inline-flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{icon}</span> : null}
       <span style={{ fontSize: w < 400 ? (big ? 30 : 26) : big ? 34 : 29, fontWeight: 600, lineHeight: 1.35 }}>{text}</span>
     </div>
@@ -108,14 +108,14 @@ export const SideNote: React.FC<{ y: number; text: string; p: number; icon?: Rea
 /** Small numbered chip, e.g. "الحالة 2", above a note. */
 export const CaseChip: React.FC<{ y: number; text: string; p: number; warn?: boolean }> = ({ y, text, p, warn }) =>
   p > 0 ? (
-    <div dir="rtl" style={{ position: "absolute", left: 34, top: y, opacity: p, height: 44, padding: "0 18px", borderRadius: 999, display: "flex", alignItems: "center", fontFamily: FONT, fontSize: 24, fontWeight: 700, background: warn ? C.warningSoft : C.selectSoft, color: warn ? C.warning : C.select, border: `2px solid ${warn ? C.warning : C.select}` }}>{text}</div>
+    <div dir="rtl" data-note={y} style={{ position: "absolute", left: 34, top: y, opacity: p, height: 44, padding: "0 18px", borderRadius: 999, display: "flex", alignItems: "center", fontFamily: FONT, fontSize: 24, fontWeight: 700, background: warn ? C.warningSoft : C.selectSoft, color: warn ? C.warning : C.select, border: `2px solid ${warn ? C.warning : C.select}` }}>{text}</div>
   ) : null;
 
 /** Left-side list card: a title and items revealed one by one, each marked do (✓) or don't (✕). */
 export const ListCard: React.FC<{ y?: number; title?: string; p: number; items: { text: string; p: number; no?: boolean }[]; w?: number }> = ({ y = 120, title, p, items, w = 440 }) => {
   if (p <= 0) return null;
   return (
-    <div dir="rtl" style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, fontFamily: FONT, background: C.surface, border: `2px solid ${C.border}`, borderRadius: 22, boxShadow: T.shadow.viewport, padding: "18px 24px", boxSizing: "border-box" }}>
+    <div dir="rtl" data-note={y} style={{ position: "absolute", left: 34, width: w, top: y, opacity: p, translate: `${(1 - p) * -16}px 0px`, fontFamily: FONT, background: C.surface, border: `2px solid ${C.border}`, borderRadius: 22, boxShadow: T.shadow.viewport, padding: "18px 24px", boxSizing: "border-box" }}>
       {title ? <div style={{ fontSize: 26, fontWeight: 700, color: C.select, lineHeight: 1.4, marginBottom: 6 }}>{title}</div> : null}
       {items.map((it, i) => (
         <div key={it.text} style={{ display: "flex", alignItems: "center", gap: 14, minHeight: 62, borderTop: i || title ? `1px solid ${C.border}` : undefined, opacity: it.p, translate: `${(1 - it.p) * -20}px 0px` }}>

@@ -1,3 +1,4 @@
+import { NoteStacker } from "./Inspect";
 import React from "react";
 import { AbsoluteFill, Img, staticFile } from "remotion";
 import { C, FONT, PRODUCT_FONT, T, themeVars, VP } from "../brand/theme";
@@ -32,6 +33,8 @@ const EXAMPLES: Record<string, Example> = {
   janah: { name: "جناح", brand: "#1D4ED8", brandSoft: "#E3EAFD", onBrand: "#FFFFFF" },
   daw: { name: "ضوء", brand: "#4D7C0F", brandSoft: "#ECF3DC", onBrand: "#FFFFFF" },
   iqama: { name: "إقامة", brand: "#7E22CE", brandSoft: "#F1E6FB", onBrand: "#FFFFFF" },
+  tazkara: { name: "تذكرة", brand: "#0F4C81", brandSoft: "#E0EBF5", onBrand: "#FFFFFF" },
+  kalima: { name: "كلمة", brand: "#047857", brandSoft: "#D9F2EA", onBrand: "#FFFFFF" },
 };
 export const exampleFor = (address: string): Example => EXAMPLES[address.split(/[./]/)[0]] ?? EXAMPLES.shop;
 /** Light product palette plus the example's brand, for the product subtree only. */
@@ -156,7 +159,7 @@ export const DebuggerShell: React.FC<{
       <div style={{ position: "absolute", top: VP.toolbarH, left: 0, right: 0, bottom: 0, overflow: "hidden" }}>
         <div style={{ position: "absolute", inset: 0, ...exampleVars(address) }}>{children}</div>
       </div>
-      {overlay ? <div style={{ position: "absolute", top: VP.toolbarH, left: 0, right: 0, bottom: 0, overflow: "hidden", pointerEvents: "none" }}>{overlay}</div> : null}
+      {overlay ? <div style={{ position: "absolute", top: VP.toolbarH, left: 0, right: 0, bottom: 0, overflow: "hidden", pointerEvents: "none" }}>{overlay}<NoteStacker /></div> : null}
     </div>
   </AbsoluteFill>
 );

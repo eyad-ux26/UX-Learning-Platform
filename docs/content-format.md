@@ -165,6 +165,20 @@ mock:
 
 Two block kinds go with it: `tip` (a dark tooltip bubble with an arrow, placed under the block it explains) and `iconbtn` (a small round icon-only button, such as ⓘ).
 
+A `chips` block draws a wrapping row of UI chips (not the small status `chip`), for lessons about chips:
+
+```yaml
+- kind: chips
+  label: { en: "To", ar: "إلى" }   # optional label above
+  boxed: true                       # draws a field around the chips (input chips in a To field)
+  lead: { en: "To", ar: "إلى" }     # optional muted text before the chips, inside the row
+  after: { en: "Add…", ar: "أضف…" } # optional muted text after the chips (where people type)
+  items:
+    - { text: { en: "Photos", ar: "صور" }, on: true }   # on: selected, shows ✓
+    - { text: { en: "Mona", ar: "منى" }, x: true }      # x: removable, shows ✕
+    - { text: { en: "Directions", ar: "الاتجاهات" }, icon: "➚" }
+```
+
 ## Player behaviour worth knowing
 
 - A `reason` question appears only after the main answer is right, so it can't give that answer away. Learners then answer it and press Check again.

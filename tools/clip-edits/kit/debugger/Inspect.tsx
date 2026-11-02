@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import { useCurrentFrame } from "remotion";
 import { C, CONTENT, FONT, T } from "../brand/theme";
 import { Rect } from "./camera";
 
@@ -6,6 +7,35 @@ import { Rect } from "./camera";
  * Selection outline in content-area screen space (pass camRect(...) output).
  * hover: 0..1 dashed hover outline. selected: 0..1 solid outline with handles and a name tag.
  */
+/** Rect of the element marked data-sel={key}, in the coordinates of `anchor`'s positioned parent (the overlay layer). */
+const measure = (anchor: HTMLElement | null, key: string): Rect | null => {
+  const box = anchor?.offsetParent as HTMLElement | null;
+  const el = document.querySelector(`[data-sel="${key}"]`) as HTMLElement | null;
+  if (!box || !el) return null;
+  const b = box.getBoundingClientRect(), t = el.getBoundingClientRect(), k = b.width / (box.offsetWidth || b.width);
+  return { x: (t.left - b.left) / k, y: (t.top - b.top) / k, w: t.width / k, h: t.height / k };
+};
+
+/** Selection drawn around a product element marked data-sel={target}, measured from the real layout every frame. */
+export const SelectionOn: React.FC<{ target: string; hover: number; selected: number; label?: string; pad?: number; labelSide?: "right" | "left" | "below" }> = ({ target, ...rest }) => {
+  const f = useCurrentFrame();
+  const ref = useRef<HTMLDivElement>(null);
+  const [r, setR] = useState<Rect | null>(null);
+  const live = rest.hover > 0 || rest.selected > 0;
+  useLayoutEffect(() => {
+    if (!live) return;
+    const m = measure(ref.current, target);
+    if (m && (!r || Math.abs(m.x - r.x) + Math.abs(m.y - r.y) + Math.abs(m.w - r.w) + Math.abs(m.h - r.h) > 0.5)) setR(m);
+  });
+  void f;
+  return (
+    <>
+      <div ref={ref} style={{ position: "absolute", left: 0, top: 0, width: 0, height: 0 }} />
+      {r && live ? <Selection r={r} {...rest} /> : null}
+    </>
+  );
+};
+
 export const Selection: React.FC<{ r: Rect; hover: number; selected: number; label?: string; pad?: number; labelSide?: "right" | "left" | "below" }> = ({ r, hover, selected, label, pad = 6, labelSide = "right" }) => {
   if (hover <= 0 && selected <= 0) return null;
   const x = r.x - pad, y = r.y - pad, w = r.w + pad * 2, h = r.h + pad * 2;
@@ -159,4 +189,28 @@ export const ScanPath: React.FC<{ rects: Rect[]; progress: number }> = ({ rects,
       ))}
     </svg>
   );
+};
+
+/**
+ * Keeps the left-hand notes (elements with data-note = their authored top) from covering each other: every frame it
+ * puts each note back at its own top, then pushes it down below the visible note above it when they would overlap.
+ */
+export const NoteStacker: React.FC<{ gap?: number }> = ({ gap = 14 }) => {
+  const f = useCurrentFrame();
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const box = ref.current?.parentElement;
+    if (!box) return;
+    const notes = Array.from(box.querySelectorAll<HTMLElement>("[data-note]"));
+    notes.forEach((n) => (n.style.top = `${n.dataset.note}px`));
+    notes.sort((a, b) => Number(a.dataset.note) - Number(b.dataset.note));
+    let bottom = -Infinity;
+    for (const n of notes) {
+      const y = Number(n.dataset.note);
+      const top = Math.max(y, bottom + gap);
+      n.style.top = `${top}px`;
+      bottom = top + n.offsetHeight;
+    }
+  }, [f]);
+  return <div ref={ref} style={{ display: "none" }} />;
 };

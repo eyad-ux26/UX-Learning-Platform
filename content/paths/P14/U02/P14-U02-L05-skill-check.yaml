@@ -1,4 +1,4 @@
-id: P14-U02-L04
+id: P14-U02-L05
 mode: check
 minutes: 7
 title:
@@ -15,14 +15,16 @@ sources:
     url: "https://www.nngroup.com/articles/ui-elements-glossary/"
   - title: { en: "Icon Usability (NN/g)", ar: "سهولة استخدام الأيقونات (NN/g)" }
     url: "https://www.nngroup.com/articles/icon-usability/"
+  - title: { en: "Proximity Principle in Visual Design (NN/g)", ar: "مبدأ التقارب في التصميم المرئي (NN/g)" }
+    url: "https://www.nngroup.com/articles/gestalt-proximity/"
 steps:
   - id: S01
     type: card
     part: hook
     title: { en: "Nadia's travel app", ar: "تطبيق السفر لنادية" }
     body:
-      en: "Nadia's team is about to launch an app for booking hotels. You're reviewing five screens before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
-      ar: "فريق نادية على وشك إطلاق تطبيق لحجز الفنادق. وأنت تراجع خمس شاشات فيه قبل الإطلاق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
+      en: "Nadia's team is about to launch an app for booking hotels. You're reviewing six screens before launch.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
+      ar: "فريق نادية على وشك إطلاق تطبيق لحجز الفنادق. وأنت تراجع ست شاشات فيه قبل الإطلاق.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
 
   - id: S02
     type: tune
@@ -354,3 +356,80 @@ steps:
     explain:
       en: "The two actions guests use all stay long are one tap away. The invoice and reporting wait in ⋯ for the few who need them."
       ar: "الإجراءان اللذان يستخدمهما النزلاء طوال إقامتهم على بُعد ضغطة واحدة. والفاتورة والإبلاغ ينتظران في ⋯ للقلّة التي تحتاجهما."
+
+  - id: S07
+    type: tune
+    part: check
+    skill: SK-P14-U02-06
+    value:
+      en: "Check, proximity and similarity (NN/g): related items close together read as one group, and the filled color is reserved for the primary action. Room types are one set of choices, so they're chips; Book now is the step forward, so it's the filled button."
+      ar: "اختبار، مبدأ التقارب والتشابه (NN/g): العناصر المترابطة القريبة من بعضها تُقرأ مجموعة واحدة، واللون الممتلئ مخصّص للإجراء الرئيسي. وأنواع الغرف مجموعة واحدة من الاختيارات، فهي Chips؛ و«احجز الآن» هي الخطوة إلى الأمام، فهي الزر الممتلئ."
+    ref: { url: "https://www.nngroup.com/articles/gestalt-proximity/", quote: "Items close together are likely to be perceived as part of the same group — sharing similar functionality or traits." }
+    scenario:
+      en: "The room screen. Guests pick one room type, **Single**, **Double** or **Family**, then book."
+      ar: "شاشة الغرفة. يختار النزلاء نوع غرفة واحدًا، **فردية** أو **مزدوجة** أو **عائلية**، ثم يحجزون."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: allchips
+    options:
+      - id: allchips
+        text: { en: "Room types and Book now, all as chips", ar: "أنواع الغرف و«احجز الآن»، كلها Chips" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
+            - { kind: meta, text: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: xs }
+            - kind: chips
+              gap: m
+              items:
+                - { text: { en: "Single", ar: "فردية" } }
+                - { text: { en: "Double", ar: "مزدوجة" }, on: true }
+                - { text: { en: "Family", ar: "عائلية" } }
+                - { text: { en: "Book now", ar: "احجز الآن" } }
+      - id: allbuttons
+        text: { en: "Room types and Book now, all as filled buttons", ar: "أنواع الغرف و«احجز الآن»، كلها أزرار ممتلئة" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
+            - { kind: meta, text: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: xs }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, text: { en: "Single", ar: "فردية" } }
+                - { kind: button, text: { en: "Double", ar: "مزدوجة" } }
+                - { kind: button, text: { en: "Family", ar: "عائلية" } }
+            - { kind: button, text: { en: "Book now", ar: "احجز الآن" }, gap: s }
+      - id: mixed
+        text: { en: "Room types as chips; Book now as a filled button", ar: "أنواع الغرف Chips؛ و«احجز الآن» زر ممتلئ" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: title, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
+            - { kind: meta, text: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: xs }
+            - kind: chips
+              gap: m
+              items:
+                - { text: { en: "Single", ar: "فردية" } }
+                - { text: { en: "Double", ar: "مزدوجة" }, on: true }
+                - { text: { en: "Family", ar: "عائلية" } }
+            - { kind: button, text: { en: "Book now", ar: "احجز الآن" }, gap: m }
+    answer: [mixed]
+    misconceptions:
+      - id: MC-P14-069
+        when: [allchips]
+        feedback:
+          en: "Book now looks like a fourth room type. The one step that finishes the booking is hidden among the choices."
+          ar: "«احجز الآن» يبدو كنوع رابع من الغرف. والخطوة الوحيدة التي تُنهي الحجز مختبئة بين الاختيارات."
+      - id: MC-P14-070
+        when: [allbuttons]
+        feedback:
+          en: "Four filled buttons look equally important, so Book now doesn't stand out, and nothing shows which room is picked."
+          ar: "أربعة أزرار ممتلئة تبدو متساوية في الأهمية، فلا يبرز «احجز الآن»، ولا يظهر أيّ غرفة اختيرت."
+    correct:
+      en: "Room types as chips; Book now as the button."
+      ar: "أنواع الغرف Chips؛ و«احجز الآن» الزر."
+    explain:
+      en: "Guests see the three rooms as one set and which one is picked. Book now alone is filled, so the next step is clear."
+      ar: "يرى النزلاء الغرف الثلاث كمجموعة واحدة، ويرون أيّها اختير. و«احجز الآن» وحده ممتلئ، فتكون الخطوة التالية واضحة."
