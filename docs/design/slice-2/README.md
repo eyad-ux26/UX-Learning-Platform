@@ -82,3 +82,10 @@ The review card on lesson end lists the misconceptions the learner hit in that l
 - `none`: a clean-run line, nothing is queued.
 
 Those skills join the review queue (confident errors first, from 3 days later, on a new scenario).
+
+## Scenario characters (2026-11-02)
+
+- Every step type and both mastery questions have a speaker (`say` on the step spec, first-person `says` in EN and AR). The plain `scenario` stays as the fallback and as the text for screen readers that skip the bubble.
+- Speakers: Hana on the gym steps, Tarek on words, Mona on order and spot, and Nour in the mastery round.
+- On a phone the bubble is tighter (52 px avatar, 14 px text) so the answers keep their room. In the "pick how sure you are" state, the confidence box label carries the help text ("Pick how sure you are, then Check.") instead of a separate line below. Desktop keeps the separate line.
+- All 474 canvas states still fit their frames.

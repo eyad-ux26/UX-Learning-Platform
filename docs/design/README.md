@@ -39,6 +39,8 @@ Onboarding has all three questions on the canvas (prop `q` on `ScreenOnboarding`
 
 Scenario text (the line above a question, such as "Hana runs a small gym…") uses the `.scn` class: full ink, weight 500, 15 px on mobile and 18 px on desktop (`.scn-lg`), with a taller line height in Arabic. It used to be small, light and grey, which was hard to read in Arabic. The lesson player's `.lp-scn` uses the same style.
 
+On every question screen a scenario character now tells the scenario in first person: an avatar next to a speech bubble with "Name · Role". Their face changes with the answer: talking, then happy after a right answer, thinking after a wrong one. See `system/characters/README.md` for the cast, files and sizes. Hana always owns the gym. The visitor who signs up is Salma, and the clinic patient is Ahmed, so no cast member plays two people.
+
 The desktop home has no search bar: learner search is not planned yet, so it was removed rather than shipped as a box that does nothing.
 
 Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
