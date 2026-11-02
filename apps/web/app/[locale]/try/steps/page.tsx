@@ -22,6 +22,8 @@ const lesson: Lesson = {
   ],
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function StepsDevPage({ params }: { params: Promise<{ locale: string }> }) {
   if (process.env.UG_DEV_FIXTURE !== "1") notFound();
   const { locale } = await params;

@@ -17,6 +17,8 @@ const lesson: Lesson = {
   }],
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function VideoTestPage({ params }: { params: Promise<{ locale: string }> }) {
   if (process.env.UG_VIDEO_TEST === "0") notFound();
   const { locale } = await params;
