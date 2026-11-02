@@ -499,7 +499,7 @@ const X = {
 const K = {
   predict: { step: 1, ctx: 'gym', variant: 'now', conf: true, answer: 2,
     en: { over: 'Predict · Step 1', frame: "Example · Hana's Gym trial form", who: 'Hana · Example',
-      scenario: "Hana's gym added date of birth and national ID to its free-trial form. Nothing on the form says why.",
+      scenario: "Hana's gym added date of birth and national ID to its free-trial form, with no reason given.",
       question: 'Which change will get more people to finish the trial form?',
       opts: ['Mark both fields as required with a red star', 'Keep both, and split the form into two short pages', 'Take both off the trial form, and ask when people join'],
       miscon: 'Two short pages take the same few seconds. The cost is trust: a personal question with no reason makes people wonder what the data is for, and some leave.',
@@ -508,9 +508,9 @@ const K = {
       why: "Every field costs time. A personal question the task doesn't explain also costs trust, and people start to wonder what the data is really for.",
       steps: ['Count the cost in time: two short fields, a few seconds.', 'Count the cost in trust: a national ID for a free trial, with no reason given.', 'The trial needs neither, so take them off. More people finish.'] },
     ar: { over: 'توقّع · الخطوة 1', frame: 'مثال · نموذج تجربة نادي هناء', who: 'هناء · مثال',
-      scenario: 'أضاف نادي هناء تاريخ الميلاد والرقم القومي إلى نموذج التجربة المجانية. ولا شيء في النموذج يوضّح السبب.',
+      scenario: 'أضاف نادي هناء تاريخ الميلاد والرقم القومي إلى نموذج التجربة المجانية، دون ذكر السبب.',
       question: 'أي تغيير يجعل عددًا أكبر من الناس يُكملون نموذج التجربة؟',
-      opts: ['ضع نجمة حمراء على الحقلين ليصبحا إلزاميين', 'أبقِ الحقلين، وقسّم النموذج إلى صفحتين قصيرتين', 'احذف الحقلين من نموذج التجربة، واسأل عنهما عند الاشتراك'],
+      opts: ['ضع نجمة حمراء على الحقلين ليصبحا إلزاميين', 'أبقِ الحقلين، وقسّم النموذج إلى صفحتين', 'احذفهما من التجربة، واسأل عند الاشتراك'],
       miscon: 'الصفحتان القصيرتان تأخذان الثواني نفسها. التكلفة هنا هي الثقة: السؤال الشخصي بلا سبب يجعل الناس يتساءلون عن الغرض من بياناتهم، فيغادر بعضهم.',
       hints: ['فكّر في شعور الزائر حين تطلب منه تجربة مجانية رقمه القومي.', 'هل تحتاج التجربة المجانية أيًّا من الحقلين اليوم؟'],
       correct: 'احذفهما. الحقل الشخصي الذي لا تحتاجه التجربة يكلّف الثقة، لا الوقت فقط.',
@@ -829,7 +829,7 @@ class Component extends DCLogic {
     const ctx = { gym: ctxKind === 'gym', gymStep: ctxKind === 'gymStep', words: ctxKind === 'words', fix: ctxKind === 'fix', clinic: ctxKind === 'clinic', order: ctxKind === 'order', spot: ctxKind === 'spot',
       variant: spec.variant || 'now', size: isDesk ? 'md' : 'sm', width: isDesk ? (ctxKind === 'spot' ? 420 : 400) : (ctxKind === 'spot' ? 330 : 300) };
     if (ctxKind === 'gymStep') { ctx.width = isDesk ? 460 : 350; }
-    const SCALE = { predict: [0.75, 212], words: [0.8, 226] };
+    const SCALE = { predict: [0.7, 198], words: [0.8, 226] };
     ctx.wrap = ''; ctx.inner = '';
     if (!isDesk && SCALE[kind]) { ctx.wrap = 'height: ' + SCALE[kind][1] + 'px; display: flex; justify-content: center; overflow: visible;'; ctx.inner = 'transform: scale(' + SCALE[kind][0] + '); transform-origin: top center;'; }
 

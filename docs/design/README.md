@@ -35,6 +35,10 @@ Landing header and hero (approved 1 November): Sign in uses the neutral outline 
 
 Language switch before sign-in: the same quiet globe button ("عربي" on English pages, "English" on Arabic pages) is on the landing, sign up and onboarding, mobile and desktop. On sign up and onboarding it sits at the top, next to Skip or opposite the logo.
 
+Onboarding has all three questions on the canvas (prop `q` on `ScreenOnboarding` and `DeskOnboarding`): 1, why you want to learn UX (four goals); 2, what to get better at first, with the suggested path; 3, time each week, a daily goal of 1 to 3 lessons and an optional reminder time. Question 1 has no Back; question 3 ends with Finish. The copy matches the slice 1 build.
+
+Scenario text (the line above a question, such as "Hana runs a small gym…") uses the `.scn` class: full ink, weight 500, 15 px on mobile and 18 px on desktop (`.scn-lg`), with a taller line height in Arabic. It used to be small, light and grey, which was hard to read in Arabic. The lesson player's `.lp-scn` uses the same style.
+
 The desktop home has no search bar: learner search is not planned yet, so it was removed rather than shipped as a box that does nothing.
 
 Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
