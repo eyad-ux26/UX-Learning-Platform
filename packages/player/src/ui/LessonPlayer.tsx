@@ -48,6 +48,11 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, muted, onTogg
 
   // New step: reset local view state and move focus to the heading so screen readers announce it.
   useEffect(() => { setWhyOpen(false); setMockOpen(true); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
+  // On a phone the example screen folds into a "Show it again" bar once feedback is up, so the options and feedback fit (choose steps only).
+  useEffect(() => {
+    if (st.phase === "answering") setMockOpen(true);
+    else if (question && step.type === "choose" && window.matchMedia("(max-width: 1023px)").matches) setMockOpen(false);
+  }, [st.phase, st.tries, state.i, question, step.type]);
   // Feedback appeared: move focus to its main button so keyboard players keep going.
   useEffect(() => { if (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed") sheetBtnRef.current?.focus({ preventScroll: true }); }, [st.phase, st.tries, state.i]);
 
