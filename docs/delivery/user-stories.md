@@ -199,7 +199,7 @@ As a learner, I want to see every path and choose which one I'm working on, so t
 
 Follows the rules in spec §4.4b (Several paths). Checks:
 
-- The Paths tab lists all 13 paths with name, subtitle, interactive or hybrid, unit count and my progress. Joined paths come first. Paths without content show "Coming soon" and can't be started.
+- The Paths tab lists all 14 paths with name, subtitle, interactive or hybrid, unit count and my progress. Joined paths come first. Paths without content show "Coming soon" and can't be started.
 - "Start this path" joins the path and makes it current. "Continue" on a joined path makes it current. Progress on other paths is kept.
 - Home follows the current path, and its "Your paths" row switches with one tap. The resume card names its path. The path map header has a switcher.
 - Lesson end's "Next lesson" stays in the same path. The last unit of a path suggests choosing a next path.

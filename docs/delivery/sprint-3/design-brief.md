@@ -14,7 +14,7 @@ All in mobile (390) and desktop (1440), EN light and AR night, using the existin
 
 | # | Screen or state | What to show | Rules |
 | --- | --- | --- | --- |
-| 1 | **Paths tab** | All 13 paths: name, subtitle, interactive or hybrid, unit count, my progress; joined paths first; "Coming soon" paths that can't be started | Spec §4.4b, EN-11b |
+| 1 | **Paths tab** | All 14 paths: name, subtitle, interactive or hybrid, unit count, my progress; joined paths first; "Coming soon" paths that can't be started | Spec §4.4b, EN-11b |
 | 2 | **Path detail and choosing** | Opening a path shows its map; "Start this path" and "Continue"; confirmation that progress on other paths is kept | §4.4b |
 | 3 | **Home with several paths** | Next lesson in the current path with its name; "Your paths" row with progress and one-tap switch; resume card naming its path; review due from all paths; streak and goal | §4.4b, EN-11 |
 | 4 | **Path map switcher** | Header switcher; locked units say why and how to unlock | EN-11 |
