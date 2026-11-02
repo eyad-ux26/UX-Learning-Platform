@@ -146,7 +146,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
       </main>
 
       <footer className="land-foot">
-        <Logo height={22} />
+        <Logo height={20} />
         <nav className="land-foot-links" aria-label={t("navPaths")}>
           <a href="#paths">{t("navPaths")}</a>
           <a href="#plan">{t("navPricing")}</a>
