@@ -189,7 +189,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   return (
     <section className="player-grid">
       <div className="player-visual">
-        {step.scenario ? <p className="t-small ink-2 scenario">{step.scenario[locale]}</p> : null}
+        {step.scenario ? <p className="scn">{step.scenario[locale]}</p> : null}
         {source ? <MockView mock={source} locale={locale} label={mockLabel} tag={t("exampleTag")} /> : null}
         {step.type === "compare" ? (
           <div className="cmp">
