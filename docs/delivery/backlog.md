@@ -39,11 +39,11 @@ Landing, sign up and sign in, onboarding, home, path map, lesson player with the
 
 ### Slice 2 · Full lesson player · design sprint 2 · build sprint 3
 
-Every remaining step type (words, fix, tune, sort, order, match, spot, compare, video), concept card, confidence tap, skill check, mastery round, exit and resume, guest sample lesson, offline and saving states inside a lesson. Stories: DS-06 (part), EN-07 (rest), EN-08, EN-10, EN-12, EN-14. Design brief: [sprint-2/design-brief.md](sprint-2/design-brief.md).
+Every remaining step type (words, fix, tune, sort, order, match, spot, compare, video), concept card, confidence tap, skill check, mastery round, exit and resume, guest sample lesson, offline and saving states inside a lesson. Stories: DS-06 (part), EN-07 (rest), EN-08, EN-10, EN-12, EN-14. Design ✓ (Eyad, 2 Nov). Design brief: [sprint-2/design-brief.md](sprint-2/design-brief.md); build brief: [sprint-2/build-brief.md](sprint-2/build-brief.md).
 
 ### Slice 3 · Progress and motivation · design sprint 3 · build sprint 4
 
-Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard, and the Paths tab to browse all paths and switch the current one, with every screen it touches (home, path map, lesson end, review, profile, certificates, reminders) following spec §4.4b. Stories: EN-11 (rest), EN-11b, EN-13 (rest), EN-20, EN-21, EN-23.
+Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard, and the Paths tab to browse all paths and switch the current one, with every screen it touches (home, path map, lesson end, review, profile, certificates, reminders) following spec §4.4b. Stories: EN-11 (rest), EN-11b, EN-13 (rest), EN-20, EN-21, EN-23. Design brief: [sprint-3/design-brief.md](sprint-3/design-brief.md).
 
 ### Slice 4 · Account, notifications and public site · design sprint 4 · build sprint 5
 

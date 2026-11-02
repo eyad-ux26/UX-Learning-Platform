@@ -4,6 +4,8 @@
 
 ## Verdict
 
+**Approved by Eyad on 2 November 2026** (canvas v39, PR #35), including the changes made after v34: scenario characters on every question screen (a92447f) and the onboarding reminder time picker (7d59d17). Build brief: [build-brief.md](build-brief.md).
+
 **Ready for Eyad's approval.** Both fixes were done in canvas v26 and PR #35 and checked by the PM thread: `canReveal` is now `tries >= 3`, and the landing boards were raised after a render showed the FAQ clipped by up to 121 px in Arabic. Before the fixes, the verdict was ready after two small fixes. All 12 deliverables are there, each one in mobile and desktop, EN light and AR night. The step types, feedback states and offline states are complete. The concept card matches the real content format (title, body, icon rows).
 
 ## Deliverables
