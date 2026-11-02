@@ -111,7 +111,7 @@ A learner can join any number of paths. One of them is the **current path**, and
 ### 4.6 Progress and motivation
 
 - XP: 10 independent, 5 supported, 0 revealed.
-- Daily goal and streak, with up to 2 freezes earned by meeting the goal on extra days.
+- Daily goal and streak with freezes: a learner earns 1 freeze each calendar week (Monday to Sunday, learner's time zone) in which they meet their daily goal on 5 days; they hold at most 2; a missed day uses one automatically and the next visit shows a calm note "A freeze kept your streak" (Eyad, 2 Nov 2026). Freezes are never sold.
 - Replaying a finished lesson (PM decision, 2 Nov 2026, issue #43): half XP per step (5 independent, 2 supported, 0 revealed). Only the first replay of a lesson each day earns XP and counts toward the daily goal and streak; later replays that day earn nothing but are still allowed. A replay never counts as a new finished lesson for path progress, and never moves a skill past Practiced (Shown comes only from the skill check). The lesson end screen says "Replay: half XP".
 - Skill badges when a skill becomes Shown and Kept.
 - Spaced review: a queue of skills to re-check, confident errors first, from 3 days after Shown.

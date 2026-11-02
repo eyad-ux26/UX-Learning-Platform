@@ -63,4 +63,4 @@ Postgres on Supabase. All tables have `created_at` and, where they change, `upda
 - **Outcome:** independent = right on try 1 with no hint; supported = right after a hint or a retry; revealed = answer shown.
 - **XP:** 10 / 5 / 0 per outcome; written to `xp_events` by the server only.
 - **Skill state:** Shown when the skill check step for the skill is independent; Kept when a later review on a new scenario, at least 3 days after Shown, is independent.
-- **Streak:** a day counts when `lessons_done >= daily_goal` in the learner's time zone; a missed day uses a freeze if one is available; freezes are earned (max 2) by meeting the goal on two extra days in a week.
+- **Streak:** a day counts when `lessons_done >= daily_goal` in the learner's time zone; a missed day uses a freeze if one is available; freezes are earned (max 2 held) at 1 per week (Monday to Sunday) with the goal met on 5 days, and applied automatically.

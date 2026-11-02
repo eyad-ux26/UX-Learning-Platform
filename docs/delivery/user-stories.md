@@ -222,7 +222,7 @@ As a learner, I want to prove a skill on a new case, so that my progress means I
 As a learner, I want calm rewards for real effort, so that I keep coming back without pressure.
 
 - XP 10 / 5 / 0 for independent, supported and revealed answers.
-- Daily goal and streak; up to 2 freezes earned; no loss-framed messages. XP, goal and streak count lessons from any path.
+- Daily goal and streak; 1 freeze earned per week with the goal met on 5 days, up to 2 held, used automatically on a missed day; no loss-framed messages. XP, goal and streak count lessons from any path.
 - Replays follow spec §4.6: half XP, only the first replay of a lesson per day counts toward XP, goal and streak, never new path progress or a skill state above Practiced.
 - Skill badges at Shown and Kept. Each number explains why it changed.
 
