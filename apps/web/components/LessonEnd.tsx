@@ -1,19 +1,17 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { Lesson, Locale } from "@uxgate/content/types";
-import { getUnit } from "@uxgate/content";
+import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 
-export function LessonEnd({ lesson, state, locale, unitId, streak, replay, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitId: string; streak: number; replay: ReplayKind | null; onContinue: () => void }) {
+export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; onContinue: () => void }) {
   const t = useTranslations("end");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
-  const unit = getUnit(unitId);
   // A skill counts as practised once a step on it was answered (not just shown).
   const practised = new Set<string>();
   lesson.steps.forEach((s, k) => { if (isQuestion(s) && state.steps[k].outcome && state.steps[k].outcome !== "revealed") practised.add(s.skill); });
-  const skills = (unit?.skills ?? []).filter((k) => practised.has(k.id));
+  const skills = unitSkills.filter((k) => practised.has(k.id));
   const minutes = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
 
   return (
