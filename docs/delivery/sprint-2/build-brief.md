@@ -45,7 +45,7 @@ Streak freezes, badges, review queue, Kept, profile design, Paths tab and multi-
 1. Every step type works selected, wrong with hints, Show the answer after the 3rd try, and right, in EN light and AR night, at 360 px and 1440 px, with keyboard only and a screen reader.
 2. Selecting never shows right or wrong; only Check does. The first attempt is the one kept.
 3. A skill check shows no hints and no per-step verdict, and its summary matches the stored attempts.
-4. Missing a skill in the unit brings it back in the mastery round with a variant the learner hasn't seen; mastery XP follows the 10 / 5 / 0 rule.
+4. Missing a skill in the unit brings it back in the mastery round with a variant the learner hasn't seen. Mastery has no hints and one try: 10 XP right, 0 wrong. Each missed skill gets at most 2 fresh variants per round and never a seen one; if both are missed (or the variants run out) the skill stays Practiced and waits for review. A right answer moves it to Shown, never Kept. The server picks the steps; the browser never sends the plan (PM, 2 Nov).
 5. Closing a lesson after the first answer asks for confirmation; before any answer it leaves at once; Esc and back close the confirmation.
 6. The video step never autoplays with sound, and captions and transcript work in both languages.
 7. A guest plays the sample lesson, signs up, and the result appears on the new account.
