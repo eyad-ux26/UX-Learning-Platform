@@ -27,7 +27,7 @@ export function LessonEnd({ lesson, state, locale, unitId, streak, onContinue }:
         <div className="end-stats">
           <div className="stat-tile stat-xp pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr big" data-testid="xp">+{sum.xp} XP</span><span className="lbl">{t("xpLabel")}</span></div>
           <div className="stat-tile pop"><span className="ph ph-target" aria-hidden="true" /><span className="num ltr big" data-testid="first-try">{sum.independent}/{sum.questions}</span><span className="lbl ink-2">{t("firstTry")}</span></div>
-          <div className="stat-tile pop"><span className="ph ph-flame-fill" aria-hidden="true" /><span className="num ltr big" data-testid="streak">{streak}</span><span className="lbl ink-2">{t("streakLabel")}</span></div>
+          <div className="stat-tile pop"><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num ltr big" data-testid="streak">{streak}</span><span className="lbl ink-2">{t("streakLabel")}</span></div>
         </div>
         {skills.length ? (
           <section className="card end-skills" aria-label={t("skills")}>

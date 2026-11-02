@@ -27,13 +27,13 @@ export function Onboarding() {
   const [focus, setFocus] = useState<Focus | null>(null);
   const [time, setTime] = useState<Time | null>(null);
   const [dailyGoal, setDailyGoal] = useState<1 | 2 | 3>(1);
-  const [reminder, setReminder] = useState("");
+  const [reminder, setReminder] = useState("20:00");
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
 
   const submit = (skipped: boolean) => {
     const input: OnboardingInput = {
-      goal, focus, weeklyTime: time, dailyGoal, reminder: reminder || null, skipped,
+      goal, focus, weeklyTime: time, dailyGoal, reminder: skipped ? null : reminder || null, skipped,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     };
     setFailed(false);
@@ -106,12 +106,9 @@ export function Onboarding() {
           {step === 3 ? (
             <>
               <p className="ob-label">{t("time")}</p>
-              <div className="ob-opts" role="radiogroup" aria-label={t("time")}>
+              <div className="ob-chips" role="radiogroup" aria-label={t("time")}>
                 {TIMES.map((x) => (
-                  <button key={x} type="button" role="radio" aria-checked={time === x} className={`choice press sm${time === x ? " is-selected" : ""}`} onClick={() => { setTime(x); play("select-snap"); }}>
-                    <span className="grow ob-opt-t" style={{ paddingInlineStart: 8 }}>{t(x)}</span>
-                    <span className={`radio${time === x ? " is-on" : ""}`} aria-hidden="true" style={{ minBlockSize: 0 }}><span className="dot" /></span>
-                  </button>
+                  <button key={x} type="button" role="radio" aria-checked={time === x} className={`chip press${time === x ? " is-selected" : ""}`} onClick={() => { setTime(x); play("select-snap"); }}>{t(x)}</button>
                 ))}
               </div>
               <p className="ob-label">{t("goal")}</p>
@@ -150,8 +147,8 @@ export function Onboarding() {
 
       <footer className="ob-foot">
         <div className="ob-foot-btns">
-          {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}>{t("back")}</button> : null}
-          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("finish") : t("cont")}</button>
+          {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}><span className="ph ph-arrow back only-desk" aria-hidden="true" />{t("back")}</button> : null}
+          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("finish") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
         </div>
       </footer>
     </div>

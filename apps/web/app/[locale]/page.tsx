@@ -34,7 +34,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
         <span className="grow" />
         <LocaleSwitch />
         <Link href="/signin" className="btn btn-secondary btn-sm">{t("signin")}</Link>
-        <Link href="/signup" className="btn btn-primary btn-sm only-desk">{t("try")}</Link>
+        <Link href="/signup" className="btn btn-primary btn-sm land-try">{t("try")}</Link>
       </header>
 
       <main>
