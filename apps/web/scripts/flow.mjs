@@ -14,6 +14,7 @@ const page = await ctx.newPage();
 let bad = 0;
 const fail = (m) => { bad++; console.log(`FAIL ${m}`); };
 const axe = async (label) => {
+  await page.waitForTimeout(400); // let button colour transitions finish so axe does not read a half-faded colour
   const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
   const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   if (serious.length) { bad++; console.log(`FAIL axe ${label}: ${serious.map((v) => `${v.id} ${v.nodes[0]?.target.join(" ")}`).join(" | ")}`); }
