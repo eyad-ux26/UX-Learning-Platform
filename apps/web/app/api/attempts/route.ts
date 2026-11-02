@@ -37,7 +37,11 @@ export async function POST(req: Request) {
 
   // Answers given on an older version of the lesson are scored against that version, which stays stored.
   const { data: versionRow } = await db.from("content_versions").select("id, body").eq("lesson_id", body.lessonId).eq("hash", body.hash).maybeSingle();
-  if (!versionRow) return NextResponse.json({ error: "content_not_published" }, { status: 409 });
+  if (!versionRow) {
+    // The app knows this version but the database does not yet (a deploy that came before the content seed): the client must keep the answers and retry.
+    if (current.hash === body.hash) return NextResponse.json({ error: "content_not_ready" }, { status: 503, headers: { "retry-after": "300" } });
+    return NextResponse.json({ error: "content_not_published" }, { status: 409 }); // a version we never stored: nothing can score it
+  }
   const lesson: Lesson = current.hash === body.hash ? current.body : (versionRow.body as Lesson);
   if (!Array.isArray(lesson?.steps)) return NextResponse.json({ error: "content_not_published" }, { status: 409 });
 
