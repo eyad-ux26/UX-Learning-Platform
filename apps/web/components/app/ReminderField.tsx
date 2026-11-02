@@ -38,6 +38,15 @@ export function ReminderField({ value, onChange }: { value: string | null; onCha
     return () => document.removeEventListener("mousedown", onDown);
   }, [open]);
   useEffect(() => { if (!on) setOpen(false); }, [on]);
+  // Opening moves focus into the popover (the chosen preset or hour); Esc closes it from anywhere on the page.
+  const dlg = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    dlg.current?.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { e.preventDefault(); close(); } };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const toggleOpen = () => {
     if (!on) return;
@@ -88,10 +97,9 @@ export function ReminderField({ value, onChange }: { value: string | null; onCha
         )}
 
         {desk && open ? (
-          <div className="tp" role="dialog" aria-label={t("tpTitle")} style={below ? { bottom: "auto", top: "calc(100% + 10px)" } : undefined}
-            onKeyDown={(e) => { if (e.key === "Escape") { e.stopPropagation(); close(); } }}>
+          <div className="tp" ref={dlg} role="dialog" aria-labelledby={`${id}-tp`} style={below ? { bottom: "auto", top: "calc(100% + 10px)" } : undefined}>
             <div className="tp-head">
-              <h3 className="tp-title">{t("tpTitle")}</h3>
+              <h3 className="tp-title" id={`${id}-tp`}>{t("tpTitle")}</h3>
               <span className="tp-now" dir="ltr" aria-live="polite">{formatTime(draft, locale)}</span>
             </div>
             <div className="tp-presets">
