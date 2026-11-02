@@ -95,10 +95,10 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
             />
             <span className="lp-vtime num ltr" aria-hidden="true">{clock(time)} / {clock(dur)}</span>
             <div className="lp-speed">
-              <button type="button" className={`lp-vbtn lp-vspeed num ltr${rate !== 1 ? " is-on" : ""}`} aria-haspopup="true" aria-expanded={speedOpen} onClick={() => setSpeedOpen(!speedOpen)} aria-label={`${t("videoSpeed")}: ${rate}×`}>{rate}×</button>
+              <button type="button" className={`lp-vbtn lp-vspeed${rate !== 1 ? " is-on" : ""}`} aria-expanded={speedOpen} onClick={() => setSpeedOpen(!speedOpen)} aria-label={`${t("videoSpeed")}: ${rate}×`} dir="auto">{rate === 1 ? t("videoSpeedNormal") : `${rate}×`}</button>
               {speedOpen ? (
                 <div className="lp-speedmenu" role="group" aria-label={t("videoSpeed")} onKeyDown={(e) => { if (e.key === "Escape") setSpeedOpen(false); }}>
-                  {[0.75, 1, 1.25, 1.5, 2].map((r) => <button key={r} type="button" className="num ltr" aria-pressed={rate === r} onClick={() => setSpeed(r)}>{r}×</button>)}
+                  {[0.75, 1, 1.25, 1.5, 2].map((r) => <button key={r} type="button" aria-pressed={rate === r} onClick={() => setSpeed(r)}>{r === 1 ? t("videoSpeedNormal") : `${r}×`}</button>)}
                 </div>
               ) : null}
             </div>

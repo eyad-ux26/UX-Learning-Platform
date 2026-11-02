@@ -126,7 +126,7 @@ export async function POST(req: Request) {
 async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, kind: "lesson" | "check" | "mastery", attemptId: string, skillIds: string[], now: Date) {
   if (kind === "mastery") {
     // The mastery round is not a lesson: it does not count toward the daily goal. A right first try moves the skill to Shown.
-    await markShown(db, userId, await firstTryRight(db, attemptId, userId), now);
+    await markShown(db, userId, await firstTryRight(db, attemptId, userId, "any"), now);
     return;
   }
   const { data: profile } = await db.from("profiles").select("time_zone, daily_goal").eq("user_id", userId).maybeSingle();
@@ -150,8 +150,8 @@ async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: st
   if (kind === "check") await markShown(db, userId, await firstTryRight(db, attemptId, userId), now);
 }
 
-/** Skills whose step in this attempt was right on the first judged try. A skill with several steps needs all of them right. */
-async function firstTryRight(db: ReturnType<typeof createAdminClient>, attemptId: string, userId: string): Promise<string[]> {
+/** Skills whose step in this attempt was right on the first judged try. A skill with several steps needs all of them right in a skill check ("all"); in the mastery round one right first try is enough ("any"). */
+async function firstTryRight(db: ReturnType<typeof createAdminClient>, attemptId: string, userId: string, rule: "all" | "any" = "all"): Promise<string[]> {
   const { data } = await db.from("step_results").select("step_id, skill_id, try_no, kind, correct").eq("attempt_id", attemptId).eq("user_id", userId).eq("kind", "check");
   const first = new Map<string, { skill: string; correct: boolean; tryNo: number }>();
   for (const r of data ?? []) {
@@ -159,6 +159,6 @@ async function firstTryRight(db: ReturnType<typeof createAdminClient>, attemptId
     if (r.skill_id && (!cur || (r.try_no as number) < cur.tryNo)) first.set(r.step_id as string, { skill: r.skill_id as string, correct: r.correct as boolean, tryNo: r.try_no as number });
   }
   const bySkill = new Map<string, boolean>();
-  for (const f of first.values()) bySkill.set(f.skill, (bySkill.get(f.skill) ?? true) && f.correct);
+  for (const f of first.values()) bySkill.set(f.skill, rule === "any" ? (bySkill.get(f.skill) ?? false) || f.correct : (bySkill.get(f.skill) ?? true) && f.correct);
   return [...bySkill].filter(([, ok]) => ok).map(([skill]) => skill);
 }
