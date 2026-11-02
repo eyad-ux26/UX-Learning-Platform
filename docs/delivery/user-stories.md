@@ -223,6 +223,7 @@ As a learner, I want calm rewards for real effort, so that I keep coming back wi
 
 - XP 10 / 5 / 0 for independent, supported and revealed answers.
 - Daily goal and streak; up to 2 freezes earned; no loss-framed messages. XP, goal and streak count lessons from any path.
+- Replays follow spec §4.6: half XP, only the first replay of a lesson per day counts toward XP, goal and streak, never new path progress or a skill state above Practiced.
 - Skill badges at Shown and Kept. Each number explains why it changed.
 
 ### EN-14 Video steps · 3 pts

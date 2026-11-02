@@ -41,6 +41,7 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
   - set up the Supabase Custom Domain add-on (for example auth.uxgate.org), which needs Pro and costs about $10 a month;
   - update the Google and Apple redirect URLs to the new domain.
 - The privacy and terms pages (EN-24) are live in both languages.
+- Session cookies are HttpOnly (issue #42): sign-in, sign-up, Google and the email link run through server actions and route handlers, so no browser code reads the session. Built in slice 2, checked by the verify thread.
 - Check every service price against its official price page, because the stack review's numbers come from memory and third-party summaries.
 - **Budget decision for Eyad:** running costs depend on active learners: about $60–100 a month below about 3,000 learners and about $120–200 a month at about 10k learners, which can pass the $100 budget. Eyad decides, tied to the revenue plan, before the beta opens.
 

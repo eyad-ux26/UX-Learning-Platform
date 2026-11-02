@@ -112,6 +112,7 @@ A learner can join any number of paths. One of them is the **current path**, and
 
 - XP: 10 independent, 5 supported, 0 revealed.
 - Daily goal and streak, with up to 2 freezes earned by meeting the goal on extra days.
+- Replaying a finished lesson (PM decision, 2 Nov 2026, issue #43): half XP per step (5 independent, 2 supported, 0 revealed). Only the first replay of a lesson each day earns XP and counts toward the daily goal and streak; later replays that day earn nothing but are still allowed. A replay never counts as a new finished lesson for path progress, and never moves a skill past Practiced (Shown comes only from the skill check). The lesson end screen says "Replay: half XP".
 - Skill badges when a skill becomes Shown and Kept.
 - Spaced review: a queue of skills to re-check, confident errors first, from 3 days after Shown.
 - Weekly leaderboards: off until the learner opts in. Feature flag in admin.
