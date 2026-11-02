@@ -16,13 +16,15 @@ const shiftDay = (day: string, by: number) => {
 
 /**
  * Days in a row with at least one finished lesson. Today may still be empty without breaking the run,
- * because the learner still has the rest of the day. Streak freezes arrive in slice 3.
+ * because the learner still has the rest of the day. A day a streak freeze covered keeps the run going
+ * without adding to it.
  */
-export function streakDays(activeDays: Iterable<string>, today: string): number {
+export function streakDays(activeDays: Iterable<string>, today: string, frozenDays: Iterable<string> = []): number {
   const days = new Set(activeDays);
-  let cursor = days.has(today) ? today : shiftDay(today, -1);
+  const frozen = new Set(frozenDays);
+  let cursor = days.has(today) || frozen.has(today) ? today : shiftDay(today, -1);
   let n = 0;
-  while (days.has(cursor)) { n++; cursor = shiftDay(cursor, -1); }
+  while (days.has(cursor) || frozen.has(cursor)) { if (days.has(cursor)) n++; cursor = shiftDay(cursor, -1); }
   return n;
 }
 

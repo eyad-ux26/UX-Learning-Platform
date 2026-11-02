@@ -14,7 +14,7 @@ const RENAME = {
   arrow: "arrow-right", review: "arrows-clockwise", caret: "caret-down", freeze: "snowflake",
   signout: "sign-out", google: "google-logo", apple: "apple-logo", comment: "chat-teardrop",
   chat: "chat-circle", bolt: "lightning", bulb: "lightbulb", map: "map-trifold", mail: "envelope-simple",
-  search: "magnifying-glass",
+  search: "magnifying-glass", external: "arrow-square-out",
   // Slice 2 lesson player icons (carried in the design file; unused until slice 2).
   replay: "arrow-counter-clockwise", sync: "arrows-clockwise", cc: "closed-captioning", "cloud-up": "cloud-arrow-up",
   "corners-out": "arrows-out", grip: "dots-six-vertical", send: "paper-plane-tilt", also: "check-circle",
