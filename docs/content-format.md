@@ -123,6 +123,8 @@ mock:
 | `segmented` | `options` (a list of texts) and `value`, the index of the selected one |
 | `slider` | `label`, a two-handle range track, and the chosen range in `text`. With `min`, `max`, `from`, `to` and a `format` such as "From {a} to {b}", learners can drag it |
 
+Contrast lessons have extra tones. An `image` with `tone: photo-light` (light photo, white text on it, low contrast), `photo-busy` (busy light photo), `photo-dark` (dark photo), `photo-fade` (light photo with a dark fade at the bottom and the text there) or `photo-box` (light photo darkened behind the text). A `group` with `tone: night` is a dark screen; inside it, `color: neon` is a saturated blue that is hard to read on dark, `color: sky` a light blue that reads well, a `divider` is nearly invisible unless it has `tone: clear`, and a child `group` with `tone: raised` is a lighter card. A `color` also works on a `button` with `style: plain` (for a faded text button).
+
 A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
 
 In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) and space-separated numbers (such as `010 1234 5678`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
