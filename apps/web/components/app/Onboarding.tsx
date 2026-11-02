@@ -108,9 +108,11 @@ export function Onboarding() {
           {step === 3 ? (
             <>
               <p className="ob-label">{t("time")}</p>
-              <div className="ob-chips" role="radiogroup" aria-label={t("time")}>
+              <div className="ob-opts ob-times" role="radiogroup" aria-label={t("time")}>
                 {TIMES.map((x) => (
-                  <button key={x} type="button" role="radio" aria-checked={time === x} className={`chip press${time === x ? " is-selected" : ""}`} onClick={() => { setTime(x); play("select-snap"); }}>{t(x)}</button>
+                  <button key={x} type="button" role="radio" aria-checked={time === x} className={`choice press sm${time === x ? " is-selected" : ""}`} onClick={() => { setTime(x); play("select-snap"); }}>
+                    <span className="grow ob-opt-t">{t(x)}</span>
+                  </button>
                 ))}
               </div>
               <p className="ob-label">{t("goal")}</p>

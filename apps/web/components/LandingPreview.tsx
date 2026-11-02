@@ -25,6 +25,7 @@ export function LandingPreview() {
   return (
     <>
       <section className="card preview-card" aria-label={t("previewLabel")}>
+        {right ? <span className="cursor-tag preview-xp" aria-hidden="true"><span className="ph ph-cursor" /><b dir="ltr">+10 XP</b></span> : null}
         <div className="preview-top"><div className="progress progress-sm"><i style={{ width: "40%" }} /></div><span className="t-small num ink-3">4/10</span></div>
         <p className="t-over" style={{ color: "var(--link)" }}>{t("pOver")}</p>
         <p className="t-label preview-q" id="lp-q">{t("pQ")}</p>
@@ -46,20 +47,20 @@ export function LandingPreview() {
         </div>
         {!checked ? (
           <>
-            <p className="t-small ink-2 try-it"><span className="ph ph-cursor" aria-hidden="true" />{t("tryIt")}</p>
+            <p className="t-small ink-2 try-it"><span className="ph ph-hand-tap" aria-hidden="true" />{t("tryIt")}</p>
             <button type="button" className="btn btn-primary btn-block press" disabled={!pick} onClick={check}>{t("check")}</button>
           </>
         ) : (
           <div className={`preview-fb ${right ? "is-right" : "is-wrong"}`} role="status">
-            <p className="verdict-row"><span className={`ph ${right ? "ph-check-circle-fill" : "ph-x-circle-fill"}`} aria-hidden="true" />{right ? t("fbRight") : t("fbWrong")}{right ? <span className="xp-chip" dir="ltr">+10 XP</span> : null}</p>
+            <p className="verdict-row"><span className={`ph ${right ? "ph-check-circle-fill" : "ph-x-circle-fill"}`} aria-hidden="true" />{right ? t("fbRight") : t("fbWrong")}</p>
             <p className="t-small ink-2">{right ? t("fbRightWhy") : t("fbWrongWhy")}</p>
             {right
-              ? <Link href="/signup" className="btn btn-primary btn-block press">{t("keepGoing")}</Link>
+              ? <Link href="/signup" className="btn btn-right btn-block press">{t("keepGoing")}</Link>
               : <button type="button" className="btn btn-secondary btn-block press" onClick={again}>{t("tryAgain")}</button>}
           </div>
         )}
       </section>
-      <div className="comment preview-hint" aria-hidden="true"><span className="pin"><span className="ph ph-bulb-fill" /></span><span className="t-small">{t("previewHint")}</span></div>
+      {!checked && !pick ? <div className="comment preview-hint" aria-hidden="true"><span className="pin"><span className="ph ph-bulb-fill" /></span><span className="t-small">{t("previewHint")}</span></div> : null}
     </>
   );
 }
