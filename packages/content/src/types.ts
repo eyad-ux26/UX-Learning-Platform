@@ -34,7 +34,8 @@ export type ReasonQuestion = { prompt: Text; options: { id: string; text: Text }
 
 /** `speaker` is a cast id: that character tells `scenario` in first person. The compiler fills it from the lesson's speaker when the step has none; without a speaker the scenario shows as a plain line. */
 type StepBase = { id: string; part: string; scenario?: Text; speaker?: string; mock?: Mock };
-export type CardStep = StepBase & { type: "card"; title?: Text; body: Text; icons?: string[] };
+export type CardPoint = { icon: string; en: string; ar: string };
+export type CardStep = StepBase & { type: "card"; title?: Text; body?: Text; points?: CardPoint[]; icons?: string[] };
 type QuestionBase = StepBase & {
   skill: string;
   prompt: Text;

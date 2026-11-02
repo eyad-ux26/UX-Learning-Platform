@@ -49,7 +49,14 @@ function checkStep(s, where, errors) {
     return;
   }
   if (s.type === "card") {
-    if (!isText(s.body)) errors.push(`${where}: card needs body in en and ar`);
+    if (s.points !== undefined) {
+      const p = s.points;
+      if (!Array.isArray(p) || p.length < 1 || p.length > 4) errors.push(`${where}: points holds 1 to 4 items`);
+      else p.forEach((x, k) => {
+        if (!x || typeof x.icon !== "string" || !/^[a-z0-9-]+$/.test(x.icon)) errors.push(`${where}: point ${k + 1} needs a Phosphor icon name`);
+        if (!isText(x)) errors.push(`${where}: point ${k + 1} needs en and ar`);
+      });
+    } else if (!isText(s.body)) errors.push(`${where}: card needs body in en and ar`);
     checkMock(s.mock, where, errors);
     return;
   }

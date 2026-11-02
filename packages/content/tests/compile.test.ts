@@ -59,6 +59,22 @@ describe("content compiler", () => {
     expect(r.errors).toEqual([]);
     expect(lessonOf(r).body.steps.find((s) => s.scenario)?.speaker).toBe("karim");
   });
+  it("accepts concept-card points (1 to 4, icon + both languages) and rejects bad ones", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "uxg-"));
+    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml"));
+    const f = path.join(tmp, "paths/P01/U01/P01-U01-L01-every-field-costs-something.yaml");
+    const text = fs.readFileSync(f, "utf8");
+    const withPoints = (pts: string) => text.replace(/^(\s*)type: card\n/m, `$1type: card\n$1points:\n${pts}\n`);
+    const row = (i: string) => `        - { icon: ${i}, en: "One", ar: "واحد" }`;
+    expect(compileTree(path.join(tmp, "paths")).errors).toEqual([]);
+    fs.writeFileSync(f, withPoints([row("eye"), row("hand")].join("\n")));
+    const ok = compileTree(path.join(tmp, "paths"));
+    expect(ok.errors.filter((e: string) => /point/.test(e))).toEqual([]);
+    fs.writeFileSync(f, withPoints([1, 2, 3, 4, 5].map(() => row("eye")).join("\n")));
+    expect(compileTree(path.join(tmp, "paths")).errors.join("\n")).toMatch(/points holds 1 to 4/);
+    fs.writeFileSync(f, withPoints('        - { icon: eye, en: "Only English" }'));
+    expect(compileTree(path.join(tmp, "paths")).errors.join("\n")).toMatch(/point 1 needs en and ar/);
+  });
   it("has all three faces for every cast member", () => {
     const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../apps/web/public/char");
     for (const c of cast) for (const face of ["talk", "smile", "think"]) expect(fs.existsSync(path.join(pub, `uxgate-char-${c.id}-${face}-avatar.svg`)), `${c.id} ${face}`).toBe(true);

@@ -114,7 +114,14 @@ export function validate(paths) {
           need((s.hints || []).length <= 2, `${sw}: at most 2 hints`);
           if (s.speaker !== undefined) need(castIds.includes(s.speaker), `${sw}: unknown speaker ${s.speaker}`);
           if (s.type === "card") {
-            need(s.body || s.mock, `${sw}: a card needs a body or a mock`);
+            need(s.body || s.mock || s.points, `${sw}: a card needs a body, points or a mock`);
+            if (s.points !== undefined) {
+              need(Array.isArray(s.points) && s.points.length >= 1 && s.points.length <= 4, `${sw}: points holds 1 to 4 items`);
+              for (const [k, x] of (Array.isArray(s.points) ? s.points : []).entries()) {
+                need(typeof x?.icon === "string" && /^[a-z0-9-]+$/.test(x.icon), `${sw}: point ${k + 1} needs a Phosphor icon name`);
+                need(x?.en && x?.ar, `${sw}: point ${k + 1} needs en and ar`);
+              }
+            }
             continue;
           }
           if (s.type === "video") {

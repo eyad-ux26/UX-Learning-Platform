@@ -74,7 +74,7 @@ By type:
 
 | Type | Fields | `when` in a misconception |
 | --- | --- | --- |
-| `card` | `title`, `body` | none |
+| `card` | `title`, `body`, optional `points` (concept cards). `points` is a list of 1 to 4 items `{ icon, en, ar }`, `icon` a Phosphor name such as `eye`. When `points` is present the body is not shown and may be left out. Icons used in `points` are added to the stylesheet by `npm run assets -w @uxgate/web` | none |
 | `video` | `title`, `video` (Bunny Stream id), `duration` (seconds), `transcript` (list of `{ t, en, ar }`, `t` in seconds, increasing). Not graded. The captions are the transcript lines, so they exist in both languages. Never autoplays | none |
 | `choose`, `words`, `fix` | `options`, `answer: [ids]`, optional `multi`, `also_ok`, `reason` | `[option ids]`, matches if any was picked |
 | `predict` | as `choose`; with `any_ok: true` it's ungraded and needs `reveal`; `recall: S02` shows the learner's earlier answer | as `choose` |

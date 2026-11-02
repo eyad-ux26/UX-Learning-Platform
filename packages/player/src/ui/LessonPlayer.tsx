@@ -156,7 +156,13 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         ) : step.type === "card" ? (
           <section className="player-col">
             {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : null}
-            <Rich text={step.body} locale={locale} className="card-body" />
+            {step.points?.length ? (
+              <ul className="card-points">
+                {step.points.map((p, k) => (
+                  <li key={k}><span className={`ph ph-${p.icon}`} aria-hidden="true" /><span>{p[locale]}</span></li>
+                ))}
+              </ul>
+            ) : step.body ? <Rich text={step.body} locale={locale} className="card-body" /> : null}
             {step.mock ? <MockView mock={step.mock} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} /> : null}
           </section>
         ) : (
