@@ -1,4 +1,4 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Shell } from "@/components/app/Shell";
 import { ProfileForm } from "@/components/app/ProfileForm";
 import { ProfileMain } from "@/components/app/ProfileMain";
@@ -11,6 +11,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
+  const t = await getTranslations("profile");
   let email = "";
   let reminder = "";
   let boardOpen = false;
@@ -26,6 +27,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const certificates = me.db ? await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : [];
   return (
     <Shell me={me}>
+      <h1 className="t-h1 h1-s">{t("title")}</h1>
       <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} />
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
     </Shell>

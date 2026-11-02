@@ -114,13 +114,13 @@ export async function SkillsMain({ me }: { me: Learner }) {
             {units.map((u, i) => (
               <div key={u.id} className="ph-page">
                 <p className="t-over">{t("unit", { n: i + 1 })} · {u.title[locale]}</p>
-                <div className="badge-grid">
+                <div className="sbadge-grid">
                   {u.skills.map((s) => {
                     const st = me.skillStates.get(s.id)?.state;
                     const b = badgeOf(st);
                     return (
-                      <div key={s.id} className={`card badge is-${b ?? "none"}`}>
-                        <span className="gem"><span className={`ph ph-${b === "gold" ? "medal-fill" : b === "blue" ? "seal-check-fill" : "lock"}`} aria-hidden="true" /></span>
+                      <div key={s.id} className={`card sbadge is-${b ?? "none"}`}>
+                        <span className="sgem"><span className={`ph ph-${b === "gold" ? "medal-fill" : b === "blue" ? "seal-check-fill" : "lock"}`} aria-hidden="true" /></span>
                         <small className="t-label" style={{ fontSize: 12 }}>{s.title[locale]}</small>
                         <small className="t-small ink-2">{st ? t(st) : t("none")} · {b === "gold" ? t("badgeGold") : b === "blue" ? t("badgeBlue") : t("badgeNone")}</small>
                       </div>

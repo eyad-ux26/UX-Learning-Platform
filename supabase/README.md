@@ -4,7 +4,7 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 
 ## 1. Create the project
 1. New Supabase project named `uxgate-staging` (later `uxgate-production`). **Region: Frankfurt (eu-central-1).** There is no Middle East region, Frankfurt is the closest, and the region cannot be changed after creation.
-2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
+2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `0006` to `0015` as they arrive, then `migrations/0016_progress_paths.sql` (slice 3: several paths, freezes, certificates, achievement page, leaderboard), then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
 3. Regenerate the content file after any lesson change with `npm run seed:sql` and commit it. The tests fail if it is stale.
 
 ## 2. Where each key goes
@@ -35,3 +35,10 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 
 ## 6. Check
 `npm run test -w @uxgate/db` runs the row-level security tests with no Docker.
+
+## 7. Slice 3 settings
+
+- Run `migrations/0016_progress_paths.sql` (after any slice 2 migrations). It is safe to run once; it does not touch lesson content.
+- Vercel env `CRON_SECRET`: any long random string. Vercel Cron calls `/api/jobs/daily` (00:05 UTC, set in `apps/web/vercel.json`) with it, and the job refuses anything without it. The job only catches learners who have not opened the app: every Home visit settles that learner's finished days (streak, freezes) by itself. Hobby plans allow one cron run a day, which is enough.
+- The leaderboard is off. To open it for testing, run `update public.app_flags set enabled = true where key = 'leaderboard';` (the admin panel will own this switch later). While it is off, `/app/board` is a 404 and nobody can join.
+- The achievement page (`/u/<handle>`) is off for every learner until they turn it on from a certificate.

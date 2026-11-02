@@ -133,7 +133,7 @@ export async function HomeMain({ me, view }: { me: Learner; view: PathView }) {
   );
 }
 
-export async function HomePanel({ progress }: { progress: Progress }) {
+export async function HomePanel({ progress, freezes = 0 }: { progress: Progress; freezes?: number }) {
   const t = await getTranslations("home");
   const remaining = Math.max(0, progress.dailyGoal - progress.lessonsToday);
   return (
@@ -148,6 +148,7 @@ export async function HomePanel({ progress }: { progress: Progress }) {
       <div className="dk-prop">
         <div className="streak-row"><span className="ph ph-flame-fill" style={{ fontSize: 20, color: "#F59E2B" }} aria-hidden="true" /><p className="t-label" style={{ flex: 1 }}>{progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone")}</p></div>
         <Week today={progress.today} activeDays={progress.activeDays} small />
+        <Link href="/app/streak" className="kind" style={{ alignSelf: "flex-start" }}><span className="ph ph-freeze-fill" aria-hidden="true" />{freezes > 0 ? t("freezeReady", { count: freezes }) : t("freezeNone")}</Link>
       </div>
       <div className="dk-prop">
         <span className="stat" style={{ alignSelf: "flex-start" }}><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>

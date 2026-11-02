@@ -28,7 +28,7 @@ export function ProfileForm({ initial, email, userId }: { initial: { displayName
 
   return (
     <div className="profile">
-      <h1 className="t-h1 h1-s">{t("title")}</h1>
+      <h2 className="t-h2">{t("settings")}</h2>
       <section className="card profile-card">
         <div className="field">
           <label htmlFor="pf-name">{t("name")}</label>

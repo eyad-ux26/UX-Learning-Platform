@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { pickPath } from "@/lib/learning";
+import { isPlayable } from "@/lib/catalog";
 import { FOCUS_PATH, onboardingSchema, type OnboardingInput } from "@/lib/onboarding";
 
 /** Saves the answers (even a skipped, partial set) and enrols the learner in their first path. */
@@ -14,7 +15,7 @@ export async function saveOnboarding(input: OnboardingInput): Promise<{ ok: bool
   if (!data.user) return { ok: false };
   const userId = data.user.id;
 
-  const path = pickPath(a.focus ? FOCUS_PATH[a.focus] : null);
+  const path = pickPath(a.pathId && isPlayable(a.pathId) ? a.pathId : a.focus ? FOCUS_PATH[a.focus] : null);
   const now = new Date().toISOString();
   const [onb, prof] = await Promise.all([
     db.from("onboarding").upsert({ user_id: userId, goal: a.goal, focus: a.focus, weekly_time: a.weeklyTime, recommended_path_id: path?.id ?? null, skipped: a.skipped, completed_at: now }, { onConflict: "user_id" }),
@@ -26,6 +27,7 @@ export async function saveOnboarding(input: OnboardingInput): Promise<{ ok: bool
     await db.from("enrollments").upsert({ user_id: userId, path_id: path.id }, { onConflict: "user_id,path_id", ignoreDuplicates: true });
     await db.from("enrollments").update({ last_active_at: now }).eq("user_id", userId).eq("path_id", path.id);
     await db.from("profiles").update({ current_path_id: path.id }).eq("user_id", userId).is("current_path_id", null);
+    await db.from("path_events").insert({ user_id: userId, kind: "started", path_id: path.id });
   }
   return { ok: true };
 }

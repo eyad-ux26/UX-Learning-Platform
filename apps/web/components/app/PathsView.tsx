@@ -38,7 +38,7 @@ function Card({ p, view, t, locale }: { p: CatalogRow; view: PathView | null; t:
         </span>
         {joined ? <span className="pc-prog"><span className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></span><span className="num">{pct}%</span></span> : null}
       </span>
-      <span className="pc-end"><span className="ph ph-caret flip" aria-hidden="true" /></span>
+      <span className="pc-end"><span className="ph ph-arrow flip" aria-hidden="true" /></span>
     </Link>
   );
 }

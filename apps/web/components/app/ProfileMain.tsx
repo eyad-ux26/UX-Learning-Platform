@@ -35,7 +35,7 @@ export async function ProfileMain({ me, certificates, boardOpen }: { me: Learner
             <Link key={id} href={`/app/path/${id}`} className="path-card press">
               <span className="pc-ill"><img src={pathArtUrl(id)} alt="" /></span>
               <span className="pc-text"><span className="pc-name"><bdi>{catalogEntry(id)?.name ?? id}</bdi></span><span className="t-small ink-2">{t("skillsOf", { shown: c.shown, total: c.total, kept: c.kept })}</span></span>
-              <span className="pc-end"><span className="ph ph-caret flip" aria-hidden="true" /></span>
+              <span className="pc-end"><span className="ph ph-arrow flip" aria-hidden="true" /></span>
             </Link>
           );
         })}
@@ -50,14 +50,14 @@ export async function ProfileMain({ me, certificates, boardOpen }: { me: Learner
             
             <img src="/ill/uxgate-ill-certificate.png" alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none", opacity: cert ? 1 : 0.4 }} />
             <span className="grow"><b><bdi>{catalogEntry(id)?.name ?? id}</bdi></b><span className="t-small ink-2">{cert ? `${t("certReady")} · ${fmt.format(new Date(cert.issuedAt))}` : t("certProgress", { shown: c.shown, total: c.total })}</span></span>
-            <span className="ph ph-caret flip" aria-hidden="true" />
+            <span className="ph ph-arrow flip" aria-hidden="true" />
           </Link>
         );
       })}
       {certificates.length === 0 ? <p className="t-small ink-2">{t("certNone")}</p> : null}
 
-      <Link href="/app/skills" className="card row-card press"><span className="ph ph-medal" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("badges")}</b><span className="t-small ink-2">{t("badgesBody")}</span></span><span className="ph ph-caret flip" aria-hidden="true" /></Link>
-      {boardOpen ? <Link href="/app/board" className="card row-card press"><span className="ph ph-ranking" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("board")}</b><span className="t-small ink-2">{t("boardBody")}</span></span><span className="ph ph-caret flip" aria-hidden="true" /></Link> : null}
+      <Link href="/app/skills" className="card row-card press"><span className="ph ph-medal" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("badges")}</b><span className="t-small ink-2">{t("badgesBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link>
+      {boardOpen ? <Link href="/app/board" className="card row-card press"><span className="ph ph-ranking" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("board")}</b><span className="t-small ink-2">{t("boardBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link> : null}
     </div>
   );
 }

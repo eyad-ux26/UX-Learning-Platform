@@ -11,6 +11,7 @@ import { FOCUSES, GOALS, TIMES, type OnboardingInput } from "@/lib/onboarding";
 import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
+import { CATALOG, isPlayable, pathArtUrl } from "@/lib/catalog";
 
 type Goal = (typeof GOALS)[number];
 type Focus = (typeof FOCUSES)[number];
@@ -30,12 +31,14 @@ export function Onboarding() {
   const [time, setTime] = useState<Time | null>("t2"); // the canvas starts on "2 to 4 hours"
   const [dailyGoal, setDailyGoal] = useState<1 | 2 | 3>(1);
   const [reminder, setReminder] = useState<string | null>(DEFAULT_REMINDER);
+  const [showAll, setShowAll] = useState(false);
+  const [pathChoice, setPathChoice] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
 
   const submit = (skipped: boolean) => {
     const input: OnboardingInput = {
-      goal, focus, weeklyTime: skipped ? null : time, dailyGoal, reminder: skipped ? null : reminder, skipped,
+      goal, focus, weeklyTime: skipped ? null : time, dailyGoal, reminder: skipped ? null : reminder, skipped, pathId: pathChoice,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     };
     setFailed(false);
@@ -101,6 +104,23 @@ export function Onboarding() {
                   </button>
                 ))}
               </div>
+              <button type="button" className="btn btn-ghost btn-sm" aria-expanded={showAll} onClick={() => setShowAll(!showAll)} style={{ alignSelf: "flex-start" }}>{t("seeAll", { count: CATALOG.length })}</button>
+              {showAll ? (
+                <div className="ob-opts" role="radiogroup" aria-label={t("allTitle")}>
+                  <p className="t-small ink-2">{t("allBody")}</p>
+                  {CATALOG.map((p) => {
+                    const open = isPlayable(p.id);
+                    const on = pathChoice === p.id;
+                    return (
+                      <button key={p.id} type="button" role="radio" aria-checked={on} aria-disabled={!open} disabled={!open} className={`choice press sm${on ? " is-selected" : ""}`} onClick={() => { setPathChoice(p.id); play("select-snap"); }}>
+                        <span className="ob-ico"><img src={pathArtUrl(p.id)} alt="" /></span>
+                        <span className="grow ob-opt-t"><bdi>{p.name}</bdi>{!open ? <small>{t("soon")}</small> : null}</span>
+                        <span className={`radio${on ? " is-on" : ""}`} aria-hidden="true" style={{ minBlockSize: 0 }}><span className="dot" /></span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
               {sugg ? <div className="sugg only-mobile" role="status"><span className="ph ph-sparkle" aria-hidden="true" /><p className="t-small"><b>{t("weSuggest")}</b> {sugg}</p></div> : null}
             </>
           ) : null}
@@ -145,7 +165,7 @@ export function Onboarding() {
       <footer className="ob-foot">
         <div className="ob-foot-btns">
           {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}><span className="ph ph-arrow back only-desk" aria-hidden="true" />{t("back")}</button> : null}
-          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("startLearning") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
+          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus && !pathChoice)}>{step === 3 ? t("startLearning") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
         </div>
       </footer>
     </div>
