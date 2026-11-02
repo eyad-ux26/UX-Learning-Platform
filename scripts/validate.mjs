@@ -84,6 +84,19 @@ export function validate(paths) {
         need(["lesson", "check", "bank"].includes(l.mode), `${lw}: mode must be lesson, check or bank`);
         need(l.title && (bank || l.minutes), `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
+        // Optional one-line summary for the home screen's next-lesson card: what the learner will do.
+        if (l.summary !== undefined) {
+          const ok = l.summary && typeof l.summary === "object" && typeof l.summary.en === "string" && typeof l.summary.ar === "string";
+          need(ok, `${lw}.summary: needs both en and ar text`);
+          if (ok) {
+            for (const lang of ["en", "ar"]) {
+              const t = l.summary[lang].trim();
+              const words = t.split(/\s+/).filter(Boolean).length;
+              need(words >= 6 && words <= 22, `${lw}.summary.${lang}: keep it to one line of about 15 words (6 to 22), found ${words}`);
+              need(!/\n/.test(t), `${lw}.summary.${lang}: one line only`);
+            }
+          }
+        } else if (!bank) warnings.push(`${lw}: no summary yet (one line for the next-lesson card)`);
         checkText(l, lw);
         // Every scenario is told by a cast member: the lesson's speaker, or a step's own.
         if (l.speaker !== undefined) need(castIds.includes(l.speaker), `${lw}: unknown speaker ${l.speaker}`);
