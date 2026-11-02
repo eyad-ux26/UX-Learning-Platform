@@ -101,6 +101,17 @@ describe("one learner cannot change another learner's rows", () => {
     expect(r).toHaveLength(1);
     expect(await as("authenticated", A, `insert into enrollments (user_id, path_id) values ($1, 'P01') returning path_id`, [A])).toHaveLength(1);
   });
+  it("can only make a path they joined their current path", async () => {
+    // not joined yet: refused
+    await expect(as("authenticated", A, `update profiles set current_path_id = 'P01' where user_id = $1`, [A])).rejects.toThrow();
+    // join, then set it, then record activity
+    const rows = await as("authenticated", A, `with e as (insert into enrollments (user_id, path_id) values ($1, 'P01') returning 1), p as (update profiles set current_path_id = 'P01' where user_id = $1 returning current_path_id) select * from p`, [A]);
+    expect(rows).toHaveLength(1);
+  });
+  it("cannot point B at a path or touch B's enrollment activity", async () => {
+    expect(await as("authenticated", A, `update profiles set current_path_id = null where user_id = $1 returning user_id`, [B])).toHaveLength(0);
+    expect(await as("authenticated", A, `update enrollments set last_active_at = now() where user_id = $1 returning user_id`, [B])).toHaveLength(0);
+  });
 });
 
 describe("answers and XP can only be written by the server", () => {

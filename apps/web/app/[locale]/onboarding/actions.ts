@@ -21,6 +21,11 @@ export async function saveOnboarding(input: OnboardingInput): Promise<{ ok: bool
     db.from("profiles").update({ daily_goal: a.dailyGoal, reminder_time: a.reminder, time_zone: a.timeZone, updated_at: now }).eq("user_id", userId),
   ]);
   if (onb.error || prof.error) return { ok: false };
-  if (path) await db.from("enrollments").upsert({ user_id: userId, path_id: path.id }, { onConflict: "user_id,path_id", ignoreDuplicates: true });
+  if (path) {
+    // Join the path, then make it the current one. A second sign-up pass must not move a learner who already chose another path.
+    await db.from("enrollments").upsert({ user_id: userId, path_id: path.id }, { onConflict: "user_id,path_id", ignoreDuplicates: true });
+    await db.from("enrollments").update({ last_active_at: now }).eq("user_id", userId).eq("path_id", path.id);
+    await db.from("profiles").update({ current_path_id: path.id }).eq("user_id", userId).is("current_path_id", null);
+  }
   return { ok: true };
 }

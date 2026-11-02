@@ -10,7 +10,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
-  const path = pickPath(me.recommendedPathId)!;
+  const path = pickPath(me.currentPathId ?? me.recommendedPathId)!;
   const view = buildPathView(path.id, me.progress, me.practicedSkills)!;
   let email = "";
   let reminder = "";
