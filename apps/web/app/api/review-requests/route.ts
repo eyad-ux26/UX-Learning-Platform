@@ -6,8 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { withinDbLimit } from "@/lib/server/rate-limit";
 
-export const REVIEW_REASONS = ["answer_works", "unclear", "broken", "other"] as const;
-export const NOTE_MAX = 280;
+const REVIEW_REASONS = ["answer_works", "unclear", "broken", "other"] as const;
+const NOTE_MAX = 280;
 
 const body = z.object({
   lessonId: z.string().min(1).max(60),
