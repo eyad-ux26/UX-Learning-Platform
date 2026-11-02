@@ -19,15 +19,23 @@ describe("mastery round rules", () => {
   it("nothing missed means no round", () => {
     expect(missedSkills(unit, [{ lessonId: "L1", stepId: "S1", skillId: s1, correct: true }], [])).toEqual([]);
   });
-  it("brings back one bank step per missed skill, never one the learner already saw while another exists", () => {
+  it("gives each missed skill up to 2 fresh bank steps, never one already answered, and stops when none are left", () => {
     const bank = getBank("P10-U01")!;
     const first = pickRound(bank, [s1, s2], []);
-    expect(first.map((s) => s.skill)).toEqual([s1, s2]);
+    expect(first.filter((s) => s.skill === s1)).toHaveLength(2);
+    expect(first.filter((s) => s.skill === s2)).toHaveLength(2);
     const second = pickRound(bank, [s1, s2], first.map((s) => s.id));
-    expect(second.map((s) => s.skill)).toEqual([s1, s2]);
-    expect(second.every((s, k) => s.id !== first[k].id)).toBe(true);
+    expect(second.every((s) => !first.some((f) => f.id === s.id))).toBe(true);
+    const all = bank.body.steps.map((s) => s.id);
+    expect(pickRound(bank, [s1, s2], all)).toEqual([]);
     // Every bank step is a held-back re-test, never a lesson step.
     expect(bank.body.steps.every((s) => s.part === "retest")).toBe(true);
+  });
+  it("after 2 wrong mastery answers a skill stays Practiced and stops coming back", () => {
+    const lessons = [{ lessonId: "L1", stepId: "S1", skillId: s1, correct: false }];
+    const wrong = (stepId: string) => ({ lessonId: "B", stepId, skillId: s1, correct: false });
+    expect(missedSkills(unit, lessons, [wrong("B1")])).toEqual([s1]);
+    expect(missedSkills(unit, lessons, [wrong("B1"), wrong("B2")])).toEqual([]);
   });
   it("reads the first judged try of each step per attempt, ignoring the main_ok event", () => {
     const rows = [

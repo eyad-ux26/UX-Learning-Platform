@@ -25,7 +25,7 @@ export async function flush(): Promise<void> {
   if (running) return;
   running = true;
   try {
-    if (!currentUser) return; // not known yet: sending now could put one learner's answers on another account
+    if (!currentUser || currentUser === "guest") return; // not known yet: sending now could put one learner's answers on another account. Guest answers stay on the device until sign-up.
     const mine = (it: QueuedAttempt) => it.userId === currentUser;
     const items = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter(mine);
     set({ pending: items.length });

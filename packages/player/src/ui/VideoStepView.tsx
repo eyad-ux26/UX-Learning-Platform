@@ -25,6 +25,8 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   const [cc, setCc] = useState(true);
   const [capLang, setCapLang] = useState<Locale>(locale);
   const [open, setOpen] = useState(false);
+  const [rate, setRate] = useState(1);
+  const [speedOpen, setSpeedOpen] = useState(false);
 
   const load = useCallback(() => {
     setSrc("loading");
@@ -52,6 +54,7 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
 
   const toggle = () => { const v = ref.current; if (!v) return; if (v.paused) { setEnded(false); void v.play().catch(() => setPlaying(false)); } else v.pause(); };
   const seek = (to: number) => { const v = ref.current; if (v) { v.currentTime = to; setTime(to); } };
+  const setSpeed = (r: number) => { setRate(r); setSpeedOpen(false); if (ref.current) ref.current.playbackRate = r; };
   const replay = () => { seek(0); setEnded(false); void ref.current?.play(); };
 
   const lines = step.transcript;
@@ -91,6 +94,14 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
               onChange={(e) => seek(Number(e.target.value))} disabled={!ready} aria-label={t("videoSeek")} aria-valuetext={`${clock(time)} / ${clock(dur)}`}
             />
             <span className="lp-vtime num ltr" aria-hidden="true">{clock(time)} / {clock(dur)}</span>
+            <div className="lp-speed">
+              <button type="button" className={`lp-vbtn lp-vspeed num ltr${rate !== 1 ? " is-on" : ""}`} aria-haspopup="true" aria-expanded={speedOpen} onClick={() => setSpeedOpen(!speedOpen)} aria-label={`${t("videoSpeed")}: ${rate}×`}>{rate}×</button>
+              {speedOpen ? (
+                <div className="lp-speedmenu" role="group" aria-label={t("videoSpeed")} onKeyDown={(e) => { if (e.key === "Escape") setSpeedOpen(false); }}>
+                  {[0.75, 1, 1.25, 1.5, 2].map((r) => <button key={r} type="button" className="num ltr" aria-pressed={rate === r} onClick={() => setSpeed(r)}>{r}×</button>)}
+                </div>
+              ) : null}
+            </div>
             <button type="button" className={`lp-vbtn${cc ? " is-on" : ""}`} aria-pressed={cc} onClick={() => setCc(!cc)} aria-label={t("videoCaptions")}><span className="ph ph-closed-captioning" aria-hidden="true" /></button>
             <button type="button" className={`lp-vbtn${open ? " is-on" : ""}`} aria-pressed={open} onClick={() => setOpen(!open)} aria-label={t("videoTranscript")}><span className="ph ph-article" aria-hidden="true" /></button>
             <button type="button" className="lp-vbtn" onClick={() => void ref.current?.requestFullscreen?.().catch(() => {})} aria-label={t("videoFullscreen")}><span className="ph ph-corners-out" aria-hidden="true" /></button>

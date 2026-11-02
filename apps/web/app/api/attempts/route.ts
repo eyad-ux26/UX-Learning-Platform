@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getLessonVersion, getUnit } from "@uxgate/content";
+import { getLessonVersion } from "@uxgate/content";
 import type { Lesson } from "@uxgate/content/types";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -10,7 +10,7 @@ import { loadProgress } from "@/lib/server/load-progress";
 import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
 import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
 import { markPracticed, markShown } from "@/lib/server/skill-states";
-import { isQuestion } from "@uxgate/player/engine";
+import { loadRound } from "@/lib/server/mastery";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
 const PER_MINUTE = 60;
@@ -55,16 +55,17 @@ export async function POST(req: Request) {
   let plan: string[] | null = (known?.plan as string[] | null | undefined) ?? null;
   let replay: ReplayKind | null = null;
   if (mastery) {
-    // The mastery round of a unit opens once its skill check is finished, and asks only questions of that unit's bank.
+    // The mastery round of a unit opens once its skill check is finished. The server builds the round itself
+    // (one fresh bank step per missed skill); the plan the client sends is only checked against it, never trusted.
     if (!known) {
-      const bankSteps = new Set(lesson.steps.filter(isQuestion).map((s) => s.id));
-      if (!body.plan || body.plan.some((id) => !bankSteps.has(id)) || new Set(body.plan).size !== body.plan.length) return NextResponse.json({ error: "bad_request" }, { status: 400 });
-      const unit = getUnit(current.unitId);
-      const checkId = unit?.lessons.find((id) => getLessonVersion(id)?.mode === "check");
-      const progress = await loadProgress(db, userId);
-      if (!checkId || !progress.finishedLessons.includes(checkId)) return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
+      const round = await loadRound(db, userId, current.unitId);
+      if (!round || !round.skillCheckDone) return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
+      if (!round.steps.length) return NextResponse.json({ error: "nothing_to_retest" }, { status: 409 });
+      const serverPlan = round.steps.map((x) => x.id);
+      if (round.bankId !== body.lessonId) return NextResponse.json({ error: "bad_request" }, { status: 400 });
+      if (body.plan && (body.plan.length !== serverPlan.length || body.plan.some((id) => !serverPlan.includes(id)))) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
       if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
-      plan = body.plan;
+      plan = serverPlan;
     }
   } else if (known) {
     // Its own query: if migration 0004 is not applied yet this just reads as a first play.
