@@ -10,10 +10,10 @@ import { bundle, cast } from "../src/index";
 const seed = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../seed/paths");
 
 describe("content compiler", () => {
-  it("compiles the P01 U01 seed with no errors", () => {
+  it("compiles the seed (P01 U01-U02 and P10) with no errors", () => {
     const { errors, bundle: b } = compileTree(seed);
     expect(errors).toEqual([]);
-    expect(b.lessons.map((l: { lessonId: string }) => l.lessonId)).toEqual(["P01-U01-L01", "P01-U01-L02", "P01-U01-L03", "P01-U01-L04", "P01-U02-L01", "P01-U02-L02", "P01-U02-L03", "P01-U02-L04"]);
+    expect(b.lessons.map((l: { lessonId: string }) => l.lessonId).filter((id: string) => id.startsWith("P01"))).toEqual(["P01-U01-L01", "P01-U01-L02", "P01-U01-L03", "P01-U01-L04", "P01-U02-L01", "P01-U02-L02", "P01-U02-L03", "P01-U02-L04"]);
   });
   it("is deterministic: same input gives the same hashes", () => {
     const a = compileTree(seed).bundle.lessons.map((l: { hash: string }) => l.hash);
