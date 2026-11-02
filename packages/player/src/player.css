@@ -7,6 +7,13 @@
 .player-main { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px 20px 24px; max-inline-size: 760px; inline-size: 100%; margin-inline: auto; }
 .player-over { color: var(--link); }
 .player-col, .player-grid, .player-visual, .player-ask { display: flex; flex-direction: column; gap: 12px; min-inline-size: 0; }
+/* Phone: scenario, then the question, then the example screen, then the answers, so the question is on screen first. */
+.player-visual, .player-ask { display: contents; }
+.player-visual > .scn { order: 1; }
+.player-ask > .prompt { order: 2; }
+.player-visual > :not(.scn) { order: 3; }
+.player-ask > :not(.prompt) { order: 4; }
+.choices.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .player-col h1, .player-ask h1 { outline: none; }
 .card-body { display: flex; flex-direction: column; gap: 10px; }
 .card-body p { margin: 0; }
@@ -30,8 +37,8 @@
 .player-foot { position: sticky; inset-block-end: 0; padding: 10px 20px 18px; display: flex; flex-direction: column; gap: 10px; border-block-start: 2px solid var(--line); background: var(--surface); }
 .player-foot > * { max-inline-size: 760px; inline-size: 100%; margin-inline: auto; }
 .conf { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-.conf-label { font-weight: 700; flex: 1; min-inline-size: 120px; }
-.conf .chip { min-height: 36px; padding: 0 10px; font-size: 13px; }
+.conf-label { font-weight: 700; flex: 1 0 100%; }
+.conf .chip { flex: 1 1 0; justify-content: center; min-height: 36px; padding: 0 8px; font-size: 13px; white-space: nowrap; }
 .foot-note { margin: 0; text-align: center; }
 .player-sheet { position: sticky; inset-block-end: 0; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
 .player-sheet > * { max-inline-size: 720px; inline-size: 100%; margin-inline: auto; }
@@ -51,6 +58,7 @@
   .player-head { padding: 18px 40px; border-block-end: 2px solid var(--line); background: var(--surface); }
   .player-head .progress { max-inline-size: 640px; margin-inline: auto; }
   .player-main { max-inline-size: 1240px; padding: 36px 64px 40px; }
+  .player-visual, .player-ask { display: flex; }
   .player-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 56px; align-items: start; }
   .cmp { grid-template-columns: 1fr 1fr; }
   .player-grid:has(.cmp) { grid-template-columns: 1fr; }

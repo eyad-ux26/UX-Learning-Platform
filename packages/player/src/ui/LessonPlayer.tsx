@@ -186,6 +186,8 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
   const showMock = live && (mockOpen || step.type === "tune" || step.type === "compare");
   const reason = step.type === "compare" ? (step as CompareStep).reason : undefined;
   const ids = options.map((o) => o.id);
+  // Four or more short options sit two to a row, as in the design.
+  const twoCol = options.length >= 4 && options.every((o) => o.text.length <= 22);
   const tried = (id: string) => (st.tried ?? []).includes(id);
   const firstOpen = options.findIndex((o) => !tried(o.id));
 
@@ -216,7 +218,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
       <div className="player-ask">
         <h1 ref={headingRef} tabIndex={-1} className="t-h3 prompt">{step.prompt[locale]}</h1>
         {st.hints > 0 && st.phase === "answering" ? <Hints step={step} count={st.hints} locale={locale} t={t} /> : null}
-        <div className="choices" role="radiogroup" aria-label={step.prompt[locale]} onKeyDown={(e) => !locked && onKeys(e, ids, onSelect, st.sel[0])}>
+        <div className={`choices${twoCol ? " two" : ""}`} role="radiogroup" aria-label={step.prompt[locale]} onKeyDown={(e) => !locked && onKeys(e, ids, onSelect, st.sel[0])}>
           {options.map((o, n) => {
             const icon = verdictIcon(o.id);
             const checked = st.sel.includes(o.id);
