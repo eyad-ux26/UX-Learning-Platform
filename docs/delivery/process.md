@@ -35,7 +35,7 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 
 ### Beta gate (before the private beta, sprint 7)
 
-- Production on Supabase Pro with daily backups, and Cloudflare usage alerts set on Workers Paid.
+- Production on Supabase Pro with daily backups, and Cloudflare Workers Paid ($5 a month, Eyad adds the payment method) with usage alerts set. Upgrade earlier if QA shows p99 CPU time near the free plan's 10 ms limit.
 - Google sign-in shows UXGate, not the Supabase project address (Eyad, 2 Nov):
   - finish Google OAuth brand verification, with the name UXGate, the logo, uxgate.org, and links to the privacy and terms pages;
   - set up the Supabase Custom Domain add-on (for example auth.uxgate.org), which needs Pro and costs about $10 a month;
