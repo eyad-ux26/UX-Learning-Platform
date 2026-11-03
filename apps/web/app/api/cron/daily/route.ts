@@ -4,13 +4,12 @@ import { settleLearner } from "@/lib/server/settle";
 import { shiftDay } from "@/lib/freeze";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
 const BATCH = 500;
 
 /**
  * The daily job: settles finished days for learners who have not opened the app, so freezes are earned and used on time.
  * Every Home visit settles the visiting learner too, so this only catches the rest. Safe to run more than once.
- * Vercel Cron calls it with `Authorization: Bearer $CRON_SECRET`; anything else is refused.
+ * The Cloudflare Cron Trigger (cf-worker.ts) calls it with `Authorization: Bearer $CRON_SECRET`; anything else is refused.
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;

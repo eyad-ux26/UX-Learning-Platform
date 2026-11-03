@@ -39,6 +39,6 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 ## 7. Slice 3 settings
 
 - Run `migrations/0016_progress_paths.sql` (after any slice 2 migrations). It is safe to run once; it does not touch lesson content.
-- Vercel env `CRON_SECRET`: any long random string. Vercel Cron calls `/api/jobs/daily` (00:05 UTC, set in `apps/web/vercel.json`) with it, and the job refuses anything without it. The job only catches learners who have not opened the app: every Home visit settles that learner's finished days (streak, freezes) by itself. Hobby plans allow one cron run a day, which is enough.
+- `CRON_SECRET`: any long random string, set as a secret where the app runs (see `docs/deploy-cloudflare.md`; on Vercel previews, an environment variable). The Cloudflare Cron Trigger calls `/api/cron/daily` (02:00 UTC, set in `apps/web/wrangler.jsonc`) with it, and the job refuses anything without it. The job only catches learners who have not opened the app: every Home visit settles that learner's finished days (streak, freezes) by itself.
 - The leaderboard is off. To open it for testing, run `update public.app_flags set enabled = true where key = 'leaderboard';` (the admin panel will own this switch later). While it is off, `/app/board` is a 404 and nobody can join.
 - The achievement page (`/u/<handle>`) is off for every learner until they turn it on from a certificate.

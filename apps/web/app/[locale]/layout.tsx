@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { WebAnalytics } from "@/components/WebAnalytics";
 import "@fontsource/cairo/400.css";
 import "@fontsource/cairo/600.css";
 import "@fontsource/cairo/700.css";
@@ -46,7 +46,7 @@ export default async function LocaleLayout({
       </head>
       <body>
         <NextIntlClientProvider><ThemeSync />{children}</NextIntlClientProvider>
-        <SpeedInsights />
+        <WebAnalytics />
       </body>
     </html>
   );
