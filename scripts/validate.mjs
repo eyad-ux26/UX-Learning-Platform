@@ -1,6 +1,7 @@
 // Checks every path, unit and lesson against the content format in docs/content-format.md.
 // Exits with code 1 when anything is wrong, so CI and the preview build stop on bad content.
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { loadContent, loadCast, resolveRefs, scenarioOf, CHOICE_TYPES, STEP_TYPES } from "./lib/content.mjs";
 
 const PARTS = ["hook", "try", "concept", "guided", "contrast", "independent", "recap", "check", "retest"];
@@ -201,7 +202,7 @@ export function validate(paths) {
   return { errors, warnings };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (path.resolve(fileURLToPath(import.meta.url)) === path.resolve(process.argv[1])) {
   const { errors, warnings } = validate(loadContent());
   for (const w of warnings) console.log(`warning  ${w}`);
   for (const e of errors) console.log(`error    ${e}`);
