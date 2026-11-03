@@ -4,7 +4,7 @@ import { C, D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCheck, IconUser } from "../components/Icons";
 import { span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, PhoneFrame, phoneRect, Presenter, RecapCard, Row, Screens, SideNote, Strike, TitleBand, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Presenter, RecapCard, Row, Screens, SideNote, Strike, Tap, TitleBand, v, Voice, wi } from "./p02";
 
 /*
  * P02-C02 re-edit: heu 2 "match between the system and the real world", 160.4–276.2 s. A pharmacy app that sorts
@@ -73,6 +73,15 @@ export const C02: React.FC = () => {
       <SideNote y={110} text="طابِق النموذج الذهني للمستخدم (Mental model)" p={span(f, v(B.fail), v(END))} big icon={wi(IconCheck)} />
       <SideNote y={290} text="الأسهل لمن اعتاد الطريقة في حياته" p={span(f, v(B.win), v(END))} />
       <Strike r={phoneRect} p={f >= v(B.surprise) && f < v(B.abc) ? Math.min(1, (f - v(B.surprise)) / 20) : 0} />
+      <Tap at={11} x={150} y={94} />
+      <Mark r={L(14, 72, 272, 44)} from={11} to={20} label="البحث" />
+      <Mark r={L(14, 126, 272, 120)} from={26.5} to={33} label="أدوية السكر" />
+      <Mark r={L(14, 252, 272, 92)} from={33} to={40} label="أدوية الكبد" />
+      <Mark r={L(10, 122, 280, 330)} from={40} to={B.surprise} label="Categories حسب المرض" side="below" />
+      <Mark r={L(10, 128, 40, 340)} from={B.abc + 0.5} to={B.assumed} label="أبجدي" />
+      <Mark r={L(270, 128, 26, 450)} from={B.abc + 3} to={B.assumed} label="A–Z" side="below" />
+      <Mark r={L(10, 122, 280, 340)} from={B.patient} to={B.missed} label="منطق المريض" side="below" />
+      <Mark r={L(10, 128, 286, 340)} from={B.fail + 1} to={END} label="منطق الصيدلي" side="below" />
     </>
   );
   return (

@@ -2,6 +2,7 @@ import React from "react";
 import { useCurrentFrame } from "remotion";
 import { C, D } from "../brand/theme";
 import { UserTouch } from "../debugger/Pointers";
+import { Selection } from "../debugger/Inspect";
 import { enter, Key } from "../lib/timeline";
 import { PH, v } from "./p14";
 
@@ -61,3 +62,10 @@ export const Strike: React.FC<{ r: { x: number; y: number; w: number; h: number 
       <path d={`M16 16 L${r.w - 16} ${r.h - 16} M${r.w - 16} 16 L16 ${r.h - 16}`} stroke={C.warning} strokeWidth={10} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - Math.min(1, p)} fill="none" />
     </svg>
   ) : null;
+
+/** Selects a part of the product (content coordinates) from voice second `from` to `to`, with an optional name tag. */
+export const Mark: React.FC<{ r: { x: number; y: number; w: number; h: number }; from: number; to: number; label?: string; side?: "right" | "left" | "below" }> = ({ r, from, to, label, side = "left" }) => {
+  const f = useCurrentFrame();
+  const p = enter(f, v(from), 10) * (1 - enter(f, v(to), 8));
+  return <Selection r={r} hover={p} selected={p} label={label} labelSide={side} />;
+};
