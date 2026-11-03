@@ -20,7 +20,7 @@ export default async function MasteryPage({ params }: { params: Promise<{ locale
   const back = `/app/path/${unit.pathId}`;
   const round = await loadRound(me.db, me.userId, unitId);
   if (!round || !round.skillCheckDone) return <MasteryLocked backHref={back} />;
-  if (!round.steps.length) return <MasteryNone backHref={back} />;
+  if (!round.steps.length) return <MasteryNone backHref={back} usedUp={round.unresolved.length > 0} />;
   const lesson: Lesson = { ...bank.body, id: bank.lessonId, mode: "bank", steps: round.steps };
   const skills = unit.skills.filter((k) => round.steps.some((s) => s.skill === k.id));
   return (

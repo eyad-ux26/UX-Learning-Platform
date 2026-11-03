@@ -5,10 +5,17 @@ import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { Link } from "@/i18n/navigation";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 
-/** Which skills a finished play got right on the first try: every step of the skill was independent. */
-export function skillResults(lesson: Lesson, state: LessonState, skills: Skill[]) {
+/**
+ * Which skills a finished play got right on the first try. A skill check needs every step of the skill independent ("all");
+ * in the mastery round one right first try is enough ("any"), the same rule the server uses to mark a skill Shown.
+ */
+export function skillResults(lesson: Lesson, state: LessonState, skills: Skill[], rule: "all" | "any" = "all") {
   const by = new Map<string, boolean>();
-  lesson.steps.forEach((s, k) => { if (isQuestion(s)) by.set(s.skill, (by.get(s.skill) ?? true) && state.steps[k].outcome === "independent"); });
+  lesson.steps.forEach((s, k) => {
+    if (!isQuestion(s)) return;
+    const ok = state.steps[k].outcome === "independent";
+    by.set(s.skill, rule === "any" ? (by.get(s.skill) ?? false) || ok : (by.get(s.skill) ?? true) && ok);
+  });
   return skills.filter((k) => by.has(k.id)).map((k) => ({ skill: k, shown: by.get(k.id) === true }));
 }
 
@@ -67,7 +74,7 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
 /** End of the mastery round: skills answered right on the one try move to Shown; the rest come back once more. */
 export function MasteryEnd({ lesson, state, locale, unitSkills, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; onContinue: () => void }) {
   const t = useTranslations("pages");
-  const rows = skillResults(lesson, state, unitSkills);
+  const rows = skillResults(lesson, state, unitSkills, "any");
   const sum = summarize(lesson, state);
   const all = rows.every((r) => r.shown);
   return (
@@ -96,10 +103,10 @@ export function MasteryIntro({ skills, locale, onStart, backHref }: { skills: Sk
 }
 
 /** Nothing was missed in the unit, so there is no round. */
-export function MasteryNone({ backHref }: { backHref: string }) {
+export function MasteryNone({ backHref, usedUp = false }: { backHref: string; usedUp?: boolean }) {
   const t = useTranslations("pages");
   return (
-    <Page art="empty-box" title={t("noneTitle")} sub={t("noneBody")} foot={<Link href={backHref as never} className="btn btn-primary btn-lg press">{t("continue")}</Link>} />
+    <Page art="empty-box" title={t(usedUp ? "usedUpTitle" : "noneTitle")} sub={t(usedUp ? "usedUpBody" : "noneBody")} foot={<Link href={backHref as never} className="btn btn-primary btn-lg press">{t("continue")}</Link>} />
   );
 }
 

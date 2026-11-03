@@ -1,11 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getBank, getUnit, getLessonVersion } from "@uxgate/content";
 import type { QuestionStep } from "@uxgate/content/types";
-import { firstTries, missedSkills, pickRound } from "@/lib/mastery";
+import { firstTries, missedSkills, pickRound, unresolvedSkills } from "@/lib/mastery";
 
 type Row = { attempt_id: string; step_id: string; skill_id: string | null; try_no: number; kind: string; correct: boolean; attempts: { lesson_id: string; started_at: string; finished_at: string | null; kind: string } | { lesson_id: string; started_at: string; finished_at: string | null; kind: string }[] };
 
-export type Round = { unitId: string; bankId: string; hash: string; skillCheckDone: boolean; missed: string[]; steps: QuestionStep[] };
+export type Round = { unitId: string; bankId: string; hash: string; skillCheckDone: boolean; missed: string[]; unresolved: string[]; steps: QuestionStep[] };
 
 /** What the mastery round of a unit asks this learner, read with the learner's own session. */
 export async function loadRound(db: SupabaseClient, userId: string, unitId: string): Promise<Round | null> {
@@ -33,5 +33,5 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
   const masteryTries = firstTries(masteryRows.map(asRow));
   const missed = missedSkills(unit, lessonTries, masteryTries);
   const seen = [...new Set(masteryRows.map((r) => `${r.attempt_id}:${r.step_id}`))].map((k) => k.split(":")[1]);
-  return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, steps: pickRound(bank, missed, seen) };
+  return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, unresolved: unresolvedSkills(unit, lessonTries, masteryTries), steps: pickRound(bank, missed, seen) };
 }

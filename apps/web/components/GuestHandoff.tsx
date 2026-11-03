@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { queueAll, queueDel, queuePut } from "@/lib/idb";
 import type { QueuedAttempt } from "@/lib/attempts";
 import { kick, setSyncUser, startSync } from "@/lib/sync";
@@ -15,7 +16,11 @@ export const HANDOFF_TTL_MS = 2 * 60 * 60 * 1000;
  * so a different person signing in on a shared device never inherits a guest's answers.
  */
 export function GuestHandoff() {
+  // Signing in is a client navigation, so this runs again whenever the page changes, not only on a full load.
+  const pathname = usePathname();
+  const busy = useRef(false);
   useEffect(() => {
+    if (busy.current) return;
     let flag: string | null = null;
     try { flag = localStorage.getItem(FLAG); } catch { return; }
     const age = Date.now() - Number(flag);
@@ -27,6 +32,7 @@ export function GuestHandoff() {
       }
       return;
     }
+    busy.current = true;
     (async () => {
       // The session is HttpOnly, so ask the server who is signed in.
       const id = ((await (await fetch("/api/auth/whoami", { cache: "no-store" })).json()) as { id: string | null }).id;
@@ -35,7 +41,7 @@ export function GuestHandoff() {
       await Promise.all(guest.map((i) => queuePut({ ...i, userId: id } as { key: string })));
       try { localStorage.removeItem(FLAG); } catch { /* nothing to clean */ }
       setSyncUser(id); startSync(); kick();
-    })().catch(() => {});
-  }, []);
+    })().catch(() => {}).finally(() => { busy.current = false; });
+  }, [pathname]);
   return null;
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getBank, getUnit } from "@uxgate/content";
-import { firstTries, missedSkills, pickRound } from "./mastery";
+import { firstTries, missedSkills, pickRound, unresolvedSkills } from "./mastery";
 
 const unit = getUnit("P10-U01")!;
 const [s1, s2, s3] = unit.skills.map((k) => k.id);
@@ -36,6 +36,14 @@ describe("mastery round rules", () => {
     const wrong = (stepId: string) => ({ lessonId: "B", stepId, skillId: s1, correct: false });
     expect(missedSkills(unit, lessons, [wrong("B1")])).toEqual([s1]);
     expect(missedSkills(unit, lessons, [wrong("B1"), wrong("B2")])).toEqual([]);
+  });
+  it("tells apart a unit with nothing missed from one whose missed skills have no round left", () => {
+    const lessons = [{ lessonId: "L1", stepId: "S1", skillId: s1, correct: false }];
+    const wrong = (stepId: string) => ({ lessonId: "B", stepId, skillId: s1, correct: false });
+    expect(unresolvedSkills(unit, [{ ...lessons[0], correct: true }], [])).toEqual([]);
+    expect(missedSkills(unit, lessons, [wrong("B1"), wrong("B2")])).toEqual([]);
+    expect(unresolvedSkills(unit, lessons, [wrong("B1"), wrong("B2")])).toEqual([s1]);
+    expect(unresolvedSkills(unit, lessons, [{ ...wrong("B1"), correct: true }])).toEqual([]);
   });
   it("reads the first judged try of each step per attempt, ignoring the main_ok event", () => {
     const rows = [

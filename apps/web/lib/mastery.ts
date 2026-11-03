@@ -23,6 +23,13 @@ export function missedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstT
   return unit.skills.map((s) => s.id).filter((id) => missed.has(id) && !won.has(id) && (misses.get(id) ?? 0) < MAX_MASTERY_MISSES);
 }
 
+/** Skills missed in the unit and not yet won in a mastery round, whether or not a fresh variant is left to ask. */
+export function unresolvedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[]): string[] {
+  const missed = new Set(lessonTries.filter((t) => !t.correct).map((t) => t.skillId));
+  const won = new Set(masteryTries.filter((t) => t.correct).map((t) => t.skillId));
+  return unit.skills.map((s) => s.id).filter((id) => missed.has(id) && !won.has(id));
+}
+
 /** Up to 2 fresh bank steps per missed skill, in bank order. A step the learner has already answered in a mastery round is never asked again; a skill with none left is skipped. */
 export function pickRound(bank: Pick<LessonVersion, "body">, missed: string[], seenStepIds: string[]): QuestionStep[] {
   const seen = new Set(seenStepIds);
