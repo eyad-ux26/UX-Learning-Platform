@@ -4,7 +4,7 @@ import { C, D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCheck, IconText } from "../components/Icons";
 import { span } from "../lib/timeline";
-import { CaseChip, clipFrames, Field, Header, IntroCard, L, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Row, Screens, SideNote, Strike, TitleBand, Txt, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, Field, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Row, Screens, SideNote, Strike, TitleBand, Txt, v, Voice, wi } from "./p02";
 
 /*
  * P02-C09 re-edit: heu 9 "help users recognize, diagnose and recover from errors", 1084.4–1199.1 s. A bare "404"
@@ -66,6 +66,15 @@ export const C09: React.FC = () => {
       <SideNote y={250} text="جملتان لا تقولان ما الخطأ" p={span(f, v(B.wordy), v(B.wordy + 6))} warn icon={wi(IconAlert)} />
       <SideNote y={110} text="نبرة إيجابية، بلا لوم للمستخدم" p={span(f, v(B.tone), v(END))} big icon={wi(IconCheck)} />
       <Strike r={phoneRect} p={(f >= v(B.raw + 3) && f < v(B.lang) ? Math.min(1, (f - v(B.raw + 3)) / 20) : 0) + (f >= v(B.wordy + 2) && f < v(B.wordy + 6) ? Math.min(1, (f - v(B.wordy + 2)) / 20) : 0) + (f >= v(B.tone + 1) && f < v(B.tone + 6) ? Math.min(1, (f - v(B.tone + 1)) / 20) : 0)} />
+      <Mark r={L(10, 190, 200, 90)} from={B.raw + 0.5} to={B.lang} label="404؟" side="below" />
+      <Mark r={L(14, 212, 272, 30)} from={B.words} to={B.recover} label="لغة المستخدم" side="below" />
+      <Mark r={L(14, 280, 272, 152)} from={B.recover + 0.5} to={B.friendly} label="Recovery" side="below" />
+      <Mark r={L(14, 74, 272, 130)} from={B.friendly} to={B.links} label="رسم لطيف" side="below" />
+      <Mark r={L(14, 444, 120, 28)} from={B.links} to={B.short} label="خريطة الموقع" side="below" />
+      <Mark r={L(14, 258, 272, 100)} from={B.wordy + 0.5} to={B.wordy + 6} label="طويلة ومبهمة" side="below" />
+      <Mark r={L(14, 258, 272, 64)} from={B.wordy + 6.5} to={B.tone} label="قصيرة وواضحة" side="below" />
+      <Mark r={L(14, 258, 272, 44)} from={B.tone + 0.5} to={B.tone + 6} label="لوم" side="below" />
+      <Mark r={L(14, 258, 272, 64)} from={B.tone + 6.5} to={END} label="نبرة إيجابية" side="below" />
     </>
   );
   return (
