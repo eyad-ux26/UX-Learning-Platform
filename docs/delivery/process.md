@@ -20,7 +20,7 @@ Then the **admin panel, waterfall**: requirements (sprint 6) → design of the w
 
 ## Fixed technical decisions
 
-From the stack review on 1 November 2026 (https://claude.ai/artifact/9g1GkaEXm2mip4BsMPof8F): the stack stays Next.js and Supabase. Supabase runs in Frankfurt (eu-central-1). On 3 November 2026 Eyad moved hosting from Vercel to Cloudflare Workers (OpenNext adapter, Workers Paid, placement near Frankfurt, daily job as a Cron Trigger). Vercel stays as a fallback until the beta. Every verify plan runs the tech gate in `definition-of-done.md`.
+From the stack review on 1 November 2026 (https://claude.ai/artifact/9g1GkaEXm2mip4BsMPof8F): the stack stays Next.js and Supabase. Supabase runs in Frankfurt (eu-central-1). On 3 November 2026 Eyad moved hosting from Vercel to Cloudflare Workers (OpenNext adapter, free plan for testing and Workers Paid before the beta, placement near Frankfurt, daily job as a Cron Trigger). Vercel stays as a fallback until the beta. Every verify plan runs the tech gate in `definition-of-done.md`.
 
 ## Gates
 
