@@ -25,6 +25,12 @@ for (let guard = 0; guard < 60; guard++) {
     // pick the first open answer (dimmed or locked ones are skipped) with the keyboard, then press Check with the keyboard
     const first = await tabUntil((a) => !a.locked && (a.cls.includes("choice") || a.role === "radio" || a.role === "checkbox" || a.cls.includes("opt")));
     if (first) { await page.keyboard.press("Space"); }
+    // a step that asks how sure the learner is keeps Check disabled until one is picked: do that with the keyboard too
+    if (await page.locator(".conf .chip").count() && !(await page.locator(".conf .chip.is-selected").count())) {
+      const chip = await tabUntil((a) => a.cls.includes("chip"));
+      if (!chip) { console.log("FAIL: could not reach the confidence choices with Tab"); process.exit(1); }
+      await page.keyboard.press("Space");
+    }
     await page.evaluate(() => (document.activeElement)?.blur?.());
     const c = await tabUntil((a) => /^(Check|تحقّق|تحقق)/.test(a.text));
     if (!c) { console.log("FAIL: could not reach Check with Tab"); process.exit(1); }
