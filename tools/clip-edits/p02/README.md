@@ -20,7 +20,7 @@ slides with an example product drawn in the P14 style, so the look, intro card, 
 
 ## Differences from P14
 
-- The course has several trainers, so the camera tag reads «مدرّب UXGate» (`PRESENTER` in `p14.tsx`), not a name.
+- The camera has no name tag (the course has several trainers), and `clipcut.py` crops the camera around the trainer's face so he sits in the centre.
 - `p02.tsx` adds `Screens` (cross-fading phone screens by voice time), `Tap`, `Row`, `Txt` and `Pic`.
 - No silent gaps are cut yet (`cuts.ts` is empty).
 
