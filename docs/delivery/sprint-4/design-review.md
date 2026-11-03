@@ -4,6 +4,8 @@
 
 ## Verdict
 
+**Approved by Eyad on 3 November 2026** (canvas v53, draft PR #67). The privacy and terms text isn't approved yet; Eyad is revising it at https://claude.ai/artifact/7J7vyELaFbJkptMRc13zBc, so the build uses placeholder legal text until he signs it off. Build brief: [build-brief.md](build-brief.md).
+
 **Ready for Eyad's approval** (canvas v52, PR #67 commit 1d73c60, with calls 5 and 6 and the delete undo copy applied). All 11 brief items are delivered in mobile and desktop, EN light and AR night. The Google button now follows Google's own brand style, which Google requires.
 
 ## Product calls on the design's assumptions (PM, 2 Nov)

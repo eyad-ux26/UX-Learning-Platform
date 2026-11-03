@@ -47,11 +47,11 @@ Daily goal and streak with freezes, skill states and badges, review queue and re
 
 ### Slice 4 · Account, notifications and public site · design sprint 4 · build sprint 5
 
-Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), privacy and terms pages (needed for Google brand verification), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, EN-24, appeals (learner side). Design brief: [sprint-4/design-brief.md](sprint-4/design-brief.md).
+Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), privacy and terms pages (needed for Google brand verification), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, EN-24, appeals (learner side). Design ✓ (Eyad, 3 Nov). Design brief: [sprint-4/design-brief.md](sprint-4/design-brief.md); build brief: [sprint-4/build-brief.md](sprint-4/build-brief.md).
 
 ### Slice 5 · Subscriptions · design sprint 5 · build sprint 6
 
-Pricing, paywall, checkout result, billing and plan management, cancel and refund request, billing emails. Paymob and Paddle in test mode. Stories: EN-15 to EN-18.
+Pricing, paywall, checkout result, billing and plan management, cancel and refund request, billing emails. Paymob and Paddle in test mode. Stories: EN-15 to EN-18. Design brief: [sprint-5/design-brief.md](sprint-5/design-brief.md).
 
 ### Sprint 7 · Web app release candidate
 
