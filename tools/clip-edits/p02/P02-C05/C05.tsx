@@ -4,7 +4,7 @@ import { C, D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCalendar, IconCheck } from "../components/Icons";
 import { span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, PhoneFrame, phoneRect, Presenter, RecapCard, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Presenter, RecapCard, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi } from "./p02";
 
 /*
  * P02-C05 re-edit: heu 5 "error prevention", 351.9–471.3 s. A check-in calendar that greys out past days, so a slipped
@@ -65,6 +65,10 @@ export const C05: React.FC = () => {
       <SideNote y={110} text="كل الأيام بالأسود: يختار 10 يوليو" p={span(f, v(B.black), v(B.door))} warn icon={wi(IconAlert)} />
       <SideNote y={110} text="حدِّد ما يمكن اختياره، فتمنع الزلّات والأخطاء" p={span(f, v(B.door), v(END))} big icon={wi(IconCheck)} />
       <Strike r={phoneRect} p={f >= v(B.mistake) && f < v(B.door) ? Math.min(1, (f - v(B.mistake)) / 20) : 0} />
+      <Mark r={L(14, 140, 272, 124)} from={B.disabled + 0.5} to={B.example + 6} label="Disabled" side="below" />
+      <Mark r={L(p14.x - 20, p14.y - 20, 40, 40)} from={B.tap14 + 0.3} to={B.noResp + 6} label="لا يستجيب" side="below" />
+      <Mark r={L(14, 76, 272, 30)} from={B.august} to={B.black} label="يوليو، لا أغسطس" side="below" />
+      <Mark r={L(p10.x - 20, p10.y - 20, 40, 40)} from={B.black + 6.5} to={B.door} label="10 يوليو" side="below" />
       <Tap at={B.tap14} x={p14.x} y={p14.y} />
       <Tap at={B.black + 6} x={p10.x} y={p10.y} />
     </>

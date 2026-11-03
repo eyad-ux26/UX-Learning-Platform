@@ -142,7 +142,6 @@ export const Presenter: React.FC<{ cam: string; hide?: number }> = ({ cam, hide 
         <Img src={staticFile(img)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
       </Sequence>
     ))}
-    <div dir="rtl" style={{ position: "absolute", right: 8, bottom: 8, height: 30, padding: "0 12px", borderRadius: 999, background: "rgba(23,26,33,0.78)", color: "#FFFFFF", fontSize: 17, fontWeight: 600, display: "flex", alignItems: "center", fontFamily: FONT }}>{PRESENTER}</div>
   </div>
 );
 

@@ -6,7 +6,7 @@ detected camera modes. The source shows the trainer either full frame or in a bo
 The camera track crops the box on slides, scales the full frame otherwise, and holds the last good frame over
 slides that carry no camera.
 """
-import json, subprocess, sys
+import json, os, subprocess, sys
 from pathlib import Path
 import numpy as np
 
@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 SRC = Path(r"D:\Eyad\UX Learning Platform\Video Courses\Usability Heuristics")
 BOX = (1414, 0, 506, 334)  # x, y, w, h of the camera box on slides
 FPS_SCAN = 5
-W, H = 480, 310
+W, H = 472, 320  # the presenter box ratio (236x160)
 FULL = ""
 
 
@@ -34,6 +34,40 @@ def mode(f):
         box = f[0:int(334 * s), int(1402 * s):].mean(axis=2)
         return "box" if box.std() > 25 and box.mean() < 200 else "gap"
     return "full"
+
+
+_CASCADE = None
+
+
+def face_crop(src, a, t0, t1, region):
+    """A crop (w:h:x:y in source pixels) inside `region` that centres the trainer's face, at the presenter ratio."""
+    global _CASCADE
+    import cv2
+    if _CASCADE is None:
+        _CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    rx, ry, rw, rh = region
+    found = []
+    for k in range(6):
+        t = a + t0 + (t1 - t0) * (k + 0.5) / 6
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{t:.3f}", "-i", str(src), "-frames:v", "1", "-vf",
+                              f"crop={rw}:{rh}:{rx}:{ry}", "-f", "rawvideo", "-pix_fmt", "gray", "-"], capture_output=True).stdout
+        if len(raw) != rw * rh:
+            continue
+        img = np.frombuffer(raw, np.uint8).reshape(rh, rw)
+        faces = _CASCADE.detectMultiScale(img, 1.1, 5, minSize=(rh // 8, rh // 8))
+        if len(faces):
+            x, y, w, h = max(faces, key=lambda r: r[2] * r[3])
+            found.append((x + w / 2, y + h / 2, h))
+    if not found:
+        return None
+    cx, cy, fh = (float(np.median([f[i] for f in found])) for i in range(3))
+    h = min(rh, fh * float(os.environ.get("ZOOM", "2.3")))
+    w = h * W / H
+    if w > rw:
+        w = rw; h = w * H / W
+    x = min(max(cx - w / 2, 0), rw - w)
+    y = min(max(cy - h * 0.42, 0), rh - h)
+    return f"{int(w)}:{int(h)}:{int(rx + x)}:{int(ry + y)}"
 
 
 def segments(modes, step):
@@ -75,7 +109,10 @@ def main():
         if m == "gap":
             parts[-1] = parts[-1].replace(f"[v{i - 1}]", "") + f",tpad=stop_mode=clone:stop_duration={t1 - t0:.3f}[v{i - 1}]"
             continue
-        crop = f"crop={BOX[2]}:{BOX[3]}:{BOX[0]}:{BOX[1]}," if m == "box" else (f"crop={FULL}," if FULL else "")
+        region = BOX if m == "box" else (tuple(int(n) for n in [FULL.split(":")[2], FULL.split(":")[3], FULL.split(":")[0], FULL.split(":")[1]]) if FULL else (0, 0, 1920, 1080))
+        fc_ = face_crop(src, a, t0, t1, region)
+        crop = f"crop={fc_}," if fc_ else (f"crop={BOX[2]}:{BOX[3]}:{BOX[0]}:{BOX[1]}," if m == "box" else (f"crop={FULL}," if FULL else ""))
+        print(f"  {m} {t0:.1f}-{t1:.1f}: {crop or 'full frame'}", flush=True)
         parts.append(f"[0:v]trim=start={t0:.3f}:end={t1:.3f},setpts=PTS-STARTPTS,{crop}scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},setsar=1,fps=30[v{i}]")
         labels.append(f"[v{i}]")
     fc = ";".join(parts) + ";" + "".join(labels) + f"concat=n={len(labels)}:v=1:a=0[out]"

@@ -4,7 +4,7 @@ import { C, D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCheck, IconText, IconSearch } from "../components/Icons";
 import { span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Screens, SideNote, Strike, TitleBand, Txt, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi } from "./p02";
 
 /*
  * P02-C10 re-edit: heu 10 "help and documentation", 919.8–1095.3 s. A help article built for scanning (breadcrumb,
@@ -93,6 +93,18 @@ export const C10: React.FC = () => {
       <SideNote y={110} text="بحث بارز بحدود وأولوية بصرية" p={span(f, v(B.good), v(END))} big icon={wi(IconCheck)} />
       <SideNote y={250} text="أبرِز الكلمة التي بحث بها" p={span(f, v(B.highlight), v(END))} />
       <Strike r={phoneRect} p={(f >= v(B.bad + 2) && f < v(B.media) ? Math.min(1, (f - v(B.bad + 2)) / 20) : 0) + (f >= v(B.faint + 2) && f < v(B.good) ? Math.min(1, (f - v(B.faint + 2)) / 20) : 0)} />
+      <Mark r={L(14, 98, 272, 30)} from={2} to={B.chunk} label="سؤال واحد" side="below" />
+      <Mark r={L(14, 160, 272, 160)} from={B.chunk} to={B.hier} label="Chunk" side="below" />
+      <Mark r={L(150, 160, 136, 150)} from={B.keys} to={B.dest} label="كلمات بلون مختلف" side="below" />
+      <Mark r={L(14, 160, 272, 160)} from={B.bullets} to={B.crumb} label="خطوات مرقّمة" side="below" />
+      <Mark r={L(14, 66, 272, 24)} from={B.crumb} to={B.bad} label="Breadcrumb" side="below" />
+      <Mark r={L(14, 72, 272, 300)} from={B.scan} to={B.media} label="نص متصل" side="below" />
+      <Mark r={L(14, 98, 272, 140)} from={B.media + 1} to={B.text} label="فيديو" side="below" />
+      <Mark r={L(14, 250, 272, 120)} from={B.text} to={B.search} label="الخطوات مكتوبة" side="below" />
+      <Mark r={L(14, 76, 272, 50)} from={B.faint} to={B.good} label="تباين منخفض" side="below" />
+      <Mark r={L(14, 76, 272, 50)} from={B.good + 1} to={B.highlight} label="بحث واضح" side="below" />
+      <Mark r={L(14, 150, 272, 176)} from={B.highlight + 1} to={END} label="الكلمة مُبرزة" side="below" />
+      <Tap at={B.highlight - 1} x={150} y={100} />
     </>
   );
   return (

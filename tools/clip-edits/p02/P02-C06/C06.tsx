@@ -4,7 +4,7 @@ import { C, D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCheck, IconColumns, IconEye } from "../components/Icons";
 import { span, tween } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Row, Screens, SideNote, Strike, TitleBand, Txt, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Row, Screens, SideNote, Strike, TitleBand, Txt, v, Voice, wi } from "./p02";
 
 /*
  * P02-C06 re-edit: heu 6 "recognition rather than recall", 224.5–369.5 s. Comparing phones page by page (recall),
@@ -76,6 +76,13 @@ export const C06: React.FC = () => {
       <SideNote y={250} text="أيّ عمود لأيّ هاتف؟ يصعد وينزل" p={span(f, v(B.battery), v(B.plans))} warn />
       <SideNote y={110} text="العناوين ثابتة أثناء التمرير" p={span(f, v(B.fixed), v(END))} big icon={wi(IconCheck)} />
       <Strike r={phoneRect} p={f >= v(B.updown + 4) && f < v(B.plans) ? Math.min(1, (f - v(B.updown + 4)) / 20) : 0} />
+      <Mark r={L(14, 292, 272, 44)} from={B.phones} to={B.ways} label="الكاميرا" />
+      <Mark r={L(14, 344, 272, 44)} from={B.ways + 2} to={B.recall} label="البطارية" />
+      <Mark r={L(14, 292, 272, 96)} from={B.recall + 0.5} to={B.second} label="ويتذكّر الأول" side="below" />
+      <Mark r={L(10, 70, 280, 44)} from={B.table} to={B.look} label="أسماء الهواتف" side="below" />
+      <Mark r={L(10, 114, 280, 104)} from={B.look} to={B.problem} label="يرى ويقارن" side="below" />
+      <Mark r={L(10, 70, 280, 52)} from={B.battery} to={B.updown} label="أيّ عمود؟" side="below" />
+      <Mark r={L(10, 70, 280, 44)} from={B.fixed} to={END} label="ثابت" side="below" />
     </>
   );
   return (

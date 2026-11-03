@@ -4,7 +4,7 @@ import { D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconBack, IconCheck } from "../components/Icons";
 import { span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, Pic, Presenter, RecapCard, Row, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi, L, phoneRect, PhoneFrame } from "./p02";
+import { CaseChip, clipFrames, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Pic, Presenter, RecapCard, Row, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi } from "./p02";
 
 /*
  * P02-C03 re-edit: heu 3 "user control and freedom", 90.0–196.8 s. Back from a reviews page returns to the product
@@ -95,6 +95,17 @@ export const C03: React.FC = () => {
       <SideNote y={110} text="Back أعاده إلى أول صفحة البحث" p={span(f, v(B.back), v(END))} warn icon={wi(IconAlert)} />
       <SideNote y={250} text="ضاعت النتائج والفلاتر، فيبحث من جديد" p={span(f, v(B.lost), v(END))} warn />
       <Strike r={phoneRect} p={span(f, v(B.lost + 2), v(END)) * Math.min(1, (f - v(B.lost + 2)) / 20)} />
+      <Mark r={L(14, 300, 272, 28)} from={1.5} to={B.reviews + 0.3} label="483 تقييمًا" />
+      <Mark r={L(8, 8, 48, 44)} from={B.good - 2.5} to={B.good - 0.7} label="Back" side="below" />
+      <Mark r={L(14, 74, 272, 190)} from={B.good} to={B.other} label="المنتج نفسه" side="below" />
+      <Mark r={L(8, 8, 48, 44)} from={B.other - 0.5} to={B.other + 1.2} label="Back" side="below" />
+      <Mark r={L(14, 70, 272, 160)} from={B.other + 1.5} to={B.job} label="الرئيسية!" side="below" />
+      <Mark r={L(8, 8, 48, 44)} from={B.one} to={B.uc} label="خطوة واحدة" side="below" />
+      <Mark r={L(14, 118, 272, 180)} from={B.flights + 0.5} to={B.flights + 3.8} label="البحث" side="below" />
+      <Mark r={L(14, 68, 272, 34)} from={B.flights + 4.3} to={B.book - 2} label="الفلاتر" side="below" />
+      <Mark r={L(14, 190, 272, 64)} from={B.book - 2} to={B.book - 1.5} label="الرحلة" />
+      <Mark r={L(8, 8, 48, 44)} from={B.back - 2.2} to={B.back - 0.6} label="Back" side="below" />
+      <Mark r={L(14, 118, 272, 180)} from={B.back} to={B.lost + 2} label="بحث فارغ" side="below" />
       <Strike r={L(0, 0, 300, 582)} p={f > v(B.other + 3) && f < v(B.job) ? Math.min(1, (f - v(B.other + 3)) / 20) : 0} />
       <Tap at={B.reviews} x={150} y={316} />
       <Tap at={B.good - 1} x={30} y={30} />

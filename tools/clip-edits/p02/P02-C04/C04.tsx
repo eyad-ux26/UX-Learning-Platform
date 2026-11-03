@@ -4,7 +4,7 @@ import { C, D } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCheck, IconColumns } from "../components/Icons";
 import { span } from "../lib/timeline";
-import { CaseChip, clipFrames, Header, IntroCard, PhoneFrame, phoneRect, Presenter, RecapCard, Row, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, Header, IntroCard, L, Mark, PhoneFrame, phoneRect, Presenter, RecapCard, Row, Screens, SideNote, Strike, Tap, TitleBand, Txt, v, Voice, wi } from "./p02";
 
 /*
  * P02-C04 re-edit: heu 4 "consistency and standards", 992.3–1105.3 s. A multi-step listing form moves Next, Back and
@@ -49,6 +49,14 @@ export const C04: React.FC = () => {
       <SideNote y={290} text="والخروج ثابت في الأعلى، بأولوية أقل" p={span(f, v(T.exit), v(END))} />
       <SideNote y={430} text="والـ Pattern نفسه في كل مكان يُستخدم فيه" p={span(f, v(T.reuse), v(END))} />
       <Strike r={phoneRect} p={f >= v(T.oops + 3) && f < v(T.fix) ? Math.min(1, (f - v(T.oops + 3)) / 20) : 0} />
+      <Mark r={L(10, 470, 86, 48)} from={T.form + 2} to={T.step2} label="التالي" />
+      <Mark r={L(10, 470, 86, 48)} from={T.step2 + 0.4} to={T.oops - 0.3} label="رجوع هنا الآن" />
+      <Mark r={L(104, 470, 86, 48)} from={T.step2 + 2} to={T.oops - 0.3} label="التالي" side="below" />
+      <Mark r={L(10, 470, 86, 48)} from={T.oops + 0.2} to={T.oops + 4} label="ضغط رجوع!" />
+      <Mark r={L(204, 470, 86, 48)} from={T.fix + 1} to={T.exit} label="التالي ثابت" />
+      <Mark r={L(14, 66, 80, 26)} from={T.exit} to={T.reuse} label="خروج" side="below" />
+      <Tap at={T.fix + 4} x={247} y={494} />
+      <Tap at={T.fix + 9} x={247} y={494} />
       <Tap at={T.oops} x={54} y={494} />
     </>
   );
