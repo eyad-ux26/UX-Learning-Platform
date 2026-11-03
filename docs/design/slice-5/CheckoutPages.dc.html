@@ -56,7 +56,7 @@ a{color:#005F99}a:hover{color:#003F66}
               </sc-for>
             </div>
             <sc-if value="{{codeOn}}" hint-placeholder-val="{{false}}">
-              <div class="notice is-info"><span class="ph ph-tag" aria-hidden="true"></span><span class="grow"><b>{{c.codeT}}</b><span>{{r.codeBody}}</span><span class="t-small ink-2" style="font-size: 12.5px;">{{c.oneDiscount}}</span></span><a href="#remove" class="btn btn-ghost btn-sm" style="flex: none; padding: 0 10px;">{{c.remove}}</a></div>
+              <div class="notice is-info"><span class="{{disc.icon}}" aria-hidden="true"></span><span class="grow"><b>{{disc.t}}</b><span>{{disc.body}}</span><span class="t-small ink-2" style="font-size: 12.5px;">{{c.oneDiscount}}</span></span><sc-if value="{{disc.canRemove}}" hint-placeholder-val="{{true}}"><a href="#remove" class="btn btn-ghost btn-sm" style="flex: none; padding: 0 10px;">{{c.remove}}</a></sc-if></div>
             </sc-if>
             <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
               <div class="facts"><sc-for list="{{c.facts}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p></sc-for></div>
@@ -225,7 +225,7 @@ a{color:#005F99}a:hover{color:#003F66}
         <h1 class="pg-title">{{c.reviewTitle}}</h1>
         <div class="sum">
           <div class="sum-row"><span>{{c.sumPlan}}</span><b>{{selName}}</b></div>
-          <sc-if value="{{codeOn}}" hint-placeholder-val="{{false}}"><div class="sum-row"><span>{{c.sumCode}}</span><b>FOUNDING · −30%</b></div></sc-if>
+          <sc-if value="{{codeOn}}" hint-placeholder-val="{{false}}"><div class="sum-row"><span>{{c.sumCode}}</span><b>{{disc.sum}}</b></div></sc-if>
           <div class="sum-row total"><span>{{c.sumToday}}</span><b><span class="{{pc}}">{{selPrice}}</span></b></div>
           <div class="sum-row"><span>{{c.sumThen}}</span><b>{{selThen}}</b></div>
           <div class="sum-row"><span>{{c.sumCountry}}</span><b>{{r.country}} · <a href="#country" style="font-size: 14px;">{{c.change}}</a></b></div>
@@ -307,25 +307,33 @@ a{color:#005F99}a:hover{color:#003F66}
         <h2 id="ck-ov-{{lang}}-{{theme}}-{{device}}" style="text-align: center;">{{c.stTitle}}</h2>
         <p class="t-small ink-2" style="text-align: center; font-size: 14.5px;">{{c.stBody}}</p>
         <div class="field"><label for="uni-{{lang}}-{{theme}}-{{device}}">{{c.stEmail}}</label><div class="input is-focus"><span class="ph ph-mail" aria-hidden="true"></span><input id="uni-{{lang}}-{{theme}}-{{device}}" type="email" dir="ltr" value="yasmin.adel@cu.edu.eg"></div><span class="help">{{c.stHelp}}</span></div>
-        <a href="#id" class="pg-link" style="min-height: 40px;"><span class="ph ph-student" aria-hidden="true"></span>{{c.stId}}</a>
+        <p class="t-small ink-3" style="font-size: 12.5px;">{{c.stDomains}}</p>
         <div class="notice is-info" style="padding: 10px 12px;"><span class="ph ph-tag" aria-hidden="true"></span><span class="grow"><span>{{r.stPrice}}</span></span></div>
         <a href="#send" class="btn btn-primary btn-lg btn-block press">{{c.stGo}}</a>
+        <a href="#close" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.notNow}}</a>
+      </sc-if>
+      <sc-if value="{{ov.studentId}}" hint-placeholder-val="{{false}}">
+        <h2 id="ck-ov-{{lang}}-{{theme}}-{{device}}">{{c.idTitle}}</h2>
+        <p class="t-small ink-2" style="font-size: 14.5px;">{{c.idBody}}</p>
+        <a href="#upload" class="snap" style="align-items: center; text-align: center; padding: 22px 16px; color: var(--ink); text-decoration: none;"><span class="ph ph-student" style="font-size: 34px; color: var(--link);" aria-hidden="true"></span><b style="font-size: 15px;">{{c.idDrop}}</b><span class="t-small ink-2" style="font-size: 13px;">{{c.idFormats}}</span></a>
+        <div class="notice is-info" style="padding: 10px 12px;"><span class="ph ph-shield-check" aria-hidden="true"></span><span class="grow"><span>{{c.idPrivacy}}</span></span></div>
+        <button class="btn btn-primary btn-lg btn-block is-disabled" type="button" aria-disabled="true">{{c.idGo}}</button>
         <a href="#close" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.notNow}}</a>
       </sc-if>
     </section>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["paywallUnit","paywallCert","plans","plansCode","studentAsk","handoffPaymob","handoffPaddle","returning","resultSuccess","resultPending","resultFailed","resultCancelled","mapFree","endFree","profileFree"],"default":"plans"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["paywallUnit","paywallCert","plans","plansCode","plansWelcome","studentAsk","studentId","handoffPaymob","handoffPaddle","returning","resultSuccess","resultPending","resultFailed","resultCancelled","mapFree","endFree","profileFree"],"default":"plans"},"$preview":{"width":390,"height":844}}'>
 /* Slice 5 · Paywall and plans (EN-15, spec §4.8), checkout hand-off and results (EN-16, EN-17), locked states for a free learner (EN-15).
    Prices approved by Eyad on 2 Nov 2026: Egypt 249 / 2,249 EGP, Gulf $8 / $72, other Arab countries $5 / $45. Student 40%, founding member 30% on annual (year 1), welcome back 40% on annual (2 years). */
 const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', lock: '/_blob/7cbe7a77e505c37be737172ca25dd102', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b',
   cert: '/_blob/d9eda267550722d49fbe378d64d9eb01', payment: '/_blob/771c73990dbdac0c4c60019a15939cef', gift: '/_blob/69f4ee2e21acf9572d40c16983889570', calendar: '/_blob/f042bfb4689d32362320ee48e15ea560', shield: '/_blob/296b31e6708271de02299aaf9fce4de9' };
 /* m: monthly, y: annual, ym: annual per month, save: a year on annual, st: student monthly / annual, fy: founding first year */
 const PRICE = {
-  eg: { m: 249, y: 2249, ym: 187, save: 739, stm: 149, sty: 1349, fy: 1574, usd: false, prov: 'paymob' },
-  gulf: { m: 8, y: 72, ym: 6, save: 24, stm: 4.8, sty: 43.2, fy: 50.4, usd: true, prov: 'paddle' },
-  arab: { m: 5, y: 45, ym: 3.75, save: 15, stm: 3, sty: 27, fy: 31.5, usd: true, prov: 'paddle' }
+  eg: { m: 249, y: 2249, ym: 187, save: 739, stm: 149, sty: 1349, fy: 1574, wb: 1349, usd: false, prov: 'paymob' },
+  gulf: { m: 8, y: 72, ym: 6, save: 24, stm: 4.8, sty: 43.2, fy: 50.4, wb: 43.2, usd: true, prov: 'paddle' },
+  arab: { m: 5, y: 45, ym: 3.75, save: 15, stm: 3, sty: 27, fy: 31.5, wb: 27, usd: true, prov: 'paddle' }
 };
 const money = (lang, p, n) => {
   if (p.usd) return '$' + (Number.isInteger(n) ? String(n) : n.toFixed(2));
@@ -344,7 +352,7 @@ const C = {
     fp: [['Unit 1 of every path', 1], ['Review and practice of your skills', 1], ['Streak, XP, badges and leaderboard', 1], ['Every unit after Unit 1, in all 14 paths', 0], ['A certificate for each path you finish', 0]],
     included: 'included', notIncluded: 'not included',
     codeT: 'Founding member · FOUNDING', oneDiscount: 'One discount per account. Discounts don’t add up.', remove: 'Remove',
-    codeLabel: 'Have a code?', codeKinds: 'Founding member or welcome back', codePh: 'Enter your code', apply: 'Apply',
+    codeLabel: 'Have a code?', codeKinds: 'Founding member', codePh: 'Enter your code', apply: 'Apply',
     studentT: 'Student? 40% off', studentS: 'With a university email or student ID',
     yourChoice: 'Your choice', toPay: 'Continue to payment',
     thenM: (x) => 'Then ' + x + ' every month. Cancel any time.', thenY: (x) => 'Then ' + x + ' every year. Cancel any time.', thenFy: (x) => 'Then ' + x + ' a year from the second year.',
@@ -366,7 +374,11 @@ const C = {
     payCtaM: (x) => 'Continue · ' + x + ' a month', payCtaY: (x) => 'Continue · ' + x + ' a year', planDetails: 'Plan details', notNow: 'Not now',
     /* student */
     stTitle: 'Student price: 40% off', stBody: 'For university students in any country. We check once, then again each year.',
-    stEmail: 'University email', stHelp: 'We send a link to this address. It works for 24 hours.', stId: 'No university email? Upload your student ID', stGo: 'Send the link',
+    stEmail: 'University email', stHelp: 'We send a link to this address. It works for 24 hours.', stGo: 'Send the link',
+    stDomains: 'University addresses ending in .edu, .edu.eg, .edu.sa, .ac.ae and similar count. No university email? Write to support@uxgate.org.',
+    idTitle: 'Upload your student ID', idBody: 'For students without a university email. A person from the UXGate team checks it within 2 working days.', idDrop: 'Add a photo or PDF of your student ID', idFormats: 'JPG, PNG or PDF, up to 5 MB. Your name, university and this year’s date must show.', idPrivacy: 'We use the file only for this check and delete it after 30 days.', idGo: 'Send for checking',
+    wbT: 'Welcome back · 40% off annual', wbBody: (x, y) => 'Welcome back, Yasmin. The annual plan is ' + x + ' a year for 2 years, instead of ' + y + '. It’s already applied.', wbThen: (x) => 'For 2 years, then ' + x + ' a year', wbSum: 'Welcome back · −40%',
+    fdT: 'Founding member · FOUNDING', fdSum: 'FOUNDING · −30%',
     /* hand-off */
     secure: 'Secure checkout', reviewTitle: 'Check and pay', sumPlan: 'Plan', sumCode: 'Code', sumToday: 'You pay today', sumThen: 'After that', sumCountry: 'Billing country', change: 'Change',
     agree: 'By continuing, you agree to the', terms: 'Terms of use',
@@ -412,7 +424,7 @@ const C = {
     fp: [['الوحدة 1 من كل مسار', 1], ['مراجعة مهاراتك والتدرّب عليها', 1], ['السلسلة والنقاط والشارات ولوحة الصدارة', 1], ['كل الوحدات بعد الوحدة 1، في المسارات الـ14', 0], ['شهادة لكل مسار تُكمله', 0]],
     included: 'متاح', notIncluded: 'غير متاح',
     codeT: 'عضو مؤسس · FOUNDING', oneDiscount: 'خصم واحد لكل حساب، والخصومات لا تُجمع.', remove: 'إزالة',
-    codeLabel: 'لديك رمز خصم؟', codeKinds: 'عضو مؤسس أو مرحبًا بعودتك', codePh: 'اكتب الرمز', apply: 'تطبيق',
+    codeLabel: 'لديك رمز خصم؟', codeKinds: 'عضو مؤسس', codePh: 'اكتب الرمز', apply: 'تطبيق',
     studentT: 'طالب؟ خصم 40%', studentS: 'ببريد جامعي أو بطاقة طالب',
     yourChoice: 'اختيارك', toPay: 'تابع إلى الدفع',
     thenM: (x) => 'ثم ' + x + ' كل شهر. ألغِ في أي وقت.', thenY: (x) => 'ثم ' + x + ' كل سنة. ألغِ في أي وقت.', thenFy: (x) => 'ثم ' + x + ' سنويًا من السنة الثانية.',
@@ -431,7 +443,11 @@ const C = {
     pwCertOver: 'الشهادات', pwCertTitle: 'الشهادات تأتي مع Pro', pwCertBody: 'شهادة المسار تُثبت أنك تتقن كل مهاراته. والوحدات من 2 إلى 5، حيث معظم هذه المهارات، ضمن Pro.',
     payCtaM: (x) => 'تابع · ' + x + ' شهريًا', payCtaY: (x) => 'تابع · ' + x + ' سنويًا', planDetails: 'تفاصيل الخطة', notNow: 'ليس الآن',
     stTitle: 'سعر الطلاب: خصم 40%', stBody: 'لطلاب الجامعات في أي دولة. نتحقّق مرة واحدة، ثم مرة كل سنة.',
-    stEmail: 'البريد الجامعي', stHelp: 'نرسل رابطًا إلى هذا العنوان، ويعمل لمدة 24 ساعة.', stId: 'ليس لديك بريد جامعي؟ ارفع بطاقة الطالب', stGo: 'أرسل الرابط',
+    stEmail: 'البريد الجامعي', stHelp: 'نرسل رابطًا إلى هذا العنوان، ويعمل لمدة 24 ساعة.', stGo: 'أرسل الرابط',
+    stDomains: 'تُقبل عناوين الجامعات التي تنتهي بـ .edu و.edu.eg و.edu.sa و.ac.ae وما يشبهها. ليس لديك بريد جامعي؟ راسلنا على support@uxgate.org.',
+    idTitle: 'ارفع بطاقة الطالب', idBody: 'للطلاب الذين ليس لديهم بريد جامعي. يراجعها شخص من فريق UXGate خلال يومَي عمل.', idDrop: 'أضف صورة أو ملف PDF لبطاقة الطالب', idFormats: 'JPG أو PNG أو PDF، حتى 5 ميجابايت. يجب أن يظهر اسمك وجامعتك وتاريخ هذا العام.', idPrivacy: 'نستخدم الملف لهذه المراجعة فقط، ونحذفه بعد 30 يومًا.', idGo: 'أرسل للمراجعة',
+    wbT: 'مرحبًا بعودتك · خصم 40% على السنوي', wbBody: (x, y) => 'مرحبًا بعودتك يا ياسمين. الخطة السنوية بسعر ' + x + ' سنويًا لمدة سنتين، بدلًا من ' + y + '. الخصم مطبّق بالفعل.', wbThen: (x) => 'لمدة سنتين، ثم ' + x + ' سنويًا', wbSum: 'مرحبًا بعودتك · −40%',
+    fdT: 'عضو مؤسس · FOUNDING', fdSum: 'FOUNDING · −30%',
     secure: 'دفع آمن', reviewTitle: 'راجع وادفع', sumPlan: 'الخطة', sumCode: 'الرمز', sumToday: 'تدفع اليوم', sumThen: 'بعد ذلك', sumCountry: 'دولة الدفع', change: 'تغيير',
     agree: 'بالمتابعة، أنت توافق على', terms: 'شروط الاستخدام',
     retBody: 'يستغرق هذا بضع ثوانٍ. أبقِ هذه الصفحة مفتوحة من فضلك.',
@@ -465,7 +481,7 @@ const C = {
     }
   }
 };
-const VIEWS = ['paywallUnit', 'paywallCert', 'plans', 'plansCode', 'studentAsk', 'handoffPaymob', 'handoffPaddle', 'returning', 'resultSuccess', 'resultPending', 'resultFailed', 'resultCancelled', 'mapFree', 'endFree', 'profileFree'];
+const VIEWS = ['paywallUnit', 'paywallCert', 'plans', 'plansCode', 'plansWelcome', 'studentAsk', 'studentId', 'handoffPaymob', 'handoffPaddle', 'returning', 'resultSuccess', 'resultPending', 'resultFailed', 'resultCancelled', 'mapFree', 'endFree', 'profileFree'];
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = { period: null }; }
   renderVals() {
@@ -481,23 +497,25 @@ class Component extends DCLogic {
     const P = PRICE[region]; const $ = (n) => money(lang, P, n);
     const isDesk = device === 'desktop';
 
-    const is = { plans: view === 'plans' || view === 'plansCode' || view === 'studentAsk', map: view === 'mapFree' || view === 'paywallUnit', profile: view === 'profileFree' || view === 'paywallCert',
+    const is = { plans: ['plans', 'plansCode', 'plansWelcome', 'studentAsk', 'studentId'].indexOf(view) >= 0, map: view === 'mapFree' || view === 'paywallUnit', profile: view === 'profileFree' || view === 'paywallCert',
       end: view === 'endFree', handoff: view === 'handoffPaymob' || view === 'handoffPaddle', returning: view === 'returning', result: view.indexOf('result') === 0 };
-    const ov = { pay: view === 'paywallUnit' || view === 'paywallCert', student: view === 'studentAsk' };
-    ov.any = ov.pay || ov.student;
+    const ov = { pay: view === 'paywallUnit' || view === 'paywallCert', student: view === 'studentAsk', studentId: view === 'studentId' };
+    ov.any = ov.pay || ov.student || ov.studentId;
 
-    const codeOn = view === 'plansCode';
+    const wb = view === 'plansWelcome';
+    const codeOn = view === 'plansCode' || wb;
     const defPeriod = (codeOn || view === 'handoffPaddle') ? 'y' : 'm';
     const period = this.state.period || defPeriod;
-    const yPrice = codeOn ? P.fy : P.y;
+    const yPrice = wb ? P.wb : (codeOn ? P.fy : P.y);
+    const disc = wb ? { t: c.wbT, body: c.wbBody($(P.wb), $(P.y)), canRemove: false, icon: 'ph ph-sparkle', sum: c.wbSum } : { t: c.fdT, body: r.codeBody, canRemove: true, icon: 'ph ph-tag', sum: c.fdSum };
     const planCards = ['m', 'y'].map((k) => { const on = k === period; const y = k === 'y';
       return { name: y ? c.annual : c.monthly, price: $(y ? yPrice : P.m), per: y ? c.perYear : c.perMonth,
-        sub: y ? (codeOn ? c.thenYear($(P.y)) : c.annualSub($(P.ym))) : c.monthlySub, hasWas: y && codeOn, was: $(P.y),
+        sub: y ? (wb ? c.wbThen($(P.y)) : codeOn ? c.thenYear($(P.y)) : c.annualSub($(P.ym))) : c.monthlySub, hasWas: y && codeOn, was: $(P.y),
         hasSave: y && !codeOn, save: c.save($(P.save)), on: on ? 'true' : 'false', cls: 'plan-card press' + (on ? ' is-on' : ''), radio: 'radio' + (on ? ' is-on' : ''),
         pick: () => this.setState({ period: k }) }; });
     const selName = 'UXGate Pro · ' + (period === 'y' ? c.annual : c.monthly);
     const selPrice = period === 'y' ? $(yPrice) : $(P.m);
-    const selThen = period === 'y' ? (codeOn ? c.thenFy($(P.y)) : c.thenY($(P.y))) : c.thenM($(P.m));
+    const selThen = period === 'y' ? (wb ? c.wbThen($(P.y)) : codeOn ? c.thenFy($(P.y)) : c.thenY($(P.y))) : c.thenM($(P.m));
     const fpRows = c.fp.map(([label, free], i, arr) => { const last = i === arr.length - 1 ? ' fp-last' : '';
       return { label, kCls: 'fp-k' + last, fCls: last.trim(), pCls: 'is-pro' + last, fIc: free ? 'ph ph-check-circle-fill yes' : 'no', fAria: free ? c.included : c.notIncluded, pAria: c.included }; });
     const periodTabs = ['m', 'y'].map((k) => ({ label: k === 'y' ? c.annual + ' · ' + c.save($(P.save)) : c.monthly, on: k === period ? 'true' : 'false', cls: 'tab' + (k === period ? ' is-on' : ''), pick: () => this.setState({ period: k }) }));
@@ -525,7 +543,7 @@ class Component extends DCLogic {
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
-      pc: pcUsd, codeOn, codeVal: codeOn ? 'FOUNDING' : '', planCards, selName, selPrice, selThen, fpRows, periodTabs, payCta, pw, res,
+      pc: pcUsd, codeOn, disc, codeVal: view === 'plansCode' ? 'FOUNDING' : '', planCards, selName, selPrice, selThen, fpRows, periodTabs, payCta, pw, res,
       splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; max-width: 1120px;' : '',
       mapSplit: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px;' : '',
       laterUnits: [2, 3, 4].map((i) => ({ n: c.unitN(i + 1), title: c.units[i] })),

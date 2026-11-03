@@ -187,7 +187,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["billing","billingChange","billingExpiring","billingFailed","billingLapsed","cancelAsk","cancelDone","refundAsk","refundSent","refundLate"],"default":"billing"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["billing","billingChange","billingExpiring","billingFailed","billingLapsed","billingWallet","billingWalletLate","cancelAsk","cancelDone","refundAsk","refundSent","refundLate"],"default":"billing"},"$preview":{"width":390,"height":844}}'>
 /* Slice 5 · Plan and billing in Settings (EN-18), change plan, cancel (EN-18), refund request (EN-18, spec §4.8), payment problems (EN-16).
    Sample learner: Yasmin, monthly since 3 November 2026. Refunds: within 7 days of a charge, answered by the team. */
 const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', calendar: '/_blob/f042bfb4689d32362320ee48e15ea560' };
@@ -211,6 +211,9 @@ const C = {
     nExpT: 'Your card expires this month', nExpB: 'Your next charge is on 3 December. Update the card before then so Pro keeps going.', nExpAct: 'Update card', nExpAlt: 'Remind me later',
     nFailT: 'We couldn’t take this month’s payment', nFailB: 'Your bank declined the charge on 3 December. Nothing changes yet: Pro stays on until 10 December while we try again on 5 and 8 December.', nFailAct: 'Update card', nFailAlt: 'Try now',
     nLapT: 'Pro is paused', nLapB: 'We couldn’t take the payment by 10 December. Your progress, streak and badges are all kept, and Unit 1 of every path stays open.', nLapAct: 'Restart Pro',
+    nWalT: 'Pay for next month', nWalB: 'You pay with a mobile wallet, which can’t renew by itself. Pay 249 EGP by 3 December to keep Pro going. We emailed you a reminder too.', nWalAct: 'Pay with my wallet', nWalAlt: 'Use a card instead',
+    nWalLateT: 'This month isn’t paid yet', nWalLateB: 'Your month ended on 3 December. Pro stays on until 10 December, so you have a week to pay with your wallet. Your progress is safe either way.',
+    walletName: 'Mobile wallet •••• 4521', walletSub: 'Pays one month at a time', payBy: 'Pay by', due: 'Payment due', dueBy: 'Pay by 3 Dec',
     nCxT: 'Your plan won’t renew', nCxB: 'Pro stays on until 3 December 2026. Resume any time before then, and nothing changes.', nCxAct: 'Resume plan',
     /* cancel */
     cxLead: 'If you cancel, here is what happens:',
@@ -251,6 +254,9 @@ const C = {
     nExpT: 'تنتهي صلاحية بطاقتك هذا الشهر', nExpB: 'دفعتك التالية في 3 ديسمبر. حدّث البطاقة قبلها ليستمر Pro.', nExpAct: 'حدّث البطاقة', nExpAlt: 'ذكّرني لاحقًا',
     nFailT: 'لم نتمكّن من تحصيل دفعة هذا الشهر', nFailB: 'رفض البنك دفعة 3 ديسمبر. لن يتغيّر شيء الآن: يبقى Pro مفعّلًا حتى 10 ديسمبر، ونحاول مرة أخرى في 5 و8 ديسمبر.', nFailAct: 'حدّث البطاقة', nFailAlt: 'حاول الآن',
     nLapT: 'Pro متوقّف', nLapB: 'لم نتمكّن من تحصيل الدفعة حتى 10 ديسمبر. تقدّمك وسلسلتك وشاراتك كلها محفوظة، والوحدة 1 من كل مسار تبقى متاحة.', nLapAct: 'أعد تشغيل Pro',
+    nWalT: 'ادفع للشهر القادم', nWalB: 'تدفع بمحفظة إلكترونية، وهي لا تتجدّد تلقائيًا. ادفع 249 ج.م قبل 3 ديسمبر ليستمر Pro. وأرسلنا لك تذكيرًا بالبريد أيضًا.', nWalAct: 'ادفع بمحفظتي', nWalAlt: 'استخدم بطاقة بدلًا منها',
+    nWalLateT: 'لم تُدفع قيمة هذا الشهر بعد', nWalLateB: 'انتهى شهرك في 3 ديسمبر. يبقى Pro مفعّلًا حتى 10 ديسمبر، فأمامك أسبوع لتدفع بمحفظتك. وتقدّمك محفوظ في كل الأحوال.',
+    walletName: 'محفظة إلكترونية •••• 4521', walletSub: 'تدفع شهرًا بشهر', payBy: 'ادفع قبل', dueBy: 'ادفع قبل 3 ديسمبر',
     nCxT: 'لن تتجدّد خطتك', nCxB: 'يبقى Pro مفعّلًا حتى 3 ديسمبر 2026. استأنف في أي وقت قبل ذلك، ولن يتغيّر شيء.', nCxAct: 'استأنف الخطة',
     cxLead: 'إذا ألغيت، هذا ما يحدث:',
     keeps: [{ icon: 'ph ph-calendar', t: 'يبقى Pro مفعّلًا حتى 3 ديسمبر 2026', s: 'دفعت لهذا الشهر، فهو لك.' }, { icon: 'ph ph-check-circle-fill', t: 'كل تقدّمك محفوظ', s: 'الدروس والمهارات والنقاط والسلسلة والشارات.' }, { icon: 'ph ph-check-circle-fill', t: 'الوحدة 1 من كل مسار تبقى متاحة', s: 'والمراجعة تبقى مجانية أيضًا.' }, { icon: 'ph ph-sync', t: 'لا دفعات أخرى', s: 'استأنف في أي وقت بلمسة واحدة.' }],
@@ -272,7 +278,7 @@ const C = {
     countryLine: { eg: 'مصر · الدفع عبر Paymob', gulf: 'السعودية · الدفع عبر Paddle', arab: 'الأردن · الدفع عبر Paddle' }
   }
 };
-const VIEWS = ['billing', 'billingChange', 'billingExpiring', 'billingFailed', 'billingLapsed', 'cancelAsk', 'cancelDone', 'refundAsk', 'refundSent', 'refundLate'];
+const VIEWS = ['billing', 'billingChange', 'billingExpiring', 'billingFailed', 'billingLapsed', 'billingWallet', 'billingWalletLate', 'cancelAsk', 'cancelDone', 'refundAsk', 'refundSent', 'refundLate'];
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = { reason: null, pick: null }; }
   renderVals() {
@@ -285,27 +291,34 @@ class Component extends DCLogic {
     const isDesk = device === 'desktop';
     const r = { m: $(P.m), countryLine: c.countryLine[region] };
 
-    const is = { billing: ['billing', 'billingChange', 'billingExpiring', 'billingFailed', 'billingLapsed', 'cancelDone', 'refundLate'].indexOf(view) >= 0, cancel: view === 'cancelAsk', refund: view === 'refundAsk', requests: view === 'refundSent' };
+    const is = { billing: ['billing', 'billingChange', 'billingExpiring', 'billingFailed', 'billingLapsed', 'billingWallet', 'billingWalletLate', 'cancelDone', 'refundLate'].indexOf(view) >= 0, cancel: view === 'cancelAsk', refund: view === 'refundAsk', requests: view === 'refundSent' };
     const ov = { change: view === 'billingChange', late: view === 'refundLate' }; ov.any = ov.change || ov.late;
     const title = is.cancel ? c.tCancel : is.refund ? c.tRefund : is.requests ? c.tRequests : c.tBilling;
 
+    const wal = view === 'billingWallet', walLate = view === 'billingWalletLate';
     const failed = view === 'billingFailed', lapsed = view === 'billingLapsed', cancelled = view === 'cancelDone', expiring = view === 'billingExpiring';
     const plan = { name: 'UXGate Pro · ' + c.monthly, st: c.active, stCls: 'st st-yes', k1: c.nextCharge, v1: $(P.m) + ' · ' + c.d3Dec, k2: c.memberSince, v2: c.d3Nov, resume: false, change: true, resumeLabel: c.resume };
     if (failed) Object.assign(plan, { st: c.due, stCls: 'st st-warn', k1: c.proUntil, v1: c.d10Dec, k2: c.nextCharge, v2: lang === 'ar' ? 'محاولة جديدة 5 ديسمبر' : 'Retry on 5 Dec' });
     if (lapsed) Object.assign(plan, { st: c.paused, stCls: 'st st-off', k1: c.lastDay, v1: c.d10Dec, k2: c.restartK, v2: lang === 'ar' ? 'محفوظ بالكامل' : 'All kept', resume: true, change: false, resumeLabel: c.restart });
     if (cancelled) Object.assign(plan, { st: c.ends, stCls: 'st st-kept', k1: c.proUntil, v1: c.d3Dec, k2: c.renewal, v2: c.renewalOff, resume: true, change: false });
+    if (wal) Object.assign(plan, { st: c.dueBy, stCls: 'st st-kept', k1: c.payBy, v1: $(P.m) + ' · ' + c.d3Dec });
+    if (walLate) Object.assign(plan, { st: c.due, stCls: 'st st-warn', k1: c.proUntil, v1: c.d10Dec, k2: c.payBy, v2: c.d10Dec });
     const nt = { on: false, cls: 'notice', icon: '', t: '', b: '', act: '', alt: '', hasAlt: false };
     if (expiring) Object.assign(nt, { on: true, cls: 'notice', icon: 'ph ph-credit-card', t: c.nExpT, b: c.nExpB, act: c.nExpAct, alt: c.nExpAlt, hasAlt: true });
     if (failed) Object.assign(nt, { on: true, cls: 'notice', icon: 'ph ph-warning', t: c.nFailT, b: c.nFailB, act: c.nFailAct, alt: c.nFailAlt, hasAlt: true });
     if (lapsed) Object.assign(nt, { on: true, cls: 'notice is-info', icon: 'ph ph-info', t: c.nLapT, b: c.nLapB, act: c.nLapAct, hasAlt: false });
     if (cancelled) Object.assign(nt, { on: false });
+    if (wal) Object.assign(nt, { on: true, cls: 'notice is-info', icon: 'ph ph-wallet', t: c.nWalT, b: c.nWalB, act: c.nWalAct, alt: c.nWalAlt, hasAlt: true });
+    if (walLate) Object.assign(nt, { on: true, cls: 'notice', icon: 'ph ph-wallet', t: c.nWalLateT, b: c.nWalLateB, act: c.nWalAct, alt: c.nWalAlt, hasAlt: true });
 
     const card = region === 'eg' ? 'Visa •••• 4242' : 'Mastercard •••• 5100';
     const pm = { icon: 'ph ph-credit-card', name: card, sub: c.expires(expiring ? '11/26' : '08/28') };
     if (expiring) pm.sub = c.expires('11/26');
+    if (wal || walLate) Object.assign(pm, { icon: 'ph ph-wallet', name: c.walletName, sub: c.walletSub });
     const inv = [
       { date: c.d3Nov, what: c.proMonthly, amt: $(P.m), st: view === 'refundSent' ? c.refundReq : c.paid, stCls: 'st ' + (view === 'refundSent' ? 'st-wait' : 'st-yes'), aria: c.recAria(c.d3Nov) }
     ];
+    if (walLate) inv.unshift({ date: c.d3Dec, what: c.proMonthly, amt: $(P.m), st: c.due, stCls: 'st st-warn', aria: c.recAria(c.d3Dec) });
     if (failed || lapsed) inv.unshift({ date: c.d3Dec, what: c.proMonthly, amt: $(P.m), st: c.due, stCls: 'st st-warn', aria: c.recAria(c.d3Dec) });
     const refundSub = (view === 'refundLate' || failed || lapsed) ? c.refundOut : c.refundIn;
 
