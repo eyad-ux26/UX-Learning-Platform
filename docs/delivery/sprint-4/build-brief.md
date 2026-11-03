@@ -48,7 +48,7 @@ Payments and paywall (slice 5). Admin answers to requests (admin waterfall).
 8. Public path pages are static, have `hreflang`, and meet LCP under 2.5 s on 4G.
 9. Apple sign-in works in both languages.
 10. Every screen matches canvas v53; axe shows no serious issues; RLS tests cover the new tables; the tech gate passes.
-11. CI is green and the PR has a Vercel preview link. Push in batches (Vercel Hobby allows 100 deployments a day).
+11. CI is green and the PR has a Cloudflare preview link. Push in batches.
 
 ## How to work
 

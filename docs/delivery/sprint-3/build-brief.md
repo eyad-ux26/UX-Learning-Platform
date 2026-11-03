@@ -58,7 +58,7 @@ Settings, notifications and the reminder sending itself, Apple, public path page
 8. The leaderboard stays hidden until the learner joins, shows weekly XP from all paths, and other learners can't see anyone who hasn't joined.
 9. A second learner can't read the first learner's enrollments, streaks, review queue or leaderboard opt-in through the API or Supabase (RLS tests in CI).
 10. Every screen matches canvas v48 in EN light and AR night, mobile and desktop. Keyboard-only use works, axe shows no serious issues, and the tech gate passes.
-11. CI is green and the PR has a Vercel preview link.
+11. CI is green and the PR has a Cloudflare preview link.
 
 ## How to work
 
