@@ -4,7 +4,7 @@ import { C, D, PRODUCT_FONT } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconCheck, IconClock, IconTarget } from "../components/Icons";
 import { enter, span } from "../lib/timeline";
-import { CaseChip, clipFrames, IntroCard, Presenter, RecapCard, SideNote, TitleBand, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, IntroCard, Mark, Presenter, RecapCard, SideNote, TitleBand, v, Voice, wi } from "./p02";
 
 /*
  * P02-C07 re-edit: heu 7 "flexibility and efficiency of use", 56.4–175.6 s. A design tool shows each tool's keyboard
@@ -43,6 +43,13 @@ export const C07: React.FC = () => {
       <SideNote y={110} text="للإجراءات المتكررة اختصارات" p={span(f, v(B.repeat), v(B.figma))} />
       <SideNote y={250} text="لا تظهر للمبتدئ، لكن سهلة الوصول لمن يريد أن يتعلّم" p={span(f, v(B.reach), v(END))} />
       <SideNote y={110} text="اختصار عند المرور، وقائمة كاملة بها" p={span(f, v(B.figma), v(END))} big icon={wi(IconCheck)} />
+      <Mark r={{ x: WIN.x + 140, y: WIN.y + 64, w: 48, h: 44 }} from={B.hover} to={B.faster} label="Hover" side="below" />
+      <Mark r={{ x: WIN.x + 375, y: WIN.y + 415, w: 94, h: 94 }} from={B.faster + 3} to={B.letters + 6} label="R" />
+      <Mark r={{ x: WIN.x + 135, y: WIN.y + 155, w: 230, h: 160 }} from={B.faster + 4} to={B.letters} label="مستطيل" side="below" />
+      <Mark r={{ x: WIN.x + 20, y: WIN.y + 404, w: WIN.w - 40, h: 44 }} from={B.provide} to={B.expert} label="شهر" />
+      <Mark r={{ x: WIN.x + 20, y: WIN.y + 444, w: WIN.w - 40, h: 44 }} from={B.expert} to={B.repeat} label="خبير" />
+      <Mark r={{ x: WIN.x + 140, y: WIN.y + 64, w: 48, h: 44 }} from={B.figma} to={B.docs} label="Hover" side="below" />
+      <Mark r={{ x: WIN.x + 30, y: WIN.y + 300, w: WIN.w - 60, h: 230 }} from={B.docs + 1} to={END} label="كل الاختصارات" />
     </>
   );
   const t = (i: number) => ({ left: WIN.x + 20 + i * 60, top: WIN.y + 64 });

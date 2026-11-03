@@ -4,7 +4,7 @@ import { C, D, PRODUCT_FONT } from "../brand/theme";
 import { DebuggerShell, DebugMode } from "../debugger/DebuggerShell";
 import { IconAlert, IconCheck, IconTarget } from "../components/Icons";
 import { enter, span } from "../lib/timeline";
-import { CaseChip, clipFrames, IntroCard, Presenter, RecapCard, SideNote, Strike, TitleBand, v, Voice, wi } from "./p02";
+import { CaseChip, clipFrames, IntroCard, Mark, Presenter, RecapCard, SideNote, Strike, TitleBand, v, Voice, wi } from "./p02";
 
 /*
  * P02-C08 re-edit: heu 8 "aesthetic and minimalist design", 194.9–340.3 s. A flight booking page full of colours,
@@ -66,6 +66,13 @@ export const C08: React.FC = () => {
       <SideNote y={110} text="إحساس السفر موجود، لكن بهدوء" p={span(f, v(B.calm), v(END))} big icon={wi(IconCheck)} />
       <SideNote y={290} text="لا شيء يسحب التركيز عن المهمة" p={span(f, v(B.focus), v(END))} />
       <Strike r={{ x: WIN.x, y: WIN.y, w: WIN.w, h: WIN.h }} p={f >= v(B.compete) && f < v(B.better) ? Math.min(1, (f - v(B.compete)) / 20) : 0} />
+      <Mark r={{ x: WIN.x + 14, y: WIN.y + 50, w: 150, h: 120 }} from={B.many} to={B.many + 3} label="عرض" />
+      <Mark r={{ x: WIN.x + 14, y: WIN.y + 290, w: 472, h: 90 }} from={B.many + 3} to={B.many + 6} label="عروض" />
+      <Mark r={{ x: WIN.x + 14, y: WIN.y + 390, w: 472, h: 60 }} from={B.many + 6} to={B.matters} label="خصومات" />
+      <Mark r={{ x: WIN.x + 172, y: WIN.y + 50, w: 170, h: 230 }} from={B.matters} to={B.compete} label="المهمة الأساسية" side="below" />
+      <Mark r={{ x: WIN.x + 40, y: WIN.y + 130, w: 420, h: 222 }} from={B.box} to={B.explore} label="الوجهة والتاريخ" side="below" />
+      <Mark r={{ x: WIN.x + 170, y: WIN.y + 400, w: 160, h: 50 }} from={B.explore} to={B.calm} label="Primary" side="below" />
+      <Mark r={{ x: WIN.x + 40, y: WIN.y + 130, w: 420, h: 222 }} from={B.task} to={END} label="التركيز" side="below" />
     </>
   );
   return (
