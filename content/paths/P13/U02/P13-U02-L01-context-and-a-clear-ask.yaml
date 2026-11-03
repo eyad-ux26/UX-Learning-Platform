@@ -1,0 +1,333 @@
+id: P13-U02-L01
+mode: lesson
+minutes: 7
+title:
+  en: "Context and a clear ask"
+  ar: "السياق وطلب واضح"
+summary:
+  en: "Turn a vague one-line prompt for a gym app into one that gets useful text."
+  ar: "حوّل طلبًا غامضًا من سطر واحد لتطبيق نادٍ رياضي إلى طلب يعطي نصوصًا مفيدة."
+speaker: hana
+sources:
+  - title: { en: "CARE: Structure for Crafting AI Prompts (NN/g)", ar: "CARE: بنية لكتابة طلبات الذكاء الاصطناعي (NN/g)" }
+    url: "https://www.nngroup.com/articles/careful-prompts/"
+review_labels:
+  MC-P13-011: { en: "AI doesn't know your situation unless you tell it", ar: "الذكاء الاصطناعي لا يعرف موقفك إلا إذا أخبرته" }
+  MC-P13-012: { en: "A vague ask gets a vague answer", ar: "الطلب الغامض يعطي إجابة غامضة" }
+  MC-P13-016: { en: "A longer prompt isn't better by itself", ar: "الطلب الأطول ليس أفضل في حدّ ذاته" }
+  MC-P13-017: { en: "Give context that matters for this task", ar: "أعطِ السياق الذي يهمّ هذه المهمة" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "One line in, nothing useful out", ar: "سطر واحد يدخل، ولا شيء مفيد يخرج" }
+    body:
+      en: "I design a gym app. Members book classes, and popular classes fill up fast.\n\nI asked an AI chatbot for the message people see when a class is full. It gave me something I could put in any app."
+      ar: "أصمّم تطبيقًا لنادٍ رياضي. الأعضاء يحجزون الحصص، والحصص المشهورة تمتلئ بسرعة.\n\nطلبت من روبوت محادثة بالذكاء الاصطناعي الرسالة التي يراها الناس حين تمتلئ الحصة. فأعطاني شيئًا يمكن وضعه في أي تطبيق."
+    mock:
+      width: 300
+      blocks:
+        - kind: group
+          tone: tint
+          blocks:
+            - { kind: small, color: muted, text: { en: "My prompt", ar: "طلبي" } }
+            - { kind: text, text: { en: "Write an error message.", ar: "اكتب رسالة خطأ." } }
+        - kind: group
+          gap: s
+          blocks:
+            - { kind: small, color: muted, text: { en: "AI", ar: "الذكاء الاصطناعي" } }
+            - { kind: text, text: { en: "Oops! Something went wrong. Please try again later.", ar: "عذرًا! حدث خطأ ما. يرجى المحاولة لاحقًا." } }
+
+  - id: S02
+    type: choose
+    skill: SK-P13-U02-01
+    part: try
+    rules: [R12]
+    value:
+      en: "Try first. CARE (NN/g): to get better results from AI chatbots, write careful prompts that include context, what you're asking, rules and examples."
+      ar: "جرّب أولًا. CARE (NN/g): لتحصل على نتائج أفضل من روبوتات المحادثة، اكتب طلبات مدروسة فيها السياق، وما تطلبه، والقواعد، والأمثلة."
+    ref: { url: "https://www.nngroup.com/articles/careful-prompts/", quote: "To get better results from generative-AI chatbots, write CAREful prompts." }
+    prompt:
+      en: "Why did the AI give such a general message?"
+      ar: "لماذا أعطى الذكاء الاصطناعي رسالة عامة إلى هذا الحد؟"
+    options:
+      - { id: polite, text: { en: "I didn't say \"please\"", ar: "لم أقل «من فضلك»" } }
+      - { id: weak, text: { en: "This AI is bad at writing", ar: "هذا الذكاء الاصطناعي ضعيف في الكتابة" } }
+      - { id: context, text: { en: "It knew nothing about my app, my members or that the class is full", ar: "لم يعرف شيئًا عن تطبيقي، ولا عن الأعضاء، ولا أن الحصة ممتلئة" } }
+    answer: [context]
+    misconceptions:
+      - id: MC-P13-011
+        when: [polite, weak]
+        feedback:
+          en: "The AI only knows what you tell it. \"Write an error message\" could mean any error, in any app."
+          ar: "الذكاء الاصطناعي يعرف فقط ما تخبره به. و«اكتب رسالة خطأ» قد تعني أي خطأ، في أي تطبيق."
+    hints:
+      - { en: "What did my prompt say about the gym or the full class?", ar: "ماذا قال طلبي عن النادي أو الحصة الممتلئة؟" }
+      - { en: "Could a new colleague write a good message from that one line?", ar: "هل يستطيع زميل جديد أن يكتب رسالة جيدة من هذا السطر وحده؟" }
+    correct:
+      en: "Right. No context, so it guessed."
+      ar: "صحيح. لا يوجد سياق، فخمّن."
+    explain:
+      en: "A vague prompt gets a general answer. The AI needs to know your situation."
+      ar: "الطلب الغامض يعطي إجابة عامة. والذكاء الاصطناعي يحتاج أن يعرف موقفك."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [info, edit, list, ok]
+    title: { en: "CARE: four parts of a good prompt", ar: "CARE: أربعة أجزاء للطلب الجيد" }
+    body:
+      en: "A prompt is what you type to the AI. Good prompts have four parts, easy to remember as **CARE**:\n\n- **Context:** your product, your users and the exact situation.\n- **Ask:** exactly what you want: the AI's role, what to make, how many, in which steps and in what format.\n- **Rules:** limits, tone and guidelines.\n- **Examples:** what good and bad look like.\n\nThis lesson covers context and the ask. The next one covers rules, examples and what to do with the answer."
+      ar: "الطلب (Prompt) هو ما تكتبه للذكاء الاصطناعي. والطلبات الجيدة لها أربعة أجزاء، يسهل تذكّرها بكلمة **CARE**:\n\n- **السياق (Context):** منتجك، ومستخدموك، والموقف بالضبط.\n- **الطلب (Ask):** ما تريده بالضبط: دور الذكاء الاصطناعي، وماذا يصنع، وكم نسخة، وبأي خطوات، وبأي شكل.\n- **القواعد (Rules):** الحدود، والنبرة، والإرشادات.\n- **الأمثلة (Examples):** كيف يبدو الجيد والسيئ.\n\nهذا الدرس عن السياق والطلب. والدرس التالي عن القواعد والأمثلة وما تفعله بالإجابة."
+
+  - id: S04
+    type: choose
+    skill: SK-P13-U02-01
+    part: guided
+    confidence: true
+    rules: [R06]
+    value:
+      en: "CARE (NN/g): give context that is relevant for the task, the way you'd explain your situation to a new team member."
+      ar: "CARE (NN/g): أعطِ السياق المهمّ للمهمة، كما تشرح موقفك لزميل جديد في الفريق."
+    ref: { url: "https://www.nngroup.com/articles/careful-prompts/", quote: "Focus on what’s relevant for the task." }
+    scenario:
+      en: "I'm adding context to my prompt about the full class."
+      ar: "أضيف سياقًا إلى طلبي عن الحصة الممتلئة."
+    prompt:
+      en: "Which context helps the AI most?"
+      ar: "أي سياق يساعد الذكاء الاصطناعي أكثر؟"
+    options:
+      - { id: history, text: { en: "\"Our gym opened in 2015. We have 3 branches, a pool and 40 trainers.\"", ar: "«افتُتح نادينا عام 2015. ولدينا 3 فروع، ومسبح، و40 مدرّبًا.»" } }
+      - { id: task, text: { en: "\"I design a gym app. Members are busy adults who book on their phones. This message shows when they try to book a class that is full.\"", ar: "«أصمّم تطبيقًا لنادٍ رياضي. الأعضاء بالغون مشغولون يحجزون من هواتفهم. وتظهر هذه الرسالة حين يحاولون حجز حصة ممتلئة.»" } }
+      - { id: smart, text: { en: "\"You are very smart. Do your best work.\"", ar: "«أنت ذكي جدًا. قدّم أفضل ما عندك.»" } }
+    answer: [task]
+    misconceptions:
+      - id: MC-P13-017
+        when: [history]
+        feedback:
+          en: "True, but it doesn't help write this message. Give the details that matter for this task."
+          ar: "صحيح، لكنه لا يساعد في كتابة هذه الرسالة. أعطِ التفاصيل التي تهمّ هذه المهمة."
+      - id: MC-P13-011
+        when: [smart]
+        feedback:
+          en: "Praise tells the AI nothing about your app or your members."
+          ar: "المديح لا يخبر الذكاء الاصطناعي بشيء عن تطبيقك أو أعضائك."
+    hints:
+      - { en: "Which one would help a new teammate write this exact message?", ar: "أيّها يساعد زميلًا جديدًا على كتابة هذه الرسالة بالذات؟" }
+      - { en: "Look for the product, the users and the moment.", ar: "ابحث عن المنتج، والمستخدمين، واللحظة." }
+    correct:
+      en: "Right. Product, users and the exact moment."
+      ar: "صحيح. المنتج، والمستخدمون، واللحظة بالضبط."
+    explain:
+      en: "Good context answers: what's the product, who uses it, and when do they see this?"
+      ar: "السياق الجيد يجيب: ما المنتج، ومن يستخدمه، ومتى يرى هذا؟"
+
+  - id: S05
+    type: tune
+    skill: SK-P13-U02-02
+    part: guided
+    rules: [R06]
+    value:
+      en: "CARE (NN/g): whether you phrase the ask as a question or a command, be specific: the output you need, how many, and the format."
+      ar: "CARE (NN/g): سواء صغت الطلب كسؤال أو كأمر، كن محدّدًا: الناتج الذي تحتاجه، وكم نسخة، وبأي شكل."
+    ref: { url: "https://www.nngroup.com/articles/careful-prompts/", quote: "Whether you phrase the ask as a question or command, it’s important to be specific." }
+    scenario:
+      en: "The context is in. Now I write the ask. I want options to show my team."
+      ar: "السياق موجود. والآن أكتب الطلب. وأريد خيارات أعرضها على فريقي."
+    prompt:
+      en: "Tap each option to see the change. Which ask gives me something I can use with my team?"
+      ar: "اضغط على كل خيار لترى التغيير. أي طلب يعطيني شيئًا أستطيع استخدامه مع فريقي؟"
+    mock:
+      width: 300
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: small, color: muted, text: { en: "Ask: (empty)", ar: "الطلب: (فارغ)" } }
+    options:
+      - id: some
+        text: { en: "\"Write something for this.\"", ar: "«اكتب شيئًا لهذا.»" }
+        mock:
+          width: 300
+          caption: { en: "AI's answer", ar: "إجابة الذكاء الاصطناعي" }
+          blocks:
+            - { kind: text, text: { en: "Fitness is a journey, and sometimes classes fill up because so many people love them! Don't be discouraged. There are many ways to stay active, such as…", ar: "اللياقة رحلة، وأحيانًا تمتلئ الحصص لأن كثيرًا من الناس يحبّونها! لا تُحبَط. فهناك طرق كثيرة لتبقى نشيطًا، مثل…" } }
+      - id: specific
+        text: { en: "\"Write 5 different messages for the full class. Show them as a numbered list.\"", ar: "«اكتب 5 رسائل مختلفة للحصة الممتلئة. واعرضها كقائمة مرقّمة.»" }
+        mock:
+          width: 300
+          caption: { en: "AI's answer", ar: "إجابة الذكاء الاصطناعي" }
+          blocks:
+            - { kind: small, text: { en: "1. This class is full. Join the waitlist?", ar: "1. هذه الحصة ممتلئة. هل تنضمّ إلى قائمة الانتظار؟" } }
+            - { kind: small, text: { en: "2. No spots left. See the next class at 7 PM.", ar: "2. لا أماكن متبقية. شاهد الحصة التالية الساعة 7 مساءً." }, gap: xs }
+            - { kind: small, text: { en: "3. Full for now. We'll tell you if a spot opens.", ar: "3. ممتلئة الآن. سنخبرك إذا فُتح مكان." }, gap: xs }
+            - { kind: small, color: muted, text: { en: "4. … 5. …", ar: "4. … 5. …" }, gap: xs }
+      - id: good
+        text: { en: "\"Make it good.\"", ar: "«اجعلها جيدة.»" }
+        mock:
+          width: 300
+          caption: { en: "AI's answer", ar: "إجابة الذكاء الاصطناعي" }
+          blocks:
+            - { kind: text, text: { en: "Sorry, this class is unavailable at the moment.", ar: "عذرًا، هذه الحصة غير متاحة حاليًا." } }
+    answer: [specific]
+    misconceptions:
+      - id: MC-P13-012
+        when: [some, good]
+        feedback:
+          en: "The AI had to guess what you wanted, how much, and in what form. A vague ask gets a vague answer."
+          ar: "اضطرّ الذكاء الاصطناعي أن يخمّن ما تريده، وكم، وبأي شكل. والطلب الغامض يعطي إجابة غامضة."
+    hints:
+      - { en: "Which ask says what to make, how many, and how to show them?", ar: "أي طلب يقول ماذا يصنع، وكم، وكيف يعرضها؟" }
+    correct:
+      en: "Right. Five options, in a list, ready to compare."
+      ar: "صحيح. خمسة خيارات، في قائمة، جاهزة للمقارنة."
+    explain:
+      en: "Say what to produce, how many versions and in what format. Then you get what you need."
+      ar: "قل ماذا ينتج، وكم نسخة، وبأي شكل. حينها تحصل على ما تحتاجه."
+
+  - id: S06
+    type: compare
+    skill: SK-P13-U02-02
+    part: contrast
+    confidence: true
+    rules: [R11]
+    value:
+      en: "Contrast: one big request vs the same request in ordered steps. CARE (NN/g): breaking a task into a series of ordered steps (chain-of-thought prompting) can help the AI solve it more systematically."
+      ar: "مقارنة: طلب واحد كبير مقابل الطلب نفسه في خطوات مرتّبة. CARE (NN/g): تقسيم المهمة إلى خطوات مرتّبة (Chain-of-thought prompting) يساعد الذكاء الاصطناعي على حلّها بطريقة أكثر تنظيمًا."
+    ref: { url: "https://www.nngroup.com/articles/careful-prompts/", quote: "Chain-of-thought prompting is a technique in which a task is broken down into a series of discrete ordered steps, which can help an AI model approach solving the problem more systematically." }
+    scenario:
+      en: "We're adding a waitlist for full classes, and it needs a name. I wrote two prompts."
+      ar: "نضيف قائمة انتظار للحصص الممتلئة، وتحتاج اسمًا. فكتبت طلبين."
+    prompt:
+      en: "Which prompt will give me better names to choose from?"
+      ar: "أي طلب سيعطيني أسماء أفضل لأختار منها؟"
+    a:
+      label: { en: "A: one sentence", ar: "A: جملة واحدة" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: small, text: { en: "\"Give me a name for our waitlist feature.\"", ar: "«أعطني اسمًا لميزة قائمة الانتظار.»" } }
+    b:
+      label: { en: "B: three numbered lines", ar: "B: ثلاثة أسطر مرقّمة" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: small, text: { en: "\"Follow these steps:", ar: "«اتّبع هذه الخطوات:" } }
+          - { kind: small, text: { en: "1. Write 15 names for our waitlist feature.", ar: "1. اكتب 15 اسمًا لميزة قائمة الانتظار." }, gap: xs }
+          - { kind: small, text: { en: "2. Pick the 5 clearest for busy members.", ar: "2. اختر أوضح 5 للأعضاء المشغولين." }, gap: xs }
+          - { kind: small, text: { en: "3. Rank them and say why.\"", ar: "3. رتّبها واذكر السبب.»" }, gap: xs }
+    answer: b
+    reason:
+      prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
+      options:
+        - { id: long, text: { en: "Longer prompts always work better", ar: "الطلبات الأطول تعمل دائمًا بشكل أفضل" } }
+        - { id: steps, text: { en: "It breaks the job into steps, so the AI makes many, narrows them, and explains its picks", ar: "تقسّم المهمة إلى خطوات، فيصنع الذكاء الاصطناعي أسماء كثيرة، ثم يختصرها، ويشرح اختياره" } }
+        - { id: number, text: { en: "Numbers make the AI work faster", ar: "الأرقام تجعل الذكاء الاصطناعي يعمل أسرع" } }
+      answer: [steps]
+      misconceptions:
+        - id: MC-P13-016
+          when: [long, number]
+          feedback:
+            en: "Length and numbers don't help by themselves. What helps is clear steps: make many, narrow down, explain."
+            ar: "الطول والأرقام لا يساعدان وحدهما. ما يساعد هو الخطوات الواضحة: اصنع كثيرًا، ثم اختصر، ثم اشرح."
+    misconceptions:
+      - id: MC-P13-012
+        when: [a]
+        feedback:
+          en: "A gets you one name and no reason. You have nothing to compare it with."
+          ar: "A تعطيك اسمًا واحدًا بلا سبب. ولا شيء تقارنه به."
+    hints:
+      - { en: "How many names will each prompt give you?", ar: "كم اسمًا سيعطيك كل طلب؟" }
+      - { en: "Which one tells the AI how to work?", ar: "أيّهما يخبر الذكاء الاصطناعي كيف يعمل؟" }
+    correct:
+      en: "Right. Steps turn one guess into a short list with reasons."
+      ar: "صحيح. الخطوات تحوّل تخمينًا واحدًا إلى قائمة قصيرة مع أسباب."
+    explain:
+      en: "For bigger tasks, list the steps in order. You'll still pick the final name yourself."
+      ar: "في المهام الأكبر، اكتب الخطوات بالترتيب. وستختار الاسم النهائي بنفسك في النهاية."
+
+  - id: S07
+    type: choose
+    skill: SK-P13-U02-02
+    part: guided
+    rules: [R06]
+    value:
+      en: "CARE (NN/g): part of the ask is the AI's role, for example: \"You're a UX writer focusing on intuitive, straightforward, plain language.\""
+      ar: "CARE (NN/g): جزء من الطلب هو دور الذكاء الاصطناعي، مثلًا: «أنت كاتب تجربة مستخدم (UX writer) يركّز على لغة بسيطة ومباشرة وسهلة الفهم.»"
+    ref: { url: "https://www.nngroup.com/articles/careful-prompts/", quote: "You’re a UX writer focusing on intuitive, straightforward, plain language." }
+    scenario:
+      en: "I want to start the prompt by giving the AI a role. The messages are for the app's screens."
+      ar: "أريد أن أبدأ الطلب بإعطاء الذكاء الاصطناعي دورًا. والرسائل لشاشات التطبيق."
+    prompt:
+      en: "Which role fits this task best?"
+      ar: "أي دور يناسب هذه المهمة أكثر؟"
+    options:
+      - { id: coach, text: { en: "\"You're a fitness coach who motivates people.\"", ar: "«أنت مدرّب لياقة يحفّز الناس.»" } }
+      - { id: none, text: { en: "No role. It changes nothing", ar: "بلا دور. فهو لا يغيّر شيئًا" } }
+      - { id: writer, text: { en: "\"You're a UX writer who uses short, plain words.\"", ar: "«أنت كاتب تجربة مستخدم (UX writer) يستخدم كلمات قصيرة وبسيطة.»" } }
+    answer: [writer]
+    misconceptions:
+      - id: MC-P13-017
+        when: [coach]
+        feedback:
+          en: "A coach would write a pep talk. You need clear words for an app screen."
+          ar: "المدرّب سيكتب كلامًا تحفيزيًا. وأنت تحتاج كلمات واضحة لشاشة تطبيق."
+      - id: MC-P13-012
+        when: [none]
+        feedback:
+          en: "The role tells the AI what kind of writing you want. Without it, it guesses."
+          ar: "الدور يخبر الذكاء الاصطناعي بنوع الكتابة الذي تريده. ودونه يخمّن."
+    hints:
+      - { en: "Who in a team writes the text on app screens?", ar: "من في الفريق يكتب النصوص على شاشات التطبيق؟" }
+    correct:
+      en: "Right. The role matches the job."
+      ar: "صحيح. الدور يناسب المهمة."
+    explain:
+      en: "Pick the role of the person who would do this job well on your team."
+      ar: "اختر دور الشخص الذي يُتقن هذه المهمة في فريقك."
+
+  - id: S08
+    type: choose
+    skill: SK-P13-U02-01
+    part: independent
+    speaker: karim
+    rules: [R14]
+    value:
+      en: "New case. CARE (NN/g): explain your situation the way you would to a new consultant or team member before asking for help."
+      ar: "حالة جديدة. CARE (NN/g): اشرح موقفك كما تشرحه لمستشار أو زميل جديد قبل أن تطلب المساعدة."
+    ref: { url: "https://www.nngroup.com/articles/careful-prompts/", quote: "If you were speaking to a new consultant or team member, how would you explain your situation before asking for advice or help?" }
+    scenario:
+      en: "In our photo-printing app, uploads fail when a photo is over 20 MB. I want AI to help write the message people see."
+      ar: "في تطبيق طباعة الصور، يفشل الرفع حين تكون الصورة أكبر من 20 MB. وأريد أن يساعدني الذكاء الاصطناعي في كتابة الرسالة التي يراها الناس."
+    prompt:
+      en: "Which prompt gives the AI the context it needs?"
+      ar: "أي طلب يعطي الذكاء الاصطناعي السياق الذي يحتاجه؟"
+    options:
+      - { id: me, text: { en: "\"I'm a designer with 10 years of experience and I love clean design. Write an upload error.\"", ar: "«أنا مصمم بخبرة 10 سنوات وأحبّ التصميم البسيط. اكتب رسالة خطأ للرفع.»" } }
+      - { id: bare, text: { en: "\"Write an upload error message.\"", ar: "«اكتب رسالة خطأ للرفع.»" } }
+      - { id: full, text: { en: "\"I design a photo-printing app. Most users are parents printing family photos from their phones. Uploads fail when a photo is over 20 MB. Write the message they see.\"", ar: "«أصمّم تطبيقًا لطباعة الصور. أغلب المستخدمين آباء وأمهات يطبعون صور العائلة من هواتفهم. ويفشل الرفع حين تكون الصورة أكبر من 20 MB. اكتب الرسالة التي يرونها.»" } }
+    answer: [full]
+    misconceptions:
+      - id: MC-P13-017
+        when: [me]
+        feedback:
+          en: "That's about you, not the problem. The AI still doesn't know why the upload failed."
+          ar: "هذا عنك، لا عن المشكلة. والذكاء الاصطناعي ما زال لا يعرف لماذا فشل الرفع."
+      - id: MC-P13-011
+        when: [bare]
+        feedback:
+          en: "With no context, the AI can only write a general error, like \"Upload failed\"."
+          ar: "دون سياق، لا يستطيع الذكاء الاصطناعي إلا كتابة خطأ عام، مثل «فشل الرفع»."
+    correct:
+      en: "Right. Users, product and the real cause."
+      ar: "صحيح. المستخدمون، والمنتج، والسبب الحقيقي."
+    explain:
+      en: "Knowing the 20 MB limit lets the AI write a message that tells people how to fix it."
+      ar: "معرفة حدّ الـ20 MB تجعل الذكاء الاصطناعي يكتب رسالة تخبر الناس كيف يصلحون المشكلة."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [info, edit, list, ok]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **No context, general answer:** one line got an \"Oops\" message.\n- **Context that matters:** product, users and the exact moment, not the gym's history.\n- **A specific ask:** what to make, how many and in what format.\n- **Steps for bigger tasks:** make many, narrow down, explain.\n- **A role that fits:** a UX writer, not a coach.\n\nNext: rules, examples and checking the answer."
+      ar: "- **بلا سياق، إجابة عامة:** سطر واحد أعطى رسالة «عذرًا».\n- **السياق المهمّ:** المنتج، والمستخدمون، واللحظة بالضبط، لا تاريخ النادي.\n- **طلب محدّد:** ماذا يصنع، وكم، وبأي شكل.\n- **خطوات للمهام الأكبر:** اصنع كثيرًا، ثم اختصر، ثم اشرح.\n- **دور مناسب:** كاتب تجربة مستخدم، لا مدرّب.\n\nالتالي: القواعد، والأمثلة، ومراجعة الإجابة."
