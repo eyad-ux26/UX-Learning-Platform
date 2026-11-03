@@ -134,7 +134,7 @@ export const canSelect = (st: StepState) => st.phase === "answering" || st.phase
 export const isComplete = (step: Step, sel: string[]) =>
   step.type === "sort" ? sel.length === step.items.length : step.type === "match" ? sel.length === step.left.length : sel.length > 0;
 export const canCheck = (step: Step, st: StepState) =>
-  isQuestion(step) && (st.phase === "answering" ? isComplete(step, st.sel) : st.phase === "main_ok" ? st.reason.length > 0 : false);
+  isQuestion(step) && (step.confidence && st.conf === null && st.phase === "answering" ? false : true) && (st.phase === "answering" ? isComplete(step, st.sel) : st.phase === "main_ok" ? st.reason.length > 0 : false);
 
 const withStep = (state: LessonState, i: number, patch: Partial<StepState>): LessonState => ({
   ...state,

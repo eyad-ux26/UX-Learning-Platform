@@ -27,21 +27,28 @@ export function SortAnswer({ step, st, locale, t, onChange }: Props<SortStep>) {
   const heldText = step.items.find((i) => i.id === held)?.text[locale];
   return (
     <div className="lp-sort">
-      <div className="lp-tray" role="group" aria-label={t("sortTray")}>
+      <div className={`lp-tray${unplaced.length ? "" : " is-done"}`} role="group" aria-label={t("sortTray")}>
         {unplaced.length ? unplaced.map((i) => (
           <button key={i.id} type="button" className={`lp-item${held === i.id ? " is-selected" : ""}`} aria-pressed={held === i.id} disabled={!open(st)} onClick={() => setHeld(held === i.id ? null : i.id)}>
-            <span className="ph ph-dots-six-vertical" aria-hidden="true" />{i.text[locale]}
+            {i.text[locale]}
           </button>
-        )) : <p className="lp-tray-empty">{t("sortEmpty")}</p>}
+        )) : null}
       </div>
+      {unplaced.length ? null : <p className="lp-sr" role="status">{t("sortEmpty")}</p>}
       <p className="t-small ink-2" role="status">{heldText ? t("sortHeld", { item: heldText }) : " "}</p>
       <div className="lp-buckets">
         {step.buckets.map((b) => (
           <section key={b.id} className={`lp-bucket${held ? " is-target" : ""}`} aria-label={b.title[locale]}>
-            <h3 className="hd">{b.title[locale]}</h3>
+            <div className="hdrow">
+              <h3 className="hd">{b.title[locale]}</h3>
+              <span className="count num ltr" aria-hidden="true">{step.items.filter((i) => placed.get(i.id) === b.id).length}</span>
+              {held && open(st) ? <button type="button" className="lp-drop" onClick={() => place(b.id)}><span className="ph ph-arrow-down" aria-hidden="true" />{t("putHere")}</button> : null}
+            </div>
             <div className="its">
               {step.items.filter((i) => placed.get(i.id) === b.id).map((i) => {
-                const ok = judged(st) ? right(i.id, b.id) : null;
+                // After a wrong check only the misplaced items are marked; the right ones stay neutral.
+                const raw = right(i.id, b.id);
+                const ok = judged(st) ? (st.phase === "wrong" && raw ? null : raw) : null;
                 return (
                   <button key={i.id} type="button" className={`lp-item${ok === true ? " is-right" : ok === false ? " is-wrong" : ""}`} disabled={!open(st)} onClick={() => takeBack(i.id)} aria-label={open(st) ? t("sortTakeBack", { item: i.text[locale] }) : undefined}>
                     {i.text[locale]}{ok !== null ? <span className={`ph ${mark(ok)} v`} aria-label={ok ? t("rightWord") : t("wrongWord")} /> : null}
@@ -49,7 +56,6 @@ export function SortAnswer({ step, st, locale, t, onChange }: Props<SortStep>) {
                 );
               })}
             </div>
-            {held && open(st) ? <button type="button" className="lp-drop" onClick={() => place(b.id)}><span className="ph ph-arrow-down" aria-hidden="true" />{t("putHere")}</button> : null}
           </section>
         ))}
       </div>
@@ -120,7 +126,7 @@ export function MatchAnswer({ step, st, locale, t, onChange }: Props<MatchStep>)
   return (
     <div className="lp-match">
       <div className="side" role="group" aria-label={t("matchLeft")}>
-        <span className="hd">{t("matchLeft")}</span>
+        <span className="hd">{step.headers ? step.headers.left[locale] : t("matchLeft")}</span>
         {step.left.map((l) => (
           <button key={l.id} type="button" className={cls(ok(l.id), leftHeld === l.id, !!rightOf(l.id))} aria-pressed={leftHeld === l.id} disabled={!open(st)} onClick={() => tapLeft(l.id)}>
             <span className={`lp-pno${rightOf(l.id) ? "" : " is-empty"}`} aria-hidden="true">{rightOf(l.id) ? numberOf(l.id) : 0}</span>
@@ -130,7 +136,7 @@ export function MatchAnswer({ step, st, locale, t, onChange }: Props<MatchStep>)
         ))}
       </div>
       <div className="side" role="group" aria-label={t("matchRight")}>
-        <span className="hd">{t("matchRight")}</span>
+        <span className="hd">{step.headers ? step.headers.right[locale] : t("matchRight")}</span>
         {step.right.map((r) => {
           const owner = leftOf(r.id);
           return (
@@ -150,11 +156,12 @@ export function MatchAnswer({ step, st, locale, t, onChange }: Props<MatchStep>)
 export function SpotList({ step, st, locale, t, onPick }: { step: SpotStep; st: StepState; locale: Locale; t: T; onPick: (id: string) => void }) {
   return (
     <div className="choices" role="radiogroup" aria-label={t("spotAria")}>
-      {step.regions.map((r) => {
+      {step.regions.map((r, k) => {
         const picked = st.sel.includes(r.id);
         const state = judged(st) && picked ? (step.answer.includes(r.id) ? "is-right" : "is-wrong") : picked ? "is-selected" : "";
         return (
           <button key={r.id} type="button" role="radio" aria-checked={picked} aria-disabled={!open(st) || undefined} className={`choice press ${state}`} onClick={() => open(st) && onPick(r.id)}>
+            <span className="lp-key ltr" aria-hidden="true">{String.fromCharCode(65 + k)}</span>
             <span className="grow">{r.label[locale]}</span>
           </button>
         );

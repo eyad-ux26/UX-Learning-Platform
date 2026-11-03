@@ -186,7 +186,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         <footer className="player-foot">
           {question && step.confidence ? (
             <div className="conf" role="group" aria-label={t("sure")}>
-              <span className="t-small conf-label">{t("sure")}</span>
+              <span className="t-small conf-label">{st.conf === null && st.phase === "answering" ? t("surePick") : t("sure")}</span>
               {[0, 1, 2].map((k) => (
                 <button key={k} type="button" className={`chip${st.conf === k ? " is-selected" : ""}`} aria-pressed={st.conf === k} onClick={() => doConf(k)}>{t(`conf.${k}` as never)}</button>
               ))}

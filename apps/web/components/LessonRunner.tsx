@@ -116,7 +116,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   if (!state) return <div className="player-loading" aria-busy="true" />;
   if (finished) {
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
-    if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} onContinue={() => leave(`/app`)} />;
+    if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} />;
     return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} />;
   }

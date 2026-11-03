@@ -80,6 +80,8 @@ export type MatchStep = QuestionBase & {
   type: "match";
   left: { id: string; text: Text }[];
   right: { id: string; text: Text }[];
+  /** Optional column headers, such as "Field" and "Used for". Without them the player shows its generic ones. */
+  headers?: { left: Text; right: Text };
   answer: Record<string, string>;
 };
 /** The learner taps a `region` of the mock (or picks it from the list). */

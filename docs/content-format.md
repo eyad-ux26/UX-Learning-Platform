@@ -81,7 +81,7 @@ By type:
 | `tune` | as `choose`, each option has a `mock`; `start` is the option previewed first | as `choose` |
 | `sort` | `items`, `buckets`, `answer: { bucket: [items] }`, `also_ok` | `{ item, bucket }` |
 | `order` | `items` (in their starting order), `answer: [ids]`, `also_ok` | `{ before: [x, y] }`, matches when x is above y |
-| `match` | `left`, `right`, `answer: { leftId: rightId }` | `{ left, right }` |
+| `match` | `left`, `right`, `answer: { leftId: rightId }`, optional `headers: { left, right }` (column titles in en and ar, such as "Field" / "Used for") | `{ left, right }` |
 | `spot` | `mock` with `region` on blocks, `regions` (labels for the list), `answer` | `[region ids]` |
 | `compare` | `a: { mock, label? }`, `b: { ... }`, `answer: a` or `b`, optional `reason` | `[a]` or `[b]` |
 

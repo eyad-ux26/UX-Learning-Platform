@@ -72,19 +72,25 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
 }
 
 /** End of the mastery round: skills answered right on the one try move to Shown; the rest come back once more. */
-export function MasteryEnd({ lesson, state, locale, unitSkills, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; onContinue: () => void }) {
+export function MasteryEnd({ lesson, state, locale, unitSkills, unitId, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; unitId: string; onContinue: () => void }) {
   const t = useTranslations("pages");
   const rows = skillResults(lesson, state, unitSkills, "any");
   const sum = summarize(lesson, state);
-  const all = rows.every((r) => r.shown);
+  const shownN = rows.filter((r) => r.shown).length;
+  const unitNo = Number(unitId.split("-U")[1]) || 1;
   return (
-    <Page art={all ? "trophy" : "target"} title={t("masteryDoneTitle")} sub={all ? t("masteryDoneAll") : t("masteryDoneSome")} foot={<button type="button" className="btn btn-primary btn-lg press" onClick={onContinue}>{t("continue")}</button>}>
-      <p className="pill pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+{sum.xp} XP</span></p>
+    <Page art={shownN === rows.length ? "trophy" : "target"} title={t("unitDoneTitle", { n: unitNo })} foot={<button type="button" className="btn btn-primary btn-lg press" onClick={onContinue}>{t("backToPath")}</button>}>
+      <p className="lp-chips">
+        <span className="pill pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+{sum.xp} XP</span></span>
+        <span className="pill"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span>{t("shownOf", { shown: shownN, total: rows.length })}</span></span>
+      </p>
+      <h2 className="t-small ink-2 lp-roundhd">{t("thisRound")}</h2>
       <ul className="lp-list" style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {rows.map(({ skill, shown: ok }) => ok
-          ? <SkillRow key={skill.id} title={skill.title[locale]} status="shown" label={t("shown")} />
-          : <SkillRow key={skill.id} title={skill.title[locale]} status="later" label={t("later")} retry />)}
+          ? <SkillRow key={skill.id} title={skill.title[locale]} can={t("rightFirst")} status="shown" label={t("shown")} />
+          : <SkillRow key={skill.id} title={skill.title[locale]} can={t("backInReview")} status="later" label={t("later")} retry />)}
       </ul>
+      <p className="t-small ink-2">{t("keptNote")}</p>
     </Page>
   );
 }

@@ -84,6 +84,7 @@ function checkStep(s, where, errors) {
   }
   if (s.type === "match") {
     const left = idsOf(s.left), right = idsOf(s.right);
+    if (s.headers !== undefined && !(isText(s.headers?.left) && isText(s.headers?.right))) errors.push(`${where}: match headers need left and right in en and ar`);
     if (Object.keys(s.answer ?? {}).length !== left.length) errors.push(`${where}: match answer must pair every left item`);
     subset(Object.keys(s.answer ?? {}), left, "answer"); subset(Object.values(s.answer ?? {}), right, "answer");
   }
