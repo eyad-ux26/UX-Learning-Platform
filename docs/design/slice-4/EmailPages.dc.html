@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Slice 4 · Email templates</title>
+<title>Slices 4 and 5 · Email templates</title>
 <script src="./support.js"></script>
 <link rel="stylesheet" href="./uxgate.css">
 </head>
@@ -30,6 +30,9 @@
         <sc-if value="{{e.hasBox}}" hint-placeholder-val="{{true}}">
           <div class="em-box"><img src="{{e.boxImg}}" alt=""><div class="grow"><b>{{e.boxT}}</b><span>{{e.boxS}}</span></div></div>
         </sc-if>
+        <sc-if value="{{e.hasRows}}" hint-placeholder-val="{{false}}">
+          <div class="em-rows"><sc-for list="{{e.rows}}" as="w" hint-placeholder-count="4"><div><span>{{w.k}}</span><b>{{w.v}}</b></div></sc-for></div>
+        </sc-if>
         <a href="#{{view}}" class="em-btn">{{e.btn}}</a>
         <sc-for list="{{e.notes}}" as="n" hint-placeholder-count="1"><p class="muted">{{n}}</p></sc-for>
         <sc-if value="{{e.hasCode}}" hint-placeholder-val="{{false}}"><p class="em-code">{{e.code}}</p></sc-if>
@@ -46,8 +49,8 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge","deleted"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
-const IMG = { lesson: '/_blob/54daac1136dd65086f58f73b440ed1a9', forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', flame: '/_blob/ef2b9cc307685520ab2b815707ec327f', mail: '/_blob/b8ff95a8c2f1c68111476aaf1b979bca', key: '/_blob/c1a5e232b4681719bddf8f85963a691d', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', review: '/_blob/27529cb276100eb41db22c17bdf85470' };
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge","deleted","receipt","renewSoon","payFailed","cancelled","refundYes","refundNo"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+const IMG = { lesson: '/_blob/54daac1136dd65086f58f73b440ed1a9', forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', flame: '/_blob/ef2b9cc307685520ab2b815707ec327f', mail: '/_blob/b8ff95a8c2f1c68111476aaf1b979bca', key: '/_blob/c1a5e232b4681719bddf8f85963a691d', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', review: '/_blob/27529cb276100eb41db22c17bdf85470', payment: '/_blob/771c73990dbdac0c4c60019a15939cef', calendar: '/_blob/f042bfb4689d32362320ee48e15ea560' };
 const LINK = 'https://uxgate.org/auth/link?token=8f2c…e41a';
 const RESET = 'https://uxgate.org/auth/reset?token=b71d…09c3';
 const C = {
@@ -83,7 +86,33 @@ const C = {
         h1: 'Your account is set to be deleted', ps: ['We signed you out on every device. Your personal data, progress and certificates will be removed by 2 December 2026.'],
         btn: 'Sign in to undo', notes: ['Sign in before 2 December 2026 to undo. After that date, the account can’t come back.'],
         safety: 'Didn’t ask for this? Sign in now, change your password and write to support@uxgate.org.',
-        why: 'This email is about your account, so it always arrives.' }
+        why: 'This email is about your account, so it always arrives.' },
+      receipt: { subj: 'Your UXGate receipt · 249 EGP', pre: 'UXGate Pro, monthly · paid on 3 Nov 2026', ill: 'payment', illAlt: '',
+        h1: 'Thanks, Yasmin. Here is your receipt.', ps: ['Your payment went through, and Pro is on.'],
+        rows: [['Receipt', 'UXG-2026-000214'], ['Date', '3 Nov 2026'], ['Plan', 'UXGate Pro · monthly'], ['Paid with', 'Visa •••• 4242'], ['Amount', '249 EGP'], ['Next charge', '249 EGP on 3 Dec 2026']],
+        btn: 'Download the receipt (PDF)', notes: ['Changed your mind? You can ask for a refund until 10 November in Settings, Plan and billing.'],
+        why: 'This email is about your payments, so it always arrives.' },
+      renewSoon: { subj: 'Your annual plan renews on 3 November', pre: '2,249 EGP on 3 Nov 2027. Nothing to do if you want to keep it.', ill: 'calendar', illAlt: '',
+        h1: 'Your annual plan renews in 7 days', ps: ['We will charge your card on 3 November 2027, so you keep UXGate Pro for another year.'],
+        rows: [['Renews on', '3 Nov 2027'], ['Amount', '2,249 EGP'], ['Card', 'Visa •••• 4242']],
+        btn: 'Manage my plan', notes: ['Don’t want it? Cancel before 3 November and you won’t be charged. You can also switch to monthly.'],
+        why: 'This email is about your payments, so it always arrives.' },
+      payFailed: { subj: 'We couldn’t take your UXGate payment', pre: 'Pro stays on until 10 December. Updating your card takes a minute.', ill: 'payment', illAlt: '',
+        h1: 'Your payment didn’t go through', ps: ['Your bank declined the 249 EGP charge on 3 December. This often happens when a card expires or online payments are turned off.', 'Pro stays on until 10 December, and we will try again on 5 and 8 December.'],
+        btn: 'Update my card', notes: ['Your progress is safe, whatever happens.'],
+        why: 'This email is about your payments, so it always arrives.' },
+      cancelled: { subj: 'Your UXGate Pro plan is cancelled', pre: 'Pro stays on until 3 December 2026.', ill: 'calendar', illAlt: '',
+        h1: 'Your plan is cancelled', ps: ['We won’t charge you again. Pro stays on until 3 December 2026. After that, all your progress stays in your account, and Unit 1 of every path stays open.'],
+        btn: 'Resume my plan', notes: ['Resume before 3 December and nothing changes.'],
+        why: 'This email is about your payments, so it always arrives.' },
+      refundYes: { subj: 'Your refund is approved', pre: '249 EGP back to Visa •••• 4242 in 5 to 10 working days.', ill: 'payment', illAlt: '',
+        h1: 'Your refund is approved', ps: ['We sent 249 EGP back to Visa •••• 4242. Banks take 5 to 10 working days to show it.', 'Pro has ended. Your progress, streak and badges stay in your account, and Unit 1 of every path stays open.'],
+        btn: 'See my requests', notes: ['The UXGate team'],
+        why: 'This email is about your payments, so it always arrives.' },
+      refundNo: { subj: 'About your refund request', pre: 'The charge was more than 7 days ago.', ill: 'calendar', illAlt: '',
+        h1: 'We can’t refund this charge', ps: ['You wrote to us on 20 November about the 249 EGP charge on 3 November. Refunds are possible within 7 days of a charge, so we can’t refund this one.', 'You can still cancel. You won’t be charged again, and Pro stays on until 3 December.'],
+        btn: 'Manage my plan', notes: ['If something went wrong with the charge itself, reply to this email and we will look again.', 'The UXGate team'],
+        why: 'This email is about your payments, so it always arrives.' }
     } },
   ar: { addr: 'UXGate · uxgate.org · لديك سؤال؟ ردّ على هذه الرسالة أو راسلنا على support@uxgate.org.',
     E: {
@@ -117,7 +146,33 @@ const C = {
         h1: 'سيُحذف حسابك', ps: ['سجّلنا خروجك من كل الأجهزة. ستُحذف بياناتك الشخصية وتقدّمك وشهاداتك قبل 2 ديسمبر 2026.'],
         btn: 'سجّل الدخول للتراجع', notes: ['سجّل الدخول قبل 2 ديسمبر 2026 للتراجع. بعد هذا التاريخ لا يمكن استعادة الحساب.'],
         safety: 'لم تطلب هذا؟ سجّل الدخول الآن وغيّر كلمة المرور وراسلنا على support@uxgate.org.',
-        why: 'هذه الرسالة تخص حسابك، لذلك تصل دائمًا.' }
+        why: 'هذه الرسالة تخص حسابك، لذلك تصل دائمًا.' },
+      receipt: { subj: 'إيصال UXGate · 249 ج.م', pre: 'UXGate Pro شهري · دُفع في 3 نوفمبر 2026', ill: 'payment', illAlt: '',
+        h1: 'شكرًا يا ياسمين، هذا إيصالك.', ps: ['تمّت عملية الدفع، وأصبح Pro مفعّلًا.'],
+        rows: [['رقم الإيصال', 'UXG-2026-000214'], ['التاريخ', '3 نوفمبر 2026'], ['الخطة', 'UXGate Pro · شهري'], ['طريقة الدفع', 'Visa •••• 4242'], ['المبلغ', '249 ج.م'], ['الدفعة التالية', '249 ج.م في 3 ديسمبر 2026']],
+        btn: 'نزّل الإيصال (PDF)', notes: ['غيّرت رأيك؟ يمكنك طلب استرداد المبلغ حتى 10 نوفمبر من الإعدادات، «الخطة والدفع».'],
+        why: 'هذه الرسالة تخص مدفوعاتك، لذلك تصل دائمًا.' },
+      renewSoon: { subj: 'تتجدّد خطتك السنوية في 3 نوفمبر', pre: '2,249 ج.م في 3 نوفمبر 2027. لا تحتاج إلى فعل شيء إن أردت الاستمرار.', ill: 'calendar', illAlt: '',
+        h1: 'تتجدّد خطتك السنوية بعد 7 أيام', ps: ['سنخصم المبلغ من بطاقتك في 3 نوفمبر 2027، ليستمر معك UXGate Pro سنة أخرى.'],
+        rows: [['تاريخ التجديد', '3 نوفمبر 2027'], ['المبلغ', '2,249 ج.م'], ['البطاقة', 'Visa •••• 4242']],
+        btn: 'إدارة خطتي', notes: ['لا تريد التجديد؟ ألغِ قبل 3 نوفمبر ولن يُخصم أي مبلغ. ويمكنك أيضًا الانتقال إلى الخطة الشهرية.'],
+        why: 'هذه الرسالة تخص مدفوعاتك، لذلك تصل دائمًا.' },
+      payFailed: { subj: 'لم نتمكّن من تحصيل دفعة UXGate', pre: 'يبقى Pro مفعّلًا حتى 10 ديسمبر. تحديث البطاقة يستغرق دقيقة.', ill: 'payment', illAlt: '',
+        h1: 'لم تتم عملية الدفع', ps: ['رفض البنك دفعة 249 ج.م في 3 ديسمبر. يحدث هذا غالبًا عند انتهاء صلاحية البطاقة أو إيقاف الدفع عبر الإنترنت.', 'يبقى Pro مفعّلًا حتى 10 ديسمبر، وسنحاول مرة أخرى في 5 و8 ديسمبر.'],
+        btn: 'حدّث بطاقتي', notes: ['تقدّمك محفوظ مهما حدث.'],
+        why: 'هذه الرسالة تخص مدفوعاتك، لذلك تصل دائمًا.' },
+      cancelled: { subj: 'أُلغيت خطة UXGate Pro', pre: 'يبقى Pro مفعّلًا حتى 3 ديسمبر 2026.', ill: 'calendar', illAlt: '',
+        h1: 'أُلغيت خطتك', ps: ['لن نخصم منك أي مبلغ بعد الآن. يبقى Pro مفعّلًا حتى 3 ديسمبر 2026، وبعدها يبقى كل تقدّمك في حسابك، والوحدة 1 من كل مسار متاحة.'],
+        btn: 'استأنف خطتي', notes: ['استأنف قبل 3 ديسمبر ولن يتغيّر شيء.'],
+        why: 'هذه الرسالة تخص مدفوعاتك، لذلك تصل دائمًا.' },
+      refundYes: { subj: 'قُبل طلب استرداد المبلغ', pre: 'يعود 249 ج.م إلى Visa •••• 4242 خلال 5 إلى 10 أيام عمل.', ill: 'payment', illAlt: '',
+        h1: 'قُبل طلب الاسترداد', ps: ['أعدنا 249 ج.م إلى Visa •••• 4242. يستغرق ظهوره في البنك من 5 إلى 10 أيام عمل.', 'انتهى Pro. ويبقى تقدّمك وسلسلتك وشاراتك في حسابك، والوحدة 1 من كل مسار متاحة.'],
+        btn: 'اعرض طلباتي', notes: ['فريق UXGate'],
+        why: 'هذه الرسالة تخص مدفوعاتك، لذلك تصل دائمًا.' },
+      refundNo: { subj: 'بخصوص طلب استرداد المبلغ', pre: 'مرّ أكثر من 7 أيام على الدفعة.', ill: 'calendar', illAlt: '',
+        h1: 'لا يمكننا استرداد هذه الدفعة', ps: ['راسلتنا في 20 نوفمبر بخصوص دفعة 249 ج.م في 3 نوفمبر. يمكن استرداد المبلغ خلال 7 أيام من الدفعة، لذلك لا يمكننا استرداد هذه الدفعة.', 'ما زال بإمكانك الإلغاء، فلن يُخصم منك أي مبلغ بعد الآن، ويبقى Pro مفعّلًا حتى 3 ديسمبر.'],
+        btn: 'إدارة خطتي', notes: ['إن حدث خطأ في الدفعة نفسها، ردّ على هذه الرسالة وسنراجعها مرة أخرى.', 'فريق UXGate'],
+        why: 'هذه الرسالة تخص مدفوعاتك، لذلك تصل دائمًا.' }
     } }
 };
 class Component extends DCLogic {
@@ -130,7 +185,8 @@ class Component extends DCLogic {
     const E = c.E[view];
     const links = (E.links || []).map(([id, label], i, arr) => ({ id, label, sep: i < arr.length - 1 ? ' · ' : '' }));
     const e = Object.assign({}, E, { ill: IMG[E.ill], hasBox: !!E.box, boxImg: E.box ? IMG[E.box[0]] : '', boxT: E.box ? E.box[1] : '', boxS: E.box ? E.box[2] : '',
-      notes: E.notes || [], hasCode: !!E.code, code: E.code || '', hasSafety: !!E.safety, safety: E.safety || '', links, hasLinks: links.length > 0 });
+      notes: E.notes || [], hasCode: !!E.code, code: E.code || '', hasSafety: !!E.safety, safety: E.safety || '', links, hasLinks: links.length > 0,
+      hasRows: !!E.rows, rows: (E.rows || []).map(([k, v]) => ({ k, v })) });
     return {
       lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, e,
       rootCls: 'ug em-frame' + (device === 'desktop' ? ' em-desk' : ''),
