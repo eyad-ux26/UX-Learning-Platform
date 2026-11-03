@@ -2,8 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import yaml from "js-yaml";
+import { fileURLToPath } from "node:url";
 
-export const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../..");
+export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const PATHS_DIR = path.join(ROOT, "content/paths");
 
 const readYaml = (file) => yaml.load(fs.readFileSync(file, "utf8"));
