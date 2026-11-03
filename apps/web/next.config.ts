@@ -5,17 +5,19 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const isDev = process.env.NODE_ENV !== "production";
 const isPreview = process.env.VERCEL_ENV === "preview";
+// Cloudflare Web Analytics beacon (loaded only when a token is set).
+const cfBeacon = !isDev && !!process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
 
 // Content-Security-Policy. Next.js inlines small scripts and styles, so 'unsafe-inline' stays until a nonce setup replaces it.
 // Everything else is closed: no framing (clickjacking), no plugins, forms and base URL only to ourselves, data only to us and Supabase.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${isPreview ? " https://vercel.live" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${isPreview ? " https://vercel.live" : ""}${cfBeacon ? " https://static.cloudflareinsights.com" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
   "media-src 'self' data: blob:",
-  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${isDev ? " ws:" : ""}${isPreview ? " https://vercel.live wss://ws-us3.pusher.com https://*.pusher.com" : ""}`,
+  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""}${isPreview ? " https://vercel.live wss://ws-us3.pusher.com https://*.pusher.com" : ""}`,
   isPreview ? "frame-src https://vercel.live" : "frame-src 'none'",
   "frame-ancestors 'none'",
   "object-src 'none'",
@@ -31,6 +33,8 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+  // One year, this host only: no includeSubDomains, so the old site's subdomains are not pulled onto https-only.
+  ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=31536000" }]),
 ];
 
 // "standalone" keeps a self-hosted build possible, our way off Vercel if we ever need it.
@@ -39,7 +43,6 @@ const config: NextConfig = {
   poweredByHeader: false,
   transpilePackages: ["@uxgate/tokens", "@uxgate/player", "@uxgate/content"],
   async headers() {
-    // HSTS is left to Vercel: includeSubDomains here would also hit the old site's subdomains.
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 };
