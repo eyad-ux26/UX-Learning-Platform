@@ -38,6 +38,7 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 - Production on Supabase Pro with daily backups, and Cloudflare Workers Paid ($5 a month, Eyad adds the payment method) with usage alerts set. Upgrade earlier if QA shows p99 CPU time near the free plan's 10 ms limit. Workers Paid must also be on before slice 3 merges, because its nightly job makes more than the free plan's 50 subrequests per run. Vercel is deleted only after the QA re-test on Cloudflare passes and a week passes with no Vercel links (switch-over checklist: https://claude.ai/artifact/HPV7Y8Ast2tg2CM6Ry2uUp).
 - Google sign-in shows UXGate, not the Supabase project address (Eyad, 2 Nov):
   - finish Google OAuth brand verification, with the name UXGate, the logo, uxgate.org, and links to the privacy and terms pages;
+  - publish the Google OAuth consent screen (Google Cloud project "uxgate") out of Testing mode, which today allows only the 2 test users;
   - set up the Supabase Custom Domain add-on (for example auth.uxgate.org), which needs Pro and costs about $10 a month;
   - update the Google and Apple redirect URLs to the new domain.
 - The privacy and terms pages (EN-24) are live in both languages.
