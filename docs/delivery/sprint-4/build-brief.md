@@ -18,6 +18,10 @@ A learner can manage everything about their account: language, theme, goal, remi
 | Done rules | `docs/delivery/definition-of-done.md` (including the tech gate) |
 | Credits | `/mnt/project-files/delivery/credits-policy.md`: build on Sonnet high |
 
+## Design audit (approved by Eyad, 4 November 2026)
+
+The design audit fixes in `/mnt/project-files/design/audit/apply-audit-fixes.md` apply to every slice 4 screen: A1 to A8 (links, chips, contrast, 44px targets, 12px floor), U1 (error states with EN and AR copy), U3 (week start, once Eyad picks it), U5 and P2. Build against the canvas version that includes them. The shared stylesheet and player changes come from slice 2's follow-up PR.
+
 ## In scope
 
 | ID | Story | Notes |
