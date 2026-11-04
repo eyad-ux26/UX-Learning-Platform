@@ -1,5 +1,5 @@
-// The leaderboard week starts on Monday at 00:00 in the learner's time zone.
-import { mondayOf } from "./freeze";
+// The leaderboard week starts on the first day of the week (WEEK_START in freeze.ts) at 00:00 in the learner's time zone.
+import { weekStartOf } from "./freeze";
 import { localDay } from "./progress";
 
 const parts = (at: Date, timeZone: string) => {
@@ -16,5 +16,5 @@ export function startOfDay(day: string, timeZone: string): Date {
 export function weekStart(now: Date, timeZone: string | null | undefined): Date {
   let tz = timeZone || "UTC";
   try { new Intl.DateTimeFormat("en", { timeZone: tz }); } catch { tz = "UTC"; }
-  return startOfDay(mondayOf(localDay(now, tz)), tz);
+  return startOfDay(weekStartOf(localDay(now, tz)), tz);
 }

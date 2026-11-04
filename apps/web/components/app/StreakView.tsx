@@ -122,7 +122,7 @@ export async function SkillsMain({ me }: { me: Learner }) {
                       <div key={s.id} className={`card sbadge is-${b ?? "none"}`}>
                         <span className="sgem"><span className={`ph ph-${b === "gold" ? "medal-fill" : b === "blue" ? "seal-check-fill" : "lock"}`} aria-hidden="true" /></span>
                         <small className="t-label" style={{ fontSize: 12 }}>{s.title[locale]}</small>
-                        <small className="t-small ink-2">{st ? t(st) : t("none")} · {b === "gold" ? t("badgeGold") : b === "blue" ? t("badgeBlue") : t("badgeNone")}</small>
+                        <small className="status-chip">{st ? t(st) : t("none")} · {b === "gold" ? t("badgeGold") : b === "blue" ? t("badgeBlue") : t("badgeNone")}</small>
                       </div>
                     );
                   })}
