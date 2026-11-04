@@ -12,10 +12,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Barlow:wght@500;600;700;800&amp;family=Almarai:wght@400;700;800&amp;family=Rubik:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
-<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}" style="{{rootStyle}}">
   <header class="lp-head">
     <a href="#home" onClick="{{askExit}}" class="{{headBtn}}" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
     <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
@@ -41,7 +41,10 @@ a{color:#005F99}a:hover{color:#003F66}
 
   <main class="{{mainCls}}">
     <sc-if value="{{showCtx}}" hint-placeholder-val="{{true}}">
-      <section class="lp-ctx" aria-label="{{c.example}}">
+      <section class="{{ctxCls}}" aria-label="{{ctxLabel}}" role="{{ctxRole}}" aria-modal="{{ctxModal}}">
+        <sc-if value="{{exFull}}" hint-placeholder-val="{{false}}">
+          <div class="lp-full-head"><span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{k.frame}}</span><button class="icon-btn" type="button" aria-label="{{c.exClose}}" onClick="{{closeEx}}"><span class="ph ph-x" aria-hidden="true"></span></button></div>
+        </sc-if>
         <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
           <span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{k.frame}}</span>
         </sc-if>
@@ -56,15 +59,15 @@ a{color:#005F99}a:hover{color:#003F66}
 
           <sc-if value="{{ctx.words}}" hint-placeholder-val="{{false}}">
             <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: hidden; border: 2px solid #C9D1D6; background: #DDE3E7;">
-              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.lunchCap}}</figcaption>
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 12px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 12px; letter-spacing: 0.06em;">MOCK</span>{{x.lunchCap}}</figcaption>
               <div style="background: #FFF7EE; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; font-family: 'Rubik', sans-serif; color: #3B1F14;">
-                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: 11px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: 12px;">{{x.lunchBrand}}</span></div>
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: 12px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: 12px;">{{x.lunchBrand}}</span></div>
                 <span style="font-weight: 600; font-size: 15px;">{{x.lunchTitle}}</span>
-                <span style="font-size: 11px; color: #7A4A36; font-weight: 500;">{{x.addr}}</span>
+                <span style="font-size: 12px; color: #7A4A36; font-weight: 500;">{{x.addr}}</span>
                 <span style="display: block; height: 22px; border-radius: 10px; border: 1px solid #E9C9B2; background: #FFFFFF;"></span>
-                <span style="font-size: 11px; color: #7A4A36; font-weight: 500;">{{x.phone}}</span>
+                <span style="font-size: 12px; color: #7A4A36; font-weight: 500;">{{x.phone}}</span>
                 <span style="display: block; height: 22px; border-radius: 10px; border: 1px solid #E9C9B2; background: #FFFFFF;"></span>
-                <span class="sel-frame" style="align-self: flex-start; margin: 4px 0 2px; padding: 0 6px; font-size: 11px; font-weight: 600; color: #3B1F14; background: rgba(120, 228, 252, 0.35); min-width: 110px; min-height: 16px;">{{wordsLabel}}</span>
+                <span class="sel-frame" style="align-self: flex-start; margin: 4px 0 2px; padding: 0 6px; font-size: 12px; font-weight: 600; color: #3B1F14; background: rgba(120, 228, 252, 0.35); min-width: 110px; min-height: 16px;">{{wordsLabel}}</span>
                 <span style="display: block; height: 34px; border-radius: 10px; border: 1px solid #E9C9B2; background: #FFFFFF;"></span>
                 <span style="display: grid; place-items: center; height: 28px; border-radius: 999px; background: #C8471F; color: #FFFFFF; font-weight: 600; font-size: 12px; margin-top: 2px;">{{x.placeOrder}}</span>
               </div>
@@ -73,18 +76,18 @@ a{color:#005F99}a:hover{color:#003F66}
 
           <sc-if value="{{ctx.fix}}" hint-placeholder-val="{{false}}">
             <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: hidden; border: 2px solid #C9D1D6; background: #DDE3E7;">
-              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.gymCap}}</figcaption>
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 12px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 12px; letter-spacing: 0.06em;">MOCK</span>{{x.gymCap}}</figcaption>
               <div style="background: #FFFFFF; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; font-family: {{gymFont}}; color: #1F2328;">
-                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #B7E000; color: #1F2328; font-weight: 800; font-size: 11px;">{{x.gymMark}}</span><span style="font-weight: 800; font-size: 11px; letter-spacing: {{gymTrack}};">{{x.gymBrand}}</span></div>
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #B7E000; color: #1F2328; font-weight: 800; font-size: 12px;">{{x.gymMark}}</span><span style="font-weight: 800; font-size: 12px; letter-spacing: {{gymTrack}};">{{x.gymBrand}}</span></div>
                 <span style="font-weight: 700; font-size: 15px;">{{x.joinTitle}}</span>
-                <span style="font-size: 11px; font-weight: 600; color: #4A5560;">{{x.emailLabel}}</span>
+                <span style="font-size: 12px; font-weight: 600; color: #4A5560;">{{x.emailLabel}}</span>
                 <span style="display: block; height: 22px; border-radius: 6px; border: {{fixField}}; background: #F7F8F9;"></span>
                 <sc-if value="{{fixShowErr}}" hint-placeholder-val="{{true}}">
-                  <span style="font-size: 11px; font-weight: 700; color: #C0262D;">{{x.emailErr}}</span>
+                  <span style="font-size: 12px; font-weight: 700; color: #C0262D;">{{x.emailErr}}</span>
                 </sc-if>
                 <span style="display: grid; place-items: center; height: 28px; border-radius: 6px; background: #B7E000; color: #1F2328; font-weight: 800; font-size: 12px; margin-top: 2px;">{{x.joinBtn}}</span>
                 <sc-if value="{{fixShowOk}}" hint-placeholder-val="{{false}}">
-                  <span style="font-size: 11px; font-weight: 700; color: #2E7D32;">{{x.welcome}}</span>
+                  <span style="font-size: 12px; font-weight: 700; color: #2E7D32;">{{x.welcome}}</span>
                 </sc-if>
               </div>
             </figure>
@@ -92,18 +95,18 @@ a{color:#005F99}a:hover{color:#003F66}
 
           <sc-if value="{{ctx.clinic}}" hint-placeholder-val="{{false}}">
             <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: hidden; border: 2px solid #C9D1D6; background: #DDE3E7;">
-              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.clinicCap}}</figcaption>
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 12px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 12px; letter-spacing: 0.06em;">MOCK</span>{{x.clinicCap}}</figcaption>
               <div style="background: #F3F8F7; padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 7px; font-family: {{clinicFont}}; color: #17302C;">
-                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #0E7C6B; color: #0E7C6B; font-weight: 700; font-size: 10px; box-sizing: border-box;">{{x.clinicMark}}</span><span style="font-weight: 600; font-size: 12px; color: #0E7C6B;">{{x.clinicBrand}}</span></div>
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #0E7C6B; color: #0E7C6B; font-weight: 700; font-size: 12px; box-sizing: border-box;">{{x.clinicMark}}</span><span style="font-weight: 600; font-size: 12px; color: #0E7C6B;">{{x.clinicBrand}}</span></div>
                 <span style="font-weight: 700; font-size: 15px;">{{x.bookTitle}}</span>
-                <span style="font-size: 11px; font-weight: 500; color: #4D6662;">{{x.insLabel}}</span>
+                <span style="font-size: 12px; font-weight: 500; color: #4D6662;">{{x.insLabel}}</span>
                 <span style="display: block; height: 22px; border-radius: 4px; border: {{clinicField}}; background: #FFFFFF;"></span>
                 <sc-if value="{{fixShowErr}}" hint-placeholder-val="{{true}}">
-                  <span style="font-size: 11px; font-weight: 600; color: #C0262D;">{{x.insErr}}</span>
+                  <span style="font-size: 12px; font-weight: 600; color: #C0262D;">{{x.insErr}}</span>
                 </sc-if>
                 <span style="display: grid; place-items: center; height: 28px; border-radius: 4px; background: #0E7C6B; color: #FFFFFF; font-weight: 600; font-size: 12px; margin-top: 2px;">{{x.bookBtn}}</span>
                 <sc-if value="{{fixShowOk}}" hint-placeholder-val="{{false}}">
-                  <span style="font-size: 11px; font-weight: 600; color: #0E7C6B;">{{x.booked}}</span>
+                  <span style="font-size: 12px; font-weight: 600; color: #0E7C6B;">{{x.booked}}</span>
                 </sc-if>
               </div>
             </figure>
@@ -138,9 +141,9 @@ a{color:#005F99}a:hover{color:#003F66}
 
           <sc-if value="{{ctx.spot}}" hint-placeholder-val="{{false}}">
             <figure lang="{{lang}}" dir="{{dir}}" style="margin: 0; width: {{ctx.width}}px; border-radius: 16px; overflow: visible; border: 2px solid #C9D1D6; background: #DDE3E7;">
-              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 11px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 9px; letter-spacing: 0.06em;">MOCK</span>{{x.lunchCap}}</figcaption>
+              <figcaption style="display: flex; align-items: center; gap: 8px; height: 24px; padding: 0 10px; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 12px;"><span style="display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 12px; letter-spacing: 0.06em;">MOCK</span>{{x.lunchCap}}</figcaption>
               <div style="background: #FFF7EE; padding: {{sp.pad}}px; display: flex; flex-direction: column; gap: {{sp.gap}}px; font-family: 'Rubik', sans-serif; color: #3B1F14; border-radius: 0 0 14px 14px;">
-                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: 11px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: 12px;">{{x.lunchBrand}}</span></div>
+                <div style="display: flex; align-items: center; gap: 7px;"><span style="display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #C8471F; color: #FFFFFF; font-weight: 700; font-size: 12px;">{{x.lunchMark}}</span><span style="font-weight: 700; font-size: 12px;">{{x.lunchBrand}}</span></div>
                 <span style="font-weight: 600; font-size: {{sp.title}}px;">{{x.checkout}}</span>
                 <sc-for list="{{regions}}" as="r" hint-placeholder-count="4">
                   <button class="{{r.cls}}" type="button" aria-pressed="{{r.pressed}}" aria-label="{{r.aria}}" disabled="{{r.locked}}" onClick="{{r.pick}}">
@@ -162,8 +165,13 @@ a{color:#005F99}a:hover{color:#003F66}
           </sc-if>
           </div></div>
         </div>
+        <sc-if value="{{exThumb}}" hint-placeholder-val="{{false}}">
+          <span class="lp-thumb-txt" aria-hidden="true"><span class="cap">{{k.frame}}</span><span class="go"><span class="ph ph-corners-out" aria-hidden="true"></span>{{c.exOpen}}</span></span>
+          <button class="lp-thumb-hit" type="button" aria-haspopup="dialog" aria-label="{{thumbAria}}" onClick="{{openEx}}"></button>
+        </sc-if>
+        <sc-if value="{{exFull}}" hint-placeholder-val="{{false}}"><p class="lp-full-note">{{c.exZoom}}</p></sc-if>
         <sc-if value="{{showHana}}" hint-placeholder-val="{{false}}">
-          <span class="cursor-tag" style="position: absolute; top: 130px; inset-inline-end: -18px; --c: #3DAA80; --c-ink: #FFFFFF;"><span class="ph ph-cursor-fill" aria-hidden="true"></span><b>{{k.who}}</b></span>
+          <span class="cursor-tag" style="position: absolute; top: 130px; inset-inline-end: -18px; --c: #3DAA80; --c-ink: #012E4B;"><span class="ph ph-cursor-fill" aria-hidden="true"></span><b>{{k.who}}</b></span>
         </sc-if>
       </section>
     </sc-if>
@@ -177,7 +185,10 @@ a{color:#005F99}a:hover{color:#003F66}
         <sc-if value="{{sayOff}}" hint-placeholder-val="{{false}}">
           <p class="lp-scn">{{k.scenario}}</p>
         </sc-if>
-        <sc-if value="{{sayOn}}" hint-placeholder-val="{{true}}">
+        <sc-if value="{{sayChip}}" hint-placeholder-val="{{false}}">
+          <button class="say-chip" type="button" aria-expanded="false" aria-label="{{sayChipAria}}" onClick="{{toggleSay}}"><img src="{{sayFace}}" alt="" width="28" height="28"><b>{{sayName}}</b><span class="txt">{{k.says}}</span><span class="ph ph-caret-down" aria-hidden="true"></span></button>
+        </sc-if>
+        <sc-if value="{{sayFull}}" hint-placeholder-val="{{true}}">
           <div class="say">
             <img class="say-face" src="{{sayFace}}" alt="{{sayName}}" width="64" height="64">
             <div class="say-bubble"><span class="say-name">{{sayWho}}</span><p class="lp-scn">{{k.says}}</p></div>
@@ -189,7 +200,7 @@ a{color:#005F99}a:hover{color:#003F66}
       <div class="lp-act">
         <sc-if value="{{mockCollapsed}}" hint-placeholder-val="{{false}}">
           <button type="button" onClick="{{openMock}}" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border-radius: 14px; border: 2px solid #C9D1D6; background: #DDE3E7; color: #3C4A52; font-family: var(--font); font-weight: 700; font-size: 13px; cursor: pointer;">
-            <span style="display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 10px; letter-spacing: 0.06em;">MOCK</span>
+            <span style="display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 12px; letter-spacing: 0.06em;">MOCK</span>
             <span style="flex: 1; text-align: start;">{{c.mockAgain}}</span>
             <span class="ph ph-eye" style="font-size: 18px;" aria-hidden="true"></span>
           </button>
@@ -289,18 +300,20 @@ a{color:#005F99}a:hover{color:#003F66}
       </div>
 
       <sc-if value="{{showBar}}" hint-placeholder-val="{{true}}">
-        <div class="lp-bar">
-          <sc-if value="{{hasConf}}" hint-placeholder-val="{{false}}">
-            <div class="{{confCls}}" role="group" aria-label="{{c.sure}}">
-              <span class="lbl">{{confLbl}}</span>
+        <div class="{{barCls}}">
+          <sc-if value="{{confGo}}" hint-placeholder-val="{{false}}">
+            <p class="lp-go-lbl" id="{{goId}}">{{c.sureGo}}</p>
+            <div class="lp-go" role="group" aria-labelledby="{{goId}}">
               <sc-for list="{{conf}}" as="q" hint-placeholder-count="3">
-                <button class="{{q.cls}}" type="button" aria-pressed="{{q.on}}" onClick="{{q.pick}}">{{q.label}}</button>
+                <button class="btn btn-primary press" type="button" onClick="{{q.go}}">{{q.label}}</button>
               </sc-for>
             </div>
           </sc-if>
-          <sc-if value="{{showConfHelp}}" hint-placeholder-val="{{false}}"><p class="lp-help">{{c.confHelp}}</p></sc-if>
-          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span style="flex: 1;"></span></sc-if>
-          <button class="{{checkCls}}" type="button" disabled="{{checkOff}}" onClick="{{check}}">{{checkText}}</button>
+          <sc-if value="{{showCheck}}" hint-placeholder-val="{{true}}">
+            <sc-if value="{{checkHelp}}" hint-placeholder-val="{{false}}"><p class="lp-help lp-check-help" id="{{helpId}}">{{checkHelp}}</p></sc-if>
+            <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span style="flex: 1;"></span></sc-if>
+            <button class="{{checkCls}}" type="button" disabled="{{checkOff}}" aria-describedby="{{helpRef}}" onClick="{{check}}">{{checkText}}</button>
+          </sc-if>
         </div>
       </sc-if>
     </section>
@@ -428,7 +441,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"screen":{"editor":"enum","options":["844","664","640"],"default":"844"},"caseStep":{"editor":"enum","options":["first","later"],"default":"first"},"example":{"editor":"enum","options":["thumb","full"],"default":"thumb"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson player: every step type, its feedback and the sheets that sit over a step.
    Props: kind (step type), state (preset to review), mode (lesson, skill check, mastery round, guest), overlay.
    The mastery round uses its own new case (M below), never the lesson's own examples. */
@@ -440,6 +453,9 @@ const C = {
     wrongTitle: 'Not quite', right: 'Right', also: 'Also works', revealed: 'The answer, step by step', 
     tryOf: (n) => 'Try ' + n + ' of 3', hintOf: (n) => 'Hint ' + n + ' of 2', kept: 'Your first answer is kept.',
     sure: 'How sure are you?', conf: ['Guessing', 'Fairly sure', 'Sure'], confHelp: 'Pick how sure you are, then Check.',
+    sureGo: 'How sure are you? Your pick checks the answer.', pickFirst: 'Pick an answer, then Check.', pickFirstConf: 'Pick an answer, then say how sure you are.',
+    placedOf: (n, m) => n + ' of ' + m + ' placed', pairedOf: (n, m) => n + ' of ' + m + ' paired',
+    exOpen: 'Open full screen', exClose: 'Close the example', exZoom: 'Pinch to zoom. Close the example to go back to the question.', exAria: (f) => f + '. Open full screen', sayAria: (n) => 'Show what ' + n + ' said',
     confSure: 'You were sure, so this one comes first in your review.',
     reviewLink: 'Think your answer works too? Ask for a review',
     saving: 'Saving', saved: 'Saved', offline: 'Offline',
@@ -468,6 +484,9 @@ const C = {
     wrongTitle: 'ليس تمامًا', right: 'صحيح', also: 'تصلح أيضًا', revealed: 'الإجابة خطوة بخطوة', 
     tryOf: (n) => 'المحاولة ' + n + ' من 3', hintOf: (n) => 'تلميح ' + n + ' من 2', kept: 'نحتفظ بإجابتك الأولى.',
     sure: 'ما مدى تأكدك؟', conf: ['أخمّن', 'متأكد نوعًا ما', 'متأكد'], confHelp: 'اختر مدى تأكدك، ثم اضغط «تحقّق».',
+    sureGo: 'ما مدى تأكدك؟ اختيارك يتحقّق من الإجابة.', pickFirst: 'اختر إجابة، ثم اضغط «تحقّق».', pickFirstConf: 'اختر إجابة، ثم حدّد مدى تأكدك.',
+    placedOf: (n, m) => 'وُضع ' + n + ' من ' + m, pairedOf: (n, m) => 'رُبط ' + n + ' من ' + m,
+    exOpen: 'افتح بملء الشاشة', exClose: 'أغلق المثال', exZoom: 'كبّر بإصبعين. أغلق المثال لتعود إلى السؤال.', exAria: (f) => f + '. افتحه بملء الشاشة', sayAria: (n) => 'اعرض كلام ' + n + ' كاملًا',
     confSure: 'كنت متأكدًا، لذا يأتي هذا السؤال أولًا في مراجعتك.',
     reviewLink: 'تظن أن إجابتك تصلح أيضًا؟ اطلب مراجعة',
     saving: 'جارٍ الحفظ', saved: 'محفوظ', offline: 'بلا اتصال',
@@ -796,13 +815,13 @@ function preset(kind, stIn, sp) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = Object.assign({ sound: true, overlay: props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(props), this.stateName(props), specFor(this.kind(props), props.mode)));
+    this.state = Object.assign({ sound: true, overlay: props.overlay || 'none', reason: 0, bannerOff: false, sayOpen: false, exOpen: props.example === 'full' }, preset(this.kind(props), this.stateName(props), specFor(this.kind(props), props.mode)));
   }
   kind(p) { return K[(p || this.props).kind] ? (p || this.props).kind : 'words'; }
   stateName(p) { const m = (p || this.props).mode; const st = (p || this.props).state || 'select'; return m === 'check' && st !== 'select' && st !== 'idle' ? 'saved' : st; }
   componentDidUpdate(prev) {
-    if (prev.kind !== this.props.kind || prev.state !== this.props.state || prev.mode !== this.props.mode || prev.overlay !== this.props.overlay) {
-      this.setState(Object.assign({ overlay: this.props.overlay || 'none', reason: 0, bannerOff: false }, preset(this.kind(), this.stateName(), specFor(this.kind(), this.props.mode))));
+    if (prev.kind !== this.props.kind || prev.state !== this.props.state || prev.mode !== this.props.mode || prev.overlay !== this.props.overlay || prev.example !== this.props.example || prev.caseStep !== this.props.caseStep) {
+      this.setState(Object.assign({ overlay: this.props.overlay || 'none', reason: 0, bannerOff: false, sayOpen: false, exOpen: this.props.example === 'full' }, preset(this.kind(), this.stateName(), specFor(this.kind(), this.props.mode))));
     }
   }
   sfx(name) { if (this.state.sound && this.props.sfx) this.props.sfx(name); }
@@ -860,9 +879,22 @@ class Component extends DCLogic {
     const ctx = { gym: ctxKind === 'gym', gymStep: ctxKind === 'gymStep', words: ctxKind === 'words', fix: ctxKind === 'fix', clinic: ctxKind === 'clinic', order: ctxKind === 'order', spot: ctxKind === 'spot',
       variant: spec.variant || 'now', size: isDesk ? 'md' : 'sm', width: isDesk ? (ctxKind === 'spot' ? 420 : 400) : (ctxKind === 'spot' ? 330 : 300) };
     if (ctxKind === 'gymStep') { ctx.width = isDesk ? 460 : 350; }
-    const SCALE = { predict: [0.7, 198], words: [0.8, 226] };
+    /* Design audit L4 + A2: on a phone the example is a pinned thumbnail next to the question; a tap opens it full screen at a readable size.
+       Spot keeps the example inline, because the example is where the answer is tapped. */
+    const SCR = { '844': [390, 844], '664': [390, 664], '640': [360, 640] }[this.props.screen] || [390, 844];
+    const thumbable = !isDesk && !!ctxKind && kind !== 'spot';
+    const exFull = thumbable && s.exOpen;
+    const exThumb = thumbable && !s.exOpen;
     ctx.wrap = ''; ctx.inner = '';
-    if (!isDesk && SCALE[kind]) { ctx.wrap = 'height: ' + SCALE[kind][1] + 'px; display: flex; justify-content: center; overflow: visible;'; ctx.inner = 'transform: scale(' + SCALE[kind][0] + '); transform-origin: top center;'; }
+    if (exThumb) {
+      const tw = 104; const bw = ctxKind === 'order' ? 190 : ctx.width; const sc = tw / bw;
+      ctx.wrap = 'width: ' + tw + 'px; height: 88px; overflow: hidden; position: relative;';
+      ctx.inner = 'width: ' + bw + 'px; transform: scale(' + sc.toFixed(3) + '); transform-origin: top ' + (lang === 'ar' ? 'right' : 'left') + ';';
+    }
+    if (exFull) {
+      ctx.size = 'md'; ctx.width = Math.min(ctx.width + 40, SCR[0] - 32);
+      ctx.wrap = 'display: flex; justify-content: center;'; ctx.inner = '';
+    }
 
     /* words: the label slot in the example shows the picked label */
     const wordsLabel = kind === 'words' && s.picked !== null ? k.opts[s.picked] : '                ';
@@ -925,8 +957,8 @@ class Component extends DCLogic {
       });
       preview = order.map((id) => ({ photo: id === 'photo', price: id === 'price', ingr: id === 'ingr', add: id === 'add' }));
     }
-    const ph = isDesk ? { pad: 14, gap: 12, logo: 22, small: 13, body: 15, title: 17, photo: 120, bowl: 84, bowlH: 42, btn: 36 }
-      : { pad: 8, gap: 6, logo: 14, small: 10, body: 12, title: 12, photo: 46, bowl: 40, bowlH: 20, btn: 24 };
+    const ph = (isDesk || exFull) ? { pad: 14, gap: 12, logo: 22, small: 13, body: 15, title: 17, photo: 120, bowl: 84, bowlH: 42, btn: 36 }
+      : { pad: 8, gap: 6, logo: 16, small: 12, body: 13, title: 13, photo: 46, bowl: 40, bowlH: 20, btn: 26 };
 
     /* match */
     let left = []; let right = [];
@@ -953,7 +985,7 @@ class Component extends DCLogic {
 
     /* spot */
     let regions = [];
-    const sp = isDesk ? { pad: 16, gap: 14, title: 18, label: 13, field: 34, btn: 40 } : { pad: 12, gap: 11, title: 15, label: 11, field: 26, btn: 32 };
+    const sp = isDesk ? { pad: 16, gap: 14, title: 18, label: 13, field: 34, btn: 40 } : { pad: 12, gap: 11, title: 15, label: 12, field: 28, btn: 34 };
     if (kind === 'spot') {
       const vals = { addr: x.addrVal, phone: x.phoneVal, note: x.noteVal };
       regions = spec.regions.map((r) => {
@@ -978,10 +1010,10 @@ class Component extends DCLogic {
 
     /* confidence */
     /* no confidence tap for guests: there is no review queue to order yet */
+    /* Design audit L2: once an answer is picked, Guessing / Fairly sure / Sure replace Check, and each one submits.
+       The confidence is still given before the verdict. */
     const hasConf = !!spec.conf && !isCheck && !after && mode !== 'guest';
-    const conf = c.conf.map((label, i) => ({ label, on: s.conf === i ? 'true' : 'false', cls: 'chip press' + (s.conf === i ? ' is-selected' : ''),
-      pick: () => { this.sfx('ui-toggle-on'); this.setState({ conf: i }); } }));
-    const confMissing = hasConf && s.picked !== null && s.conf === null;
+    const confMissing = false;
 
     /* feedback */
     const v = this.verdict();
@@ -991,14 +1023,27 @@ class Component extends DCLogic {
     const hints = isMastery || isCheck ? [] : k.hints ? k.hints.slice(0, s.hints).map((text, i) => ({ title: c.hintOf(i + 1), text })) : [];
     const rightCls = 'sheet sheet-in lp-sheet ' + (s.also ? 'sheet-also' : 'sheet-right');
 
-    const check = () => {
-      if (!this.ready() || confMissing) return;
+    const submit = (confIdx) => {
+      if (!this.ready()) return;
       this.sfx('check-press');
-      if (isCheck) { this.setState({ phase: 'saved' }); return; }
+      const extra = confIdx == null ? {} : { conf: confIdx };
+      if (isCheck) { this.setState(Object.assign({ phase: 'saved' }, extra)); return; }
       const r = this.verdict();
-      if (r.ok) { this.sfx(r.also ? 'answer-also-works' : 'answer-right'); this.setState({ phase: 'right', also: !!r.also }); }
-      else { this.sfx('answer-wrong'); this.setState({ phase: 'wrong', tries: s.tries + 1, tried: s.tried.concat([s.picked]) }); }
+      if (r.ok) { this.sfx(r.also ? 'answer-also-works' : 'answer-right'); this.setState(Object.assign({ phase: 'right', also: !!r.also }, extra)); }
+      else { this.sfx('answer-wrong'); this.setState(Object.assign({ phase: 'wrong', tries: s.tries + 1, tried: s.tried.concat([s.picked]) }, extra)); }
     };
+    const check = () => submit(null);
+    const ready = this.ready();
+    const confGo = hasConf && ready;
+    const conf = c.conf.map((label, i) => ({ label, go: () => submit(i) }));
+    /* Design audit U4: say what is missing next to a disabled Check */
+    let checkHelp = '';
+    if (!ready) {
+      if (kind === 'sort') checkHelp = c.placedOf(spec.items.filter((i) => s.place[i]).length, spec.items.length);
+      else if (kind === 'match') checkHelp = c.pairedOf(spec.left.filter((l) => s.pairs[l]).length, spec.left.length);
+      else checkHelp = hasConf ? c.pickFirstConf : c.pickFirst;
+    }
+    const uid = 'lp-' + kind + '-' + lang + '-' + device + '-' + (this.props.state || 'select') + '-' + SCR[1];
     const solved = () => {
       if (kind === 'sort') return { place: Object.assign({}, spec.answer) };
       if (kind === 'order') return { order: spec.answers[0].slice() };
@@ -1008,23 +1053,30 @@ class Component extends DCLogic {
 
     return {
       lang, dir: lang === 'ar' ? 'rtl' : 'ltr', theme: this.props.theme === 'dark' ? 'dark' : 'light', c, k, x,
-      rootCls: 'ug lp lp-' + device, isDesk, headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
+      rootCls: 'ug lp lp-' + device, rootStyle: isDesk ? '' : 'width: ' + SCR[0] + 'px; height: ' + SCR[1] + 'px;',
+      ctxCls: 'lp-ctx' + (exThumb ? ' is-thumb' : '') + (exFull ? ' is-full' : ''), ctxLabel: exFull ? k.frame : c.example,
+      ctxRole: exFull ? 'dialog' : 'region', ctxModal: exFull ? 'true' : 'false', exThumb, exFull,
+      thumbAria: c.exAria(k.frame), openEx: () => { this.sfx('sheet-up'); this.setState({ exOpen: true }); }, closeEx: () => { this.sfx('sheet-down'); this.setState({ exOpen: false }); }, isDesk, headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
       stepNo, stepMax, pct: Math.round(((stepNo - 1) / stepMax) * 100 + 4) + '%', countText: stepNo + '/' + stepMax,
       save, modeTag,
       soundIcon: s.sound ? 'ph ph-speaker-high' : 'ph ph-speaker-slash', soundLabel: s.sound ? c.soundOn : c.soundOff, soundPressed: s.sound ? 'false' : 'true',
       toggleSound: () => { if (this.props.sfx && !s.sound) this.props.sfx('ui-toggle-on'); this.setState({ sound: !s.sound }); },
       banner: { offline: ov === 'offline', guest: mode === 'guest' && !after && !s.bannerOff, resume: ov === 'resume' && !s.bannerOff },
       closeBanner: (e) => { if (e) e.preventDefault(); this.setState({ bannerOff: true }); },
-      mainCls: 'lp-main' + (isDesk && (kind === 'sort' || kind === 'match') ? ' is-wide' : '') + (kind === 'order' ? ' ctx-after' : ''),
-      showCtx: showCtx && !(isDesk && (kind === 'sort' || kind === 'match')), ctx, showHana: isDesk && (ctxKind === 'gym' || ctxKind === 'gymStep'),
+      mainCls: 'lp-main' + (isDesk && (kind === 'sort' || kind === 'match') ? ' is-wide' : '') + (kind === 'order' && !exThumb ? ' ctx-after' : ''),
+      showCtx: (thumbable || showCtx) && !(isDesk && (kind === 'sort' || kind === 'match')), ctx, showHana: isDesk && (ctxKind === 'gym' || ctxKind === 'gymStep'),
       gymFont: lang === 'ar' ? "'Almarai', sans-serif" : "'Barlow', sans-serif", gymTrack: lang === 'ar' ? '0' : '0.08em',
       wordsLabel, fixField: fixed ? '1px solid #C2C8CE' : '1.5px solid #C0262D', clinicField: fixed ? '1px solid #B9CCC8' : '1.5px solid #C0262D',
       clinicFont: lang === 'ar' ? "'IBM Plex Sans Arabic', sans-serif" : "'IBM Plex Sans', sans-serif", fixShowErr: !fixed, fixShowOk: fixed,
       sayOn: !!(spec.say && k.says), sayOff: !(spec.say && k.says),
+      /* Design audit L3: the full bubble only on the first step of a case; later steps show a one-line speaker chip */
+      sayChip: !!(spec.say && k.says) && !isDesk && this.props.caseStep === 'later' && !s.sayOpen,
+      sayFull: !!(spec.say && k.says) && (isDesk || this.props.caseStep !== 'later' || s.sayOpen),
+      sayChipAria: spec.say ? c.sayAria(SAYER[spec.say][lang][0]) : '', toggleSay: () => this.setState({ sayOpen: true }),
       sayFace: spec.say ? SPK[spec.say][s.phase === 'wrong' ? 'think' : (s.phase === 'right' ? 'smile' : 'talk')] : '',
       sayName: spec.say ? SAYER[spec.say][lang][0] : '', sayWho: spec.say ? SAYER[spec.say][lang][1] : '',
       ph, preview, sp, regions,
-      mockCollapsed: !isDesk && ((after && isChoice) || kind === 'reason') && !s.mockOpen && !!ctxKind,
+      mockCollapsed: false,
       openMock: () => this.setState({ mockOpen: true }),
       isReason: kind === 'reason', isSort: kind === 'sort', isOrder: kind === 'order', isMatch: kind === 'match', isSpot: kind === 'spot',
       showOpts: isChoice || (kind === 'spot' && s.list), opts: kind === 'spot' ? spotOpts : opts,
@@ -1032,9 +1084,10 @@ class Component extends DCLogic {
       toggleList: () => this.setState({ list: !s.list }),
       showTray: tray.length > 0 && !after, tray, buckets, sortHelp: after ? '' : sortHelp,
       rows, canMove: !after, left, right,
-      showBar: !after, hasConf, conf, confCls: 'lp-conf' + (confMissing ? ' is-ask' : ''), showConfHelp: confMissing && isDesk, confLbl: (confMissing && !isDesk) ? c.confHelp : c.sure,
+      showBar: !after, barCls: 'lp-bar' + (confGo ? ' is-go' : ''), confGo, conf, goId: uid + '-go', showCheck: !confGo,
+      checkHelp, helpId: uid + '-help', helpRef: checkHelp ? uid + '-help' : '',
       checkCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), checkText: c.check,
-      checkOff: !this.ready() || confMissing, check,
+      checkOff: !ready, check,
       sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', saved: s.phase === 'saved' },
       showTry: !isMastery, tryText: c.tryOf(triesShown),
       showSure: s.phase === 'wrong' && s.conf === 2,

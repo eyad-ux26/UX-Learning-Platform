@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -213,7 +213,7 @@ a{color:#005F99}a:hover{color:#003F66}
               </section>
             </sc-if>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <div class="pg-sec" style="margin-top: -4px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 32px;">{{c.allPaths}}</a></div>
+              <div class="pg-sec" style="margin-top: -4px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 44px;">{{c.allPaths}}</a></div>
               <div class="prow">
                 <sc-for list="{{chips}}" as="p" hint-placeholder-count="2">
                   <a href="#switch" class="{{p.cls}}" aria-label="{{p.aria}}" aria-current="{{p.cur}}">
@@ -244,7 +244,7 @@ a{color:#005F99}a:hover{color:#003F66}
                 <div style="flex: 1; min-width: 0;"><p class="t-label" style="font-size: 16px;">{{c.goalTitle}}</p><p class="t-small ink-2">{{c.goalBody}}</p></div>
               </div>
               <div style="height: 2px; background: var(--line); border-radius: 2px;"></div>
-              <a href="#streak" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); min-height: 32px;">
+              <a href="#streak" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); min-height: 44px;">
                 <span class="ph ph-flame-fill" style="font-size: 20px; color: #F59E2B;" aria-hidden="true"></span>
                 <span class="t-label" style="font-size: 15px; flex: 1;">{{c.streak16}}</span>
                 <span class="t-small" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--link);"><span class="ph ph-freeze-fill" aria-hidden="true"></span>{{h.freezeText}}</span>
@@ -252,7 +252,7 @@ a{color:#005F99}a:hover{color:#003F66}
               </a>
               <div class="wk">
                 <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
-                  <div class="wk-d"><span class="{{d.cls}}" style="width: 32px; height: 32px;"><span class="{{d.icon}}" aria-hidden="true"></span></span><span class="wk-l">{{d.label}}</span></div>
+                  <div class="wk-d" role="img" aria-label="{{d.aria}}"><span aria-hidden="true" class="{{d.cls}}" style="width: 32px; height: 32px;"><span class="{{d.icon}}" aria-hidden="true"></span></span><span class="wk-l" aria-hidden="true">{{d.label}}</span></div>
                 </sc-for>
               </div>
             </section>
@@ -576,6 +576,24 @@ const C = {
 };
 const DOT = 'display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; flex: none; ';
 const VIEWS = ['paths', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'obRecommend', 'obAll', 'obGuest'];
+/* Week strip (design audit U3). One week start per locale: English starts on Monday, Arabic on Saturday (the PM confirms).
+   Short day names, today labelled Today / «اليوم», and each day has an accessible name with its state. */
+const WK = {
+  en: { order: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], sep: ', ', today: 'Today',
+    short: { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' },
+    full: { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' },
+    st: { goal: 'goal met', done: 'goal met', part: 'practised, goal not met', freeze: 'freeze used', today: 'today', next: 'still to come', future: 'still to come' } },
+  ar: { order: ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'], sep: '، ', today: 'اليوم',
+    short: { sat: 'سبت', sun: 'أحد', mon: 'اثنين', tue: 'ثلاثاء', wed: 'أربعاء', thu: 'خميس', fri: 'جمعة' },
+    full: { sat: 'السبت', sun: 'الأحد', mon: 'الاثنين', tue: 'الثلاثاء', wed: 'الأربعاء', thu: 'الخميس', fri: 'الجمعة' },
+    st: { goal: 'اكتمل الهدف', done: 'اكتمل الهدف', part: 'تدرّبت ولم يكتمل الهدف', freeze: 'استُخدم تجميد', today: 'اليوم', next: 'لم يأتِ بعد', future: 'لم يأتِ بعد' } }
+};
+/* past: the state of each day before today, by weekday; days after today in the locale's week are still to come */
+function weekStrip(lang, past, today, nextName) {
+  const w = WK[lang === 'ar' ? 'ar' : 'en']; const at = w.order.indexOf(today);
+  return w.order.map((d, i) => { const s = i < at ? (past[d] || 'part') : i === at ? 'today' : (nextName || 'next');
+    return { key: d, state: s, label: s === 'today' ? w.today : w.short[d], aria: w.full[d] + w.sep + w.st[s] }; });
+}
 class Component extends DCLogic {
   renderVals() {
     const lang = this.props.lang === 'ar' ? 'ar' : 'en';
@@ -624,7 +642,7 @@ class Component extends DCLogic {
 
     /* home */
     const freezeView = view === 'homeFreeze';
-    const weekStates = freezeView ? ['goal', 'goal', 'freeze', 'today', 'next', 'next', 'next'] : ['goal', 'part', 'goal', 'goal', 'today', 'next', 'next'];
+    const weekDays = freezeView ? weekStrip(lang, { sat: 'goal', sun: 'goal', mon: 'goal', tue: 'goal', wed: 'freeze' }, 'thu') : weekStrip(lang, { sat: 'part', sun: 'part', mon: 'goal', tue: 'part', wed: 'goal', thu: 'goal' }, 'fri');
     const wkIcon = { goal: 'ph ph-check', part: 'ph ph-check', freeze: 'ph ph-freeze-fill', today: 'ph ph-flame-fill', next: '' };
     const h = { next: view !== 'homeResume', resume: view === 'homeResume', freeze: freezeView, freezeText: freezeView ? c.freezes0 : c.freezes1,
       splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 400px;' : '', cardPad: isDesk ? '28px 32px' : '16px 16px 14px', illSize: isDesk ? 180 : 120, illTop: isDesk ? '20px' : '-4px',
@@ -671,7 +689,7 @@ class Component extends DCLogic {
       mark: theme === 'dark' ? '/_blob/5667904a660c43335758c7e0120ae2b8' : '/_blob/68b36b698602cc0ac59d5b87ca709073',
       is: { paths: view === 'paths', detail: isDetail, home: isHome, map: isMap, ob: isOb },
       joined: [all[0], all[1]], fresh: [all[2]], soon: all.slice(3),
-      d, h, chips, week: weekStates.map((s, i) => ({ label: c.days[i], cls: 'wk-dot is-' + s, icon: wkIcon[s] })),
+      d, h, chips, week: weekDays.map((w) => ({ label: w.label, aria: w.aria, cls: 'wk-dot is-' + w.state, icon: wkIcon[w.state] })),
       m, lessons, swRows, o, opts, allList, ov,
       kept: [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, where: c.keptWhere[p.id] }))
     };

@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -66,7 +66,7 @@ a{color:#005F99}a:hover{color:#003F66}
             <p class="t-over set-sec">{{c.invoices}}</p>
             <div class="set">
               <sc-for list="{{inv}}" as="i" hint-placeholder-count="2">
-                <div class="inv-row"><span class="ph ph-receipt" style="font-size: 22px; color: var(--ink-2);" aria-hidden="true"></span><span class="grow">{{i.date}}<small>{{i.what}}</small></span><span class="amt"><span class="{{pc}}">{{i.amt}}</span></span><span class="{{i.stCls}}">{{i.st}}</span><a href="#pdf" class="icon-btn plain" aria-label="{{i.aria}}" style="width: 40px; height: 40px;"><span class="ph ph-download" aria-hidden="true"></span></a></div>
+                <div class="inv-row"><span class="ph ph-receipt" style="font-size: 22px; color: var(--ink-2);" aria-hidden="true"></span><span class="grow">{{i.date}}<small>{{i.what}}</small></span><span class="amt"><span class="{{pc}}">{{i.amt}}</span></span><span class="{{i.stCls}}">{{i.st}}</span><a href="#pdf" class="icon-btn plain" aria-label="{{i.aria}}" style="width: 44px; height: 44px;"><span class="ph ph-download" aria-hidden="true"></span></a></div>
               </sc-for>
             </div>
             <div class="set">
@@ -114,7 +114,8 @@ a{color:#005F99}a:hover{color:#003F66}
           </div>
           <div class="pg-stack" style="gap: 10px;">
             <div class="field"><label for="rf-{{lang}}-{{theme}}-{{device}}">{{c.rfWhy}}</label>
-              <div class="note-in is-focus"><textarea id="rf-{{lang}}-{{theme}}-{{device}}" rows="3">{{c.rfSample}}</textarea></div>
+              <div class="{{rfE.cls}}"><textarea id="rf-{{lang}}-{{theme}}-{{device}}" rows="3" aria-invalid="{{rfE.inv}}" aria-describedby="{{rfE.desc}}">{{rfE.val}}</textarea></div>
+              <sc-if value="{{rfE.on}}" hint-placeholder-val="{{false}}"><span class="err" id="rf-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{rfE.msg}}</span></sc-if>
               <span class="help">{{c.rfHelp}}</span></div>
             <a href="#send" class="btn btn-primary btn-lg btn-block press"><span class="ph ph-send" aria-hidden="true"></span>{{c.rfGo}}</a>
             <a href="#back" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.back}}</a>
@@ -187,7 +188,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["billing","billingChange","billingExpiring","billingFailed","billingLapsed","billingWallet","billingWalletLate","cancelAsk","cancelDone","refundAsk","refundSent","refundLate"],"default":"billing"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["billing","billingChange","billingExpiring","billingFailed","billingLapsed","billingWallet","billingWalletLate","cancelAsk","cancelDone","refundAsk","refundSent","refundLate"],"default":"billing"},"error":{"editor":"enum","options":["none","refundEmpty"],"default":"none"},"$preview":{"width":390,"height":844}}'>
 /* Slice 5 · Plan and billing in Settings (EN-18), change plan, cancel (EN-18), refund request (EN-18, spec §4.8), payment problems (EN-16).
    Sample learner: Yasmin, monthly since 3 November 2026. Refunds: within 7 days of a charge, answered by the team. */
 const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', calendar: '/_blob/f042bfb4689d32362320ee48e15ea560' };
@@ -327,7 +328,7 @@ class Component extends DCLogic {
 
     const pick = this.state.pick || 'y';
     const chCards = ['m', 'y'].map((k) => { const on = k === pick; const y = k === 'y';
-      return { name: y ? c.annual : c.monthly + ' · ' + c.current, price: $(y ? P.y : P.m), per: y ? c.perYear : c.perMonth, sub: y ? c.saveY($(P.save)) : c.d3Nov,
+    return { name: y ? c.annual : c.monthly + ' · ' + c.current, price: $(y ? P.y : P.m), per: y ? c.perYear : c.perMonth, sub: y ? c.saveY($(P.save)) : c.d3Nov,
         on: on ? 'true' : 'false', cls: 'plan-card press' + (on ? ' is-on' : ''), radio: 'radio' + (on ? ' is-on' : ''), pick: () => this.setState({ pick: k }) }; });
     const toY = pick === 'y';
 
@@ -336,8 +337,13 @@ class Component extends DCLogic {
     const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: id === tab ? 'page' : 'false', icon: 'ph ' + (id === tab ? iconOn : icon) });
     const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
 
+    /* Design audit U1: refund reason left empty */
+    const rfOn = this.props.error === 'refundEmpty' && view === 'refundAsk';
+    const rfE = rfOn ? { on: true, cls: 'note-in is-error is-focus', val: '', inv: 'true', desc: 'rf-err-' + lang + '-' + theme + '-' + device,
+        msg: lang === 'ar' ? 'اكتب بضع كلمات لنراجع الدفعة. سطر واحد يكفي.' : 'Write a few words so we can check the charge. One line is enough.' }
+      : { on: false, cls: 'note-in is-focus', val: c.rfSample, inv: 'false', desc: '', msg: '' };
     return {
-      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, r, isDesk, isMobile: !isDesk, img: IMG, is, ov, title,
+      rfE, lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, r, isDesk, isMobile: !isDesk, img: IMG, is, ov, title,
       rootCls: 'ug pg pg-' + device, pc: P.usd ? 'ltr' : '',
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',

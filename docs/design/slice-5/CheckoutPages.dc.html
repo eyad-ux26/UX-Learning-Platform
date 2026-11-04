@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -43,7 +43,7 @@ a{color:#005F99}a:hover{color:#003F66}
         <div class="pg-split" style="{{splitStyle}}">
           <div class="pg-stack" style="gap: 12px;">
             <p class="t-body ink-2" style="font-size: 15px;">{{c.plansLead}}</p>
-            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-globe" aria-hidden="true"></span><span>{{r.regionLine}} <a href="#country" style="font-weight: 700;">{{c.changeCountry}}</a></span></p>
+            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-globe" aria-hidden="true"></span><span>{{r.regionLine}} <a href="#country" class="hit" style="font-weight: 700;">{{c.changeCountry}}</a></span></p>
             <div class="plans" role="radiogroup" aria-label="{{c.billingPeriod}}">
               <sc-for list="{{planCards}}" as="p" hint-placeholder-count="2">
                 <button class="{{p.cls}}" type="button" role="radio" aria-checked="{{p.on}}" onClick="{{p.pick}}">
@@ -81,15 +81,19 @@ a{color:#005F99}a:hover{color:#003F66}
                 <div class="facts"><sc-for list="{{c.facts}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p></sc-for></div>
               </section>
               <section class="card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
-                <div class="field"><label for="code-{{lang}}-{{theme}}">{{c.codeLabel}}</label>
-                  <div style="display: flex; gap: 8px;"><div class="input"><input id="code-{{lang}}-{{theme}}" type="text" value="{{codeVal}}" placeholder="{{c.codePh}}"></div><button class="btn btn-secondary press" type="button" style="flex: none;">{{c.apply}}</button></div></div>
+                <div class="field"><label for="code-{{lang}}-{{theme}}-{{device}}">{{c.codeLabel}}</label>
+                  <div style="display: flex; gap: 8px;"><div class="{{ce.cls}}" style="flex: 1;"><input id="code-{{lang}}-{{theme}}-{{device}}" type="text" value="{{codeVal}}" placeholder="{{c.codePh}}" autocapitalize="characters" aria-invalid="{{ce.inv}}" aria-describedby="{{ce.desc}}"></div><button class="btn btn-secondary press" type="button" style="flex: none;">{{c.apply}}</button></div>
+                  <sc-if value="{{ce.on}}" hint-placeholder-val="{{false}}"><span class="err" id="code-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{ce.msg}}</span></sc-if></div>
                 <a href="#student" class="set-row" style="border: 0; padding: 0; min-height: 48px;"><span class="ph ph-student" aria-hidden="true"></span><span class="set-l">{{c.studentT}}<small>{{c.studentS}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
               </section>
             </aside>
           </sc-if>
           <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+            <sc-if value="{{ce.on}}" hint-placeholder-val="{{false}}"><section class="card" style="padding: 14px 16px;"><div class="field"><label for="code-{{lang}}-{{theme}}-{{device}}">{{c.codeLabel}}</label>
+                  <div style="display: flex; gap: 8px;"><div class="{{ce.cls}}" style="flex: 1;"><input id="code-{{lang}}-{{theme}}-{{device}}" type="text" value="{{codeVal}}" placeholder="{{c.codePh}}" autocapitalize="characters" aria-invalid="{{ce.inv}}" aria-describedby="{{ce.desc}}"></div><button class="btn btn-secondary press" type="button" style="flex: none;">{{c.apply}}</button></div>
+                  <sc-if value="{{ce.on}}" hint-placeholder-val="{{false}}"><span class="err" id="code-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{ce.msg}}</span></sc-if></div></section></sc-if>
             <div class="set">
-              <a href="#code" class="set-row"><span class="ph ph-tag" aria-hidden="true"></span><span class="set-l">{{c.codeLabel}}<small>{{c.codeKinds}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
+              <sc-if value="{{ce.off}}" hint-placeholder-val="{{true}}"><a href="#code" class="set-row"><span class="ph ph-tag" aria-hidden="true"></span><span class="set-l">{{c.codeLabel}}<small>{{c.codeKinds}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a></sc-if>
               <a href="#student" class="set-row"><span class="ph ph-student" aria-hidden="true"></span><span class="set-l">{{c.studentT}}<small>{{c.studentS}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
             </div>
           </sc-if>
@@ -166,7 +170,7 @@ a{color:#005F99}a:hover{color:#003F66}
           <div class="pg-stack" style="gap: 12px;">
             <section class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 14px;">
               <span class="avatar" style="width: 56px; height: 56px; font-size: 22px;">{{c.initial}}</span>
-              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;"><b style="font-size: 18px;">{{c.fullName}}</b><span style="display: flex; align-items: center; gap: 8px;"><span class="st st-wait">{{c.freePlan}}</span><a href="#plans" style="font-weight: 700; font-size: 13px;">{{c.seePlans}}</a></span></span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;"><b style="font-size: 18px;">{{c.fullName}}</b><span style="display: flex; align-items: center; gap: 8px;"><span class="st st-wait">{{c.freePlan}}</span><a href="#plans" class="hit" style="font-weight: 700; font-size: 13px;">{{c.seePlans}}</a></span></span>
             </section>
             <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
               <sc-for list="{{c.tiles}}" as="t" hint-placeholder-count="3"><div class="card" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 2px;"><b class="num" style="font-size: 20px;">{{t.v}}</b><span class="t-small ink-2" style="font-size: 12.5px; font-weight: 600;">{{t.l}}</span></div></sc-for>
@@ -228,7 +232,7 @@ a{color:#005F99}a:hover{color:#003F66}
           <sc-if value="{{codeOn}}" hint-placeholder-val="{{false}}"><div class="sum-row"><span>{{c.sumCode}}</span><b>{{disc.sum}}</b></div></sc-if>
           <div class="sum-row total"><span>{{c.sumToday}}</span><b><span class="{{pc}}">{{selPrice}}</span></b></div>
           <div class="sum-row"><span>{{c.sumThen}}</span><b>{{selThen}}</b></div>
-          <div class="sum-row"><span>{{c.sumCountry}}</span><b>{{r.country}} · <a href="#country" style="font-size: 14px;">{{c.change}}</a></b></div>
+          <div class="sum-row"><span>{{c.sumCountry}}</span><b>{{r.country}} · <a href="#country" class="hit" style="font-size: 14px;">{{c.change}}</a></b></div>
         </div>
         <div class="prov">
           <span class="ph ph-shield-check" aria-hidden="true"></span>
@@ -238,7 +242,7 @@ a{color:#005F99}a:hover{color:#003F66}
         <div class="facts"><sc-for list="{{r.chkFacts}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p></sc-for></div>
         <div style="flex: 1;"></div>
         <a href="#provider" class="btn btn-primary btn-lg btn-block press">{{r.go}}<span class="ph ph-external" aria-hidden="true"></span></a>
-        <p class="t-small ink-3" style="text-align: center; font-size: 12.5px;">{{c.agree}} <a href="#terms" style="font-weight: 700;">{{c.terms}}</a></p>
+        <p class="t-small ink-3" style="text-align: center; font-size: 12.5px;">{{c.agree}} <a href="#terms" class="hit" style="font-weight: 700;">{{c.terms}}</a></p>
       </main>
     </div>
   </sc-if>
@@ -275,7 +279,7 @@ a{color:#005F99}a:hover{color:#003F66}
           <a href="#go" class="btn btn-primary btn-lg btn-block press">{{res.go}}</a>
           <a href="#alt" class="btn btn-ghost btn-block">{{res.alt}}</a>
         </div>
-        <sc-if value="{{res.hasHelp}}" hint-placeholder-val="{{false}}"><p class="t-small" style="font-size: 13px;">{{c.stuck}} <a href="#mail" class="ltr" style="font-weight: 700;">support@uxgate.org</a></p></sc-if>
+        <sc-if value="{{res.hasHelp}}" hint-placeholder-val="{{false}}"><p class="t-small" style="font-size: 13px;">{{c.stuck}} <a href="#mail" class="ltr hit" style="font-weight: 700;">support@uxgate.org</a></p></sc-if>
       </main>
     </div>
   </sc-if>
@@ -306,7 +310,7 @@ a{color:#005F99}a:hover{color:#003F66}
         <img class="pg-over-ill" src="{{img.gift}}" alt="" style="width: 76px; height: 76px;">
         <h2 id="ck-ov-{{lang}}-{{theme}}-{{device}}" style="text-align: center;">{{c.stTitle}}</h2>
         <p class="t-small ink-2" style="text-align: center; font-size: 14.5px;">{{c.stBody}}</p>
-        <div class="field"><label for="uni-{{lang}}-{{theme}}-{{device}}">{{c.stEmail}}</label><div class="input is-focus"><span class="ph ph-mail" aria-hidden="true"></span><input id="uni-{{lang}}-{{theme}}-{{device}}" type="email" dir="ltr" value="yasmin.adel@cu.edu.eg"></div><span class="help">{{c.stHelp}}</span></div>
+        <div class="field"><label for="uni-{{lang}}-{{theme}}-{{device}}">{{c.stEmail}}</label><div class="{{se.cls}}"><span class="ph ph-mail" aria-hidden="true"></span><input id="uni-{{lang}}-{{theme}}-{{device}}" type="email" dir="ltr" value="{{se.val}}" aria-invalid="{{se.inv}}" aria-describedby="{{se.desc}}"></div><sc-if value="{{se.on}}" hint-placeholder-val="{{false}}"><span class="err" id="uni-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{se.msg}}</span></sc-if><span class="help">{{c.stHelp}}</span></div>
         <p class="t-small ink-3" style="font-size: 12.5px;">{{c.stDomains}}</p>
         <div class="notice is-info" style="padding: 10px 12px;"><span class="ph ph-tag" aria-hidden="true"></span><span class="grow"><span>{{r.stPrice}}</span></span></div>
         <a href="#send" class="btn btn-primary btn-lg btn-block press">{{c.stGo}}</a>
@@ -324,7 +328,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["paywallUnit","paywallCert","plans","plansCode","plansWelcome","studentAsk","studentId","handoffPaymob","handoffPaddle","returning","resultSuccess","resultPending","resultFailed","resultCancelled","mapFree","endFree","profileFree"],"default":"plans"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["paywallUnit","paywallCert","plans","plansCode","plansWelcome","studentAsk","studentId","handoffPaymob","handoffPaddle","returning","resultSuccess","resultPending","resultFailed","resultCancelled","mapFree","endFree","profileFree"],"default":"plans"},"error":{"editor":"enum","options":["none","codeInvalid","codeExpired","codeRegion","studentEmail"],"default":"none"},"$preview":{"width":390,"height":844}}'>
 /* Slice 5 · Paywall and plans (EN-15, spec §4.8), checkout hand-off and results (EN-16, EN-17), locked states for a free learner (EN-15).
    Prices approved by Eyad on 2 Nov 2026: Egypt 249 / 2,249 EGP, Gulf $8 / $72, other Arab countries $5 / $45. Student 40%, founding member 30% on annual (year 1), welcome back 40% on annual (2 years). */
 const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', lock: '/_blob/7cbe7a77e505c37be737172ca25dd102', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b',
@@ -482,6 +486,18 @@ const C = {
   }
 };
 const VIEWS = ['paywallUnit', 'paywallCert', 'plans', 'plansCode', 'plansWelcome', 'studentAsk', 'studentId', 'handoffPaymob', 'handoffPaddle', 'returning', 'resultSuccess', 'resultPending', 'resultFailed', 'resultCancelled', 'mapFree', 'endFree', 'profileFree'];
+const ERRS = {
+  en: { country: { eg: 'Egypt', gulf: 'Saudi Arabia', arab: 'Jordan' },
+    codeInvalid: { val: 'FOUNDNG', msg: "We can't find this code. Check the spelling, for example FOUNDING." },
+    codeExpired: { val: 'LAUNCHWEEK', msg: 'This code ended on 31 October 2026. The prices below are the full prices.' },
+    codeRegion: { val: 'EGYPT20', msg: (cn) => 'This code is for learners billed in Egypt. Your billing country is ' + cn + '.' },
+    studentEmail: { val: 'yasmin.adel@gmail.com', msg: "This isn't a university email. Use the one your university gave you; the endings we accept are listed below." } },
+  ar: { country: { eg: 'مصر', gulf: 'السعودية', arab: 'الأردن' },
+    codeInvalid: { val: 'FOUNDNG', msg: 'لم نجد هذا الرمز. تحقّق من كتابته، مثل FOUNDING.' },
+    codeExpired: { val: 'LAUNCHWEEK', msg: 'انتهى هذا الرمز في 31 أكتوبر 2026. الأسعار أدناه هي الأسعار الكاملة.' },
+    codeRegion: { val: 'EGYPT20', msg: (cn) => 'هذا الرمز لمن يدفعون من مصر. بلد الفوترة لديك هو ' + cn + '.' },
+    studentEmail: { val: 'yasmin.adel@gmail.com', msg: 'هذا ليس بريدًا جامعيًا. استخدم البريد الذي أعطته لك جامعتك؛ النهايات المقبولة مكتوبة أدناه.' } }
+};
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = { period: null }; }
   renderVals() {
@@ -503,7 +519,16 @@ class Component extends DCLogic {
     ov.any = ov.pay || ov.student || ov.studentId;
 
     const wb = view === 'plansWelcome';
-    const codeOn = view === 'plansCode' || wb;
+    /* Design audit U1: code and student email errors, message under the field, value kept, focus on the field */
+    const EM = ERRS[lang]; const errKey = this.props.error;
+    const codeE = view === 'plansCode' && ['codeInvalid', 'codeExpired', 'codeRegion'].indexOf(errKey) >= 0 ? EM[errKey] : null;
+    const idSfx = lang + '-' + theme + '-' + device;
+    const ce = codeE ? { on: true, off: false, cls: 'input is-error is-focus', inv: 'true', desc: 'code-err-' + idSfx, msg: typeof codeE.msg === 'function' ? codeE.msg(EM.country[region]) : codeE.msg }
+      : { on: false, off: true, cls: 'input', inv: 'false', desc: '', msg: '' };
+    const stE = errKey === 'studentEmail' && view === 'studentAsk';
+    const se = stE ? { on: true, cls: 'input is-error is-focus', val: EM.studentEmail.val, inv: 'true', desc: 'uni-err-' + idSfx, msg: EM.studentEmail.msg }
+      : { on: false, cls: 'input is-focus', val: 'yasmin.adel@cu.edu.eg', inv: 'false', desc: '', msg: '' };
+    const codeOn = (view === 'plansCode' && !codeE) || wb;
     const defPeriod = (codeOn || view === 'handoffPaddle') ? 'y' : 'm';
     const period = this.state.period || defPeriod;
     const yPrice = wb ? P.wb : (codeOn ? P.fy : P.y);
@@ -543,7 +568,7 @@ class Component extends DCLogic {
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
-      pc: pcUsd, codeOn, disc, codeVal: view === 'plansCode' ? 'FOUNDING' : '', planCards, selName, selPrice, selThen, fpRows, periodTabs, payCta, pw, res,
+      pc: pcUsd, codeOn, disc, codeVal: codeE ? codeE.val : view === 'plansCode' ? 'FOUNDING' : '', ce, se, planCards, selName, selPrice, selThen, fpRows, periodTabs, payCta, pw, res,
       splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; max-width: 1120px;' : '',
       mapSplit: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px;' : '',
       laterUnits: [2, 3, 4].map((i) => ({ n: c.unitN(i + 1), title: c.units[i] })),
