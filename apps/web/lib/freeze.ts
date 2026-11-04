@@ -25,16 +25,18 @@ export const shiftDay = (day: string, by: number) => {
 /** 0 = Sunday ... 6 = Saturday, for a YYYY-MM-DD day. */
 export const weekday = (day: string) => new Date(`${day}T00:00:00Z`).getUTCDay();
 /**
- * The one place the week start is set: 0 = Sunday, 1 = Monday ... 6 = Saturday. It drives the freeze week, the
- * "goal days this week" count and the leaderboard week. Monday for now; Arabic may move to Saturday (one-line change).
+ * The one place the week start is set: 0 = Sunday, 1 = Monday ... 6 = Saturday. English weeks start on Monday and
+ * Arabic weeks on Saturday (design audit U3; Arabic is an assumption until the PM confirms). Every rule below takes the
+ * start as an argument, so it can later come from a per-learner profile column instead of the language.
  */
 export const WEEK_START = 1;
+export const weekStartFor = (locale: string | null | undefined) => (locale === "ar" ? 6 : WEEK_START);
 /** The first day of the week that holds `day`. */
 export const weekStartOf = (day: string, start: number = WEEK_START) => shiftDay(day, -((weekday(day) - start + 7) % 7));
-/** The last day of the week, as a weekday number. */
-export const WEEK_END = (WEEK_START + 6) % 7;
-/** Kept for the tests and older callers: the week start under the current setting. */
-export const mondayOf = (day: string) => weekStartOf(day);
+/** The weekday number of the last day of a week that starts on `start`. */
+export const weekEndOf = (start: number) => (start + 6) % 7;
+/** Kept for the tests and older callers: the Monday-start week. */
+export const mondayOf = (day: string) => weekStartOf(day, 1);
 
 /**
  * Settles every finished day after `settledThrough` up to and including `through` (the learner's yesterday).
@@ -42,7 +44,7 @@ export const mondayOf = (day: string) => weekStartOf(day);
  * contains the first day settled, so a week that began before it still counts all its goal days.
  * With no `settledThrough` the learner starts at their first active day, so days before they began never count as missed.
  */
-export function settle(state: SettleState, settledThrough: string | null, through: string, activity: Record<string, DayActivity>): Settled {
+export function settle(state: SettleState, settledThrough: string | null, through: string, activity: Record<string, DayActivity>, start: number = WEEK_START): Settled {
   let { current, longest, freezes } = state;
   const usedDays: string[] = [];
   const earnedDays: string[] = [];
@@ -61,8 +63,8 @@ export function settle(state: SettleState, settledThrough: string | null, throug
     } else {
       current = 0;
     }
-    if (weekday(d) === WEEK_END) {
-      const monday = weekStartOf(d);
+    if (weekday(d) === weekEndOf(start)) {
+      const monday = weekStartOf(d, start);
       let goalDays = 0;
       for (let i = 0; i < 7; i++) if (activity[shiftDay(monday, i)]?.goalMet) goalDays++;
       if (goalDays >= FREEZE_GOAL_DAYS && freezes < FREEZE_MAX) { freezes += 1; earnedDays.push(d); }
@@ -72,8 +74,8 @@ export function settle(state: SettleState, settledThrough: string | null, throug
 }
 
 /** Goal days so far in the week that holds `today`, and how many more earn the next freeze (never negative). */
-export function weekGoalProgress(today: string, activity: Record<string, DayActivity>) {
-  const monday = weekStartOf(today);
+export function weekGoalProgress(today: string, activity: Record<string, DayActivity>, start: number = WEEK_START) {
+  const monday = weekStartOf(today, start);
   let goalDays = 0;
   for (let i = 0; i < 7; i++) {
     const d = shiftDay(monday, i);

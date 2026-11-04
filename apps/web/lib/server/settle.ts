@@ -1,14 +1,14 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { localDay } from "@/lib/progress";
-import { settle, shiftDay, type DayActivity } from "@/lib/freeze";
+import { settle, shiftDay, WEEK_START, type DayActivity } from "@/lib/freeze";
 
 /**
  * Settles a learner's finished days: counts goal days, earns freezes, uses one for a missed day.
  * Safe to call as often as you like (every Home visit and the daily job do): it does nothing once yesterday is settled,
  * and two callers at once cannot both claim the same days. Never throws, because it must not break a page.
  */
-export async function settleLearner(userId: string, timeZone: string | null, now = new Date()): Promise<void> {
+export async function settleLearner(userId: string, timeZone: string | null, now = new Date(), weekStart: number = WEEK_START): Promise<void> {
   try {
     const db = createAdminClient();
     const yesterday = shiftDay(localDay(now, timeZone), -1);
@@ -24,7 +24,7 @@ export async function settleLearner(userId: string, timeZone: string | null, now
     const activity: Record<string, DayActivity> = {};
     for (const d of days ?? []) activity[d.day as string] = { lessons: d.lessons_done as number, goalMet: d.goal_met as boolean };
 
-    const out = settle({ current: row.current, longest: row.longest, freezes: row.freezes_available }, through, yesterday, activity);
+    const out = settle({ current: row.current, longest: row.longest, freezes: row.freezes_available }, through, yesterday, activity, weekStart);
 
     // Events and frozen days first: they are keyed, so a second caller repeating them changes nothing.
     if (out.usedDays.length) {

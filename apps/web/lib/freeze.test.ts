@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mondayOf, settle, weekGoalProgress, type DayActivity } from "./freeze";
+import { mondayOf, settle, weekEndOf, weekGoalProgress, weekStartFor, weekStartOf, type DayActivity } from "./freeze";
 import { localDay, streakDays } from "./progress";
 import { startOfDay, weekStart } from "./week";
 
@@ -93,5 +93,33 @@ describe("time zones: the same instant is a different day for Cairo and Riyadh",
     expect(startOfDay("2026-11-02", "Asia/Riyadh").toISOString()).toBe("2026-11-01T21:00:00.000Z");
     expect(weekStart(new Date("2026-11-05T10:00:00Z"), "Asia/Riyadh").toISOString()).toBe("2026-11-01T21:00:00.000Z");
     expect(weekStart(new Date("2026-11-05T10:00:00Z"), "Not/AZone").toISOString()).toBe("2026-11-02T00:00:00.000Z");
+  });
+});
+
+describe("the week start is one setting per language", () => {
+  it("English weeks start on Monday and Arabic weeks on Saturday", () => {
+    expect([weekStartFor("en"), weekStartFor("ar"), weekStartFor(null)]).toEqual([1, 6, 1]);
+    expect(weekEndOf(1)).toBe(0); // Sunday
+    expect(weekEndOf(6)).toBe(5); // Friday
+  });
+  it("finds the first day of a Saturday week", () => {
+    // 2026-10-31 is a Saturday; 2026-11-06 is the Friday that ends that week
+    expect(["2026-10-31", "2026-11-03", "2026-11-06"].map((d) => weekStartOf(d, 6))).toEqual(["2026-10-31", "2026-10-31", "2026-10-31"]);
+    expect(weekStartOf("2026-11-07", 6)).toBe("2026-11-07");
+  });
+  it("earns the freeze on the Friday that ends a Saturday week", () => {
+    const a = act({ "2026-10-31": [1, true], "2026-11-01": [1, true], "2026-11-02": [1, true], "2026-11-03": [1, true], "2026-11-04": [1, true], "2026-11-05": [1, false], "2026-11-06": [1, false] });
+    const r = settle({ current: 0, longest: 0, freezes: 0 }, "2026-10-30", "2026-11-06", a, 6);
+    expect(r.earnedDays).toEqual(["2026-11-06"]);
+    // the same days under a Monday week do not complete a week, so nothing is earned yet
+    expect(settle({ current: 0, longest: 0, freezes: 0 }, "2026-10-30", "2026-11-06", a, 1).earnedDays).toEqual([]);
+  });
+  it("counts goal days in the Saturday week", () => {
+    const a = act({ "2026-10-31": [1, true], "2026-11-01": [1, true], "2026-11-02": [1, true] });
+    expect(weekGoalProgress("2026-11-03", a, 6).goalDays).toBe(3);
+    expect(weekGoalProgress("2026-11-03", a, 1).goalDays).toBe(1);
+  });
+  it("the leaderboard week can start on Saturday", () => {
+    expect(weekStart(new Date("2026-11-05T10:00:00Z"), "UTC", 6).toISOString()).toBe("2026-10-31T00:00:00.000Z");
   });
 });

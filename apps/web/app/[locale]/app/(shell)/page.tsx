@@ -12,7 +12,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const me = await requireLearner(locale);
   const view = buildPathView(me.activePathId, me.progress, me.practicedSkills)!;
   return (
-    <Shell me={me} panel={<HomePanel progress={me.progress} freezes={me.freezes} />}>
+    <Shell me={me} panel={<HomePanel progress={me.progress} freezes={me.freezes} weekStart={me.weekStart} />}>
       <HomeMain me={me} view={view} />
     </Shell>
   );

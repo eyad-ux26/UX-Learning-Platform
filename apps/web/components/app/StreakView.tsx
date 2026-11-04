@@ -4,7 +4,7 @@ import { bundle, type Locale } from "@uxgate/content";
 import { FREEZE_MAX, weekGoalProgress } from "@/lib/freeze";
 import { badgeOf } from "@/lib/skill-state";
 import { catalogEntry } from "@/lib/catalog";
-import { startOfDay } from "@/lib/week";
+import { startOfDay, weekdayName } from "@/lib/week";
 import type { Learner } from "@/lib/server/learner";
 import { Week } from "./Goal";
 
@@ -12,8 +12,11 @@ import { Week } from "./Goal";
 export async function StreakMain({ me }: { me: Learner }) {
   const t = await getTranslations("streak");
   const { progress } = me;
-  const week = weekGoalProgress(progress.today, progress.recentActivity);
+  const week = weekGoalProgress(progress.today, progress.recentActivity, me.weekStart);
   const full = me.freezes >= FREEZE_MAX;
+  const locale0 = await getLocale();
+  const dayName = (n: number) => weekdayName(locale0, n);
+  const weekNames = { first: dayName(me.weekStart), last: dayName((me.weekStart + 6) % 7), day: dayName(me.weekStart) };
 
   // Today's XP events, as the learner can read them (row-level security), grouped by how the step was answered.
   const xp = { own: 0, hint: 0, reveal: 0, total: 0 };
@@ -32,7 +35,7 @@ export async function StreakMain({ me }: { me: Learner }) {
     for (const e of f.data ?? []) events[e.kind === "earned" ? "earned" : "used"]++;
     if (me.leaderboardJoined) {
       const { weekStart } = await import("@/lib/week");
-      const { data } = await me.db.rpc("weekly_leaderboard", { p_since: weekStart(new Date(), me.timeZone).toISOString(), p_limit: 100 });
+      const { data } = await me.db.rpc("weekly_leaderboard", { p_since: weekStart(new Date(), me.timeZone, me.weekStart).toISOString(), p_limit: 100 });
       const mine = (data as { rank: number; xp: number; is_me: boolean }[] | null)?.find((r) => r.is_me);
       if (mine) rank = { rank: Number(mine.rank), xp: Number(mine.xp) };
     }
@@ -48,7 +51,7 @@ export async function StreakMain({ me }: { me: Learner }) {
         <div className="streak-row"><span className="ph ph-flame-fill" style={{ fontSize: 28, color: "#F59E2B" }} aria-hidden="true" /><p className="t-h2">{t("days", { count: progress.streak })}</p></div>
         <p className="t-small ink-2">{t("longest", { count: Math.max(me.longestStreak, progress.streak) })}</p>
         <p className="t-over">{t("thisWeek")}</p>
-        <Week today={progress.today} activeDays={[...progress.activeDays, ...progress.frozenDays]} />
+        <Week today={progress.today} activeDays={progress.activeDays} frozenDays={progress.frozenDays} start={me.weekStart} />
       </section>
 
       <section className="card" style={{ padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
@@ -68,7 +71,7 @@ export async function StreakMain({ me }: { me: Learner }) {
         )}
         <details>
           <summary className="t-label" style={{ cursor: "pointer", minBlockSize: 44, display: "flex", alignItems: "center" }}>{t("howTitle")}</summary>
-          <ul style={{ paddingInlineStart: 18, display: "flex", flexDirection: "column", gap: 6 }}>{(["how1", "how2", "how3", "how4"] as const).map((k) => <li key={k} className="t-small">{t(k)}</li>)}</ul>
+          <ul style={{ paddingInlineStart: 18, display: "flex", flexDirection: "column", gap: 6 }}>{(["how1", "how2", "how3", "how4"] as const).map((k) => <li key={k} className="t-small">{t(k, weekNames)}</li>)}</ul>
         </details>
       </section>
 

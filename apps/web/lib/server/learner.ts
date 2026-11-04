@@ -5,11 +5,14 @@ import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgress } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
+import { weekStartFor } from "@/lib/freeze";
 import { pickCurrent } from "@/lib/learning";
 import type { SkillRow, SkillStateName } from "@/lib/skill-state";
 
 export type Learner = {
   db: SupabaseClient | null;
+  /** First day of the learner's week: 0 = Sunday ... 6 = Saturday (see weekStartFor in freeze.ts). */
+  weekStart: number;
   userId: string;
   progress: Progress;
   hour: number;
@@ -34,7 +37,7 @@ export type Learner = {
 };
 
 const fixture = (): Learner => ({
-  db: null, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC",
+  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC",
   practicedSkills: new Set(["SK-P01-U01-01"]),
   joined: [{ pathId: "P01", startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" }], activePathId: "P01",
   skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
@@ -57,8 +60,9 @@ export async function getLearner(): Promise<Learner | null> {
   const { data } = await db.auth.getUser();
   if (!data.user) return null;
   const userId = data.user.id;
-  const { data: p0 } = await db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle();
-  await settleLearner(userId, p0?.time_zone ?? null); // counts finished days, earns or uses freezes; never throws
+  const { data: p0 } = await db.from("profiles").select("time_zone, locale").eq("user_id", userId).maybeSingle();
+  const weekStart = weekStartFor(p0?.locale);
+  await settleLearner(userId, p0?.time_zone ?? null, new Date(), weekStart); // counts finished days, earns or uses freezes; never throws
   const progress = await loadProgress(db, userId);
   const [onb, skills, prof, extra, enr, streak, note] = await Promise.all([
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
@@ -79,7 +83,7 @@ export async function getLearner(): Promise<Learner | null> {
   const states = new Map<string, SkillRow>();
   for (const r of skills.data ?? []) states.set(r.skill_id as string, { state: r.state as SkillStateName, shownAt: r.shown_at ? new Date(r.shown_at as string) : null, keptAt: r.kept_at ? new Date(r.kept_at as string) : null, nextReviewAt: r.next_review_at ? new Date(r.next_review_at as string) : null });
   return {
-    db, userId, progress, hour, timeZone: tz,
+    db, weekStart, userId, progress, hour, timeZone: tz,
     onboarded: !!onb.data?.completed_at,
     recommendedPathId: recommended,
     currentPathId,

@@ -128,13 +128,13 @@ export async function HomeMain({ me, view }: { me: Learner; view: PathView }) {
           <p className="t-label" style={{ fontSize: 15, flex: 1 }}>{progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone")}</p>
           <Link href="/app/streak" className="kind"><span className="ph ph-freeze-fill" aria-hidden="true" />{me.freezes > 0 ? t("freezeReady", { count: me.freezes }) : t("freezeNone")}</Link>
         </div>
-        <Week today={progress.today} activeDays={progress.activeDays} />
+        <Week today={progress.today} activeDays={progress.activeDays} frozenDays={progress.frozenDays} start={me.weekStart} />
       </section>
     </>
   );
 }
 
-export async function HomePanel({ progress, freezes = 0 }: { progress: Progress; freezes?: number }) {
+export async function HomePanel({ progress, freezes = 0, weekStart }: { progress: Progress; freezes?: number; weekStart?: number }) {
   const t = await getTranslations("home");
   const remaining = Math.max(0, progress.dailyGoal - progress.lessonsToday);
   return (
@@ -148,7 +148,7 @@ export async function HomePanel({ progress, freezes = 0 }: { progress: Progress;
       </div>
       <div className="dk-prop">
         <div className="streak-row"><span className="ph ph-flame-fill" style={{ fontSize: 20, color: "#F59E2B" }} aria-hidden="true" /><p className="t-label" style={{ flex: 1 }}>{progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone")}</p></div>
-        <Week today={progress.today} activeDays={progress.activeDays} small />
+        <Week today={progress.today} activeDays={progress.activeDays} frozenDays={progress.frozenDays} start={weekStart} small />
         <Link href="/app/streak" className="kind" style={{ alignSelf: "flex-start" }}><span className="ph ph-freeze-fill" aria-hidden="true" />{freezes > 0 ? t("freezeReady", { count: freezes }) : t("freezeNone")}</Link>
       </div>
       <div className="dk-prop">
