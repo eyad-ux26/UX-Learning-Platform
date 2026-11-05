@@ -5,6 +5,8 @@ import { routing } from "./i18n/routing";
 import { isPrivateContent, notFound } from "./lib/private-content";
 import { hasSupabase, sessionCookieOptions, supabaseAnonKey, supabaseUrl } from "./lib/supabase/env";
 import { paddleLinkStep, PTXN_COOKIE, PTXN_COOKIE_SECONDS } from "./lib/billing/paddle-link";
+import { comingSoonOn, gateStep, isAdmin } from "./lib/coming-soon";
+import { TEAM_COOKIE, teamPassValid } from "./lib/team-access";
 
 const intl = createMiddleware(routing);
 // Only screens that know who the learner is need their session kept fresh.
@@ -35,7 +37,13 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`/${locale}/signin?error=link`, req.url));
   }
   const res = intl(req);
-  if (hasSupabase() && SIGNED_IN_AREA.test(req.nextUrl.pathname)) {
+  // Coming Soon gate (lib/coming-soon.ts): pages other than the open ones need an admin session while it is on; the
+  // sign-in pages also open with a team pass, the cookie the team password page sets (lib/team-access.ts).
+  const gate = comingSoonOn() ? gateStep(req.nextUrl.pathname) : null;
+  if ((gate?.kind === "open" && !gate.index) || gate?.kind === "team") res.headers.set("X-Robots-Tag", "noindex");
+  const adminOnly = gate?.kind === "admin" || (gate?.kind === "team" && !(await teamPassValid(req.cookies.get(TEAM_COOKIE)?.value)));
+  if ((hasSupabase() && SIGNED_IN_AREA.test(req.nextUrl.pathname)) || adminOnly) {
+    if (!hasSupabase()) return comingSoon(req, gate, res);
     const supabase = createServerClient(supabaseUrl(), supabaseAnonKey(), {
       cookieOptions: sessionCookieOptions(),
       cookies: {
@@ -46,6 +54,7 @@ export default async function middleware(req: NextRequest) {
     // Refreshes an expiring session cookie. getClaims checks the token locally with the project's public key, so a tab switch
     // no longer waits for a round trip to the Auth server here (getUser did one on every request).
     const { data } = await supabase.auth.getClaims();
+    if (adminOnly && !isAdmin(data?.claims as { app_metadata?: Record<string, unknown> } | undefined)) return comingSoon(req, gate, res);
     // Paddle's payment links (?_ptxn=) survive sign-in: kept in a cookie, then opened again on the app home.
     const step = paddleLinkStep(req.nextUrl.pathname, req.nextUrl.searchParams, !!data?.claims?.sub, req.cookies.get(PTXN_COOKIE)?.value);
     if (step?.kind === "clear") res.cookies.delete(PTXN_COOKIE);
@@ -58,6 +67,19 @@ export default async function middleware(req: NextRequest) {
     }
   }
   return res;
+}
+
+/** The Coming Soon page at the address asked for, private to this visitor, keeping a refreshed session cookie. */
+function comingSoon(req: NextRequest, gate: ReturnType<typeof gateStep> | null, res: NextResponse) {
+  if (gate?.kind !== "admin" && gate?.kind !== "team") return res;
+  const url = req.nextUrl.clone();
+  url.pathname = gate.to;
+  url.search = "";
+  const headers: Record<string, string> = { "Cache-Control": "private, no-store" };
+  if (gate.kind === "team" || !gate.index) headers["X-Robots-Tag"] = "noindex";
+  const out = NextResponse.rewrite(url, { headers });
+  res.cookies.getAll().forEach((c) => out.cookies.set(c));
+  return out;
 }
 
 export const config = { matcher: ["/((?!api|_next|_vercel|.*\\..*).*)", "/c/:path*"] };

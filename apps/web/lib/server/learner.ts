@@ -12,6 +12,7 @@ import { pickCurrent } from "@/lib/learning";
 import type { SkillRow, SkillStateName } from "@/lib/skill-state";
 import { proFrom, readEntitlement, requestHost } from "@/lib/server/billing/account";
 import type { Entitlement } from "@/lib/billing/subscription";
+import { comingSoonOn, isAdmin } from "@/lib/coming-soon";
 
 export type Learner = {
   db: SupabaseClient | null;
@@ -44,10 +45,12 @@ export type Learner = {
   entitlement: Entitlement | null;
   /** The language the learner last signed in with (profiles.locale), or null. */
   locale: string | null;
+  /** An admin using the tool while the public sees Coming Soon: the shell shows the "Pre-launch · team view" badge. */
+  teamView: boolean;
 };
 
 const fixture = (): Learner => ({
-  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null,
+  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null, teamView: process.env.UG_DEV_TEAM === "1",
   practicedSkills: new Set(["SK-P01-U01-01"]),
   joined: [{ pathId: "P01", startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" }], activePathId: "P01",
   skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
@@ -128,6 +131,7 @@ async function loadLearner(): Promise<Learner | null> {
     pro: proFrom(entitlement, host),
     entitlement,
     locale: (p0?.locale as string | null) ?? null,
+    teamView: comingSoonOn() && isAdmin(auth?.claims as { app_metadata?: Record<string, unknown> } | undefined),
   };
 }
 

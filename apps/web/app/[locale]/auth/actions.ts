@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { authErrorKey, isEmail, MIN_PASSWORD, type AuthErrorKey } from "@/lib/auth";
 import { restoreIfDeleting } from "@/lib/server/account";
 import { routing } from "@/i18n/routing";
+import { comingSoonOn } from "@/lib/coming-soon";
 
 // Sign-in, sign-up, Apple, Google, the email link and password reset run here, on the server, so the session cookies are
 // set HttpOnly (see sessionCookieOptions). The browser never reads or writes a session token.
@@ -27,6 +28,8 @@ async function callback(loc: string, next?: string) {
 }
 
 export async function signUpAction(input: unknown): Promise<AuthResult> {
+  // Coming Soon: no new email accounts before launch (the sign-up page shows Coming Soon; this stops direct calls).
+  if (comingSoonOn()) return { ok: false, error: "generic" };
   const p = creds.safeParse(input);
   if (!p.success || !isEmail(p.data.email)) return { ok: false, error: "emailInvalid" };
   if (p.data.password.length < MIN_PASSWORD) return { ok: false, error: "weak" };
