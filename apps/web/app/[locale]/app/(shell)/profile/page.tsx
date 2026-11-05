@@ -3,6 +3,9 @@ import { Shell } from "@/components/app/Shell";
 import { ProfileForm } from "@/components/app/ProfileForm";
 import { buildPathView, pickPath } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
+import { Link } from "@/i18n/navigation";
+import { BellLink } from "@/components/account/BellLink";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +24,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   } else email = "nour@example.com";
   return (
     <Shell pathId={path.id} pathTitle={path.title.en} units={view.units.map((u) => ({ id: u.unit.id, title: u.unit.title[locale as "en" | "ar"] }))}>
+      <div className="s4-bar">
+        <Link href="/app/settings" className="bell-link" aria-label={(await getTranslations("settings"))("title")}><span className="ph ph-gear" aria-hidden="true" /></Link>
+        <BellLink me={me} />
+      </div>
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
     </Shell>
   );

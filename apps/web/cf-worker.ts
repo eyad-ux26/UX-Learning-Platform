@@ -12,7 +12,19 @@ export default {
     if (isPrivateContent(new URL(req.url).pathname)) return notFound();
     return handler.fetch(req, env, ctx);
   },
-  async scheduled(_event: unknown, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
+  async scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
+    // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts (slice 4). Up to 4 calls of 25.
+    if (event?.cron === "*/15 * * * *") {
+      ctx.waitUntil((async () => {
+        for (let i = 0; i < 4; i++) {
+          const res: Response = await handler.fetch(new Request("https://internal/api/cron/reminders", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+          const text = await res.text();
+          console.log(`cron reminders ${i + 1}: ${res.status} ${text}`);
+          if (!res.ok || !text.includes('"more":true')) break;
+        }
+      })());
+      return;
+    }
     // Calls the daily route directly; the secret keeps it closed to the public.
     const req = new Request("https://internal/api/cron/daily", {
       headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
