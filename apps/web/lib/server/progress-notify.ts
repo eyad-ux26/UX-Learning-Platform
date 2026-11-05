@@ -27,7 +27,7 @@ export async function notifyKept(db: SupabaseClient, userId: string, skillIds: s
     const locale = p?.locale === "ar" ? "ar" : "en";
     for (const id of skillIds.slice(0, 5)) {
       const m = skillMeta(id);
-      if (m) await notify(userId, "badge", { name: m.skill.title }, "/app/skills", { db, prefs, locale });
+      if (m) await notify(userId, "badge", { name: m.skill.title }, "/app/badges", { db, prefs, locale });
     }
     const first = skillMeta(skillIds[0]);
     if (!first || !allowed(prefs, "badge", "email")) return;
@@ -37,7 +37,7 @@ export async function notifyKept(db: SupabaseClient, userId: string, skillIds: s
     const path = getPath(first.unit.pathId);
     const mail = badgeEmail({
       locale, skill: first.skill.title[locale], where: `${path?.title.en ?? first.unit.pathId} · ${first.unit.title[locale]}`, pathImg: pathArt(first.unit.pathId),
-      badgesHref: `${base}/app/skills`, settingsHref: `${base}/app/settings/notifications`, unsubscribeHref: await unsubHref(userId, "badge", locale),
+      badgesHref: `${base}/app/badges`, settingsHref: `${base}/app/settings/notifications`, unsubscribeHref: await unsubHref(userId, "badge", locale),
     });
     await sendEmail({ to: u.user.email, ...mail, kind: "badge", userId, locale });
   } catch (e) {

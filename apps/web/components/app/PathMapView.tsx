@@ -6,6 +6,7 @@ import type { PathLesson, PathView } from "@/lib/learning";
 import type { Progress } from "@/lib/progress";
 import { pathArt } from "./HomeView";
 import { PathSwitcher } from "./PathSwitcher";
+import { LockedUnitSheet, type LockedUnitText } from "./LockedUnitSheet";
 import { catalogEntry } from "@/lib/catalog";
 import { buildPathView, testOutCheck } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
@@ -52,23 +53,24 @@ function Row({ l, t, locale }: { l: PathLesson; t: Awaited<ReturnType<typeof get
 }
 
 /** Why a unit is locked and how to open it: every condition with its state. */
-function LockedUnit({ view, index, me, t }: { view: PathView; index: number; me: Learner; t: Awaited<ReturnType<typeof getTranslations>> }) {
+function LockedUnit({ view, index, me, t, locale }: { view: PathView; index: number; me: Learner; t: Awaited<ReturnType<typeof getTranslations>>; locale: Locale }) {
+  const u = view.units[index];
   const prev = view.units[index - 1];
   const checked = !prev || (prev.unit.skills.length > 0 && prev.unit.skills.every((s) => { const st = me.skillStates.get(s.id)?.state; return st === "shown" || st === "kept"; }));
-  const resume = prev?.lessons.find((l) => l.state === "available" || l.state === "in_progress");
+  const resume = prev?.lessons.find((l) => l.state === "in_progress") ?? prev?.lessons.find((l) => l.state === "available");
+  const remaining = prev ? prev.lessons.filter((l) => l.state !== "done").length : 0;
   // Test out: the previous unit's skill check, taken now instead of its remaining lessons.
   const test = index > 0 ? testOutCheck(view, index - 1) : null;
-  return (
-    <details className="card locked-unit">
-      <summary className="t-label"><span className="ph ph-lock-fill" aria-hidden="true" /> {t("lockedTitle", { unit: t("unit", { n: index + 1 }) })}</summary>
-      <p className="t-small ink-2">{t("lockedBody")}</p>
-      <ul>
-        <li><span className={`ph ph-${checked ? "check-circle-fill" : "clock"}`} aria-hidden="true" /> <b>{t("lockedCheck", { unit: t("unit", { n: index }) })}</b> <span className="t-small ink-2">{checked ? t("met") : t("todo")}</span><br /><span className="t-small ink-2">{t("lockedCheckSub")}</span></li>
-      </ul>
-      {resume ? <Link href={`/app/lesson/${resume.lesson.lessonId}`} className="btn btn-primary btn-sm press">{t("lockedGo")}</Link> : null}
-      {test ? <Link href={`/app/lesson/${test.lesson.lessonId}`} className="btn btn-ghost btn-sm" style={{ minBlockSize: 44 }}>{t("lockedTest", { unit: t("unit", { n: index }) })}</Link> : null}
-    </details>
-  );
+  const prevName = t("unit", { n: index });
+  const text: LockedUnitText = {
+    unit: t("unit", { n: index + 1 }), title: u.unit.title[locale], why: t("lockedWhy", { unit: prevName }), body: t("lockedBody"),
+    check: { title: t("lockedCheck", { unit: prevName }), sub: t("lockedCheckSub"), met: checked, toGo: !checked && remaining > 0 ? t("lockedLeft", { count: remaining }) : null, metLabel: t("met") },
+    sub: { title: t("lockedSub"), sub: t("lockedSubSub") },
+    go: resume ? { href: `/app/lesson/${resume.lesson.lessonId}`, label: t("lockedGoUnit", { unit: prevName }) } : null,
+    test: test ? { href: `/app/lesson/${test.lesson.lessonId}`, label: t("lockedTest", { unit: prevName }) } : null,
+    close: t("lockedClose"),
+  };
+  return <LockedUnitSheet id={u.unit.id} text={text} />;
 }
 
 export async function PathMapMain({ view, me }: { view: PathView; me: Learner }) {
@@ -116,7 +118,9 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
         <img src={pathArt(view.path.id)} alt="" />
       </section>
 
-      {view.units.map((u) => (
+      {view.units.map((u) => u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked") ? (
+        <LockedUnit key={u.unit.id} view={view} index={view.units.indexOf(u)} me={me} t={t} locale={locale} />
+      ) : (
         <div key={u.unit.id} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div className="unit-h">
             <div className="tags">
@@ -125,7 +129,6 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
               {u.practiced ? <span className="skill skill-practiced" style={{ blockSize: 22, fontSize: 12, padding: "0 9px" }}><span className="ph ph-check-circle" style={{ fontSize: 13 }} aria-hidden="true" />{t("practiced")}</span> : null}
             </div>
             <h2 className="t-h2" style={{ fontSize: 22 }}>{u.unit.title[locale]}</h2>
-            {u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked") ? <LockedUnit view={view} index={view.units.indexOf(u)} me={me} t={t} /> : null}
           </div>
           <ol className="lessons" style={{ ["--cols" as string]: u.lessons.length, ["--done" as string]: `${u.lessons.length > 1 ? (Math.min(u.lessons.filter((x) => x.state === "done").length, u.lessons.length - 1) / (u.lessons.length - 1)) * 100 : 0}%` }}>
             {u.lessons.map((l) => <Row key={l.lesson.lessonId} l={l} t={t} locale={locale} />)}

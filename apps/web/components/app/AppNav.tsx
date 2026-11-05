@@ -8,7 +8,9 @@ import { initSound, play, readMuted, setMuted } from "@/lib/sound";
 
 function useActive() {
   const pathname = usePathname();
-  return (id: Item["id"]) => (id === "home" ? pathname === "/app" : id === "paths" ? pathname.startsWith("/app/path") : id === "review" ? pathname.startsWith("/app/review") : pathname.startsWith("/app/profile"));
+  // As on the canvas: Streak sits under Home, Skills under Paths, Badges and certificates under Profile.
+  const under = (...p: string[]) => p.some((x) => pathname === x || pathname.startsWith(`${x}/`));
+  return (id: Item["id"]) => (id === "home" ? pathname === "/app" || under("/app/streak") : id === "paths" ? pathname.startsWith("/app/path") || under("/app/skills") : id === "review" ? under("/app/review") : under("/app/profile", "/app/badges", "/app/certificate", "/app/board"));
 }
 
 /** Phone: the floating toolbar at the bottom. */

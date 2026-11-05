@@ -311,3 +311,38 @@ a.kind::after { content: ""; position: absolute; inset-block: -11px; inset-inlin
 .ug a.hit { display: inline-block; padding-block: 12px; margin-block: -12px; }
 /* A3: a status that is not a control. Disabled tokens stay for disabled controls only. */
 .ug .status-chip { display: inline-flex; align-items: center; gap: 6px; block-size: 26px; padding-inline: 10px; border-radius: 8px; background: var(--disabled-bg); color: var(--ink-2); font-weight: 700; font-size: 12px; }
+
+/* ---- #144 pixel match to canvas v60 page 7: Profile path cards, Skills list, locked-unit sheet ---- */
+.ug .pp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.ug .pp .progress { inline-size: 100%; }
+.ug .sk-totals { display: flex; gap: 6px; flex-wrap: wrap; }
+.ug .sk-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.ug .sk-head h2 { margin: 0; }
+.ug ul.sk-list { list-style: none; margin: 0; padding: 0; }
+.ug .ph-page h2.t-over { margin: 0; }
+.ug .vh { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ug .lk-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--surface-2); border-style: dashed; text-align: start; font: inherit; color: var(--ink); cursor: pointer; inline-size: 100%; }
+.ug .lk-card .grow { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 2px; }
+.ug .lk-ico { display: grid; place-items: center; inline-size: 44px; block-size: 44px; border-radius: 14px; background: var(--disabled-bg); color: var(--disabled-ink); flex: none; font-size: 22px; }
+.ug .lk-why { font-size: 13px; display: inline-flex; gap: 6px; align-items: center; }
+/* Bottom sheet on a phone, centred dialog on desktop (the canvas .pg-over). */
+.ug .lk-sheet { border: 0; padding: 0; margin: 0; background: transparent; color: var(--ink); max-inline-size: none; max-block-size: none; inline-size: 100%; inset-block: auto 0; inset-inline: 0; position: fixed; }
+.ug .lk-sheet::backdrop { background: var(--scrim, rgb(1 22 38 / 0.55)); }
+.ug .lk-in { position: relative; display: flex; flex-direction: column; gap: 12px; background: var(--surface); border-radius: 28px 28px 0 0; padding: 10px 20px 22px; box-shadow: var(--shadow-sheet); max-block-size: 92dvh; overflow-y: auto; box-sizing: border-box; }
+.ug .lk-in .grab { inline-size: 44px; block-size: 5px; border-radius: 4px; background: var(--line); margin: 0 auto 2px; }
+.ug .lk-in h2 { margin: 0; font-weight: 700; font-size: 22px; line-height: var(--lh-tight, 1.25); }
+.ug .lk-in p { margin: 0; }
+.ug .lk-ill { inline-size: 76px; block-size: 76px; align-self: center; }
+.ug .lk-x { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; }
+.ug .lk-in .why-list { list-style: none; margin: 0; padding: 0; }
+.ug .lk-sheet[open] .lk-in { animation: ug-sheet-up var(--t-slow, 280ms) var(--ease-out, ease-out) both; }
+@keyframes ug-sheet-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (min-width: 1024px) {
+  .ug .lk-sheet { inset: 0; margin: auto; inline-size: 540px; max-inline-size: calc(100vw - 48px); block-size: fit-content; }
+  .ug .lk-in { border-radius: 24px; padding: 28px; border: 2px solid var(--line); box-shadow: var(--shadow-soft); max-block-size: calc(100dvh - 80px); }
+  .ug .lk-in .grab { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .ug .lk-sheet[open] .lk-in { animation: ug-fade 140ms linear both; } }
+/* The design-system chip colours win over the lesson player's quieter "Shown" chip and the plain status tag. */
+.ug .pp .kind.kind-current { background: var(--hl); color: var(--on-hl); }
+.ug :is(.pp-chips, .sk-totals, .sk-row, .sk-states) .skill.skill-shown { background: var(--brand); color: var(--on-brand); }

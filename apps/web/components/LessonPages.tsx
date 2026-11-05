@@ -119,7 +119,7 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
           : <SkillRow key={skill.id} title={skill.title[locale]} status="later" label={t("later")} retry />)}
       </ul>
       {shown ? (
-        <Link href="/app/skills" className="card end-badges press">
+        <Link href="/app/badges" className="card end-badges press">
           <span className="bdg-strip" aria-hidden="true">{rows.filter((r) => r.shown).slice(0, 6).map((r) => <span key={r.skill.id} className="bdg-face is-shown"><span className="ph ph-seal-fill" /></span>)}</span>
           <span className="t-label">{t("newBadges", { n: shown })}</span>
           <span className="ph ph-caret flip ink-3" aria-hidden="true" />

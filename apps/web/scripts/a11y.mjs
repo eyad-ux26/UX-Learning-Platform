@@ -6,7 +6,7 @@ import AxeBuilder from "@axe-core/playwright";
 const { chromium } = createRequire(import.meta.url)("playwright-core"); // comes with @axe-core/playwright; the browser is installed by `npx playwright-core install chromium`
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/paths", "/app/paths/P01", "/app/review", "/app/streak", "/app/skills", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video", "/app/settings", "/app/settings/notifications", "/app/settings/data", "/app/inbox", "/app/help", "/app/requests", "/app/requests/00000000-0000-4000-9000-000000000001", "/goodbye", "/paths", "/paths/forms-that-flow", "/paths/patterns-that-fit", "/privacy", "/terms", "/offline", "/maintenance", "/no-such-page", "/forgot"];
+const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/paths", "/app/paths/P01", "/app/review", "/app/streak", "/app/skills", "/app/badges", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video", "/app/settings", "/app/settings/notifications", "/app/settings/data", "/app/inbox", "/app/help", "/app/requests", "/app/requests/00000000-0000-4000-9000-000000000001", "/goodbye", "/paths", "/paths/forms-that-flow", "/paths/patterns-that-fit", "/privacy", "/terms", "/offline", "/maintenance", "/no-such-page", "/forgot"];
 const views = [
   ["en", "light", { width: 1440, height: 900 }],
   ["ar", "dark", { width: 390, height: 844 }],

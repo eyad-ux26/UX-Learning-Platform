@@ -17,13 +17,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   let email = "";
   let reminder = "";
   let boardOpen = false;
+  let since: string | null = me.joined.map((j) => j.startedAt).sort()[0] ?? null;
   if (me.db) {
     email = (await me.db.auth.getUser()).data.user?.email ?? "";
     const [{ data }, { data: flag }] = await Promise.all([
-      me.db.from("profiles").select("reminder_time").eq("user_id", me.userId).maybeSingle(),
+      me.db.from("profiles").select("reminder_time, created_at").eq("user_id", me.userId).maybeSingle(),
       me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
     ]);
     reminder = data?.reminder_time?.slice(0, 5) ?? "";
+    since = (data?.created_at as string | undefined) ?? since;
     boardOpen = !!flag?.enabled;
   } else email = "nour@example.com";
   const certificates = me.db ? await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : [];
@@ -34,7 +36,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
         <BellLink me={me} />
       </div>
       <h1 className="t-h1 h1-s">{t("title")}</h1>
-      <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} />
+      <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} since={since} />
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
     </Shell>
   );

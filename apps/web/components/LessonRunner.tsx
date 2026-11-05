@@ -121,7 +121,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   if (!state) return <div className="player-loading" aria-busy="true" />;
   if (finished) {
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
-    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={locale} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/skills")} />;
+    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={locale} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
     return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} />;
