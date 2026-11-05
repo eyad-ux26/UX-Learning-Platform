@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { safeNext } from "@/lib/auth";
+import { safeNext, signInLocale } from "@/lib/auth";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { hasServiceKey } from "@/lib/supabase/env";
 import { restoreIfDeleting } from "@/lib/server/account";
 import { routing } from "@/i18n/routing";
 
@@ -24,9 +26,16 @@ export async function GET(req: NextRequest) {
 
   // Emails follow the language the learner last signed in with. Google sign-ups and existing learners cannot carry a language
   // into the email request itself, so it is kept up to date here.
-  if (data.user.user_metadata?.locale !== locale) {
+  const fix = signInLocale(data.user, locale as "en" | "ar");
+  if (fix.save) {
     await db.auth.updateUser({ data: { locale } });
-    await db.from("profiles").update({ locale }).eq("user_id", data.user.id);
+    const { error: pe } = await db.from("profiles").update({ locale }).eq("user_id", data.user.id);
+    if (pe) console.error("auth callback: profile locale", pe.code);
+  }
+  // A new Google or Apple account on the Arabic page: its week start follows Arabic too (learners cannot write it).
+  if (fix.weekStart !== null && hasServiceKey()) {
+    const { error: we } = await createAdminClient().from("profiles").update({ week_start: fix.weekStart }).eq("user_id", data.user.id);
+    if (we) console.error("auth callback: profile week start", we.code);
   }
 
   // Signing in during the 30 days after a delete request keeps the account; the app says so (?restored=1).
