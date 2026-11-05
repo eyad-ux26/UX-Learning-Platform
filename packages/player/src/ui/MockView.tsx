@@ -444,12 +444,34 @@ const Keyboard = ({ kind }: { kind: "text" | "number" }) => (
 );
 
 /** Readable text on a brand colour: white unless the colour is light. */
-const onColor = (hex: string) => {
+const rgbOf = (hex: string): [number, number, number] | null => {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
-  if (!m) return "#FFFFFF";
-  const n = parseInt(m[1], 16), ch = [n >> 16, (n >> 8) & 255, n & 255].map((v) => { const c = v / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
-  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2] > 0.45 ? "#1D1D1F" : "#FFFFFF";
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  return [n >> 16, (n >> 8) & 255, n & 255];
 };
+const lum = (rgb: [number, number, number]) => {
+  const [r, g, b] = rgb.map((v) => { const c = v / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const onColor = (hex: string) => { const rgb = rgbOf(hex); return rgb && lum(rgb) > 0.45 ? "#1D1D1F" : "#FFFFFF"; };
+/** The product colour darkened until white text on it, and it as text on white, reach 4.5:1 (WCAG AA).
+ *  Buttons, links, active tabs and other app-coloured parts use this; the label swatch and an explicit
+ *  `color: brand` keep the exact product colour. */
+const hexOf = (rgb: number[]) => "#" + rgb.map((v) => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+export const accessibleBrand = (hex: string, dark = false) => {
+  let rgb = rgbOf(hex);
+  if (!rgb) return hex;
+  if (!dark) {
+    for (let i = 0; i < 40 && 1.05 / (lum(rgb) + 0.05) < 4.6; i++) rgb = rgb.map((v) => Math.round(v * 0.94)) as [number, number, number];
+  } else {
+    // Dark screens (#121417): lighten until the colour reads as text on the background.
+    for (let i = 0; i < 40 && (lum(rgb) + 0.05) / (0.0072 + 0.05) < 4.6; i++) rgb = rgb.map((v) => Math.round(v + (255 - v) * 0.08)) as [number, number, number];
+  }
+  return hexOf(rgb);
+};
+/** White or near-black text, whichever reads better on the colour. */
+const bestOn = (hex: string) => { const rgb = rgbOf(hex); if (!rgb) return "#FFFFFF"; const l = lum(rgb); return 1.05 / (l + 0.05) >= (l + 0.05) / (0.0137 + 0.05) ? "#FFFFFF" : "#16181B"; };
 
 /**
  * An example screen drawn from the content's mock: a phone, tablet or browser with the product's own chrome, never
@@ -466,7 +488,7 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
   const screen: React.CSSProperties & Record<string, string | number> = {};
   if (mock.width) { screen.maxWidth = mock.width; screen.marginInline = "auto"; }
   if (mock.height) screen.minHeight = Number(mock.height);
-  if (app) { screen["--mock-brand"] = app.color; screen["--mock-focus"] = app.color; screen["--mock-on-brand"] = onColor(app.color); }
+  if (app) { const brand = accessibleBrand(app.color, mock.theme === "dark"); screen["--mock-brand"] = brand; screen["--mock-focus"] = brand; screen["--mock-on-brand"] = bestOn(brand); }
   const chrome = !!(status || mock.appbar || mock.tabbar || mock.footer || mock.navbar || wide || mock.keyboard);
   const cls = ["exmock", wide && "wide", mock.gray && "gray", mock.overlay && "has-ov", mock.fab && "has-fab", app && "has-app", chrome && "has-chrome", mock.theme === "dark" && "th-dark", mock.screen === "lock" && "is-lock"].filter(Boolean).join(" ");
   const caption = [app ? mt(app.name, locale) : null, tag, mock.caption ? mt(mock.caption, locale) : null].filter(Boolean).join(" · ");

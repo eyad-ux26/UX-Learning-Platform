@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Locale, Mock, MockBlock } from "@uxgate/content/types";
 // @ts-expect-error plain ESM helper shared with the validator and the preview build
 import { loadContent, resolveAll } from "../../../scripts/lib/content.mjs";
-import { MockView } from "../src/ui/MockView";
+import { MockView, accessibleBrand } from "../src/ui/MockView";
 import { ART_NAMES } from "../src/ui/art";
 import vocab from "../src/mock-vocab.json";
 
@@ -104,5 +104,12 @@ describe("MockView details", () => {
     expect(ar).toContain("xi-caret-left");
     expect(ar).toContain("xi-arrow-left");
     expect(ar).toContain("xi-arrows-left-right");
+  });
+  it("darkens a light product colour until white text on it passes AA, and keeps dark ones", () => {
+    expect(accessibleBrand("#F97316")).not.toBe("#F97316");
+    expect(accessibleBrand("#1C3D6E")).toBe("#1C3D6E");
+    const html = render({ app: { id: "nashat", name: "Nashat", color: "#F97316", icon: "barbell" }, blocks: [{ kind: "button", text: "Join" }] } as never, "en");
+    expect(html).toContain(`--mock-brand:${accessibleBrand("#F97316")}`);
+    expect(html).toContain("background:#F97316"); // the label swatch keeps the exact colour
   });
 });
