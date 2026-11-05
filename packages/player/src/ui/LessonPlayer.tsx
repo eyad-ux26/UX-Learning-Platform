@@ -136,7 +136,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         <div className="progress" role="progressbar" aria-label={t("progress")} aria-valuenow={state.i + (finished ? 1 : 0)} aria-valuemin={0} aria-valuemax={total}>
           <i style={{ width: `${((state.i + (finished ? 1 : 0)) / total) * 100}%` }} />
         </div>
-        {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" />{t(`save.${saveStatus}` as never)}</span> : null}
+        {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" /><span className="lp-save-txt">{t(`save.${saveStatus}` as never)}</span></span> : null}
         {lesson.mode === "check" || variant !== "lesson" ? <span className="lp-mode"><span className={`ph ${variant === "mastery" ? "ph-target" : variant === "review" ? "ph-review" : "ph-seal-check"}`} aria-hidden="true" />{t(variant === "mastery" ? "modeMastery" : variant === "review" ? "modeReview" : "modeCheck")}</span> : null}
         {lessonNo && variant === "lesson" ? <span className="t-small ink-3 player-label" title={t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}</span> : null}
         <span className="t-label num ink-2 player-count">{state.i + 1}/{total}</span>
