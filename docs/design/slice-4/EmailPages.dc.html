@@ -49,10 +49,11 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge","deleted","receipt","renewSoon","payFailed","cancelled","refundYes","refundNo","walletDue"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["reminder","goal","link","reset","welcome","badge","deleted","receipt","renewSoon","payFailed","cancelled","refundYes","refundNo","walletDue","launchConfirm","launchLive"],"default":"reminder"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":1000}}'>
 const IMG = { lesson: '/_blob/54daac1136dd65086f58f73b440ed1a9', forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', flame: '/_blob/ef2b9cc307685520ab2b815707ec327f', mail: '/_blob/b8ff95a8c2f1c68111476aaf1b979bca', key: '/_blob/c1a5e232b4681719bddf8f85963a691d', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', review: '/_blob/27529cb276100eb41db22c17bdf85470', payment: '/_blob/771c73990dbdac0c4c60019a15939cef', calendar: '/_blob/f042bfb4689d32362320ee48e15ea560' };
 const LINK = 'https://uxgate.org/auth/link?token=8f2c…e41a';
 const RESET = 'https://uxgate.org/auth/reset?token=b71d…09c3';
+const CONFIRM = 'https://uxgate.org/launch/confirm?token=4c9a…d27f';
 const C = {
   en: { addr: 'UXGate · uxgate.org · Questions? Reply to this email or write to support@uxgate.org.',
     E: {
@@ -74,6 +75,15 @@ const C = {
         btn: 'Set a new password', notes: ['The link works once, for 1 hour. If the button doesn’t work, copy this link into your browser:'], code: RESET,
         safety: 'Didn’t ask for this? Ignore this email. Your password stays the same.',
         why: 'This email is about your account, so it always arrives.' },
+      launchConfirm: { subj: 'Confirm your email for the UXGate launch', pre: 'One tap and you are on the launch list.', ill: 'mail', illAlt: '',
+        h1: 'Confirm your email', ps: ['You asked to hear when UXGate opens. Confirm that this is your email and we will write to you once, on launch day.'],
+        btn: 'Confirm my email', notes: ['The link works for 7 days. If the button doesn’t work, copy this link into your browser:'], code: CONFIRM,
+        safety: 'Didn’t ask for this? Ignore this email. We won’t add you or write again.',
+        why: 'You get this because this address was entered on uxgate.org.' },
+      launchLive: { subj: 'UXGate is open', pre: 'Unit 1 of every path is free. Your first lesson takes about 5 minutes.', ill: 'gate', illAlt: '',
+        h1: 'UXGate is open', ps: ['You asked us to tell you when we open. Practise real design decisions in short lessons, in Arabic or English, and prove each skill on a new case.'],
+        box: ['forms', 'Start with Forms That Flow', 'Unit 1 is free · 5 to 10 minutes a lesson'], btn: 'Create your account', notes: ['This is the only launch email we send.'],
+        why: 'You get this once, because you joined the launch list.', links: [['leave', 'Leave the launch list']] },
       welcome: { subj: 'Welcome to UXGate, Yasmin', pre: 'Your starting path is Forms That Flow. Unit 1 is free.', ill: 'gate', illAlt: '',
         h1: 'Welcome, Yasmin', ps: ['Every lesson is a few real decisions, with feedback that explains why. Most take 5 to 10 minutes.'],
         box: ['forms', 'Your starting path: Forms That Flow', 'Unit 1 · Ask only what you need · free'], btn: 'Start Unit 1', notes: ['Your daily reminder is set for 8:00 PM. You can change it in Settings.'],
@@ -139,6 +149,15 @@ const C = {
         btn: 'ضع كلمة مرور جديدة', notes: ['الرابط يعمل مرة واحدة، لمدة ساعة. إن لم يعمل الزر، انسخ هذا الرابط في المتصفح:'], code: RESET,
         safety: 'لم تطلب هذا؟ تجاهل الرسالة. تبقى كلمة مرورك كما هي.',
         why: 'هذه الرسالة تخص حسابك، لذلك تصل دائمًا.' },
+      launchConfirm: { subj: 'أكّد بريدك لإطلاق UXGate', pre: 'ضغطة واحدة وتصبح في قائمة الإطلاق.', ill: 'mail', illAlt: '',
+        h1: 'أكّد بريدك الإلكتروني', ps: ['طلبت أن نخبرك عند إطلاق UXGate. أكّد أن هذا بريدك، وسنراسلك مرة واحدة يوم الإطلاق.'],
+        btn: 'أكّد بريدي', notes: ['يعمل الرابط لمدة 7 أيام. إن لم يعمل الزر، انسخ هذا الرابط في المتصفح:'], code: CONFIRM,
+        safety: 'لم تطلب هذا؟ تجاهل هذه الرسالة. لن نضيفك ولن نراسلك مرة أخرى.',
+        why: 'تصلك هذه الرسالة لأن هذا البريد كُتب في uxgate.org.' },
+      launchLive: { subj: 'UXGate متاح الآن', pre: 'الوحدة 1 من كل مسار مجانية. درسك الأول يستغرق نحو 5 دقائق.', ill: 'gate', illAlt: '',
+        h1: 'UXGate متاح الآن', ps: ['طلبت أن نخبرك عند الإطلاق. تدرّب على قرارات تصميم حقيقية في دروس قصيرة، بالعربية أو الإنجليزية، وأثبت كل مهارة على حالة جديدة.'],
+        box: ['forms', 'ابدأ بمسار Forms That Flow', 'الوحدة 1 مجانية · من 5 إلى 10 دقائق للدرس'], btn: 'أنشئ حسابك', notes: ['هذه رسالة الإطلاق الوحيدة التي نرسلها.'],
+        why: 'تصلك هذه الرسالة مرة واحدة لأنك انضممت إلى قائمة الإطلاق.', links: [['leave', 'اخرج من قائمة الإطلاق']] },
       welcome: { subj: 'أهلًا بك في UXGate يا ياسمين', pre: 'مسارك الأول: Forms That Flow. الوحدة 1 مجانية.', ill: 'gate', illAlt: '',
         h1: 'أهلًا يا ياسمين', ps: ['كل درس عبارة عن بضعة قرارات حقيقية، مع ملاحظات تشرح السبب. معظم الدروس تستغرق من 5 إلى 10 دقائق.'],
         box: ['forms', 'مسارك الأول: Forms That Flow', 'الوحدة 1 · اطلب ما تحتاجه فقط · مجانية'], btn: 'ابدأ الوحدة 1', notes: ['تذكيرك اليومي مضبوط على الساعة 8:00 م. يمكنك تغييره من الإعدادات.'],
