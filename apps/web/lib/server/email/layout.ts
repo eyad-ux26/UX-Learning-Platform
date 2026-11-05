@@ -18,6 +18,8 @@ export type EmailLayoutInput = {
   paragraphs: string[];
   /** showLink prints the address under the button as copyable text. Every button that signs in sets it. */
   button?: { label: string; href: string; showLink?: boolean };
+  /** Label and value lines under the paragraphs (receipts: plan, amount, card, next charge). Slice 5. */
+  table?: Array<[string, string]>;
   /** img: an illustration name ("path-forms"), a site path ("/ill/x.png") or an absolute https address. */
   box?: { title: string; body: string; img?: string };
   /** "transactional": about the account or payments, always arrives. Otherwise the footer carries a "turn off" link (kindLabel is its text). */
@@ -100,7 +102,7 @@ const DARK_CSS = `
 }`;
 
 export function emailLayout(input: EmailLayoutInput): { html: string; text: string } {
-  const { locale, preheader, heading, paragraphs, button, box, footer, ill, illAlt = "", notes = [], safety, signoff } = input;
+  const { locale, preheader, heading, paragraphs, table = [], button, box, footer, ill, illAlt = "", notes = [], safety, signoff } = input;
   const m = (locale === "ar" ? ar : en).emails.common;
   const dir = locale === "ar" ? "rtl" : "ltr";
   const font = FONT[locale];
@@ -123,6 +125,14 @@ export function emailLayout(input: EmailLayoutInput): { html: string; text: stri
   if (ill) rows.push(block(`<img class="em-ill" src="${esc(imageUrl(ill))}" width="96" height="96" alt="${esc(illAlt)}" style="display:block;width:96px;height:96px;border:0;outline:none;">`, true));
   rows.push(block(`<h1 style="margin:0;font-size:24px;line-height:1.25;font-weight:700;color:${C.ink};font-family:${font};">${esc(heading)}</h1>`, rows.length === 0));
   for (const p of paragraphs) rows.push(block(`<p style="${pStyle}">${esc(p)}</p>`));
+  if (table.length) {
+    const cell = `padding:9px 0;border-bottom:1px solid ${C.cardLine};font-size:14px;line-height:1.4;font-family:${font};`;
+    rows.push(block(
+      `<table role="presentation" class="em-rows" width="100%" cellpadding="0" cellspacing="0" border="0" dir="${dir}" style="width:100%;border-top:1px solid ${C.cardLine};">` +
+        table.map(([k, v]) => `<tr><td style="${cell}color:${C.muted};">${esc(k)}</td><td style="${cell}color:${C.ink};font-weight:700;text-align:end;">${esc(v)}</td></tr>`).join("") +
+        `</table>`,
+    ));
+  }
   if (box) {
     const img = box.img
       ? `<td width="56" valign="middle" style="width:56px;padding:0;"><img src="${esc(imageUrl(box.img))}" width="56" height="56" alt="" style="display:block;width:56px;height:56px;border:0;"></td><td width="14" style="width:14px;font-size:0;line-height:0;">&nbsp;</td>`
@@ -193,6 +203,7 @@ ${footLines.map((l, i) => `<div style="margin:${i ? "6px" : "0"} 0 0 0;">${l}</d
 
   const t: string[] = [heading, ""];
   for (const p of paragraphs) t.push(p, "");
+  if (table.length) t.push(...table.map(([k, v]) => `${k}: ${v}`), "");
   if (box) t.push(box.title, ...(box.body ? [box.body] : []), "");
   if (button) t.push(`${button.label}: ${safeHref(button.href)}`, "");
   for (const n of notes) t.push(n);

@@ -103,7 +103,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
               </Link>
             ))}
           </div>
-          <p className="t-small ink-2 paths-note">{t("pathsNote")} <Link href="/paths">{t("seePaths")}</Link></p>
+          <p className="t-small ink-2 paths-note">{t("pathsNote")} <Link href="/paths" className="hit">{t("seePaths")}</Link></p>
         </section>
 
         <section id="plan" className="land-sec">

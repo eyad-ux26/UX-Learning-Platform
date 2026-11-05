@@ -14,6 +14,9 @@ import { loadReviewSession } from "@/lib/server/review-session";
 import { notifyKept } from "@/lib/server/progress-notify";
 import { reviewPlanOk } from "@/lib/review";
 import { isQuestion } from "@uxgate/player/engine";
+import { lessonOpen } from "@/lib/billing/access";
+import { readPro } from "@/lib/server/billing/account";
+import { hostOf } from "@/lib/server/billing/config";
 import { loadRound } from "@/lib/server/mastery";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
@@ -40,6 +43,8 @@ export async function POST(req: Request) {
 
   const db = createAdminClient();
   const userId = auth.user.id;
+  // Units after Unit 1 need Pro, checked here and not only on the screen (slice 5). Read with the learner's own session.
+  if (!lessonOpen(body.lessonId, false) && !(await readPro(supabase, userId, hostOf(req)))) return NextResponse.json({ error: "pro_required" }, { status: 403 });
   if (!(await withinDbLimit(db, userId, "attempts-minute", PER_MINUTE, 60))) return tooMany();
 
   // Answers given on an older version of the lesson are scored against that version, which stays stored.

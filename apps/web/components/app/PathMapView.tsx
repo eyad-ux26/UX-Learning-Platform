@@ -10,6 +10,7 @@ import { LockedUnitSheet, type LockedUnitText } from "./LockedUnitSheet";
 import { catalogEntry } from "@/lib/catalog";
 import { buildPathView, testOutCheck } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
+import { FreeProList } from "@/components/billing/FreeProList";
 
 function Row({ l, t, locale }: { l: PathLesson; t: Awaited<ReturnType<typeof getTranslations>>; locale: Locale }) {
   const title = l.lesson.body.title[locale];
@@ -75,7 +76,11 @@ function LockedUnit({ view, index, me, t, locale }: { view: PathView; index: num
 
 export async function PathMapMain({ view, me }: { view: PathView; me: Learner }) {
   const progress: Progress = me.progress;
+  const pro = me.pro;
   const t = await getTranslations("map");
+  const tb = await getTranslations("billing");
+  // A free learner sees the Pro units as locked cards that open the paywall; the first one says why.
+  const firstLocked = pro ? null : view.units.find((u) => !u.unit.free)?.unit.id;
   const locale = (await getLocale()) as Locale;
   const pct = view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0;
   const current = view.units.find((u) => u.lessons.some((l) => l.state !== "done")) ?? view.units[view.units.length - 1];
@@ -118,7 +123,17 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
         <img src={pathArt(view.path.id)} alt="" />
       </section>
 
-      {view.units.map((u) => u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked") ? (
+      {view.units.map((u) => !pro && !u.unit.free ? (
+        <Link key={u.unit.id} href={`/app/path/${view.path.id}?paywall=${u.unit.id}`} scroll={false} className={`unit-lock press${u.unit.id === firstLocked ? " is-next" : ""}`} style={{ flexWrap: "wrap" }}>
+          <span className="ic"><span className="ph ph-lock-fill" aria-hidden="true" /></span>
+          <span className="grow">
+            <span style={{ display: "flex", alignItems: "center", gap: 6 }}><span className="t-small ink-3" style={{ fontWeight: 700, fontSize: 12 }}>{t("unit", { n: u.number })}{u.unit.id === firstLocked ? ` · ${tb("next")}` : ""}</span><span className="pro-tag">PRO</span></span>
+            <b>{u.unit.title[locale]}</b>
+            {u.unit.id === firstLocked ? <span className="t-small ink-2" style={{ fontSize: 13 }}>{tb("unitNote")}</span> : null}
+          </span>
+          <span className="ph ph-caret-end flip ink-3" aria-hidden="true" />
+        </Link>
+      ) : u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked") ? (
         <LockedUnit key={u.unit.id} view={view} index={view.units.indexOf(u)} me={me} t={t} locale={locale} />
       ) : (
         <div key={u.unit.id} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -139,10 +154,24 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
   );
 }
 
-export async function PathMapPanel({ view }: { view: PathView }) {
+/** The free learner's plan card on a laptop: what stays free and what Pro opens. */
+export async function FreePlanCard() {
+  const t = await getTranslations("billing");
+  return (
+    <section className="card" style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}><p className="t-over">{t("yourPlan")}</p><span className="st st-wait">{t("freePlan")}</span></div>
+      <FreeProList single />
+      <Link href="/app/plans" className="btn btn-secondary btn-block press">{t("seePlans")}</Link>
+    </section>
+  );
+}
+
+export async function PathMapPanel({ view, pro = true }: { view: PathView; pro?: boolean }) {
   const t = await getTranslations("map");
   const locale = (await getLocale()) as Locale;
   const l = view.next;
+  // The next lesson can be in a Pro unit: a free learner sees the plan card instead.
+  if (!pro && (!l || !view.units.find((u) => u.lessons.includes(l))?.unit.free)) return <FreePlanCard />;
   if (!l) return null;
   const cont = l.state === "in_progress";
   return (
@@ -155,6 +184,7 @@ export async function PathMapPanel({ view }: { view: PathView }) {
         <div className="meta-i t-small ink-2"><span className="ph ph-clock" aria-hidden="true" />{t("minutes", { count: l.lesson.minutes })}</div>
       </div>
       <Link href={`/app/lesson/${l.lesson.lessonId}`} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{cont ? t("continue") : t("start")}</Link>
+      {pro ? null : <FreePlanCard />}
     </>
   );
 }

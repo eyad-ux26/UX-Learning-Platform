@@ -4,11 +4,16 @@ import { useTranslations } from "next-intl";
 import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
+import { Link } from "@/i18n/navigation";
 import { PushAsk } from "@/components/account/PushAsk";
 import type { UpNext } from "@/lib/up-next";
 
-export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "" }: { pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void }) {
+/** The next unit when it is part of Pro and the learner is on the free plan. */
+export type ProNext = { n: number; title: string };
+
+export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "", proNext = null }: { pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void; proNext?: ProNext | null }) {
   const t = useTranslations("end");
+  const tb = useTranslations("billing");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
   // A skill counts as practised once a step on it was answered (not just shown).
   const practised = new Set<string>();
@@ -58,6 +63,19 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
                 <b>{upNext.title[locale]}</b>
                 <span className="t-small ink-2">{t("nextMeta", { unit: upNext.unitNo, n: upNext.lessonNo, minutes: upNext.minutes })}</span>
               </span>
+            </section>
+          ) : null}
+          {proNext ? (
+            <section className="card" style={{ padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ display: "grid", placeItems: "center", inlineSize: 40, blockSize: 40, borderRadius: 12, background: "var(--panel)", color: "var(--panel-ink)", fontWeight: 800, flex: "none" }} className="num">{proNext.n}</span>
+                <span style={{ flex: 1, minInlineSize: 0, display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 6 }}><span className="t-small ink-3" style={{ fontWeight: 700, fontSize: 12 }}>{tb("nextUnit")}</span><span className="pro-tag">PRO</span></span>
+                  <b style={{ fontSize: 15 }}>{proNext.title}</b>
+                </span>
+              </div>
+              <p className="t-small ink-2" style={{ fontSize: 13.5 }}>{tb("endPro", { n: proNext.n })}</p>
+              <Link href="/app/plans" className="btn btn-secondary btn-block press">{tb("seePlans")}</Link>
             </section>
           ) : null}
           <div className="end-actions">

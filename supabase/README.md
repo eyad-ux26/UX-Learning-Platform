@@ -4,7 +4,7 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 
 ## 1. Create the project
 1. New Supabase project named `uxgate-staging` (later `uxgate-production`). **Region: Frankfurt (eu-central-1).** There is no Middle East region, Frankfurt is the closest, and the region cannot be changed after creation.
-2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then (slice 3) `migrations/0016_progress_paths.sql`, then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
+2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then (slice 3) `migrations/0016_progress_paths.sql`, then (slice 4) `migrations/0026_account_notifications.sql`, then (slice 5) `migrations/0036_billing.sql` (plans, payments, refunds), then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
 3. Regenerate the content file after any lesson change with `npm run seed:sql` and commit it. The tests fail if it is stale.
 
 ## 2. Where each key goes
@@ -94,3 +94,17 @@ Slice 3 migrations start at 0016 and run after these.
 | badge | A review session that turns skills gold (Kept): `notifyKept` in `lib/server/progress-notify.ts`, one inbox item per badge and one `badgeEmail` per session | Done |
 | review | `/api/cron/review-due`, called by the daily Cron Trigger after the nightly job: learners with a skill that came due in the last day, once a day | Done |
 | billing | Slice 5 | Slice 5 wires it |
+
+## 12. Give Pro without a payment (admins, QA accounts)
+
+After 0036, run this in the SQL editor with the learner's email. It gives one year of Pro marked `source = 'manual'`, which counts on uxgate.org too. Nothing renews or charges it, and plan events leave it alone. Running it again resets the year.
+
+```sql
+insert into public.entitlements (user_id, plan, valid_until, pro_since, source) select id, 'pro', now() + interval '1 year', now(), 'manual' from auth.users where email = 'qa@example.com' on conflict (user_id) do update set plan = 'pro', valid_until = excluded.valid_until, pro_since = coalesce(public.entitlements.pro_since, excluded.pro_since), source = 'manual', updated_at = now();
+```
+
+To take it back:
+
+```sql
+update public.entitlements set plan = 'free', valid_until = null, pro_since = null, pro_ended_at = now(), source = 'live', updated_at = now() where source = 'manual' and user_id = (select id from auth.users where email = 'qa@example.com');
+```

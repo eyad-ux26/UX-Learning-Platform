@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { redirect } from "@/i18n/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
@@ -8,6 +9,8 @@ import { settleLearner } from "@/lib/server/settle";
 import { resolveWeekStart } from "@/lib/freeze";
 import { pickCurrent } from "@/lib/learning";
 import type { SkillRow, SkillStateName } from "@/lib/skill-state";
+import { proFrom, readEntitlement, requestHost } from "@/lib/server/billing/account";
+import type { Entitlement } from "@/lib/billing/subscription";
 
 export type Learner = {
   db: SupabaseClient | null;
@@ -34,10 +37,14 @@ export type Learner = {
   leaderboardJoined: boolean;
   shareEnabled: boolean;
   handle: string | null;
+  /** On UXGate Pro right now (slice 5). Free learners get Unit 1 of every path. */
+  pro: boolean;
+  /** The plan row behind `pro`, read once per request and reused by the plans and billing screens. */
+  entitlement: Entitlement | null;
 };
 
 const fixture = (): Learner => ({
-  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC",
+  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null,
   practicedSkills: new Set(["SK-P01-U01-01"]),
   joined: [{ pathId: "P01", startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" }], activePathId: "P01",
   skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
@@ -53,7 +60,10 @@ const fixture = (): Learner => ({
  * The signed-in learner and everything the app shell shows about them.
  * UG_DEV_FIXTURE=1 swaps in a made-up learner so screens can be checked without a database; it is never set on a deployed host.
  */
-export async function getLearner(): Promise<Learner | null> {
+export const getLearner = cache(loadLearner);
+
+/** Cached per request (React cache): a page, its layout and its components share one sign-in check and one set of reads. */
+async function loadLearner(): Promise<Learner | null> {
   if (process.env.UG_DEV_FIXTURE === "1") return fixture();
   if (!hasSupabase()) return null; // not connected to Supabase yet: everyone is signed out
   const db = await createClient();
@@ -65,7 +75,8 @@ export async function getLearner(): Promise<Learner | null> {
   const weekStart = resolveWeekStart(p0?.week_start, p0?.locale);
   await settleLearner(userId, p0?.time_zone ?? null, new Date(), weekStart); // never throws
   // Every other read at once, so a page waits for one more database round trip, not several.
-  const [{ progress, timeZone: tz }, onb, skills, extra, enr, streak, note] = await Promise.all([
+  // The plan is one primary-key read in the same round (issue #131), with no retries and a fast exit before 0036 exists.
+  const [{ progress, timeZone: tz }, onb, skills, extra, enr, streak, note, entitlement, host] = await Promise.all([
     loadProgressAndZone(db, userId),
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id, state, shown_at, kept_at, next_review_at").eq("user_id", userId),
@@ -74,6 +85,8 @@ export async function getLearner(): Promise<Learner | null> {
     db.from("enrollments").select("path_id, started_at, last_active_at").eq("user_id", userId),
     db.from("streaks").select("longest, freezes_available").eq("user_id", userId).maybeSingle(),
     db.from("freeze_events").select("id, day").eq("user_id", userId).eq("kind", "used").is("seen_at", null).order("day", { ascending: false }).limit(1),
+    readEntitlement(db, userId),
+    requestHost(),
   ]);
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(new Date()));
   const joined = (enr.data ?? []).map((e) => ({ pathId: e.path_id as string, startedAt: e.started_at as string, lastActiveAt: (e.last_active_at as string | null) ?? null }))
@@ -97,6 +110,8 @@ export async function getLearner(): Promise<Learner | null> {
     leaderboardJoined: !!extra.data?.leaderboard_joined_at,
     shareEnabled: !!extra.data?.share_enabled,
     handle: (extra.data?.handle as string | null) ?? null,
+    pro: proFrom(entitlement, host),
+    entitlement,
   };
 }
 

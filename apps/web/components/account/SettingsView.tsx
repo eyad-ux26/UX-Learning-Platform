@@ -13,8 +13,6 @@ import { pushState, type PushState } from "@/lib/push-client";
 import { Sheet } from "./Sheet";
 import { joinLeaderboard, leaveLeaderboard, setAchievementPage } from "@/app/[locale]/app/(shell)/profile/share-actions";
 
-/** Slice 5 turns this on when Plan and billing (/app/settings/billing) exists. */
-const BILLING_READY = false;
 
 type Initial = { name: string; email: string; provider: string; theme: ThemePref; goal: 1 | 2 | 3; reminder: string | null };
 /** The two sharing choices (both off by default). The leaderboard can only be joined while the admins have it open. */
@@ -107,9 +105,7 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
               <span className="ph ph-user" aria-hidden="true" /><span className="set-l">{t("name")}<small>{name}</small></span><span className="set-v">{t("edit")}<Caret /></span>
             </button>
             <div className="set-row"><span className="ph ph-mail" aria-hidden="true" /><span className="set-l">{t("email")}<small className="ltr" style={{ textAlign: "start" }}>{initial.email}</small></span><span className="set-v" style={{ fontWeight: 600 }}>{via}</span></div>
-            {BILLING_READY ? (
-              <Link href="/app/settings/billing" className="set-row"><span className="ph ph-credit-card" aria-hidden="true" /><span className="set-l">{t("billing")}<small>{t("billingSub")}</small></span><span className="set-v"><span className="pro-tag">PRO</span><Caret /></span></Link>
-            ) : null}
+            <Link href="/app/settings/billing" className="set-row"><span className="ph ph-credit-card" aria-hidden="true" /><span className="set-l">{t("billing")}<small>{t("billingSub")}</small></span><span className="set-v"><span className="pro-tag">PRO</span><Caret /></span></Link>
           </div>
 
           <h2 className="t-over set-sec">{t("secLearning")}</h2>

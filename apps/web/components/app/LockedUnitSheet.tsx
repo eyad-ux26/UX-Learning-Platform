@@ -49,8 +49,9 @@ export function LockedUnitSheet({ id, text }: { id: string; text: LockedUnitText
               <span className="grow"><b>{text.check.title}</b><span>{text.check.sub}</span></span>
               {text.check.met ? <span className="vh">{text.check.metLabel}</span> : text.check.toGo ? <span className="kind">{text.check.toGo}</span> : null}
             </li>
-            <li className="why-row">
-              <span className="ph ph-info" aria-hidden="true" style={{ color: "var(--link)" }} />
+            {/* Only a Pro learner reaches this sheet (a free learner's Pro units open the paywall), so the plan is met. */}
+            <li className="why-row is-done">
+              <span className="ph ph-check-circle-fill" aria-hidden="true" />
               <span className="grow"><b>{text.sub.title}</b><span>{text.sub.sub}</span></span>
             </li>
           </ul>

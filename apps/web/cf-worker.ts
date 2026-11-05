@@ -51,6 +51,12 @@ export default {
       }
     };
     ctx.waitUntil(run().then(reviews));
+    // Slice 5: renewals, grace period, retries and billing reminders.
+    ctx.waitUntil(
+      handler.fetch(new Request("https://internal/api/cron/billing", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx).then(async (res: Response) => {
+        console.log(`cron billing: ${res.status} ${await res.text()}`);
+      }),
+    );
   },
 };
 

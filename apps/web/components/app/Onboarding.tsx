@@ -12,7 +12,7 @@ import { FOCUSES, GOALS, type OnboardingInput } from "@/lib/onboarding";
 import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
-import { CATALOG, isPlayable, pathArtUrl } from "@/lib/catalog";
+import { CATALOG, pathArtUrl } from "@/lib/catalog-list";
 
 type Goal = (typeof GOALS)[number];
 type Focus = (typeof FOCUSES)[number];
@@ -22,7 +22,8 @@ const FOCUS_IMG: Record<Focus, string | null> = { forms: "path-forms", hier: "pa
 const FOCUS_NAME: Record<Focus, string> = { forms: "Forms That Flow", hier: "Visual Hierarchy in Action", usab: "Find and Fix Usability", none: "" };
 const OPEN_PATHS = new Set<Focus>(["forms"]); // paths whose lessons exist today
 
-export function Onboarding() {
+/** `playable`: ids of the paths that have lessons (the rest show as Coming soon), passed in so no content ships to the browser. */
+export function Onboarding({ playable }: { playable: string[] }) {
   const t = useTranslations("onboarding");
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -122,7 +123,7 @@ export function Onboarding() {
                 <div className="ob-opts" role="radiogroup" aria-label={t("allTitle")}>
                   <p className="t-small ink-2">{t("allBody")}</p>
                   {CATALOG.map((p) => {
-                    const open = isPlayable(p.id);
+                    const open = playable.includes(p.id);
                     const on = pathChoice === p.id;
                     return (
                       <button key={p.id} type="button" role="radio" aria-checked={on} aria-disabled={!open} disabled={!open} className={`choice press sm${on ? " is-selected" : ""}`} onClick={() => { setPathChoice(p.id); play("select-snap"); }}>
