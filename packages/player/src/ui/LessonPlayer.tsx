@@ -51,8 +51,9 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
-  const [mockOpen, setMockOpen] = useState(true);
-  const [layer, setLayer] = useState<null | "exit" | "review">(null);
+  const [layer, setLayer] = useState<null | "exit" | "review" | "example">(null);
+  // The example opened full screen from its phone thumbnail (design audit L4).
+  const [example, setExample] = useState<{ mock: Mock; label: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const welcomeBack = initial.i > 0 && initial.steps.some((x) => x.phase !== "answering" || x.tries > 0);
   const [showBack, setShowBack] = useState(welcomeBack);
@@ -73,22 +74,17 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   }, [onState, onEvent]);
 
   // New step: reset local view state and move focus to the heading so screen readers announce it.
-  useEffect(() => { setWhyOpen(false); setMockOpen(true); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
-  // On a phone the example screen folds into a "Show it again" bar once feedback is up, so the options and feedback fit (choose steps only).
-  useEffect(() => {
-    if (st.phase === "answering") setMockOpen(true);
-    else if (question && step.type === "choose" && window.matchMedia("(max-width: 1023px)").matches) setMockOpen(false);
-  }, [st.phase, st.tries, state.i, question, step.type]);
+  useEffect(() => { setWhyOpen(false); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
   // Feedback appeared: move focus to its main button so keyboard players keep going.
   useEffect(() => { if (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed") sheetBtnRef.current?.focus({ preventScroll: true }); }, [st.phase, st.tries, state.i]);
 
   const doSelect = (id: string) => { onSound("select-snap"); commit({ state: E.select(lesson, state, id) }); };
   const doSelection = (sel: string[]) => { onSound("select-snap"); commit({ state: E.setSelection(lesson, state, sel) }); };
   const doReason = (id: string) => { onSound("select-snap"); commit({ state: E.selectReason(lesson, state, id) }); };
-  const doConf = (k: number) => commit({ state: E.setConfidence(state, k) });
-  const doCheck = () => {
+  // Design audit L2: on confidence steps each part of the split Check button sets the confidence and checks in one press.
+  const doCheck = (conf?: number) => {
     onSound("check-press");
-    const tr = E.check(lesson, state);
+    const tr = E.check(lesson, conf === undefined ? state : E.setConfidence(state, conf));
     commit(tr);
     const nst = tr.state.steps[tr.state.i];
     const verdict = nst.phase === "right" ? (nst.alsoOk ? "answer-also-works" : "answer-right") : nst.phase === "wrong" ? "answer-wrong" : null;
@@ -100,8 +96,9 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   const tryExit = () => (answered ? setLayer("exit") : onExit());
   useEffect(() => {
     if (!layer) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setLayer(null); };
-    const onPop = () => setLayer(null);
+    const close = () => { setLayer(null); setExample(null); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    const onPop = () => close();
     history.pushState({ lessonLayer: true }, "");
     window.addEventListener("keydown", onKey); window.addEventListener("popstate", onPop);
     return () => { window.removeEventListener("keydown", onKey); window.removeEventListener("popstate", onPop); if (history.state?.lessonLayer) history.back(); };
@@ -115,6 +112,9 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   };
 
   const part = t(`part.${step.part}` as never);
+  // Design audit L3: a later step of the same case (same speaker, same scenario as the step before) shows the speaker as a one-line chip.
+  const prev = state.i > 0 ? lesson.steps[state.i - 1] : undefined;
+  const laterInCase = !!(step.scenario && step.speaker && prev?.scenario && prev.speaker === step.speaker && prev.scenario.en === step.scenario.en);
   const finished = E.isFinished(step, st);
   const showSheet = question && (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed" || st.phase === "saved" || st.phase === "missed");
 
@@ -168,9 +168,9 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         ) : (
           <Question
             step={step} st={st} locale={locale} t={t} mockLabel={mockLabel}
-            headingRef={headingRef} mockOpen={mockOpen} setMockOpen={setMockOpen}
+            headingRef={headingRef} laterInCase={laterInCase}
             onSelect={doSelect} onReason={doReason} onSelection={doSelection}
-            concept={step.part === "concept"}
+            onOpenExample={(mock, label) => { onSound("sheet-up"); setExample({ mock, label }); setLayer("example"); }}
           />
         )}
       </main>
@@ -184,25 +184,13 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         />
       ) : (
         <footer className="player-foot">
-          {question && step.confidence ? (
-            <div className="conf" role="group" aria-label={t("sure")}>
-              <span className="t-small conf-label">{st.conf === null && st.phase === "answering" ? t("surePick") : t("sure")}</span>
-              {[0, 1, 2].map((k) => (
-                <button key={k} type="button" className={`chip${st.conf === k ? " is-selected" : ""}`} aria-pressed={st.conf === k} onClick={() => doConf(k)}>{t(`conf.${k}` as never)}</button>
-              ))}
-            </div>
-          ) : null}
-          {question ? (
-            <>
-              {st.phase === "main_ok" ? <p className="t-small ink-2 foot-note">{t("reasonNote")}</p> : null}
-              <button type="button" className="btn btn-primary btn-lg btn-block press" disabled={!E.canCheck(step, st)} onClick={doCheck}>{t("check")}<kbd className="key-hint" aria-hidden="true">{t("enterKey")}</kbd></button>
-            </>
-          ) : (
+          {question ? <CheckBar step={step} st={st} t={t} onCheck={doCheck} /> : (
             <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={doNext}>{state.i === total - 1 ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
           )}
         </footer>
       )}
 
+      {layer === "example" && example ? <ExampleLayer mock={example.mock} label={example.label} locale={locale} t={t} onClose={() => { onSound("sheet-down"); setLayer(null); setExample(null); }} /> : null}
       {layer === "exit" ? <ExitLayer t={t} onKeep={() => setLayer(null)} onLeave={() => { setLayer(null); onExit(); }} /> : null}
       {layer === "review" && onReview ? (
         <ReviewLayer t={t} onClose={() => setLayer(null)} onSend={async (reason, note) => {
@@ -272,12 +260,15 @@ function ReviewLayer({ t, onClose, onSend }: { t: TFn; onClose: () => void; onSe
 
 type TFn = ReturnType<typeof useTranslations<"player">>;
 
-function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMockOpen, onSelect, onReason, onSelection }: {
+function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onSelect, onReason, onSelection, onOpenExample }: {
   step: QuestionStep; st: E.StepState; locale: Locale; t: TFn; mockLabel: string;
-  headingRef: React.RefObject<HTMLHeadingElement | null>; mockOpen: boolean; setMockOpen: (v: boolean) => void;
-  onSelect: (id: string) => void; onReason: (id: string) => void; onSelection: (sel: string[]) => void; concept?: boolean;
+  headingRef: React.RefObject<HTMLHeadingElement | null>; laterInCase: boolean;
+  onSelect: (id: string) => void; onReason: (id: string) => void; onSelection: (sel: string[]) => void;
+  onOpenExample: (mock: Mock, label: string) => void;
 }) {
   const [spotList, setSpotList] = useState(false);
+  const [sayOpen, setSayOpen] = useState(false);
+  useEffect(() => setSayOpen(false), [step.id]);
   const locked = st.phase !== "answering";
   const speaker = getCast(step.speaker);
   const face = sayFace(st);
@@ -322,7 +313,6 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
     requestAnimationFrame(() => (e.currentTarget as HTMLElement).querySelector<HTMLElement>(`[data-id="${to}"]`)?.focus());
   };
 
-  const showMock = live && (mockOpen || step.type === "tune" || step.type === "compare");
   const reason = step.type === "compare" ? (step as CompareStep).reason : undefined;
   const ids = options.map((o) => o.id);
   // Four or more short options sit two to a row, as in the design.
@@ -334,7 +324,14 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
     <section className="player-grid">
       <div className="player-visual">
         {step.scenario ? (
-          speaker ? (
+          speaker && laterInCase && !sayOpen ? (
+            <button type="button" className="say-chip" aria-expanded={false} aria-label={t("sayAria", { name: locale === "ar" ? speaker.ar : speaker.en })} onClick={() => setSayOpen(true)}>
+              <img src={faceSrc(speaker, face)} alt="" width={32} height={32} />
+              <b>{locale === "ar" ? speaker.ar : speaker.en}</b>
+              <span className="txt">{step.scenario[locale]}</span>
+              <span className="ph ph-caret" aria-hidden="true" />
+            </button>
+          ) : speaker ? (
             <div className="say">
               {/* The picture only repeats the speaker's name, so it has no alt text. */}
               <img className="say-face" key={face} data-face={face} src={faceSrc(speaker, face)} alt="" width={88} height={88} />
@@ -345,7 +342,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
             </div>
           ) : <p className="scn">{step.scenario[locale]}</p>
         ) : null}
-        {source ? <MockView mock={source} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} /> : null}
+        {source ? <Example mock={source} locale={locale} t={t} label={mockLabel} onOpen={onOpenExample} /> : null}
         {step.type === "compare" ? (
           <div className="cmp">
             {(["a", "b"] as const).map((k, n) => (
@@ -365,13 +362,11 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
               onPick: onSelect, rightWord: t("rightWord"), wrongWord: t("wrongWord"),
             }}
           />
-        ) : showMock && live && !isSpot ? (
+        ) : live && !isSpot ? (
           <div aria-live={step.type === "tune" ? "polite" : undefined}>
-            {step.type === "tune" ? <span className="frame-label"><span className="ph ph-play-circle" aria-hidden="true" />{t("livePreview")}</span> : null}
-            <MockView mock={live} locale={locale} label={mockLabel} tag={t("exampleTag")} chip={t("mockChip")} />
+            {step.type === "tune" ? <span className="frame-label lp-live-label"><span className="ph ph-play-circle" aria-hidden="true" />{t("livePreview")}</span> : null}
+            <Example mock={live} locale={locale} t={t} label={step.type === "tune" ? t("livePreview") : mockLabel} onOpen={onOpenExample} />
           </div>
-        ) : live ? (
-          <button type="button" className="mock-again" onClick={() => setMockOpen(true)}><span className="mock-tag">{t("mockChip")}</span><span>{t("mockAgain")}</span><span className="ph ph-eye" aria-hidden="true" /></button>
         ) : null}
       </div>
 
@@ -433,6 +428,77 @@ function Question({ step, st, locale, t, mockLabel, headingRef, mockOpen, setMoc
         ) : null}
       </div>
     </section>
+  );
+}
+
+/** Design audit L2 + U4: the Check bar. Confidence steps get one split primary button (each part checks with that confidence);
+ *  other steps keep Check, and a disabled Check says what is missing. */
+function CheckBar({ step, st, t, onCheck }: { step: QuestionStep; st: E.StepState; t: TFn; onCheck: (conf?: number) => void }) {
+  const helpId = `lp-help-${step.id}`;
+  if (step.confidence && st.phase === "answering") {
+    const ready = E.canCheck(step, { ...st, conf: 0 });
+    const lblId = `lp-go-${step.id}`;
+    return (
+      <div className="lp-go">
+        <div className="lp-go-head">
+          <p className="lp-go-lbl" id={lblId}>{t("goLbl")}</p>
+          {!ready ? <p className="lp-go-wait" id={helpId}>{t("pickFirstConf")}</p> : null}
+        </div>
+        <div className={`split-check${ready ? "" : " is-off"}`} role="group" aria-labelledby={lblId}>
+          {[0, 1, 2].map((k) => {
+            const label = t(`conf.${k}` as never) as string;
+            return (
+              <button key={k} type="button" className="split-seg" disabled={!ready} aria-label={t("confAria", { level: label.toLowerCase() })}
+                aria-describedby={ready ? undefined : helpId} onClick={() => onCheck(k)}>{label}</button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  const ready = E.canCheck(step, st);
+  const help = ready || st.phase !== "answering" ? null
+    : step.type === "sort" ? t("placedOf", { n: st.sel.length, total: (step as SortStep).items.length })
+    : step.type === "match" ? t("pairedOf", { n: st.sel.length, total: (step as MatchStep).left.length })
+    : t("pickFirst");
+  return (
+    <>
+      {st.phase === "main_ok" ? <p className="t-small ink-2 foot-note">{t("reasonNote")}</p> : null}
+      {help ? <p className="lp-check-help" id={helpId}>{help}</p> : null}
+      <button type="button" className="btn btn-primary btn-lg btn-block press" disabled={!ready} aria-describedby={help ? helpId : undefined} onClick={() => onCheck()}>{t("check")}<kbd className="key-hint" aria-hidden="true">{t("enterKey")}</kbd></button>
+    </>
+  );
+}
+
+/** Design audit L4 + A2: on a phone the example is a pinned thumbnail beside the question, and a tap opens it full screen.
+ *  On a laptop the same markup shows the example at full size (CSS only, so nothing moves when the page loads). */
+function Example({ mock, locale, t, label, onOpen }: { mock: Mock; locale: Locale; t: TFn; label: string; onOpen: (mock: Mock, label: string) => void }) {
+  return (
+    <div className="lp-ctx">
+      <div className="lp-stage"><div className="lp-stage-in"><MockView mock={mock} locale={locale} label={label} tag={t("exampleTag")} chip={t("mockChip")} /></div></div>
+      <span className="lp-thumb-txt" aria-hidden="true"><span className="cap">{label}</span><span className="go"><span className="ph ph-corners-out" aria-hidden="true" />{t("exOpen")}</span></span>
+      <button type="button" className="lp-thumb-hit" aria-haspopup="dialog" aria-label={t("exAria", { frame: label })} onClick={() => onOpen(mock, label)} />
+    </div>
+  );
+}
+
+/** The example full screen, at a readable size, with pinch zoom. Esc, the close button and the back button close it. */
+function ExampleLayer({ mock, label, locale, t, onClose }: { mock: Mock; label: string; locale: Locale; t: TFn; onClose: () => void }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    ref.current?.focus();
+    return () => opener?.focus?.({ preventScroll: true });
+  }, []);
+  return (
+    <div className="lp-exfull" role="dialog" aria-modal="true" aria-label={label}>
+      <div className="lp-full-head">
+        <span className="frame-label"><span className="ph ph-frame-corners" aria-hidden="true" />{label}</span>
+        <button type="button" ref={ref} className="icon-btn" aria-label={t("exClose")} onClick={onClose}><span className="ph ph-x" aria-hidden="true" /></button>
+      </div>
+      <div className="lp-full-mock"><MockView mock={mock} locale={locale} label={label} tag={t("exampleTag")} chip={t("mockChip")} /></div>
+      <p className="lp-full-note">{t("exZoom")}</p>
+    </div>
   );
 }
 

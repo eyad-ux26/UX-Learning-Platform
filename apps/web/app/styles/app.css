@@ -143,14 +143,14 @@
   .hero-mock { display: block; position: absolute; inset-block-start: 56px; inset-inline-start: 0; inline-size: 310px; border-radius: 18px; border: 2px solid #C9D1D6; background: #EEF1F3; overflow: hidden; transform: rotate(-3deg); box-shadow: var(--shadow-soft); }
   [dir="rtl"] .hero-mock { transform: rotate(3deg); }
   .hero-mock .mock-bar { display: flex; align-items: center; gap: 8px; block-size: 30px; padding-inline: 12px; background: #DDE3E7; color: #3C4A52; font-weight: 700; font-size: 12px; }
-  .ug .hero-mock .mock-bar .lbl { padding: 0 8px; block-size: 20px; display: inline-flex; align-items: center; border-radius: 6px; background: #3C4A52; color: #fff; font-size: 11px; letter-spacing: 0.06em; }
+  .ug .hero-mock .mock-bar .lbl { padding: 0 8px; block-size: 20px; display: inline-flex; align-items: center; border-radius: 6px; background: #3C4A52; color: #fff; font-size: 12px; letter-spacing: 0.06em; }
   .hero-mock .cap { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .hero-mock .dots { display: inline-flex; gap: 4px; } .hero-mock .dots i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: currentColor; opacity: 0.35; }
   .hm-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; color: #1F2A30; }
   .hm-brand { margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12px; }
-  .hm-logo { display: inline-grid; place-items: center; inline-size: 18px; block-size: 18px; border-radius: 5px; background: #B7E02A; font-size: 11px; }
+  .hm-logo { display: inline-grid; place-items: center; inline-size: 18px; block-size: 18px; border-radius: 5px; background: #B7E02A; font-size: 12px; }
   .hm-title { margin: 0; font-weight: 800; font-size: 18px; }
-  .hm-field { display: block; } .hm-field i { display: block; font-style: normal; font-size: 11px; color: #5A6870; margin-block-end: 3px; }
+  .hm-field { display: block; } .hm-field i { display: block; font-style: normal; font-size: 12px; color: #5A6870; margin-block-end: 3px; }
   .hm-field::after { content: ""; display: block; block-size: 24px; border-radius: 6px; border: 1.5px solid #C9D1D6; background: #fff; }
   .hm-btn { margin-block-start: 4px; padding: 8px; text-align: center; border-radius: 8px; background: #B7E02A; font-weight: 800; font-size: 12px; }
   .preview-card { margin: 0; inline-size: 340px; margin-inline-start: auto; margin-block-start: 76px; }
@@ -291,8 +291,7 @@
 @media print { .shell-rail, .app-bnav, .no-print { display: none !important; } .shell-main { padding: 0 !important; max-inline-size: none !important; } body { background: #fff !important; } .cert-card { border: 0 !important; box-shadow: none !important; } }
 .pg-cards .path-card, .pg-page .path-card { flex-direction: row; align-items: center; padding: 12px 14px; gap: 12px; }
 
-/* Design audit (Nov 4): A3 neutral status chip, A4 certificate eyebrow in brand blue, U5 badge names wrap (up to 3 lines, never cut). */
-.status-chip { display: inline-flex; align-items: center; min-block-size: 24px; padding: 0 10px; border-radius: var(--r-pill); background: var(--disabled-bg); color: var(--ink-2); font-size: 12px; font-weight: 700; line-height: 1.3; }
+/* Design audit (Nov 4): A4 certificate eyebrow in brand blue, U5 badge names wrap (up to 3 lines, never cut). */
 .cert-art .t-over { color: var(--link); }
 .sbadge .t-label { overflow-wrap: anywhere; hyphens: auto; line-height: 1.3; }
 .sbadge-grid { align-items: start; }
@@ -303,3 +302,12 @@ a.kind::after { content: ""; position: absolute; inset-block: -11px; inset-inlin
 .shell-rail .dk-layer { min-block-size: 44px; }
 
 .ob-kept-ico { display: grid; place-items: center; inline-size: 44px; block-size: 44px; border-radius: 14px; background: var(--surface); color: var(--right-ink); flex: none; font-size: 24px; }
+
+/* ===== Design audit fixes (canvas v63) ===== */
+/* A1: one link colour, from the theme token (night links are #4CC3E8). Same weight as a bare element rule, so classes still win. */
+:where(.ug) a { color: var(--link); }
+:where(.ug) a:hover { text-decoration-thickness: 2px; }
+/* A7: a standalone text link gets a 44px hit area; what you see stays the same size. */
+.ug a.hit { display: inline-block; padding-block: 12px; margin-block: -12px; }
+/* A3: a status that is not a control. Disabled tokens stay for disabled controls only. */
+.ug .status-chip { display: inline-flex; align-items: center; gap: 6px; block-size: 26px; padding-inline: 10px; border-radius: 8px; background: var(--disabled-bg); color: var(--ink-2); font-weight: 700; font-size: 12px; }
