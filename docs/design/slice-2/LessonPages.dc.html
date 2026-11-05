@@ -65,6 +65,9 @@ body{margin:0}
                 </div>
               </div>
             </div>
+            <sc-if value="{{v.load}}" hint-placeholder-val="{{false}}">
+              <div class="lp-vload" role="status"><span class="spin" aria-hidden="true"></span><span class="sr-only">{{c.vLoading}}</span></div>
+            </sc-if>
             <sc-if value="{{v.start}}" hint-placeholder-val="{{false}}">
               <button class="lp-vplay" type="button" onClick="{{play}}" aria-label="{{c.vPlay}}"><span class="ph ph-play-fill" aria-hidden="true"></span></button>
             </sc-if>
@@ -268,7 +271,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoTranscript","videoSpeed","videoEnd","concept","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoLoad","videoTranscript","videoSpeed","videoEnd","concept","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson pages: video step, concept card, skill check and mastery pages, resume on home, offline end, guest end. */
 const IMG = { skillCheck: '/_blob/f92a3e6847a208fe460c2076565bb0b0', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', target: '/_blob/f339db60a2fdc85567ed1a06c7bf9515',
   trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4', empty: '/_blob/db03534bd1e09763438142db3c0a865b', offline: '/_blob/15713cc29474a7a427354bd2c907f463', gate: '/_blob/940849193fa4b01dff04d73c95583da2' };
@@ -285,7 +288,7 @@ const C = {
     exit: 'Leave lesson', close: 'Close', progress: 'Lesson progress', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', cont: 'Continue',
     soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
     vOver: 'Watch · Step 3 · 1 min', vTitle: 'Why every field costs something', vLabel: 'Lesson video', vChapter: 'Every field costs something', vExample: "Example · Hana's Gym",
-    vPlay: 'Play video with sound', vReplay: 'Watch again', vPause: 'Pause', vSeek: 'Video position', vCc: 'Captions', vFull: 'Full screen', vCaptions: 'Captions',
+    vLoading: 'Loading the video', vPlay: 'Play video with sound', vReplay: 'Watch again', vPause: 'Pause', vSeek: 'Video position', vCc: 'Captions', vFull: 'Full screen', vCaptions: 'Captions',
     vSpeed: 'Playback speed', vSpeedBtn: 'Playback speed', vSpeeds: ['0.75×', 'Normal', '1.25×', '1.5×', '2×'], vSpeedNote: 'Kept for your next videos.',
     vTranscript: 'Transcript', vTapLine: 'Tap a line to jump there', vNoAuto: 'Nothing plays until you tap. Captions are on.',
     kOver: 'Concept · Step 4', kTitle: 'Every field costs something', kBody: 'Each field costs people time, effort and a little trust. Forms that feel quick get finished. Before you add a field, ask four questions:',
@@ -333,7 +336,7 @@ const C = {
     exit: 'الخروج من الدرس', close: 'إغلاق', progress: 'تقدّم الدرس', lessonName: 'Forms That Flow · الدرس 1 · كل حقل له تكلفة', cont: 'متابعة',
     soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
     vOver: 'شاهد · الخطوة 3 · دقيقة واحدة', vTitle: 'لماذا لكل حقل تكلفة', vLabel: 'فيديو الدرس', vChapter: 'كل حقل له تكلفة', vExample: 'مثال · نادي هناء',
-    vPlay: 'شغّل الفيديو بالصوت', vReplay: 'شاهد مرة أخرى', vPause: 'إيقاف مؤقت', vSeek: 'موضع الفيديو', vCc: 'الترجمة', vFull: 'ملء الشاشة', vCaptions: 'الترجمة',
+    vLoading: 'جارٍ تحميل الفيديو', vPlay: 'شغّل الفيديو بالصوت', vReplay: 'شاهد مرة أخرى', vPause: 'إيقاف مؤقت', vSeek: 'موضع الفيديو', vCc: 'الترجمة', vFull: 'ملء الشاشة', vCaptions: 'الترجمة',
     vSpeed: 'سرعة التشغيل', vSpeedBtn: 'سرعة التشغيل', vSpeeds: ['0.75×', 'عادية', '1.25×', '1.5×', '2×'], vSpeedNote: 'نحتفظ بها لفيديوهاتك التالية.',
     vTranscript: 'النص المكتوب', vTapLine: 'اضغط سطرًا للانتقال إليه', vNoAuto: 'لا يعمل شيء حتى تضغط. الترجمة مفعّلة.',
     kOver: 'الفكرة · الخطوة 4', kTitle: 'كل حقل له تكلفة', kBody: 'كل حقل يكلّف الناس وقتًا وجهدًا وقليلًا من الثقة. والنماذج التي تبدو سريعة يُكملها الناس. قبل أن تضيف حقلًا، اسأل أربعة أسئلة:',
@@ -380,12 +383,12 @@ const C = {
 };
 const CHIP = { practiced: ['skill skill-practiced', 'ph ph-check'], shown: ['skill skill-shown', 'ph ph-seal-fill'], retry: ['skill skill-retry', 'ph ph-target'], later: ['skill skill-later', 'ph ph-clock'] };
 const ROWICON = { practiced: ['ph ph-check-circle', 'var(--ink-3)'], shown: ['ph ph-seal-fill', 'var(--link)'], retry: ['ph ph-target', 'var(--warn-ink)'], later: ['ph ph-clock', 'var(--ink-3)'] };
-const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoSpeed: { sec: 27, playing: true, spd: true, speed: 1.25 }, videoEnd: { sec: 72, playing: false, end: true } };
+const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoSpeed: { sec: 27, playing: true, spd: true, speed: 1.25 }, videoEnd: { sec: 72, playing: false, end: true }, videoLoad: { sec: 14, playing: true, load: true } };
 function fmt(sec) { return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = this.fresh(props); }
-  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null, spd: !!v.spd, speed: v.speed || 1 }; }
+  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null, spd: !!v.spd, speed: v.speed || 1, load: !!v.load }; }
   componentDidUpdate(prev) { if (prev.view !== this.props.view || prev.device !== this.props.device) this.setState(this.fresh(this.props)); }
   sfx(n) { if (this.state.sound && this.props.sfx) this.props.sfx(n); }
   renderVals() {
@@ -429,7 +432,7 @@ class Component extends DCLogic {
       exit: go('exit'), next: go('next'), primary: go('primary'), secondary: go('secondary'),
       contCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'),
       /* video */
-      videoMain: 'lp-main', videoGrid: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; padding-top: 20px;' : 'gap: 8px; padding-top: 8px;', v: { start: !s.playing && !s.end && s.sec === 0, end: s.end, sec, pctStr },
+      videoMain: 'lp-main', videoGrid: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; padding-top: 20px;' : 'gap: 8px; padding-top: 8px;', v: { start: !s.playing && !s.end && s.sec === 0, end: s.end, load: !!s.load && !s.end, sec, pctStr },
       vMock, vMarked: sec >= 24 && !s.end,
       showCap: s.cc && s.sec > 0 && !s.end, capText: (capLang === 'ar' ? LINES[cur][3] : LINES[cur][2]), capLang, capDir: capLang === 'ar' ? 'rtl' : 'ltr',
       capFont: capLang === 'ar' ? 'var(--font-ar)' : 'var(--font-en)',
@@ -437,7 +440,7 @@ class Component extends DCLogic {
       capToEn: () => this.setState({ capLang: 'en' }), capToAr: () => this.setState({ capLang: 'ar' }),
       timeText: fmt(sec) + ' / 1:12',
       playIcon: s.playing ? 'ph ph-pause-fill' : (s.end ? 'ph ph-replay' : 'ph ph-play-fill'), playLabel: s.playing ? c.vPause : (s.end ? c.vReplay : c.vPlay),
-      play: () => { if (s.end) { this.sfx('ui-tap'); this.setState({ end: false, sec: 1, playing: true }); } else { this.sfx('ui-tap'); this.setState({ playing: !s.playing, sec: s.sec === 0 ? 1 : s.sec }); } },
+      play: () => { if (s.end) { this.sfx('ui-tap'); this.setState({ end: false, sec: 1, playing: true }); } else { this.sfx('ui-tap'); this.setState({ playing: !s.playing, load: false, sec: s.sec === 0 ? 1 : s.sec }); } },
       spdOpen: s.spd, spdOpenStr: s.spd ? 'true' : 'false', toggleSpd: () => { this.sfx('ui-tap'); this.setState({ spd: !s.spd }); },
       spdText: (s.speed === 1 ? '1' : String(s.speed)) + '×', spdLabel: c.vSpeedBtn + ', ' + (s.speed === 1 ? c.vSpeeds[1] : s.speed + '×'),
       spdCls: 'lp-vbtn lp-vspd' + (s.speed !== 1 || s.spd ? ' is-on' : ''),

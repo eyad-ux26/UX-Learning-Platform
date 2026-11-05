@@ -266,7 +266,7 @@ body{margin:0}
       <header class="pg-top" style="gap: 6px; position: relative;">
         <button class="{{m.swCls}}" type="button" aria-haspopup="dialog" aria-expanded="{{m.swOpen}}">
           <img src="{{img.forms}}" alt="">
-          <span class="sw-name"><span class="ltr">Forms That Flow</span><small>{{c.unit2of5}}</small></span>
+          <span class="sw-name"><span class="ltr">Forms That Flow</span><small>{{mp.sub}}</small></span>
           <span class="ph ph-caret-down caret" aria-hidden="true"></span>
         </button>
         <div style="flex: 1;"></div>
@@ -286,25 +286,45 @@ body{margin:0}
       <main class="pg-body" style="gap: 12px;">
         <div class="pg-split" style="{{m.splitStyle}}">
           <div class="pg-stack" style="gap: 12px;">
-            <a href="#unit1" class="card press" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);">
-              <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--right-line); color: #01241A; flex: none; box-shadow: 0 3px 0 #2A7F5F;"><span class="ph ph-check" style="font-size: 22px;" aria-hidden="true"></span></span>
-              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
-                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unit1}} · {{c.done}}</span>
-                <span class="t-label" style="font-size: 15px;">{{c.u1Title}}</span>
-                <span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="skill skill-shown" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-seal-fill" style="font-size: 13px;" aria-hidden="true"></span>6 · {{c.shown}}</span><span class="skill skill-kept" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-star-fill" style="font-size: 13px;" aria-hidden="true"></span>2 · {{c.kept}}</span></span>
-              </span>
-              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
-            </a>
+            <section class="path-go" aria-labelledby="pgo-{{lang}}-{{theme}}-{{device}}-{{view}}">
+              <span class="{{mp.icCls}}" aria-hidden="true"><span class="{{mp.icon}}"></span></span>
+              <div class="pgo-text">
+                <p class="pgo-over">{{mp.over}}</p>
+                <h2 class="pgo-title" id="pgo-{{lang}}-{{theme}}-{{device}}-{{view}}">{{mp.title}}</h2>
+                <p class="pgo-meta">{{mp.meta}}</p>
+              </div>
+              <sc-if value="{{mp.hasProg}}" hint-placeholder-val="{{true}}">
+                <div class="pgo-prog"><span class="progress progress-sm" role="progressbar" aria-label="{{c.pathProgress}}" aria-valuenow="{{mp.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{mp.pct}};"></i></span><span class="num">{{mp.pct}}</span></div>
+              </sc-if>
+              <div class="pgo-acts">
+                <a href="{{mp.href}}" class="btn btn-primary btn-lg btn-block press">{{mp.btn}}<span class="{{mp.btnIcon}}" aria-hidden="true"></span></a>
+                <sc-if value="{{mp.hasLink}}" hint-placeholder-val="{{false}}">
+                  <a href="#certificate" class="pg-link"><span class="ph ph-certificate" aria-hidden="true"></span>{{c.goDoneLink}}</a>
+                </sc-if>
+              </div>
+            </section>
+            <sc-for list="{{mp.doneUnits}}" as="u" hint-placeholder-count="1">
+              <a href="#{{u.id}}" class="card press" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);">
+                <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--right-line); color: #01241A; flex: none; box-shadow: 0 3px 0 #2A7F5F;"><span class="ph ph-check" style="font-size: 22px;" aria-hidden="true"></span></span>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                  <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{u.over}}</span>
+                  <span class="t-label" style="font-size: 15px;">{{u.title}}</span>
+                  <span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="skill skill-shown" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-seal-fill" style="font-size: 13px;" aria-hidden="true"></span>{{u.shownN}} · {{c.shown}}</span><span class="skill skill-kept" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-star-fill" style="font-size: 13px;" aria-hidden="true"></span>{{u.keptN}} · {{c.kept}}</span></span>
+                </span>
+                <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+              </a>
+            </sc-for>
+            <sc-if value="{{mp.hasCur}}" hint-placeholder-val="{{true}}">
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                <span class="t-over">{{c.unit2}}</span>
-                <span class="skill skill-practiced" style="height: 22px; font-size: 12px; padding: 0 9px;"><span class="ph ph-check-circle" style="font-size: 13px;" aria-hidden="true"></span>5 · {{c.practiced}}</span>
-                <span class="skill" style="height: 22px; font-size: 12px; padding: 0 9px; box-shadow: inset 0 0 0 1.5px var(--line-field); color: var(--ink-2);">3 · {{c.notYet}}</span>
+                <span class="t-over">{{mp.curOver}}</span>
+                <sc-if value="{{mp.hasPr}}" hint-placeholder-val="{{true}}"><span class="skill skill-practiced" style="height: 22px; font-size: 12px; padding: 0 9px;"><span class="ph ph-check-circle" style="font-size: 13px;" aria-hidden="true"></span>{{mp.prN}} · {{c.practiced}}</span></sc-if>
+                <span class="skill" style="height: 22px; font-size: 12px; padding: 0 9px; box-shadow: inset 0 0 0 1.5px var(--line-field); color: var(--ink-2);">{{mp.nyN}} · {{c.notYet}}</span>
               </div>
-              <h2 class="t-h2" style="font-size: 22px;">{{c.u2Title}}</h2>
+              <h2 class="t-h2" style="font-size: 22px;">{{mp.curTitle}}</h2>
             </div>
             <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; position: relative;">
-              <span aria-hidden="true" style="position: absolute; top: 24px; bottom: 30px; inset-inline-start: 21px; width: 4px; border-radius: 4px; background: linear-gradient(180deg, var(--right-line) 0 46%, var(--sel-line) 46% 70%, var(--line) 70% 100%);"></span>
+              <span aria-hidden="true" style="position: absolute; top: 24px; bottom: 30px; inset-inline-start: 21px; width: 4px; border-radius: 4px; background: {{mp.lineBg}};"></span>
               <sc-for list="{{lessons}}" as="l" hint-placeholder-count="4">
                 <li style="display: flex; align-items: center; gap: 12px; position: relative;">
                   <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
@@ -318,23 +338,24 @@ body{margin:0}
             <button class="card" type="button" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-style: dashed; text-align: start; font: inherit; color: var(--ink); cursor: pointer;">
               <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--disabled-bg); color: var(--disabled-ink); flex: none;"><span class="ph ph-lock-fill" style="font-size: 22px;" aria-hidden="true"></span></span>
               <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unit3}}</span>
-                <span class="t-label">{{c.u3Title}}</span>
-                <span class="t-small ink-2" style="font-size: 13px; display: inline-flex; gap: 6px; align-items: center;"><span class="ph ph-info" aria-hidden="true"></span>{{c.u3Why}}</span>
+                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{mp.lockOver}}</span>
+                <span class="t-label">{{mp.lockTitle}}</span>
+                <span class="t-small ink-2" style="font-size: 13px; display: inline-flex; gap: 6px; align-items: center;"><span class="ph ph-info" aria-hidden="true"></span>{{mp.lockWhy}}</span>
               </span>
             </button>
+            </sc-if>
           </div>
           <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
             <aside class="pg-stack">
               <section class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
                 <p class="t-over">{{c.pathProgress}}</p>
-                <div style="display: flex; align-items: baseline; gap: 8px;"><b class="num" style="font-size: 30px;">30%</b><span class="t-small ink-2">{{c.p01Progress}}</span></div>
-                <div class="progress progress-sm"><i style="width: 30%;"></i></div>
+                <div style="display: flex; align-items: baseline; gap: 8px;"><b class="num" style="font-size: 30px;">{{mp.pct}}</b><span class="t-small ink-2">{{mp.progText}}</span></div>
+                <div class="progress progress-sm"><i style="width: {{mp.pct}};"></i></div>
                 <p class="t-over" style="margin-top: 6px;">{{c.skillsTitle}}</p>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                  <span class="skill skill-practiced"><span class="ph ph-check-circle" aria-hidden="true"></span>5 · {{c.practiced}}</span>
-                  <span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>6 · {{c.shown}}</span>
-                  <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>2 · {{c.kept}}</span>
+                  <span class="skill skill-practiced"><span class="ph ph-check-circle" aria-hidden="true"></span>{{mp.aPr}} · {{c.practiced}}</span>
+                  <span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>{{mp.aSh}} · {{c.shown}}</span>
+                  <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>{{mp.aKp}} · {{c.kept}}</span>
                 </div>
                 <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.statesNote}}</span></p>
               </section>
@@ -406,6 +427,28 @@ body{margin:0}
     </sc-if>
   </div>
 
+  <!-- ============ Loading between screens (built in PR #155) ============ -->
+  <sc-if value="{{ld.line}}" hint-placeholder-val="{{false}}">
+    <div class="{{ld.lineCls}}" aria-hidden="true"><span class="nav-line-bar" style="{{ld.lineStyle}}"></span></div>
+  </sc-if>
+  <sc-if value="{{ld.layer}}" hint-placeholder-val="{{false}}">
+    <div class="{{ld.layerCls}}" aria-busy="true">
+      <div class="ug-loader">
+        <div class="ug-loader-art">
+          <span class="ug-loader-tag"><span class="ph ph-hash" aria-hidden="true"></span>{{ld.name}}</span>
+          <div class="ug-loader-frame sel-frame">
+            <svg class="ugm ugm--loading" viewBox="0 0 487.5 495" width="64" height="65" aria-hidden="true" focusable="false" style="--ugm-grad: url(#ugm-{{lang}}-{{theme}}-{{device}}-{{view}}-{{ld.kind}}) #005F99;"><defs><linearGradient id="ugm-{{lang}}-{{theme}}-{{device}}-{{view}}-{{ld.kind}}" gradientUnits="userSpaceOnUse" x1="30.47" y1="49.45" x2="396.55" y2="351.54"><stop offset="0" stop-color="#60BEBB"></stop><stop offset="0.102" stop-color="#54B3B7"></stop><stop offset="0.663" stop-color="#187CA4"></stop><stop offset="0.93" stop-color="#00669C"></stop><stop offset="1" stop-color="#005F99"></stop></linearGradient></defs><g class="door"><path d="M353.9,12.8c-3.6-3.5-223,26-257.8,30.7c-2.7,0.4-4.6,2.6-4.6,5.3v283.5c0,25.6,3.9,47.9,11.7,67c7.8,19.1,18.4,35,31.9,47.8c13.4,12.8,28.9,22.5,46.4,29c17.5,6.6,36.2,9.8,56.2,9.8c18.7,0,36.9-3.1,54.3-9.4c17.5-6.2,33-15.8,46.4-28.6c13.4-12.8,24-28.9,31.9-48.3c7.8-19.4,11.7-41.9,11.7-67.5V40.9C382,25.4,369.4,12.8,353.9,12.8L353.9,12.8z M344,388.1c-6.6,15.9-15.1,29-25.8,39.4c-10.6,10.3-23,18-37,23c-14.1,5-28.6,7.5-43.6,7.5c-15.6,0-30.6-2.7-45-8c-6.2-2.3-12-5-17.5-8.2c-12.5-7.3-20.2-20.7-20-35.2l2.4-269.8c0.1-11.2,6.9-21.3,17.2-25.7l167.4-70.3c5.6-2.3,11.8,1.8,11.8,7.8v283.8C353.9,353.6,350.6,372.2,344,388.1z"></path></g><circle class="eye" cx="228.4" cy="286" r="23.9"></circle><path class="smile" d="M202.9,414.4c-0.3,0-0.5,0-0.8,0c-3.6-0.2-6.2-3.5-5.7-7l1.2-8.5l-1,7.5l0.2-1.7c0.4-3.2,3.2-5.5,6.4-5.4c14.1,0.7,52-0.1,78.3-25.3c2.3-2.2,5.9-2.2,8.3,0l2,1.8c2.7,2.4,2.7,6.6,0.1,9.2C261.6,414,219.8,415.2,202.9,414.4z"></path></svg>
+            <span class="ug-loader-line"></span>
+            <span class="ug-loader-line is-short"></span>
+            <span class="ug-loader-cursor" aria-hidden="true"><span class="ph ph-cursor-fill"></span></span>
+          </div>
+        </div>
+        <p class="ug-loader-tip">{{c.ldTip}}</p>
+        <p class="sr-only" role="status">{{c.ldLabel}}</p>
+      </div>
+    </div>
+  </sc-if>
+
   <!-- ============ Overlays ============ -->
   <sc-if value="{{ov.any}}" hint-placeholder-val="{{false}}">
     <div class="pg-scrim"></div>
@@ -466,7 +509,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","obRecommend","obAll","obGuest"],"default":"paths"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"$preview":{"width":390,"height":844}}'>
 /* Slice 3 · several paths: Paths tab, path detail, home, path map switcher, onboarding. Spec §4.4b, EN-11, EN-11b. */
 const IMG = {
   forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
@@ -519,6 +562,16 @@ const C = {
     goalTitle: "Today's goal", goalBody: 'One more lesson, in any path.', streak16: '16 day streak', freezes1: '1 freeze ready', freezes0: 'Earn a freeze this week',
     fzKept: 'A freeze kept your streak', fzKeptBody: 'You missed yesterday, so a freeze covered it. Your streak is still 16 days.', dismiss: 'Dismiss',
     days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    /* path page main action (5 Nov 2026) */
+    unit1of5: 'Unit 1 of 5', allUnitsDone: 'All 5 units done',
+    goStartOver: 'Start here · Unit 1, Lesson 1', goStartTitle: 'Every field costs something', goStartMeta: '8 min · 5 units, 20 lessons', goStartBtn: 'Start path',
+    goContOver: 'Next up · Unit 2, Lesson 3', goContTitle: 'Long lists: let people type', goContMeta: '6 min · 6 of 20 lessons done', goContBtn: 'Continue path',
+    goDoneOver: 'Path complete', goDoneTitle: 'You finished Forms That Flow', goDoneMeta: '20 of 20 lessons · all 40 skills shown', goDoneBtn: 'Review this path', goDoneLink: 'See your certificate',
+    u2Why: 'Opens after the Unit 1 skill check', p01Start: 'Unit 1 of 5 · 0 of 20 lessons', p01Done: 'All 5 units · 20 of 20 lessons',
+    u4Title: 'Errors people can fix', u5Title: 'Forms everyone can finish',
+    lessonsU1: [['Every field costs something', 'next', '8 min'], ['Required or optional? Show it on every field', 'lock', '8 min'], ['Ask so people can answer', 'lock', '8 min'], ['Skill check: ask only what you need', 'check', 'New case, no hints']],
+    /* loading */
+    ldLabel: 'Loading', ldTip: 'Snapping layers to the grid…',
     /* map */
     unit2of5: 'Unit 2 of 5', switchTitle: 'Switch path', switchBody: 'Your next lesson follows the path you pick. Nothing is lost on the others.',
     unit1: 'Unit 1', unit3: 'Unit 3', done: 'Done', u1Title: 'Ask only what you need', u2Title: 'Pick the right control', u3Title: 'Labels and hints that stay visible',
@@ -560,6 +613,14 @@ const C = {
     goalTitle: 'هدف اليوم', goalBody: 'درس واحد آخر، في أي مسار.', streak16: '16 يومًا متتاليًا', freezes1: 'تجميد واحد متاح', freezes0: 'اكسب تجميدًا هذا الأسبوع',
     fzKept: 'حافظ التجميد على سلسلتك', fzKeptBody: 'فاتك يوم أمس، فغطّاه تجميد. وما زالت سلسلتك 16 يومًا.', dismiss: 'إغلاق',
     days: ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح'],
+    unit1of5: 'الوحدة 1 من 5', allUnitsDone: 'أنهيت الوحدات الخمس',
+    goStartOver: 'ابدأ من هنا · الوحدة 1، الدرس 1', goStartTitle: 'لكل حقل ثمن', goStartMeta: '8 دقائق · 5 وحدات، 20 درسًا', goStartBtn: 'ابدأ المسار',
+    goContOver: 'التالي · الوحدة 2، الدرس 3', goContTitle: 'القوائم الطويلة: دع الناس يكتبون', goContMeta: '6 دقائق · أنهيت 6 دروس من 20', goContBtn: 'تابع المسار',
+    goDoneOver: 'اكتمل المسار', goDoneTitle: 'أنهيت مسار Forms That Flow', goDoneMeta: '20 درسًا من 20 · أثبتّ المهارات الـ40 كلها', goDoneBtn: 'راجع هذا المسار', goDoneLink: 'اعرض شهادتك',
+    u2Why: 'تُفتح بعد اختبار مهارة الوحدة 1', p01Start: 'الوحدة 1 من 5 · 0 دروس من 20', p01Done: 'الوحدات الخمس · 20 درسًا من 20',
+    u4Title: 'أخطاء يستطيع الناس إصلاحها', u5Title: 'نماذج يستطيع الجميع إكمالها',
+    lessonsU1: [['لكل حقل ثمن', 'next', '8 دقائق'], ['إلزامي أم اختياري؟ وضّحه في كل حقل', 'lock', '8 دقائق'], ['اسأل بطريقة يستطيع الناس الإجابة عنها', 'lock', '8 دقائق'], ['اختبار المهارة: اسأل فقط عمّا تحتاجه', 'check', 'حالة جديدة بدون تلميحات']],
+    ldLabel: 'جارٍ التحميل', ldTip: 'نضبط الطبقات على الشبكة…',
     unit2of5: 'الوحدة 2 من 5', switchTitle: 'غيّر المسار', switchBody: 'درسك التالي يتبع المسار الذي تختاره، ولا يضيع شيء من المسارات الأخرى.',
     unit1: 'الوحدة 1', unit3: 'الوحدة 3', done: 'مكتملة', u1Title: 'اسأل فقط عمّا تحتاجه', u2Title: 'اختر عنصر التحكّم المناسب', u3Title: 'عناوين وتلميحات تبقى ظاهرة',
     u3Why: 'تُفتح بعد اختبار مهارة الوحدة 2', shown: 'أثبتّ', kept: 'أتقنت', practiced: 'تدرّبت', notYet: 'لم تبدأ',
@@ -575,7 +636,8 @@ const C = {
   }
 };
 const DOT = 'display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; flex: none; ';
-const VIEWS = ['paths', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'obRecommend', 'obAll', 'obGuest'];
+const VIEWS = ['paths', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'mapStart', 'mapContinue', 'mapDone', 'obRecommend', 'obAll', 'obGuest'];
+const LOADS = ['none', 'early', 'layer', 'reduced', 'full'];
 /* Week strip (design audit U3). One week start per locale: English starts on Monday, Arabic on Saturday (the PM confirms).
    Short day names, today labelled Today / «اليوم», and each day has an accessible name with its state. */
 const WK = {
@@ -610,13 +672,15 @@ class Component extends DCLogic {
         cls: 'path-card press' + (state === 'current' ? ' is-current sel-frame' : ''), aria: state === 'current' ? c.isCurrentAria(name) : name }, kindOf(kind));
     };
     const all = PATHS.map(card);
-    const tab = { paths: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths' }[view];
+    const tab = { paths: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths', mapStart: 'paths', mapContinue: 'paths', mapDone: 'paths' }[view];
+    const load = LOADS.indexOf(this.props.loading) >= 0 ? this.props.loading : 'none';
+    const navTab = (load === 'none' || load === 'full') ? tab : 'paths'; /* the tapped tab lights up at once */
     const isOb = view.indexOf('ob') === 0;
-    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: tab === id ? 'page' : 'false', icon: 'ph ' + (tab === id ? iconOn : icon) });
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: navTab === id ? 'page' : 'false', icon: 'ph ' + (navTab === id ? iconOn : icon) });
     const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
     const isDetail = view === 'pathNew' || view === 'pathJoined' || view === 'pathStarted';
     const isHome = view === 'home' || view === 'homeResume' || view === 'homeFreeze';
-    const isMap = view === 'mapSwitch' || view === 'mapLocked';
+    const isMap = view.indexOf('map') === 0;
 
     /* path detail */
     let d = {};
@@ -651,7 +715,8 @@ class Component extends DCLogic {
       sub: p.isCurrent ? c.current + ' · ' + p.where : p.where, cls: 'pchip press' + (p.isCurrent ? ' is-current' : ''), aria: p.isCurrent ? c.isCurrentAria(p.name) : c.switchTo(p.name) }));
 
     /* map */
-    const lessons = c.lessonsP01.map(([title, st, meta]) => {
+    const mapState = view === 'mapStart' ? 'start' : view === 'mapDone' ? 'done' : 'continue';
+    const lessons = (mapState === 'start' ? c.lessonsU1 : c.lessonsP01).map(([title, st, meta]) => {
       const done = st === 'done', next = st === 'next';
       return { title, over: done ? (c.doneChip + ' · ' + meta) : meta, overColor: done ? 'var(--right-ink)' : (next ? 'var(--link)' : 'var(--ink-3)'),
         icon: done ? 'ph ph-check' : (next ? 'ph ph-play' : 'ph ph-lock-fill'),
@@ -659,6 +724,27 @@ class Component extends DCLogic {
         cardCls: next ? 'card' : 'card',
         cardStyle: 'flex: 1; min-width: 0; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; border-radius: 16px;' + (next ? ' background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 4px 0 var(--sel-line);' : (st === 'check' ? ' border-style: dashed; background: transparent;' : '')) };
     });
+
+    /* path page main action: Start path (not started), Continue path (started), Review this path (finished) */
+    const UNITS = [['u1', c.u1Title, 6, 2], ['u2', c.u2Title, 5, 3], ['u3', c.u3Title, 6, 2], ['u4', c.u4Title, 7, 1], ['u5', c.u5Title, 8, 0]];
+    const doneUnit = ([id, title, sh, kp], i) => ({ id, title, over: c.unitN(i + 1) + ' · ' + c.done, shownN: sh, keptN: kp });
+    const MP = {
+      start: { sub: c.unit1of5, icCls: 'pgo-ic', icon: 'ph ph-cursor-fill', over: c.goStartOver, title: c.goStartTitle, meta: c.goStartMeta, btn: c.goStartBtn, btnIcon: 'ph ph-arrow flip', href: '#lesson-1-1',
+        hasProg: false, hasLink: false, pct: '0%', pctNum: 0, doneUnits: [], hasCur: true, curOver: c.unitN(1), curTitle: c.u1Title, hasPr: false, prN: 0, nyN: 8,
+        lineBg: 'linear-gradient(180deg, var(--sel-line) 0 24%, var(--line) 24% 100%)', lockOver: c.unitN(2), lockTitle: c.u2Title, lockWhy: c.u2Why, progText: c.p01Start, aPr: 0, aSh: 0, aKp: 0 },
+      continue: { sub: c.unit2of5, icCls: 'pgo-ic', icon: 'ph ph-play-fill', over: c.goContOver, title: c.goContTitle, meta: c.goContMeta, btn: c.goContBtn, btnIcon: 'ph ph-arrow flip', href: '#lesson-2-3',
+        hasProg: true, hasLink: false, pct: '30%', pctNum: 30, doneUnits: UNITS.slice(0, 1).map(doneUnit), hasCur: true, curOver: c.unit2, curTitle: c.u2Title, hasPr: true, prN: 5, nyN: 3,
+        lineBg: 'linear-gradient(180deg, var(--right-line) 0 46%, var(--sel-line) 46% 70%, var(--line) 70% 100%)', lockOver: c.unit3, lockTitle: c.u3Title, lockWhy: c.u3Why, progText: c.p01Progress, aPr: 5, aSh: 6, aKp: 2 },
+      done: { sub: c.allUnitsDone, icCls: 'pgo-ic is-done', icon: 'ph ph-trophy-fill', over: c.goDoneOver, title: c.goDoneTitle, meta: c.goDoneMeta, btn: c.goDoneBtn, btnIcon: 'ph ph-review', href: '#review-path',
+        hasProg: false, hasLink: true, pct: '100%', pctNum: 100, doneUnits: UNITS.map(doneUnit), hasCur: false, curOver: '', curTitle: '', hasPr: false, prN: 0, nyN: 0,
+        lineBg: 'none', lockOver: '', lockTitle: '', lockWhy: '', progText: c.p01Done, aPr: 0, aSh: 32, aKp: 8 }
+    };
+    const mp = MP[mapState];
+
+    /* loading between screens: Home is on screen, Paths was tapped */
+    const ld = { kind: load, line: load === 'early' || load === 'layer' || load === 'reduced', layer: load === 'layer' || load === 'reduced' || load === 'full',
+      lineCls: 'nav-line' + (load === 'reduced' ? ' is-still' : ''), lineStyle: 'animation: none; inline-size: ' + ({ early: '34%', layer: '72%', reduced: '90%' }[load] || '0') + ';',
+      layerCls: 'nav-layer' + (load === 'full' ? ' is-full' : '') + (load === 'reduced' ? ' is-still' : ''), name: load === 'full' ? 'UXGate' : c.nav.paths };
     const swOpen = view === 'mapSwitch';
     const m = { swCls: 'sw-btn' + (swOpen ? ' is-open' : ''), swOpen: swOpen ? 'true' : 'false', pop: swOpen && isDesk, splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px;' : '' };
     const swRows = [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, pct: p.pct, where: c.where[p.id] + ' · ' + p.pct, cls: 'sw-row' + (p.isCurrent ? ' is-on' : ''), cur: p.isCurrent ? 'true' : 'false', endIcon: p.isCurrent ? 'ph ph-check-circle-fill' : '' }));
@@ -680,8 +766,9 @@ class Component extends DCLogic {
 
     return {
       lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG,
-      rootCls: 'ug pg pg-' + device,
-      showRail: isDesk && !isOb, showNav: !isDesk && !isOb && !isDetail,
+      view, mp, ld,
+      rootCls: 'ug pg pg-' + device + ((load === 'early' || load === 'layer' || load === 'reduced') ? ' is-navbusy' : ''),
+      showRail: isDesk && !isOb && load !== 'full', showNav: !isDesk && !isOb && !isDetail && load !== 'full',
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
       railPaths: (view === 'pathStarted' ? [Object.assign({}, all[2], { isCurrent: true, pct: '0%' }), Object.assign({}, all[0], { isCurrent: false }), all[1]] : [all[0], all[1]]).map((p) => ({ name: p.name, img: p.img, pct: p.pct, cls: 'dk-layer' + (p.isCurrent ? ' is-on' : '') })),

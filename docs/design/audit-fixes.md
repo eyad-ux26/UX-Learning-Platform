@@ -48,3 +48,5 @@ Update (5 November 2026, canvas v63): L2 is now the split button described above
 - **P1:** the slice 1 lesson step, tune and compare boards are marked "Replaced". Build from the slice 2 player.
 - **P2:** the settings reminder switch sits at the trailing edge, with the time field under the label.
 - **P3:** the landing lesson preview letters its two options A and B.
+
+Update (5 November 2026, canvas v66): loading states (S3-12) and the path page main action, Start path / Continue path / Review this path (S3-13). Notes are in `slice-3/README.md`; the CSS is the "Loading" and "Path page main action" blocks at the end of `system/uxgate.css`.
