@@ -103,3 +103,12 @@ export async function verifyPaddle(body: string, header: string | null, secret: 
   if (!json.event_id || !json.event_type) return { ok: false, reason: "payload" };
   return { ok: true, events: paddleEvents(json), eventType: String(json.event_type), eventId: String(json.event_id) };
 }
+
+/**
+ * A transaction id from Paddle's own payment links (card updates, invoices). Paddle sends them to the default payment
+ * link (our Check and pay page) as ?_ptxn=txn_…. Anything that doesn't look like a Paddle transaction id is ignored.
+ */
+export function paddleLinkTxn(v: string | string[] | undefined | null): string | null {
+  const s = Array.isArray(v) ? v[0] : v;
+  return s && /^txn_[a-z0-9]{10,40}$/i.test(s) ? s : null;
+}

@@ -1,7 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { Logo } from "@/components/Logo";
-import { PayButton } from "@/components/billing/CheckoutView";
+import { PaddleLinkCheckout, PayButton } from "@/components/billing/CheckoutView";
+import { paddleLinkTxn } from "@/lib/billing/paddle";
+import { paddleConfig } from "@/lib/server/billing/config";
 import { formatMoney, moneyCls, UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 import { requireLearner } from "@/lib/server/learner";
 import { loadOffer } from "@/lib/server/billing/plans";
@@ -15,6 +17,19 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
   const sp = await searchParams;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
+  // A payment link Paddle emailed (card update, invoice) lands here with ?_ptxn=: open that transaction as it is, for
+  // signed-in learners only, without a checkout of ours. Pro learners too, so this comes before the Pro redirect.
+  const ptxn = paddleLinkTxn(sp._ptxn);
+  if (ptxn) {
+    const c = paddleConfig();
+    if (!c.clientToken) return redirect({ href: "/app/settings/billing", locale }) as never;
+    return (
+      <div className="chk-page">
+        <header className="pub-head"><Logo height={30} /></header>
+        <PaddleLinkCheckout transactionId={ptxn} clientToken={c.clientToken} env={c.env} locale={locale as "en" | "ar"} doneUrl={`/${locale}/app/settings/billing`} />
+      </div>
+    );
+  }
   const t = await getTranslations("billing");
   // ?intl=1: "Pay with an international card" after Paymob refused a foreign card (world price, Paddle).
   const intl = sp.intl === "1";
