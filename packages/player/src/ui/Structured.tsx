@@ -4,6 +4,10 @@ import { useState } from "react";
 import type { MatchStep, OrderStep, SortStep, SpotStep, Locale } from "@uxgate/content/types";
 import { pairOf, type StepState } from "../engine";
 
+// Option letters, as in the choice list: A B C in English, أ ب ج in Arabic (QA #142).
+const EN_KEYS = ["A", "B", "C", "D", "E", "F"];
+const AR_KEYS = ["أ", "ب", "ج", "د", "هـ", "و"];
+
 type T = (key: string, values?: Record<string, string | number>) => string;
 type Props<S> = { step: S; st: StepState; locale: Locale; t: T; onChange: (sel: string[]) => void };
 
@@ -161,7 +165,7 @@ export function SpotList({ step, st, locale, t, onPick }: { step: SpotStep; st: 
         const state = judged(st) && picked ? (step.answer.includes(r.id) ? "is-right" : "is-wrong") : picked ? "is-selected" : "";
         return (
           <button key={r.id} type="button" role="radio" aria-checked={picked} aria-disabled={!open(st) || undefined} className={`choice press ${state}`} onClick={() => open(st) && onPick(r.id)}>
-            <span className="lp-key ltr" aria-hidden="true">{String.fromCharCode(65 + k)}</span>
+            <span className={`lp-key${locale === "ar" ? "" : " ltr"}`} aria-hidden="true">{(locale === "ar" ? AR_KEYS : EN_KEYS)[k] ?? String(k + 1)}</span>
             <span className="grow">{r.label[locale]}</span>
           </button>
         );
