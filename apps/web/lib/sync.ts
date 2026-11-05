@@ -20,10 +20,12 @@ let started = false;
 let timer: ReturnType<typeof setTimeout> | undefined;
 let delay = 2000;
 let running = false;
+let again = false; // a flush was asked for while one was running: run once more when it ends
 
 export async function flush(): Promise<void> {
-  if (running) return;
+  if (running) { again = true; return; }
   running = true;
+  again = false;
   try {
     if (!currentUser || currentUser === "guest") return; // not known yet: sending now could put one learner's answers on another account. Guest answers stay on the device until sign-up.
     const mine = (it: QueuedAttempt) => it.userId === currentUser;
@@ -52,8 +54,14 @@ export async function flush(): Promise<void> {
     }
     const left = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter(mine);
     set({ pending: left.length });
-    if (failed && left.length) schedule(); else delay = 2000;
-  } finally { running = false; }
+    // Answers queued while this run was sending were not in its snapshot: send them now, not on the next retry.
+    const seen = new Set(items.map((i) => i.key));
+    if (left.some((i) => !seen.has(i.key))) again = true;
+    if (failed && left.length) { schedule(); again = false; } else delay = 2000;
+  } finally {
+    running = false;
+    if (again) { again = false; void flush(); }
+  }
 }
 
 function schedule() {
