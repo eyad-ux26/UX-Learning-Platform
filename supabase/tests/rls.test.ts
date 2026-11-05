@@ -15,8 +15,8 @@ create role anon nologin; create role authenticated nologin; create role service
 create schema auth;
 create table auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb not null default '{}');
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-grant usage on schema auth to anon, authenticated;
-grant execute on function auth.uid() to anon, authenticated;
+grant usage on schema auth to anon, authenticated, service_role;
+grant execute on function auth.uid() to anon, authenticated, service_role;
 `;
 
 let db: PGlite;
@@ -237,5 +237,29 @@ describe("email language (migration 0005)", () => {
   it("is not callable by learners or visitors", async () => {
     await expect(as("authenticated", A, `select public.set_locale_by_email('a@example.com', 'en')`)).rejects.toThrow(/permission denied/);
     await expect(as("anon", null, `select public.set_locale_by_email('a@example.com', 'en')`)).rejects.toThrow(/permission denied/);
+  });
+});
+
+describe("my_lesson_progress (per-lesson summary)", () => {
+  it("returns only the caller's lessons, with finished and XP summed over every play", async () => {
+    // A plays the lesson a second time, finishes it and earns 5 more XP; B is untouched.
+    const att = (await db.query<{ id: string }>(`insert into attempts (client_attempt_id, user_id, lesson_id, content_version_id, finished_at) values ('a2', $1, 'P01-U01-L01', $2, now()) returning id`, [A, versionId])).rows[0].id;
+    await db.query(`insert into xp_events (user_id, attempt_id, step_id, outcome, amount) values ($1, $2, 'S03', 'supported', 5)`, [A, att]);
+    try {
+      expect(await as("authenticated", A, `select * from my_lesson_progress()`)).toEqual([{ lesson_id: "P01-U01-L01", finished: true, xp: 15 }]);
+      expect(await as("authenticated", B, `select * from my_lesson_progress()`)).toEqual([{ lesson_id: "P01-U01-L01", finished: false, xp: 10 }]);
+      expect(await as("authenticated", null, `select * from my_lesson_progress()`)).toEqual([]);
+    } finally {
+      await db.query(`delete from attempts where id = $1`, [att]);
+    }
+  });
+  it("a learner naming another learner still gets only their own; the service role can read a named learner", async () => {
+    const mine = await as<{ xp: number }>("authenticated", A, `select * from my_lesson_progress($1)`, [B]);
+    expect(mine.every((r) => r.xp === 10)).toBe(true); // A's own row (one play, 10 XP), not B's
+    expect(await as("authenticated", null, `select * from my_lesson_progress($1)`, [B])).toEqual([]);
+    expect(await as("service_role", null, `select * from my_lesson_progress($1)`, [B])).toEqual([{ lesson_id: "P01-U01-L01", finished: false, xp: 10 }]);
+  });
+  it("a signed-out visitor cannot call it", async () => {
+    await expect(as("anon", null, `select * from my_lesson_progress()`)).rejects.toThrow(/permission denied/);
   });
 });

@@ -102,7 +102,7 @@ A learner can join any number of paths. One of them is the **current path**, and
 - Selecting never shows correctness; only Check does (U25). Wrong answers show the matching misconception message, up to 2 hints, then "Show the answer" after 3 tries. The first attempt is kept.
 - Confidence tap on about 2 steps per lesson.
 - Skill checks: new scenario, no hints, no per-step verdict, summary at the end.
-- End-of-unit mastery round: every skill missed in the unit comes back with a fresh variant until it is right or the variants run out.
+- End-of-unit mastery round: every skill missed in the unit comes back with a fresh variant it hasn't seen, at most 2 per skill per round, with no hints and one try (10 XP right, 0 wrong). A right answer makes the skill Shown; otherwise it stays Practiced for review.
 - Video steps: Bunny Stream player with English and Arabic captions, a transcript, and no autoplay with sound.
 - Lesson end: recap, XP earned, skill progress, next lesson.
 - Exit at any time; progress resumes at the same step.

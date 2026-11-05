@@ -4,7 +4,7 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 
 ## 1. Create the project
 1. New Supabase project named `uxgate-staging` (later `uxgate-production`). **Region: Frankfurt (eu-central-1).** There is no Middle East region, Frankfurt is the closest, and the region cannot be changed after creation.
-2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql` and `migrations/0007_mastery_and_review.sql`, then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
+2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
 3. Regenerate the content file after any lesson change with `npm run seed:sql` and commit it. The tests fail if it is stale.
 
 ## 2. Where each key goes
@@ -38,11 +38,13 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 ## 6. Check
 `npm run test -w @uxgate/db` runs the row-level security tests with no Docker.
 
-## 7. Slice 2 migrations (0006, 0007)
+## 7. Slice 2 migrations (0006, 0007, 0008)
 Run in the SQL editor, in this order, after 0001 to 0005. Each runs once and is safe to read before running.
 1. Paste `migrations/0006_banks.sql`. It lets a lesson row have `mode = 'bank'` (the mastery question banks).
 2. Paste `migrations/0007_mastery_and_review.sql`. It adds `attempts.plan`, allows the `missed` outcome in `xp_events`, and creates the `review_requests` table with row-level security.
 3. Check: `select column_name from information_schema.columns where table_name = 'attempts' and column_name = 'plan';` returns one row.
+4. Paste `migrations/0008_lesson_progress_summary.sql`. It adds `my_lesson_progress()`, which sums a learner's progress per lesson inside the database, so pages no longer download the whole history (and an index for it). It changes no data; the app works before it too, only slower.
+5. Check: `select proname from pg_proc where proname = 'my_lesson_progress';` returns one row.
 Slice 3 migrations start at 0016 and run after these.
 
 ## 8. Reseed the content (after 0006 and 0007)

@@ -43,15 +43,15 @@ Every remaining step type (words, fix, tune, sort, order, match, spot, compare, 
 
 ### Slice 3 · Progress and motivation · design sprint 3 · build sprint 4
 
-Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard, and the Paths tab to browse all paths and switch the current one, with every screen it touches (home, path map, lesson end, review, profile, certificates, reminders) following spec §4.4b. Stories: EN-11 (rest), EN-11b, EN-13 (rest), EN-20, EN-21, EN-23. Design brief: [sprint-3/design-brief.md](sprint-3/design-brief.md).
+Daily goal and streak with freezes, skill states and badges, review queue and review sessions, profile, certificate, public achievement page, opt-in leaderboard, and the Paths tab to browse all paths and switch the current one, with every screen it touches (home, path map, lesson end, review, profile, certificates, reminders) following spec §4.4b. Stories: EN-11 (rest), EN-11b, EN-13 (rest), EN-20, EN-21, EN-23. Design ✓ (Eyad, 2 Nov). Design brief: [sprint-3/design-brief.md](sprint-3/design-brief.md); build brief: [sprint-3/build-brief.md](sprint-3/build-brief.md).
 
 ### Slice 4 · Account, notifications and public site · design sprint 4 · build sprint 5
 
-Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), privacy and terms pages (needed for Google brand verification), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, appeals (learner side).
+Settings (language, theme, goal, reminders, sound, data export, delete account), notifications (inbox, email templates, push prompt), help and appeals on the learner side, public path pages with SEO, system pages (404, error, offline, maintenance), privacy and terms pages (needed for Google brand verification), Sign in with Apple. Stories: EN-03 (Apple), EN-05 (rest), EN-19, EN-22, EN-24, appeals (learner side). Design ✓ (Eyad, 3 Nov). Design brief: [sprint-4/design-brief.md](sprint-4/design-brief.md); build brief: [sprint-4/build-brief.md](sprint-4/build-brief.md).
 
 ### Slice 5 · Subscriptions · design sprint 5 · build sprint 6
 
-Pricing, paywall, checkout result, billing and plan management, cancel and refund request, billing emails. Paymob and Paddle in test mode. Stories: EN-15 to EN-18.
+Pricing, paywall, checkout result, billing and plan management, cancel and refund request, billing emails. Paymob and Paddle in test mode. Stories: EN-15 to EN-18. Design brief: [sprint-5/design-brief.md](sprint-5/design-brief.md).
 
 ### Sprint 7 · Web app release candidate
 

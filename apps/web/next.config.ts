@@ -47,6 +47,12 @@ const config: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // hls.js only ever loads in the browser (VideoStepView imports it inside an effect). Leaving it out of the server
+  // build keeps 590 kB out of the Worker's script, which every isolate parses.
+  webpack(cfg, { isServer }) {
+    if (isServer) cfg.resolve.alias = { ...(cfg.resolve.alias ?? {}), "hls.js": false };
+    return cfg;
+  },
 };
 
 export default withNextIntl(config);
