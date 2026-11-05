@@ -81,7 +81,7 @@ export const PUBLIC_PATHS: PublicPath[] = [
     },
   },
   {
-    id: "P14", slug: "patterns-that-fit", name: "Patterns That Fit", art: "rocket", kind: "hybrid", status: "soon",
+    id: "P14", slug: "patterns-that-fit", name: "Patterns That Fit", art: "rocket", kind: "hybrid", status: "open",
     sub: t("Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.", "اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر."),
     short: t("The right pattern for the moment.", "النمط المناسب للموقف."),
     can: [
@@ -99,7 +99,22 @@ export const PUBLIC_PATHS: PublicPath[] = [
       after: t("After the clip, you pick the right pattern for three new screens.", "بعد المقطع، تختار النمط المناسب لثلاث شاشات جديدة."),
     },
   },
-  { id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "interactive", status: "soon", sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.") },
+  {
+    id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "interactive", status: "open",
+    sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "sara",
+      scenario: t("I'm designing an app for a parcel delivery company. Laila wants a courier to pick up a parcel from her home. She taps Book pickup. For four seconds nothing on the screen changes, so she taps again. Two couriers come to her door the next morning.", "أصمّم تطبيقًا لشركة توصيل طرود. تريد ليلى أن يأتي مندوب ليستلم طردًا من بيتها. ضغطت احجز الاستلام. ولمدة أربع ثوانٍ لم يتغيّر شيء على الشاشة، فضغطت مرة أخرى. وفي الصباح التالي جاء إلى بابها مندوبان."),
+      question: t("Booking takes about four seconds. What should I change?", "الحجز يستغرق نحو أربع ثوانٍ. ماذا أغيّر؟"),
+      options: [
+        t("Add a line under the button: \"Booking can take a few seconds\"", "أضيف سطرًا تحت الزر: «قد يستغرق الحجز بضع ثوانٍ»"),
+        t("Quietly ignore a second tap within ten seconds", "أتجاهل بهدوء أي ضغطة ثانية خلال عشر ثوانٍ"),
+        t("Change the button to \"Booking…\" with a spinner, then show \"Pickup booked\" with the time", "أحوّل الزر إلى «جارٍ الحجز…» مع مؤشر دوّار، ثم أعرض «تم حجز الاستلام» مع الموعد"),
+      ],
+      answer: 2,
+      why: t("The spinner tells Laila her tap was caught and the app is working, so she has no reason to tap again. The confirmation with the time tells her the result.", "المؤشر الدوّار يخبر ليلى أن ضغطتها وصلت وأن التطبيق يعمل، فلا يبقى سبب لتضغط مرة أخرى. والتأكيد مع الموعد يخبرها بالنتيجة."),
+    },
+  },
   { id: "P03", slug: "frame-the-right-problem", name: "Frame the Right Problem", art: "target", kind: "interactive", status: "soon", sub: t("Make sure you solve the problem that matters.", "تأكّد أنك تحلّ المشكلة التي تهمّ فعلًا.") },
   { id: "P04", slug: "user-flows-that-work", name: "User Flows That Work", art: "gate", kind: "interactive", status: "soon", sub: t("Plan the steps people take, from start to done.", "خطّط للخطوات التي يمرّ بها الناس من البداية حتى النهاية.") },
   { id: "P05", slug: "make-ux-accessible", name: "Make UX Accessible", art: "shield", kind: "interactive", status: "open", sub: t("Design that works for every ability and device.", "تصميم يناسب كل القدرات وكل الأجهزة."),

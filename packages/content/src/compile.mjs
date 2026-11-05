@@ -135,7 +135,7 @@ export function compileTree(dir) {
     bundle.paths.push({ id: pathDoc.id, title: pathDoc.title, subtitle: pathDoc.subtitle });
     for (const u of fs.readdirSync(pDir).sort()) {
       const uDir = path.join(pDir, u);
-      if (!fs.statSync(uDir).isDirectory()) continue;
+      if (!/^U\d{2}$/.test(u) || !fs.statSync(uDir).isDirectory()) continue; // e.g. captions/ is not a unit
       const unit = readYaml(path.join(uDir, "unit.yaml"));
       const all = fs.readdirSync(uDir).filter((f) => f.endsWith(".yaml") && f !== "unit.yaml").sort();
       const files = all.filter((f) => !BANK_RE.test(f));

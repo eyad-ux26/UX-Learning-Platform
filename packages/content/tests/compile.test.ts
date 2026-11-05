@@ -15,7 +15,7 @@ describe("content compiler", () => {
     const { errors, bundle: b } = compileTree(seed);
     expect(errors).toEqual([]);
     const units = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${p}-U0${i + 1}`);
-    expect(b.units.map((u: { id: string }) => u.id)).toEqual([...units("P01", 5), ...units("P05", 5), ...units("P10", 6), ...units("P12", 5), ...units("P13", 5), ...units("P15", 5)]);
+    expect(b.units.map((u: { id: string }) => u.id)).toEqual([...units("P01", 5), ...units("P02", 5), ...units("P05", 5), ...units("P10", 6), ...units("P12", 5), ...units("P13", 5), ...units("P14", 6), ...units("P15", 5)]);
     // Every unit has a re-test bank, and every skill has at least 2 held-back steps in it.
     expect(b.banks.map((l: { unitId: string }) => l.unitId)).toEqual(b.units.map((u: { id: string }) => u.id));
     for (const u of b.units) {
