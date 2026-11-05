@@ -281,7 +281,7 @@ export function AuthForm({ mode, linkError, apple = false }: { mode: Mode; linkE
         <div style={{ marginBlockStart: "auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, textAlign: "center", paddingBlockStart: 8 }}>
           {signup ? (
             <p className="t-small ink-3" style={{ fontSize: 13 }}>
-              {t("terms1")} <Link href="/terms" style={{ color: "var(--link)" }}>{t("terms")}</Link> {t("and")} <Link href="/privacy" style={{ color: "var(--link)" }}>{t("privacy")}</Link>.
+              {t("terms1")} <Link href="/terms" style={{ color: "var(--link)" }}>{t("terms")}</Link> {t("and")}{locale === "ar" ? "" : " "}<Link href="/privacy" style={{ color: "var(--link)" }}>{t("privacy")}</Link>.
             </p>
           ) : null}
           <p className="t-small ink-2">

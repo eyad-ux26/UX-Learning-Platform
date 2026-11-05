@@ -95,22 +95,22 @@ export function SettingsView({ initial, userId, restored }: { initial: Initial; 
 
           <h2 className="t-over set-sec">{t("secLearning")}</h2>
           <div className="set">
-            <div className="set-row is-seg"><span className="ph ph-globe" aria-hidden="true" /><span className="set-l" id="st-lang">{t("language")}</span>
-              <div className="tabs" role="radiogroup" aria-labelledby="st-lang">
+            <div className="set-row"><span className="ph ph-globe" aria-hidden="true" /><span className="set-l" id="st-lang">{t("language")}</span>
+              <div className="tabs" role="radiogroup" aria-labelledby="st-lang" style={{ inlineSize: 200, flex: "none" }}>
                 {(["en", "ar"] as const).map((l) => (
                   <button key={l} type="button" role="radio" aria-checked={l === locale} lang={l} className={`tab${l === locale ? " is-on" : ""}`} onClick={() => pickLocale(l)} disabled={pending && l !== locale}>{l === "en" ? "English" : "العربية"}</button>
                 ))}
               </div>
             </div>
-            <div className="set-row is-seg"><span className="ph ph-moon" aria-hidden="true" /><span className="set-l" id="st-theme">{t("theme")}</span>
-              <div className="tabs" role="radiogroup" aria-labelledby="st-theme">
+            <div className="set-row"><span className="ph ph-moon" aria-hidden="true" /><span className="set-l" id="st-theme">{t("theme")}</span>
+              <div className="tabs" role="radiogroup" aria-labelledby="st-theme" style={{ inlineSize: 232, flex: "none" }}>
                 {themes.map(([v, label]) => (
                   <button key={v} type="button" role="radio" aria-checked={theme === v} className={`tab${theme === v ? " is-on" : ""}`} onClick={() => pickTheme(v)} style={{ padding: "0 4px" }}>{label}</button>
                 ))}
               </div>
             </div>
-            <div className="set-row is-seg"><span className="ph ph-target" aria-hidden="true" /><span className="set-l" id="st-goal">{t("goal")}<small>{t("goalSub")}</small></span>
-              <div className="tabs" role="radiogroup" aria-labelledby="st-goal">
+            <div className="set-row"><span className="ph ph-target" aria-hidden="true" /><span className="set-l" id="st-goal">{t("goal")}<small>{t("goalSub")}</small></span>
+              <div className="tabs" role="radiogroup" aria-labelledby="st-goal" style={{ inlineSize: 156, flex: "none" }}>
                 {([1, 2, 3] as const).map((n) => (
                   <button key={n} type="button" role="radio" aria-checked={goal === n} aria-label={t("goalAria", { count: n })} className={`tab${goal === n ? " is-on" : ""}`} onClick={() => pickGoal(n)}>{n}</button>
                 ))}

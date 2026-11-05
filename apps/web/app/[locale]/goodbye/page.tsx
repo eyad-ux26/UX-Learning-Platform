@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/Logo";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { BYE_COOKIE } from "@/lib/server/account";
-import { deleteAfter, longDate } from "@/lib/reminder-plan";
+import { longDate } from "@/lib/reminder-plan";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { robots: { index: false } };
@@ -17,8 +18,11 @@ export default async function GoodbyePage({ params }: { params: Promise<{ locale
   setRequestLocale(locale);
   const t = await getTranslations("acctdata");
   let info: { d?: string; e?: string; n?: string } = {};
-  try { info = JSON.parse((await cookies()).get(BYE_COOKIE)?.value ?? "{}"); } catch { /* no cookie: show the general page */ }
-  const date = longDate(info.d ? new Date(info.d) : deleteAfter(new Date()), locale as "en" | "ar");
+  try { info = JSON.parse((await cookies()).get(BYE_COOKIE)?.value ?? "{}"); } catch { /* unreadable: same as none */ }
+  // Only right after a delete request (the cookie lasts an hour) is there a real date to show; otherwise go home.
+  const at = info.d ? new Date(info.d) : null;
+  if (!at || Number.isNaN(at.getTime())) redirect(`/${locale}`);
+  const date = longDate(at, locale as "en" | "ar");
   return (
     <div className="s4-pub">
       <header className="pub-head">
