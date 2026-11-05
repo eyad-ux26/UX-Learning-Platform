@@ -11,25 +11,30 @@ import { initSound, play, readMuted, setMuted } from "@/lib/sound";
 import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
 import { LessonEnd, type ProNext } from "./LessonEnd";
-import { CheckSummary, GuestEnd, MasteryEnd } from "./LessonPages";
+import { CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
 import type { ReplayKind } from "@/lib/replay";
+import type { PathEnd, UpNext } from "@/lib/up-next";
 
 export const GUEST_ID = "guest";
 
 type Props = {
   lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number; userId: string; replay: ReplayKind | null;
   /** The mastery round of a unit: `lesson` is its re-test bank cut down to the steps in `plan`. */
-  variant?: "lesson" | "mastery";
+  /** "review": a spaced-review session, also a cut-down bank, with its own end page. */
+  variant?: "lesson" | "mastery" | "review";
   plan?: string[];
   /** The sample lesson for someone who is not signed in: answers stay on this device until they sign up. */
   guest?: boolean;
   /** The unit's skills, for the result pages (the client never loads the whole content bundle). */
   unitSkills?: Skill[];
+  /** The next lesson of the path, or null after its last one (then `pathEnd`). */
+  upNext?: UpNext | null;
+  pathEnd?: PathEnd | null;
   /** The next unit, when it is part of Pro and the learner is on the free plan (slice 5). */
   proNext?: ProNext | null;
 };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], proNext = null }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null }: Props) {
   const router = useRouter();
   const t = useTranslations("sync");
   const sync = useSyncStatus();
@@ -58,7 +63,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   }, [lesson, hash, key, userId]);
 
   const onState = useCallback((s: LessonState) => { kvSet(key, s).catch(() => {}); }, [key]);
-  const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(userId, attemptId.current, e, planKey ? planKey.split(",") : undefined).then(kick).catch(() => {}); }, [userId, planKey]);
+  const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(userId, attemptId.current, e, planKey ? planKey.split(",") : undefined, variant === "review" ? "review" : undefined).then(kick).catch(() => {}); }, [userId, planKey, variant]);
   const onFinish = useCallback((s: LessonState) => {
     kvDel(key).catch(() => {});
     play("lesson-complete");
@@ -118,9 +123,10 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   if (!state) return <div className="player-loading" aria-busy="true" />;
   if (finished) {
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
+    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={locale} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
-    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} proNext={proNext} />;
+    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
   }
 
   return (

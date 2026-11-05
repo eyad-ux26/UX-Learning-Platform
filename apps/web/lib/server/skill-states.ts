@@ -1,5 +1,6 @@
 import "server-only";
 import type { createAdminClient } from "@/lib/supabase/admin";
+import { applyReview, type SkillRow } from "@/lib/skill-state";
 
 type Db = ReturnType<typeof createAdminClient>;
 export const REVIEW_AFTER_DAYS = 3;
@@ -23,4 +24,27 @@ export async function markShown(db: Db, userId: string, skillIds: string[], now 
   const next = new Date(now.getTime() + REVIEW_AFTER_DAYS * 86_400_000).toISOString();
   const rows = ids.filter((id) => !done.has(id)).map((skill_id) => ({ user_id: userId, skill_id, state: "shown", shown_at: now.toISOString(), next_review_at: next }));
   if (rows.length) await db.from("skill_states").upsert(rows, { onConflict: "user_id,skill_id" });
+}
+
+/**
+ * A review session ended. Each skill asked is judged on its first try: right when due makes it Kept (gold); a miss
+ * keeps it Shown and brings it back tomorrow. The update only applies to a row that is still Shown, so a double
+ * finish or a stale read can never move a skill backwards.
+ */
+export async function markReviewed(db: Db, userId: string, asked: string[], correct: string[], now = new Date()) {
+  const ids = [...new Set(asked)];
+  if (!ids.length) return [];
+  const { data } = await db.from("skill_states").select("skill_id, state, shown_at, kept_at, next_review_at").eq("user_id", userId).in("skill_id", ids);
+  const ok = new Set(correct);
+  const kept: string[] = [];
+  for (const r of data ?? []) {
+    const prev: SkillRow = { state: r.state as SkillRow["state"], shownAt: r.shown_at ? new Date(r.shown_at as string) : null, keptAt: r.kept_at ? new Date(r.kept_at as string) : null, nextReviewAt: r.next_review_at ? new Date(r.next_review_at as string) : null };
+    const next = applyReview(prev, ok.has(r.skill_id as string), now);
+    if (next === prev) continue;
+    await db.from("skill_states")
+      .update({ state: next.state, kept_at: next.keptAt?.toISOString() ?? null, next_review_at: next.nextReviewAt?.toISOString() ?? null })
+      .eq("user_id", userId).eq("skill_id", r.skill_id as string).eq("state", "shown");
+    if (next.state === "kept") kept.push(r.skill_id as string);
+  }
+  return kept;
 }

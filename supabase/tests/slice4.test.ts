@@ -78,8 +78,9 @@ describe("only the server writes what is sent and scheduled", () => {
     await expect(as("authenticated", A, `update review_requests set status = 'accepted', xp_added = 999 where user_id = $1`, [A])).rejects.toThrow(/permission denied/);
   });
   it("a learner cannot set or change the delete and welcome columns on their own profile", async () => {
+    // Slice 3 (0016) limits which profile columns a learner may update at all, so either guard can be the one that refuses.
     for (const set of [`delete_after = now() - interval '1 day'`, `delete_requested_at = now()`, `welcome_sent_at = now()`]) {
-      await expect(as("authenticated", A, `update profiles set ${set} where user_id = $1`, [A])).rejects.toThrow(/server only/);
+      await expect(as("authenticated", A, `update profiles set ${set} where user_id = $1`, [A])).rejects.toThrow(/server only|permission denied/);
     }
     // Their other settings still save.
     const ok = await as<{ user_id: string }>("authenticated", A, `update profiles set daily_goal = 3 where user_id = $1 returning user_id`, [A]);

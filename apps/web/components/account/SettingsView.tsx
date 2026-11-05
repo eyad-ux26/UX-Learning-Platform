@@ -11,15 +11,18 @@ import { saveSetting } from "@/app/[locale]/app/(shell)/settings/actions";
 import { signOut } from "@/app/[locale]/app/(shell)/profile/actions";
 import { pushState, type PushState } from "@/lib/push-client";
 import { Sheet } from "./Sheet";
+import { joinLeaderboard, leaveLeaderboard, setAchievementPage } from "@/app/[locale]/app/(shell)/profile/share-actions";
 
 
 type Initial = { name: string; email: string; provider: string; theme: ThemePref; goal: 1 | 2 | 3; reminder: string | null };
+/** The two sharing choices (both off by default). The leaderboard can only be joined while the admins have it open. */
+export type Sharing = { pageOn: boolean; boardJoined: boolean; boardOpen: boolean };
 
 function Caret() {
   return <span className="ph ph-caret-right flip" aria-hidden="true" />;
 }
 
-export function SettingsView({ initial, userId, restored }: { initial: Initial; userId: string; restored?: boolean }) {
+export function SettingsView({ initial, userId, restored, sharing = { pageOn: false, boardJoined: false, boardOpen: false } }: { initial: Initial; userId: string; restored?: boolean; sharing?: Sharing }) {
   const t = useTranslations("settings");
   const locale = useLocale() as "en" | "ar";
   const router = useRouter();
@@ -35,6 +38,22 @@ export function SettingsView({ initial, userId, restored }: { initial: Initial; 
   const [push, setPush] = useState<PushState>("unsupported");
   const [toast, setToast] = useState(restored ? t("restored") : "");
   const [pending, start] = useTransition();
+  const [pageOn, setPageOn] = useState(sharing.pageOn);
+  const [boardOn, setBoardOn] = useState(sharing.boardJoined);
+  const [shareErr, setShareErr] = useState(false);
+  // Same actions as Profile: the page switch makes the handle once; joining the board uses the learner's name.
+  const togglePage = () => start(async () => {
+    setShareErr(false);
+    const r = await setAchievementPage({ enabled: !pageOn }).catch(() => ({ ok: false }));
+    if (!r.ok) { setShareErr(true); return; }
+    setPageOn(!pageOn); play(pageOn ? "ui-toggle-off" : "ui-toggle-on");
+  });
+  const toggleBoard = () => start(async () => {
+    setShareErr(false);
+    const r = await (boardOn ? leaveLeaderboard() : joinLeaderboard({ name: (name || initial.email.split("@")[0] || "Learner").slice(0, 30) })).catch(() => ({ ok: false }));
+    if (!r.ok) { setShareErr(true); return; }
+    setBoardOn(!boardOn); play(boardOn ? "ui-toggle-off" : "ui-toggle-on");
+  });
 
   useEffect(() => { initSound(); setSound(!readMuted()); pushState().then(setPush); }, []);
   useEffect(() => { if (!toast) return; const id = setTimeout(() => setToast(""), 6000); return () => clearTimeout(id); }, [toast]);
@@ -129,9 +148,14 @@ export function SettingsView({ initial, userId, restored }: { initial: Initial; 
           </div>
           <h2 className="t-over set-sec">{t("secSharing")}</h2>
           <div className="set">
-            <Link href="/app/profile" className="set-row"><span className="ph ph-globe" aria-hidden="true" /><span className="set-l">{t("pubTitle")}<small>{t("sharingWhere")}</small></span><span className="set-v"><Caret /></span></Link>
-            <Link href="/app/profile" className="set-row"><span className="ph ph-ranking" aria-hidden="true" /><span className="set-l">{t("boardTitle")}<small>{t("sharingWhere")}</small></span><span className="set-v"><Caret /></span></Link>
+            <div className="set-row"><span className="ph ph-globe" aria-hidden="true" /><span className="set-l" id="st-pub">{t("pubTitle")}<small>{pageOn ? t("pubOn") : t("pubOff")}</small></span>
+              <button type="button" role="switch" aria-checked={pageOn} aria-labelledby="st-pub" className={`switch sw-only${pageOn ? " is-on" : ""}`} onClick={togglePage} disabled={pending}><span className="track" aria-hidden="true" /></button>
+            </div>
+            <div className="set-row"><span className="ph ph-ranking" aria-hidden="true" /><span className="set-l" id="st-board">{t("boardTitle")}<small>{boardOn ? t("boardOn") : sharing.boardOpen ? t("boardOff") : t("boardClosed")}</small></span>
+              <button type="button" role="switch" aria-checked={boardOn} aria-labelledby="st-board" className={`switch sw-only${boardOn ? " is-on" : ""}`} onClick={toggleBoard} disabled={pending || (!boardOn && !sharing.boardOpen)}><span className="track" aria-hidden="true" /></button>
+            </div>
           </div>
+          {shareErr ? <p className="ob-err" role="alert">{t("shareFailed")}</p> : null}
           <h2 className="t-over set-sec">{t("secData")}</h2>
           <div className="set">
             <Link href="/app/settings/data" className="set-row"><span className="ph ph-download" aria-hidden="true" /><span className="set-l">{t("download")}<small>{t("downloadSub")}</small></span><span className="set-v"><Caret /></span></Link>

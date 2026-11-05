@@ -14,7 +14,7 @@ const RENAME = {
   arrow: "arrow-right", review: "arrows-clockwise", caret: "caret-down", freeze: "snowflake",
   signout: "sign-out", google: "google-logo", apple: "apple-logo", comment: "chat-teardrop",
   chat: "chat-circle", bolt: "lightning", bulb: "lightbulb", map: "map-trifold", mail: "envelope-simple",
-  search: "magnifying-glass",
+  search: "magnifying-glass", external: "arrow-square-out",
   // Slice 2 lesson player icons (carried in the design file; unused until slice 2).
   replay: "arrow-counter-clockwise", sync: "arrows-clockwise", cc: "closed-captioning", "cloud-up": "cloud-arrow-up",
   "corners-out": "arrows-out", grip: "dots-six-vertical", send: "paper-plane-tilt", also: "check-circle",
@@ -50,7 +50,9 @@ const rules = names.map((cls) => {
 // The design file also carries the canvas-only lesson-player frames (.ug.lp, .lp-*: fixed 390 and 1440 wide boards, slice 2).
 // The app's own player lays itself out, so those rules are left out of the app stylesheet.
 const LP_RULE = /^[^{\n]*(\.ug\.lp\b|\.lp\b|\.lp-|lp-(?:mobile|desktop))[^{\n]*\{.*\}\n/gm;
-const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "");
+// Likewise the slice 3 canvas frames (.ug.pg, .pg-mobile, .pg-desktop, the .pg-over sheets): fixed 390 and 1440 wide boards.
+const PG_RULE = /^[^{\n]*(\.ug\.pg\b|\.pg-over|\.pg-mobile|\.pg-desktop)[^{\n]*\{.*\}\n/gm;
+const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "").replace(PG_RULE, "");
 if (/_blob/.test(css)) throw new Error("uxgate.css still references /_blob");
 const out = path.resolve(here, "../app/styles");
 fs.mkdirSync(out, { recursive: true });

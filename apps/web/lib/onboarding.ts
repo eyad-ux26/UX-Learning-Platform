@@ -16,5 +16,7 @@ export const onboardingSchema = z.object({
   reminder: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(),
   timeZone: z.string().max(60).refine(validZone).nullable(),
   skipped: z.boolean(),
+  /** A path picked from "See all paths"; it wins over the suggestion when it has content. */
+  pathId: z.string().regex(/^P\d{2}$/).nullable().optional(),
 });
 export type OnboardingInput = z.infer<typeof onboardingSchema>;

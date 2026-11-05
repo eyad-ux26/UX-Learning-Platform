@@ -7,6 +7,8 @@ import type { QueuedAttempt } from "@/lib/attempts";
 import { kick, setSyncUser, startSync } from "@/lib/sync";
 
 const FLAG = "ug-guest-handoff";
+/** Set once the sample answers moved to the account, so onboarding can say so and pick the sample's path. */
+export const SAMPLE_KEPT = "ug-sample-kept";
 /** The "keep my result" choice is good for two hours; after that the guest answers are dropped, not handed to whoever signs in. */
 export const HANDOFF_TTL_MS = 2 * 60 * 60 * 1000;
 
@@ -39,7 +41,7 @@ export function GuestHandoff() {
       if (!id) return; // not signed up yet: keep waiting
       const guest = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter((i) => i.userId === "guest");
       await Promise.all(guest.map((i) => queuePut({ ...i, userId: id } as { key: string })));
-      try { localStorage.removeItem(FLAG); } catch { /* nothing to clean */ }
+      try { localStorage.removeItem(FLAG); if (guest.length) sessionStorage.setItem(SAMPLE_KEPT, "1"); } catch { /* nothing to clean */ }
       setSyncUser(id); startSync(); kick();
     })().catch(() => {}).finally(() => { busy.current = false; });
   }, [pathname]);

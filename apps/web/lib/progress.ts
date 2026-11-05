@@ -16,13 +16,15 @@ const shiftDay = (day: string, by: number) => {
 
 /**
  * Days in a row with at least one finished lesson. Today may still be empty without breaking the run,
- * because the learner still has the rest of the day. Streak freezes arrive in slice 3.
+ * because the learner still has the rest of the day. A day a streak freeze covered keeps the run going
+ * without adding to it.
  */
-export function streakDays(activeDays: Iterable<string>, today: string): number {
+export function streakDays(activeDays: Iterable<string>, today: string, frozenDays: Iterable<string> = []): number {
   const days = new Set(activeDays);
-  let cursor = days.has(today) ? today : shiftDay(today, -1);
+  const frozen = new Set(frozenDays);
+  let cursor = days.has(today) || frozen.has(today) ? today : shiftDay(today, -1);
   let n = 0;
-  while (days.has(cursor)) { n++; cursor = shiftDay(cursor, -1); }
+  while (days.has(cursor) || frozen.has(cursor)) { if (days.has(cursor)) n++; cursor = shiftDay(cursor, -1); }
   return n;
 }
 
@@ -47,12 +49,17 @@ export function weekOf(today: string, weekStart: number): string[] {
  */
 export function lessonStates(lessonIds: string[], finished: ReadonlySet<string>, started: ReadonlySet<string>): Record<string, LessonState> {
   const out: Record<string, LessonState> = {};
+  // A learner who tested out (passed a unit's skill check early) skipped some lessons: those stay open, and the path
+  // goes on in order after the furthest finished lesson.
+  let lastDone = -1;
+  lessonIds.forEach((id, i) => { if (finished.has(id)) lastDone = i; });
   let openUsed = false;
-  for (const id of lessonIds) {
+  lessonIds.forEach((id, i) => {
     if (finished.has(id)) out[id] = "done";
+    else if (i < lastDone) out[id] = started.has(id) ? "in_progress" : "available";
     else if (!openUsed) { out[id] = started.has(id) ? "in_progress" : "available"; openUsed = true; }
     else out[id] = "locked";
-  }
+  });
   return out;
 }
 
@@ -63,8 +70,13 @@ export type Progress = {
   lessonsToday: number;
   streak: number;
   activeDays: string[]; // last 7 days with a finished lesson, YYYY-MM-DD
+  frozenDays: string[]; // last 7 days a streak freeze covered
+  recentActivity: Record<string, { lessons: number; goalMet: boolean }>; // last 14 days
   today: string;
   finishedLessons: string[];
   startedLessons: string[];
   xpByLesson: Record<string, number>;
 };
+
+/** Days of the last two weeks on which the daily goal was met (a day with a lesson can still be short of the goal). */
+export const goalDaysOf = (p: Pick<Progress, "recentActivity">) => Object.entries(p.recentActivity).filter(([, a]) => a.goalMet).map(([day]) => day);

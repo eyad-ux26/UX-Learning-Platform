@@ -22,7 +22,9 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
       .in("attempts.lesson_id", [...unit.lessons, bank.lessonId]),
     checkId ? db.from("attempts").select("id").eq("user_id", userId).eq("lesson_id", checkId).not("finished_at", "is", null).limit(1) : Promise.resolve({ data: [] as unknown[] }),
   ]);
-  const rows = ((data ?? []) as unknown as Row[]).map((r) => ({ ...r, attempt: Array.isArray(r.attempts) ? r.attempts[0] : r.attempts }));
+  const all = ((data ?? []) as unknown as Row[]).map((r) => ({ ...r, attempt: Array.isArray(r.attempts) ? r.attempts[0] : r.attempts }));
+  // Review sessions also draw from the bank, but they are not part of the unit: they only mark cases as seen.
+  const rows = all.filter((r) => r.attempt.kind !== "review");
   const skillCheckDone = !!checkId && checkDone.data?.length === 1;
 
   // Per lesson, only its latest play counts: a lesson played again and aced no longer holds a miss against the learner.
@@ -37,6 +39,6 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
   const masteryRows = rows.filter((r) => r.attempt.kind === "mastery");
   const masteryTries = firstTries(masteryRows.map(asRow));
   const missed = missedSkills(unit, lessonTries, masteryTries, checkId);
-  const seen = [...new Set(masteryRows.map((r) => `${r.attempt_id}:${r.step_id}`))].map((k) => k.split(":")[1]);
+  const seen = [...new Set(all.filter((r) => r.attempt.kind === "mastery" || r.attempt.kind === "review").map((r) => r.step_id))];
   return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, unresolved: unresolvedSkills(unit, lessonTries, masteryTries, checkId), steps: pickRound(bank, missed, seen) };
 }

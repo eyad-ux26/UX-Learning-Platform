@@ -6,11 +6,12 @@ import { replayXp, type ReplayKind } from "@/lib/replay";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 import { Link } from "@/i18n/navigation";
 import { PushAsk } from "@/components/account/PushAsk";
+import type { UpNext } from "@/lib/up-next";
 
 /** The next unit when it is part of Pro and the learner is on the free plan. */
 export type ProNext = { n: number; title: string };
 
-export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, proNext }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; proNext?: ProNext | null }) {
+export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "", proNext = null }: { pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void; proNext?: ProNext | null }) {
   const t = useTranslations("end");
   const tb = useTranslations("billing");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
@@ -19,6 +20,9 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
   lesson.steps.forEach((s, k) => { if (isQuestion(s) && state.steps[k].outcome && state.steps[k].outcome !== "revealed") practised.add(s.skill); });
   const skills = unitSkills.filter((k) => practised.has(k.id));
   const minutes = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
+  // After a first play, the end page leads on to the next lesson of the path; a replay goes back home.
+  const go = !replay && upNext && onNext ? onNext : null;
+  const unitNo = Number(lesson.id.split("-U")[1]?.slice(0, 2)) || 1;
 
   return (
     <div className="end">
@@ -47,6 +51,18 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
               {skills.map((k) => (
                 <div key={k.id} className="end-skill"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span className="t-small grow">{k.title[locale]}</span><span className="skill skill-practiced">{t("practiced")}</span></div>
               ))}
+              {lesson.mode === "lesson" && !replay ? <p className="t-small ink-2"><span className="ph ph-info" aria-hidden="true" /> {t("shownNext", { n: unitNo })}</p> : null}
+            </section>
+          ) : null}
+          {go && upNext ? (
+            <section className="card-panel end-next" aria-label={t("nextGo")}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/ill/uxgate-ill-rocket.png" alt="" width={56} height={56} />
+              <span className="grow">
+                <span className="t-over" style={{ color: "var(--link)" }}>{t("nextOver", { path: pathLabel })}</span>
+                <b>{upNext.title[locale]}</b>
+                <span className="t-small ink-2">{t("nextMeta", { unit: upNext.unitNo, n: upNext.lessonNo, minutes: upNext.minutes })}</span>
+              </span>
             </section>
           ) : null}
           {proNext ? (
@@ -63,11 +79,15 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
             </section>
           ) : null}
           <div className="end-actions">
-            <button type="button" className="btn btn-primary btn-lg press" onClick={onContinue}>{t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+            <button type="button" className="btn btn-primary btn-lg press" onClick={go ?? onContinue}>{go ? t("nextGo") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+            {go ? <button type="button" className="btn btn-ghost btn-lg" onClick={onContinue}>{t("home")}</button> : null}
           </div>
         </div>
       </main>
-      <footer className="end-foot"><button type="button" className="btn btn-primary btn-lg btn-block press" onClick={onContinue}>{t("continue")}</button></footer>
+      <footer className="end-foot">
+        <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={go ?? onContinue}>{go ? t("nextGo") : t("continue")}</button>
+        {go ? <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={onContinue}>{t("home")}</button> : null}
+      </footer>
       <PushAsk />
     </div>
   );

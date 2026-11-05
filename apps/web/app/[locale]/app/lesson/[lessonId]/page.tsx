@@ -5,9 +5,11 @@ import { getLessonVersion } from "@/lib/server/content";
 import type { Locale } from "@uxgate/content/types";
 import { LessonRunner } from "@/components/LessonRunner";
 import { redirect } from "@/i18n/navigation";
-import { buildPathView } from "@/lib/learning";
+import { buildPathView, canPlay } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
 import { decideReplay } from "@/lib/replay";
+import { upNextOf, type PathEnd } from "@/lib/up-next";
+import { isShown, pathSkills } from "@/lib/certificate";
 import { lessonOpen } from "@/lib/billing/access";
 
 export const dynamic = "force-dynamic";
@@ -22,8 +24,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   if (!lessonOpen(lessonId, me.pro)) return redirect({ href: `/app/path/${version.pathId}?paywall=${version.unitId}`, locale }) as never;
   // Lessons play in order: a locked lesson sends the learner back to the path map.
   const view = buildPathView(version.pathId, me.progress, me.practicedSkills);
-  const state = view?.units.flatMap((u) => u.lessons).find((l) => l.lesson.lessonId === lessonId)?.state;
-  if (state === "locked" && process.env.UG_DEV_FIXTURE !== "1") return redirect({ href: `/app/path/${version.pathId}`, locale }) as never;
+  if (view && !canPlay(view, lessonId) && process.env.UG_DEV_FIXTURE !== "1") return redirect({ href: `/app/path/${version.pathId}`, locale }) as never;
   const unit = getUnit(version.unitId);
   // The last lesson of a free unit, for a free learner, ends with the next unit shown as part of Pro.
   const units = view?.units ?? [];
@@ -39,5 +40,15 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
     const paid = me.db ? await me.db.from("attempts").select("started_at").eq("lesson_id", lessonId).eq("replay_kind", "paid").not("finished_at", "is", null) : null;
     replay = decideReplay(true, (paid?.data ?? []).map((p) => p.started_at as string), new Date(), me.timeZone);
   }
-  return <LessonRunner lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} />;
+  // Where the end page points: the next lesson of this path, or (after its last lesson) the certificate and other paths.
+  // A free learner at the end of the free unit sees the Pro card instead of a next lesson they cannot open.
+  const nextLesson = view ? upNextOf(view, lessonId) : null;
+  const upNext = proNext ? null : nextLesson;
+  let pathEnd: PathEnd | null = null;
+  if (view && !nextLesson) {
+    const skills = pathSkills(version.pathId);
+    const others = skills.filter((s) => !unit?.skills.some((k) => k.id === s.id));
+    pathEnd = { pathId: version.pathId, pathTitle, skills: skills.length, certReady: others.every((s) => isShown(me.skillStates.get(s.id)?.state)) };
+  }
+  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} />;
 }

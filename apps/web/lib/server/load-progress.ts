@@ -39,7 +39,7 @@ export async function loadProgressAndZone(db: SupabaseClient, userId: string, no
   const [{ data: profile }, lessons, activityRaw] = await Promise.all([
     db.from("profiles").select("display_name, daily_goal, time_zone").eq("user_id", userId).maybeSingle(),
     lessonRows(db, userId),
-    db.from("daily_activity").select("day, lessons_done").eq("user_id", userId).gte("day", roughSince),
+    db.from("daily_activity").select("day, lessons_done, goal_met, freeze_used").eq("user_id", userId).gte("day", roughSince),
   ]);
   const today = localDay(now, profile?.time_zone);
   const since = lastDays(today, 120)[0];
@@ -51,14 +51,19 @@ export async function loadProgressAndZone(db: SupabaseClient, userId: string, no
   let xpTotal = 0;
   for (const l of lessons) { xpTotal += l.xp; if (l.xp) xpByLesson[l.lesson_id] = l.xp; }
   const days = (activity.data ?? []).filter((d) => d.lessons_done > 0).map((d) => d.day as string);
+  const frozenDays = (activity.data ?? []).filter((d) => d.freeze_used).map((d) => d.day as string);
+  const week: Record<string, { lessons: number; goalMet: boolean }> = {};
+  for (const d of activity.data ?? []) if (d.day >= lastDays(today, 14)[0]) week[d.day as string] = { lessons: d.lessons_done, goalMet: !!d.goal_met };
 
   const progress: Progress = {
     displayName: profile?.display_name ?? null,
     dailyGoal: profile?.daily_goal ?? 1,
     xpTotal,
     lessonsToday: (activity.data ?? []).find((d) => d.day === today)?.lessons_done ?? 0,
-    streak: streakDays(days, today),
+    streak: streakDays(days, today, frozenDays),
     activeDays: days.filter((d) => lastDays(today).includes(d)),
+    frozenDays: frozenDays.filter((d) => lastDays(today).includes(d)),
+    recentActivity: week,
     today,
     finishedLessons: finished,
     startedLessons: started,

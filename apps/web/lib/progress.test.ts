@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { lastDays, lessonStates, localDay, streakDays, weekOf } from "./progress";
+import { goalDaysOf } from "./progress";
 
 describe("streakDays", () => {
   it("counts back from today", () => expect(streakDays(["2026-10-28", "2026-10-29", "2026-10-30"], "2026-10-30")).toBe(3));
@@ -42,5 +43,11 @@ describe("weekOf", () => {
   it("Arabic weeks run Saturday to Friday", () => {
     expect(weekOf("2026-11-04", 6)).toEqual(["2026-10-31", "2026-11-01", "2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06"]);
     expect(weekOf("2026-10-31", 6)[0]).toBe("2026-10-31"); // Saturday is the first
+  });
+});
+
+describe("goalDaysOf (#140)", () => {
+  it("lists only the days the goal was met, not every day with a lesson", () => {
+    expect(goalDaysOf({ recentActivity: { "2026-11-03": { lessons: 1, goalMet: false }, "2026-11-04": { lessons: 2, goalMet: true } } })).toEqual(["2026-11-04"]);
   });
 });

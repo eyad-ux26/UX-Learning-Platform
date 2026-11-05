@@ -24,6 +24,8 @@ export const bodySchema = z.object({
   startedAt: realTime(),
   /** Mastery round only: the bank steps this round asks, in order. */
   plan: z.array(z.string().min(1).max(40)).min(1).max(40).optional(),
+  /** A review session on a unit's bank (spaced review), not its mastery round. */
+  purpose: z.enum(["review"]).optional(),
   events: z.array(eventSchema).min(1).max(200),
 });
 export type AttemptBody = z.infer<typeof bodySchema>;

@@ -1,14 +1,10 @@
 import "server-only";
-import { pickPath } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 
-/**
- * What the shell needs on the billing pages: only the current path's name. The rail's unit list is left out so these
- * pages do no lesson work (issue #114, Worker CPU time).
- */
+/** What the shell needs on the billing pages: the learner (slice 3's Shell reads the paths and rail from it). */
 export function shellFor(me: Learner) {
-  const path = pickPath(me.currentPathId ?? me.recommendedPathId)!;
-  return { pathId: path.id, pathTitle: path.title.en };
+  // Slice 3's Shell takes the learner and works out the paths and rail itself.
+  return { me };
 }
 
 export const countryName = (code: string, locale: string) => {

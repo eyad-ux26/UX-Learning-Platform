@@ -25,18 +25,38 @@ export default {
       })());
       return;
     }
-    // Calls the daily routes directly; the secret keeps them closed to the public.
-    // daily: streaks and reminders. billing: renewals, grace period, retries and billing reminders (slice 5).
-    for (const job of ["daily", "billing"]) {
-      const req = new Request(`https://internal/api/cron/${job}`, {
-        headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
-      });
-      ctx.waitUntil(
-        handler.fetch(req, env, ctx).then(async (res: Response) => {
-          console.log(`cron ${job}: ${res.status} ${await res.text()}`);
-        }),
-      );
-    }
+    // Calls the daily route directly; the secret keeps it closed to the public.
+    // The job settles 100 learners a call and answers `more: true` while others are waiting; up to 10 calls a night.
+    const run = async () => {
+      for (let i = 0; i < 10; i++) {
+        const res: Response = await handler.fetch(new Request("https://internal/api/cron/daily", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+        const text = await res.text();
+        if (!res.ok) { console.warn(`WARN cron daily ${i + 1} failed: ${res.status} ${text}`); break; }
+        if (text.includes('"stoppedEarly":"')) { console.warn(`WARN cron daily ${i + 1} stopped early (${text}). Calling again in this run would hit the same limit; the rest waits for the next run or the learner's next visit.`); break; }
+        console.log(`cron daily ${i + 1}: ${res.status} ${text}`);
+        if (!text.includes('"more":true')) break;
+      }
+    };
+    // Then the "skills to review" notices, 25 learners a call, each call starting after the last learner told.
+    const reviews = async () => {
+      let after = "";
+      for (let i = 0; i < 4; i++) {
+        const res: Response = await handler.fetch(new Request(`https://internal/api/cron/review-due${after ? `?after=${after}` : ""}`, { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+        const text = await res.text();
+        if (!res.ok) { console.warn(`WARN cron review-due ${i + 1} failed: ${res.status} ${text}`); break; }
+        console.log(`cron review-due ${i + 1}: ${res.status} ${text}`);
+        const next = /"next":"([0-9a-f-]{36})"/.exec(text)?.[1];
+        if (!next || text.includes('"stoppedEarly":"')) break;
+        after = next;
+      }
+    };
+    ctx.waitUntil(run().then(reviews));
+    // Slice 5: renewals, grace period, retries and billing reminders.
+    ctx.waitUntil(
+      handler.fetch(new Request("https://internal/api/cron/billing", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx).then(async (res: Response) => {
+        console.log(`cron billing: ${res.status} ${await res.text()}`);
+      }),
+    );
   },
 };
 

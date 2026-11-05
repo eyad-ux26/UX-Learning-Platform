@@ -18,12 +18,15 @@ export default async function SettingsPage({ params, searchParams }: { params: P
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("settings");
+  let boardOpen = false;
   let initial = { name: me.progress.displayName ?? "", email: "nour@example.com", provider: "email", theme: "system" as ThemePref, goal: me.progress.dailyGoal as 1 | 2 | 3, reminder: "20:00" as string | null };
   if (me.db) {
-    const [{ data: auth }, { data: prof }] = await Promise.all([
+    const [{ data: auth }, { data: prof }, { data: flag }] = await Promise.all([
       me.db.auth.getUser(),
       me.db.from("profiles").select("display_name, theme, daily_goal, reminder_time").eq("user_id", me.userId).maybeSingle(),
+      me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
     ]);
+    boardOpen = !!flag?.enabled;
     const u = auth.user;
     initial = {
       name: prof?.display_name ?? "",
@@ -37,7 +40,7 @@ export default async function SettingsPage({ params, searchParams }: { params: P
   return (
     <AccountFrame me={me} locale={locale}>
       <PageTop title={t("title")} back="/app/profile" backLabel={t("back")} />
-      <SettingsView initial={initial} userId={me.userId} restored={(await searchParams).restored === "1"} />
+      <SettingsView initial={initial} userId={me.userId} restored={(await searchParams).restored === "1"} sharing={{ pageOn: me.shareEnabled, boardJoined: me.leaderboardJoined, boardOpen }} />
     </AccountFrame>
   );
 }

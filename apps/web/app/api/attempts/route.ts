@@ -5,14 +5,18 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { bodySchema, processEvents } from "@/lib/server/process-attempts";
 import { localDay } from "@/lib/progress";
-import { buildPathView } from "@/lib/learning";
+import { buildPathView, canPlay } from "@/lib/learning";
 import { loadProgress } from "@/lib/server/load-progress";
 import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
 import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
+import { markPracticed, markReviewed, markShown } from "@/lib/server/skill-states";
+import { loadReviewSession } from "@/lib/server/review-session";
+import { notifyKept } from "@/lib/server/progress-notify";
+import { reviewPlanOk } from "@/lib/review";
+import { isQuestion } from "@uxgate/player/engine";
 import { lessonOpen } from "@/lib/billing/access";
 import { readPro } from "@/lib/server/billing/account";
 import { hostOf } from "@/lib/server/billing/config";
-import { markPracticed, markShown } from "@/lib/server/skill-states";
 import { loadRound } from "@/lib/server/mastery";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
@@ -53,13 +57,29 @@ export async function POST(req: Request) {
   const lesson: Lesson = current.hash === body.hash ? current.body : (versionRow.body as Lesson);
   if (!Array.isArray(lesson?.steps)) return NextResponse.json({ error: "content_not_published" }, { status: 409 });
 
-  const mastery = lesson.mode === "bank";
-  const kind = mastery ? "mastery" : lesson.mode === "check" ? "check" : "lesson";
+  const bank = lesson.mode === "bank";
   // A first send for a play: it must be a lesson the learner has unlocked, and a learner can only start so many plays a day.
-  const { data: known } = await db.from("attempts").select("id, plan").eq("user_id", userId).eq("client_attempt_id", body.attemptId).maybeSingle();
+  const { data: known } = await db.from("attempts").select("id, plan, kind").eq("user_id", userId).eq("client_attempt_id", body.attemptId).maybeSingle();
+  // A bank is played either as the unit's mastery round or as a review session; once stored, the play keeps its kind.
+  const review = bank && (known ? known.kind === "review" : body.purpose === "review");
+  const mastery = bank && !review;
+  const kind = review ? "review" : mastery ? "mastery" : lesson.mode === "check" ? "check" : "lesson";
   let plan: string[] | null = (known?.plan as string[] | null | undefined) ?? null;
   let replay: ReplayKind | null = null;
-  if (mastery) {
+  if (review) {
+    // Spaced review: the server builds the session from the skills that are due now; the client's plan is only checked.
+    if (!known) {
+      const session = await loadReviewSession(db, userId);
+      if (!session) return NextResponse.json({ error: "nothing_to_review" }, { status: 409 });
+      // The page built the plan a little earlier; it still holds if every step is a case of this bank for a skill that is
+      // due now, one per skill. Otherwise the queue moved on (a skill was reviewed elsewhere) and the play cannot be saved.
+      // A case already answered is accepted only when that skill has no unseen case left (#141).
+      if (body.plan && (session.bankId !== body.lessonId || !reviewPlanOk(body.plan, lesson.steps.filter(isQuestion), session.due, session.seen))) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
+      if (!body.plan && session.bankId !== body.lessonId) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
+      if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
+      plan = body.plan ?? session.steps.map((x) => x.id);
+    }
+  } else if (mastery) {
     // The mastery round of a unit opens once its skill check is finished. The server builds the round itself
     // (one fresh bank step per missed skill); the plan the client sends is only checked against it, never trusted.
     if (!known) {
@@ -78,8 +98,9 @@ export async function POST(req: Request) {
     replay = (r?.replay_kind as ReplayKind | null | undefined) ?? null;
   } else {
     const progress = await loadProgress(db, userId);
-    const state = buildPathView(current.pathId, progress, new Set())?.units.flatMap((u) => u.lessons).find((l) => l.lesson.lessonId === body.lessonId)?.state;
-    if (state === "locked") return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
+    const view = buildPathView(current.pathId, progress, new Set());
+    // A skill check of the unit the learner is in may be taken early (test out); every other locked lesson is refused.
+    if (view && !canPlay(view, body.lessonId)) return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
     if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
     // Playing a finished lesson again is a replay: half XP the first time each day, nothing after that.
     if (progress.finishedLessons.includes(body.lessonId)) {
@@ -128,7 +149,13 @@ export async function POST(req: Request) {
 }
 
 /** A lesson was finished for the first time in this attempt: count it for today and mark its skills Practiced. */
-async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, kind: "lesson" | "check" | "mastery", attemptId: string, skillIds: string[], now: Date) {
+async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, kind: "lesson" | "check" | "mastery" | "review", attemptId: string, skillIds: string[], now: Date) {
+  if (kind === "review") {
+    // A review session is not a lesson either. Right first try on a due skill: Kept. A miss: back tomorrow, nothing taken away.
+    const kept = await markReviewed(db, userId, skillIds, await firstTryRight(db, attemptId, userId, "any"), now);
+    await notifyKept(db, userId, kept);
+    return;
+  }
   if (kind === "mastery") {
     // The mastery round is not a lesson: it does not count toward the daily goal. A right first try moves the skill to Shown.
     await markShown(db, userId, await firstTryRight(db, attemptId, userId, "any"), now);

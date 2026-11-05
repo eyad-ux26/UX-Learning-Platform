@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ContentIndex } from "@uxgate/content";
-import { buildPathView, pickPath } from "./learning";
+import { buildPathView, canPlay, pickPath, testOutCheck } from "./learning";
 
 const t = (s: string) => ({ en: s, ar: s });
 const lesson = (lessonId: string, unitId: string, order: number) => ({ lessonId, unitId, pathId: "P1", order, mode: "lesson", minutes: 5, hash: "h", body: {} as never });
@@ -38,5 +38,28 @@ describe("buildPathView", () => {
   });
   it("has no next lesson when everything is done", () => {
     expect(buildPathView("P1", { finishedLessons: ["L1", "L2", "L3"], startedLessons: [], xpByLesson: {} }, new Set(), b)!.next).toBeNull();
+  });
+});
+
+describe("test out of a unit", () => {
+  const order = (b: ReturnType<typeof buildPathView>) => b!.units.flatMap((u) => u.lessons);
+  const fresh = buildPathView("P01", { finishedLessons: [], startedLessons: [], xpByLesson: {} }, new Set())!;
+  const u1 = fresh.units[0].lessons;
+  const check = u1.find((l) => l.lesson.mode === "check")!;
+  it("the skill check of the unit the learner is in can be taken early; later units cannot", () => {
+    expect(check.state).toBe("locked");
+    expect(canPlay(fresh, check.lesson.lessonId)).toBe(true);
+    expect(testOutCheck(fresh, 0)?.lesson.lessonId).toBe(check.lesson.lessonId);
+    const u2check = fresh.units[1].lessons.find((l) => l.lesson.mode === "check")!;
+    expect(canPlay(fresh, u2check.lesson.lessonId)).toBe(false);
+    expect(canPlay(fresh, fresh.units[1].lessons[0].lesson.lessonId)).toBe(false);
+  });
+  it("passing it opens the next unit, and the skipped lessons stay open", () => {
+    const after = buildPathView("P01", { finishedLessons: [u1[0].lesson.lessonId, check.lesson.lessonId], startedLessons: [], xpByLesson: {} }, new Set())!;
+    const all = order(after);
+    expect(after.units[1].lessons[0].state).toBe("available");
+    expect(after.next?.lesson.lessonId).toBe(after.units[1].lessons[0].lesson.lessonId);
+    expect(all.filter((l) => l.unit.id === u1[0].unit.id && l.state === "available").length).toBe(u1.length - 2);
+    expect(after.units[1].lessons[1].state).toBe("locked");
   });
 });

@@ -4,7 +4,7 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 
 ## 1. Create the project
 1. New Supabase project named `uxgate-staging` (later `uxgate-production`). **Region: Frankfurt (eu-central-1).** There is no Middle East region, Frankfurt is the closest, and the region cannot be changed after creation.
-2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then (slice 4) `migrations/0026_account_notifications.sql`, then (slice 5) `migrations/0036_billing.sql` (plans, payments, refunds), then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
+2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then (slice 3) `migrations/0016_progress_paths.sql`, then (slice 4) `migrations/0026_account_notifications.sql`, then (slice 5) `migrations/0036_billing.sql` (plans, payments, refunds), then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
 3. Regenerate the content file after any lesson change with `npm run seed:sql` and commit it. The tests fail if it is stale.
 
 ## 2. Where each key goes
@@ -59,7 +59,15 @@ Slice 3 migrations start at 0016 and run after these.
 4. Redeploy. Without these two values, video steps show a "video unavailable" state and the lesson still continues.
 5. Check: open `/en/try/video` (plays the bundled test clip) and then a real lesson with a video step. The step ids in the content (`video:`) are the Bunny video ids. Signing against a real library has not been tested yet.
 
-## 10. Slice 4: settings, notifications, reminders and deleting an account (0026)
+## 10. Slice 3 settings (migration 0016, nightly job)
+
+- Run `migrations/0016_progress_paths.sql` (after 0006 to 0008). It is safe to run once; it does not touch lesson content. It also adds `profiles.week_start` (Saturday for Arabic, Monday for English, set at sign-up; existing learners are set once from their current language) and replaces the sign-up trigger so new learners get it.
+- `CRON_SECRET`: any long random string, set as a secret where the app runs (see `docs/deploy-cloudflare.md`). The Cloudflare Cron Trigger calls `/api/cron/daily` (02:00 UTC, set in `apps/web/wrangler.jsonc`) with it, and the job refuses anything without it. The job only catches learners who have not opened the app: every Home visit settles that learner's finished days (streak, freezes) by itself.
+- The leaderboard is off. To open it for testing, run `update public.app_flags set enabled = true where key = 'leaderboard';` (the admin panel will own this switch later). While it is off, `/app/board` is a 404 and nobody can join.
+- The achievement page (`/u/<handle>`) is off for every learner until they turn it on from a certificate or in Settings › Sharing.
+- After the nightly job, the same Cron Trigger calls `/api/cron/review-due` (same secret) to send the "skills to review" notice, 25 learners a call. Like the reminders, it needs Workers Paid once there are more than a handful of learners.
+
+## 11. Slice 4: settings, notifications, reminders and deleting an account (0026)
 
 1. In the SQL editor, paste `migrations/0026_account_notifications.sql`. It runs after slice 2 (0007) and slice 3 (0016 onwards) in any order with them. It adds `notification_prefs`, `notifications` (the inbox), `email_log`, `push_subscriptions`, the reply columns on `review_requests`, the delete columns on `profiles` and the `reminder_candidates` function for the reminder job, and a guard so a learner's own session cannot change the delete or welcome columns. Slice 5 starts at 0036.
 2. Values to add in Cloudflare (Worker secrets unless marked build variable). Never paste them in chat or git.
@@ -83,11 +91,11 @@ Slice 3 migrations start at 0016 and run after these.
 | reminder, goal | The reminder cron | Done |
 | welcome | `sendWelcomeOnce` after onboarding, once per account | Done |
 | answer | A database trigger on `review_requests` adds the inbox item when the status leaves `open` | Done. The admin tool that writes answers should also call `notify(…, "answer", …)` for push. |
-| badge | Slice 3, when a skill turns gold (Kept): `notify(userId, "badge", { name, kind }, "/app/profile")` plus `badgeEmail` | Slice 3 wires it |
-| review | Slice 3's daily job, when skills are due: `notify(userId, "review", { count, minutes }, "/app/review")` | Slice 3 wires it |
+| badge | A review session that turns skills gold (Kept): `notifyKept` in `lib/server/progress-notify.ts`, one inbox item per badge and one `badgeEmail` per session | Done |
+| review | `/api/cron/review-due`, called by the daily Cron Trigger after the nightly job: learners with a skill that came due in the last day, once a day | Done |
 | billing | Slice 5 | Slice 5 wires it |
 
-## 11. Give Pro without a payment (admins, QA accounts)
+## 12. Give Pro without a payment (admins, QA accounts)
 
 After 0036, run this in the SQL editor with the learner's email. It gives one year of Pro marked `source = 'manual'`, which counts on uxgate.org too. Nothing renews or charges it, and plan events leave it alone. Running it again resets the year.
 
