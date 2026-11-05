@@ -28,23 +28,37 @@ for (const [locale, scheme, viewport] of views) {
   }
 }
 
-// The collapsed "Show the example again" bar only appears once a choose step is checked on a phone, so open the dev choose page, check it, and run axe on that state.
+// Design audit L4: on a phone the example is a thumbnail that opens full screen. Check a choose step after Check (thumbnail + feedback),
+// then the full-screen example, and that Esc closes it and gives focus back to the thumbnail.
+const axeOn = async (page, label) => {
+  const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+  const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+  bad += serious.length;
+  console.log(`${label}: ${serious.length ? "FAIL" : "ok"}`);
+  for (const v of serious) console.log(`   ${v.impact} ${v.id}: ${v.help} · ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`);
+};
 for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: scheme });
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 664 }, colorScheme: scheme });
   const page = await ctx.newPage();
   await page.goto(`${base}/${locale}/try/choose`);
   await page.waitForSelector(".ug");
   await page.waitForTimeout(600);
   await page.locator(".choice").nth(1).click();
-  await page.locator(".btn-primary").last().click();
+  await page.locator(".player-foot .btn-primary, .player-foot .split-seg").last().click();
   await page.waitForTimeout(600);
-  if (!(await page.locator(".mock-again").count())) { bad++; console.log(`${locale} 390 collapsed example bar: FAIL (never appeared)`); }
+  const thumb = page.locator(".lp-thumb-hit").first();
+  if (!(await thumb.count())) { bad++; console.log(`${locale} 390x664 example thumbnail: FAIL (never appeared)`); await ctx.close(); continue; }
+  await axeOn(page, `${locale} 390x664 example thumbnail after Check`);
+  await thumb.click();
+  await page.waitForTimeout(400);
+  if (!(await page.locator(".lp-exfull[role=dialog]").count())) { bad++; console.log(`${locale} full-screen example: FAIL (never opened)`); }
   else {
-    const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
-    const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-    bad += serious.length;
-    console.log(`${locale} 390 collapsed example bar: ${serious.length ? "FAIL" : "ok"}`);
-    for (const v of serious) console.log(`   ${v.impact} ${v.id}: ${v.help} · ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`);
+    await axeOn(page, `${locale} 390x664 full-screen example`);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(300);
+    const back = await page.evaluate(() => document.activeElement?.classList.contains("lp-thumb-hit") && !document.querySelector(".lp-exfull"));
+    if (!back) bad++;
+    console.log(`${locale} Esc closes the example and focus returns: ${back ? "ok" : "FAIL"}`);
   }
   await ctx.close();
 }

@@ -12,9 +12,8 @@
 .player-col, .player-grid, .player-visual, .player-ask { display: flex; flex-direction: column; gap: 12px; min-inline-size: 0; }
 /* Phone: scenario, then the question, then the example screen, then the answers, so the question is on screen first. */
 .player-visual, .player-ask { display: contents; }
-.player-visual > .scn, .player-visual > .say { order: 1; }
-.player-ask > .prompt { order: 2; }
-.player-visual > :not(.scn):not(.say) { order: 3; }
+.player-visual > .scn, .player-visual > .say, .player-ask > .prompt { order: 2; }
+.player-visual > :not(.scn):not(.say):not(.say-chip) { order: 3; }
 .player-ask > :not(.prompt) { order: 4; }
 .choices.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .player-col h1, .player-ask h1 { outline: none; }
@@ -33,7 +32,7 @@
 .ug .say .say-face { inline-size: 52px; block-size: 52px; }
 .ug .say .say-bubble { padding: 6px 10px 7px; border-radius: 14px; display: flex; flex-direction: column; gap: 2px; }
 .ug .say .say-bubble::before { inset-block-end: 12px; }
-.ug .say .say-name { font-size: 11.5px; line-height: 1.3; }
+.ug .say .say-name { font-size: 12px; line-height: 1.3; }
 .ug .say .say-bubble .scn { font-size: 14px; line-height: 1.45; }
 .ug[lang="ar"] .say .say-bubble .scn { line-height: 1.6; }
 @media (min-width: 1024px) {
@@ -54,16 +53,10 @@
 .choice .key { font-variant-numeric: normal; }
 .cmp { display: grid; grid-template-columns: 1fr; gap: 14px; }
 .cmp-item { margin: 0; display: flex; flex-direction: column; gap: 6px; min-inline-size: 0; }
-.mock-again { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px; border-radius: 14px; border: 2px solid #C9D1D6; background: #DDE3E7; color: #3C4A52; font-weight: 700; font-size: 13px; cursor: pointer; }
-.mock-again > :nth-child(2) { flex: 1; text-align: start; }
-.mock-tag { display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 5px; background: #3C4A52; color: #FFFFFF; font-size: 10px; letter-spacing: 0.06em; }
 .reason { display: flex; flex-direction: column; gap: 8px; margin-block-start: 8px; }
 .reason-note { margin: 0; padding: 8px 12px; border-radius: 14px; background: var(--mint); color: var(--right-ink); font-weight: 700; font-size: 14px; }
 .player-foot { position: sticky; inset-block-end: 0; padding: 10px 20px 18px; display: flex; flex-direction: column; gap: 10px; border-block-start: 2px solid var(--line); background: var(--surface); }
 .player-foot > * { max-inline-size: 760px; inline-size: 100%; margin-inline: auto; }
-.conf { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-.conf-label { font-weight: 700; flex: 1 0 100%; }
-.conf .chip { flex: 1 1 0; justify-content: center; min-height: 36px; padding: 0 8px; font-size: 13px; white-space: nowrap; }
 .foot-note { margin: 0; text-align: center; }
 .player-sheet { position: sticky; inset-block-end: 0; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
 .player-sheet > * { max-inline-size: 720px; inline-size: 100%; margin-inline: auto; }
@@ -109,3 +102,60 @@
 .ug .mock .mock-bar .cap { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .ug .mock .mock-bar .dots { display: inline-flex; gap: 4px; margin-inline-start: auto; }
 .ug .mock .mock-bar .dots i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: currentColor; opacity: 0.35; }
+
+/* ===== Design audit fixes (canvas v63) ===== */
+/* L5: the step scrolls with the page and the Check bar stays in a sticky footer; the last option fades under it and never hides behind it. */
+.player-foot::before { content: ""; position: absolute; inset-inline: 0; inset-block-end: calc(100% + 2px); block-size: 28px; background: linear-gradient(to bottom, color-mix(in srgb, var(--ground) 0%, transparent), var(--ground)); pointer-events: none; }
+.lp-check-help { margin: 0; text-align: center; font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--ink-2); }
+
+/* L2: confidence is the Check. One primary control with one ledge, the same size as Check, three equal parts so no answer looks stronger. */
+.ug .lp-go { display: flex; flex-direction: column; gap: 8px; }
+.ug .lp-go-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2px 12px; }
+.ug .lp-go-lbl { margin: 0; font-weight: 700; font-size: 14px; line-height: 1.35; color: var(--ink); }
+.ug .lp-go-wait { margin: 0; font-weight: 600; font-size: 13px; line-height: 1.35; color: var(--ink-2); }
+.ug .split-check { display: flex; inline-size: 100%; min-block-size: 56px; border-radius: var(--r-md); overflow: hidden; background: var(--brand); color: var(--on-brand); box-shadow: 0 var(--ledge-h) 0 var(--brand-ledge); margin-block-end: var(--ledge-h); transition: transform var(--t-press) linear, box-shadow var(--t-press) linear; }
+.ug .split-check:has(.split-seg:active:not([disabled])) { transform: translateY(var(--ledge-h)); box-shadow: 0 0 0 var(--brand-ledge); }
+.ug .split-seg { position: relative; flex: 1 1 0; min-inline-size: 0; min-block-size: 56px; display: flex; align-items: center; justify-content: center; padding: 4px 8px; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; font-size: 16px; line-height: 1.15; text-align: center; text-wrap: balance; cursor: pointer; transition: background-color var(--t-fast); }
+.ug .split-seg + .split-seg::before { content: ""; position: absolute; inset-inline-start: -1px; inset-block: 12px; inline-size: 2px; border-radius: 1px; background: color-mix(in srgb, var(--on-brand) 40%, var(--brand)); pointer-events: none; }
+.ug .split-seg:hover:not([disabled]) { background: color-mix(in srgb, var(--brand) 88%, white); }
+.ug .split-seg:active:not([disabled]) { background: color-mix(in srgb, var(--brand) 78%, black); }
+.ug .split-seg:focus-visible { outline: 3px solid var(--focus); outline-offset: -6px; border-radius: 12px; }
+.ug .split-check.is-off { background: var(--disabled-bg); color: var(--disabled-ink); box-shadow: 0 var(--ledge-h) 0 var(--disabled-ledge); transform: none; }
+.ug .split-check.is-off .split-seg { background: transparent; cursor: not-allowed; }
+.ug .split-check.is-off .split-seg + .split-seg::before { background: color-mix(in srgb, var(--disabled-ink) 35%, var(--disabled-bg)); }
+@media (prefers-reduced-motion: reduce) { .ug .split-check, .ug .split-seg { transition: none; } }
+@media (min-width: 1024px) {
+  .ug .lp-go { flex-direction: row; align-items: center; gap: 24px; }
+  .ug .lp-go-head { flex: 1; min-inline-size: 0; flex-direction: column; align-items: flex-start; }
+  .ug .lp-go-lbl { font-size: 16px; }
+  .ug .split-check { flex: none; inline-size: 480px; }
+  .ug .split-seg { font-size: 17px; }
+}
+
+/* L3: a later step of the same case shows the speaker as a one-line chip; a tap opens the full text. */
+.ug .say-chip { display: flex; align-items: center; gap: 8px; inline-size: 100%; min-block-size: 44px; padding-block: 4px; padding-inline: 4px 12px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; text-align: start; }
+.ug .say-chip img { inline-size: 32px; block-size: 32px; flex: none; border-radius: 50%; background: var(--panel); }
+.ug .say-chip b { flex: none; font-weight: 700; }
+.ug .say-chip .txt { flex: 1; min-inline-size: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink-2); }
+.ug .say-chip .ph { flex: none; font-size: 16px; color: var(--ink-2); }
+
+/* L4 + A2: on a phone the example is a pinned thumbnail beside the question; a tap opens it full screen. Spot keeps it inline. */
+.lp-thumb-txt, .lp-thumb-hit { display: none; }
+@media (max-width: 1023px) {
+  .ug .lp-ctx { position: relative; display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); box-shadow: 0 3px 0 var(--ledge); margin-block-end: 3px; }
+  .ug .lp-stage { flex: none; inline-size: 104px; block-size: 88px; border-radius: 10px; overflow: hidden; background: #DDE3E7; }
+  .ug .lp-stage-in { inline-size: 300px; transform: scale(0.3467); transform-origin: top left; pointer-events: none; }
+  [dir="rtl"] .lp-stage-in { transform-origin: top right; }
+  .ug .lp-stage-in .lp-phone, .ug .lp-stage-in .mock { box-shadow: none; }
+  .ug .lp-thumb-txt { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 4px; }
+  .ug .lp-thumb-txt .cap { font-size: 13px; font-weight: 700; line-height: 1.35; color: var(--ink-2); }
+  .ug .lp-thumb-txt .go { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--link); }
+  .ug .lp-thumb-txt .go .ph { font-size: 18px; }
+  .ug .lp-thumb-hit { display: block; position: absolute; inset: 0; z-index: 1; inline-size: 100%; padding: 0; border: 0; border-radius: 16px; background: transparent; cursor: zoom-in; }
+  .ug .lp-thumb-hit:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .ug .lp-live-label { display: none; }
+}
+.ug .lp-exfull { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; gap: 14px; padding: 10px 16px calc(20px + env(safe-area-inset-bottom)); background: var(--ground-grad, var(--ground)); background-color: var(--ground); overflow-y: auto; }
+.ug .lp-full-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ug .lp-full-mock { inline-size: 100%; max-inline-size: 420px; margin-inline: auto; }
+.ug .lp-full-note { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); text-align: center; }
