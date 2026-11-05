@@ -20,8 +20,8 @@ describe("public path list", () => {
     expect(new Set(PUBLIC_PATHS.map((p) => p.slug)).size).toBe(PUBLIC_PATHS.length);
     for (const p of PUBLIC_PATHS) expect(p.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
   });
-  it("lists the 14 paths, open ones first", () => {
-    expect(PUBLIC_PATHS).toHaveLength(14);
+  it("lists the 15 paths, open ones first", () => {
+    expect(PUBLIC_PATHS).toHaveLength(15);
     const order = publicPathsInOrder().map((p) => isOpen(p));
     expect(order.indexOf(false)).toBeGreaterThan(0);
     expect(order.slice(order.indexOf(false)).every((o) => !o)).toBe(true);

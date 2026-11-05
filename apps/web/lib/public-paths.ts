@@ -1,5 +1,5 @@
 // Public path pages (spec 4.1, EN-05): one static page per path at /{locale}/paths/{slug}, for visitors without an account.
-// The 14 paths match slice 3's catalog. Names stay in English in both languages. A path is open only when it is marked open here
+// The 15 paths match slice 3's catalog. Names stay in English in both languages. A path is open only when it is marked open here
 // AND the content bundle has lessons for it; the tests keep the two in step. Facts (units, lessons, skills) always come from the bundle.
 import { content as defaultBundle, getCast, type ContentIndex, type Text } from "@uxgate/content";
 import { routing, type Locale } from "../i18n/routing";
@@ -102,14 +102,70 @@ export const PUBLIC_PATHS: PublicPath[] = [
   { id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "interactive", status: "soon", sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.") },
   { id: "P03", slug: "frame-the-right-problem", name: "Frame the Right Problem", art: "target", kind: "interactive", status: "soon", sub: t("Make sure you solve the problem that matters.", "تأكّد أنك تحلّ المشكلة التي تهمّ فعلًا.") },
   { id: "P04", slug: "user-flows-that-work", name: "User Flows That Work", art: "gate", kind: "interactive", status: "soon", sub: t("Plan the steps people take, from start to done.", "خطّط للخطوات التي يمرّ بها الناس من البداية حتى النهاية.") },
-  { id: "P05", slug: "make-ux-accessible", name: "Make UX Accessible", art: "shield", kind: "interactive", status: "soon", sub: t("Design that works for every ability and device.", "تصميم يناسب كل القدرات وكل الأجهزة.") },
+  { id: "P05", slug: "make-ux-accessible", name: "Make UX Accessible", art: "shield", kind: "interactive", status: "open", sub: t("Design that works for every ability and device.", "تصميم يناسب كل القدرات وكل الأجهزة."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "hana",
+      scenario: t("I'm choosing a class-booking system for my gym. The company selling it says it's \"fully accessible\" and shows a certificate. Two of our members are blind and use screen readers. One member uses a screen magnifier (a tool that makes part of the screen bigger).", "أختار نظامًا لحجز الحصص في النادي الذي أملكه. الشركة التي تبيعه تقول إنه «مناسب تمامًا لذوي الإعاقة» وتعرض شهادة. اثنان من أعضائنا مكفوفان ويستخدمان قارئ الشاشة. وعضوة تستخدم مكبّر الشاشة (Screen magnifier)، وهو أداة تكبّر جزءًا من الشاشة."),
+      question: t("What should I do before I sign the contract?", "ماذا أفعل قبل أن أوقّع العقد؟"),
+      options: [
+        t("Ask those three members to book a class with it, on their own phones", "أطلب من هؤلاء الأعضاء الثلاثة أن يحجزوا حصة به، على هواتفهم"),
+        t("Sign now; the certificate proves it works for them", "أوقّع الآن؛ فالشهادة تُثبت أنه يناسبهم"),
+        t("Ask the company for the full list of points it passed", "أطلب من الشركة القائمة الكاملة للبنود التي نجح فيها"),
+      ],
+      answer: 0,
+      why: t("One hour with a few members, on their own phones and tools, tells you more than any certificate. You'll see if they can book, and where they get stuck.", "ساعة واحدة مع بعض الأعضاء، على هواتفهم وبأدواتهم، تخبرك أكثر من أي شهادة. سترى هل يستطيعون الحجز، وأين يتوقّفون."),
+    },
+  },
   { id: "P06", slug: "better-user-interviews", name: "Better User Interviews", art: "bulb", kind: "interactive", status: "soon", sub: t("Ask, listen and learn what people really need.", "اسأل واستمع، واعرف ما يحتاجه الناس فعلًا.") },
   { id: "P07", slug: "turn-research-into-decisions", name: "Turn Research into Decisions", art: "key", kind: "interactive", status: "soon", sub: t("Go from findings to clear design choices.", "انتقل من النتائج إلى قرارات تصميم واضحة.") },
   { id: "P08", slug: "test-and-improve-usability", name: "Test and Improve Usability", art: "review", kind: "interactive", status: "soon", sub: t("Run quick tests and fix what they find.", "أجرِ اختبارات سريعة وأصلح ما تكشفه.") },
   { id: "P09", slug: "make-content-easy-to-find", name: "Make Content Easy to Find", art: "empty-box", kind: "interactive", status: "soon", sub: t("Menus and labels that lead to the right page.", "قوائم وعناوين تقود إلى الصفحة الصحيحة.") },
   { id: "P11", slug: "design-systems-in-action", name: "Design Systems in Action", art: "trophy", kind: "interactive", status: "soon", sub: t("Build components that stay consistent.", "ابنِ مكوّنات تبقى متّسقة.") },
-  { id: "P12", slug: "design-better-ai-experiences", name: "Design Better AI Experiences", art: "bulb", kind: "interactive", status: "soon", sub: t("AI features people understand and trust.", "ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.") },
-  { id: "P13", slug: "ai-tools-for-better-ux", name: "AI Tools for Better UX", art: "rocket", kind: "interactive", status: "soon", sub: t("Use AI tools to research and design faster.", "استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.") },
+  { id: "P12", slug: "design-better-ai-experiences", name: "Design Better AI Experiences", art: "bulb", kind: "interactive", status: "open", sub: t("AI features people understand and trust.", "ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "karim",
+      scenario: t("I build a bus ticket app. The team wants an AI chat assistant. Our top complaint: people can't find how to get a refund. The refund button is hidden in Settings.", "أبني تطبيقًا لتذاكر الحافلات. والفريق يريد مساعد محادثة بالذكاء الاصطناعي. وأكبر شكوى عندنا: الناس لا يجدون كيف يستردّون المال. وزر الاسترداد مخفي في الإعدادات."),
+      question: t("What should we do first?", "ماذا يجب أن نفعل أولًا؟"),
+      options: [
+        t("Build the AI chat, so it can explain where the refund button is", "نبني محادثة الذكاء الاصطناعي، لتشرح مكان زر الاسترداد"),
+        t("Put a \"Refund\" button on each ticket", "نضع زر «استرداد» على كل تذكرة"),
+        t("Build AI that predicts who will ask for a refund", "نبني ذكاءً اصطناعيًا يتوقّع من سيطلب الاسترداد"),
+      ],
+      answer: 1,
+      why: t("AI that explains a confusing design is a patch. First make the design clear.", "الذكاء الاصطناعي الذي يشرح تصميمًا مُربكًا مجرد ترقيع. اجعل التصميم واضحًا أولًا."),
+    },
+  },
+  { id: "P13", slug: "ai-tools-for-better-ux", name: "AI Tools for Better UX", art: "rocket", kind: "interactive", status: "open", sub: t("Use AI tools to research and design faster.", "استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "youssef",
+      scenario: t("I asked an AI tool to write the page for a new air fryer in my shop. It reads beautifully. It says \"5-year warranty\" and \"4.5-liter basket\". The box says 2 years and 3.5 liters.", "طلبت من أداة ذكاء اصطناعي أن تكتب صفحة قلّاية هوائية جديدة في متجري. وصياغتها رائعة. وهي تقول «ضمان 5 سنوات» و«سلة 4.5 لتر». والعلبة تقول سنتين و3.5 لتر."),
+      question: t("What should I do before I publish?", "ماذا أفعل قبل النشر؟"),
+      options: [
+        t("Publish it. The writing is great, and buyers won't check", "أنشرها. فالصياغة رائعة، والمشترون لن يتحقّقوا"),
+        t("Keep the writing, and check every number and claim against the box and the supplier's sheet", "أُبقي الصياغة، وأتحقّق من كل رقم وادعاء مقارنةً بالعلبة وورقة المورّد"),
+        t("Fix the warranty and the basket size, and publish the rest", "أصلح الضمان وحجم السلة، وأنشر الباقي"),
+      ],
+      answer: 1,
+      why: t("AI sounds just as sure when it's wrong. Check its facts against a source you trust.", "الذكاء الاصطناعي يبدو واثقًا بالقدر نفسه حين يخطئ. فتحقّق من معلوماته بمصدر تثق به."),
+    },
+  },
+  {
+    id: "P15", slug: "write-words-that-work", name: "Write Words That Work", art: "article", kind: "interactive", status: "open",
+    sub: t("Write screen text people can scan, understand and act on, in a tone that fits the moment.", "اكتب نصوص الشاشات بحيث يتصفّحها الناس بسرعة ويفهمونها ويتصرّفون بها، وبنبرة تناسب الموقف."),
+    short: t("Screen text people scan, understand and act on.", "نصوص شاشات يتصفّحها الناس ويفهمونها ويتصرّفون بها."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "nour",
+      scenario: t("I manage a clinic. A doctor is travelling, so we must move some appointments. Our SMS starts: \"Dear patient, as part of our commitment to the best care, and due to a change in Dr. Hazem's schedule…\"", "أدير عيادة. وأحد الأطباء مسافر، فلا بد أن نغيّر بعض المواعيد. ورسالتنا النصية تبدأ هكذا: «عزيزي المريض، حرصًا منّا على تقديم أفضل رعاية، ونظرًا لتغيّر في جدول د. حازم…»"),
+      question: t("Which first sentence should the SMS have, so patients know what to do right away?", "بأي جملة يجب أن تبدأ الرسالة، حتى يعرف المرضى ما عليهم فورًا؟"),
+      options: [
+        t("\"Your Sunday visit with Dr. Hazem is now on Monday at 10:00. Reply 1 to confirm.\"", "«موعدك مع د. حازم يوم الأحد انتقل إلى الاثنين الساعة 10:00. أرسل 1 للتأكيد.»"),
+        t("\"Thank you for trusting our clinic with your care.\"", "«شكرًا لثقتكم في عيادتنا.»"),
+        t("\"Dr. Hazem will be at a medical conference next week.\"", "«د. حازم سيحضر مؤتمرًا طبيًا الأسبوع القادم.»"),
+      ],
+      answer: 0,
+      why: t("Open with what changed for this person and what they should do. Thanks and reasons can follow.", "ابدأ بما تغيّر لهذا الشخص وما عليه أن يفعله. والشكر والأسباب تأتي بعد ذلك."),
+    },
+  },
 ];
 
 export const SITE_URL = "https://uxgate.org";

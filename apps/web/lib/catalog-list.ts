@@ -1,4 +1,4 @@
-// The 14 paths a learner can see (spec 4.4b), with no content bundle import, so client components can use the list
+// The 15 paths a learner can see (spec 4.4b), with no content bundle import, so client components can use the list
 // without shipping lesson text to the browser (scripts/check-static.mjs). Names stay in English in both languages.
 export type CatalogEntry = { id: string; name: string; art: string; kind: "interactive" | "hybrid"; sub: { en: string; ar: string } };
 
@@ -17,6 +17,7 @@ export const CATALOG: CatalogEntry[] = [
   { id: "P11", name: "Design Systems in Action", art: "trophy", kind: "interactive", sub: { en: "Build components that stay consistent.", ar: "ابنِ مكوّنات تبقى متّسقة." } },
   { id: "P12", name: "Design Better AI Experiences", art: "bulb", kind: "interactive", sub: { en: "AI features people understand and trust.", ar: "ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها." } },
   { id: "P13", name: "AI Tools for Better UX", art: "rocket", kind: "interactive", sub: { en: "Use AI tools to research and design faster.", ar: "استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع." } },
+  { id: "P15", name: "Write Words That Work", art: "article", kind: "interactive", sub: { en: "Write screen text people can scan, understand and act on, in a tone that fits the moment.", ar: "اكتب نصوص الشاشات بحيث يتصفّحها الناس بسرعة ويفهمونها ويتصرّفون بها، وبنبرة تناسب الموقف." } },
 ];
 
 export const catalogEntry = (id: string) => CATALOG.find((p) => p.id === id);
