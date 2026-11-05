@@ -98,6 +98,12 @@ describe("server-only billing tables", () => {
     await expect(as("authenticated", A, `select public.has_pro($1)`, [A])).rejects.toThrow(/permission denied/);
     expect((await as<{ p: boolean }>("service_role", null, `select public.has_pro($1) as p`, [A]))[0].p).toBe(true);
   });
+  it("has_pro never counts Pro from the test payment page", async () => {
+    const id = (await db.query<{ id: string }>(`insert into auth.users (email) values ('mock@example.com') returning id`)).rows[0].id;
+    await db.query(`insert into entitlements (user_id, plan, valid_until, source) values ($1, 'pro', now() + interval '30 days', 'mock')`, [id]);
+    expect((await as<{ p: boolean }>("service_role", null, `select public.has_pro($1) as p`, [id]))[0].p).toBe(false);
+    await expect(db.query(`update entitlements set source = 'other' where user_id = $1`, [id])).rejects.toThrow(/check/);
+  });
 });
 
 describe("integrity", () => {

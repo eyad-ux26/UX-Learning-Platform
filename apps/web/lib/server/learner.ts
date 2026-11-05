@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgress } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
-import { readPro } from "@/lib/server/billing/account";
+import { readPro, requestHost } from "@/lib/server/billing/account";
 
 export type Learner = {
   db: SupabaseClient | null;
@@ -42,14 +42,15 @@ export async function getLearner(): Promise<Learner | null> {
   const { data } = await db.auth.getUser();
   if (!data.user) return null;
   const userId = data.user.id;
-  const progress = await loadProgress(db, userId);
-  const [onb, skills, prof, current, pro] = await Promise.all([
+  // One round of queries in parallel (issue #131): progress, onboarding, skills, profile and the plan.
+  const [progress, onb, skills, prof, current, pro] = await Promise.all([
+    loadProgress(db, userId),
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id").eq("user_id", userId),
     db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle(),
     // Its own query: if the column is missing the rest of the app still loads.
     db.from("profiles").select("current_path_id").eq("user_id", userId).maybeSingle(),
-    readPro(db, userId),
+    requestHost().then((host) => readPro(db, userId, host)),
   ]);
   const tz = prof.data?.time_zone ?? null;
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(new Date()));

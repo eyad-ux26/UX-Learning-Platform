@@ -5,11 +5,11 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { billingPost } from "./api";
 
-type PaddleOpen = { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string };
+type PaddleOpen = { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null };
 type PaddleJs = {
   Environment: { set: (env: string) => void };
   Initialize: (o: { token: string; eventCallback?: (e: { name?: string }) => void }) => void;
-  Checkout: { open: (o: { transactionId: string; settings: Record<string, unknown> }) => void };
+  Checkout: { open: (o: { transactionId: string; customer?: { address: { countryCode: string } }; settings: Record<string, unknown> }) => void };
 };
 
 let paddleLoad: Promise<PaddleJs> | null = null;
@@ -38,7 +38,8 @@ async function openPaddle(p: PaddleOpen, locale: string) {
       if (e.name === "checkout.closed") window.location.assign(`${p.successUrl}&left=1`);
     },
   });
-  Paddle.Checkout.open({ transactionId: p.transactionId, settings: { displayMode: "overlay", locale, successUrl: p.successUrl, theme: "light" } });
+  // The billing country starts as the country the price is for; a different card country moves renewals to the Gulf price.
+  Paddle.Checkout.open({ transactionId: p.transactionId, ...(p.country ? { customer: { address: { countryCode: p.country } } } : {}), settings: { displayMode: "overlay", locale, successUrl: p.successUrl, theme: "light" } });
 }
 
 /** Starts a checkout and hands the learner to the provider: a redirect (Paymob, test mode) or Paddle's overlay. */

@@ -44,7 +44,7 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
           {discLabel ? <div className="sum-row"><span>{t("sumCode")}</span><b>{discLabel}</b></div> : null}
           <div className="sum-row total"><span>{t("sumToday")}</span><b><span className={moneyCls(q.currency)}>{$(q.amount)}</span></b></div>
           <div className="sum-row"><span>{t("sumThen")}</span><b>{then}</b></div>
-          <div className="sum-row"><span>{t("sumCountry")}</span><b>{countryName(offer.country, locale)} · <Link href="/app/plans" className="hit" style={{ fontSize: 14 }}>{t("change")}</Link></b></div>
+          <div className="sum-row"><span>{t("sumCountry")}</span><b>{countryName(offer.country, locale)}</b></div>
         </div>
         <div className="prov">
           <span className="ph ph-shield-check" aria-hidden="true" />

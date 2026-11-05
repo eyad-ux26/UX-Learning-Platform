@@ -10,9 +10,13 @@ export type Charger = (sub: Sub, attempt: number) => Promise<BillingEvent | null
 
 export type DailyResult = { renewed: number; failed: number; settled: number; reminders: number; errors: string[] };
 
-export async function runDaily(e: Engine, charge: Charger, now: string = e.now?.() ?? new Date().toISOString()): Promise<DailyResult> {
+/**
+ * `includeMock`: test-mode plans (bought on the test payment page of a preview host) are left alone unless the job
+ * runs where test payments are on. Production never renews, charges or emails them.
+ */
+export async function runDaily(e: Engine, charge: Charger, now: string = e.now?.() ?? new Date().toISOString(), opts: { includeMock?: boolean } = {}): Promise<DailyResult> {
   const out: DailyResult = { renewed: 0, failed: 0, settled: 0, reminders: 0, errors: [] };
-  const subs = await e.store.dueSubs(now);
+  const subs = (await e.store.dueSubs(now)).filter((s) => s.provider !== "mock" || opts.includeMock);
   for (const sub of subs) {
     try {
       const settled = settle(sub, now);

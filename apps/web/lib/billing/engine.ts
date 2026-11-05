@@ -2,9 +2,9 @@
 // It talks to storage and email through two small interfaces, so tests run it on an in-memory store and a fake mailer,
 // and the server runs it on Supabase (service role) and Resend.
 import type { BillingEvent } from "./events";
-import type { DiscountKind, Period, Region } from "./pricing";
+import { PRICES, regionFor, type DiscountKind, type Period, type Region } from "./pricing";
 import {
-  cancelled, entitlementFor, planChanged, refunded, renewalFailed, renewed, resumed, startSub,
+  cancelled, entitlementFor, planChanged, refunded, renewalFailed, renewalPrice, renewed, resumed, startSub,
   type BillingProvider, type Card, type Entitlement, type PayMethod, type Sub,
 } from "./subscription";
 import type { EmailKind } from "./emails";
@@ -65,13 +65,52 @@ export type EmailData = { sub?: Sub | null; payment?: Payment | null; request?: 
 
 export type ApplyResult = { status: "applied" | "duplicate" | "ignored"; note?: string };
 
+type Paid = Extract<BillingEvent, { type: "paid" }>;
+
+/** Calls back to the provider from a webhook: for money the engine refuses, and for Paddle's checkout country. */
+export type WebhookActions = {
+  /** Gives a payment back in full. */
+  refund?: (provider: BillingProvider, providerPaymentId: string, amountMinor: number) => Promise<void>;
+  /** Ends a provider subscription now (Paddle). */
+  cancelNow?: (provider: BillingProvider, providerSubId: string) => Promise<void>;
+  /** The billing country the payer entered at the provider (Paddle), or null when it is not known. */
+  payerCountry?: (ev: Paid) => Promise<string | null>;
+  /** Moves a plan's renewals to another region's price at the provider, from the next billing date (Paddle). */
+  reprice?: (sub: Sub, region: Region) => Promise<void>;
+};
+
 export type Engine = {
   store: BillingStore;
   mail: BillingMailer;
   /** Encrypts a saved-card token before it is stored. */
   seal: (token: string) => Promise<string>;
   now?: () => string;
+  actions?: WebhookActions;
 };
+
+const LIVE = ["active", "grace", "cancelled"];
+
+/**
+ * Money arrived that must not buy anything (a second Paddle subscription, or a charge on a plan that has ended):
+ * it is recorded with no plan, the provider subscription is ended and the payment is given back. The refund webhook
+ * then marks it refunded and emails the learner.
+ */
+async function refuse(e: Engine, ev: Paid, userId: string, period: Period, note: string): Promise<ApplyResult> {
+  await e.store.insertPayment({
+    userId, subscriptionId: null, provider: ev.provider, providerPaymentId: ev.paymentId, kind: ev.recurring ? "renewal" : "first", period,
+    amountMinor: ev.amountMinor, currency: ev.currency, payMethod: ev.card?.method ?? null, cardBrand: ev.card?.brand ?? null, cardLast4: ev.card?.last4 ?? null,
+    paidAt: ev.at, periodEnd: null,
+  });
+  const failed: string[] = [];
+  if (ev.provider === "paddle" && ev.providerSubId) await e.actions?.cancelNow?.(ev.provider, ev.providerSubId).catch((err) => { failed.push(`cancel: ${String(err?.message ?? err)}`); });
+  await e.actions?.refund?.(ev.provider, ev.paymentId, ev.amountMinor).catch((err) => { failed.push(`refund: ${String(err?.message ?? err)}`); });
+  if (failed.length) console.error("billing: refused payment needs a hand", ev.provider, ev.paymentId, failed.join("; "));
+  return { status: "ignored", note: failed.length ? `${note}; ${failed.join("; ")}` : `${note}; refunded` };
+}
+
+/** Paymob and the test provider charge exactly our price; Paddle adds tax in the payer's currency, so it is not compared. */
+const amountOk = (ev: Paid, amountMinor: number, currency: string) =>
+  ev.provider === "paddle" || (ev.amountMinor === amountMinor && ev.currency.toUpperCase() === currency.toUpperCase());
 
 /** Recomputes the learner's entitlement from their plan. Returns the new value. */
 export async function syncEntitlement(e: Engine, userId: string): Promise<Entitlement> {
@@ -112,7 +151,19 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
     case "paid": {
       if (ev.recurring) {
         const sub = await subForEvent(e, ev.provider, ev.providerSubId);
-        if (!sub?.id) throw new Error("renewal for an unknown subscription");
+        if (!sub?.id) {
+          // A Paddle subscription we do not know (or no longer keep) charged: end it and give the money back.
+          if (ev.provider === "paddle" && ev.userId) return refuse(e, ev, ev.userId, "month", "renewal for an unknown subscription");
+          console.error("billing: renewal for an unknown subscription", ev.provider, ev.paymentId);
+          return { status: "ignored", note: "renewal for an unknown subscription" };
+        }
+        if (!amountOk(ev, sub.renewAmountMinor, sub.currency)) {
+          console.error("billing: renewal amount differs", ev.provider, ev.paymentId, ev.amountMinor, ev.currency, sub.renewAmountMinor, sub.currency);
+          return { status: "ignored", note: "amount mismatch" };
+        }
+        // A charge on a plan that is over (cancelled in the grace period, refunded, or replaced by a newer plan) buys nothing.
+        const other = await store.liveSub(sub.userId);
+        if (sub.status === "ended" || sub.status === "refunded" || (other?.id && other.id !== sub.id)) return refuse(e, ev, sub.userId, sub.pendingPeriod ?? sub.period, `renewal for a ${sub.status} plan`);
         const pay = await store.insertPayment({
           userId: sub.userId, subscriptionId: sub.id, provider: ev.provider, providerPaymentId: ev.paymentId, kind: "renewal",
           period: sub.pendingPeriod ?? sub.period, amountMinor: ev.amountMinor, currency: ev.currency, payMethod: ev.card?.method ?? sub.payMethod,
@@ -121,13 +172,37 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
         if (!pay) return { status: "ignored", note: "payment already recorded" };
         const next = await store.saveSub(renewed(sub, { at: ev.at, periodStart: ev.periodStart, periodEnd: ev.periodEnd, card: ev.card }));
         await store.linkPayment(pay.id, sub.id, next.currentPeriodEnd);
+        // Paying Paddle's overdue charge from the grace period: that checkout is now paid.
+        const opened = await store.sessionByRef(ev.provider, ev.paymentId);
+        if (opened && opened.userId === sub.userId && opened.status !== "paid") await store.updateSession(opened.id, { status: "paid" });
         await syncEntitlement(e, sub.userId);
         await e.mail(sub.userId, "receipt", pay.id, { sub: next, payment: { ...pay, periodEnd: next.currentPeriodEnd } });
         return { status: "applied", note: "renewed" };
       }
       const session = ev.sessionId ? await store.getSession(ev.sessionId) : null;
       if (!session) throw new Error("payment for an unknown checkout");
-      const live = session.kind === "renewal" && session.subscriptionId ? await store.subById(session.subscriptionId) : await store.liveSub(session.userId);
+      // The payment must be for this checkout: same provider, the order we created (Paymob), our price and currency.
+      if (session.provider !== ev.provider) return { status: "ignored", note: "provider mismatch" };
+      if (ev.provider === "paymob" && (!session.providerRef || session.providerRef !== ev.orderRef)) {
+        console.error("billing: payment for another order", ev.paymentId, ev.orderRef, session.id);
+        return { status: "ignored", note: "order mismatch" };
+      }
+      if (!amountOk(ev, session.amountMinor, session.currency)) {
+        console.error("billing: amount differs from the checkout", ev.provider, ev.paymentId, ev.amountMinor, ev.currency, session.amountMinor, session.currency);
+        await store.updateSession(session.id, { status: "failed" });
+        return { status: "ignored", note: "amount mismatch" };
+      }
+      let live = session.kind === "renewal" && session.subscriptionId ? await store.subById(session.subscriptionId) : await store.liveSub(session.userId);
+      // A test-mode plan (preview hosts) gives way to a real one.
+      if (live?.id && live.provider === "mock" && ev.provider !== "mock" && LIVE.includes(live.status)) {
+        await store.saveSub({ ...live, status: "ended", endedAt: ev.at, graceUntil: null, nextRetryAt: null });
+        live = null;
+      }
+      // Paddle made a second subscription (two checkouts paid, or a new one next to a live plan): end it, refund it.
+      if (ev.provider === "paddle" && live?.id && LIVE.includes(live.status) && ev.providerSubId && live.providerSubId !== ev.providerSubId) {
+        await store.updateSession(session.id, { status: "cancelled" });
+        return refuse(e, ev, session.userId, session.period, "second Paddle subscription");
+      }
       const pay = await store.insertPayment({
         userId: session.userId, subscriptionId: live?.id ?? null, provider: ev.provider, providerPaymentId: ev.paymentId,
         kind: live ? "renewal" : "first", period: session.period, amountMinor: ev.amountMinor, currency: ev.currency,
@@ -145,6 +220,7 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
           period: session.period, currency: session.currency, renewAmountMinor: session.renewAmountMinor, discount: session.discount,
           discountUntil: session.discountUntil ? new Date(session.discountUntil) : null, at: ev.at, periodEnd: ev.periodEnd, card: ev.card,
         }));
+        if (ev.provider === "paddle") sub = await checkPayerCountry(e, ev, sub);
       }
       await store.linkPayment(pay.id, sub.id!, sub.currentPeriodEnd);
       await syncEntitlement(e, session.userId);
@@ -177,7 +253,8 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
 
     case "refunded": {
       const pay = await store.paymentByProviderId(ev.provider, ev.paymentId);
-      if (!pay) throw new Error("refund for an unknown payment");
+      // Not a payment of ours (or not one we kept): nothing to undo. Retrying would not change that.
+      if (!pay) return { status: "ignored", note: "refund for an unknown payment" };
       if (pay.status === "refunded") return { status: "ignored", note: "already refunded" };
       await store.markPaymentRefunded(pay.id, ev.at);
       const sub = pay.subscriptionId ? await store.subById(pay.subscriptionId) : null;
@@ -232,6 +309,21 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
       return { status: "applied", note: "card saved" };
     }
   }
+}
+
+/**
+ * The price region comes from the country the learner was in when they opened the checkout. If the billing country
+ * they then entered in Paddle's checkout belongs to a region with a higher price, renewals move to the Gulf price
+ * (the highest Paddle price) from the next billing date. The first period keeps the price that was paid.
+ */
+async function checkPayerCountry(e: Engine, ev: Paid, sub: Sub): Promise<Sub> {
+  const country = await e.actions?.payerCountry?.(ev).catch(() => null);
+  if (!country) return sub;
+  if (regionFor(country) === sub.region || PRICES[sub.region].year >= PRICES.gulf.year) return sub;
+  const next = { ...sub, region: "gulf" as const, country: country.toUpperCase() };
+  next.renewAmountMinor = renewalPrice(next, next.pendingPeriod ?? next.period, next.currentPeriodEnd);
+  await e.actions?.reprice?.(next, "gulf");
+  return e.store.saveSub(next);
 }
 
 /** A renewal failed: 7-day grace with retries, Pro stays on, one email per failed period. */

@@ -6,7 +6,14 @@ type Base = { provider: BillingProvider; eventId: string; at: string };
 
 export type BillingEvent =
   /** Money was taken. `sessionId` ties a first payment to our checkout; `recurring` is a renewal of a plan. */
-  | (Base & { type: "paid"; paymentId: string; sessionId: string | null; providerSubId: string | null; userId: string | null; amountMinor: number; currency: string; recurring: boolean; periodStart: string | null; periodEnd: string | null; card: Card | null })
+  | (Base & {
+      type: "paid"; paymentId: string; sessionId: string | null; providerSubId: string | null; userId: string | null; amountMinor: number; currency: string;
+      recurring: boolean; periodStart: string | null; periodEnd: string | null; card: Card | null;
+      /** Paymob: the order the transaction paid (it must be the order our checkout created). */
+      orderRef?: string | null;
+      /** Paddle: where to read the billing country the payer chose in Paddle's checkout. */
+      customerId?: string | null; addressId?: string | null;
+    })
   /** The payer still has to approve (a wallet), or a bank is confirming. */
   | (Base & { type: "pending"; sessionId: string })
   /** A charge was declined. */
@@ -28,4 +35,4 @@ export type BillingEvent =
   /** A verified event we do not act on. */
   | (Base & { type: "ignored"; eventType: string });
 
-export type Verified = { ok: true; events: BillingEvent[]; eventType: string; eventId: string } | { ok: false; reason: "signature" | "payload" };
+export type Verified = { ok: true; events: BillingEvent[]; eventType: string; eventId: string } | { ok: false; reason: "signature" | "payload" | "lookup" };

@@ -1,5 +1,8 @@
 import "server-only";
 import type { Period, Region } from "@/lib/billing/pricing";
+import { mockAllowed } from "@/lib/billing/hosts";
+
+export { mockAllowed, PRODUCTION_HOSTS } from "@/lib/billing/hosts";
 
 // Billing settings come from Cloudflare secrets and vars only; nothing secret is ever committed.
 // Until the Paymob and Paddle test keys exist, the test-mode provider ("mock") stands in for both, on test hosts only.
@@ -13,7 +16,7 @@ export function paymobConfig() {
     motoIntegration: Number(env("PAYMOB_MOTO_INTEGRATION_ID")) || 0,
     base: env("PAYMOB_BASE_URL") || "https://accept.paymob.com",
   };
-  return { ...c, ready: !!(c.secretKey && c.publicKey && c.hmac && c.cardIntegration) };
+  return { ...c, ready: !!(c.secretKey && c.publicKey && c.hmac && c.apiKey && c.cardIntegration) };
 }
 
 const PADDLE_REGIONS: Exclude<Region, "eg">[] = ["gulf", "arab", "world"];
@@ -30,14 +33,19 @@ export function paddleConfig() {
   return { ...c, base, ready: !!(c.apiKey && c.webhookSecret && c.clientToken && PADDLE_REGIONS.every((r) => prices[`${r}_month`] && prices[`${r}_year`])) };
 }
 
-/** Hosts that serve real learners. The test-mode provider never runs there, whatever the settings say. */
-export const PRODUCTION_HOSTS = ["uxgate.org", "www.uxgate.org", "uxgate-web.uxgate-web.workers.dev"];
+/**
+ * The host a route request came to. Only the URL (the Host the request was routed by) counts: x-forwarded-host is
+ * set by whoever sends the request, so it can never turn test payments on.
+ */
+export const hostOf = (req: Request) => new URL(req.url).host;
 
-/** Test-mode payments: on when BILLING_MOCK=1 and the request is not on a production host. */
-export function mockAllowed(host: string | null | undefined): boolean {
-  if (process.env.BILLING_MOCK !== "1") return false;
-  const h = (host ?? "").toLowerCase().split(":")[0];
-  return !!h && !PRODUCTION_HOSTS.includes(h);
+/**
+ * The country a request comes from, by Cloudflare's CF-IPCountry header (set at Cloudflare's edge, not by the
+ * browser). The price region follows it: a learner cannot pick a cheaper country. Null when Cloudflare does not know.
+ */
+export function ipCountry(h: Pick<Headers, "get">): string | null {
+  const c = h.get("cf-ipcountry")?.toUpperCase() ?? null;
+  return c && /^[A-Z]{2}$/.test(c) && c !== "XX" && c !== "T1" ? c : null;
 }
 
 export type Mode = "live" | "mock" | "off";

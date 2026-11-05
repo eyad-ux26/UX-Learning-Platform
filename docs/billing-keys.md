@@ -1,6 +1,6 @@
 # Billing keys and settings (slice 5)
 
-Every value below is a **Cloudflare Worker secret** (`wrangler secret put NAME`, or Workers > Settings > Variables and Secrets, type "Secret"), unless the table says "variable". None of them goes in git, chat or the browser. Until they are set the site keeps working: payments show "Payments open soon", and preview hosts use the test payment page (`BILLING_MOCK=1`).
+Every value below is a **Cloudflare Worker secret** (`wrangler secret put NAME`, or Workers > Settings > Variables and Secrets, type "Secret"), unless the table says "variable". None of them goes in git, chat or the browser. Until they are set the site keeps working: payments show "Payments open soon", and preview hosts use the test payment page (`BILLING_MOCK=1`, set by the preview deploy command only).
 
 ## Paymob (Egypt, EGP)
 
@@ -10,7 +10,7 @@ From the Paymob dashboard (test mode first, then live). Settings > Account info,
 | --- | --- |
 | `PAYMOB_SECRET_KEY` | Secret key (Unified Checkout / Intention API) |
 | `PAYMOB_PUBLIC_KEY` | Public key (used to build the hosted checkout link) |
-| `PAYMOB_API_KEY` | Legacy API key (used for saved-card renewals: auth token, order, payment key) |
+| `PAYMOB_API_KEY` | Legacy API key. Needed for every webhook (each transaction is read back from Paymob before it counts), saved-card renewals and refunds of refused payments |
 | `PAYMOB_HMAC_SECRET` | HMAC secret that signs callbacks |
 | `PAYMOB_CARD_INTEGRATION_ID` | Online card integration id |
 | `PAYMOB_WALLET_INTEGRATION_ID` | Mobile wallet integration id |
@@ -48,7 +48,7 @@ Paddle notification destination: `https://uxgate.org/api/webhooks/paddle`, event
 | `RESEND_API_KEY` | Resend API key for billing emails from `hello@uxgate.org` (receipts, renewal notices, failed payments, refunds, student links). The domain must be verified in Resend. |
 | `CRON_SECRET` | Already set for slice 3; the billing job uses the same one. |
 | `SITE_URL` | Variable, optional. Links in emails. Default the production workers.dev address; set `https://uxgate.org` when the domain moves. |
-| `BILLING_MOCK` | Variable, in `wrangler.jsonc`: `1` turns on the test payment page on preview hosts. The code refuses it on uxgate.org and the production workers.dev host. |
+| `BILLING_MOCK` | Preview versions only, from the non-production branch deploy command: `cd apps/web && npx wrangler versions upload --var BILLING_MOCK:1`. Never in `wrangler.jsonc` or the Worker's variables (they reach production). The code also refuses it on uxgate.org and the production workers.dev host, and Pro bought with it is stored as test-mode Pro that production ignores. |
 
 ## Before real learners pay
 

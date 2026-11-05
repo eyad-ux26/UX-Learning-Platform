@@ -5,7 +5,7 @@ import type { Learner } from "@/lib/server/learner";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { entitlementFromRow, subFromRow } from "./store";
 import { checkCode, studentStatus } from "./checkout";
-import { providerMode, type Mode } from "./config";
+import { mockAllowed, providerMode, type Mode } from "./config";
 import { requestCountry, requestHost } from "./account";
 
 /** Everything the plans page, the paywall and the check-and-pay page show: both prices for this learner, priced on the server. */
@@ -49,26 +49,28 @@ export async function loadOffer(me: Learner, opts: { code?: string | null; fixtu
   const code = opts.code?.trim() || null;
   if (!me.db) return fixtureOffer(/^[A-Z]{2}$/.test(opts.fixtureCountry ?? "") ? opts.fixtureCountry! : "EG", opts.fixtureOffer, code, host);
 
-  const [acct, live] = await Promise.all([
-    me.db.from("billing_accounts").select("country").eq("user_id", me.userId).maybeSingle(),
-    me.db.from("subscriptions").select("*").eq("user_id", me.userId).in("status", ["active", "grace", "cancelled"]).maybeSingle(),
-  ]);
-  const sub = live.data ? subFromRow(live.data) : null;
-  const country = (acct.data?.country as string | undefined) ?? sub?.country ?? (await requestCountry()) ?? "EG";
-  const region = regionFor(country);
-  const provider = providerFor(region);
+  // The price region follows the country the request comes from (Cloudflare), so every read can start at once.
+  const ip = (await requestCountry()) ?? "EG";
   const admin = createAdminClient();
-  // One read of each input, then both prices from the same rules the checkout uses.
-  const [ent, student, check] = await Promise.all([
+  let liveQ = me.db.from("subscriptions").select("*").eq("user_id", me.userId).in("status", ["active", "grace", "cancelled"]);
+  if (!mockAllowed(host)) liveQ = liveQ.neq("provider", "mock"); // test-mode plans do not exist on the live site
+  const [live, ent, student, check] = await Promise.all([
+    liveQ.maybeSingle(),
     me.db.from("entitlements").select("*").eq("user_id", me.userId).maybeSingle(),
     studentStatus(admin, me.userId),
-    code ? checkCode(admin, me.userId, code, region) : Promise.resolve(null),
+    code ? checkCode(admin, me.userId, code, regionFor(ip)) : Promise.resolve(null),
   ]);
+  const sub = live.data ? subFromRow(live.data) : null;
+  // A live plan keeps the country it was bought in (paying again in the grace period renews that plan).
+  const country = sub?.country ?? ip;
+  const region = regionFor(country);
+  const provider = providerFor(region);
+  const valid = check?.ok && regionFor(ip) === region ? check : null;
   const welcomeBack = welcomeBackEligible(entitlementFromRow(ent.data));
-  const e = { student: student.verified, welcomeBack, code: check?.ok ? check.code : null };
+  const e = { student: student.verified, welcomeBack, code: valid ? valid.code : null };
   return {
     country, region, provider, mode: providerMode(provider, host), pro: me.pro, grace: sub?.status === "grace",
     month: quote(region, "month", e), year: quote(region, "year", e), student, welcomeBack,
-    code: check?.ok ? check.code.code : null, codeError: check && !check.ok ? check.error : null,
+    code: valid ? valid.code.code : null, codeError: check && !check.ok ? check.error : null,
   };
 }

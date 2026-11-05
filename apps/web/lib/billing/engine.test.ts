@@ -4,7 +4,8 @@ import { runDaily, type Charger } from "./daily";
 import { MemoryStore } from "./memory-store";
 import { makeMailer, type Transport } from "./mailer";
 import { hmacHex } from "./crypto";
-import { signedString, TOKEN_FIELDS, TRANSACTION_FIELDS, verifyPaymob, transactionEvent } from "./paymob";
+import { confirmTransaction, signedString, TOKEN_FIELDS, TRANSACTION_FIELDS, verifyPaymob, transactionEvent } from "./paymob";
+import { mockAllowed, PRODUCTION_HOSTS } from "./hosts";
 import { verifyPaddle } from "./paddle";
 import { isPro, welcomeBackEligible } from "./subscription";
 import type { BillingEvent } from "./events";
@@ -46,9 +47,15 @@ async function paymobCallback(obj: Record<string, unknown>, secret = PAYMOB_SECR
   return { body, hmac: await hmacHex("SHA-512", secret, signedString(full, TRANSACTION_FIELDS)) };
 }
 
-async function deliverPaymob(obj: Record<string, unknown>) {
+/** Paymob's own copy of each transaction, as its API would answer (by default the same as the callback). */
+let paymobCopies: Map<string, Record<string, unknown>>;
+const fetchTx = async (id: string) => paymobCopies.get(id) ?? null;
+
+async function deliverPaymob(obj: Record<string, unknown>, copy?: Record<string, unknown>) {
   const { body, hmac } = await paymobCallback(obj);
-  const v = await verifyPaymob(body, hmac, PAYMOB_SECRET);
+  const signed = JSON.parse(body).obj;
+  paymobCopies.set(String(signed.id), copy ? { ...signed, ...copy } : signed);
+  const v = await verifyPaymob(body, hmac, PAYMOB_SECRET, fetchTx);
   if (!v.ok) throw new Error(v.reason);
   return Promise.all(v.events.map((ev) => applyEvent(engine, ev)));
 }
@@ -69,6 +76,7 @@ const subjects = () => sent.map((m) => m.subject);
 
 beforeEach(() => {
   store = new MemoryStore();
+  paymobCopies = new Map();
   sent = [];
   at("2026-11-03T09:00:00Z");
   store.learners.set(U, { email: "yasmin@example.com", locale: "ar", name: "ياسمين" });
@@ -321,7 +329,7 @@ describe("wallet payers (Paymob cannot renew wallets)", () => {
     at("2026-12-03T10:00:00Z"); await runDaily(engine, async () => { throw new Error("wallets are never charged"); });
     expect(sub()).toMatchObject({ status: "grace", graceUntil: "2026-12-10T09:00:00.000Z", nextRetryAt: null });
     expect(pro()).toBe(true);
-    const r = session({ kind: "renewal", subscriptionId: sub().id! });
+    const r = session({ kind: "renewal", subscriptionId: sub().id!, providerRef: "9002" });
     at("2026-12-06T10:00:00Z");
     await deliverPaymob({ id: 701, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" }, order: { id: 9002, merchant_order_id: `s_${r.id}` } });
     expect(sub()).toMatchObject({ status: "active", currentPeriodStart: "2026-12-03T09:00:00.000Z", currentPeriodEnd: "2027-01-03T09:00:00.000Z" });
@@ -353,5 +361,244 @@ describe("entitlement", () => {
     await expect(applyEvent(engine, ev)).rejects.toThrow(/unknown checkout/);
     expect(store.events.get("paymob:x:paid")?.error).toMatch(/unknown checkout/);
     expect(pro()).toBe(false);
+  });
+});
+
+// ───────── QA round 1 fixes (issues #128, #132, #133, #134, #135) ─────────
+
+describe("test payments never give real Pro (#128)", () => {
+  const mockPay = async () => {
+    const s = session({ provider: "mock", providerRef: null });
+    const obj = { id: `mock-${s.id}`, amount_cents: 24900, currency: "EGP", created_at: clock, success: true, pending: false, order: { id: s.id, merchant_order_id: `s_${s.id}` }, source_data: { pan: "4242", sub_type: "Visa", type: "card" } };
+    await applyEvent(engine, transactionEvent(obj, "mock"));
+    return s;
+  };
+
+  it("Pro from the test payment page is stored as test-mode Pro, and counts only where test payments are allowed", async () => {
+    await mockPay();
+    expect(ent()).toMatchObject({ plan: "pro", source: "mock" });
+    expect(isPro(ent(), new Date(clock))).toBe(false);       // production: uxgate.org, the production workers.dev host
+    expect(isPro(ent(), new Date(clock), true)).toBe(true);  // a preview host with BILLING_MOCK=1
+  });
+
+  it("test payments are off without BILLING_MOCK=1, and always off on production hosts", () => {
+    expect(mockAllowed("claude-x-uxgate-web.uxgate-web.workers.dev", {})).toBe(false);
+    expect(mockAllowed("claude-x-uxgate-web.uxgate-web.workers.dev", { BILLING_MOCK: "1" })).toBe(true);
+    for (const h of [...PRODUCTION_HOSTS, "UXGATE.ORG", "uxgate.org:443", "uxgate.org."]) expect(mockAllowed(h, { BILLING_MOCK: "1" })).toBe(false);
+    expect(mockAllowed(null, { BILLING_MOCK: "1" })).toBe(false);
+  });
+
+  it("the daily job in production never renews, charges or emails a test-mode plan", async () => {
+    await mockPay();
+    sent = [];
+    let charged = 0;
+    at("2026-12-03T02:00:00Z");
+    const r = await runDaily(engine, async () => { charged++; return null; });
+    expect(charged).toBe(0);
+    expect(r).toMatchObject({ renewed: 0, failed: 0, settled: 0, reminders: 0 });
+    expect(sent).toHaveLength(0);
+    // Where test payments are on, it is renewed like any plan.
+    await runDaily(engine, async () => { charged++; return null; }, clock, { includeMock: true });
+    expect(charged).toBe(1);
+  });
+
+  it("a real payment replaces a live test-mode plan", async () => {
+    await mockPay();
+    const s = session({ providerRef: "9001" });
+    await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    const subs = [...store.subs.values()];
+    expect(subs.find((x) => x.provider === "mock")?.status).toBe("ended");
+    expect(sub()).toMatchObject({ provider: "paymob", status: "active" });
+    expect(ent()).toMatchObject({ plan: "pro", source: "live" });
+    expect(isPro(ent(), new Date(clock))).toBe(true);
+  });
+
+  it("test-mode Pro ending does not open the welcome-back discount", async () => {
+    await mockPay();
+    await cancelPlan(engine, U, null);
+    at("2027-03-01T09:00:00Z");
+    await runDaily(engine, async () => null, clock, { includeMock: true });
+    expect(ent()).toMatchObject({ plan: "free", proEndedAt: null });
+  });
+});
+
+describe("Paymob: only signed fields count (#132)", () => {
+  const B = "22222222-2222-4222-8222-222222222222";
+
+  it("a callback whose unsigned order reference was changed still pays the order it really paid", async () => {
+    const victim = session({ providerRef: "9001" });
+    const theirs = session({ userId: B, providerRef: "9100" });
+    // The attacker forwards a real, signed callback with merchant_order_id pointing at their own checkout.
+    await deliverPaymob({ id: 801, order: { id: 9001, merchant_order_id: `s_${theirs.id}` } }, { order: { id: 9001, merchant_order_id: `s_${victim.id}` } });
+    expect(store.sessions.get(theirs.id)?.status).toBe("open");
+    expect(store.entitlements.get(B)).toBeUndefined();
+    expect(store.sessions.get(victim.id)?.status).toBe("paid");
+  });
+
+  it("a payment for another order is refused even if Paymob's copy named our checkout", async () => {
+    const s = session({ providerRef: "9001" });
+    const r = await deliverPaymob({ id: 802, order: { id: 9555, merchant_order_id: `s_${s.id}` } });
+    expect(r[0]).toMatchObject({ status: "ignored", note: "order mismatch" });
+    expect(pro()).toBe(false);
+  });
+
+  it("a payment below our price is refused and buys nothing", async () => {
+    const s = session({ providerRef: "9001" });
+    const r = await deliverPaymob({ id: 803, amount_cents: 100, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    expect(r[0]).toMatchObject({ status: "ignored", note: "amount mismatch" });
+    expect(pro()).toBe(false);
+    expect(store.payments.size).toBe(0);
+    expect(store.sessions.get(s.id)?.status).toBe("failed");
+  });
+
+  it("a refund callback cannot point at someone else's payment: the parent comes from Paymob's copy", async () => {
+    const s = session({ providerRef: "9001" });
+    await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    // A signed refund of transaction 900 (someone else's), with parent_transaction (unsigned) changed to 501.
+    const r = await deliverPaymob({ id: 901, is_refund: true, has_parent_transaction: true, parent_transaction: 501, order: { id: 7777 } }, { parent_transaction: 900 });
+    expect(r[0]).toMatchObject({ status: "ignored", note: "refund for an unknown payment" });
+    expect(pro()).toBe(true);
+    expect([...store.payments.values()][0].status).toBe("paid");
+  });
+
+  it("refuses when Paymob cannot be asked, or when its copy disagrees with the signed fields", async () => {
+    const s = session({ providerRef: "9001" });
+    const { body, hmac } = await paymobCallback({ id: 804, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    expect(await verifyPaymob(body, hmac, PAYMOB_SECRET)).toEqual({ ok: false, reason: "lookup" });
+    expect(await verifyPaymob(body, hmac, PAYMOB_SECRET, async () => { throw new Error("down"); })).toEqual({ ok: false, reason: "lookup" });
+    expect(await verifyPaymob(body, hmac, PAYMOB_SECRET, async () => ({ ...JSON.parse(body).obj, amount_cents: 100 }))).toEqual({ ok: false, reason: "payload" });
+    expect(confirmTransaction({ id: 1, amount_cents: 5, currency: "EGP", order: { id: 2 } }, { id: 1, amount_cents: 5, currency: "EGP", order: { id: 3 } })).toBeNull();
+    expect(pro()).toBe(false);
+  });
+});
+
+describe("Paddle: one subscription, one charge (#133, #134)", () => {
+  let calls: string[];
+  let payerCountry: string | null;
+  const paddleTxn = (id: string, subId: string, sessionId: string, total = "7200") => ({
+    event_id: `evt_${id}`, event_type: "transaction.completed", occurred_at: clock,
+    data: {
+      id, status: "completed", origin: "web", subscription_id: subId, currency_code: "USD", custom_data: { session_id: sessionId, user_id: U },
+      customer_id: "ctm_1", address_id: "add_1", billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2027-11-03T09:00:00Z" }, details: { totals: { grand_total: total } },
+    },
+  });
+  const paddleSession = (over: Partial<Session> = {}) => session({ provider: "paddle", region: "gulf", country: "SA", period: "year", currency: "USD", amountMinor: 7200, renewAmountMinor: 7200, locale: "en", providerRef: null, ...over });
+
+  beforeEach(() => {
+    calls = [];
+    payerCountry = null;
+    engine.actions = {
+      refund: async (p, id) => { calls.push(`refund ${p} ${id}`); },
+      cancelNow: async (p, id) => { calls.push(`cancel ${p} ${id}`); },
+      payerCountry: async () => payerCountry,
+      reprice: async (s, region) => { calls.push(`reprice ${s.providerSubId} ${region}`); },
+    };
+  });
+
+  it("two checkouts paid one after the other: the second Paddle subscription is ended and refunded", async () => {
+    const a = paddleSession(), b = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    const r = await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
+    expect(r[0].status).toBe("ignored");
+    expect(calls).toEqual(["cancel paddle sub_b", "refund paddle txn_b"]);
+    expect([...store.subs.values()].filter((x) => ["active", "grace", "cancelled"].includes(x.status))).toHaveLength(1);
+    expect(sub()).toMatchObject({ providerSubId: "sub_a", currentPeriodEnd: "2027-11-03T09:00:00Z" });
+    expect([...store.payments.values()].find((p) => p.providerPaymentId === "txn_b")?.subscriptionId).toBeNull();
+    // Its refund then comes back from Paddle and does not touch the plan.
+    await deliverPaddle({ event_id: "evt_adj_b", event_type: "adjustment.updated", occurred_at: clock, data: { action: "refund", status: "approved", transaction_id: "txn_b" } });
+    expect(pro()).toBe(true);
+    expect(sub().status).toBe("active");
+  });
+
+  it("cancel in the grace period ends the plan now and asks Paddle to cancel now; a late charge is refunded", async () => {
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    at("2027-11-03T09:05:00Z");
+    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_a", status: "past_due" } });
+    const told: string[] = [];
+    await cancelPlan(engine, U, null, { cancel: async (s) => { told.push(s.status); } });
+    expect(told).toEqual(["grace"]); // paddle-api cancels "immediately" for a plan in grace
+    expect(sub().status).toBe("ended");
+    expect(pro()).toBe(false);
+    // Paddle's dunning still got through before the cancel landed: the money goes back, the plan stays ended.
+    const r = await deliverPaddle({ event_id: "evt_late", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_late", origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", custom_data: { user_id: U }, details: { totals: { grand_total: "7200" } } } });
+    expect(r[0].status).toBe("ignored");
+    expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_late"]);
+    expect(sub().status).toBe("ended");
+    expect(pro()).toBe(false);
+  });
+
+  it("subscribing again after that is one new plan; the old Paddle subscription never renews it", async () => {
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    at("2027-11-03T09:05:00Z");
+    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_a", status: "past_due" } });
+    await cancelPlan(engine, U, null, { cancel: async () => {} });
+    const b = paddleSession();
+    await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
+    expect(sub()).toMatchObject({ providerSubId: "sub_b", status: "active" });
+    await deliverPaddle({ event_id: "evt_old", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_old", origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", custom_data: { user_id: U }, details: { totals: { grand_total: "7200" } } } });
+    expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_old"]);
+    expect(sub()).toMatchObject({ providerSubId: "sub_b", status: "active" });
+  });
+
+  it("paying Paddle's overdue charge from the grace period renews the plan and marks that checkout paid", async () => {
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    at("2027-11-03T09:05:00Z");
+    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_a", status: "past_due" } });
+    const again = paddleSession({ kind: "renewal", subscriptionId: sub().id!, providerRef: "txn_due" });
+    await deliverPaddle({ event_id: "evt_due", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_due", origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", billing_period: { starts_at: "2027-11-03T09:00:00Z", ends_at: "2028-11-03T09:00:00Z" }, details: { totals: { grand_total: "7200" } } } });
+    expect(sub()).toMatchObject({ providerSubId: "sub_a", status: "active", currentPeriodEnd: "2028-11-03T09:00:00Z" });
+    expect(store.sessions.get(again.id)?.status).toBe("paid");
+    expect(calls).toEqual([]);
+  });
+
+  it("a billing country in Paddle's checkout from a dearer region moves renewals to the Gulf price", async () => {
+    payerCountry = "US";
+    const s = paddleSession({ region: "arab", country: "JO", amountMinor: 4500, renewAmountMinor: 4500 });
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", s.id, "4500"));
+    expect(sub()).toMatchObject({ region: "gulf", country: "US", renewAmountMinor: 7200 });
+    expect(calls).toEqual(["reprice sub_a gulf"]);
+    expect([...store.payments.values()][0].amountMinor).toBe(4500); // the first year keeps the price paid
+  });
+
+  it("the same region's country keeps the price", async () => {
+    payerCountry = "TN";
+    const s = paddleSession({ region: "arab", country: "JO", amountMinor: 4500, renewAmountMinor: 4500 });
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", s.id, "4500"));
+    expect(sub()).toMatchObject({ region: "arab", country: "JO", renewAmountMinor: 4500 });
+    expect(calls).toEqual([]);
+  });
+});
+
+describe("hardening (#135)", () => {
+  it("a Paddle signature whose time is not a whole number of seconds is refused", async () => {
+    const body = JSON.stringify({ event_id: "e", event_type: "transaction.completed", data: {} });
+    for (const ts of ["abc", "1e9", "", "-5", "1.5"]) {
+      const sig = `ts=${ts};h1=${await hmacHex("SHA-256", PADDLE_SECRET, `${ts}:${body}`)}`;
+      expect(await verifyPaddle(body, sig, PADDLE_SECRET, new Date(clock))).toEqual({ ok: false, reason: "signature" });
+    }
+  });
+
+  it("two identical webhooks at the same moment apply once", async () => {
+    const s = session({ providerRef: "9001" });
+    const { body, hmac } = await paymobCallback({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    paymobCopies.set("501", JSON.parse(body).obj);
+    const v = await verifyPaymob(body, hmac, PAYMOB_SECRET, fetchTx);
+    if (!v.ok) throw new Error(v.reason);
+    const r = await Promise.all([applyEvent(engine, v.events[0]), applyEvent(engine, v.events[0])]);
+    expect(r.map((x) => x.status).sort()).toEqual(["applied", "duplicate"]);
+    expect(store.payments.size).toBe(1);
+    expect(sent).toHaveLength(1);
+  });
+
+  it("a failed renewal delivered twice at once counts one retry", async () => {
+    const s = session({ providerRef: "9001" });
+    await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    at("2026-12-03T09:30:00Z");
+    const ev = transactionEvent({ id: "d0", success: false, pending: false, created_at: clock, order: { merchant_order_id: `r_${sub().id}_x_0` } });
+    await Promise.all([applyEvent(engine, ev), applyEvent(engine, ev)]);
+    expect(sub()).toMatchObject({ status: "grace", retries: 0 });
   });
 });

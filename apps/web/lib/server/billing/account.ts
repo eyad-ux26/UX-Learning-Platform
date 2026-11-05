@@ -5,7 +5,7 @@ import { providerFor, regionFor, type Period, type Region } from "@/lib/billing/
 import { isPro, startSub, welcomeBackEligible, type Entitlement, type Sub } from "@/lib/billing/subscription";
 import type { Payment, RefundRequest } from "@/lib/billing/engine";
 import { entitlementFromRow, paymentFromRow, requestFromRow, subFromRow } from "./store";
-import { providerMode, type Mode } from "./config";
+import { ipCountry, mockAllowed, providerMode, type Mode } from "./config";
 
 // What the billing screens need about the signed-in learner, read with their own session (RLS: own rows only).
 
@@ -23,41 +23,50 @@ export type BillingView = {
   student: { verified: boolean; validUntil: string | null };
 };
 
+/** The host this page request came to. Never x-forwarded-host: the sender sets it (see hostOf). */
 export async function requestHost(): Promise<string | null> {
-  const h = await headers();
-  return h.get("x-forwarded-host") ?? h.get("host");
+  return (await headers()).get("host");
 }
 
 export async function requestCountry(): Promise<string | null> {
-  const c = (await headers()).get("cf-ipcountry");
-  return c && /^[A-Z]{2}$/.test(c) && c !== "XX" && c !== "T1" ? c : null;
+  return ipCountry(await headers());
 }
 
-/** Is the learner on Pro right now? Any read error counts as Free: locked is the safe side. */
-export async function readPro(db: SupabaseClient | null, userId: string): Promise<boolean> {
+/**
+ * Is the learner on Pro right now? Any read error counts as Free: locked is the safe side. Pro from the test payment
+ * page counts only on a host where test payments are allowed, never on uxgate.org or the production workers.dev host.
+ */
+export async function readPro(db: SupabaseClient | null, userId: string, host: string | null): Promise<boolean> {
   if (!db) return process.env.UG_DEV_PRO === "1";
-  const { data, error } = await db.from("entitlements").select("plan, valid_until, pro_since, pro_ended_at").eq("user_id", userId).maybeSingle();
+  const { data, error } = await db.from("entitlements").select("plan, valid_until, pro_since, pro_ended_at, source").eq("user_id", userId).maybeSingle();
   if (error) return false;
-  return isPro(entitlementFromRow(data));
+  return isPro(entitlementFromRow(data), new Date(), mockAllowed(host));
 }
 
 export async function loadBilling(db: SupabaseClient | null, userId: string, fixtureState?: string): Promise<BillingView> {
   const host = await requestHost();
   if (!db) return fixtureBilling(fixtureState, host);
-  const [ent, subs, pays, reqs, acct] = await Promise.all([
+  // Test-mode plans and payments exist only on preview hosts; elsewhere they are left out as if they never happened.
+  const allowMock = mockAllowed(host);
+  const notMock = <Q extends { neq: (c: string, v: string) => Q }>(q: Q) => (allowMock ? q : q.neq("provider", "mock"));
+  const [ent, subs, pays, reqs, country0] = await Promise.all([
     db.from("entitlements").select("*").eq("user_id", userId).maybeSingle(),
-    db.from("subscriptions").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(1),
-    db.from("payments").select("*").eq("user_id", userId).order("paid_at", { ascending: false }).limit(24),
+    notMock(db.from("subscriptions").select("*").eq("user_id", userId)).order("created_at", { ascending: false }).limit(1),
+    notMock(db.from("payments").select("*").eq("user_id", userId)).order("paid_at", { ascending: false }).limit(24),
     db.from("refund_requests").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
-    db.from("billing_accounts").select("country").eq("user_id", userId).maybeSingle(),
+    requestCountry(),
   ]);
   const entitlement = ent.error ? null : entitlementFromRow(ent.data);
   const sub = subs.data?.[0] ? subFromRow(subs.data[0]) : null;
-  const country = (acct.data?.country as string | undefined) ?? sub?.country ?? (await requestCountry()) ?? "EG";
+  const payments = (pays.data ?? []).map(paymentFromRow);
+  const shown = new Set(payments.map((p) => p.id));
+  // A live plan keeps the country it was bought in; a new purchase is priced for the country the request comes from.
+  const live = !!sub && ["active", "grace", "cancelled"].includes(sub.status);
+  const country = (live ? sub!.country : null) ?? country0 ?? "EG";
   const region = regionFor(country);
   const provider = providerFor(region);
   return {
-    pro: isPro(entitlement), entitlement, sub, payments: (pays.data ?? []).map(paymentFromRow), requests: (reqs.data ?? []).map(requestFromRow),
+    pro: isPro(entitlement, new Date(), allowMock), entitlement, sub, payments, requests: (reqs.data ?? []).map(requestFromRow).filter((r) => shown.has(r.paymentId)),
     country, region, provider, mode: providerMode(provider, host), welcomeBack: welcomeBackEligible(entitlement),
     // The student check is server-only; the plans page reads it through the admin client when it needs it.
     student: { verified: false, validUntil: null },

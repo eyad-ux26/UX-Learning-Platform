@@ -35,8 +35,25 @@ export async function createTransaction(input: { region: Region; period: Period;
   return { transactionId: r.data.id, customerId: r.data.customer_id };
 }
 
-/** Cancel at the end of the paid period. */
-export const cancelSubscription = (sub: Sub) => call("POST", `/subscriptions/${sub.providerSubId}/cancel`, { effective_from: "next_billing_period" });
+/**
+ * Cancel at the end of the paid period. In the grace period nothing is paid up, so Paddle cancels at once and its
+ * dunning stops: no later retry can charge a plan the learner cancelled.
+ */
+export const cancelSubscription = (sub: Sub) =>
+  call("POST", `/subscriptions/${sub.providerSubId}/cancel`, { effective_from: sub.status === "grace" ? "immediately" : "next_billing_period" });
+
+/** Ends a Paddle subscription now (a duplicate one the engine refused). */
+export const cancelSubscriptionNow = (providerSubId: string) => call("POST", `/subscriptions/${encodeURIComponent(providerSubId)}/cancel`, { effective_from: "immediately" });
+
+/** Gives a whole transaction back (a duplicate or late charge the engine refused). */
+export const refundTransaction = (transactionId: string, reason: string) =>
+  call("POST", "/adjustments", { action: "refund", type: "full", transaction_id: transactionId, reason });
+
+/** The billing country the payer entered in Paddle's checkout. */
+export async function customerCountry(customerId: string, addressId: string): Promise<string | null> {
+  const r = await call<{ data: { country_code?: string } }>("GET", `/customers/${encodeURIComponent(customerId)}/addresses/${encodeURIComponent(addressId)}`);
+  return r.data.country_code ?? null;
+}
 
 /** Remove a scheduled cancel. */
 export const resumeSubscription = (sub: Sub) => call("PATCH", `/subscriptions/${sub.providerSubId}`, { scheduled_change: null });
@@ -44,6 +61,10 @@ export const resumeSubscription = (sub: Sub) => call("PATCH", `/subscriptions/${
 /** Switch monthly and annual: nothing is charged today; the new price is charged in full on the next billing date. */
 export const changeSubscriptionPeriod = (sub: Sub, period: Period) =>
   call("PATCH", `/subscriptions/${sub.providerSubId}`, { items: [{ price_id: priceId(sub.region, period), quantity: 1 }], proration_billing_mode: "full_next_billing_period" });
+
+/** Renewals at another region's price from the next billing date (nothing is charged today). */
+export const changeSubscriptionRegion = (sub: Sub, region: Region) =>
+  call("PATCH", `/subscriptions/${sub.providerSubId}`, { items: [{ price_id: priceId(region, sub.pendingPeriod ?? sub.period), quantity: 1 }], proration_billing_mode: "do_not_bill" });
 
 /** A transaction that lets the learner change the card Paddle charges (opened with Paddle.js). */
 export async function updatePaymentTransaction(sub: Sub): Promise<string> {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { runDaily } from "@/lib/billing/daily";
-import { unseal } from "@/lib/billing/crypto";
+import { safeEqual, unseal } from "@/lib/billing/crypto";
 import { transactionEvent } from "@/lib/billing/paymob";
 import { billingEngine } from "@/lib/server/billing";
 import { tokenKey } from "@/lib/server/billing/config";
@@ -13,10 +13,11 @@ export const dynamic = "force-dynamic";
 /** Daily billing job, called by the Cloudflare Cron Trigger (cf-worker.ts) with CRON_SECRET. */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!secret || !safeEqual(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ ok: false }, { status: 401 });
   const engine = billingEngine();
   const admin = createAdminClient();
-  const result = await runDaily(engine, (sub, attempt) => chargeSaved(admin, engine.store, sub, attempt));
+  // Test-mode plans renew only where test payments are on (never in production: BILLING_MOCK is a preview-only var).
+  const result = await runDaily(engine, (sub, attempt) => chargeSaved(admin, engine.store, sub, attempt), undefined, { includeMock: process.env.BILLING_MOCK === "1" });
   return NextResponse.json({ ok: true, job: "billing", at: new Date().toISOString(), ...result });
 }
 

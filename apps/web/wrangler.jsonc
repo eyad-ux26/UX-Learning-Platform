@@ -14,8 +14,9 @@
   // Non-secret settings. NEXT_PUBLIC_* values must also be present at build time (Workers Builds variables).
   // Secrets (SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, the Paymob and Paddle keys, BILLING_TOKEN_KEY, RESEND_API_KEY)
   // are set with `wrangler secret put`, never here. The full list is in docs/billing-keys.md.
-  // BILLING_MOCK=1 turns on the test payment page on preview hosts only; the code refuses it on uxgate.org and the
-  // production workers.dev host, whatever this says.
-  "vars": { "UG_HTTPS": "1", "BILLING_MOCK": "1" },
+  // BILLING_MOCK is NOT set here: these vars reach production too. Preview versions get it from the non-production
+  // branch deploy command (`npx wrangler versions upload --var BILLING_MOCK:1`, see docs/deploy-cloudflare.md), and
+  // the code still refuses test payments on uxgate.org and the production workers.dev host.
+  "vars": { "UG_HTTPS": "1" },
   "observability": { "enabled": true }
 }

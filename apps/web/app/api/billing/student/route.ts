@@ -5,7 +5,7 @@ import { randomToken, sha256Hex } from "@/lib/billing/crypto";
 import { renderEmail } from "@/lib/billing/emails";
 import { billingCaller, bad } from "@/lib/server/billing/route";
 import { resendTransport } from "@/lib/server/billing";
-import { mockAllowed } from "@/lib/server/billing/config";
+import { hostOf, mockAllowed } from "@/lib/server/billing/config";
 
 const send = z.object({ action: z.literal("send"), email: z.string().trim().max(200), locale: z.enum(["en", "ar"]).default("en") });
 const confirm = z.object({ action: z.literal("confirm"), token: z.string().regex(/^[0-9a-f]{64}$/) });
@@ -43,6 +43,6 @@ export async function POST(req: Request) {
     await transport({ to: s.data.email, subject: m.subject, html: m.html, text: m.text });
   }
   // With no email provider on a test host, hand the link back so the flow can still be tried.
-  const testLink = !transport && mockAllowed(req.headers.get("x-forwarded-host") ?? url.host) ? link : undefined;
+  const testLink = !transport && mockAllowed(hostOf(req)) ? link : undefined;
   return NextResponse.json({ ok: true, ...(testLink ? { testLink } : {}) });
 }

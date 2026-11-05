@@ -7,7 +7,7 @@ let n = 0;
 const uuid = () => `00000000-0000-4000-8000-${String(++n).padStart(12, "0")}`;
 
 export class MemoryStore implements BillingStore {
-  events = new Map<string, { type: string; error: string | null; processed: boolean }>();
+  events = new Map<string, { type: string; error: string | null; processed: boolean; claimed: boolean }>();
   sessions = new Map<string, Session>();
   subs = new Map<string, Sub>();
   payments = new Map<string, Payment>();
@@ -20,13 +20,19 @@ export class MemoryStore implements BillingStore {
 
   async recordEvent(provider: string, eventId: string, eventType: string) {
     const k = `${provider}:${eventId}`;
-    if (this.events.has(k)) return !this.events.get(k)!.processed; // a half-applied event is tried again
-    this.events.set(k, { type: eventType, error: null, processed: false });
+    const seen = this.events.get(k);
+    if (seen) {
+      // A half-applied event is tried again, by one caller at a time (the Supabase store claims it in one update).
+      if (seen.processed || seen.claimed) return false;
+      seen.claimed = true;
+      return true;
+    }
+    this.events.set(k, { type: eventType, error: null, processed: false, claimed: true });
     return true;
   }
   async markEvent(provider: string, eventId: string, error: string | null) {
     const e = this.events.get(`${provider}:${eventId}`);
-    if (e) Object.assign(e, { error, processed: !error });
+    if (e) Object.assign(e, { error, processed: !error, claimed: false });
   }
   async getSession(id: string) { return this.sessions.get(id) ?? null; }
   async sessionByRef(provider: BillingProvider, ref: string) { return [...this.sessions.values()].find((s) => s.provider === provider && s.providerRef === ref) ?? null; }

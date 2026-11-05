@@ -37,7 +37,11 @@ export type Sub = {
 
 export type Card = { method: PayMethod; brand?: string | null; last4?: string | null; expiry?: string | null };
 
-export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null };
+/**
+ * `source: "mock"` marks Pro that came from the test payment page on a preview host. Previews share the production
+ * database, so production never counts it (isPro without allowMock, and has_pro() in SQL).
+ */
+export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null; source?: "live" | "mock" };
 
 export const GRACE_DAYS = 7;
 /** Failed renewals are tried again this many days after the charge date. */
@@ -174,15 +178,17 @@ export function proUntil(s: Sub | null, now: string): string | null {
 /** The one row the app checks, recomputed from the learner's current plan. */
 export function entitlementFor(s: Sub | null, prev: Entitlement | null, now: string): Entitlement {
   const until = proUntil(s, now);
-  if (until) return { plan: "pro", validUntil: until, proSince: prev?.plan === "pro" && prev.proSince ? prev.proSince : (s?.currentPeriodStart ?? now), proEndedAt: prev?.proEndedAt ?? null };
-  const wasPro = prev?.plan === "pro";
+  const source = s?.provider === "mock" ? "mock" : "live";
+  if (until) return { plan: "pro", validUntil: until, proSince: prev?.plan === "pro" && prev.source === source && prev.proSince ? prev.proSince : (s?.currentPeriodStart ?? now), proEndedAt: prev?.proEndedAt ?? null, source };
+  // Test-mode Pro ending is not a real end of Pro (it must not open the welcome-back discount).
+  const wasPro = prev?.plan === "pro" && prev.source !== "mock";
   const ended = s?.endedAt ?? (wasPro ? now : null);
-  return { plan: "free", validUntil: null, proSince: null, proEndedAt: wasPro ? ended : (prev?.proEndedAt ?? null) };
+  return { plan: "free", validUntil: null, proSince: null, proEndedAt: wasPro ? ended : (prev?.proEndedAt ?? null), source: "live" };
 }
 
-/** Pro is on right now. */
-export const isPro = (e: Pick<Entitlement, "plan" | "validUntil"> | null, now: Date = new Date()) =>
-  !!e && e.plan === "pro" && !!e.validUntil && new Date(e.validUntil) > now;
+/** Pro is on right now. Test-mode Pro counts only where test payments are allowed (`allowMock`, preview hosts). */
+export const isPro = (e: Pick<Entitlement, "plan" | "validUntil" | "source"> | null, now: Date = new Date(), allowMock = false) =>
+  !!e && e.plan === "pro" && !!e.validUntil && new Date(e.validUntil) > now && (allowMock || e.source !== "mock");
 
 /** Welcome back: 40% off annual, applied by itself for a learner whose Pro ended 60 or more days ago. */
 export function welcomeBackEligible(e: Entitlement | null, now: Date = new Date()): boolean {

@@ -24,6 +24,27 @@ async function post<T>(url: string, body: unknown, headers: Record<string, strin
   return JSON.parse(text) as T;
 }
 
+async function authToken(): Promise<string> {
+  const c = paymobConfig();
+  return (await post<{ token: string }>(`${c.base}/api/auth/tokens`, { api_key: c.apiKey })).token;
+}
+
+/** Paymob's own copy of a transaction, read by id (the webhook acts on this, not on the callback's unsigned fields). Null when it does not exist. */
+export async function fetchTransaction(id: string): Promise<Record<string, unknown> | null> {
+  if (!/^\d{1,20}$/.test(id)) return null;
+  const c = paymobConfig();
+  const res = await fetch(`${c.base}/api/acceptance/transactions/${id}`, { headers: { authorization: `Bearer ${await authToken()}` } });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`paymob transaction ${res.status}`);
+  return (await res.json()) as Record<string, unknown>;
+}
+
+/** Gives a payment back in full (a duplicate or late charge the engine refused). */
+export async function refundTransaction(id: string, amountMinor: number): Promise<void> {
+  const c = paymobConfig();
+  await post(`${c.base}/api/acceptance/void_refund/refund`, { auth_token: await authToken(), transaction_id: id, amount_cents: amountMinor });
+}
+
 /** Creates a payment intention and returns the hosted checkout address. `ref` is `s_<checkout session id>`. */
 export async function createIntention(input: { ref: string; amountMinor: number; label: string; billing: Billing; notifyUrl: string; returnUrl: string; wallet: boolean }) {
   const c = paymobConfig();
@@ -34,8 +55,10 @@ export async function createIntention(input: { ref: string; amountMinor: number;
     billing_data: billingData(input.billing), special_reference: input.ref, merchant_order_id: input.ref,
     notification_url: input.notifyUrl, redirection_url: input.returnUrl, extras: { ref: input.ref },
   }, { authorization: `Token ${c.secretKey}` });
+  // The webhook checks that a payment is for this order, so a checkout without one cannot be paid.
+  if (!r.intention_order_id) throw new Error("paymob intention without an order id");
   return {
-    orderRef: r.intention_order_id ? String(r.intention_order_id) : r.id,
+    orderRef: String(r.intention_order_id),
     url: `${c.base}/unifiedcheckout/?publicKey=${encodeURIComponent(c.publicKey)}&clientSecret=${encodeURIComponent(r.client_secret)}`,
   };
 }
@@ -49,7 +72,7 @@ export async function chargeToken(sub: Sub, token: string, billing: Billing, att
   const c = paymobConfig();
   if (!c.apiKey || !c.motoIntegration) return null;
   const ref = `r_${sub.id}_${sub.currentPeriodEnd.slice(0, 10)}_${attempt}`;
-  const auth = await post<{ token: string }>(`${c.base}/api/auth/tokens`, { api_key: c.apiKey });
+  const auth = { token: await authToken() };
   const order = await post<{ id: number }>(`${c.base}/api/ecommerce/orders`, { auth_token: auth.token, delivery_needed: false, amount_cents: sub.renewAmountMinor, currency: "EGP", merchant_order_id: ref, items: [] });
   const key = await post<{ token: string }>(`${c.base}/api/acceptance/payment_keys`, {
     auth_token: auth.token, amount_cents: sub.renewAmountMinor, expiration: 3600, order_id: order.id, billing_data: billingData(billing), currency: "EGP", integration_id: c.motoIntegration,

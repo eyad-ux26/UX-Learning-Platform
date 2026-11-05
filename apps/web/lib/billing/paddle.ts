@@ -58,7 +58,7 @@ export function paddleEvents(body: Obj): BillingEvent[] {
       return [{
         ...base, type: "paid", paymentId: s(data.id) ?? eventId, sessionId: s(custom.session_id), providerSubId: subId, userId: s(custom.user_id),
         amountMinor: Number(totals.grand_total ?? totals.total ?? 0), currency: s(data.currency_code) ?? "USD", recurring: RECURRING.has(origin),
-        periodStart: s(period.starts_at), periodEnd: s(period.ends_at), card: cardFrom(data),
+        periodStart: s(period.starts_at), periodEnd: s(period.ends_at), card: cardFrom(data), customerId: s(data.customer_id), addressId: s(data.address_id),
       }];
     }
     case "transaction.payment_failed":
@@ -94,7 +94,7 @@ export function paddleEvents(body: Obj): BillingEvent[] {
 /** Checks a Paddle notification's signature and age, then translates it. */
 export async function verifyPaddle(body: string, header: string | null, secret: string, now: Date = new Date()): Promise<Verified> {
   const sig = parseSignature(header);
-  if (!sig) return { ok: false, reason: "signature" };
+  if (!sig || !/^\d{1,12}$/.test(sig.ts)) return { ok: false, reason: "signature" };
   if (Math.abs(now.getTime() / 1000 - Number(sig.ts)) > MAX_SKEW_SECONDS) return { ok: false, reason: "signature" };
   const expected = await hmacHex("SHA-256", secret, `${sig.ts}:${body}`);
   if (!sig.h1.some((h) => safeEqual(expected, h))) return { ok: false, reason: "signature" };

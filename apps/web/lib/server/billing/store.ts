@@ -51,7 +51,7 @@ export const requestFromRow = (r: Row): RefundRequest => ({
 });
 
 export const entitlementFromRow = (r: Row | null): Entitlement | null =>
-  r ? { plan: r.plan as Entitlement["plan"], validUntil: (r.valid_until as string) ?? null, proSince: (r.pro_since as string) ?? null, proEndedAt: (r.pro_ended_at as string) ?? null } : null;
+  r ? { plan: r.plan as Entitlement["plan"], validUntil: (r.valid_until as string) ?? null, proSince: (r.pro_since as string) ?? null, proEndedAt: (r.pro_ended_at as string) ?? null, source: r.source === "mock" ? "mock" : "live" } : null;
 
 function must<T>(res: { data: T; error: { message: string } | null }): T {
   if (res.error) throw new Error(res.error.message);
@@ -62,15 +62,21 @@ export class SupabaseBillingStore implements BillingStore {
   constructor(private db: SupabaseClient) {}
 
   async recordEvent(provider: string, eventId: string, eventType: string, payload: unknown) {
-    const { data, error } = await this.db.from("billing_events").upsert({ provider, event_id: eventId, event_type: eventType, payload }, { onConflict: "provider,event_id", ignoreDuplicates: true }).select("id");
+    const now = new Date().toISOString();
+    const { data, error } = await this.db.from("billing_events").upsert({ provider, event_id: eventId, event_type: eventType, payload, claimed_at: now }, { onConflict: "provider,event_id", ignoreDuplicates: true }).select("id");
     if (error) throw new Error(error.message);
     if ((data ?? []).length > 0) return true;
-    // Seen before: only an event that failed half way (never marked processed) is tried again.
-    const { data: seen } = await this.db.from("billing_events").select("processed_at").eq("provider", provider).eq("event_id", eventId).maybeSingle();
-    return !!seen && !seen.processed_at;
+    // Seen before: only an event that failed half way (never processed) is tried again, and only by one request at a
+    // time. The claim is one conditional update, so two deliveries at the same moment cannot both apply it. A claim
+    // older than 5 minutes belongs to a request that died, and can be taken over.
+    const stale = new Date(Date.now() - 5 * 60_000).toISOString();
+    const { data: claimed, error: err } = await this.db.from("billing_events").update({ claimed_at: now })
+      .eq("provider", provider).eq("event_id", eventId).is("processed_at", null).or(`claimed_at.is.null,claimed_at.lt."${stale}"`).select("id");
+    if (err) throw new Error(err.message);
+    return (claimed ?? []).length > 0;
   }
   async markEvent(provider: string, eventId: string, error: string | null) {
-    await this.db.from("billing_events").update({ processed_at: error ? null : new Date().toISOString(), error }).eq("provider", provider).eq("event_id", eventId);
+    await this.db.from("billing_events").update({ processed_at: error ? null : new Date().toISOString(), error, claimed_at: null }).eq("provider", provider).eq("event_id", eventId);
   }
   async getSession(id: string) {
     if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
@@ -140,7 +146,7 @@ export class SupabaseBillingStore implements BillingStore {
     return entitlementFromRow(must(await this.db.from("entitlements").select("*").eq("user_id", userId).maybeSingle()));
   }
   async saveEntitlement(userId: string, e: Entitlement) {
-    must(await this.db.from("entitlements").upsert({ user_id: userId, plan: e.plan, valid_until: e.validUntil, pro_since: e.proSince, pro_ended_at: e.proEndedAt, updated_at: new Date().toISOString() }, { onConflict: "user_id" }));
+    must(await this.db.from("entitlements").upsert({ user_id: userId, plan: e.plan, valid_until: e.validUntil, pro_since: e.proSince, pro_ended_at: e.proEndedAt, source: e.source ?? "live", updated_at: new Date().toISOString() }, { onConflict: "user_id" }));
   }
   async saveToken(userId: string, provider: BillingProvider, sealedToken: string, card: Card) {
     must(await this.db.from("payment_tokens").upsert({ user_id: userId, provider, token: sealedToken, card_brand: card.brand ?? null, card_last4: card.last4 ?? null, card_expiry: card.expiry ?? null }, { onConflict: "user_id,provider" }));

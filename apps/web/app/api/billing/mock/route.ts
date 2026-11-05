@@ -5,7 +5,7 @@ import { transactionEvent } from "@/lib/billing/paymob";
 import { seal } from "@/lib/billing/crypto";
 import { billingCaller, bad } from "@/lib/server/billing/route";
 import { billingEngine } from "@/lib/server/billing";
-import { mockAllowed, tokenKey } from "@/lib/server/billing/config";
+import { hostOf, mockAllowed, tokenKey } from "@/lib/server/billing/config";
 import { sessionFromRow } from "@/lib/server/billing/store";
 
 const body = z.object({
@@ -19,8 +19,7 @@ const body = z.object({
  * Paymob and Paddle until their test keys exist. Its result goes through the same engine as a real webhook.
  */
 export async function POST(req: Request) {
-  const url = new URL(req.url);
-  if (!mockAllowed(req.headers.get("x-forwarded-host") ?? url.host)) return bad("not_found", 404);
+  if (!mockAllowed(hostOf(req))) return bad("not_found", 404);
   const who = await billingCaller(req, "mock", 20);
   if ("error" in who) return who.error;
   const parsed = body.safeParse(await req.json().catch(() => null));

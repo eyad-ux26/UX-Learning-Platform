@@ -9,18 +9,18 @@ import type { Offer } from "@/lib/server/billing/plans";
 import { billingPost } from "./api";
 import { Sheet } from "./Sheet";
 
-type Props = { offer: Offer; locale: "en" | "ar"; countries: { code: string; name: string }[]; countryName: string; fixture: boolean; studentDate: string | null };
+type Props = { offer: Offer; locale: "en" | "ar"; countryName: string; studentDate: string | null };
 
 const FP = [["unit1", true], ["review", true], ["streak", true], ["units", false], ["certs", false]] as const;
 
-export function PlansView({ offer, locale, countries, countryName, fixture, studentDate }: Props) {
+export function PlansView({ offer, locale, countryName, studentDate }: Props) {
   const t = useTranslations("billing");
   const router = useRouter();
   const pathname = usePathname();
   const [period, setPeriod] = useState<Period>("year");
   const [codeOpen, setCodeOpen] = useState(!!offer.codeError);
   const [code, setCode] = useState(offer.code ?? "");
-  const [sheet, setSheet] = useState<"country" | "student" | null>(null);
+  const [sheet, setSheet] = useState<"student" | null>(null);
   const $ = (n: number) => formatMoney(n, offer.month.currency, locale);
   const mc = moneyCls(offer.month.currency);
   const q = period === "month" ? offer.month : offer.year;
@@ -107,7 +107,7 @@ export function PlansView({ offer, locale, countries, countryName, fixture, stud
           {blocked ? <div className="notice is-info" role="status"><span className="ph ph-check-circle" aria-hidden="true" /><span className="grow"><b>{t("alreadyPro")}</b></span><span className="acts"><Link href="/app/settings/billing" className="btn btn-secondary btn-sm press">{t("seeMyPlan")}</Link></span></div> : null}
           <p className="pg-note" style={{ fontSize: 13 }}>
             <span className="ph ph-globe" aria-hidden="true" />
-            <span>{t(`regionLine.${offer.region}`, { country: countryName })} <button type="button" className="hit" style={{ fontWeight: 700, background: "none", border: 0, padding: 0, font: "inherit", color: "var(--link)", cursor: "pointer", minBlockSize: 24 }} onClick={() => setSheet("country")}>{t("changeCountry")}</button></span>
+            <span>{t(`regionLine.${offer.region}`, { country: countryName })} {t("regionHow")}</span>
           </p>
           <div className="plans" role="radiogroup" aria-label={t("billingPeriod")}>{cards}</div>
           {notice ? (
@@ -167,40 +167,8 @@ export function PlansView({ offer, locale, countries, countryName, fixture, stud
         {payButton}
       </footer>
 
-      <CountrySheet open={sheet === "country"} onClose={() => setSheet(null)} current={offer.country} countries={countries} fixture={fixture} />
       <StudentSheet open={sheet === "student"} onClose={() => setSheet(null)} locale={locale} prices={{ m: $(discounted(offer.month.base, 40, offer.month.currency)), y: $(discounted(offer.year.base, 40, offer.year.currency)) }} />
     </>
-  );
-}
-
-function CountrySheet({ open, onClose, current, countries, fixture }: { open: boolean; onClose: () => void; current: string; countries: { code: string; name: string }[]; fixture: boolean }) {
-  const t = useTranslations("billing");
-  const router = useRouter();
-  const pathname = usePathname();
-  const [value, setValue] = useState(current);
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState(false);
-  const save = async () => {
-    setBusy(true); setErr(false);
-    if (fixture) { router.replace(`${pathname}?country=${value}`, { scroll: false }); onClose(); setBusy(false); return; }
-    const r = await billingPost("country", { country: value });
-    setBusy(false);
-    if (!r.ok) { setErr(true); return; }
-    onClose();
-    router.refresh();
-  };
-  return (
-    <Sheet open={open} onClose={onClose} title={t("country")}>
-      <div className="field">
-        <label htmlFor="bl-country">{t("countryAria")}</label>
-        <select id="bl-country" className="bl-select" value={value} onChange={(e) => setValue(e.target.value)}>
-          {countries.map((c) => <option key={c.code} value={c.code}>{c.name}</option>)}
-        </select>
-      </div>
-      {err ? <p className="err" role="alert"><span className="ph ph-x-circle-fill" aria-hidden="true" />{t("error")}</p> : null}
-      <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={save} aria-disabled={busy}>{t("countrySave")}</button>
-      <button type="button" className="btn btn-ghost btn-block" style={{ minHeight: 44 }} onClick={onClose}>{t("notNow")}</button>
-    </Sheet>
   );
 }
 

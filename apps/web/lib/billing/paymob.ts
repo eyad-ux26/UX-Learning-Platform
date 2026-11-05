@@ -51,14 +51,32 @@ export function transactionEvent(obj: Obj, provider: "paymob" | "mock" = "paymob
     return {
       ...base, type: "paid", eventId: `${id}:paid`, paymentId: id, sessionId: ref.sessionId, providerSubId: ref.subId, userId: null,
       amountMinor: Number(obj.amount_cents), currency: str(obj.currency) || "EGP", recurring: !!ref.subId, periodStart: null, periodEnd: null,
-      card: cardFrom(obj.source_data as Obj | undefined),
+      card: cardFrom(obj.source_data as Obj | undefined), orderRef: str(get(obj, "order.id")) || null,
     };
   if (obj.pending === true && ref.sessionId) return { ...base, type: "pending", eventId: `${id}:pending`, sessionId: ref.sessionId };
   return { ...base, type: "failed", eventId: `${id}:failed`, sessionId: ref.sessionId, providerSubId: ref.subId, recurring: !!ref.subId };
 }
 
-/** Checks a Paymob callback and translates it. `hmac` is the query parameter Paymob sends with the POST. */
-export async function verifyPaymob(body: string, hmac: string | null, secret: string): Promise<Verified> {
+/** Signed fields that must be the same in the callback and in Paymob's own copy of the transaction. */
+const SAME = ["id", "amount_cents", "currency", "order.id"];
+
+/**
+ * Paymob's HMAC does not cover every field we act on (merchant_order_id, parent_transaction, is_refund), so the
+ * callback is only a signal: the transaction is read again from Paymob's API by its signed id, and that copy is used,
+ * if it matches the signed amount, currency and order.
+ */
+export function confirmTransaction(signed: Obj, fetched: Obj | null): Obj | null {
+  if (!fetched || typeof fetched !== "object") return null;
+  return SAME.every((f) => str(get(signed, f)) !== "" && str(get(signed, f)) === str(get(fetched, f))) ? fetched : null;
+}
+
+export type FetchTransaction = (id: string) => Promise<Obj | null>;
+
+/**
+ * Checks a Paymob callback and translates it. `hmac` is the query parameter Paymob sends with the POST. A transaction
+ * is translated from Paymob's own copy (`fetchTx`), never from the unsigned fields of the callback.
+ */
+export async function verifyPaymob(body: string, hmac: string | null, secret: string, fetchTx?: FetchTransaction): Promise<Verified> {
   let json: { type?: string; obj?: Obj };
   try { json = JSON.parse(body); } catch { return { ok: false, reason: "payload" }; }
   const obj = json?.obj;
@@ -80,6 +98,11 @@ export async function verifyPaymob(body: string, hmac: string | null, secret: st
     const eventId = `${type.toLowerCase()}:${str(obj.id)}`;
     return { ok: true, events: [{ provider: "paymob", type: "ignored", eventId, at: new Date().toISOString(), eventType: type }], eventType: type, eventId };
   }
-  const ev = transactionEvent(obj);
+  if (!fetchTx) return { ok: false, reason: "lookup" };
+  let fetched: Obj | null;
+  try { fetched = await fetchTx(str(obj.id)); } catch { return { ok: false, reason: "lookup" }; }
+  const tx = confirmTransaction(obj, fetched);
+  if (!tx) return fetched ? { ok: false, reason: "payload" } : { ok: false, reason: "lookup" };
+  const ev = transactionEvent(tx);
   return { ok: true, events: [ev], eventType: "TRANSACTION", eventId: ev.eventId };
 }

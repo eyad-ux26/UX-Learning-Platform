@@ -1,5 +1,4 @@
 import "server-only";
-import { COUNTRIES } from "@/lib/billing/pricing";
 import { pickPath } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 
@@ -15,12 +14,6 @@ export function shellFor(me: Learner) {
 export const countryName = (code: string, locale: string) => {
   try { return new Intl.DisplayNames([locale], { type: "region" }).of(code) ?? code; } catch { return code; }
 };
-
-/** The billing country list: Egypt, the Gulf, other Arab countries, then the learner's own country if it is elsewhere. */
-export function countryOptions(locale: string, current: string) {
-  const codes = COUNTRIES.includes(current) ? COUNTRIES : [...COUNTRIES, current];
-  return codes.map((code) => ({ code, name: countryName(code, locale) }));
-}
 
 export const formatDate = (iso: string | null | undefined, locale: string, withYear = false) =>
   iso ? new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}), timeZone: "Africa/Cairo", numberingSystem: "latn" }).format(new Date(iso)) : "";

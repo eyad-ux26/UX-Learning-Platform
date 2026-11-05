@@ -15,7 +15,7 @@ Workers & Pages, Create, Import a repository, pick `UX-Learning-Platform`.
 - Worker name: `uxgate-web` (must match `wrangler.jsonc`). Production branch: `main`. Root directory: `/`.
 - Build command: `npm ci && npm run cf:build -w @uxgate/web`
 - Deploy command: `cd apps/web && npx wrangler deploy`
-- Non-production branch deploy command: `cd apps/web && npx wrangler versions upload` (gives each branch a preview URL).
+- Non-production branch deploy command: `cd apps/web && npx wrangler versions upload --var BILLING_MOCK:1` (gives each branch a preview URL, with the test payment page on). `BILLING_MOCK` must never be in `wrangler.jsonc` or the Worker's own variables: those reach production too. Previews share production's Supabase project, so test-mode Pro is stored as `source = 'mock'` and production never counts it, never shows the test payment page and never renews it.
 - Build variables: `NODE_VERSION` = `22`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, later `NEXT_PUBLIC_CF_BEACON_TOKEN`.
 - Worker settings, Variables and Secrets (type Secret): `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`. Never put these in the repo or in chat.
 
