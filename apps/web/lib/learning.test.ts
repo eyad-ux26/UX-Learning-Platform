@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ContentIndex } from "@uxgate/content";
-import { buildPathView, canPlay, pickPath, testOutCheck } from "./learning";
+import { buildPathView, canPlay, pathBegun, pickPath, testOutCheck } from "./learning";
 
 const t = (s: string) => ({ en: s, ar: s });
 const lesson = (lessonId: string, unitId: string, order: number) => ({ lessonId, unitId, pathId: "P1", order, mode: "lesson", minutes: 5, hash: "h", body: {} as never });
@@ -38,6 +38,15 @@ describe("buildPathView", () => {
   });
   it("has no next lesson when everything is done", () => {
     expect(buildPathView("P1", { finishedLessons: ["L1", "L2", "L3"], startedLessons: [], xpByLesson: {} }, new Set(), b)!.next).toBeNull();
+  });
+});
+
+describe("pathBegun (Start path or Continue path)", () => {
+  it("is false before any lesson is opened, true once one is started or finished", () => {
+    const none = { finishedLessons: [], startedLessons: [], xpByLesson: {} };
+    expect(pathBegun(buildPathView("P1", none, new Set(), b)!)).toBe(false);
+    expect(pathBegun(buildPathView("P1", { ...none, startedLessons: ["L1"] }, new Set(), b)!)).toBe(true);
+    expect(pathBegun(buildPathView("P1", { ...none, finishedLessons: ["L1"], startedLessons: ["L1"] }, new Set(), b)!)).toBe(true);
   });
 });
 

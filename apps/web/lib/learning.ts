@@ -76,3 +76,8 @@ export function buildPathView(pathId: string, progress: Pick<Progress, "finished
     doneCount: all.filter((l) => l.state === "done").length, totalCount: all.length,
   };
 }
+
+/** The learner has started at least one lesson of this path (finished or not): its main button says Continue, not Start. */
+export function pathBegun(view: PathView): boolean {
+  return view.units.some((u) => u.lessons.some((l) => l.state === "done" || l.state === "in_progress"));
+}
