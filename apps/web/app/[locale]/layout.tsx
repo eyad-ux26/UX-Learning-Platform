@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { WebAnalytics } from "@/components/WebAnalytics";
+import { ServiceWorker } from "@/components/ServiceWorker";
 import "@fontsource/cairo/400.css";
 import "@fontsource/cairo/600.css";
 import "@fontsource/cairo/700.css";
@@ -48,6 +49,7 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider><ThemeSync /><GuestHandoff />{children}</NextIntlClientProvider>
         <WebAnalytics />
+        <ServiceWorker />
       </body>
     </html>
   );

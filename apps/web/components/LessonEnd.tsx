@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
+import { PushAsk } from "@/components/account/PushAsk";
 
 export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void }) {
   const t = useTranslations("end");
@@ -49,6 +50,7 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
         </div>
       </main>
       <footer className="end-foot"><button type="button" className="btn btn-primary btn-lg btn-block press" onClick={onContinue}>{t("continue")}</button></footer>
+      <PushAsk />
     </div>
   );
 }
