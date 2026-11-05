@@ -173,6 +173,20 @@ body{margin:0}
         </sc-if>
         <div class="pg-split" style="{{h.splitStyle}}">
           <div class="pg-stack" style="gap: 14px;">
+            <!-- Your paths sits right under the greeting, above the next lesson (PR #164) -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="pg-sec" style="margin-top: -2px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 44px;">{{c.allPaths}}</a></div>
+              <div class="prow">
+                <sc-for list="{{chips}}" as="p" hint-placeholder-count="2">
+                  <a href="#switch" class="{{p.cls}}" aria-label="{{p.aria}}" aria-current="{{p.cur}}">
+                    <span class="pchip-top"><img src="{{p.img}}" alt=""><span class="pchip-name ltr">{{p.name}}</span></span>
+                    <div class="progress progress-sm" aria-hidden="true"><i style="width: {{p.pct}};"></i></div>
+                    <span class="pchip-sub"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="color: var(--link);" aria-hidden="true"></span></sc-if><span>{{p.sub}}</span></span>
+                  </a>
+                </sc-for>
+                <sc-if value="{{isDesk}}" hint-placeholder-val="{{true}}"><a href="#paths" class="pchip is-add press"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addShort}}</a></sc-if>
+              </div>
+            </div>
             <sc-if value="{{h.next}}" hint-placeholder-val="{{true}}">
               <section class="card-panel" aria-labelledby="pg-next-{{lang}}-{{theme}}-{{device}}" style="position: relative; padding: {{h.cardPad}}; display: flex; flex-direction: column; gap: 12px; border-radius: 24px; overflow: hidden;">
                 <img src="{{img.forms}}" alt="" style="position: absolute; width: {{h.illSize}}px; height: {{h.illSize}}px; top: {{h.illTop}}; inset-inline-end: -8px;">
@@ -212,19 +226,6 @@ body{margin:0}
                 </div>
               </section>
             </sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <div class="pg-sec" style="margin-top: -4px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 44px;">{{c.allPaths}}</a></div>
-              <div class="prow">
-                <sc-for list="{{chips}}" as="p" hint-placeholder-count="2">
-                  <a href="#switch" class="{{p.cls}}" aria-label="{{p.aria}}" aria-current="{{p.cur}}">
-                    <span class="pchip-top"><img src="{{p.img}}" alt=""><span class="pchip-name ltr">{{p.name}}</span></span>
-                    <div class="progress progress-sm" aria-hidden="true"><i style="width: {{p.pct}};"></i></div>
-                    <span class="pchip-sub"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="color: var(--link);" aria-hidden="true"></span></sc-if><span>{{p.sub}}</span></span>
-                  </a>
-                </sc-for>
-                <sc-if value="{{isDesk}}" hint-placeholder-val="{{true}}"><a href="#paths" class="pchip is-add press"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addShort}}</a></sc-if>
-              </div>
-            </div>
           </div>
           <div class="pg-stack" style="gap: 14px;">
             <section class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 14px;">

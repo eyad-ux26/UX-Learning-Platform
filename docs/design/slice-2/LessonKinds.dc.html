@@ -24,8 +24,9 @@ body{margin:0}
     <div class="progress" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="{{stepNo}}" aria-valuemin="0" aria-valuemax="{{stepMax}}"><i style="width: {{pct}};"></i></div>
     <span class="t-label num ink-2 lp-count">{{countText}}</span>
     <sc-if value="{{save.show}}" hint-placeholder-val="{{false}}">
-      <span class="{{save.cls}}" role="status"><span class="{{save.icon}}" aria-hidden="true"></span>{{save.text}}</span>
+      <span class="{{save.cls}}" role="status"><span class="{{save.icon}}" aria-hidden="true"></span><span class="{{saveTextCls}}">{{save.text}}</span></span>
     </sc-if>
+    <button class="lp-lang" type="button" lang="{{langBtn.lang}}" aria-label="{{langBtn.aria}}" onClick="{{switchLang}}"><sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="ph ph-globe" aria-hidden="true"></span></sc-if><span>{{langBtn.label}}</span></button>
     <button class="{{headBtn}}" type="button" aria-label="{{soundLabel}}" aria-pressed="{{soundPressed}}" onClick="{{toggleSound}}"><span class="{{soundIcon}}" aria-hidden="true"></span></button>
   </header>
 
@@ -1066,6 +1067,9 @@ class Component extends DCLogic {
       thumbAria: c.exAria(k.frame), openEx: () => { this.sfx('sheet-up'); this.setState({ exOpen: true }); }, closeEx: () => { this.sfx('sheet-down'); this.setState({ exOpen: false }); }, isDesk, headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
       stepNo, stepMax, pct: Math.round(((stepNo - 1) / stepMax) * 100 + 4) + '%', countText: stepNo + '/' + stepMax,
       save, modeTag,
+      /* Lesson language button (PR #164): after the step count, before sound. Desktop: globe + the other language's name; phones: short label. */
+      langBtn: lang === 'ar' ? { label: isDesk ? 'English' : 'EN', lang: 'en', aria: 'Switch the lesson to English' } : { label: 'عربي', lang: 'ar', aria: 'حوّل الدرس إلى العربية' },
+      switchLang: () => {}, saveTextCls: isDesk ? '' : 'sr-only',
       soundIcon: s.sound ? 'ph ph-speaker-high' : 'ph ph-speaker-slash', soundLabel: s.sound ? c.soundOn : c.soundOff, soundPressed: s.sound ? 'false' : 'true',
       toggleSound: () => { if (this.props.sfx && !s.sound) this.props.sfx('ui-toggle-on'); this.setState({ sound: !s.sound }); },
       banner: { offline: ov === 'offline', guest: mode === 'guest' && !after && !s.bannerOff, resume: ov === 'resume' && !s.bannerOff },
