@@ -29,15 +29,33 @@ steps:
       en: "I manage a clinic. Our app sends messages to patients, but many of them call us to ask what the messages mean.\n\nLast week, a patient waited at home for us to send her lab results. The message said they \"must be collected\". She didn't know that meant her."
       ar: "أدير عيادة. وتطبيقنا يرسل رسائل إلى المرضى، لكن كثيرين منهم يتصلون بنا ليسألوا عن معناها.\n\nالأسبوع الماضي، انتظرت مريضة في بيتها أن نرسل لها نتائج تحاليلها. كانت الرسالة تقول إن النتائج «يجب أن تُستلم». ولم تعرف أن المقصود هو هي."
     mock:
-      width: 300
+      app: raha
+      appbar:
+        title: {en: Results, ar: النتائج}
+      tabbar:
+        active: 2
+        items:
+        - icon: house
+          text: {en: Home, ar: الرئيسية}
+        - icon: calendar-check
+          text: {en: Appointments, ar: المواعيد}
+        - icon: flask
+          text: {en: Results, ar: النتائج}
+        - icon: chat-circle-text
+          text: {en: Messages, ar: الرسائل}
       blocks:
-        - { kind: title, text: { en: "Afia Clinic", ar: "عيادة عافية" } }
-        - kind: group
-          tone: tint
+      - kind: card
+        blocks:
+        - kind: listitem
+          icon: flask
+          text: {en: Lab results, ar: نتائج التحاليل}
+          sub: {en: Blood test · 3 March, ar: تحليل دم · 3 مارس}
+          badge:
+            text: {en: Ready, ar: جاهزة}
+            tone: good
+        - kind: text
+          text: {en: Results must be collected within seven days., ar: يجب أن تُستلم النتائج خلال سبعة أيام.}
           gap: s
-          blocks:
-            - { kind: meta, weight: bold, text: { en: "Lab results", ar: "نتائج التحاليل" } }
-            - { kind: text, text: { en: "Results must be collected within seven days.", ar: "يجب أن تُستلم النتائج خلال سبعة أيام." }, gap: xs }
 
   - id: S02
     type: choose
@@ -94,11 +112,30 @@ steps:
       en: "This note is on the appointment screen. Patients keep calling to ask if they can still change their visit."
       ar: "هذه الملاحظة في شاشة المواعيد. والمرضى يتصلون باستمرار ليسألوا هل ما زال بإمكانهم تغيير زيارتهم."
     mock:
-      width: 300
+      app: raha
+      appbar:
+        title: {en: Your appointment, ar: موعدك}
+        back: true
       blocks:
-        - { kind: heading, text: { en: "Your appointment", ar: "موعدك" } }
-        - { kind: small, color: muted, text: { en: "Appointments cannot be changed unless there are no fewer than 24 hours left.", ar: "لا يمكن تغيير المواعيد إلا إذا بقي ما لا يقل عن 24 ساعة." }, gap: xs }
-        - { kind: button, text: { en: "Change appointment", ar: "غيّر الموعد" }, gap: s }
+      - kind: listitem
+        avatar: {text: Dr Mona Adel, art: doctor}
+        text: {en: Dr Mona Adel, ar: د. منى عادل}
+        sub: {en: Family medicine, ar: طب الأسرة}
+      - kind: listitem
+        icon: calendar-blank
+        text:
+          en: "Sunday 9 March · 10:30 AM"
+          ar: "الأحد 9 مارس · 10:30 ص"
+        sub: {en: Room 12, ar: الغرفة 12}
+        gap: s
+      - kind: small
+        text: {en: Appointments cannot be changed unless there are no fewer than 24 hours left., ar: لا يمكن تغيير المواعيد إلا إذا بقي ما لا يقل عن 24 ساعة.}
+        color: muted
+        gap: m
+      - kind: button
+        text: {en: Change appointment, ar: غيّر الموعد}
+        style: outline
+        gap: s
     prompt:
       en: "Which rewrite tells patients clearly when they can change their visit?"
       ar: "أي صياغة تخبر المرضى بوضوح متى يمكنهم تغيير زيارتهم؟"
@@ -144,36 +181,70 @@ steps:
       en: "Tap each option to see the change. Which reminder lets patients spot the time and room at a glance?"
       ar: "اضغط على كل خيار لترى التغيير. أي تذكير يجعل المرضى يرون الوقت والغرفة بنظرة سريعة؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: raha
+      screen: lock
+      caption: {en: Now, ar: الآن}
       blocks:
-        - { kind: meta, weight: bold, text: { en: "Tomorrow's visit", ar: "زيارة الغد" } }
-        - { kind: text, text: { en: "Your visit is at half past three in the afternoon in room twelve. Arrive fifteen minutes early.", ar: "زيارتك في الثالثة والنصف عصرًا في الغرفة رقم اثني عشر. احضر قبل الموعد بخمس عشرة دقيقة." }, gap: xs }
+      - kind: notification
+        title:
+          en: "Tomorrow's visit"
+          ar: زيارة الغد
+        text: {en: Your visit is at half past three in the afternoon in room twelve. Arrive fifteen minutes early., ar: زيارتك في الثالثة والنصف عصرًا في الغرفة رقم اثني عشر. احضر قبل الموعد بخمس عشرة دقيقة.}
+        time:
+          en: "now"
+          ar: "الآن"
     options:
       - id: digits
         text: { en: "Write the times and room as digits", ar: "اكتب الأوقات والغرفة بالأرقام" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          screen: lock
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Tomorrow's visit", ar: "زيارة الغد" } }
-            - { kind: text, text: { en: "Your visit is at 3:30 PM in Room 12. Arrive 15 minutes early.", ar: "زيارتك الساعة 3:30 عصرًا في الغرفة 12. احضر قبل الموعد بـ 15 دقيقة." }, gap: xs }
+          - kind: notification
+            title:
+              en: "Tomorrow's visit"
+              ar: زيارة الغد
+            text:
+              en: "Your visit is at 3:30 PM in Room 12. Arrive 15 minutes early."
+              ar: "زيارتك الساعة 3:30 عصرًا في الغرفة 12. احضر قبل الموعد بـ 15 دقيقة."
+            time:
+              en: "now"
+              ar: "الآن"
       - id: bold
         text: { en: "Make the number words bold", ar: "اجعل الأعداد المكتوبة بالحروف بخط Bold" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          screen: lock
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Tomorrow's visit", ar: "زيارة الغد" } }
-            - { kind: text, text: { en: "Your visit is at **half past three** in the afternoon in room **twelve**. Arrive **fifteen** minutes early.", ar: "زيارتك في **الثالثة والنصف** عصرًا في الغرفة رقم **اثني عشر**. احضر قبل الموعد بـ **خمس عشرة** دقيقة." }, gap: xs }
+          - kind: notification
+            title:
+              en: "Tomorrow's visit"
+              ar: زيارة الغد
+            text:
+              en: "Your visit is at **half past three** in the afternoon in room **twelve**. Arrive **fifteen** minutes early."
+              ar: "زيارتك في **الثالثة والنصف** عصرًا في الغرفة رقم **اثني عشر**. احضر قبل الموعد بـ **خمس عشرة** دقيقة."
+            time:
+              en: "now"
+              ar: "الآن"
       - id: vague
         text: { en: "Shorten it to \"See you tomorrow afternoon!\"", ar: "اختصره إلى «نراك غدًا بعد الظهر!»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          screen: lock
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Tomorrow's visit", ar: "زيارة الغد" } }
-            - { kind: text, text: { en: "See you tomorrow afternoon!", ar: "نراك غدًا بعد الظهر!" }, gap: xs }
+          - kind: notification
+            title:
+              en: "Tomorrow's visit"
+              ar: زيارة الغد
+            text:
+              en: "See you tomorrow afternoon!"
+              ar: "نراك غدًا بعد الظهر!"
+            time:
+              en: "now"
+              ar: "الآن"
     answer: [digits]
     misconceptions:
       - id: MC-P15-013
@@ -256,19 +327,59 @@ steps:
     a:
       label: { en: "A: The message tells the parent to book the next dose.", ar: "A: الرسالة تطلب من ولي الأمر حجز الجرعة التالية." }
       mock:
-        width: 300
+        app: raha
+        appbar:
+          title: {en: Vaccines, ar: التطعيمات}
+          back: true
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Vaccine: dose 1 done", ar: "التطعيم: تمّت الجرعة 1" } }
-          - { kind: text, text: { en: "Book your child's second dose for 4 weeks from today.", ar: "احجز الجرعة الثانية لطفلك بعد 4 أسابيع من اليوم." }, gap: xs }
-          - { kind: button, text: { en: "Book dose 2", ar: "احجز الجرعة 2" }, gap: s }
+        - kind: listitem
+          avatar: {text: Salma, art: woman-3}
+          text: {en: Salma Hassan, ar: سلمى حسن}
+          sub: {en: Age 2 months, ar: العمر شهران}
+        - kind: card
+          gap: m
+          blocks:
+          - kind: badge
+            text:
+              en: "Vaccine: dose 1 done"
+              ar: "التطعيم: تمّت الجرعة 1"
+            tone: good
+            icon: check
+          - kind: text
+            text:
+              en: "Book your child's second dose for 4 weeks from today."
+              ar: احجز الجرعة الثانية لطفلك بعد 4 أسابيع من اليوم.
+            gap: s
+          - kind: button
+            text: {en: Book dose 2, ar: احجز الجرعة 2}
+            gap: m
     b:
       label: { en: "B: The message says when the next dose should be given.", ar: "B: الرسالة تقول متى يجب أن تُعطى الجرعة التالية." }
       mock:
-        width: 300
+        app: raha
+        appbar:
+          title: {en: Vaccines, ar: التطعيمات}
+          back: true
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Vaccine: dose 1 done", ar: "التطعيم: تمّت الجرعة 1" } }
-          - { kind: text, text: { en: "The second dose should be given after 4 weeks.", ar: "يجب أن تُعطى الجرعة الثانية بعد 4 أسابيع." }, gap: xs }
-          - { kind: button, text: { en: "Book dose 2", ar: "احجز الجرعة 2" }, gap: s }
+        - kind: listitem
+          avatar: {text: Salma, art: woman-3}
+          text: {en: Salma Hassan, ar: سلمى حسن}
+          sub: {en: Age 2 months, ar: العمر شهران}
+        - kind: card
+          gap: m
+          blocks:
+          - kind: badge
+            text:
+              en: "Vaccine: dose 1 done"
+              ar: "التطعيم: تمّت الجرعة 1"
+            tone: good
+            icon: check
+          - kind: text
+            text: {en: The second dose should be given after 4 weeks., ar: يجب أن تُعطى الجرعة الثانية بعد 4 أسابيع.}
+            gap: s
+          - kind: button
+            text: {en: Book dose 2, ar: احجز الجرعة 2}
+            gap: m
     answer: a
     reason:
       prompt: { en: "Why does A work better?", ar: "لماذا تنجح A أكثر؟" }

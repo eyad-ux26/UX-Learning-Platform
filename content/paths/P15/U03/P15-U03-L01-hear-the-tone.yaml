@@ -27,14 +27,44 @@ steps:
       en: "I'm a product designer on a banking app. Our marketing team says our text is boring and wants it to be \"fun\".\n\nBut some people say our new error message feels rude. I need a way to talk about tone that's clearer than \"fun\" or \"boring\"."
       ar: "أنا مصممة منتجات في تطبيق بنكي. وفريق التسويق يقول إن نصوصنا مملّة، ويريدها «ممتعة».\n\nلكن بعض الناس يقولون إن رسالة الخطأ الجديدة تبدو غير مهذّبة. أحتاج طريقة للحديث عن النبرة أوضح من «ممتع» و«ممل»."
     mock:
-      width: 300
-      blocks:
-        - { kind: title, text: { en: "Rasid", ar: "رصيد" } }
-        - kind: group
-          tone: tint
+      app: rasid
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: wallet
+          text: {en: Accounts, ar: الحسابات}
+        - icon: arrows-left-right
+          text: {en: Transfers, ar: التحويلات}
+        - icon: credit-card
+          text: {en: Cards, ar: البطاقات}
+        - icon: user
+          text: {en: Profile, ar: حسابي}
+      overlay:
+        type: dialog
+        blocks:
+        - {kind: icon, icon: warning-circle, size: l, color: red}
+        - kind: text
+          text:
+            en: "What did you do?! You broke it! \U0001F61C (Just kidding. We're having a problem on our side.)"
+            ar: "ماذا فعلت؟! لقد كسرته! \U0001F61C (نمزح فقط. عندنا مشكلة من جهتنا.)"
           gap: s
-          blocks:
-            - { kind: text, text: { en: "What did you do?! You broke it! 😜 (Just kidding. We're having a problem on our side.)", ar: "ماذا فعلت؟! لقد كسرته! 😜 (نمزح فقط. عندنا مشكلة من جهتنا.)" } }
+        - kind: button
+          text: {en: OK, ar: حسنًا}
+          gap: m
+      blocks:
+      - kind: listitem
+        icon: wallet
+        text: {en: Current account, ar: الحساب الجاري}
+        value:
+          en: "EGP 12,480"
+          ar: "12,480 جنيه"
+      - kind: listitem
+        icon: piggy-bank
+        text: {en: Savings, ar: التوفير}
+        value:
+          en: "EGP 40,000"
+          ar: "40,000 جنيه"
 
   - id: S02
     type: choose
@@ -138,17 +168,65 @@ steps:
     a:
       label: { en: "A: Formal words and long nouns.", ar: "A: كلمات رسمية وأسماء طويلة." }
       mock:
-        width: 300
+        app: rasid
+        frame: wide
+        url: rasid.example/accounts/current
+        navbar:
+          links:
+          - {en: Accounts, ar: الحسابات}
+          - {en: Cards, ar: البطاقات}
+          - {en: Insurance, ar: التأمين}
+          active: 0
+          actions:
+          - {icon: user}
         blocks:
-          - { kind: heading, text: { en: "Current account", ar: "الحساب الجاري" } }
-          - { kind: text, text: { en: "Account holders are entitled to complimentary online services and the issuance of a debit card without charge.", ar: "يحقّ لأصحاب الحسابات الحصول على خدمات إلكترونية مجانية وإصدار بطاقة خصم دون رسوم." }, gap: xs }
+        - {kind: image, art: bank-card, size: m}
+        - kind: title
+          text: {en: Current account, ar: الحساب الجاري}
+          gap: m
+        - kind: text
+          text: {en: Account holders are entitled to complimentary online services and the issuance of a debit card without charge., ar: يحقّ لأصحاب الحسابات الحصول على خدمات إلكترونية مجانية وإصدار بطاقة خصم دون رسوم.}
+          gap: s
+        - kind: row
+          gap: m
+          blocks:
+          - kind: button
+            text: {en: Open an account, ar: افتح حسابًا}
+          - kind: button
+            text: {en: Compare accounts, ar: قارن الحسابات}
+            style: outline
     b:
       label: { en: "B: Plain, everyday words, with no jokes.", ar: "B: كلمات بسيطة يومية، دون نكات." }
       mock:
-        width: 300
+        app: rasid
+        frame: wide
+        url: rasid.example/accounts/current
+        navbar:
+          links:
+          - {en: Accounts, ar: الحسابات}
+          - {en: Cards, ar: البطاقات}
+          - {en: Insurance, ar: التأمين}
+          active: 0
+          actions:
+          - {icon: user}
         blocks:
-          - { kind: heading, text: { en: "Current account", ar: "الحساب الجاري" } }
-          - { kind: text, text: { en: "Everything you need from a bank: online banking, the app and a debit card. All free.", ar: "كل ما تحتاجه من البنك: خدمات الإنترنت والتطبيق وبطاقة خصم. وكلها مجانية." }, gap: xs }
+        - {kind: image, art: bank-card, size: m}
+        - kind: title
+          text: {en: Current account, ar: الحساب الجاري}
+          gap: m
+        - kind: text
+          text:
+            en: "Everything you need from a bank: online banking, the app and a debit card. All free."
+            ar: "كل ما تحتاجه من البنك: خدمات الإنترنت والتطبيق وبطاقة خصم. وكلها مجانية."
+          gap: s
+        - kind: row
+          gap: m
+          blocks:
+          - kind: button
+            text: {en: Open an account, ar: افتح حسابًا}
+          - kind: button
+            text: {en: Compare accounts, ar: قارن الحسابات}
+            style: outline
     answer: b
     reason:
       prompt: { en: "Why does B do better?", ar: "لماذا تنجح B أكثر؟" }
@@ -195,36 +273,102 @@ steps:
       en: "Tap each option to see the change. Which line keeps it friendly and makes people trust us with their car?"
       ar: "اضغط على كل خيار لترى التغيير. أي سطر يبقى ودّيًا ويجعل الناس يثقون بنا في سياراتهم؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: rasid
+      appbar:
+        title: {en: Insurance, ar: التأمين}
+        back: true
+      caption: {en: Now, ar: الآن}
+      footer:
+      - kind: button
+        text: {en: Get a quote, ar: اطلب عرض سعر}
       blocks:
-        - { kind: heading, text: { en: "Car insurance", ar: "تأمين السيارات" } }
-        - { kind: text, text: { en: "Our customers are a happy bunch 😎 Crashed your car? Who cares, we've got you!", ar: "عملاؤنا مجموعة سعيدة 😎 صدمت سيارتك؟ ولا يهمّك، نحن معك!" }, gap: xs }
+      - {kind: image, art: car, size: m}
+      - kind: heading
+        text: {en: Car insurance, ar: تأمين السيارات}
+        gap: m
+      - kind: text
+        text:
+          en: "Our customers are a happy bunch \U0001F60E Crashed your car? Who cares, we've got you!"
+          ar: "عملاؤنا مجموعة سعيدة \U0001F60E صدمت سيارتك؟ ولا يهمّك، نحن معك!"
+        gap: xs
+      - kind: price
+        text: {en: From EGP 350, ar: من 350 جنيهًا}
+        per: {en: / month, ar: / شهريًا}
+        gap: m
     options:
       - id: more
         text: { en: "Add more jokes and emojis", ar: "أضف نكاتًا ورموزًا تعبيرية أكثر" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar:
+            title: {en: Insurance, ar: التأمين}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Get a quote, ar: اطلب عرض سعر}
           blocks:
-            - { kind: heading, text: { en: "Car insurance", ar: "تأمين السيارات" } }
-            - { kind: text, text: { en: "Our customers are a happy bunch 😎🚗💥 Crashed your car? LOL, who cares, we've got you! 🤣", ar: "عملاؤنا مجموعة سعيدة 😎🚗💥 صدمت سيارتك؟ هههه ولا يهمّك، نحن معك! 🤣" }, gap: xs }
+          - {kind: image, art: car, size: m}
+          - kind: heading
+            text: {en: Car insurance, ar: تأمين السيارات}
+            gap: m
+          - kind: text
+            text:
+              en: "Our customers are a happy bunch \U0001F60E\U0001F697\U0001F4A5 Crashed your car? LOL, who cares, we've got you! \U0001F923"
+              ar: "عملاؤنا مجموعة سعيدة \U0001F60E\U0001F697\U0001F4A5 صدمت سيارتك؟ هههه ولا يهمّك، نحن معك! \U0001F923"
+            gap: xs
+          - kind: price
+            text: {en: From EGP 350, ar: من 350 جنيهًا}
+            per: {en: / month, ar: / شهريًا}
+            gap: m
       - id: stiff
         text: { en: "Make it formal", ar: "اجعله رسميًا" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar:
+            title: {en: Insurance, ar: التأمين}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Get a quote, ar: اطلب عرض سعر}
           blocks:
-            - { kind: heading, text: { en: "Car insurance", ar: "تأمين السيارات" } }
-            - { kind: text, text: { en: "Policyholders are entitled to claim settlement in accordance with the applicable terms and conditions.", ar: "يحقّ لحاملي الوثائق تسوية المطالبات وفقًا للشروط والأحكام المعمول بها." }, gap: xs }
+          - {kind: image, art: car, size: m}
+          - kind: heading
+            text: {en: Car insurance, ar: تأمين السيارات}
+            gap: m
+          - kind: text
+            text: {en: Policyholders are entitled to claim settlement in accordance with the applicable terms and conditions., ar: يحقّ لحاملي الوثائق تسوية المطالبات وفقًا للشروط والأحكام المعمول بها.}
+            gap: xs
+          - kind: price
+            text: {en: From EGP 350, ar: من 350 جنيهًا}
+            per: {en: / month, ar: / شهريًا}
+            gap: m
       - id: warm
         text: { en: "Keep it casual, drop the jokes", ar: "أبقِه ودّيًا، واحذف النكات" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar:
+            title: {en: Insurance, ar: التأمين}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Get a quote, ar: اطلب عرض سعر}
           blocks:
-            - { kind: heading, text: { en: "Car insurance", ar: "تأمين السيارات" } }
-            - { kind: text, text: { en: "If you have an accident, report it in the app. We'll guide you through every step of your claim.", ar: "إن تعرّضت لحادث، أبلغ عنه في التطبيق. وسنرشدك في كل خطوة من مطالبتك." }, gap: xs }
+          - {kind: image, art: car, size: m}
+          - kind: heading
+            text: {en: Car insurance, ar: تأمين السيارات}
+            gap: m
+          - kind: text
+            text:
+              en: "If you have an accident, report it in the app. We'll guide you through every step of your claim."
+              ar: إن تعرّضت لحادث، أبلغ عنه في التطبيق. وسنرشدك في كل خطوة من مطالبتك.
+            gap: xs
+          - kind: price
+            text: {en: From EGP 350, ar: من 350 جنيهًا}
+            per: {en: / month, ar: / شهريًا}
+            gap: m
     answer: [warm]
     misconceptions:
       - id: MC-P15-018
