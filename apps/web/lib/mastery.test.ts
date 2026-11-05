@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getBank, getUnit } from "@uxgate/content";
+import { getUnit } from "@uxgate/content";
+import { getBank } from "@uxgate/content/full";
 import { firstTries, missedSkills, pickRound, unresolvedSkills } from "./mastery";
 
 const unit = getUnit("P10-U01")!;
@@ -15,6 +16,19 @@ describe("mastery round rules", () => {
     expect(missedSkills(unit, lessons, [])).toEqual([s1, s3]);
     expect(missedSkills(unit, lessons, [{ lessonId: "B", stepId: "S1", skillId: s1, correct: false }])).toEqual([s1, s3]);
     expect(missedSkills(unit, lessons, [{ lessonId: "B", stepId: "S1", skillId: s1, correct: true }])).toEqual([s3]);
+  });
+  it("a skill the skill check showed does not come back, even if a lesson missed it (#117)", () => {
+    const lessons = [
+      { lessonId: "L1", stepId: "S1", skillId: s1, correct: false },
+      { lessonId: "L2", stepId: "S1", skillId: s2, correct: false },
+      { lessonId: "CHK", stepId: "C1", skillId: s1, correct: true },
+      { lessonId: "CHK", stepId: "C2", skillId: s2, correct: true },
+      { lessonId: "CHK", stepId: "C3", skillId: s2, correct: false },
+      { lessonId: "CHK", stepId: "C4", skillId: s3, correct: false },
+    ];
+    expect(missedSkills(unit, lessons, [], "CHK")).toEqual([s2, s3]);
+    expect(unresolvedSkills(unit, lessons, [], "CHK")).toEqual([s2, s3]);
+    expect(missedSkills(unit, lessons, [])).toEqual([s1, s2, s3]);
   });
   it("nothing missed means no round", () => {
     expect(missedSkills(unit, [{ lessonId: "L1", stepId: "S1", skillId: s1, correct: true }], [])).toEqual([]);

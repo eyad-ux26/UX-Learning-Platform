@@ -1,5 +1,5 @@
-// Pure rules for the end-of-unit mastery round. Learning model: a skill missed anywhere in the unit comes back
-// after the skill check as a fresh re-test, until the learner gets one right on the first try.
+// Pure rules for the end-of-unit mastery round. Learning model: a skill missed anywhere in the unit and not shown in the
+// skill check comes back after the check as a fresh re-test, until the learner gets one right on the first try.
 import type { LessonVersion, QuestionStep, UnitMeta } from "@uxgate/content/types";
 import { isQuestion } from "@uxgate/player/engine";
 
@@ -12,11 +12,28 @@ export const MAX_MASTERY_MISSES = 2;
 export const VARIANTS_PER_SKILL = 2;
 
 /**
+ * Skills the skill check showed: every step of the skill in the check was right on the first try (the same rule as the
+ * check's summary). The mastery round brings back only "the rest", so these never come back in it.
+ */
+export function shownInCheck(lessonTries: FirstTry[], checkId: string | undefined): Set<string> {
+  if (!checkId) return new Set();
+  const inCheck = lessonTries.filter((t) => t.lessonId === checkId);
+  const wrong = new Set(inCheck.filter((t) => !t.correct).map((t) => t.skillId));
+  return new Set(inCheck.filter((t) => t.correct && !wrong.has(t.skillId)).map((t) => t.skillId));
+}
+
+/** Skills with a wrong first try anywhere in the unit, minus the ones the skill check then showed. */
+function missedInUnit(lessonTries: FirstTry[], checkId: string | undefined): Set<string> {
+  const shown = shownInCheck(lessonTries, checkId);
+  return new Set(lessonTries.filter((t) => !t.correct && !shown.has(t.skillId)).map((t) => t.skillId));
+}
+
+/**
  * A skill is missed when the first try of any of its steps in the unit's lessons was wrong, and no mastery step for it
  * was right first try yet. After 2 wrong mastery answers it stays Practiced and stops coming back.
  */
-export function missedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[]): string[] {
-  const missed = new Set(lessonTries.filter((t) => !t.correct).map((t) => t.skillId));
+export function missedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[], checkId?: string): string[] {
+  const missed = missedInUnit(lessonTries, checkId);
   const won = new Set(masteryTries.filter((t) => t.correct).map((t) => t.skillId));
   const misses = new Map<string, number>();
   for (const t of masteryTries) if (!t.correct) misses.set(t.skillId, (misses.get(t.skillId) ?? 0) + 1);
@@ -24,8 +41,8 @@ export function missedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstT
 }
 
 /** Skills missed in the unit and not yet won in a mastery round, whether or not a fresh variant is left to ask. */
-export function unresolvedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[]): string[] {
-  const missed = new Set(lessonTries.filter((t) => !t.correct).map((t) => t.skillId));
+export function unresolvedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[], checkId?: string): string[] {
+  const missed = missedInUnit(lessonTries, checkId);
   const won = new Set(masteryTries.filter((t) => t.correct).map((t) => t.skillId));
   return unit.skills.map((s) => s.id).filter((id) => missed.has(id) && !won.has(id));
 }
