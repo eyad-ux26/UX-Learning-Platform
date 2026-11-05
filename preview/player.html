@@ -300,6 +300,14 @@ body.board #main.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));paddi
 .tunescreen.upd .mock{animation:upd .6s ease-out}@keyframes upd{from{box-shadow:0 0 0 4px #5B3FD1}to{box-shadow:0 0 0 0 transparent}}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}.tunescreen.upd .mock{animation:none}}
 </style>
+<style>/*__MOCKCSS__*/</style>
+<style>
+/* realistic mocks drawn by the app renderer */
+.xm{margin:0 0 14px;max-width:380px}.xm.xm-wide,.xm.xm-tablet{max-width:640px}
+.exmock button.region{cursor:pointer;display:block;inline-size:100%;text-align:start;border:0;background:none;color:inherit;padding:0;font:inherit;border-radius:8px;outline:2px dashed transparent;outline-offset:3px}
+.exmock button.region:hover{outline-color:#B9B9C0}
+.exmock button.region[aria-pressed="true"]{outline:3px solid var(--accent);outline-offset:3px}
+</style>
 </head>
 <body>
 <header><div class="wrap">
@@ -314,6 +322,7 @@ body.board #main.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));paddi
 <main class="wrap" id="main"></main>
 <div class="actions" id="actions" hidden><div class="wrap"><div id="fb" aria-live="polite"></div><div class="btnrow" id="actionRow"></div></div></div>
 
+<script>/*__MOCKJS__*/</script>
 <script>
 const CONTENT = /*__CONTENT__*/null;
 const BUILD = /*__BUILD__*/"";
@@ -457,7 +466,13 @@ function mockBlocks(blocks, opts){
     return `<div class="${cls}"${st}>${inner}</div>`;
   }).join("");
 }
-const mock = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
+/* Mocks that use the realistic vocabulary (product, chrome, overlays, new blocks) are drawn by the app's renderer,
+   so the preview matches the app. Older mocks keep this page's renderer, with its tap-to-try controls. */
+const OLD_KINDS = ["title","heading","text","meta","small","chip","pill","line","button","link","image","banner","tip","iconbtn","field","select","radio","check","toggle","stepper","segmented","slider","calendar","wheel","chips","divider","group","row"];
+const usesNew = bs => (bs||[]).some(b => !OLD_KINDS.includes(b.kind) || b.art || b.icon || b.mark || b.note || usesNew(b.blocks));
+const realistic = m => !!(window.UXMock && (m.app || m.appbar || m.tabbar || m.navbar || m.footer || m.frame || m.screen || m.overlay || m.fab || m.theme || m.keyboard || m.url || m.reader || usesNew(m.blocks) || (m.overlay && usesNew(m.overlay.blocks))));
+const mock = (m, opts) => m && realistic(m) ? UXMock.html(m, lang, opts) : mockOld(m, opts);
+const mockOld = (m, opts) => m ? `<div class="mock${m.frame==="wide"?" wide":""}${m.gray?" gray":""}" dir="${m.dir || (lang==="ar"?"rtl":"ltr")}"${m.width?` style="max-width:${m.width}px"`:""}>${m.caption?`<div class="mcap">${esc(tx(m.caption))}</div>`:""}${m.blur?`<div class="blurred" style="filter:blur(${m.blur}px)" aria-hidden="true">${mockBlocks(m.blocks, opts)}</div>`:mockBlocks(m.blocks, opts)}</div>` : "";
 /* a source link that opens the article with the supporting passage highlighted (URL text fragment) */
 const fragUrl = r => r.quote ? `${r.url}#:~:text=${encodeURIComponent(r.quote).replace(/-/g, "%2D")}` : r.url;
 const srcTitle = (url, lessons) => { for (const l of lessons) { const x = (l.sources||[]).find(x => x.url === url); if (x) return tx(x.title); } return url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0]; };

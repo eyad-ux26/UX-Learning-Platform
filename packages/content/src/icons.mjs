@@ -10,7 +10,7 @@ let root = null;
 try { root = path.resolve(path.dirname(require.resolve("@phosphor-icons/core/assets/regular/house.svg")), "../.."); } catch { root = null; }
 
 /** Icons the renderer draws itself: status bar, app bar, lists, search, chat, reader strip, FAB default. */
-export const BASE_ICONS = ["caret-left", "caret-right", "caret-down", "check", "check-circle", "magnifying-glass", "paper-plane-tilt", "sparkle", "cell-signal-full", "wifi-high", "battery-full", "lock-simple", "speaker-high", "plus", "copy", "arrows-clockwise", "thumbs-up", "thumbs-down", "share-network", "bell", "app-window", "circle"];
+export const BASE_ICONS = ["x", "caret-left", "caret-right", "caret-down", "check", "check-circle", "magnifying-glass", "paper-plane-tilt", "sparkle", "cell-signal-full", "wifi-high", "battery-full", "lock-simple", "speaker-high", "plus", "copy", "arrows-clockwise", "thumbs-up", "thumbs-down", "share-network", "bell", "app-window", "circle"];
 const ICON_KEYS = new Set(["icon", "trail"]);
 export const isIconName = (v) => typeof v === "string" && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(v);
 const fileOf = (name) => {

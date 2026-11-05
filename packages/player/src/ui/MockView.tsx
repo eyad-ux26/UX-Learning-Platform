@@ -372,7 +372,7 @@ function Overlay({ o, locale }: { o: MockOverlay; locale: Locale }) {
       {scrim ? <div className="scrim" aria-hidden="true" /> : null}
       <div className={`ov ov-${o.type}${o.tall ? " tall" : ""}`}>
         {o.type === "sheet" && o.handle !== false ? <div className="grab" aria-hidden="true" /> : null}
-        {o.close ? <span className="ovx" aria-hidden="true">✕</span> : null}
+        {o.close ? <span className="ovx" aria-hidden="true"><Icon name="x" /></span> : null}
         {o.title ? <div className="ov-title">{mt(o.title, locale)}</div> : null}
         {o.blocks.map((c, i) => <Block key={i} b={c} locale={locale} />)}
       </div>
