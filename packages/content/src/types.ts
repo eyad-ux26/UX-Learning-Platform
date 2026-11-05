@@ -26,7 +26,11 @@ export type MockBlock = {
   blocks?: MockBlock[];
   [extra: string]: unknown;
 };
-export type Mock = { width?: number; caption?: Text; frame?: "wide"; dir?: "rtl" | "ltr"; gray?: boolean; blur?: number; blocks: MockBlock[] };
+/** A layer drawn over the screen. Dialogs and sheets dim the screen unless `scrim: false`. */
+export type MockOverlay = { type: "dialog" | "sheet" | "full" | "toast" | "banner"; blocks: MockBlock[]; close?: boolean; scrim?: boolean; handle?: boolean; tall?: boolean };
+/** A floating action button; `text` makes it an extended FAB. */
+export type MockFab = { icon?: string; text?: MockText };
+export type Mock = { width?: number; height?: number; caption?: MockText; frame?: "wide"; dir?: "rtl" | "ltr"; gray?: boolean; blur?: number; overlay?: MockOverlay; fab?: MockFab | MockFab[]; blocks: MockBlock[] };
 
 export type Option = { id: string; text: Text; mock?: Mock };
 export type Misconception = { id: string; when: string | string[]; feedback: Text };
