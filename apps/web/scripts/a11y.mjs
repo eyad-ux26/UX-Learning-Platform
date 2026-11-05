@@ -6,12 +6,17 @@ import AxeBuilder from "@axe-core/playwright";
 const { chromium } = createRequire(import.meta.url)("playwright-core"); // comes with @axe-core/playwright; the browser is installed by `npx playwright-core install chromium`
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/profile", "/app/lesson/P01-U01-L01"];
+const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/profile", "/app/lesson/P01-U01-L01",
+  // Slice 5: paywall, plans, checkout, results and billing (fixture states, no database).
+  "/app/path/P01?paywall=P01-U02", "/app/profile?paywall=cert", "/app/plans", "/app/plans?offer=founding&country=SA", "/app/checkout?period=year",
+  "/app/checkout/return?state=success", "/app/checkout/return?state=failed", "/app/settings/billing", "/app/settings/billing?state=failed",
+  "/app/settings/billing?state=wallet", "/app/settings/billing?state=active", "/app/settings/billing/cancel?state=active", "/app/settings/billing/refund?state=active", "/app/settings/billing/requests?state=requested",
+  "/app/settings/billing/receipt/fixture-pay-2?state=active", "/app/settings/billing?state=lapsed"];
 const views = [
   ["en", "light", { width: 1440, height: 900 }],
   ["ar", "dark", { width: 390, height: 844 }],
 ];
-const browser = await chromium.launch();
+const browser = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
 let bad = 0;
 for (const [locale, scheme, viewport] of views) {
   for (const p of pages) {

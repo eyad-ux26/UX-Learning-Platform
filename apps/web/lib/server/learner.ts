@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgress } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
+import { readPro } from "@/lib/server/billing/account";
 
 export type Learner = {
   db: SupabaseClient | null;
@@ -16,10 +17,12 @@ export type Learner = {
   currentPathId: string | null;
   practicedSkills: Set<string>;
   timeZone: string | null;
+  /** On UXGate Pro right now (slice 5). Free learners get Unit 1 of every path. */
+  pro: boolean;
 };
 
 const fixture = (): Learner => ({
-  db: null, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC",
+  db: null, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1",
   practicedSkills: new Set(["SK-P01-U01-01"]),
   progress: {
     displayName: "Nour", dailyGoal: 2, xpTotal: 240, lessonsToday: 1, streak: 12, today: "2026-10-30",
@@ -40,12 +43,13 @@ export async function getLearner(): Promise<Learner | null> {
   if (!data.user) return null;
   const userId = data.user.id;
   const progress = await loadProgress(db, userId);
-  const [onb, skills, prof, current] = await Promise.all([
+  const [onb, skills, prof, current, pro] = await Promise.all([
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id").eq("user_id", userId),
     db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle(),
     // Its own query: if the column is missing the rest of the app still loads.
     db.from("profiles").select("current_path_id").eq("user_id", userId).maybeSingle(),
+    readPro(db, userId),
   ]);
   const tz = prof.data?.time_zone ?? null;
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(new Date()));
@@ -55,6 +59,7 @@ export async function getLearner(): Promise<Learner | null> {
     recommendedPathId: onb.data?.recommended_path_id ?? null,
     currentPathId: current.data?.current_path_id ?? null,
     practicedSkills: new Set((skills.data ?? []).map((s) => s.skill_id)),
+    pro,
   };
 }
 

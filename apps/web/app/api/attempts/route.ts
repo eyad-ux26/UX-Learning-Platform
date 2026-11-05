@@ -9,6 +9,8 @@ import { buildPathView } from "@/lib/learning";
 import { loadProgress } from "@/lib/server/load-progress";
 import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
 import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
+import { lessonOpen } from "@/lib/billing/access";
+import { readPro } from "@/lib/server/billing/account";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
 const PER_MINUTE = 60;
@@ -34,6 +36,8 @@ export async function POST(req: Request) {
 
   const db = createAdminClient();
   const userId = auth.user.id;
+  // Units after Unit 1 need Pro, checked here and not only on the screen (slice 5). Read with the learner's own session.
+  if (!lessonOpen(body.lessonId, false) && !(await readPro(supabase, userId))) return NextResponse.json({ error: "pro_required" }, { status: 403 });
   if (!(await withinDbLimit(db, userId, "attempts-minute", PER_MINUTE, 60))) return tooMany();
 
   // Answers given on an older version of the lesson are scored against that version, which stays stored.

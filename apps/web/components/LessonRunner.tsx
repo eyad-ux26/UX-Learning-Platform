@@ -10,12 +10,12 @@ import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
 import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
-import { LessonEnd } from "./LessonEnd";
+import { LessonEnd, type ProNext } from "./LessonEnd";
 import type { ReplayKind } from "@/lib/replay";
 
-type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number; userId: string; replay: ReplayKind | null };
+type Props = { lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number; userId: string; replay: ReplayKind | null; proNext?: ProNext | null };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, proNext }: Props) {
   const router = useRouter();
   const t = useTranslations("sync");
   const sync = useSyncStatus();
@@ -58,7 +58,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   };
 
   if (!state) return <div className="player-loading" aria-busy="true" />;
-  if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} streak={streak} replay={replay} onContinue={leave} />;
+  if (finished) return <LessonEnd lesson={lesson} state={finished} locale={locale} unitId={unitId} streak={streak} replay={replay} onContinue={leave} proNext={proNext} />;
 
   return (
     <>
