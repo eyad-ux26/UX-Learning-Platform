@@ -8,6 +8,8 @@ import { redirect } from "@/i18n/navigation";
 import { buildPathView } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
 import { decideReplay } from "@/lib/replay";
+import { upNextOf, type PathEnd } from "@/lib/up-next";
+import { isShown, pathSkills } from "@/lib/certificate";
 
 export const dynamic = "force-dynamic";
 
@@ -30,5 +32,13 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
     const paid = me.db ? await me.db.from("attempts").select("started_at").eq("lesson_id", lessonId).eq("replay_kind", "paid").not("finished_at", "is", null) : null;
     replay = decideReplay(true, (paid?.data ?? []).map((p) => p.started_at as string), new Date(), me.timeZone);
   }
-  return <LessonRunner lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} />;
+  // Where the end page points: the next lesson of this path, or (after its last lesson) the certificate and other paths.
+  const upNext = view ? upNextOf(view, lessonId) : null;
+  let pathEnd: PathEnd | null = null;
+  if (view && !upNext) {
+    const skills = pathSkills(version.pathId);
+    const others = skills.filter((s) => !unit?.skills.some((k) => k.id === s.id));
+    pathEnd = { pathId: version.pathId, pathTitle, skills: skills.length, certReady: others.every((s) => isShown(me.skillStates.get(s.id)?.state)) };
+  }
+  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} />;
 }
