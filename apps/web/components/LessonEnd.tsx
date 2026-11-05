@@ -1,24 +1,24 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { Lesson, Locale } from "@uxgate/content/types";
-import { getUnit } from "@uxgate/content";
+import type { Lesson } from "@uxgate/content/types";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 import { Link } from "@/i18n/navigation";
 
 /** The next unit when it is part of Pro and the learner is on the free plan. */
 export type ProNext = { n: number; title: string };
+/** A skill of this lesson's unit, already in the learner's language. Passed from the server: client code never imports the content package. */
+export type UnitSkill = { id: string; title: string };
 
-export function LessonEnd({ lesson, state, locale, unitId, streak, replay, onContinue, proNext }: { lesson: Lesson; state: LessonState; locale: Locale; unitId: string; streak: number; replay: ReplayKind | null; onContinue: () => void; proNext?: ProNext | null }) {
+export function LessonEnd({ lesson, state, unitSkills, streak, replay, onContinue, proNext }: { lesson: Lesson; state: LessonState; unitSkills: UnitSkill[]; streak: number; replay: ReplayKind | null; onContinue: () => void; proNext?: ProNext | null }) {
   const t = useTranslations("end");
   const tb = useTranslations("billing");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
-  const unit = getUnit(unitId);
   // A skill counts as practised once a step on it was answered (not just shown).
   const practised = new Set<string>();
   lesson.steps.forEach((s, k) => { if (isQuestion(s) && state.steps[k].outcome && state.steps[k].outcome !== "revealed") practised.add(s.skill); });
-  const skills = (unit?.skills ?? []).filter((k) => practised.has(k.id));
+  const skills = unitSkills.filter((k) => practised.has(k.id));
   const minutes = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
 
   return (
@@ -45,7 +45,7 @@ export function LessonEnd({ lesson, state, locale, unitId, streak, replay, onCon
             <section className="card end-skills" aria-label={t("skills")}>
               <p className="t-over">{t("skills")}</p>
               {skills.map((k) => (
-                <div key={k.id} className="end-skill"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span className="t-small grow">{k.title[locale]}</span><span className="skill skill-practiced">{t("practiced")}</span></div>
+                <div key={k.id} className="end-skill"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span className="t-small grow">{k.title}</span><span className="skill skill-practiced">{t("practiced")}</span></div>
               ))}
             </section>
           ) : null}

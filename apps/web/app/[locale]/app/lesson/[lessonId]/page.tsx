@@ -38,5 +38,5 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
     const paid = me.db ? await me.db.from("attempts").select("started_at").eq("lesson_id", lessonId).eq("replay_kind", "paid").not("finished_at", "is", null) : null;
     replay = decideReplay(true, (paid?.data ?? []).map((p) => p.started_at as string), new Date(), me.timeZone);
   }
-  return <LessonRunner lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} />;
+  return <LessonRunner lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitSkills={(unit?.skills ?? []).map((k) => ({ id: k.id, title: k.title[locale as Locale] }))} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} />;
 }
