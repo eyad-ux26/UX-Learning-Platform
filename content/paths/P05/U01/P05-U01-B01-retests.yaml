@@ -37,12 +37,13 @@ steps:
       en: "What should we do so screen reader users get every feature?"
       ar: "ماذا نفعل ليحصل مستخدمو قارئ الشاشة على كل الميزات؟"
     mock:
-      width: 300
+      app: rasid
+      appbar: { title: { en: "Rasid Lite", ar: "رصيد Lite" } }
       blocks:
-        - { kind: title, text: { en: "Bank Lite", ar: "البنك Lite" } }
-        - { kind: button, style: plain, text: { en: "Balances", ar: "الرصيد" }, gap: s }
-        - { kind: button, style: plain, text: { en: "Transfers", ar: "التحويلات" }, gap: xs }
-        - { kind: small, color: muted, text: { en: "Bill payments: use the main app", ar: "دفع الفواتير: استخدم التطبيق الأساسي" }, gap: s }
+        - { kind: small, color: muted, text: { en: "The simple version for screen reader users", ar: "النسخة المبسّطة لمستخدمي قارئ الشاشة" } }
+        - { kind: listitem, icon: wallet, text: { en: "Balances", ar: "الرصيد" }, chevron: true, gap: s }
+        - { kind: listitem, icon: arrows-left-right, text: { en: "Transfers", ar: "التحويلات" }, chevron: true }
+        - { kind: listitem, icon: receipt, text: { en: "Bill payments", ar: "دفع الفواتير" }, sub: { en: "Not here: use the main app", ar: "غير موجود هنا: استخدم التطبيق الأساسي" } }
     options:
       - id: note
         text: { en: "Keep Lite, with a note that bills are paid in the main app", ar: "نُبقي Lite، مع ملاحظة أن الفواتير تُدفع في التطبيق الأساسي" }
@@ -81,38 +82,42 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل اختيار المقاعد سريعًا لزياد؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: shasha
+      appbar: { title: { en: "Pick 2 seats", ar: "اختر مقعدين" }, back: true }
       blocks: &seatnow
         - { kind: title, text: { en: "Pick 2 seats", ar: "اختر مقعدين" } }
-        - { kind: image, size: m, text: { en: "Seat map: 180 small seats", ar: "خريطة المقاعد: 180 مقعدًا صغيرًا" }, gap: s }
+        - { kind: seatmap, rows: 10, cols: 18, aisle: 9, taken: [ [0,3], [0,4], [2,8], [2,9], [4,12], [6,2], [7,15] ], gap: s }
         - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
     options:
       - id: keep
         text: { en: "Change nothing; the map works with a magnifier", ar: "لا تغيّر شيئًا؛ فالخريطة تعمل مع المكبّر" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: shasha
+          appbar: { title: { en: "Pick 2 seats", ar: "اختر مقعدين" }, back: true }
           blocks: *seatnow
       - id: help
         text: { en: "Add a help page on using the map with a magnifier", ar: "أضف صفحة مساعدة تشرح استخدام الخريطة مع المكبّر" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: shasha
+          appbar: { title: { en: "Pick 2 seats", ar: "اختر مقعدين" }, back: true }
           blocks:
             - { kind: title, text: { en: "Pick 2 seats", ar: "اختر مقعدين" } }
             - { kind: link, text: { en: "How to use the seat map with a magnifier", ar: "كيف تستخدم خريطة المقاعد مع المكبّر" }, gap: xs }
-            - { kind: image, size: m, text: { en: "Seat map: 180 small seats", ar: "خريطة المقاعد: 180 مقعدًا صغيرًا" }, gap: s }
+            - { kind: seatmap, rows: 10, cols: 18, aisle: 9, taken: [ [0,3], [0,4], [2,8], [2,9], [4,12], [6,2], [7,15] ], gap: s }
             - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
       - id: best
         text: { en: "Add a \"Best 2 seats together\" button above the map, for everyone", ar: "أضف زر «أفضل مقعدين بجوار بعض» فوق الخريطة، للجميع" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: shasha
+          appbar: { title: { en: "Pick 2 seats", ar: "اختر مقعدين" }, back: true }
           blocks:
             - { kind: title, text: { en: "Pick 2 seats", ar: "اختر مقعدين" } }
             - { kind: button, text: { en: "Best 2 seats together", ar: "أفضل مقعدين بجوار بعض" }, gap: s }
             - { kind: small, color: muted, text: { en: "or choose on the map", ar: "أو اختر من الخريطة" }, gap: s }
-            - { kind: image, size: m, text: { en: "Seat map: 180 small seats", ar: "خريطة المقاعد: 180 مقعدًا صغيرًا" }, gap: xs }
+            - { kind: seatmap, rows: 10, cols: 18, aisle: 9, taken: [ [0,3], [0,4], [2,8], [2,9], [4,12], [6,2], [7,15] ], gap: xs }
     answer: [best]
     misconceptions:
       - id: MC-P05-002
@@ -143,6 +148,12 @@ steps:
     prompt:
       en: "Which test will show what really stops screen reader users?"
       ar: "أي اختبار سيكشف ما يوقف مستخدمي قارئ الشاشة فعلًا؟"
+    mock:
+      app: mudawwana
+      appbar: { title: { en: "Screen reader test plan", ar: "خطة اختبار قارئ الشاشة" }, back: true }
+      blocks:
+        - { kind: heading, text: { en: "Food delivery app · order a meal", ar: "تطبيق توصيل الطعام · اطلب وجبة" } }
+        - { kind: list, style: number, gap: s, items: [ { en: "Turn on the screen reader on my phone", ar: "أشغّل قارئ الشاشة على هاتفي" }, { en: "Close my eyes", ar: "أغمض عينيّ" }, { en: "Order a meal and note where I get stuck", ar: "أطلب وجبة وأكتب أين أتوقّف" } ] }
     options:
       - id: me
         text: { en: "My plan is enough to find the problems", ar: "خطتي تكفي لاكتشاف المشكلات" }
@@ -180,11 +191,17 @@ steps:
       en: "What should I do so blind customers can really shop in my store?"
       ar: "ماذا أفعل ليستطيع العملاء المكفوفون الشراء فعلًا من متجري؟"
     mock:
-      width: 300
+      app: dar
+      frame: wide
+      navbar: { links: [ { en: "Kitchen", ar: "المطبخ" }, { en: "TVs", ar: "التلفزيونات" }, { en: "Offers", ar: "العروض" } ], actions: [ { icon: shopping-cart } ] }
       blocks:
-        - { kind: title, text: { en: "Spice shop", ar: "متجر التوابل" } }
-        - { kind: image, size: s, text: { en: "Products", ar: "المنتجات" }, gap: s }
-        - { kind: pill, text: { en: "♿ Accessibility toolbar", ar: "♿ شريط الأدوات" }, gap: m }
+        - { kind: title, text: { en: "Kitchen appliances", ar: "أجهزة المطبخ" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: card, art: fridge, blocks: [ { kind: small, text: { en: "Fridge 16 ft", ar: "ثلاجة 16 قدم" } }, { kind: price, text: { en: "EGP 21,500", ar: "21,500 جنيه" } } ] }
+            - { kind: card, art: washing-machine, blocks: [ { kind: small, text: { en: "Washer 8 kg", ar: "غسالة 8 كجم" } }, { kind: price, text: { en: "EGP 14,900", ar: "14,900 جنيه" } } ] }
+      fab: { icon: wheelchair, text: { en: "Accessibility toolbar · EGP 300/month", ar: "شريط الأدوات · 300 جنيه شهريًا" } }
     options:
       - id: test
         text: { en: "Watch a few blind customers shop on their own phones, and fix where they get stuck", ar: "أراقب بعض العملاء المكفوفين وهم يشترون من هواتفهم، وأُصلح ما يتعثّرون فيه" }
@@ -224,10 +241,12 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يُوصل زائرًا يعاني آلام الظهر إلى قصة آلام الظهر بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: nashat
+      frame: wide
+      url: nashat.example/stories
       blocks: &storiesnow
         - { kind: heading, text: { en: "Member stories", ar: "قصص الأعضاء" } }
-        - { kind: image, size: s, text: { en: "Salma: lost 12 kg", ar: "سلمى: خسرت 12 كيلو" }, gap: s }
+        - { kind: image, art: woman-1, size: s, text: { en: "Salma: lost 12 kg", ar: "سلمى: خسرت 12 كيلو" }, gap: s }
         - kind: row
           gap: xs
           blocks:
@@ -238,20 +257,24 @@ steps:
         text: { en: "Add bigger arrows on both sides", ar: "أضف أسهمًا أكبر على الجانبين" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/stories
           blocks:
             - { kind: heading, text: { en: "Member stories", ar: "قصص الأعضاء" } }
             - kind: row
               gap: s
               blocks:
                 - { kind: title, text: "‹" }
-                - { kind: image, size: s, text: { en: "Salma: lost 12 kg", ar: "سلمى: خسرت 12 كيلو" } }
+                - { kind: image, art: woman-1, size: s, text: { en: "Salma: lost 12 kg", ar: "سلمى: خسرت 12 كيلو" } }
                 - { kind: title, text: "›" }
       - id: several
         text: { en: "Show 3 stories at once, named by goal, with a link to all 10", ar: "اعرض 3 قصص معًا، كل قصة باسم هدفها، مع رابط للقصص العشر" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/stories
           blocks:
             - { kind: heading, text: { en: "Member stories", ar: "قصص الأعضاء" } }
             - { kind: link, text: { en: "Weight loss: Salma lost 12 kg", ar: "إنقاص الوزن: سلمى خسرت 12 كيلو" }, gap: xs }
@@ -262,10 +285,12 @@ steps:
         text: { en: "Make the slider move by itself every 5 seconds", ar: "اجعل الشرائح تتحرّك وحدها كل 5 ثوانٍ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/stories
           blocks:
             - { kind: heading, text: { en: "Member stories", ar: "قصص الأعضاء" } }
-            - { kind: image, size: s, text: { en: "Salma: lost 12 kg", ar: "سلمى: خسرت 12 كيلو" }, gap: s }
+            - { kind: image, art: woman-1, size: s, text: { en: "Salma: lost 12 kg", ar: "سلمى: خسرت 12 كيلو" }, gap: s }
             - { kind: meta, text: { en: "1 / 10 · next in 5 s", ar: "1 من 10 · التالي بعد 5 ثوانٍ" }, gap: xs }
     answer: [several]
     misconceptions:
@@ -297,10 +322,11 @@ steps:
       en: "Which change lets people find one ingredient's amount straight away?"
       ar: "أي تغيير يجعل الناس يجدون كمية مكوّن واحد فورًا؟"
     mock:
-      width: 300
+      app: tabkha
+      appbar: { title: { en: "Recipe", ar: "الوصفة" }, back: true }
       blocks:
         - { kind: title, text: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" } }
-        - { kind: image, size: m, text: { en: "▶ Video · 6:00", ar: "▶ فيديو · 6:00" }, gap: s }
+        - { kind: image, art: food-grill, size: m, text: { en: "▶ Video · 6:00", ar: "▶ فيديو · 6:00" }, gap: s }
     options:
       - id: replay
         text: { en: "Add a \"Back 10 seconds\" button to the video", ar: "أضف زر «رجوع 10 ثوانٍ» إلى الفيديو" }
@@ -340,7 +366,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يسمح للأستاذ سامي بالدفع بالرقم كما كتبه؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: lamha
+      appbar: { title: { en: "Payment", ar: "الدفع" }, back: true }
       blocks:
         - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, filled: true, text: "4111 1111 1111 1111", tone: bad, error: { en: "Invalid card number", ar: "رقم البطاقة غير صحيح" } }
     options:
@@ -348,14 +375,16 @@ steps:
         text: { en: "Add a hint above the box: \"No spaces\"", ar: "أضف تلميحًا فوق المربع: «بدون مسافات»" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: lamha
+          appbar: { title: { en: "Payment", ar: "الدفع" }, back: true }
           blocks:
             - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, hintFirst: true, hint: { en: "No spaces", ar: "بدون مسافات" }, filled: true, text: "4111 1111 1111 1111", tone: bad, error: { en: "Invalid card number", ar: "رقم البطاقة غير صحيح" } }
       - id: accept
         text: { en: "Accept the spaces, and let the app remove them", ar: "اقبل المسافات، واجعل التطبيق يحذفها بنفسه" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: lamha
+          appbar: { title: { en: "Payment", ar: "الدفع" }, back: true }
           blocks:
             - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, filled: true, text: "4111 1111 1111 1111" }
             - { kind: small, color: green, text: { en: "✓ Visa", ar: "✓ Visa" }, gap: xs }
@@ -363,7 +392,8 @@ steps:
         text: { en: "Change the error to \"Please remove the spaces\"", ar: "غيّر رسالة الخطأ إلى «من فضلك احذف المسافات»" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: lamha
+          appbar: { title: { en: "Payment", ar: "الدفع" }, back: true }
           blocks:
             - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, filled: true, text: "4111 1111 1111 1111", tone: bad, error: { en: "Please remove the spaces", ar: "من فضلك احذف المسافات" } }
     answer: [accept]
@@ -397,7 +427,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل عمّ محمود يضبط 8:15 بأسهل شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: dawaa
+      appbar: { title: { en: "New reminder", ar: "تذكير جديد" }, back: true }
       blocks: &medwheel
         - { kind: small, weight: bold, text: { en: "Remind me at", ar: "ذكّرني الساعة" } }
         - kind: group
@@ -412,14 +443,16 @@ steps:
         text: { en: "A box where he can type 8:15", ar: "مربع يكتب فيه 8:15" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: dawaa
+          appbar: { title: { en: "New reminder", ar: "تذكير جديد" }, back: true }
           blocks:
             - { kind: field, label: { en: "Remind me at", ar: "ذكّرني الساعة" }, filled: true, text: "8:15", hint: { en: "For example 8:15", ar: "مثلًا 8:15" } }
       - id: buzz
         text: { en: "Keep the wheel, and make the phone vibrate at each minute", ar: "أبقِ العجلة، واجعل الهاتف يهتز مع كل دقيقة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: dawaa
+          appbar: { title: { en: "New reminder", ar: "تذكير جديد" }, back: true }
           blocks:
             - { kind: small, weight: bold, text: { en: "Remind me at", ar: "ذكّرني الساعة" } }
             - kind: group
@@ -434,7 +467,8 @@ steps:
         text: { en: "Keep the wheel; it never gives a wrong time", ar: "أبقِ العجلة؛ فهي لا تسمح بوقت خطأ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: dawaa
+          appbar: { title: { en: "New reminder", ar: "تذكير جديد" }, back: true }
           blocks: *medwheel
     answer: [type]
     misconceptions:
@@ -467,7 +501,8 @@ steps:
       en: "What should we do with the button, so readers who need bigger text can still read?"
       ar: "ماذا نفعل بالزر، ليظل من يحتاجون خطًا أكبر قادرين على القراءة؟"
     mock:
-      width: 300
+      app: mirsad
+      appbar: { logo: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
       blocks:
         - kind: row
           blocks:
@@ -513,18 +548,25 @@ steps:
     a:
       label: { en: "A: Follow the phone's setting, and let people change it", ar: "A: نتبع إعداد الهاتف، ونسمح للناس بتغييره" }
       mock:
-        width: 300
+        app: rasid
+        appbar: { title: { en: "Display", ar: "العرض" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Theme", ar: "المظهر" } }
-          - { kind: text, text: { en: "Follows your phone's light or dark setting. You can change it here.", ar: "يتبع إعداد الفاتح أو الداكن في هاتفك. ويمكنك تغييره من هنا." }, gap: s }
-          - { kind: segmented, options: [{ en: "Light", ar: "فاتح" }, { en: "Dark", ar: "داكن" }, { en: "Like my phone", ar: "مثل هاتفي" }], value: 2, gap: s }
+          - { kind: small, weight: bold, text: { en: "Theme", ar: "المظهر" } }
+          - { kind: small, text: { en: "Follows your phone's light or dark setting. You can change it here.", ar: "يتبع إعداد الفاتح أو الداكن في هاتفك. ويمكنك تغييره من هنا." }, gap: xs }
+          - { kind: segmented, options: [ { en: "Light", ar: "فاتح" }, { en: "Dark", ar: "داكن" }, { en: "Like my phone", ar: "مثل هاتفي" } ], value: 2, gap: s }
     b:
       label: { en: "B: Make the app dark only, to match our brand", ar: "B: نجعل التطبيق داكنًا فقط، ليناسب هوية البنك" }
       mock:
-        width: 300
+        app: rasid
+        theme: dark
+        appbar: { logo: true }
         blocks:
-          - { kind: title, text: { en: "Theme", ar: "المظهر" } }
-          - { kind: text, text: { en: "Our new look is dark only, to match our brand.", ar: "شكلنا الجديد داكن فقط، ليناسب هوية البنك." }, gap: s }
+          - { kind: banner, tone: info, icon: moon, text: { en: "Our new look is dark only, to match our brand.", ar: "شكلنا الجديد داكن فقط، ليناسب هوية البنك." } }
+          - kind: card
+            gap: m
+            blocks:
+              - { kind: small, text: { en: "Current account", ar: "الحساب الجاري" } }
+              - { kind: price, size: l, text: { en: "EGP 12,400", ar: "12,400 جنيه" } }
     answer: a
     misconceptions:
       - id: MC-P05-013

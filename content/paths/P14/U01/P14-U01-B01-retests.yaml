@@ -37,17 +37,40 @@ steps:
       - id: close
         text: { en: "Close the photo at once", ar: "أغلق الصورة فورًا" }
         mock:
+          app: suwar
           frame: wide
-          blocks:
-            - { kind: title, text: { en: "My photos", ar: "صوري" } }
-            - { kind: meta, text: { en: "beach.jpg · last saved 20 minutes ago", ar: "beach.jpg · آخر حفظ قبل 20 دقيقة" }, gap: m }
+          url: suwar.example/photos
+          navbar: &snav { links: [ { en: "Photos", ar: "الصور" }, { en: "Albums", ar: "الألبومات" }, { en: "Shared", ar: "مشاركة" } ], active: 0, search: true, actions: [ { icon: upload-simple }, { icon: user } ] }
+          blocks: &sgrid
+            - { kind: heading, text: { en: "My photos", ar: "صوري" } }
+            - { kind: meta, text: { en: "beach.jpg · last saved 20 minutes ago", ar: "beach.jpg · آخر حفظ قبل 20 دقيقة" }, gap: s }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: image, art: beach, size: s, alt: { en: "Beach", ar: "شاطئ" } }
+                - { kind: image, art: family, size: s, alt: { en: "Family", ar: "العائلة" } }
+                - { kind: image, art: city-night, size: s, alt: { en: "City at night", ar: "المدينة ليلًا" } }
+                - { kind: image, art: desert, size: s, alt: { en: "Desert", ar: "صحراء" } }
       - id: ask
         text: { en: "A dialog: \"Save changes to beach.jpg?\" with Save, Don't save and Cancel", ar: "Dialog: «حفظ التغييرات في beach.jpg؟» مع «احفظ» و«لا تحفظ» و«إلغاء»" }
         mock:
+          app: suwar
           frame: wide
-          blocks: &editor
-            - { kind: title, text: { en: "beach.jpg", ar: "beach.jpg" } }
-            - { kind: image, size: l, gap: m }
+          url: suwar.example/edit/beach.jpg
+          navbar: *snav
+          blocks:
+            - kind: row
+              blocks:
+                - { kind: title, text: { en: "beach.jpg", ar: "beach.jpg" } }
+                - { kind: iconbtn, icon: x, aria: { en: "Close editor", ar: "أغلق المحرر" } }
+            - { kind: image, art: beach, size: l, alt: { en: "Beach photo being edited", ar: "صورة الشاطئ قيد التعديل" }, gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: chip, icon: crop, text: { en: "Crop", ar: "قص" } }
+                - { kind: chip, icon: sun, text: { en: "Light", ar: "الإضاءة" }, active: true }
+                - { kind: chip, icon: drop, text: { en: "Color", ar: "الألوان" } }
+                - { kind: chip, icon: magic-wand, text: { en: "Filters", ar: "الفلاتر" } }
           overlay:
             type: dialog
             blocks:
@@ -57,15 +80,16 @@ steps:
                 gap: m
                 blocks:
                   - { kind: button, text: { en: "Save", ar: "احفظ" } }
-                  - { kind: button, text: { en: "Don't save", ar: "لا تحفظ" }, style: plain }
-                  - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: plain }
+                  - { kind: button, text: { en: "Don't save", ar: "لا تحفظ" }, style: outline }
+                  - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text }
       - id: snack
         text: { en: "Close it, with a snackbar: \"Unsaved changes were discarded\"", ar: "أغلقها، مع Snackbar: «تم تجاهل التغييرات غير المحفوظة»" }
         mock:
+          app: suwar
           frame: wide
-          blocks:
-            - { kind: title, text: { en: "My photos", ar: "صوري" } }
-            - { kind: meta, text: { en: "beach.jpg · last saved 20 minutes ago", ar: "beach.jpg · آخر حفظ قبل 20 دقيقة" }, gap: m }
+          url: suwar.example/photos
+          navbar: *snav
+          blocks: *sgrid
           overlay:
             type: toast
             blocks:
@@ -104,40 +128,60 @@ steps:
       - id: keep
         text: { en: "Keep the newsletter dialog", ar: "أبقِ Dialog النشرة البريدية" }
         mock:
-          width: 300
-          blocks: &pax
-            - { kind: title, text: { en: "Passenger 1 of 2", ar: "المسافر 1 من 2" } }
-            - { kind: field, label: { en: "Full name as on passport", ar: "الاسم كاملًا كما في جواز السفر" }, filled: true, text: "Lobna Adel", gap: m }
-            - { kind: field, label: { en: "Passport number", ar: "رقم جواز السفر" }, text: "", gap: s }
+          app: zad
+          appbar: &zbar { title: { en: "Passenger details", ar: "بيانات المسافرين" }, back: true }
+          blocks:
+            - { kind: progress, value: 50, label: { en: "Passenger 1 of 2", ar: "المسافر 1 من 2" } }
+            - { kind: field, label: { en: "Full name as on passport", ar: "الاسم كاملًا كما في جواز السفر" }, icon: user, filled: true, text: "Lobna Adel", gap: m }
+            - { kind: field, label: { en: "Passport number", ar: "رقم جواز السفر" }, icon: identification-card, text: "", gap: s }
+            - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, icon: calendar-blank, text: "", gap: s }
+          footer:
+            - { kind: button, text: { en: "Next passenger", ar: "المسافر التالي" } }
+          keyboard: text
           overlay:
             type: dialog
             close: true
             blocks:
-              - { kind: heading, text: { en: "Never miss a deal!", ar: "لا تفوّتي أي عرض!" } }
-              - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "", gap: s }
+              - { kind: icon, icon: tag, size: l, color: brand }
+              - { kind: heading, text: { en: "Never miss a deal!", ar: "لا تفوّتي أي عرض!" }, gap: s }
+              - { kind: small, text: { en: "Get our best fares to your inbox.", ar: "تصلك أفضل أسعارنا على بريدك." }, gap: xs }
+              - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, icon: envelope-simple, text: "", gap: s }
               - { kind: button, text: { en: "Subscribe", ar: "اشتركي" }, gap: m }
       - id: box
         text: { en: "Remove the dialog; add an unticked newsletter checkbox on the booking-confirmed page", ar: "احذف الـ Dialog؛ وأضف Checkbox غير محدّد للنشرة في صفحة تأكيد الحجز" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: "Booking confirmed", ar: "تم تأكيد الحجز" } }
           blocks:
-            - { kind: title, text: { en: "Booking confirmed", ar: "تم تأكيد الحجز" } }
-            - { kind: meta, text: { en: "Cairo → Jeddah · 14 Nov", ar: "القاهرة ← جدة · 14 نوفمبر" }, gap: s }
-            - { kind: check, text: { en: "Email me deals on this route", ar: "أرسلوا لي عروض هذا الخط بالبريد" }, gap: l }
+            - { kind: icon, icon: check-circle-fill, size: l, color: good }
+            - { kind: heading, text: { en: "You're going to Jeddah!", ar: "أنتِ مسافرة إلى جدة!" }, gap: s }
+            - kind: card
+              gap: m
+              blocks:
+                - { kind: listitem, icon: airplane-tilt, text: { en: "Cairo → Jeddah", ar: "القاهرة ← جدة" }, sub: { en: "14 Nov · 09:40 · 2 passengers", ar: "14 نوفمبر · 09:40 · مسافران" } }
+                - { kind: listitem, icon: ticket, text: { en: "Booking code", ar: "رمز الحجز" }, value: "ZD7K4Q" }
+            - { kind: check, text: { en: "Email me deals on this route", ar: "أرسلوا لي عروض هذا الخط بالبريد" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "View my trip", ar: "اعرضي رحلتي" } }
       - id: end
         text: { en: "Keep the dialog, but show it after passenger 2", ar: "أبقِ الـ Dialog، لكن اعرضه بعد المسافر الثاني" }
         mock:
           caption: { en: "After passenger 2, before payment", ar: "بعد المسافر الثاني، قبل الدفع" }
-          width: 300
+          app: zad
+          appbar: { title: { en: "Payment", ar: "الدفع" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Payment", ar: "الدفع" } }
-            - { kind: meta, text: { en: "2 passengers · EGP 18,400", ar: "مسافران · 18400 جنيه" }, gap: s }
+            - { kind: listitem, icon: airplane-tilt, text: { en: "Cairo → Jeddah · 14 Nov", ar: "القاهرة ← جدة · 14 نوفمبر" }, sub: { en: "2 passengers", ar: "مسافران" } }
+            - { kind: price, text: { en: "EGP 18,400", ar: "18400 جنيه" }, gap: m }
+            - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, icon: credit-card, text: "", gap: m }
+          footer:
+            - { kind: button, text: { en: "Pay EGP 18,400", ar: "ادفعي 18400 جنيه" } }
           overlay:
             type: dialog
             close: true
             blocks:
-              - { kind: heading, text: { en: "Never miss a deal!", ar: "لا تفوّتي أي عرض!" } }
-              - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "", gap: s }
+              - { kind: icon, icon: tag, size: l, color: brand }
+              - { kind: heading, text: { en: "Never miss a deal!", ar: "لا تفوّتي أي عرض!" }, gap: s }
+              - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, icon: envelope-simple, text: "", gap: s }
               - { kind: button, text: { en: "Subscribe", ar: "اشتركي" }, gap: m }
     answer: [box]
     misconceptions:
@@ -177,25 +221,40 @@ steps:
     a:
       label: { en: "Version A: the plans on a page with her car's details", ar: "النسخة A: الخطط في صفحة مع بيانات سيارتها" }
       mock:
-        width: 260
+        app: aman
+        appbar: { title: { en: "Insure your car", ar: "أمّن سيارتك" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "Insure your car", ar: "أمّن سيارتك" } }
-          - { kind: banner, text: { en: "Your car: 9 years old · value EGP 650,000", ar: "سيارتك: عمرها 9 سنوات · قيمتها 650 ألف جنيه" }, gap: s }
-          - { kind: radio, text: { en: "Full cover · EGP 21,000/year", ar: "تغطية شاملة · 21000 جنيه/سنة" }, gap: m }
-          - { kind: radio, text: { en: "Third party · EGP 4,500/year", ar: "ضد الغير · 4500 جنيه/سنة" }, gap: xs }
+          - { kind: banner, icon: car, tone: info, text: { en: "Your car: 9 years old · value EGP 650,000", ar: "سيارتك: عمرها 9 سنوات · قيمتها 650 ألف جنيه" } }
+          - kind: card
+            gap: m
+            blocks:
+              - { kind: radio, text: { en: "Full cover", ar: "تغطية شاملة" } }
+              - { kind: price, text: { en: "EGP 21,000", ar: "21000 جنيه" }, per: { en: "/ year", ar: "/ سنويًا" }, gap: xs }
+              - { kind: small, text: { en: "Theft, fire, and damage to your car and others'", ar: "السرقة والحريق وأضرار سيارتك وسيارات الغير" }, gap: xs }
+          - kind: card
+            gap: s
+            blocks:
+              - { kind: radio, text: { en: "Third party", ar: "ضد الغير" } }
+              - { kind: price, text: { en: "EGP 4,500", ar: "4500 جنيه" }, per: { en: "/ year", ar: "/ سنويًا" }, gap: xs }
+              - { kind: small, text: { en: "Only damage you cause to others", ar: "فقط الأضرار التي تسببها للغير" }, gap: xs }
+        footer:
+          - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     b:
       label: { en: "Version B: the plans in a dialog over the car's page", ar: "النسخة B: الخطط في Dialog فوق صفحة السيارة" }
       mock:
-        width: 260
+        app: aman
+        appbar: { title: { en: "My car", ar: "سيارتي" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "My car", ar: "سيارتي" } }
-          - { kind: meta, text: { en: "9 years old · value EGP 650,000", ar: "عمرها 9 سنوات · قيمتها 650 ألف جنيه" }, gap: s }
+          - { kind: image, art: car, size: m, alt: { en: "Your car", ar: "سيارتك" } }
+          - { kind: listitem, icon: car, text: { en: "Hyundai Elantra 2017", ar: "هيونداي إلنترا 2017" }, sub: { en: "9 years old · value EGP 650,000", ar: "عمرها 9 سنوات · قيمتها 650 ألف جنيه" }, gap: s }
+          - { kind: button, text: { en: "Choose a plan", ar: "اختاري خطة" }, gap: m }
         overlay:
           type: dialog
           blocks:
             - { kind: heading, text: { en: "Choose a plan", ar: "اختاري خطة" } }
             - { kind: radio, text: { en: "Full cover · EGP 21,000/year", ar: "تغطية شاملة · 21000 جنيه/سنة" }, gap: s }
             - { kind: radio, text: { en: "Third party · EGP 4,500/year", ar: "ضد الغير · 4500 جنيه/سنة" }, gap: xs }
+            - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
     answer: a
     misconceptions:
       - id: MC-P14-005
@@ -230,31 +289,37 @@ steps:
       - id: dialog
         text: { en: "Keep the list in the dialog", ar: "أبقِ القائمة في الـ Dialog" }
         mock:
-          width: 300
-          blocks: &mapbg
-            - { kind: heading, text: { en: "Collection points", ar: "نقاط الاستلام" } }
-            - { kind: image, size: l, gap: s }
+          app: dar
+          appbar: &dbar { title: { en: "Collection points", ar: "نقاط الاستلام" }, back: true }
+          blocks: &dmap
+            - { kind: searchbar, text: { en: "Search an area", ar: "ابحثي عن منطقة" } }
+            - { kind: image, art: map, size: l, alt: { en: "Map with three collection points", ar: "خريطة عليها ثلاث نقاط استلام" }, gap: s }
           overlay:
             type: dialog
+            title: { en: "Pick a point", ar: "اختاري نقطة" }
             blocks:
               - { kind: radio, text: { en: "Point A · Tahrir St", ar: "النقطة A · شارع التحرير" } }
               - { kind: radio, text: { en: "Point B · Nile Corniche", ar: "النقطة B · كورنيش النيل" }, gap: xs }
               - { kind: radio, text: { en: "Point C · Ramses Sq", ar: "النقطة C · ميدان رمسيس" }, gap: xs }
+              - { kind: button, text: { en: "Confirm", ar: "تأكيد" }, gap: m }
       - id: page
         text: { en: "Show the map with the points marked, and the list under it", ar: "اعرض الخريطة وعليها النقاط، والقائمة تحتها" }
         mock:
-          width: 300
+          app: dar
+          appbar: *dbar
           blocks:
-            - { kind: heading, text: { en: "Collection points", ar: "نقاط الاستلام" } }
-            - { kind: image, size: m, gap: s }
-            - { kind: radio, text: { en: "A · Tahrir St · 0.4 km from your office", ar: "A · شارع التحرير · 0.4 كم من مكتبك" }, gap: m }
-            - { kind: radio, text: { en: "B · Nile Corniche · 1.8 km", ar: "B · كورنيش النيل · 1.8 كم" }, gap: xs }
-            - { kind: radio, text: { en: "C · Ramses Sq · 3.1 km", ar: "C · ميدان رمسيس · 3.1 كم" }, gap: xs }
+            - { kind: image, art: map, size: m, alt: { en: "Map with three collection points", ar: "خريطة عليها ثلاث نقاط استلام" } }
+            - { kind: listitem, icon: map-pin-fill, text: { en: "A · Tahrir St", ar: "A · شارع التحرير" }, sub: { en: "Open until 10 pm", ar: "مفتوح حتى 10 م" }, value: { en: "0.4 km from your office", ar: "0.4 كم من مكتبك" }, check: true, gap: s }
+            - { kind: listitem, icon: map-pin, text: { en: "B · Nile Corniche", ar: "B · كورنيش النيل" }, sub: { en: "Open until 9 pm", ar: "مفتوح حتى 9 م" }, value: { en: "1.8 km", ar: "1.8 كم" } }
+            - { kind: listitem, icon: map-pin, text: { en: "C · Ramses Sq", ar: "C · ميدان رمسيس" }, sub: { en: "Open 24 hours", ar: "مفتوح 24 ساعة" }, value: { en: "3.1 km", ar: "3.1 كم" } }
+          footer:
+            - { kind: button, text: { en: "Collect from Point A", ar: "استلمي من النقطة A" } }
       - id: half
         text: { en: "Keep the dialog, but make it see-through", ar: "أبقِ الـ Dialog، لكن اجعله شفافًا" }
         mock:
-          width: 300
-          blocks: *mapbg
+          app: dar
+          appbar: *dbar
+          blocks: *dmap
           overlay:
             type: dialog
             scrim: false
@@ -297,20 +362,23 @@ steps:
       - id: swipe
         text: { en: "Keep it as it is", ar: "أبقِه كما هو" }
         mock:
-          width: 300
-          blocks: &menu
-            - { kind: title, text: { en: "Koshary House", ar: "بيت الكشري" } }
-            - { kind: meta, text: { en: "Cart: 2 items", ar: "السلّة: منتجان" }, gap: s }
+          app: lokma
+          appbar: &kbar { title: { en: "Koshary House", ar: "بيت الكشري" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" }, count: 2 } ] }
+          blocks: &kmenu
+            - { kind: image, art: food-koshary, size: m, alt: { en: "Koshary", ar: "كشري" } }
+            - { kind: listitem, art: food-koshary, text: { en: "Large koshary", ar: "كشري كبير" }, sub: { en: "In your cart", ar: "في سلّتك" }, value: { en: "EGP 75", ar: "75 جنيه" }, gap: s }
+            - { kind: listitem, art: food-dessert, text: { en: "Rice pudding", ar: "أرز باللبن" }, sub: { en: "In your cart", ar: "في سلّتك" }, value: { en: "EGP 30", ar: "30 جنيه" } }
           overlay:
             type: sheet
-            blocks: &note
+            blocks:
               - { kind: heading, text: { en: "Note for the restaurant", ar: "ملاحظة للمطعم" } }
               - { kind: field, label: "", text: { en: "e.g. extra crispy onions", ar: "مثال: بصل مقرمش زيادة" }, gap: s }
       - id: fixed
         text: { en: "Add an ✕ Close and Done, and make Back close the sheet", ar: "أضف ✕ للإغلاق و«تم»، واجعل زر الرجوع يغلق الـ Sheet" }
         mock:
-          width: 300
-          blocks: *menu
+          app: lokma
+          appbar: *kbar
+          blocks: *kmenu
           overlay:
             type: sheet
             close: true
@@ -321,12 +389,13 @@ steps:
       - id: warn
         text: { en: "Keep the swipe; warn \"Back will empty your cart\"", ar: "أبقِ السحب؛ ونبّه «زر الرجوع سيُفرغ سلّتك»" }
         mock:
-          width: 300
-          blocks: *menu
+          app: lokma
+          appbar: *kbar
+          blocks: *kmenu
           overlay:
             type: sheet
             blocks:
-              - { kind: small, color: red, text: { en: "Back will empty your cart.", ar: "زر الرجوع سيُفرغ سلّتك." } }
+              - { kind: banner, icon: warning, tone: warn, text: { en: "Back will empty your cart.", ar: "زر الرجوع سيُفرغ سلّتك." } }
               - { kind: heading, text: { en: "Note for the restaurant", ar: "ملاحظة للمطعم" }, gap: s }
               - { kind: field, label: "", text: { en: "e.g. extra crispy onions", ar: "مثال: بصل مقرمش زيادة" }, gap: s }
     answer: [fixed]
@@ -363,40 +432,52 @@ steps:
       - id: sheet
         text: { en: "Keep the six steps in the sheet", ar: "أبقِ الخطوات الست في الـ Sheet" }
         mock:
-          width: 300
-          blocks: &acc
-            - { kind: title, text: { en: "Accounts", ar: "الحسابات" } }
-            - { kind: meta, text: { en: "Current · EGP 42,300", ar: "جاري · 42300 جنيه" }, gap: m }
+          app: rasid
+          appbar: &rbar { title: { en: "Accounts", ar: "الحسابات" }, large: true }
+          tabbar: &rtabs
+            active: 0
+            items:
+              - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+              - { icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" } }
+              - { icon: receipt, text: { en: "Bills", ar: "فواتير" } }
+              - { icon: list, text: { en: "More", ar: "المزيد" } }
+          blocks: &racc
+            - { kind: listitem, icon: wallet, text: { en: "Current account", ar: "الحساب الجاري" }, sub: "•••• 3307", value: { en: "EGP 42,300", ar: "42300 جنيه" } }
+            - { kind: listitem, icon: piggy-bank, text: { en: "Open a savings certificate", ar: "افتحي شهادة ادخار" }, chevron: true, gap: s }
           overlay:
             type: sheet
             close: true
             blocks:
-              - { kind: small, text: { en: "Step 3 of 6", ar: "الخطوة 3 من 6" } }
+              - { kind: progress, value: 50, label: { en: "Step 3 of 6", ar: "الخطوة 3 من 6" } }
               - { kind: heading, text: { en: "Interest payout", ar: "صرف العائد" }, gap: s }
               - { kind: radio, text: { en: "Monthly", ar: "شهريًا" }, gap: s }
               - { kind: radio, text: { en: "At the end", ar: "في النهاية" }, gap: xs }
       - id: pages
         text: { en: "Make it a flow of pages, one step each", ar: "اجعله مسارًا من الصفحات، خطوة في كل صفحة" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: "Savings certificate", ar: "شهادة ادخار" }, back: true }
           blocks:
-            - { kind: small, text: { en: "Step 3 of 6", ar: "الخطوة 3 من 6" } }
-            - { kind: title, text: { en: "Interest payout", ar: "صرف العائد" }, gap: s }
+            - { kind: progress, value: 50, label: { en: "Step 3 of 6", ar: "الخطوة 3 من 6" } }
+            - { kind: title, text: { en: "Interest payout", ar: "صرف العائد" }, gap: m }
             - { kind: radio, text: { en: "Monthly", ar: "شهريًا" }, gap: m }
             - { kind: radio, text: { en: "At the end", ar: "في النهاية" }, gap: xs }
-            - { kind: button, text: { en: "Next", ar: "التالي" }, gap: l }
+          footer:
+            - { kind: button, text: { en: "Next", ar: "التالي" } }
       - id: sheets
         text: { en: "Give each step its own sheet, one after another", ar: "اجعل لكل خطوة Sheet خاصًا، واحدًا بعد الآخر" }
         mock:
-          width: 300
-          blocks: *acc
+          app: rasid
+          appbar: *rbar
+          tabbar: *rtabs
+          blocks: *racc
           overlay:
             type: sheet
             blocks:
               - { kind: heading, text: { en: "Interest payout", ar: "صرف العائد" } }
               - { kind: radio, text: { en: "Monthly", ar: "شهريًا" }, gap: s }
               - { kind: radio, text: { en: "At the end", ar: "في النهاية" }, gap: xs }
-              - { kind: small, text: { en: "(sheet 3, on top of sheets 1 and 2)", ar: "(الـ Sheet الثالث، فوق الأول والثاني)" }, gap: s }
+              - { kind: small, text: { en: "Sheet 3, on top of sheets 1 and 2", ar: "الـ Sheet الثالث، فوق الأول والثاني" }, note: { en: "Two more sheets are stacked underneath", ar: "تحته Sheet اثنان آخران" }, gap: s }
     answer: [pages]
     misconceptions:
       - id: MC-P14-008
@@ -437,27 +518,30 @@ steps:
       - id: tip
         text: { en: "Keep the rules in the tooltip", ar: "أبقِ الشروط في الـ Tooltip" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Create account", ar: "أنشئي حسابًا" }, back: true, logo: true }
           blocks:
-            - { kind: title, text: { en: "Create account", ar: "أنشئي حسابًا" } }
-            - { kind: field, label: { en: "Password ⓘ", ar: "كلمة المرور ⓘ" }, text: "", gap: m }
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, icon: envelope-simple, filled: true, text: "salma@mail.com" }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, icon: lock, trail: info, text: "", gap: m }
             - { kind: button, text: { en: "Sign up", ar: "سجّلي" }, gap: m }
       - id: hint
         text: { en: "Show the rules under the field", ar: "اعرض الشروط تحت الحقل" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Create account", ar: "أنشئي حسابًا" }, back: true, logo: true }
           blocks:
-            - { kind: title, text: { en: "Create account", ar: "أنشئي حسابًا" } }
-            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "", hint: { en: "At least 8 characters, including a number.", ar: "8 أحرف على الأقل، منها رقم." }, gap: m }
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, icon: envelope-simple, filled: true, text: "salma@mail.com" }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, icon: lock, text: "", hint: { en: "At least 8 characters, including a number.", ar: "8 أحرف على الأقل، منها رقم." }, gap: m }
             - { kind: button, text: { en: "Sign up", ar: "سجّلي" }, gap: m }
       - id: error
         text: { en: "Remove the tooltip; show the rules only after a wrong password", ar: "احذف الـ Tooltip؛ واعرض الشروط فقط بعد كلمة مرور خاطئة" }
         mock:
           caption: { en: "After she taps Sign up", ar: "بعد أن تضغط «سجّلي»" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Create account", ar: "أنشئي حسابًا" }, back: true, logo: true }
           blocks:
-            - { kind: title, text: { en: "Create account", ar: "أنشئي حسابًا" } }
-            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••", error: { en: "Use at least 8 characters, including a number.", ar: "استخدمي 8 أحرف على الأقل، منها رقم." }, gap: m }
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, icon: envelope-simple, filled: true, text: "salma@mail.com" }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, icon: lock, filled: true, text: "••••••", error: { en: "Use at least 8 characters, including a number.", ar: "استخدمي 8 أحرف على الأقل، منها رقم." }, gap: m }
             - { kind: button, text: { en: "Sign up", ar: "سجّلي" }, gap: m }
     answer: [hint]
     misconceptions:
@@ -491,29 +575,35 @@ steps:
     a:
       label: { en: "Version A: icons with labels", ar: "النسخة A: أيقونات مع تسميات" }
       mock:
-        width: 260
-        blocks:
-          - { kind: heading, text: { en: "Home", ar: "الرئيسية" } }
-          - kind: row
-            gap: xl
+        app: rasid
+        appbar: { title: { en: "Home", ar: "الرئيسية" }, large: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" }, count: 1 } ] }
+        tabbar:
+          active: 0
+          items:
+            - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+            - { icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" } }
+            - { icon: receipt, text: { en: "Bills", ar: "فواتير" } }
+            - { icon: list, text: { en: "More", ar: "المزيد" } }
+        blocks: &rhome
+          - kind: card
             blocks:
-              - { kind: small, text: { en: "⌂ Home", ar: "⌂ الرئيسية" } }
-              - { kind: small, text: { en: "⇄ Transfer", ar: "⇄ تحويل" } }
-              - { kind: small, text: { en: "▤ Bills", ar: "▤ فواتير" } }
-              - { kind: small, text: { en: "☰ More", ar: "☰ المزيد" } }
+              - { kind: small, text: { en: "Current account", ar: "الحساب الجاري" } }
+              - { kind: price, text: { en: "EGP 42,300", ar: "42300 جنيه" }, gap: xs }
+          - { kind: listitem, icon: arrow-down-left, text: { en: "Salary", ar: "الراتب" }, sub: { en: "1 Nov", ar: "1 نوفمبر" }, value: { en: "+EGP 18,000", ar: "+18000 جنيه" }, gap: m }
+          - { kind: listitem, icon: lightning, text: { en: "Electricity bill", ar: "فاتورة الكهرباء" }, sub: { en: "30 Oct", ar: "30 أكتوبر" }, value: { en: "−EGP 640", ar: "−640 جنيه" } }
     b:
       label: { en: "Version B: icons only", ar: "النسخة B: أيقونات فقط" }
       mock:
-        width: 260
-        blocks:
-          - { kind: heading, text: { en: "Home", ar: "الرئيسية" } }
-          - kind: row
-            gap: xl
-            blocks:
-              - { kind: iconbtn, text: "⌂" }
-              - { kind: iconbtn, text: "⇄" }
-              - { kind: iconbtn, text: "▤" }
-              - { kind: iconbtn, text: "☰" }
+        app: rasid
+        appbar: { title: { en: "Home", ar: "الرئيسية" }, large: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" }, count: 1 } ] }
+        tabbar:
+          active: 0
+          items:
+            - { icon: house, aria: { en: "Home", ar: "الرئيسية" } }
+            - { icon: arrows-left-right, aria: { en: "Transfer", ar: "تحويل" } }
+            - { icon: receipt, aria: { en: "Bills", ar: "فواتير" } }
+            - { icon: list, aria: { en: "More", ar: "المزيد" } }
+        blocks: *rhome
     answer: a
     misconceptions:
       - id: MC-P14-010
@@ -549,20 +639,33 @@ steps:
       - id: dialog
         text: { en: "Keep the dialog", ar: "أبقِ الـ Dialog" }
         mock:
-          width: 300
+          app: suwar
+          appbar: &abar { title: { en: "Family · Summer", ar: "العائلة · الصيف" }, back: true, actions: [ { icon: upload-simple, aria: { en: "Upload", ar: "ارفعي" } }, { icon: share-network, aria: { en: "Share", ar: "شاركي" } } ] }
           blocks: &album
-            - { kind: title, text: { en: "Family · Summer", ar: "العائلة · الصيف" } }
-            - { kind: meta, text: { en: "48 photos", ar: "48 صورة" }, gap: s }
-            - { kind: image, size: m, gap: m }
+            - { kind: meta, text: { en: "48 photos · shared with 5 people", ar: "48 صورة · مشترك مع 5 أشخاص" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, art: family, size: s, alt: { en: "Family", ar: "العائلة" } }
+                - { kind: image, art: beach, size: s, alt: { en: "Beach", ar: "شاطئ" } }
+                - { kind: image, art: people, size: s, alt: { en: "Friends", ar: "أصدقاء" } }
+            - kind: row
+              gap: xs
+              blocks:
+                - { kind: image, art: food-grill, size: s, alt: { en: "Dinner", ar: "عشاء" } }
+                - { kind: image, art: city-night, size: s, alt: { en: "City at night", ar: "المدينة ليلًا" } }
+                - { kind: image, art: photo, size: s, alt: { en: "Photo", ar: "صورة" } }
           overlay:
             type: dialog
             blocks:
-              - { kind: heading, text: { en: "Upload complete", ar: "اكتمل الرفع" } }
+              - { kind: icon, icon: check-circle-fill, size: l, color: good }
+              - { kind: heading, text: { en: "Upload complete", ar: "اكتمل الرفع" }, gap: s }
               - { kind: button, text: { en: "OK", ar: "حسنًا" }, gap: m }
       - id: banner
         text: { en: "A banner that stays until she closes it", ar: "Banner يبقى حتى تغلقه" }
         mock:
-          width: 300
+          app: suwar
+          appbar: *abar
           blocks: *album
           overlay:
             type: banner
@@ -572,7 +675,8 @@ steps:
       - id: snack
         text: { en: "A snackbar: \"12 photos added\"", ar: "Snackbar: «أُضيفت 12 صورة»" }
         mock:
-          width: 300
+          app: suwar
+          appbar: *abar
           blocks: *album
           overlay:
             type: toast
@@ -612,10 +716,22 @@ steps:
       - id: snack
         text: { en: "A snackbar when she opens the app", ar: "Snackbar حين تفتح التطبيق" }
         mock:
-          width: 300
+          app: kalima
+          appbar: &kalbar { title: { en: "Kalima", ar: "كلمة" }, logo: true, actions: [ { icon: fire-fill, aria: { en: "Streak", ar: "أيام متتالية" }, count: 12 } ] }
+          tabbar: &kaltabs
+            active: 0
+            items:
+              - { icon: book-open, text: { en: "Learn", ar: "تعلّم" } }
+              - { icon: chats-circle, text: { en: "Practice", ar: "تدرّب" } }
+              - { icon: user, text: { en: "Profile", ar: "حسابي" } }
           blocks: &lessons
-            - { kind: title, text: { en: "Today's lesson", ar: "درس اليوم" } }
-            - { kind: meta, text: { en: "Ordering at a café · 6 min", ar: "الطلب في مقهى · 6 دقائق" }, gap: s }
+            - kind: card
+              art: cafe
+              blocks:
+                - { kind: small, text: { en: "Today's lesson", ar: "درس اليوم" } }
+                - { kind: heading, text: { en: "Ordering at a café", ar: "الطلب في مقهى" }, gap: xs }
+                - { kind: meta, text: { en: "6 min · Lesson 14", ar: "6 دقائق · الدرس 14" }, gap: xs }
+                - { kind: button, text: { en: "Start", ar: "ابدئي" }, gap: s }
           overlay:
             type: toast
             blocks:
@@ -623,22 +739,33 @@ steps:
       - id: dialog
         text: { en: "A dialog that blocks lessons until she pays", ar: "Dialog يحجب الدروس حتى تدفع" }
         mock:
-          width: 300
+          app: kalima
+          appbar: *kalbar
+          tabbar: *kaltabs
           blocks: *lessons
           overlay:
             type: dialog
             blocks:
-              - { kind: heading, text: { en: "Update your payment", ar: "حدّثي طريقة الدفع" } }
+              - { kind: icon, icon: credit-card, size: l, color: brand }
+              - { kind: heading, text: { en: "Update your payment", ar: "حدّثي طريقة الدفع" }, gap: s }
               - { kind: button, text: { en: "Update card", ar: "حدّثي البطاقة" }, gap: m }
       - id: banner
         text: { en: "A banner with \"Update card\" until it's paid", ar: "Banner فيه «حدّثي البطاقة» حتى يتم الدفع" }
         mock:
-          width: 300
+          app: kalima
+          appbar: *kalbar
+          tabbar: *kaltabs
           blocks:
-            - { kind: banner, text: { en: "Your card was declined. Update it within 3 days to keep your lessons.", ar: "رُفضت بطاقتك. حدّثيها خلال 3 أيام لتحتفظي بدروسك." } }
+            - { kind: banner, icon: credit-card, tone: warn, text: { en: "Your card was declined. Update it within 3 days to keep your lessons.", ar: "رُفضت بطاقتك. حدّثيها خلال 3 أيام لتحتفظي بدروسك." } }
             - { kind: link, text: { en: "Update card", ar: "حدّثي البطاقة" }, gap: s }
-            - { kind: title, text: { en: "Today's lesson", ar: "درس اليوم" }, gap: m }
-            - { kind: meta, text: { en: "Ordering at a café · 6 min", ar: "الطلب في مقهى · 6 دقائق" }, gap: s }
+            - kind: card
+              art: cafe
+              gap: m
+              blocks:
+                - { kind: small, text: { en: "Today's lesson", ar: "درس اليوم" } }
+                - { kind: heading, text: { en: "Ordering at a café", ar: "الطلب في مقهى" }, gap: xs }
+                - { kind: meta, text: { en: "6 min · Lesson 14", ar: "6 دقائق · الدرس 14" }, gap: xs }
+                - { kind: button, text: { en: "Start", ar: "ابدئي" }, gap: s }
     answer: [banner]
     misconceptions:
       - id: MC-P14-014

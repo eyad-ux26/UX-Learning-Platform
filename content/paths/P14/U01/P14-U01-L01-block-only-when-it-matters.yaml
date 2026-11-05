@@ -25,20 +25,24 @@ steps:
       en: "I'm designing a wallet app. Hassan is paying his electricity bill in it. He has checked the amount and is about to confirm.\n\nAs he taps **Pay now**, a window covers the screen: an offer for our new credit card. He closes it, loses his place, and decides to pay later."
       ar: "أصمّم تطبيق محفظة. يدفع فيه حسن فاتورة الكهرباء. راجع المبلغ وهو على وشك التأكيد.\n\nوحين ضغط **ادفع الآن**، غطّت نافذة الشاشة: عرض لبطاقة الائتمان الجديدة عندنا. أغلقها، فضاع مكانه، وقرّر أن يدفع لاحقًا."
     mock:
-      width: 300
+      app: kanz
+      appbar: { title: { en: "Pay bill", ar: "دفع الفاتورة" }, back: true }
       blocks: &paynow
-        - { kind: title, text: { en: "Pay bill", ar: "دفع الفاتورة" } }
-        - { kind: meta, text: { en: "Electricity · October", ar: "الكهرباء · أكتوبر" }, gap: s }
-        - { kind: heading, text: { en: "EGP 640", ar: "640 جنيه" }, gap: m }
-        - { kind: small, text: { en: "From: Wallet balance", ar: "من: رصيد المحفظة" }, gap: s }
-        - { kind: button, text: { en: "Pay now", ar: "ادفع الآن" }, gap: xl }
-      overlay:
+        - { kind: listitem, icon: lightning, text: { en: "Cairo Electricity", ar: "كهرباء القاهرة" }, sub: { en: "Account 4471 208 · October", ar: "حساب 4471 208 · أكتوبر" } }
+        - { kind: small, text: { en: "Amount due", ar: "المبلغ المستحق" }, gap: l }
+        - { kind: price, text: { en: "EGP 640", ar: "640 جنيه" }, size: l }
+        - { kind: listitem, icon: wallet, text: { en: "Pay from Kanz balance", ar: "الدفع من رصيد كنز" }, value: { en: "EGP 2,315", ar: "2,315 جنيه" }, gap: l }
+      footer: &payfooter
+        - { kind: button, text: { en: "Pay EGP 640", ar: "ادفع 640 جنيه" } }
+      overlay: &promo
         type: dialog
         close: true
         blocks:
-          - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" } }
-          - { kind: small, text: { en: "Apply for our new credit card in 2 minutes.", ar: "قدّم على بطاقتنا الائتمانية الجديدة في دقيقتين." }, gap: s }
+          - { kind: image, art: bank-card, size: s }
+          - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" }, gap: s }
+          - { kind: small, text: { en: "Apply for the Kanz credit card in 2 minutes.", ar: "قدّم على بطاقة كنز الائتمانية في دقيقتين." }, gap: s }
           - { kind: button, text: { en: "Apply now", ar: "قدّم الآن" }, gap: m }
+          - { kind: button, text: { en: "Not now", ar: "ليس الآن" }, style: text, gap: xs }
 
   - id: S02
     type: tune
@@ -55,52 +59,50 @@ steps:
       ar: "ما زال الفريق يريد أن يرى الناس عرض البطاقة. جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: kanz
+      appbar: { title: { en: "Pay bill", ar: "دفع الفاتورة" }, back: true }
       blocks: *paynow
-      overlay:
-        type: dialog
-        close: true
-        blocks:
-          - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" } }
-          - { kind: small, text: { en: "Apply for our new credit card in 2 minutes.", ar: "قدّم على بطاقتنا الائتمانية الجديدة في دقيقتين." }, gap: s }
-          - { kind: button, text: { en: "Apply now", ar: "قدّم الآن" }, gap: m }
+      footer: *payfooter
+      overlay: *promo
     options:
       - id: delay
         text: { en: "Keep the window, but show it 5 seconds after the screen opens", ar: "أبقِ النافذة، لكن اعرضها بعد 5 ثوانٍ من فتح الشاشة" }
         mock:
           caption: { en: "After this change (5 seconds in)", ar: "بعد هذا التغيير (بعد 5 ثوانٍ)" }
-          width: 300
+          app: kanz
+          appbar: { title: { en: "Pay bill", ar: "دفع الفاتورة" }, back: true }
           blocks: *paynow
-          overlay:
-            type: dialog
-            close: true
-            blocks:
-              - { kind: heading, text: { en: "Get 5% cashback!", ar: "احصل على استرداد 5%!" } }
-              - { kind: small, text: { en: "Apply for our new credit card in 2 minutes.", ar: "قدّم على بطاقتنا الائتمانية الجديدة في دقيقتين." }, gap: s }
-              - { kind: button, text: { en: "Apply now", ar: "قدّم الآن" }, gap: m }
+          footer: *payfooter
+          overlay: *promo
       - id: after
         text: { en: "Remove the window; show the offer as a line on the \"Payment done\" screen", ar: "احذف النافذة؛ واعرض العرض سطرًا في شاشة «تمّ الدفع»" }
         mock:
           caption: { en: "After this change (once paid)", ar: "بعد هذا التغيير (بعد الدفع)" }
-          width: 300
+          app: kanz
+          appbar: { title: { en: "Payment done", ar: "تمّ الدفع" } }
           blocks:
-            - { kind: title, text: { en: "Payment done", ar: "تمّ الدفع" } }
-            - { kind: meta, text: { en: "EGP 640 · Electricity · October", ar: "640 جنيه · الكهرباء · أكتوبر" }, gap: s }
+            - { kind: icon, icon: check-circle-fill, size: l, color: brand }
+            - { kind: title, text: { en: "EGP 640 paid", ar: "دُفع 640 جنيه" }, gap: s }
+            - { kind: meta, text: { en: "Cairo Electricity · October · Ref. 88213", ar: "كهرباء القاهرة · أكتوبر · مرجع 88213" }, gap: xs }
             - { kind: button, text: { en: "Back to home", ar: "العودة للرئيسية" }, gap: l }
-            - { kind: divider, gap: l }
-            - { kind: small, text: { en: "Get 5% cashback on bills with our credit card.", ar: "احصل على استرداد 5% على الفواتير ببطاقتنا الائتمانية." }, gap: m }
-            - { kind: link, text: { en: "See the card", ar: "اعرف البطاقة" }, gap: s }
+            - kind: card
+              gap: xl
+              blocks:
+                - { kind: listitem, art: bank-card, text: { en: "5% cashback on bills", ar: "استرداد 5% على الفواتير" }, sub: { en: "With the Kanz credit card", ar: "مع بطاقة كنز الائتمانية" } }
+                - { kind: link, text: { en: "See the card", ar: "اعرف البطاقة" }, gap: xs }
       - id: smaller
         text: { en: "Keep the window, but make it smaller with a big Close button", ar: "أبقِ النافذة، لكن صغّرها وكبّر زر الإغلاق" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: kanz
+          appbar: { title: { en: "Pay bill", ar: "دفع الفاتورة" }, back: true }
           blocks: *paynow
+          footer: *payfooter
           overlay:
             type: dialog
             blocks:
-              - { kind: small, text: { en: "Get 5% cashback with our new credit card.", ar: "احصل على استرداد 5% ببطاقتنا الائتمانية الجديدة." } }
-              - { kind: button, text: { en: "Close", ar: "إغلاق" }, gap: m }
+              - { kind: small, text: { en: "Get 5% cashback with the Kanz credit card.", ar: "احصل على استرداد 5% ببطاقة كنز الائتمانية." } }
+              - { kind: button, text: { en: "Close", ar: "إغلاق" }, style: text, gap: m }
     answer: [after]
     misconceptions:
       - id: MC-P14-002
@@ -183,34 +185,39 @@ steps:
       - id: instant
         text: { en: "Remove the card at once", ar: "احذف البطاقة فورًا" }
         mock:
-          width: 300
+          app: kanz
+          appbar: { title: { en: "Saved cards", ar: "البطاقات المحفوظة" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Saved cards", ar: "البطاقات المحفوظة" } }
-            - { kind: meta, text: { en: "No saved cards", ar: "لا توجد بطاقات محفوظة" }, gap: m }
-            - { kind: button, text: { en: "Add a card", ar: "أضف بطاقة" }, gap: l, style: plain }
+            - { kind: icon, icon: credit-card, size: l, color: brand, gap: xl }
+            - { kind: heading, text: { en: "No saved cards", ar: "لا توجد بطاقات محفوظة" }, gap: s }
+            - { kind: small, text: { en: "Add a card to pay bills faster.", ar: "أضف بطاقة لتدفع فواتيرك أسرع." }, gap: xs }
+          footer:
+            - { kind: button, text: { en: "Add a card", ar: "أضف بطاقة" }, icon: plus }
       - id: dialog
         text: { en: "Ask first, in a dialog that names the card", ar: "اسأل أولًا، في نافذة تذكر البطاقة" }
         mock:
-          width: 300
-          blocks: &cards
-            - { kind: title, text: { en: "Saved cards", ar: "البطاقات المحفوظة" } }
-            - { kind: meta, text: { en: "Visa ending 4821", ar: "Visa تنتهي بـ 4821" }, gap: m }
-            - { kind: link, text: { en: "Remove", ar: "حذف" }, gap: s }
+          app: kanz
+          appbar: { title: { en: "Saved cards", ar: "البطاقات المحفوظة" }, back: true }
+          blocks:
+            - { kind: listitem, art: bank-card, text: { en: "Visa ending 4821", ar: "Visa تنتهي بـ 4821" }, sub: { en: "Expires 08/28 · Default", ar: "تنتهي 08/28 · الأساسية" }, value: { en: "Remove", ar: "حذف" } }
           overlay:
             type: dialog
             blocks:
               - { kind: heading, text: { en: "Remove Visa ending 4821?", ar: "حذف Visa التي تنتهي بـ 4821؟" } }
               - { kind: small, text: { en: "To use it again, you'll need to add it and get a code from your bank.", ar: "لاستخدامها مرة أخرى، ستحتاج إلى إضافتها والحصول على رمز من البنك." }, gap: s }
               - { kind: button, text: { en: "Remove card", ar: "احذف البطاقة" }, style: danger, gap: m }
-              - { kind: button, text: { en: "Keep card", ar: "أبقِ البطاقة" }, style: plain, gap: s }
+              - { kind: button, text: { en: "Keep card", ar: "أبقِ البطاقة" }, style: text, gap: s }
       - id: banner
         text: { en: "Remove it and show a banner: \"Card removed\"", ar: "احذفها واعرض Banner: «حُذفت البطاقة»" }
         mock:
-          width: 300
+          app: kanz
+          appbar: { title: { en: "Saved cards", ar: "البطاقات المحفوظة" }, back: true }
           blocks:
-            - { kind: banner, text: { en: "Card removed.", ar: "حُذفت البطاقة." } }
-            - { kind: title, text: { en: "Saved cards", ar: "البطاقات المحفوظة" }, gap: m }
-            - { kind: meta, text: { en: "No saved cards", ar: "لا توجد بطاقات محفوظة" }, gap: m }
+            - { kind: banner, icon: check-circle, tone: good, text: { en: "Card removed.", ar: "حُذفت البطاقة." } }
+            - { kind: icon, icon: credit-card, size: l, color: brand, gap: xl }
+            - { kind: heading, text: { en: "No saved cards", ar: "لا توجد بطاقات محفوظة" }, gap: s }
+          footer:
+            - { kind: button, text: { en: "Add a card", ar: "أضف بطاقة" }, icon: plus }
     answer: [dialog]
     misconceptions:
       - id: MC-P14-003
@@ -246,35 +253,40 @@ steps:
       - id: settings
         text: { en: "Open the Settings page so he can add an address", ar: "افتح صفحة الإعدادات ليضيف عنوانًا" }
         mock:
-          width: 300
+          app: lokma
+          appbar: { title: { en: "Settings", ar: "الإعدادات" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Settings", ar: "الإعدادات" } }
-            - { kind: meta, text: { en: "Account", ar: "الحساب" }, gap: m }
-            - { kind: meta, text: { en: "Addresses", ar: "العناوين" }, gap: s }
-            - { kind: meta, text: { en: "Payment methods", ar: "طرق الدفع" }, gap: s }
-            - { kind: meta, text: { en: "Notifications", ar: "الإشعارات" }, gap: s }
+            - { kind: listitem, icon: user, text: { en: "Account", ar: "الحساب" }, chevron: true }
+            - { kind: listitem, icon: map-pin, text: { en: "Addresses", ar: "العناوين" }, sub: { en: "No saved address", ar: "لا يوجد عنوان محفوظ" }, chevron: true }
+            - { kind: listitem, icon: credit-card, text: { en: "Payment methods", ar: "طرق الدفع" }, chevron: true }
+            - { kind: listitem, icon: bell, text: { en: "Notifications", ar: "الإشعارات" }, chevron: true }
       - id: ask
         text: { en: "Ask for the address in a dialog over the cart", ar: "اطلب العنوان في نافذة فوق السلّة" }
         mock:
-          width: 300
+          app: lokma
+          appbar: { title: { en: "Your cart", ar: "سلّتك" }, back: true }
           blocks: &cart
-            - { kind: title, text: { en: "Your cart", ar: "سلّتك" } }
-            - { kind: meta, text: { en: "2 × Chicken shawarma", ar: "2 × شاورما فراخ" }, gap: m }
-            - { kind: meta, text: { en: "1 × Fries", ar: "1 × بطاطس" }, gap: s }
-            - { kind: button, text: { en: "Order · EGP 285", ar: "اطلب · 285 جنيه" }, gap: xl }
+            - { kind: listitem, art: food-grill, text: { en: "Chicken shawarma", ar: "شاورما فراخ" }, sub: { en: "× 2", ar: "× 2" }, value: { en: "EGP 220", ar: "220 جنيه" } }
+            - { kind: listitem, art: food-burger, text: { en: "Fries", ar: "بطاطس" }, sub: { en: "× 1", ar: "× 1" }, value: { en: "EGP 65", ar: "65 جنيه" } }
+            - { kind: divider, gap: m }
+            - { kind: row, blocks: [ { kind: meta, text: { en: "Total", ar: "الإجمالي" } }, { kind: price, text: { en: "EGP 285", ar: "285 جنيه" } } ] }
+          footer: &cartfooter
+            - { kind: button, text: { en: "Order · EGP 285", ar: "اطلب · 285 جنيه" } }
           overlay:
             type: dialog
             close: true
             blocks:
               - { kind: heading, text: { en: "Where should we deliver?", ar: "إلى أين نوصّل الطلب؟" } }
-              - { kind: field, label: { en: "Street and building", ar: "الشارع والعمارة" }, text: { en: "e.g. 12 Nile St, building 4", ar: "مثال: 12 شارع النيل، عمارة 4" }, gap: m }
+              - { kind: field, icon: map-pin, label: { en: "Street and building", ar: "الشارع والعمارة" }, text: { en: "e.g. 12 Nile St, building 4", ar: "مثال: 12 شارع النيل، عمارة 4" }, gap: m }
               - { kind: field, label: { en: "Floor and flat", ar: "الدور والشقة" }, text: { en: "e.g. 3rd floor, flat 7", ar: "مثال: الدور الثالث، شقة 7" }, gap: s }
               - { kind: button, text: { en: "Save and order", ar: "احفظ واطلب" }, gap: m }
       - id: toast
         text: { en: "Show a message: \"Add an address in Settings first\"", ar: "اعرض رسالة: «أضف عنوانًا من الإعدادات أولًا»" }
         mock:
-          width: 300
+          app: lokma
+          appbar: { title: { en: "Your cart", ar: "سلّتك" }, back: true }
           blocks: *cart
+          footer: *cartfooter
           overlay:
             type: toast
             blocks:
@@ -312,11 +324,13 @@ steps:
     a:
       label: { en: "Version A: types in a dialog", ar: "النسخة A: الأنواع في نافذة" }
       mock:
-        width: 260
+        app: tazkara
+        appbar: { title: { en: "Cairo Jazz Night", ar: "ليلة جاز القاهرة" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "Seat map", ar: "خريطة المقاعد" } }
-          - { kind: image, size: m, gap: s }
-          - { kind: small, text: { en: "Zones A, B, C", ar: "المناطق A وB وC" }, gap: s }
+          - { kind: small, text: { en: "Fri 14 Nov · 9 pm · Cairo Opera House", ar: "الجمعة 14 نوفمبر · 9 م · دار الأوبرا" } }
+          - { kind: heading, text: { en: "Seat map", ar: "خريطة المقاعد" }, gap: m }
+          - { kind: seatmap, rows: 6, cols: 8, aisle: 4, taken: [ [0,1], [0,6], [2,3], [4,5] ], gap: s }
+          - { kind: small, text: { en: "Front: Gold · Middle: Silver · Back: Standard", ar: "الأمام: Gold · الوسط: Silver · الخلف: Standard" }, gap: s }
         overlay:
           type: dialog
           blocks:
@@ -328,14 +342,16 @@ steps:
     b:
       label: { en: "Version B: types on the page", ar: "النسخة B: الأنواع في الصفحة" }
       mock:
-        width: 260
+        app: tazkara
+        appbar: { title: { en: "Cairo Jazz Night", ar: "ليلة جاز القاهرة" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "Seat map", ar: "خريطة المقاعد" } }
-          - { kind: image, size: m, gap: s }
-          - { kind: radio, text: { en: "Gold · Zone A · EGP 1,500", ar: "Gold · المنطقة A · 1500 جنيه" }, gap: m }
-          - { kind: radio, text: { en: "Silver · Zone B · EGP 900", ar: "Silver · المنطقة B · 900 جنيه" }, gap: xs }
-          - { kind: radio, text: { en: "Standard · Zone C · EGP 450", ar: "Standard · المنطقة C · 450 جنيه" }, gap: xs }
-          - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+          - { kind: small, text: { en: "Fri 14 Nov · 9 pm · Cairo Opera House", ar: "الجمعة 14 نوفمبر · 9 م · دار الأوبرا" } }
+          - { kind: seatmap, rows: 6, cols: 8, aisle: 4, taken: [ [0,1], [0,6], [2,3], [4,5] ], gap: m }
+          - { kind: radio, text: { en: "Gold · rows 1–2 · EGP 1,500", ar: "Gold · الصفان 1–2 · 1500 جنيه" }, gap: m }
+          - { kind: radio, text: { en: "Silver · rows 3–4 · EGP 900", ar: "Silver · الصفان 3–4 · 900 جنيه" }, gap: xs }
+          - { kind: radio, text: { en: "Standard · rows 5–6 · EGP 450", ar: "Standard · الصفان 5–6 · 450 جنيه" }, gap: xs }
+        footer:
+          - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     answer: b
     misconceptions:
       - id: MC-P14-005
@@ -369,11 +385,20 @@ steps:
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: khatt
+      appbar: { title: { en: "My line", ar: "خطّي" }, logo: true }
+      tabbar: &khatttabs
+        active: 0
+        items:
+          - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+          - { icon: package, text: { en: "Packages", ar: "الباقات" } }
+          - { icon: user, text: { en: "Account", ar: "حسابي" } }
       blocks: &home
-        - { kind: title, text: { en: "My line", ar: "خطّي" } }
-        - { kind: meta, text: { en: "Usage: Aug 128 GB · Sep 141 GB · Oct 150 GB", ar: "الاستهلاك: أغسطس 128 GB · سبتمبر 141 GB · أكتوبر 150 GB" }, gap: s }
-        - { kind: button, text: { en: "Upgrade package", ar: "رقِّ الباقة" }, gap: xl }
+        - { kind: listitem, icon: sim-card, text: { en: "0100 482 7731", ar: "0100 482 7731" }, sub: { en: "Package 140 GB · renews 1 Nov", ar: "باقة 140 GB · تتجدد 1 نوفمبر" } }
+        - { kind: heading, text: { en: "Usage, last 3 months", ar: "الاستهلاك في آخر 3 شهور" }, gap: m }
+        - { kind: chart, type: bar, values: [128, 141, 150], labels: [ { en: "Aug", ar: "أغسطس" }, { en: "Sep", ar: "سبتمبر" }, { en: "Oct", ar: "أكتوبر" } ], highlight: 2, gap: s }
+        - { kind: small, text: { en: "Aug 128 GB · Sep 141 GB · Oct 150 GB", ar: "أغسطس 128 GB · سبتمبر 141 GB · أكتوبر 150 GB" }, gap: xs }
+        - { kind: button, text: { en: "Upgrade package", ar: "رقِّ الباقة" }, gap: l }
       overlay:
         type: dialog
         close: true
@@ -387,7 +412,9 @@ steps:
         text: { en: "Keep the dialog; add a \"Check my usage\" link that closes it", ar: "أبقِ النافذة؛ وأضف رابط «راجع استهلاكي» يغلقها" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: khatt
+          appbar: { title: { en: "My line", ar: "خطّي" }, logo: true }
+          tabbar: *khatttabs
           blocks: *home
           overlay:
             type: dialog
@@ -402,25 +429,29 @@ steps:
         text: { en: "Open a page that shows her usage above the packages", ar: "افتح صفحة تعرض استهلاكها فوق الباقات" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: khatt
+          appbar: { title: { en: "Upgrade package", ar: "ترقية الباقة" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Upgrade package", ar: "ترقية الباقة" } }
-            - { kind: banner, text: { en: "You used 128, 141 and 150 GB in the last 3 months.", ar: "استهلكتِ 128 و141 و150 GB في آخر 3 شهور." }, gap: m }
+            - { kind: chart, type: bar, values: [128, 141, 150], labels: [ { en: "Aug", ar: "أغسطس" }, { en: "Sep", ar: "سبتمبر" }, { en: "Oct", ar: "أكتوبر" } ], highlight: 2 }
+            - { kind: banner, icon: info, tone: info, text: { en: "You used 128, 141 and 150 GB in the last 3 months.", ar: "استهلكتِ 128 و141 و150 GB في آخر 3 شهور." }, gap: s }
             - { kind: radio, text: { en: "140 GB · EGP 400", ar: "140 GB · 400 جنيه" }, gap: m }
             - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: xs }
             - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: xs }
-            - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Continue", ar: "متابعة" } }
       - id: bigger
         text: { en: "Keep the dialog, but make it cover the whole screen", ar: "أبقِ النافذة، لكن اجعلها تغطّي الشاشة كلها" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: khatt
+          appbar: { title: { en: "My line", ar: "خطّي" }, logo: true }
+          tabbar: *khatttabs
           blocks: *home
           overlay:
             type: full
             close: true
+            title: { en: "Choose a package", ar: "اختر باقة" }
             blocks:
-              - { kind: heading, text: { en: "Choose a package", ar: "اختر باقة" } }
               - { kind: radio, text: { en: "140 GB · EGP 400", ar: "140 GB · 400 جنيه" }, gap: m }
               - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: s }
               - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: s }

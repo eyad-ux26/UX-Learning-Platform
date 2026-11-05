@@ -34,13 +34,23 @@ steps:
       en: "Last month, our pharmacy app passed an accessibility check: 52 of 52 points, all green. Accessibility means people with disabilities can use the app.\n\nThis week, Adel emailed us. He is blind and uses a screen reader (an app that reads the screen out loud). He tried to order his monthly medicine again, and gave up after 20 minutes. Most customers do it in less than one minute."
       ar: "الشهر الماضي، نجح تطبيق الصيدلية عندنا في فحص الـ Accessibility (أن يستطيع ذوو الإعاقة استخدام التطبيق): 52 بندًا من 52، كلها خضراء.\n\nوهذا الأسبوع، أرسل لنا عادل رسالة. عادل كفيف، ويستخدم قارئ الشاشة (Screen reader)، وهو تطبيق يقرأ ما على الشاشة بصوت عالٍ. حاول أن يطلب دواءه الشهري مرة أخرى، وتوقّف بعد 20 دقيقة. وأغلب العملاء يطلبونه في أقل من دقيقة."
     mock:
-      width: 300
+      app: dawaa
+      frame: wide
+      url: admin.dawaa.example/accessibility-report
       blocks:
-        - { kind: title, text: { en: "Accessibility check", ar: "فحص الـ Accessibility" } }
-        - { kind: chip, text: { en: "Passed", ar: "ناجح" }, gap: s }
-        - { kind: text, text: { en: "52 of 52 points passed", ar: "نجح 52 بندًا من 52" }, gap: m }
-        - { kind: line, gap: s }
-        - { kind: small, text: { en: "Email from Adel: \"I couldn't reorder my medicine.\"", ar: "رسالة من عادل: «لم أستطع أن أطلب دوائي مرة أخرى»." }, gap: m }
+        - kind: row
+          blocks:
+            - { kind: title, text: { en: "Accessibility check · October", ar: "فحص الـ Accessibility · أكتوبر" } }
+            - { kind: badge, tone: good, icon: check-circle, text: { en: "Passed", ar: "ناجح" } }
+        - { kind: progress, value: 100, label: { en: "52 of 52 points passed", ar: "نجح 52 بندًا من 52" }, gap: s }
+        - { kind: list, style: check, gap: m, items: [ { en: "Images have alt text", ar: "للصور نص بديل (Alt text)" }, { en: "Buttons have names", ar: "للأزرار أسماء" }, { en: "Text contrast is 4.5:1 or more", ar: "تباين النص 4.5:1 أو أكثر" }, { en: "… 49 more, all green", ar: "… 49 بندًا آخر، كلها خضراء" } ] }
+      overlay:
+        type: toast
+        blocks:
+          - kind: listitem
+            avatar: { text: "Adel Samir", art: man-3 }
+            text: { en: "New email from Adel Samir", ar: "رسالة جديدة من عادل سمير" }
+            sub: { en: "\"I tried for 20 minutes and couldn't reorder my medicine.\"", ar: "«حاولت 20 دقيقة ولم أستطع أن أطلب دوائي مرة أخرى.»" }
 
   - id: S02
     type: choose
@@ -110,24 +120,27 @@ steps:
     a:
       label: { en: "A: Make a separate, simple page only for blind customers", ar: "A: نعمل صفحة بسيطة منفصلة للعملاء المكفوفين فقط" }
       mock:
-        width: 300
+        app: dawaa
+        appbar: { title: { en: "Simple order", ar: "طلب مبسّط" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Order (simple)", ar: "الطلب (مبسّط)" } }
+          - { kind: banner, tone: info, icon: info, text: { en: "Saved prescriptions and offers are not available here.", ar: "الوصفات المحفوظة والعروض غير موجودة هنا." } }
           - { kind: field, label: { en: "Medicine name", ar: "اسم الدواء" }, text: { en: "Type the name", ar: "اكتب الاسم" }, gap: m }
-          - { kind: field, label: { en: "Quantity", ar: "الكمية" }, text: "1", filled: true, gap: s }
-          - { kind: small, color: muted, text: { en: "Saved prescriptions and offers are not available here.", ar: "الوصفات المحفوظة والعروض غير موجودة هنا." }, gap: s }
-          - { kind: button, text: { en: "Send order", ar: "أرسل الطلب" }, gap: m }
+          - { kind: stepper, label: { en: "Quantity", ar: "الكمية" }, text: "1", gap: s }
+        footer:
+          - { kind: button, text: { en: "Send order", ar: "أرسل الطلب" } }
     b:
       label: { en: "B: Fix our normal order screen so it works with a screen reader", ar: "B: نُصلح شاشة الطلب العادية لتعمل مع قارئ الشاشة" }
       mock:
-        width: 300
+        app: dawaa
+        appbar: { title: { en: "My prescriptions", ar: "وصفاتي" }, back: true }
+        reader: { en: "Reorder Metformin 500 mg, button", ar: "اطلب ميتفورمين 500 ملجم مرة أخرى، زر" }
         blocks:
-          - { kind: title, text: { en: "My prescriptions", ar: "وصفاتي" } }
-          - { kind: text, weight: bold, text: { en: "Metformin 500 mg, monthly", ar: "ميتفورمين 500 ملجم، شهريًا" }, gap: m }
-          - { kind: small, text: { en: "Last ordered 2 October", ar: "آخر طلب: 2 أكتوبر" }, gap: xs }
-          - { kind: button, text: { en: "Reorder Metformin", ar: "اطلب ميتفورمين مرة أخرى" }, gap: s }
-          - { kind: link, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" }, gap: s }
-          - { kind: chip, text: { en: "✓ Works with a screen reader", ar: "✓ يعمل مع قارئ الشاشة" }, gap: m }
+          - kind: card
+            blocks:
+              - { kind: listitem, art: medicine, text: { en: "Metformin 500 mg", ar: "ميتفورمين 500 ملجم" }, sub: { en: "Monthly · last ordered 2 October", ar: "شهريًا · آخر طلب 2 أكتوبر" }, value: { en: "EGP 64", ar: "64 جنيه" } }
+              - { kind: button, icon: arrow-counter-clockwise, text: { en: "Reorder Metformin", ar: "اطلب ميتفورمين مرة أخرى" }, gap: s }
+          - { kind: listitem, icon: tag, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" }, chevron: true, gap: m }
+          - { kind: listitem, icon: file-text, text: { en: "Upload a new prescription", ar: "ارفع وصفة جديدة" }, chevron: true }
     answer: b
     misconceptions:
       - id: MC-P05-003
@@ -162,42 +175,47 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي تغيير يجعل عادل يبدأ طلبه بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
-      blocks: &homenow
-        - { kind: title, text: { en: "Pharmacy", ar: "الصيدلية" } }
-        - { kind: image, size: s, text: { en: "Offer 1 of 14", ar: "العرض 1 من 14" }, gap: s }
-        - { kind: image, size: s, text: { en: "Offer 2 of 14", ar: "العرض 2 من 14" }, gap: s }
+      app: dawaa
+      appbar: &dawaahome { logo: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } }, { icon: shopping-cart, aria: { en: "Basket", ar: "السلة" } } ] }
+      reader: { en: "Offer 1 of 14: 20% off vitamins, link", ar: "العرض 1 من 14: خصم 20% على الفيتامينات، رابط" }
+      blocks: &dawaanow
+        - { kind: card, art: medicine, mark: 1, blocks: [ { kind: heading, text: { en: "20% off vitamins", ar: "خصم 20% على الفيتامينات" } } ] }
+        - { kind: card, art: box, mark: 2, gap: s, blocks: [ { kind: heading, text: { en: "Free delivery this week", ar: "توصيل مجاني هذا الأسبوع" } } ] }
         - { kind: small, color: muted, text: { en: "… 12 more offers …", ar: "… 12 عرضًا آخر …" }, gap: s }
-        - { kind: button, style: plain, text: { en: "My orders", ar: "طلباتي" }, gap: s }
+        - { kind: listitem, icon: receipt, mark: 15, text: { en: "My orders", ar: "طلباتي" }, chevron: true, gap: s }
     options:
       - id: keep
         text: { en: "Change nothing: he can reach \"My orders\" in the end", ar: "لا تغيّر شيئًا: فهو يصل إلى «طلباتي» في النهاية" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
-          blocks: *homenow
+          app: dawaa
+          appbar: *dawaahome
+          reader: { en: "Offer 1 of 14: 20% off vitamins, link", ar: "العرض 1 من 14: خصم 20% على الفيتامينات، رابط" }
+          blocks: *dawaanow
       - id: top
         text: { en: "Put \"Reorder my medicine\" at the top, before the offers", ar: "ضع زر «اطلب دوائي مرة أخرى» في الأعلى، قبل العروض" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: dawaa
+          appbar: *dawaahome
+          reader: { en: "Reorder my medicine, button", ar: "اطلب دوائي مرة أخرى، زر" }
           blocks:
-            - { kind: title, text: { en: "Pharmacy", ar: "الصيدلية" } }
-            - { kind: button, text: { en: "Reorder my medicine", ar: "اطلب دوائي مرة أخرى" }, gap: s }
-            - { kind: image, size: s, text: { en: "Offer 1 of 14", ar: "العرض 1 من 14" }, gap: m }
+            - { kind: button, icon: arrow-counter-clockwise, mark: 1, text: { en: "Reorder my medicine", ar: "اطلب دوائي مرة أخرى" } }
+            - { kind: card, art: medicine, mark: 2, gap: m, blocks: [ { kind: heading, text: { en: "20% off vitamins", ar: "خصم 20% على الفيتامينات" } } ] }
             - { kind: small, color: muted, text: { en: "… 13 more offers …", ar: "… 13 عرضًا آخر …" }, gap: s }
+            - { kind: listitem, icon: receipt, text: { en: "My orders", ar: "طلباتي" }, chevron: true, gap: s }
       - id: note
         text: { en: "Add a line at the top: \"Screen reader users: My orders is at the bottom\"", ar: "أضف سطرًا في الأعلى: «لمستخدمي قارئ الشاشة: طلباتي في الأسفل»" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: dawaa
+          appbar: *dawaahome
+          reader: { en: "Screen reader users: My orders is at the bottom", ar: "لمستخدمي قارئ الشاشة: «طلباتي» في الأسفل" }
           blocks:
-            - { kind: title, text: { en: "Pharmacy", ar: "الصيدلية" } }
-            - { kind: small, text: { en: "Screen reader users: My orders is at the bottom.", ar: "لمستخدمي قارئ الشاشة: «طلباتي» في الأسفل." }, gap: xs }
-            - { kind: image, size: s, text: { en: "Offer 1 of 14", ar: "العرض 1 من 14" }, gap: s }
-            - { kind: image, size: s, text: { en: "Offer 2 of 14", ar: "العرض 2 من 14" }, gap: s }
-            - { kind: small, color: muted, text: { en: "… 12 more offers …", ar: "… 12 عرضًا آخر …" }, gap: s }
-            - { kind: button, style: plain, text: { en: "My orders", ar: "طلباتي" }, gap: s }
+            - { kind: small, mark: 1, text: { en: "Screen reader users: My orders is at the bottom.", ar: "لمستخدمي قارئ الشاشة: «طلباتي» في الأسفل." } }
+            - { kind: card, art: medicine, mark: 2, gap: s, blocks: [ { kind: heading, text: { en: "20% off vitamins", ar: "خصم 20% على الفيتامينات" } } ] }
+            - { kind: small, color: muted, text: { en: "… 13 more offers …", ar: "… 13 عرضًا آخر …" }, gap: s }
+            - { kind: listitem, icon: receipt, mark: 16, text: { en: "My orders", ar: "طلباتي" }, chevron: true, gap: s }
     answer: [top]
     misconceptions:
       - id: MC-P05-002
@@ -236,11 +254,13 @@ steps:
       en: "What should we do before we say Adel's problem is fixed?"
       ar: "ماذا نفعل قبل أن نقول إن مشكلة عادل انحلّت؟"
     mock:
-      width: 300
+      app: dawaa
+      appbar: { logo: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
       blocks:
-        - { kind: title, text: { en: "Pharmacy", ar: "الصيدلية" } }
-        - { kind: image, size: m, text: { en: "Offers", ar: "العروض" }, gap: s }
-        - { kind: pill, text: { en: "♿ Accessibility menu", ar: "♿ قائمة الأدوات" }, gap: m }
+        - { kind: card, art: medicine, blocks: [ { kind: heading, text: { en: "20% off vitamins", ar: "خصم 20% على الفيتامينات" } } ] }
+        - { kind: listitem, icon: receipt, text: { en: "My orders", ar: "طلباتي" }, chevron: true, gap: m }
+        - { kind: listitem, icon: file-text, text: { en: "My prescriptions", ar: "وصفاتي" }, chevron: true }
+      fab: { icon: wheelchair, text: { en: "Accessibility menu", ar: "قائمة الـ Accessibility" } }
     options:
       - id: menu
         text: { en: "Add the menu; its screen reader is enough for Adel", ar: "نضيف القائمة؛ فقارئ الشاشة الذي فيها يكفي عادل" }
@@ -284,17 +304,19 @@ steps:
     a:
       label: { en: "A: Everyone uses our office phone", ar: "A: الكل يستخدم هاتف المكتب عندنا" }
       mock:
-        width: 300
+        app: mudawwana
+        appbar: { title: { en: "Test plan A", ar: "خطة الاختبار A" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "Test plan A", ar: "خطة الاختبار A" } }
-          - { kind: text, text: { en: "Each person uses our office test phone. The screen reader is on its default settings.", ar: "كل شخص يستخدم هاتف الاختبار الموجود في مكتبنا. وقارئ الشاشة على الإعدادات الأصلية." }, gap: s }
+          - { kind: heading, text: { en: "Order screen test · 5 blind customers", ar: "اختبار شاشة الطلب · 5 عملاء مكفوفين" } }
+          - { kind: list, style: number, gap: s, items: [ { en: "Each person uses **our office test phone**", ar: "كل شخص يستخدم **هاتف الاختبار في مكتبنا**" }, { en: "The screen reader is on its default settings", ar: "قارئ الشاشة على الإعدادات الأصلية" }, { en: "Task: reorder your monthly medicine", ar: "المهمة: اطلب دواءك الشهري مرة أخرى" } ] }
     b:
       label: { en: "B: Each person uses their own phone", ar: "B: كل شخص يستخدم هاتفه" }
       mock:
-        width: 300
+        app: mudawwana
+        appbar: { title: { en: "Test plan B", ar: "خطة الاختبار B" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "Test plan B", ar: "خطة الاختبار B" } }
-          - { kind: text, text: { en: "Each person uses their own phone, with their own screen reader settings.", ar: "كل شخص يستخدم هاتفه، بإعدادات قارئ الشاشة التي يستخدمها كل يوم." }, gap: s }
+          - { kind: heading, text: { en: "Order screen test · 5 blind customers", ar: "اختبار شاشة الطلب · 5 عملاء مكفوفين" } }
+          - { kind: list, style: number, gap: s, items: [ { en: "Each person uses **their own phone**", ar: "كل شخص يستخدم **هاتفه**" }, { en: "With the screen reader settings they use every day", ar: "بإعدادات قارئ الشاشة التي يستخدمها كل يوم" }, { en: "Task: reorder your monthly medicine", ar: "المهمة: اطلب دواءك الشهري مرة أخرى" } ] }
     answer: b
     reason:
       prompt: { en: "Why does Plan B give us truer results?", ar: "لماذا تعطينا الخطة B نتائج أصدق؟" }
@@ -341,6 +363,20 @@ steps:
     prompt:
       en: "What should I do before I sign the contract?"
       ar: "ماذا أفعل قبل أن أوقّع العقد؟"
+    mock:
+      app: { name: { en: "Hajz Pro", ar: "حجز برو" }, color: "#2563EB", icon: calendar-check, domain: hajzpro.example }
+      frame: wide
+      navbar:
+        links: [ { en: "Features", ar: "الميزات" }, { en: "Prices", ar: "الأسعار" }, { en: "Contact", ar: "تواصل معنا" } ]
+      blocks:
+        - { kind: title, text: { en: "Class booking for every gym", ar: "حجز الحصص لكل نادٍ رياضي" } }
+        - { kind: badge, tone: good, icon: seal-check, text: { en: "Fully accessible · certified", ar: "مناسب تمامًا لذوي الإعاقة · معتمد" }, gap: s }
+        - { kind: small, text: { en: "Members book, cancel and pay from their phones.", ar: "الأعضاء يحجزون ويلغون ويدفعون من هواتفهم." }, gap: s }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: button, text: { en: "Sign the contract", ar: "وقّع العقد" } }
+            - { kind: button, style: outline, text: { en: "Book a demo", ar: "احجز عرضًا تجريبيًا" } }
     options:
       - id: try
         text: { en: "Ask those three members to book a class with it, on their own phones", ar: "أطلب من هؤلاء الأعضاء الثلاثة أن يحجزوا حصة به، على هواتفهم" }

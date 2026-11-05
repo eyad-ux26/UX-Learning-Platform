@@ -21,17 +21,18 @@ steps:
     type: card
     part: hook
     title: { en: "The clinic app nobody uses", ar: "تطبيق العيادة الذي لا يستخدمه أحد" }
+    mock:
+      app: raha
+      appbar: { title: { en: "New encounter", ar: "Encounter جديد" }, back: true }
+      blocks:
+        - { kind: select, label: { en: "Service line", ar: "خط الخدمة (Service line)" }, text: "OPD-DERM", filled: true }
+        - { kind: select, label: { en: "Provider", ar: "مقدّم الخدمة (Provider)" }, text: { en: "Select provider", ar: "اختر مقدّم الخدمة" }, gap: m }
+        - { kind: select, label: { en: "Encounter type", ar: "نوع الـ Encounter" }, text: "F/U", filled: true, gap: m }
+      footer:
+        - { kind: button, text: { en: "Submit encounter request", ar: "أرسل طلب الـ Encounter" } }
     body:
       en: "I manage a clinic. Our new app lets patients book visits, but most of them still call the front desk.\n\nOne patient told me she opened the app, saw this screen, and closed it: she didn't know what an \"encounter\" was, or what she was meant to pick."
       ar: "أدير عيادة. تطبيقنا الجديد يتيح للمرضى حجز الزيارات، لكن أغلبهم ما زالوا يتصلون بالاستقبال.\n\nأخبرتني مريضة أنها فتحت التطبيق، ورأت هذه الشاشة، فأغلقته: لم تعرف ما معنى «Encounter»، ولا ما الذي يُفترض أن تختاره."
-    mock:
-      width: 300
-      blocks: &jargon
-        - { kind: title, text: { en: "New encounter", ar: "Encounter جديد" } }
-        - { kind: select, label: { en: "Service line", ar: "خط الخدمة (Service line)" }, text: { en: "OPD-DERM", ar: "OPD-DERM" }, filled: true, gap: m }
-        - { kind: select, label: { en: "Provider", ar: "مقدّم الخدمة (Provider)" }, text: { en: "Select provider", ar: "اختر مقدّم الخدمة" }, gap: m }
-        - { kind: button, text: { en: "Submit encounter request", ar: "أرسل طلب الـ Encounter" }, gap: l }
-
   - id: S02
     type: choose
     part: try
@@ -45,6 +46,14 @@ steps:
     prompt:
       en: "What should the main button say?"
       ar: "ماذا يجب أن يكتب على الزر الرئيسي؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "New encounter", ar: "Encounter جديد" }, back: true }
+      blocks:
+        - { kind: select, label: { en: "Service line", ar: "خط الخدمة (Service line)" }, text: "OPD-DERM", filled: true }
+        - { kind: select, label: { en: "Provider", ar: "مقدّم الخدمة (Provider)" }, text: { en: "Dr. Salma Adel", ar: "د. سلمى عادل" }, filled: true, gap: m }
+      footer:
+        - { kind: button, text: { en: "Submit encounter request", ar: "أرسل طلب الـ Encounter" }, ring: true }
     options:
       - { id: keep, text: { en: "Keep \"Submit encounter request\": it's the correct medical term", ar: "يبقى «أرسل طلب الـ Encounter»: فهو المصطلح الطبي الصحيح" } }
       - { id: tip, text: { en: "Keep it, and add an ⓘ that explains \"encounter\"", ar: "يبقى كما هو، مع ⓘ يشرح معنى «Encounter»" } }
@@ -117,13 +126,14 @@ steps:
       en: "How should the list name the clinics?"
       ar: "كيف تسمّي القائمة العيادات؟"
     mock:
-      width: 300
+      app: raha
+      appbar: { title: { en: "Choose a clinic", ar: "اختر عيادة" }, back: true }
       blocks:
-        - { kind: title, text: { en: "Choose a clinic", ar: "اختر عيادة" } }
-        - { kind: radio, text: { en: "DERM", ar: "DERM" }, gap: m }
-        - { kind: radio, text: { en: "ENT", ar: "ENT" }, gap: xs }
-        - { kind: radio, text: { en: "OB-GYN", ar: "OB-GYN" }, gap: xs }
-        - { kind: radio, text: { en: "PEDS", ar: "PEDS" }, gap: xs }
+        - { kind: searchbar, text: { en: "Search clinics", ar: "ابحث عن عيادة" } }
+        - { kind: listitem, icon: first-aid-kit, text: "DERM", sub: { en: "3 doctors · from EGP 350", ar: "3 أطباء · من 350 جنيه" }, chevron: true, gap: m }
+        - { kind: listitem, icon: first-aid-kit, text: "ENT", sub: { en: "2 doctors · from EGP 300", ar: "طبيبان · من 300 جنيه" }, chevron: true, gap: s }
+        - { kind: listitem, icon: first-aid-kit, text: "OB-GYN", sub: { en: "4 doctors · from EGP 400", ar: "4 أطباء · من 400 جنيه" }, chevron: true, gap: s }
+        - { kind: listitem, icon: first-aid-kit, text: "PEDS", sub: { en: "3 doctors · from EGP 300", ar: "3 أطباء · من 300 جنيه" }, chevron: true, gap: s }
     options:
       - { id: codes, text: { en: "Keep the codes; they're short and fit on small screens", ar: "تبقى الرموز؛ فهي قصيرة وتناسب الشاشات الصغيرة" } }
       - { id: names, text: { en: "Skin, Ear nose and throat, Women's health and pregnancy, Children", ar: "الجلدية، والأنف والأذن والحنجرة، وصحة المرأة والحمل، والأطفال" } }
@@ -160,6 +170,16 @@ steps:
     prompt:
       en: "Which order should patients go through?"
       ar: "بأي ترتيب يجب أن يمرّ المرضى؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Book a visit", ar: "احجز زيارة" }, back: true }
+      blocks:
+        - { kind: progress, value: 25, label: { en: "Step 1 of 4: Payment", ar: "الخطوة 1 من 4: الدفع" } }
+        - { kind: heading, text: { en: "Pay for your visit", ar: "ادفع ثمن زيارتك" }, gap: m }
+        - { kind: listitem, art: bank-card, text: { en: "Visa ending 4821", ar: "Visa تنتهي بـ 4821" }, check: true, gap: s }
+        - { kind: price, text: { en: "EGP ?", ar: "? جنيه" }, gap: m, note: { en: "No clinic or doctor chosen yet", ar: "لم تُختر العيادة ولا الطبيب بعد" } }
+      footer:
+        - { kind: button, text: { en: "Pay and continue", ar: "ادفع وتابع" } }
     options:
       - { id: db, text: { en: "Pay → time → clinic and doctor", ar: "الدفع ← الموعد ← العيادة والطبيب" } }
       - { id: natural, text: { en: "Clinic → doctor → time → review → pay", ar: "العيادة ← الطبيب ← الموعد ← المراجعة ← الدفع" } }
@@ -200,19 +220,27 @@ steps:
     a:
       label: { en: "Version A: corner tabs", ar: "النسخة A: زوايا" }
       mock:
-        width: 260
+        app: sakan
+        frame: wide
+        url: sakan.example/maadi/2-bedroom-flat
+        navbar: { links: [ { en: "Flats", ar: "شقق" }, { en: "Villas", ar: "فيلات" } ], active: 0, actions: [ { icon: heart }, { icon: user } ] }
         blocks:
-          - { kind: image, size: l }
-          - { kind: row, gap: xs, blocks: [ { kind: small, text: "◖" }, { kind: small, text: "◗" } ] }
+          - { kind: image, art: hotel-room, size: l }
+          - { kind: row, overlap: true, blocks: [ { kind: small, text: "◖" }, { kind: small, text: "◗" } ] }
           - { kind: title, text: { en: "2-bedroom flat, Maadi", ar: "شقة غرفتين، المعادي" }, gap: s }
+          - { kind: price, text: { en: "EGP 1,800", ar: "1,800 جنيه" }, per: { en: "/ night", ar: "/ الليلة" } }
     b:
       label: { en: "Version B: arrows", ar: "النسخة B: أسهم" }
       mock:
-        width: 260
+        app: sakan
+        frame: wide
+        url: sakan.example/maadi/2-bedroom-flat
+        navbar: { links: [ { en: "Flats", ar: "شقق" }, { en: "Villas", ar: "فيلات" } ], active: 0, actions: [ { icon: heart }, { icon: user } ] }
         blocks:
-          - { kind: image, size: l }
-          - { kind: row, gap: xs, blocks: [ { kind: button, text: "‹", style: plain }, { kind: small, text: "1 / 8" }, { kind: button, text: "›", style: plain } ] }
+          - { kind: image, art: hotel-room, size: l }
+          - { kind: row, overlap: true, blocks: [ { kind: iconbtn, icon: caret-left, aria: { en: "Previous photo", ar: "الصورة السابقة" } }, { kind: badge, text: "1 / 8", tone: neutral }, { kind: iconbtn, icon: caret-right, aria: { en: "Next photo", ar: "الصورة التالية" } } ] }
           - { kind: title, text: { en: "2-bedroom flat, Maadi", ar: "شقة غرفتين، المعادي" }, gap: s }
+          - { kind: price, text: { en: "EGP 1,800", ar: "1,800 جنيه" }, per: { en: "/ night", ar: "/ الليلة" } }
     answer: b
     misconceptions:
       - id: MC-P02-011
@@ -243,6 +271,13 @@ steps:
     prompt:
       en: "Which label would help customers understand it?"
       ar: "أيّ اسم يساعد العملاء على فهمه؟"
+    mock:
+      app: rasid
+      appbar: { title: { en: "Security", ar: "الأمان" }, back: true }
+      blocks:
+        - { kind: listitem, icon: fingerprint, text: { en: "Sign in with fingerprint", ar: "الدخول ببصمة الإصبع" }, toggle: true }
+        - { kind: listitem, icon: shield-check, text: { en: "Enable 2FA (TOTP)", ar: "فعّل 2FA (TOTP)" }, toggle: false, gap: s, ring: true }
+        - { kind: listitem, icon: devices, text: { en: "Signed-in devices", ar: "الأجهزة المسجّلة" }, value: "2", chevron: true, gap: s }
     options:
       - { id: full, text: { en: "\"Enable two-factor authentication (TOTP)\"", ar: "«فعّل المصادقة الثنائية (TOTP)»" } }
       - { id: plain, text: { en: "\"Ask for a code from my phone when I sign in\"", ar: "«اطلب رمزًا من هاتفي حين أسجّل الدخول»" } }
