@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { Logo } from "@/components/Logo";
 import { PayButton } from "@/components/billing/CheckoutView";
-import { formatMoney, moneyCls } from "@/lib/billing/pricing";
+import { formatMoney, moneyCls, UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 import { requireLearner } from "@/lib/server/learner";
 import { loadOffer } from "@/lib/server/billing/plans";
 import { countryName } from "@/lib/server/billing/page";
@@ -16,7 +16,9 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("billing");
-  const offer = await loadOffer(me, { code: sp.code ?? null, fixtureOffer: sp.offer, fixtureCountry: sp.country });
+  // ?intl=1: "Pay with an international card" after Paymob refused a foreign card (world price, Paddle).
+  const intl = sp.intl === "1";
+  const offer = await loadOffer(me, { code: sp.code ?? null, fixtureOffer: sp.offer, fixtureCountry: sp.country, intl });
   if (offer.pro && !offer.grace) return redirect({ href: "/app/settings/billing", locale }) as never;
   const period = sp.period === "month" ? "month" : "year";
   const q = period === "month" ? offer.month : offer.year;
@@ -44,7 +46,7 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
           {discLabel ? <div className="sum-row"><span>{t("sumCode")}</span><b>{discLabel}</b></div> : null}
           <div className="sum-row total"><span>{t("sumToday")}</span><b><span className={moneyCls(q.currency)}>{$(q.amount)}</span></b></div>
           <div className="sum-row"><span>{t("sumThen")}</span><b>{then}</b></div>
-          <div className="sum-row"><span>{t("sumCountry")}</span><b>{countryName(offer.country, locale)}</b></div>
+          <div className="sum-row"><span>{t("sumCountry")}</span><b>{offer.country === UNKNOWN_COUNTRY ? t("intlCountry") : countryName(offer.country, locale)}</b></div>
         </div>
         <div className="prov">
           <span className="ph ph-shield-check" aria-hidden="true" />
@@ -60,7 +62,7 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
         </div>
         {offer.mode === "mock" ? <p className="pg-note" style={{ fontSize: 13 }}><span className="ph ph-info" aria-hidden="true" /><span>{t("testMode")}</span></p> : null}
         <div style={{ flex: 1 }} />
-        <PayButton label={t(`prov.${prov}.go`)} period={period} code={q.code} locale={locale as "en" | "ar"} disabled={offer.mode === "off" || !me.db} />
+        <PayButton label={t(`prov.${prov}.go`)} period={period} code={q.code} intl={intl} locale={locale as "en" | "ar"} disabled={offer.mode === "off" || !me.db} />
         <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12.5 }}>{t("agree")} <Link href="/terms" className="hit" style={{ fontWeight: 700 }}>{t("terms")}</Link></p>
       </main>
     </div>

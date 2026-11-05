@@ -1,5 +1,5 @@
 import "server-only";
-import { providerFor, quote, regionFor, UNKNOWN_COUNTRY, type Period, type Provider, type Quote, type Region } from "@/lib/billing/pricing";
+import { priceCountry, providerFor, quote, regionFor, UNKNOWN_COUNTRY, type Period, type Provider, type Quote, type Region } from "@/lib/billing/pricing";
 import { welcomeBackEligible } from "@/lib/billing/subscription";
 import type { Learner } from "@/lib/server/learner";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -45,13 +45,13 @@ function fixtureOffer(country: string, offer: string | undefined, code: string |
   };
 }
 
-export async function loadOffer(me: Learner, opts: { code?: string | null; fixtureOffer?: string; fixtureCountry?: string } = {}): Promise<Offer> {
+export async function loadOffer(me: Learner, opts: { code?: string | null; fixtureOffer?: string; fixtureCountry?: string; intl?: boolean } = {}): Promise<Offer> {
   const host = await requestHost();
   const code = opts.code?.trim() || null;
-  if (!me.db) return fixtureOffer(/^[A-Z]{2}$/.test(opts.fixtureCountry ?? "") ? opts.fixtureCountry! : "EG", opts.fixtureOffer, code, host);
+  if (!me.db) return fixtureOffer(opts.intl ? UNKNOWN_COUNTRY : /^[A-Z]{2}$/.test(opts.fixtureCountry ?? "") ? opts.fixtureCountry! : "EG", opts.fixtureOffer, code, host);
 
   // The price region follows the country the request comes from (Cloudflare), so every read can start at once.
-  const ip = (await requestCountry()) ?? UNKNOWN_COUNTRY;
+  const ip = priceCountry(await requestCountry(), opts.intl);
   const admin = createAdminClient();
   let liveQ = me.db.from("subscriptions").select("*").eq("user_id", me.userId).in("status", ["active", "grace", "cancelled"]);
   if (!mockAllowed(host)) liveQ = liveQ.neq("provider", "mock"); // test-mode plans do not exist on the live site

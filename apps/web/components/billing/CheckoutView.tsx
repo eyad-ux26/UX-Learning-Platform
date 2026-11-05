@@ -43,7 +43,7 @@ async function openPaddle(p: PaddleOpen, locale: string) {
 }
 
 /** Starts a checkout and hands the learner to the provider: a redirect (Paymob, test mode) or Paddle's overlay. */
-export async function startPayment(body: { period: "month" | "year"; code?: string | null; kind: "new" | "renewal" | "card"; locale: "en" | "ar" }): Promise<string | null> {
+export async function startPayment(body: { period: "month" | "year"; code?: string | null; kind: "new" | "renewal" | "card"; locale: "en" | "ar"; intl?: boolean }): Promise<string | null> {
   const r = await billingPost<{ url?: string; paddle?: PaddleOpen; detail?: string }>("checkout", body);
   if (!r.ok) return r.error === "code" ? `code:${String(r.detail ?? "invalid")}` : r.error;
   if (r.url) { window.location.assign(r.url); return null; }
@@ -53,14 +53,14 @@ export async function startPayment(body: { period: "month" | "year"; code?: stri
   return "provider";
 }
 
-export function PayButton({ label, period, code, locale, disabled }: { label: string; period: "month" | "year"; code: string | null; locale: "en" | "ar"; disabled?: boolean }) {
+export function PayButton({ label, period, code, intl, locale, disabled }: { label: string; period: "month" | "year"; code: string | null; intl?: boolean; locale: "en" | "ar"; disabled?: boolean }) {
   const t = useTranslations("billing");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const go = async () => {
     if (busy || disabled) return;
     setBusy(true); setErr(null);
-    const e = await startPayment({ period, code, kind: "new", locale });
+    const e = await startPayment({ period, code, kind: "new", locale, ...(intl ? { intl: true } : {}) });
     setBusy(false);
     if (e) setErr(e);
   };

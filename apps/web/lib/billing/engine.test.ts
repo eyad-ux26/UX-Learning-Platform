@@ -637,6 +637,25 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
     expect(sent[0].text).not.toContain("انتهى Pro");
   });
 
+  it("refused, then offered Paddle: the email links to the international checkout with the same plan and code, and paying there starts Pro", async () => {
+    const s = session({ code: "FOUNDING", period: "month" });
+    await foreign(1520, s, "SA");
+    expect(store.sessions.get(s.id)?.status).toBe("refused");
+    expect(sent[0].html).toContain("https://uxgate.org/ar/app/checkout?period=month&amp;intl=1&amp;code=FOUNDING");
+    expect(sent[0].text).toContain("ادفع ببطاقة دولية");
+    // The learner opens Paddle's checkout at the world price and pays.
+    const p = session({ provider: "paddle", region: "world", country: "ZZ", period: "month", currency: "USD", amountMinor: 800, renewAmountMinor: 800, providerRef: null, code: "FOUNDING" });
+    await deliverPaddle({
+      event_id: "evt_intl", event_type: "transaction.completed", occurred_at: clock,
+      data: { id: "txn_intl", status: "completed", origin: "web", subscription_id: "sub_intl", currency_code: "USD", custom_data: { session_id: p.id, user_id: U },
+        billing_period: { starts_at: clock, ends_at: "2026-12-03T09:00:00Z" }, details: { totals: { grand_total: "800" } } },
+    });
+    expect(pro()).toBe(true);
+    expect(sub()).toMatchObject({ provider: "paddle", region: "world", currency: "USD", status: "active" });
+    // The Paymob charge is still refunded.
+    expect(refunds).toEqual(["paymob:1520:24900"]);
+  });
+
   it("an Egyptian card (EG, EGY) starts Pro as usual", async () => {
     const s = session();
     await deliverPaymob({ id: 1502, data: { card_issuer_country: "EGY" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });

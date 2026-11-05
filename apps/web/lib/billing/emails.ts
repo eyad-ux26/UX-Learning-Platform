@@ -3,7 +3,7 @@
 // refused foreign card (cardRefused, PAYMOB_EG_CARDS_ONLY).
 // Billing emails always arrive: they cannot be turned off. Pure: returns subject, HTML and text.
 import { emailLayout } from "../server/email/layout";
-import { formatMoney } from "./pricing";
+import { formatMoney, intlCheckoutPath } from "./pricing";
 import type { Payment, RefundRequest } from "./engine";
 import { REFUND_DAYS, RETRY_DAYS, type Sub } from "./subscription";
 
@@ -151,9 +151,9 @@ function content(kind: EmailKind, i: EmailInput): Body {
         heading: hi("This price needs a card issued in Egypt", "هذا السعر يحتاج إلى بطاقة صادرة في مصر"),
         paragraphs: [hi(`The Egypt price is for cards issued in Egypt, and ${card} was issued in another country, so Pro did not start.`, `سعر مصر مخصص للبطاقات الصادرة في مصر، و${card} صادرة في بلد آخر، لذلك لم يبدأ Pro.`),
           hi(`We are sending ${amount} back to ${card}. Banks take 5 to 10 working days to show it. You don’t need to do anything.`, `نعيد ${amount} إلى ${card}. يستغرق ظهوره في البنك من 5 إلى 10 أيام عمل، ولا تحتاج إلى فعل أي شيء.`),
-          hi("You can pay again with a card issued in Egypt or a mobile wallet.", "يمكنك الدفع مرة أخرى ببطاقة صادرة في مصر أو بمحفظة إلكترونية.")],
+          hi("You can still get Pro with this card: pay with an international card, in US dollars through Paddle, for the same plan. Or pay again with a card issued in Egypt or a mobile wallet.", "ما زال بإمكانك الحصول على Pro بهذه البطاقة: ادفع ببطاقة دولية بالدولار الأمريكي عبر Paddle للخطة نفسها. أو ادفع مرة أخرى ببطاقة صادرة في مصر أو بمحفظة إلكترونية.")],
         rows: [[hi("Receipt", "الإيصال"), p.receiptNo], [hi("Amount", "المبلغ"), amount], [hi("Status", "الحالة"), hi("Refund on its way", "الاسترداد قيد التنفيذ")]],
-        button: { label: hi("See plans", "اعرض الخطط"), href: `${i.site}/${L}/app/plans` },
+        button: { label: hi("Pay with an international card", "ادفع ببطاقة دولية"), href: `${i.site}/${L}${intlCheckoutPath(p.period, i.extra?.code)}` },
         notes: [hi("Questions? Reply to this email.", "لديك سؤال؟ ردّ على هذه الرسالة."), hi("The UXGate team", "فريق UXGate")],
         why,
       };

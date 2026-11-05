@@ -202,7 +202,8 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
         await store.updateSession(session.id, { status: "refused" });
         const r = await refuse(e, ev, session.userId, session.period, `card issued in ${ev.cardCountry}`);
         const pay = await store.paymentByProviderId(ev.provider, ev.paymentId);
-        if (pay) await e.mail(session.userId, "cardRefused", pay.id, { payment: pay });
+        // The email offers the same plan, with the same code, at the world price through Paddle.
+        if (pay) await e.mail(session.userId, "cardRefused", pay.id, { payment: pay, extra: session.code ? { code: session.code } : undefined });
         return r;
       }
       let live = session.kind === "renewal" && session.subscriptionId ? await store.subById(session.subscriptionId) : await store.liveSub(session.userId);
