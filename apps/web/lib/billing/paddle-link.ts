@@ -53,3 +53,17 @@ export function paddleLinkStep(pathname: string, search: URLSearchParams, signed
   if (home && signedIn && txn) return { kind: "resume", to: `/${home[1]}/app/checkout?_ptxn=${encodeURIComponent(txn)}` };
   return null;
 }
+
+/**
+ * A Paddle link opens only the learner's own transaction: one our checkout made for them (custom_data.user_id), one for
+ * their Paddle customer, or one of their Paddle subscription (card update, overdue charge). Anything else, such as a
+ * crafted link to someone else's renewal, is refused, so nobody can be led to pay for another account's plan.
+ */
+export function paddleTxnOwned(
+  txn: { userId: string | null; customerId: string | null; subscriptionId: string | null },
+  me: { userId: string; customerIds: string[]; subscriptionIds: string[] },
+): boolean {
+  if (txn.userId) return txn.userId === me.userId; // ours, made for one learner: only that learner
+  if (txn.customerId && me.customerIds.includes(txn.customerId)) return true;
+  return !!txn.subscriptionId && me.subscriptionIds.includes(txn.subscriptionId);
+}

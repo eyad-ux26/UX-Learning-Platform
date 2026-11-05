@@ -5,6 +5,7 @@ import { PaddleLinkCheckout, PayButton } from "@/components/billing/CheckoutView
 import { cookies } from "next/headers";
 import { paddleLinkLocale, paddleLinkTxn } from "@/lib/billing/paddle-link";
 import { paddleConfig } from "@/lib/server/billing/config";
+import { ownPaddleTxn } from "@/lib/server/billing/paddle-link";
 import { formatMoney, moneyCls, UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 import { requireLearner } from "@/lib/server/learner";
 import { loadOffer } from "@/lib/server/billing/plans";
@@ -26,7 +27,8 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
     const own = paddleLinkLocale(locale, me.locale, (await cookies()).get("NEXT_LOCALE")?.value);
     if (own) return redirect({ href: { pathname: "/app/checkout", query: { _ptxn: ptxn } }, locale: own }) as never;
     const c = paddleConfig();
-    if (!c.clientToken) return redirect({ href: "/app/settings/billing", locale }) as never;
+    // Only the learner's own transaction opens: a link to someone else's (a crafted "renew your plan") goes to billing.
+    if (!c.clientToken || !(await ownPaddleTxn(me.userId, ptxn))) return redirect({ href: "/app/settings/billing", locale }) as never;
     return (
       <div className="chk-page">
         <header className="pub-head"><Logo height={30} /></header>
