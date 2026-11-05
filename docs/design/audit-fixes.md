@@ -55,3 +55,5 @@ Update (5 November 2026, canvas v69), app changes from PR #164 added to the desi
 - **Lesson language button** (board S2-13, `LessonKinds` and `LessonPages` headers): after the step count, before sound. A 44px outlined pill with a ledge (`.lp-lang`). Desktop shows a globe and the other language's name (عربي / English); phones show the short label (عربي / EN). Tapping it switches the whole lesson in place.
 - **Saved chip**: under 420px it shows only its cloud icon; the word stays for screen readers.
 - **Home**: the "Your paths" chips sit right under the greeting, above the next lesson card (boards S3-2 and the `PathsPages` home views).
+
+Update (5 November 2026, canvas v70): new page "10 · Pre-launch · Coming soon" (PL-1 to PL-3) for uxgate.org. See `prelaunch/README.md`.

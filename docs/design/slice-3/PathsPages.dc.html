@@ -20,6 +20,9 @@ body{margin:0}
   <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
     <nav class="dk-rail" aria-label="{{c.navLabel}}">
       <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-if value="{{tm.on}}" hint-placeholder-val="{{false}}">
+        <a href="#public" class="team-pill" aria-label="{{tm.aria}}"><span><span class="ph ph-eye" aria-hidden="true"></span>{{tm.title}}</span><small>{{tm.sub}}</small></a>
+      </sc-if>
       <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
         <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
       </sc-for>
@@ -35,6 +38,10 @@ body{margin:0}
   </sc-if>
 
   <div class="pg-col">
+    <!-- Pre-launch team view: admins see the full tool; the public sees the Coming soon page -->
+    <sc-if value="{{tm.bar}}" hint-placeholder-val="{{false}}">
+      <a href="#public" class="team-bar" aria-label="{{tm.aria}}"><span class="ph ph-eye" aria-hidden="true"></span><span class="grow">{{tm.title}}</span><small>{{tm.subShort}}</small></a>
+    </sc-if>
 
     <!-- ============ Paths tab ============ -->
     <sc-if value="{{is.paths}}" hint-placeholder-val="{{true}}">
@@ -510,7 +517,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"team":{"editor":"enum","options":["off","on"],"default":"off"},"$preview":{"width":390,"height":844}}'>
 /* Slice 3 · several paths: Paths tab, path detail, home, path map switcher, onboarding. Spec §4.4b, EN-11, EN-11b. */
 const IMG = {
   forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
@@ -768,6 +775,10 @@ class Component extends DCLogic {
     return {
       lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG,
       view, mp, ld,
+      tm: { on: this.props.team === 'on' && isDesk && !isOb, bar: this.props.team === 'on' && !isDesk && !isOb,
+        title: lang === 'ar' ? 'قبل الإطلاق · عرض الفريق' : 'Pre-launch · team view', sub: lang === 'ar' ? 'يرى الزوار صفحة «قريبًا»' : 'The public sees the Coming soon page',
+        subShort: lang === 'ar' ? 'الزوار يرون «قريبًا»' : 'Public sees Coming soon',
+        aria: lang === 'ar' ? 'قبل الإطلاق، عرض الفريق. يرى الزوار صفحة «قريبًا». افتح الصفحة العامة' : 'Pre-launch team view. The public sees the Coming soon page. Open the public page' },
       rootCls: 'ug pg pg-' + device + ((load === 'early' || load === 'layer' || load === 'reduced') ? ' is-navbusy' : ''),
       showRail: isDesk && !isOb && load !== 'full', showNav: !isDesk && !isOb && !isDetail && load !== 'full',
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
