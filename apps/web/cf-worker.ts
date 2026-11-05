@@ -7,13 +7,13 @@ type Env = { CRON_SECRET?: string };
 export default {
   fetch: handler.fetch,
   async scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
-    // Every hour: reminders at each learner's own time and removal of deleted accounts (slice 4). Up to 4 calls of 25.
-    if (event?.cron === "0 * * * *") {
+    // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts (slice 4). Up to 4 calls of 25.
+    if (event?.cron === "*/15 * * * *") {
       ctx.waitUntil((async () => {
         for (let i = 0; i < 4; i++) {
-          const res: Response = await handler.fetch(new Request("https://internal/api/cron/hourly", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+          const res: Response = await handler.fetch(new Request("https://internal/api/cron/reminders", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
           const text = await res.text();
-          console.log(`cron hourly ${i + 1}: ${res.status} ${text}`);
+          console.log(`cron reminders ${i + 1}: ${res.status} ${text}`);
           if (!res.ok || !text.includes('"more":true')) break;
         }
       })());

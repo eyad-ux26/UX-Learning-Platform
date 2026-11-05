@@ -77,6 +77,17 @@ describe("only the server writes what is sent and scheduled", () => {
     await expect(as("authenticated", A, `update notification_prefs set prefs = '{}' where user_id = $1`, [A])).rejects.toThrow(/permission denied/);
     await expect(as("authenticated", A, `update review_requests set status = 'accepted', xp_added = 999 where user_id = $1`, [A])).rejects.toThrow(/permission denied/);
   });
+  it("a learner cannot set or change the delete and welcome columns on their own profile", async () => {
+    for (const set of [`delete_after = now() - interval '1 day'`, `delete_requested_at = now()`, `welcome_sent_at = now()`]) {
+      await expect(as("authenticated", A, `update profiles set ${set} where user_id = $1`, [A])).rejects.toThrow(/server only/);
+    }
+    // Their other settings still save.
+    const ok = await as<{ user_id: string }>("authenticated", A, `update profiles set daily_goal = 3 where user_id = $1 returning user_id`, [A]);
+    expect(ok.length).toBe(1);
+    // The server (service role) can.
+    const srv = await as<{ user_id: string }>("service_role", null, `update profiles set delete_after = now() + interval '30 days' where user_id = $1 returning user_id`, [A]);
+    expect(srv.length).toBe(1);
+  });
   it("mark as read changes only the caller's own unread items", async () => {
     let n: { n: number }[] = [];
     let bUnread: { c: number }[] = [];
@@ -101,6 +112,25 @@ describe("only the server writes what is sent and scheduled", () => {
   });
 });
 
+describe("answers to review requests", () => {
+  it("an answer puts one inbox item in the learner's inbox, linking to it, unless In app is off for answers", async () => {
+    await db.transaction(async (tx) => {
+      const id = (await tx.query<{ id: string }>(`insert into review_requests (user_id, lesson_id, step_id, answer, reason, status) values ($1, 'P01-U01-L01', 'S03', '{"sel":["b"]}', 'answer_works', 'open') returning id`, [A])).rows[0].id;
+      await tx.query(`update review_requests set status = 'accepted', xp_added = 10, reply = '{"en":"Yes"}', replied_at = now() where id = $1`, [id]);
+      const n = (await tx.query<{ href: string; data: { status: string; xp: number } }>(`select href, data from notifications where user_id = $1 and kind = 'answer'`, [A])).rows;
+      expect(n).toHaveLength(1);
+      expect(n[0].href).toBe(`/app/requests/${id}`);
+      expect(n[0].data).toMatchObject({ status: "accepted", xp: 10 });
+      await tx.query(`update notification_prefs set prefs = '{"answer":{"in_app":false}}' where user_id = $1`, [B]);
+      const idB = (await tx.query<{ id: string }>(`insert into review_requests (user_id, lesson_id, step_id, answer, reason, status) values ($1, 'P01-U01-L01', 'S03', '{"sel":["b"]}', 'answer_works', 'open') returning id`, [B])).rows[0].id;
+      await tx.query(`update review_requests set status = 'declined' where id = $1`, [idB]);
+      const nb = (await tx.query<{ c: number }>(`select count(*)::int as c from notifications where user_id = $1 and kind = 'answer'`, [B])).rows[0].c;
+      expect(nb).toBe(0);
+      await tx.rollback();
+    });
+  });
+});
+
 describe("at most one reminder email a day", () => {
   it("a second reminder or goal email on the same day is refused by the database", async () => {
     await db.transaction(async (tx) => {
@@ -122,12 +152,12 @@ describe("the reminder job's learner query", () => {
     await expect(as("authenticated", A, `select * from public.reminder_candidates(10)`)).rejects.toThrow(/permission denied/);
     await expect(as("anon", null, `select * from public.reminder_candidates(10)`)).rejects.toThrow(/permission denied/);
   });
-  it("finds learners whose reminder hour is now in their zone, skips those already sent today and accounts being deleted", async () => {
+  it("finds learners whose reminder quarter hour is now in their zone, skips those already sent today and accounts being deleted", async () => {
     let first: { user_id: string; lessons_today: number }[] = [];
     let afterSend: { user_id: string }[] = [];
     let deleting: { user_id: string }[] = [];
     await db.transaction(async (tx) => {
-      await tx.query(`update profiles set reminder_time = make_time(extract(hour from now() at time zone 'UTC')::int, 0, 0), time_zone = 'UTC' where user_id in ($1, $2)`, [A, B]);
+      await tx.query(`update profiles set reminder_time = make_time(extract(hour from now() at time zone 'UTC')::int, (floor(extract(minute from now() at time zone 'UTC') / 15) * 15)::int, 0), time_zone = 'UTC' where user_id in ($1, $2)`, [A, B]);
       await tx.query(`insert into daily_activity (user_id, day, lessons_done) values ($1, (now() at time zone 'UTC')::date, 1)`, [A]);
       await tx.exec(`set local role service_role`);
       first = (await tx.query<{ user_id: string; lessons_today: number }>(`select user_id, lessons_today from public.reminder_candidates(10) order by user_id`)).rows;
@@ -142,10 +172,21 @@ describe("the reminder job's learner query", () => {
     expect(afterSend.map((r) => r.user_id)).toEqual([A]);
     expect(deleting).toEqual([]);
   });
+  it("is never early: a reminder later in the hour waits for its own quarter hour", async () => {
+    let rows: { user_id: string }[] = [];
+    await db.transaction(async (tx) => {
+      // The next quarter hour (wrapping at midnight): not due yet.
+      await tx.query(`update profiles set time_zone = 'UTC', reminder_time = (date_trunc('hour', now() at time zone 'UTC') + (floor(extract(minute from now() at time zone 'UTC') / 15) + 1) * interval '15 minutes')::time where user_id = $1`, [A]);
+      await tx.exec(`set local role service_role`);
+      rows = (await tx.query<{ user_id: string }>(`select user_id from public.reminder_candidates(10)`)).rows;
+      await tx.rollback();
+    });
+    expect(rows.map((r) => r.user_id)).not.toContain(A);
+  });
   it("an unknown time zone counts as UTC instead of failing the whole run", async () => {
     let rows: { user_id: string }[] = [];
     await db.transaction(async (tx) => {
-      await tx.query(`update profiles set reminder_time = make_time(extract(hour from now() at time zone 'UTC')::int, 0, 0), time_zone = 'Not/AZone' where user_id = $1`, [A]);
+      await tx.query(`update profiles set reminder_time = make_time(extract(hour from now() at time zone 'UTC')::int, (floor(extract(minute from now() at time zone 'UTC') / 15) * 15)::int, 0), time_zone = 'Not/AZone' where user_id = $1`, [A]);
       await tx.exec(`set local role service_role`);
       rows = (await tx.query<{ user_id: string }>(`select user_id from public.reminder_candidates(10)`)).rows;
       await tx.rollback();

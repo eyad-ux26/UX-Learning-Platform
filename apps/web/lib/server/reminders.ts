@@ -27,7 +27,7 @@ async function nextLesson(db: SupabaseClient, c: Candidate) {
 }
 
 /**
- * One hourly run: everyone whose reminder time is this hour gets at most one reminder that local day. The email_log
+ * One run (every 15 minutes): everyone whose reminder time is this quarter hour gets at most one reminder that local day. The email_log
  * unique index makes a second email for the same day impossible even if two runs overlap.
  */
 export async function runReminders(db: SupabaseClient, batch = 25): Promise<{ sent: number; skipped: number; failed: number; more: boolean }> {

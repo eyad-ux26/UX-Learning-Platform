@@ -9,6 +9,12 @@ describe("the daily reminder", () => {
     expect(planReminder({ ...base, localHour: 19 })).toBeNull();
     expect(planReminder({ ...base, reminderTime: "20:45" })).toBe("reminder");
   });
+  it("is never early: 20:45 waits for the 20:45 run", () => {
+    expect(planReminder({ ...base, reminderTime: "20:45", localMinute: 0 })).toBeNull();
+    expect(planReminder({ ...base, reminderTime: "20:45", localMinute: 30 })).toBeNull();
+    expect(planReminder({ ...base, reminderTime: "20:45", localMinute: 45 })).toBe("reminder");
+    expect(planReminder({ ...base, reminderTime: "20:15", localMinute: 16 })).toBe("reminder");
+  });
   it("never when reminders are off, the goal is met, or one was sent today", () => {
     expect(planReminder({ ...base, reminderTime: null })).toBeNull();
     expect(planReminder({ ...base, lessonsToday: 2 })).toBeNull();

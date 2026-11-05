@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { pickPath } from "@/lib/learning";
 import { FOCUS_PATH, onboardingSchema, type OnboardingInput } from "@/lib/onboarding";
+import { sendWelcomeOnce } from "@/lib/server/welcome";
 
 /** Saves the answers (even a skipped, partial set) and enrols the learner in their first path. */
 export async function saveOnboarding(input: OnboardingInput): Promise<{ ok: boolean }> {
@@ -27,5 +28,7 @@ export async function saveOnboarding(input: OnboardingInput): Promise<{ ok: bool
     await db.from("enrollments").update({ last_active_at: now }).eq("user_id", userId).eq("path_id", path.id);
     await db.from("profiles").update({ current_path_id: path.id }).eq("user_id", userId).is("current_path_id", null);
   }
+  // Once per account: the welcome inbox item and email, now that the starting path is known.
+  await sendWelcomeOnce(userId, data.user.email);
   return { ok: true };
 }

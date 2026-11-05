@@ -9,8 +9,8 @@
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "uxgate-web" }],
   // Run server code near Supabase in Frankfurt instead of near each visitor.
   "placement": { "region": "aws:eu-central-1" },
-  // Daily job at 02:00 UTC (05:00 Cairo) calls /api/cron/daily; the hourly one calls /api/cron/hourly (reminders, slice 4).
-  "triggers": { "crons": ["0 2 * * *", "0 * * * *"] },
+  // Daily job at 02:00 UTC (05:00 Cairo) calls /api/cron/daily; the 15-minute one calls /api/cron/reminders (slice 4).
+  "triggers": { "crons": ["0 2 * * *", "*/15 * * * *"] },
   // Non-secret settings. NEXT_PUBLIC_* values must also be present at build time (Workers Builds variables).
   // Secrets (SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET) are set with `wrangler secret put`, never here.
   "vars": { "UG_HTTPS": "1" },

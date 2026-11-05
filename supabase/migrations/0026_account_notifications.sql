@@ -91,6 +91,24 @@ alter table public.review_requests
   add column if not exists replied_at timestamptz,
   add column if not exists xp_added integer not null default 0;
 
+-- When the team answers a request (open -> accepted or declined), the learner gets an inbox item linking to the answer,
+-- unless they turned In app off for answers. Done here so it holds whichever admin tool writes the answer; that tool still
+-- sends the matching push and email through the app (lib/server/notify.ts).
+create function public.review_request_answered() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if old.status = 'open' and new.status in ('accepted', 'declined') and not exists (
+    select 1 from public.notification_prefs n where n.user_id = new.user_id and n.prefs -> 'answer' ->> 'in_app' = 'false'
+  ) then
+    insert into public.notifications (user_id, kind, data, href)
+    values (new.user_id, 'answer', jsonb_build_object('status', new.status, 'xp', new.xp_added, 'lesson', new.lesson_id), '/app/requests/' || new.id);
+  end if;
+  return new;
+end $$;
+revoke all on function public.review_request_answered() from public, anon, authenticated;
+create trigger review_request_answered after update of status on public.review_requests
+  for each row execute function public.review_request_answered();
+
 -- ───────── deleting an account ─────────
 
 -- Deleting signs the learner out everywhere and schedules removal 30 days later. Signing in before then undoes it.
@@ -100,10 +118,32 @@ alter table public.profiles
   add column if not exists delete_after timestamptz,
   add column if not exists welcome_sent_at timestamptz;
 create index profiles_delete_after on public.profiles (delete_after) where delete_after is not null;
+-- These three columns are the server's: a learner's own session (PostgREST, role authenticated) cannot set or change
+-- them, or it could skip the 30-day undo or reset the welcome email. A trigger rather than column grants, so columns
+-- other slices add to profiles keep the table-wide grant from 0001.
+create function public.profiles_guard_server_columns() returns trigger
+language plpgsql set search_path = public as $$
+begin
+  if current_user in ('authenticated', 'anon') then
+    if tg_op = 'INSERT' then
+      if new.delete_after is not null or new.delete_requested_at is not null or new.welcome_sent_at is not null then
+        raise exception 'profiles: delete and welcome columns are set by the server only' using errcode = '42501';
+      end if;
+    elsif new.delete_after is distinct from old.delete_after
+       or new.delete_requested_at is distinct from old.delete_requested_at
+       or new.welcome_sent_at is distinct from old.welcome_sent_at then
+      raise exception 'profiles: delete and welcome columns are set by the server only' using errcode = '42501';
+    end if;
+  end if;
+  return new;
+end $$;
+create trigger profiles_guard_server_columns before insert or update on public.profiles
+  for each row execute function public.profiles_guard_server_columns();
 
--- ───────── the hourly reminder job ─────────
+-- ───────── the reminder job (every 15 minutes) ─────────
 
--- Learners whose reminder hour is the current hour in their own time zone, who have not had a reminder email for that
+-- Learners whose reminder time falls in the current quarter hour of their own time zone (the picker offers :00, :15,
+-- :30 and :45, and the job runs at those minutes, so it is never early), who have not had a reminder email for that
 -- local day, and whose account is not being deleted. Service role only. An unknown time zone counts as UTC.
 create function public.reminder_candidates(p_limit integer default 25)
 returns table (user_id uuid, email text, locale text, display_name text, daily_goal integer, current_path_id text, local_day date, lessons_today integer, active_days date[], reminder_time time)
@@ -118,6 +158,7 @@ language sql stable security definer set search_path = public as $$
     select p.*, (now() at time zone p.tz)::date as lday
     from p
     where extract(hour from (now() at time zone p.tz)) = extract(hour from p.reminder_time)
+      and floor(extract(minute from (now() at time zone p.tz)) / 15) = floor(extract(minute from p.reminder_time) / 15)
   )
   select d.user_id, u.email::text, d.locale, d.display_name, d.daily_goal, d.current_path_id, d.lday,
     coalesce((select a.lessons_done from public.daily_activity a where a.user_id = d.user_id and a.day = d.lday), 0),

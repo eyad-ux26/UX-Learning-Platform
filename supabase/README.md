@@ -59,7 +59,7 @@ Slice 3 migrations start at 0016 and run after these.
 
 ## 10. Slice 4: settings, notifications, reminders and deleting an account (0026)
 
-1. In the SQL editor, paste `migrations/0026_account_notifications.sql`. It runs after slice 2 (0007) and slice 3 (0016 onwards) in any order with them. It adds `notification_prefs`, `notifications` (the inbox), `email_log`, `push_subscriptions`, the reply columns on `review_requests`, the delete columns on `profiles` and the `reminder_candidates` function for the hourly job. Slice 5 starts at 0036.
+1. In the SQL editor, paste `migrations/0026_account_notifications.sql`. It runs after slice 2 (0007) and slice 3 (0016 onwards) in any order with them. It adds `notification_prefs`, `notifications` (the inbox), `email_log`, `push_subscriptions`, the reply columns on `review_requests`, the delete columns on `profiles` and the `reminder_candidates` function for the reminder job, and a guard so a learner's own session cannot change the delete or welcome columns. Slice 5 starts at 0036.
 2. Values to add in Cloudflare (Worker secrets unless marked build variable). Never paste them in chat or git.
 
 | Value | Where | What it does |
@@ -71,5 +71,16 @@ Slice 3 migrations start at 0016 and run after these.
 | `NEXT_PUBLIC_SITE_URL` | Build variable | Links in emails. `https://uxgate.org` in production, the staging address on staging. |
 | `NEXT_PUBLIC_APPLE_SIGNIN` | Build variable, `1` | Shows Sign in with Apple. Set only after the Apple setup is done. |
 | `UG_MAINTENANCE` | Worker variable, `1` | Shows the maintenance page (status 503) on every page. Remove it to end maintenance. |
+| `UG_MAINTENANCE_UNTIL` | Worker variable, an ISO time such as `2026-11-20T18:00:00Z` | The "back by" time on the maintenance page, shown in Cairo time. Without it the page says "We'll be back soon". |
 
-3. The hourly cron (`0 * * * *` in `wrangler.jsonc`) calls `/api/cron/hourly` with `CRON_SECRET`. It removes accounts whose 30 days have passed, then sends the day's reminders in batches of 25. Cloudflare's free plan allows too few subrequests per run, so this needs Workers Paid.
+3. The reminder cron (`*/15 * * * *` in `wrangler.jsonc`) calls `/api/cron/reminders` with `CRON_SECRET`. It removes accounts whose 30 days have passed, then sends the reminders due in this quarter hour (each learner's own time, never early, at most one a day) in batches of 25. Cloudflare's free plan allows too few subrequests per run, so this needs Workers Paid.
+4. Who sends which notification. Each one goes through `notify()` in `apps/web/lib/server/notify.ts`, which writes the inbox item and sends push as the learner's choices allow. The email, where one exists, is sent next to it from `lib/server/email/templates.ts`.
+
+| Kind | Sent by | Status |
+| --- | --- | --- |
+| reminder, goal | The reminder cron | Done |
+| welcome | `sendWelcomeOnce` after onboarding, once per account | Done |
+| answer | A database trigger on `review_requests` adds the inbox item when the status leaves `open` | Done. The admin tool that writes answers should also call `notify(…, "answer", …)` for push. |
+| badge | Slice 3, when a skill turns gold (Kept): `notify(userId, "badge", { name, kind }, "/app/profile")` plus `badgeEmail` | Slice 3 wires it |
+| review | Slice 3's daily job, when skills are due: `notify(userId, "review", { count, minutes }, "/app/review")` | Slice 3 wires it |
+| billing | Slice 5 | Slice 5 wires it |

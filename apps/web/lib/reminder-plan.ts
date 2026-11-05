@@ -1,4 +1,4 @@
-// Which daily reminder (if any) a learner gets in this hourly run. Pure, so the rules are tested without a database.
+// Which daily reminder (if any) a learner gets in this 15-minute run. Pure, so the rules are tested without a database.
 // Rules (slice 4 design review, 2 Nov 2026):
 // - at most one reminder email a day, at the learner's own time, in their time zone;
 // - nothing when the day's goal is already met, or when reminders are off;
@@ -11,6 +11,8 @@ export type ReminderInput = {
   reminderTime: string | null;
   /** The learner's local hour now (0 to 23). */
   localHour: number;
+  /** The learner's local minute now (0 to 59). Left out, only the hour is compared. */
+  localMinute?: number;
   dailyGoal: number;
   lessonsToday: number;
   streak: number;
@@ -24,8 +26,12 @@ export type ReminderKind = "reminder" | "goal";
 
 export function planReminder(r: ReminderInput): ReminderKind | null {
   if (!r.reminderTime) return null;
-  const hour = Number(/^(\d{1,2}):/.exec(r.reminderTime)?.[1] ?? NaN);
+  const m = /^(\d{1,2}):(\d{2})/.exec(r.reminderTime);
+  const hour = Number(m?.[1] ?? NaN);
+  const minute = Number(m?.[2] ?? 0);
   if (!Number.isFinite(hour) || hour !== r.localHour) return null;
+  // The job runs at :00, :15, :30 and :45; a reminder is due in its own quarter hour, never before.
+  if (r.localMinute !== undefined && Math.floor(minute / 15) !== Math.floor(r.localMinute / 15)) return null;
   return planDue(r);
 }
 
