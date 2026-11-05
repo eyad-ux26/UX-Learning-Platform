@@ -237,8 +237,17 @@ function Plain({ b, locale }: { b: MockBlock; locale: Locale }) {
 }
 
 /** A Phosphor icon (drawn from mock-icons.css), or a literal character such as an emoji. */
-export const Icon = ({ name, cls }: { name: string; cls?: string }) =>
-  /^[a-z0-9-]+$/.test(name) ? <span className={`xi xi-${name}${cls ? ` ${cls}` : ""}`} aria-hidden="true" /> : <span className={`xi-ch${cls ? ` ${cls}` : ""}`} aria-hidden="true">{name}</span>;
+/** True inside a right-to-left screen, where carets and arrows point the other way. */
+const Rtl = createContext(false);
+/** caret-left ⇄ caret-right, arrow-up-left ⇄ arrow-up-right; two-way icons (arrows-left-right) stay. */
+export const mirrorIcon = (name: string) =>
+  /^(caret|arrow)/.test(name) && !(/left/.test(name) && /right/.test(name)) ? name.replace(/\b(left|right)\b/, (d) => (d === "left" ? "right" : "left")) : name;
+
+export const Icon = ({ name, cls }: { name: string; cls?: string }) => {
+  const rtl = useContext(Rtl);
+  const n = rtl ? mirrorIcon(name) : name;
+  return /^[a-z0-9-]+$/.test(n) ? <span className={`xi xi-${n}${cls ? ` ${cls}` : ""}`} aria-hidden="true" /> : <span className={`xi-ch${cls ? ` ${cls}` : ""}`} aria-hidden="true">{name}</span>;
+};
 
 const Art = ({ name, label }: { name: string; label?: string }) => {
   const svg = artSvg(name, label || undefined);
@@ -462,11 +471,13 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
   const cls = ["exmock", wide && "wide", mock.gray && "gray", mock.overlay && "has-ov", mock.fab && "has-fab", app && "has-app", chrome && "has-chrome", mock.theme === "dark" && "th-dark", mock.screen === "lock" && "is-lock"].filter(Boolean).join(" ");
   const caption = [app ? mt(app.name, locale) : null, tag, mock.caption ? mt(mock.caption, locale) : null].filter(Boolean).join(" · ");
   const url = mock.url ?? app?.domain ?? (wide && app ? `${String(app.id ?? "site")}.example` : undefined);
+  const dir = mock.dir ?? (locale === "ar" ? "rtl" : "ltr");
   const body = (
+    <Rtl.Provider value={dir === "rtl"}>
     <figure className={`xm xm-${frame}${chrome ? " xm-dev" : ""}`} role="group" aria-label={label} style={mock.width ? { maxWidth: Number(mock.width) + (phoneLike && chrome ? 12 : 0) } : undefined}>
       <figcaption className="xm-label" aria-hidden="true">{app ? <span className="xm-label-ic" style={{ background: app.color, color: onColor(app.color) }}><Icon name={app.icon} /></span> : null}<span>{caption}</span></figcaption>
       <div className="xm-shell">
-        <div className={cls} dir={mock.dir ?? (locale === "ar" ? "rtl" : "ltr")} style={screen}>
+        <div className={cls} dir={dir} style={screen}>
           {wide && url ? <BrowserBar url={url} /> : null}
           {status ? <StatusBar /> : null}
           {mock.navbar ? <NavBar nav={mock.navbar} app={app} locale={locale} /> : null}
@@ -482,6 +493,7 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
       </div>
       {mock.reader ? <div className="xm-reader"><Icon name="speaker-high" /><span>“{mt(mock.reader, locale)}”</span></div> : null}
     </figure>
+    </Rtl.Provider>
   );
   return regions ? <Regions.Provider value={regions}>{body}</Regions.Provider> : body;
 }

@@ -96,4 +96,13 @@ describe("MockView details", () => {
     const html = render({ frame: "wide", url: "maktaba.example/search", blocks: [{ kind: "searchbar", text: "UX books" }] } as never, "en");
     expect(html).toContain("maktaba.example/search");
   });
+  it("points carets and arrows the reading way in Arabic", () => {
+    const mock = { appbar: { title: T("Cards", "البطاقات"), back: true }, blocks: [{ kind: "listitem", text: "Visa", chevron: true }, { kind: "button", icon: "arrow-right", text: "Next" }, { kind: "button", icon: "arrows-left-right", text: "Swap" }] } as never;
+    const en = render(mock, "en"), ar = render(mock, "ar");
+    expect(en).toContain("xi-caret-left xm-back");
+    expect(ar).toContain("xi-caret-right xm-back");
+    expect(ar).toContain("xi-caret-left");
+    expect(ar).toContain("xi-arrow-left");
+    expect(ar).toContain("xi-arrows-left-right");
+  });
 });
