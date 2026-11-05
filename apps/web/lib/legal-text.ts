@@ -236,7 +236,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         {
           h: "Subscription, cancelling and refunds",
           ps: [],
-          key: "A monthly or an annual plan, priced by region: in Egypt 249 EGP a month or 2,249 EGP a year, in the Gulf $8 or $72, in other Arab countries $5 or $45. No trial. A plan renews at the end of each period until you cancel. Payments go through Paymob in Egypt and Paddle elsewhere. Cancel any time in Settings and keep access until the end of the period you paid for. Ask for a refund within 7 days of a charge.",
+          key: "A monthly or an annual plan, priced by region: in Egypt 249 EGP a month or 2,249 EGP a year, in the Gulf $8 or $72, in other Arab countries $5 or $45, and in all other countries $8 or $72. No trial. A plan renews at the end of each period until you cancel. Payments go through Paymob in Egypt and Paddle elsewhere. Cancel any time in Settings and keep access until the end of the period you paid for. Ask for a refund within 7 days of a charge.",
         },
         {
           h: "Fair use",
@@ -309,7 +309,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         {
           h: "الاشتراك والإلغاء والاسترداد",
           ps: [],
-          key: "خطة شهرية أو سنوية، بسعر حسب المنطقة: في مصر 249 ج.م شهريًا أو 2,249 ج.م سنويًا، وفي الخليج 8$ أو 72$، وفي باقي الدول العربية 5$ أو 45$. بدون فترة تجريبية. تتجدّد الخطة في نهاية كل مدة حتى تلغيها. يتم الدفع عبر Paymob في مصر وPaddle خارجها. ألغِ متى شئت من الإعدادات ويبقى وصولك حتى نهاية المدة المدفوعة. اطلب استرداد المبلغ خلال 7 أيام من الدفع.",
+          key: "خطة شهرية أو سنوية، بسعر حسب المنطقة: في مصر 249 ج.م شهريًا أو 2,249 ج.م سنويًا، وفي الخليج 8$ أو 72$، وفي باقي الدول العربية 5$ أو 45$، وفي كل الدول الأخرى 8$ أو 72$. بدون فترة تجريبية. تتجدّد الخطة في نهاية كل مدة حتى تلغيها. يتم الدفع عبر Paymob في مصر وPaddle خارجها. ألغِ متى شئت من الإعدادات ويبقى وصولك حتى نهاية المدة المدفوعة. اطلب استرداد المبلغ خلال 7 أيام من الدفع.",
         },
         {
           h: "الاستخدام العادل",
@@ -374,7 +374,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
           ps: ["Ask from your account, so we can find the charge quickly:"],
           list: [
             "Open Settings, then Plan and billing, then Ask for a refund.",
-            "Pick the charge and tell us why in a few words. One line is enough.",
+            "Ask for a refund for your latest charge and tell us why in a few words. One line is enough.",
             "Or write to support@uxgate.org from the email on your account.",
           ],
           key: "You get an email when the team answers. Pro stays on until then.",
@@ -421,7 +421,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
           ps: ["اطلبه من حسابك حتى نجد الدفعة بسرعة:"],
           list: [
             "افتح الإعدادات، ثم «الخطة والدفع»، ثم «اطلب استرداد المبلغ».",
-            "اختر الدفعة واكتب السبب في كلمات قليلة. سطر واحد يكفي.",
+            "اطلب استرداد مبلغ آخر دفعة واكتب السبب في كلمات قليلة. سطر واحد يكفي.",
             "أو راسل support@uxgate.org من البريد المسجَّل في حسابك.",
           ],
           key: "تصلك رسالة بالبريد عندما يردّ الفريق. ويبقى Pro مفعّلًا حتى ذلك الوقت.",
