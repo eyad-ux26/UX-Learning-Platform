@@ -589,6 +589,37 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     expect(sub().currentPeriodEnd).toBe("2027-11-03T09:00:00Z");
   });
 
+  it("a whole refund or a chargeback that ends the plan also cancels the Paddle subscription; a partial refund does not (#159)", async () => {
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    const adj = (id: string, data: Record<string, unknown>) =>
+      deliverPaddle({ event_id: id, event_type: "adjustment.created", occurred_at: clock, data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_a", ...data } });
+    await adj("p", { action: "refund", type: "partial", totals: { total: "100", currency_code: "USD" } });
+    expect(calls).toEqual([]);
+    await adj("f", { action: "refund", type: "full", totals: { total: "7100", currency_code: "USD" } });
+    expect(calls).toEqual(["cancel paddle sub_a"]);
+    expect(sub().status).toBe("refunded");
+    // Paddle's own "canceled" notice then changes nothing.
+    await deliverPaddle({ event_id: "evt_c", event_type: "subscription.canceled", occurred_at: clock, data: { id: "sub_a", status: "canceled" } });
+    expect(sub().status).toBe("refunded");
+
+    const b = paddleSession();
+    await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
+    calls = [];
+    await deliverPaddle({ event_id: "evt_cb", event_type: "adjustment.created", occurred_at: clock, data: { id: "adj_cb", action: "chargeback", status: "approved", transaction_id: "txn_b", totals: { total: "7200", currency_code: "USD" } } });
+    expect(calls).toEqual(["cancel paddle sub_b"]);
+    expect(pro()).toBe(false);
+  });
+
+  it("a failed Paddle cancel after a refund is logged, and the refund still ends Pro", async () => {
+    engine.actions = { ...engine.actions, cancelNow: async () => { throw new Error("paddle down"); } };
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    const r = await deliverPaddle({ event_id: "evt_f", event_type: "adjustment.created", occurred_at: clock, data: { id: "adj_f", action: "refund", status: "approved", type: "full", transaction_id: "txn_a" } });
+    expect(r[0].status).toBe("applied");
+    expect(pro()).toBe(false);
+  });
+
   it("cancel in the grace period ends the plan now and asks Paddle to cancel now; a late charge is refunded", async () => {
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
