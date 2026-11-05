@@ -57,3 +57,10 @@ Update (5 November 2026, canvas v69), app changes from PR #164 added to the desi
 - **Home**: the "Your paths" chips sit right under the greeting, above the next lesson card (boards S3-2 and the `PathsPages` home views).
 
 Update (5 November 2026, canvas v70): new page "10 · Pre-launch · Coming soon" (PL-1 to PL-3) for uxgate.org. See `prelaunch/README.md`.
+
+Update (5 November 2026, canvas v72): board S2-14, the lesson video summary as cards (`LessonPages` views `summary` and `summaryPoints`, CSS block "Video summary" at the end of `system/uxgate.css`). It replaces the plain text summary.
+- **Header:** the clip's name as an overline, the title "Video summary" / «ملخص الفيديو», and a secondary "Watch again" / «شاهد مرة أخرى» button with the clip length. It replays the clip.
+- **The idea card:** the summary's intro paragraph, with its bold term kept bold, in a card with a bulb icon.
+- **Point cards:** each "- **Title:** text" point becomes a card with an icon tile, a bold title and the text. The icon comes from the step's `icons:` list, one per point. If there is none, fit points use check-circle and "Not…" / «لا…» points use x-circle.
+- **Groups:** points that start with "Not" / «لا» go in a "When it doesn't fit" / «متى لا يناسب» group with dashed cards on the wrong-answer tint. The rest go in "When it fits" / «متى يناسب» on mint. A summary with no "Not" points has one "Key points" / «أهم النقاط» group. Each group heading shows a count badge.
+- **Layout:** one column on phones. On desktop the two groups sit side by side, and a single "Key points" group shows 3 cards per row. Continue sits at the bottom.
