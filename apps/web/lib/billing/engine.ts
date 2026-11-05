@@ -302,7 +302,16 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
       }
       await store.markPaymentRefunded(pay.id, ev.at);
       const sub = pay.subscriptionId ? await store.subById(pay.subscriptionId) : null;
-      if (sub?.id && ["active", "grace", "cancelled"].includes(sub.status)) await store.saveSub(refunded(sub, ev.at));
+      if (sub?.id && ["active", "grace", "cancelled"].includes(sub.status)) {
+        await store.saveSub(refunded(sub, ev.at));
+        // Paddle renews by itself: end its subscription now, or it charges again next period (#159). A failure is logged;
+        // such a charge would still be refused and refunded as a renewal of a refunded plan.
+        if (sub.provider === "paddle" && sub.providerSubId) {
+          await e.actions?.cancelNow?.(sub.provider, sub.providerSubId).catch((err) => {
+            console.error("billing: Paddle subscription not cancelled after a refund", sub.providerSubId, String(err?.message ?? err));
+          });
+        }
+      }
       const req = await store.refundRequestFor(pay.id);
       if (req && req.status === "waiting") await store.answerRefundRequest(req.id, "approved", ev.at);
       await syncEntitlement(e, pay.userId);

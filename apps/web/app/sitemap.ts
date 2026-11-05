@@ -5,9 +5,9 @@ import { LEGAL_STATUS } from "@/lib/legal-text";
 
 export const dynamic = "force-static";
 
-/** Public pages in both languages, each with its hreflang pair. Privacy and terms join once their text is approved. */
+/** Public pages in both languages, each with its hreflang pair. Privacy, terms and the refund policy join once their text is approved. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/paths", ...PUBLIC_PATHS.map((p) => `/paths/${p.slug}`), ...(LEGAL_STATUS.approved ? ["/privacy", "/terms"] : [])];
+  const pages = ["", "/paths", ...PUBLIC_PATHS.map((p) => `/paths/${p.slug}`), ...(LEGAL_STATUS.approved ? ["/privacy", "/terms", "/refund"] : [])];
   return pages.flatMap((page) => routing.locales.map((locale) => ({
     url: `${SITE_URL}/${locale}${page}`,
     changeFrequency: "weekly" as const,
