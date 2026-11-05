@@ -20,10 +20,31 @@ steps:
       en: "I lead design on a bill-payment app. This week my team wants to use AI for four tasks.\n\nYour job: decide what to do with the AI's work each time.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "أقود التصميم في تطبيق لدفع الفواتير. وهذا الأسبوع يريد فريقي أن يستخدم الذكاء الاصطناعي في أربع مهام.\n\nمهمّتك: قرّر ماذا تفعل بعمل الذكاء الاصطناعي في كل مرة.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: dafaa
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: receipt
+          text: {en: Bills, ar: الفواتير}
+        - icon: arrows-clockwise
+          text: {en: Autopay, ar: الدفع التلقائي}
+        - icon: clock-counter-clockwise
+          text: {en: History, ar: السجل}
+        - icon: user
+          text: {en: Account, ar: حسابي}
       blocks:
-        - { kind: title, text: { en: "Dafaa", ar: "دفعة" } }
-        - { kind: meta, text: { en: "Bills · Autopay · History", ar: "الفواتير · الدفع التلقائي · السجل" }, gap: s }
+      - kind: small
+        text: {en: Due this month, ar: مستحقة هذا الشهر}
+        color: muted
+      - kind: listitem
+        icon: lightning
+        text: {en: Electricity, ar: الكهرباء}
+        sub: {en: Due 20 March, ar: تستحق 20 مارس}
+        value:
+          en: EGP 640
+          ar: "640 جنيه"
+        gap: s
 
   - id: S02
     type: choose
@@ -38,10 +59,41 @@ steps:
       en: "AI wrote the release notes for our app update in seconds. They read well and are ready to paste into the app store page."
       ar: "كتب الذكاء الاصطناعي ملاحظات الإصدار (release notes) لتحديث تطبيقنا في ثوانٍ. صياغتها جيدة وجاهزة للّصق في صفحة المتجر."
     mock:
-      width: 300
+      app: dafaa
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: receipt
+          text: {en: Bills, ar: الفواتير}
+        - icon: arrows-clockwise
+          text: {en: Autopay, ar: الدفع التلقائي}
+        - icon: clock-counter-clockwise
+          text: {en: History, ar: السجل}
+        - icon: user
+          text: {en: Account, ar: حسابي}
+      overlay:
+        type: sheet
+        title:
+          en: "What's new in 4.2"
+          ar: ما الجديد في 4.2
+        blocks:
+        - {kind: icon, icon: sparkle, size: l, color: brand}
+        - kind: text
+          text:
+            en: "Pay any bill in one tap, split bills with friends, and get 5% back on every payment."
+            ar: "ادفع أي فاتورة بضغطة واحدة، وقسّم الفواتير مع أصدقائك، واحصل على 5% من كل دفعة."
+          gap: s
+        - kind: button
+          text: {en: Got it, ar: حسنًا}
+          gap: m
       blocks:
-        - { kind: heading, text: { en: "What's new in 4.2", ar: "ما الجديد في 4.2" } }
-        - { kind: text, text: { en: "Pay any bill in one tap, split bills with friends, and get 5% back on every payment.", ar: "ادفع أي فاتورة بضغطة واحدة، وقسّم الفواتير مع أصدقائك، واحصل على 5% من كل دفعة." }, gap: s }
+      - kind: listitem
+        icon: lightning
+        text: {en: Electricity, ar: الكهرباء}
+        value:
+          en: EGP 640
+          ar: "640 جنيه"
     prompt:
       en: "What should you do before publishing them?"
       ar: "ماذا يجب أن تفعل قبل نشرها؟"
@@ -148,12 +200,22 @@ steps:
       en: "An AI tool made a quick prototype of our bill screen for testing with users in Cairo."
       ar: "صنعت أداة ذكاء اصطناعي نموذجًا أوليًا (prototype) سريعًا لشاشة الفاتورة، لنختبره مع مستخدمين في القاهرة."
     mock:
-      width: 300
+      app: dafaa
+      appbar:
+        title: {en: Electricity bill, ar: فاتورة الكهرباء}
+        back: true
+      footer:
+      - kind: button
+        text: {en: Pay now, ar: ادفع الآن}
       blocks:
-        - { kind: heading, text: { en: "Electricity bill", ar: "فاتورة الكهرباء" } }
-        - { kind: meta, text: { en: "Mr. John Smith · Due 11/05/2026", ar: "Mr. John Smith · Due 11/05/2026" }, gap: s }
-        - { kind: title, text: { en: "$84.50", ar: "$84.50" }, gap: s }
-        - { kind: button, text: { en: "Pay now", ar: "ادفع الآن" }, gap: s }
+      - kind: listitem
+        icon: lightning
+        text: {en: North Cairo Electricity, ar: كهرباء شمال القاهرة}
+        sub: {en: Mr. John Smith · Due 11/05/2026, ar: Mr. John Smith · Due 11/05/2026}
+      - kind: price
+        text: {en: $84.50, ar: $84.50}
+        size: l
+        gap: m
     prompt:
       en: "What should you do before the test?"
       ar: "ماذا يجب أن تفعل قبل الاختبار؟"
