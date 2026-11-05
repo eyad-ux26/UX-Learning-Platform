@@ -17,6 +17,19 @@ steps:
     type: card
     part: hook
     title: { en: "Youssef's online shop", ar: "متجر يوسف الإلكتروني" }
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example
+      navbar: { links: [ { en: "Tools", ar: "أدوات" }, { en: "Kitchen", ar: "المطبخ" }, { en: "Offers", ar: "العروض" } ], active: 0, search: { en: "Search Dar", ar: "ابحث في دار" }, actions: [ { icon: shopping-cart, count: 1 }, { icon: user } ] }
+      blocks:
+        - { kind: title, text: { en: "Everything for your home", ar: "كل ما يحتاجه بيتك" } }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: card, art: washing-machine, blocks: [ { kind: small, text: { en: "Washers", ar: "غسالات" } } ] }
+            - { kind: card, art: fridge, blocks: [ { kind: small, text: { en: "Fridges", ar: "ثلاجات" } } ] }
+            - { kind: card, art: box, blocks: [ { kind: small, text: { en: "Tools", ar: "أدوات" } } ] }
     body:
       en: "I sell home tools online, and my customers keep calling me with the same questions. Help me find what my site does wrong in four places.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "أبيع أدوات منزلية عبر الإنترنت، وعملائي يتصلون بي دائمًا بالأسئلة نفسها. ساعدني أن أجد ما يخطئ فيه موقعي في أربعة مواضع.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
@@ -35,6 +48,15 @@ steps:
     prompt:
       en: "What should happen right after the tap?"
       ar: "ماذا يجب أن يحدث بعد الضغطة مباشرة؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/checkout/pay
+      blocks:
+        - { kind: title, text: { en: "Payment", ar: "الدفع" } }
+        - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "4921 •••• •••• 7710", filled: true, icon: credit-card, gap: m }
+        - { kind: price, text: { en: "Total EGP 3,450", ar: "الإجمالي 3,450 جنيه" }, gap: m }
+        - { kind: button, text: { en: "Pay", ar: "ادفع" }, gap: m, note: { en: "6 s after the tap, nothing changed", ar: "بعد الضغط بـ 6 ثوانٍ، لم يتغيّر شيء" } }
     options:
       - { id: confirm, text: { en: "Ask \"Are you sure you want to pay?\" first", ar: "أسأل أولًا: «هل أنت متأكد أنك تريد الدفع؟»" } }
       - { id: progress, text: { en: "Disable the button and show \"Confirming with your bank…\" with a spinner", ar: "أعطّل الزر وأعرض «جارٍ التأكيد مع البنك…» مع مؤشر دوّار" } }
@@ -72,6 +94,14 @@ steps:
     prompt:
       en: "What should I do?"
       ar: "ماذا أفعل؟"
+    mock:
+      app: dar
+      appbar: { title: { en: "Order #48213", ar: "الطلب ‎#48213" }, back: true }
+      blocks:
+        - { kind: listitem, art: box, text: { en: "Electric drill · Kettle", ar: "مثقاب كهربائي · غلاية" }, sub: { en: "2 items · EGP 2,140", ar: "منتجان · 2,140 جنيه" } }
+        - { kind: badge, text: { en: "Arriving today", ar: "يصل اليوم" }, tone: good, icon: truck, gap: m }
+        - { kind: progress, value: 75, label: { en: "Out for delivery", ar: "خرج للتوصيل" }, gap: s }
+        - { kind: small, text: { en: "The courier's update: arriving tomorrow.", ar: "تحديث شركة الشحن: يصل غدًا." }, tone: faint, gap: m, note: { en: "Known to the shop, not shown", ar: "يعرفه المتجر، ولا يظهر" } }
     options:
       - { id: keep, text: { en: "Leave it; he'll get the order tomorrow anyway", ar: "أتركها؛ سيستلم الطلب غدًا على أي حال" } }
       - { id: email, text: { en: "Send a newsletter saying deliveries may be slower this week", ar: "أرسل نشرة بريدية تقول إن التوصيل قد يكون أبطأ هذا الأسبوع" } }
@@ -109,6 +139,17 @@ steps:
     prompt:
       en: "What should customers see?"
       ar: "ماذا يجب أن يرى العملاء؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/tools/electric-drill-650w
+      navbar: { links: [ { en: "Tools", ar: "أدوات" }, { en: "Kitchen", ar: "المطبخ" } ], active: 0, actions: [ { icon: shopping-cart } ] }
+      blocks:
+        - { kind: image, art: box, size: m }
+        - { kind: title, text: { en: "Electric drill 650 W", ar: "مثقاب كهربائي 650 وات" }, gap: s }
+        - { kind: price, text: { en: "EGP 1,250", ar: "1,250 جنيه" } }
+        - { kind: small, text: { en: "SKU status: WH-1 available", ar: "حالة الـ SKU: متاح في WH-1" }, gap: s, ring: true }
+        - { kind: button, icon: shopping-cart, text: { en: "Add to cart", ar: "أضف إلى السلة" }, gap: m }
     options:
       - { id: plain, text: { en: "\"In stock: delivered within 2 days\"", ar: "«متوفّر: يصل خلال يومين»" } }
       - { id: tip, text: { en: "The same text, with ⓘ explaining SKU and WH-1", ar: "النص نفسه، مع ⓘ يشرح الـ SKU والـ WH-1" } }
@@ -146,6 +187,19 @@ steps:
     prompt:
       en: "How should the menu be grouped?"
       ar: "كيف تُقسّم القائمة؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example
+      navbar: { links: [ { en: "Al-Nour Trading", ar: "النور للتجارة" }, { en: "Delta Imports", ar: "دلتا للاستيراد" }, { en: "Cairo Tools Co.", ar: "القاهرة للأدوات" } ], active: 0, actions: [ { icon: shopping-cart } ] }
+      blocks:
+        - { kind: title, text: { en: "Al-Nour Trading", ar: "النور للتجارة" } }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: card, art: box, blocks: [ { kind: small, text: { en: "Paint roller", ar: "رولة دهان" } }, { kind: price, text: { en: "EGP 120", ar: "120 جنيه" } } ] }
+            - { kind: card, art: box, blocks: [ { kind: small, text: { en: "Pipe wrench", ar: "مفتاح مواسير" } }, { kind: price, text: { en: "EGP 210", ar: "210 جنيه" } } ] }
+            - { kind: card, art: box, blocks: [ { kind: small, text: { en: "Garden hose", ar: "خرطوم حديقة" } }, { kind: price, text: { en: "EGP 340", ar: "340 جنيه" } } ] }
     options:
       - { id: supplier, text: { en: "Keep the suppliers; they're my real categories", ar: "تبقى أسماء الموردين؛ فهي أقسامي الحقيقية" } }
       - { id: task, text: { en: "By job: Painting, Plumbing, Electrical, Garden", ar: "حسب العمل: الدهان، والسباكة، والكهرباء، والحديقة" } }
