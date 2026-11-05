@@ -316,6 +316,62 @@ describe("Paddle", () => {
     await deliverPaddle({ event_id: "evt_adj", event_type: "adjustment.updated", occurred_at: clock, data: { id: "adj_1", action: "refund", status: "approved", transaction_id: "txn_1" } });
     expect(pro()).toBe(false);
   });
+
+  describe("refund amounts and chargebacks (#156)", () => {
+    const paid = async () => {
+      store.learners.set(U, { email: "y@example.com", locale: "en", name: "Yasmin" });
+      const s = session({ provider: "paddle", region: "gulf", country: "SA", period: "year", currency: "USD", amountMinor: 7200, renewAmountMinor: 7200 });
+      const t = txn({ details: { totals: { grand_total: "7871" } } }); // $72 + tax
+      (t.data.custom_data as Record<string, string>).session_id = s.id;
+      await deliverPaddle(t);
+      sent = [];
+    };
+    const adj = (id: string, data: Record<string, unknown>) =>
+      deliverPaddle({ event_id: id, event_type: "adjustment.created", occurred_at: clock, data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_1", ...data } });
+    const payment = () => [...store.payments.values()].find((p) => p.providerPaymentId === "txn_1")!;
+
+    it("a 'partial' refund of the whole total (how the dashboard sent it) is a full refund: Pro ends, refund email", async () => {
+      await paid();
+      await adj("a1", { action: "refund", type: "partial", totals: { total: "7871", currency_code: "USD" } });
+      expect(payment().status).toBe("refunded");
+      expect(sub().status).toBe("refunded");
+      expect(pro()).toBe(false);
+      expect(sent).toHaveLength(1);
+    });
+
+    it("a true partial refund (goodwill) keeps the plan, Pro and the payment, and sends no refund email", async () => {
+      await paid();
+      const r = await adj("a2", { action: "refund", type: "partial", totals: { total: "200", currency_code: "USD" } });
+      expect(r[0]).toMatchObject({ status: "applied", note: expect.stringContaining("partial refund 200 of 7871") });
+      expect(payment().status).toBe("paid");
+      expect(sub().status).toBe("active");
+      expect(pro()).toBe(true);
+      expect(sent).toEqual([]);
+      // A later full refund still ends it.
+      await adj("a3", { action: "refund", type: "full", totals: { total: "7671", currency_code: "USD" } });
+      expect(pro()).toBe(false);
+    });
+
+    it("a chargeback ends Pro like a full refund, with no 'refund approved' email; its reversal changes nothing", async () => {
+      await paid();
+      const r = await adj("c1", { action: "chargeback", type: "full", totals: { total: "7871", currency_code: "USD" } });
+      expect(r[0]).toMatchObject({ status: "applied", note: "chargeback" });
+      expect(payment().status).toBe("refunded");
+      expect(sub().status).toBe("refunded");
+      expect(pro()).toBe(false);
+      expect(sent).toEqual([]);
+      const back = await adj("c2", { action: "chargeback_reverse", totals: { total: "7871", currency_code: "USD" } });
+      expect(back[0].status).toBe("ignored");
+      expect(pro()).toBe(false);
+    });
+
+    it("a refund that is not approved yet changes nothing", async () => {
+      await paid();
+      const r = await adj("p1", { action: "refund", status: "pending_approval", type: "full", totals: { total: "7871" } });
+      expect(r[0].status).toBe("ignored");
+      expect(pro()).toBe(true);
+    });
+  });
 });
 
 describe("wallet payers (Paymob cannot renew wallets)", () => {

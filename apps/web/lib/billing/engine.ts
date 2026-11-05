@@ -110,6 +110,19 @@ async function refuse(e: Engine, ev: Paid, userId: string, period: Period, note:
   return { status: "ignored", note: failed.length ? `${note}; ${failed.join("; ")}` : `${note}; refunded` };
 }
 
+/**
+ * Whether a refund gives back the whole payment (#156). A chargeback, or a refund Paddle calls "full" (all that is left
+ * of the payment), always does. A "partial" one is whole when its amount covers the payment (a dashboard refund of the
+ * full total can come as "partial"). With no amount in the payment's currency, a "partial" refund keeps the plan, and a
+ * refund with no details at all (Paymob, the test provider) is whole.
+ */
+export function refundIsWhole(ev: { amountMinor?: number | null; currency?: string | null; full?: boolean | null; chargeback?: boolean }, pay: { amountMinor: number; currency: string }): boolean {
+  if (ev.chargeback || ev.full === true) return true; // "full" is whatever is left of the payment
+  const sameCurrency = !ev.currency || ev.currency.toUpperCase() === pay.currency.toUpperCase();
+  if (typeof ev.amountMinor === "number" && sameCurrency) return ev.amountMinor >= pay.amountMinor;
+  return ev.full !== false;
+}
+
 /** Paymob and the test provider charge exactly our price; Paddle adds tax in the payer's currency, so it is not compared. */
 const amountOk = (ev: Paid, amountMinor: number, currency: string) =>
   ev.provider === "paddle" || (ev.amountMinor === amountMinor && ev.currency.toUpperCase() === currency.toUpperCase());
@@ -281,12 +294,20 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
       // Not a payment of ours (or not one we kept): nothing to undo. Retrying would not change that.
       if (!pay) return { status: "ignored", note: "refund for an unknown payment" };
       if (pay.status === "refunded") return { status: "ignored", note: "already refunded" };
+      // Only the whole payment going back (or a chargeback) undoes what it bought. A partial refund, such as an admin's
+      // goodwill amount, keeps the plan and Pro; the amount stays in the event log and Paddle sends its own credit note.
+      if (!refundIsWhole(ev, pay)) {
+        console.error("billing: partial refund kept the plan", ev.provider, ev.paymentId, ev.amountMinor, ev.currency, pay.amountMinor, pay.currency);
+        return { status: "applied", note: `partial refund ${ev.amountMinor ?? "?"} of ${pay.amountMinor} ${pay.currency}` };
+      }
       await store.markPaymentRefunded(pay.id, ev.at);
       const sub = pay.subscriptionId ? await store.subById(pay.subscriptionId) : null;
       if (sub?.id && ["active", "grace", "cancelled"].includes(sub.status)) await store.saveSub(refunded(sub, ev.at));
       const req = await store.refundRequestFor(pay.id);
       if (req && req.status === "waiting") await store.answerRefundRequest(req.id, "approved", ev.at);
       await syncEntitlement(e, pay.userId);
+      // A chargeback is the bank's doing, not a refund we approved: Pro ends, and no "refund approved" email goes out.
+      if (ev.chargeback) return { status: "applied", note: "chargeback" };
       // A payment that never bought a plan (refused) ends no Pro; the email says only that the money is back.
       await e.mail(pay.userId, "refundYes", pay.id, { sub, payment: { ...pay, status: "refunded", refundedAt: ev.at }, request: req, extra: pay.subscriptionId ? undefined : { noPlan: "1" } });
       return { status: "applied", note: "refunded" };
