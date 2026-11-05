@@ -87,3 +87,18 @@ describe("Paddle payment links (?_ptxn=)", () => {
       expect(paddleLinkTxn(bad as string | undefined)).toBeNull();
   });
 });
+
+describe("refundIsWhole (#156)", () => {
+  const pay = { amountMinor: 7871, currency: "USD" };
+  it("the amount decides a 'partial' refund; 'full', a chargeback, or no details at all count as whole", async () => {
+    const { refundIsWhole } = await import("./engine");
+    expect(refundIsWhole({ amountMinor: 7871, currency: "USD", full: false }, pay)).toBe(true);
+    expect(refundIsWhole({ amountMinor: 9000, currency: "usd", full: false }, pay)).toBe(true);
+    expect(refundIsWhole({ amountMinor: 200, currency: "USD", full: false }, pay)).toBe(false);
+    expect(refundIsWhole({ amountMinor: 200, currency: "USD", full: true }, pay)).toBe(true);
+    expect(refundIsWhole({ amountMinor: 1, currency: "USD", chargeback: true }, pay)).toBe(true);
+    expect(refundIsWhole({ amountMinor: 9000, currency: "EUR", full: false }, pay)).toBe(false); // other currency: trust "partial"
+    expect(refundIsWhole({ amountMinor: null, full: null }, pay)).toBe(true); // Paymob and the test provider
+    expect(refundIsWhole({}, pay)).toBe(true);
+  });
+});
