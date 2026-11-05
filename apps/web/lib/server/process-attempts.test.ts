@@ -55,6 +55,15 @@ describe("processEvents", () => {
   });
 });
 
+describe("bodySchema purpose", () => {
+  const base = { attemptId: "r@1760000000000", lessonId: "P01-U01-BANK", hash: "a".repeat(64), startedAt: 1760000000000, events: [{ stepId: "s1", tryNo: 1, kind: "check", answer: { sel: ["a"] }, hintsUsed: 0, confidence: null, clientTs: 1760000000001 }] };
+  it("a review session says so; anything else is not a purpose", () => {
+    expect(bodySchema.safeParse({ ...base, purpose: "review" }).success).toBe(true);
+    expect(bodySchema.safeParse(base).success).toBe(true);
+    expect(bodySchema.safeParse({ ...base, purpose: "mastery" }).success).toBe(false);
+  });
+});
+
 describe("bodySchema times", () => {
   const ok = { attemptId: "A@1", lessonId: lv.lessonId, hash: "a".repeat(64), startedAt: Date.now(), events: [ev({ clientTs: Date.now() })] };
   it("accepts real times", () => { expect(bodySchema.safeParse(ok).success).toBe(true); });

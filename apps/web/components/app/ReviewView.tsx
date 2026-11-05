@@ -2,7 +2,9 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { content, type Locale } from "@uxgate/content";
 import { catalogEntry, pathArtUrl } from "@/lib/catalog";
-import { buildQueue, confidentErrorSkills, pathOfId, type CheckResult, type ReviewSkill } from "@/lib/review";
+import { Link } from "@/i18n/navigation";
+import { loadQueue, reviewUnitOf } from "@/lib/server/review-session";
+import { sessionSkills } from "@/lib/review";
 import type { Learner } from "@/lib/server/learner";
 
 const skillTitle = (id: string) => content.units.flatMap((u) => u.skills).find((s) => s.id === id)?.title;
@@ -12,15 +14,10 @@ export async function ReviewMain({ me }: { me: Learner }) {
   const t = await getTranslations("review");
   const locale = (await getLocale()) as Locale;
   const now = new Date();
-  const skills: ReviewSkill[] = [...me.skillStates].map(([skillId, r]) => ({ skillId, pathId: pathOfId(skillId), ...r }));
-
-  // "Sure" and wrong answers on a skill, as the learner's own rows (row-level security): the ones to see first.
-  let results: CheckResult[] = [];
-  if (me.db && skills.length) {
-    const { data } = await me.db.from("step_results").select("skill_id, correct, confidence, created_at").eq("user_id", me.userId).eq("kind", "check").in("skill_id", skills.map((s) => s.skillId)).order("created_at", { ascending: false }).limit(500);
-    results = (data ?? []).map((r) => ({ skillId: r.skill_id as string, correct: !!r.correct, confidence: r.confidence as number | null, at: Date.parse(r.created_at as string) }));
-  }
-  const queue = buildQueue(skills, confidentErrorSkills(results), now);
+  // "Sure" and wrong answers come first; read as the learner's own rows (row-level security).
+  const { skills, queue } = me.db ? await loadQueue(me.db, me.userId, me.skillStates, now) : { skills: [], queue: [] };
+  // The next session takes the due skills of one unit, at most 5, so the Start button says how many questions it asks.
+  const session = sessionSkills(queue, reviewUnitOf);
   const next = skills.filter((s) => s.state === "shown" && s.nextReviewAt && s.nextReviewAt > now).sort((a, b) => a.nextReviewAt!.getTime() - b.nextReviewAt!.getTime())[0];
   const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
   const shownAt = new Map(skills.map((s) => [s.skillId, s.shownAt]));
@@ -39,6 +36,12 @@ export async function ReviewMain({ me }: { me: Learner }) {
         <>
           <p className="t-small ink-2">{t("lead")}</p>
           <p className="t-over">{t("count", { count: queue.length })}</p>
+          {session ? (
+            <div className="card" style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
+              <p className="t-small ink-2">{t("about", { n: session.skills.length })}{queue.length > session.skills.length ? <> · {t("more", { n: queue.length - session.skills.length })}</> : null}</p>
+              <Link href="/app/review/session" className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{t("start")}</Link>
+            </div>
+          ) : null}
           <ul className="why-list">
             {queue.map((q) => (
               <li key={q.skillId} className="card review-card-q">

@@ -42,7 +42,7 @@ export async function flush(): Promise<void> {
         const res = await fetch("/api/attempts", {
           method: "POST", headers: { "content-type": "application/json" },
           body: JSON.stringify({
-            attemptId, lessonId: first.lessonId, hash: first.hash, startedAt, ...(list[0].plan ? { plan: list[0].plan } : {}),
+            attemptId, lessonId: first.lessonId, hash: first.hash, startedAt, ...(list[0].plan ? { plan: list[0].plan } : {}), ...(list.some((i) => i.purpose) ? { purpose: "review" } : {}),
             events: list.map(({ event: e }) => ({ stepId: e.stepId, tryNo: e.tryNo, kind: e.kind, answer: e.answer, hintsUsed: e.hintsUsed, confidence: e.confidence, clientTs: e.clientTs })),
           }),
         });

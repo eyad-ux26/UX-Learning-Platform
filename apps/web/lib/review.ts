@@ -30,3 +30,31 @@ export function confidentErrorSkills(results: CheckResult[]): Set<string> {
 
 /** Pathid of a skill id like SK-P01-U02-03 or a lesson/unit id like P01-U02. */
 export const pathOfId = (id: string) => id.match(/P\d{2}/)?.[0] ?? "";
+
+/** A review session covers one unit at a time (its re-test bank), so it stays short and each step is a new case. */
+export const REVIEW_SESSION_MAX = 5;
+
+/**
+ * The skills of the next session: the unit of the first skill in the queue, then every due skill of that unit in queue
+ * order, at most REVIEW_SESSION_MAX. Null when nothing is due.
+ */
+export function sessionSkills(queue: ReviewItem[], unitOf: (skillId: string) => string | undefined): { unitId: string; skills: string[] } | null {
+  const first = queue.find((q) => unitOf(q.skillId));
+  if (!first) return null;
+  const unitId = unitOf(first.skillId)!;
+  return { unitId, skills: queue.filter((q) => unitOf(q.skillId) === unitId).slice(0, REVIEW_SESSION_MAX).map((q) => q.skillId) };
+}
+
+/**
+ * One step per skill from the unit's bank: a case the learner has not answered yet, in bank order. If every case of the
+ * skill was answered before (in a mastery round or an earlier review), the one answered longest ago comes back.
+ * `seen` maps a step id to when it was last answered (ms).
+ */
+export function pickReviewSteps<S extends { id: string; skill: string }>(bankSteps: S[], skills: string[], seen: ReadonlyMap<string, number>): S[] {
+  return skills.flatMap((skill) => {
+    const cases = bankSteps.filter((s) => s.skill === skill);
+    if (!cases.length) return [];
+    const fresh = cases.find((s) => !seen.has(s.id));
+    return [fresh ?? [...cases].sort((a, b) => (seen.get(a.id) ?? 0) - (seen.get(b.id) ?? 0) || a.id.localeCompare(b.id))[0]];
+  });
+}

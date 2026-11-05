@@ -41,4 +41,16 @@ describe("sync flush", () => {
     expect(bodies[1]).toContain('"stepId":"s2"');
     expect(queue.size).toBe(0);
   });
+
+  it("a review session's answers go out marked as a review, with the session's plan", async () => {
+    const { setSyncUser, kick } = await import("./sync");
+    const bodies: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (_url: string, init: { body: string }) => { bodies.push(init.body); return { ok: true, status: 200 } as Response; }));
+    const r = { ...item(3), attemptId: "b@2", key: "b@2:s3:1:try", plan: ["s3"], purpose: "review" };
+    queue.set(r.key, r);
+    setSyncUser("u2"); setSyncUser("u1"); kick();
+    for (let i = 0; i < 10 && queue.size; i++) await settle();
+    const sent = JSON.parse(bodies.at(-1)!);
+    expect(sent).toMatchObject({ attemptId: "b@2", plan: ["s3"], purpose: "review" });
+  });
 });

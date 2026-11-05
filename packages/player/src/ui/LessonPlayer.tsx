@@ -28,7 +28,7 @@ export type PlayerProps = {
   onExit: () => void;
   onFinish: (s: E.LessonState) => void;
   /** "mastery": the round at the end of a unit (steps come from the re-test bank). Skill checks are `lesson.mode === "check"`. */
-  variant?: "lesson" | "mastery";
+  variant?: "lesson" | "mastery" | "review";
   /** Sample lesson for a guest: no review requests, no confidence taps, a banner on top. */
   guest?: boolean;
   /** Saving chip in the header; undefined shows nothing. */
@@ -135,8 +135,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
           <i style={{ width: `${((state.i + (finished ? 1 : 0)) / total) * 100}%` }} />
         </div>
         {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" />{t(`save.${saveStatus}` as never)}</span> : null}
-        {lesson.mode === "check" || variant === "mastery" ? <span className="lp-mode"><span className={`ph ${variant === "mastery" ? "ph-target" : "ph-seal-check"}`} aria-hidden="true" />{t(variant === "mastery" ? "modeMastery" : "modeCheck")}</span> : null}
-        {lessonNo && variant !== "mastery" ? <span className="t-small ink-3 player-label" title={t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}</span> : null}
+        {lesson.mode === "check" || variant !== "lesson" ? <span className="lp-mode"><span className={`ph ${variant === "mastery" ? "ph-target" : variant === "review" ? "ph-review" : "ph-seal-check"}`} aria-hidden="true" />{t(variant === "mastery" ? "modeMastery" : variant === "review" ? "modeReview" : "modeCheck")}</span> : null}
+        {lessonNo && variant === "lesson" ? <span className="t-small ink-3 player-label" title={t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}</span> : null}
         <span className="t-label num ink-2 player-count">{state.i + 1}/{total}</span>
         <button type="button" className="icon-btn plain" onClick={onToggleMute} aria-pressed={!muted} aria-label={muted ? t("soundOff") : t("soundOn")}>
           <span className={`ph ${muted ? "ph-speaker-slash" : "ph-speaker-high"}`} aria-hidden="true" />
@@ -149,7 +149,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
           <button type="button" className="act" onClick={() => { setShowBack(false); setLayer(null); onStartOver?.(); }}>{t("startOver")}</button></p>
       ) : null}
       <main className="player-main">
-        <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant === "mastery" ? t("masteryQ", { n: state.i + 1, total }) : part}</p>
+        <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
 
         {step.type === "video" ? (
           <VideoStepView step={step} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
