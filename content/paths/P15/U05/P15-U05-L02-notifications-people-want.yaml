@@ -25,17 +25,57 @@ steps:
       en: "I'm a junior designer on our bus-ticket app. The moment people open it for the first time, it asks: \"Rehla would like to send you notifications.\"\n\nMost tap \"Don't Allow\". Then they miss delay alerts we could have sent them."
       ar: "أنا مصمم مبتدئ في تطبيق تذاكر الحافلات. وفي اللحظة التي يفتح فيها الناس التطبيق لأول مرة، يسألهم: «يريد تطبيق رحلة أن يرسل لك إشعارات.»\n\nمعظمهم يضغط «لا تسمح». ثم تفوتهم تنبيهات التأخير التي كان يمكن أن نرسلها لهم."
     mock:
-      width: 300
-      blocks:
-        - kind: group
-          tone: tint
+      app: rehla
+      appbar:
+        title: {en: My trips, ar: رحلاتي}
+      tabbar:
+        active: 1
+        items:
+        - icon: magnifying-glass
+          text: {en: Search, ar: البحث}
+        - icon: ticket
+          text: {en: My trips, ar: رحلاتي}
+        - icon: bell
+          text: {en: Alerts, ar: التنبيهات}
+        - icon: user
+          text: {en: Account, ar: حسابي}
+      overlay:
+        type: dialog
+        blocks:
+        - kind: heading
+          text:
+            en: "\"Rehla\" would like to send you notifications"
+            ar: يريد «رحلة» أن يرسل لك إشعارات
+        - kind: small
+          text:
+            en: "Notifications may include alerts, sounds and icon badges."
+            ar: قد تشمل الإشعارات تنبيهات وأصواتًا وشارات على الأيقونة.
+          color: muted
+          gap: s
+        - kind: row
+          gap: m
           blocks:
-            - { kind: meta, weight: bold, text: { en: "\"Rehla\" would like to send you notifications", ar: "يريد «رحلة» أن يرسل لك إشعارات" } }
-            - kind: row
-              gap: m
-              blocks:
-                - { kind: button, style: plain, text: { en: "Don't Allow", ar: "لا تسمح" } }
-                - { kind: button, style: plain, text: { en: "Allow", ar: "اسمح" } }
+          - kind: button
+            text:
+              en: "Don't Allow"
+              ar: لا تسمح
+            style: text
+          - kind: button
+            text: {en: Allow, ar: اسمح}
+            style: text
+      blocks:
+      - kind: card
+        art: bus
+        blocks:
+        - kind: heading
+          text:
+            en: "Booked: Cairo → Alexandria"
+            ar: "تمّ الحجز: القاهرة ← الإسكندرية"
+        - kind: small
+          text:
+            en: "Fri 14 March · 9:00 AM · Seat 12"
+            ar: "الجمعة 14 مارس · 9:00 ص · المقعد 12"
+          color: muted
 
   - id: S02
     type: choose
@@ -133,13 +173,31 @@ steps:
       en: "Prices dropped on 6 trips that one traveler saved. The app sent 6 notifications in one minute."
       ar: "انخفضت أسعار 6 رحلات حفظها أحد المسافرين. فأرسل التطبيق 6 إشعارات في دقيقة واحدة."
     mock:
-      width: 300
+      app: rehla
+      screen: lock
       blocks:
-        - { kind: small, text: { en: "🔔 Price drop: Cairo → Alexandria", ar: "🔔 انخفاض سعر: القاهرة ← الإسكندرية" } }
-        - { kind: small, text: { en: "🔔 Price drop: Cairo → Luxor", ar: "🔔 انخفاض سعر: القاهرة ← الأقصر" }, gap: xs }
-        - { kind: small, text: { en: "🔔 Price drop: Cairo → Aswan", ar: "🔔 انخفاض سعر: القاهرة ← أسوان" }, gap: xs }
-        - { kind: small, text: { en: "🔔 Price drop: Giza → Hurghada", ar: "🔔 انخفاض سعر: الجيزة ← الغردقة" }, gap: xs }
-        - { kind: small, color: muted, text: { en: "+ 2 more", ar: "+ 2 أخرى" }, gap: xs }
+      - kind: notification
+        title: {en: Price drop, ar: انخفاض سعر}
+        text: {en: Cairo → Alexandria, ar: القاهرة ← الإسكندرية}
+        time: {en: now, ar: الآن}
+      - kind: notification
+        title: {en: Price drop, ar: انخفاض سعر}
+        text: {en: Cairo → Luxor, ar: القاهرة ← الأقصر}
+        time: {en: now, ar: الآن}
+      - kind: notification
+        title: {en: Price drop, ar: انخفاض سعر}
+        text: {en: Cairo → Aswan, ar: القاهرة ← أسوان}
+        time: {en: now, ar: الآن}
+      - kind: notification
+        title: {en: Price drop, ar: انخفاض سعر}
+        text: {en: Giza → Hurghada, ar: الجيزة ← الغردقة}
+        time: {en: now, ar: الآن}
+      - kind: small
+        text:
+          en: "+ 2 more"
+          ar: "+ 2 أخرى"
+        color: muted
+        gap: xs
     prompt:
       en: "What should the app send instead?"
       ar: "ماذا يجب أن يرسل التطبيق بدلًا من ذلك؟"
@@ -188,15 +246,27 @@ steps:
     a:
       label: { en: "A: News about other people's trips.", ar: "A: أخبار عن رحلات أشخاص آخرين." }
       mock:
-        width: 300
+        app: rehla
+        screen: lock
         blocks:
-          - { kind: small, text: { en: "🚌 Someone near you just booked a trip to Aswan!", ar: "🚌 شخص بالقرب منك حجز للتو رحلة إلى أسوان!" } }
+        - kind: notification
+          title: {en: Rehla, ar: رحلة}
+          text:
+            en: "\U0001F68C Someone near you just booked a trip to Aswan!"
+            ar: "\U0001F68C شخص بالقرب منك حجز للتو رحلة إلى أسوان!"
+          time: {en: now, ar: الآن}
     b:
       label: { en: "B: A change to this traveler's own trip.", ar: "B: تغيير في رحلة هذا المسافر نفسه." }
       mock:
-        width: 300
+        app: rehla
+        screen: lock
         blocks:
-          - { kind: small, text: { en: "🚌 Your 9:00 bus to Alexandria now leaves from Gate 4.", ar: "🚌 حافلتك الساعة 9:00 إلى الإسكندرية تغادر الآن من البوابة 4." } }
+        - kind: notification
+          title: {en: Gate change, ar: تغيير البوابة}
+          text:
+            en: "\U0001F68C Your 9:00 bus to Alexandria now leaves from Gate 4."
+            ar: "\U0001F68C حافلتك الساعة 9:00 إلى الإسكندرية تغادر الآن من البوابة 4."
+          time: {en: now, ar: الآن}
     answer: b
     reason:
       prompt: { en: "Why is B worth sending?", ar: "لماذا يستحق B الإرسال؟" }
