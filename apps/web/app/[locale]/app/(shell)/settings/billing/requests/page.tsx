@@ -20,7 +20,7 @@ export default async function RequestsPage({ params, searchParams }: { params: P
   const pay = (id: string) => v.payments.find((p) => p.id === id);
   const st = { waiting: ["st st-wait", "ph ph-hourglass", t("waiting")], approved: ["st st-yes", "ph ph-check", t("approved")], declined: ["st st-off", "ph ph-x", t("declined")] } as const;
   return (
-    <Shell {...shellFor(me, locale)}>
+    <Shell {...shellFor(me)}>
       <header className="pg-top" style={{ gap: 4 }}>
         <Link href="/app/settings/billing" className="icon-btn plain" aria-label={t("back")}><span className="ph ph-arrow back" aria-hidden="true" /></Link>
         <h1 className="pg-title" style={{ flex: 1 }}>{t("tRequests")}</h1>

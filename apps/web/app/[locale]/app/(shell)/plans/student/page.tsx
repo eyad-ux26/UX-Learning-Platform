@@ -14,7 +14,7 @@ export default async function StudentConfirmPage({ params, searchParams }: { par
   const me = await requireLearner(locale);
   const until = formatDate(new Date(Date.now() + STUDENT_VALID_DAYS * 86_400_000).toISOString(), locale, true);
   return (
-    <Shell {...shellFor(me, locale)}>
+    <Shell {...shellFor(me)}>
       <StudentConfirm token={token && /^[0-9a-f]{64}$/.test(token) ? token : null} until={until} />
     </Shell>
   );

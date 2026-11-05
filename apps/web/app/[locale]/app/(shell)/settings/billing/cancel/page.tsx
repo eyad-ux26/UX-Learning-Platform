@@ -22,7 +22,7 @@ export default async function CancelPage({ params, searchParams }: { params: Pro
   const until = formatDate(v.sub.status === "grace" ? new Date().toISOString() : v.sub.currentPeriodEnd, locale);
   const keeps = [["ph ph-calendar", t("keeps.k1t", { date: until }), t("keeps.k1s")], ["ph ph-check-circle-fill", t("keeps.k2t"), t("keeps.k2s")], ["ph ph-lock-open", t("keeps.k3t"), t("keeps.k3s")], ["ph ph-x-circle", t("keeps.k4t"), t("keeps.k4s")]];
   return (
-    <Shell {...shellFor(me, locale)}>
+    <Shell {...shellFor(me)}>
       <header className="pg-top" style={{ gap: 4 }}>
         <Link href="/app/settings/billing" className="icon-btn plain" aria-label={t("back")}><span className="ph ph-arrow back" aria-hidden="true" /></Link>
         <h1 className="pg-title" style={{ flex: 1 }}>{t("tCancel")}</h1>

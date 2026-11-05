@@ -14,7 +14,7 @@ export default async function PlansPage({ params, searchParams }: { params: Prom
   const me = await requireLearner(locale);
   const offer = await loadOffer(me, { code: sp.code ?? null, fixtureOffer: sp.offer, fixtureCountry: sp.country });
   return (
-    <Shell {...shellFor(me, locale)}>
+    <Shell {...shellFor(me)}>
       <PlansView offer={offer} locale={locale as "en" | "ar"} countries={countryOptions(locale, offer.country)} countryName={countryName(offer.country, locale)}
         fixture={!me.db} studentDate={formatDate(offer.student.validUntil, locale, true) || null} />
     </Shell>

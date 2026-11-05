@@ -22,7 +22,7 @@ export default async function BillingPage({ params, searchParams }: { params: Pr
   const toast = sp.done === "cancel" ? t("cxToast", { date: s.endDate }) : sp.done === "resume" ? t("resumeToast") : sp.done === "change" ? t("chToast", { date: s.endDate }) : sp.done === "keep" ? t("resumeToast") : null;
 
   return (
-    <Shell {...shellFor(me, locale)}>
+    <Shell {...shellFor(me)}>
       <header className="pg-top" style={{ gap: 4 }}>
         <Link href="/app/profile" className="icon-btn plain only-mobile" aria-label={t("back")}><span className="ph ph-arrow back" aria-hidden="true" /></Link>
         <h1 className="pg-title" style={{ flex: 1 }}>{t("tBilling")}</h1>

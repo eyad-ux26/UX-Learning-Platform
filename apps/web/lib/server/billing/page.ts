@@ -1,13 +1,15 @@
 import "server-only";
 import { COUNTRIES } from "@/lib/billing/pricing";
-import { buildPathView, pickPath } from "@/lib/learning";
+import { pickPath } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 
-/** What the shell needs on the billing pages: the learner's current path and its units. */
-export function shellFor(me: Learner, locale: string) {
+/**
+ * What the shell needs on the billing pages: only the current path's name. The rail's unit list is left out so these
+ * pages do no lesson work (issue #114, Worker CPU time).
+ */
+export function shellFor(me: Learner) {
   const path = pickPath(me.currentPathId ?? me.recommendedPathId)!;
-  const view = buildPathView(path.id, me.progress, me.practicedSkills)!;
-  return { pathId: path.id, pathTitle: path.title.en, units: view.units.map((u) => ({ id: u.unit.id, title: u.unit.title[locale as "en" | "ar"] })) };
+  return { pathId: path.id, pathTitle: path.title.en };
 }
 
 export const countryName = (code: string, locale: string) => {

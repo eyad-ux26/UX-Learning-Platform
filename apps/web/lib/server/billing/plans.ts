@@ -4,7 +4,7 @@ import { welcomeBackEligible } from "@/lib/billing/subscription";
 import type { Learner } from "@/lib/server/learner";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { entitlementFromRow, subFromRow } from "./store";
-import { priceFor, studentStatus } from "./checkout";
+import { checkCode, studentStatus } from "./checkout";
 import { providerMode, type Mode } from "./config";
 import { requestCountry, requestHost } from "./account";
 
@@ -58,17 +58,17 @@ export async function loadOffer(me: Learner, opts: { code?: string | null; fixtu
   const region = regionFor(country);
   const provider = providerFor(region);
   const admin = createAdminClient();
-  const [m, y, ent, student] = await Promise.all([
-    priceFor(admin, me.userId, country, "month", code),
-    priceFor(admin, me.userId, country, "year", code),
+  // One read of each input, then both prices from the same rules the checkout uses.
+  const [ent, student, check] = await Promise.all([
     me.db.from("entitlements").select("*").eq("user_id", me.userId).maybeSingle(),
     studentStatus(admin, me.userId),
+    code ? checkCode(admin, me.userId, code, region) : Promise.resolve(null),
   ]);
-  const check = y.codeCheck ?? m.codeCheck;
+  const welcomeBack = welcomeBackEligible(entitlementFromRow(ent.data));
+  const e = { student: student.verified, welcomeBack, code: check?.ok ? check.code : null };
   return {
     country, region, provider, mode: providerMode(provider, host), pro: me.pro, grace: sub?.status === "grace",
-    month: m.q, year: y.q, student,
-    welcomeBack: welcomeBackEligible(entitlementFromRow(ent.data)),
+    month: quote(region, "month", e), year: quote(region, "year", e), student, welcomeBack,
     code: check?.ok ? check.code.code : null, codeError: check && !check.ok ? check.error : null,
   };
 }

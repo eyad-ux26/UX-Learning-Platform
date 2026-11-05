@@ -31,7 +31,7 @@ export default async function ReceiptPage({ params, searchParams }: { params: Pr
     [t("rcSeller"), p.provider === "paddle" ? t("rcSellerPaddle") : t("rcSellerPaymob")],
   ];
   return (
-    <Shell {...shellFor(me, locale)}>
+    <Shell {...shellFor(me)}>
       <header className="pg-top no-print" style={{ gap: 4 }}>
         <Link href="/app/settings/billing" className="icon-btn plain" aria-label={t("back")}><span className="ph ph-arrow back" aria-hidden="true" /></Link>
         <h1 className="pg-title" style={{ flex: 1 }}>{t("tReceipt")}</h1>
