@@ -9,6 +9,7 @@ import { MasteryGate } from "@/components/MasteryGate";
 import { MasteryLocked, MasteryNone } from "@/components/LessonPages";
 import { requireLearner } from "@/lib/server/learner";
 import { loadRound } from "@/lib/server/mastery";
+import { otherLocaleMessages } from "@/lib/server/lesson-messages";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export const dynamic = "force-dynamic";
 export default async function MasteryPage({ params }: { params: Promise<{ locale: string; unitId: string }> }) {
   const { locale, unitId } = await params;
   setRequestLocale(locale);
-  const [me, bank] = await Promise.all([requireLearner(locale), getBank(unitId)]);
+  const [me, bank, other] = await Promise.all([requireLearner(locale), getBank(unitId), otherLocaleMessages(locale)]);
   const unit = getUnit(unitId);
   if (!unit || !bank || !me.db) notFound();
   const back = `/app/path/${unit.pathId}`;
@@ -30,7 +31,7 @@ export default async function MasteryPage({ params }: { params: Promise<{ locale
   return (
     <MasteryGate
       lesson={lesson} hash={bank.hash} locale={locale as Locale} pathLabel={getPath(unit.pathId)?.title.en ?? unit.pathId}
-      unitId={unitId} userId={me.userId} plan={round.steps.map((s) => s.id)} skills={skills} allSkills={unit.skills} backHref={back}
+      unitId={unitId} userId={me.userId} plan={round.steps.map((s) => s.id)} skills={skills} allSkills={unit.skills} backHref={back} other={other}
     />
   );
 }

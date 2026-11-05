@@ -42,12 +42,14 @@ export type PlayerProps = {
   /** "Start over" in the welcome-back banner. Without it the banner has no button. */
   onStartOver?: () => void;
   /** The mastery round counts its steps in the header ("Question n of m"). */
+  /** Shows the lesson in the other language without leaving it. Without it the header has no language button. */
+  onSwitchLocale?: () => void;
 };
 
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource, notice }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource, notice, onSwitchLocale }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -134,10 +136,15 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         <div className="progress" role="progressbar" aria-label={t("progress")} aria-valuenow={state.i + (finished ? 1 : 0)} aria-valuemin={0} aria-valuemax={total}>
           <i style={{ width: `${((state.i + (finished ? 1 : 0)) / total) * 100}%` }} />
         </div>
-        {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" />{t(`save.${saveStatus}` as never)}</span> : null}
+        {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" /><span className="lp-save-txt">{t(`save.${saveStatus}` as never)}</span></span> : null}
         {lesson.mode === "check" || variant !== "lesson" ? <span className="lp-mode"><span className={`ph ${variant === "mastery" ? "ph-target" : variant === "review" ? "ph-review" : "ph-seal-check"}`} aria-hidden="true" />{t(variant === "mastery" ? "modeMastery" : variant === "review" ? "modeReview" : "modeCheck")}</span> : null}
         {lessonNo && variant === "lesson" ? <span className="t-small ink-3 player-label" title={t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}</span> : null}
         <span className="t-label num ink-2 player-count">{state.i + 1}/{total}</span>
+        {onSwitchLocale ? (
+          <button type="button" className="lp-lang press" onClick={onSwitchLocale} aria-label={t("langSwitchAria")} title={t("langSwitchAria")}>
+            <span className="ph ph-globe" aria-hidden="true" /><span lang={locale === "ar" ? "en" : "ar"} className="lp-lang-long">{t("langSwitch")}</span><span lang={locale === "ar" ? "en" : "ar"} className="lp-lang-short" aria-hidden="true">{t("langSwitchShort")}</span>
+          </button>
+        ) : null}
         <button type="button" className="icon-btn plain" onClick={onToggleMute} aria-pressed={!muted} aria-label={muted ? t("soundOff") : t("soundOn")}>
           <span className={`ph ${muted ? "ph-speaker-slash" : "ph-speaker-high"}`} aria-hidden="true" />
         </button>

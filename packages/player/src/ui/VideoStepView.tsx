@@ -36,6 +36,8 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   }, [getSource, step.video]);
   useEffect(() => { load(); }, [load]);
   useEffect(() => { setOpen(window.matchMedia("(min-width: 1024px)").matches); }, []);
+  // The language switch in the header also moves the captions to the language now shown.
+  useEffect(() => { setCapLang(locale); }, [locale]);
 
   // Attach the source. Safari plays HLS itself; other browsers get hls.js, loaded only when a clip needs it.
   useEffect(() => {
