@@ -26,9 +26,15 @@ steps:
       en: "A football academy asked me to fix its sign-up form. Samir wants to register his 9-year-old son, Ziad, for a summer camp, and this is the form he gets.\n\nYour job: help me fix it, one decision at a time.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "طلبت مني أكاديمية لكرة القدم إصلاح نموذج التسجيل. يريد سمير تسجيل ابنه زياد، 9 سنوات، في معسكر صيفي، وهذا هو النموذج الذي يظهر له.\n\nمهمّتك: ساعدني على إصلاحه، قرارًا بعد قرار.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: hadaf
+      appbar: { title: "@F3a", back: true }
       blocks: &campfull
-        - { kind: title, text: "@F3a" }
+        - kind: "card"
+          art: "people"
+          blocks:
+            - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+            - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+            - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
         - { kind: field, label: "@F3child", text: "", gap: m }
         - { kind: field, label: "@F3age", text: "", gap: s }
         - { kind: field, label: "@F3parent", text: "", gap: s }
@@ -36,8 +42,9 @@ steps:
         - { kind: field, label: "@F3school", text: "", gap: s }
         - { kind: field, label: "@F3income", text: "", gap: s }
         - { kind: field, label: "@F3photo", text: "", gap: s }
-        - { kind: button, text: "@F3btn", gap: m }
 
+      footer:
+        - { kind: button, text: "@F3btn" }
   - id: S02
     type: tune
     skill: SK-P01-U01-01
@@ -54,17 +61,26 @@ steps:
       en: "Try each version of the form. Which one should ship?"
       ar: "جرّب كل نسخة من النموذج. أيّها يجب أن تُطلق؟"
     mock:
+      app: hadaf
+      appbar: { title: "@F3a", back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: *campfull
+      footer:
+        - { kind: button, text: "@F3btn" }
     options:
       - id: optional
         text: { en: "Keep all seven; mark school, income and photo optional", ar: "أبقِ السبعة؛ واجعل المدرسة والدخل والصورة اختيارية" }
         mock:
+          app: hadaf
+          appbar: { title: "@F3a", back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: "@F3a" }
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3child", text: "", gap: m }
             - { kind: field, label: "@F3age", text: "", gap: s }
             - { kind: field, label: "@F3parent", text: "", gap: s }
@@ -72,28 +88,42 @@ steps:
             - { kind: field, label: { en: "School name (optional)", ar: "اسم المدرسة (اختياري)" }, text: "", gap: s }
             - { kind: field, label: { en: "Monthly family income (optional)", ar: "دخل الأسرة الشهري (اختياري)" }, text: "", gap: s }
             - { kind: field, label: { en: "Photo of the child (optional)", ar: "صورة الطفل (اختياري)" }, text: "", gap: s }
-            - { kind: button, text: "@F3btn", gap: m }
+          footer:
+            - { kind: button, text: "@F3btn" }
       - id: income
         text: { en: "Remove the income only", ar: "احذف الدخل فقط" }
         mock:
+          app: hadaf
+          appbar: { title: "@F3a", back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: "@F3a" }
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3child", text: "", gap: m }
             - { kind: field, label: "@F3age", text: "", gap: s }
             - { kind: field, label: "@F3parent", text: "", gap: s }
             - { kind: field, label: "@F3med", text: "", gap: s }
             - { kind: field, label: "@F3school", text: "", gap: s }
             - { kind: field, label: "@F3photo", text: "", gap: s }
-            - { kind: button, text: "@F3btn", gap: m }
+          footer:
+            - { kind: button, text: "@F3btn" }
       - id: needed
         text: { en: "Keep the four it needs now; the photo on day one", ar: "أبقِ الأربعة المطلوبة الآن؛ والصورة في اليوم الأول" }
         mock:
+          app: hadaf
+          appbar: { title: "@F3a", back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: "@F3a" }
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3child", text: "", gap: m }
             - { kind: field, label: "@F3age", text: "", gap: s }
             - { kind: field, label: "@F3parent", text: "", gap: s }
@@ -136,20 +166,41 @@ steps:
       - id: why
         text: { en: "Say who sees it and what it's for", ar: "وضّح من يراه وما الغرض منه" }
         mock:
-          width: 300
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3med", text: "", hint: { en: "Only Ziad's coaches see this, so they know what to do in an emergency.", ar: "لا يرى هذا إلا مدرّبو زياد، ليعرفوا ماذا يفعلون في حالة طارئة." } }
       - id: bare
         text: { en: "Just the label", ar: "التسمية فقط" }
         mock:
-          width: 300
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3med", text: "" }
       - id: legal
         text: { en: "Add \"We collect this as required by our policies\"", ar: "أضف «نجمع هذا وفقًا لسياساتنا»" }
         mock:
-          width: 300
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3med", text: "", hint: { en: "We collect this as required by our policies.", ar: "نجمع هذا وفقًا لسياساتنا." } }
     answer: [why]
     misconceptions:
@@ -183,9 +234,16 @@ steps:
       en: "Try each way of marking the form. Which one should ship?"
       ar: "جرّب كل طريقة لتمييز الحقول. أيّها يجب أن تُطلق؟"
     mock:
+      app: hadaf
+      appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks:
+        - kind: "card"
+          art: "people"
+          blocks:
+            - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+            - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+            - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
         - { kind: field, label: "@F3child", text: "" }
         - { kind: field, label: "@F3age", text: "", gap: s }
         - { kind: field, label: "@F3parent", text: "", gap: s }
@@ -195,9 +253,16 @@ steps:
       - id: note
         text: { en: "A note at the top: \"All fields required except the last\"", ar: "ملاحظة في الأعلى: «كل الحقول إلزامية ما عدا الأخير»" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: small, text: { en: "All fields are required except the last one.", ar: "كل الحقول إلزامية ما عدا الأخير." } }
             - { kind: field, label: "@F3child", text: "", gap: s }
             - { kind: field, label: "@F3age", text: "", gap: s }
@@ -207,9 +272,16 @@ steps:
       - id: both
         text: { en: "A star on each required field, \"(optional)\" on the last", ar: "نجمة على كل حقل إلزامي، و«(اختياري)» على الأخير" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: small, text: { en: "* Required", ar: "* إلزامي" } }
             - { kind: field, label: { en: "Child's full name *", ar: "اسم الطفل الكامل *" }, text: "", gap: s }
             - { kind: field, label: { en: "Child's date of birth *", ar: "تاريخ ميلاد الطفل *" }, text: "", gap: s }
@@ -219,9 +291,16 @@ steps:
       - id: optonly
         text: { en: "Only \"(optional)\" on the last field", ar: "«(اختياري)» على الحقل الأخير فقط" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3child", text: "" }
             - { kind: field, label: "@F3age", text: "", gap: s }
             - { kind: field, label: "@F3parent", text: "", gap: s }
@@ -259,32 +338,58 @@ steps:
       en: "Try each fix. Which one should ship?"
       ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
     mock:
+      app: hadaf
+      appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &nickerr
+        - kind: "card"
+          art: "people"
+          blocks:
+            - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+            - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+            - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
         - { kind: field, tone: bad, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "", error: { en: "This field is required.", ar: "هذا الحقل إلزامي." } }
-        - { kind: button, text: "@F3btn", gap: m }
+      footer:
+        - { kind: button, text: "@F3btn" }
     options:
       - id: star
         text: { en: "Make the label required: add a star", ar: "اجعل التسمية إلزامية: أضف نجمة" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "What should the coaches call him? *", ar: "بماذا يناديه المدرّبون؟ *" }, text: "" }
-            - { kind: button, text: "@F3btn", gap: m }
+          footer:
+            - { kind: button, text: "@F3btn" }
       - id: keep
         text: { en: "Keep it; the error explains what to do", ar: "أبقِه؛ فرسالة الخطأ توضّح ما يجب فعله" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *nickerr
+          footer:
+            - { kind: button, text: "@F3btn" }
       - id: check
         text: { en: "Fix the check so an empty nickname goes through", ar: "أصلِح التحقق ليمرّ اسم الدلع الفارغ" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "What should the coaches call him? (optional)", ar: "بماذا يناديه المدرّبون؟ (اختياري)" }, text: "" }
             - { kind: button, text: "@F3btn", gap: m }
             - { kind: small, color: green, text: { en: "Ziad is registered!", ar: "تمّ تسجيل زياد!" }, gap: s }
@@ -324,21 +429,42 @@ steps:
       - id: one
         text: { en: "One field: \"Child's full name, as on his birth certificate\"", ar: "حقل واحد: «اسم الطفل الكامل، كما في شهادة الميلاد»" }
         mock:
-          width: 300
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Child's full name, as on his birth certificate *", ar: "اسم الطفل الكامل، كما في شهادة الميلاد *" }, filled: true, text: { en: "Ziad Samir Abdelaziz Farid", ar: "زياد سمير عبد العزيز فريد" } }
       - id: split
         text: { en: "Two fields: first name and last name", ar: "حقلان: الاسم الأول واسم العائلة" }
         mock:
-          width: 300
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Child's first name *", ar: "الاسم الأول للطفل *" }, text: "" }
             - { kind: field, label: { en: "Child's last name *", ar: "اسم عائلة الطفل *" }, text: "", gap: s }
       - id: three
         text: { en: "Three fields: name, father's name, family name", ar: "ثلاثة حقول: الاسم، اسم الأب، اسم العائلة" }
         mock:
-          width: 300
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Child's name *", ar: "اسم الطفل *" }, text: "" }
             - { kind: field, label: { en: "Father's name *", ar: "اسم الأب *" }, text: "", gap: s }
             - { kind: field, label: { en: "Family name *", ar: "اسم العائلة *" }, text: "", gap: s }
@@ -374,32 +500,60 @@ steps:
       en: "Try each fix. Which one should ship?"
       ar: "جرّب كل إصلاح. أيّها يجب أن يُطلق؟"
     mock:
+      app: hadaf
+      appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks:
+        - kind: "card"
+          art: "people"
+          blocks:
+            - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+            - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+            - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
         - { kind: field, tone: bad, label: "@F3parent", filled: true, text: "⁦+20 10 1234 5678⁩", error: { en: "Use 11 digits starting with 0.", ar: "استخدم 11 رقمًا تبدأ بـ 0." } }
     options:
       - id: hint
         text: { en: "Add a hint: \"Start with 0, no country code\"", ar: "أضف تلميحًا: «ابدأ بـ 0، بدون رمز الدولة»" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3parent", text: "", hint: { en: "Start with 0, no country code, no spaces.", ar: "ابدأ بـ 0، بدون رمز الدولة، بدون مسافات." } }
       - id: accept
         text: { en: "Accept it with or without the country code and spaces", ar: "اقبله برمز الدولة أو بدونه، وبالمسافات" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: field, label: "@F3parent", filled: true, text: "⁦+20 10 1234 5678⁩" }
             - { kind: small, color: green, text: { en: "✓ Saved", ar: "✓ تم الحفظ" }, gap: xs }
       - id: picker
         text: { en: "Split it: a country box and an 11-digit box", ar: "قسّمه: خانة للدولة وخانة من 11 رقمًا" }
         mock:
+          app: hadaf
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - kind: "card"
+              art: "people"
+              blocks:
+                - { kind: "heading", text: { en: "Summer camp 2027", ar: "المعسكر الصيفي 2027" } }
+                - { kind: "meta", text: { en: "Ages 8 to 12 · July, 4 weeks", ar: "من 8 إلى 12 سنة · يوليو، 4 أسابيع" } }
+                - { kind: "price", text: { en: "EGP 1,500", ar: "1,500 جنيه" }, gap: "s" }
             - { kind: small, text: "@F3parent" }
             - kind: row
               gap: s
