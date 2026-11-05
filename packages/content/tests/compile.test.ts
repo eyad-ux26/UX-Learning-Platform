@@ -84,7 +84,7 @@ describe("content compiler", () => {
 
 describe("split content for the app", () => {
   it("the index has every lesson without steps, and each lesson file matches the bundle", async () => {
-    const { content, createLessonLoader, videoIds } = await import("../src/index");
+    const { content, createLessonLoader, videoIds, videoUnits } = await import("../src/index");
     const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../dist/lessons");
     const { getLessonVersion, getBank } = createLessonLoader(async (file) => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")));
     expect(fs.readdirSync(dir).length).toBe(bundle.lessons.length + bundle.banks.length);
@@ -94,6 +94,9 @@ describe("split content for the app", () => {
     expect((await getBank(bundle.banks[0].unitId))?.lessonId).toBe(bundle.banks[0].lessonId);
     expect(await getLessonVersion("nope")).toBeUndefined();
     expect(await getLessonVersion("constructor")).toBeUndefined();
-    expect(videoIds.size).toBe(new Set(bundle.lessons.flatMap((l) => l.body.steps.flatMap((s) => (s.type === "video" ? [s.video] : [])))).size);
+    expect(videoIds.size).toBe(new Set([...bundle.lessons, ...bundle.banks].flatMap((l) => l.body.steps.flatMap((s) => (s.type === "video" ? [s.video] : [])))).size);
+    // Each video knows every unit that uses it, so the video API can check that unit's plan.
+    for (const l of [...bundle.lessons, ...bundle.banks]) for (const s of l.body.steps) if (s.type === "video") expect(videoUnits(s.video)).toContain(l.unitId);
+    expect(videoUnits("constructor")).toEqual([]);
   });
 });

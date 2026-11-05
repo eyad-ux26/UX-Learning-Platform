@@ -10,7 +10,7 @@ import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
 import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { useTranslations } from "next-intl";
-import { LessonEnd } from "./LessonEnd";
+import { LessonEnd, type ProNext } from "./LessonEnd";
 import { CheckSummary, GuestEnd, MasteryEnd } from "./LessonPages";
 import type { ReplayKind } from "@/lib/replay";
 
@@ -25,9 +25,11 @@ type Props = {
   guest?: boolean;
   /** The unit's skills, for the result pages (the client never loads the whole content bundle). */
   unitSkills?: Skill[];
+  /** The next unit, when it is part of Pro and the learner is on the free plan (slice 5). */
+  proNext?: ProNext | null;
 };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [] }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], proNext = null }: Props) {
   const router = useRouter();
   const t = useTranslations("sync");
   const sync = useSyncStatus();
@@ -118,7 +120,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} proNext={proNext} />;
   }
 
   return (

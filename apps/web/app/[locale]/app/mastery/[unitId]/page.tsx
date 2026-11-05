@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
+import { unitOpen } from "@/lib/billing/access";
 import { setRequestLocale } from "next-intl/server";
 import { getPath, getUnit } from "@uxgate/content";
 import { getBank } from "@/lib/server/content";
@@ -18,6 +20,8 @@ export default async function MasteryPage({ params }: { params: Promise<{ locale
   const unit = getUnit(unitId);
   if (!unit || !bank || !me.db) notFound();
   const back = `/app/path/${unit.pathId}`;
+  // A Pro unit's re-test questions are Pro content too (issue #137): without Pro the path map opens with the paywall.
+  if (!unitOpen(unit, me.pro)) return redirect({ href: `${back}?paywall=${unitId}`, locale }) as never;
   const round = await loadRound(me.db, me.userId, unitId);
   if (!round || !round.skillCheckDone) return <MasteryLocked backHref={back} />;
   if (!round.steps.length) return <MasteryNone backHref={back} usedUp={round.unresolved.length > 0} />;

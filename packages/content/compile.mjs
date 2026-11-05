@@ -38,7 +38,9 @@ for (const l of all) {
   files.set(l.lessonId, file);
 }
 const meta = (l) => { const { steps, review_labels, ...body } = l.body; void steps; void review_labels; return { ...l, file: files.get(l.lessonId), body }; };
-const videos = [...new Set(all.flatMap((l) => l.body.steps.flatMap((s) => (s.type === "video" ? [s.video] : []))))].sort();
+// Each video id with the units whose lessons use it, so the video API can check the unit's plan (issue #137).
+const videos = {};
+for (const l of all) for (const s of l.body.steps) if (s.type === "video") videos[s.video] = [...new Set([...(videos[s.video] ?? []), l.unitId])].sort();
 fs.writeFileSync(path.join(outDir, "index.json"), JSON.stringify({ paths: bundle.paths, units: bundle.units, lessons: bundle.lessons.map(meta), banks: bundle.banks.map(meta), videos }) + "\n");
 fs.writeFileSync(path.join(outDir, "cast.json"), JSON.stringify(bundle.cast) + "\n");
 console.log(`compiled ${bundle.lessons.length} lessons from ${path.relative(process.cwd(), dir)} -> ${path.relative(process.cwd(), out)}`);

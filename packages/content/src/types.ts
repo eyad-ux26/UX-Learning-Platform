@@ -120,6 +120,6 @@ export type Bundle = { cast: CastMember[]; paths: PathMeta[]; units: UnitMeta[];
 /** A lesson without its steps: enough for maps, lists and titles. */
 export type LessonMeta = Omit<LessonVersion, "body"> & { body: Omit<Lesson, "steps" | "review_labels">; /** The lesson's file in dist/lessons (a content hash). */ file: string };
 /** What the app parses up front (dist/index.json). */
-export type ContentIndex = { paths: PathMeta[]; units: UnitMeta[]; lessons: LessonMeta[]; banks: LessonMeta[]; videos: string[] };
+export type ContentIndex = { paths: PathMeta[]; units: UnitMeta[]; lessons: LessonMeta[]; banks: LessonMeta[]; /** Video id -> the units whose lessons use it. */ videos: Record<string, string[]> };
 
 export type CastMember = { id: string; en: string; ar: string; role_en: string; role_ar: string; age?: string };

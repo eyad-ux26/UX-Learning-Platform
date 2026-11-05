@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import enBase from "../messages/en.json";
 import arBase from "../messages/ar.json";
 import { slice4 } from "../messages/s4";
+import en5 from "../messages/s5/en.json";
+import ar5 from "../messages/s5/ar.json";
 
 const en = { ...enBase, ...slice4.en };
 const ar = { ...arBase, ...slice4.ar };
@@ -15,10 +17,14 @@ const flat = (o: unknown): string[] => Object.values(o as object).flatMap((v) =>
 describe("message files", () => {
   it("English and Arabic have exactly the same keys", () => {
     expect(keys(ar).sort()).toEqual(keys(en).sort());
+    expect(keys(ar5).sort()).toEqual(keys(en5).sort());
+  });
+  it("slice files only add new namespaces", () => {
+    for (const ns of Object.keys(en5)) expect(Object.keys(en)).not.toContain(ns);
   });
   it("no message is empty", () => {
     for (const m of [en, ar]) for (const k of keys(m)) expect(k.length).toBeGreaterThan(0);
-    for (const m of [en, ar]) for (const s of flat(m)) expect(s.trim()).not.toBe("");
+    for (const m of [en, ar, en5, ar5]) for (const s of flat(m)) expect(s.trim()).not.toBe("");
   });
   it("slice 4 files add namespaces and never replace one from the main files", () => {
     for (const ns of Object.keys(slice4.en)) expect(Object.keys(enBase)).not.toContain(ns);

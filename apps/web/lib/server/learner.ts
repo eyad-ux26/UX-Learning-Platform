@@ -1,9 +1,12 @@
+import { cache } from "react";
 import { redirect } from "@/i18n/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgressAndZone } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
+import { proFrom, readEntitlement, requestHost } from "@/lib/server/billing/account";
+import type { Entitlement } from "@/lib/billing/subscription";
 
 export type Learner = {
   db: SupabaseClient | null;
@@ -16,10 +19,14 @@ export type Learner = {
   currentPathId: string | null;
   practicedSkills: Set<string>;
   timeZone: string | null;
+  /** On UXGate Pro right now (slice 5). Free learners get Unit 1 of every path. */
+  pro: boolean;
+  /** The plan row behind `pro`, read once per request and reused by the plans and billing screens. */
+  entitlement: Entitlement | null;
 };
 
 const fixture = (): Learner => ({
-  db: null, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC",
+  db: null, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null,
   practicedSkills: new Set(["SK-P01-U01-01"]),
   progress: {
     displayName: "Nour", dailyGoal: 2, xpTotal: 240, lessonsToday: 1, streak: 12, today: "2026-10-30",
@@ -32,7 +39,10 @@ const fixture = (): Learner => ({
  * The signed-in learner and everything the app shell shows about them.
  * UG_DEV_FIXTURE=1 swaps in a made-up learner so screens can be checked without a database; it is never set on a deployed host.
  */
-export async function getLearner(): Promise<Learner | null> {
+export const getLearner = cache(loadLearner);
+
+/** Cached per request (React cache): a page, its layout and its components share one sign-in check and one set of reads. */
+async function loadLearner(): Promise<Learner | null> {
   if (process.env.UG_DEV_FIXTURE === "1") return fixture();
   if (!hasSupabase()) return null; // not connected to Supabase yet: everyone is signed out
   const db = await createClient();
@@ -40,12 +50,15 @@ export async function getLearner(): Promise<Learner | null> {
   if (!data.user) return null;
   const userId = data.user.id;
   // Every read at once, so a page waits for one database round trip after sign-in, not three.
-  const [{ progress, timeZone: tz }, onb, skills, current] = await Promise.all([
+  // The plan is one primary-key read in the same round (issue #131), with no retries and a fast exit before 0036 exists.
+  const [{ progress, timeZone: tz }, onb, skills, current, entitlement, host] = await Promise.all([
     loadProgressAndZone(db, userId),
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id").eq("user_id", userId),
     // Its own query: if the column is missing the rest of the app still loads.
     db.from("profiles").select("current_path_id").eq("user_id", userId).maybeSingle(),
+    readEntitlement(db, userId),
+    requestHost(),
   ]);
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(new Date()));
   return {
@@ -54,6 +67,8 @@ export async function getLearner(): Promise<Learner | null> {
     recommendedPathId: onb.data?.recommended_path_id ?? null,
     currentPathId: current.data?.current_path_id ?? null,
     practicedSkills: new Set((skills.data ?? []).map((s) => s.skill_id)),
+    pro: proFrom(entitlement, host),
+    entitlement,
   };
 }
 

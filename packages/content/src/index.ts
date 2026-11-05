@@ -17,7 +17,9 @@ export const getPath = (pathId: string): PathMeta | undefined => content.paths.f
 export const unitLessons = (unitId: string): LessonMeta[] =>
   content.lessons.filter((l) => l.unitId === unitId).sort((a, b) => a.order - b.order);
 /** Every video id any lesson uses. */
-export const videoIds = new Set(content.videos);
+export const videoIds = new Set(Object.keys(content.videos ?? {}));
+/** The units whose lessons use this video (empty for an unknown id). */
+export const videoUnits = (id: string): string[] => (Object.hasOwn(content.videos ?? {}, id) ? content.videos[id] : []);
 
 export type LessonLoader = {
   /** The whole lesson (or bank), steps included. Read once per isolate. */
