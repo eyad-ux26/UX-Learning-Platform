@@ -28,13 +28,42 @@ steps:
       en: "I sell home appliances online. Every day, customers call to ask things that are already written in our app.\n\nI looked at our messages. They are long, and the useful words come at the end."
       ar: "أبيع أجهزة منزلية أونلاين. وكل يوم يتصل عملاء ليسألوا عن أشياء مكتوبة بالفعل في تطبيقنا.\n\nنظرت إلى رسائلنا. إنها طويلة، والكلمات المفيدة تأتي في آخرها."
     mock:
-      width: 300
+      app: dar
+      appbar:
+        title: {en: Messages, ar: الرسائل}
+      tabbar:
+        active: 3
+        items:
+        - icon: house
+          text: {en: Home, ar: الرئيسية}
+        - icon: magnifying-glass
+          text: {en: Search, ar: البحث}
+        - icon: package
+          text: {en: Orders, ar: طلباتي}
+        - icon: chat-circle-text
+          text: {en: Messages, ar: الرسائل}
+          count: 3
+        - icon: user
+          text: {en: Account, ar: حسابي}
       blocks:
-        - { kind: title, text: { en: "Dar Appliances", ar: "دار للأجهزة" } }
-        - { kind: small, color: muted, text: { en: "Messages", ar: "الرسائل" }, gap: s }
-        - { kind: meta, text: { en: "Introducing our new delivery service for all of Cairo", ar: "نقدّم لكم خدمة التوصيل الجديدة لكل أحياء القاهرة" }, gap: s }
-        - { kind: meta, text: { en: "Important information regarding your refund request", ar: "معلومات مهمة بخصوص طلب استرداد المبلغ" }, gap: s }
-        - { kind: meta, text: { en: "Please note that the shop will be closed on Friday", ar: "يرجى العلم بأن المتجر سيكون مغلقًا يوم الجمعة" }, gap: s }
+      - kind: listitem
+        avatar: {text: Dar}
+        text: {en: Introducing our new delivery service for all of Cairo, ar: نقدّم لكم خدمة التوصيل الجديدة لكل أحياء القاهرة}
+        sub: {en: Dar · Today, ar: دار · اليوم}
+        value: "9:40"
+        nowrap: true
+      - kind: listitem
+        avatar: {text: Dar}
+        text: {en: Important information regarding your refund request, ar: معلومات مهمة بخصوص طلب استرداد المبلغ}
+        sub: {en: Dar · Yesterday, ar: دار · أمس}
+        value: {en: Mon, ar: الإثنين}
+        nowrap: true
+      - kind: listitem
+        avatar: {text: Dar}
+        text: {en: Please note that the shop will be closed on Friday, ar: يرجى العلم بأن المتجر سيكون مغلقًا يوم الجمعة}
+        sub: {en: Dar · Last week, ar: دار · الأسبوع الماضي}
+        value: {en: Thu, ar: الخميس}
+        nowrap: true
 
   - id: S02
     type: choose
@@ -94,12 +123,30 @@ steps:
       en: "Which link text lets a customer find order tracking fastest in the list?"
       ar: "أي نص للرابط يجعل العميل يجد تتبّع الطلب أسرع في القائمة؟"
     mock:
-      width: 300
+      app: dar
+      appbar:
+        title: {en: Help, ar: المساعدة}
+        back: true
       blocks:
-        - { kind: heading, text: { en: "Help", ar: "المساعدة" } }
-        - { kind: link, text: { en: "Click here to see where your order is", ar: "اضغط هنا لترى أين طلبك" }, gap: s }
-        - { kind: link, text: { en: "Click here to change your address", ar: "اضغط هنا لتغيير عنوانك" }, gap: s }
-        - { kind: link, text: { en: "Click here to return a product", ar: "اضغط هنا لإرجاع منتج" }, gap: s }
+      - kind: searchbar
+        text: {en: Search help, ar: ابحث في المساعدة}
+      - kind: small
+        color: muted
+        text: {en: Popular, ar: الأكثر طلبًا}
+        gap: m
+      - kind: listitem
+        icon: package
+        text: {en: Click here to see where your order is, ar: اضغط هنا لترى أين طلبك}
+        chevron: true
+        gap: s
+      - kind: listitem
+        icon: map-pin
+        text: {en: Click here to change your address, ar: اضغط هنا لتغيير عنوانك}
+        chevron: true
+      - kind: listitem
+        icon: arrow-u-up-left
+        text: {en: Click here to return a product, ar: اضغط هنا لإرجاع منتج}
+        chevron: true
     options:
       - { id: here, text: { en: "\"Click here: where is my order?\"", ar: "«اضغط هنا: أين طلبي؟»" } }
       - { id: you, text: { en: "\"You can see where your order is here\"", ar: "«يمكنك أن ترى مكان طلبك هنا»" } }
@@ -181,19 +228,63 @@ steps:
     a:
       label: { en: "A: The page starts with how the service began.", ar: "A: الصفحة تبدأ بقصة بداية الخدمة." }
       mock:
-        width: 300
+        app: dar
+        frame: wide
+        url: dar.example/services/installation
+        navbar:
+          links:
+          - {en: Washers, ar: غسالات}
+          - {en: Fridges, ar: ثلاجات}
+          - {en: Services, ar: الخدمات}
+          active: 2
+          actions:
+          - {icon: shopping-cart}
+          - {icon: user}
         blocks:
-          - { kind: heading, text: { en: "Installation", ar: "التركيب" } }
-          - { kind: text, text: { en: "Last year, many customers told us that installing a washer was hard. So our team started to think about a better way.", ar: "في العام الماضي قال لنا كثير من العملاء إن تركيب الغسالة صعب. فبدأ فريقنا يفكّر في طريقة أفضل." }, gap: s }
-          - { kind: text, text: { en: "Now we install it for free, on the day it arrives.", ar: "والآن نركّبها مجانًا في يوم وصولها." }, gap: s }
+        - {kind: image, art: washing-machine, size: m}
+        - kind: title
+          text: {en: Installation, ar: التركيب}
+          gap: m
+        - kind: text
+          text:
+            en: "Last year, many customers told us that installing a washer was hard. So our team started to think about a better way."
+            ar: في العام الماضي قال لنا كثير من العملاء إن تركيب الغسالة صعب. فبدأ فريقنا يفكّر في طريقة أفضل.
+          gap: s
+        - kind: text
+          text:
+            en: "Now we install it for free, on the day it arrives."
+            ar: والآن نركّبها مجانًا في يوم وصولها.
+          gap: s
     b:
       label: { en: "B: The page starts with the offer itself.", ar: "B: الصفحة تبدأ بالعرض نفسه." }
       mock:
-        width: 300
+        app: dar
+        frame: wide
+        url: dar.example/services/installation
+        navbar:
+          links:
+          - {en: Washers, ar: غسالات}
+          - {en: Fridges, ar: ثلاجات}
+          - {en: Services, ar: الخدمات}
+          active: 2
+          actions:
+          - {icon: shopping-cart}
+          - {icon: user}
         blocks:
-          - { kind: heading, text: { en: "Installation", ar: "التركيب" } }
-          - { kind: text, text: { en: "We install your washer for free, on the day it arrives.", ar: "نركّب غسالتك مجانًا في يوم وصولها." }, gap: s }
-          - { kind: text, text: { en: "Last year, many customers told us installing it was hard, so we built this service.", ar: "في العام الماضي قال لنا كثير من العملاء إن التركيب صعب، فبنينا هذه الخدمة." }, gap: s }
+        - {kind: image, art: washing-machine, size: m}
+        - kind: title
+          text: {en: Installation, ar: التركيب}
+          gap: m
+        - kind: text
+          text:
+            en: "We install your washer for free, on the day it arrives."
+            ar: نركّب غسالتك مجانًا في يوم وصولها.
+          gap: s
+        - kind: text
+          text:
+            en: "Last year, many customers told us installing it was hard, so we built this service."
+            ar: في العام الماضي قال لنا كثير من العملاء إن التركيب صعب، فبنينا هذه الخدمة.
+          gap: s
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -241,48 +332,61 @@ steps:
       en: "Tap each option to see the change. Which notification still tells the customer the news when the phone cuts it?"
       ar: "اضغط على كل خيار لترى التغيير. أي إشعار يخبر العميل بالخبر حتى بعد أن يقطعه الهاتف؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: dar
+      screen: lock
+      caption: {en: Now, ar: الآن}
       blocks:
-        - kind: group
-          tone: tint
-          blocks:
-            - { kind: small, color: muted, text: { en: "Dar Appliances · now", ar: "دار للأجهزة · الآن" } }
-            - { kind: meta, nowrap: true, text: { en: "Hi Ahmed! We wanted to let you know that your order has shipped and arrives Tuesday", ar: "مرحبًا أحمد! أردنا أن نخبرك بأن طلبك قد شُحن وسيصل يوم الثلاثاء" } }
+      - kind: notification
+        title: {en: Dar, ar: دار}
+        text:
+          en: "Hi Ahmed! We wanted to let you know that your order has shipped and arrives Tuesday"
+          ar: "مرحبًا أحمد! أردنا أن نخبرك بأن طلبك قد شُحن وسيصل يوم الثلاثاء"
+        time: {en: now, ar: الآن}
+        nowrap: true
     options:
       - id: hello
         text: { en: "Keep the greeting, add an emoji: \"Hi Ahmed! 👋 Good news about your order: it has shipped…\"", ar: "أبقِ التحية وأضف رمزًا: «مرحبًا أحمد! 👋 خبر سعيد عن طلبك: لقد شُحن…»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          screen: lock
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - kind: group
-              tone: tint
-              blocks:
-                - { kind: small, color: muted, text: { en: "Dar Appliances · now", ar: "دار للأجهزة · الآن" } }
-                - { kind: meta, nowrap: true, text: { en: "Hi Ahmed! 👋 Good news about your order: it has shipped and arrives Tuesday", ar: "مرحبًا أحمد! 👋 خبر سعيد عن طلبك: لقد شُحن وسيصل يوم الثلاثاء" } }
+          - kind: notification
+            title: {en: Dar, ar: دار}
+            text:
+              en: "Hi Ahmed! \U0001F44B Good news about your order: it has shipped and arrives Tuesday"
+              ar: "مرحبًا أحمد! \U0001F44B خبر سعيد عن طلبك: لقد شُحن وسيصل يوم الثلاثاء"
+            time: {en: now, ar: الآن}
+            nowrap: true
       - id: bold
         text: { en: "Keep the same text, but make it bold", ar: "أبقِ نفس النص، لكن اجعله عريضًا (Bold)" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          screen: lock
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - kind: group
-              tone: tint
-              blocks:
-                - { kind: small, color: muted, text: { en: "Dar Appliances · now", ar: "دار للأجهزة · الآن" } }
-                - { kind: meta, weight: bold, nowrap: true, text: { en: "Hi Ahmed! We wanted to let you know that your order has shipped and arrives Tuesday", ar: "مرحبًا أحمد! أردنا أن نخبرك بأن طلبك قد شُحن وسيصل يوم الثلاثاء" } }
+          - kind: notification
+            title: {en: Dar, ar: دار}
+            text:
+              en: "Hi Ahmed! We wanted to let you know that your order has shipped and arrives Tuesday"
+              ar: "مرحبًا أحمد! أردنا أن نخبرك بأن طلبك قد شُحن وسيصل يوم الثلاثاء"
+            time: {en: now, ar: الآن}
+            nowrap: true
+            weight: bold
       - id: front
         text: { en: "Start with the news: \"Order shipped: arrives Tuesday\"", ar: "ابدأ بالخبر: «تمّ شحن طلبك: يصل الثلاثاء»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          screen: lock
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - kind: group
-              tone: tint
-              blocks:
-                - { kind: small, color: muted, text: { en: "Dar Appliances · now", ar: "دار للأجهزة · الآن" } }
-                - { kind: meta, nowrap: true, text: { en: "Order shipped: arrives Tuesday", ar: "تمّ شحن طلبك: يصل الثلاثاء" } }
+          - kind: notification
+            title: {en: Dar, ar: دار}
+            text:
+              en: "Order shipped: arrives Tuesday"
+              ar: "تمّ شحن طلبك: يصل الثلاثاء"
+            time: {en: now, ar: الآن}
+            nowrap: true
     answer: [front]
     misconceptions:
       - id: MC-P15-003
