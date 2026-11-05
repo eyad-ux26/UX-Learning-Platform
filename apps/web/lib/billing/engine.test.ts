@@ -510,6 +510,29 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     expect(sub().status).toBe("active");
   });
 
+  it("a checkout for more than one plan (Paddle's quantity picker) buys nothing and is refunded whole", async () => {
+    const a = paddleSession();
+    const txn = paddleTxn("txn_q", "sub_q", a.id, "14400");
+    const r = await deliverPaddle({ ...txn, data: { ...txn.data, items: [{ price_id: "pri_1", quantity: 2 }] } });
+    expect(r[0]).toMatchObject({ status: "ignored", note: expect.stringContaining("quantity 2") });
+    expect(calls).toEqual(["cancel paddle sub_q", "refund paddle txn_q"]);
+    expect(pro()).toBe(false);
+    expect(store.sessions.get(a.id)?.status).toBe("failed");
+    expect([...store.payments.values()].find((p) => p.providerPaymentId === "txn_q")?.subscriptionId).toBeNull();
+  });
+
+  it("a renewal for more than one plan is refunded too; a quantity of 1 (or none) renews as usual", async () => {
+    const a = paddleSession();
+    const first = paddleTxn("txn_a", "sub_a", a.id);
+    await deliverPaddle({ ...first, data: { ...first.data, items: [{ price_id: "pri_1", quantity: 1 }] } });
+    expect(sub()).toMatchObject({ providerSubId: "sub_a", status: "active" });
+    const renew = { origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", custom_data: { user_id: U }, details: { totals: { grand_total: "21600" } } };
+    const r = await deliverPaddle({ event_id: "evt_r3", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_r3", ...renew, items: [{ quantity: 3 }] } });
+    expect(r[0].status).toBe("ignored");
+    expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_r3"]);
+    expect(sub().currentPeriodEnd).toBe("2027-11-03T09:00:00Z");
+  });
+
   it("cancel in the grace period ends the plan now and asks Paddle to cancel now; a late charge is refunded", async () => {
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));

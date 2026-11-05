@@ -15,8 +15,8 @@ const bunny = " https://*.b-cdn.net";
 const csp = [
   "default-src 'self'",
   // Paddle.js (international checkout) loads from Paddle's CDN and opens its checkout in a frame (slice 5).
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${cfBeacon ? " https://static.cloudflareinsights.com" : ""} https://cdn.paddle.com`,
-  "style-src 'self' 'unsafe-inline' https://cdn.paddle.com",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${cfBeacon ? " https://static.cloudflareinsights.com" : ""} https://cdn.paddle.com https://sandbox-cdn.paddle.com`,
+  "style-src 'self' 'unsafe-inline' https://cdn.paddle.com https://sandbox-cdn.paddle.com",
   `img-src 'self' data: blob:${bunny}`,
   "font-src 'self' data:",
   `media-src 'self' data: blob:${bunny}`,

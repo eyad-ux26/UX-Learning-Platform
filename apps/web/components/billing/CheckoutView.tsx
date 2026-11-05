@@ -5,11 +5,11 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { billingPost } from "./api";
 
-type PaddleOpen = { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null };
+type PaddleOpen = { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null; email?: string | null };
 type PaddleJs = {
   Environment: { set: (env: string) => void };
   Initialize: (o: { token: string; eventCallback?: (e: { name?: string }) => void }) => void;
-  Checkout: { open: (o: { transactionId: string; customer?: { address: { countryCode: string } }; settings: Record<string, unknown> }) => void };
+  Checkout: { open: (o: { transactionId: string; customer?: { email?: string; address?: { countryCode: string } }; settings: Record<string, unknown> }) => void };
 };
 
 let paddleLoad: Promise<PaddleJs> | null = null;
@@ -39,7 +39,13 @@ async function openPaddle(p: PaddleOpen, locale: string) {
     },
   });
   // The billing country starts as the country the price is for; a different card country moves renewals to the Gulf price.
-  Paddle.Checkout.open({ transactionId: p.transactionId, ...(p.country ? { customer: { address: { countryCode: p.country } } } : {}), settings: { displayMode: "overlay", locale, successUrl: p.successUrl, theme: "light" } });
+  // The learner's email is filled in when the transaction has no Paddle customer yet (the server sends it only then).
+  const customer = { ...(p.email ? { email: p.email } : {}), ...(p.country ? { address: { countryCode: p.country } } : {}) };
+  Paddle.Checkout.open({
+    transactionId: p.transactionId,
+    ...(Object.keys(customer).length ? { customer } : {}),
+    settings: { displayMode: "overlay", locale, successUrl: p.successUrl, theme: "light" },
+  });
 }
 
 /**
