@@ -41,14 +41,14 @@ describe("content compiler", () => {
   });
   it("rejects an answer that names no option", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "uxg-"));
-    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml"));
+    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml")); fs.copyFileSync(path.join(seed, "../products.yaml"), path.join(tmp, "products.yaml"));
     const f = path.join(tmp, "paths/P01/U01/P01-U01-L01-every-field-costs-something.yaml");
     fs.writeFileSync(f, fs.readFileSync(f, "utf8").replace("answer: [nid]", "answer: [nope]"));
     expect(compileTree(path.join(tmp, "paths")).errors.join("\n")).toMatch(/P01-U01-L01\/S02: answer must list option ids/);
   });
   it("reads the speaker from the lesson, lets a step override it, and rejects unknown ids", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "uxg-"));
-    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml"));
+    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml")); fs.copyFileSync(path.join(seed, "../products.yaml"), path.join(tmp, "products.yaml"));
     const f = path.join(tmp, "paths/P01/U01/P01-U01-L01-every-field-costs-something.yaml");
     const text = fs.readFileSync(f, "utf8");
     const lessonOf = (r: { bundle: { lessons: { lessonId: string; body: { steps: { scenario?: unknown; speaker?: string }[] } }[] } }) => r.bundle.lessons.find((l) => l.lessonId === "P01-U01-L01")!;
@@ -63,7 +63,7 @@ describe("content compiler", () => {
   });
   it("accepts concept-card points (1 to 4, icon + both languages) and rejects bad ones", () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "uxg-"));
-    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml"));
+    fs.cpSync(seed, path.join(tmp, "paths"), { recursive: true }); fs.copyFileSync(path.join(seed, "../cast.yaml"), path.join(tmp, "cast.yaml")); fs.copyFileSync(path.join(seed, "../products.yaml"), path.join(tmp, "products.yaml"));
     const f = path.join(tmp, "paths/P01/U01/P01-U01-L01-every-field-costs-something.yaml");
     const text = fs.readFileSync(f, "utf8");
     const withPoints = (pts: string) => text.replace(/^(\s*)type: card\n/m, `$1type: card\n$1points:\n${pts}\n`);
