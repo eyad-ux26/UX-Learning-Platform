@@ -11,10 +11,11 @@ import { bundle } from "../src/full";
 const seed = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../content/paths");
 
 describe("content compiler", () => {
-  it("compiles every P01 and P10 unit with no errors", () => {
+  it("compiles every unit of every path with no errors", () => {
     const { errors, bundle: b } = compileTree(seed);
     expect(errors).toEqual([]);
-    expect(b.units.map((u: { id: string }) => u.id)).toEqual(["P01-U01", "P01-U02", "P01-U03", "P01-U04", "P01-U05", "P10-U01", "P10-U02", "P10-U03", "P10-U04", "P10-U05", "P10-U06"]);
+    const units = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${p}-U0${i + 1}`);
+    expect(b.units.map((u: { id: string }) => u.id)).toEqual([...units("P01", 5), ...units("P02", 5), ...units("P05", 5), ...units("P10", 6), ...units("P12", 5), ...units("P13", 5), ...units("P14", 6), ...units("P15", 5)]);
     // Every unit has a re-test bank, and every skill has at least 2 held-back steps in it.
     expect(b.banks.map((l: { unitId: string }) => l.unitId)).toEqual(b.units.map((u: { id: string }) => u.id));
     for (const u of b.units) {

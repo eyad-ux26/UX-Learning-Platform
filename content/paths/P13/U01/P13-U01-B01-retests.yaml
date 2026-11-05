@@ -1,0 +1,305 @@
+id: P13-U01-B01
+mode: bank
+title:
+  en: "Re-tests: let AI draft, you decide"
+  ar: "إعادة اختبار: دع الذكاء الاصطناعي يكتب المسوّدة، وقرّر أنت"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "AI for UX: Getting Started (NN/g)", ar: "الذكاء الاصطناعي لتجربة المستخدم: البداية (NN/g)" }
+    url: "https://www.nngroup.com/articles/ai-ux-getting-started/"
+  - title: { en: "Synthetic Users vs. Human Respondents (NN/g)", ar: "المستخدمون الاصطناعيون مقابل المشاركين الحقيقيين (NN/g)" }
+    url: "https://www.nngroup.com/articles/synthetic-users-vs-human-respondents/"
+steps:
+  - id: S01
+    type: choose
+    skill: SK-P13-U01-01
+    part: retest
+    speaker: hana
+    value:
+      en: "Re-test. AI for UX (NN/g): when AI gives you facts, ask for its sources and double-check the information."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): حين يعطيك الذكاء الاصطناعي معلومات، اطلب مصادرها وتحقّق منها مرة أخرى."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "Ask for links to those sources as well, and doublecheck the information provided." }
+    scenario:
+      en: "In our gym app, I asked AI to write the help page for booking classes. It says classes open for booking 7 days ahead. Our real rule is 3 days."
+      ar: "في تطبيق النادي الرياضي، طلبت من الذكاء الاصطناعي أن يكتب صفحة المساعدة لحجز الحصص. وهو يقول إن الحجز يُفتح قبل 7 أيام. وقاعدتنا الحقيقية 3 أيام."
+    prompt:
+      en: "What does this tell you about the rest of the page?"
+      ar: "ماذا يخبرك هذا عن بقية الصفحة؟"
+    options:
+      - { id: one, text: { en: "Fix the 7 days. One mistake means the rest is fine", ar: "أصلح الـ7 أيام. فخطأ واحد يعني أن الباقي سليم" } }
+      - { id: all, text: { en: "Check every rule on the page against our real rules", ar: "أتحقّق من كل قاعدة في الصفحة مقارنةً بقواعدنا الحقيقية" } }
+      - { id: stop, text: { en: "Stop using AI for help pages", ar: "أتوقّف عن استخدام الذكاء الاصطناعي لصفحات المساعدة" } }
+    answer: [all]
+    misconceptions:
+      - id: MC-P13-001
+        when: [one]
+        feedback:
+          en: "If it got one rule wrong, others may be wrong too. Check them all."
+          ar: "إذا أخطأ في قاعدة واحدة، فقد تكون غيرها خاطئة أيضًا. تحقّق منها كلها."
+      - id: MC-P13-002
+        when: [stop]
+        feedback:
+          en: "The draft still saved time. Checking it is your part of the work."
+          ar: "المسوّدة ما زالت توفّر الوقت. والتحقّق منها هو دورك في العمل."
+    correct:
+      en: "Right. A draft with one wrong fact needs a full check."
+      ar: "صحيح. المسوّدة التي فيها معلومة خاطئة تحتاج تحقّقًا كاملًا."
+    explain:
+      en: "AI can state wrong facts with full confidence. Check each one before you publish."
+      ar: "الذكاء الاصطناعي قد يذكر معلومات خاطئة بثقة كاملة. تحقّق من كل واحدة قبل النشر."
+
+  - id: S02
+    type: choose
+    skill: SK-P13-U01-01
+    part: retest
+    speaker: karim
+    value:
+      en: "Re-test. AI for UX (NN/g): treat AI's work as a first draft that you review before it goes to anyone."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): تعامل مع عمل الذكاء الاصطناعي كمسوّدة أولى تراجعها قبل أن تصل إلى أي أحد."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "Don't deliver this first draft to your client or stakeholders." }
+    scenario:
+      en: "AI wrote 40 error messages for our photo app. My lead wants them in the app by tomorrow."
+      ar: "كتب الذكاء الاصطناعي 40 رسالة خطأ لتطبيق الصور. ويريدها قائد الفريق في التطبيق بحلول الغد."
+    prompt:
+      en: "What's the best plan?"
+      ar: "ما أفضل خطة؟"
+    options:
+      - { id: review, text: { en: "Read all 40 in the real screens, and fix any that are wrong or unclear", ar: "أقرأ الـ40 في الشاشات الحقيقية، وأصلح أي رسالة خاطئة أو غير واضحة" } }
+      - { id: sample, text: { en: "Read 3 of them. If those are fine, ship all 40", ar: "أقرأ 3 منها. وإذا كانت سليمة، أطلق الـ40 كلها" } }
+      - { id: ship, text: { en: "Ship them now. AI writes clearly", ar: "أطلقها الآن. فالذكاء الاصطناعي يكتب بوضوح" } }
+    answer: [review]
+    misconceptions:
+      - id: MC-P13-001
+        when: [sample]
+        feedback:
+          en: "Three good ones don't prove the other 37 are right."
+          ar: "ثلاث رسائل جيدة لا تُثبت أن الـ37 الأخرى صحيحة."
+      - id: MC-P13-007
+        when: [ship]
+        feedback:
+          en: "Clear writing can still give the wrong reason or the wrong fix."
+          ar: "الكتابة الواضحة قد تذكر سببًا خاطئًا أو حلًا خاطئًا."
+    correct:
+      en: "Right. Each message is a draft until you've checked it."
+      ar: "صحيح. كل رسالة مسوّدة حتى تتحقّق منها."
+    explain:
+      en: "AI made the 40 drafts fast. Your review is what makes them ready."
+      ar: "الذكاء الاصطناعي صنع الـ40 مسوّدة بسرعة. ومراجعتك هي ما يجعلها جاهزة."
+
+  - id: S03
+    type: choose
+    skill: SK-P13-U01-02
+    part: retest
+    speaker: nour
+    value:
+      en: "Re-test. AI for UX (NN/g): ideation is free with AI, so you can use it for many more steps than a team brainstorm allows."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): توليد الأفكار مجاني مع الذكاء الاصطناعي، فتستطيع استخدامه في خطوات أكثر بكثير مما يسمح به اجتماع عصف ذهني للفريق."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "Ideation is free with AI, so you can employ it for many more steps in the UX workflow than would be economical if you had to get a group of UX colleagues into a room for a brainstorming session." }
+    scenario:
+      en: "Our clinic app needs new text for 12 small screens. The team can only meet for one brainstorm, enough for 2 screens."
+      ar: "يحتاج تطبيق العيادة نصوصًا جديدة لـ12 شاشة صغيرة. والفريق يستطيع أن يجتمع لعصف ذهني (brainstorm) واحد فقط، يكفي لشاشتين."
+    prompt:
+      en: "How should I use AI here?"
+      ar: "كيف أستخدم الذكاء الاصطناعي هنا؟"
+    options:
+      - { id: big, text: { en: "Only for the 2 most important screens, and leave the rest as they are", ar: "للشاشتين الأهم فقط، وأترك الباقي كما هو" } }
+      - { id: one, text: { en: "Ask for one version per screen and use it", ar: "أطلب نسخة واحدة لكل شاشة وأستخدمها" } }
+      - { id: many, text: { en: "Ask for several versions for every screen, then pick the best ones", ar: "أطلب عدة نسخ لكل شاشة، ثم أختار أفضلها" } }
+    answer: [many]
+    misconceptions:
+      - id: MC-P13-002
+        when: [big]
+        feedback:
+          en: "AI ideas cost almost nothing. The 10 small screens can get ideas too."
+          ar: "أفكار الذكاء الاصطناعي لا تكلّف تقريبًا شيئًا. والشاشات العشر الصغيرة تستحق أفكارًا أيضًا."
+      - id: MC-P13-003
+        when: [one]
+        feedback:
+          en: "One version per screen leaves you nothing to choose from."
+          ar: "نسخة واحدة لكل شاشة لا تترك لك شيئًا لتختار منه."
+    correct:
+      en: "Right. AI gives every screen its own small brainstorm."
+      ar: "صحيح. الذكاء الاصطناعي يعطي كل شاشة عصفًا ذهنيًا صغيرًا خاصًا بها."
+    explain:
+      en: "Use AI ideas on small steps too, where a team meeting would cost too much."
+      ar: "استخدم أفكار الذكاء الاصطناعي في الخطوات الصغيرة أيضًا، حيث يكلّف اجتماع الفريق أكثر من اللازم."
+
+  - id: S04
+    type: choose
+    skill: SK-P13-U01-02
+    part: retest
+    speaker: rami
+    value:
+      en: "Re-test. AI for UX (NN/g): AI gives many ideas; humans need to narrow them down to the few worth exploring."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): الذكاء الاصطناعي يعطي أفكارًا كثيرة؛ والبشر يجب أن يختصروها إلى القليل الذي يستحق الاستكشاف."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "Humans need to winnow down the many of these to the few that bear further exploration and implementation." }
+    scenario:
+      en: "AI gave me 30 names for a new \"live bus location\" feature in our bus app. Next week we test names with riders."
+      ar: "أعطاني الذكاء الاصطناعي 30 اسمًا لميزة جديدة لـ«موقع الحافلة المباشر» في تطبيق الحافلات. والأسبوع القادم نختبر الأسماء مع الركّاب."
+    prompt:
+      en: "What should I take to the test?"
+      ar: "ماذا آخذ إلى الاختبار؟"
+    options:
+      - { id: aibest, text: { en: "The one name the AI says is best", ar: "الاسم الواحد الذي يقول الذكاء الاصطناعي إنه الأفضل" } }
+      - { id: few, text: { en: "3 or 4 names the team picks, based on what riders need", ar: "3 أو 4 أسماء يختارها الفريق، بناءً على ما يحتاجه الركّاب" } }
+      - { id: all30, text: { en: "All 30 names, and let riders choose", ar: "الأسماء الـ30 كلها، وأترك الركّاب يختارون" } }
+    answer: [few]
+    misconceptions:
+      - id: MC-P13-004
+        when: [aibest]
+        feedback:
+          en: "The AI doesn't know your riders. The team should choose."
+          ar: "الذكاء الاصطناعي لا يعرف ركّابك. والفريق هو من يجب أن يختار."
+      - id: MC-P13-003
+        when: [all30]
+        feedback:
+          en: "30 names would tire riders out. Picking a few is your job before the test."
+          ar: "30 اسمًا ستُتعب الركّاب. واختيار القليل منها مهمّتك قبل الاختبار."
+    correct:
+      en: "Right. AI makes the long list; you make the short list."
+      ar: "صحيح. الذكاء الاصطناعي يصنع القائمة الطويلة، وأنت تصنع القائمة القصيرة."
+    explain:
+      en: "More ideas mean more choosing. Use your judgment to keep only the strongest."
+      ar: "أفكار أكثر تعني اختيارًا أكثر. استخدم حكمك لتُبقي الأقوى فقط."
+
+  - id: S05
+    type: choose
+    skill: SK-P13-U01-03
+    part: retest
+    speaker: youssef
+    value:
+      en: "Re-test. AI for UX (NN/g): AI design critiques are dangerous because many of their points are wrong, even when they sound expert."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): نقد التصميم من الذكاء الاصطناعي خطير لأن كثيرًا من ملاحظاته خاطئة، حتى حين تبدو كلام خبير."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "AI-derived design critiques are dangerous because many of its insights are wrong" }
+    scenario:
+      en: "I gave AI screenshots of our shop's new checkout. It replied: \"This design follows usability rules and users will find it easy.\" My business partner says we can skip the user test."
+      ar: "أعطيت الذكاء الاصطناعي صورًا لصفحة الدفع (checkout) الجديدة في متجرنا. فردّ: «هذا التصميم يتّبع قواعد قابلية الاستخدام، وسيجده المستخدمون سهلًا.» وشريكي في المتجر يقول إننا نستطيع تخطّي اختبار المستخدمين."
+    prompt:
+      en: "What should I tell my partner?"
+      ar: "ماذا أقول لشريكي؟"
+    options:
+      - { id: test, text: { en: "Use the AI's notes as ideas, but still test with a few real shoppers", ar: "نستخدم ملاحظات الذكاء الاصطناعي كأفكار، لكن نختبر مع بعض المتسوّقين الحقيقيين" } }
+      - { id: skip, text: { en: "Agree. The AI checked it against usability rules", ar: "أوافق. فالذكاء الاصطناعي راجعه وفق قواعد قابلية الاستخدام" } }
+      - { id: aiusers, text: { en: "Skip the test, but ask AI users to try the checkout", ar: "نتخطّى الاختبار، لكن نطلب من مستخدمين اصطناعيين أن يجرّبوا صفحة الدفع" } }
+    answer: [test]
+    misconceptions:
+      - id: MC-P13-006
+        when: [skip]
+        feedback:
+          en: "AI reviews often sound expert and are still wrong. Only real shoppers show you where they get stuck."
+          ar: "مراجعات الذكاء الاصطناعي تبدو غالبًا كلام خبير وتكون خاطئة رغم ذلك. والمتسوّقون الحقيقيون فقط يُرونك أين يتعثّرون."
+      - id: MC-P13-010
+        when: [aiusers]
+        feedback:
+          en: "AI users tend to like what they see. They don't get stuck the way people do."
+          ar: "المستخدمون الاصطناعيون يميلون لأن يُعجبهم ما يرونه. ولا يتعثّرون كما يتعثّر الناس."
+    correct:
+      en: "Right. AI notes can guide the test, not replace it."
+      ar: "صحيح. ملاحظات الذكاء الاصطناعي توجّه الاختبار، ولا تحلّ محلّه."
+    explain:
+      en: "A confident AI review is not proof. Test with real people before you ship."
+      ar: "المراجعة الواثقة من الذكاء الاصطناعي ليست دليلًا. اختبر مع أناس حقيقيين قبل الإطلاق."
+
+  - id: S06
+    type: choose
+    skill: SK-P13-U01-03
+    part: retest
+    speaker: sara
+    value:
+      en: "Re-test. Synthetic Users vs. Human Respondents (NN/g): AI-made answers repeat the most common response and drop the less common ones real people give."
+      ar: "إعادة اختبار. المستخدمون الاصطناعيون مقابل المشاركين الحقيقيين (NN/g): إجابات الذكاء الاصطناعي تكرّر الرد الأكثر شيوعًا، وتُسقط الردود الأقل شيوعًا التي يعطيها الناس الحقيقيون."
+    ref: { url: "https://www.nngroup.com/articles/synthetic-users-vs-human-respondents/", quote: "In synthetic-users research, mode collapse refers to synthetic data that reproduces the most common data point but drops the long tail of less-common responses in the target human population." }
+    scenario:
+      en: "Our bank wants to know why older customers avoid the app. A teammate suggests asking 200 AI users instead of calling 8 real older customers."
+      ar: "يريد بنكنا أن يعرف لماذا يتجنّب العملاء الأكبر سنًا التطبيق. ويقترح زميل أن نسأل 200 مستخدم اصطناعي بدلًا من الاتصال بـ8 عملاء حقيقيين أكبر سنًا."
+    prompt:
+      en: "Why are the 8 real customers the better choice?"
+      ar: "لماذا الـ8 عملاء الحقيقيون هم الخيار الأفضل؟"
+    options:
+      - { id: same, text: { en: "They aren't. 200 AI answers cover more people", ar: "ليسوا كذلك. فـ200 إجابة اصطناعية تغطّي ناسًا أكثر" } }
+      - { id: cheap, text: { en: "Because calling people is cheaper than an AI tool", ar: "لأن الاتصال بالناس أرخص من أداة الذكاء الاصطناعي" } }
+      - { id: rare, text: { en: "Real people give the unusual reasons that AI answers tend to miss", ar: "الناس الحقيقيون يذكرون الأسباب غير المعتادة التي تُفوّتها إجابات الذكاء الاصطناعي غالبًا" } }
+    answer: [rare]
+    misconceptions:
+      - id: MC-P13-008
+        when: [same]
+        feedback:
+          en: "200 AI answers often say the same few things. The reasons you most need may be the less common ones."
+          ar: "الـ200 إجابة اصطناعية تقول غالبًا الأشياء القليلة نفسها. والأسباب التي تحتاجها أكثر قد تكون الأقل شيوعًا."
+      - id: MC-P13-006
+        when: [cheap]
+        feedback:
+          en: "Cost isn't the reason. AI answers simply can't stand in for what real people do."
+          ar: "التكلفة ليست السبب. فإجابات الذكاء الاصطناعي ببساطة لا تحلّ محلّ ما يفعله الناس الحقيقيون."
+    correct:
+      en: "Right. The rare answers are often the ones that matter."
+      ar: "صحيح. الإجابات النادرة هي غالبًا الأهم."
+    explain:
+      en: "AI answers cluster around the common view. Real people show you the full range."
+      ar: "إجابات الذكاء الاصطناعي تتجمّع حول الرأي الشائع. والناس الحقيقيون يُرونك التنوّع الكامل."
+
+  - id: S07
+    type: choose
+    skill: SK-P13-U01-04
+    part: retest
+    speaker: mona
+    value:
+      en: "Re-test. AI for UX (NN/g): AI reflects its training data, which came mostly from the internet, and much of it reflects Western countries."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): الذكاء الاصطناعي يعكس البيانات التي تدرّب عليها، وأغلبها من الإنترنت، وكثير منها يعكس الدول الغربية."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "Current AI also exhibits some bias because it reflects its training data, which came mostly from the internet." }
+    scenario:
+      en: "I asked AI to design a sign-up form for our app in Egypt. It made fields for \"First name\", \"Last name\", \"ZIP code\" and \"State\"."
+      ar: "طلبت من الذكاء الاصطناعي أن يصمّم نموذج تسجيل لتطبيقنا في مصر. فصنع حقولًا لـ«الاسم الأول»، و«اسم العائلة»، و«الرمز البريدي (ZIP code)»، و«الولاية»."
+    prompt:
+      en: "What's the most likely problem?"
+      ar: "ما المشكلة الأرجح؟"
+    options:
+      - { id: west, text: { en: "The form follows US habits, so some fields may not fit users in Egypt", ar: "النموذج يتّبع العادات الأمريكية، فقد لا تناسب بعض الحقول المستخدمين في مصر" } }
+      - { id: none, text: { en: "Nothing. Forms are the same everywhere", ar: "لا شيء. فالنماذج متشابهة في كل مكان" } }
+      - { id: short, text: { en: "The form is too short", ar: "النموذج قصير جدًا" } }
+    answer: [west]
+    misconceptions:
+      - id: MC-P13-005
+        when: [none, short]
+        feedback:
+          en: "\"State\" and \"ZIP code\" are US habits. Egypt has governorates, and many people don't know their postal code."
+          ar: "«الولاية» و«الرمز البريدي» عادات أمريكية. ومصر فيها محافظات، وكثير من الناس لا يعرفون رمزهم البريدي."
+    correct:
+      en: "Right. Check AI's defaults against how your users live."
+      ar: "صحيح. قارن افتراضات الذكاء الاصطناعي بطريقة حياة مستخدميك."
+    explain:
+      en: "AI often fills in Western defaults. Look for them and change them for your users."
+      ar: "الذكاء الاصطناعي يضع غالبًا افتراضات غربية. ابحث عنها وغيّرها لتناسب مستخدميك."
+
+  - id: S08
+    type: choose
+    skill: SK-P13-U01-04
+    part: retest
+    speaker: tarek
+    value:
+      en: "Re-test. AI for UX (NN/g): the internet that AI learned from has plenty of good information, but also inaccurate and false information."
+      ar: "إعادة اختبار. الذكاء الاصطناعي لتجربة المستخدم (NN/g): الإنترنت الذي تعلّم منه الذكاء الاصطناعي فيه معلومات جيدة كثيرة، لكن فيه أيضًا معلومات غير دقيقة وخاطئة."
+    ref: { url: "https://www.nngroup.com/articles/ai-ux-getting-started/", quote: "While the internet contains plenty of good information, it also has unpleasant, inaccurate, and downright false information." }
+    scenario:
+      en: "I asked AI how to lay out our food app's menu page. It said: \"Users never scroll, so put everything above the fold.\""
+      ar: "سألت الذكاء الاصطناعي كيف أرتّب صفحة القائمة في تطبيق الطعام. فقال: «المستخدمون لا يمرّرون الشاشة أبدًا (scroll)، فضع كل شيء في الجزء الظاهر أولًا.»"
+    prompt:
+      en: "What should I do with this advice?"
+      ar: "ماذا أفعل بهذه النصيحة؟"
+    options:
+      - { id: follow, text: { en: "Follow it. AI learned from millions of pages", ar: "أتّبعها. فالذكاء الاصطناعي تعلّم من ملايين الصفحات" } }
+      - { id: verify, text: { en: "Check it against trusted UX research before I use it", ar: "أتحقّق منها في أبحاث موثوقة لتجربة المستخدم قبل أن أستخدمها" } }
+      - { id: ask, text: { en: "Ask the AI \"Are you sure?\" and follow its second answer", ar: "أسأل الذكاء الاصطناعي «هل أنت متأكد؟» وأتّبع إجابته الثانية" } }
+    answer: [verify]
+    misconceptions:
+      - id: MC-P13-007
+        when: [follow, ask]
+        feedback:
+          en: "AI also learned from wrong pages. It can repeat a popular myth in a confident voice."
+          ar: "الذكاء الاصطناعي تعلّم أيضًا من صفحات خاطئة. وقد يكرّر خرافة منتشرة بصوت واثق."
+    correct:
+      en: "Right. Popular online advice isn't always true."
+      ar: "صحيح. النصيحة المنتشرة على الإنترنت ليست صحيحة دائمًا."
+    explain:
+      en: "AI learned from good and bad pages alike. Check its advice against trusted sources."
+      ar: "تعلّم الذكاء الاصطناعي من صفحات جيدة وسيئة معًا. تحقّق من نصيحته في مصادر موثوقة."

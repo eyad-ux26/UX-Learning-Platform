@@ -2,8 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import yaml from "js-yaml";
+import { fileURLToPath } from "node:url";
 
-export const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../..");
+export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const PATHS_DIR = path.join(ROOT, "content/paths");
 
 const readYaml = (file) => yaml.load(fs.readFileSync(file, "utf8"));
@@ -29,7 +30,7 @@ export function loadContent() {
     p.units = [];
     for (const uName of fs.readdirSync(pDir).sort()) {
       const uDir = path.join(pDir, uName);
-      if (!fs.statSync(uDir).isDirectory()) continue;
+      if (!/^U\d{2}$/.test(uName) || !fs.statSync(uDir).isDirectory()) continue; // e.g. captions/ is not a unit
       const u = readYaml(path.join(uDir, "unit.yaml"));
       u._file = path.relative(ROOT, path.join(uDir, "unit.yaml"));
       const files = fs.readdirSync(uDir).filter((f) => f.endsWith(".yaml") && f !== "unit.yaml").sort();

@@ -1,0 +1,295 @@
+id: P15-U05-B01
+mode: bank
+title:
+  en: "Re-tests: empty screens and alerts"
+  ar: "إعادة اختبار: الشاشات الفارغة والتنبيهات"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Designing Empty States in Complex Applications: 3 Guidelines (NN/g)", ar: "تصميم الحالات الفارغة في التطبيقات المعقّدة: 3 إرشادات (NN/g)" }
+    url: "https://www.nngroup.com/articles/empty-state-interface-design/"
+  - title: { en: "5 Mistakes in Designing Mobile Push Notifications (NN/g)", ar: "5 أخطاء في تصميم إشعارات الهاتف (NN/g)" }
+    url: "https://www.nngroup.com/articles/push-notification/"
+steps:
+  - id: S01
+    type: choose
+    skill: SK-P15-U05-01
+    part: retest
+    speaker: karim
+    value:
+      en: "Re-test. Empty States (NN/g): in-context learning cues shown when the user starts a task help people learn the system in real time."
+      ar: "إعادة اختبار. الحالات الفارغة (NN/g): الإرشادات التي تظهر في سياق المهمة حين يبدؤها المستخدم تساعده على تعلّم النظام في اللحظة نفسها."
+    ref: { url: "https://www.nngroup.com/articles/empty-state-interface-design/", quote: "In-context learning cues displayed when the user has started a task help users understand how to use an application or system in real time" }
+    scenario:
+      en: "In our photo app, people can save unfinished photo books as drafts. New users open \"Drafts\" and see \"No data\"."
+      ar: "في تطبيق الصور، يستطيع الناس حفظ ألبومات الصور غير المكتملة كمسوّدات. والمستخدمون الجدد يفتحون «المسوّدات» فيرون «لا توجد بيانات»."
+    prompt:
+      en: "Which text should replace \"No data\"?"
+      ar: "أي نص يجب أن يحلّ محلّ «لا توجد بيانات»؟"
+    options:
+      - { id: empty, text: { en: "\"Drafts: empty\"", ar: "«المسوّدات: فارغة»" } }
+      - { id: cue, text: { en: "\"Photo books you start but don't finish are saved here automatically.\"", ar: "«ألبومات الصور التي تبدؤها ولا تُكملها تُحفظ هنا تلقائيًا.»" } }
+      - { id: oops, text: { en: "\"Oops, nothing here! 🤷\"", ar: "«أوبس، لا شيء هنا! 🤷»" } }
+    answer: [cue]
+    misconceptions:
+      - id: MC-P15-030
+        when: [empty, oops]
+        feedback:
+          en: "People already see it's empty. They need to know what drafts are and how they get here."
+          ar: "الناس يرون أنها فارغة أصلًا. وهم يحتاجون أن يعرفوا ما المسوّدات وكيف تصل إلى هنا."
+    correct:
+      en: "Right. It explains how the screen fills up."
+      ar: "صحيح. يشرح كيف تمتلئ الشاشة."
+    explain:
+      en: "Tell people how content gets into the empty area. Then they know it's working."
+      ar: "أخبر الناس كيف يصل المحتوى إلى المساحة الفارغة. فيعرفون أنها تعمل."
+
+  - id: S02
+    type: choose
+    skill: SK-P15-U05-01
+    part: retest
+    speaker: nour
+    value:
+      en: "Re-test. Empty States (NN/g): use progress indicators while a process runs, and show a brief \"no content\" message only after it has completed."
+      ar: "إعادة اختبار. الحالات الفارغة (NN/g): استخدم مؤشّرات التقدّم أثناء العملية، واعرض رسالة «لا يوجد محتوى» القصيرة فقط بعد اكتمالها."
+    ref: { url: "https://www.nngroup.com/articles/empty-state-interface-design/", quote: "If there is no relevant data to display after a process has completed, use the empty space to provide a system-status message in the empty space that briefly states that no content is available." }
+    scenario:
+      en: "Lab results take up to 10 seconds to load in our clinic app. Meanwhile, the screen says \"No results found\". Some patients think their tests were lost."
+      ar: "تستغرق نتائج التحاليل حتى 10 ثوانٍ لتُحمَّل في تطبيق العيادة. وفي هذه الأثناء، تقول الشاشة «لم يتم العثور على نتائج». فيظن بعض المرضى أن تحاليلهم ضاعت."
+    prompt:
+      en: "What should the screen say while results load?"
+      ar: "ماذا يجب أن تقول الشاشة أثناء تحميل النتائج؟"
+    options:
+      - { id: loading, text: { en: "\"Getting your results…\" with a progress bar", ar: "«جارٍ جلب نتائجك…» مع شريط تقدّم" } }
+      - { id: none, text: { en: "Keep \"No results found\" and add \"Please wait\"", ar: "أُبقي «لم يتم العثور على نتائج» وأضيف «يرجى الانتظار»" } }
+      - { id: blank, text: { en: "Nothing until they load", ar: "لا شيء حتى تُحمَّل" } }
+    answer: [loading]
+    misconceptions:
+      - id: MC-P15-031
+        when: [none]
+        feedback:
+          en: "\"No results found\" is still false. \"Please wait\" doesn't undo the scare."
+          ar: "«لم يتم العثور على نتائج» ما زالت غير صحيحة. و«يرجى الانتظار» لا تُزيل الخوف."
+      - id: MC-P15-030
+        when: [blank]
+        feedback:
+          en: "Ten silent seconds look like a broken screen."
+          ar: "عشر ثوانٍ صامتة تبدو كشاشة معطّلة."
+    correct:
+      en: "Right. Say what's happening while it happens."
+      ar: "صحيح. قل ما يحدث أثناء حدوثه."
+    explain:
+      en: "Show progress while loading. Say \"no results\" only when you're sure."
+      ar: "أظهِر التقدّم أثناء التحميل. وقل «لا توجد نتائج» فقط حين تكون متأكدًا."
+
+  - id: S03
+    type: choose
+    skill: SK-P15-U05-02
+    part: retest
+    speaker: sara
+    value:
+      en: "Re-test. Empty States (NN/g): do not default to totally empty states; give help cues and a direct pathway into the key task."
+      ar: "إعادة اختبار. الحالات الفارغة (NN/g): لا تترك الشاشات فارغة تمامًا؛ بل أعطِ إرشادات وطريقًا مباشرًا إلى المهمة الأساسية."
+    ref: { url: "https://www.nngroup.com/articles/empty-state-interface-design/", quote: "Do not default to totally empty states." }
+    scenario:
+      en: "Our banking app has a new \"Savings goals\" screen. For everyone, it starts empty."
+      ar: "في تطبيقنا البنكي شاشة جديدة اسمها «أهداف الادخار». وهي تبدأ فارغة للجميع."
+    prompt:
+      en: "Which empty screen helps people create their first goal?"
+      ar: "أي شاشة فارغة تساعد الناس على إنشاء أول هدف؟"
+    options:
+      - { id: faq, text: { en: "\"No goals yet. See our FAQ to learn about goals.\"", ar: "«لا توجد أهداف بعد. راجع الأسئلة الشائعة لتعرف عن الأهداف.»" } }
+      - { id: quote, text: { en: "\"A penny saved is a penny earned 💰\"", ar: "«القرش الأبيض ينفع في اليوم الأسود 💰»" } }
+      - { id: create, text: { en: "\"Save for something big, like a trip or a car, a little each month.\" with a \"Create a goal\" button", ar: "«ادّخر لشيء كبير، مثل رحلة أو سيارة، قليلًا كل شهر.» مع زر «أنشئ هدفًا»" } }
+    answer: [create]
+    misconceptions:
+      - id: MC-P15-032
+        when: [faq]
+        feedback:
+          en: "It sends people away to read, instead of letting them start here."
+          ar: "ترسل الناس بعيدًا ليقرؤوا، بدل أن تتيح لهم البدء هنا."
+      - id: MC-P15-030
+        when: [quote]
+        feedback:
+          en: "A nice saying, but it doesn't explain goals or how to make one."
+          ar: "مقولة لطيفة، لكنها لا تشرح الأهداف ولا كيف تُنشئ واحدًا."
+    correct:
+      en: "Right. What it's for, and a button to start."
+      ar: "صحيح. ما الغرض منها، وزر للبدء."
+    explain:
+      en: "A first-time empty screen should explain the feature and start it in one tap."
+      ar: "الشاشة الفارغة للمرة الأولى يجب أن تشرح الميزة وتبدأها بضغطة واحدة."
+
+  - id: S04
+    type: choose
+    skill: SK-P15-U05-02
+    part: retest
+    speaker: tarek
+    value:
+      en: "Re-test. Empty States (NN/g): a log tool's empty screen offers 2 direct pathways: add real data, or explore with demo data."
+      ar: "إعادة اختبار. الحالات الفارغة (NN/g): الشاشة الفارغة في إحدى أدوات السجلات تقدّم طريقين مباشرين: إضافة بيانات حقيقية، أو الاستكشاف ببيانات تجريبية."
+    ref: { url: "https://www.nngroup.com/articles/empty-state-interface-design/", quote: "the empty state contains 2 direct pathways into the workflow" }
+    scenario:
+      en: "New restaurants join our food app. Their \"Menu\" screen is empty. Some type dishes one by one; others already have their menu in a spreadsheet."
+      ar: "تنضمّ مطاعم جديدة إلى تطبيق الطعام. وشاشة «القائمة» لديها فارغة. بعضها يكتب الأطباق واحدًا واحدًا، وبعضها لديه القائمة في جدول بيانات."
+    prompt:
+      en: "Which empty screen helps both kinds of restaurants start?"
+      ar: "أي شاشة فارغة تساعد النوعين من المطاعم على البدء؟"
+    options:
+      - { id: one, text: { en: "\"Your menu is empty.\" with an \"Add dish\" button", ar: "«قائمتك فارغة.» مع زر «أضف طبقًا»" } }
+      - { id: two, text: { en: "\"Add your dishes so customers can order.\" with \"Add a dish\" and \"Upload menu file\" buttons", ar: "«أضف أطباقك حتى يطلب العملاء.» مع زرَّي «أضف طبقًا» و«ارفع ملف القائمة»" } }
+      - { id: email, text: { en: "\"Email your menu to our team and we'll add it within a week.\"", ar: "«أرسل قائمتك إلى فريقنا بالبريد وسنضيفها خلال أسبوع.»" } }
+    answer: [two]
+    misconceptions:
+      - id: MC-P15-032
+        when: [one, email]
+        feedback:
+          en: "This works for only one kind of restaurant, or makes everyone wait. Give each a direct way in."
+          ar: "هذا ينجح مع نوع واحد من المطاعم فقط، أو يجعل الجميع ينتظرون. فأعطِ كلًّا منهم طريقًا مباشرًا."
+    correct:
+      en: "Right. Two direct paths, one for each way of working."
+      ar: "صحيح. طريقان مباشران، واحد لكل طريقة عمل."
+    explain:
+      en: "When people start in different ways, offer a direct path for each."
+      ar: "حين يبدأ الناس بطرق مختلفة، قدّم طريقًا مباشرًا لكل طريقة."
+
+  - id: S05
+    type: choose
+    skill: SK-P15-U05-03
+    part: retest
+    speaker: hana
+    value:
+      en: "Re-test. Push Notifications (NN/g): users who just downloaded an app don't yet understand its value; in many studies the immediate response to an early ask is Don't Allow."
+      ar: "إعادة اختبار. الإشعارات (NN/g): من حمّل التطبيق للتو لا يفهم فائدته بعد؛ وفي دراسات كثيرة كان الرد الفوري على الطلب المبكر هو «لا تسمح»."
+    ref: { url: "https://www.nngroup.com/articles/push-notification/", quote: "In many of our studies, the immediate response is to click Don't Allow." }
+    scenario:
+      en: "My gym app asks for notifications before new members even see the class schedule. I want them to get reminders before class."
+      ar: "تطبيق ناديّ يطلب الإشعارات قبل أن يرى الأعضاء الجدد جدول الحصص أصلًا. وأريد أن تصلهم تذكيرات قبل الحصص."
+    prompt:
+      en: "What's the best change?"
+      ar: "ما أفضل تغيير؟"
+    options:
+      - { id: booked, text: { en: "Ask after they book their first class: \"Remind me 1 hour before class\"", ar: "أطلب بعد أن يحجزوا أول حصة: «ذكّرني قبل الحصة بساعة»" } }
+      - { id: reward, text: { en: "Keep asking first, and offer a free smoothie if they allow", ar: "أُبقي الطلب أولًا، وأعرض عصيرًا مجانيًا إن وافقوا" } }
+      - { id: again, text: { en: "Ask first, then ask again the next day if they say no", ar: "أطلب أولًا، ثم أطلب مرة أخرى في اليوم التالي إن رفضوا" } }
+    answer: [booked]
+    misconceptions:
+      - id: MC-P15-033
+        when: [reward, again]
+        feedback:
+          en: "The timing is still wrong. New members don't yet know what the reminders would do for them."
+          ar: "التوقيت ما زال خطأ. فالأعضاء الجدد لا يعرفون بعد ما الذي ستقدّمه لهم التذكيرات."
+    correct:
+      en: "Right. Ask when the reminder is clearly useful."
+      ar: "صحيح. اطلب حين يكون التذكير مفيدًا بوضوح."
+    explain:
+      en: "Tie the ask to a moment of value, like a booked class."
+      ar: "اربط الطلب بلحظة فائدة، مثل حصة محجوزة."
+
+  - id: S06
+    type: words
+    skill: SK-P15-U05-03
+    part: retest
+    speaker: youssef
+    value:
+      en: "Re-test. Push Notifications (NN/g): for a retail app it's hard to guess what notifications will contain, so say what they'll be about."
+      ar: "إعادة اختبار. الإشعارات (NN/g): في تطبيقات البيع يصعب تخمين محتوى الإشعارات، فقل عمّا ستكون."
+    ref: { url: "https://www.nngroup.com/articles/push-notification/", quote: "Tell people what notifications will be about to increase the chance that they will accept your request." }
+    scenario:
+      en: "After a customer saves a product, my shop's app asks: \"Allow notifications?\""
+      ar: "بعد أن يحفظ العميل منتجًا، يسأل تطبيق متجري: «هل تسمح بالإشعارات؟»"
+    prompt:
+      en: "Which question will more customers say yes to?"
+      ar: "أي سؤال سيوافق عليه عملاء أكثر؟"
+    options:
+      - { id: generic, text: { en: "\"Stay updated with notifications!\"", ar: "«ابقَ على اطّلاع بالإشعارات!»" } }
+      - { id: deals, text: { en: "\"Allow notifications for deals, news and more?\"", ar: "«هل تسمح بالإشعارات للعروض والأخبار والمزيد؟»" } }
+      - { id: price, text: { en: "\"Tell me when this blender's price drops\"", ar: "«أخبرني حين ينخفض سعر هذا الخلّاط»" } }
+    answer: [price]
+    misconceptions:
+      - id: MC-P15-034
+        when: [generic]
+        feedback:
+          en: "Updated about what? Customers can't tell what they're agreeing to."
+          ar: "على اطّلاع بماذا؟ لا يعرف العملاء على ماذا يوافقون."
+      - id: MC-P15-036
+        when: [deals]
+        feedback:
+          en: "\"Deals, news and more\" sounds like a flood of ads."
+          ar: "«العروض والأخبار والمزيد» تبدو كسيل من الإعلانات."
+    correct:
+      en: "Right. Specific, and about what they just saved."
+      ar: "صحيح. محدد، ويخصّ ما حفظوه للتو."
+    explain:
+      en: "Name the exact alert, linked to what the person is doing now."
+      ar: "سمِّ التنبيه بالضبط، مرتبطًا بما يفعله الشخص الآن."
+
+  - id: S07
+    type: choose
+    skill: SK-P15-U05-04
+    part: retest
+    speaker: mona
+    value:
+      en: "Re-test. Push Notifications (NN/g): sending notifications for every little thing is a big mistake; one payment app notified users of friends' transactions that didn't involve them."
+      ar: "إعادة اختبار. الإشعارات (NN/g): إرسال إشعار لكل شيء صغير خطأ كبير؛ فأحد تطبيقات الدفع أرسل إشعارات عن معاملات الأصدقاء التي لا تخصّ المستخدم."
+    ref: { url: "https://www.nngroup.com/articles/push-notification/", quote: "Sending users notifications for every little thing that happens in your app is a big mistake." }
+    scenario:
+      en: "Families can share one account in our bill app. Right now, everyone gets a notification each time any family member opens a bill."
+      ar: "تستطيع الأسر مشاركة حساب واحد في تطبيق الفواتير. والآن يصل الجميع إشعار في كل مرة يفتح فيها أي فرد من الأسرة فاتورة."
+    prompt:
+      en: "Which notifications should family members get?"
+      ar: "أي إشعارات يجب أن تصل أفراد الأسرة؟"
+    options:
+      - { id: all, text: { en: "Keep them all, so families stay informed", ar: "أُبقيها كلها، حتى تبقى الأسرة على اطّلاع" } }
+      - { id: matter, text: { en: "Only things that need them: a bill they're in charge of is due, or a payment failed", ar: "فقط ما يحتاجونه: فاتورة مسؤولون عنها حان موعدها، أو دفعة فشلت" } }
+      - { id: daily, text: { en: "A daily summary of everything every family member did", ar: "ملخص يومي لكل ما فعله كل فرد في الأسرة" } }
+    answer: [matter]
+    misconceptions:
+      - id: MC-P15-036
+        when: [all, daily]
+        feedback:
+          en: "Someone opening a bill doesn't need anyone else to act. These alerts teach people to ignore the app."
+          ar: "فتح أحدهم لفاتورة لا يتطلّب أن يتصرّف أي شخص آخر. وهذه التنبيهات تعلّم الناس تجاهل التطبيق."
+    correct:
+      en: "Right. Only what this person needs to know or do."
+      ar: "صحيح. فقط ما يحتاج هذا الشخص أن يعرفه أو يفعله."
+    explain:
+      en: "Before sending, ask: does this person need to know this now?"
+      ar: "قبل الإرسال، اسأل: هل يحتاج هذا الشخص أن يعرف هذا الآن؟"
+
+  - id: S08
+    type: choose
+    skill: SK-P15-U05-04
+    part: retest
+    speaker: karim
+    value:
+      en: "Re-test. Push Notifications (NN/g): one app bundles likes into a single notification with two names and a count of the others, instead of sending 11."
+      ar: "إعادة اختبار. الإشعارات (NN/g): أحد التطبيقات يجمع الإعجابات في إشعار واحد فيه اسمان وعدد الباقين، بدل إرسال 11 إشعارًا."
+    ref: { url: "https://www.nngroup.com/articles/push-notification/", quote: "Shift the focus to quality over quantity" }
+    scenario:
+      en: "In our photo app, friends can comment on a shared album. One album got 12 comments in 10 minutes, and the owner got 12 notifications."
+      ar: "في تطبيق الصور، يستطيع الأصدقاء التعليق على ألبوم مشترك. وحصل أحد الألبومات على 12 تعليقًا في 10 دقائق، فوصل صاحبه 12 إشعارًا."
+    prompt:
+      en: "What should the owner get instead?"
+      ar: "ماذا يجب أن يصل صاحب الألبوم بدلًا من ذلك؟"
+    options:
+      - { id: none, text: { en: "No notifications for comments at all", ar: "لا إشعارات للتعليقات على الإطلاق" } }
+      - { id: sound, text: { en: "The same 12, but without sound", ar: "نفس الإشعارات الـ 12، لكن دون صوت" } }
+      - { id: bundle, text: { en: "One: \"Laila, Omar and 10 others commented on Summer in Dahab.\"", ar: "إشعارًا واحدًا: «ليلى وعمر و10 آخرون علّقوا على صيف في دهب.»" } }
+    answer: [bundle]
+    misconceptions:
+      - id: MC-P15-035
+        when: [sound]
+        feedback:
+          en: "Still 12 notifications filling the screen. Quieter, but just as cluttered."
+          ar: "ما زالت 12 إشعارًا تملأ الشاشة. أهدأ، لكنها بنفس الفوضى."
+      - id: MC-P15-036
+        when: [none]
+        feedback:
+          en: "Comments on their own album matter to the owner. Combine them; don't drop them."
+          ar: "التعليقات على ألبومه تهمّ صاحبه. فاجمعها، ولا تحذفها."
+    correct:
+      en: "Right. One message, the key names, and a count."
+      ar: "صحيح. رسالة واحدة، والأسماء المهمّة، والعدد."
+    explain:
+      en: "When updates pile up, send one summary that names what matters most."
+      ar: "حين تتراكم التحديثات، أرسل ملخصًا واحدًا يذكر الأهم."

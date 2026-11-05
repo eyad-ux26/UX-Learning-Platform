@@ -1,0 +1,312 @@
+id: P02-U03-B01
+mode: bank
+title:
+  en: "Re-tests: stop errors early, and don't make people remember"
+  ar: "إعادة اختبار: امنع الأخطاء مبكرًا، ولا تُجبر الناس على التذكّر"
+# Held back for the mastery round: each step is a new case for one skill, never shown in a lesson.
+sources:
+  - title: { en: "Preventing User Errors: Avoiding Unconscious Slips (NN/g)", ar: "منع أخطاء المستخدمين: تجنّب الزلّات غير الواعية (NN/g)" }
+    url: "https://www.nngroup.com/articles/slips/"
+  - title: { en: "What the Erroneous Hawaiian Missile Alert Can Teach Us About Error Prevention (NN/g)", ar: "ما يعلّمنا إنذار الصواريخ الخاطئ في هاواي عن منع الأخطاء (NN/g)" }
+    url: "https://www.nngroup.com/articles/error-prevention/"
+  - title: { en: "Confirmation Dialogs Can Prevent User Errors — If Not Overused (NN/g)", ar: "نوافذ التأكيد تمنع أخطاء المستخدمين، إن لم يُبالَغ فيها (NN/g)" }
+    url: "https://www.nngroup.com/articles/confirmation-dialog/"
+  - title: { en: "Preventing User Errors: Avoiding Conscious Mistakes (NN/g)", ar: "منع أخطاء المستخدمين: تجنّب الأخطاء الواعية (NN/g)" }
+    url: "https://www.nngroup.com/articles/user-mistakes/"
+  - title: { en: "Memory Recognition and Recall in User Interfaces (NN/g)", ar: "التعرّف والتذكّر في الواجهات (NN/g)" }
+    url: "https://www.nngroup.com/articles/recognition-and-recall/"
+  - title: { en: "10 Usability Heuristics for User Interface Design (NN/g)", ar: "مبادئ الاستخدام العشرة لتصميم الواجهات (NN/g)" }
+    url: "https://www.nngroup.com/articles/ten-usability-heuristics/"
+steps:
+  # SK-P02-U03-01: design out easy slips
+  - id: S01
+    type: choose
+    speaker: hana
+    part: retest
+    skill: SK-P02-U03-01
+    value:
+      en: "Re-test, preventing slips (NN/g): where clear rules define what's acceptable, constrain the input. If members may bring at most two guests, the control shouldn't allow more."
+      ar: "إعادة اختبار، منع الزلّات (NN/g): حين تحدّد قواعد واضحة ما هو مقبول، ضع حدودًا للإدخال. فإن كان للعضو أن يُحضر ضيفين على الأكثر، فلا يجب أن يسمح العنصر بأكثر."
+    ref: { url: "https://www.nngroup.com/articles/slips/", quote: "in cases where there are clear rules that define acceptable options, it can be a good strategy to constrain the types of input users can make." }
+    scenario:
+      en: "Members of my gym can bring up to two guests a month. The booking form has a text box for the number of guests. Some type 3 or 20, and only learn at the door that it's not allowed."
+      ar: "يستطيع أعضاء ناديّ إحضار ضيفين على الأكثر كل شهر. وفي نموذج الحجز مربع نص لعدد الضيوف. يكتب بعضهم 3 أو 20، ولا يعرفون أن هذا غير مسموح إلا عند الباب."
+    prompt:
+      en: "What should the form use?"
+      ar: "ماذا يجب أن يستخدم النموذج؟"
+    options:
+      - { id: stepper, text: { en: "A − / + control from 0 to 2, showing \"2 guests left this month\"", ar: "عنصر − / + من 0 إلى 2، مع «بقي لك ضيفان هذا الشهر»" } }
+      - { id: rule, text: { en: "Keep the text box, and print the rule under it", ar: "يبقى مربع النص، مع كتابة القاعدة تحته" } }
+      - { id: door, text: { en: "Keep it; staff will explain at the door", ar: "يبقى كما هو؛ وسيشرح الموظفون عند الباب" } }
+    answer: [stepper]
+    misconceptions:
+      - id: MC-P02-020
+        when: [rule, door]
+        feedback:
+          en: "The box still accepts numbers that can't work. Members who skip the rule only find out when they're turned away."
+          ar: "ما زال المربع يقبل أرقامًا لا يمكن أن تنجح. ومن يتجاوز القاعدة من الأعضاء لا يعرف إلا حين يُمنع ضيفه."
+    correct:
+      en: "Allow only valid choices."
+      ar: "اسمح بالاختيارات الصحيحة فقط."
+    explain:
+      en: "The control can't go above 2, so the slip can't happen, and \"2 guests left\" explains the limit without a rule to read."
+      ar: "العنصر لا يتجاوز 2، فلا يمكن أن تقع الزلّة، و«بقي لك ضيفان» تشرح الحد دون قاعدة تُقرأ."
+
+  - id: S02
+    type: compare
+    speaker: karim
+    part: retest
+    skill: SK-P02-U03-01
+    value:
+      en: "Re-test, error prevention (NN/g): poorly differentiated options, with similar names or similar styling, cause slips. A test send and a send to everyone shouldn't look alike side by side."
+      ar: "إعادة اختبار، منع الأخطاء (NN/g): الخيارات غير المتمايزة، بأسماء متشابهة أو شكل متشابه، تسبّب الزلّات. فإرسال التجربة والإرسال للجميع لا يجب أن يتشابها متجاورين."
+    ref: { url: "https://www.nngroup.com/articles/error-prevention/", quote: "Poorly differentiated options: When an interface provides multiple choices, but it uses similar names or similar visual styling for them" }
+    scenario:
+      en: "I'm building an email newsletter tool. Last week a customer sent a half-finished draft to 40,000 people. They meant to send a test to themselves."
+      ar: "أبني أداة لإرسال النشرات البريدية. في الأسبوع الماضي أرسل أحد العملاء مسودّة غير مكتملة إلى 40 ألف شخص. وكان يقصد أن يرسل تجربة إلى نفسه."
+    prompt:
+      en: "Which version makes that slip less likely?"
+      ar: "أيّ نسخة تجعل هذه الزلّة أقل احتمالًا؟"
+    a:
+      label: { en: "Version A: two matching buttons", ar: "النسخة A: زرّان متطابقان" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: title, text: { en: "November news", ar: "أخبار نوفمبر" } }
+          - kind: row
+            gap: l
+            blocks:
+              - { kind: button, text: { en: "Send test", ar: "إرسال تجربة" } }
+              - { kind: button, text: { en: "Send all", ar: "إرسال للكل" } }
+    b:
+      label: { en: "Version B: different and apart", ar: "النسخة B: مختلفان ومتباعدان" }
+      mock:
+        width: 260
+        blocks:
+          - { kind: title, text: { en: "November news", ar: "أخبار نوفمبر" } }
+          - { kind: link, text: { en: "Send a test to me (me@mynews.com)", ar: "أرسل تجربة إليّ (me@mynews.com)" }, gap: m }
+          - { kind: button, text: { en: "Send to 40,000 subscribers…", ar: "أرسل إلى 40 ألف مشترك…" }, gap: xl }
+    answer: b
+    misconceptions:
+      - id: MC-P02-020
+        when: [a]
+        feedback:
+          en: "Two same-looking buttons side by side, with similar words, are exactly where a hurried tap lands on the wrong one."
+          ar: "زرّان متشابهان متجاوران، بكلمات متقاربة، هما بالضبط المكان الذي تقع فيه الضغطة المستعجلة على الزر الخطأ."
+    correct:
+      en: "B: different looks, clear words, some distance."
+      ar: "B: شكلان مختلفان، وكلمات واضحة، ومسافة بينهما."
+    explain:
+      en: "The test is a quiet link that names who gets it; the big send names the 40,000 people and sits apart. The two can't be mistaken for each other at a glance."
+      ar: "التجربة رابط هادئ يذكر من سيستلمها؛ والإرسال الكبير يذكر الأربعين ألفًا ويقع بعيدًا. فلا يمكن الخلط بينهما من نظرة."
+
+  # SK-P02-U03-02: confirm only what's serious, and say exactly what will happen
+  - id: S03
+    type: choose
+    speaker: youssef
+    part: retest
+    skill: SK-P02-U03-02
+    value:
+      en: "Re-test, confirmation dialogs (NN/g): many confirmations fail through lack of specificity. \"Delete 2 items?\" doesn't say which items, so people can't catch a mistake."
+      ar: "إعادة اختبار، نوافذ التأكيد (NN/g): كثير من نوافذ التأكيد تفشل لأنها غير محددة. و«حذف عنصرين؟» لا تقول أيّ عنصرين، فلا يستطيع الناس اكتشاف الخطأ."
+    ref: { url: "https://www.nngroup.com/articles/confirmation-dialog/", quote: "The problem with the multiple-file confirmation plagues many confirmation dialogs: lack of specificity." }
+    scenario:
+      en: "In my shop's dashboard, I select products and tap **Delete**. The dialog says \"Delete 2 items? OK / Cancel\". Last week I deleted my best-selling drill by mistake."
+      ar: "في لوحة التحكم بمتجري، أختار منتجات وأضغط **احذف**. فتقول النافذة «حذف عنصرين؟ موافق / إلغاء». وفي الأسبوع الماضي حذفت أكثر مثقاب مبيعًا بالخطأ."
+    prompt:
+      en: "What should the dialog show?"
+      ar: "ماذا يجب أن تعرض النافذة؟"
+    options:
+      - { id: names, text: { en: "The product names and photos, and buttons \"Delete 2 products\" / \"Keep them\"", ar: "أسماء المنتجات وصورها، وأزرار «احذف المنتجين» / «أبقِهما»" } }
+      - { id: red, text: { en: "The same text in red", ar: "النص نفسه باللون الأحمر" } }
+      - { id: type, text: { en: "Ask me to type DELETE to confirm", ar: "أن تطلب مني كتابة «احذف» للتأكيد" } }
+    answer: [names]
+    misconceptions:
+      - id: MC-P02-022
+        when: [red, type]
+        feedback:
+          en: "Red text or typing a word makes me slow down, but I still can't see which products I'm deleting, so I can't spot the wrong one."
+          ar: "النص الأحمر أو كتابة كلمة يجعلانني أبطئ، لكنني ما زلت لا أرى المنتجات التي أحذفها، فلا أستطيع ملاحظة الخطأ."
+    correct:
+      en: "Show exactly what will be deleted."
+      ar: "اعرض بالضبط ما سيُحذف."
+    explain:
+      en: "Seeing the drill's name and photo is what lets me notice it's in the wrong pile. Buttons that repeat the action make the choice clear."
+      ar: "رؤية اسم المثقاب وصورته هي ما يجعلني ألاحظ أنه في المكان الخطأ. والأزرار التي تكرّر الإجراء تجعل الاختيار واضحًا."
+
+  - id: S04
+    type: choose
+    speaker: tarek
+    part: retest
+    skill: SK-P02-U03-02
+    value:
+      en: "Re-test, error prevention (NN/g): remove error-prone conditions, or check for them and offer a confirmation before people commit. Closing an account is serious and final; renaming it isn't."
+      ar: "إعادة اختبار، منع الأخطاء (NN/g): أزِل الظروف التي تسبّب الأخطاء، أو تحقّق منها واعرض تأكيدًا قبل أن يلتزم الناس. وإغلاق الحساب خطير ونهائي؛ أما تغيير اسمه فلا."
+    ref: { url: "https://www.nngroup.com/articles/ten-usability-heuristics/", quote: "Either eliminate error-prone conditions, or check for them and present users with a confirmation option before they commit to the action." }
+    scenario:
+      en: "In our banking app, two actions sit in the same menu: **Rename account** and **Close account**. Today, both happen in one tap. A closed account can't be reopened."
+      ar: "في تطبيق البنك عندنا، إجراءان في القائمة نفسها: **غيّر اسم الحساب** و**أغلق الحساب**. واليوم يتمّ كلاهما بضغطة واحدة. والحساب المغلق لا يمكن إعادة فتحه."
+    prompt:
+      en: "Which one should ask for confirmation?"
+      ar: "أيّهما يجب أن يطلب تأكيدًا؟"
+    options:
+      - { id: both, text: { en: "Both, to be safe", ar: "كلاهما، للاحتياط" } }
+      - { id: close, text: { en: "Only Close account, with a dialog that names the account and what happens to its balance", ar: "«أغلق الحساب» فقط، بنافذة تذكر الحساب وما سيحدث لرصيده" } }
+      - { id: none, text: { en: "Neither; customers can call the bank if they make a mistake", ar: "لا أحد منهما؛ ويستطيع العملاء الاتصال بالبنك إن أخطؤوا" } }
+    answer: [close]
+    misconceptions:
+      - id: MC-P02-023
+        when: [both]
+        feedback:
+          en: "Renaming is easy to change back. Confirming it teaches people to tap through dialogs, including the one that matters."
+          ar: "تغيير الاسم سهل الإرجاع. وتأكيده يعلّم الناس أن يتخطّوا النوافذ بالضغط، ومنها النافذة المهمة."
+      - id: MC-P02-020
+        when: [none]
+        feedback:
+          en: "A call can't reopen a closed account. The protection has to come before the tap, not after."
+          ar: "المكالمة لا تعيد فتح الحساب المغلق. يجب أن تأتي الحماية قبل الضغطة، لا بعدها."
+    correct:
+      en: "Confirm only the action that can't be undone."
+      ar: "اطلب التأكيد للإجراء الذي لا يمكن التراجع عنه فقط."
+    explain:
+      en: "Closing is final and affects money, so it earns a pause with specific details. Renaming stays one tap, which keeps the dialog rare enough to be read."
+      ar: "الإغلاق نهائي ويمسّ المال، فيستحق وقفة بتفاصيل محددة. ويبقى تغيير الاسم بضغطة واحدة، فتظل النافذة نادرة بما يكفي لتُقرأ."
+
+  # SK-P02-U03-03: keep what people need in view
+  - id: S05
+    type: choose
+    speaker: nour
+    part: retest
+    skill: SK-P02-U03-03
+    value:
+      en: "Re-test, recognition rather than recall (NN/g): minimise people's memory load by making elements, actions and options visible. Receptionists shouldn't copy a file number from one screen to another by memory."
+      ar: "إعادة اختبار، التعرّف بدل التذكّر (NN/g): خفّف العبء على ذاكرة الناس بجعل العناصر والإجراءات والخيارات ظاهرة. ولا يجب أن ينقل موظفو الاستقبال رقم ملف من شاشة إلى أخرى بالذاكرة."
+    ref: { url: "https://www.nngroup.com/articles/ten-usability-heuristics/", quote: "Minimize the user's memory load by making elements, actions, and options visible." }
+    scenario:
+      en: "To book a follow-up visit, my receptionists open the patient's file to find the 8-digit file number, then switch to the booking screen and type it from memory. Some visits end up in the wrong file."
+      ar: "لحجز زيارة متابعة، يفتح موظفو الاستقبال عندي ملف المريض ليجدوا رقم الملف المكوّن من 8 أرقام، ثم ينتقلون إلى شاشة الحجز ويكتبونه من الذاكرة. وينتهي بعض الزيارات في الملف الخطأ."
+    prompt:
+      en: "What should the system do?"
+      ar: "ماذا يجب أن يفعل النظام؟"
+    options:
+      - { id: button, text: { en: "Add a \"Book follow-up\" button inside the patient's file that fills in the patient", ar: "إضافة زر «احجز متابعة» داخل ملف المريض يملأ بيانات المريض تلقائيًا" } }
+      - { id: check, text: { en: "Ask receptionists to read the number twice", ar: "أن يُطلب من الموظفين قراءة الرقم مرتين" } }
+      - { id: shorter, text: { en: "Make file numbers shorter", ar: "تقصير أرقام الملفات" } }
+    answer: [button]
+    misconceptions:
+      - id: MC-P02-025
+        when: [check, shorter]
+        feedback:
+          en: "Both still have people carry a number in their heads between screens. A shorter number is easier, but the slip can still happen."
+          ar: "كلاهما ما زال يجعل الناس يحملون رقمًا في أذهانهم بين الشاشات. والرقم الأقصر أسهل، لكن الزلّة ما زالت ممكنة."
+    correct:
+      en: "Don't make people carry it at all."
+      ar: "لا تجعل الناس يحملونه أصلًا."
+    explain:
+      en: "Booking from inside the file brings the patient along, so there's nothing to remember or retype."
+      ar: "الحجز من داخل الملف يأخذ بيانات المريض معه، فلا يبقى شيء لتذكّره أو إعادة كتابته."
+
+  - id: S06
+    type: choose
+    speaker: sara
+    part: retest
+    skill: SK-P02-U03-03
+    value:
+      en: "Re-test, preventing mistakes (NN/g): remove burdens on people's memory. Keeping the search words in the box lets people see and adjust what they searched."
+      ar: "إعادة اختبار، منع الأخطاء الواعية (NN/g): خفّف العبء على ذاكرة الناس. وإبقاء كلمات البحث في المربع يتيح للناس أن يروا ما بحثوا عنه ويعدّلوه."
+    ref: { url: "https://www.nngroup.com/articles/user-mistakes/", quote: "A good strategy for preventing both of these types of errors is to remove burdens on users" }
+    scenario:
+      en: "On a recipe website I'm designing, the search box empties itself after each search. People looking at the results often can't tell what they searched, or retype it with one word changed."
+      ar: "في موقع للوصفات أصمّمه، يُفرغ مربع البحث نفسه بعد كل بحث. والناس الذين ينظرون إلى النتائج كثيرًا ما لا يعرفون بماذا بحثوا، أو يعيدون كتابته كله لتغيير كلمة واحدة."
+    prompt:
+      en: "What should the search box do after a search?"
+      ar: "ماذا يجب أن يفعل مربع البحث بعد البحث؟"
+    options:
+      - { id: keep, text: { en: "Keep the words in the box, ready to edit", ar: "يُبقي الكلمات في المربع، جاهزة للتعديل" } }
+      - { id: empty, text: { en: "Empty itself, ready for a new search", ar: "يُفرغ نفسه، جاهزًا لبحث جديد" } }
+      - { id: title, text: { en: "Empty itself, with the words in small grey text under the results", ar: "يُفرغ نفسه، مع الكلمات بخط رمادي صغير تحت النتائج" } }
+    answer: [keep]
+    misconceptions:
+      - id: MC-P02-024
+        when: [empty, title]
+        feedback:
+          en: "People have to remember or hunt for what they searched before they can change it, and then type it all again."
+          ar: "على الناس أن يتذكّروا ما بحثوا عنه أو يبحثوا عنه قبل أن يغيّروه، ثم يكتبوه كله من جديد."
+    correct:
+      en: "Keep the search words in view."
+      ar: "أبقِ كلمات البحث ظاهرة."
+    explain:
+      en: "\"chicken rice no oven\" stays in the box, so people see why they got these results and change one word in a second."
+      ar: "تبقى «دجاج أرز بدون فرن» في المربع، فيرى الناس سبب ظهور هذه النتائج، ويغيّرون كلمة واحدة في ثانية."
+
+  # SK-P02-U03-04: let people pick instead of recall
+  - id: S07
+    type: choose
+    speaker: mona
+    part: retest
+    skill: SK-P02-U03-04
+    value:
+      en: "Re-test, recognition rather than recall (NN/g): a menu is the classic recognition-based interface: people see the commands and recognise the one they want, instead of recalling its name."
+      ar: "إعادة اختبار، التعرّف بدل التذكّر (NN/g): القائمة هي المثال الكلاسيكي للواجهة القائمة على التعرّف: يرى الناس الأوامر ويتعرّفون على ما يريدونه، بدل تذكّر اسمه."
+    ref: { url: "https://www.nngroup.com/articles/recognition-and-recall/", quote: "menu system is the most classic example of a recognition-based user interface" }
+    scenario:
+      en: "In my team's note app, people format text by typing commands such as /strike or /h2. New users don't know them, and regular users forget the rare ones."
+      ar: "في تطبيق الملاحظات الذي يصنعه فريقي، ينسّق الناس النص بكتابة أوامر مثل /strike أو /h2. والمستخدمون الجدد لا يعرفونها، والمعتادون ينسون النادرة منها."
+    prompt:
+      en: "What should we add?"
+      ar: "ماذا نضيف؟"
+    options:
+      - { id: menu, text: { en: "Typing / opens a list of all commands with names and previews; people pick one", ar: "كتابة / تفتح قائمة بكل الأوامر بأسمائها ومعاينتها؛ ويختار الناس منها" } }
+      - { id: cheat, text: { en: "A printable cheat sheet of commands", ar: "ورقة أوامر قابلة للطباعة" } }
+      - { id: fewer, text: { en: "Remove the rarely used commands", ar: "حذف الأوامر قليلة الاستخدام" } }
+    answer: [menu]
+    misconceptions:
+      - id: MC-P02-026
+        when: [cheat]
+        feedback:
+          en: "A cheat sheet still asks people to look up or memorise commands outside the app."
+          ar: "ورقة الأوامر ما زالت تطلب من الناس البحث عن الأوامر أو حفظها خارج التطبيق."
+      - id: MC-P02-027
+        when: [fewer]
+        feedback:
+          en: "People who need those commands lose them, and the rest still have to recall the names."
+          ar: "من يحتاج تلك الأوامر يفقدها، والباقون ما زال عليهم تذكّر الأسماء."
+    correct:
+      en: "Show the options so people can pick."
+      ar: "اعرض الخيارات ليختار الناس."
+    explain:
+      en: "The list shows what's possible the moment it's needed. Beginners discover commands and regulars find the rare ones without remembering exact names."
+      ar: "القائمة تُظهر ما هو ممكن في اللحظة التي يُحتاج فيها. فيكتشف المبتدئون الأوامر، ويجد المعتادون النادرة منها دون تذكّر الأسماء الدقيقة."
+
+  - id: S08
+    type: choose
+    speaker: rami
+    part: retest
+    skill: SK-P02-U03-04
+    value:
+      en: "Re-test, recognition rather than recall (NN/g): let people recognise information in the interface instead of forcing them to remember it. A tip shown at the moment of use beats a long tour to memorise."
+      ar: "إعادة اختبار، التعرّف بدل التذكّر (NN/g): دَع الناس يتعرّفون على المعلومات في الواجهة بدل أن تجبرهم على تذكّرها. والنصيحة التي تظهر لحظة الاستخدام أفضل من جولة طويلة يجب حفظها."
+    ref: { url: "https://www.nngroup.com/articles/ten-usability-heuristics/", quote: "Let people recognize information in the interface, rather than forcing them to remember" }
+    scenario:
+      en: "I designed an 8-screen tour for a budgeting app that explains every feature on first launch. A week later, people still ask how to split a bill."
+      ar: "صمّمت جولة من 8 شاشات لتطبيق ميزانية، تشرح كل الميزات عند أول تشغيل. وبعد أسبوع، ما زال الناس يسألون كيف يقسمون فاتورة."
+    prompt:
+      en: "What should I do instead?"
+      ar: "ماذا أفعل بدلًا من ذلك؟"
+    options:
+      - { id: longer, text: { en: "Add two more tour screens about splitting bills", ar: "أضيف شاشتين أخريين للجولة عن تقسيم الفواتير" } }
+      - { id: context, text: { en: "Show a short tip next to a new expense: \"Shared this? Split it\", the first few times", ar: "أعرض نصيحة قصيرة بجانب المصروف الجديد: «شاركت فيه؟ قسّمه»، في المرات الأولى" } }
+      - { id: video, text: { en: "Link a 5-minute video in Settings", ar: "أضع رابط فيديو مدته 5 دقائق في الإعدادات" } }
+    answer: [context]
+    misconceptions:
+      - id: MC-P02-024
+        when: [longer, video]
+        feedback:
+          en: "Both teach the feature away from the moment it's needed, so people must remember it days later."
+          ar: "كلاهما يعلّم الميزة بعيدًا عن لحظة الحاجة إليها، فيجب على الناس أن يتذكّروها بعد أيام."
+    correct:
+      en: "Help at the moment of use."
+      ar: "ساعد في لحظة الاستخدام."
+    explain:
+      en: "The tip appears exactly when someone adds a shared expense, so they recognise the option right there instead of recalling a tour."
+      ar: "تظهر النصيحة بالضبط حين يضيف أحد مصروفًا مشتركًا، فيتعرّف على الخيار في مكانه بدل تذكّر جولة."

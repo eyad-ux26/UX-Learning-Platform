@@ -1,0 +1,265 @@
+id: P12-U04-L03
+mode: lesson
+minutes: 7
+title:
+  en: "Ask before you collect"
+  ar: "اسأل قبل أن تجمع البيانات"
+summary:
+  en: "Fix a keyboard app that learned from people's typing without telling them."
+  ar: "أصلح تطبيق لوحة مفاتيح تعلّم مما يكتبه الناس دون أن يخبرهم."
+speaker: tarek
+sources:
+  - title: { en: "Feedback + Control (People + AI Guidebook)", ar: "الملاحظات والتحكّم (دليل الناس والذكاء الاصطناعي)" }
+    url: "https://pair.withgoogle.com/chapter/feedback-controls/"
+review_labels:
+  MC-P12-034: { en: "Tell people before you collect", ar: "أخبر الناس قبل أن تجمع البيانات" }
+  MC-P12-035: { en: "Let people see, edit and stop collection", ar: "اسمح للناس برؤية البيانات وتعديلها وإيقاف جمعها" }
+  MC-P12-036: { en: "Ask rarely, and make it easy to skip", ar: "اسأل نادرًا، واجعل التخطّي سهلًا" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "\"Why does my keyboard know that?\"", ar: "«لماذا تعرف لوحة المفاتيح هذا؟»" }
+    body:
+      en: "I'm the PM of a phone keyboard app. It learns the words you type to suggest the next one. We never told anyone.\n\nThen a user typed a medicine name once, in a private chat. A week later, it popped up as a suggestion while her boss was looking at her screen. Reviews called us spies."
+      ar: "أنا مدير منتج لتطبيق لوحة مفاتيح للهاتف. يتعلّم الكلمات التي تكتبها ليقترح الكلمة التالية. ولم نخبر أحدًا بذلك.\n\nثم كتبت إحدى المستخدمات اسم دواء مرة واحدة، في محادثة خاصة. وبعد أسبوع، ظهر كاقتراح بينما كان مديرها ينظر إلى شاشتها. ووصفتنا التقييمات بالجواسيس."
+    mock:
+      width: 300
+      blocks:
+        - { kind: field, text: { en: "Meeting at 3, I'll bring the", ar: "الاجتماع الساعة 3، سأحضر" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: chip, text: { en: "report", ar: "التقرير" } }
+            - { kind: chip, text: { en: "Fluoxetine", ar: "فلوكستين" } }
+            - { kind: chip, text: { en: "file", ar: "الملف" } }
+
+  - id: S02
+    type: choose
+    skill: SK-P12-U04-05
+    part: try
+    rules: [R12]
+    value:
+      en: "Try first. Feedback + Control (People + AI): don't collect data without telling people, and always give a way to see it."
+      ar: "جرّب أولًا. الملاحظات والتحكّم (People + AI): لا تجمع البيانات دون إخبار الناس، وأعطِ دائمًا طريقة لرؤيتها."
+    ref: { url: "https://pair.withgoogle.com/chapter/feedback-controls/", quote: "Don’t implicitly collect data without telling people." }
+    prompt:
+      en: "What was the main mistake?"
+      ar: "ما الخطأ الأساسي؟"
+    options:
+      - { id: good, text: { en: "The suggestions were too accurate", ar: "الاقتراحات كانت دقيقة أكثر من اللازم" } }
+      - { id: terms, text: { en: "She should have read the terms", ar: "كان عليها أن تقرأ الشروط" } }
+      - { id: secret, text: { en: "It learned from her typing without telling her", ar: "تعلّم مما تكتبه دون أن يخبرها" } }
+    answer: [secret]
+    misconceptions:
+      - id: MC-P12-034
+        when: [good, terms]
+        feedback:
+          en: "Learning isn't the problem, and no one reads long terms. The problem is that she never knew, so she had no chance to say no."
+          ar: "التعلّم ليس المشكلة، ولا أحد يقرأ الشروط الطويلة. المشكلة أنها لم تعرف أبدًا، فلم تكن لديها فرصة للرفض."
+    hints:
+      - { en: "Did she know the keyboard was learning?", ar: "هل كانت تعرف أن لوحة المفاتيح تتعلّم؟" }
+      - { en: "Could she have stopped it?", ar: "هل كانت تستطيع إيقافه؟" }
+    correct:
+      en: "Right. Secret collection breaks trust."
+      ar: "صحيح. الجمع السرّي يكسر الثقة."
+    explain:
+      en: "The same feature feels helpful when people chose it, and creepy when they didn't know."
+      ar: "الميزة نفسها تبدو مفيدة حين يختارها الناس، ومخيفة حين لا يعرفون عنها."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [ear, eye, toggle, clock]
+    title: { en: "Ask, show, let them change", ar: "اسأل، ووضّح، واسمح لهم بالتغيير" }
+    body:
+      en: "Apps learn from what people do: taps, typing, time spent. That's useful, if people know.\n\n- **Tell and ask up front:** what you collect, why, and how it helps them.\n- **Show where to see it,** like a list of learned words.\n- **Let them edit or stop it,** without losing the whole app.\n- **Ask rarely:** one clear question, easy to skip."
+      ar: "التطبيقات تتعلّم مما يفعله الناس: الضغطات، والكتابة، والوقت الذي يقضونه. وهذا مفيد، إذا عرف الناس.\n\n- **أخبر واسأل من البداية:** ماذا تجمع، ولماذا، وكيف يفيدهم.\n- **وضّح أين يرونها،** مثل قائمة بالكلمات التي تعلّمها.\n- **اسمح لهم بتعديلها أو إيقافها،** دون أن يخسروا التطبيق كله.\n- **اسأل نادرًا:** سؤال واحد واضح، يسهل تخطّيه."
+
+  - id: S04
+    type: choose
+    skill: SK-P12-U04-05
+    part: guided
+    rules: [R06]
+    value:
+      en: "Feedback + Control (People + AI): you don't have to ask for behaviour data every time, but tell people you're collecting it and get permission up front."
+      ar: "الملاحظات والتحكّم (People + AI): لا تحتاج أن تطلب بيانات السلوك كل مرة، لكن أخبر الناس أنك تجمعها وخذ إذنهم من البداية."
+    ref: { url: "https://pair.withgoogle.com/chapter/feedback-controls/", quote: "Often, this happens as part of regular product usage — you don’t have to explicitly ask for this type of information, but you should let users know you’re collecting it, and get their permission up front." }
+    scenario:
+      en: "We're adding a step to set-up, before people start typing."
+      ar: "نضيف خطوة إلى الإعداد، قبل أن يبدأ الناس الكتابة."
+    prompt:
+      en: "What should it say?"
+      ar: "ماذا يجب أن تقول؟"
+    options:
+      - { id: ask, text: { en: "\"Learn from what I type to suggest better words? It stays on this phone.\" Allow / Not now", ar: "«التعلّم مما أكتبه لاقتراح كلمات أفضل؟ يبقى على هذا الهاتف.» اسمح / ليس الآن" } }
+      - { id: terms, text: { en: "Nothing new; it's already in the terms", ar: "لا شيء جديد؛ فهو موجود في الشروط" } }
+      - { id: daily, text: { en: "A pop-up every day: \"We're learning from your typing!\"", ar: "نافذة كل يوم: «نحن نتعلّم من كتابتك!»" } }
+    answer: [ask]
+    misconceptions:
+      - id: MC-P12-034
+        when: [terms]
+        feedback:
+          en: "Hidden in the terms means nobody knows. Ask on one clear screen, before it starts."
+          ar: "الإخفاء في الشروط يعني أن لا أحد يعرف. اسأل في شاشة واحدة واضحة، قبل أن يبدأ."
+      - id: MC-P12-036
+        when: [daily]
+        feedback:
+          en: "Telling them every day is noise, and it still doesn't ask permission. Ask once, up front."
+          ar: "إخبارهم كل يوم إزعاج، ولا يطلب الإذن أيضًا. اسأل مرة واحدة، من البداية."
+    hints:
+      - { en: "When should people hear about it: before or after?", ar: "متى يجب أن يسمع الناس عنه: قبل أم بعد؟" }
+      - { en: "Which option lets them say no?", ar: "أي خيار يسمح لهم بالرفض؟" }
+    correct:
+      en: "Right. Tell, explain the benefit, and ask, once."
+      ar: "صحيح. أخبر، واشرح الفائدة، واسأل، مرة واحدة."
+    explain:
+      en: "One honest screen up front turns a secret into a choice."
+      ar: "شاشة صادقة واحدة من البداية تحوّل السرّ إلى اختيار."
+
+  - id: S05
+    type: choose
+    skill: SK-P12-U04-05
+    part: guided
+    rules: [R06]
+    value:
+      en: "Feedback + Control (People + AI): always give a way to see, and ideally edit, the data collected."
+      ar: "الملاحظات والتحكّم (People + AI): أعطِ دائمًا طريقة لرؤية البيانات التي جُمعت، ويُفضّل تعديلها."
+    ref: { url: "https://pair.withgoogle.com/chapter/feedback-controls/", quote: "Always provide a way to see, and ideally edit, data collected." }
+    scenario:
+      en: "She allowed learning, but wants that one medicine name gone."
+      ar: "سمحت بالتعلّم، لكنها تريد حذف اسم ذلك الدواء فقط."
+    prompt:
+      en: "What should she be able to do?"
+      ar: "ماذا يجب أن تستطيع أن تفعل؟"
+    options:
+      - { id: all, text: { en: "Only \"Delete all learned words\"", ar: "فقط «احذف كل الكلمات المتعلَّمة»" } }
+      - { id: email, text: { en: "Email support to remove it", ar: "مراسلة الدعم لحذفه" } }
+      - { id: word, text: { en: "Long-press the suggestion → \"Forget this word\", plus a \"Learned words\" list in Settings", ar: "الضغط المطوّل على الاقتراح ← «انسَ هذه الكلمة»، مع قائمة «الكلمات المتعلَّمة» في الإعدادات" } }
+    answer: [word]
+    misconceptions:
+      - id: MC-P12-035
+        when: [all, email]
+        feedback:
+          en: "Deleting everything loses all her useful words, and email is slow and awkward for something private. Let her remove one word herself."
+          ar: "حذف كل شيء يُضيّع كل كلماتها المفيدة، والبريد بطيء ومحرج لشيء خاص. اسمح لها بحذف كلمة واحدة بنفسها."
+    hints:
+      - { en: "Does she want to lose all her learned words?", ar: "هل تريد أن تخسر كل كلماتها المتعلَّمة؟" }
+      - { en: "Would she like to tell support about this word?", ar: "هل ستحبّ أن تخبر الدعم عن هذه الكلمة؟" }
+    correct:
+      en: "Right. See it, and remove just what she wants."
+      ar: "صحيح. ترى البيانات، وتحذف فقط ما تريد."
+    explain:
+      en: "A list shows what it learned; a long-press fixes one word in a second."
+      ar: "القائمة تُظهر ما تعلّمه؛ والضغط المطوّل يصلح كلمة واحدة في ثانية."
+
+  - id: S06
+    type: compare
+    skill: SK-P12-U04-05
+    part: contrast
+    confidence: true
+    rules: [R11]
+    value:
+      en: "Contrast: always on vs a real choice. Feedback + Control (People + AI): let people opt out of parts of behaviour collection, like having their behaviour logged."
+      ar: "مقارنة: تشغيل دائم مقابل اختيار حقيقي. الملاحظات والتحكّم (People + AI): اسمح للناس بإيقاف أجزاء من جمع بيانات السلوك، مثل تسجيل ما يفعلونه."
+    ref: { url: "https://pair.withgoogle.com/chapter/feedback-controls/", quote: "In particular, you should allow users to opt out of certain aspects of sharing implicit feedback — like having their behavior logged — and this should be included in your terms of service." }
+    scenario:
+      en: "Two designs for the keyboard's Settings page:"
+      ar: "تصميمان لصفحة إعدادات لوحة المفاتيح:"
+    prompt:
+      en: "Which design should we ship?"
+      ar: "أي تصميم يجب أن نطلق؟"
+    a:
+      label: { en: "A: \"Learning is always on, to keep suggestions accurate.\"", ar: "A: «التعلّم يعمل دائمًا، لتبقى الاقتراحات دقيقة.»" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: title, text: { en: "Learning", ar: "التعلّم" } }
+          - { kind: meta, text: { en: "Learning is always on, to keep suggestions accurate.", ar: "التعلّم يعمل دائمًا، لتبقى الاقتراحات دقيقة." }, gap: s }
+    b:
+      label: { en: "B: \"Learn from my typing: On\", with \"See learned words\"", ar: "B: «التعلّم من كتابتي: يعمل»، مع «اعرض الكلمات المتعلَّمة»" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: title, text: { en: "Learning", ar: "التعلّم" } }
+          - kind: row
+            gap: s
+            blocks:
+              - { kind: meta, text: { en: "Learn from my typing", ar: "التعلّم من كتابتي" } }
+              - { kind: chip, text: { en: "On", ar: "يعمل" } }
+          - { kind: link, text: { en: "See learned words", ar: "اعرض الكلمات المتعلَّمة" }, gap: s }
+    answer: b
+    reason:
+      prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
+      options:
+        - { id: modern, text: { en: "Switches look more modern", ar: "مفاتيح التشغيل تبدو أحدث" } }
+        - { id: choice, text: { en: "People can stop the learning and still use the keyboard", ar: "يستطيع الناس إيقاف التعلّم ومواصلة استخدام لوحة المفاتيح" } }
+        - { id: accurate, text: { en: "Accuracy doesn't matter", ar: "الدقة غير مهمة" } }
+      answer: [choice]
+      misconceptions:
+        - id: MC-P12-035
+          when: [modern, accurate]
+          feedback:
+            en: "Looks aside, accuracy matters. But people must be able to trade some accuracy for privacy if they want."
+            ar: "بعيدًا عن الشكل، الدقة مهمة. لكن يجب أن يستطيع الناس التنازل عن بعض الدقة مقابل الخصوصية إذا أرادوا."
+    misconceptions:
+      - id: MC-P12-035
+        when: [a]
+        feedback:
+          en: "A sounds reasonable, but it leaves people one choice: accept the logging or delete the keyboard."
+          ar: "A يبدو منطقيًا، لكنه يترك للناس خيارًا واحدًا: يقبلون التسجيل أو يحذفون لوحة المفاتيح."
+    hints:
+      - { en: "What can someone who wants privacy do in A?", ar: "ماذا يستطيع من يريد الخصوصية أن يفعل في A؟" }
+      - { en: "Which design gives them a real choice?", ar: "أي تصميم يعطيهم اختيارًا حقيقيًا؟" }
+    correct:
+      en: "Right. A real off switch, and a way to look."
+      ar: "صحيح. زر إيقاف حقيقي، وطريقة للرؤية."
+    explain:
+      en: "People trust learning more when they know they can stop it."
+      ar: "الناس يثقون بالتعلّم أكثر حين يعرفون أنهم يستطيعون إيقافه."
+
+  - id: S07
+    type: choose
+    skill: SK-P12-U04-03
+    part: independent
+    speaker: nour
+    rules: [R14]
+    value:
+      en: "New case. Feedback + Control (People + AI): your product isn't the focus of people's lives, so keep requests few and easy to dismiss."
+      ar: "حالة جديدة. الملاحظات والتحكّم (People + AI): منتجك ليس محور حياة الناس، فاجعل الطلبات قليلة وسهلة التجاهل."
+    ref: { url: "https://pair.withgoogle.com/chapter/feedback-controls/", quote: "Remember that your product likely isn’t the focus of your users’ lives, so keep engagement requests strategic, minimal, and allow for easy dismissal." }
+    scenario:
+      en: "I manage a clinic. Our booking app now asks \"Was this helpful?\" on every screen, to train its suggestions. Patients find it annoying."
+      ar: "أدير عيادة. وتطبيق الحجز عندنا أصبح يسأل «هل كان هذا مفيدًا؟» في كل شاشة، ليدرّب اقتراحاته. والمرضى يجدونه مزعجًا."
+    prompt:
+      en: "What should we do?"
+      ar: "ماذا يجب أن نفعل؟"
+    options:
+      - { id: every, text: { en: "Keep it on every screen; more answers train it faster", ar: "نُبقيه في كل شاشة؛ فالإجابات الأكثر تدرّبه أسرع" } }
+      - { id: once, text: { en: "One short question after the visit, with a clear \"Skip\"", ar: "سؤال قصير واحد بعد الزيارة، مع «تخطَّ» واضح" } }
+      - { id: must, text: { en: "Make a survey required before each booking", ar: "نجعل استبيانًا إجباريًا قبل كل حجز" } }
+    answer: [once]
+    misconceptions:
+      - id: MC-P12-036
+        when: [every, must]
+        feedback:
+          en: "Patients come to book, not to train an app. Too many questions, or forced ones, get rushed or angry answers."
+          ar: "المرضى يأتون للحجز، لا لتدريب التطبيق. والأسئلة الكثيرة، أو الإجبارية، تحصل على إجابات متسرّعة أو غاضبة."
+    hints:
+      - { en: "Why do patients open the app?", ar: "لماذا يفتح المرضى التطبيق؟" }
+      - { en: "When would one question feel natural?", ar: "متى يبدو سؤال واحد طبيعيًا؟" }
+    correct:
+      en: "Right. Ask once, at a good moment, easy to skip."
+      ar: "صحيح. اسأل مرة واحدة، في لحظة مناسبة، مع تخطٍّ سهل."
+    explain:
+      en: "Fewer, well-timed questions get more honest answers."
+      ar: "الأسئلة الأقل، في الوقت المناسب، تحصل على إجابات أصدق."
+
+  - id: S08
+    type: card
+    part: recap
+    icons: [warn, ear, cut, toggle, clock]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **Found the mistake:** learning in secret, not learning itself.\n- **Asked up front:** one set-up screen with Allow / Not now.\n- **See and edit:** \"Forget this word\" and a learned-words list.\n- **Real off switch:** stop learning, keep the keyboard.\n- **New case:** you cut a clinic's questions to one, after the visit.\n\nNext: the skill check for this unit."
+      ar: "- **وجدت الخطأ:** التعلّم سرًّا، لا التعلّم نفسه.\n- **سألت من البداية:** شاشة إعداد واحدة مع «اسمح / ليس الآن».\n- **الرؤية والتعديل:** «انسَ هذه الكلمة» وقائمة بالكلمات المتعلَّمة.\n- **زر إيقاف حقيقي:** أوقف التعلّم، واحتفظ بلوحة المفاتيح.\n- **حالة جديدة:** قلّلت أسئلة العيادة إلى سؤال واحد، بعد الزيارة.\n\nالتالي: اختبار المهارة لهذه الوحدة."

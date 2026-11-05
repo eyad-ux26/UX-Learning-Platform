@@ -1,5 +1,5 @@
 // Public path pages (spec 4.1, EN-05): one static page per path at /{locale}/paths/{slug}, for visitors without an account.
-// The 14 paths match slice 3's catalog. Names stay in English in both languages. A path is open only when it is marked open here
+// The 15 paths match slice 3's catalog. Names stay in English in both languages. A path is open only when it is marked open here
 // AND the content bundle has lessons for it; the tests keep the two in step. Facts (units, lessons, skills) always come from the bundle.
 import { content as defaultBundle, getCast, type ContentIndex, type Text } from "@uxgate/content";
 import { routing, type Locale } from "../i18n/routing";
@@ -81,7 +81,7 @@ export const PUBLIC_PATHS: PublicPath[] = [
     },
   },
   {
-    id: "P14", slug: "patterns-that-fit", name: "Patterns That Fit", art: "rocket", kind: "hybrid", status: "soon",
+    id: "P14", slug: "patterns-that-fit", name: "Patterns That Fit", art: "rocket", kind: "hybrid", status: "open",
     sub: t("Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.", "اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر."),
     short: t("The right pattern for the moment.", "النمط المناسب للموقف."),
     can: [
@@ -99,17 +99,93 @@ export const PUBLIC_PATHS: PublicPath[] = [
       after: t("After the clip, you pick the right pattern for three new screens.", "بعد المقطع، تختار النمط المناسب لثلاث شاشات جديدة."),
     },
   },
-  { id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "interactive", status: "soon", sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.") },
+  {
+    id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "interactive", status: "open",
+    sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "sara",
+      scenario: t("I'm designing an app for a parcel delivery company. Laila wants a courier to pick up a parcel from her home. She taps Book pickup. For four seconds nothing on the screen changes, so she taps again. Two couriers come to her door the next morning.", "أصمّم تطبيقًا لشركة توصيل طرود. تريد ليلى أن يأتي مندوب ليستلم طردًا من بيتها. ضغطت احجز الاستلام. ولمدة أربع ثوانٍ لم يتغيّر شيء على الشاشة، فضغطت مرة أخرى. وفي الصباح التالي جاء إلى بابها مندوبان."),
+      question: t("Booking takes about four seconds. What should I change?", "الحجز يستغرق نحو أربع ثوانٍ. ماذا أغيّر؟"),
+      options: [
+        t("Add a line under the button: \"Booking can take a few seconds\"", "أضيف سطرًا تحت الزر: «قد يستغرق الحجز بضع ثوانٍ»"),
+        t("Quietly ignore a second tap within ten seconds", "أتجاهل بهدوء أي ضغطة ثانية خلال عشر ثوانٍ"),
+        t("Change the button to \"Booking…\" with a spinner, then show \"Pickup booked\" with the time", "أحوّل الزر إلى «جارٍ الحجز…» مع مؤشر دوّار، ثم أعرض «تم حجز الاستلام» مع الموعد"),
+      ],
+      answer: 2,
+      why: t("The spinner tells Laila her tap was caught and the app is working, so she has no reason to tap again. The confirmation with the time tells her the result.", "المؤشر الدوّار يخبر ليلى أن ضغطتها وصلت وأن التطبيق يعمل، فلا يبقى سبب لتضغط مرة أخرى. والتأكيد مع الموعد يخبرها بالنتيجة."),
+    },
+  },
   { id: "P03", slug: "frame-the-right-problem", name: "Frame the Right Problem", art: "target", kind: "interactive", status: "soon", sub: t("Make sure you solve the problem that matters.", "تأكّد أنك تحلّ المشكلة التي تهمّ فعلًا.") },
   { id: "P04", slug: "user-flows-that-work", name: "User Flows That Work", art: "gate", kind: "interactive", status: "soon", sub: t("Plan the steps people take, from start to done.", "خطّط للخطوات التي يمرّ بها الناس من البداية حتى النهاية.") },
-  { id: "P05", slug: "make-ux-accessible", name: "Make UX Accessible", art: "shield", kind: "interactive", status: "soon", sub: t("Design that works for every ability and device.", "تصميم يناسب كل القدرات وكل الأجهزة.") },
+  {
+    id: "P05", slug: "make-ux-accessible", name: "Make UX Accessible", art: "shield", kind: "interactive", status: "open",
+    sub: t("Design that works for every ability and device.", "تصميم يناسب كل القدرات وكل الأجهزة."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "tarek",
+      scenario: t("Last month, our pharmacy app passed an accessibility check: 52 of 52 points, all green. Accessibility means people with disabilities can use the app. This week, Adel emailed us. He is blind and uses a screen reader (an app that reads the screen out loud). He tried to order his monthly medicine again, and gave up after 20 minutes. Most customers do it in less than one minute.", "الشهر الماضي، نجح تطبيق الصيدلية عندنا في فحص الـ Accessibility (أن يستطيع ذوو الإعاقة استخدام التطبيق): 52 بندًا من 52، كلها خضراء. وهذا الأسبوع، أرسل لنا عادل رسالة. عادل كفيف، ويستخدم قارئ الشاشة (Screen reader)، وهو تطبيق يقرأ ما على الشاشة بصوت عالٍ. حاول أن يطلب دواءه الشهري مرة أخرى، وتوقّف بعد 20 دقيقة. وأغلب العملاء يطلبونه في أقل من دقيقة."),
+      question: t("The app passed all 52 points, but Adel couldn't order. Is the app good enough for blind customers now?", "نجح التطبيق في البنود الـ 52 كلها، لكن عادل لم يستطع الطلب. هل التطبيق مناسب الآن للعملاء المكفوفين؟"),
+      options: [
+        t("No. A blind customer couldn't finish a main task", "لا. عميل كفيف لم يستطع إنهاء مهمة أساسية"),
+        t("Yes. It passed every point, so Adel's case is rare", "نعم. نجح في كل البنود، وحالة عادل نادرة"),
+        t("Yes, if we add a phone number for people who get stuck", "نعم، إذا أضفنا رقم هاتف لمن يواجه مشكلة"),
+      ],
+      answer: 0,
+      why: t("A checklist checks rules one by one. It can't tell you if people can really finish a task. Only watching them try can tell you that.", "الـ Checklist يفحص القواعد واحدة بعد الأخرى. لكنه لا يخبرك هل يُنهي الناس المهمة فعلًا. وهذا لا تعرفه إلا حين تراهم يحاولون."),
+    },
+  },
   { id: "P06", slug: "better-user-interviews", name: "Better User Interviews", art: "bulb", kind: "interactive", status: "soon", sub: t("Ask, listen and learn what people really need.", "اسأل واستمع، واعرف ما يحتاجه الناس فعلًا.") },
   { id: "P07", slug: "turn-research-into-decisions", name: "Turn Research into Decisions", art: "key", kind: "interactive", status: "soon", sub: t("Go from findings to clear design choices.", "انتقل من النتائج إلى قرارات تصميم واضحة.") },
   { id: "P08", slug: "test-and-improve-usability", name: "Test and Improve Usability", art: "review", kind: "interactive", status: "soon", sub: t("Run quick tests and fix what they find.", "أجرِ اختبارات سريعة وأصلح ما تكشفه.") },
   { id: "P09", slug: "make-content-easy-to-find", name: "Make Content Easy to Find", art: "empty-box", kind: "interactive", status: "soon", sub: t("Menus and labels that lead to the right page.", "قوائم وعناوين تقود إلى الصفحة الصحيحة.") },
   { id: "P11", slug: "design-systems-in-action", name: "Design Systems in Action", art: "trophy", kind: "interactive", status: "soon", sub: t("Build components that stay consistent.", "ابنِ مكوّنات تبقى متّسقة.") },
-  { id: "P12", slug: "design-better-ai-experiences", name: "Design Better AI Experiences", art: "bulb", kind: "interactive", status: "soon", sub: t("AI features people understand and trust.", "ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.") },
-  { id: "P13", slug: "ai-tools-for-better-ux", name: "AI Tools for Better UX", art: "rocket", kind: "interactive", status: "soon", sub: t("Use AI tools to research and design faster.", "استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.") },
+  {
+    id: "P12", slug: "design-better-ai-experiences", name: "Design Better AI Experiences", art: "bulb", kind: "interactive", status: "open",
+    sub: t("AI features people understand and trust.", "ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "tarek",
+      scenario: t("I manage an online grocery app. Our CEO came back from a conference and said: \"Every app has AI now. Add AI to ours.\" I have one month of the team's time. Where should it go?", "أدير تطبيق بقالة أونلاين. ورجع مديرنا التنفيذي من مؤتمر وقال: «كل التطبيقات فيها ذكاء اصطناعي الآن. أضيفوه لتطبيقنا.» عندي شهر واحد من وقت الفريق. أين أضعه؟"),
+      question: t("What should the team ask first?", "ماذا يجب أن يسأل الفريق أولًا؟"),
+      options: [
+        t("\"What AI features do other grocery apps have?\"", "«ما ميزات الذكاء الاصطناعي في تطبيقات البقالة الأخرى؟»"),
+        t("\"How can we use AI to make our app smarter?\"", "«كيف نستخدم الذكاء الاصطناعي ليصبح تطبيقنا أذكى؟»"),
+        t("\"What problem do our customers have that we don't solve well today?\"", "«ما المشكلة التي عند عملائنا ولا نحلّها جيدًا اليوم؟»"),
+      ],
+      answer: 2,
+      why: t("AI is a tool, not a goal. Find what customers struggle with, then check if AI is the best way to fix it.", "الذكاء الاصطناعي أداة، لا هدف. اعرف ما يعانيه العملاء، ثم تأكّد إن كان الذكاء الاصطناعي أفضل طريقة لإصلاحه."),
+    },
+  },
+  {
+    id: "P13", slug: "ai-tools-for-better-ux", name: "AI Tools for Better UX", art: "rocket", kind: "interactive", status: "open",
+    sub: t("Use AI tools to research and design faster.", "استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "sara",
+      scenario: t("I'm a product designer on a banking app. My manager asked me to use an AI chatbot to write our new onboarding screens. It wrote all five screens in seconds, and they read well. I pasted them into the design. In review, the team found a fee we don't charge and a feature we don't have.", "أنا مصممة منتجات في تطبيق بنكي. وطلب مني مديري أن أستخدم روبوت محادثة بالذكاء الاصطناعي لأكتب شاشات التعريف الجديدة. فكتب الشاشات الخمس في ثوانٍ، وكانت صياغتها جيدة. فوضعتها في التصميم كما هي. وفي المراجعة، وجد الفريق رسومًا لا نأخذها، وميزة ليست عندنا."),
+      question: t("What should I have done with the AI's five screens?", "ماذا كان يجب أن أفعل بالشاشات الخمس التي كتبها الذكاء الاصطناعي؟"),
+      options: [
+        t("Use them as they are. The AI writes well and saves days of work", "أستخدمها كما هي. فالذكاء الاصطناعي يكتب جيدًا ويوفّر أيامًا من العمل"),
+        t("Stop using AI for writing, since it makes mistakes", "أتوقّف عن استخدام الذكاء الاصطناعي في الكتابة، لأنه يخطئ"),
+        t("Use them as a first draft: edit them, and check every fact against our real product", "أستخدمها كمسوّدة أولى: أحرّرها، وأتحقّق من كل معلومة مقارنةً بمنتجنا الحقيقي"),
+      ],
+      answer: 2,
+      why: t("Editing is much faster than starting from a blank page. That's where AI saves time, as long as you check the result.", "التحرير أسرع بكثير من البدء من صفحة فارغة. وهنا يوفّر الذكاء الاصطناعي الوقت، بشرط أن تتحقّق من النتيجة."),
+    },
+  },
+  {
+    id: "P15", slug: "write-words-that-work", name: "Write Words That Work", art: "article", kind: "interactive", status: "open",
+    sub: t("Write screen text people can scan, understand and act on, in a tone that fits the moment.", "اكتب نصوص الشاشات بحيث يتصفّحها الناس بسرعة ويفهمونها ويتصرّفون بها، وبنبرة تناسب الموقف."),
+    sample: {
+      unit: 1, lesson: 1, speaker: "youssef",
+      scenario: t("I sell home appliances online. Every day, customers call to ask things that are already written in our app. I looked at our messages. They are long, and the useful words come at the end.", "أبيع أجهزة منزلية أونلاين. وكل يوم يتصل عملاء ليسألوا عن أشياء مكتوبة بالفعل في تطبيقنا. نظرت إلى رسائلنا. إنها طويلة، والكلمات المفيدة تأتي في آخرها."),
+      question: t("Customers read only the first two words of each message. Which rewrite of the refund message tells them the news fastest?", "العملاء يقرؤون أول كلمتين فقط من كل رسالة. أي صياغة لرسالة الاسترداد تخبرهم بالخبر أسرع؟"),
+      options: [
+        t("\"Important: information about your refund request\"", "«مهم: معلومات عن طلب استرداد المبلغ»"),
+        t("\"Refund approved: the money reaches your card in 3 days\"", "«تمّت الموافقة على الاسترداد: يصل المبلغ لبطاقتك خلال 3 أيام»"),
+        t("\"Please read this update about your refund\"", "«يرجى قراءة هذا التحديث عن الاسترداد»"),
+      ],
+      answer: 1,
+      why: t("People scan. If the first words carry the news, they get it without opening the message.", "الناس يتصفّحون بسرعة. فإذا حملت الكلمات الأولى الخبر، فهموه دون فتح الرسالة."),
+    },
+  },
 ];
 
 export const SITE_URL = "https://uxgate.org";
