@@ -602,3 +602,47 @@ describe("hardening (#135)", () => {
     expect(sub()).toMatchObject({ status: "grace", retries: 0 });
   });
 });
+
+describe("Paymob: Egypt's price needs a card issued in Egypt", () => {
+  let refunds: string[];
+  beforeEach(() => {
+    refunds = [];
+    engine.actions = { refund: async (provider, id, amount) => { refunds.push(`${provider}:${id}:${amount}`); } };
+  });
+
+  it("a card issued abroad (a VPN user) is refused and refunded, with no Pro", async () => {
+    const s = session();
+    const r = await deliverPaymob({ id: 1501, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "DE" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    expect(r[0]).toMatchObject({ status: "ignored" });
+    expect(pro()).toBe(false);
+    expect([...store.subs.values()]).toHaveLength(0);
+    expect(store.sessions.get(s.id)?.status).toBe("failed");
+    expect(refunds).toEqual(["paymob:1501:24900"]);
+    expect([...store.payments.values()][0]).toMatchObject({ subscriptionId: null, amountMinor: 24900 });
+  });
+
+  it("an Egyptian card (two or three letters) starts Pro as usual", async () => {
+    const s = session();
+    await deliverPaymob({ id: 1502, data: { card_issuer_country: "EGY" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    expect(pro()).toBe(true);
+    expect(refunds).toEqual([]);
+  });
+
+  it("a wallet, or a card whose country Paymob does not report, is not refused", async () => {
+    const s = session();
+    await deliverPaymob({ id: 1503, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet", issuer_country: "DE" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    expect(pro()).toBe(true);
+    const u2 = session({ userId: "00000000-0000-4000-8000-0000000000b2", providerRef: "9002" });
+    store.learners.set(u2.userId, { email: "b@example.com", locale: "en", name: "B" });
+    await deliverPaymob({ id: 1504, order: { id: 9002, merchant_order_id: `s_${u2.id}` } });
+    expect(store.sessions.get(u2.id)?.status).toBe("paid");
+    expect(refunds).toEqual([]);
+  });
+
+  it("the check reads Paymob's own copy, not the callback", async () => {
+    const s = session();
+    await deliverPaymob({ id: 1505, order: { id: 9001, merchant_order_id: `s_${s.id}` } }, { source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "US" } });
+    expect(pro()).toBe(false);
+    expect(refunds).toEqual(["paymob:1505:24900"]);
+  });
+});

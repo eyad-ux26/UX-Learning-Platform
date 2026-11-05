@@ -55,3 +55,4 @@ Paddle notification destination: `https://uxgate.org/api/webhooks/paddle`, event
 - Previews must not share the production database: give previews the staging Supabase project.
 - Paymob live mode and Paddle production keys, then one real payment and refund on each.
 - `support@uxgate.org` must receive mail (refund requests go there).
+- **Paymob card country:** pay once in Paymob test mode with a test card, then open that transaction (Paymob dashboard, or `GET /api/acceptance/transactions/<id>`) and find the field that holds the country that issued the card. Keep only that path in `CARD_COUNTRY_PATHS` (`apps/web/lib/billing/paymob.ts`). Until one of those paths matches, the card country is unknown, and a card issued abroad is not refused. When a path matches a country other than Egypt, the payment is refused and refunded.

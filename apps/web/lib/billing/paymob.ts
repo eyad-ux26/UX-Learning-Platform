@@ -38,6 +38,24 @@ export function cardFrom(source: Obj | undefined): Card {
   return { method: "card", brand: str(source?.sub_type) || null, last4: last4(source?.pan), expiry: null };
 }
 
+/**
+ * Where Paymob may report the country that issued the card. NOT YET CONFIRMED against Paymob's sandbox (its docs host
+ * could not be reached when this was written): look at a real card transaction once the test keys exist, and keep
+ * only the right path (docs/billing-keys.md). While no path matches, the card country is unknown and nothing is refused.
+ */
+export const CARD_COUNTRY_PATHS = ["source_data.issuer_country", "source_data.card_issuer_country", "data.card_issuer_country", "data.issuer_country", "data.card_country"];
+
+/** The card's issuing country (two letters, or Paymob's own code when it is not Egypt), or null when Paymob does not say. */
+export function cardCountry(obj: Obj): string | null {
+  for (const p of CARD_COUNTRY_PATHS) {
+    const v = str(get(obj, p)).trim().toUpperCase();
+    if (!v) continue;
+    if (v === "EG" || v === "EGY" || v === "EGYPT") return "EG";
+    if (/^[A-Z]{2,3}$/.test(v)) return v;
+  }
+  return null;
+}
+
 /** Turns one verified transaction object into our event. Also used for the direct reply to a token renewal charge, and by the test-mode provider. */
 export function transactionEvent(obj: Obj, provider: "paymob" | "mock" = "paymob"): BillingEvent {
   const id = str(obj.id);
@@ -52,6 +70,7 @@ export function transactionEvent(obj: Obj, provider: "paymob" | "mock" = "paymob
       ...base, type: "paid", eventId: `${id}:paid`, paymentId: id, sessionId: ref.sessionId, providerSubId: ref.subId, userId: null,
       amountMinor: Number(obj.amount_cents), currency: str(obj.currency) || "EGP", recurring: !!ref.subId, periodStart: null, periodEnd: null,
       card: cardFrom(obj.source_data as Obj | undefined), orderRef: str(get(obj, "order.id")) || null,
+      ...(provider === "paymob" ? { cardCountry: cardCountry(obj) } : {}),
     };
   if (obj.pending === true && ref.sessionId) return { ...base, type: "pending", eventId: `${id}:pending`, sessionId: ref.sessionId };
   return { ...base, type: "failed", eventId: `${id}:failed`, sessionId: ref.sessionId, providerSubId: ref.subId, recurring: !!ref.subId };

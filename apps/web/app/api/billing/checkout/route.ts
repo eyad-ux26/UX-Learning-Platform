@@ -3,6 +3,7 @@ import { z } from "zod";
 import { billingCaller, bad } from "@/lib/server/billing/route";
 import { startCheckout } from "@/lib/server/billing/checkout";
 import { hostOf, ipCountry } from "@/lib/server/billing/config";
+import { UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 
 const body = z.object({
   period: z.enum(["month", "year"]).default("month"),
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
     userId: who.user.id, email: who.user.email ?? "", name: prof?.display_name ?? null, locale: parsed.data.locale, period: parsed.data.period,
     code: parsed.data.code || null, kind: parsed.data.kind, host: hostOf(req), origin: url.origin,
     // The price region follows the country the request comes from (Cloudflare), never a country the learner picks.
-    country: ipCountry(req.headers) ?? "EG",
+    country: ipCountry(req.headers) ?? UNKNOWN_COUNTRY,
   });
   return NextResponse.json(r, { status: r.ok ? 200 : r.error === "provider" ? 502 : 409 });
 }

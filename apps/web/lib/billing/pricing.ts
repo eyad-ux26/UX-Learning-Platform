@@ -21,6 +21,12 @@ export const ARAB = ["JO", "LB", "IQ", "SY", "PS", "YE", "SD", "LY", "TN", "DZ",
 /** Countries offered in the billing country list, in this order. */
 export const COUNTRIES = ["EG", ...GULF, ...ARAB];
 
+/**
+ * The country used when the request's country is not known (no CF-IPCountry, or Cloudflare's XX / T1). "ZZ" is
+ * "Unknown Region" in every locale's country names. It prices at the world rate, never at Egypt's (the cheapest).
+ */
+export const UNKNOWN_COUNTRY = "ZZ";
+
 export function regionFor(country: string | null | undefined): Region {
   const c = (country ?? "").toUpperCase();
   if (c === "EG") return "eg";

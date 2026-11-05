@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { discountUntil, providerFor, quote, regionFor, type Eligibility, type Period, type Quote } from "@/lib/billing/pricing";
+import { discountUntil, providerFor, quote, regionFor, UNKNOWN_COUNTRY, type Eligibility, type Period, type Quote } from "@/lib/billing/pricing";
 import { welcomeBackEligible } from "@/lib/billing/subscription";
 import { entitlementFromRow, subFromRow } from "./store";
 import { mockAllowed, paddleConfig, providerMode } from "./config";
@@ -30,6 +30,9 @@ export async function studentStatus(admin: SupabaseClient, userId: string, now =
   const verified = !!data?.verified_at && !!data.valid_until && new Date(data.valid_until) > now;
   return { verified, validUntil: verified ? (data!.valid_until as string) : null, email: (data?.email as string) ?? null, sentAt: (data?.sent_at as string) ?? null };
 }
+
+/** Paddle's checkout gets the country only when Cloudflare told us one. */
+const knownCountry = (c: string) => (c === UNKNOWN_COUNTRY ? null : c);
 
 /** Prices a checkout for this learner. */
 export async function priceFor(admin: SupabaseClient, userId: string, country: string, period: Period, code: string | null) {
@@ -96,7 +99,7 @@ export async function startCheckout(admin: SupabaseClient, input: {
     const { data: open } = await admin.from("checkout_sessions").select("id, provider_ref").eq("user_id", input.userId).eq("provider", "paddle")
       .eq("kind", sessionKind).eq("period", q.period).eq("amount_minor", q.amount).eq("status", "open").not("provider_ref", "is", null)
       .gte("created_at", since).order("created_at", { ascending: false }).limit(1).maybeSingle();
-    if (open?.provider_ref) return { ok: true, paddle: { transactionId: open.provider_ref as string, clientToken: c.clientToken, env: c.env, sessionId: open.id as string, successUrl: successUrl(open.id as string), country } };
+    if (open?.provider_ref) return { ok: true, paddle: { transactionId: open.provider_ref as string, clientToken: c.clientToken, env: c.env, sessionId: open.id as string, successUrl: successUrl(open.id as string), country: knownCountry(country) } };
   }
 
   const { data: session, error } = await admin.from("checkout_sessions").insert({
@@ -128,7 +131,7 @@ export async function startCheckout(admin: SupabaseClient, input: {
       : await createTransaction({ region: q.region, period: q.period, discount: q.discount, sessionId: session.id, userId: input.userId, email: input.email, customerId: acct?.paddle_customer_id ?? null, country });
     await admin.from("checkout_sessions").update({ provider_ref: t.transactionId }).eq("id", session.id);
     if (t.customerId) await admin.from("billing_accounts").upsert({ user_id: input.userId, country, paddle_customer_id: t.customerId, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
-    return { ok: true, paddle: { transactionId: t.transactionId, clientToken: c.clientToken, env: c.env, sessionId: session.id, successUrl: returnUrl, country } };
+    return { ok: true, paddle: { transactionId: t.transactionId, clientToken: c.clientToken, env: c.env, sessionId: session.id, successUrl: returnUrl, country: knownCountry(country) } };
   } catch (err) {
     console.error("checkout provider error", err);
     await admin.from("checkout_sessions").update({ status: "failed" }).eq("id", session.id);

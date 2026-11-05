@@ -86,3 +86,11 @@ describe("dates and money", () => {
     expect(formatMoney(800, "USD", "ar")).toBe("$8");
   });
 });
+
+describe("an unknown request country", () => {
+  it("prices at the world rate through Paddle, never at Egypt's", async () => {
+    const { UNKNOWN_COUNTRY } = await import("./pricing");
+    expect(regionFor(UNKNOWN_COUNTRY)).toBe("world");
+    expect(providerFor(regionFor(UNKNOWN_COUNTRY))).toBe("paddle");
+  });
+});

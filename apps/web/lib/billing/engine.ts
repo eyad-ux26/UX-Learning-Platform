@@ -192,6 +192,13 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
         await store.updateSession(session.id, { status: "failed" });
         return { status: "ignored", note: "amount mismatch" };
       }
+      // Egypt's price is for cards issued in Egypt. Paymob charges only in EGP, so a card from abroad (someone on a VPN)
+      // cannot be moved to a dollar price there: the payment is refused and refunded. Wallets are Egyptian by nature.
+      if (ev.provider === "paymob" && ev.card?.method !== "wallet" && ev.cardCountry && ev.cardCountry !== "EG") {
+        console.error("billing: card issued outside Egypt", ev.paymentId, ev.cardCountry, session.id);
+        await store.updateSession(session.id, { status: "failed" });
+        return refuse(e, ev, session.userId, session.period, `card issued in ${ev.cardCountry}`);
+      }
       let live = session.kind === "renewal" && session.subscriptionId ? await store.subById(session.subscriptionId) : await store.liveSub(session.userId);
       // A test-mode plan (preview hosts) gives way to a real one.
       if (live?.id && live.provider === "mock" && ev.provider !== "mock" && LIVE.includes(live.status)) {
