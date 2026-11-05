@@ -12,6 +12,12 @@ export function pathProgressCounts(pathId: string, stateOf: StateOf, b: Bundle =
   const skills = pathSkills(pathId, b);
   return { total: skills.length, shown: skills.filter((s) => isShown(stateOf(s.id))).length, kept: skills.filter((s) => stateOf(s.id) === "kept").length };
 }
+/** Shown and Kept across the given paths only (Profile counts the paths it shows, so a lesson opened from an unjoined path does not add to the totals). */
+export function totalsAcross(pathIds: readonly string[], stateOf: StateOf, b: Bundle = defaultBundle) {
+  const t = { shown: 0, kept: 0 };
+  for (const id of new Set(pathIds)) { const c = pathProgressCounts(id, stateOf, b); t.shown += c.shown; t.kept += c.kept; }
+  return t;
+}
 /** True only when the path has skills and all of them are Shown or Kept. */
 export function certificateEarned(pathId: string, stateOf: StateOf, b: Bundle = defaultBundle): boolean {
   const c = pathProgressCounts(pathId, stateOf, b);

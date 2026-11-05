@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
 import { catalogEntry, pathArtUrl } from "@/lib/catalog";
-import { pathProgressCounts, pathSkills, isShown } from "@/lib/certificate";
+import { pathProgressCounts, pathSkills, isShown, totalsAcross } from "@/lib/certificate";
 import { buildPathView } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 import type { Certificate } from "@/lib/server/certificates";
@@ -12,11 +12,10 @@ import type { Certificate } from "@/lib/server/certificates";
 export async function ProfileMain({ me, certificates, boardOpen, since = null }: { me: Learner; certificates: Certificate[]; boardOpen: boolean; since?: string | null }) {
   const t = await getTranslations("profile");
   const locale = (await getLocale()) as Locale;
-  const states = [...me.skillStates.values()];
-  const shown = states.filter((s) => s.state === "shown" || s.state === "kept").length;
-  const kept = states.filter((s) => s.state === "kept").length;
   const ids = me.joined.length ? me.joined.map((j) => j.pathId) : [me.activePathId];
   const stateOf = (id: string) => me.skillStates.get(id)?.state;
+  // The totals add up the same paths as the cards below, so they always agree.
+  const { shown, kept } = totalsAcross(ids, stateOf);
   const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
   const name = me.progress.displayName?.trim() || "";
   const month = since ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(since)) : null;
