@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
@@ -8,7 +7,8 @@ import { pathArt } from "./HomeView";
 import { PathSwitcher } from "./PathSwitcher";
 import { LockedUnitSheet, type LockedUnitText } from "./LockedUnitSheet";
 import { catalogEntry } from "@/lib/catalog";
-import { buildPathView, testOutCheck } from "@/lib/learning";
+import { buildPathView, pathBegun, testOutCheck } from "@/lib/learning";
+import { certificateEarned, pathProgressCounts, pathSkills } from "@/lib/certificate";
 import type { Learner } from "@/lib/server/learner";
 import { FreeProList } from "@/components/billing/FreeProList";
 
@@ -42,14 +42,67 @@ function Row({ l, t, locale }: { l: PathLesson; t: Awaited<ReturnType<typeof get
   return (
     <li>
       <span className="node next"><span className="ph ph-play" style={{ fontSize: 20 }} aria-hidden="true" /></span>
-      <div className="card lcard next">
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span className="lsub" style={{ color: "var(--link)" }}>{cont ? t("inProgress") : t("next")} · {mins}</span>
-          <span className="t-label" style={{ fontSize: 16 }}>{title}</span>
-        </div>
-        <Link href={href} className="btn btn-primary btn-sm btn-block press" style={{ marginBlockEnd: 4 }}><span className="ph ph-play" aria-hidden="true" />{cont ? t("continue") : t("start")}</Link>
-      </div>
+      <Link href={href} className="card press lcard next" aria-label={`${title}. ${cont ? t("continue") : t("start")}`}>
+        <span className="lsub" style={{ color: "var(--link)" }}>{cont ? t("inProgress") : t("next")} · {mins}</span>
+        <span className="t-label" style={{ fontSize: 16 }}>{title}</span>
+      </Link>
     </li>
+  );
+}
+
+/**
+ * The path's one main action, at the top of the map (canvas v67, S3-13): Start this path before any lesson is opened,
+ * Continue this path afterwards (straight into the next unfinished lesson), and a finished path's review and certificate.
+ * A free learner whose next lesson is in a Pro unit gets the paywall, as the lesson page would send them.
+ */
+async function PathGo({ view, me, pct, locale }: { view: PathView; me: Learner; pct: number; locale: Locale }) {
+  const t = await getTranslations("map");
+  const tp = await getTranslations("paths");
+  const next = view.next;
+  if (!next) {
+    const stateOf = (id: string) => me.skillStates.get(id)?.state;
+    const skills = pathProgressCounts(view.path.id, stateOf);
+    const cert = certificateEarned(view.path.id, stateOf);
+    return (
+      <section className="path-go" aria-labelledby="pgo-title">
+        <span className="pgo-ic is-done" aria-hidden="true"><span className="ph ph-trophy-fill" /></span>
+        <div className="pgo-text">
+          <p className="pgo-over">{t("goDoneOver")}</p>
+          <h2 className="pgo-title" id="pgo-title">{t("goDoneTitle", { name: catalogEntry(view.path.id)?.name ?? view.path.title[locale] })}</h2>
+          <p className="pgo-meta">{t("goDoneMeta", { total: view.totalCount, shown: skills.shown, skills: skills.total })}</p>
+        </div>
+        <div className="pgo-acts">
+          <Link href="/app/review" className="btn btn-primary btn-lg btn-block press">{t("goReview")}<span className="ph ph-review" aria-hidden="true" /></Link>
+          {cert ? <Link href={`/app/certificate/${view.path.id}`} className="pg-link"><span className="ph ph-certificate" aria-hidden="true" />{t("goCert")}</Link> : null}
+        </div>
+      </section>
+    );
+  }
+  const begun = pathBegun(view);
+  const unitNo = view.units.find((u) => u.unit.id === next.unit.id)?.number ?? 1;
+  const locked = !me.pro && !next.unit.free;
+  const href = locked ? `/app/path/${view.path.id}?paywall=${next.unit.id}` : `/app/lesson/${next.lesson.lessonId}`;
+  const minutes = t("minutes", { count: next.lesson.minutes });
+  return (
+    <section className="path-go" aria-labelledby="pgo-title">
+      <span className="pgo-ic" aria-hidden="true"><span className={`ph ph-${begun ? "play-fill" : "cursor-fill"}`} /></span>
+      <div className="pgo-text">
+        <p className="pgo-over">{t(begun ? "goNextOver" : "goStartOver", { unit: unitNo, lesson: next.indexInUnit })}</p>
+        <h2 className="pgo-title" id="pgo-title">{next.lesson.body.title[locale]}</h2>
+        <p className="pgo-meta">{begun
+          ? t("goNextMeta", { minutes, done: view.doneCount, total: view.totalCount })
+          : t("goStartMeta", { minutes, units: tp("units", { count: view.unitCount }), lessons: tp("lessonsN", { count: view.totalCount }) })}</p>
+      </div>
+      {begun ? (
+        <div className="pgo-prog">
+          <span className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></span>
+          <span className="num">{pct}%</span>
+        </div>
+      ) : null}
+      <div className="pgo-acts">
+        <Link href={href} scroll={!locked} className="btn btn-primary btn-lg btn-block press">{begun ? tp("continueCta") : tp("startCta")}<span className="ph ph-arrow flip" aria-hidden="true" /></Link>
+      </div>
+    </section>
   );
 }
 
@@ -83,7 +136,6 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
   const firstLocked = pro ? null : view.units.find((u) => !u.unit.free)?.unit.id;
   const locale = (await getLocale()) as Locale;
   const pct = view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0;
-  const current = view.units.find((u) => u.lessons.some((l) => l.state !== "done")) ?? view.units[view.units.length - 1];
   const chips = me.joined.map((j) => {
     const v = buildPathView(j.pathId, progress, me.practicedSkills);
     const p = v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0;
@@ -107,21 +159,9 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
           <PathSwitcher chips={chips} currentId={view.path.id} />
           <p className="t-body ink-2">{view.path.subtitle[locale]}</p>
         </div>
-        <div style={{ flex: "1 1 220px", maxInlineSize: 280, display: "flex", flexDirection: "column", gap: 8 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}><span className="t-label">{t("pathProgress")}</span><span className="t-small num" style={{ fontWeight: 700 }}>{pct}%</span></div>
-          <div className="progress progress-sm" aria-hidden="true"><i style={{ inlineSize: `${pct}%` }} /></div>
-        </div>
       </div>
 
-      <section className="card-panel prog-card only-mobile">
-        <div className="col">
-          <div className="between"><span className="t-label">{t("pathProgress")}</span><span className="t-small num" style={{ fontWeight: 700 }}>{pct}%</span></div>
-          <div className="progress progress-sm" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label={t("pathProgress")} style={{ background: "var(--surface)" }}><i style={{ inlineSize: `${pct}%` }} /></div>
-          <span className="t-small ink-2" style={{ fontSize: 13 }}>{t("units", { unit: current.number, total: view.unitCount, done: view.doneCount, lessons: view.totalCount })}</span>
-        </div>
-        
-        <img src={pathArt(view.path.id)} alt="" />
-      </section>
+      <PathGo view={view} me={me} pct={pct} locale={locale} />
 
       {view.units.map((u) => !pro && !u.unit.free ? (
         <Link key={u.unit.id} href={`/app/path/${view.path.id}?paywall=${u.unit.id}`} scroll={false} className={`unit-lock press${u.unit.id === firstLocked ? " is-next" : ""}`} style={{ flexWrap: "wrap" }}>
@@ -166,25 +206,34 @@ export async function FreePlanCard() {
   );
 }
 
-export async function PathMapPanel({ view, pro = true }: { view: PathView; pro?: boolean }) {
+/**
+ * The laptop side panel (canvas v67, S3-13): path progress and the path's skills by state. The map's top card holds the
+ * one main action, so the panel adds no second Start button. A free learner also sees the plan card.
+ */
+export async function PathMapPanel({ view, me }: { view: PathView; me: Learner }) {
   const t = await getTranslations("map");
-  const locale = (await getLocale()) as Locale;
-  const l = view.next;
-  // The next lesson can be in a Pro unit: a free learner sees the plan card instead.
-  if (!pro && (!l || !view.units.find((u) => u.lessons.includes(l))?.unit.free)) return <FreePlanCard />;
-  if (!l) return null;
-  const cont = l.state === "in_progress";
+  const pct = view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0;
+  const skills = pathSkills(view.path.id);
+  const stateOf = (id: string) => me.skillStates.get(id)?.state;
+  const shown = skills.filter((s) => { const st = stateOf(s.id); return st === "shown" || st === "kept"; }).length;
+  const kept = skills.filter((s) => stateOf(s.id) === "kept").length;
+  const practiced = skills.filter((s) => me.practicedSkills.has(s.id)).length;
   return (
     <>
-      <div className="dk-prop">
-        <p className="t-over">{t("next")}</p>
-        
-        <img src={pathArt(view.path.id)} alt="" style={{ inlineSize: 120, blockSize: 120, alignSelf: "center" }} />
-        <h2 className="t-h2">{l.lesson.body.title[locale]}</h2>
-        <div className="meta-i t-small ink-2"><span className="ph ph-clock" aria-hidden="true" />{t("minutes", { count: l.lesson.minutes })}</div>
-      </div>
-      <Link href={`/app/lesson/${l.lesson.lessonId}`} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{cont ? t("continue") : t("start")}</Link>
-      {pro ? null : <FreePlanCard />}
+      <section className="card" style={{ padding: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+        <p className="t-over">{t("pathProgress")}</p>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}><b className="num" style={{ fontSize: 30 }}>{pct}%</b><span className="t-small ink-2">{t("progText", { done: view.doneCount, total: view.totalCount })}</span></div>
+        <div className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></div>
+        <p className="t-over" style={{ marginBlockStart: 6 }}>{t("skillsTitle")}</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <span className="skill skill-practiced"><span className="ph ph-check-circle" aria-hidden="true" /><span className="num">{practiced}</span> · {t("practiced")}</span>
+          <span className="skill skill-shown"><span className="ph ph-seal-fill" aria-hidden="true" /><span className="num">{shown}</span> · {t("shown")}</span>
+          <span className="skill skill-kept"><span className="ph ph-star-fill" aria-hidden="true" /><span className="num">{kept}</span> · {t("kept")}</span>
+        </div>
+        <p className="pg-note" style={{ fontSize: 13 }}><span className="ph ph-info" aria-hidden="true" /><span>{t("statesNote")}</span></p>
+      </section>
+      {me.pro ? null : <FreePlanCard />}
     </>
   );
 }
+
