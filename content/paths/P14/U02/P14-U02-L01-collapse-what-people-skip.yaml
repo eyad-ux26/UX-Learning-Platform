@@ -23,9 +23,13 @@ steps:
       en: "In the insurance app I manage, Laila wants to know one thing: does her health plan cover a dental cleaning?\n\nShe opens **Your plan**. All nine sections are open, one under the other: doctors, hospitals, medicines, eyes, dental, maternity, abroad, claims and terms. Dental is the fifth section, five screens down."
       ar: "في تطبيق التأمين الذي أديره، تريد ليلى أن تعرف شيئًا واحدًا: هل يغطّي تأمينها الصحي تنظيف الأسنان؟\n\nفتحت **خطّتك**. كل الأقسام التسعة مفتوحة، واحدًا تحت الآخر: الأطباء، والمستشفيات، والأدوية، والعيون، والأسنان، والولادة، والسفر، والمطالبات، والشروط. والأسنان هي القسم الخامس، بعد خمس شاشات."
     mock:
-      width: 300
-      blocks: &open
-        - { kind: title, text: { en: "Your plan", ar: "خطّتك" } }
+      app: aman
+      appbar: &abar { title: { en: "Your plan", ar: "خطّتك" }, back: true, actions: [ { icon: phone, aria: { en: "Call us", ar: "اتصلي بنا" } } ] }
+      blocks:
+        - kind: card
+          blocks:
+            - { kind: badge, text: { en: "Gold · Family", ar: "ذهبية · عائلية" }, icon: shield-check }
+            - { kind: small, text: { en: "Card no. 8812 4409 · valid to Dec 2027", ar: "بطاقة رقم 8812 4409 · سارية حتى ديسمبر 2027" }, gap: xs }
         - { kind: heading, text: { en: "Doctors", ar: "الأطباء" }, gap: m }
         - { kind: small, text: { en: "Visits to any doctor in the network are covered at 80%. Specialists need a referral from your family doctor, except for…", ar: "زيارات أي طبيب في الشبكة مغطّاة بنسبة 80%. والمتخصّصون يحتاجون تحويلًا من طبيب الأسرة، ما عدا…" }, gap: xs }
         - { kind: heading, text: { en: "Hospitals", ar: "المستشفيات" }, gap: m }
@@ -52,49 +56,45 @@ steps:
         text: { en: "Keep every section open, with bigger headings", ar: "أبقِ كل الأقسام مفتوحة، مع عناوين أكبر" }
         mock:
           caption: { en: "Dental is still five screens down", ar: "الأسنان ما زالت بعد خمس شاشات" }
-          width: 300
+          app: aman
+          appbar: *abar
           blocks:
-            - { kind: title, text: { en: "Your plan", ar: "خطّتك" } }
-            - { kind: title, text: { en: "Doctors", ar: "الأطباء" }, gap: m }
+            - { kind: title, text: { en: "Doctors", ar: "الأطباء" } }
             - { kind: small, text: { en: "Visits to any doctor in the network are covered at 80%. Specialists need a referral from your family doctor, except for…", ar: "زيارات أي طبيب في الشبكة مغطّاة بنسبة 80%. والمتخصّصون يحتاجون تحويلًا من طبيب الأسرة، ما عدا…" }, gap: xs }
             - { kind: title, text: { en: "Hospitals", ar: "المستشفيات" }, gap: m }
             - { kind: small, text: { en: "Stays in a shared room are fully covered. A private room is covered up to EGP 1,500 a night, and…", ar: "الإقامة في غرفة مشتركة مغطّاة بالكامل. والغرفة الخاصة مغطّاة حتى 1,500 جنيه في الليلة، و…" }, gap: xs }
       - id: more
         text: { en: "Show the first three sections, and the rest behind \"Show more\"", ar: "اعرض الأقسام الثلاثة الأولى، والباقي خلف «اعرض المزيد»" }
         mock:
-          width: 300
+          app: aman
+          appbar: *abar
           blocks:
-            - { kind: title, text: { en: "Your plan", ar: "خطّتك" } }
-            - { kind: heading, text: { en: "Doctors", ar: "الأطباء" }, gap: m }
+            - { kind: heading, text: { en: "Doctors", ar: "الأطباء" } }
             - { kind: small, text: { en: "Visits to any doctor in the network are covered at 80%…", ar: "زيارات أي طبيب في الشبكة مغطّاة بنسبة 80%…" }, gap: xs }
             - { kind: heading, text: { en: "Hospitals", ar: "المستشفيات" }, gap: m }
             - { kind: small, text: { en: "Stays in a shared room are fully covered…", ar: "الإقامة في غرفة مشتركة مغطّاة بالكامل…" }, gap: xs }
             - { kind: heading, text: { en: "Medicines", ar: "الأدوية" }, gap: m }
             - { kind: small, text: { en: "Medicines on the plan's list are covered at 70%…", ar: "الأدوية الموجودة في قائمة الخطّة مغطّاة بنسبة 70%…" }, gap: xs }
-            - { kind: link, text: { en: "Show more", ar: "اعرض المزيد" }, gap: m }
+            - { kind: button, style: text, icon: caret-down, text: { en: "Show more", ar: "اعرض المزيد" }, gap: m }
       - id: accordion
         text: { en: "Collapse each section under its title; tap a title to open it", ar: "اطوِ كل قسم تحت عنوانه؛ واضغط العنوان لفتحه" }
         mock:
-          width: 300
+          app: aman
+          appbar: *abar
           blocks: &acc
-            - { kind: title, text: { en: "Your plan", ar: "خطّتك" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Doctors", ar: "الأطباء" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Hospitals", ar: "المستشفيات" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Medicines", ar: "الأدوية" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Eyes", ar: "العيون" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Dental", ar: "الأسنان" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Maternity", ar: "الولادة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Abroad", ar: "السفر" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Claims", ar: "المطالبات" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
+            - kind: card
+              blocks:
+                - { kind: badge, text: { en: "Gold · Family", ar: "ذهبية · عائلية" }, icon: shield-check }
+                - { kind: small, text: { en: "Card no. 8812 4409", ar: "بطاقة رقم 8812 4409" }, gap: xs }
+            - { kind: accordion, text: { en: "Doctors", ar: "الأطباء" }, gap: m }
+            - { kind: accordion, text: { en: "Hospitals", ar: "المستشفيات" } }
+            - { kind: accordion, text: { en: "Medicines", ar: "الأدوية" } }
+            - { kind: accordion, text: { en: "Eyes", ar: "العيون" } }
+            - { kind: accordion, text: { en: "Dental", ar: "الأسنان" } }
+            - { kind: accordion, text: { en: "Maternity", ar: "الولادة" } }
+            - { kind: accordion, text: { en: "Abroad", ar: "السفر" } }
+            - { kind: accordion, text: { en: "Claims", ar: "المطالبات" } }
+            - { kind: accordion, text: { en: "Terms", ar: "الشروط" } }
     answer: [accordion]
     misconceptions:
       - id: MC-P14-017
@@ -168,44 +168,36 @@ steps:
       - id: list
         text: { en: "All six steps open, as one numbered list", ar: "الخطوات الست مفتوحة، كقائمة واحدة مرقّمة" }
         mock:
-          width: 300
+          app: shabaka
+          appbar: &shbar { title: { en: "Set up your router", ar: "ركّب الراوتر" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Set up your router", ar: "ركّب الراوتر" } }
-            - { kind: text, weight: bold, text: { en: "1. Plug in the cable", ar: "1. وصّل السلك" }, gap: m }
-            - { kind: small, text: { en: "Use the yellow port marked WAN.", ar: "استخدم المنفذ الأصفر المكتوب عليه WAN." }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "2. Turn it on", ar: "2. شغّله" }, gap: m }
-            - { kind: small, text: { en: "Press the button on the back for 2 seconds.", ar: "اضغط الزر الخلفي لمدة ثانيتين." }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "3. Wait for the green light", ar: "3. انتظر الضوء الأخضر" }, gap: m }
-            - { kind: small, text: { en: "It takes about a minute.", ar: "يستغرق ذلك دقيقة تقريبًا." }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "4. Join the network", ar: "4. اتصل بالشبكة" }, gap: m }
-            - { kind: small, text: { en: "The name and password are on the sticker.", ar: "الاسم وكلمة المرور على الملصق." }, gap: xs }
+            - { kind: image, art: workshop, size: s, alt: { en: "Router on a desk", ar: "راوتر على مكتب" } }
+            - { kind: listitem, icon: plug, text: { en: "1. Plug in the cable", ar: "1. وصّل السلك" }, sub: { en: "Use the yellow port marked WAN.", ar: "استخدم المنفذ الأصفر المكتوب عليه WAN." }, gap: s }
+            - { kind: listitem, icon: power, text: { en: "2. Turn it on", ar: "2. شغّله" }, sub: { en: "Press the button on the back for 2 seconds.", ar: "اضغط الزر الخلفي لمدة ثانيتين." } }
+            - { kind: listitem, icon: lightbulb, text: { en: "3. Wait for the green light", ar: "3. انتظر الضوء الأخضر" }, sub: { en: "It takes about a minute.", ar: "يستغرق ذلك دقيقة تقريبًا." } }
+            - { kind: listitem, icon: wifi-high, text: { en: "4. Join the network", ar: "4. اتصل بالشبكة" }, sub: { en: "The name and password are on the sticker.", ar: "الاسم وكلمة المرور على الملصق." } }
       - id: collapsed
         text: { en: "Each step collapsed under its title", ar: "كل خطوة مطويّة تحت عنوانها" }
         mock:
-          width: 300
+          app: shabaka
+          appbar: *shbar
           blocks:
-            - { kind: title, text: { en: "Set up your router", ar: "ركّب الراوتر" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "1. Plug in the cable", ar: "1. وصّل السلك" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "2. Turn it on", ar: "2. شغّله" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "3. Wait for the green light", ar: "3. انتظر الضوء الأخضر" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "4. Join the network", ar: "4. اتصل بالشبكة" } }, { kind: meta, text: "+" }] }
+            - { kind: image, art: workshop, size: s, alt: { en: "Router on a desk", ar: "راوتر على مكتب" } }
+            - { kind: accordion, text: { en: "1. Plug in the cable", ar: "1. وصّل السلك" }, gap: s }
+            - { kind: accordion, text: { en: "2. Turn it on", ar: "2. شغّله" } }
+            - { kind: accordion, text: { en: "3. Wait for the green light", ar: "3. انتظر الضوء الأخضر" } }
+            - { kind: accordion, text: { en: "4. Join the network", ar: "4. اتصل بالشبكة" } }
       - id: one
         text: { en: "Only one step open at a time; opening the next closes the last", ar: "خطوة واحدة مفتوحة في كل مرة؛ وفتح التالية يغلق السابقة" }
         mock:
-          width: 300
+          app: shabaka
+          appbar: *shbar
           blocks:
-            - { kind: title, text: { en: "Set up your router", ar: "ركّب الراوتر" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "1. Plug in the cable", ar: "1. وصّل السلك" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "2. Turn it on", ar: "2. شغّله" } }, { kind: meta, text: "−" }] }
-            - { kind: small, text: { en: "Press the button on the back for 2 seconds.", ar: "اضغط الزر الخلفي لمدة ثانيتين." }, gap: xs }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "3. Wait for the green light", ar: "3. انتظر الضوء الأخضر" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "4. Join the network", ar: "4. اتصل بالشبكة" } }, { kind: meta, text: "+" }] }
+            - { kind: image, art: workshop, size: s, alt: { en: "Router on a desk", ar: "راوتر على مكتب" } }
+            - { kind: accordion, text: { en: "1. Plug in the cable", ar: "1. وصّل السلك" }, gap: s }
+            - { kind: accordion, text: { en: "2. Turn it on", ar: "2. شغّله" }, open: true, blocks: [ { kind: small, text: { en: "Press the button on the back for 2 seconds.", ar: "اضغط الزر الخلفي لمدة ثانيتين." } } ] }
+            - { kind: accordion, text: { en: "3. Wait for the green light", ar: "3. انتظر الضوء الأخضر" } }
+            - { kind: accordion, text: { en: "4. Join the network", ar: "4. اتصل بالشبكة" } }
     answer: [list]
     misconceptions:
       - id: MC-P14-016
@@ -241,35 +233,30 @@ steps:
       - id: above
         text: { en: "Show the rule above the sections, always visible", ar: "اعرض الشرط فوق الأقسام، ظاهرًا دائمًا" }
         mock:
-          width: 300
+          app: aman
+          appbar: *abar
           blocks:
-            - { kind: title, text: { en: "Your plan", ar: "خطّتك" } }
-            - { kind: banner, text: { en: "Send receipts within 30 days of a visit, or it won't be paid.", ar: "أرسلي الإيصال خلال 30 يومًا من الزيارة، وإلا فلن تُدفع قيمتها." }, gap: m }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Dental", ar: "الأسنان" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Maternity", ar: "الولادة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Claims", ar: "المطالبات" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
+            - { kind: banner, icon: receipt, tone: warn, text: { en: "Send receipts within 30 days of a visit, or it won't be paid.", ar: "أرسلي الإيصال خلال 30 يومًا من الزيارة، وإلا فلن تُدفع قيمتها." } }
+            - { kind: accordion, text: { en: "Dental", ar: "الأسنان" }, gap: m }
+            - { kind: accordion, text: { en: "Maternity", ar: "الولادة" } }
+            - { kind: accordion, text: { en: "Claims", ar: "المطالبات" } }
+            - { kind: accordion, text: { en: "Terms", ar: "الشروط" } }
       - id: inside
         text: { en: "Keep the rule inside Claims", ar: "أبقِ الشرط داخل «المطالبات»" }
         mock:
-          width: 300
+          app: aman
+          appbar: *abar
           blocks: *acc
       - id: label
         text: { en: "Keep it inside, but rename the title \"Claims (important)\"", ar: "أبقِه بالداخل، لكن غيّر العنوان إلى «المطالبات (مهم)»" }
         mock:
-          width: 300
+          app: aman
+          appbar: *abar
           blocks:
-            - { kind: title, text: { en: "Your plan", ar: "خطّتك" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Dental", ar: "الأسنان" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Maternity", ar: "الولادة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Claims (important)", ar: "المطالبات (مهم)" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
+            - { kind: accordion, text: { en: "Dental", ar: "الأسنان" } }
+            - { kind: accordion, text: { en: "Maternity", ar: "الولادة" } }
+            - { kind: accordion, text: { en: "Claims (important)", ar: "المطالبات (مهم)" } }
+            - { kind: accordion, text: { en: "Terms", ar: "الشروط" } }
     answer: [above]
     misconceptions:
       - id: MC-P14-018
@@ -306,28 +293,32 @@ steps:
     a:
       label: { en: "Version A: the rule in a line above Buy", ar: "النسخة A: الشرط في سطر فوق «اشترِ»" }
       mock:
-        width: 260
+        app: tazkara
+        appbar: &tbar { title: { en: "Concert", ar: "حفلة" }, back: true, actions: [ { icon: share-network, aria: { en: "Share", ar: "شارك" } } ] }
         blocks:
-          - { kind: heading, text: { en: "Concert · Fri 8 pm · EGP 1,200", ar: "حفلة · الجمعة 8 م · 1,200 جنيه" } }
-          - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Venue", ar: "المكان" } }, { kind: meta, text: "+" }] }
-          - { kind: divider }
-          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Seating", ar: "المقاعد" } }, { kind: meta, text: "+" }] }
-          - { kind: divider }
-          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Refunds", ar: "الاسترداد" } }, { kind: meta, text: "+" }] }
-          - { kind: small, weight: bold, text: { en: "This ticket can't be refunded.", ar: "لا يمكن استرداد قيمة هذه التذكرة." }, gap: l }
-          - { kind: button, text: { en: "Buy ticket", ar: "اشترِ التذكرة" }, gap: s }
+          - { kind: image, art: city-night, size: m, alt: { en: "Concert stage", ar: "مسرح الحفلة" } }
+          - { kind: heading, text: { en: "Concert · Fri 8 pm", ar: "حفلة · الجمعة 8 م" }, gap: s }
+          - { kind: price, text: { en: "EGP 1,200", ar: "1,200 جنيه" }, gap: xs }
+          - { kind: small, weight: bold, text: { en: "This ticket can't be refunded.", ar: "لا يمكن استرداد قيمة هذه التذكرة." }, gap: xs }
+          - { kind: accordion, text: { en: "Venue", ar: "المكان" }, gap: s }
+          - { kind: accordion, text: { en: "Seating", ar: "المقاعد" } }
+          - { kind: accordion, text: { en: "Refunds", ar: "الاسترداد" } }
+        footer:
+          - { kind: button, text: { en: "Buy ticket", ar: "اشترِ التذكرة" } }
     b:
       label: { en: "Version B: the rule inside Refunds", ar: "النسخة B: الشرط داخل «الاسترداد»" }
       mock:
-        width: 260
+        app: tazkara
+        appbar: *tbar
         blocks:
-          - { kind: heading, text: { en: "Concert · Fri 8 pm · EGP 1,200", ar: "حفلة · الجمعة 8 م · 1,200 جنيه" } }
-          - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Venue", ar: "المكان" } }, { kind: meta, text: "+" }] }
-          - { kind: divider }
-          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Seating", ar: "المقاعد" } }, { kind: meta, text: "+" }] }
-          - { kind: divider }
-          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Refunds", ar: "الاسترداد" } }, { kind: meta, text: "+" }] }
-          - { kind: button, text: { en: "Buy ticket", ar: "اشترِ التذكرة" }, gap: l }
+          - { kind: image, art: city-night, size: m, alt: { en: "Concert stage", ar: "مسرح الحفلة" } }
+          - { kind: heading, text: { en: "Concert · Fri 8 pm", ar: "حفلة · الجمعة 8 م" }, gap: s }
+          - { kind: price, text: { en: "EGP 1,200", ar: "1,200 جنيه" }, gap: xs }
+          - { kind: accordion, text: { en: "Venue", ar: "المكان" }, gap: s }
+          - { kind: accordion, text: { en: "Seating", ar: "المقاعد" } }
+          - { kind: accordion, text: { en: "Refunds", ar: "الاسترداد" } }
+        footer:
+          - { kind: button, text: { en: "Buy ticket", ar: "اشترِ التذكرة" } }
     answer: a
     misconceptions:
       - id: MC-P14-018
@@ -363,7 +354,10 @@ steps:
       - id: open
         text: { en: "All 14 questions and answers open", ar: "الأسئلة الـ 14 وأجوبتها مفتوحة" }
         mock:
+          app: tard
           frame: wide
+          url: tard.example/help
+          navbar: &tnav { links: [ { en: "Send", ar: "أرسل" }, { en: "Track", ar: "تتبّع" }, { en: "Help", ar: "المساعدة" } ], active: 2, actions: [ { icon: user } ] }
           blocks:
             - { kind: title, text: { en: "Help", ar: "المساعدة" } }
             - { kind: text, weight: bold, text: { en: "How do I track my parcel?", ar: "كيف أتتبّع شحنتي؟" }, gap: m }
@@ -373,22 +367,25 @@ steps:
       - id: acc
         text: { en: "The 14 questions as an accordion: tap one to see its answer", ar: "الأسئلة الـ 14 كـ Accordion: اضغط سؤالًا لترى جوابه" }
         mock:
+          app: tard
           frame: wide
+          url: tard.example/help
+          navbar: *tnav
           blocks:
             - { kind: title, text: { en: "Help", ar: "المساعدة" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "How do I track my parcel?", ar: "كيف أتتبّع شحنتي؟" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "How much does sending a parcel cost?", ar: "كم تكلفة إرسال شحنة؟" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "What happens if I miss a delivery?", ar: "ماذا يحدث إن فاتني التوصيل؟" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Can I change the delivery address?", ar: "هل يمكنني تغيير عنوان التوصيل؟" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
+            - { kind: searchbar, text: { en: "Search help", ar: "ابحث في المساعدة" }, gap: s }
+            - { kind: accordion, text: { en: "How do I track my parcel?", ar: "كيف أتتبّع شحنتي؟" }, gap: m }
+            - { kind: accordion, text: { en: "How much does sending a parcel cost?", ar: "كم تكلفة إرسال شحنة؟" } }
+            - { kind: accordion, text: { en: "What happens if I miss a delivery?", ar: "ماذا يحدث إن فاتني التوصيل؟" } }
+            - { kind: accordion, text: { en: "Can I change the delivery address?", ar: "هل يمكنني تغيير عنوان التوصيل؟" } }
             - { kind: meta, text: { en: "+ 10 more questions", ar: "+ 10 أسئلة أخرى" }, gap: s }
       - id: top
         text: { en: "Only the 5 most asked questions; remove the other 9", ar: "أكثر 5 أسئلة طرحًا فقط؛ واحذف الأسئلة التسعة الأخرى" }
         mock:
+          app: tard
           frame: wide
+          url: tard.example/help
+          navbar: *tnav
           blocks:
             - { kind: title, text: { en: "Help", ar: "المساعدة" } }
             - { kind: text, weight: bold, text: { en: "How do I track my parcel?", ar: "كيف أتتبّع شحنتي؟" }, gap: m }

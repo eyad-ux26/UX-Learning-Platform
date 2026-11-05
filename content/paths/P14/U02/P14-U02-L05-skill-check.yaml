@@ -46,33 +46,35 @@ steps:
       - id: all
         text: { en: "Keep all three filled", ar: "أبقِ الثلاثة ممتلئة" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Payment", ar: "الدفع" } }
-            - { kind: meta, text: { en: "Nile View Hotel · 3 nights", ar: "فندق نايل فيو · 3 ليالٍ" }, gap: s }
-            - { kind: button, text: { en: "Apply promo code", ar: "استخدم كود الخصم" }, gap: l }
+          app: nuzul
+          appbar: &pbar { title: { en: "Payment", ar: "الدفع" }, back: true }
+          blocks: &pay
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights · 12 to 15 March", ar: "3 ليالٍ · من 12 إلى 15 مارس" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
+            - { kind: listitem, icon: credit-card, text: { en: "Visa •••• 4821", ar: "Visa •••• 4821" }, chevron: true, gap: s }
+          footer:
+            - { kind: button, text: { en: "Apply promo code", ar: "استخدم كود الخصم" } }
             - { kind: button, text: { en: "Pay EGP 4,200", ar: "ادفع 4,200 جنيه" }, gap: s }
             - { kind: button, text: { en: "Back", ar: "رجوع" }, gap: s }
       - id: pay
         text: { en: "Pay filled; promo code outlined; Back as text", ar: "«ادفع» ممتلئ؛ وكود الخصم بإطار فقط؛ و«رجوع» نص" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Payment", ar: "الدفع" } }
-            - { kind: meta, text: { en: "Nile View Hotel · 3 nights", ar: "فندق نايل فيو · 3 ليالٍ" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Apply promo code", ar: "استخدم كود الخصم" }, gap: l }
+          app: nuzul
+          appbar: *pbar
+          blocks: *pay
+          footer:
+            - { kind: button, style: outline, icon: tag, text: { en: "Apply promo code", ar: "استخدم كود الخصم" } }
             - { kind: button, text: { en: "Pay EGP 4,200", ar: "ادفع 4,200 جنيه" }, gap: s }
-            - { kind: button, style: plain, text: { en: "Back", ar: "رجوع" }, gap: s }
+            - { kind: button, style: text, text: { en: "Back", ar: "رجوع" }, gap: s }
       - id: promo
         text: { en: "Promo code filled; Pay and Back outlined", ar: "كود الخصم ممتلئ؛ و«ادفع» و«رجوع» بإطار فقط" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Payment", ar: "الدفع" } }
-            - { kind: meta, text: { en: "Nile View Hotel · 3 nights", ar: "فندق نايل فيو · 3 ليالٍ" }, gap: s }
-            - { kind: button, text: { en: "Apply promo code", ar: "استخدم كود الخصم" }, gap: l }
-            - { kind: button, emphasis: low, text: { en: "Pay EGP 4,200", ar: "ادفع 4,200 جنيه" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Back", ar: "رجوع" }, gap: s }
+          app: nuzul
+          appbar: *pbar
+          blocks: *pay
+          footer:
+            - { kind: button, icon: tag, text: { en: "Apply promo code", ar: "استخدم كود الخصم" } }
+            - { kind: button, style: outline, text: { en: "Pay EGP 4,200", ar: "ادفع 4,200 جنيه" }, gap: s }
+            - { kind: button, style: outline, text: { en: "Back", ar: "رجوع" }, gap: s }
     answer: [pay]
     misconceptions:
       - id: MC-P14-019
@@ -111,10 +113,12 @@ steps:
       - id: open
         text: { en: "All eight sections open, one under the other", ar: "الأقسام الثمانية مفتوحة، واحدًا تحت الآخر" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: &hbar { title: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, back: true, actions: [ { icon: heart, aria: { en: "Save", ar: "احفظ" } } ] }
           blocks:
-            - { kind: image, size: m }
-            - { kind: heading, text: { en: "Nile View Hotel · EGP 1,400 a night", ar: "فندق نايل فيو · 1,400 جنيه في الليلة" }, gap: s }
+            - { kind: image, art: hotel-room, size: m, alt: { en: "Hotel room", ar: "غرفة الفندق" } }
+            - { kind: heading, text: { en: "Nile View Hotel · ★ 4.6", ar: "فندق نايل فيو · ★ 4.6" }, gap: s }
+            - { kind: price, text: { en: "EGP 1,400", ar: "1,400 جنيه" }, per: { en: "/ night", ar: "/ الليلة" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Rooms", ar: "الغرف" }, gap: m }
             - { kind: small, text: { en: "All rooms have a balcony, air conditioning and a safe. Rooms on floors 5 to 9 face the river…", ar: "كل الغرف فيها شرفة وتكييف وخزنة. والغرف في الأدوار من الخامس إلى التاسع تطلّ على النيل…" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Breakfast", ar: "الإفطار" }, gap: m }
@@ -122,26 +126,26 @@ steps:
       - id: acc
         text: { en: "The eight sections as an accordion under the price", ar: "الأقسام الثمانية كـ Accordion تحت السعر" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *hbar
           blocks:
-            - { kind: image, size: m }
-            - { kind: heading, text: { en: "Nile View Hotel · EGP 1,400 a night", ar: "فندق نايل فيو · 1,400 جنيه في الليلة" }, gap: s }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Rooms", ar: "الغرف" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Breakfast", ar: "الإفطار" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Parking", ar: "الانتظار" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Pool", ar: "المسبح" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
+            - { kind: image, art: hotel-room, size: m, alt: { en: "Hotel room", ar: "غرفة الفندق" } }
+            - { kind: heading, text: { en: "Nile View Hotel · ★ 4.6", ar: "فندق نايل فيو · ★ 4.6" }, gap: s }
+            - { kind: price, text: { en: "EGP 1,400", ar: "1,400 جنيه" }, per: { en: "/ night", ar: "/ الليلة" }, gap: xs }
+            - { kind: accordion, text: { en: "Rooms", ar: "الغرف" }, gap: m }
+            - { kind: accordion, text: { en: "Breakfast", ar: "الإفطار" } }
+            - { kind: accordion, text: { en: "Parking", ar: "الانتظار" } }
+            - { kind: accordion, text: { en: "Pool", ar: "المسبح" } }
             - { kind: meta, text: { en: "+ 4 more sections", ar: "+ 4 أقسام أخرى" }, gap: s }
       - id: two
         text: { en: "Show only Rooms and Breakfast; remove the other six", ar: "اعرض الغرف والإفطار فقط؛ واحذف الأقسام الستة الأخرى" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *hbar
           blocks:
-            - { kind: image, size: m }
-            - { kind: heading, text: { en: "Nile View Hotel · EGP 1,400 a night", ar: "فندق نايل فيو · 1,400 جنيه في الليلة" }, gap: s }
+            - { kind: image, art: hotel-room, size: m, alt: { en: "Hotel room", ar: "غرفة الفندق" } }
+            - { kind: heading, text: { en: "Nile View Hotel · ★ 4.6", ar: "فندق نايل فيو · ★ 4.6" }, gap: s }
+            - { kind: price, text: { en: "EGP 1,400", ar: "1,400 جنيه" }, per: { en: "/ night", ar: "/ الليلة" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Rooms", ar: "الغرف" }, gap: m }
             - { kind: small, text: { en: "All rooms have a balcony, air conditioning and a safe…", ar: "كل الغرف فيها شرفة وتكييف وخزنة…" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Breakfast", ar: "الإفطار" }, gap: m }
@@ -184,25 +188,42 @@ steps:
       - id: icon
         text: { en: "\"✈\" alone", ar: "«✈» وحدها" }
         mock:
-          width: 300
-          fab: { icon: "✈" }
+          app: nuzul
+          appbar: &tbar { title: { en: "My trips", ar: "رحلاتي" }, large: true }
+          tabbar: &ntabs
+            active: 1
+            items:
+              - { icon: magnifying-glass, text: { en: "Explore", ar: "استكشف" } }
+              - { icon: suitcase, text: { en: "Trips", ar: "رحلاتي" } }
+              - { icon: user, text: { en: "Account", ar: "حسابي" } }
+          fab: { icon: airplane-tilt }
           blocks: &trips
-            - { kind: title, text: { en: "My trips", ar: "رحلاتي" } }
-            - { kind: text, weight: bold, text: { en: "Aswan · 12 to 15 March", ar: "أسوان · من 12 إلى 15 مارس" }, gap: m }
-            - { kind: meta, text: { en: "Nile View Hotel · 3 nights", ar: "فندق نايل فيو · 3 ليالٍ" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "Dahab · 2 to 6 May", ar: "دهب · من 2 إلى 6 مايو" }, gap: m }
-            - { kind: meta, text: { en: "Blue Lagoon Camp · 4 nights", ar: "معسكر بلو لاجون · 4 ليالٍ" }, gap: xs }
+            - kind: card
+              art: hotel-room
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Aswan · 12 to 15 March", ar: "أسوان · من 12 إلى 15 مارس" } }
+                - { kind: meta, text: { en: "Nile View Hotel · 3 nights", ar: "فندق نايل فيو · 3 ليالٍ" }, gap: xs }
+            - kind: card
+              art: beach
+              gap: s
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Dahab · 2 to 6 May", ar: "دهب · من 2 إلى 6 مايو" } }
+                - { kind: meta, text: { en: "Blue Lagoon Camp · 4 nights", ar: "معسكر بلو لاجون · 4 ليالٍ" }, gap: xs }
       - id: support
         text: { en: "\"💬 Support\"", ar: "«💬 الدعم»" }
         mock:
-          width: 300
-          fab: { icon: "💬", text: { en: "Support", ar: "الدعم" } }
+          app: nuzul
+          appbar: *tbar
+          tabbar: *ntabs
+          fab: { icon: chat-circle-dots, text: { en: "Support", ar: "الدعم" } }
           blocks: *trips
       - id: plan
         text: { en: "\"✈ Plan a trip\"", ar: "«✈ خطّط لرحلة»" }
         mock:
-          width: 300
-          fab: { icon: "✈", text: { en: "Plan a trip", ar: "خطّط لرحلة" } }
+          app: nuzul
+          appbar: *tbar
+          tabbar: *ntabs
+          fab: { icon: airplane-tilt, text: { en: "Plan a trip", ar: "خطّط لرحلة" } }
           blocks: *trips
     answer: [plan]
     misconceptions:
@@ -242,37 +263,37 @@ steps:
       - id: inside
         text: { en: "Keep the rule inside Payment details", ar: "أبقِ الشرط داخل «تفاصيل الدفع»" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: &sbar { title: { en: "Booking summary", ar: "ملخّص الحجز" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Booking summary", ar: "ملخّص الحجز" } }
-            - { kind: meta, text: { en: "3 nights · EGP 4,200", ar: "3 ليالٍ · 4,200 جنيه" }, gap: s }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Room", ar: "الغرفة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Payment details", ar: "تفاصيل الدفع" } }, { kind: meta, text: "+" }] }
-            - { kind: button, text: { en: "Book", ar: "احجز" }, gap: l }
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights", ar: "3 ليالٍ" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
+            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m }
+            - { kind: accordion, text: { en: "Payment details", ar: "تفاصيل الدفع" } }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: line
         text: { en: "Show the rule in a line right above Book", ar: "اعرض الشرط في سطر فوق «احجز» مباشرة" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *sbar
           blocks:
-            - { kind: title, text: { en: "Booking summary", ar: "ملخّص الحجز" } }
-            - { kind: meta, text: { en: "3 nights · EGP 4,200", ar: "3 ليالٍ · 4,200 جنيه" }, gap: s }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Room", ar: "الغرفة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Payment details", ar: "تفاصيل الدفع" } }, { kind: meta, text: "+" }] }
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights", ar: "3 ليالٍ" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
+            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m }
+            - { kind: accordion, text: { en: "Payment details", ar: "تفاصيل الدفع" } }
             - { kind: small, weight: bold, text: { en: "EGP 500 is charged now and won't be refunded.", ar: "يُخصم 500 جنيه الآن ولن تُسترد." }, gap: l }
-            - { kind: button, text: { en: "Book", ar: "احجز" }, gap: s }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: star
         text: { en: "Keep it inside, and add ★ to the Payment details title", ar: "أبقِه بالداخل، وأضف ★ إلى عنوان «تفاصيل الدفع»" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *sbar
           blocks:
-            - { kind: title, text: { en: "Booking summary", ar: "ملخّص الحجز" } }
-            - { kind: meta, text: { en: "3 nights · EGP 4,200", ar: "3 ليالٍ · 4,200 جنيه" }, gap: s }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Room", ar: "الغرفة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Payment details ★", ar: "تفاصيل الدفع ★" } }, { kind: meta, text: "+" }] }
-            - { kind: button, text: { en: "Book", ar: "احجز" }, gap: l }
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights", ar: "3 ليالٍ" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
+            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m }
+            - { kind: accordion, text: { en: "Payment details ★", ar: "تفاصيل الدفع ★" } }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
     answer: [line]
     misconceptions:
       - id: MC-P14-018
@@ -306,39 +327,31 @@ steps:
       - id: menu
         text: { en: "All four in a ⋯ menu", ar: "الأربعة في قائمة ⋯" }
         mock:
-          width: 300
-          blocks:
-            - kind: row
-              blocks:
-                - { kind: title, text: { en: "Aswan trip", ar: "رحلة أسوان" } }
-                - { kind: iconbtn, text: "⋯" }
-            - { kind: meta, text: { en: "Nile View Hotel · 12 to 15 March", ar: "فندق نايل فيو · من 12 إلى 15 مارس" }, gap: s }
-            - { kind: image, size: m, gap: m }
+          app: nuzul
+          appbar: &abar { title: { en: "Aswan trip", ar: "رحلة أسوان" }, back: true, actions: [ { icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks: &aswan
+            - { kind: image, art: hotel-room, size: m, alt: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
+            - { kind: listitem, icon: calendar-blank, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: s }
       - id: two
         text: { en: "Booking code and Directions on screen; the other two in ⋯", ar: "رمز الحجز والاتجاهات على الشاشة؛ والاثنان الآخران في ⋯" }
         mock:
-          width: 300
-          blocks:
-            - kind: row
-              blocks:
-                - { kind: title, text: { en: "Aswan trip", ar: "رحلة أسوان" } }
-                - { kind: iconbtn, text: "⋯" }
-            - { kind: meta, text: { en: "Nile View Hotel · 12 to 15 March", ar: "فندق نايل فيو · من 12 إلى 15 مارس" }, gap: s }
-            - { kind: image, size: m, gap: m }
-            - { kind: button, text: { en: "Show booking code", ar: "اعرض رمز الحجز" }, gap: m }
-            - { kind: button, emphasis: low, text: { en: "Directions", ar: "الاتجاهات" }, gap: s }
+          app: nuzul
+          appbar: *abar
+          blocks: *aswan
+          footer:
+            - { kind: button, icon: qr-code, text: { en: "Show booking code", ar: "اعرض رمز الحجز" } }
+            - { kind: button, style: outline, icon: navigation-arrow, text: { en: "Directions", ar: "الاتجاهات" }, gap: s }
       - id: all
         text: { en: "All four as buttons", ar: "الأربعة كأزرار" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Aswan trip", ar: "رحلة أسوان" } }
-            - { kind: meta, text: { en: "Nile View Hotel · 12 to 15 March", ar: "فندق نايل فيو · من 12 إلى 15 مارس" }, gap: s }
-            - { kind: image, size: m, gap: m }
-            - { kind: button, text: { en: "Show booking code", ar: "اعرض رمز الحجز" }, gap: m }
-            - { kind: button, emphasis: low, text: { en: "Directions", ar: "الاتجاهات" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Download invoice", ar: "حمّل الفاتورة" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Report a problem", ar: "أبلِغ عن مشكلة" }, gap: s }
+          app: nuzul
+          appbar: { title: { en: "Aswan trip", ar: "رحلة أسوان" }, back: true }
+          blocks: *aswan
+          footer:
+            - { kind: button, icon: qr-code, text: { en: "Show booking code", ar: "اعرض رمز الحجز" } }
+            - { kind: button, style: outline, text: { en: "Directions", ar: "الاتجاهات" }, gap: s }
+            - { kind: button, style: outline, text: { en: "Download invoice", ar: "حمّل الفاتورة" }, gap: s }
+            - { kind: button, style: outline, text: { en: "Report a problem", ar: "أبلِغ عن مشكلة" }, gap: s }
     answer: [two]
     misconceptions:
       - id: MC-P14-021
@@ -377,10 +390,10 @@ steps:
       - id: allchips
         text: { en: "Room types and Book now, all as chips", ar: "أنواع الغرف و«احجز الآن»، كلها Chips" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: &rbar { title: { en: "Room type", ar: "نوع الغرفة" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
-            - { kind: meta, text: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: xs }
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" } }
             - kind: chips
               gap: m
               items:
@@ -391,31 +404,33 @@ steps:
       - id: allbuttons
         text: { en: "Room types and Book now, all as filled buttons", ar: "أنواع الغرف و«احجز الآن»، كلها أزرار ممتلئة" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *rbar
           blocks:
-            - { kind: title, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
-            - { kind: meta, text: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: xs }
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" } }
             - kind: row
               gap: m
               blocks:
                 - { kind: button, text: { en: "Single", ar: "فردية" } }
                 - { kind: button, text: { en: "Double", ar: "مزدوجة" } }
                 - { kind: button, text: { en: "Family", ar: "عائلية" } }
-            - { kind: button, text: { en: "Book now", ar: "احجز الآن" }, gap: s }
+          footer:
+            - { kind: button, text: { en: "Book now", ar: "احجز الآن" } }
       - id: mixed
         text: { en: "Room types as chips; Book now as a filled button", ar: "أنواع الغرف Chips؛ و«احجز الآن» زر ممتلئ" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *rbar
           blocks:
-            - { kind: title, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
-            - { kind: meta, text: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" }, gap: xs }
+            - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "12 to 15 March · 2 guests", ar: "من 12 إلى 15 مارس · ضيفان" } }
             - kind: chips
               gap: m
               items:
                 - { text: { en: "Single", ar: "فردية" } }
                 - { text: { en: "Double", ar: "مزدوجة" }, on: true }
                 - { text: { en: "Family", ar: "عائلية" } }
-            - { kind: button, text: { en: "Book now", ar: "احجز الآن" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Book now", ar: "احجز الآن" } }
     answer: [mixed]
     misconceptions:
       - id: MC-P14-069

@@ -22,13 +22,27 @@ steps:
       en: "I'm designing a recipe app. People open it mostly to post their own recipes and to browse others'.\n\nMy team added a round floating button in the corner of the home screen. It asks people to **rate the app**, because we want more ratings."
       ar: "أصمّم تطبيقًا للوصفات. والناس يفتحونه غالبًا لينشروا وصفاتهم ويتصفّحوا وصفات غيرهم.\n\nوأضاف فريقي زرًا دائريًا عائمًا في زاوية الشاشة الرئيسية. وهو يطلب من الناس **تقييم التطبيق**، لأننا نريد تقييمات أكثر."
     mock:
-      width: 300
-      fab: { icon: "★" }
+      app: tabkha
+      appbar: &tbar { title: { en: "Recipes", ar: "الوصفات" }, logo: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+      tabbar: &ttabs
+        active: 0
+        items:
+          - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+          - { icon: bookmark-simple, text: { en: "Saved", ar: "المحفوظة" } }
+          - { icon: user, text: { en: "Me", ar: "حسابي" } }
+      fab: { icon: star }
       blocks: &feed
-        - { kind: title, text: { en: "Recipes", ar: "الوصفات" } }
-        - { kind: image, size: m, gap: m }
-        - { kind: text, weight: bold, text: { en: "Lentil soup in 20 minutes", ar: "شوربة عدس في 20 دقيقة" }, gap: s }
-        - { kind: meta, text: { en: "by Amal · 1.2k saves", ar: "من أمل · 1.2 ألف حفظ" }, gap: xs }
+        - kind: card
+          art: food-salad
+          blocks:
+            - { kind: text, weight: bold, text: { en: "Lentil soup in 20 minutes", ar: "شوربة عدس في 20 دقيقة" } }
+            - { kind: meta, text: { en: "by Amal · 1.2k saves · ★ 4.8", ar: "من أمل · 1.2 ألف حفظ · ★ 4.8" }, gap: xs }
+        - kind: card
+          art: food-grill
+          gap: s
+          blocks:
+            - { kind: text, weight: bold, text: { en: "Grilled kofta with tahini", ar: "كفتة مشوية بالطحينة" } }
+            - { kind: meta, text: { en: "by Omar · 860 saves · ★ 4.6", ar: "من عمر · 860 حفظ · ★ 4.6" }, gap: xs }
 
   - id: S02
     type: tune
@@ -48,20 +62,26 @@ steps:
       - id: rate
         text: { en: "★ Rate the app", ar: "★ قيّم التطبيق" }
         mock:
-          width: 300
-          fab: { icon: "★", text: { en: "Rate us", ar: "قيّمنا" } }
+          app: tabkha
+          appbar: *tbar
+          tabbar: *ttabs
+          fab: { icon: star, text: { en: "Rate us", ar: "قيّمنا" } }
           blocks: *feed
       - id: post
         text: { en: "＋ Post a recipe", ar: "＋ انشر وصفة" }
         mock:
-          width: 300
-          fab: { icon: "＋", text: { en: "Post a recipe", ar: "انشر وصفة" } }
+          app: tabkha
+          appbar: *tbar
+          tabbar: *ttabs
+          fab: { icon: plus, text: { en: "Post a recipe", ar: "انشر وصفة" } }
           blocks: *feed
       - id: settings
         text: { en: "⚙ Settings", ar: "⚙ الإعدادات" }
         mock:
-          width: 300
-          fab: { icon: "⚙", text: { en: "Settings", ar: "الإعدادات" } }
+          app: tabkha
+          appbar: *tbar
+          tabbar: *ttabs
+          fab: { icon: gear, text: { en: "Settings", ar: "الإعدادات" } }
           blocks: *feed
     answer: [post]
     misconceptions:
@@ -131,28 +151,27 @@ steps:
       - id: one
         text: { en: "One floating button for a new note; folders and scanning in the menu", ar: "زر عائم واحد لملاحظة جديدة؛ والمجلدات والمسح في القائمة" }
         mock:
-          width: 300
-          fab: { icon: "✎" }
+          app: satr
+          appbar: &sbar { title: { en: "Notes", ar: "الملاحظات" }, large: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          fab: { icon: pencil-simple }
           blocks: &notes
-            - { kind: title, text: { en: "Notes", ar: "الملاحظات" } }
-            - { kind: text, weight: bold, text: { en: "Shopping list", ar: "قائمة المشتريات" }, gap: m }
-            - { kind: meta, text: { en: "Bread, eggs, tea, rice…", ar: "عيش، بيض، شاي، أرز…" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "Meeting, Sunday", ar: "اجتماع الأحد" }, gap: m }
-            - { kind: meta, text: { en: "Budget, launch date, hiring…", ar: "الميزانية، موعد الإطلاق، التوظيف…" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "Gift ideas", ar: "أفكار هدايا" }, gap: m }
-            - { kind: meta, text: { en: "A book for Mom, a scarf…", ar: "كتاب لأمي، وشال…" }, gap: xs }
+            - { kind: listitem, icon: note, text: { en: "Shopping list", ar: "قائمة المشتريات" }, sub: { en: "Bread, eggs, tea, rice…", ar: "عيش، بيض، شاي، أرز…" }, value: { en: "Today", ar: "اليوم" } }
+            - { kind: listitem, icon: note, text: { en: "Meeting, Sunday", ar: "اجتماع الأحد" }, sub: { en: "Budget, launch date, hiring…", ar: "الميزانية، موعد الإطلاق، التوظيف…" }, value: { en: "Fri", ar: "الجمعة" } }
+            - { kind: listitem, icon: note, text: { en: "Gift ideas", ar: "أفكار هدايا" }, sub: { en: "A book for Mom, a scarf…", ar: "كتاب لأمي، وشال…" }, value: { en: "2 May", ar: "2 مايو" } }
       - id: three
         text: { en: "Keep the three floating buttons", ar: "أبقِ الأزرار العائمة الثلاثة" }
         mock:
-          width: 300
-          fab: [{ icon: "✎" }, { icon: "▢" }, { icon: "⎙" }]
+          app: satr
+          appbar: *sbar
+          fab: [ { icon: pencil-simple }, { icon: check-square }, { icon: camera } ]
           blocks: *notes
       - id: small
         text: { en: "Keep all three, but make them smaller", ar: "أبقِ الثلاثة، لكن صغّرها" }
         mock:
-          width: 300
+          app: satr
           caption: { en: "Three smaller floating buttons", ar: "ثلاثة أزرار عائمة أصغر" }
-          fab: [{ icon: "✎" }, { icon: "▢" }, { icon: "⎙" }]
+          appbar: *sbar
+          fab: [ { icon: pencil-simple }, { icon: check-square }, { icon: camera } ]
           blocks: *notes
     answer: [one]
     misconceptions:
@@ -190,30 +209,41 @@ steps:
       - id: icon
         text: { en: "Keep the icon only", ar: "أبقِ الأيقونة فقط" }
         mock:
-          width: 300
-          fab: { icon: "⟲" }
+          app: lamma
+          appbar: &lbar { title: { en: "Restaurants near you", ar: "مطاعم قريبة منك" }, actions: [ { icon: shopping-bag, aria: { en: "Orders", ar: "الطلبات" } } ] }
+          fab: { icon: arrow-counter-clockwise }
           blocks: &food
-            - { kind: title, text: { en: "Restaurants near you", ar: "مطاعم قريبة منك" } }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Grill House · 25 min", ar: "Grill House · 25 دقيقة" }, gap: s }
-            - { kind: meta, text: { en: "Grills · EGP 150 for two", ar: "مشويات · 150 جنيه لشخصين" }, gap: xs }
+            - kind: card
+              art: food-grill
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Grill House · 25 min", ar: "Grill House · 25 دقيقة" } }
+                - { kind: meta, text: { en: "Grills · EGP 150 for two · ★ 4.5", ar: "مشويات · 150 جنيه لشخصين · ★ 4.5" }, gap: xs }
+            - kind: card
+              art: food-pizza
+              gap: s
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Napoli Pizza · 35 min", ar: "Napoli Pizza · 35 دقيقة" } }
+                - { kind: meta, text: { en: "Pizza · EGP 220 for two · ★ 4.3", ar: "بيتزا · 220 جنيه لشخصين · ★ 4.3" }, gap: xs }
       - id: tip
         text: { en: "Icon only; a tooltip \"Reorder\" appears on a long press", ar: "أيقونة فقط؛ ويظهر Tooltip «اطلب مجددًا» عند الضغط المطوّل" }
         mock:
-          width: 300
           caption: { en: "Only after a long press", ar: "بعد ضغط مطوّل فقط" }
-          fab: { icon: "⟲" }
+          app: lamma
+          appbar: *lbar
+          fab: { icon: arrow-counter-clockwise }
           blocks:
-            - { kind: title, text: { en: "Restaurants near you", ar: "مطاعم قريبة منك" } }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Grill House · 25 min", ar: "Grill House · 25 دقيقة" }, gap: s }
-            - { kind: meta, text: { en: "Grills · EGP 150 for two", ar: "مشويات · 150 جنيه لشخصين" }, gap: xs }
+            - kind: card
+              art: food-grill
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Grill House · 25 min", ar: "Grill House · 25 دقيقة" } }
+                - { kind: meta, text: { en: "Grills · EGP 150 for two · ★ 4.5", ar: "مشويات · 150 جنيه لشخصين · ★ 4.5" }, gap: xs }
             - { kind: tip, text: { en: "Reorder", ar: "اطلب مجددًا" }, gap: m }
       - id: label
         text: { en: "Extended floating button: \"⟲ Reorder\"", ar: "Extended floating button: «⟲ اطلب مجددًا»" }
         mock:
-          width: 300
-          fab: { icon: "⟲", text: { en: "Reorder", ar: "اطلب مجددًا" } }
+          app: lamma
+          appbar: *lbar
+          fab: { icon: arrow-counter-clockwise, text: { en: "Reorder", ar: "اطلب مجددًا" } }
           blocks: *food
     answer: [label]
     misconceptions:
@@ -251,21 +281,19 @@ steps:
     a:
       label: { en: "Version A: new chat and camera, both floating", ar: "النسخة A: محادثة جديدة وكاميرا، كلاهما عائم" }
       mock:
-        width: 260
-        fab: [{ icon: "✎" }, { icon: "📷" }]
+        app: hakawy
+        appbar: &hbar { title: { en: "Chats", ar: "المحادثات" }, large: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+        fab: [ { icon: pencil-simple }, { icon: camera } ]
         blocks: &chats
-          - { kind: title, text: { en: "Chats", ar: "المحادثات" } }
-          - { kind: text, weight: bold, text: { en: "Mom", ar: "ماما" }, gap: m }
-          - { kind: meta, text: { en: "Call me when you're home", ar: "كلّمني لما توصل" }, gap: xs }
-          - { kind: text, weight: bold, text: { en: "Work team", ar: "فريق العمل" }, gap: m }
-          - { kind: meta, text: { en: "Slides are ready", ar: "العرض جاهز" }, gap: xs }
-          - { kind: text, weight: bold, text: { en: "Hossam", ar: "حسام" }, gap: m }
-          - { kind: meta, text: { en: "See you at 7", ar: "نتقابل الساعة 7" }, gap: xs }
+          - { kind: listitem, avatar: { text: "Mom", art: woman-2 }, text: { en: "Mom", ar: "ماما" }, sub: { en: "Call me when you're home", ar: "كلّمني لما توصل" }, value: "9:41", badge: { text: "2" } }
+          - { kind: listitem, avatar: { text: "Work team", art: people }, text: { en: "Work team", ar: "فريق العمل" }, sub: { en: "Slides are ready", ar: "العرض جاهز" }, value: "8:15" }
+          - { kind: listitem, avatar: { text: "Hossam", art: man-2 }, text: { en: "Hossam", ar: "حسام" }, sub: { en: "See you at 7", ar: "نتقابل الساعة 7" }, value: { en: "Yesterday", ar: "أمس" } }
     b:
       label: { en: "Version B: one floating button for a new chat", ar: "النسخة B: زر عائم واحد لمحادثة جديدة" }
       mock:
-        width: 260
-        fab: { icon: "✎" }
+        app: hakawy
+        appbar: *hbar
+        fab: { icon: pencil-simple }
         blocks: *chats
     answer: b
     misconceptions:
@@ -302,24 +330,26 @@ steps:
       - id: today
         text: { en: "Jump to today", ar: "انتقل إلى اليوم" }
         mock:
-          width: 300
-          fab: { icon: "◎", text: { en: "Today", ar: "اليوم" } }
+          app: mawid
+          appbar: &mbar { title: { en: "Tuesday, 14 May", ar: "الثلاثاء، 14 مايو" }, actions: [ { icon: calendar-blank, aria: { en: "Month view", ar: "عرض الشهر" } } ] }
+          fab: { icon: crosshair, text: { en: "Today", ar: "اليوم" } }
           blocks: &cal
-            - { kind: title, text: { en: "Tuesday, 14 May", ar: "الثلاثاء، 14 مايو" } }
-            - { kind: meta, text: { en: "9:00 · Dentist", ar: "9:00 · طبيب الأسنان" }, gap: m }
-            - { kind: meta, text: { en: "13:00 · Lunch with Samar", ar: "13:00 · غداء مع سمر" }, gap: s }
-            - { kind: meta, text: { en: "18:30 · Gym", ar: "18:30 · النادي" }, gap: s }
+            - { kind: listitem, icon: tooth, text: { en: "Dentist", ar: "طبيب الأسنان" }, sub: "9:00 – 9:45" }
+            - { kind: listitem, icon: fork-knife, text: { en: "Lunch with Samar", ar: "غداء مع سمر" }, sub: "13:00 – 14:00" }
+            - { kind: listitem, icon: barbell, text: { en: "Gym", ar: "النادي" }, sub: "18:30 – 19:30" }
       - id: new
         text: { en: "New event", ar: "موعد جديد" }
         mock:
-          width: 300
-          fab: { icon: "＋", text: { en: "New event", ar: "موعد جديد" } }
+          app: mawid
+          appbar: *mbar
+          fab: { icon: plus, text: { en: "New event", ar: "موعد جديد" } }
           blocks: *cal
       - id: settings
         text: { en: "Settings", ar: "الإعدادات" }
         mock:
-          width: 300
-          fab: { icon: "⚙", text: { en: "Settings", ar: "الإعدادات" } }
+          app: mawid
+          appbar: *mbar
+          fab: { icon: gear, text: { en: "Settings", ar: "الإعدادات" } }
           blocks: *cal
     answer: [new]
     misconceptions:
