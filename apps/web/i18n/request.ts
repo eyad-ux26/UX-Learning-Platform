@@ -14,9 +14,20 @@ function merge(a: Messages, b: Messages): Messages {
   return out;
 }
 
+/** Merged once per locale for the life of the Worker, not on every request (issue #131). */
+const cache = new Map<string, Promise<Messages>>();
+function messagesFor(locale: string): Promise<Messages> {
+  let m = cache.get(locale);
+  if (!m) {
+    m = Promise.all([import(`../messages/${locale}.json`), import(`../messages/s5/${locale}.json`)]).then(([main, s5]) => merge(main.default, s5.default));
+    m.catch(() => cache.delete(locale));
+    cache.set(locale, m);
+  }
+  return m;
+}
+
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
-  const [main, s5] = await Promise.all([import(`../messages/${locale}.json`), import(`../messages/s5/${locale}.json`)]);
-  return { locale, messages: merge(main.default, s5.default) };
+  return { locale, messages: await messagesFor(locale) };
 });
