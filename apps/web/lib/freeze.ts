@@ -30,7 +30,11 @@ export const weekday = (day: string) => new Date(`${day}T00:00:00Z`).getUTCDay()
  * start as an argument, so it can later come from a per-learner profile column instead of the language.
  */
 export const WEEK_START = 1;
+/** The week start a language gets when a learner signs up (the database trigger does the same). */
 export const weekStartFor = (locale: string | null | undefined) => (locale === "ar" ? 6 : WEEK_START);
+/** The learner's own week start (fixed at sign-up, stored in profiles.week_start); falls back to the language only if the column is unreadable. */
+export const resolveWeekStart = (stored: number | null | undefined, locale: string | null | undefined) =>
+  typeof stored === "number" && stored >= 0 && stored <= 6 ? stored : weekStartFor(locale);
 /** The first day of the week that holds `day`. */
 export const weekStartOf = (day: string, start: number = WEEK_START) => shiftDay(day, -((weekday(day) - start + 7) % 7));
 /** The weekday number of the last day of a week that starts on `start`. */

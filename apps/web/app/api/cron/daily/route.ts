@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { settleLearner } from "@/lib/server/settle";
-import { shiftDay, weekStartFor } from "@/lib/freeze";
+import { resolveWeekStart, shiftDay } from "@/lib/freeze";
 
 export const dynamic = "force-dynamic";
 // Each learner costs a handful of database calls and a Worker request has a subrequest budget, so a run settles 100
@@ -23,8 +23,8 @@ export async function GET(req: Request) {
   const { data: rows, error } = await db.from("streaks").select("user_id, settled_through").or(`settled_through.is.null,settled_through.lt.${cutoff}`).order("settled_through", { ascending: true, nullsFirst: true }).limit(BATCH);
   if (error) return NextResponse.json({ error: "read_failed" }, { status: 500 });
   const ids = (rows ?? []).map((r) => r.user_id as string);
-  const { data: zones } = ids.length ? await db.from("profiles").select("user_id, time_zone, locale").in("user_id", ids) : { data: [] };
-  const prof = new Map((zones ?? []).map((z) => [z.user_id as string, { tz: (z.time_zone as string | null) ?? null, start: weekStartFor(z.locale as string | null) }]));
+  const { data: zones } = ids.length ? await db.from("profiles").select("user_id, time_zone, locale, week_start").in("user_id", ids) : { data: [] };
+  const prof = new Map((zones ?? []).map((z) => [z.user_id as string, { tz: (z.time_zone as string | null) ?? null, start: resolveWeekStart(z.week_start as number | null, z.locale as string | null) }]));
   let settled = 0;
   let failed = 0;
   let stoppedEarly: string | null = null;

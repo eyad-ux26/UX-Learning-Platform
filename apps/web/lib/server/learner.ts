@@ -5,7 +5,7 @@ import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgress } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
-import { weekStartFor } from "@/lib/freeze";
+import { resolveWeekStart } from "@/lib/freeze";
 import { pickCurrent } from "@/lib/learning";
 import type { SkillRow, SkillStateName } from "@/lib/skill-state";
 
@@ -60,8 +60,8 @@ export async function getLearner(): Promise<Learner | null> {
   const { data } = await db.auth.getUser();
   if (!data.user) return null;
   const userId = data.user.id;
-  const { data: p0 } = await db.from("profiles").select("time_zone, locale").eq("user_id", userId).maybeSingle();
-  const weekStart = weekStartFor(p0?.locale);
+  const { data: p0 } = await db.from("profiles").select("time_zone, locale, week_start").eq("user_id", userId).maybeSingle();
+  const weekStart = resolveWeekStart(p0?.week_start, p0?.locale);
   await settleLearner(userId, p0?.time_zone ?? null, new Date(), weekStart); // counts finished days, earns or uses freezes; never throws
   const progress = await loadProgress(db, userId);
   const [onb, skills, prof, extra, enr, streak, note] = await Promise.all([

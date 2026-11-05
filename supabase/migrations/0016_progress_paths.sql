@@ -68,6 +68,22 @@ alter table public.profiles
 create unique index profiles_handle_key on public.profiles (lower(handle)) where handle is not null;
 alter table public.profiles add constraint profiles_handle_shape check (handle is null or handle ~ '^[a-z0-9][a-z0-9-]{2,29}$');
 
+-- The first day of the learner's week (0 = Sunday ... 6 = Saturday), fixed at sign-up from their language:
+-- Saturday for Arabic, Monday for English. Changing the language later does not move the week. Existing learners are
+-- set once from their current language.
+alter table public.profiles add column week_start smallint not null default 1 check (week_start between 0 and 6);
+update public.profiles set week_start = case when locale = 'ar' then 6 else 1 end;
+create or replace function public.handle_new_user() returns trigger language plpgsql security definer set search_path = public as $$
+declare
+  v_locale text := case when new.raw_user_meta_data ->> 'locale' = 'ar' then 'ar' else 'en' end;
+begin
+  insert into public.profiles (user_id, display_name, locale, week_start)
+  values (new.id, coalesce(new.raw_user_meta_data ->> 'display_name', split_part(new.email, '@', 1)), v_locale, case when v_locale = 'ar' then 6 else 1 end);
+  insert into public.onboarding (user_id) values (new.id);
+  insert into public.streaks (user_id) values (new.id);
+  return new;
+end $$;
+
 -- The browser may update a learner's own profile row, but not these columns: the server sets them after checking the rules.
 -- (Column privileges: update is granted per column, replacing the table-wide update from 0001.)
 revoke update on public.profiles from authenticated;

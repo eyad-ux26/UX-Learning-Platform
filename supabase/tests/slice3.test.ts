@@ -63,6 +63,22 @@ beforeAll(async () => {
   await db.query(`insert into skill_states (user_id, skill_id, state) values ($1, 'SK-P01-U01-01', 'shown'), ($2, 'SK-P01-U01-01', 'practiced')`, [A, B]);
 });
 
+describe("the week start", () => {
+  it("is set at sign-up from the language, and the browser cannot change it", async () => {
+    const mkLoc = async (email: string, locale: string) =>
+      (await db.query<{ id: string }>(`insert into auth.users (email, raw_user_meta_data) values ($1, $2) returning id`, [email, JSON.stringify({ locale })])).rows[0].id;
+    const ar = await mkLoc("ar@example.com", "ar");
+    const en = await mkLoc("en@example.com", "en");
+    const get = async (id: string) => (await db.query<{ week_start: number }>(`select week_start from profiles where user_id = $1`, [id])).rows[0].week_start;
+    expect([await get(ar), await get(en)]).toEqual([6, 1]);
+    // switching the language later does not move the week
+    await db.query(`update profiles set locale = 'en' where user_id = $1`, [ar]);
+    expect(await get(ar)).toBe(6);
+    await expect(as("authenticated", ar, `update profiles set week_start = 1 where user_id = $1 returning user_id`, [ar])).rejects.toThrow(/permission denied/);
+    await expect(db.query(`update profiles set week_start = 9 where user_id = $1`, [ar])).rejects.toThrow(/check/);
+  });
+});
+
 describe("several paths", () => {
   it("a learner joins a published path but not one that is still coming soon", async () => {
     expect(await as("authenticated", C, `insert into enrollments (user_id, path_id) values ($1, 'P10') returning path_id`, [C])).toHaveLength(1);
