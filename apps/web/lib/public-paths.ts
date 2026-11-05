@@ -1,7 +1,7 @@
 // Public path pages (spec 4.1, EN-05): one static page per path at /{locale}/paths/{slug}, for visitors without an account.
 // The 14 paths match slice 3's catalog. Names stay in English in both languages. A path is open only when it is marked open here
 // AND the content bundle has lessons for it; the tests keep the two in step. Facts (units, lessons, skills) always come from the bundle.
-import { bundle as defaultBundle, getCast, type Bundle, type Text } from "@uxgate/content";
+import { content as defaultBundle, getCast, type ContentIndex, type Text } from "@uxgate/content";
 import { routing, type Locale } from "../i18n/routing";
 
 export type PathKind = "interactive" | "hybrid";
@@ -118,11 +118,11 @@ export const publicPathBySlug = (slug: string) => PUBLIC_PATHS.find((p) => p.slu
 export const publicPathById = (id: string) => PUBLIC_PATHS.find((p) => p.id === id);
 
 /** The bundle has playable lessons for this path. */
-export const isPublished = (pathId: string, b: Bundle = defaultBundle) => b.units.some((u) => u.pathId === pathId && u.lessons.length > 0);
+export const isPublished = (pathId: string, b: ContentIndex = defaultBundle) => b.units.some((u) => u.pathId === pathId && u.lessons.length > 0);
 /** Open on the public site: marked open and published. Anything else shows the Coming soon page, with nothing to sign up for. */
-export const isOpen = (p: PublicPath, b: Bundle = defaultBundle) => p.status === "open" && isPublished(p.id, b);
+export const isOpen = (p: PublicPath, b: ContentIndex = defaultBundle) => p.status === "open" && isPublished(p.id, b);
 /** Open paths first, in list order, then Coming soon. */
-export const publicPathsInOrder = (b: Bundle = defaultBundle) => [...PUBLIC_PATHS.filter((p) => isOpen(p, b)), ...PUBLIC_PATHS.filter((p) => !isOpen(p, b))];
+export const publicPathsInOrder = (b: ContentIndex = defaultBundle) => [...PUBLIC_PATHS.filter((p) => isOpen(p, b)), ...PUBLIC_PATHS.filter((p) => !isOpen(p, b))];
 
 /** Every static path page: each path in every language. */
 export function publicPathParams(locales: readonly string[] = routing.locales) {
@@ -141,7 +141,7 @@ export type UnitRow = { n: number; name: string; lessons: number; skills: number
 export type PathFacts = { units: number; lessons: number; skills: number; unitRows: UnitRow[]; can: string[] };
 
 /** What the page shows about an open path, all counted from the bundle. */
-export function pathFacts(p: PublicPath, locale: Locale, b: Bundle = defaultBundle): PathFacts {
+export function pathFacts(p: PublicPath, locale: Locale, b: ContentIndex = defaultBundle): PathFacts {
   const units = b.units.filter((u) => u.pathId === p.id);
   const unitRows = units.map((u, i) => ({ n: i + 1, name: u.title[locale], lessons: u.lessons.length, skills: u.skills.length, free: u.free }));
   return {

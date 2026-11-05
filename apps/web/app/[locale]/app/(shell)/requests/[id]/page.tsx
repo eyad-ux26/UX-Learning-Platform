@@ -33,7 +33,7 @@ export default async function RequestPage({ params }: { params: Promise<{ locale
     row = (data ?? undefined) as RequestRow | undefined;
   } else row = fixtureRequests().find((r) => r.id === id);
   if (!row) notFound();
-  const v = describeRequest(row, locale as "en" | "ar");
+  const v = await describeRequest(row, locale as "en" | "ar");
   const when = (iso: string) => f.dateTime(new Date(iso), { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", numberingSystem: "latn" });
 
   return (

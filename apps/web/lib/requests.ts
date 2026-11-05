@@ -25,8 +25,9 @@ export type RequestView = {
 
 const KEYS = { en: ["A", "B", "C", "D", "E", "F"], ar: ["أ", "ب", "ج", "د", "هـ", "و"] };
 
-export function describeRequest(r: RequestRow, locale: L): RequestView {
-  const lesson = getLessonVersion(r.lesson_id);
+/** Loads only that one lesson file (for its steps). */
+export async function describeRequest(r: RequestRow, locale: L): Promise<RequestView> {
+  const lesson = await getLessonVersion(r.lesson_id);
   const unit = lesson ? getUnit(lesson.unitId) : undefined;
   const path = lesson ? getPath(lesson.pathId) : undefined;
   const steps = lesson?.body.steps ?? [];

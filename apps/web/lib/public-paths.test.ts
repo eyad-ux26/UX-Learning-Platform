@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { bundle, type Bundle } from "@uxgate/content";
+import { bundle } from "@uxgate/content/full";
+import type { ContentIndex } from "@uxgate/content";
 import { PUBLIC_PATHS, isOpen, isPublished, pageAlternates, pathFacts, publicPathParams, publicPathsInOrder } from "./public-paths";
 
 describe("public path list", () => {
@@ -37,7 +38,7 @@ describe("public path list", () => {
     }
   });
   it("a path marked open but missing from the bundle shows as Coming soon", () => {
-    const empty = { ...bundle, units: [] } as unknown as Bundle;
+    const empty = { ...bundle, units: [] } as unknown as ContentIndex;
     expect(PUBLIC_PATHS.some((p) => isOpen(p, empty))).toBe(false);
   });
 });

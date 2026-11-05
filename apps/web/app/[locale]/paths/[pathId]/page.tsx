@@ -11,9 +11,9 @@ import {
   type PublicPath,
 } from "@/lib/public-paths";
 
-// One static page per path and language, built at deploy. Anything not listed is a 404.
+// One static page per path and language, built at deploy. Unknown slugs call notFound() below.
+// No `dynamicParams = false`: on Cloudflare (OpenNext without an incremental cache) it turns every path page into a 404.
 export const dynamic = "force-static";
-export const dynamicParams = false;
 export const revalidate = false;
 
 // Next calls this once per language from the [locale] layout; without a language it lists every path in both.

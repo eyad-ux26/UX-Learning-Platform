@@ -29,7 +29,7 @@ export default async function RequestsPage({ params }: { params: Promise<{ local
     const { data } = await me.db.from("review_requests").select(REQUEST_COLUMNS).eq("user_id", me.userId).order("created_at", { ascending: false }).limit(100);
     rows = (data ?? []) as RequestRow[];
   }
-  const views = rows.map((r) => describeRequest(r, locale as "en" | "ar"));
+  const views = await Promise.all(rows.map((r) => describeRequest(r, locale as "en" | "ar")));
   const day = (iso: string) => f.dateTime(new Date(iso), { day: "numeric", month: "short", numberingSystem: "latn" });
   return (
     <AccountFrame me={me} locale={locale}>
