@@ -84,7 +84,7 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
         {offer.mode === "mock" ? <p className="pg-note" style={{ fontSize: 13 }}><span className="ph ph-info" aria-hidden="true" /><span>{t("testMode")}</span></p> : null}
         <div style={{ flex: 1 }} />
         <PayButton label={t(`prov.${prov}.go`)} period={period} code={q.code} intl={intl} locale={locale as "en" | "ar"} disabled={offer.mode === "off" || !me.db} />
-        <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12.5 }}>{t("agree")} <Link href="/terms" className="hit" style={{ fontWeight: 700 }}>{t("terms")}</Link></p>
+        <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12.5 }}>{t("agree")} <Link href="/terms" className="hit" style={{ fontWeight: 700 }}>{t("terms")}</Link> {t("andRefund")}{locale === "ar" ? "" : " "}<Link href="/refund" className="hit" style={{ fontWeight: 700 }}>{t("refundPolicy")}</Link></p>
       </main>
     </div>
   );

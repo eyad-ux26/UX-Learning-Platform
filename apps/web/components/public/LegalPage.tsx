@@ -12,14 +12,14 @@ export async function legalMetadata(kind: LegalKind, locale: string): Promise<Me
   return {
     metadataBase: new URL(SITE_URL),
     title: `${doc.title} · UXGate`,
-    description: t(kind === "privacy" ? "privacyDesc" : "termsDesc"),
+    description: t(`${kind}Desc`),
     alternates: pageAlternates(locale, `/${kind}`),
     // The sample draft stays out of search results until the admins approve the text.
     robots: LEGAL_STATUS.approved ? undefined : { index: false, follow: true },
   };
 }
 
-/** Privacy and terms: a reading page. On phones the table of contents folds into a button (a native <details>, no script);
+/** Privacy, terms and the refund policy: a reading page. On phones the table of contents folds into a button (a native <details>, no script);
  *  on desktop it is a side list. */
 export async function LegalPage({ kind, locale }: { kind: LegalKind; locale: Locale }) {
   const t = await getTranslations("legal");
