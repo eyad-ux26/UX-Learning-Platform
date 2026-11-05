@@ -12,13 +12,15 @@ Canvas: https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx (version 60)
 | A6 | Never fade an option with `opacity`. `.choice.is-dim` now uses the surface-2 fill, a line border and text-2. Text stays readable. |
 | A8 | No text below 12px anywhere. This includes bottom tab labels, the speaker name, the PRO tag and the labels inside the example mocks. |
 | L1 | Size the lesson player with `100dvh`, not a fixed 844px. Test it at 390 × 664 and 360 × 640. |
-| L2 | Once an answer is picked, Guessing / Fairly sure / Sure replace Check, and each button submits. Remove the separate confidence row. Steps without confidence keep Check. |
+| L2 | On steps that ask for confidence, Check becomes one primary split button: Guessing \| Fairly sure \| Sure (`.split-check` and `.split-seg`). It is one filled bar with one ledge, the same size as Check, with thin dividers. The three segments are equal in size and colour, so none looks like the right answer. Each segment is a real button, 44px or taller, that submits, with an accessible name like "Check, sure" («تحقّق، متأكد»). The label above it says "Check: how sure are you?" («تحقّق: ما مدى ثقتك؟»). Before an answer is picked, the whole bar is disabled and says "Pick an answer first." («اختر إجابة أولًا.»). On press, the whole bar sinks once and the tapped segment darkens. In RTL the order mirrors, so Guessing sits at the start (right). Remove the separate confidence row. Steps without confidence keep Check. |
 | L3 | Show the full scenario bubble only on the first step of a case. Later steps show a one-line speaker chip, and a tap opens the full text. |
 | L4 | On a phone, the example is a pinned thumbnail (about 112px tall) next to the question. A tap opens it full screen at a readable size, with pinch zoom. Spot keeps the example inline, because the answer is tapped there. |
 | L5 | `.lp-main` scrolls and `.lp-bar` is `position: sticky; bottom: 0`. The last option fades under the footer, and no option hides behind it. Once an answer is picked, scroll the footer into view. |
 | U4 | Next to a disabled Check, say what is missing: "Pick an answer, then Check.", "3 of 5 placed" or "2 of 4 paired". |
 
-New `LessonKinds` props: `screen` (844, 664, 640), `caseStep` (first, later) and `example` (thumb, full).
+New `LessonKinds` props: `screen` (844, 664, 640), `caseStep` (first, later) and `example` (thumb, full). `state` also has a new `press` value, which shows the pressed split button.
+
+Update (5 November 2026, canvas v63): L2 is now the split button described above. See board S2-5 and the "Confidence is the Check" part of the Choices, Check and feedback component board.
 
 ## Other fixes on the canvas
 

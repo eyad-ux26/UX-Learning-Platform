@@ -1673,14 +1673,28 @@
 .ug.lp-mobile .lp-bar::before { content: ""; position: absolute; inset-inline: 0; bottom: calc(100% + 2px); height: 28px; background: linear-gradient(to bottom, rgba(242, 250, 253, 0), var(--ground)); pointer-events: none; }
 .ug[data-theme="dark"].lp-mobile .lp-bar::before { background: linear-gradient(to bottom, rgba(0, 18, 27, 0), var(--ground)); }
 /* L2: the confidence choice is the submit action */
+/* Confidence split Check (design audit L2, revised 5 Nov 2026).
+   One primary control with one ledge, the same size as Check. Three equal segments, so no confidence answer looks stronger than another. */
+.ug .lp-go-head { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 2px 12px; }
 .ug .lp-go-lbl { margin: 0; font-weight: 700; font-size: 14px; line-height: 1.35; color: var(--ink); }
-.ug .lp-go { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.ug .lp-go .btn { min-height: 52px; padding: 0 6px; font-size: 15px; line-height: 1.2; white-space: normal; text-align: center; }
+.ug .lp-go-wait { margin: 0; font-weight: 600; font-size: 13px; line-height: 1.35; color: var(--ink-2); }
+.ug .split-check { display: flex; width: 100%; min-height: 56px; border-radius: var(--r-md); overflow: hidden; background: var(--brand); color: var(--on-brand); box-shadow: 0 var(--ledge-h) 0 var(--brand-ledge); margin-bottom: var(--ledge-h); transition: transform var(--t-press) linear, box-shadow var(--t-press) linear; }
+.ug .split-check:has(.split-seg:active:not([disabled])), .ug .split-check.is-down { transform: translateY(var(--ledge-h)); box-shadow: 0 0 0 var(--brand-ledge); }
+.ug .split-seg { position: relative; flex: 1 1 0; min-width: 0; min-height: 56px; display: flex; align-items: center; justify-content: center; padding: 4px 8px; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; font-weight: 700; font-size: 16px; line-height: 1.15; text-align: center; text-wrap: balance; cursor: pointer; transition: background-color var(--t-fast); }
+.ug .split-seg + .split-seg::before { content: ""; position: absolute; inset-inline-start: -1px; top: 12px; bottom: 12px; width: 2px; border-radius: 1px; background: color-mix(in srgb, var(--on-brand) 40%, var(--brand)); pointer-events: none; }
+.ug .split-seg:hover, .ug .split-seg.is-hover { background: color-mix(in srgb, var(--brand) 88%, white); }
+.ug .split-seg:active, .ug .split-seg.is-pressed { background: color-mix(in srgb, var(--brand) 78%, black); }
+.ug .split-seg:focus-visible { outline: 3px solid var(--focus); outline-offset: -6px; border-radius: 12px; }
+.ug .split-check.is-off { background: var(--disabled-bg); color: var(--disabled-ink); box-shadow: 0 var(--ledge-h) 0 var(--disabled-ledge); transform: none; }
+.ug .split-check.is-off .split-seg { background: transparent; cursor: not-allowed; }
+.ug .split-check.is-off .split-seg + .split-seg::before { background: color-mix(in srgb, var(--disabled-ink) 35%, var(--disabled-bg)); }
 .ug.lp-mobile .lp-bar.is-go { gap: 8px; }
-.ug.lp-desktop .lp-bar.is-go { flex-wrap: nowrap; }
-.ug.lp-desktop .lp-go { display: flex; gap: 10px; margin-inline-start: auto; }
-.ug.lp-desktop .lp-go .btn { min-width: 150px; min-height: 56px; font-size: 17px; }
+.ug.lp-desktop .lp-bar.is-go { flex-wrap: nowrap; gap: 24px; }
+.ug.lp-desktop .lp-go-head { flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; }
 .ug.lp-desktop .lp-go-lbl { font-size: 16px; }
+.ug.lp-desktop .split-check { flex: none; width: 480px; }
+.ug.lp-desktop .split-seg { font-size: 17px; }
+@media (prefers-reduced-motion: reduce) { .ug .split-check, .ug .split-seg { transition: none; } }
 .ug .lp-check-help { font-weight: 600; }
 /* L3: later steps of a case show the speaker as a one-line chip */
 .ug .say-chip { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 4px 12px 4px 4px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; text-align: start; }

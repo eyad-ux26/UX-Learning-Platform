@@ -301,11 +301,14 @@ body{margin:0}
 
       <sc-if value="{{showBar}}" hint-placeholder-val="{{true}}">
         <div class="{{barCls}}">
-          <sc-if value="{{confGo}}" hint-placeholder-val="{{false}}">
-            <p class="lp-go-lbl" id="{{goId}}">{{c.sureGo}}</p>
-            <div class="lp-go" role="group" aria-labelledby="{{goId}}">
+          <sc-if value="{{hasConf}}" hint-placeholder-val="{{false}}">
+            <div class="lp-go-head">
+              <p class="lp-go-lbl" id="{{goId}}">{{c.goLbl}}</p>
+              <sc-if value="{{goWait}}" hint-placeholder-val="{{false}}"><p class="lp-go-wait" id="{{helpId}}">{{c.pickFirstConf}}</p></sc-if>
+            </div>
+            <div class="{{splitCls}}" role="group" aria-labelledby="{{goId}}">
               <sc-for list="{{conf}}" as="q" hint-placeholder-count="3">
-                <button class="btn btn-primary press" type="button" onClick="{{q.go}}">{{q.label}}</button>
+                <button class="{{q.cls}}" type="button" disabled="{{goWait}}" aria-label="{{q.aria}}" aria-describedby="{{helpRef}}" onClick="{{q.go}}">{{q.label}}</button>
               </sc-for>
             </div>
           </sc-if>
@@ -441,7 +444,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"screen":{"editor":"enum","options":["844","664","640"],"default":"844"},"caseStep":{"editor":"enum","options":["first","later"],"default":"first"},"example":{"editor":"enum","options":["thumb","full"],"default":"thumb"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","press","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"screen":{"editor":"enum","options":["844","664","640"],"default":"844"},"caseStep":{"editor":"enum","options":["first","later"],"default":"first"},"example":{"editor":"enum","options":["thumb","full"],"default":"thumb"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson player: every step type, its feedback and the sheets that sit over a step.
    Props: kind (step type), state (preset to review), mode (lesson, skill check, mastery round, guest), overlay.
    The mastery round uses its own new case (M below), never the lesson's own examples. */
@@ -453,7 +456,7 @@ const C = {
     wrongTitle: 'Not quite', right: 'Right', also: 'Also works', revealed: 'The answer, step by step', 
     tryOf: (n) => 'Try ' + n + ' of 3', hintOf: (n) => 'Hint ' + n + ' of 2', kept: 'Your first answer is kept.',
     sure: 'How sure are you?', conf: ['Guessing', 'Fairly sure', 'Sure'], confHelp: 'Pick how sure you are, then Check.',
-    sureGo: 'How sure are you? Your pick checks the answer.', pickFirst: 'Pick an answer, then Check.', pickFirstConf: 'Pick an answer, then say how sure you are.',
+    goLbl: 'Check: how sure are you?', confAria: (l) => 'Check, ' + l.toLowerCase(), pickFirst: 'Pick an answer, then Check.', pickFirstConf: 'Pick an answer first.',
     placedOf: (n, m) => n + ' of ' + m + ' placed', pairedOf: (n, m) => n + ' of ' + m + ' paired',
     exOpen: 'Open full screen', exClose: 'Close the example', exZoom: 'Pinch to zoom. Close the example to go back to the question.', exAria: (f) => f + '. Open full screen', sayAria: (n) => 'Show what ' + n + ' said',
     confSure: 'You were sure, so this one comes first in your review.',
@@ -484,7 +487,7 @@ const C = {
     wrongTitle: 'ليس تمامًا', right: 'صحيح', also: 'تصلح أيضًا', revealed: 'الإجابة خطوة بخطوة', 
     tryOf: (n) => 'المحاولة ' + n + ' من 3', hintOf: (n) => 'تلميح ' + n + ' من 2', kept: 'نحتفظ بإجابتك الأولى.',
     sure: 'ما مدى تأكدك؟', conf: ['أخمّن', 'متأكد نوعًا ما', 'متأكد'], confHelp: 'اختر مدى تأكدك، ثم اضغط «تحقّق».',
-    sureGo: 'ما مدى تأكدك؟ اختيارك يتحقّق من الإجابة.', pickFirst: 'اختر إجابة، ثم اضغط «تحقّق».', pickFirstConf: 'اختر إجابة، ثم حدّد مدى تأكدك.',
+    goLbl: 'تحقّق: ما مدى ثقتك؟', confAria: (l) => 'تحقّق، ' + l, pickFirst: 'اختر إجابة، ثم اضغط «تحقّق».', pickFirstConf: 'اختر إجابة أولًا.',
     placedOf: (n, m) => 'وُضع ' + n + ' من ' + m, pairedOf: (n, m) => 'رُبط ' + n + ' من ' + m,
     exOpen: 'افتح بملء الشاشة', exClose: 'أغلق المثال', exZoom: 'كبّر بإصبعين. أغلق المثال لتعود إلى السؤال.', exAria: (f) => f + '. افتحه بملء الشاشة', sayAria: (n) => 'اعرض كلام ' + n + ' كاملًا',
     confSure: 'كنت متأكدًا، لذا يأتي هذا السؤال أولًا في مراجعتك.',
@@ -764,7 +767,7 @@ const CHOICE_KINDS = ['predict', 'words', 'fix', 'reason'];
 
 function preset(kind, stIn, sp) {
   const st = stIn === 'rightFirst' ? 'right' : stIn;
-  const base = { phase: 'idle', picked: null, tries: 0, hints: 0, conf: null, tried: [], revealed: false, also: false, why: false,
+  const base = { phase: 'idle', picked: null, tries: 0, hints: 0, conf: null, pressIdx: null, tried: [], revealed: false, also: false, why: false,
     place: {}, sel: null, order: null, moved: null, pairs: {}, selL: null, list: false, mockOpen: false };
   const s = Object.assign({}, base);
   const wrongish = ['wrong', 'hint2', 'reveal', 'confWrong'];
@@ -773,6 +776,7 @@ function preset(kind, stIn, sp) {
     const wrongPick = kind === 'words' ? 0 : (kind === 'reason' ? 0 : (kind === 'fix' ? 0 : 1));
     if (st === 'select') Object.assign(s, { phase: 'selected', picked: wrongPick, conf: 1 });
     if (st === 'confAsk') Object.assign(s, { phase: 'selected', picked: wrongPick, conf: null });
+    if (st === 'press') Object.assign(s, { phase: 'selected', picked: wrongPick, conf: null, pressIdx: 1 });
     if (wrongish.indexOf(st) >= 0) Object.assign(s, { phase: 'wrong', picked: wrongPick, tries: 1, hints: 1, conf: st === 'confWrong' ? 2 : 1, tried: [wrongPick] });
     if (st === 'hint2') Object.assign(s, { tries: 2, hints: 2, tried: [wrongPick, wrongPick === 0 ? 2 : 0] });
     if (st === 'reveal') Object.assign(s, { phase: 'right', picked: ans, tries: 3, hints: 2, revealed: true, tried: [0, 2] });
@@ -1034,14 +1038,17 @@ class Component extends DCLogic {
     };
     const check = () => submit(null);
     const ready = this.ready();
-    const confGo = hasConf && ready;
-    const conf = c.conf.map((label, i) => ({ label, go: () => submit(i) }));
+    /* Revised 5 Nov 2026: one primary split button, Guessing | Fairly sure | Sure, each segment checks. Disabled until an answer is picked. */
+    const goWait = hasConf && !ready;
+    const pressIdx = s.pressIdx == null ? -1 : s.pressIdx;
+    const splitCls = 'split-check' + (goWait ? ' is-off' : '') + (!goWait && pressIdx >= 0 ? ' is-down' : '');
+    const conf = c.conf.map((label, i) => ({ label, aria: c.confAria(label), cls: 'split-seg' + (!goWait && i === pressIdx ? ' is-pressed' : ''), go: () => submit(i) }));
     /* Design audit U4: say what is missing next to a disabled Check */
     let checkHelp = '';
     if (!ready) {
       if (kind === 'sort') checkHelp = c.placedOf(spec.items.filter((i) => s.place[i]).length, spec.items.length);
       else if (kind === 'match') checkHelp = c.pairedOf(spec.left.filter((l) => s.pairs[l]).length, spec.left.length);
-      else checkHelp = hasConf ? c.pickFirstConf : c.pickFirst;
+      else if (!hasConf) checkHelp = c.pickFirst;
     }
     const uid = 'lp-' + kind + '-' + lang + '-' + device + '-' + (this.props.state || 'select') + '-' + SCR[1];
     const solved = () => {
@@ -1084,8 +1091,8 @@ class Component extends DCLogic {
       toggleList: () => this.setState({ list: !s.list }),
       showTray: tray.length > 0 && !after, tray, buckets, sortHelp: after ? '' : sortHelp,
       rows, canMove: !after, left, right,
-      showBar: !after, barCls: 'lp-bar' + (confGo ? ' is-go' : ''), confGo, conf, goId: uid + '-go', showCheck: !confGo,
-      checkHelp, helpId: uid + '-help', helpRef: checkHelp ? uid + '-help' : '',
+      showBar: !after, barCls: 'lp-bar' + (hasConf ? ' is-go' : ''), hasConf, goWait, splitCls, conf, goId: uid + '-go', showCheck: !hasConf,
+      checkHelp, helpId: uid + '-help', helpRef: (checkHelp || goWait) ? uid + '-help' : '',
       checkCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), checkText: c.check,
       checkOff: !ready, check,
       sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', saved: s.phase === 'saved' },
