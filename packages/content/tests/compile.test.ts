@@ -11,7 +11,7 @@ import { bundle } from "../src/full";
 const seed = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../content/paths");
 
 describe("content compiler", () => {
-  it("compiles every unit of every path with no errors", () => {
+  it("compiles every published unit with no errors", () => {
     const { errors, bundle: b } = compileTree(seed);
     expect(errors).toEqual([]);
     const units = (p: string, n: number) => Array.from({ length: n }, (_, i) => `${p}-U0${i + 1}`);
