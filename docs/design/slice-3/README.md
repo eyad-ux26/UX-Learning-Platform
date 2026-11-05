@@ -85,11 +85,11 @@ Drawn from what PR #155 built, so the canvas matches the app. `PathsPages` takes
 - **Lesson video:** a spinner over the frame while the clip loads or buffers (`LessonPages` view `videoLoad`).
 - **Busy buttons:** `aria-busy="true"` adds a spinner after the label and keeps the button's colour, not the disabled grey. The components board's Loading column now shows this.
 
-## Start or continue a path (`RowS3PathGo.dc.html`, canvas v66)
+## Start or continue a path (`RowS3PathGo.dc.html`, canvas v67)
 
 The path map opens with one main action card above the units (`PathsPages` views `mapStart`, `mapContinue`, `mapDone`; the switcher and locked views show the Continue card too).
 
-- **Not started:** "Start here · Unit 1, Lesson 1", the lesson name, **Start path** → Unit 1, Lesson 1.
-- **Started:** "Next up · Unit N, Lesson M", the next unfinished lesson, the path progress bar, **Continue path** → the learner's next unfinished step (a half-done lesson resumes at its step).
+- **Not started:** "Start here · Unit 1, Lesson 1", the lesson name, **Start this path** → Unit 1, Lesson 1.
+- **Started:** "Next up · Unit N, Lesson M", the next unfinished lesson, the path progress bar, **Continue this path** → the learner's next unfinished step (a half-done lesson resumes at its step).
 - **Finished (proposed, the build thread confirms):** a green trophy, "Path complete", **Review this path** → a review session of this path's skills, and a quiet link **See your certificate**.
-- Arabic: ابدأ المسار / تابع المسار / راجع هذا المسار / اعرض شهادتك.
+- Arabic: ابدأ هذا المسار / تابع هذا المسار / راجع هذا المسار / اعرض شهادتك. The Start and Continue labels match the build (PR #160).
