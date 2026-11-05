@@ -7,15 +7,17 @@ type Env = { CRON_SECRET?: string };
 export default {
   fetch: handler.fetch,
   async scheduled(_event: unknown, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
-    // Same route Vercel Cron would call; the secret keeps it closed to the public.
-    const req = new Request("https://internal/api/cron/daily", {
-      headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
-    });
-    ctx.waitUntil(
-      handler.fetch(req, env, ctx).then(async (res: Response) => {
-        console.log(`cron daily: ${res.status} ${await res.text()}`);
-      }),
-    );
+    // Calls the daily route directly; the secret keeps it closed to the public.
+    // The job settles 100 learners a call and answers `more: true` while others are waiting; up to 10 calls a night.
+    const run = async () => {
+      for (let i = 0; i < 10; i++) {
+        const res: Response = await handler.fetch(new Request("https://internal/api/cron/daily", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+        const text = await res.text();
+        console.log(`cron daily ${i + 1}: ${res.status} ${text}`);
+        if (!res.ok || !text.includes('"more":true')) break;
+      }
+    };
+    ctx.waitUntil(run());
   },
 };
 

@@ -6,6 +6,12 @@ updates:
     open-pull-requests-limit: 5
     groups:
       minor-and-patch: { update-types: [minor, patch] }
+    ignore:
+      # next-intl 4.5+ depends on @swc/core, whose native binding fails to load in the Cloudflare
+      # build image ("Failed to load native binding" when next.config.ts loads). Pinned to 4.4.0
+      # until that is understood. See the tracking issue for next-intl.
+      - dependency-name: next-intl
+        versions: [">=4.5.0"]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }

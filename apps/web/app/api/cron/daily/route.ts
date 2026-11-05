@@ -4,7 +4,9 @@ import { settleLearner } from "@/lib/server/settle";
 import { shiftDay, weekStartFor } from "@/lib/freeze";
 
 export const dynamic = "force-dynamic";
-const BATCH = 500;
+// Each learner costs a handful of database calls and a Worker request has a subrequest budget, so a run settles 100
+// learners and says `more` when there are others; the Cron Trigger calls again while `more` is true.
+const BATCH = 100;
 
 /**
  * The daily job: settles finished days for learners who have not opened the app, so freezes are earned and used on time.
