@@ -9,10 +9,13 @@
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "uxgate-web" }],
   // Run server code near Supabase in Frankfurt instead of near each visitor.
   "placement": { "region": "aws:eu-central-1" },
-  // Daily job at 02:00 UTC (05:00 Cairo). It calls /api/cron/daily inside the same worker.
+  // Daily jobs at 02:00 UTC (05:00 Cairo). They call /api/cron/daily and /api/cron/billing inside the same worker.
   "triggers": { "crons": ["0 2 * * *"] },
   // Non-secret settings. NEXT_PUBLIC_* values must also be present at build time (Workers Builds variables).
-  // Secrets (SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET) are set with `wrangler secret put`, never here.
-  "vars": { "UG_HTTPS": "1" },
+  // Secrets (SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, the Paymob and Paddle keys, BILLING_TOKEN_KEY, RESEND_API_KEY)
+  // are set with `wrangler secret put`, never here. The full list is in docs/billing-keys.md.
+  // BILLING_MOCK=1 turns on the test payment page on preview hosts only; the code refuses it on uxgate.org and the
+  // production workers.dev host, whatever this says.
+  "vars": { "UG_HTTPS": "1", "BILLING_MOCK": "1" },
   "observability": { "enabled": true }
 }

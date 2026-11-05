@@ -11,13 +11,14 @@ const cfBeacon = !isDev && !!process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
 // Everything else is closed: no framing (clickjacking), no plugins, forms and base URL only to ourselves, data only to us and Supabase.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${cfBeacon ? " https://static.cloudflareinsights.com" : ""}`,
-  "style-src 'self' 'unsafe-inline'",
+  // Paddle.js (international checkout) loads from Paddle's CDN and opens its checkout in a frame (slice 5).
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${cfBeacon ? " https://static.cloudflareinsights.com" : ""} https://cdn.paddle.com`,
+  "style-src 'self' 'unsafe-inline' https://cdn.paddle.com",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
   "media-src 'self' data: blob:",
-  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""}`,
-  "frame-src 'none'",
+  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""} https://*.paddle.com`,
+  "frame-src https://buy.paddle.com https://sandbox-buy.paddle.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
