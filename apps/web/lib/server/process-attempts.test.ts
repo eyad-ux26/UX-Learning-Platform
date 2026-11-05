@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getBank, getLessonVersion } from "@uxgate/content";
+import { getBank, getLessonVersion } from "@uxgate/content/full";
 import type { TuneStep } from "@uxgate/content/types";
 import { processEvents, bodySchema, type AttemptBody } from "./process-attempts";
 

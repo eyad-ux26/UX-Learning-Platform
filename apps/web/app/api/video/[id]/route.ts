@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { bundle } from "@uxgate/content";
+import { videoIds } from "@uxgate/content";
 import { createClient } from "@/lib/supabase/server";
 import { signBunnyUrl, bunnyConfigured } from "@/lib/server/bunny";
 
 /** Test clip used until the real clips are ready. It is a public file, so it needs no signature. */
 const TEST_CLIP = "test-clip";
 
-const videoIds = new Set(bundle.lessons.flatMap((l) => l.body.steps.flatMap((s) => (s.type === "video" ? [s.video] : []))));
 
 /** A signed address for a clip used in a lesson. Only clips that a lesson uses can be asked for, and only by a signed-in learner. */
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {

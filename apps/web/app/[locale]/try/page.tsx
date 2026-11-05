@@ -9,7 +9,7 @@ const SAMPLE_LESSON = "P01-U01-L01";
 export default async function TryPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const v = getLessonVersion(SAMPLE_LESSON)!;
+  const v = (await getLessonVersion(SAMPLE_LESSON))!;
   return (
     <LessonRunner
       lesson={v.body} hash={v.hash} locale={locale as Locale} pathLabel={getPath(v.pathId)?.title.en ?? v.pathId}

@@ -5,7 +5,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 // @ts-expect-error plain JS module
 import { compileTree } from "../src/compile.mjs";
-import { bundle, cast } from "../src/index";
+import { cast } from "../src/index";
+import { bundle } from "../src/full";
 
 const seed = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../content/paths");
 
@@ -78,5 +79,18 @@ describe("content compiler", () => {
   it("has all three faces for every cast member", () => {
     const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../apps/web/public/char");
     for (const c of cast) for (const face of ["talk", "smile", "think"]) expect(fs.existsSync(path.join(pub, `uxgate-char-${c.id}-${face}-avatar.svg`)), `${c.id} ${face}`).toBe(true);
+  });
+});
+
+describe("split content for the app", () => {
+  it("the index has every lesson without steps, and each lesson file matches the bundle", async () => {
+    const { content, getLessonVersion, getBank, videoIds } = await import("../src/index");
+    expect(content.lessons.map((l) => l.lessonId)).toEqual(bundle.lessons.map((l) => l.lessonId));
+    expect(content.lessons.every((l) => !("steps" in l.body))).toBe(true);
+    for (const l of [...bundle.lessons, ...bundle.banks]) expect(await getLessonVersion(l.lessonId)).toEqual(l);
+    expect((await getBank(bundle.banks[0].unitId))?.lessonId).toBe(bundle.banks[0].lessonId);
+    expect(await getLessonVersion("nope")).toBeUndefined();
+    expect(await getLessonVersion("constructor")).toBeUndefined();
+    expect(videoIds.size).toBe(new Set(bundle.lessons.flatMap((l) => l.body.steps.flatMap((s) => (s.type === "video" ? [s.video] : [])))).size);
   });
 });
