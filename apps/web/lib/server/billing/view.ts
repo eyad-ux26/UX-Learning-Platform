@@ -12,7 +12,8 @@ const DAY = 86_400_000;
 
 /** The latest charge a refund can be asked for, and whether the 7 days are still open. */
 export function refundTarget(v: BillingView, now = new Date()) {
-  const last = v.payments.find((p) => p.status === "paid") ?? null;
+  // A payment that bought no plan (refused, its refund already on the way) cannot be asked back again.
+  const last = v.payments.find((p) => p.status === "paid" && p.subscriptionId) ?? null;
   if (!last) return null;
   const req = v.requests.find((r) => r.paymentId === last.id) ?? null;
   return { payment: last, request: req, window: refundWindow(last, !!req, now) };
@@ -85,7 +86,7 @@ export async function billingScreen(v: BillingView, locale: string, now = new Da
   const reqFor = (p: Payment) => v.requests.find((r) => r.paymentId === p.id);
   const receipts = v.payments.map((p) => {
     const r = reqFor(p);
-    const st = p.status === "refunded" ? { st: t("refundedSt"), cls: "st st-off" } : r?.status === "waiting" ? { st: t("refundReq"), cls: "st st-wait" } : { st: t("paid"), cls: "st st-yes" };
+    const st = p.status === "refunded" ? { st: t("refundedSt"), cls: "st st-off" } : !p.subscriptionId ? { st: t("refundPending"), cls: "st st-wait" } : r?.status === "waiting" ? { st: t("refundReq"), cls: "st st-wait" } : { st: t("paid"), cls: "st st-yes" };
     return { id: p.id, mc: moneyCls(p.currency), date: d(p.paidAt), what: p.period === "year" ? t("lineY") : t("lineM"), amt: formatMoney(p.amountMinor, p.currency, L), ...st, aria: t("recAria", { date: d(p.paidAt) }) };
   });
 

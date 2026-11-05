@@ -38,6 +38,31 @@ export function cardFrom(source: Obj | undefined): Card {
   return { method: "card", brand: str(source?.sub_type) || null, last4: last4(source?.pan), expiry: null };
 }
 
+/**
+ * Where Paymob may report the country that issued the card. NOT YET CONFIRMED against Paymob's sandbox (its docs host
+ * could not be reached when this was written): look at a real card transaction once the test keys exist, and keep
+ * only the right path (docs/billing-keys.md). While no path matches, the card country is unknown and nothing is refused.
+ */
+export const CARD_COUNTRY_PATHS = ["source_data.issuer_country", "source_data.card_issuer_country", "data.card_issuer_country", "data.issuer_country", "data.card_country"];
+
+/** ISO 3166-1 alpha-2 codes, all assigned countries. NA (Namibia) is left out: Paymob may use it for "not available". */
+const ISO_ALPHA2 = new Set(("AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW").split(" "));
+
+/**
+ * The card's issuing country as an ISO 3166-1 alpha-2 code, or null when Paymob does not say. Egypt's other spellings
+ * (EGY, EGYPT) read as EG. Anything that is not a real country code (NA, XX, ZZ, UNK, a bank name) is ignored, so a
+ * placeholder can never get an Egyptian card refused.
+ */
+export function cardCountry(obj: Obj): string | null {
+  for (const p of CARD_COUNTRY_PATHS) {
+    const v = str(get(obj, p)).trim().toUpperCase();
+    if (!v) continue;
+    if (v === "EG" || v === "EGY" || v === "EGYPT") return "EG";
+    if (ISO_ALPHA2.has(v)) return v;
+  }
+  return null;
+}
+
 /** Turns one verified transaction object into our event. Also used for the direct reply to a token renewal charge, and by the test-mode provider. */
 export function transactionEvent(obj: Obj, provider: "paymob" | "mock" = "paymob"): BillingEvent {
   const id = str(obj.id);
@@ -52,6 +77,7 @@ export function transactionEvent(obj: Obj, provider: "paymob" | "mock" = "paymob
       ...base, type: "paid", eventId: `${id}:paid`, paymentId: id, sessionId: ref.sessionId, providerSubId: ref.subId, userId: null,
       amountMinor: Number(obj.amount_cents), currency: str(obj.currency) || "EGP", recurring: !!ref.subId, periodStart: null, periodEnd: null,
       card: cardFrom(obj.source_data as Obj | undefined), orderRef: str(get(obj, "order.id")) || null,
+      ...(provider === "paymob" ? { cardCountry: cardCountry(obj) } : {}),
     };
   if (obj.pending === true && ref.sessionId) return { ...base, type: "pending", eventId: `${id}:pending`, sessionId: ref.sessionId };
   return { ...base, type: "failed", eventId: `${id}:failed`, sessionId: ref.sessionId, providerSubId: ref.subId, recurring: !!ref.subId };

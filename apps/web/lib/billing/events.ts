@@ -11,6 +11,8 @@ export type BillingEvent =
       recurring: boolean; periodStart: string | null; periodEnd: string | null; card: Card | null;
       /** Paymob: the order the transaction paid (it must be the order our checkout created). */
       orderRef?: string | null;
+      /** Paymob: the country that issued the card, when Paymob reports it (null for wallets or when unknown). */
+      cardCountry?: string | null;
       /** Paddle: where to read the billing country the payer chose in Paddle's checkout. */
       customerId?: string | null; addressId?: string | null;
     })

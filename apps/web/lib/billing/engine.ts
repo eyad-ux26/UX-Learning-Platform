@@ -12,7 +12,7 @@ import type { EmailKind } from "./emails";
 export type Session = {
   id: string; userId: string; kind: "new" | "renewal"; subscriptionId: string | null; provider: BillingProvider; region: Region; country: string;
   period: Period; discount: DiscountKind | null; discountUntil: string | null; code: string | null; amountMinor: number; renewAmountMinor: number;
-  currency: string; locale: "en" | "ar"; status: "open" | "pending" | "paid" | "failed" | "cancelled"; providerRef: string | null; createdAt: string;
+  currency: string; locale: "en" | "ar"; status: "open" | "pending" | "paid" | "failed" | "cancelled" | "refused"; providerRef: string | null; createdAt: string;
 };
 
 export type Payment = {
@@ -86,6 +86,8 @@ export type Engine = {
   seal: (token: string) => Promise<string>;
   now?: () => string;
   actions?: WebhookActions;
+  /** PAYMOB_EG_CARDS_ONLY=1: Egypt's EGP price needs a card issued in Egypt. Off by default (an admin decision). */
+  egCardsOnly?: boolean;
 };
 
 const LIVE = ["active", "grace", "cancelled"];
@@ -192,6 +194,18 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
         await store.updateSession(session.id, { status: "failed" });
         return { status: "ignored", note: "amount mismatch" };
       }
+      // With PAYMOB_EG_CARDS_ONLY=1, Egypt's price is for cards issued in Egypt. Paymob charges only in EGP, so a card from
+      // abroad (someone on a VPN) cannot be moved to a dollar price there: the payment is refused and refunded, and the
+      // learner is told why. Wallets are Egyptian by nature.
+      if (e.egCardsOnly && ev.provider === "paymob" && ev.card?.method !== "wallet" && ev.cardCountry && ev.cardCountry !== "EG") {
+        console.error("billing: card issued outside Egypt", ev.paymentId, ev.cardCountry, session.id);
+        await store.updateSession(session.id, { status: "refused" });
+        const r = await refuse(e, ev, session.userId, session.period, `card issued in ${ev.cardCountry}`);
+        const pay = await store.paymentByProviderId(ev.provider, ev.paymentId);
+        // The email offers the same plan, with the same code, at the world price through Paddle.
+        if (pay) await e.mail(session.userId, "cardRefused", pay.id, { payment: pay, extra: session.code ? { code: session.code } : undefined });
+        return r;
+      }
       let live = session.kind === "renewal" && session.subscriptionId ? await store.subById(session.subscriptionId) : await store.liveSub(session.userId);
       // A test-mode plan (preview hosts) gives way to a real one.
       if (live?.id && live.provider === "mock" && ev.provider !== "mock" && LIVE.includes(live.status)) {
@@ -262,7 +276,8 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
       const req = await store.refundRequestFor(pay.id);
       if (req && req.status === "waiting") await store.answerRefundRequest(req.id, "approved", ev.at);
       await syncEntitlement(e, pay.userId);
-      await e.mail(pay.userId, "refundYes", pay.id, { sub, payment: { ...pay, status: "refunded", refundedAt: ev.at }, request: req });
+      // A payment that never bought a plan (refused) ends no Pro; the email says only that the money is back.
+      await e.mail(pay.userId, "refundYes", pay.id, { sub, payment: { ...pay, status: "refunded", refundedAt: ev.at }, request: req, extra: pay.subscriptionId ? undefined : { noPlan: "1" } });
       return { status: "applied", note: "refunded" };
     }
 

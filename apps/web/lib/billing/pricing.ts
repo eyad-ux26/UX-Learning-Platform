@@ -21,6 +21,22 @@ export const ARAB = ["JO", "LB", "IQ", "SY", "PS", "YE", "SD", "LY", "TN", "DZ",
 /** Countries offered in the billing country list, in this order. */
 export const COUNTRIES = ["EG", ...GULF, ...ARAB];
 
+/**
+ * The country used when the request's country is not known (no CF-IPCountry, or Cloudflare's XX / T1). "ZZ" is
+ * "Unknown Region" in every locale's country names. It prices at the world rate, never at Egypt's (the cheapest).
+ */
+export const UNKNOWN_COUNTRY = "ZZ";
+
+/**
+ * The country a checkout is priced for. `intl` is "Pay with an international card", offered after Paymob refuses a
+ * card issued outside Egypt: it prices at the world rate in USD through Paddle, whatever the request's country.
+ */
+export const priceCountry = (ip: string | null, intl = false): string => (intl ? UNKNOWN_COUNTRY : ip ?? UNKNOWN_COUNTRY);
+
+/** Check and pay with an international card (Paddle, world price), same plan and code. Relative to /{locale}. */
+export const intlCheckoutPath = (period: Period, code?: string | null): string =>
+  `/app/checkout?period=${period}&intl=1${code ? `&code=${encodeURIComponent(code)}` : ""}`;
+
 export function regionFor(country: string | null | undefined): Region {
   const c = (country ?? "").toUpperCase();
   if (c === "EG") return "eg";

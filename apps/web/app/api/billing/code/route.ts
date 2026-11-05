@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { regionFor } from "@/lib/billing/pricing";
+import { regionFor, UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 import { billingCaller, bad } from "@/lib/server/billing/route";
 import { priceFor } from "@/lib/server/billing/checkout";
 import { ipCountry } from "@/lib/server/billing/config";
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   if ("error" in who) return who.error;
   const parsed = body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return bad();
-  const country = ipCountry(req.headers) ?? "EG";
+  const country = ipCountry(req.headers) ?? UNKNOWN_COUNTRY;
   const { q, codeCheck } = await priceFor(who.admin, who.user.id, country, parsed.data.period, parsed.data.code);
   if (!codeCheck?.ok) return NextResponse.json({ ok: false, error: codeCheck?.error ?? "invalid", region: regionFor(country) });
   return NextResponse.json({ ok: true, code: codeCheck.code.code, applied: q.code === codeCheck.code.code, amount: q.amount, renewAmount: q.renewAmount, currency: q.currency });

@@ -27,7 +27,7 @@ export default async function ReceiptPage({ params, searchParams }: { params: Pr
     [t("rcPlan"), p.period === "year" ? t("lineY") : t("lineM")],
     [t("rcPeriod"), `${formatDate(p.paidAt, locale, true)} – ${formatDate(p.periodEnd, locale, true)}`],
     [t("rcPaidWith"), cardName(t, p)],
-    [t("rcStatus"), p.status === "refunded" ? t("refundedSt") : t("paid")],
+    [t("rcStatus"), p.status === "refunded" ? t("refundedSt") : !p.subscriptionId ? t("refundPending") : t("paid")],
     [t("rcSeller"), p.provider === "paddle" ? t("rcSellerPaddle") : t("rcSellerPaymob")],
   ];
   return (

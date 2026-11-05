@@ -86,3 +86,26 @@ describe("dates and money", () => {
     expect(formatMoney(800, "USD", "ar")).toBe("$8");
   });
 });
+
+describe("an unknown request country", () => {
+  it("prices at the world rate through Paddle, never at Egypt's", async () => {
+    const { UNKNOWN_COUNTRY } = await import("./pricing");
+    expect(regionFor(UNKNOWN_COUNTRY)).toBe("world");
+    expect(providerFor(regionFor(UNKNOWN_COUNTRY))).toBe("paddle");
+  });
+});
+
+describe("pay with an international card (after Paymob refuses a foreign card)", () => {
+  it("prices at the world rate in USD through Paddle, whatever the request's country, and keeps the code", async () => {
+    const { priceCountry, intlCheckoutPath } = await import("./pricing");
+    expect(priceCountry("EG", true)).toBe("ZZ");
+    expect(priceCountry("EG")).toBe("EG");
+    expect(priceCountry(null)).toBe("ZZ");
+    const region = regionFor(priceCountry("EG", true));
+    expect(providerFor(region)).toBe("paddle");
+    expect(quote(region, "year", { student: false, welcomeBack: false, code: null })).toMatchObject({ currency: "USD", amount: 7200 });
+    expect(quote(region, "year", { student: false, welcomeBack: false, code: { code: "FOUNDING", kind: "founding", percent: 30, period: "year" } }).amount).toBeLessThan(7200);
+    expect(intlCheckoutPath("month", "FOUNDING")).toBe("/app/checkout?period=month&intl=1&code=FOUNDING");
+    expect(intlCheckoutPath("year", null)).toBe("/app/checkout?period=year&intl=1");
+  });
+});

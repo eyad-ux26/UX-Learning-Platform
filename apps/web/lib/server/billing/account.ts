@@ -1,7 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { headers } from "next/headers";
-import { providerFor, regionFor, type Period, type Region } from "@/lib/billing/pricing";
+import { providerFor, regionFor, UNKNOWN_COUNTRY, type Period, type Region } from "@/lib/billing/pricing";
 import { isPro, startSub, welcomeBackEligible, type Entitlement, type Sub } from "@/lib/billing/subscription";
 import type { Payment, RefundRequest } from "@/lib/billing/engine";
 import { entitlementFromRow, paymentFromRow, requestFromRow, subFromRow } from "./store";
@@ -79,7 +79,7 @@ export async function loadBilling(me: { db: SupabaseClient | null; userId: strin
   const shown = new Set(payments.map((p) => p.id));
   // A live plan keeps the country it was bought in; a new purchase is priced for the country the request comes from.
   const live = !!sub && ["active", "grace", "cancelled"].includes(sub.status);
-  const country = (live ? sub!.country : null) ?? country0 ?? "EG";
+  const country = (live ? sub!.country : null) ?? country0 ?? UNKNOWN_COUNTRY;
   const region = regionFor(country);
   const provider = providerFor(region);
   return {

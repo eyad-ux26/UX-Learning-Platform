@@ -16,6 +16,7 @@ From the Paymob dashboard (test mode first, then live). Settings > Account info,
 | `PAYMOB_WALLET_INTEGRATION_ID` | Mobile wallet integration id |
 | `PAYMOB_MOTO_INTEGRATION_ID` | MOTO (card-not-present) integration id, for charging the saved card at renewal. Ask Paymob support to turn on card tokenisation ("save card") and MOTO for the account. |
 | `PAYMOB_BASE_URL` | Variable, optional. Default `https://accept.paymob.com`. |
+| `PAYMOB_EG_CARDS_ONLY` | Variable, optional, **off by default** (an admin decision). `1` refuses and refunds an Egypt-price card payment when Paymob reports a card issued outside Egypt; the learner sees why and gets an email. Change it in Cloudflare (Settings > Variables), no code deploy. Before turning it on: run `0037_billing_refused.sql`, and cut `CARD_COUNTRY_PATHS` to the confirmed field (below). |
 
 In the Paymob dashboard, set each integration's **Transaction processed callback** and **Transaction response callback** to:
 - processed (server to server): `https://uxgate.org/api/webhooks/paymob`
@@ -55,3 +56,4 @@ Paddle notification destination: `https://uxgate.org/api/webhooks/paddle`, event
 - Previews must not share the production database: give previews the staging Supabase project.
 - Paymob live mode and Paddle production keys, then one real payment and refund on each.
 - `support@uxgate.org` must receive mail (refund requests go there).
+- **Paymob card country (before `PAYMOB_EG_CARDS_ONLY=1`):** the paths in `CARD_COUNTRY_PATHS` (`apps/web/lib/billing/paymob.ts`) are guesses, because Paymob's docs couldn't be reached when this was written. Pay once in Paymob test mode with a test card, then open that transaction (Paymob dashboard, or `GET /api/acceptance/transactions/<id>`), find the field that holds the country that issued the card, and cut the list to that one path. Only a real ISO 3166-1 two-letter code other than EG refuses a payment. Placeholders such as NA, XX, ZZ and UNK are ignored, so a missing value never refunds an Egyptian card.

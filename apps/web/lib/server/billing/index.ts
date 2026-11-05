@@ -23,7 +23,7 @@ export function resendTransport(): Transport | null {
 /** The billing engine on the service-role client. Call only from webhooks, the daily job, or after checking the learner. */
 export function billingEngine(): Engine {
   const store = new SupabaseBillingStore(createAdminClient());
-  return { store, mail: makeMailer(store, resendTransport(), siteUrl()), seal: (t) => seal(tokenKey(), t), actions: webhookActions };
+  return { store, mail: makeMailer(store, resendTransport(), siteUrl()), seal: (t) => seal(tokenKey(), t), actions: webhookActions, egCardsOnly: process.env.PAYMOB_EG_CARDS_ONLY === "1" };
 }
 
 /** What the engine may ask a provider from a webhook: give refused money back, end a duplicate subscription, read Paddle's billing country. */

@@ -1,12 +1,13 @@
 // Billing emails in English and Arabic (copy from canvas v63, EmailPages: receipt, renewSoon, payFailed, cancelled,
-// refundYes, refundNo, walletDue), plus the student link and the note to support about a refund request.
+// refundYes, refundNo, walletDue), plus the student link, the note to support about a refund request, and the
+// refused foreign card (cardRefused, PAYMOB_EG_CARDS_ONLY).
 // Billing emails always arrive: they cannot be turned off. Pure: returns subject, HTML and text.
 import { emailLayout } from "../server/email/layout";
-import { formatMoney } from "./pricing";
+import { formatMoney, intlCheckoutPath } from "./pricing";
 import type { Payment, RefundRequest } from "./engine";
 import { REFUND_DAYS, RETRY_DAYS, type Sub } from "./subscription";
 
-export type EmailKind = "receipt" | "renewSoon" | "payFailed" | "cancelled" | "refundYes" | "refundNo" | "walletDue" | "studentLink" | "refundAsked";
+export type EmailKind = "receipt" | "renewSoon" | "payFailed" | "cancelled" | "refundYes" | "refundNo" | "walletDue" | "studentLink" | "refundAsked" | "cardRefused";
 export type Locale = "en" | "ar";
 
 export type EmailInput = {
@@ -120,7 +121,7 @@ function content(kind: EmailKind, i: EmailInput): Body {
         preheader: hi(`${amount} back to ${card} in 5 to 10 working days.`, `يعود ${amount} إلى ${card} خلال 5 إلى 10 أيام عمل.`),
         heading: hi("Your refund is approved", "قُبل طلب الاسترداد"),
         paragraphs: [hi(`We sent ${amount} back to ${card}. Banks take 5 to 10 working days to show it.`, `أعدنا ${amount} إلى ${card}. يستغرق ظهوره في البنك من 5 إلى 10 أيام عمل.`),
-          hi("Pro has ended. Your progress, streak and badges stay in your account, and Unit 1 of every path stays open.", "انتهى Pro. ويبقى تقدّمك وسلسلتك وشاراتك في حسابك، والوحدة 1 من كل مسار متاحة.")],
+          ...(i.extra?.noPlan ? [] : [hi("Pro has ended. Your progress, streak and badges stay in your account, and Unit 1 of every path stays open.", "انتهى Pro. ويبقى تقدّمك وسلسلتك وشاراتك في حسابك، والوحدة 1 من كل مسار متاحة.")])],
         button: { label: hi("See my requests", "اعرض طلباتي"), href: `${billing}/requests` },
         notes: [hi("The UXGate team", "فريق UXGate")],
         why,
@@ -138,6 +139,22 @@ function content(kind: EmailKind, i: EmailInput): Body {
           ...(until ? [hi(`You can still cancel. You won’t be charged again, and Pro stays on until ${until}.`, `ما زال بإمكانك الإلغاء، فلن يُخصم منك أي مبلغ بعد الآن، ويبقى Pro مفعّلًا حتى ${until}.`)] : [])],
         button: { label: hi("Manage my plan", "إدارة خطتي"), href: billing },
         notes: [hi("If something went wrong with the charge itself, reply to this email and we will look again.", "إن حدث خطأ في الدفعة نفسها، ردّ على هذه الرسالة وسنراجعها مرة أخرى."), hi("The UXGate team", "فريق UXGate")],
+        why,
+      };
+    }
+    case "cardRefused": {
+      const p = pay!;
+      const amount = money(p.amountMinor, p.currency), card = cardName(p.cardBrand, p.cardLast4, L);
+      return {
+        subject: hi("We couldn’t take this payment: your refund is on its way", "لم نتمكن من قبول هذه الدفعة: المبلغ في طريقه إليك"),
+        preheader: hi(`The Egypt price needs a card issued in Egypt. ${amount} is going back to ${card}.`, `سعر مصر يحتاج إلى بطاقة صادرة في مصر. يعود ${amount} إلى ${card}.`),
+        heading: hi("This price needs a card issued in Egypt", "هذا السعر يحتاج إلى بطاقة صادرة في مصر"),
+        paragraphs: [hi(`The Egypt price is for cards issued in Egypt, and ${card} was issued in another country, so Pro did not start.`, `سعر مصر مخصص للبطاقات الصادرة في مصر، و${card} صادرة في بلد آخر، لذلك لم يبدأ Pro.`),
+          hi(`We are sending ${amount} back to ${card}. Banks take 5 to 10 working days to show it. You don’t need to do anything.`, `نعيد ${amount} إلى ${card}. يستغرق ظهوره في البنك من 5 إلى 10 أيام عمل، ولا تحتاج إلى فعل أي شيء.`),
+          hi("You can still get Pro with this card: pay with an international card, in US dollars through Paddle, for the same plan. Or pay again with a card issued in Egypt or a mobile wallet.", "ما زال بإمكانك الحصول على Pro بهذه البطاقة: ادفع ببطاقة دولية بالدولار الأمريكي عبر Paddle للخطة نفسها. أو ادفع مرة أخرى ببطاقة صادرة في مصر أو بمحفظة إلكترونية.")],
+        rows: [[hi("Receipt", "الإيصال"), p.receiptNo], [hi("Amount", "المبلغ"), amount], [hi("Status", "الحالة"), hi("Refund on its way", "الاسترداد قيد التنفيذ")]],
+        button: { label: hi("Pay with an international card", "ادفع ببطاقة دولية"), href: `${i.site}/${L}${intlCheckoutPath(p.period, i.extra?.code)}` },
+        notes: [hi("Questions? Reply to this email.", "لديك سؤال؟ ردّ على هذه الرسالة."), hi("The UXGate team", "فريق UXGate")],
         why,
       };
     }
