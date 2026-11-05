@@ -40,8 +40,10 @@ export type Card = { method: PayMethod; brand?: string | null; last4?: string | 
 /**
  * `source: "mock"` marks Pro that came from the test payment page on a preview host. Previews share the production
  * database, so production never counts it (isPro without allowMock, and has_pro() in SQL).
+ * `source: "manual"` is Pro granted by admins with SQL (supabase/README.md), with no payment: it counts everywhere,
+ * nothing renews it, and plan events leave it alone while it lasts longer than the plan.
  */
-export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null; source?: "live" | "mock" };
+export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null; source?: "live" | "mock" | "manual" };
 
 export const GRACE_DAYS = 7;
 /** Failed renewals are tried again this many days after the charge date. */
@@ -178,6 +180,8 @@ export function proUntil(s: Sub | null, now: string): string | null {
 /** The one row the app checks, recomputed from the learner's current plan. */
 export function entitlementFor(s: Sub | null, prev: Entitlement | null, now: string): Entitlement {
   const until = proUntil(s, now);
+  // A grant from admins stands until it ends, unless a paid plan runs longer.
+  if (prev?.source === "manual" && prev.plan === "pro" && prev.validUntil && new Date(prev.validUntil) > new Date(now) && (!until || prev.validUntil >= until)) return prev;
   const source = s?.provider === "mock" ? "mock" : "live";
   if (until) return { plan: "pro", validUntil: until, proSince: prev?.plan === "pro" && prev.source === source && prev.proSince ? prev.proSince : (s?.currentPeriodStart ?? now), proEndedAt: prev?.proEndedAt ?? null, source };
   // Test-mode Pro ending is not a real end of Pro (it must not open the welcome-back discount).

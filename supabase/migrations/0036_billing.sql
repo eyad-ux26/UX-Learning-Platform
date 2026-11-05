@@ -13,7 +13,8 @@ create table public.entitlements (
   pro_since timestamptz,            -- first day of the current run of Pro
   pro_ended_at timestamptz,         -- when Pro last ended (welcome back needs 60 days without Pro)
   -- 'mock' when Pro came from the test payment page on a preview host. Production never counts it (has_pro, readPro).
-  source text not null default 'live' check (source in ('live', 'mock')),
+  -- 'manual' when admins granted Pro with SQL (supabase/README.md): counted everywhere, never renewed or charged.
+  source text not null default 'live' check (source in ('live', 'mock', 'manual')),
   updated_at timestamptz not null default now()
 );
 
@@ -220,7 +221,7 @@ grant usage, select on sequence public.receipt_no_seq to service_role;
 
 -- Is this learner on Pro right now? For SQL callers (later: certificates, video tokens). Server only.
 create function public.has_pro(p_user uuid) returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.entitlements e where e.user_id = p_user and e.plan = 'pro' and e.source = 'live' and e.valid_until > now())
+  select exists (select 1 from public.entitlements e where e.user_id = p_user and e.plan = 'pro' and e.source in ('live', 'manual') and e.valid_until > now())
 $$;
 revoke all on function public.has_pro(uuid) from public, anon, authenticated;
 grant execute on function public.has_pro(uuid) to service_role;

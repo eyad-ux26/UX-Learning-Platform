@@ -67,6 +67,12 @@ export async function billingScreen(v: BillingView, locale: string, now = new Da
     }
   }
 
+  // Pro granted by admins (source 'manual'): nothing to renew, change or cancel.
+  if (v.pro && v.entitlement?.source === "manual" && !live) {
+    plan = { name: t("proName"), st: t("st.active"), stCls: "st st-yes", k1: t("proUntil"), v1: d(v.entitlement.validUntil), k2: t("renewal"), v2: t("renewalOff"), resume: null, change: false };
+    notice = null;
+  }
+
   const pending = s?.pendingPeriod && s.pendingPeriod !== s.period ? (s.pendingPeriod === "year" ? t("startsOn", { date: d(s.currentPeriodEnd) }) : t("startsOnM", { date: d(s.currentPeriodEnd) })) : null;
 
   // Payment method: Paddle changes cards on its page; a Paymob card changes when a payment is due.

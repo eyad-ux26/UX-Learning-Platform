@@ -1,8 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { isStudentEmail } from "./student";
-import { cardExpiresBefore, refundWindow, startSub } from "./subscription";
+import { cardExpiresBefore, entitlementFor, isPro, refundWindow, startSub, type Entitlement } from "./subscription";
 import { renderEmail, type EmailKind } from "./emails";
 import type { Payment, RefundRequest } from "./engine";
+
+describe("Pro granted by admins (source 'manual')", () => {
+  const now = "2026-11-05T09:00:00Z";
+  const manual: Entitlement = { plan: "pro", validUntil: "2027-11-05T09:00:00Z", proSince: now, proEndedAt: null, source: "manual" };
+  const monthly = (status: "active" | "ended") => ({ ...startSub({ userId: "u", provider: "paymob", region: "eg", country: "EG", period: "month", currency: "EGP", renewAmountMinor: 24900, discount: null, discountUntil: null, at: now }), id: "s1", status, endedAt: status === "ended" ? now : null });
+  it("counts on production, with no payment", () => {
+    expect(isPro(manual, new Date(now))).toBe(true);
+    expect(isPro({ ...manual, validUntil: "2026-11-01T00:00:00Z" }, new Date(now))).toBe(false);
+  });
+  it("plan events leave it alone while it lasts longer than the plan", () => {
+    expect(entitlementFor(null, manual, now)).toEqual(manual);
+    expect(entitlementFor(monthly("ended"), manual, now)).toEqual(manual);
+    expect(entitlementFor(monthly("active"), manual, now)).toEqual(manual);
+  });
+  it("a paid plan that runs longer takes over, and an ended grant is Free", () => {
+    const short = { ...manual, validUntil: "2026-11-10T09:00:00Z" };
+    expect(entitlementFor(monthly("active"), short, now)).toMatchObject({ plan: "pro", source: "live" });
+    expect(entitlementFor(null, { ...manual, validUntil: "2026-11-01T00:00:00Z" }, now)).toMatchObject({ plan: "free" });
+  });
+});
 
 describe("student email", () => {
   it("accepts university addresses", () => {

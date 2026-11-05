@@ -106,6 +106,21 @@ describe("server-only billing tables", () => {
   });
 });
 
+describe("Pro granted by admins", () => {
+  it("the README grant gives Pro that has_pro counts", async () => {
+    const id = (await db.query<{ id: string }>(`insert into auth.users (email) values ('qa@example.com') returning id`)).rows[0].id;
+    const readme = fs.readFileSync(path.join(here, "../README.md"), "utf8");
+    const grant = readme.match(/```sql\n(insert into public\.entitlements[^`]*?)\n```/)?.[1];
+    expect(grant).toBeTruthy();
+    await db.exec(grant!);
+    expect((await as<{ p: boolean }>("service_role", null, `select public.has_pro($1) as p`, [id]))[0].p).toBe(true);
+    expect((await db.query<{ source: string }>(`select source from entitlements where user_id = $1`, [id])).rows[0].source).toBe("manual");
+    const revoke = readme.match(/```sql\n(update public\.entitlements[^`]*?)\n```/)?.[1];
+    await db.exec(revoke!);
+    expect((await as<{ p: boolean }>("service_role", null, `select public.has_pro($1) as p`, [id]))[0].p).toBe(false);
+  });
+});
+
 describe("integrity", () => {
   it("a webhook event is stored once", async () => {
     await expect(db.query(`insert into billing_events (provider, event_id, event_type, payload) values ('paymob', 'e1', 'TRANSACTION', '{}')`)).rejects.toThrow(/duplicate/);

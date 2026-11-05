@@ -86,3 +86,17 @@ Slice 3 migrations start at 0016 and run after these.
 | badge | Slice 3, when a skill turns gold (Kept): `notify(userId, "badge", { name, kind }, "/app/profile")` plus `badgeEmail` | Slice 3 wires it |
 | review | Slice 3's daily job, when skills are due: `notify(userId, "review", { count, minutes }, "/app/review")` | Slice 3 wires it |
 | billing | Slice 5 | Slice 5 wires it |
+
+## 11. Give Pro without a payment (admins, QA accounts)
+
+After 0036, run this in the SQL editor with the learner's email. It gives one year of Pro marked `source = 'manual'`, which counts on uxgate.org too. Nothing renews or charges it, and plan events leave it alone. Running it again resets the year.
+
+```sql
+insert into public.entitlements (user_id, plan, valid_until, pro_since, source) select id, 'pro', now() + interval '1 year', now(), 'manual' from auth.users where email = 'qa@example.com' on conflict (user_id) do update set plan = 'pro', valid_until = excluded.valid_until, pro_since = coalesce(public.entitlements.pro_since, excluded.pro_since), source = 'manual', updated_at = now();
+```
+
+To take it back:
+
+```sql
+update public.entitlements set plan = 'free', valid_until = null, pro_since = null, pro_ended_at = now(), source = 'live', updated_at = now() where source = 'manual' and user_id = (select id from auth.users where email = 'qa@example.com');
+```
