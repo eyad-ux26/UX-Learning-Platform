@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { pickPath } from "@/lib/learning";
 import { isPlayable } from "@/lib/catalog";
 import { FOCUS_PATH, onboardingSchema, type OnboardingInput } from "@/lib/onboarding";
@@ -28,7 +29,7 @@ export async function saveOnboarding(input: OnboardingInput): Promise<{ ok: bool
     await db.from("enrollments").upsert({ user_id: userId, path_id: path.id }, { onConflict: "user_id,path_id", ignoreDuplicates: true });
     await db.from("enrollments").update({ last_active_at: now }).eq("user_id", userId).eq("path_id", path.id);
     await db.from("profiles").update({ current_path_id: path.id }).eq("user_id", userId).is("current_path_id", null);
-    await db.from("path_events").insert({ user_id: userId, kind: "started", path_id: path.id });
+    await createAdminClient().from("path_events").insert({ user_id: userId, kind: "started", path_id: path.id });
   }
   // Once per account: the welcome inbox item and email, now that the starting path is known.
   await sendWelcomeOnce(userId, data.user.email);

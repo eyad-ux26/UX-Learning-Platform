@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { settleLearner } from "@/lib/server/settle";
-import { resolveWeekStart, shiftDay } from "@/lib/freeze";
+import { resolveWeekStart } from "@/lib/freeze";
 
 export const dynamic = "force-dynamic";
 // Each learner costs a handful of database calls and a Worker request has a subrequest budget, so a run settles 100
@@ -18,13 +18,13 @@ export async function GET(req: Request) {
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   const db = createAdminClient();
-  // Anyone whose settled day is before yesterday in the earliest time zone (UTC-12) may have days to settle.
-  const cutoff = shiftDay(new Date().toISOString().slice(0, 10), -1);
-  const { data: rows, error } = await db.from("streaks").select("user_id, settled_through").or(`settled_through.is.null,settled_through.lt.${cutoff}`).order("settled_through", { ascending: true, nullsFirst: true }).limit(BATCH);
+  // Only learners whose settled day is before their own yesterday (in their time zone), oldest first: a learner west of
+  // UTC who is already settled up to their local yesterday is not picked again, so every call makes progress (#139).
+  const { data: rows, error } = await db.rpc("settle_candidates", { p_limit: BATCH });
   if (error) return NextResponse.json({ error: "read_failed" }, { status: 500 });
-  const ids = (rows ?? []).map((r) => r.user_id as string);
-  const { data: zones } = ids.length ? await db.from("profiles").select("user_id, time_zone, locale, week_start").in("user_id", ids) : { data: [] };
-  const prof = new Map((zones ?? []).map((z) => [z.user_id as string, { tz: (z.time_zone as string | null) ?? null, start: resolveWeekStart(z.week_start as number | null, z.locale as string | null) }]));
+  const list = (rows ?? []) as { user_id: string; time_zone: string | null; locale: string | null; week_start: number | null }[];
+  const ids = list.map((r) => r.user_id);
+  const prof = new Map(list.map((z) => [z.user_id, { tz: z.time_zone ?? null, start: resolveWeekStart(z.week_start, z.locale) }]));
   let settled = 0;
   let failed = 0;
   let stoppedEarly: string | null = null;
@@ -41,5 +41,5 @@ export async function GET(req: Request) {
     }
     console.warn(`WARN daily job: could not settle ${id}: ${r.error}`);
   }
-  return NextResponse.json({ settled, failed, stoppedEarly, more: stoppedEarly ? true : ids.length === BATCH });
+  return NextResponse.json({ settled, failed, stoppedEarly, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
 }

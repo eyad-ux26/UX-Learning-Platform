@@ -46,6 +46,18 @@ export function sessionSkills(queue: ReviewItem[], unitOf: (skillId: string) => 
 }
 
 /**
+ * Whether a plan a page built earlier still holds: one case per skill, at most REVIEW_SESSION_MAX, every skill due now,
+ * and each case one the learner has not answered unless every case of that skill was answered before (#141).
+ */
+export function reviewPlanOk<S extends { id: string; skill: string }>(plan: string[], bankSteps: S[], due: ReadonlySet<string>, seen: ReadonlyMap<string, number>): boolean {
+  const byId = new Map(bankSteps.map((s) => [s.id, s]));
+  const steps = plan.map((id) => byId.get(id));
+  if (!plan.length || plan.length > REVIEW_SESSION_MAX || steps.some((s) => !s || !due.has(s.skill))) return false;
+  if (new Set(steps.map((s) => s!.skill)).size !== steps.length) return false;
+  return steps.every((s) => !seen.has(s!.id) || bankSteps.filter((b) => b.skill === s!.skill).every((b) => seen.has(b.id)));
+}
+
+/**
  * One step per skill from the unit's bank: a case the learner has not answered yet, in bank order. If every case of the
  * skill was answered before (in a mastery round or an earlier review), the one answered longest ago comes back.
  * `seen` maps a step id to when it was last answered (ms).

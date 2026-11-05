@@ -77,3 +77,6 @@ export type Progress = {
   startedLessons: string[];
   xpByLesson: Record<string, number>;
 };
+
+/** Days of the last two weeks on which the daily goal was met (a day with a lesson can still be short of the goal). */
+export const goalDaysOf = (p: Pick<Progress, "recentActivity">) => Object.entries(p.recentActivity).filter(([, a]) => a.goalMet).map(([day]) => day);

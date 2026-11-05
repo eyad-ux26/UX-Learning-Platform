@@ -22,10 +22,12 @@ export async function GoalRing({ done, goal, size = 52 }: { done: number; goal: 
  * The week strip: seven days from the learner's week start (Monday in English, Saturday in Arabic), short day names,
  * "Today" on the current day, and a spoken name per day that includes its state ("Tuesday, freeze used").
  */
-export async function Week({ today, activeDays, frozenDays = [], start, small = false }: { today: string; activeDays: string[]; frozenDays?: string[]; start?: number; small?: boolean }) {
+/** `goalDays`: days the daily goal was met. A day with a lesson but short of the goal is "practised" (#140). */
+export async function Week({ today, activeDays, goalDays, frozenDays = [], start, small = false }: { today: string; activeDays: string[]; goalDays?: string[]; frozenDays?: string[]; start?: number; small?: boolean }) {
   const locale = await getLocale();
   const t = await getTranslations("week");
   const active = new Set(activeDays);
+  const goal = new Set(goalDays ?? activeDays);
   const frozen = new Set(frozenDays);
   const long = new Intl.DateTimeFormat(locale, { weekday: "long", timeZone: "UTC" });
   return (
@@ -33,13 +35,13 @@ export async function Week({ today, activeDays, frozenDays = [], start, small = 
       {weekOf(today, start ?? weekStartFor(locale)).map((d) => {
         const date = new Date(`${d}T00:00:00Z`);
         const isToday = d === today;
-        const state = isToday ? "today" : frozen.has(d) ? "frozen" : active.has(d) ? "done" : "next";
+        const state = isToday ? "today" : frozen.has(d) ? "frozen" : goal.has(d) ? "done" : active.has(d) ? "part" : "next";
         const day = long.format(date);
-        const spoken = isToday ? t("spokenToday", { day }) : state === "frozen" ? t("spokenFrozen", { day }) : state === "done" ? t("spokenDone", { day }) : d > today ? t("spokenLater", { day }) : t("spokenNone", { day });
+        const spoken = isToday ? t("spokenToday", { day }) : state === "frozen" ? t("spokenFrozen", { day }) : state === "done" ? t("spokenDone", { day }) : state === "part" ? t("spokenPart", { day }) : d > today ? t("spokenLater", { day }) : t("spokenNone", { day });
         const icon = state === "today" ? "flame-fill" : state === "frozen" ? "freeze-fill" : "check";
         return (
           <div key={d} role="listitem" aria-label={spoken}>
-            <span className={`dot ${state === "frozen" ? "done" : state}`} aria-hidden="true" style={small ? { inlineSize: 28, blockSize: 28 } : undefined}>
+            <span className={`dot ${state}`} aria-hidden="true" style={small ? { inlineSize: 28, blockSize: 28 } : undefined}>
               <span className={`ph ph-${icon}`} style={{ fontSize: small ? 14 : 15 }} />
             </span>
             <span className="dlabel" aria-hidden="true" style={{ color: state === "next" ? "var(--ink-2)" : state === "today" ? "var(--ink)" : undefined }}>{isToday ? t("today") : t(`short.${date.getUTCDay()}` as never)}</span>

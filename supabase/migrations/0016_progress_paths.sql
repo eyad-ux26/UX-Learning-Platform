@@ -8,8 +8,20 @@
 drop policy "own enrollments insert" on public.enrollments;
 create policy "own enrollments insert" on public.enrollments for insert to authenticated
   with check (user_id = (select auth.uid()) and exists (select 1 from public.paths p where p.id = path_id and p.status = 'published'));
+-- A row the learner has cannot be moved to another path or back-dated: the browser may only set which lesson is current
+-- and when the path was last active. (The current path must be an enrollment, so it can only be a published path too.)
+revoke insert, update on public.enrollments from authenticated;
+grant insert (user_id, path_id, current_lesson_id, last_active_at) on public.enrollments to authenticated;
+grant update (current_lesson_id, last_active_at) on public.enrollments to authenticated;
+-- The suggested path in onboarding must be a published one as well.
+drop policy "own onboarding insert" on public.onboarding;
+drop policy "own onboarding update" on public.onboarding;
+create policy "own onboarding insert" on public.onboarding for insert to authenticated
+  with check (user_id = (select auth.uid()) and (recommended_path_id is null or exists (select 1 from public.paths p where p.id = recommended_path_id and p.status = 'published')));
+create policy "own onboarding update" on public.onboarding for update to authenticated using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()) and (recommended_path_id is null or exists (select 1 from public.paths p where p.id = recommended_path_id and p.status = 'published')));
 
--- Every start and every switch is logged, so "why is this my current path" can always be answered.
+-- Every start and every switch is logged, so "why is this my current path" can always be answered. Only the server writes it.
 create table public.path_events (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -19,16 +31,24 @@ create table public.path_events (
   created_at timestamptz not null default now()
 );
 create index path_events_user on public.path_events (user_id, created_at desc);
-grant select, insert on public.path_events to authenticated;
+grant select on public.path_events to authenticated;
 alter table public.path_events enable row level security;
 create policy "own path events read" on public.path_events for select to authenticated using (user_id = (select auth.uid()));
-create policy "own path events insert" on public.path_events for insert to authenticated with check (user_id = (select auth.uid()));
 
 -- ───────── streak and freezes ─────────
 
 -- Days up to and including this one have been settled (goal days counted, freezes earned or used). The daily job and
 -- every Home visit move it forward; running them again changes nothing.
 alter table public.streaks add column settled_through date;
+
+-- A learner's own yesterday. A time zone the database does not know counts as UTC rather than failing the whole query.
+create or replace function public.local_yesterday(p_tz text) returns date language plpgsql stable set search_path = public as $$
+begin
+  return (now() at time zone coalesce(nullif(p_tz, ''), 'UTC'))::date - 1;
+exception when others then
+  return (now() at time zone 'UTC')::date - 1;
+end $$;
+
 
 -- One row each time a freeze is earned or used. `seen_at` stays empty until the learner has seen the calm note.
 create table public.freeze_events (
@@ -83,6 +103,19 @@ begin
   insert into public.streaks (user_id) values (new.id);
   return new;
 end $$;
+
+-- Who the nightly job still has to settle: only learners whose settled day is before their own yesterday, so a learner
+-- already settled (in any zone, east or west of UTC) is never picked again, oldest first.
+create or replace function public.settle_candidates(p_limit integer) returns table (user_id uuid, time_zone text, locale text, week_start smallint)
+language sql stable security definer set search_path = public as $$
+  select s.user_id, p.time_zone, p.locale, p.week_start
+  from public.streaks s join public.profiles p on p.user_id = s.user_id
+  where s.settled_through is null or s.settled_through < public.local_yesterday(p.time_zone)
+  order by s.settled_through asc nulls first, s.user_id
+  limit greatest(1, least(p_limit, 500));
+$$;
+revoke all on function public.settle_candidates(integer) from public, anon, authenticated;
+grant execute on function public.settle_candidates(integer) to service_role;
 
 -- The browser may update a learner's own profile row, but not these columns: the server sets them after checking the rules.
 -- (Column privileges: update is granted per column, replacing the table-wide update from 0001.)

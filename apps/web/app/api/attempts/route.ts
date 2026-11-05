@@ -12,7 +12,7 @@ import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
 import { markPracticed, markReviewed, markShown } from "@/lib/server/skill-states";
 import { loadReviewSession } from "@/lib/server/review-session";
 import { notifyKept } from "@/lib/server/progress-notify";
-import { REVIEW_SESSION_MAX } from "@/lib/review";
+import { reviewPlanOk } from "@/lib/review";
 import { isQuestion } from "@uxgate/player/engine";
 import { loadRound } from "@/lib/server/mastery";
 
@@ -68,9 +68,8 @@ export async function POST(req: Request) {
       if (!session) return NextResponse.json({ error: "nothing_to_review" }, { status: 409 });
       // The page built the plan a little earlier; it still holds if every step is a case of this bank for a skill that is
       // due now, one per skill. Otherwise the queue moved on (a skill was reviewed elsewhere) and the play cannot be saved.
-      const skillOf = new Map(lesson.steps.filter(isQuestion).map((s) => [s.id, s.skill]));
-      const asked = body.plan?.map((id) => skillOf.get(id));
-      if (body.plan && (body.plan.length > REVIEW_SESSION_MAX || asked!.some((k) => !k || !session.due.has(k)) || new Set(asked).size !== asked!.length)) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
+      // A case already answered is accepted only when that skill has no unseen case left (#141).
+      if (body.plan && (session.bankId !== body.lessonId || !reviewPlanOk(body.plan, lesson.steps.filter(isQuestion), session.due, session.seen))) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
       if (!body.plan && session.bankId !== body.lessonId) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
       if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
       plan = body.plan ?? session.steps.map((x) => x.id);

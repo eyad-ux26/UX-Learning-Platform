@@ -33,7 +33,7 @@ const unitWithBank = new Map(content.units.flatMap((u) => (content.banks.some((b
 export const reviewUnitOf = (skillId: string) => unitWithBank.get(skillId);
 
 /** `due` holds every skill that is due now and can be reviewed, in any unit; `remaining` is how many of them this session does not ask. */
-export type ReviewSession = { unitId: string; bankId: string; hash: string; skills: string[]; steps: QuestionStep[]; due: Set<string>; remaining: number };
+export type ReviewSession = { unitId: string; bankId: string; hash: string; skills: string[]; steps: QuestionStep[]; due: Set<string>; remaining: number; seen: ReadonlyMap<string, number> };
 
 /**
  * The next review session: the due skills of one unit (at most 5), one bank case each, preferring a case the learner
@@ -55,5 +55,5 @@ export async function loadReviewSession(db: SupabaseClient, userId: string, now 
   const steps = pickReviewSteps(bank.body.steps.filter(isQuestion) as QuestionStep[], pick.skills, seen);
   if (!steps.length) return null;
   const due = new Set(queue.map((q) => q.skillId).filter((id) => reviewUnitOf(id)));
-  return { unitId: pick.unitId, bankId: bank.lessonId, hash: bank.hash, skills: steps.map((s) => s.skill), steps, due, remaining: due.size - steps.length };
+  return { unitId: pick.unitId, bankId: bank.lessonId, hash: bank.hash, skills: steps.map((s) => s.skill), steps, due, remaining: due.size - steps.length, seen };
 }

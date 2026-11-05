@@ -84,9 +84,19 @@ describe("several paths", () => {
     expect(await as("authenticated", C, `insert into enrollments (user_id, path_id) values ($1, 'P10') returning path_id`, [C])).toHaveLength(1);
     await expect(as("authenticated", C, `insert into enrollments (user_id, path_id) values ($1, 'P02')`, [C])).rejects.toThrow(/row-level security/);
   });
-  it("switching logs an event, and a second learner cannot read or write it", async () => {
-    expect(await as("authenticated", A, `insert into path_events (user_id, kind, path_id) values ($1, 'started', 'P01') returning id`, [A])).toHaveLength(1);
-    await expect(as("authenticated", A, `insert into path_events (user_id, kind, path_id) values ($1, 'started', 'P01')`, [B])).rejects.toThrow(/row-level security/);
+  it("an enrollment cannot be moved onto a Coming soon path or back-dated, so it can never become the current path (#138)", async () => {
+    await db.query(`insert into enrollments (user_id, path_id) values ($1, 'P10') on conflict do nothing`, [C]);
+    await expect(as("authenticated", C, `update enrollments set path_id = 'P02' where user_id = $1 and path_id = 'P10'`, [C])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", C, `update enrollments set started_at = now() - interval '1 year' where user_id = $1`, [C])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", C, `insert into enrollments (user_id, path_id, started_at) values ($1, 'P01', now() - interval '1 year')`, [C])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", C, `update profiles set current_path_id = 'P02' where user_id = $1`, [C])).rejects.toThrow(/foreign key|violates/);
+    // What the app does still works: last active and the current lesson.
+    expect(await as("authenticated", C, `update enrollments set last_active_at = now() where user_id = $1 and path_id = 'P10' returning path_id`, [C])).toHaveLength(1);
+    // Onboarding cannot suggest a Coming soon path either.
+    await expect(as("authenticated", C, `insert into onboarding (user_id, recommended_path_id) values ($1, 'P02')`, [C])).rejects.toThrow(/row-level security/);
+  });
+  it("switching logs an event that only the server writes, and a second learner cannot read it", async () => {
+    await expect(as("authenticated", A, `insert into path_events (user_id, kind, path_id) values ($1, 'started', 'P01')`, [A])).rejects.toThrow(/permission denied/);
     await db.query(`insert into path_events (user_id, kind, path_id) values ($1, 'started', 'P01')`, [B]);
     expect(await as("authenticated", A, `select * from path_events where user_id = $1`, [B])).toHaveLength(0);
   });
@@ -122,6 +132,22 @@ describe("streak, freezes, badges and certificates are private and written by th
     await expect(db.query(`insert into certificates (user_id, path_id) values ($1, 'P01')`, [A])).rejects.toThrow(/unique|duplicate/);
     const code = (await db.query<{ code: string }>(`select code from certificates where user_id = $1`, [A])).rows[0].code;
     expect(code).toMatch(/^[0-9a-f]{12}$/);
+  });
+});
+
+describe("nightly job candidates (#139)", () => {
+  it("a learner already settled to their own yesterday is not picked again, east or west of UTC", async () => {
+    await db.query(`update profiles set time_zone = 'America/Sao_Paulo' where user_id = $1`, [A]);
+    await db.query(`update profiles set time_zone = 'Africa/Cairo' where user_id = $1`, [B]);
+    await db.query(`update profiles set time_zone = 'Not/AZone' where user_id = $1`, [C]);
+    await db.query(`update streaks set settled_through = public.local_yesterday('America/Sao_Paulo') where user_id = $1`, [A]);
+    await db.query(`update streaks set settled_through = public.local_yesterday('Africa/Cairo') - 1 where user_id = $1`, [B]);
+    await db.query(`update streaks set settled_through = null where user_id = $1`, [C]);
+    const ids = (await as<{ user_id: string }>("service_role", null, `select user_id from public.settle_candidates(100)`)).map((r) => r.user_id);
+    expect(ids).not.toContain(A);
+    expect(ids).toContain(B);
+    expect(ids).toContain(C); // never settled, and an unknown zone does not break the query
+    await expect(as("authenticated", A, `select * from public.settle_candidates(100)`)).rejects.toThrow(/permission denied/);
   });
 });
 

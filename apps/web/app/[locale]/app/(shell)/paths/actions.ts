@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { isPlayable } from "@/lib/catalog";
 
 const schema = z.object({ pathId: z.string().regex(/^P\d{2}$/) });
@@ -37,7 +38,7 @@ export async function chooseCurrentPath(input: { pathId: string }): Promise<{ ok
     if (error) return { ok: false };
   }
   if (joined || previous !== pathId) {
-    await db.from("path_events").insert({ user_id: userId, kind: joined ? "started" : "switched", path_id: pathId, from_path_id: previous && previous !== pathId ? previous : null });
+    await createAdminClient().from("path_events").insert({ user_id: userId, kind: joined ? "started" : "switched", path_id: pathId, from_path_id: previous && previous !== pathId ? previous : null });
   }
   return { ok: true, joined };
 }

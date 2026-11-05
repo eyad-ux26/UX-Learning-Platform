@@ -1,4 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
+import { goalDaysOf } from "@/lib/progress";
 import { Link } from "@/i18n/navigation";
 import { content, type Locale } from "@uxgate/content";
 import { FREEZE_MAX, weekGoalProgress } from "@/lib/freeze";
@@ -51,7 +52,7 @@ export async function StreakMain({ me }: { me: Learner }) {
         <div className="streak-row"><span className="ph ph-flame-fill" style={{ fontSize: 28, color: "#F59E2B" }} aria-hidden="true" /><p className="t-h2">{t("days", { count: progress.streak })}</p></div>
         <p className="t-small ink-2">{t("longest", { count: Math.max(me.longestStreak, progress.streak) })}</p>
         <p className="t-over">{t("thisWeek")}</p>
-        <Week today={progress.today} activeDays={progress.activeDays} frozenDays={progress.frozenDays} start={me.weekStart} />
+        <Week today={progress.today} activeDays={progress.activeDays} goalDays={goalDaysOf(progress)} frozenDays={progress.frozenDays} start={me.weekStart} />
       </section>
 
       <section className="card" style={{ padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
