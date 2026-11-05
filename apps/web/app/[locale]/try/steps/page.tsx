@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import type { Lesson, Locale } from "@uxgate/content/types";
+import type { Lesson, Locale, Mock } from "@uxgate/content/types";
 import { LessonRunner, GUEST_ID } from "@/components/LessonRunner";
 
 /** Dev only (UG_DEV_FIXTURE=1): one step of each type that no lesson uses yet, for screenshots and the keyboard and axe checks. */
 const T = (en: string, ar: string) => ({ en, ar });
 const base = { part: "guided", skill: "SK-DEV", hints: [T("Look at who needs it.", "انظر إلى من يحتاجه."), T("Think about the first screen.", "فكّر في الشاشة الأولى.")], correct: T("Right.", "صحيح."), explain: T("It follows the rule.", "هذا يتبع القاعدة.") };
+const CASE = T("Half the people who open my gym's join form leave before the end. I want more of them to finish.", "نصف من يفتحون نموذج الانضمام في ناديّ يغادرون قبل النهاية. أريد أن يكمله عدد أكبر.");
+const JOIN = { caption: T("Join form", "نموذج الانضمام"), blocks: [{ kind: "title", text: T("Join Hana's Gym", "انضم إلى نادي هنا") }, { kind: "field", label: T("Email", "البريد الإلكتروني"), text: "" }, { kind: "field", label: T("Insurance number", "رقم التأمين"), text: "" }, { kind: "button", text: T("Join", "انضم") }] } satisfies Mock;
 const lesson: Lesson = {
   id: "DEV-STEPS", mode: "lesson", minutes: 5, title: T("Step types", "أنواع الخطوات"), speaker: "hana",
   steps: [
@@ -17,8 +19,11 @@ const lesson: Lesson = {
     { ...base, id: "S03", type: "spot", prompt: T("Tap the part that blocks people.", "اضغط على الجزء الذي يعيق الناس."),
       mock: { caption: T("Join form", "نموذج الانضمام"), blocks: [{ kind: "title", text: T("Join Hana's Gym", "انضم إلى نادي هنا") }, { kind: "field", label: T("Insurance number", "رقم التأمين"), text: "", region: "ins" }, { kind: "button", text: T("Join", "انضم"), region: "btn" }] },
       regions: [{ id: "ins", label: T("Insurance number field", "حقل رقم التأمين") }, { id: "btn", label: T("Join button", "زر الانضمام") }], answer: ["ins"] },
-    { ...base, id: "S04", type: "predict", confidence: true, prompt: T("Which change will get more people to finish?", "أي تغيير سيجعل أناسًا أكثر يكملون؟"),
+    { ...base, id: "S04", type: "predict", confidence: true, speaker: "hana", scenario: CASE, mock: JOIN, prompt: T("Which change will get more people to finish?", "أي تغيير سيجعل أناسًا أكثر يكملون؟"),
       options: [{ id: "o1", text: T("Remove optional fields", "إزالة الحقول الاختيارية") }, { id: "o2", text: T("Add a progress bar", "إضافة شريط تقدّم") }], answer: ["o1"] },
+    // A later step of the same case (same speaker and scenario): the scenario shows as a one-line chip (design audit L3).
+    { ...base, id: "S05", type: "predict", speaker: "hana", scenario: CASE, mock: JOIN, prompt: T("Which field should go first?", "أي حقل يجب حذفه أولًا؟"),
+      options: [{ id: "o1", text: T("Insurance number", "رقم التأمين") }, { id: "o2", text: T("Email", "البريد الإلكتروني") }], answer: ["o1"] },
   ],
 };
 

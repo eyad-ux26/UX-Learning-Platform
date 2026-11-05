@@ -134,14 +134,14 @@
   .hero-mock { display: block; position: absolute; inset-block-start: 56px; inset-inline-start: 0; inline-size: 310px; border-radius: 18px; border: 2px solid #C9D1D6; background: #EEF1F3; overflow: hidden; transform: rotate(-3deg); box-shadow: var(--shadow-soft); }
   [dir="rtl"] .hero-mock { transform: rotate(3deg); }
   .hero-mock .mock-bar { display: flex; align-items: center; gap: 8px; block-size: 30px; padding-inline: 12px; background: #DDE3E7; color: #3C4A52; font-weight: 700; font-size: 12px; }
-  .ug .hero-mock .mock-bar .lbl { padding: 0 8px; block-size: 20px; display: inline-flex; align-items: center; border-radius: 6px; background: #3C4A52; color: #fff; font-size: 11px; letter-spacing: 0.06em; }
+  .ug .hero-mock .mock-bar .lbl { padding: 0 8px; block-size: 20px; display: inline-flex; align-items: center; border-radius: 6px; background: #3C4A52; color: #fff; font-size: 12px; letter-spacing: 0.06em; }
   .hero-mock .cap { flex: 1; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .hero-mock .dots { display: inline-flex; gap: 4px; } .hero-mock .dots i { inline-size: 7px; block-size: 7px; border-radius: 50%; background: currentColor; opacity: 0.35; }
   .hm-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; color: #1F2A30; }
   .hm-brand { margin: 0; display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 12px; }
-  .hm-logo { display: inline-grid; place-items: center; inline-size: 18px; block-size: 18px; border-radius: 5px; background: #B7E02A; font-size: 11px; }
+  .hm-logo { display: inline-grid; place-items: center; inline-size: 18px; block-size: 18px; border-radius: 5px; background: #B7E02A; font-size: 12px; }
   .hm-title { margin: 0; font-weight: 800; font-size: 18px; }
-  .hm-field { display: block; } .hm-field i { display: block; font-style: normal; font-size: 11px; color: #5A6870; margin-block-end: 3px; }
+  .hm-field { display: block; } .hm-field i { display: block; font-style: normal; font-size: 12px; color: #5A6870; margin-block-end: 3px; }
   .hm-field::after { content: ""; display: block; block-size: 24px; border-radius: 6px; border: 1.5px solid #C9D1D6; background: #fff; }
   .hm-btn { margin-block-start: 4px; padding: 8px; text-align: center; border-radius: 8px; background: #B7E02A; font-weight: 800; font-size: 12px; }
   .preview-card { margin: 0; inline-size: 340px; margin-inline-start: auto; margin-block-start: 76px; }
@@ -220,3 +220,12 @@
 .ug .ob-opts.ob-times .choice { min-height: 56px; min-block-size: 56px; padding: 6px 8px; font-size: 14px; justify-content: center; text-align: center; }
 .ug .ob-opts.ob-times .ob-opt-t { padding-inline-start: 0 !important; text-align: center; font-size: 14px; line-height: 1.25; }
 @media (min-width: 1024px) { .ob-opts.ob-times { gap: 14px; } .ug .ob-opts.ob-times .choice { min-height: 60px; min-block-size: 60px; padding: 12px 16px; font-size: 17px; } .ug .ob-opts.ob-times .ob-opt-t { font-size: 17px; } }
+
+/* ===== Design audit fixes (canvas v63) ===== */
+/* A1: one link colour, from the theme token (night links are #4CC3E8). Same weight as a bare element rule, so classes still win. */
+:where(.ug) a { color: var(--link); }
+:where(.ug) a:hover { text-decoration-thickness: 2px; }
+/* A7: a standalone text link gets a 44px hit area; what you see stays the same size. */
+.ug a.hit { display: inline-block; padding-block: 12px; margin-block: -12px; }
+/* A3: a status that is not a control. Disabled tokens stay for disabled controls only. */
+.ug .status-chip { display: inline-flex; align-items: center; gap: 6px; block-size: 26px; padding-inline: 10px; border-radius: 8px; background: var(--disabled-bg); color: var(--ink-2); font-weight: 700; font-size: 12px; }
