@@ -92,7 +92,7 @@ export async function loadBilling(me: { db: SupabaseClient | null; userId: strin
 
 /**
  * Made-up billing states for screens without a database (UG_DEV_FIXTURE=1, never on a deployed host), so every
- * designed state can be looked at and checked: free, active, failed, lapsed, cancelled, wallet, walletLate, expiring.
+ * designed state can be looked at and checked: free, active, failed, lapsed, cancelled, wallet, walletLate, expiring, paddle.
  */
 export function fixtureBilling(state: string | undefined, host: string | null = null): BillingView {
   const now = Date.now();
@@ -112,6 +112,7 @@ export function fixtureBilling(state: string | undefined, host: string | null = 
     case "expiring": sub = { ...sub, cardExpiry: new Date(now).toISOString().slice(5, 7) + "/" + new Date(now).toISOString().slice(2, 4) }; break;
     case "late": payments = [pay(-17)]; sub = { ...sub, currentPeriodStart: iso(-17), currentPeriodEnd: iso(13) }; break;
     case "requested": requests = [{ id: "fixture-rq", userId: "fixture", paymentId: "fixture-pay-2", amountMinor: 24900, currency: "EGP", reason: "I meant to choose the annual plan, not monthly.", status: "waiting", createdAt: iso(0), answeredAt: null }]; break;
+    case "paddle": sub = { ...sub, provider: "paddle", providerSubId: "sub_fixture", region: "gulf", country: "US", currency: "USD", renewAmountMinor: 800 }; payments = [{ ...pay(-2), provider: "paddle", currency: "USD", amountMinor: 871 }]; break;
     case "welcome": sub = null; payments = []; break;
     case undefined: case "": case "free": sub = null; payments = []; break;
   }

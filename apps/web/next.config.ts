@@ -34,7 +34,8 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "DENY" },
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+  // Apple Pay and Google Pay run in Paddle's checkout frame and need the Payment Request API there (#151).
+  { key: "Permissions-Policy", value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://buy.paddle.com" "https://sandbox-buy.paddle.com"), usb=()' },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
   // One year, this host only: no includeSubDomains, so the old site's subdomains are not pulled onto https-only.
   ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=31536000" }]),
