@@ -28,12 +28,34 @@ steps:
       en: "I'm the product manager of a food delivery app. Next week we test our new reorder feature with 6 customers.\n\nAI is helping me get ready: it drafted the test tasks and the consent form. And a tool says it can analyze all 6 sessions for us automatically."
       ar: "أنا مدير المنتج في تطبيق لتوصيل الطعام. والأسبوع القادم نختبر ميزة إعادة الطلب الجديدة مع 6 عملاء.\n\nوالذكاء الاصطناعي يساعدني في التحضير: فقد كتب مسوّدة مهام الاختبار ونموذج الموافقة (consent form). وأداة تقول إنها تستطيع تحليل الجلسات الست تلقائيًا بدلًا منا."
     mock:
-      width: 300
+      app: basira
+      frame: wide
+      url: basira.example/projects/lamma-reorder/plan
+      navbar:
+        links:
+        - {en: Plans, ar: الخطط}
+        - {en: Sessions, ar: الجلسات}
+        - {en: Themes, ar: المحاور}
+        active: 0
       blocks:
-        - { kind: heading, text: { en: "Reorder test · plan", ar: "اختبار إعادة الطلب · الخطة" } }
-        - { kind: small, text: { en: "✓ Tasks (AI draft)", ar: "✓ المهام (مسوّدة الذكاء الاصطناعي)" }, gap: xs }
-        - { kind: small, text: { en: "✓ Consent form (AI draft)", ar: "✓ نموذج الموافقة (مسوّدة الذكاء الاصطناعي)" }, gap: xs }
-        - { kind: small, text: { en: "? Analysis: \"Auto-analyze sessions\"", ar: "؟ التحليل: «تحليل الجلسات تلقائيًا»" }, gap: xs }
+      - kind: heading
+        text: {en: Reorder test · plan, ar: اختبار إعادة الطلب · الخطة}
+      - kind: list
+        style: check
+        items:
+        - {en: Tasks (AI draft), ar: المهام (مسوّدة الذكاء الاصطناعي)}
+        - {en: Consent form (AI draft), ar: نموذج الموافقة (مسوّدة الذكاء الاصطناعي)}
+        gap: s
+      - kind: listitem
+        icon: question
+        text:
+          en: "Analysis: \"Auto-analyze sessions\""
+          ar: "التحليل: «تحليل الجلسات تلقائيًا»"
+        toggle: true
+        badge:
+          text: {en: Undecided, ar: لم يُحسم}
+          tone: warn
+        gap: s
 
   - id: S02
     type: choose
@@ -94,11 +116,33 @@ steps:
       en: "AI filled in our consent form template. We'll record each customer's screen and voice."
       ar: "ملأ الذكاء الاصطناعي قالب نموذج الموافقة عندنا. وسنسجّل شاشة كل عميل وصوته."
     mock:
-      width: 300
+      app: basira
+      frame: wide
+      url: basira.example/projects/lamma-reorder/consent
+      navbar:
+        links:
+        - {en: Plans, ar: الخطط}
+        - {en: Sessions, ar: الجلسات}
+        - {en: Themes, ar: المحاور}
+        active: 0
       blocks:
-        - { kind: heading, text: { en: "Consent form", ar: "نموذج الموافقة" } }
-        - { kind: small, text: { en: "We will take written notes during the session. No recordings will be made.", ar: "سنكتب ملاحظات أثناء الجلسة. ولن يتم أي تسجيل." }, gap: xs }
-        - { kind: small, text: { en: "Session length: 45 minutes. Gift: 200 EGP voucher.", ar: "مدة الجلسة: 45 دقيقة. الهدية: قسيمة بقيمة 200 جنيه." }, gap: xs }
+      - kind: heading
+        text: {en: Consent form, ar: نموذج الموافقة}
+      - kind: badge
+        text: {en: AI draft, ar: مسوّدة الذكاء الاصطناعي}
+        icon: sparkle
+        gap: xs
+      - kind: text
+        text: {en: We will take written notes during the session. No recordings will be made., ar: سنكتب ملاحظات أثناء الجلسة. ولن يتم أي تسجيل.}
+        gap: s
+      - kind: text
+        text:
+          en: "Session length: 45 minutes. Gift: 200 EGP voucher."
+          ar: "مدة الجلسة: 45 دقيقة. الهدية: قسيمة بقيمة 200 جنيه."
+        gap: s
+      - kind: check
+        text: {en: I agree to take part, ar: أوافق على المشاركة}
+        gap: m
     prompt:
       en: "What should I do before sending it?"
       ar: "ماذا أفعل قبل إرساله؟"
@@ -177,15 +221,56 @@ steps:
     a:
       label: { en: "A: made from the session transcript", ar: "A: مصنوع من النص المكتوب للجلسة" }
       mock:
-        width: 300
+        app: basira
+        frame: wide
+        url: basira.example/projects/lamma-reorder/sessions/1
+        navbar:
+          links:
+          - {en: Plans, ar: الخطط}
+          - {en: Sessions, ar: الجلسات}
+          - {en: Themes, ar: المحاور}
+          active: 1
         blocks:
-          - { kind: small, text: { en: "Customer 1 found reordering easy. Quote: \"Oh, this is simple.\"", ar: "وجد العميل 1 إعادة الطلب سهلة. اقتباس: «آه، هذا بسيط.»" } }
+        - kind: heading
+          text: {en: Session 1 · notes, ar: الجلسة 1 · الملاحظات}
+        - kind: card
+          gap: s
+          blocks:
+          - kind: badge
+            text: {en: AI summary, ar: ملخص الذكاء الاصطناعي}
+            icon: sparkle
+          - kind: text
+            text:
+              en: "Customer 1 found reordering easy. Quote: \"Oh, this is simple.\""
+              ar: "وجد العميل 1 إعادة الطلب سهلة. اقتباس: «آه، هذا بسيط.»"
+            gap: s
     b:
       label: { en: "B: made from watching the screen recording", ar: "B: مصنوع من مشاهدة تسجيل الشاشة" }
       mock:
-        width: 300
+        app: basira
+        frame: wide
+        url: basira.example/projects/lamma-reorder/sessions/1
+        navbar:
+          links:
+          - {en: Plans, ar: الخطط}
+          - {en: Sessions, ar: الجلسات}
+          - {en: Themes, ar: المحاور}
+          active: 1
         blocks:
-          - { kind: small, text: { en: "Customer 1 said \"Oh, this is simple\", then opened Search, typed the restaurant's name and ordered from the menu. Never saw the Reorder button.", ar: "قال العميل 1 «آه، هذا بسيط»، ثم فتح البحث، وكتب اسم المطعم، وطلب من القائمة. ولم يرَ زر إعادة الطلب أبدًا." } }
+        - kind: heading
+          text: {en: Session 1 · notes, ar: الجلسة 1 · الملاحظات}
+        - kind: quote
+          text:
+            en: "Oh, this is simple."
+            ar: آه، هذا بسيط.
+          name: {en: Customer 1, ar: العميل 1}
+          time: "04:12"
+          gap: s
+        - kind: text
+          text:
+            en: "Customer 1 said \"Oh, this is simple\", then opened Search, typed the restaurant's name and ordered from the menu. Never saw the Reorder button."
+            ar: قال العميل 1 «آه، هذا بسيط»، ثم فتح البحث، وكتب اسم المطعم، وطلب من القائمة. ولم يرَ زر إعادة الطلب أبدًا.
+          gap: s
     answer: b
     reason:
       prompt: { en: "Why does B tell us more?", ar: "لماذا تخبرنا B أكثر؟" }

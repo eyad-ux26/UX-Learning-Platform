@@ -29,13 +29,41 @@ steps:
       en: "I'm a junior designer on a bus app. I asked an AI prototyping tool: \"Design a clean, modern trip planner.\"\n\nIt made a screen in seconds. Next week we test it with riders, and it looks like this."
       ar: "أنا مصمم مبتدئ في تطبيق للحافلات. وطلبت من أداة نماذج أولية بالذكاء الاصطناعي: «صمّم مخطّط رحلات بسيطًا وعصريًا.»\n\nفصنعت شاشة في ثوانٍ. والأسبوع القادم نختبرها مع الركّاب، وهي تبدو هكذا."
     mock:
-      width: 300
+      app: rehla
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: magnifying-glass
+          text: {en: Search, ar: البحث}
+        - icon: ticket
+          text: {en: My trips, ar: رحلاتي}
+        - icon: bell
+          text: {en: Alerts, ar: التنبيهات}
+        - icon: user
+          text: {en: Account, ar: حسابي}
+      caption: {en: AI-generated screen, ar: شاشة ولّدها الذكاء الاصطناعي}
       blocks:
-        - { kind: heading, text: { en: "Plan your trip", ar: "خطّط لرحلتك" } }
-        - { kind: small, text: { en: "Lorem ipsum dolor sit amet", ar: "Lorem ipsum dolor sit amet" }, gap: xs }
-        - { kind: small, text: { en: "Bus 1 · Stop A → Stop B · $12.99", ar: "Bus 1 · Stop A → Stop B · $12.99" }, gap: s }
-        - { kind: small, text: { en: "Bus 2 · Stop A → Stop C · $12.99", ar: "Bus 2 · Stop A → Stop C · $12.99" }, gap: xs }
-        - { kind: small, color: muted, text: { en: "Hi, John Doe!", ar: "Hi, John Doe!" }, gap: xs }
+      - kind: small
+        text:
+          en: "Hi, John Doe!"
+          ar: "Hi, John Doe!"
+        color: muted
+      - kind: heading
+        text: {en: Plan your trip, ar: خطّط لرحلتك}
+        gap: xs
+      - kind: small
+        text: {en: Lorem ipsum dolor sit amet, ar: Lorem ipsum dolor sit amet}
+        gap: xs
+      - kind: listitem
+        icon: bus
+        text: {en: Bus 1 · Stop A → Stop B, ar: Bus 1 · Stop A → Stop B}
+        value: {en: $12.99, ar: $12.99}
+        gap: s
+      - kind: listitem
+        icon: bus
+        text: {en: Bus 2 · Stop A → Stop C, ar: Bus 2 · Stop A → Stop C}
+        value: {en: $12.99, ar: $12.99}
 
   - id: S02
     type: choose
@@ -185,19 +213,71 @@ steps:
     a:
       label: { en: "A: results list, version 1", ar: "A: قائمة النتائج، النسخة 1" }
       mock:
-        width: 300
+        app: rehla
+        appbar:
+          title: {en: Results, ar: النتائج}
+          back: true
         blocks:
-          - { kind: small, text: { en: "Bus 1 · Stop A → Stop B · 10:00 · $12.99", ar: "Bus 1 · Stop A → Stop B · 10:00 · $12.99" } }
-          - { kind: small, text: { en: "Bus 2 · Stop A → Stop B · 10:00 · $12.99", ar: "Bus 2 · Stop A → Stop B · 10:00 · $12.99" }, gap: xs }
-          - { kind: small, text: { en: "Bus 3 · Stop A → Stop B · 10:00 · $12.99", ar: "Bus 3 · Stop A → Stop B · 10:00 · $12.99" }, gap: xs }
+        - kind: listitem
+          icon: bus
+          text: {en: Bus 1 · Stop A → Stop B, ar: Bus 1 · Stop A → Stop B}
+          sub:
+            en: "10:00"
+            ar: "10:00"
+          value: {en: $12.99, ar: $12.99}
+        - kind: listitem
+          icon: bus
+          text: {en: Bus 2 · Stop A → Stop B, ar: Bus 2 · Stop A → Stop B}
+          sub:
+            en: "10:00"
+            ar: "10:00"
+          value: {en: $12.99, ar: $12.99}
+          gap: s
+        - kind: listitem
+          icon: bus
+          text: {en: Bus 3 · Stop A → Stop B, ar: Bus 3 · Stop A → Stop B}
+          sub:
+            en: "10:00"
+            ar: "10:00"
+          value: {en: $12.99, ar: $12.99}
+          gap: s
     b:
       label: { en: "B: results list, version 2", ar: "B: قائمة النتائج، النسخة 2" }
       mock:
-        width: 300
+        app: rehla
+        appbar:
+          title: {en: Results, ar: النتائج}
+          back: true
         blocks:
-          - { kind: small, text: { en: "Bus 356 · Tahrir → Maadi · 7:45 to 8:40 · 12 EGP", ar: "حافلة 356 · التحرير ← المعادي · من 7:45 إلى 8:40 · 12 جنيه" } }
-          - { kind: small, text: { en: "Bus 110 · Tahrir → Maadi · 8:10 to 9:15 · 10 EGP", ar: "حافلة 110 · التحرير ← المعادي · من 8:10 إلى 9:15 · 10 جنيه" }, gap: xs }
-          - { kind: small, text: { en: "Bus 356 · Tahrir → Maadi · 8:30 to 9:25 · 12 EGP", ar: "حافلة 356 · التحرير ← المعادي · من 8:30 إلى 9:25 · 12 جنيه" }, gap: xs }
+        - kind: listitem
+          icon: bus
+          text: {en: Bus 356 · Tahrir → Maadi, ar: حافلة 356 · التحرير ← المعادي}
+          sub:
+            en: "7:45 to 8:40"
+            ar: "من 7:45 إلى 8:40"
+          value:
+            en: "12 EGP"
+            ar: "12 جنيه"
+        - kind: listitem
+          icon: bus
+          text: {en: Bus 110 · Tahrir → Maadi, ar: حافلة 110 · التحرير ← المعادي}
+          sub:
+            en: "8:10 to 9:15"
+            ar: "من 8:10 إلى 9:15"
+          value:
+            en: "10 EGP"
+            ar: "10 جنيه"
+          gap: s
+        - kind: listitem
+          icon: bus
+          text: {en: Bus 356 · Tahrir → Maadi, ar: حافلة 356 · التحرير ← المعادي}
+          sub:
+            en: "8:30 to 9:25"
+            ar: "من 8:30 إلى 9:25"
+          value:
+            en: "12 EGP"
+            ar: "12 جنيه"
+          gap: s
     answer: b
     reason:
       prompt: { en: "Why B?", ar: "لماذا B؟" }
