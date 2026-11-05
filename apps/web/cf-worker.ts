@@ -7,15 +7,18 @@ type Env = { CRON_SECRET?: string };
 export default {
   fetch: handler.fetch,
   async scheduled(_event: unknown, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
-    // Calls the daily route directly; the secret keeps it closed to the public.
-    const req = new Request("https://internal/api/cron/daily", {
-      headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
-    });
-    ctx.waitUntil(
-      handler.fetch(req, env, ctx).then(async (res: Response) => {
-        console.log(`cron daily: ${res.status} ${await res.text()}`);
-      }),
-    );
+    // Calls the daily routes directly; the secret keeps them closed to the public.
+    // daily: streaks and reminders. billing: renewals, grace period, retries and billing reminders (slice 5).
+    for (const job of ["daily", "billing"]) {
+      const req = new Request(`https://internal/api/cron/${job}`, {
+        headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
+      });
+      ctx.waitUntil(
+        handler.fetch(req, env, ctx).then(async (res: Response) => {
+          console.log(`cron ${job}: ${res.status} ${await res.text()}`);
+        }),
+      );
+    }
   },
 };
 
