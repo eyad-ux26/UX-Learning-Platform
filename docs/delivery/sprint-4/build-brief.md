@@ -1,6 +1,6 @@
 # Slice 4 build brief: account, notifications and public site
 
-For the **Build slice 4** thread (a new thread). Written by the PM thread, 3 November 2026, after Eyad approved the slice 4 design. Start when Eyad sends "build slice 4" in the project chat. Branch from `build/slice-1` (PR #36) and merge slice 2 and 3 in as they pass verify.
+For the **Build slice 4** thread (a new thread). Written by the PM thread, 3 November 2026, after Eyad approved the slice 4 design. Started 5 November 2026 on Eyad's go-ahead to build the rest while he is away. Branch from `main` (slice 1 merged 5 November) and merge main in again as slices 2 and 3 merge. Migrations 0026 to 0035; slice 5 starts at 0036.
 
 ## Goal
 
@@ -51,7 +51,7 @@ Payments and paywall (slice 5). Admin answers to requests (admin waterfall).
 7. Emails come from hello@uxgate.org and pass SPF, DKIM and DMARC checks.
 8. Public path pages are static, have `hreflang`, and meet LCP under 2.5 s on 4G.
 9. Apple sign-in works in both languages.
-10. Every screen matches canvas v53; axe shows no serious issues; RLS tests cover the new tables; the tech gate passes.
+10. Every screen matches canvas v63; axe shows no serious issues; RLS tests cover the new tables; the tech gate passes.
 11. CI is green and the PR has a Cloudflare preview link. Push in batches.
 
 ## How to work
