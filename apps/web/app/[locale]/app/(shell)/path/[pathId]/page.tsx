@@ -26,7 +26,7 @@ export default async function PathPage({ params, searchParams }: { params: Promi
   const offer = locked ? await loadOffer(me) : null;
   const tb = await getTranslations("billing");
   return (
-    <Shell me={me} panel={<PathMapPanel view={view} pro={me.pro} />}>
+    <Shell me={me} panel={<PathMapPanel view={view} me={me} />}>
       <PathMapMain view={view} me={me} />
       {locked && offer ? (
         <PaywallSheet key={locked.unit.id} kind="unit" unitN={locked.number} over={`${view.path.title.en} · ${tb("unitN", { n: locked.number })}`}
