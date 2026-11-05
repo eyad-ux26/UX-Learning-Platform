@@ -43,9 +43,11 @@ export default async function middleware(req: NextRequest) {
         setAll: (list) => list.forEach(({ name, value, options }) => { req.cookies.set(name, value); res.cookies.set(name, value, options); }),
       },
     });
-    const { data } = await supabase.auth.getUser(); // refreshes an expiring session cookie
+    // Refreshes an expiring session cookie. getClaims checks the token locally with the project's public key, so a tab switch
+    // no longer waits for a round trip to the Auth server here (getUser did one on every request).
+    const { data } = await supabase.auth.getClaims();
     // Paddle's payment links (?_ptxn=) survive sign-in: kept in a cookie, then opened again on the app home.
-    const step = paddleLinkStep(req.nextUrl.pathname, req.nextUrl.searchParams, !!data.user, req.cookies.get(PTXN_COOKIE)?.value);
+    const step = paddleLinkStep(req.nextUrl.pathname, req.nextUrl.searchParams, !!data?.claims?.sub, req.cookies.get(PTXN_COOKIE)?.value);
     if (step?.kind === "clear") res.cookies.delete(PTXN_COOKIE);
     if (step?.kind === "signin" || step?.kind === "resume") {
       const out = NextResponse.redirect(new URL(step.to, req.url));

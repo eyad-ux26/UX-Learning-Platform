@@ -6,7 +6,8 @@ import { hasSupabase } from "@/lib/supabase/env";
 import { loadProgressAndZone } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
-import { resolveWeekStart } from "@/lib/freeze";
+import { resolveWeekStart, shiftDay } from "@/lib/freeze";
+import { localDay } from "@/lib/progress";
 import { pickCurrent } from "@/lib/learning";
 import type { SkillRow, SkillStateName } from "@/lib/skill-state";
 import { proFrom, readEntitlement, requestHost } from "@/lib/server/billing/account";
@@ -69,27 +70,39 @@ async function loadLearner(): Promise<Learner | null> {
   if (process.env.UG_DEV_FIXTURE === "1") return fixture();
   if (!hasSupabase()) return null; // not connected to Supabase yet: everyone is signed out
   const db = await createClient();
-  const { data } = await db.auth.getUser();
-  if (!data.user) return null;
-  const userId = data.user.id;
-  // Settle finished days first (freezes earned or used), so the progress read below already shows them.
-  const { data: p0 } = await db.from("profiles").select("time_zone, locale, week_start").eq("user_id", userId).maybeSingle();
-  const weekStart = resolveWeekStart(p0?.week_start, p0?.locale);
-  await settleLearner(userId, p0?.time_zone ?? null, new Date(), weekStart); // never throws
-  // Every other read at once, so a page waits for one more database round trip, not several.
+  // getClaims checks the session token's signature here, with the project's public key (cached for 10 minutes), instead of
+  // asking the Auth server on every page as getUser does. Writes (server actions, /api routes) still call getUser.
+  const { data: auth } = await db.auth.getClaims();
+  const userId = auth?.claims?.sub;
+  if (!userId) return null;
+  // Every read at once, so a page waits for one database round trip, not four in a row (tab switches felt slow).
   // The plan is one primary-key read in the same round (issue #131), with no retries and a fast exit before 0036 exists.
-  const [{ progress, timeZone: tz }, onb, skills, extra, enr, streak, note, entitlement, host] = await Promise.all([
+  const readAll = () => Promise.all([
     loadProgressAndZone(db, userId),
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id, state, shown_at, kept_at, next_review_at").eq("user_id", userId),
     // Its own query: if a column is missing the rest of the app still loads.
     db.from("profiles").select("current_path_id, handle, share_enabled, leaderboard_joined_at").eq("user_id", userId).maybeSingle(),
     db.from("enrollments").select("path_id, started_at, last_active_at").eq("user_id", userId),
-    db.from("streaks").select("longest, freezes_available").eq("user_id", userId).maybeSingle(),
+    db.from("streaks").select("longest, freezes_available, settled_through").eq("user_id", userId).maybeSingle(),
     db.from("freeze_events").select("id, day").eq("user_id", userId).eq("kind", "used").is("seen_at", null).order("day", { ascending: false }).limit(1),
     readEntitlement(db, userId),
     requestHost(),
+    db.from("profiles").select("time_zone, locale, week_start").eq("user_id", userId).maybeSingle(),
   ]);
+  let reads = await readAll();
+  const p0 = reads[9].data;
+  const weekStart = resolveWeekStart(p0?.week_start, p0?.locale);
+  // Finished days are settled (freezes earned or used) at most once a day. Only when yesterday is not settled yet does the
+  // page settle them and read again, so the progress it shows already includes them.
+  const s0 = reads[5];
+  const through = (s0.data?.settled_through as string | null | undefined) ?? null;
+  const yesterday = shiftDay(localDay(new Date(), p0?.time_zone ?? null), -1);
+  if (s0.error || (s0.data && !(through && through >= yesterday))) {
+    const settled = await settleLearner(userId, p0?.time_zone ?? null, new Date(), weekStart); // never throws
+    if (settled.ok) reads = await readAll();
+  }
+  const [{ progress, timeZone: tz }, onb, skills, extra, enr, streak, note, entitlement, host] = reads;
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(new Date()));
   const joined = (enr.data ?? []).map((e) => ({ pathId: e.path_id as string, startedAt: e.started_at as string, lastActiveAt: (e.last_active_at as string | null) ?? null }))
     .sort((a, b) => (b.lastActiveAt ?? b.startedAt).localeCompare(a.lastActiveAt ?? a.startedAt));

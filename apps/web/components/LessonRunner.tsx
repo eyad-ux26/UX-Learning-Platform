@@ -14,6 +14,7 @@ import { LessonEnd, type ProNext } from "./LessonEnd";
 import { CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
 import type { ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
+import { Loader } from "@/components/loading/Loader";
 
 export const GUEST_ID = "guest";
 
@@ -120,7 +121,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     return sync.pending > 0 ? ("saving" as const) : ("saved" as const);
   }, [guest, sync.online, sync.pending]);
 
-  if (!state) return <div className="player-loading" aria-busy="true" />;
+  if (!state) return <div className="player-loading" aria-busy="true"><Loader full /></div>;
   if (finished) {
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
     if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={locale} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;

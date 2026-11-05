@@ -5,9 +5,13 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { NavItem as Item } from "@/lib/nav";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
+import { useNavProgress } from "@/lib/nav-progress";
 
 function useActive() {
-  const pathname = usePathname();
+  const current = usePathname();
+  // A tapped tab lights up at once, while its screen loads, instead of after the server answers.
+  const nav = useNavProgress();
+  const pathname = nav.active && nav.to?.startsWith("/app") ? nav.to : current;
   // As on the canvas: Streak sits under Home, Skills under Paths, Badges and certificates under Profile.
   const under = (...p: string[]) => p.some((x) => pathname === x || pathname.startsWith(`${x}/`));
   return (id: Item["id"]) => (id === "home" ? pathname === "/app" || under("/app/streak") : id === "paths" ? pathname.startsWith("/app/path") || under("/app/skills") : id === "review" ? under("/app/review") : under("/app/profile", "/app/badges", "/app/certificate", "/app/board"));

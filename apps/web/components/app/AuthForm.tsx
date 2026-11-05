@@ -276,7 +276,7 @@ export function AuthForm({ mode, linkError, apple = false }: { mode: Mode; linkE
         <PasswordField id="au-pw" label={t("password")} value={password} onChange={(v) => { setPassword(v); if (err?.field === "pw") setErr(null); }} err={err} inputRef={pwRef} autoComplete={signup ? "new-password" : "current-password"} help={signup}>
           {signup ? null : <Link href="/forgot" style={{ alignSelf: "flex-end", fontWeight: 700, fontSize: 14, color: "var(--link)", minBlockSize: 44, display: "inline-flex", alignItems: "center" }}>{t("forgotQ")}</Link>}
         </PasswordField>
-        <button type="submit" className="btn btn-primary btn-lg btn-block press" disabled={busy}>{busy ? t("wait") : signup ? t("create") : t("signin")}</button>
+        <button type="submit" className="btn btn-primary btn-lg btn-block press" disabled={busy} aria-busy={busy || undefined}>{busy ? t("wait") : signup ? t("create") : t("signin")}</button>
         <button className="btn btn-ghost btn-block" type="button" style={{ minBlockSize: 44, marginBlockStart: -4 }} onClick={magic} disabled={busy}><span className="ph ph-mail" aria-hidden="true" />{t("magic")}</button>
         <div style={{ marginBlockStart: "auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, textAlign: "center", paddingBlockStart: 8 }}>
           {signup ? (
@@ -343,7 +343,7 @@ export function ForgotForm({ linkError }: { linkError?: boolean }) {
         </div>
         {alert ? <Alert k={alert} /> : null}
         <EmailField id="fp-email" value={email} onChange={(v) => { setEmail(v); if (err) setErr(null); }} err={err} inputRef={emailRef} />
-        <button type="submit" className="btn btn-primary btn-lg btn-block press" disabled={busy}>{busy ? t("wait") : t("fSend")}</button>
+        <button type="submit" className="btn btn-primary btn-lg btn-block press" disabled={busy} aria-busy={busy || undefined}>{busy ? t("wait") : t("fSend")}</button>
         <p className="pg-note"><span className="ph ph-info" aria-hidden="true" /><span>{t("fNote")}</span></p>
         <Link href="/signin" className="btn btn-ghost btn-block" style={{ minBlockSize: 44, marginBlockStart: "auto" }}>
           <span className="ph ph-arrow" aria-hidden="true" style={locale === "ar" ? undefined : { transform: "scaleX(-1)" }} />{t("backIn")}
@@ -392,7 +392,7 @@ export function ResetForm({ signedIn, restored }: { signedIn: boolean; restored?
         {alert === "expired" ? null : (
           <>
             <PasswordField id="rp-pw" label={t("rLabel")} value={password} onChange={(v) => { setPassword(v); if (err) setErr(null); }} err={err} inputRef={pwRef} autoComplete="new-password" help />
-            <button type="submit" className="btn btn-primary btn-lg btn-block press" disabled={busy}>{busy ? t("wait") : t("rSave")}</button>
+            <button type="submit" className="btn btn-primary btn-lg btn-block press" disabled={busy} aria-busy={busy || undefined}>{busy ? t("wait") : t("rSave")}</button>
           </>
         )}
         <Link href="/signin" className="btn btn-ghost btn-block" style={{ minBlockSize: 44, marginBlockStart: "auto" }}>

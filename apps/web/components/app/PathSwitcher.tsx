@@ -7,6 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { play } from "@/lib/sound";
 import { chooseCurrentPath } from "@/app/[locale]/app/(shell)/paths/actions";
 import type { Chip } from "./PathChips";
+import { doneNavProgress, startNavProgress } from "@/lib/nav-progress";
 
 /** The path map header: shows the path you are looking at and lets you switch to another joined path. */
 export function PathSwitcher({ chips, currentId, sub }: { chips: (Chip & { where: string })[]; currentId: string; sub?: string }) {
@@ -32,14 +33,16 @@ export function PathSwitcher({ chips, currentId, sub }: { chips: (Chip & { where
   const pick = (c: Chip) => {
     setOpen(false);
     if (c.id === currentId) return;
+    // The progress line runs from the tap, through the save, until the new path's map is on screen.
+    startNavProgress();
     start(async () => {
       const res = await chooseCurrentPath({ pathId: c.id });
-      if (res.ok) { play("ui-tap"); router.push(`/app/path/${c.id}`); router.refresh(); }
+      if (res.ok) { play("ui-tap"); router.push(`/app/path/${c.id}`); router.refresh(); } else doneNavProgress();
     });
   };
   return (
     <div ref={box} style={{ position: "relative", minInlineSize: 0 }}>
-      <button type="button" className={`sw-btn press${open ? " is-open" : ""}`} aria-haspopup="true" aria-expanded={open} aria-label={t("switchLabel", { name: here?.name ?? "" })} onClick={() => setOpen(!open)} disabled={pending}>
+      <button type="button" className={`sw-btn press${open ? " is-open" : ""}`} aria-haspopup="true" aria-expanded={open} aria-label={t("switchLabel", { name: here?.name ?? "" })} onClick={() => setOpen(!open)} disabled={pending} aria-busy={pending || undefined}>
         
         {here ? <img src={here.art} alt="" /> : null}
         <span className="sw-name"><span className="t-label" style={{ fontSize: 17 }}><bdi>{here?.name}</bdi></span>{sub ? <small>{sub}</small> : null}</span>
