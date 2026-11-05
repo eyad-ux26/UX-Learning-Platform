@@ -5,7 +5,8 @@
   "main": "cf-worker.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // /c/* (lesson files) goes to the Worker first, which answers 404: only the server reads them, through ASSETS.
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS", "run_worker_first": ["/c/*"] },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "uxgate-web" }],
   // Run server code near Supabase in Frankfurt instead of near each visitor.
   "placement": { "region": "aws:eu-central-1" },
