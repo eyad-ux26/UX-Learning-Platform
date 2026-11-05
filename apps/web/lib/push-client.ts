@@ -42,10 +42,20 @@ export async function turnOnPush(): Promise<PushState> {
   if (perm !== "granted") return "off";
   const reg = await navigator.serviceWorker.register("/sw.js");
   await navigator.serviceWorker.ready;
-  const sub = (await reg.pushManager.getSubscription()) ?? (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(vapidKey()) }));
-  const json = sub.toJSON() as { endpoint?: string; keys?: { p256dh?: string; auth?: string } };
-  if (!json.endpoint || !json.keys?.p256dh || !json.keys?.auth) return "off";
-  const r = await savePushSubscription({ endpoint: json.endpoint, p256dh: json.keys.p256dh, auth: json.keys.auth, userAgent: navigator.userAgent.slice(0, 300) });
+  const subscribe = () => reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(vapidKey()) });
+  const save = async (s: PushSubscription) => {
+    const json = s.toJSON() as { endpoint?: string; keys?: { p256dh?: string; auth?: string } };
+    if (!json.endpoint || !json.keys?.p256dh || !json.keys?.auth) return { ok: false };
+    return savePushSubscription({ endpoint: json.endpoint, p256dh: json.keys.p256dh, auth: json.keys.auth, userAgent: navigator.userAgent.slice(0, 300) });
+  };
+  let sub = (await reg.pushManager.getSubscription()) ?? (await subscribe());
+  let r = await save(sub);
+  // Another account on this browser saved this subscription first: start a fresh one for this account.
+  if (!r.ok && r.taken) {
+    await sub.unsubscribe().catch(() => false);
+    sub = await subscribe();
+    r = await save(sub);
+  }
   return r.ok ? "on" : "off";
 }
 

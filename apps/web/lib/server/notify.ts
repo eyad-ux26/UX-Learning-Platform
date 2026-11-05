@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { allowed, readPrefs, type InboxKind, type Prefs } from "@/lib/notifications";
 import { inboxCopy, type InboxData } from "@/lib/inbox";
 import { slice4 } from "@/messages/s4";
+import { isPushEndpoint } from "@/lib/push-hosts";
 import { sendPush } from "./webpush";
 
 export async function loadPrefs(db: SupabaseClient, userId: string): Promise<Prefs> {
@@ -17,6 +18,7 @@ export async function pushToLearner(db: SupabaseClient, userId: string, msg: { t
   const { data: subs } = await db.from("push_subscriptions").select("id, endpoint, p256dh, auth").eq("user_id", userId).limit(10);
   let sent = 0;
   for (const s of subs ?? []) {
+    if (!isPushEndpoint(s.endpoint as string)) { await db.from("push_subscriptions").delete().eq("id", s.id); continue; }
     try {
       const r = await sendPush({ endpoint: s.endpoint as string, p256dh: s.p256dh as string, auth: s.auth as string }, msg);
       if (r.ok) { sent++; await db.from("push_subscriptions").update({ last_ok_at: new Date().toISOString() }).eq("id", s.id); }

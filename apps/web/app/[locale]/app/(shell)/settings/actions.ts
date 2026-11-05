@@ -10,6 +10,7 @@ import { deleteAfter } from "@/lib/reminder-plan";
 import { onAccountDeletionScheduled } from "@/lib/server/account-hooks";
 import { sendDeletedEmail } from "@/lib/server/account-email";
 import { BYE_COOKIE } from "@/lib/server/account";
+import { isPushEndpoint } from "@/lib/push-hosts";
 
 async function me() {
   const db = await createClient();
@@ -55,15 +56,22 @@ export async function saveNotificationPrefs(input: Prefs): Promise<{ ok: boolean
 const sub = z.object({ endpoint: z.string().url().startsWith("https://").max(1000), p256dh: z.string().min(20).max(200), auth: z.string().min(8).max(100), userAgent: z.string().max(300).optional() });
 
 /** This device said yes to push: keep its subscription. One endpoint belongs to one learner (the last who signed in on it). */
-export async function savePushSubscription(input: z.infer<typeof sub>): Promise<{ ok: boolean }> {
+/**
+ * Saves this device's push subscription. Only the browsers' push services are accepted, and an endpoint stays with the
+ * account that saved it first: "taken" tells the browser to drop that subscription and make a fresh one.
+ */
+export async function savePushSubscription(input: z.infer<typeof sub>): Promise<{ ok: boolean; taken?: boolean }> {
   const p = sub.safeParse(input);
-  if (!p.success) return { ok: false };
+  if (!p.success || !isPushEndpoint(p.data.endpoint)) return { ok: false };
   const { user } = await me();
   if (!user || !hasServiceKey()) return { ok: false };
-  const { error } = await createAdminClient().from("push_subscriptions").upsert(
-    { user_id: user.id, endpoint: p.data.endpoint, p256dh: p.data.p256dh, auth: p.data.auth, user_agent: p.data.userAgent ?? null },
-    { onConflict: "endpoint" },
-  );
+  const admin = createAdminClient();
+  const { data: had } = await admin.from("push_subscriptions").select("user_id").eq("endpoint", p.data.endpoint).maybeSingle();
+  if (had && had.user_id !== user.id) return { ok: false, taken: true };
+  const row = { p256dh: p.data.p256dh, auth: p.data.auth, user_agent: p.data.userAgent ?? null };
+  const { error } = had
+    ? await admin.from("push_subscriptions").update(row).eq("endpoint", p.data.endpoint).eq("user_id", user.id)
+    : await admin.from("push_subscriptions").insert({ user_id: user.id, endpoint: p.data.endpoint, ...row });
   return { ok: !error };
 }
 
