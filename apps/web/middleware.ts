@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 import { isPrivateContent, notFound } from "./lib/private-content";
 import { hasSupabase, sessionCookieOptions, supabaseAnonKey, supabaseUrl } from "./lib/supabase/env";
+import { paddleLinkStep, PTXN_COOKIE, PTXN_COOKIE_SECONDS } from "./lib/billing/paddle-link";
 
 const intl = createMiddleware(routing);
 // Only screens that know who the learner is need their session kept fresh.
@@ -42,7 +43,17 @@ export default async function middleware(req: NextRequest) {
         setAll: (list) => list.forEach(({ name, value, options }) => { req.cookies.set(name, value); res.cookies.set(name, value, options); }),
       },
     });
-    await supabase.auth.getUser(); // refreshes an expiring session cookie
+    const { data } = await supabase.auth.getUser(); // refreshes an expiring session cookie
+    // Paddle's payment links (?_ptxn=) survive sign-in: kept in a cookie, then opened again on the app home.
+    const step = paddleLinkStep(req.nextUrl.pathname, req.nextUrl.searchParams, !!data.user, req.cookies.get(PTXN_COOKIE)?.value);
+    if (step?.kind === "clear") res.cookies.delete(PTXN_COOKIE);
+    if (step?.kind === "signin" || step?.kind === "resume") {
+      const out = NextResponse.redirect(new URL(step.to, req.url));
+      res.cookies.getAll().forEach((c) => out.cookies.set(c)); // keep a refreshed session
+      if (step.kind === "signin") out.cookies.set(PTXN_COOKIE, step.txn, { httpOnly: true, secure: req.nextUrl.protocol === "https:", sameSite: "lax", path: "/", maxAge: PTXN_COOKIE_SECONDS });
+      else out.cookies.delete(PTXN_COOKIE);
+      return out;
+    }
   }
   return res;
 }

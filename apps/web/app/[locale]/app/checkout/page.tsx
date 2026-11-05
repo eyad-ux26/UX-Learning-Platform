@@ -2,7 +2,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { Logo } from "@/components/Logo";
 import { PaddleLinkCheckout, PayButton } from "@/components/billing/CheckoutView";
-import { paddleLinkTxn } from "@/lib/billing/paddle";
+import { cookies } from "next/headers";
+import { paddleLinkLocale, paddleLinkTxn } from "@/lib/billing/paddle-link";
 import { paddleConfig } from "@/lib/server/billing/config";
 import { formatMoney, moneyCls, UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 import { requireLearner } from "@/lib/server/learner";
@@ -21,6 +22,9 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
   // signed-in learners only, without a checkout of ours. Pro learners too, so this comes before the Pro redirect.
   const ptxn = paddleLinkTxn(sp._ptxn);
   if (ptxn) {
+    // Paddle's links all point at the English page: an Arabic learner is moved to their own language, link kept.
+    const own = paddleLinkLocale(locale, me.locale, (await cookies()).get("NEXT_LOCALE")?.value);
+    if (own) return redirect({ href: { pathname: "/app/checkout", query: { _ptxn: ptxn } }, locale: own }) as never;
     const c = paddleConfig();
     if (!c.clientToken) return redirect({ href: "/app/settings/billing", locale }) as never;
     return (

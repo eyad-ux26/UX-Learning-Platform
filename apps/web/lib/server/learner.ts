@@ -41,10 +41,12 @@ export type Learner = {
   pro: boolean;
   /** The plan row behind `pro`, read once per request and reused by the plans and billing screens. */
   entitlement: Entitlement | null;
+  /** The language the learner last signed in with (profiles.locale), or null. */
+  locale: string | null;
 };
 
 const fixture = (): Learner => ({
-  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null,
+  db: null, weekStart: 1, userId: "fixture", hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null,
   practicedSkills: new Set(["SK-P01-U01-01"]),
   joined: [{ pathId: "P01", startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" }], activePathId: "P01",
   skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
@@ -112,6 +114,7 @@ async function loadLearner(): Promise<Learner | null> {
     handle: (extra.data?.handle as string | null) ?? null,
     pro: proFrom(entitlement, host),
     entitlement,
+    locale: (p0?.locale as string | null) ?? null,
   };
 }
 
