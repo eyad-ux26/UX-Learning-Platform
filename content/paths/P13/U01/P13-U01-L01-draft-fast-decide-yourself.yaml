@@ -28,11 +28,26 @@ steps:
       en: "I'm a product designer on a banking app. My manager asked me to use an AI chatbot to write our new onboarding screens.\n\nIt wrote all five screens in seconds, and they read well. I pasted them into the design. In review, the team found a fee we don't charge and a feature we don't have."
       ar: "أنا مصممة منتجات في تطبيق بنكي. وطلب مني مديري أن أستخدم روبوت محادثة بالذكاء الاصطناعي لأكتب شاشات التعريف الجديدة.\n\nفكتب الشاشات الخمس في ثوانٍ، وكانت صياغتها جيدة. فوضعتها في التصميم كما هي. وفي المراجعة، وجد الفريق رسومًا لا نأخذها، وميزة ليست عندنا."
     mock:
-      width: 300
+      app: rasid
+      footer:
+      - kind: button
+        text: {en: Next, ar: التالي}
       blocks:
-        - { kind: title, text: { en: "Rasid", ar: "رصيد" } }
-        - { kind: meta, text: { en: "Welcome · 2 of 5", ar: "مرحبًا · 2 من 5" }, gap: s }
-        - { kind: text, text: { en: "Send money abroad instantly for a small fee of just 1%, and earn cashback on every purchase!", ar: "حوّل الأموال إلى الخارج فورًا برسوم بسيطة لا تتجاوز 1%، واحصل على استرداد نقدي على كل عملية شراء!" }, gap: s }
+      - {kind: image, art: map, size: l}
+      - kind: heading
+        text: {en: Send money abroad, ar: حوّل إلى الخارج}
+        gap: m
+      - kind: text
+        text:
+          en: "Send money abroad instantly for a small fee of just 1%, and earn cashback on every purchase!"
+          ar: "حوّل الأموال إلى الخارج فورًا برسوم بسيطة لا تتجاوز 1%، واحصل على استرداد نقدي على كل عملية شراء!"
+        gap: s
+      - kind: progress
+        value: 40
+        label:
+          en: "2 of 5"
+          ar: "2 من 5"
+        gap: m
 
   - id: S02
     type: choose
@@ -182,19 +197,55 @@ steps:
     a:
       label: { en: "A: The chatbot's first answer, unchanged.", ar: "A: أول إجابة من روبوت المحادثة، دون تغيير." }
       mock:
-        width: 300
+        app: rasid
+        appbar:
+          title: {en: Savings goals, ar: أهداف الادخار}
+          back: true
+          actions:
+          - icon: plus
+            aria: {en: Add goal, ar: أضف هدفًا}
         blocks:
-          - { kind: heading, text: { en: "Savings goals", ar: "أهداف الادخار" } }
-          - { kind: text, text: { en: "Thanksgiving dinner · $250 of $400", ar: "عشاء عيد الشكر · 250$ من 400$" }, gap: xs }
-          - { kind: text, text: { en: "College fund for Emma · $1,200 of $10,000", ar: "صندوق الجامعة لإيما · 1,200$ من 10,000$" }, gap: xs }
+        - kind: listitem
+          icon: gift
+          text: {en: Thanksgiving dinner, ar: عشاء عيد الشكر}
+          sub:
+            en: $250 of $400
+            ar: "250$ من 400$"
+        - {kind: progress, value: 62, gap: xs}
+        - kind: listitem
+          icon: graduation-cap
+          text: {en: College fund for Emma, ar: صندوق الجامعة لإيما}
+          sub:
+            en: "$1,200 of $10,000"
+            ar: "1,200$ من 10,000$"
+          gap: s
+        - {kind: progress, value: 12, gap: xs}
     b:
       label: { en: "B: The same idea, fixed for our users.", ar: "B: نفس الفكرة، معدّلة لمستخدمينا." }
       mock:
-        width: 300
+        app: rasid
+        appbar:
+          title: {en: Savings goals, ar: أهداف الادخار}
+          back: true
+          actions:
+          - icon: plus
+            aria: {en: Add goal, ar: أضف هدفًا}
         blocks:
-          - { kind: heading, text: { en: "Savings goals", ar: "أهداف الادخار" } }
-          - { kind: text, text: { en: "Eid gifts · EGP 2,500 of 4,000", ar: "هدايا العيد · 2,500 من 4,000 جنيه" }, gap: xs }
-          - { kind: text, text: { en: "School fees for Salma · EGP 12,000 of 30,000", ar: "مصروفات مدرسة سلمى · 12,000 من 30,000 جنيه" }, gap: xs }
+        - kind: listitem
+          icon: gift
+          text: {en: Eid gifts, ar: هدايا العيد}
+          sub:
+            en: "EGP 2,500 of 4,000"
+            ar: "2,500 من 4,000 جنيه"
+        - {kind: progress, value: 62, gap: xs}
+        - kind: listitem
+          icon: graduation-cap
+          text: {en: School fees for Salma, ar: مصروفات مدرسة سلمى}
+          sub:
+            en: "EGP 12,000 of 30,000"
+            ar: "12,000 من 30,000 جنيه"
+          gap: s
+        - {kind: progress, value: 40, gap: xs}
     answer: b
     reason:
       prompt: { en: "Why did A need fixing?", ar: "لماذا احتاجت A إلى تعديل؟" }
