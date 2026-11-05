@@ -27,10 +27,22 @@ export type MockBlock = {
   [extra: string]: unknown;
 };
 /** A layer drawn over the screen. Dialogs and sheets dim the screen unless `scrim: false`. */
-export type MockOverlay = { type: "dialog" | "sheet" | "full" | "toast" | "banner"; blocks: MockBlock[]; close?: boolean; scrim?: boolean; handle?: boolean; tall?: boolean };
+export type MockOverlay = { type: "dialog" | "sheet" | "full" | "toast" | "banner" | "menu" | "side"; blocks: MockBlock[]; close?: boolean; scrim?: boolean; handle?: boolean; tall?: boolean; title?: MockText };
 /** A floating action button; `text` makes it an extended FAB. */
 export type MockFab = { icon?: string; text?: MockText };
-export type Mock = { width?: number; height?: number; caption?: MockText; frame?: "wide"; dir?: "rtl" | "ltr"; gray?: boolean; blur?: number; overlay?: MockOverlay; fab?: MockFab | MockFab[]; blocks: MockBlock[] };
+/** A fictional product from content/products.yaml (the compiler swaps `app: <id>` for this). */
+export type MockApp = { id?: string; name: MockText; color: string; icon: string; domain?: string };
+/** An icon button in the chrome; `count` draws a red count dot. */
+export type MockAction = { icon: string; aria?: MockText; count?: number; region?: string };
+export type MockAppbar = { title?: MockText; back?: boolean; actions?: MockAction[]; large?: boolean; logo?: boolean; region?: string };
+export type MockTab = { icon: string; text?: MockText; aria?: MockText; count?: number; region?: string };
+export type MockNavbar = { links?: MockText[]; active?: number; search?: MockText; actions?: MockAction[] };
+export type Mock = {
+  width?: number; height?: number; caption?: MockText; frame?: "phone" | "small" | "tablet" | "wide"; dir?: "rtl" | "ltr"; gray?: boolean; blur?: number;
+  app?: MockApp | string; status?: boolean; appbar?: MockAppbar; tabbar?: { items: MockTab[]; active?: number }; footer?: MockBlock[];
+  url?: string; navbar?: MockNavbar; theme?: "dark"; keyboard?: "text" | "number"; screen?: "lock"; reader?: MockText;
+  overlay?: MockOverlay; fab?: MockFab | MockFab[]; blocks: MockBlock[];
+};
 
 export type Option = { id: string; text: Text; mock?: Mock };
 export type Misconception = { id: string; when: string | string[]; feedback: Text };

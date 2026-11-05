@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import yaml from "js-yaml";
 import { fileURLToPath } from "node:url";
+import { loadProducts, resolveProducts } from "../../packages/content/src/products.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const PATHS_DIR = path.join(ROOT, "content/paths");
@@ -47,6 +48,10 @@ export function loadContent() {
 }
 
 // Replaces "@ID" strings with the bilingual text from the path's fixtures.
+export const PRODUCTS = loadProducts(path.join(ROOT, "content"));
+// Fixture references, then product ids (`app: kanz`) swapped for the product from content/products.yaml.
+export const resolveAll = (node, fixtures, errors, where) => resolveProducts(resolveRefs(node, fixtures, errors, where), PRODUCTS, errors, where);
+
 export function resolveRefs(node, fixtures, errors, where) {
   if (typeof node === "string" && node.startsWith("@")) {
     const hit = fixtures[node.slice(1)];
