@@ -199,7 +199,7 @@ function StudentSheet({ open, onClose, locale, prices }: { open: boolean; onClos
           </div>
           <p className="t-small ink-3" style={{ fontSize: 12.5 }}>{t("stDomains")}</p>
           <div className="notice is-info" style={{ padding: "10px 12px" }}><span className="ph ph-tag" aria-hidden="true" /><span className="grow"><span>{t("stPrice", { m: prices.m, y: prices.y })}</span></span></div>
-          <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={send} aria-disabled={state.busy}>{t("stGo")}</button>
+          <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={send} aria-disabled={state.busy} aria-busy={state.busy || undefined}>{t("stGo")}</button>
         </>
       )}
       <button type="button" className="btn btn-ghost btn-block" style={{ minHeight: 44 }} onClick={onClose}>{state.sent ? t("close") : t("notNow")}</button>

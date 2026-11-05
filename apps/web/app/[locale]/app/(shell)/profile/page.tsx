@@ -26,17 +26,21 @@ export default async function ProfilePage({ params, searchParams }: { params: Pr
   let reminder = "";
   let boardOpen = false;
   let since: string | null = me.joined.map((j) => j.startedAt).sort()[0] ?? null;
+  // Certificates are read while the profile reads below run, not after them.
+  const certs = me.db ? ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : Promise.resolve([]);
   if (me.db) {
-    email = (await me.db.auth.getUser()).data.user?.email ?? "";
-    const [{ data }, { data: flag }] = await Promise.all([
+    // The email comes in the same round as the other reads, not before them.
+    const [{ data: auth }, { data }, { data: flag }] = await Promise.all([
+      me.db.auth.getUser(),
       me.db.from("profiles").select("reminder_time, created_at").eq("user_id", me.userId).maybeSingle(),
       me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
     ]);
+    email = auth.user?.email ?? "";
     reminder = data?.reminder_time?.slice(0, 5) ?? "";
     since = (data?.created_at as string | undefined) ?? since;
     boardOpen = !!flag?.enabled;
   } else email = "nour@example.com";
-  const certificates = me.db ? await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : [];
+  const certificates = await certs;
   const offer = !me.pro && paywall === "cert" ? await loadOffer(me) : null;
   return (
     <Shell me={me}>
