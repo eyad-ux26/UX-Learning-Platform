@@ -62,6 +62,8 @@ export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView
         <h1 className="t-h1 h1-s" style={{ flex: 1 }}>{await greeting(hour, progress.displayName)}</h1>
         {bell ? <span className="only-desk">{bell}</span> : null}
       </div>
+      {/* "Your paths" sits at the top, so switching path comes before the lesson card it changes (Eyad, 5 Nov). */}
+      {chips.length > 1 ? <PathChips chips={chips} label={t("yourPaths")} addLabel={t("addPath")} /> : null}
       {me.freezeNote ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
 
       {next ? (
@@ -104,8 +106,6 @@ export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView
           <Link href={`/app/lesson/${resume.lessonId}`} className="btn btn-secondary btn-sm press">{t("continue")}</Link>
         </section>
       ) : null}
-
-      {chips.length > 1 ? <PathChips chips={chips} label={t("yourPaths")} addLabel={t("addPath")} /> : null}
 
       {due.count > 0 ? (
         <Link href="/app/review" className="card press review-card">

@@ -11,6 +11,7 @@ import { decideReplay } from "@/lib/replay";
 import { upNextOf, type PathEnd } from "@/lib/up-next";
 import { isShown, pathSkills } from "@/lib/certificate";
 import { lessonOpen } from "@/lib/billing/access";
+import { otherLocaleMessages } from "@/lib/server/lesson-messages";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   const { locale, lessonId } = await params;
   setRequestLocale(locale);
   // The lesson file and the learner's data load side by side.
-  const [me, version] = await Promise.all([requireLearner(locale), getLessonVersion(lessonId)]);
+  const [me, version, other] = await Promise.all([requireLearner(locale), getLessonVersion(lessonId), otherLocaleMessages(locale)]);
   if (!version) notFound();
   // Units after Unit 1 are part of Pro: a free learner lands on the path map with the paywall open.
   if (!lessonOpen(lessonId, me.pro)) return redirect({ href: `/app/path/${version.pathId}?paywall=${version.unitId}`, locale }) as never;
@@ -50,5 +51,5 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
     const others = skills.filter((s) => !unit?.skills.some((k) => k.id === s.id));
     pathEnd = { pathId: version.pathId, pathTitle, skills: skills.length, certReady: others.every((s) => isShown(me.skillStates.get(s.id)?.state)) };
   }
-  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} />;
+  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} other={other} />;
 }
