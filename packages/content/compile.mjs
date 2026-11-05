@@ -6,6 +6,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { compileTree } from "./src/compile.mjs";
+import { collectIcons, mockIconsCss } from "./src/icons.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dir = path.resolve(process.argv[2] ?? path.join(here, "../../content/paths"));
@@ -43,5 +44,7 @@ const videos = {};
 for (const l of all) for (const s of l.body.steps) if (s.type === "video") videos[s.video] = [...new Set([...(videos[s.video] ?? []), l.unitId])].sort();
 fs.writeFileSync(path.join(outDir, "index.json"), JSON.stringify({ paths: bundle.paths, units: bundle.units, lessons: bundle.lessons.map(meta), banks: bundle.banks.map(meta), videos }) + "\n");
 fs.writeFileSync(path.join(outDir, "cast.json"), JSON.stringify(bundle.cast) + "\n");
+// Icons the example screens use (Phosphor masks), imported by the app as @uxgate/content/mock-icons.css.
+fs.writeFileSync(path.join(outDir, "mock-icons.css"), mockIconsCss(collectIcons(all.map((l) => l.body))));
 console.log(`compiled ${bundle.lessons.length} lessons from ${path.relative(process.cwd(), dir)} -> ${path.relative(process.cwd(), out)}`);
 for (const l of [...bundle.lessons, ...bundle.banks]) console.log(`  ${l.lessonId}  ${l.hash.slice(0, 10)}  ${l.body.steps.length} steps`);

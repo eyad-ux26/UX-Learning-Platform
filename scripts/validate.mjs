@@ -1,7 +1,31 @@
 // Checks every path, unit and lesson against the content format in docs/content-format.md.
 // Exits with code 1 when anything is wrong, so CI and the preview build stop on bad content.
 import path from "node:path";
-import { loadContent, loadCast, resolveRefs, scenarioOf, CHOICE_TYPES, STEP_TYPES } from "./lib/content.mjs";
+import fs from "node:fs";
+import { loadContent, loadCast, resolveAll, scenarioOf, CHOICE_TYPES, STEP_TYPES, ROOT } from "./lib/content.mjs";
+import { iconExists, isIconName } from "../packages/content/src/icons.mjs";
+
+// The mock vocabulary the player draws (packages/player/src/mock-vocab.json): unknown kinds and art fail here, not on screen.
+const VOCAB = JSON.parse(fs.readFileSync(path.join(ROOT, "packages/player/src/mock-vocab.json"), "utf8"));
+const OVERLAYS = ["dialog", "sheet", "full", "toast", "banner", "menu", "side"];
+const FRAMES = ["phone", "small", "tablet", "wide"];
+function checkMocks(node, where, errors, inMock = false) {
+  if (Array.isArray(node)) return node.forEach((n) => checkMocks(n, where, errors, inMock));
+  if (!node || typeof node !== "object") return;
+  if (inMock) {
+    if (typeof node.kind === "string" && !VOCAB.kinds.includes(node.kind)) errors.push(`${where}: unknown mock block kind "${node.kind}"`);
+    if (typeof node.art === "string" && !VOCAB.art.includes(node.art)) errors.push(`${where}: unknown art "${node.art}"`);
+    if (isIconName(node.icon) && !iconExists(node.icon)) errors.push(`${where}: unknown icon "${node.icon}" (use a Phosphor name)`);
+  }
+  for (const [k, v] of Object.entries(node)) {
+    if (k === "mock" && v && typeof v === "object") {
+      if (v.frame !== undefined && !FRAMES.includes(v.frame)) errors.push(`${where}: mock frame must be one of ${FRAMES.join(", ")}`);
+      if (v.overlay && !OVERLAYS.includes(v.overlay.type)) errors.push(`${where}: overlay type must be one of ${OVERLAYS.join(", ")}`);
+    }
+    checkMocks(v, where, errors, inMock || k === "mock");
+  }
+}
+
 
 const PARTS = ["hook", "try", "concept", "guided", "contrast", "independent", "recap", "check", "retest"];
 const RULE_RE = /^(R(0[1-9]|[1-3]\d|40)|U(0[1-9]|[1-5]\d|60))$/;
@@ -77,7 +101,7 @@ export function validate(paths) {
       const versions = Object.fromEntries(skillIds.map((id) => [id, []]));
       for (const raw of [...u.lessons, ...u.bank]) {
         const lw = raw._file;
-        const l = resolveRefs(raw, p.fixtures, errors, lw);
+        const l = resolveAll(raw, p.fixtures, errors, lw);
         const bank = l.mode === "bank";
         need(new RegExp(`^${u.id}-${bank ? "B" : "L"}\\d{2}$`).test(l.id || ""), `${lw}: id must look like ${u.id}-${bank ? "B" : "L"}01`);
         need(path.basename(lw, ".yaml").startsWith(l.id || "?"), `${lw}: file name must start with the lesson id`);
@@ -85,6 +109,7 @@ export function validate(paths) {
         need(l.title && (bank || l.minutes), `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
         checkText(l, lw);
+        checkMocks(l.steps, lw, errors);
         // Every scenario is told by a cast member: the lesson's speaker, or a step's own.
         if (l.speaker !== undefined) need(castIds.includes(l.speaker), `${lw}: unknown speaker ${l.speaker}`);
         const told = (l.steps || []).filter((s) => s.part === "hook" || s.scenario);
