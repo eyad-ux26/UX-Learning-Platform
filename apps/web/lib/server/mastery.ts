@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getBank, getUnit, getLessonVersion } from "@uxgate/content";
+import { getBank, getUnit, getLessonMeta } from "@uxgate/content";
 import type { QuestionStep } from "@uxgate/content/types";
 import { firstTries, missedSkills, pickRound, unresolvedSkills } from "@/lib/mastery";
 
@@ -10,9 +10,9 @@ export type Round = { unitId: string; bankId: string; hash: string; skillCheckDo
 /** What the mastery round of a unit asks this learner, read with the learner's own session. */
 export async function loadRound(db: SupabaseClient, userId: string, unitId: string): Promise<Round | null> {
   const unit = getUnit(unitId);
-  const bank = getBank(unitId);
+  const bank = await getBank(unitId);
   if (!unit || !bank) return null;
-  const checkId = unit.lessons.find((id) => getLessonVersion(id)?.mode === "check");
+  const checkId = unit.lessons.find((id) => getLessonMeta(id)?.mode === "check");
   const { data } = await db
     .from("step_results")
     .select("attempt_id, step_id, skill_id, try_no, kind, correct, attempts!inner(lesson_id, started_at, finished_at, kind)")
@@ -31,7 +31,7 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
   const lessonTries = firstTries(rows.filter((r) => r.attempt.kind !== "mastery" && latest.get(r.attempt.lesson_id) === r.attempt_id).map(asRow));
   const masteryRows = rows.filter((r) => r.attempt.kind === "mastery");
   const masteryTries = firstTries(masteryRows.map(asRow));
-  const missed = missedSkills(unit, lessonTries, masteryTries);
+  const missed = missedSkills(unit, lessonTries, masteryTries, checkId);
   const seen = [...new Set(masteryRows.map((r) => `${r.attempt_id}:${r.step_id}`))].map((k) => k.split(":")[1]);
-  return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, unresolved: unresolvedSkills(unit, lessonTries, masteryTries), steps: pickRound(bank, missed, seen) };
+  return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, unresolved: unresolvedSkills(unit, lessonTries, masteryTries, checkId), steps: pickRound(bank, missed, seen) };
 }

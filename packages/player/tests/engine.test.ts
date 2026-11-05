@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bundle, getLessonVersion } from "@uxgate/content";
+import { bundle, getLessonVersion } from "@uxgate/content/full";
 import type { Lesson, TuneStep, CompareStep } from "@uxgate/content/types";
 import * as E from "../src/engine";
 

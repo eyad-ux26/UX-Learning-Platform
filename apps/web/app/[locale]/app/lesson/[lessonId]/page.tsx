@@ -14,7 +14,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   const { locale, lessonId } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
-  const version = getLessonVersion(lessonId);
+  const version = await getLessonVersion(lessonId);
   if (!version) notFound();
   // Lessons play in order: a locked lesson sends the learner back to the path map.
   const view = buildPathView(version.pathId, me.progress, me.practicedSkills);

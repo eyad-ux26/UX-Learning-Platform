@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: "bad_request" }, { status: 400 });
   const b = parsed.data;
 
-  const lesson = getLessonVersion(b.lessonId);
+  const lesson = await getLessonVersion(b.lessonId);
   const step = lesson?.body.steps.find((s) => s.id === b.stepId);
   if (!lesson || !step || !isQuestion(step)) return NextResponse.json({ error: "unknown_step" }, { status: 404 });
 

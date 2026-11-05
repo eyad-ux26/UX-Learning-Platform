@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: "bad_request" }, { status: 400 });
   const body = parsed.data;
 
-  const current = getLessonVersion(body.lessonId);
+  const current = await getLessonVersion(body.lessonId);
   if (!current) return NextResponse.json({ error: "unknown_lesson" }, { status: 404 });
 
   const db = createAdminClient();
