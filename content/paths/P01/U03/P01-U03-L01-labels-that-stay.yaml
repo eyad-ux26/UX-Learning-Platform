@@ -27,14 +27,17 @@ steps:
       en: "Yasser ordered a kettle from my online shop. Our address form has no labels: each box shows a grey example inside it, like \"Street and building\", and the example disappears when he starts typing.\n\nHe typed his street, then stopped at the next box. It already showed his browser's suggestion, and he couldn't tell what it had asked for."
       ar: "طلب ياسر غلّاية من متجري الإلكتروني. ونموذج العنوان عندنا بلا عناوين: كل مربع يعرض مثالًا رماديًا بداخله، مثل «الشارع ورقم العمارة»، ويختفي المثال حين يبدأ الكتابة.\n\nكتب شارعه، ثم توقّف عند المربع التالي. كان يعرض اقتراحًا من المتصفّح، ولم يعرف ماذا كان يطلب."
     mock:
-      width: 300
+      app: dar
+      appbar: { title: { en: "Delivery address", ar: "عنوان التوصيل" }, back: true }
       blocks: &addrnow
-        - { kind: title, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
+        - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+        - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
         - { kind: field, filled: true, text: { en: "14 Abbas El Akkad St", ar: "14 شارع عباس العقاد" }, gap: m }
         - { kind: field, filled: true, text: { en: "Nasr City", ar: "مدينة نصر" }, gap: s }
         - { kind: field, text: { en: "Floor and flat number", ar: "رقم الدور والشقة" }, gap: s }
-        - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" }, gap: m }
 
+      footer:
+        - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" } }
   - id: S02
     type: tune
     skill: SK-P01-U03-01
@@ -48,38 +51,50 @@ steps:
       en: "Try each version of my form. Which one should ship?"
       ar: "جرّب كل نسخة من نموذجي. أيّها يجب أن تُطلق؟"
     mock:
+      app: dar
+      appbar: { title: { en: "Delivery address", ar: "عنوان التوصيل" }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: *addrnow
+      footer:
+        - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" } }
     options:
       - id: darker
         text: { en: "Keep the examples inside, but make them darker", ar: "أبقِ الأمثلة بالداخل، لكن اجعلها أغمق" }
         mock:
+          app: dar
+          appbar: { title: { en: "Delivery address", ar: "عنوان التوصيل" }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, filled: true, text: { en: "14 Abbas El Akkad St", ar: "14 شارع عباس العقاد" }, gap: m }
             - { kind: field, filled: true, text: { en: "Nasr City", ar: "مدينة نصر" }, gap: s }
             - { kind: field, filled: true, text: { en: "Floor and flat number", ar: "رقم الدور والشقة" }, gap: s }
-            - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" } }
       - id: labels
         text: { en: "Put a label above each box, and leave the boxes empty", ar: "ضع عنوانًا فوق كل مربع، واترك المربعات فارغة" }
         mock:
+          app: dar
+          appbar: { title: { en: "Delivery address", ar: "عنوان التوصيل" }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Street and building", ar: "الشارع ورقم العمارة" }, filled: true, text: { en: "14 Abbas El Akkad St", ar: "14 شارع عباس العقاد" }, gap: m }
             - { kind: field, label: { en: "Area", ar: "المنطقة" }, filled: true, text: { en: "Nasr City", ar: "مدينة نصر" }, gap: s }
             - { kind: field, label: { en: "Floor and flat number", ar: "رقم الدور والشقة" }, text: "", gap: s }
-            - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" } }
       - id: keep
         text: { en: "Keep it; the examples save space on a phone", ar: "أبقِه؛ فالأمثلة توفّر مساحة على الهاتف" }
         mock:
+          app: dar
+          appbar: { title: { en: "Delivery address", ar: "عنوان التوصيل" }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *addrnow
+          footer:
+            - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" } }
     answer: [labels]
     misconceptions:
       - id: MC-P01-034
@@ -131,20 +146,29 @@ steps:
       - id: inside
         text: { en: "Inside the field: \"e.g. 010 1234 5678\"", ar: "داخل الحقل: «مثال: 010 1234 5678»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Phone for the driver", ar: "رقم هاتف للسائق" }, filled: true, focus: true, text: "⁦010 98⁩" }
       - id: none
         text: { en: "No hint; the label is enough", ar: "بلا تلميح؛ العنوان يكفي" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Phone for the driver", ar: "رقم هاتف للسائق" }, filled: true, focus: true, text: "⁦010 98⁩" }
       - id: below
         text: { en: "Under the field: \"11 digits, starting with 01\"", ar: "تحت الحقل: «11 رقمًا، يبدأ بـ 01»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Phone for the driver", ar: "رقم هاتف للسائق" }, filled: true, focus: true, text: "⁦010 98⁩", hint: { en: "11 digits, starting with 01", ar: "11 رقمًا، يبدأ بـ 01" } }
     answer: [below]
     misconceptions:
@@ -184,37 +208,52 @@ steps:
       en: "Try each version of the gift box. Which one should ship?"
       ar: "جرّب كل نسخة من مربع الهدية. أيّها يجب أن تُطلق؟"
     mock:
+      app: dar
+      appbar: { title: { en: Gift options, ar: خيارات الهدية }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &giftnow
+        - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+        - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
         - { kind: check, selected: true, text: { en: "This is a gift", ar: "هذا الطلب هدية" } }
         - { kind: field, text: { en: "Happy birthday! With love…", ar: "عيد ميلاد سعيد! مع حبّي…" }, gap: s }
-        - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" } }
     options:
       - id: label
         text: { en: "Add the label \"Gift message (optional)\" above an empty box", ar: "أضف العنوان «رسالة الهدية (اختيارية)» فوق مربع فارغ" }
         mock:
+          app: dar
+          appbar: { title: { en: Gift options, ar: خيارات الهدية }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: check, selected: true, text: { en: "This is a gift", ar: "هذا الطلب هدية" } }
             - { kind: field, label: { en: "Gift message (optional)", ar: "رسالة الهدية (اختيارية)" }, text: "", gap: s }
-            - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" } }
       - id: example
         text: { en: "Keep it, and make the example longer and friendlier", ar: "أبقِه، واجعل المثال أطول وألطف" }
         mock:
+          app: dar
+          appbar: { title: { en: Gift options, ar: خيارات الهدية }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: check, selected: true, text: { en: "This is a gift", ar: "هذا الطلب هدية" } }
             - { kind: field, text: { en: "Happy birthday, dear! Wishing you a wonderful year…", ar: "عيد ميلاد سعيد يا عزيزي! أتمنّى لك سنة رائعة…" }, gap: s }
-            - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" } }
       - id: keep
         text: { en: "Keep it as it is", ar: "أبقِه كما هو" }
         mock:
+          app: dar
+          appbar: { title: { en: Gift options, ar: خيارات الهدية }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *giftnow
+          footer:
+            - { kind: button, text: { en: "Place order", ar: "أكّد الطلب" } }
     answer: [label]
     misconceptions:
       - id: MC-P01-036
@@ -248,34 +287,49 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: dar
+      appbar: { title: { en: Payment, ar: الدفع }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &cvvnow
+        - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+        - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
         - { kind: field, label: { en: "Security code ⓘ", ar: "رمز الأمان ⓘ" }, text: "" }
-        - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" } }
     options:
       - id: placeholder
         text: { en: "Put \"3 digits on the back\" inside the field", ar: "ضع «3 أرقام على الظهر» داخل الحقل" }
         mock:
+          app: dar
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Security code", ar: "رمز الأمان" }, text: { en: "3 digits on the back", ar: "3 أرقام على الظهر" } }
-            - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" } }
       - id: hint
         text: { en: "Show \"The 3 digits on the back of your card\" under the label", ar: "اعرض «الأرقام الثلاثة على ظهر بطاقتك» تحت العنوان" }
         mock:
+          app: dar
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "Security code", ar: "رمز الأمان" }, hintFirst: true, hint: { en: "The 3 digits on the back of your card", ar: "الأرقام الثلاثة على ظهر بطاقتك" }, text: "" }
-            - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" } }
       - id: keep
         text: { en: "Keep the ⓘ; it keeps the form clean", ar: "أبقِ ⓘ؛ فهي تُبقي النموذج نظيفًا" }
         mock:
+          app: dar
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *cvvnow
+          footer:
+            - { kind: button, text: { en: "Pay 450 EGP", ar: "ادفع 450 جنيهًا" } }
     answer: [hint]
     misconceptions:
       - id: MC-P01-037
@@ -316,13 +370,19 @@ steps:
       ar: "أي نسخة يجب أن تُطلق؟"
     a:
       mock:
-        width: 300
+        app: dar
+        appbar: { title: { en: Return an item, ar: إرجاع منتج }, back: true }
         blocks:
+          - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+          - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
           - { kind: field, label: { en: "Order number", ar: "رقم الطلب" }, filled: true, focus: true, text: "ORD-" }
     b:
       mock:
-        width: 300
+        app: dar
+        appbar: { title: { en: Return an item, ar: إرجاع منتج }, back: true }
         blocks:
+          - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+          - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
           - { kind: field, label: { en: "Order number", ar: "رقم الطلب" }, filled: true, focus: true, text: "ORD-", hint: { en: "Like ORD-48291, on your receipt", ar: "مثل ORD-48291، على إيصالك" } }
     answer: b
     reason:
@@ -371,40 +431,52 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: raha
+      appbar: { title: { en: "See your results", ar: "اطّلع على نتائجك" }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &signnow
-        - { kind: title, text: { en: "See your results", ar: "اطّلع على نتائجك" } }
+        - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+        - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
         - { kind: field, filled: true, text: "48213", gap: m }
         - { kind: field, filled: true, text: "⁦0101 1985⁩", gap: s }
-        - { kind: button, text: { en: "Sign in", ar: "دخول" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Sign in", ar: "دخول" } }
     options:
       - id: icons
         text: { en: "Add a small icon inside each field", ar: "أضف أيقونة صغيرة داخل كل حقل" }
         mock:
+          app: raha
+          appbar: { title: { en: "See your results", ar: "اطّلع على نتائجك" }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: { en: "See your results", ar: "اطّلع على نتائجك" } }
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, filled: true, text: "# 48213", gap: m }
             - { kind: field, filled: true, text: "▦ ⁦0101 1985⁩", gap: s }
-            - { kind: button, text: { en: "Sign in", ar: "دخول" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Sign in", ar: "دخول" } }
       - id: keep
         text: { en: "Keep it; patients know what they typed", ar: "أبقِه؛ فالمرضى يعرفون ما كتبوه" }
         mock:
+          app: raha
+          appbar: { title: { en: "See your results", ar: "اطّلع على نتائجك" }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *signnow
+          footer:
+            - { kind: button, text: { en: "Sign in", ar: "دخول" } }
       - id: labels
         text: { en: "Put \"File number\" and \"Date of birth\" above the fields", ar: "ضع «رقم الملف» و«تاريخ الميلاد» فوق الحقلين" }
         mock:
+          app: raha
+          appbar: { title: { en: "See your results", ar: "اطّلع على نتائجك" }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: { en: "See your results", ar: "اطّلع على نتائجك" } }
+            - { kind: "progress", value: 33, label: { en: "Step 1 of 3 · Address", ar: "الخطوة 1 من 3 · العنوان" } }
+            - { kind: "listitem", art: "box", text: { en: "Electric kettle, 1.7 L", ar: "غلاية كهربائية 1.7 لتر" }, sub: { en: "Arrives Sunday", ar: "يصل الأحد" }, value: { en: "EGP 850", ar: "850 جنيه" }, gap: "s" }
             - { kind: field, label: { en: "File number", ar: "رقم الملف" }, filled: true, text: "48213", gap: m }
             - { kind: field, label: { en: "Date of birth (DDMM YYYY)", ar: "تاريخ الميلاد (يوم شهر سنة)" }, filled: true, text: "⁦0101 1985⁩", gap: s }
-            - { kind: button, text: { en: "Sign in", ar: "دخول" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Sign in", ar: "دخول" } }
     answer: [labels]
     misconceptions:
       - id: MC-P01-034
