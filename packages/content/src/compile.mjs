@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import yaml from "js-yaml";
+import { loadProducts, resolveProducts } from "./products.mjs";
 
 const CHOICE = ["choose", "words", "predict", "fix", "tune"];
 const STEP_TYPES = ["card", "video", ...CHOICE, "compare", "sort", "order", "match", "spot"];
@@ -125,6 +126,7 @@ export function compileTree(dir) {
   const errors = [];
   const cast = loadCast(dir, errors);
   const castIds = cast.map((c) => c.id);
+  const products = loadProducts(path.dirname(dir));
   const bundle = { cast, paths: [], units: [], lessons: [], banks: [] };
   for (const p of fs.readdirSync(dir).sort()) {
     const pDir = path.join(dir, p);
@@ -145,7 +147,7 @@ export function compileTree(dir) {
         const raw = readYaml(path.join(uDir, f));
         const where = raw.id;
         if (f.split("-").slice(0, 3).join("-") !== raw.id) errors.push(`${where}: id must match file name ${f}`);
-        const body = resolveRefs(raw, fixtures, errors, where);
+        const body = resolveProducts(resolveRefs(raw, fixtures, errors, where), products, errors, where);
         delete body.sources;
         // The lesson's speaker tells every scenario unless a step names its own. The player reads the resolved speaker on the step.
         if (body.speaker !== undefined && !castIds.includes(body.speaker)) errors.push(`${where}: unknown speaker ${body.speaker}`);
@@ -168,7 +170,7 @@ export function compileTree(dir) {
         const where = raw.id;
         if (f.split("-").slice(0, 3).join("-") !== raw.id) errors.push(`${where}: id must match file name ${f}`);
         if (raw.mode !== "bank") errors.push(`${where}: a bank needs mode: bank`);
-        const body = resolveRefs(raw, fixtures, errors, where);
+        const body = resolveProducts(resolveRefs(raw, fixtures, errors, where), products, errors, where);
         delete body.sources;
         for (const s of body.steps) {
           if (s.speaker !== undefined && !castIds.includes(s.speaker)) errors.push(`${where}/${s.id}: unknown speaker ${s.speaker}`);

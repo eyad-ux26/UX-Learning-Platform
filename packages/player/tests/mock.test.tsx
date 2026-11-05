@@ -2,12 +2,13 @@ import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Locale, Mock, MockBlock } from "@uxgate/content/types";
 // @ts-expect-error plain ESM helper shared with the validator and the preview build
-import { loadContent, resolveRefs } from "../../../scripts/lib/content.mjs";
+import { loadContent, resolveAll } from "../../../scripts/lib/content.mjs";
 import { MockView } from "../src/ui/MockView";
+import { ART_NAMES } from "../src/ui/art";
+import vocab from "../src/mock-vocab.json";
 
-/** Every block kind the app draws. A kind outside this list would show as plain text, so the test fails until it is added. */
-const KINDS = ["title", "heading", "text", "meta", "small", "chip", "pill", "line", "button", "link", "image", "banner", "tip", "iconbtn",
-  "field", "select", "radio", "check", "toggle", "stepper", "segmented", "slider", "calendar", "wheel", "chips", "divider", "group", "row"];
+/** Every block kind the app draws (the validator reads the same list). A kind outside it would show as plain text. */
+const KINDS: string[] = vocab.kinds;
 
 type Found = { where: string; mock: Mock };
 function mocksIn(node: unknown, where: string, out: Found[]) {
@@ -20,7 +21,7 @@ function mocksIn(node: unknown, where: string, out: Found[]) {
   }
 }
 const all: Found[] = [];
-for (const p of loadContent()) for (const u of p.units) for (const l of [...u.lessons, ...u.bank]) mocksIn(resolveRefs(l.steps, p.fixtures, [], l._file), l._file, all);
+for (const p of loadContent()) for (const u of p.units) for (const l of [...u.lessons, ...u.bank]) mocksIn(resolveAll(l.steps, p.fixtures, [], l._file), l._file, all);
 
 const blocksOf = (m: Mock): MockBlock[] => {
   const out: MockBlock[] = [];
@@ -40,6 +41,12 @@ describe("MockView draws every mock in the content", () => {
     expect([...unknown]).toEqual([]);
   });
 
+  it("renders every mock without throwing", () => {
+    const bad: string[] = [];
+    for (const f of all) for (const locale of ["en", "ar"] as const) try { render(f.mock, locale); } catch (e) { bad.push(`${f.where} ${locale}: ${(e as Error).message.slice(0, 80)} :: ${JSON.stringify(f.mock).slice(0, 300)}`); }
+    expect(bad.slice(0, 5)).toEqual([]);
+  });
+
   it("renders each mock in English and Arabic, with overlays, FABs and structured kinds drawn", () => {
     const marks: Record<string, string> = { slider: 'class="sl', calendar: 'class="cal', wheel: 'class="whl"', chips: 'class="cps', stepper: 'class="stp' };
     for (const f of all) for (const locale of ["en", "ar"] as const) {
@@ -49,6 +56,10 @@ describe("MockView draws every mock in the content", () => {
       for (const b of blocksOf(f.mock)) if (marks[b.kind]) expect(html, `${b.kind} in ${f.where}`).toContain(marks[b.kind]);
     }
   });
+});
+
+describe("Mock vocabulary", () => {
+  it("draws every art name the validator accepts", () => expect([...ART_NAMES].sort()).toEqual([...vocab.art].sort()));
 });
 
 describe("MockView details", () => {
@@ -70,5 +81,19 @@ describe("MockView details", () => {
   });
   it("accepts a plain-string caption", () => {
     expect(render({ caption: "320 px" as never, blocks: [] }, "en")).toContain("Example · 320 px");
+  });
+  it("draws app chrome with the product name and brand colour", () => {
+    const app = { id: "kanz", name: T("Kanz", "كنز"), color: "#0E7C66", icon: "wallet" };
+    const html = render({ app, appbar: { title: T("Saved cards", "البطاقات المحفوظة"), back: true }, tabbar: { active: 0, items: [{ icon: "house", text: "Home" }, { icon: "user", aria: "Profile" }] },
+      blocks: [{ kind: "listitem", art: "bank-card", text: "Visa •••• 4821", sub: "Expires 08/27", chevron: true }] } as never, "en");
+    expect(html).toContain("Kanz");
+    expect(html).toContain("--mock-brand:#0E7C66");
+    expect(html).toContain("xi-house-fill");
+    expect(html).toContain("<svg");
+    expect(html).not.toContain(">MOCK<");
+  });
+  it("shows a browser bar with the URL on wide frames", () => {
+    const html = render({ frame: "wide", url: "maktaba.example/search", blocks: [{ kind: "searchbar", text: "UX books" }] } as never, "en");
+    expect(html).toContain("maktaba.example/search");
   });
 });

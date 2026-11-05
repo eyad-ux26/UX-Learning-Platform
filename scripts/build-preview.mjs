@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
-import { ROOT, loadContent, loadCast, resolveRefs } from "./lib/content.mjs";
+import { ROOT, loadContent, loadCast, resolveAll } from "./lib/content.mjs";
 import { validate } from "./validate.mjs";
 
 const board = process.argv.includes("--board");
@@ -26,7 +26,7 @@ const bundle = {
       const refErrors = [];
       const units = p.units
         .filter((u) => !only || u.id === only || p.id === only)
-        .map((u) => ({ ...u, lessons: u.lessons.map((l) => resolveRefs(l, p.fixtures, refErrors, l._file)), bank: u.bank.map((l) => resolveRefs(l, p.fixtures, refErrors, l._file)) }));
+        .map((u) => ({ ...u, lessons: u.lessons.map((l) => resolveAll(l, p.fixtures, refErrors, l._file)), bank: u.bank.map((l) => resolveAll(l, p.fixtures, refErrors, l._file)) }));
       return strip({ ...p, units });
     })
     .filter((p) => p.units.length),

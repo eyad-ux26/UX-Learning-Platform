@@ -91,7 +91,7 @@ By type:
 
 ## Mocks
 
-A mock is a phone-sized screen made of blocks, top to bottom:
+A mock is a phone-sized screen made of blocks, top to bottom. To make it look like a real app or site (product name and colour, status bar, app bar, tab bar, browser bar, lists, cards, chat, illustrations), use the vocabulary in [mock-screens.md](mock-screens.md).
 
 ```yaml
 mock:
