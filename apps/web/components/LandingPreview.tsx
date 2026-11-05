@@ -8,14 +8,15 @@ import { play } from "@/lib/sound";
 type Pick = "b" | "c" | null;
 const ANSWER = "c";
 
-/** The landing's lesson preview: a working mini step. Pick B or C, Check, then feedback in the card. Nothing is saved. */
+/** The landing's lesson preview: a working mini step. Pick one of two options, Check, then feedback in the card. Nothing is saved. */
 export function LandingPreview() {
   const t = useTranslations("landing");
   const ar = useLocale() === "ar";
   const [pick, setPick] = useState<Pick>(null);
   const [checked, setChecked] = useState(false);
   const right = checked && pick === ANSWER;
-  const keys = { b: ar ? "ب" : "B", c: ar ? "ج" : "C" } as const;
+  // Design audit P3: the two options shown are lettered A and B (not B and C).
+  const keys = { b: ar ? "أ" : "A", c: ar ? "ب" : "B" } as const;
   const labels = { b: t("optB"), c: t("optC") } as const;
 
   const choose = (k: "b" | "c") => { if (checked) return; setPick(k); play("select-snap"); };

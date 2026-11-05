@@ -139,7 +139,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             <Faq items={[{ q: t("q1"), a: t("a1") }, { q: t("q4"), a: t("a4") }, { q: t("q2"), a: t("a2") }, { q: t("q3"), a: t("a3") }, { q: t("q5"), a: t("a5") }]} />
             <div className="card-mint help-card">
               <span className="help-icon"><span className="ph ph-chat" aria-hidden="true" /></span>
-              <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail">support@uxgate.org</a></div>
+              <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail hit">support@uxgate.org</a></div>
             </div>
           </div>
         </section>

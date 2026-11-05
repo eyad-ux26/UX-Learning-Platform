@@ -7,14 +7,13 @@ import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { useRouter } from "@/i18n/navigation";
-import { FOCUSES, GOALS, TIMES, type OnboardingInput } from "@/lib/onboarding";
+import { FOCUSES, GOALS, type OnboardingInput } from "@/lib/onboarding";
 import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
 
 type Goal = (typeof GOALS)[number];
 type Focus = (typeof FOCUSES)[number];
-type Time = (typeof TIMES)[number];
 
 const GOAL_ICON: Record<Goal, string> = { g1: "target", g2: "star", g3: "sparkle", g4: "map" };
 const FOCUS_IMG: Record<Focus, string | null> = { forms: "path-forms", hier: "path-hierarchy", usab: "path-usability", none: null };
@@ -27,15 +26,15 @@ export function Onboarding() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [goal, setGoal] = useState<Goal | null>(null);
   const [focus, setFocus] = useState<Focus | null>(null);
-  const [time, setTime] = useState<Time | null>("t2"); // the canvas starts on "2 to 4 hours"
   const [dailyGoal, setDailyGoal] = useState<1 | 2 | 3>(1);
   const [reminder, setReminder] = useState<string | null>(DEFAULT_REMINDER);
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
 
+  // Design audit U2: question 3 no longer asks for time each week, so weekly_time is saved empty (the column stays for older answers).
   const submit = (skipped: boolean) => {
     const input: OnboardingInput = {
-      goal, focus, weeklyTime: skipped ? null : time, dailyGoal, reminder: skipped ? null : reminder, skipped,
+      goal, focus, weeklyTime: null, dailyGoal, reminder: skipped ? null : reminder, skipped,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     };
     setFailed(false);
@@ -107,14 +106,6 @@ export function Onboarding() {
 
           {step === 3 ? (
             <>
-              <p className="ob-label">{t("time")}</p>
-              <div className="ob-opts ob-times" role="radiogroup" aria-label={t("time")}>
-                {TIMES.map((x) => (
-                  <button key={x} type="button" role="radio" aria-checked={time === x} className={`choice press sm${time === x ? " is-selected" : ""}`} onClick={() => { setTime(x); play("select-snap"); }}>
-                    <span className="grow ob-opt-t">{t(x)}</span>
-                  </button>
-                ))}
-              </div>
               <p className="ob-label">{t("goal")}</p>
               <div className="ob-opts ob-goals" role="radiogroup" aria-label={t("goal")}>
                 {([1, 2, 3] as const).map((n) => (
