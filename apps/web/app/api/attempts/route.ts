@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getLessonVersion } from "@uxgate/content";
+import { getLessonVersion } from "@/lib/server/content";
 import type { Lesson } from "@uxgate/content/types";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";

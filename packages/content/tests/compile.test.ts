@@ -84,7 +84,10 @@ describe("content compiler", () => {
 
 describe("split content for the app", () => {
   it("the index has every lesson without steps, and each lesson file matches the bundle", async () => {
-    const { content, getLessonVersion, getBank, videoIds } = await import("../src/index");
+    const { content, createLessonLoader, videoIds } = await import("../src/index");
+    const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../dist/lessons");
+    const { getLessonVersion, getBank } = createLessonLoader(async (file) => JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")));
+    expect(fs.readdirSync(dir).length).toBe(bundle.lessons.length + bundle.banks.length);
     expect(content.lessons.map((l) => l.lessonId)).toEqual(bundle.lessons.map((l) => l.lessonId));
     expect(content.lessons.every((l) => !("steps" in l.body))).toBe(true);
     for (const l of [...bundle.lessons, ...bundle.banks]) expect(await getLessonVersion(l.lessonId)).toEqual(l);

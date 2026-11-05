@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getBank, getUnit, getLessonMeta } from "@uxgate/content";
+import { getUnit, getLessonMeta } from "@uxgate/content";
+import { getBank } from "@/lib/server/content";
 import type { QuestionStep } from "@uxgate/content/types";
 import { firstTries, missedSkills, pickRound, unresolvedSkills } from "@/lib/mastery";
 

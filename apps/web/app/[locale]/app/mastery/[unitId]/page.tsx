@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { getBank, getPath, getUnit } from "@uxgate/content";
+import { getPath, getUnit } from "@uxgate/content";
+import { getBank } from "@/lib/server/content";
 import type { Lesson, Locale } from "@uxgate/content/types";
 import { MasteryGate } from "@/components/MasteryGate";
 import { MasteryLocked, MasteryNone } from "@/components/LessonPages";
