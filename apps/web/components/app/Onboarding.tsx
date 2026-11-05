@@ -1,47 +1,58 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { SAMPLE_KEPT } from "@/components/GuestHandoff";
 import { useTranslations } from "next-intl";
 import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { useRouter } from "@/i18n/navigation";
-import { FOCUSES, GOALS, TIMES, type OnboardingInput } from "@/lib/onboarding";
+import { FOCUSES, GOALS, type OnboardingInput } from "@/lib/onboarding";
 import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
+import { CATALOG, pathArtUrl } from "@/lib/catalog-list";
 
 type Goal = (typeof GOALS)[number];
 type Focus = (typeof FOCUSES)[number];
-type Time = (typeof TIMES)[number];
 
 const GOAL_ICON: Record<Goal, string> = { g1: "target", g2: "star", g3: "sparkle", g4: "map" };
 const FOCUS_IMG: Record<Focus, string | null> = { forms: "path-forms", hier: "path-hierarchy", usab: "path-usability", none: null };
 const FOCUS_NAME: Record<Focus, string> = { forms: "Forms That Flow", hier: "Visual Hierarchy in Action", usab: "Find and Fix Usability", none: "" };
 const OPEN_PATHS = new Set<Focus>(["forms"]); // paths whose lessons exist today
 
-export function Onboarding() {
+/** `playable`: ids of the paths that have lessons (the rest show as Coming soon), passed in so no content ships to the browser. */
+export function Onboarding({ playable }: { playable: string[] }) {
   const t = useTranslations("onboarding");
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [goal, setGoal] = useState<Goal | null>(null);
   const [focus, setFocus] = useState<Focus | null>(null);
-  const [time, setTime] = useState<Time | null>("t2"); // the canvas starts on "2 to 4 hours"
   const [dailyGoal, setDailyGoal] = useState<1 | 2 | 3>(1);
   const [reminder, setReminder] = useState<string | null>(DEFAULT_REMINDER);
+  const [showAll, setShowAll] = useState(false);
+  const [pathChoice, setPathChoice] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // Came from the sample lesson (P01) and chose to keep the result: say it is saved, and start on that path.
+  const [fromSample, setFromSample] = useState(false);
+  useEffect(() => {
+    let kept = false;
+    try { kept = sessionStorage.getItem(SAMPLE_KEPT) === "1" || !!localStorage.getItem("ug-guest-handoff"); } catch { /* private mode */ }
+    if (kept) { setFromSample(true); setFocus((f) => f ?? "forms"); setPathChoice((p) => p ?? "P01"); }
+  }, []);
   const [pending, start] = useTransition();
 
+  // Design audit U2: question 3 no longer asks for time each week, so weekly_time is saved empty (the column stays for older answers).
   const submit = (skipped: boolean) => {
     const input: OnboardingInput = {
-      goal, focus, weeklyTime: skipped ? null : time, dailyGoal, reminder: skipped ? null : reminder, skipped,
+      goal, focus, weeklyTime: null, dailyGoal, reminder: skipped ? null : reminder, skipped, pathId: pathChoice,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
     };
     setFailed(false);
     start(async () => {
       const res = await saveOnboarding(input);
-      if (res.ok) router.push("/app"); else setFailed(true);
+      if (res.ok) { try { sessionStorage.removeItem(SAMPLE_KEPT); } catch { /* private mode */ } router.push("/app"); } else setFailed(true);
     });
   };
   const next = () => { play("ui-tap"); if (step === 3) submit(false); else setStep((step + 1) as 2 | 3); };
@@ -92,6 +103,12 @@ export function Onboarding() {
 
           {step === 2 ? (
             <>
+              {fromSample ? (
+                <div className="calm" role="status" style={{ background: "var(--mint)", borderColor: "var(--right-line)" }}>
+                  <span className="ob-kept-ico"><span className="ph ph-cloud-check-fill" aria-hidden="true" /></span>
+                  <div className="grow"><b>{t("sampleKept")}</b><span>{t("sampleKeptBody")}</span></div>
+                </div>
+              ) : null}
               <div className="ob-opts" role="radiogroup" aria-label={title}>
                 {FOCUSES.map((f) => (
                   <button key={f} type="button" role="radio" aria-checked={focus === f} className={`choice press${focus === f ? " is-selected" : ""}`} onClick={() => { setFocus(f); play("select-snap"); }}>
@@ -101,20 +118,29 @@ export function Onboarding() {
                   </button>
                 ))}
               </div>
+              <button type="button" className="btn btn-ghost btn-sm" aria-expanded={showAll} onClick={() => setShowAll(!showAll)} style={{ alignSelf: "flex-start" }}>{t("seeAll", { count: CATALOG.length })}</button>
+              {showAll ? (
+                <div className="ob-opts" role="radiogroup" aria-label={t("allTitle")}>
+                  <p className="t-small ink-2">{t("allBody")}</p>
+                  {CATALOG.map((p) => {
+                    const open = playable.includes(p.id);
+                    const on = pathChoice === p.id;
+                    return (
+                      <button key={p.id} type="button" role="radio" aria-checked={on} aria-disabled={!open} disabled={!open} className={`choice press sm${on ? " is-selected" : ""}`} onClick={() => { setPathChoice(p.id); play("select-snap"); }}>
+                        <span className="ob-ico"><img src={pathArtUrl(p.id)} alt="" /></span>
+                        <span className="grow ob-opt-t"><bdi>{p.name}</bdi>{!open ? <small>{t("soon")}</small> : null}</span>
+                        <span className={`radio${on ? " is-on" : ""}`} aria-hidden="true" style={{ minBlockSize: 0 }}><span className="dot" /></span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
               {sugg ? <div className="sugg only-mobile" role="status"><span className="ph ph-sparkle" aria-hidden="true" /><p className="t-small"><b>{t("weSuggest")}</b> {sugg}</p></div> : null}
             </>
           ) : null}
 
           {step === 3 ? (
             <>
-              <p className="ob-label">{t("time")}</p>
-              <div className="ob-opts ob-times" role="radiogroup" aria-label={t("time")}>
-                {TIMES.map((x) => (
-                  <button key={x} type="button" role="radio" aria-checked={time === x} className={`choice press sm${time === x ? " is-selected" : ""}`} onClick={() => { setTime(x); play("select-snap"); }}>
-                    <span className="grow ob-opt-t">{t(x)}</span>
-                  </button>
-                ))}
-              </div>
               <p className="ob-label">{t("goal")}</p>
               <div className="ob-opts ob-goals" role="radiogroup" aria-label={t("goal")}>
                 {([1, 2, 3] as const).map((n) => (
@@ -145,7 +171,7 @@ export function Onboarding() {
       <footer className="ob-foot" data-side={step === 2 ? "1" : undefined}>
         <div className="ob-foot-btns">
           {step > 1 ? <button type="button" className="btn btn-secondary btn-lg press" onClick={back} disabled={pending}><span className="ph ph-arrow back only-desk" aria-hidden="true" />{t("back")}</button> : null}
-          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus)}>{step === 3 ? t("startLearning") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
+          <button type="button" className="btn btn-primary btn-lg press" onClick={next} disabled={pending || (step === 2 && !focus && !pathChoice)}>{step === 3 ? t("startLearning") : t("cont")}<span className="ph ph-arrow flip only-desk" aria-hidden="true" /></button>
         </div>
       </footer>
     </div>

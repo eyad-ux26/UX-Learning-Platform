@@ -1,8 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
 import { Shell } from "@/components/app/Shell";
 import { HomeMain, HomePanel } from "@/components/app/HomeView";
-import { buildPathView, pickPath } from "@/lib/learning";
+import { buildPathView } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
+import { BellLink } from "@/components/account/BellLink";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +11,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
-  const path = pickPath(me.currentPathId ?? me.recommendedPathId)!;
-  const view = buildPathView(path.id, me.progress, me.practicedSkills)!;
+  const view = buildPathView(me.activePathId, me.progress, me.practicedSkills)!;
   return (
-    <Shell pathId={path.id} pathTitle={path.title.en} units={view.units.map((u) => ({ id: u.unit.id, title: u.unit.title[locale as "en" | "ar"] }))} panel={<HomePanel progress={me.progress} />}>
-      <HomeMain progress={me.progress} view={view} hour={me.hour} />
+    <Shell me={me} panel={<HomePanel progress={me.progress} freezes={me.freezes} weekStart={me.weekStart} />}>
+      <HomeMain me={me} view={view} bell={<BellLink me={me} />} />
     </Shell>
   );
 }

@@ -5,9 +5,9 @@ const { chromium } = createRequire(import.meta.url)("playwright-core");
 
 const base = process.argv[2] ?? "http://localhost:3100";
 const locale = process.argv[3] ?? "en";
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || process.env.CHROME_PATH || undefined });
 const page = await (await browser.newContext({ viewport: { width: Number(process.env.W ?? 1440), height: Number(process.env.H ?? 900) } })).newPage();
-await page.goto(`${base}/${locale}/app/lesson/P01-U01-L01`);
+await page.goto(`${base}/${locale}/app/lesson/${process.env.LESSON ?? "P01-U01-L01"}`); // LESSON=P10-U02-L03 plays steps with the split Check
 await page.waitForSelector(".ug");
 await page.waitForTimeout(500);
 
@@ -18,15 +18,17 @@ let steps = 0, checks = 0;
 for (let guard = 0; guard < 60; guard++) {
   if (await page.locator(".lesson-end, .end").count()) break;
   await page.evaluate(() => document.body.focus());
-  const primary = await page.locator(".btn-primary").last();
-  const label = ((await primary.textContent()) || "").trim();
-  const isCheck = /^(Check|تحقّق|تحقق)/.test(label);
+  const primary = page.locator(".btn-primary");
+  const label = (await primary.count()) ? ((await primary.last().textContent()) || "").trim() : "";
+  const split = (await page.locator(".player-foot .split-check").count()) > 0;
+  const isCheck = split || /^(Check|تحقّق|تحقق)/.test(label);
   if (isCheck) {
     // pick the first open answer (dimmed or locked ones are skipped) with the keyboard, then press Check with the keyboard
     const first = await tabUntil((a) => !a.locked && (a.cls.includes("choice") || a.role === "radio" || a.role === "checkbox" || a.cls.includes("opt")));
     if (first) { await page.keyboard.press("Space"); }
     await page.evaluate(() => (document.activeElement)?.blur?.());
-    const c = await tabUntil((a) => /^(Check|تحقّق|تحقق)/.test(a.text));
+    // a step that asks how sure the learner is: Check is one split button, and each part (Guessing, Fairly sure, Sure) checks
+    const c = split ? await tabUntil((a) => a.cls.includes("split-seg")) : await tabUntil((a) => /^(Check|تحقّق|تحقق)/.test(a.text));
     if (!c) { console.log("FAIL: could not reach Check with Tab"); process.exit(1); }
     await page.keyboard.press("Enter");
     checks++;

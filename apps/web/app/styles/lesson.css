@@ -1,0 +1,266 @@
+/* Slice 2 lesson parts. Ported from the canvas block that starts at .ug.lp in docs/design/system/uxgate.css; the fixed-size board rules (.lp-mobile/.lp-desktop) are dropped, desktop is a media query. */
+/* Tiles: items you place in sort, pair in match, move in order */
+.ug .lp-item { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px 0 6px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; font-size: 14px; box-shadow: 0 3px 0 var(--ledge); margin-bottom: 3px; cursor: pointer; text-align: start; }
+.ug .lp-item > .ph-grip { font-size: 16px; color: var(--ink-3); }
+.ug .lp-item.is-selected { background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 3px 0 var(--sel-line); }
+.ug .lp-item.is-right { background: var(--right-bg); border-color: var(--right-line); box-shadow: 0 3px 0 var(--right-line); }
+.ug .lp-item.is-wrong { background: var(--wrong-bg); border-color: var(--wrong-line); box-shadow: 0 3px 0 var(--wrong-line); }
+.ug .lp-item .v { font-size: 18px; }
+.ug .lp-item.is-right .v { color: var(--right-ink); }
+.ug .lp-item.is-wrong .v { color: var(--wrong-ink); }
+.ug .lp-tray { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 16px; border: 2px dashed var(--line); background: var(--surface-2); min-height: 48px; align-items: flex-start; }
+.ug .lp-tray-empty { margin: 0; font-size: 13px; color: var(--ink-3); align-self: center; }
+.ug .lp-buckets { display: grid; gap: 8px; }
+.ug .lp-bucket { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px 10px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); }
+.ug .lp-bucket.is-target { border-style: dashed; border-color: var(--sel-line); background: var(--sel-bg); }
+.ug .lp-bucket .hd { display: flex; align-items: center; gap: 6px; min-height: 30px; font-weight: 800; font-size: 13px; color: var(--ink-2); }
+.ug .lp-bucket .its:empty { display: none; }
+.ug .lp-bucket .hd .ph { font-size: 15px; }
+.ug .lp-bucket .its { display: flex; flex-wrap: wrap; gap: 6px; }
+.ug .lp-drop { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 2px dashed var(--sel-line); background: var(--surface); color: var(--link); font: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
+.ug .lp-drop .ph { font-size: 16px; }
+
+/* Order: numbered rows with move up and move down */
+.ug .lp-order { display: flex; flex-direction: column; gap: 8px; }
+.ug .lp-row { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 4px 4px 4px 10px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); box-shadow: 0 3px 0 var(--ledge); margin-bottom: 3px; }
+.ug[dir="rtl"] .lp-row, .ug [dir="rtl"] .lp-row { padding: 4px 10px 4px 4px; }
+.ug .lp-row .n { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: var(--track); color: var(--ink-2); font-weight: 800; font-size: 13px; }
+.ug .lp-row .grow { flex: 1; min-width: 0; font-weight: 600; font-size: 15px; line-height: 1.3; }
+.ug .lp-row.is-moved { background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 3px 0 var(--sel-line); }
+.ug .lp-row.is-moved .n { background: var(--brand); color: var(--on-brand); }
+.ug .lp-row.is-right { background: var(--right-bg); border-color: var(--right-line); box-shadow: 0 3px 0 var(--right-line); }
+.ug .lp-row.is-wrong { background: var(--wrong-bg); border-color: var(--wrong-line); box-shadow: 0 3px 0 var(--wrong-line); }
+.ug .lp-row.is-wrong .n { background: var(--wrong-line); color: #2A0710; }
+.ug .lp-row.is-right .n { background: var(--right-line); color: #01241A; }
+.ug .lp-mv { flex: none; display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); border: 2px solid var(--line); background: var(--surface-2); color: var(--ink-2); cursor: pointer; padding: 0; }
+.ug .lp-mv .ph { font-size: 18px; }
+.ug .lp-mv[disabled] { background: var(--disabled-bg); border-color: var(--disabled-ledge); color: var(--disabled-ink); cursor: not-allowed; }
+
+/* Match: two lists, tap one on each side to pair them; the pair number shows on both */
+.ug .lp-match { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 8px 10px; }
+.ug .lp-match .side { display: flex; flex-direction: column; gap: 8px; }
+.ug .lp-match .hd { font-size: 12px; font-weight: 800; color: var(--ink-3); }
+.ug .lp-tile { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 52px; padding: 6px 10px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; font-size: 14px; line-height: 1.25; text-align: start; box-shadow: 0 3px 0 var(--ledge); margin-bottom: 3px; cursor: pointer; }
+.ug .lp-tile .grow { flex: 1; min-width: 0; }
+.ug .lp-tile.is-selected { background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 3px 0 var(--sel-line); }
+.ug .lp-tile.is-paired { border-color: var(--sel-line); }
+.ug .lp-tile.is-right { background: var(--right-bg); border-color: var(--right-line); box-shadow: 0 3px 0 var(--right-line); }
+.ug .lp-tile.is-wrong { background: var(--wrong-bg); border-color: var(--wrong-line); box-shadow: 0 3px 0 var(--wrong-line); }
+.ug .lp-pno { flex: none; display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--brand); color: var(--on-brand); font-weight: 800; font-size: 12px; }
+.ug .lp-pno.is-empty { background: transparent; box-shadow: inset 0 0 0 2px var(--line); color: transparent; }
+.ug .lp-tile.is-right .lp-pno { background: var(--right-line); color: #01241A; }
+.ug .lp-tile.is-wrong .lp-pno { background: var(--wrong-line); color: #2A0710; }
+
+/* Spot: tap the faulty area on the example. The frame is the UXGate layer on top of the example. */
+.ug .lp-region { position: relative; display: block; width: 100%; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer; border-radius: 8px; outline: 1.5px dashed rgba(22, 119, 192, 0.5); outline-offset: 4px; }
+.ug .lp-region.is-selected { outline: 0; background: rgba(120, 228, 252, 0.22); }
+.ug .lp-region.is-right { outline: 3px solid #3DAA80; outline-offset: 4px; }
+.ug .lp-region.is-wrong { outline: 3px solid #E8707F; outline-offset: 4px; }
+.ug .lp-region.is-dim { outline-color: transparent; }
+.ug .lp-spot-tag { position: absolute; top: -14px; inset-inline-end: -8px; z-index: 2; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; font-family: var(--font); font-size: 12px; font-weight: 800; white-space: nowrap; }
+.ug .lp-spot-tag.is-right { background: #3DAA80; color: #01241A; }
+.ug .lp-spot-tag.is-wrong { background: #B4233A; color: #FFFFFF; }
+.ug .lp-switch { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--link); font: inherit; font-weight: 700; font-size: 14px; cursor: pointer; align-self: flex-start; }
+.ug .lp-switch .ph { font-size: 18px; }
+
+/* Video step: the clip is the UXGate layer (night stage); the example inside keeps its own style */
+.ug .lp-video { position: relative; border-radius: 20px; overflow: hidden; background: #00121B; aspect-ratio: 1 / 1; color: #EAF7FC; box-shadow: 0 4px 0 #021C26; }
+.ug .lp-video .stage { position: absolute; inset: 0; background: radial-gradient(circle at 1px 1px, rgba(156,195,211,0.12) 1.1px, transparent 1.6px) 0 0 / 16px 16px, radial-gradient(110% 60% at 85% 0%, rgba(30,127,166,0.35) 0%, rgba(3,46,59,0) 60%); }
+.ug .lp-video .cap { position: absolute; inset-inline: 14px; bottom: 58px; display: flex; justify-content: center; }
+.ug .lp-video .cap span { padding: 6px 12px; border-radius: 10px; background: rgba(0, 18, 27, 0.86); color: #FFFFFF; font-weight: 700; font-size: 15px; line-height: 1.45; text-align: center; max-width: 100%; }
+.ug .lp-video .ctl { position: absolute; inset-inline: 0; bottom: 0; display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: linear-gradient(0deg, rgba(0,18,27,0.92), rgba(0,18,27,0)); }
+.ug .lp-vbtn { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); border: 0; background: transparent; color: #FFFFFF; cursor: pointer; padding: 0; font: inherit; }
+.ug .lp-vbtn .ph { font-size: 22px; }
+.ug .lp-vbtn.is-on { background: rgba(120, 228, 252, 0.18); color: #78E4FC; }
+.ug .lp-vbar { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.22); position: relative; }
+.ug .lp-vbar i { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: #78E4FC; }
+.ug .lp-vbar b { position: absolute; top: 50%; width: 14px; height: 14px; margin-top: -7px; margin-inline-start: -7px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 0 3px rgba(120,228,252,0.5); }
+.ug .lp-vtime { font-size: 12px; font-weight: 700; color: #C5D9E2; min-width: 74px; text-align: center; }
+.ug .lp-vplay { position: absolute; inset: 0; width: 76px; height: 76px; margin: auto; border-radius: 50%; border: 0; background: #78E4FC; color: #012E4B; display: grid; place-items: center; box-shadow: 0 5px 0 #2BB5DE; cursor: pointer; }
+.ug .lp-vplay .ph { font-size: 34px; }
+.ug .lp-vplay .ph-play-fill { margin-inline-start: 4px; }
+.ug .lp-transcript { display: flex; flex-direction: column; gap: 2px; padding: 8px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); overflow: hidden; }
+.ug .lp-line { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 8px; padding: 7px 8px; border-radius: 10px; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.ug .lp-line .tm { font-weight: 700; font-size: 12px; color: var(--ink-3); padding-top: 2px; }
+.ug .lp-line.is-now { background: var(--sel-bg); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--sel-line); font-weight: 600; }
+.ug .lp-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: var(--track); }
+.ug .lp-seg button { min-height: 44px; padding: 0 12px; border-radius: 9px; border: 0; background: transparent; color: var(--ink-2); font: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
+.ug .lp-seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 2px 0 var(--ledge); }
+
+/* Concept card: one idea, under about 60 words */
+.ug .lp-concept { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 24px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 4px 0 var(--ledge); }
+.ug .lp-concept p { margin: 0; }
+.ug .lp-qs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.ug .lp-qs > div { display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 14px; background: var(--panel); color: var(--panel-ink); font-size: 13px; line-height: 1.35; }
+.ug .lp-qs b { font-size: 14px; }
+
+/* Result pages: skill check, mastery round, guest end */
+.ug .lp-page { flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 12px 20px 0; text-align: center; }
+.ug .lp-ill { width: 100px; height: 100px; object-fit: contain; }
+.ug .lp-list { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 560px; text-align: start; }
+.ug .lp-skillrow { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 6px 12px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); }
+.ug .lp-skillrow .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ug .lp-skillrow .grow b { font-size: 15px; line-height: 1.3; }
+.ug .lp-skillrow .grow span { font-size: 13px; color: var(--ink-2); }
+.ug .lp-skillrow.is-retry { border-color: var(--warn-line); border-style: dashed; }
+.ug .skill-retry { background: var(--warn-bg); color: var(--warn-ink); box-shadow: inset 0 0 0 1.5px var(--warn-line); }
+.ug .skill-later { background: var(--disabled-bg); color: var(--ink-2); }
+.ug .lp-foot { width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; padding: 10px 0 18px; margin-top: auto; }
+.ug .lp-dots { display: flex; gap: 6px; justify-content: center; }
+.ug .lp-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--track); box-shadow: inset 0 0 0 2px var(--line); }
+.ug .lp-dots i.is-done { background: var(--ink-3); box-shadow: none; }
+.ug .lp-dots i.is-now { background: var(--brand); box-shadow: 0 0 0 3px var(--sel-bg); }
+
+/* Sheets over a step: exit, ask for review, sign up */
+.ug .lp-reasons { display: flex; flex-direction: column; gap: 6px; }
+.ug .lp-reasons .radio { min-height: 48px; padding: 0 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); }
+.ug .lp-reasons .radio.is-on { background: var(--sel-bg); border-color: var(--sel-line); }
+.ug .lp-text { width: 100%; min-height: 76px; box-sizing: border-box; padding: 10px 12px; border-radius: 14px; border: 2px solid var(--line-field); background: var(--surface); color: var(--ink); font: inherit; font-size: 15px; line-height: 1.45; resize: none; }
+.ug .lp-toast { position: absolute; inset-inline: 16px; bottom: 150px; z-index: 6; }
+
+/* ---- Reminder time (onboarding Q3, Settings) ----
+   Pre-filled: reminders start ON at 8:00 PM, so the learner only changes it if they want.
+   Phone: the time button opens the phone's own time picker (input type="time").
+   Desktop: the time button opens the .tp popover (presets + hour / minute / AM-PM columns).
+   The popover opens upward when there is no room below. */
+.ug .rem { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ug .rem .switch { font-weight: 600; }
+.ug .time-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 12px 0 14px; border-radius: var(--r-md); border: 2px solid var(--line-field); background: var(--surface); color: var(--ink); font: inherit; font-size: 18px; font-weight: 700; cursor: pointer; }
+.ug .time-btn .ph { font-size: 20px; color: var(--link); }
+.ug .time-btn .caret { font-size: 16px; color: var(--ink-2); margin-inline-start: 4px; transform: rotate(90deg); }
+.ug .time-btn .time-val { font-variant-numeric: tabular-nums; }
+.ug .time-btn:hover, .ug .time-btn.is-hover { border-color: var(--ink-2); }
+.ug .time-btn.is-open, .ug .time-btn:focus-visible { border-color: var(--brand); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 28%, transparent); outline: none; }
+.ug .time-btn.is-open .caret { transform: rotate(-90deg); }
+.ug .time-btn:disabled, .ug .time-btn.is-disabled { background: var(--disabled-bg); border-color: var(--disabled-ledge); color: var(--disabled-ink); cursor: default; }
+.ug .time-btn:disabled .ph, .ug .time-btn.is-disabled .ph { color: var(--disabled-ink); }
+.ug .rem-wrap { position: relative; }
+.ug .tp { position: absolute; z-index: 6; inset-inline-start: 0; bottom: calc(100% + 10px); width: 400px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: var(--r-xl); background: var(--surface); border: 2px solid var(--line); box-shadow: 0 24px 48px -16px rgba(1, 46, 75, 0.35); }
+.ug[data-theme="dark"] .tp { box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.75); }
+.ug .tp-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ug .tp-title { margin: 0; font-size: 16px; font-weight: 700; }
+.ug .tp-now { font-size: 22px; font-weight: 700; color: var(--link); font-variant-numeric: tabular-nums; }
+.ug .tp-presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.ug .tp-preset { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; min-height: 56px; padding: 4px 2px; border-radius: var(--r-md); border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+.ug .tp-preset b { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ug .tp-preset small { font-size: 12px; color: var(--ink-2); font-weight: 500; line-height: 1.2; }
+.ug .tp-preset:hover, .ug .tp-preset.is-hover { background: var(--surface-2); border-color: var(--sel-line); }
+.ug .tp-preset.is-on { background: var(--sel-bg); border-color: var(--sel-line); }
+.ug .tp-cols { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 8px; }
+.ug .tp-col { display: flex; flex-direction: column; gap: 2px; padding: 6px; border-radius: var(--r-md); background: var(--surface-2); border: 2px solid var(--line); }
+.ug .tp-col-name { text-align: center; font-size: 12px; font-weight: 700; color: var(--ink-2); padding: 2px 0 4px; }
+.ug .tp-cell { display: grid; place-items: center; min-height: 32px; border: 0; border-radius: var(--r-md); background: transparent; color: var(--ink-2); font: inherit; font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; cursor: pointer; }
+.ug .tp-cell:hover, .ug .tp-cell.is-hover { background: var(--sel-bg); color: var(--ink); }
+.ug .tp-cell.is-on { background: var(--brand); color: var(--on-brand); font-weight: 800; box-shadow: 0 3px 0 var(--brand-ledge); }
+.ug .tp-cell.is-far { opacity: 0.55; }
+.ug .tp-foot { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ---- Reduced motion (prefers-reduced-motion: reduce) ----
+   Press: the surface still sinks onto its ledge, at once, with no bounce.
+   Select: the selection frame and fill appear at once, no snap or boing.
+   Rewards, XP, trophies, sheets: a short 140 ms fade, no scale or slide.
+   Confetti and loops (flame, bell, shimmer): one still frame.
+   Loading spinners keep turning, slower, because they carry meaning.
+   Sound is not changed by this setting. */
+@media (prefers-reduced-motion: reduce) {
+  .ug *, .ug *::before, .ug *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+  .ug .press { transition: none !important; }
+  .ug .choice.is-selected, .ug .choice.is-selected::before, .ug .choice.is-selected::after { animation: none !important; }
+  .ug .pop, .ug .sheet-in, .ug .reward-in { animation: ug-fade 140ms linear both !important; animation-duration: 140ms !important; }
+  .ug .confetti, .ug .conf, .ug .loop, .ug .skel { animation: none !important; }
+  .ug .spin { animation: ug-spin 1.6s linear infinite !important; animation-duration: 1.6s !important; animation-iteration-count: infinite !important; }
+  .ug .lp-save.is-saving .ph { animation: none !important; }
+  .ug .lp-over, .ug .lp-toast { animation: ug-fade 140ms linear both !important; animation-duration: 140ms !important; }
+}
+
+
+/* Layers over the lesson: a sheet on phones, a dialog on desktop */
+.ug .lp-scrim { position: fixed; inset: 0; z-index: 40; background: var(--scrim); }
+.ug .lp-over { position: fixed; inset-inline: 0; bottom: 0; z-index: 41; display: flex; flex-direction: column; gap: 12px; padding: 14px 20px calc(22px + env(safe-area-inset-bottom)); background: var(--surface); border-radius: 24px 24px 0 0; box-shadow: 0 -4px 0 var(--ledge); max-height: 90dvh; overflow: auto; }
+.ug .lp-over h2 { margin: 0; font-size: 22px; line-height: 1.3; font-weight: 800; }
+.ug .lp-over p { margin: 0; }
+.ug .lp-over .actions { display: flex; flex-direction: column; gap: 8px; }
+.ug .lp-over textarea { width: 100%; min-height: 96px; padding: 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; resize: vertical; box-sizing: border-box; }
+.ug .lp-over .count { font-size: 12px; color: var(--ink-3); text-align: end; }
+.ug .lp-buckets { grid-template-columns: 1fr; }
+.ug .lp-toast { position: fixed; inset-inline: 16px; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 45; padding: 12px 16px; border-radius: 14px; background: var(--panel); color: var(--panel-ink); font-weight: 700; text-align: center; }
+.ug .lp-save.is-offline { color: var(--warn-ink); }
+.ug .lp-grid-two { display: grid; gap: 12px; }
+.ug .lp-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-rect: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.ug .lp-radio { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 12px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; width: 100%; text-align: start; }
+.ug .lp-radio[aria-checked="true"] { background: var(--sel-bg); border-color: var(--sel-line); }
+@media (min-width: 1024px) {
+  .ug .lp-over { inset-inline: 0; margin-inline: auto; bottom: auto; top: 18vh; width: 520px; border-radius: 24px; padding: 24px 28px 26px; box-shadow: var(--shadow-soft); }
+  .ug .lp-over .actions { flex-direction: row-reverse; }
+  .ug .lp-buckets { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .ug .lp-bucket { min-height: 180px; padding: 12px; }
+  .ug .lp-video { aspect-ratio: 16 / 9; max-height: 500px; }
+  .ug .lp-video .cap span { font-size: 20px; }
+  .ug .lp-qs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ug .lp-page { padding: 40px 64px 0; gap: 16px; }
+  .ug .lp-ill { width: 200px; height: 200px; }
+  .ug .lp-toast { inset-inline: 0; margin-inline: auto; inline-size: max-content; max-inline-size: calc(100% - 32px); bottom: 32px; }
+}
+.ug .skill-shown { background: var(--panel); color: var(--panel-ink); }
+.ug .lp-pageroot { min-height: 100dvh; display: flex; flex-direction: column; }
+.ug .lp-pageroot .lp-foot { padding-inline: 20px; max-inline-size: 560px; margin-inline: auto; }
+.ug .lp-videowrap { display: flex; flex-direction: column; gap: 10px; }
+.ug .lp-videoel { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: contain; background: transparent; }
+.ug .lp-video .stage { z-index: 0; }
+.ug .lp-video .lp-videoel { z-index: 1; }
+.ug .lp-video .cap, .ug .lp-video .ctl, .ug .lp-vplay, .ug .lp-vmsg { z-index: 2; }
+.ug .lp-vmsg { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; text-align: center; background: rgba(0, 18, 27, 0.78); }
+.ug .lp-vmsg p { margin: 0; font-weight: 700; }
+.ug .lp-vrange { flex: 1; min-inline-size: 0; accent-color: #78E4FC; block-size: 44px; }
+.ug .lp-line { cursor: pointer; }
+.ug .lp-transcript { max-block-size: 320px; overflow: auto; }
+@media (min-width: 1024px) {
+  .ug .lp-videostep { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+  .ug .lp-videostep > h1 { grid-column: 1 / -1; }
+  .ug .lp-transcript { max-block-size: 480px; }
+}
+/* Banner above the lesson (sample lesson, welcome back, sync) */
+.ug .lp-banner { display: flex; align-items: center; gap: 10px; margin: 10px 16px 0; padding: 10px 12px; border-radius: 14px; font-size: 14px; line-height: 1.35; font-weight: 600; background: var(--warn-bg); color: var(--ink); box-shadow: inset 0 0 0 2px var(--warn-line); }
+.ug .lp-banner .ph { font-size: 20px; flex: none; }
+.ug .lp-banner .act { margin-inline-start: auto; flex: none; min-height: 44px; padding: 0 6px; border: 0; background: none; color: var(--link); font: inherit; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; }
+.ug .lp-mode { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 8px; background: var(--panel); color: var(--panel-ink); font-weight: 700; font-size: 13px; white-space: nowrap; }
+.ug .lp-save { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 8px; border-radius: 8px; font-weight: 700; font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.ug .lp-save .ph { font-size: 16px; }
+.ug .lp-sure { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 10px; background: var(--surface); color: var(--ink); font-size: 13px; font-weight: 700; align-self: flex-start; }
+.ug .lp-flag { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; border: 0; background: none; color: var(--ink-2); font: inherit; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; align-self: flex-start; }
+.ug .lp-flag .ph { font-size: 16px; }
+
+/* Concept card points: up to four icon + line rows. */
+.card-points { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-3, 12px); }
+.card-points li { display: flex; align-items: center; gap: var(--s-3, 12px); }
+.card-points .ph { flex: none; font-size: 24px; }
+
+/* Video playback speed menu. */
+.ug .lp-speed { position: relative; }
+.ug .lp-vspeed { width: auto; min-width: 44px; padding-inline: 8px; font-size: 14px; font-weight: 700; }
+.ug .lp-speedmenu { position: absolute; inset-inline-end: 0; bottom: 100%; display: grid; background: #00121B; border: 1px solid rgba(255,255,255,0.2); border-radius: var(--r-md); padding: 4px; z-index: 3; }
+.ug .lp-speedmenu button { min-height: 44px; min-width: 64px; padding-inline: 12px; border: 0; border-radius: var(--r-sm, 8px); background: transparent; color: #FFFFFF; font: inherit; font-size: 14px; cursor: pointer; text-align: center; }
+.ug .lp-speedmenu button[aria-pressed="true"] { background: rgba(120, 228, 252, 0.18); color: #78E4FC; }
+
+/* QA #87: selection frame with corner handles, bucket header row, spot keys, heading focus. */
+.ug .lp-item.is-selected, .ug .lp-tile.is-selected, .ug .lp-region.is-selected { position: relative; }
+.ug .lp-item.is-selected::after, .ug .lp-tile.is-selected::after, .ug .lp-region.is-selected::after {
+  content: ""; position: absolute; inset: -5px; pointer-events: none; border: 1.5px solid var(--sel-line); border-radius: 6px;
+  background:
+    linear-gradient(var(--sel-line), var(--sel-line)) left -1px top -1px / 8px 8px no-repeat,
+    linear-gradient(var(--sel-line), var(--sel-line)) right -1px top -1px / 8px 8px no-repeat,
+    linear-gradient(var(--sel-line), var(--sel-line)) left -1px bottom -1px / 8px 8px no-repeat,
+    linear-gradient(var(--sel-line), var(--sel-line)) right -1px bottom -1px / 8px 8px no-repeat;
+}
+.ug .lp-item { padding-inline: 12px; }
+.ug .lp-tray.is-done { display: none; }
+.ug .lp-bucket .hdrow { display: flex; align-items: center; gap: 8px; min-height: 36px; }
+.ug .lp-bucket .hdrow .hd { flex: 1; min-width: 0; margin: 0; }
+.ug .lp-bucket .count { font-size: 12px; font-weight: 800; color: var(--ink-3); min-width: 20px; text-align: center; }
+.ug .lp-bucket .hdrow .lp-drop { min-height: 44px; padding-inline: 10px; border-radius: 999px; font-size: 13px; }
+.ug .lp-key { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: var(--surface-2); color: var(--ink-2); font-size: 12px; font-weight: 800; flex: none; }
+.ug .lp-page h1:focus:not(:focus-visible) { outline: none; }
+.ug .lp-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0; }
+.ug .lp-roundhd { margin: 4px 0 0; font-weight: 800; }
+.ug .lp-skillrow .grow > span { display: block; font-size: 13px; color: var(--ink-2); }
+

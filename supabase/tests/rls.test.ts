@@ -15,8 +15,8 @@ create role anon nologin; create role authenticated nologin; create role service
 create schema auth;
 create table auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb not null default '{}');
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-grant usage on schema auth to anon, authenticated;
-grant execute on function auth.uid() to anon, authenticated;
+grant usage on schema auth to anon, authenticated, service_role;
+grant execute on function auth.uid() to anon, authenticated, service_role;
 `;
 
 let db: PGlite;
@@ -129,6 +129,38 @@ describe("answers and XP can only be written by the server", () => {
   });
 });
 
+describe("review requests", () => {
+  const insert = `insert into review_requests (user_id, lesson_id, step_id, answer, reason, note) values ($1, 'P01-U01-L01', 'S02', '{"sel":["x"]}', 'answer_works', 'because') returning id`;
+  it("only the server writes them; a learner cannot insert, edit or delete", async () => {
+    await expect(as("authenticated", A, insert, [A])).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", A, `update review_requests set status = 'accepted'`)).rejects.toThrow(/permission denied/);
+    await expect(as("authenticated", A, `delete from review_requests`)).rejects.toThrow(/permission denied/);
+  });
+  it("a learner reads only their own, and anon reads none", async () => {
+    await db.query(insert, [A]); await db.query(insert, [B]);
+    const rows = await as<{ user_id: string }>("authenticated", A, `select user_id from review_requests`);
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((r) => r.user_id === A)).toBe(true);
+    await expect(as("anon", null, `select * from review_requests`)).rejects.toThrow(/permission denied/);
+  });
+  it("the reason must be one of four and the note at most 280 characters", async () => {
+    await expect(db.query(`insert into review_requests (user_id, lesson_id, step_id, answer, reason) values ($1, 'P01-U01-L01', 'S02', '{}', 'whatever')`, [A])).rejects.toThrow();
+    await expect(db.query(`insert into review_requests (user_id, lesson_id, step_id, answer, reason, note) values ($1, 'P01-U01-L01', 'S02', '{}', 'other', $2)`, [A, "x".repeat(281)])).rejects.toThrow();
+  });
+});
+
+describe("mastery rounds", () => {
+  it("a bank can be stored as a lesson and a mastery attempt can carry its plan; a missed step can be scored", async () => {
+    await db.transaction(async (tx) => {
+      await tx.exec(`insert into lessons (id, unit_id, mode, sort) values ('P01-U01-B01', 'P01-U01', 'bank', 100); insert into content_versions (lesson_id, hash, body) values ('P01-U01-B01', 'hb', '{}');`);
+      const v = (await tx.query<{ id: string }>(`select id from content_versions where lesson_id = 'P01-U01-B01'`)).rows[0].id;
+      const att = (await tx.query<{ id: string }>(`insert into attempts (client_attempt_id, user_id, lesson_id, content_version_id, kind, plan) values ('m1', $1, 'P01-U01-B01', $2, 'mastery', '["S01","S02"]') returning id`, [A, v])).rows[0].id;
+      expect((await tx.query(`insert into xp_events (user_id, attempt_id, step_id, outcome, amount) values ($1, $2, 'S01', 'missed', 0) returning id`, [A, att])).rows).toHaveLength(1);
+      await tx.rollback();
+    });
+  });
+});
+
 describe("content", () => {
   it("visitors read published content only", async () => {
     expect((await as<{ id: string }>("anon", null, `select id from paths`)).map((r) => r.id)).toEqual(["P01"]);
@@ -205,5 +237,29 @@ describe("email language (migration 0005)", () => {
   it("is not callable by learners or visitors", async () => {
     await expect(as("authenticated", A, `select public.set_locale_by_email('a@example.com', 'en')`)).rejects.toThrow(/permission denied/);
     await expect(as("anon", null, `select public.set_locale_by_email('a@example.com', 'en')`)).rejects.toThrow(/permission denied/);
+  });
+});
+
+describe("my_lesson_progress (per-lesson summary)", () => {
+  it("returns only the caller's lessons, with finished and XP summed over every play", async () => {
+    // A plays the lesson a second time, finishes it and earns 5 more XP; B is untouched.
+    const att = (await db.query<{ id: string }>(`insert into attempts (client_attempt_id, user_id, lesson_id, content_version_id, finished_at) values ('a2', $1, 'P01-U01-L01', $2, now()) returning id`, [A, versionId])).rows[0].id;
+    await db.query(`insert into xp_events (user_id, attempt_id, step_id, outcome, amount) values ($1, $2, 'S03', 'supported', 5)`, [A, att]);
+    try {
+      expect(await as("authenticated", A, `select * from my_lesson_progress()`)).toEqual([{ lesson_id: "P01-U01-L01", finished: true, xp: 15 }]);
+      expect(await as("authenticated", B, `select * from my_lesson_progress()`)).toEqual([{ lesson_id: "P01-U01-L01", finished: false, xp: 10 }]);
+      expect(await as("authenticated", null, `select * from my_lesson_progress()`)).toEqual([]);
+    } finally {
+      await db.query(`delete from attempts where id = $1`, [att]);
+    }
+  });
+  it("a learner naming another learner still gets only their own; the service role can read a named learner", async () => {
+    const mine = await as<{ xp: number }>("authenticated", A, `select * from my_lesson_progress($1)`, [B]);
+    expect(mine.every((r) => r.xp === 10)).toBe(true); // A's own row (one play, 10 XP), not B's
+    expect(await as("authenticated", null, `select * from my_lesson_progress($1)`, [B])).toEqual([]);
+    expect(await as("service_role", null, `select * from my_lesson_progress($1)`, [B])).toEqual([{ lesson_id: "P01-U01-L01", finished: false, xp: 10 }]);
+  });
+  it("a signed-out visitor cannot call it", async () => {
+    await expect(as("anon", null, `select * from my_lesson_progress()`)).rejects.toThrow(/permission denied/);
   });
 });

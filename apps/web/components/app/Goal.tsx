@@ -1,5 +1,6 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { weekOf } from "@/lib/progress";
+import { weekStartFor } from "@/lib/freeze";
 
 export async function GoalRing({ done, goal, size = 52 }: { done: number; goal: number; size?: number }) {
   const t = await getTranslations("home");
@@ -17,20 +18,33 @@ export async function GoalRing({ done, goal, size = 52 }: { done: number; goal: 
   );
 }
 
-export async function Week({ today, activeDays, small = false }: { today: string; activeDays: string[]; small?: boolean }) {
+/**
+ * The week strip: seven days from the learner's week start (Monday in English, Saturday in Arabic), short day names,
+ * "Today" on the current day, and a spoken name per day that includes its state ("Tuesday, freeze used").
+ */
+/** `goalDays`: days the daily goal was met. A day with a lesson but short of the goal is "practised" (#140). */
+export async function Week({ today, activeDays, goalDays, frozenDays = [], start, small = false }: { today: string; activeDays: string[]; goalDays?: string[]; frozenDays?: string[]; start?: number; small?: boolean }) {
   const locale = await getLocale();
+  const t = await getTranslations("week");
   const active = new Set(activeDays);
-  const fmt = new Intl.DateTimeFormat(locale, { weekday: "narrow", timeZone: "UTC" });
+  const goal = new Set(goalDays ?? activeDays);
+  const frozen = new Set(frozenDays);
+  const long = new Intl.DateTimeFormat(locale, { weekday: "long", timeZone: "UTC" });
   return (
-    <div className="week" aria-hidden="true">
-      {weekOf(today, locale === "ar" ? 6 : 1).map((d) => {
-        const state = d === today ? "today" : active.has(d) ? "done" : "next";
+    <div className="week" role="list" aria-label={t("label")}>
+      {weekOf(today, start ?? weekStartFor(locale)).map((d) => {
+        const date = new Date(`${d}T00:00:00Z`);
+        const isToday = d === today;
+        const state = isToday ? "today" : frozen.has(d) ? "frozen" : goal.has(d) ? "done" : active.has(d) ? "part" : "next";
+        const day = long.format(date);
+        const spoken = isToday ? t("spokenToday", { day }) : state === "frozen" ? t("spokenFrozen", { day }) : state === "done" ? t("spokenDone", { day }) : state === "part" ? t("spokenPart", { day }) : d > today ? t("spokenLater", { day }) : t("spokenNone", { day });
+        const icon = state === "today" ? "flame-fill" : state === "frozen" ? "freeze-fill" : "check";
         return (
-          <div key={d}>
-            <span className={`dot ${state}`} style={small ? { inlineSize: 28, blockSize: 28 } : undefined}>
-              <span className={`ph ph-${state === "today" ? "flame-fill" : "check"}`} style={{ fontSize: small ? 14 : 15 }} />
+          <div key={d} role="listitem" aria-label={spoken}>
+            <span className={`dot ${state}`} aria-hidden="true" style={small ? { inlineSize: 28, blockSize: 28 } : undefined}>
+              <span className={`ph ph-${icon}`} style={{ fontSize: small ? 14 : 15 }} />
             </span>
-            <span className="dlabel" style={{ color: state === "next" ? "var(--ink-3)" : state === "today" ? "var(--ink)" : undefined }}>{fmt.format(new Date(`${d}T00:00:00Z`))}</span>
+            <span className="dlabel" aria-hidden="true" style={{ color: state === "next" ? "var(--ink-2)" : state === "today" ? "var(--ink)" : undefined }}>{isToday ? t("today") : t(`short.${date.getUTCDay()}` as never)}</span>
           </div>
         );
       })}

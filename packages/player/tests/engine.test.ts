@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bundle, getLessonVersion } from "@uxgate/content";
+import { bundle, getLessonVersion } from "@uxgate/content/full";
 import type { Lesson, TuneStep, CompareStep } from "@uxgate/content/types";
 import * as E from "../src/engine";
 
@@ -87,18 +87,28 @@ describe("tries, hints, reveal", () => {
   });
 });
 
+describe("confidence before Check", () => {
+  it("a step that asks for confidence cannot be checked until one is picked", () => {
+    const cmp = lesson.steps[idx("S07")] as CompareStep;
+    const s = E.select(lesson, at(start(), "S07"), cmp.answer);
+    expect(E.canCheck(lesson.steps[s.i], s.steps[s.i])).toBe(false);
+    const t = E.setConfidence(s, 0);
+    expect(E.canCheck(lesson.steps[t.i], t.steps[t.i])).toBe(true);
+  });
+});
+
 describe("compare with a reason", () => {
   const cmp = lesson.steps[idx("S07")] as CompareStep;
   const other = cmp.answer === "a" ? "b" : "a";
   it("a right main answer opens the reason and is not yet judged", () => {
-    let s = E.select(lesson, at(start(), "S07"), cmp.answer);
+    let s = E.setConfidence(E.select(lesson, at(start(), "S07"), cmp.answer), 1);
     const r = E.check(lesson, s);
     expect(r.state.steps[idx("S07")].phase).toBe("main_ok");
     expect(r.state.steps[idx("S07")].tries).toBe(0);
     expect(r.event?.kind).toBe("main_ok");
   });
   it("a wrong reason is a wrong try; the right reason finishes it", () => {
-    let s = E.select(lesson, at(start(), "S07"), cmp.answer);
+    let s = E.setConfidence(E.select(lesson, at(start(), "S07"), cmp.answer), 1);
     s = E.check(lesson, s).state;
     const bad = cmp.reason!.options.find((o) => !cmp.reason!.answer.includes(o.id))!.id;
     s = E.selectReason(lesson, s, bad);
@@ -111,7 +121,7 @@ describe("compare with a reason", () => {
     expect(s.steps[idx("S07")]).toMatchObject({ phase: "right", outcome: "supported", xp: 5 });
   });
   it("a wrong main answer is judged straight away", () => {
-    const s = E.check(lesson, E.select(lesson, at(start(), "S07"), other)).state;
+    const s = E.check(lesson, E.setConfidence(E.select(lesson, at(start(), "S07"), other), 1)).state;
     expect(s.steps[idx("S07")]).toMatchObject({ phase: "wrong", tries: 1 });
   });
 });
@@ -141,6 +151,7 @@ describe("whole lesson", () => {
       const step = lesson.steps[s.i];
       if (E.isQuestion(step)) {
         s = E.select(lesson, s, step.type === "compare" ? step.answer : (step as TuneStep).answer[0]);
+        if (step.confidence) s = E.setConfidence(s, 1);
         s = E.check(lesson, s).state;
         if (step.type === "compare" && step.reason) { s = E.selectReason(lesson, s, step.reason.answer[0]); s = E.check(lesson, s).state; }
       }

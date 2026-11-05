@@ -22,6 +22,10 @@ export const bodySchema = z.object({
   lessonId: z.string().min(1).max(60),
   hash: z.string().length(64),
   startedAt: realTime(),
+  /** Mastery round only: the bank steps this round asks, in order. */
+  plan: z.array(z.string().min(1).max(40)).min(1).max(40).optional(),
+  /** A review session on a unit's bank (spaced review), not its mastery round. */
+  purpose: z.enum(["review"]).optional(),
   events: z.array(eventSchema).min(1).max(200),
 });
 export type AttemptBody = z.infer<typeof bodySchema>;
@@ -37,8 +41,11 @@ export type Processed = { results: StepResultRow[]; xp: XpRow[]; finished: boole
  * Re-scores every event against the stored lesson. `correct` and XP never come from the client.
  * `prior` holds events already stored for this attempt, so a step answered across several requests still scores right.
  */
-export function processEvents(lesson: Lesson, body: AttemptBody, prior: Pick<AttemptBody["events"][number], "stepId" | "tryNo" | "kind" | "answer" | "hintsUsed">[] = []): Processed {
-  const steps = new Map(lesson.steps.filter(isQuestion).map((s) => [s.id, s as QuestionStep]));
+export function processEvents(lesson: Lesson, body: AttemptBody, prior: Pick<AttemptBody["events"][number], "stepId" | "tryNo" | "kind" | "answer" | "hintsUsed">[] = [], plan?: string[] | null): Processed {
+  const singleTry = lesson.mode !== "lesson";
+  // A mastery round only asks the steps in its plan; a lesson asks every question step.
+  const asked = plan ? new Set(plan) : null;
+  const steps = new Map(lesson.steps.filter(isQuestion).filter((s) => !asked || asked.has(s.id)).map((s) => [s.id, s as QuestionStep]));
   const rejected: string[] = [];
   const results: StepResultRow[] = [];
   const byStep = new Map<string, typeof prior>();
@@ -53,7 +60,7 @@ export function processEvents(lesson: Lesson, body: AttemptBody, prior: Pick<Att
     byStep.set(e.stepId, [...(byStep.get(e.stepId) ?? []), e]);
     if (seen.has(k)) continue; // duplicate send: stored once
     seen.add(k);
-    const single = scoreStep(step, [{ kind: e.kind, answer: e.answer, hintsUsed: e.hintsUsed, tryNo: e.tryNo }]);
+    const single = scoreStep(step, [{ kind: e.kind, answer: e.answer, hintsUsed: e.hintsUsed, tryNo: e.tryNo }], singleTry);
     results.push({
       step_id: e.stepId, skill_id: step.skill, try_no: e.tryNo, kind: e.kind, answer: e.answer,
       correct: e.kind === "check" ? single.correct[0] === true : false,
@@ -64,7 +71,10 @@ export function processEvents(lesson: Lesson, body: AttemptBody, prior: Pick<Att
 
   const xp: XpRow[] = [];
   for (const [stepId, events] of byStep) {
-    const scored = scoreStep(steps.get(stepId)!, [...events].sort((a, b) => a.tryNo - b.tryNo));
+    const step = steps.get(stepId);
+    if (!step) continue;
+    // Single-try modes: the first judged answer is the only one that counts, even if a later send carries another.
+    const scored = scoreStep(step, [...events].sort((a, b) => a.tryNo - b.tryNo), singleTry);
     if (scored.outcome) xp.push({ step_id: stepId, outcome: scored.outcome, amount: scored.xp });
   }
   const finished = [...steps.keys()].every((id) => xp.some((x) => x.step_id === id));

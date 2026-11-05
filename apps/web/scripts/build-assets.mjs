@@ -14,15 +14,26 @@ const RENAME = {
   arrow: "arrow-right", review: "arrows-clockwise", caret: "caret-down", freeze: "snowflake",
   signout: "sign-out", google: "google-logo", apple: "apple-logo", comment: "chat-teardrop",
   chat: "chat-circle", bolt: "lightning", bulb: "lightbulb", map: "map-trifold", mail: "envelope-simple",
-  search: "magnifying-glass",
+  search: "magnifying-glass", external: "arrow-square-out",
   // Slice 2 lesson player icons (carried in the design file; unused until slice 2).
   replay: "arrow-counter-clockwise", sync: "arrows-clockwise", cc: "closed-captioning", "cloud-up": "cloud-arrow-up",
   "corners-out": "arrows-out", grip: "dots-six-vertical", send: "paper-plane-tilt", also: "check-circle",
 };
 
 // Icons the app needs that the design canvas does not use (yet).
-const EXTRA = ["ph-eye-slash"];
-const names = [...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]).concat(EXTRA);
+// Slice 4: account, notifications, help, public and system pages.
+const SLICE4 = ["ph-app-window", "ph-bell-slash", "ph-brackets-curly", "ph-chat-text", "ph-checks", "ph-lifebuoy", "ph-shield-check", "ph-sun", "ph-trash", "ph-warning", "ph-wrench", "ph-credit-card", "ph-download", "ph-calendar", "ph-ranking", "ph-moon", "ph-pencil", "ph-info", "ph-envelope-open", "ph-hourglass", "ph-arrow-square-out", "ph-gift", "ph-books", "ph-arrow-left", "ph-house-line", "ph-identification-card", "ph-key", "ph-check-square", "ph-copy", "ph-clock-countdown", "ph-caret-right", "ph-certificate", "ph-cursor-click", "ph-video"];
+const EXTRA = [...SLICE4, "ph-eye-slash", "ph-arrow-counter-clockwise", "ph-arrows-clockwise", "ph-circle", "ph-closed-captioning", "ph-cloud-arrow-up", "ph-cloud-check", "ph-dots-six-vertical", "ph-hand-waving", "ph-list-bullets", "ph-paper-plane-tilt", "ph-radio-button-fill", "ph-seal-check", "ph-warning-circle"];
+// Icons named by concept-card points in the content.
+const contentIcons = [];
+(function walk(dir) {
+  for (const e of fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }) : []) {
+    const f = path.join(dir, e.name);
+    if (e.isDirectory()) walk(f);
+    else if (e.name.endsWith(".yaml")) for (const m of fs.readFileSync(f, "utf8").matchAll(/^\s*-\s*icon:\s*"?([a-z0-9-]+)"?\s*$/gm)) contentIcons.push(`ph-${m[1]}`);
+  }
+})(path.resolve(here, "../../../content/paths"));
+const names = [...new Set([...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]).concat(EXTRA, contentIcons))];
 const rules = names.map((cls) => {
   let base = cls.slice(3);
   const fill = base.endsWith("-fill");
@@ -39,7 +50,9 @@ const rules = names.map((cls) => {
 // The design file also carries the canvas-only lesson-player frames (.ug.lp, .lp-*: fixed 390 and 1440 wide boards, slice 2).
 // The app's own player lays itself out, so those rules are left out of the app stylesheet.
 const LP_RULE = /^[^{\n]*(\.ug\.lp\b|\.lp\b|\.lp-|lp-(?:mobile|desktop))[^{\n]*\{.*\}\n/gm;
-const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "");
+// Likewise the slice 3 canvas frames (.ug.pg, .pg-mobile, .pg-desktop, the .pg-over sheets): fixed 390 and 1440 wide boards.
+const PG_RULE = /^[^{\n]*(\.ug\.pg\b|\.pg-over|\.pg-mobile|\.pg-desktop)[^{\n]*\{.*\}\n/gm;
+const css = src.replace(/^\.ph-[a-z-]+ \{ --i: url\(\/_blob\/[0-9a-f]+\); \}\n/gm, "").replace(LP_RULE, "").replace(PG_RULE, "");
 if (/_blob/.test(css)) throw new Error("uxgate.css still references /_blob");
 const out = path.resolve(here, "../app/styles");
 fs.mkdirSync(out, { recursive: true });

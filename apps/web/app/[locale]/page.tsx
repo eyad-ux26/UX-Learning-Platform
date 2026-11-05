@@ -18,9 +18,9 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
     { icon: "ph-seal", t: t("how3t"), b: t("how3b") },
   ];
   const paths = [
-    { name: "Forms That Flow", sub: t("forms"), img: "path-forms", isNew: true },
-    { name: "Visual Hierarchy in Action", sub: t("hier"), img: "path-hierarchy", isNew: false },
-    { name: "Find and Fix Usability", sub: t("usab"), img: "path-usability", isNew: false },
+    { slug: "forms-that-flow", name: "Forms That Flow", sub: t("forms"), img: "path-forms", isNew: true },
+    { slug: "visual-hierarchy-in-action", name: "Visual Hierarchy in Action", sub: t("hier"), img: "path-hierarchy", isNew: false },
+    { slug: "find-and-fix-usability", name: "Find and Fix Usability", sub: t("usab"), img: "path-usability", isNew: false },
   ];
 
   return (
@@ -29,7 +29,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
       <header className="land-head">
         <Logo height={28} />
         <nav className="land-nav" aria-label="UXGate">
-          <a href="#paths">{t("navPaths")}</a>
+          <Link href="/paths">{t("navPaths")}</Link>
           <a href="#how">{t("navHow")}</a>
           <a href="#plan">{t("navPricing")}</a>
           <a href="#faq">{t("navFaq")}</a>
@@ -48,7 +48,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             <p className="t-lead">{t("lead")}</p>
             <div className="hero-cta">
               <Link href="/signup" className="btn btn-primary btn-lg press"><span className="ph ph-play" aria-hidden="true" />{t("try")}</Link>
-              <a href="#paths" className="btn btn-secondary btn-lg press">{t("seePaths")}</a>
+              <Link href="/paths" className="btn btn-secondary btn-lg press">{t("seePaths")}</Link>
             </div>
             <p className="t-small ink-2 hero-note"><span className="ph ph-clock" aria-hidden="true" />{t("note")}</p>
           </div>
@@ -88,7 +88,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
           <h2 className="t-h2">{t("pathsTitle")}</h2>
           <div className="paths-grid">
             {paths.map((p) => (
-              <Link key={p.name} href="/signup" className="card press path-card">
+              <Link key={p.name} href={`/paths/${p.slug}`} className="card press path-card">
                 <span className="path-art">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/ill/uxgate-ill-${p.img}.png`} alt="" width={84} height={84} />
@@ -103,7 +103,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
               </Link>
             ))}
           </div>
-          <p className="t-small ink-2 paths-note">{t("pathsNote")}</p>
+          <p className="t-small ink-2 paths-note">{t("pathsNote")} <Link href="/paths" className="hit">{t("seePaths")}</Link></p>
         </section>
 
         <section id="plan" className="land-sec">
@@ -139,7 +139,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             <Faq items={[{ q: t("q1"), a: t("a1") }, { q: t("q4"), a: t("a4") }, { q: t("q2"), a: t("a2") }, { q: t("q3"), a: t("a3") }, { q: t("q5"), a: t("a5") }]} />
             <div className="card-mint help-card">
               <span className="help-icon"><span className="ph ph-chat" aria-hidden="true" /></span>
-              <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail">support@uxgate.org</a></div>
+              <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail hit">support@uxgate.org</a></div>
             </div>
           </div>
         </section>
@@ -148,7 +148,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
       <footer className="land-foot">
         <Logo height={20} />
         <nav className="land-foot-links" aria-label={t("navPaths")}>
-          <a href="#paths">{t("navPaths")}</a>
+          <Link href="/paths">{t("navPaths")}</Link>
           <a href="#plan">{t("navPricing")}</a>
         </nav>
         <ThemeSwitch />

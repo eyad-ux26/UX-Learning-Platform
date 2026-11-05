@@ -1,9 +1,34 @@
 import { getRequestConfig } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing } from "./routing";
+import { withSlice4 } from "../messages/s4";
+
+type Messages = Record<string, unknown>;
+
+/** Slice 5's file adds namespaces and keys to the main file (deep merge); slice 4's files add whole namespaces. */
+function merge(a: Messages, b: Messages): Messages {
+  const out: Messages = { ...a };
+  for (const [k, v] of Object.entries(b)) {
+    const cur = out[k];
+    out[k] = cur && typeof cur === "object" && v && typeof v === "object" ? merge(cur as Messages, v as Messages) : v;
+  }
+  return out;
+}
+
+/** Merged once per locale for the life of the Worker, not on every request (issue #131). */
+const cache = new Map<string, Promise<Messages>>();
+function messagesFor(locale: string): Promise<Messages> {
+  let m = cache.get(locale);
+  if (!m) {
+    m = Promise.all([import(`../messages/${locale}.json`), import(`../messages/s5/${locale}.json`)]).then(([main, s5]) => withSlice4(locale, merge(main.default, s5.default)));
+    m.catch(() => cache.delete(locale));
+    cache.set(locale, m);
+  }
+  return m;
+}
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
-  return { locale, messages: (await import(`../messages/${locale}.json`)).default };
+  return { locale, messages: await messagesFor(locale) };
 });

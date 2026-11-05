@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S3-11 · Illustrations and sound for the new moments</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ug" lang="en" dir="ltr" style="width: 1800px; height: 1100px; box-sizing: border-box; background: #E6F1F6; padding: 40px 48px; display: flex; flex-direction: column; gap: 24px;">
+  <div style="display: flex; align-items: baseline; gap: 16px;"><h2 class="t-h1">S3-11 · Illustrations and sound for the new moments</h2><span class="t-body ink-2">Every slice 3 moment mapped to an illustration and a sound from the existing set. No new sound files. Press a sound to hear it.</span></div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="18">
+      <section class="card" style="padding: 12px 14px; display: flex; align-items: center; gap: 14px; min-height: 96px;">
+        <img src="{{r.img}}" alt="" style="width: 72px; height: 72px; flex: none;">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+          <b style="font-size: 16px; line-height: 1.3;">{{r.title}}</b>
+          <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{r.where}}</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+            <sc-for list="{{r.sounds}}" as="s" hint-placeholder-count="1">
+              <button class="chip press" type="button" onClick="{{s.play}}" aria-pressed="{{s.on}}" style="min-height: 32px; font-size: 12px; padding: 0 10px;"><span class="{{s.icon}}" aria-hidden="true"></span>{{s.name}}</button>
+            </sc-for>
+            <sc-if value="{{r.silent}}" hint-placeholder-val="{{false}}"><span class="chip" style="min-height: 32px; font-size: 12px; padding: 0 10px; opacity: 0.7;"><span class="ph ph-speaker-slash" aria-hidden="true"></span>No sound</span></sc-if>
+          </div>
+          <span class="t-small ink-2" style="font-size: 12.5px; line-height: 1.4;">{{r.note}}</span>
+        </div>
+      </section>
+    </sc-for>
+  </div>
+  <section class="card" style="padding: 16px 20px; display: flex; gap: 32px; align-items: flex-start;">
+    <p class="t-over" style="flex: none; padding-top: 2px;">Rules kept</p>
+    <p class="t-small" style="flex: 1;"><b>One win family.</b> Badges, certificates and a finished path share the glassy bell, so a learner learns one meaning. <b>Calm is silent.</b> The freeze note, an empty review and a lock never play a sound. <b>No loss sounds.</b> Leaving the leaderboard or a missed day sounds like nothing went wrong. <b>New illustrations</b> (bell, key, lock, path map, review, certificate) come from the same generator and palette as the slice 1 set.</p>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1800,"height":1100},"is_interactive":true}'>
+const SFX = {
+  'answer-also-works': '/_blob/f5d492c46b1ce8de199eecea1320f1bb',
+  'answer-right': '/_blob/3d88f4a3345269368a36ff20b8bb18b4',
+  'answer-right-streak': '/_blob/79f283044e58491d3a959b0c3aeb1ffe',
+  'answer-wrong': '/_blob/0274925ae7b976128a2b27e16a600dc1',
+  'badge-unlock': '/_blob/4494e7e2d4fbbd38e6d864c2df1140cf',
+  'check-press': '/_blob/586e217005bb18a48d7d2bdb02950f16',
+  'error-soft': '/_blob/e641c55b8c7d0da0d65e4ddf3b4dc532',
+  'gate-open': '/_blob/a25a3d0065636ac5fae2b35a15bafe17',
+  'goal-complete': '/_blob/44ffbd95e5f2f8c3e6304d479a248f0a',
+  'hint-open': '/_blob/52bae496babbcf7870dc02345a15e608',
+  'lesson-complete': '/_blob/15afbf5cd5c3a4e0206cd1cc0e589b81',
+  'lesson-start': '/_blob/811638c353ca3113f8695b1dc0ca7858',
+  'nav-switch': '/_blob/63d5188d5fb2b405e0a4cb29335e08c4',
+  'notification': '/_blob/6db74da62cf000dd0143a24dffa7cdfd',
+  'reveal-answer': '/_blob/cc5a4d8b526128a780934f151cd3ad40',
+  'select-snap': '/_blob/528346c93a60a8f014ce6a9c5dc86ecd',
+  'sheet-down': '/_blob/fbe7f7860683da28901ba84aa25209a4',
+  'sheet-up': '/_blob/a58925085888dbcbf96460c3dc14cc9c',
+  'skill-up': '/_blob/d78d5f4eb410b267f64ddb0e678d6ab5',
+  'streak-extend': '/_blob/320e5da40b83a996857f02cfc3b25756',
+  'streak-freeze': '/_blob/1f683a6c008b4bc73a904a05b7b27ac1',
+  'ui-tap': '/_blob/5e0161a91cde5476ca6aa4ba25cb800a',
+  'ui-toggle-off': '/_blob/98b69af114dc6dcea745927bca13e0fb',
+  'ui-toggle-on': '/_blob/77c98432f24ca99b879c1dd94396055d',
+  'welcome': '/_blob/a3fa16db2260ace2678d500bc5ab4603',
+  'xp-gain': '/_blob/acf1587dff8ef27713659e61b50620d1',
+  'xp-tick': '/_blob/519c1fa67941a7bb3fd8899a26f027cb'
+};
+let SFX_CTX = null;
+const SFX_BUF = {};
+function sfxCtx() {
+  if (!SFX_CTX) { const A = window.AudioContext || window.webkitAudioContext; SFX_CTX = new A(); }
+  if (SFX_CTX.state === 'suspended') SFX_CTX.resume();
+  return SFX_CTX;
+}
+function sfxLoad(name) {
+  if (!SFX_BUF[name]) {
+    SFX_BUF[name] = fetch(SFX[name]).then((r) => r.arrayBuffer()).then((b) => new Promise((res, rej) => sfxCtx().decodeAudioData(b, res, rej)));
+  }
+  return SFX_BUF[name];
+}
+function sfxPlay(name, volume) {
+  if (!SFX[name]) return Promise.resolve(0);
+  const ctx = sfxCtx();
+  return sfxLoad(name).then((buf) => {
+    const src = ctx.createBufferSource(); const gain = ctx.createGain();
+    src.buffer = buf; gain.gain.value = volume == null ? 0.9 : volume;
+    src.connect(gain); gain.connect(ctx.destination); src.start();
+    return buf.duration;
+  }).catch(() => { try { new Audio(SFX[name]).play(); } catch (e) {} return 1; });
+}
+function sfxPreload() { Object.keys(SFX).forEach((n) => sfxLoad(n).catch(() => {})); }
+const MOMENTS = [["/_blob/940849193fa4b01dff04d73c95583da2", "Start a path", "S3-1 · Started", "gate-open", "The gate opens once, when the path is joined."], ["/_blob/f6e00f674b6512115c3a1032554cf9cf", "Switch path", "S3-2, S3-3 · Path chip or switcher", "nav-switch", "Same snap as a tab change. Nothing else plays."], ["/_blob/7cbe7a77e505c37be737172ca25dd102", "Locked unit, why and how", "S3-3 · Locked unit", "sheet-up", "No error sound. A lock is information, not a mistake."], ["/_blob/54daac1136dd65086f58f73b440ed1a9", "Lesson done, next lesson", "S3-5 · Next in the same path", "lesson-complete|xp-gain", "Then XP ticks up as the numbers count."], ["/_blob/54daac1136dd65086f58f73b440ed1a9", "Replay done", "S3-5 · Replay: half XP", "xp-tick", "Quieter on purpose: half XP, one small tick."], ["/_blob/f92a3e6847a208fe460c2076565bb0b0", "Skill reaches Shown", "S3-5 · Skill check passed", "skill-up", "Once for the summary, not once per skill."], ["/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b", "Badge earned", "S3-5, S3-8 · Shown or Kept", "badge-unlock", "Gold for Kept uses the same sound, a beat later."], ["/_blob/f339db60a2fdc85567ed1a06c7bf9515", "Daily goal met", "Any lesson end", "goal-complete", "Plays after the lesson sound, never over it."], ["/_blob/ef2b9cc307685520ab2b815707ec327f", "Streak grows", "Any lesson end", "streak-extend", "Only on the first goal of the day."], ["/_blob/169f6b75bfa541dd0163f10731990da3", "Freeze earned", "S3-6 · Freeze earned", "streak-freeze", "The new slot pops in with it."], ["/_blob/169f6b75bfa541dd0163f10731990da3", "A freeze kept your streak", "S3-6 · Calm note on home", "", "Silent on purpose. A calm note does not need a sound."], ["/_blob/27529cb276100eb41db22c17bdf85470", "Review done", "S3-8 · Review done", "lesson-complete|badge-unlock", "Badge sound only when a skill turns Kept."], ["/_blob/db03534bd1e09763438142db3c0a865b", "Nothing to review", "S3-8 · Empty", "", "Silent. Nothing happened, so nothing plays."], ["/_blob/88919613cc6d0ad07645f0e62a6deac4", "Path finished", "S3-5 · End of a path", "goal-complete|badge-unlock", "The biggest moment in the app, still under 3.2 s."], ["/_blob/d9eda267550722d49fbe378d64d9eb01", "Certificate ready", "S3-9 · Certificate", "badge-unlock", "Same as a badge: one family of win sounds."], ["/_blob/9cfcf6d42ebe588ededd0ee8ea4eea6a", "Daily reminder", "Phone or browser notification", "notification", "The system decides volume and silent mode."], ["/_blob/9e5890d8d97989de5a1c1db3ea6fbc66", "Achievement page on or off", "S3-9 · Share", "ui-toggle-on|ui-toggle-off", "A plain switch sound both ways."], ["/_blob/88919613cc6d0ad07645f0e62a6deac4", "Join or leave the leaderboard", "S3-10 · Leaderboard", "ui-toggle-on|ui-toggle-off", "Leaving sounds like any switch. No sad sound."]];
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { playing: null }; }
+  play(name) {
+    this.setState({ playing: name });
+    sfxPlay(name).then((d) => { setTimeout(() => { if (this.state.playing === name) this.setState({ playing: null }); }, Math.max(300, d * 1000)); });
+  }
+  renderVals() {
+    const p = this.state.playing;
+    return { rows: MOMENTS.map(([img, title, where, snd, note], i) => ({ img, title, where, note, silent: !snd,
+      sounds: (snd ? snd.split('|') : []).map((name) => ({ name, on: p === name ? 'true' : 'false', icon: 'ph ' + (p === name ? 'ph-waveform' : 'ph-play'), play: () => this.play(name) })) })) };
+  }
+}
+</script>
+</body>
+</html>

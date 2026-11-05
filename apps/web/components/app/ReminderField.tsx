@@ -9,7 +9,11 @@ import { play } from "@/lib/sound";
  * Daily reminder: a switch (on by default) and a time button. On phones the button is the phone's own time picker;
  * on a laptop it opens a small popover with quick picks and hour, minute and AM/PM columns.
  */
-export function ReminderField({ value, onChange }: { value: string | null; onChange: (v: string | null) => void }) {
+export function ReminderField({ value, onChange, settings }: {
+  value: string | null; onChange: (v: string | null) => void;
+  /** Settings row (design audit P2): the label on top with the switch at the trailing edge, the time button under it. */
+  settings?: { label: string; sub: string; switchLabel: string; on: string; off: string };
+}) {
   const t = useTranslations("onboarding");
   const locale = useLocale() as "en" | "ar";
   const id = useId();
@@ -67,16 +71,27 @@ export function ReminderField({ value, onChange }: { value: string | null; onCha
   const timeText = formatTime(shown, locale);
   const helpId = `${id}-help`;
 
+  const toggle = () => { play(on ? "ui-toggle-off" : "ui-toggle-on"); onChange(on ? null : shown); };
   return (
-    <div className="field">
-      <span className="ob-label" id={`${id}-label`}>{label}</span>
-      <div className="rem rem-wrap" ref={wrap}>
-        <button type="button" role="switch" aria-checked={on} aria-labelledby={`${id}-sw`} aria-describedby={helpId}
-          className={`switch${on ? " is-on" : ""}`}
-          onClick={() => { play("select-snap"); onChange(on ? null : shown); }}>
-          <span className="track" aria-hidden="true" />
-          <span id={`${id}-sw`}>{t("remindAt")}</span>
-        </button>
+    <div className={settings ? "set-row is-rem" : "field"}>
+      {settings ? (
+        <div className="rem-head" style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span className="set-l" id={`${id}-label`}>{settings.label}<small>{settings.sub}</small></span>
+          <button type="button" role="switch" aria-checked={on} aria-label={settings.switchLabel} aria-describedby={helpId}
+            className={`switch sw-only${on ? " is-on" : ""}`} onClick={toggle}>
+            <span className="track" aria-hidden="true" />
+          </button>
+        </div>
+      ) : <span className="ob-label" id={`${id}-label`}>{label}</span>}
+      <div className="rem rem-wrap" ref={wrap} style={settings ? { flexWrap: "nowrap" } : undefined}>
+        {settings ? null : (
+          <button type="button" role="switch" aria-checked={on} aria-labelledby={`${id}-sw`} aria-describedby={helpId}
+            className={`switch${on ? " is-on" : ""}`}
+            onClick={() => { play("select-snap"); onChange(on ? null : shown); }}>
+            <span className="track" aria-hidden="true" />
+            <span id={`${id}-sw`}>{t("remindAt")}</span>
+          </button>
+        )}
 
         {desk ? (
           <button ref={btn} type="button" className={`time-btn${open ? " is-open" : ""}${on ? "" : " is-disabled"}`}
@@ -139,7 +154,7 @@ export function ReminderField({ value, onChange }: { value: string | null; onCha
           </div>
         ) : null}
       </div>
-      <span id={helpId} className="help">{on ? t("reminderOn") : t("reminderOff")}</span>
+      <span id={helpId} className={settings ? "t-small ink-2" : "help"}>{settings ? (on ? settings.on : settings.off) : on ? t("reminderOn") : t("reminderOff")}</span>
     </div>
   );
 }
