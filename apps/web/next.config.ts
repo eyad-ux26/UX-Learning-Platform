@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const isDev = process.env.NODE_ENV !== "production";
 // Cloudflare Web Analytics beacon (loaded only when a token is set).
 const cfBeacon = !isDev && !!process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
+// Bunny Stream: hls.js fetches the signed playlist and segments (connect-src), Safari plays HLS natively (media-src).
+// The pull zone host is a Worker secret, read at run time, so the build cannot see it: allow Bunny's CDN domain.
+const bunny = " https://*.b-cdn.net";
 
 // Content-Security-Policy. Next.js inlines small scripts and styles, so 'unsafe-inline' stays until a nonce setup replaces it.
 // Everything else is closed: no framing (clickjacking), no plugins, forms and base URL only to ourselves, data only to us and Supabase.
@@ -13,10 +16,10 @@ const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${cfBeacon ? " https://static.cloudflareinsights.com" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob:${bunny}`,
   "font-src 'self' data:",
-  "media-src 'self' data: blob:",
-  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""}`,
+  `media-src 'self' data: blob:${bunny}`,
+  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${bunny}${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""}`,
   "frame-src 'none'",
   "frame-ancestors 'none'",
   "object-src 'none'",
