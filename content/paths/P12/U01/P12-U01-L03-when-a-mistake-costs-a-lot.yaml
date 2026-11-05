@@ -24,17 +24,17 @@ steps:
       en: "Our clinic gets 400 patient messages a day. We're adding AI that marks the urgent ones, like chest pain, so a nurse calls back first.\n\nThe AI will make mistakes. The question is which mistakes we can live with."
       ar: "تصل عيادتنا 400 رسالة من المرضى يوميًا. وسنضيف ذكاءً اصطناعيًا يحدّد الرسائل العاجلة، مثل ألم الصدر، لتتصل الممرّضة بأصحابها أولًا.\n\nسيخطئ الذكاء الاصطناعي. والسؤال: أي أخطاء يمكننا تحمّلها؟"
     mock:
-      width: 300
+      app: raha
+      frame: wide
+      url: staff.raha.example/inbox
       blocks:
         - kind: row
           blocks:
-            - { kind: meta, text: { en: "\"Chest pain since this morning\"", ar: "«ألم في الصدر منذ الصباح»" } }
-            - { kind: chip, tone: bad, text: { en: "Urgent", ar: "عاجل" } }
-        - kind: row
-          gap: s
-          blocks:
-            - { kind: meta, text: { en: "\"Can I move my visit to Sunday?\"", ar: "«هل يمكن نقل موعدي إلى الأحد؟»" } }
-            - { kind: chip, text: { en: "Normal", ar: "عادي" } }
+            - { kind: title, text: { en: "Patient messages · today", ar: "رسائل المرضى · اليوم" } }
+            - { kind: badge, tone: neutral, text: { en: "400 new", ar: "400 جديدة" } }
+        - { kind: listitem, avatar: { text: "Karim Fathy", art: man-1 }, text: { en: "Karim Fathy", ar: "كريم فتحي" }, sub: { en: "\"Chest pain since this morning\"", ar: "«ألم في الصدر منذ الصباح»" }, badge: { text: { en: "✨ Urgent", ar: "✨ عاجل" }, tone: bad }, gap: s }
+        - { kind: listitem, avatar: { text: "Huda Salem", art: woman-2 }, text: { en: "Huda Salem", ar: "هدى سالم" }, sub: { en: "\"Can I move my visit to Sunday?\"", ar: "«هل يمكن نقل موعدي إلى الأحد؟»" }, badge: { text: { en: "✨ Normal", ar: "✨ عادي" }, tone: neutral } }
+        - { kind: listitem, avatar: { text: "Samir Adel", art: man-2 }, text: { en: "Samir Adel", ar: "سمير عادل" }, sub: { en: "\"Are my lab results ready?\"", ar: "«هل نتائج التحاليل جاهزة؟»" }, badge: { text: { en: "✨ Normal", ar: "✨ عادي" }, tone: neutral } }
 
   - id: S02
     type: choose
@@ -98,6 +98,18 @@ steps:
     prompt:
       en: "Which mistake should we worry about most?"
       ar: "أي خطأ يجب أن يقلقنا أكثر؟"
+    mock:
+      app: raha
+      frame: wide
+      url: mail.raha.example/spam
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: title, text: { en: "Spam", ar: "Spam" } }
+            - { kind: small, color: muted, text: { en: "Nobody checks this folder", ar: "لا أحد يفتح هذا المجلد" } }
+        - { kind: listitem, icon: envelope-simple, text: { en: "WIN a free phone!!!", ar: "اربح هاتفًا مجانًا!!!" }, sub: "promo@deals.example", gap: s }
+        - { kind: listitem, icon: envelope-simple, text: { en: "Lab results attached · please call me", ar: "نتائج التحاليل مرفقة · أرجو الاتصال بي" }, sub: { en: "Huda Salem, patient", ar: "هدى سالم، مريضة" } }
+        - { kind: listitem, icon: envelope-simple, text: { en: "Cheap watches 90% off", ar: "ساعات رخيصة بخصم 90%" }, sub: "shop@cheap.example" }
     options:
       - { id: through, text: { en: "Some junk mail gets into the inbox", ar: "بعض الرسائل المزعجة تصل إلى البريد الوارد" } }
       - { id: slow, text: { en: "The filter takes a second to sort each email", ar: "الفلتر يأخذ ثانية ليصنّف كل رسالة" } }
@@ -120,7 +132,7 @@ steps:
       ar: "في حالة الرسائل العاجلة، كانت الحالات الفائتة أسوأ. وهنا، الإنذارات الكاذبة أسوأ. اسأل دائمًا ماذا يكلّف كل خطأ في هذه المهمة."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U01-05
     part: guided
     rules: [R06]
@@ -132,12 +144,37 @@ steps:
       en: "When a doctor writes a prescription, AI lists medicines that may not mix well with what the patient already takes. Doctors say: \"Never hide a possible risk; we'll judge it.\""
       ar: "حين يكتب الطبيب وصفة، يعرض الذكاء الاصطناعي الأدوية التي قد لا تتناسب مع ما يأخذه المريض بالفعل. ويقول الأطباء: «لا تُخفِ أي خطر محتمل أبدًا؛ نحن سنحكم.»"
     prompt:
-      en: "What should the list show?"
-      ar: "ماذا يجب أن تعرض القائمة؟"
+      en: "Tap each option to see the list. What should the list show?"
+      ar: "اضغط على كل خيار لترى القائمة. ماذا يجب أن تعرض القائمة؟"
     options:
-      - { id: sure, text: { en: "Only the risks the AI is very sure of", ar: "المخاطر التي الذكاء الاصطناعي متأكّد منها جدًا فقط" } }
-      - { id: all, text: { en: "Every possible risk, with the sure ones first and the less sure ones marked", ar: "كل خطر محتمل، الأكيدة أولًا والأقل تأكيدًا معلّمة" } }
-      - { id: top, text: { en: "Only the single most likely risk", ar: "الخطر الأكثر احتمالًا فقط" } }
+      - id: sure
+        text: { en: "Only the risks the AI is very sure of", ar: "المخاطر التي الذكاء الاصطناعي متأكّد منها جدًا فقط" }
+        mock:
+          app: raha
+          appbar: &rxbar { title: { en: "New prescription", ar: "وصفة جديدة" }, back: true }
+          blocks:
+            - { kind: listitem, art: medicine, text: { en: "Ibuprofen 400 mg", ar: "إيبوبروفين 400 ملجم" }, sub: { en: "Patient: Samir Adel", ar: "المريض: سمير عادل" } }
+            - { kind: heading, text: { en: "✨ May not mix well", ar: "✨ قد لا يتوافق مع" }, gap: m }
+            - { kind: listitem, icon: warning, text: { en: "Warfarin", ar: "وارفارين" }, badge: { text: { en: "Very likely", ar: "مرجّح جدًا" }, tone: bad }, gap: s }
+      - id: all
+        text: { en: "Every possible risk, with the sure ones first and the less sure ones marked", ar: "كل خطر محتمل، الأكيدة أولًا والأقل تأكيدًا معلّمة" }
+        mock:
+          app: raha
+          appbar: *rxbar
+          blocks:
+            - { kind: listitem, art: medicine, text: { en: "Ibuprofen 400 mg", ar: "إيبوبروفين 400 ملجم" }, sub: { en: "Patient: Samir Adel", ar: "المريض: سمير عادل" } }
+            - { kind: heading, text: { en: "✨ May not mix well", ar: "✨ قد لا يتوافق مع" }, gap: m }
+            - { kind: listitem, icon: warning, text: { en: "Warfarin", ar: "وارفارين" }, badge: { text: { en: "Very likely", ar: "مرجّح جدًا" }, tone: bad }, gap: s }
+            - { kind: listitem, icon: warning, text: { en: "Lisinopril", ar: "ليسينوبريل" }, badge: { text: { en: "Likely", ar: "مرجّح" }, tone: warn } }
+            - { kind: listitem, icon: question, text: { en: "Aspirin 75 mg", ar: "أسبرين 75 ملجم" }, badge: { text: { en: "Less sure · check", ar: "أقل تأكيدًا · راجِع" }, tone: neutral } }
+      - id: top
+        text: { en: "Only the single most likely risk", ar: "الخطر الأكثر احتمالًا فقط" }
+        mock:
+          app: raha
+          appbar: *rxbar
+          blocks:
+            - { kind: listitem, art: medicine, text: { en: "Ibuprofen 400 mg", ar: "إيبوبروفين 400 ملجم" }, sub: { en: "Patient: Samir Adel", ar: "المريض: سمير عادل" } }
+            - { kind: banner, tone: warn, icon: warning, text: { en: "Most likely problem: Warfarin", ar: "المشكلة الأكثر احتمالًا: وارفارين" }, gap: m }
     answer: [all]
     misconceptions:
       - id: MC-P12-010
@@ -174,17 +211,27 @@ steps:
     a:
       label: { en: "A: 15 tips, including ones that may not fit.", ar: "A: 15 نصيحة، منها ما قد لا يناسب." }
       mock:
-        width: 300
+        app: raha
+        appbar: &rahahome { logo: true }
+        tabbar: &rahatabs { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar, text: { en: "Visits", ar: "زياراتي" } }, { icon: heart, text: { en: "Tips", ar: "نصائح" } }, { icon: user, text: { en: "Account", ar: "حسابي" } } ] }
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Tips for you (15)", ar: "نصائح لك (15)" } }
-          - { kind: small, text: { en: "Walking after meals · Baby sleep · Knee care · Teen acne · …", ar: "المشي بعد الأكل · نوم الرضيع · العناية بالركبة · حبوب المراهقين · …" }, gap: xs }
+          - { kind: heading, text: { en: "✨ Tips for you (15)", ar: "✨ نصائح لك (15)" } }
+          - { kind: listitem, icon: person-simple-walk, text: { en: "Walking after meals", ar: "المشي بعد الأكل" }, chevron: true, gap: s }
+          - { kind: listitem, icon: baby, text: { en: "Baby sleep", ar: "نوم الرضيع" }, chevron: true }
+          - { kind: listitem, icon: bandaids, text: { en: "Knee care", ar: "العناية بالركبة" }, chevron: true }
+          - { kind: listitem, icon: smiley, text: { en: "Teen acne", ar: "حبوب المراهقة" }, chevron: true }
+          - { kind: small, color: muted, text: { en: "… 11 more", ar: "… 11 نصيحة أخرى" } }
     b:
       label: { en: "B: 3 tips the AI is sure fit, and \"See all tips\".", ar: "B: 3 نصائح الذكاء الاصطناعي متأكّد أنها تناسب، و«كل النصائح»." }
       mock:
-        width: 300
+        app: raha
+        appbar: *rahahome
+        tabbar: *rahatabs
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Tips for you", ar: "نصائح لك" } }
-          - { kind: small, text: { en: "Walking after meals · Less salt · Checking sugar at home", ar: "المشي بعد الأكل · ملح أقل · قياس السكر في البيت" }, gap: xs }
+          - { kind: heading, text: { en: "✨ Tips for you", ar: "✨ نصائح لك" } }
+          - { kind: listitem, icon: person-simple-walk, text: { en: "Walking after meals", ar: "المشي بعد الأكل" }, chevron: true, gap: s }
+          - { kind: listitem, icon: bowl-food, text: { en: "Less salt", ar: "ملح أقل" }, chevron: true }
+          - { kind: listitem, icon: drop, text: { en: "Checking sugar at home", ar: "قياس السكر في البيت" }, chevron: true }
           - { kind: link, text: { en: "See all tips", ar: "كل النصائح" }, gap: s }
     answer: b
     reason:
@@ -232,6 +279,12 @@ steps:
     prompt:
       en: "How should the alerts be tuned?"
       ar: "كيف يجب أن تُضبط التنبيهات؟"
+    mock:
+      app: dar
+      screen: lock
+      blocks:
+        - { kind: notification, title: { en: "Shelf camera: maybe empty", ar: "كاميرا الرف: قد يكون فارغًا" }, text: { en: "Aisle 3 · kettles", ar: "الممر 3 · الغلايات" }, time: { en: "now", ar: "الآن" } }
+        - { kind: image, art: shelf, size: s, gap: s }
     options:
       - { id: sure, text: { en: "Alert only when the AI is very sure, so I'm not disturbed", ar: "تنبّه فقط حين يكون الذكاء الاصطناعي متأكّدًا جدًا، حتى لا أنزعج" } }
       - { id: lean, text: { en: "Alert even when it's not sure, because a miss costs more", ar: "تنبّه حتى حين لا يكون متأكّدًا، لأن الفائت يكلّف أكثر" } }
