@@ -26,17 +26,23 @@ steps:
       en: "My gym has a new app where members book classes. Rasha, one of our members, is blind and uses a screen reader. Some of our members are over 60.\n\nYour job: help me decide what's ready, what to change, and how to test it.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "عندنا في النادي الذي أملكه تطبيق جديد، يحجز فيه الأعضاء الحصص. رشا إحدى عضواتنا، وهي كفيفة وتستخدم قارئ الشاشة. وبعض أعضائنا عمرهم فوق الستين.\n\nمهمّتك: ساعدني أن أقرّر ما الجاهز، وما الذي يجب تغييره، وكيف نختبره.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Book a class", ar: "احجز حصة" }, back: true }
+      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar-check, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Account", ar: "حسابي" } } ] }
       blocks:
-        - { kind: title, text: { en: "Book a class", ar: "احجز حصة" } }
-        - { kind: image, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" }, gap: s }
+        - kind: card
+          art: gym
+          blocks:
+            - { kind: heading, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
+            - { kind: small, text: { en: "Coach Laila · 6 places left", ar: "الكوتش ليلى · باقي 6 أماكن" }, gap: xs }
         - kind: row
           gap: xs
           blocks:
-            - { kind: meta, text: { en: "1 / 12", ar: "1 من 12" } }
-            - { kind: button, style: plain, text: { en: "Next ›", ar: "التالي ‹" } }
-        - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: { en: "11 digits", ar: "11 رقمًا" }, gap: m }
-        - { kind: button, text: { en: "Book", ar: "احجز" }, gap: m }
+            - { kind: small, color: muted, text: { en: "1 of 12", ar: "1 من 12" } }
+            - { kind: button, style: text, icon: caret-right, text: { en: "Next", ar: "التالي" } }
+        - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: { en: "11 digits", ar: "11 رقمًا" }, icon: phone, gap: m }
+      footer:
+        - { kind: button, text: { en: "Book", ar: "احجز" } }
 
   - id: S02
     type: choose
@@ -53,6 +59,18 @@ steps:
     prompt:
       en: "The app is ready to go live next week. What should we do?"
       ar: "التطبيق جاهز للنشر الأسبوع القادم. ماذا نفعل؟"
+    mock:
+      app: mudawwana
+      appbar: { title: { en: "Booking test · Rasha", ar: "اختبار الحجز · رشا" }, back: true }
+      blocks:
+        - { kind: badge, tone: good, icon: check-circle, text: { en: "Checklist: 40 of 40 green", ar: "الـ Checklist: 40 من 40 أخضر" } }
+        - kind: table
+          gap: m
+          head: [ { en: "Member", ar: "العضو" }, { en: "Time to book a class", ar: "وقت حجز حصة" } ]
+          rows:
+            - [ { en: "Rasha (screen reader)", ar: "رشا (قارئ الشاشة)" }, { en: "25 min", ar: "25 دقيقة" } ]
+            - [ { en: "Other members", ar: "باقي الأعضاء" }, { en: "about 2 min", ar: "حوالي دقيقتين" } ]
+        - { kind: quote, text: { en: "I swiped through every class card to find Thursday.", ar: "مررت على كل بطاقات الحصص لأصل إلى الخميس." }, name: { en: "Rasha", ar: "رشا" }, gap: m }
     options:
       - id: phone
         text: { en: "Go live, and add a phone line so screen reader users can book by phone", ar: "ننشره، ونضيف رقم هاتف ليحجز مستخدمو قارئ الشاشة بالهاتف" }
@@ -93,9 +111,10 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يُوصل رشا إلى حصة السباحة بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Book a class", ar: "احجز حصة" }, back: true }
       blocks: &classnow
-        - { kind: image, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
+        - { kind: image, art: gym, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
         - kind: row
           gap: xs
           blocks:
@@ -106,7 +125,8 @@ steps:
         text: { en: "A list by day, where each class is a link", ar: "قائمة مقسّمة حسب اليوم، وكل حصة فيها رابط" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Book a class", ar: "احجز حصة" }, back: true }
           blocks:
             - { kind: heading, text: { en: "Sunday", ar: "الأحد" } }
             - { kind: link, text: { en: "Yoga · 8:00", ar: "يوغا · 8:00" }, gap: xs }
@@ -118,17 +138,19 @@ steps:
         text: { en: "Add dots under the carousel to show how many cards there are", ar: "أضف نقاطًا تحت الـ Carousel توضّح عدد البطاقات" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Book a class", ar: "احجز حصة" }, back: true }
           blocks:
-            - { kind: image, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
+            - { kind: image, art: gym, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
             - { kind: small, color: muted, text: "● ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○", gap: xs }
       - id: auto
         text: { en: "Let the cards move by themselves every 4 seconds", ar: "اجعل البطاقات تتحرّك وحدها كل 4 ثوانٍ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Book a class", ar: "احجز حصة" }, back: true }
           blocks:
-            - { kind: image, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
+            - { kind: image, art: gym, size: s, text: { en: "Yoga · Sunday 8:00", ar: "يوغا · الأحد 8:00" } }
             - { kind: meta, text: { en: "1 / 12 · next in 4 s", ar: "1 من 12 · التالي بعد 4 ثوانٍ" }, gap: xs }
     answer: [list]
     misconceptions:
@@ -158,7 +180,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يسمح للأستاذ حمدي بالتسجيل بالرقم كما كتبه؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Your details", ar: "بياناتك" }, back: true }
       blocks:
         - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "+20 100 123 4567", tone: bad, error: { en: "Enter 11 digits", ar: "أدخل 11 رقمًا" } }
     options:
@@ -166,7 +189,8 @@ steps:
         text: { en: "Accept +20 and spaces, and let the app turn it into the 11 digits", ar: "اقبل ⁦+20⁩ والمسافات، واجعل التطبيق يحوّله إلى الـ 11 رقمًا بنفسه" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Your details", ar: "بياناتك" }, back: true }
           blocks:
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "+20 100 123 4567" }
             - { kind: small, color: green, text: { en: "✓ Saved", ar: "✓ تم الحفظ" }, gap: xs }
@@ -174,14 +198,16 @@ steps:
         text: { en: "Keep the rule, and show an example: 01001234567", ar: "أبقِ القاعدة، واعرض مثالًا: 01001234567" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Your details", ar: "بياناتك" }, back: true }
           blocks:
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, hintFirst: true, hint: { en: "For example 01001234567", ar: "مثلًا 01001234567" }, filled: true, text: "+20 100 123 4567", tone: bad, error: { en: "Enter 11 digits", ar: "أدخل 11 رقمًا" } }
       - id: block
         text: { en: "Stop the keyboard from typing + and spaces at all", ar: "امنع لوحة المفاتيح من كتابة ⁦+⁩ والمسافات نهائيًا" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Your details", ar: "بياناتك" }, back: true }
           blocks:
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "201001234567", tone: bad, error: { en: "Enter 11 digits", ar: "أدخل 11 رقمًا" } }
     answer: [accept]
@@ -212,7 +238,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل الأعضاء يقرؤون الجدول بحجم الخط الذي اختاروه؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
       blocks: &schednow
         - { kind: heading, px: 14, text: { en: "This week", ar: "هذا الأسبوع" } }
         - { kind: text, px: 12, text: { en: "Sun 8:00 Yoga · Mon 18:00 Spinning · Tue 7:00 Pilates · Wed 19:00 Boxing · Thu 17:00 Swimming", ar: "الأحد 8:00 يوغا · الاثنين 18:00 دراجات ثابتة · الثلاثاء 7:00 بيلاتس · الأربعاء 19:00 ملاكمة · الخميس 17:00 سباحة" }, gap: xs }
@@ -221,13 +248,15 @@ steps:
         text: { en: "Keep it at 12 px, so the week fits on one screen", ar: "أبقِه على 12 بكسل، ليظهر الأسبوع في شاشة واحدة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
           blocks: *schednow
       - id: follow
         text: { en: "Let it follow each phone's text size, and let people scroll down", ar: "اجعله يتبع حجم الخط في كل هاتف، ودع الناس يمرّرون للأسفل" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
           blocks:
             - { kind: heading, px: 22, text: { en: "This week", ar: "هذا الأسبوع" } }
             - { kind: text, px: 19, text: { en: "Sun 8:00 Yoga", ar: "الأحد 8:00 يوغا" }, gap: xs }
@@ -238,7 +267,8 @@ steps:
         text: { en: "Keep 12 px, and write the class names in bold capitals", ar: "أبقِ 12 بكسل، واكتب أسماء الحصص بخط عريض (Bold)" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
           blocks:
             - { kind: heading, px: 14, text: { en: "This week", ar: "هذا الأسبوع" } }
             - { kind: text, px: 12, weight: bold, text: { en: "Sun 8:00 YOGA · Mon 18:00 SPINNING · Tue 7:00 PILATES · Wed 19:00 BOXING · Thu 17:00 SWIMMING", ar: "الأحد 8:00 يوغا · الاثنين 18:00 دراجات ثابتة · الثلاثاء 7:00 بيلاتس · الأربعاء 19:00 ملاكمة · الخميس 17:00 سباحة" }, gap: xs }
@@ -268,6 +298,13 @@ steps:
     prompt:
       en: "Which test will show us what still stops members from booking?"
       ar: "أي اختبار سيكشف لنا ما زال يمنع الأعضاء من الحجز؟"
+    mock:
+      app: mudawwana
+      appbar: { title: { en: "Final booking test", ar: "اختبار الحجز الأخير" }, back: true }
+      blocks:
+        - { kind: heading, text: { en: "Fixed this week", ar: "ما أصلحناه هذا الأسبوع" } }
+        - { kind: list, style: check, gap: s, items: [ { en: "Classes listed by day", ar: "الحصص مرتّبة حسب اليوم" }, { en: "Phone number accepts +20 and spaces", ar: "رقم الهاتف يقبل ⁦+20⁩ والمسافات" }, { en: "Timetable follows the phone's text size", ar: "الجدول يتبع حجم الخط في الهاتف" } ] }
+        - { kind: small, color: muted, text: { en: "Next: one more test before going live", ar: "التالي: اختبار أخير قبل النشر" }, gap: m }
     options:
       - id: team
         text: { en: "Our team closes their eyes and books with the screen reader on the office phone", ar: "يغمض فريقنا أعينهم، ويحجزون بقارئ الشاشة على هاتف المكتب" }
