@@ -14,9 +14,8 @@ export const dynamic = "force-dynamic";
 export default async function MasteryPage({ params }: { params: Promise<{ locale: string; unitId: string }> }) {
   const { locale, unitId } = await params;
   setRequestLocale(locale);
-  const me = await requireLearner(locale);
+  const [me, bank] = await Promise.all([requireLearner(locale), getBank(unitId)]);
   const unit = getUnit(unitId);
-  const bank = await getBank(unitId);
   if (!unit || !bank || !me.db) notFound();
   const back = `/app/path/${unit.pathId}`;
   const round = await loadRound(me.db, me.userId, unitId);

@@ -14,8 +14,8 @@ export const dynamic = "force-dynamic";
 export default async function LessonPage({ params }: { params: Promise<{ locale: string; lessonId: string }> }) {
   const { locale, lessonId } = await params;
   setRequestLocale(locale);
-  const me = await requireLearner(locale);
-  const version = await getLessonVersion(lessonId);
+  // The lesson file and the learner's data load side by side.
+  const [me, version] = await Promise.all([requireLearner(locale), getLessonVersion(lessonId)]);
   if (!version) notFound();
   // Lessons play in order: a locked lesson sends the learner back to the path map.
   const view = buildPathView(version.pathId, me.progress, me.practicedSkills);

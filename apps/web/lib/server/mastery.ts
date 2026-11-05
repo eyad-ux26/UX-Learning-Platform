@@ -14,19 +14,23 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
   const bank = await getBank(unitId);
   if (!unit || !bank) return null;
   const checkId = unit.lessons.find((id) => getLessonMeta(id)?.mode === "check");
-  const { data } = await db
-    .from("step_results")
-    .select("attempt_id, step_id, skill_id, try_no, kind, correct, attempts!inner(lesson_id, started_at, finished_at, kind)")
-    .eq("user_id", userId)
-    .in("attempts.lesson_id", [...unit.lessons, bank.lessonId]);
+  const [{ data }, checkDone] = await Promise.all([
+    db
+      .from("step_results")
+      .select("attempt_id, step_id, skill_id, try_no, kind, correct, attempts!inner(lesson_id, started_at, finished_at, kind)")
+      .eq("user_id", userId)
+      .in("attempts.lesson_id", [...unit.lessons, bank.lessonId]),
+    checkId ? db.from("attempts").select("id").eq("user_id", userId).eq("lesson_id", checkId).not("finished_at", "is", null).limit(1) : Promise.resolve({ data: [] as unknown[] }),
+  ]);
   const rows = ((data ?? []) as unknown as Row[]).map((r) => ({ ...r, attempt: Array.isArray(r.attempts) ? r.attempts[0] : r.attempts }));
-  const skillCheckDone = !!checkId && (await db.from("attempts").select("id").eq("user_id", userId).eq("lesson_id", checkId).not("finished_at", "is", null).limit(1)).data?.length === 1;
+  const skillCheckDone = !!checkId && checkDone.data?.length === 1;
 
   // Per lesson, only its latest play counts: a lesson played again and aced no longer holds a miss against the learner.
   const latest = new Map<string, string>();
+  const latestStart = new Map<string, string>();
   for (const r of rows) if (r.attempt.kind !== "mastery") {
-    const cur = rows.find((x) => x.attempt_id === latest.get(r.attempt.lesson_id));
-    if (!cur || r.attempt.started_at > cur.attempt.started_at) latest.set(r.attempt.lesson_id, r.attempt_id);
+    const cur = latestStart.get(r.attempt.lesson_id);
+    if (cur === undefined || r.attempt.started_at > cur) { latest.set(r.attempt.lesson_id, r.attempt_id); latestStart.set(r.attempt.lesson_id, r.attempt.started_at); }
   }
   const asRow = (r: (typeof rows)[number]) => ({ attempt_id: r.attempt_id, lesson_id: r.attempt.lesson_id, step_id: r.step_id, skill_id: r.skill_id, try_no: r.try_no, kind: r.kind, correct: r.correct });
   const lessonTries = firstTries(rows.filter((r) => r.attempt.kind !== "mastery" && latest.get(r.attempt.lesson_id) === r.attempt_id).map(asRow));
