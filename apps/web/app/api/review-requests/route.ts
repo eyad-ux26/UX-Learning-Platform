@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getLessonVersion } from "@uxgate/content";
+import { getLessonVersion } from "@/lib/server/content";
 import { isQuestion } from "@uxgate/player/engine";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";

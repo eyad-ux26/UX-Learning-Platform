@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { getLessonVersion, getPath, getUnit } from "@uxgate/content";
+import { getPath, getUnit } from "@uxgate/content";
+import { getLessonVersion } from "@/lib/server/content";
 import type { Locale } from "@uxgate/content/types";
 import { LessonRunner } from "@/components/LessonRunner";
 import { redirect } from "@/i18n/navigation";

@@ -118,7 +118,7 @@ export type PathMeta = { id: string; title: Text; subtitle: Text };
 /** `lessons` are the playable lessons; `banks` hold each unit's held-back re-test steps for the mastery round (mode "bank"). */
 export type Bundle = { cast: CastMember[]; paths: PathMeta[]; units: UnitMeta[]; lessons: LessonVersion[]; banks: LessonVersion[] };
 /** A lesson without its steps: enough for maps, lists and titles. */
-export type LessonMeta = Omit<LessonVersion, "body"> & { body: Omit<Lesson, "steps" | "review_labels"> };
+export type LessonMeta = Omit<LessonVersion, "body"> & { body: Omit<Lesson, "steps" | "review_labels">; /** The lesson's file in dist/lessons (a content hash). */ file: string };
 /** What the app parses up front (dist/index.json). */
 export type ContentIndex = { paths: PathMeta[]; units: UnitMeta[]; lessons: LessonMeta[]; banks: LessonMeta[]; videos: string[] };
 

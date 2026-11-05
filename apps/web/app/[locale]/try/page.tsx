@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
-import { getLessonVersion, getPath, getUnit } from "@uxgate/content";
+import { getPath, getUnit } from "@uxgate/content";
+import { getLessonVersion } from "@/lib/server/content";
 import type { Locale } from "@uxgate/content/types";
 import { LessonRunner, GUEST_ID } from "@/components/LessonRunner";
 
