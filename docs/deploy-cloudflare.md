@@ -1,6 +1,6 @@
 # Hosting on Cloudflare Workers
 
-The web app runs on Cloudflare Workers through the OpenNext adapter. The Vercel build keeps working as a fallback (`apps/web/vercel.json`).
+The web app runs on Cloudflare Workers through the OpenNext adapter. Vercel is no longer configured in the repo (`vercel.json` is gone); the Vercel project is removed after the re-test.
 
 ## What is in the repo
 - `apps/web/wrangler.jsonc`: Worker name `uxgate-web`, placement near Frankfurt, daily Cron Trigger at 02:00 UTC, `UG_HTTPS=1`.
@@ -18,3 +18,6 @@ Workers & Pages, Create, Import a repository, pick `UX-Learning-Platform`.
 - Non-production branch deploy command: `cd apps/web && npx wrangler versions upload` (gives each branch a preview URL).
 - Build variables: `NODE_VERSION` = `22`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, later `NEXT_PUBLIC_CF_BEACON_TOKEN`.
 - Worker settings, Variables and Secrets (type Secret): `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`. Never put these in the repo or in chat.
+
+## Status
+Workers Builds is connected to this repository on the UXGate Cloudflare account (worker `uxgate-web`). Branch builds use `wrangler versions upload`, so every branch gets its own preview URL; `main` builds on the production deploy command. Supabase accepts the worker URL and `*-uxgate-web.uxgate-web.workers.dev` as redirect targets.

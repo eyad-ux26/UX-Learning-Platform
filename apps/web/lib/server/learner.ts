@@ -30,7 +30,7 @@ const fixture = (): Learner => ({
 
 /**
  * The signed-in learner and everything the app shell shows about them.
- * UG_DEV_FIXTURE=1 swaps in a made-up learner so screens can be checked without a database; it is never set on Vercel.
+ * UG_DEV_FIXTURE=1 swaps in a made-up learner so screens can be checked without a database; it is never set on a deployed host.
  */
 export async function getLearner(): Promise<Learner | null> {
   if (process.env.UG_DEV_FIXTURE === "1") return fixture();
