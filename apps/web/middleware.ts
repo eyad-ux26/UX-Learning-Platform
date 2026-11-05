@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
+import { isPrivateContent, notFound } from "./lib/private-content";
 import { hasSupabase, sessionCookieOptions, supabaseAnonKey, supabaseUrl } from "./lib/supabase/env";
 
 const intl = createMiddleware(routing);
@@ -14,6 +15,7 @@ const HOME = /^\/(en|ar)?\/?$/;
 
 export default async function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
+  if (isPrivateContent(pathname)) return notFound(); // lesson files: server only (see lib/private-content.ts)
   if (HOME.test(pathname) && (searchParams.has("error") || searchParams.has("error_description") || searchParams.has("error_code"))) {
     const locale = pathname.match(HOME)?.[1] ?? routing.defaultLocale;
     return NextResponse.redirect(new URL(`/${locale}/signin?error=link`, req.url));
@@ -32,4 +34,4 @@ export default async function middleware(req: NextRequest) {
   return res;
 }
 
-export const config = { matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"] };
+export const config = { matcher: ["/((?!api|_next|_vercel|.*\\..*).*)", "/c/:path*"] };
