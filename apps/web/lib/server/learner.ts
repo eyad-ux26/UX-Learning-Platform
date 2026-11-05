@@ -2,7 +2,7 @@ import { redirect } from "@/i18n/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { hasSupabase } from "@/lib/supabase/env";
-import { loadProgress } from "@/lib/server/load-progress";
+import { loadProgressAndZone } from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
 
 export type Learner = {
@@ -39,15 +39,14 @@ export async function getLearner(): Promise<Learner | null> {
   const { data } = await db.auth.getUser();
   if (!data.user) return null;
   const userId = data.user.id;
-  const progress = await loadProgress(db, userId);
-  const [onb, skills, prof, current] = await Promise.all([
+  // Every read at once, so a page waits for one database round trip after sign-in, not three.
+  const [{ progress, timeZone: tz }, onb, skills, current] = await Promise.all([
+    loadProgressAndZone(db, userId),
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id").eq("user_id", userId),
-    db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle(),
     // Its own query: if the column is missing the rest of the app still loads.
     db.from("profiles").select("current_path_id").eq("user_id", userId).maybeSingle(),
   ]);
-  const tz = prof.data?.time_zone ?? null;
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(new Date()));
   return {
     db, userId, progress, hour, timeZone: tz,

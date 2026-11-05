@@ -1,4 +1,9 @@
+import { createContext, useContext } from "react";
 import type { Locale, Mock, MockBlock, MockText } from "@uxgate/content/types";
+
+/** Spot steps make blocks with a `region` tappable. */
+export type RegionCtx = { selected: string[]; state: (id: string) => "" | "is-right" | "is-wrong" | "is-dim"; labels: Record<string, string>; onPick: (id: string) => void; locked: boolean; rightWord: string; wrongWord: string };
+const Regions = createContext<RegionCtx | null>(null);
 
 export const mt = (v: MockText | undefined, locale: Locale): string => (v === undefined ? "" : typeof v === "string" ? v : v[locale]);
 
@@ -7,6 +12,23 @@ const isolate = (s: string, locale: Locale) =>
   locale === "ar" && /[A-Za-z]/.test(s) && /\d/.test(s) ? <bdi dir="ltr">{s}</bdi> : s;
 
 function Block({ b, locale }: { b: MockBlock; locale: Locale }) {
+  const ctx = useContext(Regions);
+  const region = typeof b.region === "string" ? b.region : null;
+  if (ctx && region && !ctx.labels[region]) return <Plain b={b} locale={locale} />;
+  if (ctx && region) {
+    const state = ctx.state(region);
+    const picked = ctx.selected.includes(region);
+    return (
+      <button type="button" className={`lp-region ${picked && !state ? "is-selected" : state}`} aria-pressed={picked} aria-label={ctx.labels[region]} disabled={ctx.locked} onClick={() => ctx.onPick(region)}>
+        {state === "is-right" || state === "is-wrong" ? <span className={`lp-spot-tag ${state}`}>{state === "is-right" ? ctx.rightWord : ctx.wrongWord}</span> : null}
+        <span aria-hidden="true"><Plain b={b} locale={locale} /></span>
+      </button>
+    );
+  }
+  return <Plain b={b} locale={locale} />;
+}
+
+function Plain({ b, locale }: { b: MockBlock; locale: Locale }) {
   const cls = ["b", `k-${b.kind}`, b.size && `size-${b.size}`, b.emphasis && `em-${b.emphasis}`, b.tone && `tone-${b.tone}`, b.gap && `gap-${b.gap}`, b.color && `c-${b.color}`, b.weight && `w-${b.weight}`, b.style && `style-${String(b.style)}`, b.nowrap && "nowrap"].filter(Boolean).join(" ");
   const style: React.CSSProperties = {};
   if (b.px) { style.fontSize = b.px; style.lineHeight = 1.3; }
@@ -52,9 +74,9 @@ function Block({ b, locale }: { b: MockBlock; locale: Locale }) {
 }
 
 /** An example screen, drawn from the content's mock blocks, inside the design system's frame with an EXAMPLE tag so it is never mistaken for UXGate. */
-export function MockView({ mock, locale, label, tag, chip }: { mock: Mock; locale: Locale; label: string; tag: string; chip: string }) {
+export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mock; locale: Locale; label: string; tag: string; chip: string; regions?: RegionCtx }) {
   const blocks = mock.blocks.map((b, i) => <Block key={i} b={b} locale={locale} />);
-  return (
+  const body = (
     <div className="mock" role="group" aria-label={label}>
       <div className="mock-bar" aria-hidden="true"><span className="lbl">{chip}</span><span className="cap">{tag}{mock.caption ? ` · ${mock.caption[locale]}` : ""}</span><span className="dots"><i /><i /></span></div>
       <div className={`exmock${mock.frame === "wide" ? " wide" : ""}${mock.gray ? " gray" : ""}`} dir={mock.dir ?? (locale === "ar" ? "rtl" : "ltr")} style={mock.width ? { maxWidth: mock.width, marginInline: "auto" } : undefined}>
@@ -62,4 +84,5 @@ export function MockView({ mock, locale, label, tag, chip }: { mock: Mock; local
       </div>
     </div>
   );
+  return regions ? <Regions.Provider value={regions}>{body}</Regions.Provider> : body;
 }

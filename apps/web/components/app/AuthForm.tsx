@@ -6,8 +6,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
-import { createClient } from "@/lib/supabase/browser";
-import { authErrorKey, isEmail, MIN_PASSWORD, type AuthErrorKey } from "@/lib/auth";
+import { isEmail, MIN_PASSWORD, type AuthErrorKey } from "@/lib/auth";
+import { googleAction, magicLinkAction, signInAction, signUpAction, type AuthResult } from "@/app/[locale]/auth/actions";
 import { play } from "@/lib/sound";
 
 /** Google's own four-colour "G" mark, used as Google's branding guidelines require. */
@@ -36,13 +36,19 @@ export function AuthForm({ mode, linkError }: { mode: Mode; linkError?: boolean 
   const [sent, setSent] = useState<null | "signup" | "magic">(null);
   const signup = mode === "signup";
 
-  const callback = () => `${location.origin}/api/auth/callback?locale=${locale}`;
-  const fail = (e: Parameters<typeof authErrorKey>[0]) => { setError(authErrorKey(e)); setBusy(false); play("error-soft"); };
+  const fail = (r: Extract<AuthResult, { ok: false }>) => { setError(r.error); setBusy(false); play("error-soft"); };
+  const done = (r: AuthResult) => {
+    if (!r.ok) return fail(r);
+    if (r.next === "app") router.push("/app");
+    else { setSent(r.next === "sent-signup" ? "signup" : "magic"); setBusy(false); }
+  };
 
+  // Everything below runs on the server (server actions), so the session cookies are HttpOnly.
   async function google() {
     setBusy(true); setError(null);
-    const { error: e } = await createClient().auth.signInWithOAuth({ provider: "google", options: { redirectTo: callback() } });
-    if (e) fail(e);
+    const r = await googleAction({ locale }).catch(() => ({ ok: false, error: "generic" }) as AuthResult);
+    if (!r.ok) return fail(r);
+    if (r.url) location.assign(r.url);
   }
 
   async function submit(ev: React.FormEvent) {
@@ -52,17 +58,8 @@ export function AuthForm({ mode, linkError }: { mode: Mode; linkError?: boolean 
     if (signup && password.length < MIN_PASSWORD) return setError("weak");
     if (!signup && !password) return setError("invalid");
     setBusy(true);
-    const auth = createClient().auth;
-    if (signup) {
-      const { data, error: e } = await auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: callback(), data: { locale } } });
-      if (e) return fail(e);
-      // With email confirmation on there is no session yet; the learner confirms from the email.
-      if (data.session) router.push("/app"); else { setSent("signup"); setBusy(false); }
-    } else {
-      const { error: e } = await auth.signInWithPassword({ email: email.trim(), password });
-      if (e) return fail(e);
-      router.push("/app");
-    }
+    const r = await (signup ? signUpAction : signInAction)({ email, password, locale }).catch(() => ({ ok: false, error: "generic" }) as AuthResult);
+    done(r);
   }
 
   async function magic() {
@@ -71,9 +68,7 @@ export function AuthForm({ mode, linkError }: { mode: Mode; linkError?: boolean 
     setBusy(true);
     // The email follows the language saved on the account, so save this page's language first (best effort).
     await fetch("/api/auth/email-locale", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email: email.trim(), locale }) }).catch(() => null);
-    const { error: e } = await createClient().auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: callback(), data: { locale } } });
-    if (e) return fail(e);
-    setSent("magic"); setBusy(false);
+    done(await magicLinkAction({ email, locale }).catch(() => ({ ok: false, error: "generic" }) as AuthResult));
   }
 
   const errText = error ? (error === "link" ? t("e_link") : error === "needEmail" ? t("needEmail") : t(`e_${error}`)) : null;
