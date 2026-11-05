@@ -26,7 +26,7 @@ export async function checkCode(admin: SupabaseClient, userId: string, raw: stri
 }
 
 export async function studentStatus(admin: SupabaseClient, userId: string, now = new Date()) {
-  const { data } = await admin.from("student_checks").select("email, verified_at, valid_until, sent_at").eq("user_id", userId).maybeSingle();
+  const { data } = await admin.from("student_checks").select("email, verified_at, valid_until, sent_at").eq("user_id", userId).retry(false).maybeSingle();
   const verified = !!data?.verified_at && !!data.valid_until && new Date(data.valid_until) > now;
   return { verified, validUntil: verified ? (data!.valid_until as string) : null, email: (data?.email as string) ?? null, sentAt: (data?.sent_at as string) ?? null };
 }

@@ -16,7 +16,7 @@ export default async function CancelPage({ params, searchParams }: { params: Pro
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("billing");
-  const v = await loadBilling(me.db, me.userId, sp.state);
+  const v = await loadBilling(me, sp.state);
   if (!v.sub || !["active", "grace"].includes(v.sub.status)) return redirect({ href: "/app/settings/billing", locale }) as never;
   // In the grace period nothing is paid ahead, so Pro ends now; otherwise at the end of the paid period.
   const until = formatDate(v.sub.status === "grace" ? new Date().toISOString() : v.sub.currentPeriodEnd, locale);

@@ -3,7 +3,8 @@ import { providerFor, quote, regionFor, type Period, type Provider, type Quote, 
 import { welcomeBackEligible } from "@/lib/billing/subscription";
 import type { Learner } from "@/lib/server/learner";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { entitlementFromRow, subFromRow } from "./store";
+import { subFromRow } from "./store";
+import { billingTablesMissing, noteBillingError } from "./tables";
 import { checkCode, studentStatus } from "./checkout";
 import { mockAllowed, providerMode, type Mode } from "./config";
 import { requestCountry, requestHost } from "./account";
@@ -54,19 +55,21 @@ export async function loadOffer(me: Learner, opts: { code?: string | null; fixtu
   const admin = createAdminClient();
   let liveQ = me.db.from("subscriptions").select("*").eq("user_id", me.userId).in("status", ["active", "grace", "cancelled"]);
   if (!mockAllowed(host)) liveQ = liveQ.neq("provider", "mock"); // test-mode plans do not exist on the live site
-  const [live, ent, student, check] = await Promise.all([
-    liveQ.maybeSingle(),
-    me.db.from("entitlements").select("*").eq("user_id", me.userId).maybeSingle(),
-    studentStatus(admin, me.userId),
-    code ? checkCode(admin, me.userId, code, regionFor(ip)) : Promise.resolve(null),
+  // The entitlement was read once for this request by getLearner. Before 0036 exists nothing else is asked for.
+  const skip = billingTablesMissing();
+  const [live, student, check] = await Promise.all([
+    skip ? { data: null, error: null } : liveQ.retry(false).maybeSingle(),
+    skip ? { verified: false, validUntil: null, email: null, sentAt: null } : studentStatus(admin, me.userId),
+    code && !skip ? checkCode(admin, me.userId, code, regionFor(ip)) : Promise.resolve(null),
   ]);
+  noteBillingError(live.error);
   const sub = live.data ? subFromRow(live.data) : null;
   // A live plan keeps the country it was bought in (paying again in the grace period renews that plan).
   const country = sub?.country ?? ip;
   const region = regionFor(country);
   const provider = providerFor(region);
   const valid = check?.ok && regionFor(ip) === region ? check : null;
-  const welcomeBack = welcomeBackEligible(entitlementFromRow(ent.data));
+  const welcomeBack = welcomeBackEligible(me.entitlement);
   const e = { student: student.verified, welcomeBack, code: valid ? valid.code : null };
   return {
     country, region, provider, mode: providerMode(provider, host), pro: me.pro, grace: sub?.status === "grace",

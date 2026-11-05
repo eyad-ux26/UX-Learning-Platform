@@ -17,7 +17,7 @@ export default async function BillingPage({ params, searchParams }: { params: Pr
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("billing");
-  const v = await loadBilling(me.db, me.userId, sp.state);
+  const v = await loadBilling(me, sp.state);
   const s = await billingScreen(v, locale);
   const toast = sp.done === "cancel" ? t("cxToast", { date: s.endDate }) : sp.done === "resume" ? t("resumeToast") : sp.done === "change" ? t("chToast", { date: s.endDate }) : sp.done === "keep" ? t("resumeToast") : null;
 

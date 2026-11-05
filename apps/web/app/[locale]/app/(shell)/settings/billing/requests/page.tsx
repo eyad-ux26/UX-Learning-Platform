@@ -16,7 +16,7 @@ export default async function RequestsPage({ params, searchParams }: { params: P
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("billing");
-  const v = await loadBilling(me.db, me.userId, sp.state);
+  const v = await loadBilling(me, sp.state);
   const pay = (id: string) => v.payments.find((p) => p.id === id);
   const st = { waiting: ["st st-wait", "ph ph-hourglass", t("waiting")], approved: ["st st-yes", "ph ph-check", t("approved")], declined: ["st st-off", "ph ph-x", t("declined")] } as const;
   return (

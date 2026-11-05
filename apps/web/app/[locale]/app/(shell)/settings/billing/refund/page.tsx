@@ -17,7 +17,7 @@ export default async function RefundPage({ params, searchParams }: { params: Pro
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("billing");
-  const v = await loadBilling(me.db, me.userId, sp.state);
+  const v = await loadBilling(me, sp.state);
   const rt = refundTarget(v);
   if (!rt) return redirect({ href: "/app/settings/billing", locale }) as never;
   if (!rt.window.ok) return redirect({ href: rt.window.reason === "asked" ? "/app/settings/billing/requests" : "/app/settings/billing?refund=late", locale }) as never;

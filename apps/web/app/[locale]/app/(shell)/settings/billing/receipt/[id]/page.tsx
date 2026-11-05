@@ -18,7 +18,7 @@ export default async function ReceiptPage({ params, searchParams }: { params: Pr
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("billing");
-  const v = await loadBilling(me.db, me.userId, sp.state);
+  const v = await loadBilling(me, sp.state);
   const p = v.payments.find((x) => x.id === id);
   if (!p) notFound();
   const L = locale as "en" | "ar";
