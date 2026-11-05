@@ -26,6 +26,8 @@ id: P10-U01-L01          # must match the file name
 mode: lesson             # or "check" for a skill check
 minutes: 7
 title: { en: "...", ar: "..." }
+summary: { en: "...", ar: "..." }   # optional, one sentence on what the learner will do; shown under the title on the desktop home card
+speaker: hana            # the cast member who tells the scenarios, from cast.yaml (compiled into the bundle)
 review_labels:           # optional short names for misconceptions, shown in the recap
   MC-P10-001: { en: "...", ar: "..." }
 steps: [ ... ]
@@ -41,6 +43,7 @@ Fields every step can have:
 | `type` | `card`, `choose`, `predict`, `words`, `fix`, `tune`, `sort`, `order`, `match`, `spot`, `compare` |
 | `part` | `hook`, `try`, `concept`, `guided`, `contrast`, `independent`, `recap`, `check` |
 | `scenario` | Optional text shown in a box above the prompt |
+| `speaker` | A cast member from `cast.yaml` who tells this step's own `scenario`, when it isn't the lesson's speaker. The hook and every scenario are written in the speaker's first person, and one cast member always plays the same person. People they mention (a gym visitor, a patient) are not cast members. In the app the speaker shows as an avatar and a speech bubble labelled "Name · Role", and the face follows the answer (talking, then smiling after a right answer, thinking after a wrong one). A scenario with no speaker is a plain line |
 | `prompt` | The question (not on cards) |
 | `mock` | Optional screen to show (see Mocks) |
 | `hints` | Up to 2, shown only after a wrong answer, never in skill checks |
