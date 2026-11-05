@@ -7,7 +7,7 @@ const unit = (pathId: string) => ({ id: `${pathId}-U01`, pathId, title: { en: ""
 const b = { cast: [], lessons: [], paths: ["P01", "P10"].map((id) => ({ id, title: { en: id, ar: id }, subtitle: { en: "", ar: "" } })), units: [unit("P01"), unit("P10")] } as unknown as Bundle;
 
 describe("path catalog", () => {
-  it("lists 14 paths", () => expect(CATALOG).toHaveLength(14));
+  it("lists 15 paths", () => expect(CATALOG).toHaveLength(15));
   it("only paths with lessons are playable; the rest are Coming soon", () => {
     expect(isPlayable("P01", b)).toBe(true);
     expect(isPlayable("P02", b)).toBe(false);
