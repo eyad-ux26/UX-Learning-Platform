@@ -603,28 +603,55 @@ describe("hardening (#135)", () => {
   });
 });
 
-describe("Paymob: Egypt's price needs a card issued in Egypt", () => {
+describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ONLY)", () => {
   let refunds: string[];
+  const foreign = (id: number, s: Session, country = "DE") => deliverPaymob({ id, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: country }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
   beforeEach(() => {
     refunds = [];
     engine.actions = { refund: async (provider, id, amount) => { refunds.push(`${provider}:${id}:${amount}`); } };
+    engine.egCardsOnly = true;
   });
 
-  it("a card issued abroad (a VPN user) is refused and refunded, with no Pro", async () => {
+  it("off by default: a card issued abroad still starts Pro", async () => {
+    engine.egCardsOnly = undefined;
     const s = session();
-    const r = await deliverPaymob({ id: 1501, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "DE" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await foreign(1500, s);
+    expect(pro()).toBe(true);
+    expect(refunds).toEqual([]);
+  });
+
+  it("on: a card issued abroad (a VPN user) is refused and refunded, with no Pro, and the learner is told why", async () => {
+    const s = session();
+    const r = await foreign(1501, s);
     expect(r[0]).toMatchObject({ status: "ignored" });
     expect(pro()).toBe(false);
     expect([...store.subs.values()]).toHaveLength(0);
-    expect(store.sessions.get(s.id)?.status).toBe("failed");
+    expect(store.sessions.get(s.id)?.status).toBe("refused");
     expect(refunds).toEqual(["paymob:1501:24900"]);
-    expect([...store.payments.values()][0]).toMatchObject({ subscriptionId: null, amountMinor: 24900 });
+    expect([...store.payments.values()][0]).toMatchObject({ subscriptionId: null, amountMinor: 24900, status: "paid" });
+    expect(subjects()).toEqual(["لم نتمكن من قبول هذه الدفعة: المبلغ في طريقه إليك"]);
+    // The refund webhook then marks it refunded, and its email does not talk about Pro ending.
+    sent = [];
+    await deliverPaymob({ id: 1501, is_refunded: true, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "DE" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    expect([...store.payments.values()][0].status).toBe("refunded");
+    expect(sent[0].text).not.toContain("انتهى Pro");
   });
 
-  it("an Egyptian card (two or three letters) starts Pro as usual", async () => {
+  it("an Egyptian card (EG, EGY) starts Pro as usual", async () => {
     const s = session();
     await deliverPaymob({ id: 1502, data: { card_issuer_country: "EGY" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     expect(pro()).toBe(true);
+    expect(refunds).toEqual([]);
+  });
+
+  it("placeholders (NA, XX, ZZ, UNK, a bank name) never refuse a payment", async () => {
+    for (const [i, c] of ["NA", "XX", "ZZ", "UNK", "Banque Misr"].entries()) {
+      const uid = `00000000-0000-4000-8000-00000000c00${i}`;
+      store.learners.set(uid, { email: `${i}@example.com`, locale: "en", name: "C" });
+      const s = session({ userId: uid, providerRef: String(9100 + i) });
+      await deliverPaymob({ id: 1510 + i, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: c }, order: { id: 9100 + i, merchant_order_id: `s_${s.id}` } });
+      expect(store.sessions.get(s.id)?.status, c).toBe("paid");
+    }
     expect(refunds).toEqual([]);
   });
 

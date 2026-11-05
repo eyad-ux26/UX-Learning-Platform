@@ -6,7 +6,7 @@ import { pickPath } from "@/lib/learning";
 
 export const dynamic = "force-dynamic";
 
-const STATES = ["returning", "success", "pending", "pendingBank", "failed", "cancelled"] as const;
+const STATES = ["returning", "success", "pending", "pendingBank", "failed", "cancelled", "refused"] as const;
 
 export default async function CheckoutReturnPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const { locale } = await params;

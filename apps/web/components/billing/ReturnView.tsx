@@ -4,8 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 
-type State = "returning" | "success" | "pending" | "pendingBank" | "failed" | "cancelled";
-type Status = { status: "open" | "pending" | "paid" | "failed" | "cancelled"; provider: string; kind: string; period: "month" | "year" };
+type State = "returning" | "success" | "pending" | "pendingBank" | "failed" | "cancelled" | "refused";
+type Status = { status: "open" | "pending" | "paid" | "failed" | "cancelled" | "refused"; provider: string; kind: string; period: "month" | "year" };
 
 const MAX_WAIT_MS = 45_000;
 
@@ -33,6 +33,7 @@ export function ReturnView({ sessionId, fixtureState, pathHref, overlayClosed, p
       if (s?.status === "pending") { setState("pending"); return; }
       if (s?.status === "failed") { setState("failed"); return; }
       if (s?.status === "cancelled") { setState("cancelled"); return; }
+      if (s?.status === "refused") { setState("refused"); return; }
       // Paddle's overlay was closed without paying: nothing will come.
       if (overlayClosed && Date.now() - started.current > 6000) { setState("cancelled"); return; }
       if (Date.now() - started.current > MAX_WAIT_MS) { setState("pendingBank"); return; }
@@ -61,15 +62,18 @@ export function ReturnView({ sessionId, fixtureState, pathHref, overlayClosed, p
     ? [["ph ph-lock-open", t("res.success.r1"), t("res.success.r1s")], ["ph ph-squares-four", t("res.success.r2"), null], ["ph ph-certificate", t("res.success.r3"), t("res.success.r3s")]]
     : key === "pending" ? [["ph ph-check-circle-fill", t("res.pending.r1"), t("res.pending.r1s")], ["ph ph-book", t("res.pending.r2"), t("res.pending.r2s")]]
     : key === "failed" ? [["ph ph-credit-card", t("res.failed.r1"), t("res.failed.r1s")], ["ph ph-globe", t("res.failed.r2"), t("res.failed.r2s")], ["ph ph-wallet", t("res.failed.r3"), null]]
+    : key === "refused" ? [["ph ph-arrow-counter-clockwise", t("res.refused.r1"), t("res.refused.r1s")], ["ph ph-credit-card", t("res.refused.r2"), t("res.refused.r2s")]]
     : [["ph ph-check-circle-fill", t("res.cancelled.r1"), null], ["ph ph-check-circle-fill", t("res.cancelled.r2"), null]];
-  const ill = key === "success" ? "/ill/uxgate-ill-trophy.png" : key === "pending" ? "/ill/uxgate-ill-target.png" : key === "failed" ? "/ill/uxgate-ill-error.png" : "/ill/uxgate-ill-gate.png";
+  const ill = key === "success" ? "/ill/uxgate-ill-trophy.png" : key === "pending" ? "/ill/uxgate-ill-target.png" : key === "failed" || key === "refused" ? "/ill/uxgate-ill-error.png" : "/ill/uxgate-ill-gate.png";
   const go = key === "success" ? <Link href={pathHref} className="btn btn-primary btn-lg btn-block press">{t("res.success.go")}</Link>
     : key === "pending" ? <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={() => void ask()}>{t("res.pending.go")}</button>
     : key === "failed" ? <Link href={`/app/checkout?period=${period}`} className="btn btn-primary btn-lg btn-block press">{t("res.failed.go")}</Link>
+    : key === "refused" ? <Link href="/app/plans" className="btn btn-primary btn-lg btn-block press">{t("res.refused.go")}</Link>
     : <Link href="/app/plans" className="btn btn-primary btn-lg btn-block press">{t("res.cancelled.go")}</Link>;
   const alt = key === "success" ? <Link href="/app/settings/billing" className="btn btn-ghost btn-block">{t("res.success.alt")}</Link>
     : key === "pending" ? <Link href={pathHref} className="btn btn-ghost btn-block">{t("res.pending.alt")}</Link>
     : key === "failed" ? <Link href="/app/plans" className="btn btn-ghost btn-block">{t("res.failed.alt")}</Link>
+    : key === "refused" ? <Link href={pathHref} className="btn btn-ghost btn-block">{t("res.refused.alt")}</Link>
     : <Link href={pathHref} className="btn btn-ghost btn-block">{t("res.cancelled.alt")}</Link>;
   return (
     <main className="bye">

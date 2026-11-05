@@ -9,7 +9,7 @@ const base = process.argv[2] ?? "http://localhost:3100";
 const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/paths", "/app/paths/P01", "/app/review", "/app/streak", "/app/skills", "/app/badges", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video", "/app/settings", "/app/settings/notifications", "/app/settings/data", "/app/inbox", "/app/help", "/app/requests", "/app/requests/00000000-0000-4000-9000-000000000001", "/goodbye", "/paths", "/paths/forms-that-flow", "/paths/patterns-that-fit", "/privacy", "/terms", "/offline", "/maintenance", "/no-such-page", "/forgot",
   // Slice 5: paywall, plans, checkout, results and billing (fixture states, no database).
   "/app/path/P01?paywall=P01-U02", "/app/profile?paywall=cert", "/app/plans", "/app/plans?offer=founding&country=SA", "/app/checkout?period=year",
-  "/app/checkout/return?state=success", "/app/checkout/return?state=failed", "/app/settings/billing", "/app/settings/billing?state=failed",
+  "/app/checkout/return?state=success", "/app/checkout/return?state=failed", "/app/checkout/return?state=refused", "/app/settings/billing", "/app/settings/billing?state=failed",
   "/app/settings/billing?state=wallet", "/app/settings/billing?state=active", "/app/settings/billing/cancel?state=active", "/app/settings/billing/refund?state=active", "/app/settings/billing/requests?state=requested",
   "/app/settings/billing/receipt/fixture-pay-2?state=active", "/app/settings/billing?state=lapsed"];
 const views = [

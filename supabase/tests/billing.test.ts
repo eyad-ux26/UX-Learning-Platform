@@ -139,6 +139,10 @@ describe("integrity", () => {
     const pay = (await db.query<{ id: string }>(`select id from payments where user_id = $1`, [A])).rows[0].id;
     await expect(db.query(`insert into refund_requests (user_id, payment_id, amount_minor, currency, reason) values ($1, $2, 1, 'EGP', 'again')`, [A, pay])).rejects.toThrow(/duplicate/);
   });
+  it("a checkout can be marked refused (0037), and nothing else new", async () => {
+    await db.query(`update checkout_sessions set status = 'refused' where user_id = $1`, [A]);
+    await expect(db.query(`update checkout_sessions set status = 'other' where user_id = $1`, [A])).rejects.toThrow(/check/);
+  });
   it("no full card number fits the card columns", async () => {
     await expect(db.query(`update subscriptions set card_last4 = '4242424242424242' where user_id = $1`, [A])).rejects.toThrow(/check/);
   });
