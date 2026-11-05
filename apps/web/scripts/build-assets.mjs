@@ -21,7 +21,9 @@ const RENAME = {
 };
 
 // Icons the app needs that the design canvas does not use (yet).
-const EXTRA = ["ph-eye-slash", "ph-arrow-counter-clockwise", "ph-arrows-clockwise", "ph-circle", "ph-closed-captioning", "ph-cloud-arrow-up", "ph-cloud-check", "ph-dots-six-vertical", "ph-hand-waving", "ph-list-bullets", "ph-paper-plane-tilt", "ph-radio-button-fill", "ph-seal-check", "ph-warning-circle"];
+// Slice 4: account, notifications, help, public and system pages.
+const SLICE4 = ["ph-app-window", "ph-bell-slash", "ph-brackets-curly", "ph-chat-text", "ph-checks", "ph-lifebuoy", "ph-shield-check", "ph-sun", "ph-trash", "ph-warning", "ph-wrench", "ph-credit-card", "ph-download", "ph-calendar", "ph-ranking", "ph-moon", "ph-pencil", "ph-info", "ph-envelope-open", "ph-hourglass", "ph-arrow-square-out", "ph-gift", "ph-books", "ph-arrow-left", "ph-house-line", "ph-identification-card", "ph-key", "ph-check-square", "ph-copy", "ph-clock-countdown", "ph-caret-right", "ph-certificate", "ph-cursor-click", "ph-video"];
+const EXTRA = [...SLICE4, "ph-eye-slash", "ph-arrow-counter-clockwise", "ph-arrows-clockwise", "ph-circle", "ph-closed-captioning", "ph-cloud-arrow-up", "ph-cloud-check", "ph-dots-six-vertical", "ph-hand-waving", "ph-list-bullets", "ph-paper-plane-tilt", "ph-radio-button-fill", "ph-seal-check", "ph-warning-circle"];
 // Icons named by concept-card points in the content.
 const contentIcons = [];
 (function walk(dir) {

@@ -1,0 +1,142 @@
+/* Slice 4 · public pages (path pages, paths index, privacy, terms) and system pages.
+   Adds to account.css: the canvas inline styles of PublicPages/SystemPages as classes, and the slice 3 card and kind tags
+   (.path-card, .pc-*, .kind*, .pg-grid) these pages need. Phones first; desktop from 1024px. Logical properties only. */
+
+/* Helpers */
+.pub-grow { flex: 1; }
+/* Shown on one layout only. !important because they sit on elements whose own class sets display. */
+@media (max-width: 1023px) { .ug .pub-only-desk, .ug .pub-only-desk-block { display: none !important; } }
+@media (min-width: 1024px) { .ug .pub-only-mob, .ug .pub-only-mob-block { display: none !important; } }
+.ug .pub-link { color: var(--link); }
+.ug .pub-strong { font-weight: 700; }
+.ug .pub-center { text-align: center; }
+.ug .pub-start { text-align: start; }
+.ug .pub-stack { display: flex; flex-direction: column; gap: 14px; min-inline-size: 0; }
+.ug .pub-list { list-style: none; margin: 0; padding: 0; }
+.ug .pub-main { flex: 1; display: flex; flex-direction: column; inline-size: 100%; max-inline-size: 1600px; margin-inline: auto; }
+
+/* Header */
+.ug .pub-logo { display: inline-flex; align-items: center; min-block-size: 44px; }
+@media (min-width: 1024px) { .ug .pub-logo img { block-size: 34px; } }
+.ug .pub-nav .links a { display: inline-flex; align-items: center; min-block-size: 44px; }
+.ug .pub-nav .links a:hover { color: var(--ink); }
+.ug .pub-nav .btn-quiet { padding-inline: 8px; gap: 6px; }
+.ug .pub-nav .btn { margin-block-end: 0; }
+@media (max-width: 1023px) { .ug .pub-nav-cta { padding-inline: 12px; } }
+
+/* Footer */
+.ug .pub-foot-logo { block-size: 28px; inline-size: auto; align-self: flex-start; }
+@media (min-width: 1024px) { .ug .pub-foot-logo { align-self: center; } }
+.ug .pub-foot nav a, .ug .pub-foot .mail { display: inline-flex; align-items: center; min-block-size: 44px; }
+.ug .pub-foot a:hover { text-decoration: underline; }
+
+/* Path page hero: copy, art, then the buttons on phones; copy and buttons beside the art on desktop */
+.ug .pub-hero-top { display: flex; flex-direction: column; gap: 14px; min-inline-size: 0; }
+.ug .pub-hero-go { display: flex; flex-direction: column; gap: 14px; }
+.ug .pub-note { display: flex; align-items: center; gap: 6px; }
+.ug .crumb a { display: inline-flex; align-items: center; min-block-size: 44px; }
+.ug .crumb { margin-block: -10px; }
+.ug .pp-art img { block-size: auto; aspect-ratio: 1; }
+.ug .pub-art-label { position: absolute; inset-block-start: -22px; inset-inline-start: 4px; }
+@media (min-width: 1024px) {
+  .ug .pp-hero.pub-hero { grid-template-areas: "top art" "go art"; row-gap: 14px; }
+  .ug .pub-hero-top { grid-area: top; align-self: end; }
+  .ug .pub-hero-art { grid-area: art; }
+  .ug .pub-hero-go { grid-area: go; align-self: start; }
+  .ug .pp-cta .btn-block { inline-size: auto; }
+}
+
+/* Units beside the sample on desktop */
+@media (min-width: 1024px) { .ug .pub-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
+.ug .pub-how .ph { color: var(--link); }
+
+/* Sample step */
+.ug .pub-sample { padding: 16px; display: flex; flex-direction: column; gap: 10px; border-radius: 24px; box-shadow: 0 6px 0 var(--ledge); }
+.ug .pub-sample .say { margin: 0; }
+.ug .pub-sample .say-face { inline-size: 56px; block-size: 56px; }
+.ug .pub-sample-q { margin: 0; font-weight: 700; font-size: 18px; line-height: 1.35; }
+.ug .pub-sample-opts { display: grid; gap: 8px; }
+.ug .pub-sample-opts .choice { min-block-size: 52px; padding: 8px 12px; gap: 10px; font: inherit; font-weight: 600; font-size: 15px; border-radius: 14px; text-align: start; }
+.ug .pub-sample-opts .choice .key { inline-size: 28px; block-size: 28px; font-size: 14px; border-radius: 8px; }
+.ug .pub-sample-live:empty { display: none; }
+.ug .pub-sample-fb { margin: 0; padding: 12px 14px; border-radius: 16px; font-size: 15px; line-height: 1.5; }
+.ug .pub-sample-fb.is-right { background: var(--right-bg); }
+.ug .pub-sample-fb.is-wrong { background: var(--wrong-bg); }
+.ug[lang="ar"] .pub-sample-fb { line-height: 1.7; }
+
+/* Hybrid path: sample clip poster */
+.ug .pub-clip-wrap { display: flex; flex-direction: column; gap: 8px; }
+.ug .pub-clip { position: relative; border-radius: 20px; overflow: hidden; background: #00121B; aspect-ratio: 16 / 9; display: grid; place-items: center; box-shadow: 0 0 0 1.5px var(--sel-line); }
+.ug .pub-clip-art { position: absolute; inset-inline-end: 6%; inset-block-end: 10%; inline-size: 34%; block-size: auto; opacity: 0.9; }
+.ug .pub-clip-copy { position: absolute; inset-inline-start: 6%; inset-block-start: 12%; display: flex; flex-direction: column; gap: 6px; max-inline-size: 56%; color: #EAF7FC; text-align: start; }
+.ug .pub-clip-over { font-size: 12px; font-weight: 700; color: #78E4FC; }
+.ug .pub-clip-title { font-size: 20px; line-height: 1.25; }
+.ug .pub-clip-play { inline-size: 64px; block-size: 64px; min-block-size: 0; padding: 0; border-radius: 50%; position: relative; margin: 0; }
+.ug .pub-clip-play .ph { font-size: 26px; }
+.ug .pub-clip-cc { position: absolute; inset-inline-start: 14px; inset-block-end: 12px; display: inline-flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 700; color: #BBD9E6; }
+
+/* Price band */
+.ug .pub-band-copy { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.ug .pp-band h2.pub-band-title { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 700; }
+.ug .pub-band-body { margin: 0; font-size: 15px; line-height: 1.5; }
+@media (min-width: 1024px) { .ug .pub-band-btn { flex: none; } }
+
+/* Coming soon */
+.ug .pub-soon-note { font-size: 15px; }
+.ug .pub-soon-art { border-style: dashed; }
+.ug .pub-soon-art img { filter: grayscale(0.6); opacity: 0.6; }
+.ug .pub-soon-cta { margin-block-start: 6px; }
+
+/* Path cards (slice 3 catalog cards) */
+.ug .pg-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+@media (min-width: 1024px) { .ug .pub-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+.ug .pub-grid > li { display: flex; min-inline-size: 0; }
+.ug .path-card.pub-card { flex: 1; position: relative; display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-xl); border: 2px solid var(--line); background: var(--surface); color: var(--ink); text-decoration: none; min-inline-size: 0; min-block-size: 80px; text-align: start; }
+.ug .path-card.pub-card.press { margin-block-end: var(--ledge-h); }
+.ug .path-card.pub-card.is-soon { background: transparent; border-style: dashed; box-shadow: none; }
+.ug .pc-ill { position: relative; inline-size: 56px; block-size: 56px; flex: none; border-radius: 16px; background: var(--panel); overflow: hidden; display: grid; place-items: center; }
+.ug .pc-ill img { inline-size: 62px; block-size: 62px; object-fit: contain; }
+.ug .path-card.is-soon .pc-ill { background: var(--track); }
+.ug .path-card.is-soon .pc-ill img { filter: grayscale(1); opacity: 0.45; }
+.ug .pc-text { flex: 1; min-inline-size: 0; display: flex; flex-direction: column; gap: 3px; }
+.ug .pc-name { margin: 0; font-weight: 700; font-size: 16px; line-height: 1.25; text-align: start; }
+.ug .pc-sub { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+.ug[lang="ar"] .pc-sub { line-height: 1.6; }
+.ug .path-card.is-soon .pc-name { color: var(--ink-2); }
+.ug .pc-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-block-start: 3px; }
+.ug .pc-end { flex: none; display: flex; align-items: center; color: var(--ink-3); }
+.ug .pc-end .ph { font-size: 20px; }
+.ug .kind { display: inline-flex; align-items: center; gap: 4px; block-size: 22px; padding: 0 8px; border-radius: 6px; font-weight: 700; font-size: 12px; white-space: nowrap; background: var(--track); color: var(--ink-2); }
+.ug .kind .ph { font-size: 13px; }
+.ug .kind-hybrid { background: #DDF1F0; color: #1D5F5C; }
+.ug[data-theme="dark"] .kind-hybrid { background: #0B3433; color: #7FD6D3; }
+.ug .kind-soon { background: transparent; color: var(--ink-3); box-shadow: inset 0 0 0 1.5px var(--line-field); }
+.ug .kind-free { background: var(--mint); color: var(--right-ink); }
+.ug .pp-facts .kind { block-size: 28px; font-size: 13px; padding: 0 10px; }
+
+/* Privacy and terms */
+@media (min-width: 1024px) { .ug .pub-legal-side { position: sticky; inset-block-start: 24px; } }
+.ug .legal-meta a { display: inline-flex; align-items: center; min-block-size: 44px; }
+.ug .toc a { min-block-size: 44px; }
+.ug .toc a:hover { color: var(--ink); background: var(--surface-2); }
+.ug .pub-toc-fold { display: flex; flex-direction: column; gap: 8px; }
+.ug .pub-toc-fold > summary { list-style: none; cursor: pointer; }
+.ug .pub-toc-fold > summary::-webkit-details-marker { display: none; }
+.ug .pub-toc-caret { transform: rotate(90deg); transition: transform var(--t-fast, 120ms); }
+.ug .pub-toc-fold[open] .pub-toc-caret { transform: rotate(-90deg); }
+.ug .pub-toc-fold > .toc { margin-block-start: 8px; }
+@media (min-width: 1024px) { .ug .pub-toc-fold { display: none; } }
+.ug .pub-qs { font-size: 13px; }
+.ug .doc > section { display: flex; flex-direction: column; gap: 10px; }
+.ug .doc a { color: var(--link); }
+.ug .sample-cap { flex-wrap: wrap; }
+.ug[lang="ar"] .sample-cap span { letter-spacing: 0; }
+
+/* System pages */
+.ug .sys img { block-size: auto; aspect-ratio: 1; }
+.ug .pub-sys-foot { font-size: 13px; margin-block-start: 6px; }
+.ug .pub-sys-btn { inline-size: 100%; }
+@media (min-width: 1024px) { .ug .pub-sys-btn { inline-size: auto; } }
+
+/* English path names keep left-to-right text but sit at the start of an Arabic page */
+.ug[dir="rtl"] .ltr.pub-start, .ug[dir="rtl"] .pc-name.ltr { text-align: end; }

@@ -22,7 +22,7 @@ export async function greeting(hour: number, name: string | null) {
   return name ? t("greetName", { greeting: g, name }) : g;
 }
 
-export async function HomeMain({ me, view }: { me: Learner; view: PathView }) {
+export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView; bell?: React.ReactNode }) {
   const { progress, hour } = me;
   const t = await getTranslations("home");
   const locale = (await getLocale()) as Locale;
@@ -55,8 +55,12 @@ export async function HomeMain({ me, view }: { me: Learner; view: PathView }) {
         <div style={{ flex: 1 }} />
         <span className="stat" aria-label={t("streakLabel", { count: progress.streak })}><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num">{progress.streak}</span></span>
         <span className="stat" aria-label={t("xpLabel", { count: progress.xpTotal })}><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>
+        {bell}
       </div>
-      <h1 className="t-h1 h1-s">{await greeting(hour, progress.displayName)}</h1>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <h1 className="t-h1 h1-s" style={{ flex: 1 }}>{await greeting(hour, progress.displayName)}</h1>
+        {bell ? <span className="only-desk">{bell}</span> : null}
+      </div>
       {me.freezeNote ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
 
       {next ? (

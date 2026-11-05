@@ -7,15 +7,28 @@ import { hasSupabase, sessionCookieOptions, supabaseAnonKey, supabaseUrl } from 
 
 const intl = createMiddleware(routing);
 // Only screens that know who the learner is need their session kept fresh.
-const SIGNED_IN_AREA = /^\/(en|ar)\/(app|onboarding|signin|signup)(\/|$)/;
+const SIGNED_IN_AREA = /^\/(en|ar)\/(app|onboarding|signin|signup|forgot|reset)(\/|$)/;
 
 // A sign-in that fails at the provider (an expired Google consent screen, for example) comes back to the site address with
 // error in the query. Show the sign-in page's "that link did not work" message instead of a plain home page.
 const HOME = /^\/(en|ar)?\/?$/;
 
+// Maintenance switch: with UG_MAINTENANCE=1 every page shows /{locale}/maintenance with a 503. The matcher already skips
+// /api, /_next and files; the maintenance page itself passes through.
+const MAINTENANCE_PAGE = /^\/(en|ar)\/maintenance\/?$/;
+const LOCALE_PREFIX = /^\/(en|ar)(\/|$)/;
+
 export default async function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
   if (isPrivateContent(pathname)) return notFound(); // lesson files: server only (see lib/private-content.ts)
+  if (process.env.UG_MAINTENANCE === "1" && !MAINTENANCE_PAGE.test(pathname)) {
+    const url = req.nextUrl.clone();
+    const cookie = req.cookies.get("NEXT_LOCALE")?.value;
+    const locale = pathname.match(LOCALE_PREFIX)?.[1] ?? (cookie === "ar" || cookie === "en" ? cookie : routing.defaultLocale);
+    url.pathname = `/${locale}/maintenance`;
+    url.search = "";
+    return NextResponse.rewrite(url, { status: 503, headers: { "Retry-After": "1800", "Cache-Control": "no-store" } });
+  }
   if (HOME.test(pathname) && (searchParams.has("error") || searchParams.has("error_description") || searchParams.has("error_code"))) {
     const locale = pathname.match(HOME)?.[1] ?? routing.defaultLocale;
     return NextResponse.redirect(new URL(`/${locale}/signin?error=link`, req.url));

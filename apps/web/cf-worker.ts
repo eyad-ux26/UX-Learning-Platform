@@ -12,7 +12,19 @@ export default {
     if (isPrivateContent(new URL(req.url).pathname)) return notFound();
     return handler.fetch(req, env, ctx);
   },
-  async scheduled(_event: unknown, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
+  async scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
+    // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts (slice 4). Up to 4 calls of 25.
+    if (event?.cron === "*/15 * * * *") {
+      ctx.waitUntil((async () => {
+        for (let i = 0; i < 4; i++) {
+          const res: Response = await handler.fetch(new Request("https://internal/api/cron/reminders", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+          const text = await res.text();
+          console.log(`cron reminders ${i + 1}: ${res.status} ${text}`);
+          if (!res.ok || !text.includes('"more":true')) break;
+        }
+      })());
+      return;
+    }
     // Calls the daily route directly; the secret keeps it closed to the public.
     // The job settles 100 learners a call and answers `more: true` while others are waiting; up to 10 calls a night.
     const run = async () => {
@@ -25,7 +37,20 @@ export default {
         if (!text.includes('"more":true')) break;
       }
     };
-    ctx.waitUntil(run());
+    // Then the "skills to review" notices, 25 learners a call, each call starting after the last learner told.
+    const reviews = async () => {
+      let after = "";
+      for (let i = 0; i < 4; i++) {
+        const res: Response = await handler.fetch(new Request(`https://internal/api/cron/review-due${after ? `?after=${after}` : ""}`, { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+        const text = await res.text();
+        if (!res.ok) { console.warn(`WARN cron review-due ${i + 1} failed: ${res.status} ${text}`); break; }
+        console.log(`cron review-due ${i + 1}: ${res.status} ${text}`);
+        const next = /"next":"([0-9a-f-]{36})"/.exec(text)?.[1];
+        if (!next || text.includes('"stoppedEarly":"')) break;
+        after = next;
+      }
+    };
+    ctx.waitUntil(run().then(reviews));
   },
 };
 

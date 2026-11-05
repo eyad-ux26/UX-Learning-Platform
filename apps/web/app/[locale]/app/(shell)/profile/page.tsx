@@ -4,6 +4,8 @@ import { ProfileForm } from "@/components/app/ProfileForm";
 import { ProfileMain } from "@/components/app/ProfileMain";
 import { requireLearner } from "@/lib/server/learner";
 import { ensureCertificates } from "@/lib/server/certificates";
+import { Link } from "@/i18n/navigation";
+import { BellLink } from "@/components/account/BellLink";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +29,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ locale
   const certificates = me.db ? await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : [];
   return (
     <Shell me={me}>
+      <div className="s4-bar">
+        <Link href="/app/settings" className="bell-link" aria-label={(await getTranslations("settings"))("title")}><span className="ph ph-gear" aria-hidden="true" /></Link>
+        <BellLink me={me} />
+      </div>
       <h1 className="t-h1 h1-s">{t("title")}</h1>
       <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} />
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />

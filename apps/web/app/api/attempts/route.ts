@@ -11,6 +11,7 @@ import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
 import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
 import { markPracticed, markReviewed, markShown } from "@/lib/server/skill-states";
 import { loadReviewSession } from "@/lib/server/review-session";
+import { notifyKept } from "@/lib/server/progress-notify";
 import { REVIEW_SESSION_MAX } from "@/lib/review";
 import { isQuestion } from "@uxgate/player/engine";
 import { loadRound } from "@/lib/server/mastery";
@@ -146,7 +147,8 @@ export async function POST(req: Request) {
 async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, kind: "lesson" | "check" | "mastery" | "review", attemptId: string, skillIds: string[], now: Date) {
   if (kind === "review") {
     // A review session is not a lesson either. Right first try on a due skill: Kept. A miss: back tomorrow, nothing taken away.
-    await markReviewed(db, userId, skillIds, await firstTryRight(db, attemptId, userId, "any"), now);
+    const kept = await markReviewed(db, userId, skillIds, await firstTryRight(db, attemptId, userId, "any"), now);
+    await notifyKept(db, userId, kept);
     return;
   }
   if (kind === "mastery") {

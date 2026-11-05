@@ -22,9 +22,12 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
   - Redirect URLs: `https://uxgate.org/api/auth/callback`, `https://*-uxgate-web.uxgate-web.workers.dev/api/auth/callback`, `http://localhost:3000/api/auth/callback`.
 
 ## 4. Emails in the learner's language
-- Authentication > SMTP: Resend. Host `smtp.resend.com`, port 465, user `resend`, password = the Resend API key (kept in Supabase only). Sender `UXGate <no-reply@uxgate.org>`. The domain `uxgate.org` must be verified in Resend (SPF, DKIM records).
-- Authentication > Emails: paste `templates/confirmation.html` into "Confirm signup" and `templates/magic_link.html` into "Magic link". They switch on `.Data.locale`, which the app sets at sign-up and sign-in (`en` or `ar`).
-- Subjects: set both in English and Arabic, e.g. `Confirm your email · أكّد بريدك الإلكتروني`.
+- Resend: add the domain `uxgate.org` with the return-path subdomain `send` (Resend's default), and add the records it lists in Cloudflare DNS: MX and SPF (TXT) on `send.uxgate.org`, DKIM (TXT) on `resend._domainkey.uxgate.org`. Mail then leaves through `send.uxgate.org`. Every email, from Supabase and from the app, goes out as `UXGate <hello@uxgate.org>`, with reply-to `support@uxgate.org`.
+- Authentication > SMTP: Resend. Host `smtp.resend.com`, port 465, user `resend`, password = a Resend API key (kept in Supabase only). Sender email `hello@uxgate.org`, sender name `UXGate`. Supabase has no reply-to field, so the footer of each template asks people to write to `support@uxgate.org`.
+- Authentication > Emails: paste `templates/confirmation.html` into "Confirm signup", `templates/magic_link.html` into "Magic link" and `templates/recovery.html` into "Reset password" (the app sends the reset email from the "Forgot password?" page). They switch on `.Data.locale`, which the app sets at sign-up and sign-in (`en` or `ar`). The three are generated from `apps/web/lib/server/email/layout.ts`, so they match the app's own emails.
+- Subjects (one per template, so both languages): `Confirm your email · أكّد بريدك الإلكتروني`, `Your UXGate sign-in link · رابط الدخول إلى UXGate`, `Reset your UXGate password · إعادة تعيين كلمة مرور UXGate`.
+- Authentication > Emails > settings: keep the email link lifetime ("Email OTP expiration") at 3600 seconds. The emails and the sign-in screens say a link works once, for 1 hour.
+- The app's own emails (welcome, daily reminder, badge, account deletion) use the Resend HTTP API with the Worker secret `RESEND_API_KEY`; their one-click "turn off" links are signed with the Worker secret `EMAIL_LINK_SECRET`.
 
 ## 5. Hosting and GitHub settings
 - Hosting is Cloudflare Workers; setup, build variables and secrets are in `docs/deploy-cloudflare.md`. The Worker is placed near Frankfurt (`placement` in `apps/web/wrangler.jsonc`) so server code sits next to the database.
@@ -61,4 +64,33 @@ Slice 3 migrations start at 0016 and run after these.
 - Run `migrations/0016_progress_paths.sql` (after 0006 to 0008). It is safe to run once; it does not touch lesson content. It also adds `profiles.week_start` (Saturday for Arabic, Monday for English, set at sign-up; existing learners are set once from their current language) and replaces the sign-up trigger so new learners get it.
 - `CRON_SECRET`: any long random string, set as a secret where the app runs (see `docs/deploy-cloudflare.md`). The Cloudflare Cron Trigger calls `/api/cron/daily` (02:00 UTC, set in `apps/web/wrangler.jsonc`) with it, and the job refuses anything without it. The job only catches learners who have not opened the app: every Home visit settles that learner's finished days (streak, freezes) by itself.
 - The leaderboard is off. To open it for testing, run `update public.app_flags set enabled = true where key = 'leaderboard';` (the admin panel will own this switch later). While it is off, `/app/board` is a 404 and nobody can join.
-- The achievement page (`/u/<handle>`) is off for every learner until they turn it on from a certificate.
+- The achievement page (`/u/<handle>`) is off for every learner until they turn it on from a certificate or in Settings › Sharing.
+- After the nightly job, the same Cron Trigger calls `/api/cron/review-due` (same secret) to send the "skills to review" notice, 25 learners a call. Like the reminders, it needs Workers Paid once there are more than a handful of learners.
+
+## 11. Slice 4: settings, notifications, reminders and deleting an account (0026)
+
+1. In the SQL editor, paste `migrations/0026_account_notifications.sql`. It runs after slice 2 (0007) and slice 3 (0016 onwards) in any order with them. It adds `notification_prefs`, `notifications` (the inbox), `email_log`, `push_subscriptions`, the reply columns on `review_requests`, the delete columns on `profiles` and the `reminder_candidates` function for the reminder job, and a guard so a learner's own session cannot change the delete or welcome columns. Slice 5 starts at 0036.
+2. Values to add in Cloudflare (Worker secrets unless marked build variable). Never paste them in chat or git.
+
+| Value | Where | What it does |
+| --- | --- | --- |
+| `RESEND_API_KEY` | Worker secret | Sends the app's own emails from hello@uxgate.org. Without it, emails are skipped and logged. |
+| `EMAIL_LINK_SECRET` | Worker secret, random (`openssl rand -base64 32`) | Signs the one-click "turn off these emails" links. |
+| `VAPID_PRIVATE_KEY` and `VAPID_PUBLIC_KEY` | Worker secrets (`npx web-push generate-vapid-keys` once) | Signs push messages. |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | Build variable, same value as `VAPID_PUBLIC_KEY` | Lets the browser subscribe. Without it, the push ask never shows. |
+| `NEXT_PUBLIC_SITE_URL` | Build variable | Links in emails. `https://uxgate.org` in production, the staging address on staging. |
+| `NEXT_PUBLIC_APPLE_SIGNIN` | Build variable, `1` | Shows Sign in with Apple. Set only after the Apple setup is done. |
+| `UG_MAINTENANCE` | Worker variable, `1` | Shows the maintenance page (status 503) on every page. Remove it to end maintenance. |
+| `UG_MAINTENANCE_UNTIL` | Worker variable, an ISO time such as `2026-11-20T18:00:00Z` | The "back by" time on the maintenance page, shown in Cairo time. Without it the page says "We'll be back soon". |
+
+3. The reminder cron (`*/15 * * * *` in `wrangler.jsonc`) calls `/api/cron/reminders` with `CRON_SECRET`. It removes accounts whose 30 days have passed, then sends the reminders due in this quarter hour (each learner's own time, never early, at most one a day) in batches of 25. Cloudflare's free plan allows too few subrequests per run, so this needs Workers Paid.
+4. Who sends which notification. Each one goes through `notify()` in `apps/web/lib/server/notify.ts`, which writes the inbox item and sends push as the learner's choices allow. The email, where one exists, is sent next to it from `lib/server/email/templates.ts`.
+
+| Kind | Sent by | Status |
+| --- | --- | --- |
+| reminder, goal | The reminder cron | Done |
+| welcome | `sendWelcomeOnce` after onboarding, once per account | Done |
+| answer | A database trigger on `review_requests` adds the inbox item when the status leaves `open` | Done. The admin tool that writes answers should also call `notify(…, "answer", …)` for push. |
+| badge | A review session that turns skills gold (Kept): `notifyKept` in `lib/server/progress-notify.ts`, one inbox item per badge and one `badgeEmail` per session | Done |
+| review | `/api/cron/review-due`, called by the daily Cron Trigger after the nightly job: learners with a skill that came due in the last day, once a day | Done |
+| billing | Slice 5 | Slice 5 wires it |

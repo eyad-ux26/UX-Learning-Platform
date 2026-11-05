@@ -3,6 +3,7 @@ import { Shell } from "@/components/app/Shell";
 import { HomeMain, HomePanel } from "@/components/app/HomeView";
 import { buildPathView } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
+import { BellLink } from "@/components/account/BellLink";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const view = buildPathView(me.activePathId, me.progress, me.practicedSkills)!;
   return (
     <Shell me={me} panel={<HomePanel progress={me.progress} freezes={me.freezes} weekStart={me.weekStart} />}>
-      <HomeMain me={me} view={view} />
+      <HomeMain me={me} view={view} bell={<BellLink me={me} />} />
     </Shell>
   );
 }
