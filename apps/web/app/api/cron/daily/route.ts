@@ -25,6 +25,21 @@ export async function GET(req: Request) {
   const ids = (rows ?? []).map((r) => r.user_id as string);
   const { data: zones } = ids.length ? await db.from("profiles").select("user_id, time_zone, locale").in("user_id", ids) : { data: [] };
   const prof = new Map((zones ?? []).map((z) => [z.user_id as string, { tz: (z.time_zone as string | null) ?? null, start: weekStartFor(z.locale as string | null) }]));
-  for (const id of ids) await settleLearner(id, prof.get(id)?.tz ?? null, new Date(), prof.get(id)?.start);
-  return NextResponse.json({ settled: ids.length, more: ids.length === BATCH });
+  let settled = 0;
+  let failed = 0;
+  let stoppedEarly: string | null = null;
+  for (const id of ids) {
+    const r = await settleLearner(id, prof.get(id)?.tz ?? null, new Date(), prof.get(id)?.start);
+    if (r.ok) { settled++; continue; }
+    failed++;
+    // A Worker run has a budget of outbound calls (50 on the free plan). When it runs out every later call fails the same way,
+    // so stop here, say so loudly, and let the next run (or the learner's next visit) settle the rest.
+    if (/subrequest/i.test(r.error)) {
+      stoppedEarly = "subrequest_budget";
+      console.warn(`WARN daily job stopped early: subrequest budget used up after ${settled} learners (${ids.length - settled} left). Turn on Workers Paid before real learners arrive. ${r.error}`);
+      break;
+    }
+    console.warn(`WARN daily job: could not settle ${id}: ${r.error}`);
+  }
+  return NextResponse.json({ settled, failed, stoppedEarly, more: stoppedEarly ? true : ids.length === BATCH });
 }

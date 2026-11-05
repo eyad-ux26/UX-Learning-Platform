@@ -13,8 +13,10 @@ export default {
       for (let i = 0; i < 10; i++) {
         const res: Response = await handler.fetch(new Request("https://internal/api/cron/daily", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
         const text = await res.text();
+        if (!res.ok) { console.warn(`WARN cron daily ${i + 1} failed: ${res.status} ${text}`); break; }
+        if (text.includes('"stoppedEarly":"')) { console.warn(`WARN cron daily ${i + 1} stopped early (${text}). Calling again in this run would hit the same limit; the rest waits for the next run or the learner's next visit.`); break; }
         console.log(`cron daily ${i + 1}: ${res.status} ${text}`);
-        if (!res.ok || !text.includes('"more":true')) break;
+        if (!text.includes('"more":true')) break;
       }
     };
     ctx.waitUntil(run());
