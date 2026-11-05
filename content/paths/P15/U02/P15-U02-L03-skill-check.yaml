@@ -24,10 +24,44 @@ steps:
       en: "I'm a junior designer, and this is my first app at work: a bus-ticket app. People book on their phones, often while standing in the station.\n\nYour job: fix four pieces of my text.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "أنا مصمم مبتدئ، وهذا أول تطبيق أعمل عليه: تطبيق لتذاكر الحافلات. والناس يحجزون من هواتفهم، وغالبًا وهم واقفون في المحطة.\n\nمهمّتك: أصلح أربعة من نصوصي.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: rehla
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: magnifying-glass
+          text: {en: Search, ar: البحث}
+        - icon: ticket
+          text: {en: My trips, ar: رحلاتي}
+        - icon: bell
+          text: {en: Alerts, ar: التنبيهات}
+        - icon: user
+          text: {en: Account, ar: حسابي}
       blocks:
-        - { kind: title, text: { en: "Rehla", ar: "رحلة" } }
-        - { kind: meta, text: { en: "Cairo → Alexandria · Today", ar: "القاهرة ← الإسكندرية · اليوم" }, gap: s }
+      - kind: searchbar
+        text: {en: Cairo → Alexandria · Today, ar: القاهرة ← الإسكندرية · اليوم}
+        filled: true
+      - kind: listitem
+        icon: bus
+        text:
+          en: "9:00 AM → 1:30 PM"
+          ar: "9:00 ص ← 1:30 م"
+        sub:
+          en: "1 stop · 18 seats left"
+          ar: توقّف واحد · 18 مقعدًا متاحًا
+        value:
+          en: EGP 180
+          ar: "180 جنيه"
+        gap: m
+      - kind: listitem
+        icon: bus
+        text:
+          en: "11:00 AM → 3:15 PM"
+          ar: "11:00 ص ← 3:15 م"
+        sub: {en: Direct · 4 seats left, ar: مباشر · 4 مقاعد متاحة}
+        value:
+          en: EGP 210
+          ar: "210 جنيه"
 
   - id: S02
     type: words
@@ -140,36 +174,156 @@ steps:
       en: "Tap each option to see the change. Which summary lets people check the trip length and the stop at a glance?"
       ar: "اضغط على كل خيار لترى التغيير. أي ملخص يجعل الناس يعرفون مدة الرحلة والتوقّف بنظرة سريعة؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: rehla
+      appbar:
+        title: {en: Review your trip, ar: راجع رحلتك}
+        back: true
+      caption: {en: Now, ar: الآن}
+      footer:
+      - kind: button
+        text: {en: Pay EGP 180, ar: ادفع 180 جنيهًا}
       blocks:
-        - { kind: meta, weight: bold, text: { en: "Trip summary", ar: "ملخص الرحلة" } }
-        - { kind: text, text: { en: "The trip takes about four and a half hours, with one stop of twenty minutes.", ar: "تستغرق الرحلة نحو أربع ساعات ونصف، مع توقّف واحد مدته عشرون دقيقة." }, gap: xs }
+      - kind: card
+        blocks:
+        - kind: row
+          blocks:
+          - kind: heading
+            text: {en: Cairo → Alexandria, ar: القاهرة ← الإسكندرية}
+          - kind: price
+            text:
+              en: EGP 180
+              ar: "180 جنيه"
+        - kind: small
+          text:
+            en: "Today · 9:00 AM · Seat 12"
+            ar: "اليوم · 9:00 ص · المقعد 12"
+          color: muted
+          gap: xs
+        - {kind: divider, gap: s}
+        - kind: meta
+          text: {en: Trip summary, ar: ملخص الرحلة}
+          weight: bold
+          gap: s
+        - kind: text
+          text:
+            en: "The trip takes about four and a half hours, with one stop of twenty minutes."
+            ar: تستغرق الرحلة نحو أربع ساعات ونصف، مع توقّف واحد مدته عشرون دقيقة.
+          gap: xs
     options:
       - id: bold
         text: { en: "Make the number words bold", ar: "اجعل الأعداد المكتوبة بالحروف بخط Bold" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rehla
+          appbar:
+            title: {en: Review your trip, ar: راجع رحلتك}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Pay EGP 180, ar: ادفع 180 جنيهًا}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Trip summary", ar: "ملخص الرحلة" } }
-            - { kind: text, text: { en: "The trip takes about **four and a half hours**, with **one** stop of **twenty minutes**.", ar: "تستغرق الرحلة نحو **أربع ساعات ونصف**، مع توقّف **واحد** مدته **عشرون دقيقة**." }, gap: xs }
+          - kind: card
+            blocks:
+            - kind: row
+              blocks:
+              - kind: heading
+                text: {en: Cairo → Alexandria, ar: القاهرة ← الإسكندرية}
+              - kind: price
+                text:
+                  en: EGP 180
+                  ar: "180 جنيه"
+            - kind: small
+              text:
+                en: "Today · 9:00 AM · Seat 12"
+                ar: "اليوم · 9:00 ص · المقعد 12"
+              color: muted
+              gap: xs
+            - {kind: divider, gap: s}
+            - kind: meta
+              text: {en: Trip summary, ar: ملخص الرحلة}
+              weight: bold
+              gap: s
+            - kind: text
+              text:
+                en: "The trip takes about **four and a half hours**, with **one** stop of **twenty minutes**."
+                ar: "تستغرق الرحلة نحو **أربع ساعات ونصف**، مع توقّف **واحد** مدته **عشرون دقيقة**."
+              gap: xs
       - id: vague
         text: { en: "Shorten it to \"A few hours, with a short break.\"", ar: "اختصره إلى «بضع ساعات، مع استراحة قصيرة.»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rehla
+          appbar:
+            title: {en: Review your trip, ar: راجع رحلتك}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Pay EGP 180, ar: ادفع 180 جنيهًا}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Trip summary", ar: "ملخص الرحلة" } }
-            - { kind: text, text: { en: "A few hours, with a short break.", ar: "بضع ساعات، مع استراحة قصيرة." }, gap: xs }
+          - kind: card
+            blocks:
+            - kind: row
+              blocks:
+              - kind: heading
+                text: {en: Cairo → Alexandria, ar: القاهرة ← الإسكندرية}
+              - kind: price
+                text:
+                  en: EGP 180
+                  ar: "180 جنيه"
+            - kind: small
+              text:
+                en: "Today · 9:00 AM · Seat 12"
+                ar: "اليوم · 9:00 ص · المقعد 12"
+              color: muted
+              gap: xs
+            - {kind: divider, gap: s}
+            - kind: meta
+              text: {en: Trip summary, ar: ملخص الرحلة}
+              weight: bold
+              gap: s
+            - kind: text
+              text:
+                en: "A few hours, with a short break."
+                ar: بضع ساعات، مع استراحة قصيرة.
+              gap: xs
       - id: digits
         text: { en: "Write the times as digits", ar: "اكتب الأوقات بالأرقام" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rehla
+          appbar:
+            title: {en: Review your trip, ar: راجع رحلتك}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Pay EGP 180, ar: ادفع 180 جنيهًا}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Trip summary", ar: "ملخص الرحلة" } }
-            - { kind: text, text: { en: "About 4 h 30 min, with 1 stop of 20 min.", ar: "نحو 4 ساعات و30 دقيقة، مع توقّف واحد مدته 20 دقيقة." }, gap: xs }
+          - kind: card
+            blocks:
+            - kind: row
+              blocks:
+              - kind: heading
+                text: {en: Cairo → Alexandria, ar: القاهرة ← الإسكندرية}
+              - kind: price
+                text:
+                  en: EGP 180
+                  ar: "180 جنيه"
+            - kind: small
+              text:
+                en: "Today · 9:00 AM · Seat 12"
+                ar: "اليوم · 9:00 ص · المقعد 12"
+              color: muted
+              gap: xs
+            - {kind: divider, gap: s}
+            - kind: meta
+              text: {en: Trip summary, ar: ملخص الرحلة}
+              weight: bold
+              gap: s
+            - kind: text
+              text:
+                en: "About 4 h 30 min, with 1 stop of 20 min."
+                ar: نحو 4 ساعات و30 دقيقة، مع توقّف واحد مدته 20 دقيقة.
+              gap: xs
     answer: [digits]
     misconceptions:
       - id: MC-P15-013
