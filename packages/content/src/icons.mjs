@@ -10,7 +10,7 @@ let root = null;
 try { root = path.resolve(path.dirname(require.resolve("@phosphor-icons/core/assets/regular/house.svg")), "../.."); } catch { root = null; }
 
 /** Icons the renderer draws itself: status bar, app bar, lists, search, chat, reader strip, FAB default. */
-export const BASE_ICONS = ["caret-left", "caret-right", "caret-down", "check", "check-circle", "magnifying-glass", "paper-plane-tilt", "sparkle", "cell-signal-full", "wifi-high", "battery-full", "lock-simple", "speaker-high", "plus", "copy", "arrows-clockwise", "thumbs-up", "thumbs-down", "share-network", "bell", "app-window", "circle"];
+export const BASE_ICONS = ["x", "caret-left", "caret-right", "caret-down", "check", "check-circle", "magnifying-glass", "paper-plane-tilt", "sparkle", "cell-signal-full", "wifi-high", "battery-full", "lock-simple", "speaker-high", "plus", "copy", "arrows-clockwise", "thumbs-up", "thumbs-down", "share-network", "bell", "app-window", "circle"];
 const ICON_KEYS = new Set(["icon", "trail"]);
 export const isIconName = (v) => typeof v === "string" && /^[a-z0-9]+(-[a-z0-9]+)*$/.test(v);
 const fileOf = (name) => {
@@ -20,12 +20,16 @@ const fileOf = (name) => {
 };
 export const iconExists = (name) => { const f = fileOf(name); return !root || (f !== null && fs.existsSync(f)); };
 
+/** The icon a right-to-left screen draws instead (same rule as MockView's mirrorIcon). */
+export const mirrorIcon = (name) =>
+  /^(caret|arrow)/.test(name) && !(/left/.test(name) && /right/.test(name)) ? name.replace(/\b(left|right)\b/, (d) => (d === "left" ? "right" : "left")) : name;
+
 /** Every icon name used under a `mock`, a product (`app.icon`) or a chrome item. */
 export function collectIcons(node, out = new Set(), inMock = false) {
   if (Array.isArray(node)) { node.forEach((n) => collectIcons(n, out, inMock)); return out; }
   if (!node || typeof node !== "object") return out;
   for (const [k, v] of Object.entries(node)) {
-    if (inMock && ICON_KEYS.has(k) && isIconName(v)) out.add(v);
+    if (inMock && ICON_KEYS.has(k) && isIconName(v)) { out.add(v); out.add(mirrorIcon(v)); }
     collectIcons(v, out, inMock || k === "mock" || k === "app");
   }
   return out;

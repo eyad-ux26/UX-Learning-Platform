@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { Locale, Mock, MockBlock } from "@uxgate/content/types";
 // @ts-expect-error plain ESM helper shared with the validator and the preview build
 import { loadContent, resolveAll } from "../../../scripts/lib/content.mjs";
-import { MockView } from "../src/ui/MockView";
+import { MockView, accessibleBrand } from "../src/ui/MockView";
 import { ART_NAMES } from "../src/ui/art";
 import vocab from "../src/mock-vocab.json";
 
@@ -95,5 +95,21 @@ describe("MockView details", () => {
   it("shows a browser bar with the URL on wide frames", () => {
     const html = render({ frame: "wide", url: "maktaba.example/search", blocks: [{ kind: "searchbar", text: "UX books" }] } as never, "en");
     expect(html).toContain("maktaba.example/search");
+  });
+  it("points carets and arrows the reading way in Arabic", () => {
+    const mock = { appbar: { title: T("Cards", "البطاقات"), back: true }, blocks: [{ kind: "listitem", text: "Visa", chevron: true }, { kind: "button", icon: "arrow-right", text: "Next" }, { kind: "button", icon: "arrows-left-right", text: "Swap" }] } as never;
+    const en = render(mock, "en"), ar = render(mock, "ar");
+    expect(en).toContain("xi-caret-left xm-back");
+    expect(ar).toContain("xi-caret-right xm-back");
+    expect(ar).toContain("xi-caret-left");
+    expect(ar).toContain("xi-arrow-left");
+    expect(ar).toContain("xi-arrows-left-right");
+  });
+  it("darkens a light product colour until white text on it passes AA, and keeps dark ones", () => {
+    expect(accessibleBrand("#F97316")).not.toBe("#F97316");
+    expect(accessibleBrand("#1C3D6E")).toBe("#1C3D6E");
+    const html = render({ app: { id: "nashat", name: "Nashat", color: "#F97316", icon: "barbell" }, blocks: [{ kind: "button", text: "Join" }] } as never, "en");
+    expect(html).toContain(`--mock-brand:${accessibleBrand("#F97316")}`);
+    expect(html).toContain("background:#F97316"); // the label swatch keeps the exact colour
   });
 });

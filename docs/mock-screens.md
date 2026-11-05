@@ -275,4 +275,4 @@ mock:
 ## Not supported yet
 
 - Several device frames side by side in one mock, such as phone, tablet and laptop together (P10 U04). For now, use a `compare` step, or one frame per step.
-- Tap-to-try interactivity inside the app. The preview keeps it. The app shows mocks as still screens, as it does today.
+- Tap-to-try controls on realistic screens. The unit preview draws realistic mocks with the app's own renderer, as still screens like the app. Older mocks in the preview keep their tap-to-try toggles, radios and sliders.
