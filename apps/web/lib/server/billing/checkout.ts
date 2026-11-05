@@ -34,6 +34,13 @@ export async function studentStatus(admin: SupabaseClient, userId: string, now =
 /** Paddle's checkout gets the country only when Cloudflare told us one. */
 const knownCountry = (c: string) => (c === UNKNOWN_COUNTRY ? null : c);
 
+/**
+ * Paddle's checkout asks for an email only when the transaction has no customer yet; the learner's own email fills it.
+ * A transaction of an existing subscription (card update, overdue charge) or one made for a known customer has one.
+ */
+export const paddleEmail = (t: { customerId: string | null; ownCustomer: boolean }, email: string): string | null =>
+  t.ownCustomer || t.customerId || !email ? null : email;
+
 /** Prices a checkout for this learner. */
 export async function priceFor(admin: SupabaseClient, userId: string, country: string, period: Period, code: string | null) {
   const region = regionFor(country);
@@ -46,7 +53,7 @@ export async function priceFor(admin: SupabaseClient, userId: string, country: s
 
 export type CheckoutResult =
   | { ok: true; url: string }
-  | { ok: true; paddle: { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null } }
+  | { ok: true; paddle: { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null; email: string | null } }
   | { ok: false; error: "payments_closed" | "already_pro" | "no_plan" | "code" | "provider"; detail?: string };
 
 /** An unpaid Paddle checkout this recent is opened again instead of a second one (two tabs must not mean two plans). */
@@ -99,7 +106,11 @@ export async function startCheckout(admin: SupabaseClient, input: {
     const { data: open } = await admin.from("checkout_sessions").select("id, provider_ref").eq("user_id", input.userId).eq("provider", "paddle")
       .eq("kind", sessionKind).eq("period", q.period).eq("amount_minor", q.amount).eq("status", "open").not("provider_ref", "is", null)
       .gte("created_at", since).order("created_at", { ascending: false }).limit(1).maybeSingle();
-    if (open?.provider_ref) return { ok: true, paddle: { transactionId: open.provider_ref as string, clientToken: c.clientToken, env: c.env, sessionId: open.id as string, successUrl: successUrl(open.id as string), country: knownCountry(country) } };
+    if (open?.provider_ref) {
+      // That checkout was made with the learner's Paddle customer when one was known (and its id was kept then).
+      const { data: acct } = await admin.from("billing_accounts").select("paddle_customer_id").eq("user_id", input.userId).maybeSingle();
+      return { ok: true, paddle: { transactionId: open.provider_ref as string, clientToken: c.clientToken, env: c.env, sessionId: open.id as string, successUrl: successUrl(open.id as string), country: knownCountry(country), email: acct?.paddle_customer_id ? null : input.email } };
+    }
   }
 
   const { data: session, error } = await admin.from("checkout_sessions").insert({
@@ -127,11 +138,11 @@ export async function startCheckout(admin: SupabaseClient, input: {
     const { data: acct } = await admin.from("billing_accounts").select("paddle_customer_id").eq("user_id", input.userId).maybeSingle();
     // A new card, or the overdue charge in the grace period: Paddle's own transaction for the existing subscription.
     const t = (input.kind === "card" || sessionKind === "renewal") && sub?.providerSubId
-      ? { transactionId: await updatePaymentTransaction(sub), customerId: null }
-      : await createTransaction({ region: q.region, period: q.period, discount: q.discount, sessionId: session.id, userId: input.userId, email: input.email, customerId: acct?.paddle_customer_id ?? null, country });
+      ? { transactionId: await updatePaymentTransaction(sub), customerId: null, ownCustomer: true }
+      : { ...(await createTransaction({ region: q.region, period: q.period, discount: q.discount, sessionId: session.id, userId: input.userId, email: input.email, customerId: acct?.paddle_customer_id ?? null, country })), ownCustomer: false };
     await admin.from("checkout_sessions").update({ provider_ref: t.transactionId }).eq("id", session.id);
     if (t.customerId) await admin.from("billing_accounts").upsert({ user_id: input.userId, country, paddle_customer_id: t.customerId, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
-    return { ok: true, paddle: { transactionId: t.transactionId, clientToken: c.clientToken, env: c.env, sessionId: session.id, successUrl: returnUrl, country: knownCountry(country) } };
+    return { ok: true, paddle: { transactionId: t.transactionId, clientToken: c.clientToken, env: c.env, sessionId: session.id, successUrl: returnUrl, country: knownCountry(country), email: paddleEmail(t, input.email) } };
   } catch (err) {
     console.error("checkout provider error", err);
     await admin.from("checkout_sessions").update({ status: "failed" }).eq("id", session.id);

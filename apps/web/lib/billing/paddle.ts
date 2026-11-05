@@ -37,6 +37,16 @@ function cardFrom(data: Obj): Card | null {
   };
 }
 
+/** The units a transaction bought, across its items. A missing quantity counts as 1, as in Paddle. */
+function quantityOf(data: Obj): number {
+  const items = Array.isArray(data.items) ? data.items.map(o) : [];
+  if (!items.length) return 1;
+  return items.reduce((n, it) => {
+    const q = Number(it.quantity ?? 1);
+    return n + (Number.isFinite(q) && q > 0 ? q : 1);
+  }, 0);
+}
+
 const RECURRING = new Set(["subscription_recurring", "subscription_charge"]);
 
 /** Translates one verified Paddle notification into our events. */
@@ -58,7 +68,7 @@ export function paddleEvents(body: Obj): BillingEvent[] {
       return [{
         ...base, type: "paid", paymentId: s(data.id) ?? eventId, sessionId: s(custom.session_id), providerSubId: subId, userId: s(custom.user_id),
         amountMinor: Number(totals.grand_total ?? totals.total ?? 0), currency: s(data.currency_code) ?? "USD", recurring: RECURRING.has(origin),
-        periodStart: s(period.starts_at), periodEnd: s(period.ends_at), card: cardFrom(data), customerId: s(data.customer_id), addressId: s(data.address_id),
+        periodStart: s(period.starts_at), periodEnd: s(period.ends_at), card: cardFrom(data), customerId: s(data.customer_id), addressId: s(data.address_id), quantity: quantityOf(data),
       }];
     }
     case "transaction.payment_failed":
@@ -102,4 +112,13 @@ export async function verifyPaddle(body: string, header: string | null, secret: 
   try { json = JSON.parse(body); } catch { return { ok: false, reason: "payload" }; }
   if (!json.event_id || !json.event_type) return { ok: false, reason: "payload" };
   return { ok: true, events: paddleEvents(json), eventType: String(json.event_type), eventId: String(json.event_id) };
+}
+
+/**
+ * A transaction id from Paddle's own payment links (card updates, invoices). Paddle sends them to the default payment
+ * link (our Check and pay page) as ?_ptxn=txn_…. Anything that doesn't look like a Paddle transaction id is ignored.
+ */
+export function paddleLinkTxn(v: string | string[] | undefined | null): string | null {
+  const s = Array.isArray(v) ? v[0] : v;
+  return s && /^txn_[a-z0-9]{10,40}$/i.test(s) ? s : null;
 }

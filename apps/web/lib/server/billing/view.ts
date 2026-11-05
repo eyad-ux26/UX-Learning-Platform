@@ -42,7 +42,9 @@ export async function billingScreen(v: BillingView, locale: string, now = new Da
 
   if (s) {
     const name = `${t("proName")} · ${s.period === "month" ? t("monthly") : t("annual")}`;
-    const next = `${$(s.renewAmountMinor)} · ${d(s.currentPeriodEnd)}`;
+    // Paddle adds sales tax for the payer's country on top of our price, so its charge is shown as "+ tax" (#151).
+    const amount = s.provider === "paddle" ? t("plusTax", { amount: $(s.renewAmountMinor) }) : $(s.renewAmountMinor);
+    const next = `${amount} · ${d(s.currentPeriodEnd)}`;
     plan = { name, st: t("st.active"), stCls: "st st-yes", k1: t("nextCharge"), v1: next, k2: t("memberSince"), v2: d(v.entitlement?.proSince ?? s.currentPeriodStart), resume: null, change: true };
     if (s.status === "active" && wallet) {
       plan = { ...plan, st: t("st.dueBy", { date: d(s.currentPeriodEnd) }), stCls: "st st-kept", k1: t("payBy") };

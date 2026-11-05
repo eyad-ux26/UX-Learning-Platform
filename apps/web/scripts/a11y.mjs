@@ -11,7 +11,7 @@ const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01",
   "/app/path/P01?paywall=P01-U02", "/app/profile?paywall=cert", "/app/plans", "/app/plans?offer=founding&country=SA", "/app/checkout?period=year",
   "/app/checkout/return?state=success", "/app/checkout/return?state=failed", "/app/checkout/return?state=refused", "/app/checkout?period=year&intl=1", "/app/settings/billing", "/app/settings/billing?state=failed",
   "/app/settings/billing?state=wallet", "/app/settings/billing?state=active", "/app/settings/billing/cancel?state=active", "/app/settings/billing/refund?state=active", "/app/settings/billing/requests?state=requested",
-  "/app/settings/billing/receipt/fixture-pay-2?state=active", "/app/settings/billing?state=lapsed"];
+  "/app/settings/billing/receipt/fixture-pay-2?state=active", "/app/settings/billing?state=lapsed", "/app/settings/billing?state=paddle"];
 const views = [
   ["en", "light", { width: 1440, height: 900 }],
   ["ar", "dark", { width: 390, height: 844 }],

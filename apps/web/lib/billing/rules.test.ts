@@ -77,3 +77,13 @@ describe("every billing email renders in both languages", () => {
     expect(renderEmail("cancelled", { locale: "ar", site: "https://uxgate.org", name: "ياسمين", sub }).text).toContain("يبقى Pro مفعّلًا حتى 3 ديسمبر 2026");
   });
 });
+
+describe("Paddle payment links (?_ptxn=)", () => {
+  it("accepts Paddle transaction ids only", async () => {
+    const { paddleLinkTxn } = await import("./paddle");
+    expect(paddleLinkTxn("txn_01hv8wptq8987qeep44cyrewp9")).toBe("txn_01hv8wptq8987qeep44cyrewp9");
+    expect(paddleLinkTxn(["txn_01hv8wptq8987qeep44cyrewp9", "x"])).toBe("txn_01hv8wptq8987qeep44cyrewp9");
+    for (const bad of [undefined, null, "", "txn_", "sub_01hv8wptq8987qeep44cyrewp9", "txn_01hv8w/../x", "txn_01hv8wptq8987qeep44cyrewp9\"><script>", "javascript:alert(1)"])
+      expect(paddleLinkTxn(bad as string | undefined)).toBeNull();
+  });
+});

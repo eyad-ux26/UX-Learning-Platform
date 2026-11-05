@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { paddleOpenOptions, type PaddleCustomer } from "@/lib/billing/paddle-open";
 import { billingPost } from "./api";
 
-type PaddleOpen = { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null };
+type PaddleOpen = { transactionId: string; clientToken: string; env: "sandbox" | "production"; sessionId: string; successUrl: string; country: string | null; email?: string | null };
 type PaddleJs = {
   Environment: { set: (env: string) => void };
   Initialize: (o: { token: string; eventCallback?: (e: { name?: string }) => void }) => void;
-  Checkout: { open: (o: { transactionId: string; customer?: { address: { countryCode: string } }; settings: Record<string, unknown> }) => void };
+  Checkout: { open: (o: { transactionId: string; customer?: PaddleCustomer; settings: Record<string, unknown> }) => void };
 };
 
 let paddleLoad: Promise<PaddleJs> | null = null;
@@ -39,7 +40,39 @@ async function openPaddle(p: PaddleOpen, locale: string) {
     },
   });
   // The billing country starts as the country the price is for; a different card country moves renewals to the Gulf price.
-  Paddle.Checkout.open({ transactionId: p.transactionId, ...(p.country ? { customer: { address: { countryCode: p.country } } } : {}), settings: { displayMode: "overlay", locale, successUrl: p.successUrl, theme: "light" } });
+  Paddle.Checkout.open(paddleOpenOptions(p, locale));
+}
+
+/**
+ * Opens a transaction Paddle created itself, from one of its emailed payment links (?_ptxn=, a card update or an
+ * invoice). No session of ours is made: Paddle's webhooks apply the result. Done or closed, the learner lands on
+ * Plan and billing.
+ */
+export function PaddleLinkCheckout({ transactionId, clientToken, env, locale, doneUrl }: { transactionId: string; clientToken: string; env: "sandbox" | "production"; locale: "en" | "ar"; doneUrl: string }) {
+  const t = useTranslations("billing");
+  const [failed, setFailed] = useState(false);
+  const started = useRef(false);
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    loadPaddle().then((Paddle) => {
+      if (env === "sandbox") Paddle.Environment.set("sandbox");
+      Paddle.Initialize({
+        token: clientToken,
+        eventCallback: (e) => { if (e.name === "checkout.completed" || e.name === "checkout.closed") window.location.assign(doneUrl); },
+      });
+      Paddle.Checkout.open({ transactionId, settings: { displayMode: "overlay", locale, successUrl: doneUrl, theme: "light" } });
+    }).catch(() => setFailed(true));
+  }, [transactionId, clientToken, env, locale, doneUrl]);
+  return (
+    <main className="bye" role="status" aria-live="polite">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/ill/uxgate-ill-shield.png" alt="" width={140} height={140} />
+      {failed ? null : <span className="spin" style={{ color: "var(--link)", inlineSize: 28, blockSize: 28 }} aria-hidden="true" />}
+      <h1>{failed ? t("payError") : t("paying")}</h1>
+      <Link href="/app/settings/billing" className="btn btn-ghost btn-block">{t("tBilling")}</Link>
+    </main>
+  );
 }
 
 /** Starts a checkout and hands the learner to the provider: a redirect (Paymob, test mode) or Paddle's overlay. */

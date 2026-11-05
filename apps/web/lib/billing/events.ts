@@ -15,6 +15,8 @@ export type BillingEvent =
       cardCountry?: string | null;
       /** Paddle: where to read the billing country the payer chose in Paddle's checkout. */
       customerId?: string | null; addressId?: string | null;
+      /** Paddle: how many plans the transaction bought (the sum of its items' quantities). One account holds one plan. */
+      quantity?: number;
     })
   /** The payer still has to approve (a wallet), or a bank is confirming. */
   | (Base & { type: "pending"; sessionId: string })

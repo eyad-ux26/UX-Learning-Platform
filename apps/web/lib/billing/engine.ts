@@ -151,6 +151,17 @@ async function apply(e: Engine, ev: BillingEvent): Promise<ApplyResult> {
       return { status: "ignored", note: ev.eventType };
 
     case "paid": {
+      // One account holds one plan: a Paddle transaction for more than one (the quantity picker in Paddle's checkout)
+      // buys nothing and is given back whole. The catalog prices allow only 1; this is the server's own check.
+      if (ev.provider === "paddle" && (ev.quantity ?? 1) > 1) {
+        const sub = ev.recurring ? await subForEvent(e, ev.provider, ev.providerSubId) : null;
+        const session = !ev.recurring && ev.sessionId ? await store.getSession(ev.sessionId) : null;
+        const userId = sub?.userId ?? session?.userId ?? ev.userId;
+        console.error("billing: Paddle transaction for more than one plan", ev.paymentId, ev.quantity);
+        if (session) await store.updateSession(session.id, { status: "failed" });
+        if (!userId) return { status: "ignored", note: `quantity ${ev.quantity} for an unknown learner` };
+        return refuse(e, ev, userId, sub?.pendingPeriod ?? sub?.period ?? session?.period ?? "month", `quantity ${ev.quantity}`);
+      }
       if (ev.recurring) {
         const sub = await subForEvent(e, ev.provider, ev.providerSubId);
         if (!sub?.id) {
