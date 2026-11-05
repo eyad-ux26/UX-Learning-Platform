@@ -24,17 +24,23 @@ steps:
     type: card
     part: hook
     title: { en: "Two pickups for one parcel", ar: "موعدا استلام لطرد واحد" }
+    mock:
+      app: tard
+      appbar: { title: { en: "Book a pickup", ar: "احجز موعد استلام" }, back: true }
+      blocks:
+        - { kind: listitem, icon: map-pin, text: { en: "14 Tahrir St, flat 6", ar: "14 شارع التحرير، شقة 6" }, sub: { en: "Home · Cairo", ar: "البيت · القاهرة" }, chevron: true }
+        - { kind: listitem, icon: package, text: { en: "1 parcel · small box", ar: "طرد واحد · صندوق صغير" }, sub: { en: "Up to 2 kg", ar: "حتى 2 كجم" }, chevron: true, gap: s }
+        - { kind: heading, text: { en: "Pickup time", ar: "موعد الاستلام" }, gap: l }
+        - kind: chips
+          items:
+            - { text: { en: "Tomorrow 10 am–1 pm", ar: "غدًا 10 ص–1 م" }, on: true }
+            - { text: { en: "Tomorrow 4–7 pm", ar: "غدًا 4–7 م" } }
+        - { kind: price, text: { en: "EGP 45", ar: "45 جنيه" }, gap: l }
+      footer:
+        - { kind: button, text: { en: "Book pickup", ar: "احجز الاستلام" }, note: { en: "Tapped 4 seconds ago, nothing changed", ar: "ضُغط منذ 4 ثوانٍ، ولم يتغيّر شيء" } }
     body:
       en: "I'm designing an app for a parcel delivery company. Laila wants a courier to pick up a parcel from her home.\n\nShe taps **Book pickup**. For four seconds nothing on the screen changes, so she taps again. Two couriers come to her door the next morning."
       ar: "أصمّم تطبيقًا لشركة توصيل طرود. تريد ليلى أن يأتي مندوب ليستلم طردًا من بيتها.\n\nضغطت **احجز الاستلام**. ولمدة أربع ثوانٍ لم يتغيّر شيء على الشاشة، فضغطت مرة أخرى. وفي الصباح التالي جاء إلى بابها مندوبان."
-    mock:
-      width: 300
-      blocks: &pickup
-        - { kind: title, text: { en: "Book a pickup", ar: "احجز موعد استلام" } }
-        - { kind: meta, text: { en: "From: 14 Tahrir St, flat 6", ar: "من: 14 شارع التحرير، شقة 6" }, gap: s }
-        - { kind: meta, text: { en: "Tomorrow · 10 am to 1 pm", ar: "غدًا · من 10 صباحًا إلى 1 ظهرًا" }, gap: s }
-        - { kind: button, text: { en: "Book pickup", ar: "احجز الاستلام" }, gap: xl }
-
   - id: S02
     type: choose
     part: try
@@ -48,6 +54,15 @@ steps:
     prompt:
       en: "Booking takes about four seconds. What should I change?"
       ar: "الحجز يستغرق نحو أربع ثوانٍ. ماذا أغيّر؟"
+    mock:
+      app: tard
+      appbar: { title: { en: "Book a pickup", ar: "احجز موعد استلام" }, back: true }
+      blocks:
+        - { kind: listitem, icon: map-pin, text: { en: "14 Tahrir St, flat 6", ar: "14 شارع التحرير، شقة 6" }, sub: { en: "Home · Cairo", ar: "البيت · القاهرة" }, chevron: true }
+        - { kind: listitem, icon: clock, text: { en: "Tomorrow, 10 am–1 pm", ar: "غدًا، 10 ص–1 م" }, chevron: true, gap: s }
+        - { kind: price, text: { en: "EGP 45", ar: "45 جنيه" }, gap: l }
+      footer:
+        - { kind: button, text: { en: "Book pickup", ar: "احجز الاستلام" }, note: { en: "4 seconds after the tap", ar: "بعد الضغط بـ 4 ثوانٍ" } }
     options:
       - { id: faq, text: { en: "Add a line under the button: \"Booking can take a few seconds\"", ar: "أضيف سطرًا تحت الزر: «قد يستغرق الحجز بضع ثوانٍ»" } }
       - { id: silent, text: { en: "Quietly ignore a second tap within ten seconds", ar: "أتجاهل بهدوء أي ضغطة ثانية خلال عشر ثوانٍ" } }
@@ -116,6 +131,16 @@ steps:
     prompt:
       en: "What should the screen show during that minute?"
       ar: "ماذا تعرض الشاشة خلال هذه الدقيقة؟"
+    mock:
+      app: tard
+      frame: wide
+      url: tard.example/business/shipments/upload
+      navbar: { links: [ { en: "Shipments", ar: "الشحنات" }, { en: "Pickups", ar: "الاستلام" }, { en: "Billing", ar: "الفواتير" } ], active: 0, actions: [ { icon: bell }, { icon: user } ] }
+      blocks:
+        - { kind: title, text: { en: "Upload shipments", ar: "رفع الشحنات" } }
+        - { kind: listitem, icon: file-xls, text: { en: "orders-november.xlsx", ar: "orders-november.xlsx" }, sub: { en: "200 parcels", ar: "200 طرد" }, gap: m }
+        - { kind: icon, icon: spinner-gap, size: l, color: brand, gap: l, note: { en: "Spinning for 40 seconds", ar: "يدور منذ 40 ثانية" } }
+        - { kind: small, text: { en: "Please wait…", ar: "انتظر من فضلك…" }, gap: s }
     options:
       - { id: spinner, text: { en: "A spinner with \"Please wait…\"", ar: "مؤشر دوّار مع «انتظر من فضلك…»" } }
       - { id: count, text: { en: "A bar that fills up, with \"Creating shipment 84 of 200\"", ar: "شريط يمتلئ، مع «جارٍ إنشاء الشحنة 84 من 200»" } }
@@ -158,13 +183,16 @@ steps:
       en: "What should people see the next time they open their saved list?"
       ar: "ماذا يرى الناس حين يفتحون قائمتهم المحفوظة في المرة التالية؟"
     mock:
-      width: 300
+      app: tard
+      appbar: { title: { en: "My boxes", ar: "صناديقي" }, back: true }
+      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: package, text: { en: "Boxes", ar: "الصناديق" } }, { icon: user, text: { en: "Account", ar: "حسابي" } } ] }
       blocks:
-        - { kind: title, text: { en: "My boxes", ar: "صناديقي" } }
-        - { kind: meta, text: { en: "Small box · 20 × 15 cm", ar: "صندوق صغير · 20 × 15 سم" }, gap: m }
-        - { kind: meta, text: { en: "Flat box · 35 × 25 cm", ar: "صندوق مسطّح · 35 × 25 سم" }, gap: s }
-        - { kind: meta, text: { en: "Large box · 50 × 40 cm", ar: "صندوق كبير · 50 × 40 سم" }, gap: s }
-        - { kind: button, text: { en: "Order again", ar: "اطلب مرة أخرى" }, gap: l }
+        - { kind: listitem, art: box, text: { en: "Small box", ar: "صندوق صغير" }, sub: { en: "20 × 15 cm · EGP 12", ar: "20 × 15 سم · 12 جنيه" } }
+        - { kind: listitem, art: box, text: { en: "Flat box", ar: "صندوق مسطّح" }, sub: { en: "35 × 25 cm · EGP 15", ar: "35 × 25 سم · 15 جنيه" }, gap: s }
+        - { kind: listitem, art: box, text: { en: "Large box", ar: "صندوق كبير" }, sub: { en: "50 × 40 cm · EGP 22", ar: "50 × 40 سم · 22 جنيه" }, gap: s }
+        - { kind: small, text: { en: "Flat box and Large box are no longer sold.", ar: "الصندوق المسطّح والكبير لم يعودا يُباعان." }, tone: faint, gap: m, note: { en: "Known to the company, not shown to people", ar: "تعرفه الشركة، ولا يُعرض للناس" } }
+      footer:
+        - { kind: button, text: { en: "Order again", ar: "اطلب مرة أخرى" } }
     options:
       - { id: remove, text: { en: "The list without the two boxes", ar: "القائمة دون الصندوقين" } }
       - { id: banner, text: { en: "The list without them, and a banner: \"Some items have changed\"", ar: "القائمة دونهما، وفوقها Banner: «تغيّرت بعض العناصر»" } }
@@ -210,23 +238,30 @@ steps:
     a:
       label: { en: "Version A: a loading screen", ar: "النسخة A: شاشة تحميل" }
       mock:
-        width: 260
+        app: lokma
+        appbar: { title: { en: "Koshary El Nil", ar: "كشري النيل" }, back: true, actions: [ { icon: shopping-cart, count: 1 } ] }
         blocks:
-          - { kind: title, text: { en: "Koshary, large", ar: "كشري، كبير" } }
-          - { kind: meta, text: { en: "EGP 65", ar: "65 جنيه" }, gap: s }
-          - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" }, gap: l }
+          - { kind: image, art: food-koshary, size: l }
+          - { kind: heading, text: { en: "Koshary, large", ar: "كشري، كبير" }, gap: m }
+          - { kind: price, text: { en: "EGP 65", ar: "65 جنيه" }, gap: s }
+        footer:
+          - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" } }
         overlay:
           type: dialog
           blocks:
-            - { kind: text, text: { en: "⟳ Loading…", ar: "⟳ جارٍ التحميل…" } }
+            - { kind: icon, icon: spinner-gap, size: l, color: brand, note: { en: "Flashes for 0.3 s", ar: "يظهر 0.3 ثانية" } }
+            - { kind: small, text: { en: "Loading…", ar: "جارٍ التحميل…" }, gap: s }
     b:
       label: { en: "Version B: the button changes", ar: "النسخة B: الزر يتغيّر" }
       mock:
-        width: 260
+        app: lokma
+        appbar: { title: { en: "Koshary El Nil", ar: "كشري النيل" }, back: true, actions: [ { icon: shopping-cart, count: 2 } ] }
         blocks:
-          - { kind: title, text: { en: "Koshary, large", ar: "كشري، كبير" } }
-          - { kind: meta, text: { en: "EGP 65", ar: "65 جنيه" }, gap: s }
-          - { kind: button, text: { en: "✓ Added · Cart (2)", ar: "✓ أُضيف · السلة (2)" }, gap: l }
+          - { kind: image, art: food-koshary, size: l }
+          - { kind: heading, text: { en: "Koshary, large", ar: "كشري، كبير" }, gap: m }
+          - { kind: price, text: { en: "EGP 65", ar: "65 جنيه" }, gap: s }
+        footer:
+          - { kind: button, icon: check, text: { en: "Added · View cart (2)", ar: "أُضيف · السلة (2)" } }
     answer: b
     misconceptions:
       - id: MC-P02-006
@@ -258,6 +293,15 @@ steps:
     prompt:
       en: "What should members see instead?"
       ar: "ماذا يجب أن يرى الأعضاء بدل ذلك؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "My bookings", ar: "حجوزاتي" } }
+      tabbar: { active: 1, items: [ { icon: calendar-blank, text: { en: "Classes", ar: "الحصص" } }, { icon: ticket, text: { en: "Bookings", ar: "حجوزاتي" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: tabs, options: [ { en: "Upcoming", ar: "القادمة" }, { en: "Past", ar: "السابقة" } ], value: 0 }
+        - { kind: listitem, art: gym, text: { en: "Yoga · Tue 6 pm", ar: "يوغا · الثلاثاء 6 م" }, sub: { en: "Coach Mai · Studio 2", ar: "المدرّبة مي · الاستوديو 2" }, gap: m }
+        - { kind: listitem, art: gym, text: { en: "HIIT · Sat 8 am", ar: "HIIT · السبت 8 ص" }, sub: { en: "Coach Omar · Hall A", ar: "المدرّب عمر · القاعة A" }, gap: s }
+        - { kind: small, text: { en: "Thursday's 7 pm spinning class used to be here.", ar: "كانت حصة الـ Spinning يوم الخميس 7 م هنا." }, tone: faint, gap: m, note: { en: "Gone, with no message", ar: "اختفت دون رسالة" } }
     options:
       - { id: vanish, text: { en: "Keep it as it is; the class is cancelled anyway", ar: "يبقى الوضع كما هو؛ فالحصة أُلغيت على أي حال" } }
       - { id: card, text: { en: "The class stays in My bookings, marked \"Cancelled by the gym: trainer ill\", with \"Book another class\"", ar: "تبقى الحصة في «حجوزاتي» وعليها «ألغاها النادي: المدرّب مريض»، مع «احجز حصة أخرى»" } }
