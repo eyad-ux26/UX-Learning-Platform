@@ -21,8 +21,17 @@ const RENAME = {
 };
 
 // Icons the app needs that the design canvas does not use (yet).
-const EXTRA = ["ph-eye-slash"];
-const names = [...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]).concat(EXTRA);
+const EXTRA = ["ph-eye-slash", "ph-arrow-counter-clockwise", "ph-arrows-clockwise", "ph-circle", "ph-closed-captioning", "ph-cloud-arrow-up", "ph-cloud-check", "ph-dots-six-vertical", "ph-hand-waving", "ph-list-bullets", "ph-paper-plane-tilt", "ph-radio-button-fill", "ph-seal-check", "ph-warning-circle"];
+// Icons named by concept-card points in the content.
+const contentIcons = [];
+(function walk(dir) {
+  for (const e of fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }) : []) {
+    const f = path.join(dir, e.name);
+    if (e.isDirectory()) walk(f);
+    else if (e.name.endsWith(".yaml")) for (const m of fs.readFileSync(f, "utf8").matchAll(/^\s*-\s*icon:\s*"?([a-z0-9-]+)"?\s*$/gm)) contentIcons.push(`ph-${m[1]}`);
+  }
+})(path.resolve(here, "../../../content/paths"));
+const names = [...new Set([...src.matchAll(/^\.(ph-[a-z-]+) \{ --i: url\(\/_blob\//gm)].map((m) => m[1]).concat(EXTRA, contentIcons))];
 const rules = names.map((cls) => {
   let base = cls.slice(3);
   const fill = base.endsWith("-fill");

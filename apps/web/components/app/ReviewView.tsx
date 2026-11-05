@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import { getLocale, getTranslations } from "next-intl/server";
-import { bundle, type Locale } from "@uxgate/content";
+import { content, type Locale } from "@uxgate/content";
 import { catalogEntry, pathArtUrl } from "@/lib/catalog";
 import { buildQueue, confidentErrorSkills, pathOfId, type CheckResult, type ReviewSkill } from "@/lib/review";
 import type { Learner } from "@/lib/server/learner";
 
-const skillTitle = (id: string) => bundle.units.flatMap((u) => u.skills).find((s) => s.id === id)?.title;
+const skillTitle = (id: string) => content.units.flatMap((u) => u.skills).find((s) => s.id === id)?.title;
 
 /** One queue for every joined path: confident errors first, each card names its path. */
 export async function ReviewMain({ me }: { me: Learner }) {

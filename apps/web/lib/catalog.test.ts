@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Bundle } from "@uxgate/content";
+import type { ContentIndex as Bundle } from "@uxgate/content";
 import { CATALOG, catalogFor, isPlayable } from "./catalog";
 import { pickCurrent } from "./learning";
 

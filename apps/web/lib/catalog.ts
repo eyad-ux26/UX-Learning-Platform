@@ -1,6 +1,6 @@
 // The 14 paths a learner can see on the Paths tab (spec 4.4b). Names stay in English in both languages, as on the canvas.
 // A path is playable when the content bundle has lessons for it; the others show as Coming soon and cannot be started.
-import { bundle as defaultBundle, type Bundle } from "@uxgate/content";
+import { content as defaultBundle, type ContentIndex as Bundle } from "@uxgate/content";
 
 export type CatalogEntry = { id: string; name: string; art: string; kind: "interactive" | "hybrid"; sub: { en: string; ar: string } };
 
@@ -24,7 +24,7 @@ export const CATALOG: CatalogEntry[] = [
 export const catalogEntry = (id: string) => CATALOG.find((p) => p.id === id);
 export const pathArtUrl = (id: string) => `/ill/uxgate-ill-${catalogEntry(id)?.art ?? "gate"}.png`;
 
-/** A path is playable when it has at least one lesson in the content bundle. */
+/** A path is playable when it has at least one lesson in the content content. */
 export const isPlayable = (pathId: string, b: Bundle = defaultBundle) => b.units.some((u) => u.pathId === pathId && u.lessons.length > 0);
 
 export type PathState = "current" | "joined" | "new" | "soon";

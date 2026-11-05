@@ -10,7 +10,7 @@ const readYaml = (file) => yaml.load(fs.readFileSync(file, "utf8"));
 
 export const CHOICE_TYPES = ["choose", "predict", "words", "fix", "tune"];
 const BANK_RE = /^P\d{2}-U\d{2}-B\d{2}-/;
-export const STEP_TYPES = ["card", ...CHOICE_TYPES, "sort", "order", "match", "spot", "compare"];
+export const STEP_TYPES = ["card", "video", ...CHOICE_TYPES, "sort", "order", "match", "spot", "compare"];
 
 // The scenario characters, from content/cast.yaml.
 export const loadCast = () => readYaml(path.join(ROOT, "content/cast.yaml")) || [];

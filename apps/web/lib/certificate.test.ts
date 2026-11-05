@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Bundle } from "@uxgate/content";
+import type { ContentIndex as Bundle } from "@uxgate/content";
 import { certificateEarned, handleBase, HANDLE_RE, pathProgressCounts } from "./certificate";
 
 const b = { cast: [], paths: [], lessons: [], units: [

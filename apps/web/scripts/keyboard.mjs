@@ -5,7 +5,7 @@ const { chromium } = createRequire(import.meta.url)("playwright-core");
 
 const base = process.argv[2] ?? "http://localhost:3100";
 const locale = process.argv[3] ?? "en";
-const browser = await chromium.launch();
+const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });
 const page = await (await browser.newContext({ viewport: { width: Number(process.env.W ?? 1440), height: Number(process.env.H ?? 900) } })).newPage();
 await page.goto(`${base}/${locale}/app/lesson/P01-U01-L01`);
 await page.waitForSelector(".ug");
@@ -25,6 +25,12 @@ for (let guard = 0; guard < 60; guard++) {
     // pick the first open answer (dimmed or locked ones are skipped) with the keyboard, then press Check with the keyboard
     const first = await tabUntil((a) => !a.locked && (a.cls.includes("choice") || a.role === "radio" || a.role === "checkbox" || a.cls.includes("opt")));
     if (first) { await page.keyboard.press("Space"); }
+    // a step that asks how sure the learner is keeps Check disabled until one is picked: do that with the keyboard too
+    if (await page.locator(".conf .chip").count() && !(await page.locator(".conf .chip.is-selected").count())) {
+      const chip = await tabUntil((a) => a.cls.includes("chip"));
+      if (!chip) { console.log("FAIL: could not reach the confidence choices with Tab"); process.exit(1); }
+      await page.keyboard.press("Space");
+    }
     await page.evaluate(() => (document.activeElement)?.blur?.());
     const c = await tabUntil((a) => /^(Check|تحقّق|تحقق)/.test(a.text));
     if (!c) { console.log("FAIL: could not reach Check with Tab"); process.exit(1); }

@@ -84,19 +84,6 @@ export function validate(paths) {
         need(["lesson", "check", "bank"].includes(l.mode), `${lw}: mode must be lesson, check or bank`);
         need(l.title && (bank || l.minutes), `${lw}: title and minutes are required`);
         need(Array.isArray(l.steps) && l.steps.length, `${lw}: steps are required`);
-        // Optional one-line summary for the home screen's next-lesson card: what the learner will do.
-        if (l.summary !== undefined) {
-          const ok = l.summary && typeof l.summary === "object" && typeof l.summary.en === "string" && typeof l.summary.ar === "string";
-          need(ok, `${lw}.summary: needs both en and ar text`);
-          if (ok) {
-            for (const lang of ["en", "ar"]) {
-              const t = l.summary[lang].trim();
-              const words = t.split(/\s+/).filter(Boolean).length;
-              need(words >= 6 && words <= 22, `${lw}.summary.${lang}: keep it to one line of about 15 words (6 to 22), found ${words}`);
-              need(!/\n/.test(t), `${lw}.summary.${lang}: one line only`);
-            }
-          }
-        } else if (!bank) warnings.push(`${lw}: no summary yet (one line for the next-lesson card)`);
         checkText(l, lw);
         // Every scenario is told by a cast member: the lesson's speaker, or a step's own.
         if (l.speaker !== undefined) need(castIds.includes(l.speaker), `${lw}: unknown speaker ${l.speaker}`);
@@ -105,8 +92,8 @@ export function validate(paths) {
         for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
         const steps = l.steps || [];
         unique(steps.map((s) => s.id), lw);
-        const graded = steps.filter((s) => s.type !== "card" && !s.any_ok).length;
-        for (const s of steps.filter((s) => s.type !== "card" && !s.any_ok)) {
+        const graded = steps.filter((s) => s.type !== "card" && s.type !== "video" && !s.any_ok).length;
+        for (const s of steps.filter((s) => s.type !== "card" && s.type !== "video" && !s.any_ok)) {
           if (!skillIds.length) continue;
           if (!s.skill) errors.push(`${lw} ${s.id}: graded steps need a skill from unit.yaml`);
           else if (!versions[s.skill]) errors.push(`${lw} ${s.id}: unknown skill ${s.skill}`);
@@ -127,7 +114,20 @@ export function validate(paths) {
           need((s.hints || []).length <= 2, `${sw}: at most 2 hints`);
           if (s.speaker !== undefined) need(castIds.includes(s.speaker), `${sw}: unknown speaker ${s.speaker}`);
           if (s.type === "card") {
-            need(s.body || s.mock, `${sw}: a card needs a body or a mock`);
+            need(s.body || s.mock || s.points, `${sw}: a card needs a body, points or a mock`);
+            if (s.points !== undefined) {
+              need(Array.isArray(s.points) && s.points.length >= 1 && s.points.length <= 4, `${sw}: points holds 1 to 4 items`);
+              for (const [k, x] of (Array.isArray(s.points) ? s.points : []).entries()) {
+                need(typeof x?.icon === "string" && /^[a-z0-9-]+$/.test(x.icon), `${sw}: point ${k + 1} needs a Phosphor icon name`);
+                need(x?.en && x?.ar, `${sw}: point ${k + 1} needs en and ar`);
+              }
+            }
+            continue;
+          }
+          if (s.type === "video") {
+            need(typeof s.video === "string" && s.video, `${sw}: a video needs a video id`);
+            need(s.duration > 0, `${sw}: a video needs a duration in seconds`);
+            need(Array.isArray(s.transcript) && s.transcript.length, `${sw}: a video needs a transcript`);
             continue;
           }
           need(s.prompt, `${sw}: prompt is required`);

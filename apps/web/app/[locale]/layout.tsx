@@ -11,6 +11,7 @@ import "@fontsource/titillium-web/400.css";
 import "@fontsource/titillium-web/600.css";
 import "@fontsource/titillium-web/700.css";
 import "../globals.css";
+import { GuestHandoff } from "@/components/GuestHandoff";
 import { ThemeSync } from "@/components/ThemeSync";
 import { routing, isRtl } from "@/i18n/routing";
 import { themeBootScript } from "@/lib/theme";
@@ -45,7 +46,7 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <NextIntlClientProvider><ThemeSync />{children}</NextIntlClientProvider>
+        <NextIntlClientProvider><ThemeSync /><GuestHandoff />{children}</NextIntlClientProvider>
         <WebAnalytics />
       </body>
     </html>

@@ -9,7 +9,7 @@
 
 ## Done (before a story closes)
 
-- Acceptance checks pass on a Vercel preview, linked in the PR.
+- Acceptance checks pass on a Cloudflare preview (Vercel until the switch lands), linked in the PR.
 - Works at 360 px wide and on desktop, in English (LTR) and Arabic (RTL), in light and dark.
 - Keyboard and screen-reader pass for new interactive parts; axe shows no serious issues.
 - No physical CSS properties; every string is in both message files.
@@ -25,5 +25,5 @@ Added 1 November 2026 from the stack review (https://claude.ai/artifact/9g1GkaEX
 - Next.js is on a patched release and Dependabot is on.
 - No access control lives in middleware alone; every protected route and API checks the session on the server, and RLS backs it.
 - RLS cross-learner tests pass: one learner cannot read or write another's rows.
-- Performance: page load under 2.5 s on a mid-range Android phone on 4G, measured with Vercel Speed Insights on the preview.
-- Infra: Supabase in Frankfurt (eu-central-1) and Vercel functions in `fra1`.
+- Performance: page load under 2.5 s on a mid-range Android phone on 4G, measured with Cloudflare Web Analytics and a Lighthouse 4G run on the preview.
+- Infra: Supabase in Frankfurt (eu-central-1) and the Cloudflare Worker placed near Frankfurt; HSTS header on.

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { bundle, type Locale } from "@uxgate/content";
+import { content, type Locale } from "@uxgate/content";
 import { Logo } from "@/components/Logo";
 import { Link } from "@/i18n/navigation";
 import { catalogEntry } from "@/lib/catalog";
@@ -42,8 +42,8 @@ export default async function PublicPage({ params }: { params: Promise<{ locale:
   const loc = locale as Locale;
   const byId = new Map(d.states.map((s) => [s.skill_id as string, s.shown_at as string | null]));
   const fmt = new Intl.DateTimeFormat(locale, { dateStyle: "long" });
-  const paths = [...new Set(bundle.units.map((u) => u.pathId))].map((pid) => {
-    const skills = bundle.units.filter((u) => u.pathId === pid).flatMap((u) => u.skills).filter((s) => byId.has(s.id));
+  const paths = [...new Set(content.units.map((u) => u.pathId))].map((pid) => {
+    const skills = content.units.filter((u) => u.pathId === pid).flatMap((u) => u.skills).filter((s) => byId.has(s.id));
     const last = skills.map((s) => byId.get(s.id)).filter(Boolean).sort().at(-1) ?? null;
     return { pid, skills, last };
   }).filter((p) => p.skills.length > 0);

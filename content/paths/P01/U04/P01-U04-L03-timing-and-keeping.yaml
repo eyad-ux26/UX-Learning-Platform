@@ -1,0 +1,423 @@
+id: P01-U04-L03
+mode: lesson
+minutes: 8
+title:
+  en: "The right moment, and nothing lost"
+  ar: "اللحظة المناسبة، ولا شيء يضيع"
+speaker: hana
+sources:
+  - title: { en: "How to Report Errors in Forms: 10 Design Guidelines (NN/g)", ar: "كيف تعرض الأخطاء في النماذج: 10 إرشادات (NN/g)" }
+    url: "https://www.nngroup.com/articles/errors-forms-design-guidelines/"
+  - title: { en: "Hostile Patterns in Error Messages (NN/g)", ar: "الأنماط العدائية في رسائل الخطأ (NN/g)" }
+    url: "https://www.nngroup.com/articles/hostile-error-messages/"
+  - title: { en: "Website Forms Usability: Top 10 Recommendations (NN/g)", ar: "سهولة استخدام نماذج المواقع: أهم 10 توصيات (NN/g)" }
+    url: "https://www.nngroup.com/articles/web-form-design/"
+  - title: { en: "Error-Message Guidelines (NN/g)", ar: "إرشادات رسائل الخطأ (NN/g)" }
+    url: "https://www.nngroup.com/articles/error-message-guidelines/"
+review_labels:
+  MC-P01-050: { en: "Wait until the person leaves the field", ar: "انتظر حتى يغادر الشخص الحقل" }
+  MC-P01-051: { en: "Keep what people typed", ar: "احتفظ بما كتبه الناس" }
+steps:
+  - id: S01
+    type: card
+    part: hook
+    title: { en: "Tamer's sign-up", ar: "تسجيل تامر" }
+    body:
+      en: "Tamer made an account in my gym's app. He typed one letter of his email, and \"Invalid email\" appeared in red. It stayed red the whole time he typed.\n\nThen he tapped Create account. His mobile number was already on another account, and the whole form came back empty, even the parts that were right."
+      ar: "أنشأ تامر حسابًا في تطبيق نادي. كتب حرفًا واحدًا من بريده، فظهرت «بريد غير صالح» باللون الأحمر. وظلّت حمراء طوال وقت الكتابة.\n\nثم ضغط «أنشئ الحساب». كان رقم موبايله مسجّلًا على حساب آخر، فعاد النموذج كله فارغًا، حتى الأجزاء الصحيحة."
+    mock:
+      width: 300
+      blocks:
+        - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, filled: true, focus: true, text: "t", tone: bad, error: { en: "⚠ Invalid email.", ar: "⚠ بريد غير صالح." } }
+        - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "", gap: s }
+
+  - id: S02
+    type: tune
+    skill: SK-P01-U04-04
+    part: try
+    rules: [R12]
+    value:
+      en: "Try first. Hostile error messages (NN/g): premature errors appear before the person had a chance to finish. Checking an email after one letter is premature; checking when Tamer moves on is not."
+      ar: "جرّب أولًا. رسائل الخطأ العدائية (NN/g): الأخطاء المبكّرة تظهر قبل أن يتمكّن الشخص من الإنهاء. والتحقّق من البريد بعد حرف واحد مبكّر؛ أما التحقّق حين ينتقل تامر لما بعده فليس كذلك."
+    ref: { url: "https://www.nngroup.com/articles/hostile-error-messages/", quote: "Premature error messages are error messages that are presented by the system too early" }
+    prompt:
+      en: "Try each timing. Each preview shows two moments. Which one should ship?"
+      ar: "جرّب كل توقيت. كل معاينة تُظهر لحظتين. أيّها يجب أن يُطلق؟"
+    start: typing
+    options:
+      - id: typing
+        text: { en: "Keep checking with every letter", ar: "أبقِ التحقّق مع كل حرف" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, color: muted, text: &tm_m1 { en: "While typing", ar: "أثناء الكتابة" } }
+            - { kind: field, label: &tm_e { en: "Email", ar: "البريد الإلكتروني" }, filled: true, focus: true, text: "tamer.h@", tone: bad, error: &tm_er { en: "⚠ Enter an email like name@example.com.", ar: "⚠ اكتب بريدًا مثل name@example.com." }, gap: xs }
+            - { kind: small, color: muted, text: &tm_m2 { en: "After moving to the next field", ar: "بعد الانتقال إلى الحقل التالي" }, gap: l }
+            - { kind: field, label: *tm_e, filled: true, text: "tamer.h@mail", tone: bad, error: *tm_er, gap: xs }
+      - id: submit
+        text: { en: "Check only when he taps Create account", ar: "تحقّق فقط حين يضغط «أنشئ الحساب»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, color: muted, text: *tm_m1 }
+            - { kind: field, label: *tm_e, filled: true, focus: true, text: "tamer.h@", gap: xs }
+            - { kind: small, color: muted, text: *tm_m2, gap: l }
+            - { kind: field, label: *tm_e, filled: true, text: "tamer.h@mail", gap: xs }
+      - id: leave
+        text: { en: "Check when he leaves the field", ar: "تحقّق حين يغادر الحقل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, color: muted, text: *tm_m1 }
+            - { kind: field, label: *tm_e, filled: true, focus: true, text: "tamer.h@", gap: xs }
+            - { kind: small, color: muted, text: *tm_m2, gap: l }
+            - { kind: field, label: *tm_e, filled: true, text: "tamer.h@mail", tone: bad, error: *tm_er, gap: xs }
+    answer: [leave]
+    misconceptions:
+      - id: MC-P01-050
+        when: [typing]
+        feedback:
+          en: "Every email is \"wrong\" until the last letter. Red while Tamer types tells him nothing he doesn't know, and makes the form feel like it's scolding him."
+          ar: "كل بريد يكون «خاطئًا» حتى آخر حرف. والأحمر أثناء كتابة تامر لا يخبره بشيء لا يعرفه، ويجعل النموذج يبدو كأنه يوبّخه."
+      - id: MC-P01-050
+        when: [submit]
+        feedback:
+          en: "Look at the second moment: the missing \".com\" goes unnoticed, and Tamer only finds out at the end, after moving on to other fields. Check as soon as he leaves the field."
+          ar: "انظر إلى اللحظة الثانية: «.com» الناقصة لا يلاحظها أحد، ولا يعرف تامر إلا في النهاية، بعد أن انتقل إلى حقول أخرى. تحقّق بمجرّد أن يغادر الحقل."
+    hints:
+      - { en: "In the first moment, is Tamer done typing?", ar: "في اللحظة الأولى، هل انتهى تامر من الكتابة؟" }
+      - { en: "In the second moment, he's done but made a typo. Which version tells him right then?", ar: "في اللحظة الثانية، انتهى لكن فيه خطأ. أي نسخة تخبره حينها؟" }
+    correct:
+      en: "Quiet while he types, clear once he moves on."
+      ar: "هادئ أثناء الكتابة، وواضح بمجرّد أن ينتقل."
+    explain:
+      en: "Leaving a field means \"I'm done\". That's the moment to check: early enough to fix while it's fresh, late enough not to interrupt."
+      ar: "مغادرة الحقل تعني «انتهيت». وهذه لحظة التحقّق: مبكّرة بما يكفي للإصلاح والأمر حاضر في الذهن، ومتأخرة بما يكفي حتى لا تقاطع."
+
+  - id: S03
+    type: card
+    part: concept
+    icons: [clock, eye, ok, warn]
+    title: { en: "Check at the right time, and keep everything", ar: "تحقّق في الوقت المناسب، واحتفظ بكل شيء" }
+    body:
+      en: "When an error appears matters as much as what it says.\n\n- **Not while typing:** an error after the first letter feels like scolding. People haven't finished yet.\n- **When they leave the field:** that's when they're done with it, so check then, and they can fix it right away.\n- **Keep every answer:** never empty the form after an error. Keep the right answers, and keep the wrong one too, marked, so people can edit it instead of starting over."
+      ar: "توقيت ظهور الخطأ مهم مثل ما يقوله.\n\n- **ليس أثناء الكتابة:** الخطأ بعد أول حرف يبدو كتوبيخ. الناس لم ينتهوا بعد.\n- **حين يغادرون الحقل:** هذه لحظة انتهائهم منه، فتحقّق حينها، ويستطيعون الإصلاح فورًا.\n- **احتفظ بكل إجابة:** لا تُفرغ النموذج أبدًا بعد خطأ. احتفظ بالإجابات الصحيحة، واحتفظ بالخاطئة أيضًا مع علامة، ليعدّلها الناس بدل أن يبدؤوا من جديد."
+
+  - id: S04
+    type: tune
+    skill: SK-P01-U04-05
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Form usability (NN/g): erroneous input should be preserved so users can correct it, with a specific explanation. Keeping the number lets Tamer see which one he typed."
+      ar: "سهولة استخدام النماذج (NN/g): يجب الاحتفاظ بالمُدخل الخاطئ ليُصلحه المستخدم، مع شرح محدّد للمشكلة. والاحتفاظ بالرقم يتيح لتامر أن يرى أي رقم كتب."
+    ref: { url: "https://www.nngroup.com/articles/web-form-design/", quote: "Erroneous input should be preserved so users can correct it, and accompanied by a specific explanation of the problem." }
+    scenario:
+      en: "Back to Tamer tapping Create account. His mobile number is already on another account: his wife signed up with it last year."
+      ar: "نعود إلى تامر وهو يضغط «أنشئ الحساب». رقم موبايله مسجّل على حساب آخر: زوجته اشتركت به العام الماضي."
+    prompt:
+      en: "Try each version of what happens after Create account. Which one should ship?"
+      ar: "جرّب كل نسخة لما يحدث بعد «أنشئ الحساب». أيّها يجب أن تُطلق؟"
+    start: empty
+    options:
+      - id: keepall
+        text: { en: "Keep every answer, and mark the mobile number", ar: "احتفظ بكل الإجابات، وعلّم رقم الموبايل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: &su_n { en: "Full name", ar: "الاسم الكامل" }, filled: true, text: { en: "Tamer Hassan", ar: "تامر حسن" } }
+            - { kind: field, label: &su_e { en: "Email", ar: "البريد الإلكتروني" }, filled: true, text: "tamer.h@mail.com", gap: s }
+            - { kind: field, label: &su_m { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "⁦0122 345 6789⁩", tone: bad, error: { en: "⚠ This number is already on another account. Use a different number, or sign in to that account.", ar: "⚠ هذا الرقم مسجّل على حساب آخر. استخدم رقمًا مختلفًا، أو سجّل الدخول إلى ذلك الحساب." }, gap: s }
+            - { kind: field, label: &su_p { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••••", gap: s }
+      - id: empty
+        text: { en: "Keep it: show the error on an empty form", ar: "أبقِه: اعرض الخطأ على نموذج فارغ" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: banner, tone: bad, text: { en: "This mobile number is already on another account.", ar: "رقم الموبايل هذا مسجّل على حساب آخر." } }
+            - { kind: field, label: *su_n, text: "", gap: s }
+            - { kind: field, label: *su_e, text: "", gap: s }
+            - { kind: field, label: *su_m, text: "", gap: s }
+            - { kind: field, label: *su_p, text: "", gap: s }
+      - id: clearone
+        text: { en: "Keep the other answers, but clear the mobile field", ar: "احتفظ بالإجابات الأخرى، لكن امسح حقل الموبايل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *su_n, filled: true, text: { en: "Tamer Hassan", ar: "تامر حسن" } }
+            - { kind: field, label: *su_e, filled: true, text: "tamer.h@mail.com", gap: s }
+            - { kind: field, label: *su_m, text: "", tone: bad, error: { en: "⚠ This number is already on another account. Use a different number, or sign in to that account.", ar: "⚠ هذا الرقم مسجّل على حساب آخر. استخدم رقمًا مختلفًا، أو سجّل الدخول إلى ذلك الحساب." }, gap: s }
+            - { kind: field, label: *su_p, filled: true, text: "••••••••", gap: s }
+    answer: [keepall]
+    misconceptions:
+      - id: MC-P01-051
+        when: [empty]
+        feedback:
+          en: "One field had a problem, and Tamer has to type four again. Many people won't. Keep what he typed."
+          ar: "حقل واحد فيه مشكلة، وعلى تامر أن يكتب أربعة من جديد. وكثيرون لن يفعلوا. احتفظ بما كتبه."
+      - id: MC-P01-051
+        when: [clearone]
+        feedback:
+          en: "Better, but now the message talks about \"this number\" and the field is empty. Tamer can't see which number we mean. Keep it so he can compare and change it."
+          ar: "أفضل، لكن الرسالة الآن تتحدّث عن «هذا الرقم» والحقل فارغ. ولا يرى تامر أي رقم نقصد. احتفظ به ليقارن ويغيّره."
+    hints:
+      - { en: "How many fields had a problem, and how many does Tamer have to retype in each version?", ar: "كم حقلًا فيه مشكلة، وكم حقلًا على تامر أن يعيد كتابته في كل نسخة؟" }
+      - { en: "To fix a wrong answer, does it help to still see it?", ar: "لإصلاح إجابة خاطئة، هل يفيد أن تظل تراها؟" }
+    correct:
+      en: "Nothing is lost, and the problem number is right there to change."
+      ar: "لا شيء يضيع، والرقم الذي فيه المشكلة أمامه ليغيّره."
+    explain:
+      en: "An error should cost one fix, not a whole form. Keep every answer, including the wrong one, and say what's wrong with it."
+      ar: "الخطأ يجب أن يكلّف إصلاحًا واحدًا، لا نموذجًا كاملًا. احتفظ بكل إجابة، حتى الخاطئة، وقل ما مشكلتها."
+
+  - id: S05
+    type: tune
+    skill: SK-P01-U04-04
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Hostile error messages (NN/g): showing errors while the person types feels like an unwarranted scolding. For a password, say the rule up front and check when the person leaves the field."
+      ar: "رسائل الخطأ العدائية (NN/g): عرض الأخطاء أثناء الكتابة يبدو كتوبيخ بلا سبب. وفي كلمة المرور، اذكر القاعدة مسبقًا وتحقّق حين يغادر الشخص الحقل."
+    ref: { url: "https://www.nngroup.com/articles/hostile-error-messages/", quote: "Displaying error messages while the user types feels like an unwarranted scolding and can be irritating." }
+    scenario:
+      en: "Passwords in our app need at least 8 characters. Right now \"Too short\" shows in red from the very first character. Rania said it felt like the app was shouting at her."
+      ar: "كلمات المرور في تطبيقنا تحتاج 8 أحرف على الأقل. والآن تظهر «قصيرة جدًا» بالأحمر من أول حرف. وقالت رانيا إنها شعرت كأن التطبيق يصرخ فيها."
+    prompt:
+      en: "Try each version. Each preview shows two moments. Which one should ship?"
+      ar: "جرّب كل نسخة. كل معاينة تُظهر لحظتين. أيّها يجب أن تُطلق؟"
+    start: red
+    options:
+      - id: red
+        text: { en: "Keep \"Too short\" in red from the first character", ar: "أبقِ «قصيرة جدًا» بالأحمر من أول حرف" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, color: muted, text: &rn_m1 { en: "After 3 characters", ar: "بعد 3 أحرف" } }
+            - { kind: field, label: &rn_l { en: "Password", ar: "كلمة المرور" }, filled: true, focus: true, text: "•••", tone: bad, error: &rn_e { en: "⚠ Too short.", ar: "⚠ قصيرة جدًا." }, gap: xs }
+            - { kind: small, color: muted, text: &rn_m2 { en: "After she moves on with 6 characters", ar: "بعد أن تنتقل وفيها 6 أحرف" }, gap: l }
+            - { kind: field, label: *rn_l, filled: true, text: "••••••", tone: bad, error: *rn_e, gap: xs }
+      - id: rule
+        text: { en: "Show the rule under the label, and check when she leaves the field", ar: "اعرض القاعدة تحت العنوان، وتحقّق حين تغادر الحقل" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, color: muted, text: *rn_m1 }
+            - { kind: field, label: *rn_l, hintFirst: true, hint: &rn_h { en: "At least 8 characters", ar: "8 أحرف على الأقل" }, filled: true, focus: true, text: "•••", gap: xs }
+            - { kind: small, color: muted, text: *rn_m2, gap: l }
+            - { kind: field, label: *rn_l, hintFirst: true, hint: *rn_h, filled: true, text: "••••••", tone: bad, error: { en: "⚠ This password has 6 characters. Add 2 more.", ar: "⚠ كلمة المرور هذه 6 أحرف. أضيفي حرفين." }, gap: xs }
+      - id: grey
+        text: { en: "Keep checking from the first character, but in grey", ar: "أبقِ التحقّق من أول حرف، لكن بالرمادي" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: small, color: muted, text: *rn_m1 }
+            - { kind: field, label: *rn_l, filled: true, focus: true, text: "•••", gap: xs }
+            - { kind: small, color: pale, text: { en: "Too short.", ar: "قصيرة جدًا." }, gap: xs }
+            - { kind: small, color: muted, text: *rn_m2, gap: l }
+            - { kind: field, label: *rn_l, filled: true, text: "••••••", gap: xs }
+            - { kind: small, color: pale, text: { en: "Too short.", ar: "قصيرة جدًا." }, gap: xs }
+    answer: [rule]
+    misconceptions:
+      - id: MC-P01-050
+        when: [red]
+        feedback:
+          en: "After 3 characters, Rania is still typing. Telling her it's too short is like correcting a sentence before she finishes it."
+          ar: "بعد 3 أحرف، ما زالت رانيا تكتب. وإخبارها أنها قصيرة كأنك تصحّح جملة قبل أن تُكملها."
+      - id: MC-P01-050
+        when: [grey]
+        feedback:
+          en: "Grey is softer, but it's still an error while she types, and a grey line is easy to miss when she does move on with 6 characters."
+          ar: "الرمادي أهدأ، لكنه ما زال خطأ أثناء الكتابة، والسطر الرمادي يسهل أن يفوتها حين تنتقل فعلًا وفيها 6 أحرف."
+    hints:
+      - { en: "In which version does Rania know the rule before she types, without being told off?", ar: "في أي نسخة تعرف رانيا القاعدة قبل الكتابة، دون أن تُوبَّخ؟" }
+      - { en: "And which one speaks up clearly once she moves on?", ar: "وأيّها يتكلّم بوضوح حين تنتقل؟" }
+    correct:
+      en: "The rule comes first; the error comes only when she's done."
+      ar: "القاعدة تأتي أولًا؛ والخطأ يأتي فقط حين تنتهي."
+    explain:
+      en: "Separate the rule from the error. The rule helps before and during typing; the error is for when the person finishes and something is still wrong."
+      ar: "افصل القاعدة عن الخطأ. القاعدة تساعد قبل الكتابة وأثناءها؛ والخطأ لحين ينتهي الشخص ويبقى شيء غير صحيح."
+
+  - id: S06
+    type: tune
+    skill: SK-P01-U04-05
+    part: guided
+    rules: [R06, R15]
+    value:
+      en: "Error messages (NN/g): let users correct errors by editing what they did, not by starting over. A message that is 62 characters too long should be shortened, not erased."
+      ar: "رسائل الخطأ (NN/g): دع المستخدم يُصلح الخطأ بتعديل ما فعله، لا بالبدء من جديد. والرسالة الأطول من المسموح بـ 62 حرفًا يجب أن تُختصر، لا أن تُمسح."
+    ref: { url: "https://www.nngroup.com/articles/error-message-guidelines/", quote: "Let users correct errors by editing their original action instead of starting over." }
+    scenario:
+      en: "When members book a trainer, they can describe their goals in up to 250 characters. Tamer wrote 312 characters about his knee injury and his goals. When he tapped Send, the box came back empty with \"Text too long\"."
+      ar: "حين يحجز الأعضاء مدرّبًا، يستطيعون وصف أهدافهم في 250 حرفًا كحدّ أقصى. كتب تامر 312 حرفًا عن إصابة ركبته وأهدافه. وحين ضغط «أرسل»، عاد المربع فارغًا مع «النص طويل جدًا»."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: clear
+    options:
+      - id: clear
+        text: { en: "Keep it: empty the box and say \"Text too long\"", ar: "أبقِه: أفرغ المربع وقل «النص طويل جدًا»" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: &gl_l { en: "Your goals", ar: "أهدافك" }, text: "", tone: bad, error: { en: "⚠ Text too long.", ar: "⚠ النص طويل جدًا." } }
+      - id: cut
+        text: { en: "Cut his text to 250 characters and send it", ar: "اقطع نصّه عند 250 حرفًا وأرسله" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *gl_l, filled: true, text: { en: "I hurt my left knee last year, so I can't run yet. I want to lose 8 kg before summer and get strong enough to…", ar: "أُصبت في ركبتي اليسرى العام الماضي، فلا أستطيع الجري بعد. أريد أن أنقص 8 كجم قبل الصيف وأن أصبح قويًا بما يكفي…" } }
+            - { kind: small, color: green, text: { en: "✓ Sent", ar: "✓ تم الإرسال" }, gap: xs }
+      - id: keep
+        text: { en: "Keep his text, and say how much to shorten it", ar: "احتفظ بنصّه، وقل كم يختصره" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *gl_l, filled: true, text: { en: "I hurt my left knee last year, so I can't run yet. I want to lose 8 kg before summer and get strong enough to…", ar: "أُصبت في ركبتي اليسرى العام الماضي، فلا أستطيع الجري بعد. أريد أن أنقص 8 كجم قبل الصيف وأن أصبح قويًا بما يكفي…" }, tone: bad, error: { en: "⚠ 312 of 250 characters. Shorten it by 62 to send.", ar: "⚠ 312 من 250 حرفًا. اختصره بـ 62 حرفًا لتُرسله." } }
+    answer: [keep]
+    misconceptions:
+      - id: MC-P01-051
+        when: [clear]
+        feedback:
+          en: "Tamer has to write 250 characters again from memory, just to fix 62 too many. Keep his text so he can trim it."
+          ar: "على تامر أن يكتب 250 حرفًا من جديد من الذاكرة، فقط ليُصلح 62 حرفًا زائدًا. احتفظ بنصّه ليختصره."
+      - id: MC-P01-051
+        when: [cut]
+        feedback:
+          en: "The end of his text is gone, and he doesn't know which part. The trainer may never read about his goals. Let him choose what to cut."
+          ar: "نهاية نصّه ضاعت، وهو لا يعرف أي جزء. وقد لا يقرأ المدرّب عن أهدافه أبدًا. دعه يختار ما يحذفه."
+    hints:
+      - { en: "What does Tamer need to fix 62 extra characters?", ar: "ماذا يحتاج تامر ليُصلح 62 حرفًا زائدًا؟" }
+      - { en: "In which version does he decide what to remove?", ar: "في أي نسخة يقرّر هو ما يحذفه؟" }
+    correct:
+      en: "His text stays, and he knows exactly how much to trim."
+      ar: "نصّه يبقى، ويعرف بالضبط كم يختصر."
+    explain:
+      en: "Fixing should mean editing, not redoing. Keep the input, and say exactly what has to change."
+      ar: "الإصلاح يجب أن يعني التعديل، لا الإعادة. احتفظ بالمُدخل، وقل بالضبط ما يجب أن يتغيّر."
+
+  - id: S07
+    type: compare
+    skill: SK-P01-U04-04
+    part: contrast
+    rules: [R11, R15]
+    value:
+      en: "Contrast with S02 and S05: there the check came too early. Form errors (NN/g): show the error once the person has finished with the field and moved on. Waiting for the final button is too late."
+      ar: "مقارنة مع الخطوتين 2 و5: هناك جاء التحقّق مبكّرًا جدًا. أخطاء النماذج (NN/g): اعرض الخطأ بعد أن ينتهي الشخص من الحقل وينتقل لما بعده. وانتظار الزر الأخير متأخر جدًا."
+    ref: { url: "https://www.nngroup.com/articles/errors-forms-design-guidelines/", quote: "In most cases, avoid showing an error until the user has finished with the field and moved to the next field." }
+    scenario:
+      en: "Our kids' swimming sign-up has 9 fields. Version A checks everything only when parents tap Register at the end. Version B checks each field as the parent moves to the next one. Ehab, a parent, has just typed his child's age as 2; classes start at 4."
+      ar: "تسجيل السباحة للأطفال عندنا فيه 9 حقول. النسخة A تتحقّق من كل شيء فقط حين يضغط الوالد «سجّل» في النهاية. والنسخة B تتحقّق من كل حقل حين ينتقل الوالد إلى التالي. وإيهاب، أحد الآباء، كتب للتوّ عمر طفله 2؛ والحصص تبدأ من 4 سنوات."
+    prompt:
+      en: "Ehab has just moved to the next field. Which version should ship?"
+      ar: "انتقل إيهاب للتوّ إلى الحقل التالي. أي نسخة يجب أن تُطلق؟"
+    a:
+      label: { en: "Check at Register", ar: "التحقّق عند «سجّل»" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: field, label: &sw_a { en: "Child's age", ar: "عمر الطفل" }, filled: true, text: "2" }
+          - { kind: field, label: &sw_c { en: "Preferred class time", ar: "وقت الحصة المفضّل" }, focus: true, text: "", gap: s }
+    b:
+      label: { en: "Check on leaving", ar: "التحقّق عند المغادرة" }
+      mock:
+        width: 300
+        blocks:
+          - { kind: field, label: *sw_a, filled: true, text: "2", tone: bad, error: { en: "⚠ Swimming classes start at age 4. See our playtime sessions for younger kids.", ar: "⚠ حصص السباحة تبدأ من عمر 4 سنوات. شاهد جلسات اللعب للأطفال الأصغر." } }
+          - { kind: field, label: *sw_c, focus: true, text: "", gap: s }
+    answer: b
+    reason:
+      prompt: { en: "Why is B better here?", ar: "لماذا B أفضل هنا؟" }
+      options:
+        - { id: fresh, text: { en: "Ehab learns about the age now, before he fills in 7 more fields for nothing", ar: "يعرف إيهاب مشكلة العمر الآن، قبل أن يملأ 7 حقول أخرى بلا فائدة" } }
+        - { id: always, text: { en: "Errors should always appear as early as possible", ar: "الأخطاء يجب أن تظهر دائمًا في أبكر وقت ممكن" } }
+        - { id: red, text: { en: "B uses more red", ar: "B تستخدم أحمر أكثر" } }
+      answer: [fresh]
+      misconceptions:
+        - id: MC-P01-050
+          when: [always]
+          feedback:
+            en: "Not as early as possible: during typing is too early. The right moment is when the field is finished, which is exactly when B checks."
+            ar: "ليس في أبكر وقت ممكن: أثناء الكتابة مبكّر جدًا. اللحظة الصحيحة حين ينتهي الحقل، وهذا بالضبط وقت تحقّق B."
+    misconceptions:
+      - id: MC-P01-050
+        when: [a]
+        feedback:
+          en: "In A, Ehab fills 7 more fields, taps Register, and only then learns his child can't join. Checking when he left the age field would have saved all that."
+          ar: "في A، يملأ إيهاب 7 حقول أخرى، ويضغط «سجّل»، وعندها فقط يعرف أن طفله لا يستطيع الانضمام. والتحقّق حين غادر حقل العمر كان سيوفّر كل ذلك."
+    hints:
+      - { en: "In A, when does Ehab find out about the age?", ar: "في A، متى يعرف إيهاب مشكلة العمر؟" }
+    correct:
+      en: "Not too early, not too late: when the field is done."
+      ar: "لا مبكّرًا جدًا، ولا متأخرًا جدًا: حين ينتهي الحقل."
+    explain:
+      en: "Too early scolds; too late wastes work. Checking on leaving a field catches the problem while it's fresh, before more effort goes in."
+      ar: "المبكّر جدًا يوبّخ؛ والمتأخر جدًا يُضيّع الجهد. والتحقّق عند مغادرة الحقل يلتقط المشكلة وهي حاضرة، قبل بذل مزيد من الجهد."
+
+  - id: S08
+    type: tune
+    skill: SK-P01-U04-05
+    part: independent
+    speaker: youssef
+    rules: [R14, R19]
+    value:
+      en: "New case. Form usability (NN/g): preserve the input, including the wrong part, and explain the problem. A bad coupon should never cost a customer their address."
+      ar: "حالة جديدة. سهولة استخدام النماذج (NN/g): احتفظ بالمُدخل، حتى الجزء الخاطئ، واشرح المشكلة. والكوبون غير الصالح يجب ألّا يكلّف العميل عنوانه أبدًا."
+    ref: { url: "https://www.nngroup.com/articles/web-form-design/", quote: "Erroneous input should be preserved so users can correct it, and accompanied by a specific explanation of the problem." }
+    scenario:
+      en: "In my online shop's checkout, Sahar typed her address and the coupon \"EID25\". That coupon is for orders over 500 EGP, and hers is 380. The page reloaded with the address empty and \"Coupon not valid\" at the top."
+      ar: "في صفحة الدفع بمتجري الإلكتروني، كتبت سحر عنوانها والكوبون «EID25». وهذا الكوبون للطلبات فوق 500 جنيه، وطلبها 380. فأُعيد تحميل الصفحة والعنوان فارغ، و«كوبون غير صالح» في الأعلى."
+    prompt:
+      en: "Try each version. Which one should ship?"
+      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+    start: reload
+    options:
+      - id: reload
+        text: { en: "Keep it: reload the page with the message at the top", ar: "أبقِه: أعد تحميل الصفحة والرسالة في الأعلى" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: banner, tone: bad, text: { en: "Coupon not valid.", ar: "كوبون غير صالح." } }
+            - { kind: field, label: &co_a { en: "Delivery address", ar: "عنوان التوصيل" }, text: "", gap: s }
+            - { kind: field, label: &co_c { en: "Coupon", ar: "الكوبون" }, text: "", gap: s }
+      - id: clearcode
+        text: { en: "Keep the address, clear the coupon, and explain", ar: "احتفظ بالعنوان، وامسح الكوبون، واشرح" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *co_a, filled: true, text: { en: "7 Tahrir St, Dokki, Giza", ar: "7 شارع التحرير، الدقي، الجيزة" } }
+            - { kind: field, label: *co_c, text: "", tone: bad, error: &co_e { en: "⚠ EID25 works on orders over 500 EGP. Your order is 380 EGP.", ar: "⚠ الكوبون EID25 يعمل على الطلبات فوق 500 جنيه. وطلبك 380 جنيه." }, gap: s }
+      - id: keepboth
+        text: { en: "Keep the address and the coupon, and explain on the coupon field", ar: "احتفظ بالعنوان والكوبون، واشرح على حقل الكوبون" }
+        mock:
+          width: 300
+          blocks:
+            - { kind: field, label: *co_a, filled: true, text: { en: "7 Tahrir St, Dokki, Giza", ar: "7 شارع التحرير، الدقي، الجيزة" } }
+            - { kind: field, label: *co_c, filled: true, text: "EID25", tone: bad, error: *co_e, gap: s }
+    answer: [keepboth]
+    misconceptions:
+      - id: MC-P01-051
+        when: [reload]
+        feedback:
+          en: "Sahar loses her address over a coupon, and \"not valid\" doesn't say why. Many shoppers would leave right here."
+          ar: "تفقد سحر عنوانها بسبب كوبون، و«غير صالح» لا تقول لماذا. وكثير من المتسوّقين سيغادرون هنا تحديدًا."
+      - id: MC-P01-051
+        when: [clearcode]
+        feedback:
+          en: "Close. But if she adds items to pass 500, she has to remember and retype the code. Keep it, so it can work as soon as her order qualifies."
+          ar: "قريب. لكن إن أضافت منتجات لتتجاوز 500، فعليها أن تتذكّر الكود وتكتبه من جديد. احتفظ به، ليعمل بمجرّد أن يستوفي طلبها الشرط."
+    correct:
+      en: "Everything stays, and the message says exactly why the coupon didn't apply."
+      ar: "كل شيء يبقى، والرسالة تقول بالضبط لماذا لم يُطبَّق الكوبون."
+    explain:
+      en: "Keep every answer, right or wrong. The wrong one, kept and explained, is the fastest thing to fix."
+      ar: "احتفظ بكل إجابة، صحيحة أو خاطئة. والإجابة الخاطئة، حين تُحفظ وتُشرح، هي الأسرع في الإصلاح."
+
+  - id: S09
+    type: card
+    part: recap
+    icons: [clock, ok, eye, list]
+    title: { en: "What you did", ar: "ماذا تعلّمت" }
+    body:
+      en: "- **Not while typing:** stopped the email and password errors from appearing after the first letters.\n- **When the field is done:** checked on leaving the field, so the child's age was caught before 7 more fields.\n- **Rule first, error later:** showed the password rule up front and the error only when it was still short.\n- **Nothing lost:** kept every answer after an error, even the wrong mobile number, the long text and the coupon.\n\nNext: the skill check for this unit."
+      ar: "- **ليس أثناء الكتابة:** أوقفت ظهور أخطاء البريد وكلمة المرور بعد الأحرف الأولى.\n- **حين ينتهي الحقل:** تحقّقت عند مغادرة الحقل، فاكتُشفت مشكلة عمر الطفل قبل 7 حقول أخرى.\n- **القاعدة أولًا، والخطأ لاحقًا:** عرضت قاعدة كلمة المرور مسبقًا، والخطأ فقط حين بقيت قصيرة.\n- **لا شيء يضيع:** احتفظت بكل إجابة بعد الخطأ، حتى رقم الموبايل الخاطئ والنص الطويل والكوبون.\n\nالتالي: اختبار المهارة لهذه الوحدة."

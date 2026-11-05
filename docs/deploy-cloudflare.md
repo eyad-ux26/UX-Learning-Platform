@@ -7,6 +7,7 @@ The web app runs on Cloudflare Workers through the OpenNext adapter. Vercel is n
 - `apps/web/cf-worker.ts`, `apps/web/open-next.config.ts`: the Worker entry and the OpenNext config.
 - `apps/web/app/api/cron/daily/route.ts`: the job the Cron Trigger calls, closed with `CRON_SECRET`.
 - `npm run cf:build -w @uxgate/web` builds the Worker; `npm run cf:preview -w @uxgate/web` runs it locally.
+- Lessons are not in the Worker's code: `npm run build` copies `packages/content/dist/lessons` to `public/c/` (file names are content hashes) and the server reads them through the `ASSETS` binding (`apps/web/lib/server/content.ts`).
 - Security headers, including HSTS (one year, this host only), come from `apps/web/next.config.ts`.
 - Cloudflare Web Analytics: set `NEXT_PUBLIC_CF_BEACON_TOKEN` at build time. Without it no analytics script loads.
 

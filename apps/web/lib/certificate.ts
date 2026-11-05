@@ -1,5 +1,5 @@
 // A path certificate exists when every skill of the path is Shown or Kept (spec 4.7). Pure, so pages, jobs and tests agree.
-import { bundle as defaultBundle, type Bundle } from "@uxgate/content";
+import { content as defaultBundle, type ContentIndex as Bundle } from "@uxgate/content";
 import type { SkillStateName } from "./skill-state";
 
 export type StateOf = (skillId: string) => SkillStateName | undefined;

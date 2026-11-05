@@ -1,6 +1,6 @@
 # Slice 2 build brief: full lesson player
 
-For the **Build slice 2** thread (a new thread). Written by the PM thread, 2 November 2026, after Eyad approved the slice 2 design. Build in sprint 3, on top of slice 1 (PR #36). Start when PR #36 has passed the slice 1 verify.
+For the **Build slice 2** thread (a new thread). Written by the PM thread, 2 November 2026, after Eyad approved the slice 2 design. Build in sprint 3, on top of slice 1 (PR #36). Eyad asked on 2 November 2026 to start now, in parallel with the slice 1 verify and the slice 3 build. Branch from `build/slice-1` and merge its later fixes in as they land.
 
 ## Goal
 
@@ -45,7 +45,7 @@ Streak freezes, badges, review queue, Kept, profile design, Paths tab and multi-
 1. Every step type works selected, wrong with hints, Show the answer after the 3rd try, and right, in EN light and AR night, at 360 px and 1440 px, with keyboard only and a screen reader.
 2. Selecting never shows right or wrong; only Check does. The first attempt is the one kept.
 3. A skill check shows no hints and no per-step verdict, and its summary matches the stored attempts.
-4. Missing a skill in the unit brings it back in the mastery round with a variant the learner hasn't seen; mastery XP follows the 10 / 5 / 0 rule.
+4. Missing a skill in the unit brings it back in the mastery round with a variant the learner hasn't seen. Mastery has no hints and one try: 10 XP right, 0 wrong. Each missed skill gets at most 2 fresh variants per round and never a seen one; if both are missed (or the variants run out) the skill stays Practiced and waits for review. A right answer moves it to Shown, never Kept. The server picks the steps; the browser never sends the plan (PM, 2 Nov).
 5. Closing a lesson after the first answer asks for confirmation; before any answer it leaves at once; Esc and back close the confirmation.
 6. The video step never autoplays with sound, and captions and transcript work in both languages.
 7. A guest plays the sample lesson, signs up, and the result appears on the new account.
@@ -57,6 +57,6 @@ Streak freezes, badges, review queue, Kept, profile design, Paths tab and multi-
 
 ## How to work
 
-- Branch `build/slice-2` from `build/slice-1`, one PR, commits per story, the PR body lists each story with its checks ticked.
+- Branch `build/slice-2` from `build/slice-1`, one PR (based on `build/slice-1` until PR #36 merges), commits per story, the PR body lists each story with its checks ticked.
 - Post the preview link when checks 1–12 pass, then stop for the verify thread. Fix every `bug` + `slice-2` issue on the same PR.
 - Do not merge. Eyad merges after the gate.

@@ -1,8 +1,8 @@
 // Reads the content bundle for the learner's current path. Pure, so the same code runs in pages and tests.
-import { bundle as defaultBundle, type Bundle, type LessonVersion, type PathMeta, type UnitMeta } from "@uxgate/content";
+import { content as defaultContent, type ContentIndex, type LessonMeta, type PathMeta, type UnitMeta } from "@uxgate/content";
 import { lessonStates, type LessonState, type Progress } from "./progress";
 
-export type PathLesson = { lesson: LessonVersion; unit: UnitMeta; indexInUnit: number; unitLessons: number; state: LessonState; xp: number };
+export type PathLesson = { lesson: LessonMeta; unit: UnitMeta; indexInUnit: number; unitLessons: number; state: LessonState; xp: number };
 export type PathView = {
   path: PathMeta;
   unitCount: number;
@@ -13,20 +13,20 @@ export type PathView = {
 };
 
 /** The path to show: the recommended one when it has content, otherwise the first path with content. */
-export function pickPath(recommendedId: string | null | undefined, b: Bundle = defaultBundle): PathMeta | undefined {
+export function pickPath(recommendedId: string | null | undefined, b: ContentIndex = defaultContent): PathMeta | undefined {
   const playable = b.paths.filter((p) => b.units.some((u) => u.pathId === p.id && u.lessons.length > 0));
   return playable.find((p) => p.id === recommendedId) ?? playable[0];
 }
 
 /** The current path when it is joined and playable; otherwise the first joined playable path; otherwise the recommended one. */
-export function pickCurrent(currentId: string | null | undefined, joined: readonly string[], recommendedId: string | null | undefined, b: Bundle = defaultBundle): PathMeta | undefined {
+export function pickCurrent(currentId: string | null | undefined, joined: readonly string[], recommendedId: string | null | undefined, b: ContentIndex = defaultContent): PathMeta | undefined {
   const ok = (id: string | null | undefined) => (id ? pickPath(id, b)?.id === id : false);
   if (ok(currentId) && (joined.length === 0 || joined.includes(currentId!))) return pickPath(currentId, b);
   const first = joined.find(ok);
   return pickPath(first ?? recommendedId, b);
 }
 
-export function buildPathView(pathId: string, progress: Pick<Progress, "finishedLessons" | "startedLessons" | "xpByLesson">, practicedSkills: ReadonlySet<string>, b: Bundle = defaultBundle): PathView | null {
+export function buildPathView(pathId: string, progress: Pick<Progress, "finishedLessons" | "startedLessons" | "xpByLesson">, practicedSkills: ReadonlySet<string>, b: ContentIndex = defaultContent): PathView | null {
   const path = b.paths.find((p) => p.id === pathId);
   if (!path) return null;
   const units = b.units.filter((u) => u.pathId === pathId);

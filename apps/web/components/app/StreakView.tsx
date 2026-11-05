@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { bundle, type Locale } from "@uxgate/content";
+import { content, type Locale } from "@uxgate/content";
 import { FREEZE_MAX, weekGoalProgress } from "@/lib/freeze";
 import { badgeOf } from "@/lib/skill-state";
 import { catalogEntry } from "@/lib/catalog";
@@ -107,7 +107,7 @@ export async function SkillsMain({ me }: { me: Learner }) {
       <p className="t-small ink-2">{t("lead")}</p>
       <p className="t-small ink-2">{t("states")}</p>
       {ids.map((pid) => {
-        const units = bundle.units.filter((u) => u.pathId === pid);
+        const units = content.units.filter((u) => u.pathId === pid);
         const all = units.flatMap((u) => u.skills);
         const shown = all.filter((s) => { const st = me.skillStates.get(s.id)?.state; return st === "shown" || st === "kept"; }).length;
         return (

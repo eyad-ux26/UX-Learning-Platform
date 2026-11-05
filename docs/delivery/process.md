@@ -20,7 +20,7 @@ Then the **admin panel, waterfall**: requirements (sprint 6) → design of the w
 
 ## Fixed technical decisions
 
-From the stack review on 1 November 2026 (https://claude.ai/artifact/9g1GkaEXm2mip4BsMPof8F): the stack stays Next.js, Supabase and Vercel. Supabase runs in Frankfurt (eu-central-1) and Vercel functions in `fra1`. Every verify plan runs the tech gate in `definition-of-done.md`.
+From the stack review on 1 November 2026 (https://claude.ai/artifact/9g1GkaEXm2mip4BsMPof8F): the stack stays Next.js and Supabase. Supabase runs in Frankfurt (eu-central-1). On 3 November 2026 Eyad moved hosting from Vercel to Cloudflare Workers (OpenNext adapter, free plan for testing and Workers Paid before the beta, placement near Frankfurt, daily job as a Cron Trigger). Vercel stays as a fallback until the beta. Every verify plan runs the tech gate in `definition-of-done.md`.
 
 ## Gates
 
@@ -29,15 +29,16 @@ Nothing moves to the next stage without passing its gate. Eyad approves every ga
 | Gate | Passed when |
 | --- | --- |
 | **Design ready** | Every screen and state in the slice exists in EN light and AR dark, mobile and desktop; the PM review finds no blocking gaps; Eyad approves the canvas |
-| **Build ready for verify** | Every story's acceptance checks pass on a Vercel preview; CI green; the build thread posts the preview link and a story checklist |
+| **Build ready for verify** | Every story's acceptance checks pass on a Cloudflare preview; CI green; the build thread posts the preview link and a story checklist |
 | **Verified** | The verify thread's test and security checklists pass; every blocking bug is fixed and re-tested |
 | **Done** | Eyad approves; the slice's PR is merged to `main` |
 
 ### Beta gate (before the private beta, sprint 7)
 
-- Production on Supabase Pro with daily backups, and a Vercel spend cap set.
+- Production on Supabase Pro with daily backups, and Cloudflare Workers Paid ($5 a month, Eyad adds the payment method) with usage alerts set. Upgrade earlier if QA shows p99 CPU time near the free plan's 10 ms limit. Workers Paid must be on before slice 3 merges, because its nightly job needs more than the free plan's 50 subrequests per run. Each slice merges into main as soon as it passes verify (Eyad, 5 November 2026), in order: slice 2, then 3, 4 and 5. Production deploys to Cloudflare from main. Vercel is deleted only after the QA re-test on Cloudflare passes and a week passes with no Vercel links (switch-over checklist: https://claude.ai/artifact/HPV7Y8Ast2tg2CM6Ry2uUp).
 - Google sign-in shows UXGate, not the Supabase project address (Eyad, 2 Nov):
   - finish Google OAuth brand verification, with the name UXGate, the logo, uxgate.org, and links to the privacy and terms pages;
+  - publish the Google OAuth consent screen (Google Cloud project "uxgate") out of Testing mode, which today allows only the 2 test users;
   - set up the Supabase Custom Domain add-on (for example auth.uxgate.org), which needs Pro and costs about $10 a month;
   - update the Google and Apple redirect URLs to the new domain.
 - The privacy and terms pages (EN-24) are live in both languages.
