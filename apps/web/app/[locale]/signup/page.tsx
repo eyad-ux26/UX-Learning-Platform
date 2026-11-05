@@ -9,5 +9,6 @@ export default async function SignUpPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   if (await getLearner()) return redirect({ href: "/app", locale }) as never;
-  return <AuthForm mode="signup" />;
+  // Sign in with Apple stays hidden until the Apple Developer and Supabase setup is done (NEXT_PUBLIC_APPLE_SIGNIN=1).
+  return <AuthForm mode="signup" apple={process.env.NEXT_PUBLIC_APPLE_SIGNIN === "1"} />;
 }
