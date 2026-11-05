@@ -7,7 +7,7 @@ type Env = { CRON_SECRET?: string };
 export default {
   fetch: handler.fetch,
   async scheduled(_event: unknown, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
-    // Same route Vercel Cron would call; the secret keeps it closed to the public.
+    // Calls the daily route directly; the secret keeps it closed to the public.
     const req = new Request("https://internal/api/cron/daily", {
       headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
     });

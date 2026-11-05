@@ -1,6 +1,6 @@
 # Hosting on Cloudflare Workers
 
-The web app runs on Cloudflare Workers through the OpenNext adapter. The Vercel build keeps working as a fallback (`apps/web/vercel.json`).
+The web app runs on Cloudflare Workers through the OpenNext adapter. Vercel is no longer configured in the repo (`vercel.json` is gone); the Vercel project is removed after the re-test.
 
 ## What is in the repo
 - `apps/web/wrangler.jsonc`: Worker name `uxgate-web`, placement near Frankfurt, daily Cron Trigger at 02:00 UTC, `UG_HTTPS=1`.
