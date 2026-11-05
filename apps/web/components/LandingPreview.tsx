@@ -55,7 +55,7 @@ export function LandingPreview() {
             <p className="verdict-row"><span className={`ph ${right ? "ph-check-circle-fill" : "ph-x-circle-fill"}`} aria-hidden="true" />{right ? t("fbRight") : t("fbWrong")}</p>
             <p className="t-small ink-2">{right ? t("fbRightWhy") : t("fbWrongWhy")}</p>
             {right
-              ? <Link href="/signup" className="btn btn-right btn-block press">{t("keepGoing")}</Link>
+              ? <Link href="/try" className="btn btn-right btn-block press">{t("keepGoing")}</Link>
               : <button type="button" className="btn btn-secondary btn-block press" onClick={again}>{t("tryAgain")}</button>}
           </div>
         )}

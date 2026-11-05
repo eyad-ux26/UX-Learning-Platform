@@ -5,12 +5,14 @@
   "main": "cf-worker.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  // /c/* (lesson files) goes to the Worker first, which answers 404: only the server reads them, through ASSETS.
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS", "run_worker_first": ["/c/*"] },
   "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "uxgate-web" }],
   // Run server code near Supabase in Frankfurt instead of near each visitor.
   "placement": { "region": "aws:eu-central-1" },
-  // Daily jobs at 02:00 UTC (05:00 Cairo). They call /api/cron/daily and /api/cron/billing inside the same worker.
-  "triggers": { "crons": ["0 2 * * *"] },
+  // Daily jobs at 02:00 UTC (05:00 Cairo) call /api/cron/daily and /api/cron/billing (slice 5); the 15-minute one calls
+  // /api/cron/reminders (slice 4).
+  "triggers": { "crons": ["0 2 * * *", "*/15 * * * *"] },
   // Non-secret settings. NEXT_PUBLIC_* values must also be present at build time (Workers Builds variables).
   // Secrets (SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET, the Paymob and Paddle keys, BILLING_TOKEN_KEY, RESEND_API_KEY)
   // are set with `wrangler secret put`, never here. The full list is in docs/billing-keys.md.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Bundle } from "@uxgate/content";
+import type { ContentIndex } from "@uxgate/content";
 import { buildPathView, pickPath } from "./learning";
 
 const t = (s: string) => ({ en: s, ar: s });
@@ -11,7 +11,7 @@ const b = {
     { id: "U2", pathId: "P1", title: t("u2"), skill: t(""), free: false, skills: [], lessons: ["L3"] },
   ],
   lessons: [lesson("L2", "U1", 2), lesson("L1", "U1", 1), lesson("L3", "U2", 1)],
-} as unknown as Bundle;
+} as unknown as ContentIndex;
 
 describe("pickPath", () => {
   it("skips paths without lessons", () => expect(pickPath(null, b)?.id).toBe("P1"));

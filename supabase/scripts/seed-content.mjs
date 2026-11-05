@@ -13,8 +13,8 @@ export function buildRows(b) {
     paths: b.paths.map((p, i) => ({ id: p.id, sort: i, title: p.title, subtitle: p.subtitle, status: "published" })),
     units: b.units.map((u, i) => ({ id: u.id, path_id: u.pathId, sort: i, title: u.title, free: u.free })),
     skills: b.units.flatMap((u) => u.skills.map((s) => ({ id: s.id, unit_id: u.id, title: s.title, criterion: s.can_do }))),
-    lessons: b.lessons.map((l) => ({ id: l.lessonId, unit_id: l.unitId, sort: l.order, mode: l.mode, minutes: l.minutes })),
-    content_versions: b.lessons.map((l) => ({ lesson_id: l.lessonId, hash: l.hash, body: l.body })),
+    lessons: [...b.lessons, ...(b.banks ?? [])].map((l) => ({ id: l.lessonId, unit_id: l.unitId, sort: l.order, mode: l.mode, minutes: l.minutes })),
+    content_versions: [...b.lessons, ...(b.banks ?? [])].map((l) => ({ lesson_id: l.lessonId, hash: l.hash, body: l.body })),
   };
 }
 

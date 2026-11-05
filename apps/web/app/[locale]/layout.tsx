@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { WebAnalytics } from "@/components/WebAnalytics";
+import { ServiceWorker } from "@/components/ServiceWorker";
 import "@fontsource/cairo/400.css";
 import "@fontsource/cairo/600.css";
 import "@fontsource/cairo/700.css";
@@ -11,6 +12,7 @@ import "@fontsource/titillium-web/400.css";
 import "@fontsource/titillium-web/600.css";
 import "@fontsource/titillium-web/700.css";
 import "../globals.css";
+import { GuestHandoff } from "@/components/GuestHandoff";
 import { ThemeSync } from "@/components/ThemeSync";
 import { routing, isRtl } from "@/i18n/routing";
 import { themeBootScript } from "@/lib/theme";
@@ -45,8 +47,9 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <NextIntlClientProvider><ThemeSync />{children}</NextIntlClientProvider>
+        <NextIntlClientProvider><ThemeSync /><GuestHandoff />{children}</NextIntlClientProvider>
         <WebAnalytics />
+        <ServiceWorker />
       </body>
     </html>
   );

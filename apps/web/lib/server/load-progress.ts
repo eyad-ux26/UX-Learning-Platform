@@ -1,36 +1,58 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { lastDays, localDay, streakDays, type Progress } from "@/lib/progress";
+import { lastDays, localDay, streakDays, type Progress } from "../progress";
 
 /** Everything Home and the path map need, read with the learner's own session (RLS lets them read only their rows). */
 export async function loadProgress(db: SupabaseClient, userId: string, now = new Date()): Promise<Progress> {
-  const { data: profile } = await db.from("profiles").select("display_name, daily_goal, time_zone").eq("user_id", userId).maybeSingle();
-  const today = localDay(now, profile?.time_zone);
-  const since = lastDays(today, 120)[0];
+  return (await loadProgressAndZone(db, userId, now)).progress;
+}
 
-  const [attempts, xp, activity] = await Promise.all([
+/** One started lesson: did any play of it finish, and how much XP it earned. */
+type LessonRow = { lesson_id: string; finished: boolean; xp: number };
+
+/**
+ * Per-lesson totals, summed in the database (migration 0008) so a page never pulls the learner's whole attempt and
+ * XP history. Until 0008 is applied it falls back to reading the rows.
+ */
+async function lessonRows(db: SupabaseClient, userId: string): Promise<LessonRow[]> {
+  const summary = await db.rpc("my_lesson_progress", { p_user: userId });
+  if (!summary.error) return (summary.data ?? []) as LessonRow[];
+  const [attempts, xp] = await Promise.all([
     db.from("attempts").select("id, lesson_id, finished_at").eq("user_id", userId),
     db.from("xp_events").select("attempt_id, amount").eq("user_id", userId),
-    db.from("daily_activity").select("day, lessons_done").eq("user_id", userId).gte("day", since),
   ]);
-
-  const lessonOfAttempt = new Map<string, string>();
-  const finished = new Set<string>();
-  const started = new Set<string>();
+  const rows = new Map<string, LessonRow>();
+  const lessonOf = new Map<string, string>();
   for (const a of attempts.data ?? []) {
-    lessonOfAttempt.set(a.id, a.lesson_id);
-    started.add(a.lesson_id);
-    if (a.finished_at) finished.add(a.lesson_id);
+    lessonOf.set(a.id, a.lesson_id);
+    const r = rows.get(a.lesson_id) ?? { lesson_id: a.lesson_id, finished: false, xp: 0 };
+    r.finished ||= !!a.finished_at;
+    rows.set(a.lesson_id, r);
   }
+  for (const e of xp.data ?? []) { const r = rows.get(lessonOf.get(e.attempt_id) ?? ""); if (r) r.xp += e.amount; }
+  return [...rows.values()];
+}
+
+/** loadProgress plus the learner's time zone. All reads go out at once: one round trip to the database. */
+export async function loadProgressAndZone(db: SupabaseClient, userId: string, now = new Date()): Promise<{ progress: Progress; timeZone: string | null }> {
+  // The learner's own day is known only after the profile arrives, so ask for one extra day of activity and trim below.
+  const roughSince = lastDays(localDay(now, "UTC"), 122)[0];
+  const [{ data: profile }, lessons, activityRaw] = await Promise.all([
+    db.from("profiles").select("display_name, daily_goal, time_zone").eq("user_id", userId).maybeSingle(),
+    lessonRows(db, userId),
+    db.from("daily_activity").select("day, lessons_done").eq("user_id", userId).gte("day", roughSince),
+  ]);
+  const today = localDay(now, profile?.time_zone);
+  const since = lastDays(today, 120)[0];
+  const activity = { data: (activityRaw.data ?? []).filter((d) => (d.day as string) >= since) };
+
+  const finished = lessons.filter((l) => l.finished).map((l) => l.lesson_id);
+  const started = lessons.map((l) => l.lesson_id);
   const xpByLesson: Record<string, number> = {};
   let xpTotal = 0;
-  for (const e of xp.data ?? []) {
-    xpTotal += e.amount;
-    const lesson = lessonOfAttempt.get(e.attempt_id);
-    if (lesson) xpByLesson[lesson] = (xpByLesson[lesson] ?? 0) + e.amount;
-  }
+  for (const l of lessons) { xpTotal += l.xp; if (l.xp) xpByLesson[l.lesson_id] = l.xp; }
   const days = (activity.data ?? []).filter((d) => d.lessons_done > 0).map((d) => d.day as string);
 
-  return {
+  const progress: Progress = {
     displayName: profile?.display_name ?? null,
     dailyGoal: profile?.daily_goal ?? 1,
     xpTotal,
@@ -38,8 +60,9 @@ export async function loadProgress(db: SupabaseClient, userId: string, now = new
     streak: streakDays(days, today),
     activeDays: days.filter((d) => lastDays(today).includes(d)),
     today,
-    finishedLessons: [...finished],
-    startedLessons: [...started],
+    finishedLessons: finished,
+    startedLessons: started,
     xpByLesson,
   };
+  return { progress, timeZone: profile?.time_zone ?? null };
 }

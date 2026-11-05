@@ -1,6 +1,7 @@
 // Billing emails in English and Arabic (copy from canvas v63, EmailPages: receipt, renewSoon, payFailed, cancelled,
 // refundYes, refundNo, walletDue), plus the student link and the note to support about a refund request.
 // Billing emails always arrive: they cannot be turned off. Pure: returns subject, HTML and text.
+import { emailLayout } from "../server/email/layout";
 import { formatMoney } from "./pricing";
 import type { Payment, RefundRequest } from "./engine";
 import { REFUND_DAYS, RETRY_DAYS, type Sub } from "./subscription";
@@ -180,32 +181,12 @@ function content(kind: EmailKind, i: EmailInput): Body {
   }
 }
 
-const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-
-/** One 600px column, solid colours, the button ledge drawn as a bottom border, system fonts (slice 4 email layout). */
+/** Billing emails use the one app email layout (slice 4, lib/server/email/layout.ts). They are transactional: they cannot be turned off. */
 export function renderEmail(kind: EmailKind, input: EmailInput): Email {
   const b = content(kind, input);
-  const dir = b.dir ?? (input.locale === "ar" ? "rtl" : "ltr");
-  const align = dir === "rtl" ? "right" : "left";
-  const font = "system-ui,-apple-system,'Segoe UI',Roboto,Tahoma,Arial,sans-serif";
-  const rows = b.rows?.length
-    ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-top:1px solid #D3E8F0;margin:16px 0">${b.rows.map(([k, v]) => `<tr><td style="padding:9px 0;border-bottom:1px solid #D3E8F0;font-size:14px;color:#3D5D73;text-align:${align}">${esc(k)}</td><td style="padding:9px 0;border-bottom:1px solid #D3E8F0;font-size:14px;font-weight:700;color:#012E4B;text-align:${dir === "rtl" ? "left" : "right"}">${esc(v)}</td></tr>`).join("")}</table>`
-    : "";
-  const button = b.button ? `<p style="margin:20px 0"><a href="${esc(b.button.href)}" style="display:inline-block;background:#005F99;color:#FFFFFF;font-weight:700;font-size:17px;text-decoration:none;padding:14px 26px;border-radius:14px;border-bottom:4px solid #003F66">${esc(b.button.label)}</a></p>` : "";
-  const html = `<!doctype html><html lang="${input.locale}" dir="${dir}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(b.subject)}</title></head>
-<body style="margin:0;background:#EEF3F6;font-family:${font};color:#012E4B">
-<span style="display:none;max-height:0;overflow:hidden">${esc(b.preheader)}</span>
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:24px 12px">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px" dir="${dir}">
-<tr><td style="padding:0 4px 16px;text-align:${align}"><img src="${esc(input.site)}/brand/logo.svg" alt="UXGate" height="30" style="height:30px"></td></tr>
-<tr><td style="background:#FFFFFF;border:1px solid #D3E8F0;border-radius:16px;padding:24px 22px;text-align:${align}">
-<h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;color:#012E4B">${esc(b.heading)}</h1>
-${b.paragraphs.map((p) => `<p style="margin:0 0 12px;font-size:16px;line-height:${input.locale === "ar" ? 1.8 : 1.6}">${esc(p)}</p>`).join("")}
-${rows}${button}
-${(b.notes ?? []).map((n) => `<p style="margin:0 0 8px;font-size:14px;line-height:1.5;color:#3D5D73">${esc(n)}</p>`).join("")}
-</td></tr>
-<tr><td style="padding:16px 8px;font-size:12.5px;line-height:1.5;color:#4B555E;text-align:${align}">${esc(b.why)}<br>${esc(input.locale === "ar" ? "UXGate · uxgate.org · لديك سؤال؟ ردّ على هذه الرسالة أو راسلنا على support@uxgate.org." : "UXGate · uxgate.org · Questions? Reply to this email or write to support@uxgate.org.")}</td></tr>
-</table></td></tr></table></body></html>`;
-  const text = [b.heading, "", ...b.paragraphs, "", ...(b.rows ?? []).map(([k, v]) => `${k}: ${v}`), "", ...(b.button ? [`${b.button.label}: ${b.button.href}`, ""] : []), ...(b.notes ?? []), "", b.why].join("\n");
+  const { html, text } = emailLayout({
+    locale: b.dir === "ltr" ? "en" : input.locale, preheader: b.preheader, heading: b.heading, paragraphs: b.paragraphs, table: b.rows,
+    button: b.button, notes: b.notes, footer: "transactional", why: b.why,
+  });
   return { subject: b.subject, preheader: b.preheader, html, text };
 }

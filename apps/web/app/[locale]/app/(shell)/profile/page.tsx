@@ -7,6 +7,9 @@ import { ProfilePlan } from "@/components/billing/ProfilePlan";
 import { PaywallSheet } from "@/components/billing/PaywallSheet";
 import { formatMoney } from "@/lib/billing/pricing";
 import { loadOffer } from "@/lib/server/billing/plans";
+import { Link } from "@/i18n/navigation";
+import { BellLink } from "@/components/account/BellLink";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +30,10 @@ export default async function ProfilePage({ params, searchParams }: { params: Pr
   const offer = !me.pro && paywall === "cert" ? await loadOffer(me) : null;
   return (
     <Shell pathId={path.id} pathTitle={path.title.en} units={view.units.map((u) => ({ id: u.unit.id, title: u.unit.title[locale as "en" | "ar"] }))}>
+      <div className="s4-bar">
+        <Link href="/app/settings" className="bell-link" aria-label={(await getTranslations("settings"))("title")}><span className="ph ph-gear" aria-hidden="true" /></Link>
+        <BellLink me={me} />
+      </div>
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
       <ProfilePlan pro={me.pro} pathTitle={path.title.en} pct={view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0} />
       {offer ? <PaywallSheet kind="cert" prices={{ month: formatMoney(offer.month.amount, offer.month.currency, locale as "en" | "ar"), year: formatMoney(offer.year.amount, offer.year.currency, locale as "en" | "ar") }} /> : null}

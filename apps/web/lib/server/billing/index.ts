@@ -2,6 +2,7 @@ import "server-only";
 import type { Engine, ProviderActions, WebhookActions } from "@/lib/billing/engine";
 import type { Transport } from "@/lib/billing/mailer";
 import { makeMailer } from "@/lib/billing/mailer";
+import { sendEmail } from "@/lib/server/email/send";
 import { seal } from "@/lib/billing/crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { siteUrl, tokenKey } from "./config";
@@ -9,18 +10,13 @@ import { SupabaseBillingStore } from "./store";
 import { cancelSubscription, cancelSubscriptionNow, changeSubscriptionPeriod, changeSubscriptionRegion, customerCountry, refundTransaction, resumeSubscription } from "./paddle-api";
 import { refundTransaction as refundPaymob } from "./paymob-api";
 
-/** Sends through Resend's HTTP API. Without RESEND_API_KEY emails are logged as skipped (staging before Resend is set up). */
+/** Sends through the app's one email sender (slice 4). Without RESEND_API_KEY emails are logged as skipped (staging before Resend is set up). */
 export function resendTransport(): Transport | null {
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return null;
+  if (!process.env.RESEND_API_KEY) return null;
   return async (m) => {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: "UXGate <hello@uxgate.org>", reply_to: "support@uxgate.org", to: [m.to], subject: m.subject, html: m.html, text: m.text }),
-    });
-    if (!res.ok) throw new Error(`resend ${res.status}: ${(await res.text()).slice(0, 200)}`);
-    return { id: ((await res.json()) as { id?: string }).id ?? null };
+    const r = await sendEmail({ ...m, kind: "billing" });
+    if (!r.ok) throw new Error(`email not sent: ${r.error ?? "unknown"}`);
+    return { id: r.id ?? null };
   };
 }
 
