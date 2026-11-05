@@ -7,7 +7,7 @@ import type { Progress } from "@/lib/progress";
 import { pathArt } from "./HomeView";
 import { PathSwitcher } from "./PathSwitcher";
 import { catalogEntry } from "@/lib/catalog";
-import { buildPathView } from "@/lib/learning";
+import { buildPathView, testOutCheck } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 
 function Row({ l, t, locale }: { l: PathLesson; t: Awaited<ReturnType<typeof getTranslations>>; locale: Locale }) {
@@ -56,6 +56,8 @@ function LockedUnit({ view, index, me, t }: { view: PathView; index: number; me:
   const prev = view.units[index - 1];
   const checked = !prev || (prev.unit.skills.length > 0 && prev.unit.skills.every((s) => { const st = me.skillStates.get(s.id)?.state; return st === "shown" || st === "kept"; }));
   const resume = prev?.lessons.find((l) => l.state === "available" || l.state === "in_progress");
+  // Test out: the previous unit's skill check, taken now instead of its remaining lessons.
+  const test = index > 0 ? testOutCheck(view, index - 1) : null;
   return (
     <details className="card locked-unit">
       <summary className="t-label"><span className="ph ph-lock-fill" aria-hidden="true" /> {t("lockedTitle", { unit: t("unit", { n: index + 1 }) })}</summary>
@@ -64,6 +66,7 @@ function LockedUnit({ view, index, me, t }: { view: PathView; index: number; me:
         <li><span className={`ph ph-${checked ? "check-circle-fill" : "clock"}`} aria-hidden="true" /> <b>{t("lockedCheck", { unit: t("unit", { n: index }) })}</b> <span className="t-small ink-2">{checked ? t("met") : t("todo")}</span><br /><span className="t-small ink-2">{t("lockedCheckSub")}</span></li>
       </ul>
       {resume ? <Link href={`/app/lesson/${resume.lesson.lessonId}`} className="btn btn-primary btn-sm press">{t("lockedGo")}</Link> : null}
+      {test ? <Link href={`/app/lesson/${test.lesson.lessonId}`} className="btn btn-ghost btn-sm" style={{ minBlockSize: 44 }}>{t("lockedTest", { unit: t("unit", { n: index }) })}</Link> : null}
     </details>
   );
 }

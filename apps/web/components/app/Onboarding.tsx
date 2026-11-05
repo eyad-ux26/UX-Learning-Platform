@@ -1,7 +1,8 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { SAMPLE_KEPT } from "@/components/GuestHandoff";
 import { useTranslations } from "next-intl";
 import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
@@ -34,6 +35,13 @@ export function Onboarding() {
   const [showAll, setShowAll] = useState(false);
   const [pathChoice, setPathChoice] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
+  // Came from the sample lesson (P01) and chose to keep the result: say it is saved, and start on that path.
+  const [fromSample, setFromSample] = useState(false);
+  useEffect(() => {
+    let kept = false;
+    try { kept = sessionStorage.getItem(SAMPLE_KEPT) === "1" || !!localStorage.getItem("ug-guest-handoff"); } catch { /* private mode */ }
+    if (kept) { setFromSample(true); setFocus((f) => f ?? "forms"); setPathChoice((p) => p ?? "P01"); }
+  }, []);
   const [pending, start] = useTransition();
 
   const submit = (skipped: boolean) => {
@@ -44,7 +52,7 @@ export function Onboarding() {
     setFailed(false);
     start(async () => {
       const res = await saveOnboarding(input);
-      if (res.ok) router.push("/app"); else setFailed(true);
+      if (res.ok) { try { sessionStorage.removeItem(SAMPLE_KEPT); } catch { /* private mode */ } router.push("/app"); } else setFailed(true);
     });
   };
   const next = () => { play("ui-tap"); if (step === 3) submit(false); else setStep((step + 1) as 2 | 3); };
@@ -95,6 +103,12 @@ export function Onboarding() {
 
           {step === 2 ? (
             <>
+              {fromSample ? (
+                <div className="calm" role="status" style={{ background: "var(--mint)", borderColor: "var(--right-line)" }}>
+                  <span className="ob-kept-ico"><span className="ph ph-cloud-check-fill" aria-hidden="true" /></span>
+                  <div className="grow"><b>{t("sampleKept")}</b><span>{t("sampleKeptBody")}</span></div>
+                </div>
+              ) : null}
               <div className="ob-opts" role="radiogroup" aria-label={title}>
                 {FOCUSES.map((f) => (
                   <button key={f} type="button" role="radio" aria-checked={focus === f} className={`choice press${focus === f ? " is-selected" : ""}`} onClick={() => { setFocus(f); play("select-snap"); }}>

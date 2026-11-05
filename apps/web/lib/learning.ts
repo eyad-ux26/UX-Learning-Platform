@@ -26,6 +26,31 @@ export function pickCurrent(currentId: string | null | undefined, joined: readon
   return pickPath(first ?? recommendedId, b);
 }
 
+const frontier = (all: PathLesson[]) => {
+  let last = -1;
+  all.forEach((l, i) => { if (l.state === "done") last = i; });
+  return all.slice(last + 1).find((l) => l.state === "available");
+};
+
+/**
+ * Whether a lesson can be played now: any lesson that is not locked, and also the skill check of the unit the learner
+ * is in, taken early to test out of the rest of that unit.
+ */
+export function canPlay(view: PathView, lessonId: string): boolean {
+  const unit = view.units.find((u) => u.lessons.some((l) => l.lesson.lessonId === lessonId));
+  const l = unit?.lessons.find((x) => x.lesson.lessonId === lessonId);
+  if (!unit || !l) return false;
+  if (l.state !== "locked") return true;
+  return l.lesson.mode === "check" && unit.lessons.some((x) => x.state !== "locked");
+}
+
+/** The skill check of a unit that can be taken early (test out), when the unit is reached but not finished. */
+export function testOutCheck(view: PathView, unitIndex: number): PathLesson | null {
+  const u = view.units[unitIndex];
+  const check = u?.lessons.find((l) => l.lesson.mode === "check");
+  return check && check.state === "locked" && canPlay(view, check.lesson.lessonId) ? check : null;
+}
+
 export function buildPathView(pathId: string, progress: Pick<Progress, "finishedLessons" | "startedLessons" | "xpByLesson">, practicedSkills: ReadonlySet<string>, b: ContentIndex = defaultContent): PathView | null {
   const path = b.paths.find((p) => p.id === pathId);
   if (!path) return null;
@@ -46,7 +71,8 @@ export function buildPathView(pathId: string, progress: Pick<Progress, "finished
   const all = rows.flatMap((r) => r.lessons);
   return {
     path, unitCount: units.length, units: rows,
-    next: all.find((l) => l.state === "available" || l.state === "in_progress") ?? null,
+    // The lesson in progress first, then the next one after the furthest finished lesson, then any skipped one.
+    next: all.find((l) => l.state === "in_progress") ?? frontier(all) ?? all.find((l) => l.state === "available") ?? null,
     doneCount: all.filter((l) => l.state === "done").length, totalCount: all.length,
   };
 }

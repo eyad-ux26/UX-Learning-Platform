@@ -4,10 +4,16 @@ import { content, type Locale } from "@uxgate/content";
 import { catalogEntry, pathArtUrl } from "@/lib/catalog";
 import { Link } from "@/i18n/navigation";
 import { loadQueue, reviewUnitOf } from "@/lib/server/review-session";
-import { sessionSkills } from "@/lib/review";
+import { buildQueue, pathOfId, sessionSkills, type ReviewSkill } from "@/lib/review";
 import type { Learner } from "@/lib/server/learner";
 
 const skillTitle = (id: string) => content.units.flatMap((u) => u.skills).find((s) => s.id === id)?.title;
+
+/** Without a database (the design fixture) the queue comes from the skill states alone. */
+function offlineQueue(me: Learner, now: Date) {
+  const skills: ReviewSkill[] = [...me.skillStates].map(([skillId, r]) => ({ skillId, pathId: pathOfId(skillId), ...r }));
+  return { skills, queue: buildQueue(skills, new Set(), now) };
+}
 
 /** One queue for every joined path: confident errors first, each card names its path. */
 export async function ReviewMain({ me }: { me: Learner }) {
@@ -15,7 +21,7 @@ export async function ReviewMain({ me }: { me: Learner }) {
   const locale = (await getLocale()) as Locale;
   const now = new Date();
   // "Sure" and wrong answers come first; read as the learner's own rows (row-level security).
-  const { skills, queue } = me.db ? await loadQueue(me.db, me.userId, me.skillStates, now) : { skills: [], queue: [] };
+  const { skills, queue } = me.db ? await loadQueue(me.db, me.userId, me.skillStates, now) : offlineQueue(me, now);
   // The next session takes the due skills of one unit, at most 5, so the Start button says how many questions it asks.
   const session = sessionSkills(queue, reviewUnitOf);
   const next = skills.filter((s) => s.state === "shown" && s.nextReviewAt && s.nextReviewAt > now).sort((a, b) => a.nextReviewAt!.getTime() - b.nextReviewAt!.getTime())[0];

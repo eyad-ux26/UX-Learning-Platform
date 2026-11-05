@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { bodySchema, processEvents } from "@/lib/server/process-attempts";
 import { localDay } from "@/lib/progress";
-import { buildPathView } from "@/lib/learning";
+import { buildPathView, canPlay } from "@/lib/learning";
 import { loadProgress } from "@/lib/server/load-progress";
 import { withinDbLimit, withinMemoryLimit } from "@/lib/server/rate-limit";
 import { decideReplay, replayXp, type ReplayKind } from "@/lib/replay";
@@ -94,8 +94,9 @@ export async function POST(req: Request) {
     replay = (r?.replay_kind as ReplayKind | null | undefined) ?? null;
   } else {
     const progress = await loadProgress(db, userId);
-    const state = buildPathView(current.pathId, progress, new Set())?.units.flatMap((u) => u.lessons).find((l) => l.lesson.lessonId === body.lessonId)?.state;
-    if (state === "locked") return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
+    const view = buildPathView(current.pathId, progress, new Set());
+    // A skill check of the unit the learner is in may be taken early (test out); every other locked lesson is refused.
+    if (view && !canPlay(view, body.lessonId)) return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
     if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
     // Playing a finished lesson again is a replay: half XP the first time each day, nothing after that.
     if (progress.finishedLessons.includes(body.lessonId)) {
