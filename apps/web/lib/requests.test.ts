@@ -1,5 +1,8 @@
-import { describe, expect, it } from "vitest";
-import { bundle } from "@uxgate/content/full";
+import { describe, expect, it, vi } from "vitest";
+import { bundle, getLessonVersion as fullLesson } from "@uxgate/content/full";
+
+// The server loader reads lesson files from disk or Cloudflare assets; here the full bundle stands in for it.
+vi.mock("./server/content", () => ({ getLessonVersion: async (id: string) => fullLesson(id) }));
 import { describeRequest, statusOf, type RequestRow } from "./requests";
 
 describe("my requests", () => {

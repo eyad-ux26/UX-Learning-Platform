@@ -1,5 +1,6 @@
 // "My requests": a review request from a lesson, described for the learner. Pure, so it is tested against real content.
-import { getLessonVersion, getPath, getUnit, getCast } from "@uxgate/content";
+import { getPath, getUnit, getCast } from "@uxgate/content";
+import { getLessonVersion } from "./server/content";
 
 export type RequestRow = {
   id: string; lesson_id: string; step_id: string; answer: { sel?: string[] } | null; reason: string; note: string | null;
