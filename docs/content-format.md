@@ -136,6 +136,8 @@ mock:
 | `iconbtn` | A small round icon button; `text` is the icon character |
 | `ring` | A focus ring on any block, for keyboard lessons: `default`, `brand`, `flush`, `white`, `double`, `faint`, `tint` |
 
+`npm run validate` rejects a prop that a block kind doesn't take, such as `options` on `chips` (it takes `items`). The props each kind takes are listed under `props` in `packages/player/src/mock-vocab.json`.
+
 A mock can also set `height` (the screen's minimum height in pixels), `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
 
 Any text in a mock can use `**bold**`.
