@@ -513,7 +513,7 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
           {mock.overlay ? <Overlay o={mock.overlay} locale={locale} /> : null}
         </div>
       </div>
-      {mock.reader ? <div className="xm-reader"><Icon name="speaker-high" /><span>“{mt(mock.reader, locale)}”</span></div> : null}
+      {mock.reader ? <div className="xm-reader"><Icon name="speaker-high" /><span>{locale === "ar" ? "«" : "“"}{mt(mock.reader, locale)}{locale === "ar" ? "»" : "”"}</span></div> : null}
     </figure>
     </Rtl.Provider>
   );
