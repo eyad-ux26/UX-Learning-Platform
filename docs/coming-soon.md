@@ -29,7 +29,7 @@ Open to everyone while the gate is on:
 The server also refuses, for anyone but an admin:
 
 - new email sign-ups (`signUpAction`);
-- every billing API call (checkout, plan changes, codes, refunds, student checks), with `403 coming_soon`.
+- every billing API call (checkout, plan changes, codes, refunds, student checks), lesson answers (`/api/attempts`), lesson videos (`/api/video`) and review requests, with `403 coming_soon`. A learner's own data export stays open.
 
 Only someone past the team password reaches sign-in. A Google sign-in there can still create an account that is not an admin; it sees the member view.
 
