@@ -120,14 +120,6 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     router.refresh();
   };
 
-  const startOver = useCallback(async () => {
-    await kvDel(key).catch(() => {});
-    const fresh = startLesson(lesson, hash);
-    attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
-    setState(null);
-    setTimeout(() => setState(fresh), 0);
-  }, [key, lesson, hash]);
-
   // A signed address for a clip, asked for when the step opens.
   const videoSource = useCallback(async (id: string) => {
     const res = await fetch(`/api/video/${encodeURIComponent(id)}`, { cache: "no-store" });
@@ -199,7 +191,6 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       onFinish={onFinish}
       variant={variant} guest={guest} saveStatus={saveStatus}
       onReview={guest ? undefined : onReview}
-      onStartOver={startOver}
       videoSource={videoSource} notice={notice}
       onSwitchLocale={other ? switchLocale : undefined}
     />

@@ -8,7 +8,7 @@ import { catalogEntry, pathArtUrl } from "@/lib/catalog";
 import { buildPathView } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 import { appItems } from "@/lib/nav";
-import { BottomNav, RailItems, RailSound } from "./AppNav";
+import { BottomNav, RailItems, RailPaths, RailSound, type RailPath } from "./AppNav";
 
 /** The signed-in frame: left rail and side panel on a laptop, bottom toolbar on a phone. */
 export async function Shell({ me, panel, children }: { me: Learner; panel?: React.ReactNode; children: React.ReactNode }) {
@@ -16,7 +16,18 @@ export async function Shell({ me, panel, children }: { me: Learner; panel?: Reac
   const locale = (await getLocale()) as Locale;
   const items = appItems();
   const joined = me.joined.length ? me.joined.map((j) => j.pathId) : [me.activePathId];
-  const units = buildPathView(me.activePathId, me.progress, me.practicedSkills)?.units ?? [];
+  // Units of every joined path, for the caret lists in the rail.
+  const rail: RailPath[] = joined.map((id) => {
+    const v = buildPathView(id, me.progress, me.practicedSkills);
+    const cur = v?.units.find((u) => u.lessons.some((l) => l.state !== "done"));
+    return {
+      id, name: catalogEntry(id)?.name ?? id, art: pathArtUrl(id), current: id === me.activePathId,
+      units: (v?.units ?? []).map((u) => ({
+        id: u.unit.id, title: u.unit.title[locale],
+        state: u.lessons.length > 0 && u.lessons.every((l) => l.state === "done") ? "done" : u === cur ? "current" : !me.pro && !u.unit.free || (u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked")) ? "locked" : "open",
+      })),
+    };
+  });
   return (
     <div className={`shell${panel ? "" : " no-panel"}`}>
       <div className="shell-rail">
@@ -25,19 +36,7 @@ export async function Shell({ me, panel, children }: { me: Learner; panel?: Reac
           <RailItems items={items} />
         </nav>
         <div className="dk-sec"><span className="ph ph-stack" aria-hidden="true" />{t("yourPaths")}</div>
-        {joined.map((id) => {
-          const e = catalogEntry(id);
-          const on = id === me.activePathId;
-          return (
-            <div key={id} style={{ display: "contents" }}>
-              <Link href={`/app/path/${id}`} className={`dk-layer${on ? " is-on" : ""}`} aria-current={on ? "true" : undefined}>
-                
-                <img src={pathArtUrl(id)} alt="" style={{ inlineSize: 22, blockSize: 22, flex: "none" }} /><span className="ltr" style={{ flex: 1, minInlineSize: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e?.name ?? id}</span>
-              </Link>
-              {on ? units.map((u) => <Link key={u.unit.id} href={`/app/path/${id}`} className="dk-layer" style={{ paddingInlineStart: 30 }}><span className="ph ph-hash" aria-hidden="true" />{u.unit.title[locale]}</Link>) : null}
-            </div>
-          );
-        })}
+        <RailPaths paths={rail} />
         <Link href="/app/paths" className="dk-layer" style={{ color: "var(--link)" }}><span className="ph ph-plus" aria-hidden="true" />{t("addPath")}</Link>
         <div style={{ flex: 1 }} />
         <RailSound />

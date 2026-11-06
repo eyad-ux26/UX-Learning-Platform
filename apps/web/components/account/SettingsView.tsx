@@ -167,7 +167,7 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
             <Link href="/privacy" className="set-row"><span className="ph ph-shield-check" aria-hidden="true" /><span className="set-l">{t("privacy")}</span><span className="set-v"><Caret /></span></Link>
             <Link href="/terms" className="set-row"><span className="ph ph-article" aria-hidden="true" /><span className="set-l">{t("terms")}</span><span className="set-v"><Caret /></span></Link>
           </div>
-          <button type="button" className="btn btn-secondary btn-block press" style={{ marginBlockStart: 6 }} onClick={doSignOut} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
+          <button type="button" className="btn btn-secondary btn-signout btn-block press" style={{ marginBlockStart: 6 }} onClick={doSignOut} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
           <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12 }}>{t("version")}</p>
         </div>
       </div>
