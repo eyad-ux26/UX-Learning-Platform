@@ -55,7 +55,7 @@ export function ProfileForm({ initial, email, userId }: { initial: { displayName
         <div className="field"><span className="label-like">{t("theme")}</span><ThemeSwitch /></div>
         <div className="field only-mobile"><span className="label-like">{t("language")}</span><LocaleSwitch /></div>
       </section>
-      <button type="button" className="btn btn-secondary press" onClick={() => start(async () => { setSyncUser(userId); await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]); await signOut(); router.push("/"); router.refresh(); })} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
+      <button type="button" className="btn btn-secondary btn-signout press" onClick={() => start(async () => { setSyncUser(userId); await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]); await signOut(); router.push("/"); router.refresh(); })} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
     </div>
   );
 }

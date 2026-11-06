@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -61,5 +62,47 @@ export function RailSound() {
       <span style={{ flex: 1 }} />
       <span className={`switch${muted ? "" : " is-on"}`} aria-hidden="true"><span className="track" /></span>
     </button>
+  );
+}
+
+export type RailPath = {
+  id: string; name: string; art: string; current: boolean;
+  units: { id: string; title: string; state: "done" | "current" | "locked" | "open" }[];
+};
+
+/** Laptop: "Your paths" in the rail. Every path starts closed, the current one too; the caret opens its units. */
+export function RailPaths({ paths }: { paths: RailPath[] }) {
+  const t = useTranslations("nav");
+  const [open, setOpen] = useState<Record<string, boolean>>({});
+  return (
+    <>
+      {paths.map((p) => {
+        const on = !!open[p.id];
+        const listId = `rail-units-${p.id}`;
+        return (
+          <div key={p.id} className="dk-path">
+            <div className="dk-path-row">
+              <Link href={`/app/path/${p.id}`} className={`dk-layer${p.current ? " is-on" : ""}`} aria-current={p.current ? "true" : undefined}>
+                <img src={p.art} alt="" style={{ inlineSize: 22, blockSize: 22, flex: "none" }} /><span className="ltr" style={{ flex: 1, minInlineSize: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+              </Link>
+              <button type="button" className="dk-tog" aria-expanded={on} aria-controls={listId} aria-label={t("pathUnits", { name: p.name })} onClick={() => setOpen({ ...open, [p.id]: !on })}>
+                <span className="ph ph-caret-down" aria-hidden="true" />
+              </button>
+            </div>
+            {on ? (
+              <ul id={listId} className="dk-units">
+                {p.units.map((u) => (
+                  <li key={u.id}>
+                    <Link href={`/app/path/${p.id}#${u.id}`} className={`dk-unit${u.state === "done" ? " is-done" : u.state === "current" ? " is-cur" : u.state === "locked" ? " is-lock" : ""}`} aria-current={u.state === "current" ? "step" : undefined}>
+                      <span className={`ph ph-${u.state === "done" ? "check-circle-fill" : u.state === "current" ? "play" : u.state === "locked" ? "lock" : "circle"}`} aria-hidden="true" />{u.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        );
+      })}
+    </>
   );
 }

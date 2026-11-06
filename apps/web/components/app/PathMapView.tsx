@@ -27,13 +27,17 @@ function Row({ l, t, locale }: { l: PathLesson; t: Awaited<ReturnType<typeof get
       </li>
     );
   }
+  // Done and next steps are one link over the dot and the card: its name is the title plus "Replay" or "Continue".
   if (l.state === "done") {
     return (
       <li>
-        <span className="node done"><span className="ph ph-check" style={{ fontSize: 22 }} aria-hidden="true" /></span>
-        <Link href={href} className="card press lcard" aria-label={`${title}. ${t("replay")}`}>
-          <span className="t-label">{title}</span>
-          <span className="lsub done"><span className="ph ph-check-circle-fill" aria-hidden="true" />{t("done")} · <span className="num ltr">+{l.xp} XP</span></span>
+        <Link href={href} className="map-step press" aria-label={`${title}. ${t("replay")}`}>
+          <span className="node done"><span className="ph ph-check" style={{ fontSize: 22 }} aria-hidden="true" /></span>
+          <span className="card lcard map-step-card">
+            <span className="t-label">{title}</span>
+            <span className="lsub done"><span className="ph ph-check-circle-fill" aria-hidden="true" />{t("done")} · <span className="num ltr">+{l.xp} XP</span></span>
+            <span className="ph ph-caret-end flip map-step-go" aria-hidden="true" />
+          </span>
         </Link>
       </li>
     );
@@ -41,14 +45,16 @@ function Row({ l, t, locale }: { l: PathLesson; t: Awaited<ReturnType<typeof get
   const cont = l.state === "in_progress";
   return (
     <li>
-      <span className="node next"><span className="ph ph-play" style={{ fontSize: 20 }} aria-hidden="true" /></span>
-      <div className="card lcard next">
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span className="lsub" style={{ color: "var(--link)" }}>{cont ? t("inProgress") : t("next")} · {mins}</span>
-          <span className="t-label" style={{ fontSize: 16 }}>{title}</span>
-        </div>
-        <Link href={href} className="btn btn-primary btn-sm btn-block press" style={{ marginBlockEnd: 4 }}><span className="ph ph-play" aria-hidden="true" />{cont ? t("continue") : t("start")}</Link>
-      </div>
+      <Link href={href} className="map-step press" aria-label={`${title}. ${cont ? t("continue") : t("start")}`}>
+        <span className="node next"><span className="ph ph-play" style={{ fontSize: 20 }} aria-hidden="true" /></span>
+        <span className="card lcard next map-step-card">
+          <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span className="lsub" style={{ color: "var(--link)" }}>{cont ? t("inProgress") : t("next")} · {mins}</span>
+            <span className="t-label" style={{ fontSize: 16 }}>{title}</span>
+          </span>
+          <span className="btn btn-primary btn-sm btn-block" style={{ marginBlockEnd: 4 }} aria-hidden="true"><span className="ph ph-play" aria-hidden="true" />{cont ? t("continue") : t("start")}</span>
+        </span>
+      </Link>
     </li>
   );
 }
@@ -136,7 +142,7 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
       ) : u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked") ? (
         <LockedUnit key={u.unit.id} view={view} index={view.units.indexOf(u)} me={me} t={t} locale={locale} />
       ) : (
-        <div key={u.unit.id} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div key={u.unit.id} id={u.unit.id} style={{ display: "flex", flexDirection: "column", gap: 14, scrollMarginBlock: 16 }}>
           <div className="unit-h">
             <div className="tags">
               <span className="t-over">{t("unit", { n: u.number })}</span>

@@ -40,17 +40,39 @@ export type PlayerProps = {
   videoSource?: (id: string) => Promise<VideoSource>;
   /** A short message from the app (for example "every answer is synced"), shown as a toast. */
   notice?: string | null;
-  /** "Start over" in the welcome-back banner. Without it the banner has no button. */
-  onStartOver?: () => void;
   /** The mastery round counts its steps in the header ("Question n of m"). */
   /** Shows the lesson in the other language without leaving it. Without it the header has no language button. */
   onSwitchLocale?: () => void;
 };
 
+/** "Welcome back": a calm note that closes by itself after 5 seconds, or with its close button. The timer pauses on hover and focus. */
+function ResumeNote({ text, close, onClose }: { text: string; close: string; onClose: () => void }) {
+  const paused = useRef(false);
+  useEffect(() => {
+    let left = 5000;
+    let last = Date.now();
+    const id = setInterval(() => {
+      const now = Date.now();
+      if (!paused.current) left -= now - last;
+      last = now;
+      if (left <= 0) onClose();
+    }, 100);
+    return () => clearInterval(id);
+  }, [onClose]);
+  const hold = (v: boolean) => () => { paused.current = v; };
+  return (
+    <p className="lp-banner is-resume" role="status" onPointerEnter={hold(true)} onPointerLeave={hold(false)} onFocus={hold(true)} onBlur={hold(false)}>
+      <span className="ph ph-hand-waving" aria-hidden="true" />{text}
+      <button type="button" className="icon-btn plain lp-banner-x" aria-label={close} onClick={onClose}><span className="ph ph-x" aria-hidden="true" /></button>
+      <span className="lp-banner-timer" aria-hidden="true" />
+    </p>
+  );
+}
+
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource, notice, onSwitchLocale }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, videoSource, notice, onSwitchLocale }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -62,6 +84,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   const [replay, setReplay] = useState(false);
   const welcomeBack = initial.i > 0 && initial.steps.some((x) => x.phase !== "answering" || x.tries > 0);
   const [showBack, setShowBack] = useState(welcomeBack);
+  const closeBack = useCallback(() => setShowBack(false), []);
   const singleTry = E.isSingleTry(lesson);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const sheetBtnRef = useRef<HTMLButtonElement>(null);
@@ -156,10 +179,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
       </header>
 
       {guest ? <p className="lp-banner" role="note"><span className="ph ph-user-plus" aria-hidden="true" />{t("guestBanner")}</p> : null}
-      {showBack && !guest ? (
-        <p className="lp-banner" role="status"><span className="ph ph-hand-waving" aria-hidden="true" />{t("welcomeBack")}
-          <button type="button" className="act" onClick={() => { setShowBack(false); setLayer(null); onStartOver?.(); }}>{t("startOver")}</button></p>
-      ) : null}
+      {showBack && !guest ? <ResumeNote text={t("welcomeBack")} close={t("close")} onClose={closeBack} /> : null}
       <main className={`player-main${summary && !replay ? " is-sum" : ""}`}>
         <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
 
