@@ -57,11 +57,17 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   }, [tip, measure]);
 
   // Focus the main button of each tip, so keyboard and screen reader players land on it.
-  useEffect(() => { box.current?.querySelector<HTMLElement>("[data-main]")?.focus(); }, [at]);
+  // The player focuses its heading as it mounts, so focus is set again a moment later.
+  useEffect(() => {
+    const focus = () => box.current?.querySelector<HTMLElement>("[data-main]")?.focus();
+    focus();
+    const id = setTimeout(focus, 120);
+    return () => clearTimeout(id);
+  }, [at]);
 
   const last = at === tips.length;
   const next = () => (last ? onDone() : setAt(at + 1));
-  const onKey = (e: React.KeyboardEvent) => {
+  const onKey = (e: KeyboardEvent) => {
     if (e.key === "Escape") { e.preventDefault(); onDone(); return; }
     if (e.key !== "Tab") return;
     const items = Array.from(box.current?.querySelectorAll<HTMLElement>("button") ?? []);
@@ -70,6 +76,15 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
     const to = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i === items.length - 1 ? 0 : i + 1);
     e.preventDefault(); items[to].focus();
   };
+
+  // On the document, so Esc and Tab work wherever focus is, not only inside the box.
+  const keyRef = useRef(onKey);
+  keyRef.current = onKey;
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => keyRef.current(e);
+    document.addEventListener("keydown", h);
+    return () => document.removeEventListener("keydown", h);
+  }, []);
 
   if (!tips.length) return null;
   const vw = typeof window === "undefined" ? 1024 : window.innerWidth;
@@ -92,7 +107,7 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   const body = tip ? t(`tourB${tip.n}`) : t("tourWelcomeB");
   const tid = "lp-tour-t", bid = "lp-tour-b";
   return (
-    <div className="lp-tour" onKeyDown={onKey}>
+    <div className="lp-tour">
       {tip && rect ? <div className="gd-spot" style={{ insetInlineStart: inl(rect.x - PAD, rect.w + PAD * 2), insetBlockStart: rect.y - PAD, inlineSize: rect.w + PAD * 2, blockSize: rect.h + PAD * 2 }} aria-hidden="true" /> : <div className="gd-scrim is-full" aria-hidden="true" />}
       <div ref={box} role="dialog" aria-modal="true" aria-labelledby={tid} aria-describedby={bid} className={`gd-tour${tip ? "" : " is-welcome"}`} style={pos}>
         {tip ? <p className="gd-tour-n">{t("tourOf", { n: at, total })}</p> : <span className="gd-tour-ic" aria-hidden="true"><span className="ph ph-sparkle" /></span>}
