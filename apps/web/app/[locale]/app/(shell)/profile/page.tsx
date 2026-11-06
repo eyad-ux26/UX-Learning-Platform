@@ -4,7 +4,7 @@ import { ProfileForm } from "@/components/app/ProfileForm";
 import { ProfileMain } from "@/components/app/ProfileMain";
 import { requireLearner } from "@/lib/server/learner";
 import { buildPathView, pickPath } from "@/lib/learning";
-import { ensureCertificates } from "@/lib/server/certificates";
+import { loadProfileData } from "@/lib/server/profile";
 import { ProfilePlan } from "@/components/billing/ProfilePlan";
 import { PaywallSheet } from "@/components/billing/PaywallSheet";
 import { formatMoney } from "@/lib/billing/pricing";
@@ -23,25 +23,8 @@ export default async function ProfilePage({ params, searchParams }: { params: Pr
   const t = await getTranslations("profile");
   const path = pickPath(me.activePathId)!;
   const view = buildPathView(path.id, me.progress, me.practicedSkills)!;
-  let email = "";
-  let reminder = "";
-  let boardOpen = false;
-  let since: string | null = me.joined.map((j) => j.startedAt).sort()[0] ?? null;
-  // Certificates are read while the profile reads below run, not after them.
-  const certs = me.db ? ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates) : Promise.resolve([]);
-  if (me.db) {
-    // The email comes in the same round as the other reads, not before them.
-    const [{ data: auth }, { data }, { data: flag }] = await Promise.all([
-      me.db.auth.getUser(),
-      me.db.from("profiles").select("reminder_time, created_at").eq("user_id", me.userId).maybeSingle(),
-      me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
-    ]);
-    email = auth.user?.email ?? "";
-    reminder = data?.reminder_time?.slice(0, 5) ?? "";
-    since = (data?.created_at as string | undefined) ?? since;
-    boardOpen = !!flag?.enabled;
-  } else email = "nour@example.com";
-  const certificates = await certs;
+  // Usually no database call here: the rest came with the learner (issue #184).
+  const { email, reminder, since, boardOpen, certificates } = await loadProfileData(me);
   const offer = !me.pro && paywall === "cert" ? await loadOffer(me) : null;
   return (
     <Shell me={me}>
