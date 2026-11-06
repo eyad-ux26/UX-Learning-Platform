@@ -105,17 +105,6 @@ body{margin:0}
           </sc-for>
         </ul>
       </section>
-
-      <!-- Prices at launch: shown on the domain for Paddle's website review -->
-      <section class="soon-get soon-price" aria-labelledby="soon-price-{{lang}}-{{theme}}-{{device}}-{{view}}">
-        <h2 id="soon-price-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.priceTitle}}</h2>
-        <ul>
-          <sc-for list="{{prices}}" as="r" hint-placeholder-count="3">
-            <li><span class="soon-get-ic" aria-hidden="true"><span class="{{r.icon}}"></span></span><span class="soon-get-text"><b>{{r.region}}</b><span class="soon-price-main"><bdi>{{r.month}}</bdi> <small>{{c.perMonth}}</small></span><span><bdi>{{r.year}}</bdi> {{c.perYear}}</span></span></li>
-          </sc-for>
-        </ul>
-        <p class="soon-price-note">{{c.taxNote}}</p>
-      </section>
       </sc-if>
     </main>
 
@@ -131,13 +120,15 @@ body{margin:0}
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["idle","busy","sent","already","invalid","network","tooMany","expired","confirmed","member","team","teamWrong"],"default":"idle"},"part":{"editor":"enum","options":["top","prices","foot"],"default":"top"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["idle","busy","sent","already","invalid","network","tooMany","expired","confirmed","member","team","teamWrong"],"default":"idle"},"part":{"editor":"enum","options":["top","foot"],"default":"top"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
 /* Pre-launch (5 Nov 2026): uxgate.org shows this Coming soon page to everyone who is not an admin.
    One launch-notify field with double opt-in. Form states follow design audit U1: the message sits under the field,
    the field gets aria-invalid and aria-describedby, and what the person typed stays in the field.
    v73 (6 Nov 2026), matching PR #173: no team link in the footer. The team signs in from a hidden page (/team) that asks for one
    team password, then shows the normal sign-in; admin access still comes from the admin role checked on the server.
-   Prices at launch sit under "What you'll get", and Refund policy is in the footer. */
+   Refund policy is in the footer.
+   v79 (6 Nov 2026), matching PR #195: the public page has no prices block. It is the hero, the waitlist form,
+   "What you'll get" and the footer only. */
 const C = {
   en: { otherLang: 'عربي', initial: 'Y', chip: 'Opening soon', over: 'UX practice in Arabic and English',
     title: 'Practise real design decisions.', lead: 'Short lessons where you fix real screens, get feedback that explains why, and prove each skill on a new case.',
@@ -154,8 +145,6 @@ const C = {
     footNav: 'Site', refunds: 'Refund policy',
     manyTitle: 'Too many tries', manyBody: 'Wait a few minutes, then try again. What you typed is still here.',
     expTitle: 'This link has expired', expBody: 'Confirmation links work for 7 days. Enter your email again and we’ll send a new one.',
-    priceTitle: 'Prices at launch', perMonth: 'a month', perYear: 'a year', taxNote: 'Tax is added to dollar prices where it applies. Students get 40% off.',
-    prices: [['ph-map', 'Egypt', '249 EGP', '2,249 EGP'], ['ph-globe', 'Other Arab countries', '$5', '$45'], ['ph-globe', 'Gulf and the rest of the world', '$8', '$72']],
     teamChip: 'Team only', teamT: 'Team access', teamLead: 'Enter the team password, then sign in with your own account.', teamLbl: 'Team password', show: 'Show password',
     teamHelp: 'Admins get this from the product lead.', teamWrong: 'That password isn’t right. Check it and try again.', teamGo: 'Continue', teamBack: 'Back to UXGate' },
   ar: { otherLang: 'English', initial: 'ي', chip: 'قريبًا', over: 'تدرّب على UX بالعربية والإنجليزية',
@@ -173,8 +162,6 @@ const C = {
     footNav: 'الموقع', refunds: 'سياسة الاسترداد',
     manyTitle: 'محاولات كثيرة', manyBody: 'انتظر بضع دقائق ثم حاول مرة أخرى. ما كتبته ما زال هنا.',
     expTitle: 'انتهت صلاحية هذا الرابط', expBody: 'يعمل رابط التأكيد لمدة 7 أيام. اكتب بريدك مرة أخرى وسنرسل لك رابطًا جديدًا.',
-    priceTitle: 'الأسعار عند الإطلاق', perMonth: 'شهريًا', perYear: 'سنويًا', taxNote: 'تُضاف الضريبة إلى الأسعار بالدولار حيث تنطبق. وللطلاب خصم 40%.',
-    prices: [['ph-map', 'مصر', '249 ج.م', '2,249 ج.م'], ['ph-globe', 'الدول العربية الأخرى', '5$', '45$'], ['ph-globe', 'الخليج وباقي العالم', '8$', '72$']],
     teamChip: 'للفريق فقط', teamT: 'دخول الفريق', teamLead: 'اكتب كلمة مرور الفريق، ثم سجّل الدخول بحسابك.', teamLbl: 'كلمة مرور الفريق', show: 'إظهار كلمة المرور',
     teamHelp: 'يحصل عليها المشرفون (Admins) من مسؤول المنتج.', teamWrong: 'كلمة المرور غير صحيحة. تحقّق منها وحاول مرة أخرى.', teamGo: 'متابعة', teamBack: 'العودة إلى UXGate' }
 };
@@ -213,10 +200,10 @@ class Component extends DCLogic {
     return {
       lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, f, p, h, isDesk,
       is: { form: isForm, panel: isPanel, member: view === 'member', team: isTeam, public: !isTeam },
-      t, prices: c.prices.map(([icon, region, month, year]) => ({ icon: 'ph ' + icon, region, month, year })),
+      t,
       get: c.get.map(([icon, title, text]) => ({ icon: 'ph ' + icon, title, text })),
       rootCls: 'ug pg pg-pub pg-soon pg-' + device,
-      scrollStyle: this.props.part === 'foot' ? (isDesk ? 'margin-top: -440px;' : 'margin-top: -1100px;') : this.props.part === 'prices' ? (isDesk ? 'margin-top: -300px;' : 'margin-top: -760px;') : '',
+      scrollStyle: this.props.part === 'foot' ? (isDesk ? 'margin-top: -60px;' : 'margin-top: -350px;') : '',
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       logoStyle: isDesk ? 'height: 34px; width: auto;' : 'height: 26px; width: auto;',
       otherCode: lang === 'ar' ? 'en' : 'ar'

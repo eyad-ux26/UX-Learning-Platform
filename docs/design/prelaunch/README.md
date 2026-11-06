@@ -18,7 +18,7 @@ There is no team link on the public page. The team opens a hidden page, `/en/tea
 - Hero: "Opening soon" chip, "Practise real design decisions." and the landing lead (copy reused from the landing page).
 - Launch-notify form: label "Get one email when we open" / «نرسل لك رسالة واحدة عند الإطلاق», one email field, **Notify me** / **أخبرني عند الإطلاق**, and the consent line with a link to the Privacy Policy. Phones stack the field and button. Desktop puts them in one row.
 - "What you'll get": the three landing points, plus a fourth: Arabic and English, switch at any time.
-- "Prices at launch" / «الأسعار عند الإطلاق» (`part=prices` scrolls to it): three cards, Egypt 249 EGP a month / 2,249 a year, other Arab countries $5 / $45, Gulf and the rest of the world $8 / $72, then "Tax is added to dollar prices where it applies. Students get 40% off." Paddle's website review looks for prices on the domain. It shows on desktop as 3 cards in a row.
+- No prices block on the public page (PR #195, Eyad, 6 Nov 2026). The page is the hero, the waitlist form, "What you'll get" and the footer only. Prices were added earlier for Paddle's website review; only the public Coming Soon page dropped them.
 - Footer: © 2026 UXGate, Privacy Policy, Terms, Refund policy / «سياسة الاسترداد», support@uxgate.org. No team link.
 - Desktop art: the artboard loader frame with the logo's `loading` eye motion (from PR #155), named "# UXGate · launch".
 
