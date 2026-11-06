@@ -2,15 +2,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasServiceKey } from "@/lib/supabase/env";
 import { withinMemoryLimit } from "@/lib/server/rate-limit";
-import { sendEmail } from "@/lib/server/email/send";
-import { launchConfirmEmail } from "@/lib/server/email/launch";
+import { sendConfirmation } from "@/lib/server/waitlist-mail";
 import { clientIp, ipHash } from "@/lib/server/ip-hash";
 import { newToken, parseWaitlist, WAITLIST_CONSENT, waitlistStatus } from "@/lib/waitlist";
 
 // The Coming Soon page's launch-notify form (double opt-in, migration 0038). Anyone may post. Guards: same origin only,
 // a hidden field bots fill in, a few tries a minute per network on this instance, 5 new addresses an hour per network
 // in the database, and at most 5 confirmation emails per address, 2 minutes apart.
-// Answers { status: "sent" } (check your inbox) or { status: "already" } (confirmed). The confirmation link points at the
+// Answers { status: "sent" } (check your inbox), { status: "already" } (confirmed) or { status: "queued" } (saved, the
+// link follows once email works). The confirmation link points at the
 // host the visitor used, so it works on workers.dev now and on uxgate.org after the move.
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "600" } });
@@ -41,15 +41,8 @@ export async function POST(req: NextRequest) {
   if (status === "limited") return tooMany();
   if (!status) return unavailable();
 
-  if (data === "send") {
-    const href = `${req.nextUrl.origin}/${input.locale}/coming-soon/confirm?t=${token}`;
-    const mail = launchConfirmEmail({ locale: input.locale, href });
-    const sent = await sendEmail({ to: input.email, ...mail, kind: "launch-confirm", locale: input.locale });
-    if (!sent.ok) {
-      // Nothing went out: the next try may send again at once. The visitor sees "we couldn't add you" and can retry.
-      await db.rpc("waitlist_send_failed", { p_token_hash: hash });
-      return unavailable();
-    }
-  }
+  // No email service yet, or it failed: the address stays on the list, unconfirmed and queued, and the daily job sends the
+  // link once email works. The visitor is told a link is coming rather than seeing an error.
+  if (data === "send" && !(await sendConfirmation(db, input, token, hash, req.nextUrl.origin))) return NextResponse.json({ status: "queued" });
   return NextResponse.json({ status });
 }

@@ -46,15 +46,20 @@ Nothing on the Coming Soon page links to sign-in. The team opens `uxgate.org/en/
 
 An admin is an account whose `app_metadata.role` is `"admin"`. Only the service role can write `app_metadata`, and Supabase copies it into the session token, so the middleware reads it with `getClaims()` without a database call.
 
-In the Supabase SQL editor, put in the account's email:
+In the Supabase SQL editor, list every account that must keep using the tool: your own, and the QA accounts (`qa@…`, `qa2@…` and the other manual-Pro test accounts). QA and the Tech Consultant's smoke tests run on the workers.dev host, which the gate covers too, so they break the moment the gate is on if their accounts are not admins.
 
 ```sql
 update auth.users
 set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role": "admin"}'::jsonb
-where email = 'name@example.com';
+where email in ('you@example.com', 'qa@example.com', 'qa2@example.com');
+
+-- check: every account that should be an admin is listed here
+select email from auth.users where raw_app_meta_data ->> 'role' = 'admin' order by email;
 ```
 
-Then sign out and sign in again on that account, so the new token carries the role. Otherwise the old token expires within the hour and the role arrives then.
+Then sign out and sign in again on those accounts, so the new token carries the role. Otherwise the old token expires within the hour and the role arrives then.
+
+A session that is already signed in as an admin does not need the team password. Signing in again (or on a new browser) does: whoever runs QA needs the password from you, or you sign the QA browser in yourself.
 
 To remove the role, run the same update with `raw_app_meta_data - 'role'`.
 
@@ -77,14 +82,14 @@ Guards:
 
 The form says "already on the list" only for a confirmed address. For anything else it says "check your inbox".
 
-The confirmation email needs `RESEND_API_KEY`, and `uxgate.org` must be verified in Resend. Without them, the form answers "We couldn't add you" and nothing is half-saved: the next try sends again.
+The confirmation email needs `RESEND_API_KEY`, and `uxgate.org` must be verified in Resend (which needs the domain's DNS). Until then the form still works: the address is saved unconfirmed and queued, and the visitor sees "You're on the list. We'll email you a link to confirm it soon." Once the key is set, the daily job (02:00 UTC) sends every queued address its link, on the site's own address (`NEXT_PUBLIC_SITE_URL`). Typing the address again also sends it at once.
 
 To read or export the list, open the `waitlist` table in the Supabase table editor, or run `select email, locale, confirmed_at from waitlist where confirmed_at is not null and unsubscribed_at is null;`.
 
 ## Before turning it on
 
 1. Run `0038_waitlist.sql` in the Supabase SQL editor.
-2. Make your own account an admin (above).
+2. Make your own account and the QA accounts admins (above).
 3. Set the `UG_TEAM_PASSWORD` secret in Cloudflare.
-4. Check that `RESEND_API_KEY` is set and `uxgate.org` is verified in Resend.
+4. Later, once uxgate.org's DNS is on Cloudflare: verify the domain in Resend and set `RESEND_API_KEY` (one secrets window with `UG_TEAM_PASSWORD` if possible). The form works before that; it queues the confirmations.
 5. Merge. The gate turns on with the deploy. Open `/en/team`, type the password, sign in again.

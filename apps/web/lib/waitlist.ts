@@ -11,8 +11,8 @@ export const WAITLIST_CONSENT = {
 
 export type WaitlistInput = { email: string; locale: "en" | "ar"; trap: string };
 
-/** What the form shows after a submit: "sent" (check your inbox) or "already" (confirmed and on the list). */
-export type WaitlistStatus = "sent" | "already";
+/** What the form shows after a submit: "sent" (check your inbox), "already" (confirmed) or "queued" (link to follow). */
+export type WaitlistStatus = "sent" | "already" | "queued";
 
 /** Checks the form body. `trap` is a field people never see; anything typed there means a bot. */
 export function parseWaitlist(body: unknown): WaitlistInput | null {

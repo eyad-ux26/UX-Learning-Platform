@@ -111,6 +111,19 @@ describe("waitlist", () => {
     expect((await row("fail@example.com")).confirm_sends).toBe(1);
   });
 
+  it("queues an address whose email failed, until the daily job sends its link", async () => {
+    expect(await join("queued@example.com", "ip4", 5, "q1")).toBe("send");
+    await svc(`select public.waitlist_send_failed('q1')`);
+    const q = await svc<{ id: string; email: string; locale: string }>(`select * from public.waitlist_queued(10)`);
+    const mine = q.find((r) => r.email === "queued@example.com")!;
+    expect(mine.locale).toBe("ar");
+    expect(q.every((r) => r.email !== "mona@example.com")).toBe(true); // confirmed ones are not queued
+    expect((await svc<{ ok: boolean }>(`select public.waitlist_mark_sent($1, 'q2') as ok`, [mine.id]))[0].ok).toBe(true);
+    expect((await svc<{ ok: boolean }>(`select public.waitlist_mark_sent($1, 'q3') as ok`, [mine.id]))[0].ok).toBe(false); // already sent
+    expect(await confirm("q2")).toHaveLength(1);
+    expect((await svc<{ id: string }>(`select id from public.waitlist_queued(10)`)).some((r) => r.id === mine.id)).toBe(false);
+  });
+
   it("limits new addresses per network per hour", async () => {
     expect(await join("n1@example.com", "net", 2)).toBe("send");
     expect(await join("n2@example.com", "net", 2)).toBe("send");
@@ -139,6 +152,7 @@ describe("waitlist", () => {
       await fails(as(who, uid, `select * from public.confirm_waitlist('m5')`));
       await fails(as(who, uid, `select public.prune_waitlist()`));
       await fails(as(who, uid, `select public.waitlist_send_failed('m5')`));
+      await fails(as(who, uid, `select * from public.waitlist_queued(5)`));
     }
     expect((await as<{ n: number }>("service_role", null, `select count(*)::int as n from public.waitlist`))[0].n).toBeGreaterThan(0);
   });

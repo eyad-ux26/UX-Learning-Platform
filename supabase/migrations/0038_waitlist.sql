@@ -63,11 +63,30 @@ begin
   return case when found then 'send' else 'pending' end;
 end $$;
 
--- The confirmation email could not be sent: the next try may send at once, and this one does not count.
+-- The confirmation email could not be sent: the address stays on the list unconfirmed and queued (the visitor sees "we'll
+-- email you a link"); the next try, or the daily job once email works, sends it. This try does not count.
 create function public.waitlist_send_failed(p_token_hash text)
 returns void language sql security definer set search_path = public as $$
   update public.waitlist set confirm_sent_at = null, confirm_sends = greatest(confirm_sends - 1, 0) where confirm_token_hash = p_token_hash;
 $$;
+
+-- Addresses whose confirmation email could not go out yet (no email service when they joined), oldest first. The daily
+-- job sends them their link once email works.
+create function public.waitlist_queued(p_limit integer)
+returns table (id uuid, email text, locale text) language sql stable security definer set search_path = public as $$
+  select w.id, w.email, w.locale from public.waitlist w
+  where w.confirmed_at is null and w.confirm_sent_at is null and w.confirm_sends < 5
+  order by w.created_at limit greatest(1, least(p_limit, 200));
+$$;
+
+-- Stores a queued address's new link just before its email is sent. False if it was confirmed or sent meanwhile.
+create function public.waitlist_mark_sent(p_id uuid, p_token_hash text)
+returns boolean language plpgsql security definer set search_path = public as $$
+begin
+  update public.waitlist set confirm_token_hash = p_token_hash, confirm_sent_at = now(), confirm_sends = confirm_sends + 1
+    where id = p_id and confirmed_at is null and confirm_sent_at is null;
+  return found;
+end $$;
 
 -- Opens a confirmation link. Returns the address and its language, or no row for an unknown or expired (7 days) link.
 -- Opening the newest link again keeps answering while it is valid, so a second tap still shows "You're on the list".
@@ -94,6 +113,10 @@ revoke all on function public.join_waitlist(text, text, text, text, text, text, 
 revoke all on function public.waitlist_send_failed(text) from public, anon, authenticated;
 revoke all on function public.confirm_waitlist(text) from public, anon, authenticated;
 revoke all on function public.prune_waitlist() from public, anon, authenticated;
+revoke all on function public.waitlist_queued(integer) from public, anon, authenticated;
+revoke all on function public.waitlist_mark_sent(uuid, text) from public, anon, authenticated;
+grant execute on function public.waitlist_queued(integer) to service_role;
+grant execute on function public.waitlist_mark_sent(uuid, text) to service_role;
 grant execute on function public.join_waitlist(text, text, text, text, text, text, integer) to service_role;
 grant execute on function public.waitlist_send_failed(text) to service_role;
 grant execute on function public.confirm_waitlist(text) to service_role;

@@ -11,8 +11,8 @@ const mail = (chunks: React.ReactNode) => <bdi className="soon-mail">{chunks}</b
 
 /**
  * Launch-notify form (canvas v70, PL-1). States: idle, busy (aria-busy), invalid (message under the field, aria-invalid,
- * value kept, focus on the field), network and too-many (role=alert box, value kept), then sent or already, which replace
- * the form with a status panel. `expired`: the visitor came from a confirmation link older than 7 days.
+ * value kept, focus on the field), network and too-many (role=alert box, value kept), then sent, already or queued (saved
+ * while email cannot go out; the link follows), which replace the form with a status panel. `expired`: the visitor came from a confirmation link older than 7 days.
  */
 export function WaitlistForm({ expired = false }: { expired?: boolean }) {
   const t = useTranslations("soon");
@@ -38,7 +38,7 @@ export function WaitlistForm({ expired = false }: { expired?: boolean }) {
         body: JSON.stringify({ email: email.trim(), locale, trap: trap.current?.value ?? "" }),
       });
       const body = (await r.json().catch(() => ({}))) as { status?: WaitlistStatus };
-      if (r.ok && (body.status === "sent" || body.status === "already")) return setDone({ status: body.status, email: email.trim() });
+      if (r.ok && (body.status === "sent" || body.status === "already" || body.status === "queued")) return setDone({ status: body.status, email: email.trim() });
       setProblem(r.status === 400 ? "invalid" : r.status === 429 ? "rate" : "network");
       if (r.status === 400) field.current?.focus();
     } catch {
@@ -56,12 +56,13 @@ export function WaitlistForm({ expired = false }: { expired?: boolean }) {
 
   if (done) {
     const sent = done.status === "sent";
+    const key = done.status === "sent" ? "sent" : done.status === "queued" ? "queued" : "already";
     return (
       <div className={`soon-done${sent ? "" : " is-info"}`} role="status">
-        <span className="soon-done-ic" aria-hidden="true"><span className={`ph ${sent ? "ph-mail" : "ph-check-circle-fill"}`} /></span>
+        <span className="soon-done-ic" aria-hidden="true"><span className={`ph ${done.status === "already" ? "ph-check-circle-fill" : "ph-mail"}`} /></span>
         <div className="soon-done-text">
-          <b>{t(sent ? "sentT" : "alreadyT")}</b>
-          <p>{t.rich(sent ? "sentB" : "alreadyB", { email: done.email, mail })}</p>
+          <b>{t(`${key}T`)}</b>
+          <p>{t.rich(`${key}B`, { email: done.email, mail })}</p>
           {sent ? <p className="soon-done-note"><span className="ph ph-search" aria-hidden="true" />{t("sentNote")}</p> : null}
           <button type="button" className="pg-link" style={{ background: "none", border: 0, cursor: "pointer", font: "inherit" }} onClick={again}>{t("other")}</button>
         </div>
