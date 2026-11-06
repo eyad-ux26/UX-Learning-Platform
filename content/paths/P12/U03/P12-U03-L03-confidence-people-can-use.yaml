@@ -25,11 +25,15 @@ steps:
       en: "I design a clothes shop app. It suggests your size from your height, weight and past orders. Next to it, we show a score: \"M · 83.7% match\".\n\nCustomers keep asking: is 83.7% good? Should I order it? And returns for wrong sizes are still high."
       ar: "أصمّم تطبيقًا لمتجر ملابس. يقترح مقاسك من طولك ووزنك وطلباتك السابقة. وبجانبه نعرض درجة: «M · تطابق 83.7%».\n\nوالعملاء يسألون دائمًا: هل 83.7% جيدة؟ هل أطلبه؟ وما زالت المرتجعات بسبب المقاس الخطأ كثيرة."
     mock:
-      width: 300
+      app: lamha
+      appbar: { title: { en: "Slim jeans", ar: "جينز ضيّق" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
       blocks:
-        - { kind: title, text: { en: "Classic jeans", ar: "جينز كلاسيكي" } }
-        - { kind: meta, text: { en: "Your size: M · 83.7% match", ar: "مقاسك: M · تطابق 83.7%" }, gap: s }
-        - { kind: button, text: { en: "Add to bag", ar: "أضف إلى السلّة" }, gap: m }
+        - { kind: image, art: shirt }
+        - { kind: price, text: { en: "790 EGP", ar: "790 جنيه" }, gap: s }
+        - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+        - { kind: badge, icon: sparkle, text: { en: "Your size: M · 83.7% match", ar: "مقاسك: M · تطابق 83.7%" } }
+      footer:
+        - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
 
   - id: S02
     type: choose
@@ -74,7 +78,7 @@ steps:
       ar: "- **اعرضها فقط إذا غيّرت القرار.** إذا كان الناس سيفعلون الشيء نفسه، فاحذفها.\n- **اربط كل مستوى بفعل:** «مناسب» ← أضف إلى السلّة. «غير متأكّد» ← راجع جدول المقاسات.\n- **حين لا يكون متأكّدًا، اعرض الخيارات:** «M أم L؟»\n- **تجنّب الأرقام وحدها.** قليلون يعرفون إن كانت 83.7% جيدة، والرقم المرتفع قد يُخفي الشك."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U03-04
     part: guided
     rules: [R06]
@@ -86,12 +90,59 @@ steps:
       en: "For T-shirts, nearly every customer keeps the suggested size. The score is always 97% to 99%."
       ar: "في التيشيرتات، يحتفظ كل العملاء تقريبًا بالمقاس المقترح. والدرجة دائمًا بين 97% و99%."
     prompt:
-      en: "What should the T-shirt page show?"
-      ar: "ماذا يجب أن تعرض صفحة التيشيرت؟"
+      en: "Tap each option to see it. What should the T-shirt page show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تعرض صفحة التيشيرت؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: lamha
+      appbar: { title: { en: "Cotton T-shirt", ar: "تيشيرت قطن" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+      blocks:
+        - { kind: image, art: shirt }
+        - { kind: price, text: { en: "290 EGP", ar: "290 جنيه" }, gap: s }
+        - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+        - { kind: badge, icon: sparkle, text: { en: "Your size: M · 98.2% match", ar: "مقاسك: M · تطابق 98.2%" } }
+      footer:
+        - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
     options:
-      - { id: score, text: { en: "\"Your size: M · 98.2% match\"", ar: "«مقاسك: M · تطابق 98.2%»" } }
-      - { id: chart, text: { en: "A small chart of how sure it is", ar: "رسم بياني صغير لمدى تأكّده" } }
-      - { id: plain, text: { en: "Just \"Your size: M\"", ar: "فقط «مقاسك: M»" } }
+      - id: score
+        text: { en: "\"Your size: M · 98.2% match\"", ar: "«مقاسك: M · تطابق 98.2%»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: lamha
+          appbar: { title: { en: "Cotton T-shirt", ar: "تيشيرت قطن" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+          blocks:
+            - { kind: image, art: shirt }
+            - { kind: price, text: { en: "290 EGP", ar: "290 جنيه" }, gap: s }
+            - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+            - { kind: badge, icon: sparkle, text: { en: "Your size: M · 98.2% match", ar: "مقاسك: M · تطابق 98.2%" } }
+          footer:
+            - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
+      - id: chart
+        text: { en: "A small chart of how sure it is", ar: "رسم بياني صغير لمدى تأكّده" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: lamha
+          appbar: { title: { en: "Cotton T-shirt", ar: "تيشيرت قطن" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+          blocks:
+            - { kind: image, art: shirt }
+            - { kind: price, text: { en: "290 EGP", ar: "290 جنيه" }, gap: s }
+            - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+            - { kind: chart, type: bar, values: [2, 98, 0, 0], labels: [ "S", "M", "L", "XL" ], highlight: 1 }
+          footer:
+            - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
+      - id: plain
+        text: { en: "Just \"Your size: M\"", ar: "فقط «مقاسك: M»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: lamha
+          appbar: { title: { en: "Cotton T-shirt", ar: "تيشيرت قطن" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+          blocks:
+            - { kind: image, art: shirt }
+            - { kind: price, text: { en: "290 EGP", ar: "290 جنيه" }, gap: s }
+            - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+            - { kind: badge, icon: sparkle, text: { en: "Your size: M", ar: "مقاسك: M" } }
+          footer:
+            - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
     answer: [plain]
     misconceptions:
       - id: MC-P12-026
@@ -110,7 +161,7 @@ steps:
       ar: "حين تكون الإجابة صحيحة دائمًا تقريبًا، تضيف الدرجة تشويشًا، لا مساعدة."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U03-05
     part: guided
     rules: [R06]
@@ -122,12 +173,59 @@ steps:
       en: "For jeans, the app is often torn between two sizes."
       ar: "في الجينز، كثيرًا ما يتردّد التطبيق بين مقاسين."
     prompt:
-      en: "What should it show when it's unsure?"
-      ar: "ماذا يجب أن يعرض حين لا يكون متأكّدًا؟"
+      en: "Tap each option to see it. What should it show when it's unsure?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يعرض حين لا يكون متأكّدًا؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: lamha
+      appbar: { title: { en: "Slim jeans", ar: "جينز ضيّق" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+      blocks:
+        - { kind: image, art: shirt }
+        - { kind: price, text: { en: "790 EGP", ar: "790 جنيه" }, gap: s }
+        - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+        - { kind: small, color: muted, text: { en: "The app is unsure: M or L", ar: "التطبيق غير متأكّد: M أم L" } }
+      footer:
+        - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
     options:
-      - { id: two, text: { en: "\"M or L. Between sizes? L fits looser.\"", ar: "«M أم L. بين مقاسين؟ L أوسع قليلًا.»" } }
-      - { id: top, text: { en: "\"Your size: M\"; just pick the most likely one", ar: "«مقاسك: M»؛ نختار الأرجح فقط" } }
-      - { id: low, text: { en: "\"Your size: M (51% match)\"", ar: "«مقاسك: M (تطابق 51%)»" } }
+      - id: two
+        text: { en: "\"M or L. Between sizes? L fits looser.\"", ar: "«M أم L. بين مقاسين؟ L أوسع قليلًا.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: lamha
+          appbar: { title: { en: "Slim jeans", ar: "جينز ضيّق" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+          blocks:
+            - { kind: image, art: shirt }
+            - { kind: price, text: { en: "790 EGP", ar: "790 جنيه" }, gap: s }
+            - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+            - { kind: badge, icon: sparkle, text: { en: "M or L. Between sizes? L fits looser.", ar: "M أم L. بين مقاسين؟ L أوسع قليلًا." } }
+          footer:
+            - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
+      - id: top
+        text: { en: "\"Your size: M\"; just pick the most likely one", ar: "«مقاسك: M»؛ نختار الأرجح فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: lamha
+          appbar: { title: { en: "Slim jeans", ar: "جينز ضيّق" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+          blocks:
+            - { kind: image, art: shirt }
+            - { kind: price, text: { en: "790 EGP", ar: "790 جنيه" }, gap: s }
+            - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+            - { kind: badge, icon: sparkle, text: { en: "Your size: M", ar: "مقاسك: M" } }
+          footer:
+            - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
+      - id: low
+        text: { en: "\"Your size: M (51% match)\"", ar: "«مقاسك: M (تطابق 51%)»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: lamha
+          appbar: { title: { en: "Slim jeans", ar: "جينز ضيّق" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+          blocks:
+            - { kind: image, art: shirt }
+            - { kind: price, text: { en: "790 EGP", ar: "790 جنيه" }, gap: s }
+            - { kind: segmented, options: [ "S", "M", "L", "XL" ], value: 1, gap: s }
+            - { kind: badge, icon: sparkle, text: { en: "Your size: M (51% match)", ar: "مقاسك: M (تطابق 51%)" } }
+          footer:
+            - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" } }
     answer: [two]
     misconceptions:
       - id: MC-P12-029
@@ -164,17 +262,23 @@ steps:
     a:
       label: { en: "A: \"Confidence: High\" or \"Confidence: Low\"", ar: "A: «الثقة: عالية» أو «الثقة: منخفضة»" }
       mock:
-        width: 300
+        app: lamha
+        appbar: { title: { en: "Your bag", ar: "حقيبتك" }, back: true }
         blocks:
-          - { kind: meta, text: { en: "Shirt · M · Confidence: High", ar: "قميص · M · الثقة: عالية" } }
-          - { kind: meta, text: { en: "Jeans · M · Confidence: Low", ar: "جينز · M · الثقة: منخفضة" }, gap: s }
+          - { kind: listitem, art: shirt, text: { en: "Cotton T-shirt · M", ar: "تيشيرت قطن · M" }, value: { en: "290 EGP", ar: "290 جنيه" }, badge: { text: { en: "Confidence: High", ar: "الثقة: عالية" }, tone: neutral } }
+          - { kind: listitem, art: shirt, text: { en: "Slim jeans · M", ar: "جينز ضيّق · M" }, value: { en: "790 EGP", ar: "790 جنيه" }, badge: { text: { en: "Confidence: Low", ar: "الثقة: منخفضة" }, tone: neutral } }
+        footer:
+          - { kind: button, text: { en: "Checkout", ar: "إتمام الشراء" } }
     b:
       label: { en: "B: \"Good fit\" or \"Not sure: check the size chart\"", ar: "B: «مناسب» أو «غير متأكّد: راجع جدول المقاسات»" }
       mock:
-        width: 300
+        app: lamha
+        appbar: { title: { en: "Your bag", ar: "حقيبتك" }, back: true }
         blocks:
-          - { kind: meta, text: { en: "Shirt · M · Good fit", ar: "قميص · M · مناسب" } }
-          - { kind: meta, text: { en: "Jeans · M · Not sure: check the size chart →", ar: "جينز · M · غير متأكّد: راجع جدول المقاسات ←" }, gap: s }
+          - { kind: listitem, art: shirt, text: { en: "Cotton T-shirt · M", ar: "تيشيرت قطن · M" }, value: { en: "290 EGP", ar: "290 جنيه" }, badge: { text: { en: "Good fit", ar: "مناسب" }, tone: good } }
+          - { kind: listitem, art: shirt, text: { en: "Slim jeans · M", ar: "جينز ضيّق · M" }, value: { en: "790 EGP", ar: "790 جنيه" }, badge: { text: { en: "Not sure: check the size chart", ar: "غير متأكّد: راجع جدول المقاسات" }, tone: warn } }
+        footer:
+          - { kind: button, text: { en: "Checkout", ar: "إتمام الشراء" } }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -206,7 +310,7 @@ steps:
       ar: "العبارات التي تقول ماذا تفعل تحوّل الثقة إلى قرار يستطيع الناس اتّخاذه."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U03-04
     part: independent
     speaker: youssef
@@ -219,12 +323,51 @@ steps:
       en: "I own a shop. My stock app now predicts sales. For a new product with only 3 days of sales, it says: \"99% sure: order 200 more.\""
       ar: "أملك متجرًا. وتطبيق المخزون عندي أصبح يتوقّع المبيعات. ولمنتج جديد عمره 3 أيام من المبيعات فقط، يقول: «متأكّد 99%: اطلب 200 قطعة أخرى.»"
     prompt:
-      en: "What should it say instead?"
-      ar: "ماذا يجب أن يقول بدلًا من ذلك؟"
+      en: "Tap each option to see it. What should it say instead?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يقول بدلًا من ذلك؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: dukkani
+      frame: wide
+      url: dukkani.example/stock
+      blocks:
+        - { kind: title, text: { en: "Stock · Smart kettle (new)", ar: "المخزون · غلاية ذكية (جديدة)" } }
+        - { kind: chart, type: bar, values: [12, 18, 15], labels: [ { en: "Sat", ar: "السبت" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الإثنين" } ], gap: s }
+        - { kind: banner, tone: info, icon: sparkle, text: { en: "99% sure: order 200 more.", ar: "متأكّد 99%: اطلب 200 أخرى." }, gap: s }
     options:
-      - { id: keep, text: { en: "Keep it; 99% is reassuring", ar: "يبقى كما هو؛ فـ 99% مطمئنة" } }
-      - { id: early, text: { en: "\"Early guess, from only 3 days of sales. Order a few, and check again next week.\"", ar: "«تخمين مبكر، من 3 أيام مبيعات فقط. اطلب كمية صغيرة، وراجع مرة أخرى الأسبوع القادم.»" } }
-      - { id: hide, text: { en: "Never show predictions for new products", ar: "لا نعرض توقّعات للمنتجات الجديدة أبدًا" } }
+      - id: keep
+        text: { en: "Keep it; 99% is reassuring", ar: "يبقى كما هو؛ فـ 99% مطمئنة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dukkani
+          frame: wide
+          url: dukkani.example/stock
+          blocks:
+            - { kind: title, text: { en: "Stock · Smart kettle (new)", ar: "المخزون · غلاية ذكية (جديدة)" } }
+            - { kind: chart, type: bar, values: [12, 18, 15], labels: [ { en: "Sat", ar: "السبت" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الإثنين" } ], gap: s }
+            - { kind: banner, tone: info, icon: sparkle, text: { en: "99% sure: order 200 more.", ar: "متأكّد 99%: اطلب 200 أخرى." }, gap: s }
+      - id: early
+        text: { en: "\"Early guess, from only 3 days of sales. Order a few, and check again next week.\"", ar: "«تخمين مبكر، من 3 أيام مبيعات فقط. اطلب كمية صغيرة، وراجع مرة أخرى الأسبوع القادم.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dukkani
+          frame: wide
+          url: dukkani.example/stock
+          blocks:
+            - { kind: title, text: { en: "Stock · Smart kettle (new)", ar: "المخزون · غلاية ذكية (جديدة)" } }
+            - { kind: chart, type: bar, values: [12, 18, 15], labels: [ { en: "Sat", ar: "السبت" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الإثنين" } ], gap: s }
+            - { kind: banner, tone: info, icon: sparkle, text: { en: "Early guess, from only 3 days of sales. Order a few, and check again next week.", ar: "تخمين مبكر، من 3 أيام مبيعات فقط. اطلب كمية صغيرة، وراجع مرة أخرى الأسبوع القادم." }, gap: s }
+      - id: hide
+        text: { en: "Never show predictions for new products", ar: "لا نعرض توقّعات للمنتجات الجديدة أبدًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dukkani
+          frame: wide
+          url: dukkani.example/stock
+          blocks:
+            - { kind: title, text: { en: "Stock · Smart kettle (new)", ar: "المخزون · غلاية ذكية (جديدة)" } }
+            - { kind: chart, type: bar, values: [12, 18, 15], labels: [ { en: "Sat", ar: "السبت" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الإثنين" } ], gap: s }
+            - { kind: small, color: muted, text: { en: "No prediction for new products.", ar: "لا توقّعات للمنتجات الجديدة." }, gap: s }
     answer: [early]
     misconceptions:
       - id: MC-P12-027

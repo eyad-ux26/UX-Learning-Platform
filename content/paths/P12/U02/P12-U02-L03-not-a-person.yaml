@@ -25,10 +25,12 @@ steps:
       en: "We added a chat assistant to book visits. The team called it \"Dr. Amal\", gave it a photo of a smiling woman, and made it say \"I understand how you feel.\"\n\nNow some patients describe their symptoms in detail and ask for medical advice. They think a real doctor is reading."
       ar: "أضفنا مساعد محادثة لحجز المواعيد. وسمّاه الفريق «د. أمل»، ووضع له صورة امرأة مبتسمة، وجعله يقول «أفهم ما تشعر به.»\n\nالآن بعض المرضى يصفون أعراضهم بالتفصيل ويطلبون نصيحة طبية. يظنّون أن طبيبة حقيقية تقرأ."
     mock:
-      width: 300
+      app: raha
+      appbar: { title: { en: "Dr. Amal · online", ar: "د. أمل · متصلة" }, back: true }
       blocks:
-        - { kind: meta, weight: bold, text: { en: "👩‍⚕️ Dr. Amal", ar: "👩‍⚕️ د. أمل" } }
-        - { kind: banner, text: { en: "Hi! I'm Amal. I understand how you feel. Tell me everything.", ar: "أهلًا! أنا أمل. أفهم ما تشعر به. احكِ لي كل شيء." }, gap: s }
+        - { kind: chat, from: them, name: { en: "Dr. Amal", ar: "د. أمل" }, avatar: { art: doctor }, text: { en: "Hi! I'm Amal. I understand how you feel. Tell me everything.", ar: "أهلًا! أنا أمل. أفهم ما تشعر به. احكِ لي كل شيء." }, time: "9:02" }
+      footer:
+        - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
 
   - id: S02
     type: choose
@@ -73,7 +75,7 @@ steps:
       ar: "- **قل إنه ليس إنسانًا:** بوضوح، وبكلمات يفهمها الجميع، مهما كان عمرهم أو مهاراتهم.\n- **الأسلوب البشري يرفع التوقّعات:** الاسم البشري، والوجه، و«أفهمك» تجعل الناس يتوقّعون فهم إنسان.\n- **أخبر الناس بما يطلبونه:** «يمكنك حجز موعد أو تغييره أو إلغاؤه.»\n- **قل ما لا يستطيعه:** الذكاء الاصطناعي لا يعمل كما يعمل الناس، فاذكر حدوده."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U02-03
     part: guided
     rules: [R06]
@@ -85,12 +87,47 @@ steps:
       en: "We're rewriting the first message patients see when they open the chat."
       ar: "نعيد كتابة أول رسالة يراها المرضى حين يفتحون المحادثة."
     prompt:
-      en: "Which first message is best?"
-      ar: "أي رسالة أولى هي الأفضل؟"
+      en: "Tap each option to see it. Which first message is best?"
+      ar: "اضغط على كل خيار لتراه. أي رسالة أولى هي الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: raha
+      appbar: { title: { en: "Dr. Amal · online", ar: "د. أمل · متصلة" }, back: true }
+      blocks:
+        - { kind: small, color: muted, text: { en: "The chat is empty. What should the first message say?", ar: "المحادثة فارغة. ماذا يجب أن تقول الرسالة الأولى؟" } }
+      footer:
+        - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
     options:
-      - { id: anything, text: { en: "\"Hi, I'm Amal! Ask me anything 😊\"", ar: "«أهلًا، أنا أمل! اسألني عن أي شيء 😊»" } }
-      - { id: feeling, text: { en: "\"Hello! How are you feeling today?\"", ar: "«أهلًا! كيف تشعر اليوم؟»" } }
-      - { id: clear, text: { en: "\"Booking assistant (automatic). You can book, move or cancel a visit. For medical questions, call the clinic.\"", ar: "«مساعد الحجز (آلي). يمكنك حجز موعد أو تغييره أو إلغاؤه. للأسئلة الطبية، اتصل بالعيادة.»" } }
+      - id: anything
+        text: { en: "\"Hi, I'm Amal! Ask me anything 😊\"", ar: "«أهلًا، أنا أمل! اسألني عن أي شيء 😊»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Dr. Amal · online", ar: "د. أمل · متصلة" }, back: true }
+          blocks:
+            - { kind: chat, from: them, name: { en: "Dr. Amal", ar: "د. أمل" }, avatar: { art: doctor }, text: { en: "Hi, I'm Amal! Ask me anything 😊", ar: "أهلًا، أنا أمل! اسألني عن أي شيء 😊" } }
+          footer:
+            - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
+      - id: feeling
+        text: { en: "\"Hello! How are you feeling today?\"", ar: "«أهلًا! كيف تشعر اليوم؟»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Dr. Amal · online", ar: "د. أمل · متصلة" }, back: true }
+          blocks:
+            - { kind: chat, from: them, name: { en: "Dr. Amal", ar: "د. أمل" }, avatar: { art: doctor }, text: { en: "Hello! How are you feeling today?", ar: "أهلًا! كيف تشعر اليوم؟" } }
+          footer:
+            - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
+      - id: clear
+        text: { en: "\"Booking assistant (automatic). You can book, move or cancel a visit. For medical questions, call the clinic.\"", ar: "«مساعد الحجز (آلي). يمكنك حجز موعد أو تغييره أو إلغاؤه. للأسئلة الطبية، اتصل بالعيادة.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking assistant", ar: "مساعد الحجز" }, back: true }
+          blocks:
+            - { kind: chat, from: ai, text: { en: "Booking assistant (automatic). You can book, move or cancel a visit. For medical questions, call the clinic.", ar: "مساعد الحجز (آلي). يمكنك حجز موعد أو تغييره أو إلغاؤه. للأسئلة الطبية، اتصل بالعيادة." } }
+          footer:
+            - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
     answer: [clear]
     misconceptions:
       - id: MC-P12-020
@@ -114,7 +151,7 @@ steps:
       ar: "الرسالة الأولى الواضحة توجّه الناس إلى طلبات يستطيع تنفيذها، فينجحون."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U02-01
     part: guided
     rules: [R06]
@@ -126,12 +163,52 @@ steps:
       en: "A patient writes: \"I've had chest pain since this morning. Should I worry?\" The assistant answered: \"I understand. Don't worry, it's probably stress.\""
       ar: "كتب مريض: «عندي ألم في الصدر منذ الصباح. هل أقلق؟» وردّ المساعد: «أفهمك. لا تقلق، غالبًا هو توتر.»"
     prompt:
-      en: "What should it say instead?"
-      ar: "ماذا يجب أن يقول بدلًا من ذلك؟"
+      en: "Tap each option to see it. What should it say instead?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يقول بدلًا من ذلك؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: raha
+      appbar: { title: { en: "Booking assistant", ar: "مساعد الحجز" }, back: true }
+      blocks:
+        - { kind: chat, from: me, text: { en: "I've had chest pain since this morning. Should I worry?", ar: "عندي ألم في الصدر منذ الصباح. هل أقلق؟" }, time: "9:14" }
+        - { kind: chat, from: ai, text: { en: "I understand. Don't worry, it's probably stress.", ar: "أفهمك. لا تقلق، غالبًا هو توتر." } }
+      footer:
+        - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
     options:
-      - { id: keep, text: { en: "The same; it calms the patient down", ar: "نفس الرد؛ فهو يطمئن المريض" } }
-      - { id: limit, text: { en: "\"This assistant can't give medical advice. For chest pain, call emergency services now.\" with a Call button", ar: "«هذا المساعد لا يستطيع تقديم نصيحة طبية. لألم الصدر، اتصل بالطوارئ الآن.» مع زر اتصال" } }
-      - { id: more, text: { en: "A longer list of possible causes of chest pain", ar: "قائمة أطول بالأسباب المحتملة لألم الصدر" } }
+      - id: keep
+        text: { en: "The same; it calms the patient down", ar: "نفس الرد؛ فهو يطمئن المريض" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking assistant", ar: "مساعد الحجز" }, back: true }
+          blocks:
+            - { kind: chat, from: me, text: { en: "I've had chest pain since this morning. Should I worry?", ar: "عندي ألم في الصدر منذ الصباح. هل أقلق؟" }, time: "9:14" }
+            - { kind: chat, from: ai, text: { en: "I understand. Don't worry, it's probably stress.", ar: "أفهمك. لا تقلق، غالبًا هو توتر." } }
+          footer:
+            - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
+      - id: limit
+        text: { en: "\"This assistant can't give medical advice. For chest pain, call emergency services now.\" with a Call button", ar: "«هذا المساعد لا يستطيع تقديم نصيحة طبية. لألم الصدر، اتصل بالطوارئ الآن.» مع زر اتصال" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking assistant", ar: "مساعد الحجز" }, back: true }
+          blocks:
+            - { kind: chat, from: me, text: { en: "I've had chest pain since this morning. Should I worry?", ar: "عندي ألم في الصدر منذ الصباح. هل أقلق؟" }, time: "9:14" }
+            - { kind: chat, from: ai, text: { en: "This assistant can't give medical advice. For chest pain, call emergency services now.", ar: "هذا المساعد لا يستطيع تقديم نصيحة طبية. لألم الصدر، اتصل بالطوارئ الآن." } }
+            - { kind: button, style: danger, icon: phone, text: { en: "Call 123", ar: "اتصل بـ 123" }, gap: xs }
+          footer:
+            - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
+      - id: more
+        text: { en: "A longer list of possible causes of chest pain", ar: "قائمة أطول بالأسباب المحتملة لألم الصدر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking assistant", ar: "مساعد الحجز" }, back: true }
+          blocks:
+            - { kind: chat, from: me, text: { en: "I've had chest pain since this morning. Should I worry?", ar: "عندي ألم في الصدر منذ الصباح. هل أقلق؟" }, time: "9:14" }
+            - { kind: chat, from: ai, text: { en: "Chest pain can come from: stress, muscle strain, acid reflux, a cold, heart problems, lung problems…", ar: "ألم الصدر قد يأتي من: التوتر، أو شدّ عضلي، أو حموضة، أو برد، أو مشكلات في القلب، أو في الرئة…" } }
+          footer:
+            - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
     answer: [limit]
     misconceptions:
       - id: MC-P12-011
@@ -168,17 +245,22 @@ steps:
     a:
       label: { en: "A: An icon, \"Booking assistant · automatic\", and what it can do.", ar: "A: أيقونة، و«مساعد الحجز · آلي»، وما يستطيع فعله." }
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: "Booking assistant · automatic", ar: "مساعد الحجز · آلي" }, back: true }
         blocks:
-          - { kind: meta, weight: bold, text: { en: "📅 Booking assistant · automatic", ar: "📅 مساعد الحجز · آلي" } }
-          - { kind: small, color: muted, text: { en: "Book · Move · Cancel a visit", ar: "حجز · تغيير · إلغاء موعد" }, gap: xs }
+          - { kind: chips, items: [ { text: { en: "Book", ar: "حجز" } }, { text: { en: "Move", ar: "تغيير" } }, { text: { en: "Cancel a visit", ar: "إلغاء موعد" } } ] }
+          - { kind: chat, from: ai, text: { en: "Which would you like to do?", ar: "ماذا تريد أن تفعل؟" }, gap: s }
+        footer:
+          - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
     b:
       label: { en: "B: A smiling photo, \"Dr. Amal\", and \"I'm here for you\".", ar: "B: صورة مبتسمة، و«د. أمل»، و«أنا هنا من أجلك»." }
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: "Dr. Amal · online", ar: "د. أمل · متصلة" }, back: true }
         blocks:
-          - { kind: meta, weight: bold, text: { en: "👩‍⚕️ Dr. Amal", ar: "👩‍⚕️ د. أمل" } }
-          - { kind: small, color: muted, text: { en: "I'm here for you 💙", ar: "أنا هنا من أجلك 💙" }, gap: xs }
+          - { kind: chat, from: them, name: { en: "Dr. Amal", ar: "د. أمل" }, avatar: { art: doctor }, text: { en: "I'm here for you 💙", ar: "أنا هنا من أجلك 💙" } }
+        footer:
+          - { kind: composer, text: { en: "Write a message", ar: "اكتب رسالة" } }
     answer: a
     reason:
       prompt: { en: "Why is A better?", ar: "لماذا A أفضل؟" }
@@ -210,7 +292,7 @@ steps:
       ar: "الوجه البشري يضع وعدًا بحجم إنسان. فاجعل الشكل بسيطًا بقدر ما يستطيعه."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U02-03
     part: independent
     speaker: karim
@@ -223,12 +305,47 @@ steps:
       en: "Our bus app is adding voice search. It understands simple requests like \"Tickets to Alexandria tomorrow\", but not long stories."
       ar: "تطبيق الحافلات عندنا يضيف بحثًا بالصوت. وهو يفهم الطلبات البسيطة مثل «تذاكر إلى الإسكندرية غدًا»، لكن لا يفهم الحكايات الطويلة."
     prompt:
-      en: "How should the voice screen invite people to speak?"
-      ar: "كيف يجب أن تدعو شاشة الصوت الناس للكلام؟"
+      en: "Tap each option to see it. How should the voice screen invite people to speak?"
+      ar: "اضغط على كل خيار لتراه. كيف يجب أن تدعو شاشة الصوت الناس للكلام؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: rehla
+      appbar: { title: { en: "Voice search", ar: "البحث بالصوت" }, back: true }
+      blocks:
+        - { kind: icon, icon: microphone, size: l, color: brand }
+        - { kind: icon, icon: waveform, size: l, color: brand, gap: s }
+        - { kind: text, text: { en: "Listening…", ar: "أستمع…" }, gap: s }
     options:
-      - { id: friend, text: { en: "\"Hi, I'm Sami! Talk to me like a friend.\"", ar: "«أهلًا، أنا سامي! كلّمني كأني صديقك.»" } }
-      - { id: examples, text: { en: "\"Say where and when. For example: 'Tickets to Alexandria tomorrow'.\"", ar: "«قل إلى أين ومتى. مثلًا: 'تذاكر إلى الإسكندرية غدًا'.»" } }
-      - { id: anything, text: { en: "\"I understand everything. Go ahead!\"", ar: "«أفهم كل شيء. تفضّل!»" } }
+      - id: friend
+        text: { en: "\"Hi, I'm Sami! Talk to me like a friend.\"", ar: "«أهلًا، أنا سامي! كلّمني كأني صديقك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rehla
+          appbar: { title: { en: "Voice search", ar: "البحث بالصوت" }, back: true }
+          blocks:
+            - { kind: icon, icon: microphone, size: l, color: brand }
+            - { kind: icon, icon: waveform, size: l, color: brand, gap: s }
+            - { kind: text, text: { en: "Hi, I'm Sami! Talk to me like a friend.", ar: "أهلًا، أنا سامي! كلّمني كأني صديقك." }, gap: s }
+      - id: examples
+        text: { en: "\"Say where and when. For example: 'Tickets to Alexandria tomorrow'.\"", ar: "«قل إلى أين ومتى. مثلًا: 'تذاكر إلى الإسكندرية غدًا'.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rehla
+          appbar: { title: { en: "Voice search", ar: "البحث بالصوت" }, back: true }
+          blocks:
+            - { kind: icon, icon: microphone, size: l, color: brand }
+            - { kind: icon, icon: waveform, size: l, color: brand, gap: s }
+            - { kind: text, text: { en: "Say where and when. For example: 'Tickets to Alexandria tomorrow'.", ar: "قل إلى أين ومتى. مثلًا: «تذاكر إلى الإسكندرية غدًا»." }, gap: s }
+      - id: anything
+        text: { en: "\"I understand everything. Go ahead!\"", ar: "«أفهم كل شيء. تفضّل!»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rehla
+          appbar: { title: { en: "Voice search", ar: "البحث بالصوت" }, back: true }
+          blocks:
+            - { kind: icon, icon: microphone, size: l, color: brand }
+            - { kind: icon, icon: waveform, size: l, color: brand, gap: s }
+            - { kind: text, text: { en: "I understand everything. Go ahead!", ar: "أفهم كل شيء. تفضّل!" }, gap: s }
     answer: [examples]
     misconceptions:
       - id: MC-P12-020

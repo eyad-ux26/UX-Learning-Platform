@@ -24,11 +24,17 @@ steps:
       en: "My gym's app suggests a workout every day. Every suggestion has the same long \"Why this?\" text, even a 5-minute warm-up. Members say they never read it.\n\nThen Sama, back from a knee injury, got \"Squats · 60 kg\" with no reason she noticed. It hurt, and she stopped trusting the app."
       ar: "تطبيق ناديّ يقترح تمرينًا كل يوم. وكل اقتراح فيه نص «لماذا هذا؟» الطويل نفسه، حتى الإحماء لمدة 5 دقائق. والأعضاء يقولون إنهم لا يقرؤونه أبدًا.\n\nثم عادت سما من إصابة في الركبة، فوصلها «القرفصاء · 60 كغ» دون سبب انتبهت له. شعرت بألم، وتوقّفت عن الثقة بالتطبيق."
     mock:
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Today's workout", ar: "تمرين اليوم" } }
+      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
       blocks:
-        - { kind: title, text: { en: "Today's workout", ar: "تمرين اليوم" } }
-        - { kind: meta, text: { en: "Squats · 60 kg · 4 × 8", ar: "القرفصاء · 60 كغ · 4 × 8" }, gap: s }
-        - { kind: small, color: muted, text: { en: "Why this? We use your goals, history, schedule, rest days, body type…", ar: "لماذا هذا؟ نستخدم أهدافك، وسجلّك، وجدولك، وأيام راحتك، ونوع جسمك…" }, gap: s }
+        - { kind: listitem, icon: person-simple-run, text: { en: "Warm-up", ar: "الإحماء" }, sub: { en: "5 min", ar: "5 دقائق" } }
+        - { kind: listitem, icon: barbell, text: { en: "Squats", ar: "القرفصاء" }, sub: { en: "60 kg · 3 × 10", ar: "60 كغ · 3 × 10" } }
+      overlay:
+        type: sheet
+        title: { en: "Why this?", ar: "لماذا هذا؟" }
+        blocks:
+          - { kind: small, color: muted, text: { en: "This workout was generated from your goals, history, recovery, recent sessions, preferred times, equipment, and many other signals, so that each exercise, set and rest…", ar: "تم إنشاء هذا التمرين من أهدافك وسجلّك وتعافيك وجلساتك الأخيرة وأوقاتك المفضّلة والأدوات وإشارات كثيرة أخرى، بحيث يكون كل تمرين ومجموعة وراحة…" } }
 
   - id: S02
     type: choose
@@ -78,7 +84,7 @@ steps:
       ar: "- **خطر قليل وأمر مألوف:** الإحماء أو قائمة الأغاني يحتاجان شرحًا قليلًا أو لا شيء.\n- **خطر كبير:** الصحة، المال، السلامة. قل لماذا، وما الذي يجب مراجعته.\n- **اسأل: ماذا لو كان خطأ؟** كلما كانت النتيجة أسوأ، احتاج الناس السبب أكثر.\n- **وجّه الناس إلى تقديرهم** حين قد ينقص التطبيقَ شيءٌ."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U03-03
     part: guided
     rules: [R06]
@@ -90,12 +96,52 @@ steps:
       en: "Every workout starts with a 5-minute warm-up: an easy jog and some stretches."
       ar: "كل تمرين يبدأ بإحماء لمدة 5 دقائق: جري خفيف وبعض الإطالات."
     prompt:
-      en: "What should the warm-up card show?"
-      ar: "ماذا يجب أن تعرض بطاقة الإحماء؟"
+      en: "Tap each option to see it. What should the warm-up card show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تعرض بطاقة الإحماء؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: nashat
+      appbar: { title: { en: "Today's workout", ar: "تمرين اليوم" } }
+      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: card, blocks: [ { kind: heading, text: { en: "Warm-up · 5 min", ar: "الإحماء · 5 دقائق" } }, { kind: small, color: muted, text: { en: "Easy jog and stretches", ar: "جري خفيف وتمارين إطالة" } } ] }
+        - { kind: listitem, icon: barbell, text: { en: "Leg press", ar: "ضغط الساقين" }, sub: { en: "50 kg · 3 × 10", ar: "50 كغ · 3 × 10" }, gap: s }
     options:
-      - { id: plain, text: { en: "Just the warm-up", ar: "الإحماء فقط" } }
-      - { id: para, text: { en: "The warm-up, plus a paragraph on how it was picked", ar: "الإحماء، مع فقرة عن طريقة اختياره" } }
-      - { id: confirm, text: { en: "The warm-up, plus a pop-up asking them to confirm they read why", ar: "الإحماء، مع نافذة تطلب منهم تأكيد أنهم قرؤوا السبب" } }
+      - id: plain
+        text: { en: "Just the warm-up", ar: "الإحماء فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Today's workout", ar: "تمرين اليوم" } }
+          tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Warm-up · 5 min", ar: "الإحماء · 5 دقائق" } }, { kind: small, color: muted, text: { en: "Easy jog and stretches", ar: "جري خفيف وتمارين إطالة" } } ] }
+            - { kind: listitem, icon: barbell, text: { en: "Leg press", ar: "ضغط الساقين" }, sub: { en: "50 kg · 3 × 10", ar: "50 كغ · 3 × 10" }, gap: s }
+      - id: para
+        text: { en: "The warm-up, plus a paragraph on how it was picked", ar: "الإحماء، مع فقرة عن طريقة اختياره" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Today's workout", ar: "تمرين اليوم" } }
+          tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Warm-up · 5 min", ar: "الإحماء · 5 دقائق" } }, { kind: small, color: muted, text: { en: "Easy jog and stretches", ar: "جري خفيف وتمارين إطالة" } }, { kind: small, text: { en: "We picked this warm-up from your goals, your last 10 sessions, your recovery score and the time of day, so your muscles are ready for…", ar: "اخترنا هذا الإحماء من أهدافك وآخر 10 جلسات وتعافيك ووقت اليوم، لتكون عضلاتك جاهزة لـ…" } } ] }
+            - { kind: listitem, icon: barbell, text: { en: "Leg press", ar: "ضغط الساقين" }, sub: { en: "50 kg · 3 × 10", ar: "50 كغ · 3 × 10" }, gap: s }
+      - id: confirm
+        text: { en: "The warm-up, plus a pop-up asking them to confirm they read why", ar: "الإحماء، مع نافذة تطلب منهم تأكيد أنهم قرؤوا السبب" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Today's workout", ar: "تمرين اليوم" } }
+          tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Warm-up · 5 min", ar: "الإحماء · 5 دقائق" } }, { kind: small, color: muted, text: { en: "Easy jog and stretches", ar: "جري خفيف وتمارين إطالة" } } ] }
+            - { kind: listitem, icon: barbell, text: { en: "Leg press", ar: "ضغط الساقين" }, sub: { en: "50 kg · 3 × 10", ar: "50 كغ · 3 × 10" }, gap: s }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Did you read why we picked this warm-up?", ar: "هل قرأت لماذا اخترنا هذا الإحماء؟" } }
+              - { kind: button, text: { en: "Yes, I read it", ar: "نعم، قرأته" }, gap: s }
     answer: [plain]
     misconceptions:
       - id: MC-P12-025
@@ -114,7 +160,7 @@ steps:
       ar: "احتفظ بالشرح للّحظات التي تحتاجه، وسيقرؤه الناس."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U03-03
     part: guided
     rules: [R06]
@@ -126,12 +172,47 @@ steps:
       en: "Sama logged a knee injury 3 weeks ago. Today the app suggests leg exercises again."
       ar: "سجّلت سما إصابة في الركبة قبل 3 أسابيع. واليوم يقترح التطبيق تمارين للساقين مرة أخرى."
     prompt:
-      en: "What should her card show?"
-      ar: "ماذا يجب أن تعرض بطاقتها؟"
+      en: "Tap each option to see it. What should her card show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تعرض بطاقتها؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: nashat
+      appbar: { title: { en: "Sama's workout", ar: "تمرين سما" }, actions: [ { icon: first-aid, aria: { en: "Knee injury logged", ar: "إصابة ركبة مسجّلة" }, count: 1 } ] }
+      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: badge, tone: warn, icon: first-aid, text: { en: "Knee injury · 3 weeks ago", ar: "إصابة ركبة · قبل 3 أسابيع" } }
+        - { kind: card, blocks: [ { kind: heading, text: { en: "Leg day", ar: "يوم الساقين" } } ], gap: s }
     options:
-      - { id: what, text: { en: "\"Leg press · 30 kg · 3 × 10\"", ar: "«ضغط الساقين · 30 كغ · 3 × 10»" } }
-      - { id: why, text: { en: "\"Leg press · 30 kg · 3 × 10. Half your usual weight, because of your knee. Stop if it hurts, and ask a coach.\"", ar: "«ضغط الساقين · 30 كغ · 3 × 10. نصف وزنك المعتاد، بسبب ركبتك. توقّفي إذا شعرتِ بألم، واسألي مدرّبًا.»" } }
-      - { id: ai, text: { en: "\"Leg press · 30 kg · 3 × 10 (picked by AI)\"", ar: "«ضغط الساقين · 30 كغ · 3 × 10 (اختاره الذكاء الاصطناعي)»" } }
+      - id: what
+        text: { en: "\"Leg press · 30 kg · 3 × 10\"", ar: "«ضغط الساقين · 30 كغ · 3 × 10»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Sama's workout", ar: "تمرين سما" }, actions: [ { icon: first-aid, aria: { en: "Knee injury logged", ar: "إصابة ركبة مسجّلة" }, count: 1 } ] }
+          tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: badge, tone: warn, icon: first-aid, text: { en: "Knee injury · 3 weeks ago", ar: "إصابة ركبة · قبل 3 أسابيع" } }
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Leg press · 30 kg · 3 × 10", ar: "ضغط الساقين · 30 كغ · 3 × 10" } } ], gap: s }
+      - id: why
+        text: { en: "\"Leg press · 30 kg · 3 × 10. Half your usual weight, because of your knee. Stop if it hurts, and ask a coach.\"", ar: "«ضغط الساقين · 30 كغ · 3 × 10. نصف وزنك المعتاد، بسبب ركبتك. توقّفي إذا شعرتِ بألم، واسألي مدرّبًا.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Sama's workout", ar: "تمرين سما" }, actions: [ { icon: first-aid, aria: { en: "Knee injury logged", ar: "إصابة ركبة مسجّلة" }, count: 1 } ] }
+          tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: badge, tone: warn, icon: first-aid, text: { en: "Knee injury · 3 weeks ago", ar: "إصابة ركبة · قبل 3 أسابيع" } }
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Leg press · 30 kg · 3 × 10", ar: "ضغط الساقين · 30 كغ · 3 × 10" } }, { kind: small, text: { en: "Half your usual weight, because of your knee. Stop if it hurts, and ask a coach.", ar: "نصف وزنك المعتاد، بسبب ركبتك. توقّفي إذا شعرتِ بألم، واسألي مدرّبًا." } } ], gap: s }
+      - id: ai
+        text: { en: "\"Leg press · 30 kg · 3 × 10 (picked by AI)\"", ar: "«ضغط الساقين · 30 كغ · 3 × 10 (اختاره الذكاء الاصطناعي)»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Sama's workout", ar: "تمرين سما" }, actions: [ { icon: first-aid, aria: { en: "Knee injury logged", ar: "إصابة ركبة مسجّلة" }, count: 1 } ] }
+          tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: barbell, text: { en: "Workout", ar: "التمرين" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: badge, tone: warn, icon: first-aid, text: { en: "Knee injury · 3 weeks ago", ar: "إصابة ركبة · قبل 3 أسابيع" } }
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Leg press · 30 kg · 3 × 10 (picked by AI)", ar: "ضغط الساقين · 30 كغ · 3 × 10 (اختاره الذكاء الاصطناعي)" } } ], gap: s }
     answer: [why]
     misconceptions:
       - id: MC-P12-024
@@ -168,19 +249,25 @@ steps:
     a:
       label: { en: "A: Plan ready, plus \"We don't know about injuries or health problems. Have one? Tell us, or ask a coach first.\"", ar: "A: الخطة جاهزة، مع «لا نعرف إن كانت لديك إصابات أو مشكلات صحية. لديك واحدة؟ أخبرنا، أو اسأل مدرّبًا أولًا.»" }
       mock:
-        width: 300
+        app: nashat
+        appbar: { title: { en: "Your plan", ar: "خطتك" } }
         blocks:
-          - { kind: title, text: { en: "Your plan is ready: 3 days a week", ar: "خطتك جاهزة: 3 أيام في الأسبوع" } }
-          - { kind: small, color: muted, text: { en: "We don't know about injuries or health problems. Have one? Tell us, or ask a coach first.", ar: "لا نعرف إن كانت لديك إصابات أو مشكلات صحية. لديك واحدة؟ أخبرنا، أو اسأل مدرّبًا أولًا." }, gap: s }
-          - { kind: button, text: { en: "Start", ar: "ابدأ" }, gap: m }
+          - { kind: icon, icon: check-circle, size: l, color: brand }
+          - { kind: title, text: { en: "Your plan is ready: 3 days a week", ar: "خطتك جاهزة: 3 أيام في الأسبوع" }, gap: s }
+          - { kind: banner, tone: warn, icon: first-aid, text: { en: "We don't know about injuries or health problems. Have one? Tell us, or ask a coach first.", ar: "لا نعرف إن كانت لديك إصابات أو مشكلات صحية. لديك واحدة؟ أخبرنا، أو اسأل مدرّبًا أولًا." }, gap: s }
+        footer:
+          - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "Add health info", ar: "أضف معلومات صحية" } }, { kind: button, text: { en: "Start", ar: "ابدأ" } } ] }
     b:
       label: { en: "B: \"Your plan is ready: 3 days a week. Let's go!\"", ar: "B: «خطتك جاهزة: 3 أيام في الأسبوع. هيا بنا!»" }
       mock:
-        width: 300
+        app: nashat
+        appbar: { title: { en: "Your plan", ar: "خطتك" } }
         blocks:
-          - { kind: title, text: { en: "Your plan is ready: 3 days a week", ar: "خطتك جاهزة: 3 أيام في الأسبوع" } }
-          - { kind: meta, text: { en: "Let's go!", ar: "هيا بنا!" }, gap: s }
-          - { kind: button, text: { en: "Start", ar: "ابدأ" }, gap: m }
+          - { kind: icon, icon: check-circle, size: l, color: brand }
+          - { kind: title, text: { en: "Your plan is ready: 3 days a week", ar: "خطتك جاهزة: 3 أيام في الأسبوع" }, gap: s }
+          - { kind: text, text: { en: "Let's go!", ar: "هيا بنا!" }, gap: xs }
+        footer:
+          - { kind: button, text: { en: "Start", ar: "ابدأ" } }
     answer: a
     reason:
       prompt: { en: "Why is A better?", ar: "لماذا A أفضل؟" }
@@ -212,7 +299,7 @@ steps:
       ar: "سطر واحد يقول للأعضاء متى يثقون بالخطة، ومتى يسألون شخصًا."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U03-03
     part: independent
     speaker: tarek
@@ -225,12 +312,49 @@ steps:
       en: "I'm the PM of a pharmacy delivery app. It estimates delivery time, like \"40 min\". For most orders, a late delivery is fine. But some people order urgent medicine, like insulin."
       ar: "أنا مدير منتج لتطبيق توصيل صيدلية. يقدّر وقت التوصيل، مثل «40 دقيقة». وفي أغلب الطلبات، لا مشكلة في التأخير. لكن بعض الناس يطلبون دواءً عاجلًا، مثل الإنسولين."
     prompt:
-      en: "What should urgent orders show?"
-      ar: "ماذا يجب أن تعرض الطلبات العاجلة؟"
+      en: "Tap each option to see it. What should urgent orders show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تعرض الطلبات العاجلة؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: dawaa
+      appbar: { title: { en: "Order #2291", ar: "الطلب 2291" }, back: true }
+      blocks:
+        - { kind: image, art: map-route }
+        - { kind: badge, tone: bad, icon: warning, text: { en: "Urgent: insulin pens", ar: "عاجل: أقلام أنسولين" }, gap: s }
+        - { kind: heading, text: { en: "Arriving in 40 min", ar: "يصل خلال 40 دقيقة" }, gap: xs }
     options:
-      - { id: why, text: { en: "\"About 40 min. Times can slip at rush hour. Need it sooner? Call the pharmacy.\"", ar: "«حوالي 40 دقيقة. قد يتأخّر الوقت في الزحام. تحتاجه أسرع؟ اتّصل بالصيدلية.»" } }
-      - { id: same, text: { en: "Just \"40 min\", like every order", ar: "فقط «40 دقيقة»، مثل كل الطلبات" } }
-      - { id: precise, text: { en: "\"39 min 20 sec\", so it looks exact", ar: "«39 دقيقة و20 ثانية»، ليبدو دقيقًا" } }
+      - id: why
+        text: { en: "\"About 40 min. Times can slip at rush hour. Need it sooner? Call the pharmacy.\"", ar: "«حوالي 40 دقيقة. قد يتأخّر الوقت في الزحام. تحتاجه أسرع؟ اتّصل بالصيدلية.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dawaa
+          appbar: { title: { en: "Order #2291", ar: "الطلب 2291" }, back: true }
+          blocks:
+            - { kind: image, art: map-route }
+            - { kind: badge, tone: bad, icon: warning, text: { en: "Urgent: insulin pens", ar: "عاجل: أقلام أنسولين" }, gap: s }
+            - { kind: heading, text: { en: "About 40 min", ar: "حوالي 40 دقيقة" }, gap: xs }
+            - { kind: small, color: muted, text: { en: "Times can slip at rush hour. Need it sooner?", ar: "قد يتأخّر الوقت في الزحام. تحتاجه أسرع؟" }, gap: xs }
+            - { kind: button, style: outline, icon: phone, text: { en: "Call the pharmacy", ar: "اتصل بالصيدلية" }, gap: s }
+      - id: same
+        text: { en: "Just \"40 min\", like every order", ar: "فقط «40 دقيقة»، مثل كل الطلبات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dawaa
+          appbar: { title: { en: "Order #2291", ar: "الطلب 2291" }, back: true }
+          blocks:
+            - { kind: image, art: map-route }
+            - { kind: badge, tone: bad, icon: warning, text: { en: "Urgent: insulin pens", ar: "عاجل: أقلام أنسولين" }, gap: s }
+            - { kind: heading, text: { en: "40 min", ar: "40 دقيقة" }, gap: xs }
+      - id: precise
+        text: { en: "\"39 min 20 sec\", so it looks exact", ar: "«39 دقيقة و20 ثانية»، ليبدو دقيقًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dawaa
+          appbar: { title: { en: "Order #2291", ar: "الطلب 2291" }, back: true }
+          blocks:
+            - { kind: image, art: map-route }
+            - { kind: badge, tone: bad, icon: warning, text: { en: "Urgent: insulin pens", ar: "عاجل: أقلام أنسولين" }, gap: s }
+            - { kind: heading, text: { en: "39 min 20 sec", ar: "39 دقيقة و20 ثانية" }, gap: xs }
     answer: [why]
     misconceptions:
       - id: MC-P12-024
