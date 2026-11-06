@@ -26,16 +26,16 @@ steps:
       en: "I design a cinema booking site. A customer wrote to us: \"My hands shake, so I use the keyboard. I couldn't choose a film.\"\n\nOur whole team uses a mouse, so none of us saw a problem."
       ar: "أصمّم موقعًا لحجز تذاكر السينما. كتب لنا أحد العملاء: «يداي ترتجفان، لذلك أستخدم لوحة المفاتيح. ولم أستطع اختيار فيلم.»\n\nكل فريقنا يستخدم الماوس، فلم يرَ أحد منّا أي مشكلة."
     mock:
-      width: 300
+      app: shasha
+      frame: wide
+      url: shasha.example
+      navbar:
+        links: [ { en: "Films ▾", ar: "الأفلام ▾" }, { en: "Offers", ar: "العروض" }, { en: "Cinemas", ar: "السينمات" } ]
+        actions: [ { icon: user } ]
       blocks:
-        - kind: row
-          blocks:
-            - { kind: meta, weight: bold, text: { en: "CineGo", ar: "سينماجو" } }
-            - { kind: meta, text: { en: "Films ▾", ar: "الأفلام ▾" } }
-            - { kind: meta, text: { en: "Offers", ar: "العروض" } }
-        - { kind: image, size: m, text: { en: "Now showing: The Lion Path", ar: "يُعرض الآن: درب الأسد" }, gap: s }
+        - { kind: image, art: city-night, text: { en: "Now showing: The Lion Path", ar: "يُعرض الآن: درب الأسد" } }
         - { kind: small, color: muted, text: "● ○ ○ ○", gap: xs }
-        - { kind: button, text: { en: "Book tickets", ar: "احجز التذاكر" }, gap: m }
+        - { kind: button, icon: ticket, text: { en: "Book tickets", ar: "احجز التذاكر" }, gap: s }
 
   - id: S02
     type: choose
@@ -95,17 +95,28 @@ steps:
       en: "What should we change?"
       ar: "ماذا يجب أن نغيّر؟"
     mock:
-      width: 300
+      app: shasha
+      frame: wide
+      url: shasha.example/films/the-lion-path
+      navbar:
+        links: [ { en: "Films ▾", ar: "الأفلام ▾" }, { en: "Offers", ar: "العروض" }, { en: "Cinemas", ar: "السينمات" } ]
+        active: 0
       blocks:
         - { kind: title, text: { en: "① The Lion Path", ar: "① درب الأسد" } }
+        - { kind: small, color: muted, text: { en: "Family · 2 h 05 min · City Stars", ar: "عائلي · ساعتان و5 دقائق · سيتي ستارز" }, gap: xs }
         - kind: row
           gap: s
           blocks:
-            - { kind: chip, text: { en: "③ 18:00", ar: "③ 18:00" } }
-            - { kind: chip, text: { en: "④ 21:00", ar: "④ 21:00" } }
+            - { kind: chip, text: "③ 18:00" }
+            - { kind: chip, text: "④ 21:00" }
         - { kind: button, text: { en: "⑤ Book tickets", ar: "⑤ احجز التذاكر" }, gap: m }
         - { kind: divider, gap: m }
-        - { kind: small, color: muted, text: { en: "② Contact us", ar: "② تواصل معنا" }, gap: s }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: small, color: muted, text: { en: "② Contact us", ar: "② تواصل معنا" } }
+            - { kind: small, color: muted, text: { en: "Privacy", ar: "الخصوصية" } }
+            - { kind: small, color: muted, text: "© Shasha" }
     options:
       - { id: move, text: { en: "Move \"Contact us\" up, under the title, to match where Tab goes", ar: "ننقل «تواصل معنا» للأعلى، تحت العنوان، ليطابق مكان Tab" } }
       - { id: note, text: { en: "Add a note: \"Keyboard users: press Tab twice to reach the times\"", ar: "نضيف ملاحظة: «مستخدمو لوحة المفاتيح: اضغطوا Tab مرتين للوصول إلى المواعيد»" } }
@@ -144,40 +155,60 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل مستخدمي لوحة المفاتيح يرون الأفلام الأربعة؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: shasha
+      frame: wide
+      url: shasha.example
+      navbar:
+        links: [ { en: "Films ▾", ar: "الأفلام ▾" }, { en: "Offers", ar: "العروض" } ]
       blocks: &carnow
-        - { kind: image, size: m, text: { en: "The Lion Path", ar: "درب الأسد" } }
+        - { kind: image, art: city-night, text: { en: "The Lion Path", ar: "درب الأسد" } }
         - { kind: small, color: muted, text: "● ○ ○ ○", gap: xs }
+        - { kind: button, icon: ticket, text: { en: "Book tickets", ar: "احجز التذاكر" }, gap: s }
     options:
       - id: auto
         text: { en: "Make the carousel move to the next film by itself every 3 seconds", ar: "اجعل الـ Carousel ينتقل وحده إلى الفيلم التالي كل 3 ثوانٍ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: shasha
+          frame: wide
+          url: shasha.example
+          navbar:
+            links: [ { en: "Films ▾", ar: "الأفلام ▾" }, { en: "Offers", ar: "العروض" } ]
           blocks:
-            - { kind: image, size: m, text: { en: "The Lion Path (moves in 3 s)", ar: "درب الأسد (ينتقل بعد 3 ثوانٍ)" } }
+            - { kind: image, art: city-night, note: { en: "Moves every 3 s", ar: "ينتقل كل 3 ثوانٍ" }, text: { en: "The Lion Path", ar: "درب الأسد" } }
             - { kind: small, color: muted, text: "● ○ ○ ○", gap: xs }
+            - { kind: button, icon: ticket, text: { en: "Book tickets", ar: "احجز التذاكر" }, gap: s }
       - id: buttons
         text: { en: "Always show Previous and Next as real buttons Tab can reach", ar: "أظهر «السابق» و«التالي» دائمًا كأزرار حقيقية يصل إليها Tab" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: shasha
+          frame: wide
+          url: shasha.example
+          navbar:
+            links: [ { en: "Films ▾", ar: "الأفلام ▾" }, { en: "Offers", ar: "العروض" } ]
           blocks:
-            - { kind: image, size: m, text: { en: "The Lion Path", ar: "درب الأسد" } }
+            - { kind: image, art: city-night, text: { en: "The Lion Path", ar: "درب الأسد" } }
             - kind: row
               gap: xs
               blocks:
                 - { kind: button, style: plain, ring: brand, text: { en: "‹ Previous", ar: "› السابق" } }
                 - { kind: meta, text: { en: "1 of 4", ar: "1 من 4" } }
                 - { kind: button, style: plain, text: { en: "Next ›", ar: "التالي ‹" } }
+            - { kind: button, icon: ticket, text: { en: "Book tickets", ar: "احجز التذاكر" }, gap: s }
       - id: dots
         text: { en: "Make the dots bigger", ar: "كبّر النقاط" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: shasha
+          frame: wide
+          url: shasha.example
+          navbar:
+            links: [ { en: "Films ▾", ar: "الأفلام ▾" }, { en: "Offers", ar: "العروض" } ]
           blocks:
-            - { kind: image, size: m, text: { en: "The Lion Path", ar: "درب الأسد" } }
+            - { kind: image, art: city-night, text: { en: "The Lion Path", ar: "درب الأسد" } }
             - { kind: text, px: 22, color: muted, text: "● ○ ○ ○", gap: xs }
+            - { kind: button, icon: ticket, text: { en: "Book tickets", ar: "احجز التذاكر" }, gap: s }
     answer: [buttons]
     misconceptions:
       - id: MC-P05-026
@@ -219,25 +250,40 @@ steps:
     a:
       label: { en: "A: Mouse over \"Films\" opens the list; pressing \"Films\" does nothing", ar: "A: مرور الماوس على «الأفلام» يفتح القائمة؛ والضغط على «الأفلام» لا يفعل شيئًا" }
       mock:
-        width: 300
+        app: shasha
+        frame: wide
+        url: shasha.example
+        navbar: { actions: [ { icon: user } ] }
         blocks:
           - kind: row
             blocks:
               - { kind: meta, ring: brand, text: { en: "Films ▾", ar: "الأفلام ▾" } }
               - { kind: meta, text: { en: "Offers", ar: "العروض" } }
-          - { kind: small, color: muted, text: { en: "Enter: nothing happens", ar: "Enter: لا يحدث شيء" }, gap: s }
+              - { kind: meta, text: { en: "Cinemas", ar: "السينمات" } }
+          - { kind: image, art: city-night, gap: s }
+          - { kind: banner, tone: bad, icon: keyboard, text: { en: "Enter: nothing happens", ar: "Enter: لا يحدث شيء" }, gap: s }
     b:
       label: { en: "B: Pressing \"Films\" opens a Films page with every genre; mouse over still opens the list", ar: "B: الضغط على «الأفلام» يفتح صفحة فيها كل الأنواع؛ ومرور الماوس ما زال يفتح القائمة" }
       mock:
-        width: 300
+        app: shasha
+        frame: wide
+        url: shasha.example/films
+        navbar: { actions: [ { icon: user } ] }
         blocks:
           - kind: row
             blocks:
               - { kind: meta, ring: brand, text: { en: "Films ▾", ar: "الأفلام ▾" } }
               - { kind: meta, text: { en: "Offers", ar: "العروض" } }
-          - { kind: small, color: muted, text: { en: "Enter opens:", ar: "Enter يفتح:" }, gap: s }
+              - { kind: meta, text: { en: "Cinemas", ar: "السينمات" } }
+          - { kind: small, color: muted, text: { en: "Enter opens the Films page:", ar: "Enter يفتح صفحة الأفلام:" }, gap: s }
           - { kind: heading, text: { en: "Films", ar: "الأفلام" }, gap: xs }
-          - { kind: link, text: { en: "Action · Comedy · Family · Drama", ar: "أكشن · كوميديا · عائلي · دراما" }, gap: xs }
+          - kind: row
+            gap: xs
+            blocks:
+              - { kind: link, text: { en: "Action", ar: "أكشن" } }
+              - { kind: link, text: { en: "Comedy", ar: "كوميديا" } }
+              - { kind: link, text: { en: "Family", ar: "عائلي" } }
+              - { kind: link, text: { en: "Drama", ar: "دراما" } }
     answer: b
     reason:
       prompt: { en: "Why does B work for keyboard users?", ar: "لماذا يعمل B لمستخدمي لوحة المفاتيح؟" }
@@ -284,6 +330,16 @@ steps:
     prompt:
       en: "Is the keyboard test done?"
       ar: "هل انتهى اختبار لوحة المفاتيح؟"
+    mock:
+      app: raha
+      frame: wide
+      url: raha.example
+      navbar:
+        links: [ { en: "Doctors", ar: "الأطباء" }, { en: "Services", ar: "الخدمات" }, { en: "Contact", ar: "تواصل" } ]
+      blocks:
+        - { kind: heading, text: { en: "Care close to home", ar: "رعاية قريبة منك" }, gap: s }
+        - { kind: button, ring: brand, icon: calendar-plus, text: { en: "Book a visit", ar: "احجز زيارة" }, gap: s }
+        - { kind: small, color: muted, text: { en: "Next: choose a doctor › pick a day › pick a time › confirm", ar: "بعدها: اختر طبيبًا ‹ اختر يومًا ‹ اختر وقتًا ‹ أكّد" }, gap: s }
     options:
       - { id: done, text: { en: "Yes. The home page passed every check", ar: "نعم. الصفحة الرئيسية نجحت في كل الفحوصات" } }
       - { id: task, text: { en: "Not yet. Book a full appointment by keyboard, from choosing a doctor to the confirmation", ar: "ليس بعد. احجز موعدًا كاملًا بلوحة المفاتيح، من اختيار الطبيب حتى التأكيد" } }

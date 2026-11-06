@@ -24,11 +24,30 @@ steps:
       en: "I own a home-appliances shop, and we just launched our app. New customers open \"Saved items\" and see an empty white screen.\n\nSome of them messaged us: \"Is the app broken?\" Nothing was broken. They just hadn't saved anything yet."
       ar: "أملك متجرًا للأجهزة المنزلية، وأطلقنا تطبيقنا للتو. والعملاء الجدد يفتحون «المحفوظات» فيرون شاشة بيضاء فارغة.\n\nراسلنا بعضهم: «هل التطبيق معطّل؟» لم يكن شيء معطّلًا. هم فقط لم يحفظوا شيئًا بعد."
     mock:
-      width: 300
+      app: dar
+      appbar:
+        title: {en: Saved items, ar: المحفوظات}
+      tabbar:
+        active: 0
+        items:
+        - icon: house
+          text: {en: Home, ar: الرئيسية}
+        - icon: squares-four
+          text: {en: Departments, ar: الأقسام}
+        - icon: package
+          text: {en: Orders, ar: طلباتي}
+        - icon: shopping-cart
+          text: {en: Cart, ar: السلة}
+        - icon: user
+          text: {en: Account, ar: حسابي}
       blocks:
-        - { kind: title, text: { en: "Saved items", ar: "المحفوظات" } }
-        - { kind: divider, gap: s }
-        - { kind: divider, gap: xl }
+      - {kind: image, art: box, size: m}
+      - kind: heading
+        text: {en: Nothing saved yet, ar: لا شيء محفوظ بعد}
+        gap: m
+        tone: faint
+      - {kind: divider, gap: s}
+      - {kind: divider, gap: xl}
 
   - id: S02
     type: choose
@@ -129,37 +148,92 @@ steps:
       en: "Tap each option to see the change. Which version gets people to add an address fastest?"
       ar: "اضغط على كل خيار لترى التغيير. أي نسخة تجعل الناس يضيفون عنوانًا بأسرع طريقة؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: dar
+      appbar:
+        title: {en: Checkout, ar: إتمام الطلب}
+        back: true
+      caption: {en: Now, ar: الآن}
       blocks:
-        - { kind: heading, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
-        - { kind: small, color: muted, text: { en: "You have no saved addresses. To add one, go to Settings > Account > Addresses.", ar: "ليس لديك عناوين محفوظة. لتضيف عنوانًا، اذهب إلى الإعدادات > الحساب > العناوين." }, gap: xs }
+      - kind: progress
+        value: 50
+        label: {en: Step 2 of 4, ar: الخطوة 2 من 4}
+      - kind: heading
+        text: {en: Delivery address, ar: عنوان التوصيل}
+        gap: m
+      - {kind: icon, icon: map-pin-line, size: l, color: muted, gap: m}
+      - kind: small
+        text:
+          en: "You have no saved addresses. To add one, go to Settings > Account > Addresses."
+          ar: "ليس لديك عناوين محفوظة. لتضيف عنوانًا، اذهب إلى الإعدادات > الحساب > العناوين."
+        color: muted
+        gap: xs
     options:
       - id: button
         text: { en: "Add an \"Add address\" button right here", ar: "أضف زر «أضف عنوانًا» هنا مباشرة" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar:
+            title: {en: Checkout, ar: إتمام الطلب}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: heading, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
-            - { kind: small, color: muted, text: { en: "Add an address so we know where to deliver.", ar: "أضف عنوانًا لنعرف أين نوصّل طلبك." }, gap: xs }
-            - { kind: button, text: { en: "Add address", ar: "أضف عنوانًا" }, gap: s }
+          - kind: progress
+            value: 50
+            label: {en: Step 2 of 4, ar: الخطوة 2 من 4}
+          - kind: heading
+            text: {en: Delivery address, ar: عنوان التوصيل}
+            gap: m
+          - {kind: icon, icon: map-pin-line, size: l, color: muted, gap: m}
+          - kind: small
+            text: {en: Add an address so we know where to deliver., ar: أضف عنوانًا لنعرف أين نوصّل طلبك.}
+            color: muted
+            gap: xs
+          - kind: button
+            text: {en: Add address, ar: أضف عنوانًا}
+            icon: plus
+            gap: s
       - id: bold
         text: { en: "Make the directions bold", ar: "اجعل الإرشادات بخط Bold" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar:
+            title: {en: Checkout, ar: إتمام الطلب}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: heading, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
-            - { kind: small, color: muted, text: { en: "You have no saved addresses. To add one, go to **Settings > Account > Addresses**.", ar: "ليس لديك عناوين محفوظة. لتضيف عنوانًا، اذهب إلى **الإعدادات > الحساب > العناوين**." }, gap: xs }
+          - kind: progress
+            value: 50
+            label: {en: Step 2 of 4, ar: الخطوة 2 من 4}
+          - kind: heading
+            text: {en: Delivery address, ar: عنوان التوصيل}
+            gap: m
+          - {kind: icon, icon: map-pin-line, size: l, color: muted, gap: m}
+          - kind: small
+            text:
+              en: "You have no saved addresses. To add one, go to **Settings > Account > Addresses**."
+              ar: "ليس لديك عناوين محفوظة. لتضيف عنوانًا، اذهب إلى **الإعدادات > الحساب > العناوين**."
+            color: muted
+            gap: xs
       - id: short
         text: { en: "Shorten it to \"No addresses\"", ar: "اختصره إلى «لا توجد عناوين»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar:
+            title: {en: Checkout, ar: إتمام الطلب}
+            back: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: heading, text: { en: "Delivery address", ar: "عنوان التوصيل" } }
-            - { kind: small, color: muted, text: { en: "No addresses", ar: "لا توجد عناوين" }, gap: xs }
+          - kind: progress
+            value: 50
+            label: {en: Step 2 of 4, ar: الخطوة 2 من 4}
+          - kind: heading
+            text: {en: Delivery address, ar: عنوان التوصيل}
+            gap: m
+          - {kind: icon, icon: map-pin-line, size: l, color: muted, gap: m}
+          - kind: small
+            text: {en: No addresses, ar: لا توجد عناوين}
+            color: muted
+            gap: xs
     answer: [button]
     misconceptions:
       - id: MC-P15-032
@@ -201,18 +275,32 @@ steps:
     a:
       label: { en: "A: The message explains, and a button starts the task.", ar: "A: الرسالة تشرح، وزر يبدأ المهمة." }
       mock:
-        width: 300
+        app: dar
+        appbar:
+          title: {en: Gift cards, ar: بطاقات الهدايا}
+          back: true
         blocks:
-          - { kind: heading, text: { en: "Gift cards", ar: "بطاقات الهدايا" } }
-          - { kind: small, color: muted, text: { en: "Send a gift card to a friend in 2 minutes. Cards you get will show here too.", ar: "أرسل بطاقة هدية لصديق في دقيقتين. والبطاقات التي تصلك ستظهر هنا أيضًا." }, gap: xs }
-          - { kind: button, text: { en: "Send a gift card", ar: "أرسل بطاقة هدية" }, gap: s }
+        - {kind: image, art: box, size: m}
+        - kind: small
+          text: {en: Send a gift card to a friend in 2 minutes. Cards you get will show here too., ar: أرسل بطاقة هدية لصديق في دقيقتين. والبطاقات التي تصلك ستظهر هنا أيضًا.}
+          color: muted
+          gap: xs
+        - kind: button
+          text: {en: Send a gift card, ar: أرسل بطاقة هدية}
+          gap: s
     b:
       label: { en: "B: The message says there are none.", ar: "B: الرسالة تقول إنه لا توجد بطاقات." }
       mock:
-        width: 300
+        app: dar
+        appbar:
+          title: {en: Gift cards, ar: بطاقات الهدايا}
+          back: true
         blocks:
-          - { kind: heading, text: { en: "Gift cards", ar: "بطاقات الهدايا" } }
-          - { kind: small, color: muted, text: { en: "You have no gift cards. Gift cards can be bought in the Gifts section.", ar: "ليس لديك بطاقات هدايا. ويمكن شراء بطاقات الهدايا من قسم الهدايا." }, gap: xs }
+        - {kind: image, art: box, size: m}
+        - kind: small
+          text: {en: You have no gift cards. Gift cards can be bought in the Gifts section., ar: ليس لديك بطاقات هدايا. ويمكن شراء بطاقات الهدايا من قسم الهدايا.}
+          color: muted
+          gap: xs
     answer: a
     reason:
       prompt: { en: "Why does A work better?", ar: "لماذا تنجح A أكثر؟" }

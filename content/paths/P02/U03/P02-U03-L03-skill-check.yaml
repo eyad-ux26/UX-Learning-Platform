@@ -19,6 +19,14 @@ steps:
     type: card
     part: hook
     title: { en: "Sara's travel site", ar: "موقع السفر لسارة" }
+    mock:
+      app: zad
+      frame: wide
+      url: zad.example
+      navbar: { links: [ { en: "Flights", ar: "طيران" }, { en: "Hotels", ar: "فنادق" }, { en: "My trips", ar: "رحلاتي" } ], active: 0, actions: [ { icon: user } ] }
+      blocks:
+        - { kind: image, art: beach, size: m }
+        - { kind: title, text: { en: "Where to next?", ar: "إلى أين بعد ذلك؟" }, gap: m }
     body:
       en: "I'm redesigning a travel booking website. Our support team listed the four problems people call about most. Help me pick a fix for each.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "أعيد تصميم موقع لحجز السفر. وقد جمع فريق الدعم أكثر أربع مشكلات يتصل بسببها الناس. ساعدني في اختيار إصلاح لكل منها.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
@@ -37,6 +45,15 @@ steps:
     prompt:
       en: "What should the destination box do?"
       ar: "ماذا يجب أن يفعل مربع الوجهة؟"
+    mock:
+      app: zad
+      frame: wide
+      url: zad.example/hotels?q=Sharm+El+Shiekh
+      navbar: { links: [ { en: "Flights", ar: "طيران" }, { en: "Hotels", ar: "فنادق" }, { en: "My trips", ar: "رحلاتي" } ], active: 1 }
+      blocks:
+        - { kind: field, label: { en: "Destination", ar: "الوجهة" }, text: { en: "Sharm El Shiekh", ar: "شرم الشيح" }, filled: true, icon: map-pin }
+        - { kind: icon, icon: magnifying-glass-minus, size: l, gap: l }
+        - { kind: heading, text: { en: "No hotels found", ar: "لا توجد فنادق" }, gap: s }
     options:
       - { id: suggest, text: { en: "Suggest matching places after the first few letters, so people pick one", ar: "يقترح الأماكن المطابقة بعد أول بضعة أحرف، فيختار الناس واحدًا" } }
       - { id: hint, text: { en: "Add \"Check your spelling\" to the No hotels message", ar: "يضيف «راجع الإملاء» إلى رسالة «لا توجد فنادق»" } }
@@ -74,6 +91,16 @@ steps:
     prompt:
       en: "What should happen when people tap it?"
       ar: "ماذا يجب أن يحدث حين يضغطه الناس؟"
+    mock:
+      app: zad
+      appbar: { title: { en: "My trips", ar: "رحلاتي" } }
+      blocks:
+        - kind: card
+          art: city-night
+          blocks:
+            - { kind: heading, text: { en: "Dubai · 12–16 Nov", ar: "دبي · 12–16 نوفمبر" } }
+            - { kind: list, style: check, items: [ { en: "Flight", ar: "الطيران" }, { en: "Hotel, 4 nights", ar: "الفندق، 4 ليالٍ" }, { en: "Car", ar: "السيارة" }, { en: "Desert tour", ar: "جولة الصحراء" } ] }
+            - { kind: link, text: { en: "Cancel trip", ar: "ألغِ الرحلة" }, style: dangerlink, gap: s, note: { en: "One tap cancels all 4", ar: "ضغطة واحدة تلغي الأربعة" } }
     options:
       - { id: none, text: { en: "Cancel at once; people know what they tapped", ar: "يُلغى فورًا؛ فالناس يعرفون ما ضغطوه" } }
       - { id: vague, text: { en: "Ask \"Are you sure?\" with Yes and No", ar: "يسأل «هل أنت متأكد؟» مع «نعم» و«لا»" } }
@@ -111,6 +138,14 @@ steps:
     prompt:
       en: "What should each seat map show?"
       ar: "ماذا يجب أن تعرض كل خريطة مقاعد؟"
+    mock:
+      app: zad
+      appbar: { title: { en: "Choose seats", ar: "اختر المقاعد" }, back: true }
+      blocks:
+        - { kind: seatmap, rows: 6, cols: 6, aisle: 3, taken: [ [0,1], [1,4], [2,2], [4,5] ], picked: [ [3,0] ] }
+        - { kind: small, text: { en: "Map 1 of 2", ar: "الخريطة 1 من 2" }, gap: s, note: { en: "Map 2 looks the same", ar: "الخريطة 2 تبدو مثلها" } }
+      footer:
+        - { kind: button, text: { en: "Next", ar: "التالي" } }
     options:
       - { id: title, text: { en: "A title above it: \"Cairo → Dubai · 12 Nov · 9:40 am\"", ar: "عنوانًا فوقها: «القاهرة ← دبي · 12 نوفمبر · 9:40 صباحًا»" } }
       - { id: counter, text: { en: "\"Map 1 of 2\" and \"Map 2 of 2\"", ar: "«الخريطة 1 من 2» و«الخريطة 2 من 2»" } }
@@ -143,6 +178,20 @@ steps:
     prompt:
       en: "What should I add?"
       ar: "ماذا أضيف؟"
+    mock:
+      app: zad
+      frame: wide
+      url: zad.example/flights
+      navbar: { links: [ { en: "Flights", ar: "طيران" }, { en: "Hotels", ar: "فنادق" } ], active: 0 }
+      blocks:
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: field, label: { en: "From", ar: "من" }, text: "" }
+            - { kind: field, label: { en: "To", ar: "إلى" }, text: "" }
+            - { kind: field, label: { en: "Dates", ar: "التواريخ" }, text: "", icon: calendar-blank }
+            - { kind: field, label: { en: "Travellers", ar: "المسافرون" }, text: "" }
+        - { kind: button, text: { en: "Search flights", ar: "ابحث عن رحلات" }, gap: m, note: { en: "Empty every time, even on the 4th search", ar: "فارغ في كل مرة، حتى في البحث الرابع" } }
     options:
       - { id: recent, text: { en: "\"Recent searches\" under the search form, each one ready to run again in a tap", ar: "«عمليات البحث الأخيرة» تحت نموذج البحث، كل منها جاهز للتشغيل مرة أخرى بضغطة" } }
       - { id: save, text: { en: "A \"Save this search\" button people can use if they remember to", ar: "زر «احفظ هذا البحث» يستخدمه الناس إن تذكّروا" } }

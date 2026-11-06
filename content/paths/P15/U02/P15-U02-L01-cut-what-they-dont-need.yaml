@@ -29,12 +29,27 @@ steps:
       en: "I lead the design team of a bill-payment app. In our tests, people skipped most of our text and then called support.\n\nI want to cut our text. But I don't want to cut anything people need."
       ar: "أقود فريق التصميم في تطبيق لدفع الفواتير. وفي اختباراتنا، تجاوز الناس أغلب نصوصنا، ثم اتصلوا بخدمة العملاء.\n\nأريد أن أختصر نصوصنا. لكني لا أريد أن أحذف أي شيء يحتاجه الناس."
     mock:
-      width: 300
+      app: dafaa
+      appbar:
+        title: {en: Electricity bill, ar: فاتورة الكهرباء}
+        back: true
+      footer:
+      - kind: button
+        text: {en: Pay EGP 640, ar: ادفع 640 جنيهًا}
       blocks:
-        - { kind: title, text: { en: "Dafaa", ar: "دفعة" } }
-        - { kind: heading, text: { en: "Electricity bill", ar: "فاتورة الكهرباء" }, gap: s }
-        - { kind: text, text: { en: "We understand that paying bills can be stressful. It is very important to make sure that you pay your bill before the due date in order to avoid any late fees.", ar: "نحن نتفهّم أن دفع الفواتير قد يكون مرهقًا. ومن المهم جدًا أن تتأكّد من دفع فاتورتك قبل تاريخ الاستحقاق لكي تتجنّب أي غرامات تأخير." }, gap: xs }
-        - { kind: button, text: { en: "Pay EGP 640", ar: "ادفع 640 جنيهًا" }, gap: m }
+      - kind: listitem
+        icon: lightning
+        text: {en: North Cairo Electricity, ar: كهرباء شمال القاهرة}
+        sub: {en: Due 20 March, ar: تستحق 20 مارس}
+      - kind: price
+        text:
+          en: EGP 640
+          ar: "640 جنيه"
+        size: l
+        gap: m
+      - kind: text
+        text: {en: We understand that paying bills can be stressful. It is very important to make sure that you pay your bill before the due date in order to avoid any late fees., ar: نحن نتفهّم أن دفع الفواتير قد يكون مرهقًا. ومن المهم جدًا أن تتأكّد من دفع فاتورتك قبل تاريخ الاستحقاق لكي تتجنّب أي غرامات تأخير.}
+        gap: s
 
   - id: S02
     type: choose
@@ -132,13 +147,25 @@ steps:
       en: "This is our message after a payment."
       ar: "هذه رسالتنا بعد الدفع."
     mock:
-      width: 300
+      app: dafaa
+      footer:
+      - kind: button
+        text: {en: Done, ar: تمّ}
       blocks:
-        - kind: group
-          tone: tint
-          blocks:
-            - { kind: meta, weight: bold, text: { en: "Payment successful", ar: "تمّ الدفع بنجاح" } }
-            - { kind: text, text: { en: "Your payment was successful and has gone through with no problems. A receipt for your payment will be sent to you by email to your email address.", ar: "تمّت عملية الدفع بنجاح واكتملت دون أي مشاكل. وسيتم إرسال إيصال الدفع الخاص بك عبر البريد الإلكتروني إلى بريدك الإلكتروني." }, gap: xs }
+      - {kind: icon, icon: check-circle-fill, size: xl, color: green}
+      - kind: heading
+        text: {en: Payment successful, ar: تمّ الدفع بنجاح}
+        gap: s
+      - kind: text
+        text: {en: Your payment was successful and has gone through with no problems. A receipt for your payment will be sent to you by email to your email address., ar: تمّت عملية الدفع بنجاح واكتملت دون أي مشاكل. وسيتم إرسال إيصال الدفع الخاص بك عبر البريد الإلكتروني إلى بريدك الإلكتروني.}
+        gap: s
+      - kind: listitem
+        icon: lightning
+        text: {en: Electricity, ar: الكهرباء}
+        value:
+          en: EGP 640
+          ar: "640 جنيه"
+        gap: m
     prompt:
       en: "Which change makes this message shorter without losing any fact?"
       ar: "أي تغيير يجعل الرسالة أقصر دون أن تضيع أي معلومة؟"
@@ -187,16 +214,53 @@ steps:
     a:
       label: { en: "A: One word only.", ar: "A: كلمة واحدة فقط." }
       mock:
-        width: 300
+        app: dafaa
+        appbar:
+          title: {en: Bill settings, ar: إعدادات الفاتورة}
+          back: true
         blocks:
-          - { kind: toggle, text: { en: "Autopay", ar: "دفع تلقائي" } }
+        - kind: listitem
+          icon: lightning
+          text: {en: Electricity, ar: الكهرباء}
+          sub: {en: Account 0123 4567, ar: حساب 0123 4567}
+          value:
+            en: EGP 640
+            ar: "640 جنيه"
+        - kind: toggle
+          text: {en: Autopay, ar: دفع تلقائي}
+          gap: m
+        - kind: listitem
+          icon: credit-card
+          text: {en: Visa ·· 4821, ar: Visa ·· 4821}
+          sub: {en: Saved card, ar: بطاقة محفوظة}
+          gap: m
     b:
       label: { en: "B: A short line that says when and from where.", ar: "B: سطر قصير يقول متى ومن أين." }
       mock:
-        width: 300
+        app: dafaa
+        appbar:
+          title: {en: Bill settings, ar: إعدادات الفاتورة}
+          back: true
         blocks:
-          - { kind: toggle, text: { en: "Autopay", ar: "دفع تلقائي" } }
-          - { kind: small, color: muted, text: { en: "We pay this bill from your saved card on its due date.", ar: "ندفع هذه الفاتورة من بطاقتك المحفوظة في تاريخ استحقاقها." }, gap: xs }
+        - kind: listitem
+          icon: lightning
+          text: {en: Electricity, ar: الكهرباء}
+          sub: {en: Account 0123 4567, ar: حساب 0123 4567}
+          value:
+            en: EGP 640
+            ar: "640 جنيه"
+        - kind: toggle
+          text: {en: Autopay, ar: دفع تلقائي}
+          gap: m
+        - kind: small
+          text: {en: We pay this bill from your saved card on its due date., ar: ندفع هذه الفاتورة من بطاقتك المحفوظة في تاريخ استحقاقها.}
+          color: muted
+          gap: xs
+        - kind: listitem
+          icon: credit-card
+          text: {en: Visa ·· 4821, ar: Visa ·· 4821}
+          sub: {en: Saved card, ar: بطاقة محفوظة}
+          gap: m
     answer: b
     reason:
       prompt: { en: "Why are the extra words worth it in B?", ar: "لماذا تستحق الكلمات الزائدة مكانها في B؟" }
@@ -243,36 +307,152 @@ steps:
       en: "Tap each option to see the change. Which note still tells people what happens if they pay late?"
       ar: "اضغط على كل خيار لترى التغيير. أي ملاحظة ما زالت تخبر الناس بما يحدث إن دفعوا متأخرين؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: dafaa
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: receipt
+          text: {en: Bills, ar: الفواتير}
+        - icon: arrows-clockwise
+          text: {en: Autopay, ar: الدفع التلقائي}
+        - icon: clock-counter-clockwise
+          text: {en: History, ar: السجل}
+        - icon: user
+          text: {en: Account, ar: حسابي}
+      caption: {en: Now, ar: الآن}
       blocks:
-        - { kind: heading, text: { en: "Water bill", ar: "فاتورة المياه" } }
-        - { kind: small, color: muted, text: { en: "Pay soon!", ar: "ادفع قريبًا!" }, gap: xs }
+      - kind: small
+        text: {en: Due this month, ar: مستحقة هذا الشهر}
+        color: muted
+      - kind: listitem
+        icon: drop
+        text: {en: Water bill, ar: فاتورة المياه}
+        sub:
+          en: "Pay soon!"
+          ar: "ادفع قريبًا!"
+        value:
+          en: EGP 210
+          ar: "210 جنيه"
+        gap: s
+      - kind: listitem
+        icon: wifi-high
+        text: {en: Internet, ar: الإنترنت}
+        sub: {en: Paid · 2 March, ar: مدفوعة · 2 مارس}
+        value:
+          en: EGP 450
+          ar: "450 جنيه"
     options:
       - id: date
         text: { en: "\"Pay by 20 March.\"", ar: "«ادفع قبل 20 مارس.»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dafaa
+          appbar: {logo: true}
+          tabbar:
+            active: 0
+            items:
+            - icon: receipt
+              text: {en: Bills, ar: الفواتير}
+            - icon: arrows-clockwise
+              text: {en: Autopay, ar: الدفع التلقائي}
+            - icon: clock-counter-clockwise
+              text: {en: History, ar: السجل}
+            - icon: user
+              text: {en: Account, ar: حسابي}
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: heading, text: { en: "Water bill", ar: "فاتورة المياه" } }
-            - { kind: small, color: muted, text: { en: "Pay by 20 March.", ar: "ادفع قبل 20 مارس." }, gap: xs }
+          - kind: small
+            text: {en: Due this month, ar: مستحقة هذا الشهر}
+            color: muted
+          - kind: listitem
+            icon: drop
+            text: {en: Water bill, ar: فاتورة المياه}
+            sub: {en: Pay by 20 March., ar: ادفع قبل 20 مارس.}
+            value:
+              en: EGP 210
+              ar: "210 جنيه"
+            gap: s
+          - kind: listitem
+            icon: wifi-high
+            text: {en: Internet, ar: الإنترنت}
+            sub: {en: Paid · 2 March, ar: مدفوعة · 2 مارس}
+            value:
+              en: EGP 450
+              ar: "450 جنيه"
       - id: both
         text: { en: "\"Pay by 20 March. After that, a EGP 25 late fee is added.\"", ar: "«ادفع قبل 20 مارس. بعد ذلك تُضاف غرامة تأخير 25 جنيهًا.»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dafaa
+          appbar: {logo: true}
+          tabbar:
+            active: 0
+            items:
+            - icon: receipt
+              text: {en: Bills, ar: الفواتير}
+            - icon: arrows-clockwise
+              text: {en: Autopay, ar: الدفع التلقائي}
+            - icon: clock-counter-clockwise
+              text: {en: History, ar: السجل}
+            - icon: user
+              text: {en: Account, ar: حسابي}
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: heading, text: { en: "Water bill", ar: "فاتورة المياه" } }
-            - { kind: small, color: muted, text: { en: "Pay by 20 March. After that, a EGP 25 late fee is added.", ar: "ادفع قبل 20 مارس. بعد ذلك تُضاف غرامة تأخير 25 جنيهًا." }, gap: xs }
+          - kind: small
+            text: {en: Due this month, ar: مستحقة هذا الشهر}
+            color: muted
+          - kind: listitem
+            icon: drop
+            text: {en: Water bill, ar: فاتورة المياه}
+            sub:
+              en: "Pay by 20 March. After that, a EGP 25 late fee is added."
+              ar: ادفع قبل 20 مارس. بعد ذلك تُضاف غرامة تأخير 25 جنيهًا.
+            value:
+              en: EGP 210
+              ar: "210 جنيه"
+            gap: s
+          - kind: listitem
+            icon: wifi-high
+            text: {en: Internet, ar: الإنترنت}
+            sub: {en: Paid · 2 March, ar: مدفوعة · 2 مارس}
+            value:
+              en: EGP 450
+              ar: "450 جنيه"
       - id: warn
         text: { en: "\"Late payment = fees ⚠️\"", ar: "«التأخير = غرامات ⚠️»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dafaa
+          appbar: {logo: true}
+          tabbar:
+            active: 0
+            items:
+            - icon: receipt
+              text: {en: Bills, ar: الفواتير}
+            - icon: arrows-clockwise
+              text: {en: Autopay, ar: الدفع التلقائي}
+            - icon: clock-counter-clockwise
+              text: {en: History, ar: السجل}
+            - icon: user
+              text: {en: Account, ar: حسابي}
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: heading, text: { en: "Water bill", ar: "فاتورة المياه" } }
-            - { kind: small, color: muted, text: { en: "Late payment = fees ⚠️", ar: "التأخير = غرامات ⚠️" }, gap: xs }
+          - kind: small
+            text: {en: Due this month, ar: مستحقة هذا الشهر}
+            color: muted
+          - kind: listitem
+            icon: drop
+            text: {en: Water bill, ar: فاتورة المياه}
+            sub: {en: Late payment = fees ⚠️, ar: التأخير = غرامات ⚠️}
+            value:
+              en: EGP 210
+              ar: "210 جنيه"
+            gap: s
+          - kind: listitem
+            icon: wifi-high
+            text: {en: Internet, ar: الإنترنت}
+            sub: {en: Paid · 2 March, ar: مدفوعة · 2 مارس}
+            value:
+              en: EGP 450
+              ar: "450 جنيه"
     answer: [both]
     misconceptions:
       - id: MC-P15-010

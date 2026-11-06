@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { CompareStep, Lesson, Locale, Mock, Option, QuestionStep, Step, TuneStep, OrderStep, SortStep, MatchStep, SpotStep } from "@uxgate/content/types";
 import { getCast } from "@uxgate/content/cast";
@@ -8,8 +8,10 @@ import * as E from "../engine";
 import { faceSrc, sayFace } from "../say";
 import { MockView } from "./MockView";
 import { VideoStepView, type VideoSource } from "./VideoStepView";
+import { VideoSummary, readSummary } from "./VideoSummary";
 import { MatchAnswer, OrderAnswer, SortAnswer, SpotList } from "./Structured";
 import { Rich } from "./Rich";
+import { LessonTour } from "./LessonTour";
 
 export type PlayerProps = {
   lesson: Lesson;
@@ -39,17 +41,42 @@ export type PlayerProps = {
   videoSource?: (id: string) => Promise<VideoSource>;
   /** A short message from the app (for example "every answer is synced"), shown as a toast. */
   notice?: string | null;
-  /** "Start over" in the welcome-back banner. Without it the banner has no button. */
-  onStartOver?: () => void;
   /** The mastery round counts its steps in the header ("Question n of m"). */
   /** Shows the lesson in the other language without leaving it. Without it the header has no language button. */
   onSwitchLocale?: () => void;
+  /** Runs the first-lesson tour at the first question: "guest" for the sample lesson, "first" for the first lesson after sign-in. `onTourDone` runs when it ends or is skipped. */
+  tour?: "guest" | "first";
+  onTourDone?: () => void;
 };
+
+/** "Welcome back": a calm note that closes by itself after 5 seconds, or with its close button. The timer pauses on hover and focus. */
+function ResumeNote({ text, close, onClose }: { text: string; close: string; onClose: () => void }) {
+  const paused = useRef(false);
+  useEffect(() => {
+    let left = 5000;
+    let last = Date.now();
+    const id = setInterval(() => {
+      const now = Date.now();
+      if (!paused.current) left -= now - last;
+      last = now;
+      if (left <= 0) onClose();
+    }, 100);
+    return () => clearInterval(id);
+  }, [onClose]);
+  const hold = (v: boolean) => () => { paused.current = v; };
+  return (
+    <p className="lp-banner is-resume" role="status" onPointerEnter={hold(true)} onPointerLeave={hold(false)} onFocus={hold(true)} onBlur={hold(false)}>
+      <span className="ph ph-hand-waving" aria-hidden="true" />{text}
+      <button type="button" className="icon-btn plain lp-banner-x" aria-label={close} onClick={onClose}><span className="ph ph-x" aria-hidden="true" /></button>
+      <span className="lp-banner-timer" aria-hidden="true" />
+    </p>
+  );
+}
 
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, onStartOver, videoSource, notice, onSwitchLocale }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, videoSource, notice, onSwitchLocale, tour, onTourDone }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -57,8 +84,13 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   // The example opened full screen from its phone thumbnail (design audit L4).
   const [example, setExample] = useState<{ mock: Mock; label: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  // "Watch again" on a video summary plays the clip in place; the main button then goes back to the summary.
+  const [replay, setReplay] = useState(false);
   const welcomeBack = initial.i > 0 && initial.steps.some((x) => x.phase !== "answering" || x.tries > 0);
   const [showBack, setShowBack] = useState(welcomeBack);
+  const closeBack = useCallback(() => setShowBack(false), []);
+  const [tourOn, setTourOn] = useState(!!tour);
+  const endTour = useCallback(() => { setTourOn(false); onTourDone?.(); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }, [onTourDone]);
   const singleTry = E.isSingleTry(lesson);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const sheetBtnRef = useRef<HTMLButtonElement>(null);
@@ -76,7 +108,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   }, [onState, onEvent]);
 
   // New step: reset local view state and move focus to the heading so screen readers announce it.
-  useEffect(() => { setWhyOpen(false); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
+  useEffect(() => { setWhyOpen(false); setReplay(false); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
   // Feedback appeared: move focus to its main button so keyboard players keep going.
   useEffect(() => { if (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed") sheetBtnRef.current?.focus({ preventScroll: true }); }, [st.phase, st.tries, state.i]);
 
@@ -118,6 +150,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   const prev = state.i > 0 ? lesson.steps[state.i - 1] : undefined;
   const laterInCase = !!(step.scenario && step.speaker && prev?.scenario && prev.speaker === step.speaker && prev.scenario.en === step.scenario.en);
   const finished = E.isFinished(step, st);
+  // Design S2-14: a concept card right after a clip is its video summary, drawn as cards.
+  const summary = step.type === "card" && step.part === "concept" && prev?.type === "video" ? readSummary(step, locale) : null;
   const showSheet = question && (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed" || st.phase === "saved" || st.phase === "missed");
 
   // Enter checks the answer from the answers list (the desktop hint on the Check button).
@@ -151,15 +185,17 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
       </header>
 
       {guest ? <p className="lp-banner" role="note"><span className="ph ph-user-plus" aria-hidden="true" />{t("guestBanner")}</p> : null}
-      {showBack && !guest ? (
-        <p className="lp-banner" role="status"><span className="ph ph-hand-waving" aria-hidden="true" />{t("welcomeBack")}
-          <button type="button" className="act" onClick={() => { setShowBack(false); setLayer(null); onStartOver?.(); }}>{t("startOver")}</button></p>
-      ) : null}
-      <main className="player-main">
+      {showBack && !guest ? <ResumeNote text={t("welcomeBack")} close={t("close")} onClose={closeBack} /> : null}
+      <main className={`player-main${summary && !replay ? " is-sum" : ""}`}>
         <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
 
         {step.type === "video" ? (
           <VideoStepView step={step} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
+        ) : summary && replay && prev?.type === "video" ? (
+          <VideoStepView step={prev} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
+        ) : summary && step.type === "card" ? (
+          <VideoSummary step={step} summary={summary} locale={locale} t={t as never} clipLength={prev?.type === "video" ? prev.duration : undefined}
+            onReplay={() => { setReplay(true); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }} headingRef={headingRef} />
         ) : step.type === "card" ? (
           <section className="player-col">
             {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : null}
@@ -192,11 +228,16 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
       ) : (
         <footer className="player-foot">
           {question ? <CheckBar step={step} st={st} t={t} onCheck={doCheck} /> : (
+            replay ? (
+            <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={() => { setReplay(false); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }}>{t("sumBack")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+          ) : (
             <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={doNext}>{state.i === total - 1 ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+          )
           )}
         </footer>
       )}
 
+      {tour && tourOn && question && st.phase === "answering" ? <LessonTour kind={tour} t={t as never} onDone={endTour} /> : null}
       {layer === "example" && example ? <ExampleLayer mock={example.mock} label={example.label} locale={locale} t={t} onClose={() => { onSound("sheet-down"); setLayer(null); setExample(null); }} /> : null}
       {layer === "exit" ? <ExitLayer t={t} onKeep={() => setLayer(null)} onLeave={() => { setLayer(null); onExit(); }} /> : null}
       {layer === "review" && onReview ? (
@@ -265,6 +306,24 @@ function ReviewLayer({ t, onClose, onSend }: { t: TFn; onClose: () => void; onSe
   );
 }
 
+type Box = { x: number; y: number; w: number; h: number };
+
+/** The parts of the preview that differ between two mocks: the body blocks that changed, as boxes inside `root`. */
+function changedBoxes(before: Mock | undefined, now: Mock | undefined, root: HTMLElement | null, rtl: boolean): Box[] {
+  if (!before || !now || !root) return [];
+  const kids = Array.from(root.querySelectorAll<HTMLElement>(".xm-body > *"));
+  if (before.blocks.length !== now.blocks.length || kids.length !== now.blocks.length) return [];
+  const rr = root.getBoundingClientRect();
+  const out: Box[] = [];
+  now.blocks.forEach((b, i) => {
+    if (out.length >= 3 || JSON.stringify(b) === JSON.stringify(before.blocks[i])) return;
+    const r = kids[i].getBoundingClientRect();
+    if (r.width < 4 || r.height < 4) return;
+    out.push({ x: Math.round(rtl ? rr.right - r.right : r.left - rr.left) - 3, y: Math.round(r.top - rr.top) - 3, w: Math.round(r.width) + 6, h: Math.round(r.height) + 6 });
+  });
+  return out;
+}
+
 type TFn = ReturnType<typeof useTranslations<"player">>;
 
 function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onSelect, onReason, onSelection, onOpenExample }: {
@@ -276,6 +335,10 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
   const [spotList, setSpotList] = useState(false);
   const [sayOpen, setSayOpen] = useState(false);
   useEffect(() => setSayOpen(false), [step.id]);
+  const prevWrap = useRef<HTMLDivElement>(null);
+  const prevSeen = useRef<{ step: string; id?: string; mock?: Mock }>({ step: step.id });
+  const [flash, setFlash] = useState<{ n: number; boxes: Box[] } | null>(null);
+  const [said, setSaid] = useState("");
   const locked = st.phase !== "answering";
   const speaker = getCast(step.speaker);
   const face = sayFace(st);
@@ -295,6 +358,24 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
     live = cur ? cur.mock : tune.mock;
     if (tune.mock?.frame === "wide" && cur?.mock && cur.mock.frame !== "wide") source = tune.mock;
   } else if (step.mock) live = step.mock;
+
+  // Tune: when the picked choice changes the screen, say so. The frame glows once, the changed part gets a dashed outline and a tag
+  // for about 1.5 s, and a polite line tells screen readers. Under reduced motion the glow is off (CSS); the tag and the chip stay.
+  const tunePick = step.type === "tune" ? st.sel[0] : undefined;
+  const tuneKey = tunePick ? KEYS[locale][(step as TuneStep).options.findIndex((o) => o.id === tunePick)] : undefined;
+  useLayoutEffect(() => {
+    if (step.type !== "tune") return;
+    const before = prevSeen.current;
+    prevSeen.current = { step: step.id, id: tunePick, mock: live };
+    if (before.step !== step.id || before.id === tunePick || !tunePick) { setFlash(null); return; }
+    const boxes = changedBoxes(before.mock, live, prevWrap.current, locale === "ar");
+    setFlash({ n: Date.now(), boxes });
+    const text = (step as TuneStep).options.find((o) => o.id === tunePick)?.text[locale] ?? "";
+    setSaid(t("previewChanged", { key: tuneKey ?? "", text }));
+    const id = setTimeout(() => setFlash(null), 1500);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tunePick, step.id]);
 
   const answerIds = step.type === "compare" ? [(step as CompareStep).answer] : Array.isArray(step.answer) ? (step.answer as string[]) : [];
   const cls = (id: string) => {
@@ -329,8 +410,8 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
 
   return (
     <section className="player-grid">
-      <div className="player-visual">
-        {step.scenario ? (
+      {step.scenario ? <div className="player-say">
+        {(
           speaker && laterInCase && !sayOpen ? (
             <button type="button" className="say-chip" aria-expanded={false} aria-label={t("sayAria", { name: locale === "ar" ? speaker.ar : speaker.en })} onClick={() => setSayOpen(true)}>
               <img src={faceSrc(speaker, face)} alt="" width={32} height={32} />
@@ -348,7 +429,9 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
               </div>
             </div>
           ) : <p className="scn">{step.scenario[locale]}</p>
-        ) : null}
+        )}
+      </div> : null}
+      <div className="player-visual">
         {source ? <Example mock={source} locale={locale} t={t} label={mockLabel} onOpen={onOpenExample} /> : null}
         {step.type === "compare" ? (
           <div className="cmp">
@@ -370,9 +453,20 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
             }}
           />
         ) : live && !isSpot ? (
-          <div aria-live={step.type === "tune" ? "polite" : undefined}>
-            {step.type === "tune" ? <span className="frame-label lp-live-label"><span className="ph ph-play-circle" aria-hidden="true" />{t("livePreview")}</span> : null}
+          <div ref={prevWrap} className={`gd-prev${step.type === "tune" ? " is-tune" : ""}${flash ? " is-glow" : ""}`} key={step.type === "tune" ? `g${flash?.n ?? 0}` : undefined}>
+            {step.type === "tune" ? (
+              <div className="gd-prev-head">
+                <span className="frame-label lp-live-label"><span className="ph ph-play-circle" aria-hidden="true" />{t("livePreview")}</span>
+                {tuneKey ? <span className={`gd-showing${flash ? " is-new" : ""}`}><i className="gd-dot" aria-hidden="true" />{t("showing", { key: tuneKey })}</span> : null}
+              </div>
+            ) : null}
             <Example mock={live} locale={locale} t={t} label={step.type === "tune" ? t("livePreview") : mockLabel} onOpen={onOpenExample} />
+            {flash ? flash.boxes.map((b, k) => (
+              <span key={k} className="gd-changed-box" aria-hidden="true" style={{ insetInlineStart: b.x, insetBlockStart: b.y, inlineSize: b.w, blockSize: b.h }}>
+                {k === 0 ? <span className="gd-changed">{t("changedTag")}</span> : null}
+              </span>
+            )) : null}
+            {step.type === "tune" ? <span className="lp-sr" role="status" aria-live="polite">{said}</span> : null}
           </div>
         ) : null}
       </div>
@@ -402,6 +496,9 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
               >
                 <span className="key" aria-hidden="true">{KEYS[locale][n]}</span>
                 <span className="grow">{o.text}</span>
+                {step.type === "tune" && !icon ? (checked
+                  ? <span className="gd-inprev"><span className="ph ph-eye" aria-hidden="true" />{t("inPreview")}</span>
+                  : <span className="ph ph-eye gd-peek" aria-hidden="true" />) : null}
                 {icon ? <span className="verdict"><span className={`ph ${icon}`} aria-hidden="true" /></span> : null}
               </button>
             );

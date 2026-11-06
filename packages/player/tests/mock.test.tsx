@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Locale, Mock, MockBlock } from "@uxgate/content/types";
@@ -60,6 +61,14 @@ describe("MockView draws every mock in the content", () => {
 
 describe("Mock vocabulary", () => {
   it("draws every art name the validator accepts", () => expect([...ART_NAMES].sort()).toEqual([...vocab.art].sort()));
+  it("lists the props of every block kind, including every prop MockView reads", () => {
+    const props = vocab.props as Record<string, string[]>;
+    expect(KINDS.filter((k) => !props[k])).toEqual([]);
+    const listed = new Set(Object.values(props).flat());
+    const src = readFileSync(new URL("../src/ui/MockView.tsx", import.meta.url), "utf8");
+    const read = new Set([...src.matchAll(/\bb\.([a-zA-Z]+)/g)].map((m) => m[1]));
+    expect([...read].filter((p) => !listed.has(p))).toEqual([]);
+  });
 });
 
 describe("MockView details", () => {
@@ -111,5 +120,10 @@ describe("MockView details", () => {
     const html = render({ app: { id: "nashat", name: "Nashat", color: "#F97316", icon: "barbell" }, blocks: [{ kind: "button", text: "Join" }] } as never, "en");
     expect(html).toContain(`--mock-brand:${accessibleBrand("#F97316")}`);
     expect(html).toContain("background:#F97316"); // the label swatch keeps the exact colour
+  });
+  it("quotes the screen reader strip with the language's own quote marks", () => {
+    const mock = { blocks: [], reader: T("Button, Pay", "زر، ادفع") } as never;
+    expect(render(mock, "en")).toContain("“Button, Pay”");
+    expect(render(mock, "ar")).toContain("«زر، ادفع»");
   });
 });

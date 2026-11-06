@@ -24,10 +24,15 @@ steps:
       en: "I build the front end of a bookshop app. Its \"Picked for you\" row shows books chosen by AI.\n\nOne customer wrote: \"Why only cookbooks? I don't cook.\" He had bought one cookbook, as a gift. Now he thinks the picks are random, and he ignores the row."
       ar: "أبني واجهة تطبيق لمتجر كتب. وفيه صفّ «اخترناه لك» يعرض كتبًا يختارها الذكاء الاصطناعي.\n\nكتب أحد العملاء: «لماذا كتب الطبخ فقط؟ أنا لا أطبخ.» كان قد اشترى كتاب طبخ واحدًا، هدية. والآن يظنّ أن الاختيارات عشوائية، ويتجاهل الصفّ."
     mock:
-      width: 300
+      app: waraq
+      appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }, { icon: books, text: { en: "My books", ar: "كتبي" } } ] }
       blocks:
-        - { kind: title, text: { en: "Picked for you", ar: "اخترناه لك" } }
-        - { kind: meta, text: { en: "Easy Home Cooking · Soups in 20 Minutes · Baking Basics", ar: "الطبخ المنزلي السهل · شوربات في 20 دقيقة · أساسيات الخَبز" }, gap: s }
+        - { kind: row, blocks: [ { kind: heading, text: { en: "Picked for you", ar: "اخترناه لك" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
+        - { kind: listitem, art: book, text: { en: "Easy Home Cooking", ar: "الطبخ المنزلي السهل" }, value: { en: "220 EGP", ar: "220 جنيه" } }
+        - { kind: listitem, art: book, text: { en: "Ramadan Kitchen", ar: "مطبخ رمضان" }, value: { en: "180 EGP", ar: "180 جنيه" } }
+        - { kind: listitem, art: book, text: { en: "Baking for Beginners", ar: "الخَبز للمبتدئين" }, value: { en: "160 EGP", ar: "160 جنيه" } }
+        - { kind: quote, text: { en: "Why only cookbooks? I don't cook.", ar: "لماذا كتب الطبخ فقط؟ أنا لا أطبخ." }, name: { en: "Customer review", ar: "تقييم عميل" }, gap: s }
 
   - id: S02
     type: choose
@@ -72,7 +77,7 @@ steps:
       ar: "كثيرًا ما يكون تفكير الذكاء الاصطناعي كاملًا أعقد من أن يُشرح. ولا تحتاجه كله.\n\n- **اذكر السبب الأساسي** لهذه النتيجة: «لأنك اشتريت…»\n- **قل ما البيانات التي يستخدمها،** حتى لا يبدو أي شيء تجسّسًا.\n- **قل ما لا يعرفه،** ليعرف الناس متى يستخدمون تقديرهم.\n- **اشرح حين يتصرّف الناس:** بعد أن يضغطوا أو يبحثوا أو يصحّحوا شيئًا مباشرة."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U03-02
     part: guided
     rules: [R06]
@@ -84,12 +89,54 @@ steps:
       en: "A new customer hasn't bought anything yet, so the row shows this week's best-sellers. It's still titled \"Picked for you\"."
       ar: "عميل جديد لم يشترِ شيئًا بعد، فيعرض الصفّ الكتب الأكثر مبيعًا هذا الأسبوع. لكن عنوانه ما زال «اخترناه لك»."
     prompt:
-      en: "What should the row say?"
-      ar: "ماذا يجب أن يقول الصفّ؟"
+      en: "Tap each option to see it. What should the row say?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يقول الصفّ؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: waraq
+      appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }, { icon: books, text: { en: "My books", ar: "كتبي" } } ] }
+      blocks:
+        - { kind: row, blocks: [ { kind: heading, text: { en: "Picked for you", ar: "اخترناه لك" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
+        - { kind: listitem, art: book, text: { en: "The Cairo Trilogy", ar: "الثلاثية" }, value: { en: "250 EGP", ar: "250 جنيه" } }
+        - { kind: listitem, art: book, text: { en: "Atomic Habits", ar: "العادات الذرية" }, value: { en: "210 EGP", ar: "210 جنيه" } }
+        - { kind: listitem, art: book, text: { en: "The Alchemist", ar: "الخيميائي" }, value: { en: "150 EGP", ar: "150 جنيه" } }
     options:
-      - { id: keep, text: { en: "Keep \"Picked for you\"; it sounds personal", ar: "يبقى «اخترناه لك»؛ فهو يبدو شخصيًا" } }
-      - { id: hide, text: { en: "Hide the row until they buy something", ar: "نُخفي الصفّ حتى يشتري شيئًا" } }
-      - { id: honest, text: { en: "\"Popular this week. Buy or save a few books, and we'll pick for you.\"", ar: "«الأكثر رواجًا هذا الأسبوع. اشترِ أو احفظ بعض الكتب، وسنختار لك.»" } }
+      - id: keep
+        text: { en: "Keep \"Picked for you\"; it sounds personal", ar: "يبقى «اخترناه لك»؛ فهو يبدو شخصيًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }, { icon: books, text: { en: "My books", ar: "كتبي" } } ] }
+          blocks:
+            - { kind: row, blocks: [ { kind: heading, text: { en: "Picked for you", ar: "اخترناه لك" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
+            - { kind: listitem, art: book, text: { en: "The Cairo Trilogy", ar: "الثلاثية" }, value: { en: "250 EGP", ar: "250 جنيه" } }
+            - { kind: listitem, art: book, text: { en: "Atomic Habits", ar: "العادات الذرية" }, value: { en: "210 EGP", ar: "210 جنيه" } }
+            - { kind: listitem, art: book, text: { en: "The Alchemist", ar: "الخيميائي" }, value: { en: "150 EGP", ar: "150 جنيه" } }
+      - id: hide
+        text: { en: "Hide the row until they buy something", ar: "نُخفي الصفّ حتى يشتري شيئًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }, { icon: books, text: { en: "My books", ar: "كتبي" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search books", ar: "ابحث عن كتاب" } }
+            - { kind: small, color: muted, text: { en: "(No picks row until the first purchase)", ar: "(لا يوجد صفّ اقتراحات حتى أول شراء)" }, gap: m }
+      - id: honest
+        text: { en: "\"Popular this week. Buy or save a few books, and we'll pick for you.\"", ar: "«الأكثر رواجًا هذا الأسبوع. اشترِ أو احفظ بعض الكتب، وسنختار لك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }, { icon: books, text: { en: "My books", ar: "كتبي" } } ] }
+          blocks:
+            - { kind: row, blocks: [ { kind: heading, text: { en: "Popular this week", ar: "الأكثر رواجًا هذا الأسبوع" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
+            - { kind: small, color: muted, text: { en: "Buy or save a few books, and we'll pick for you.", ar: "اشترِ أو احفظ بعض الكتب، وسنختار لك." }, gap: xs }
+            - { kind: listitem, art: book, text: { en: "The Cairo Trilogy", ar: "الثلاثية" }, value: { en: "250 EGP", ar: "250 جنيه" } }
+            - { kind: listitem, art: book, text: { en: "Atomic Habits", ar: "العادات الذرية" }, value: { en: "210 EGP", ar: "210 جنيه" } }
+            - { kind: listitem, art: book, text: { en: "The Alchemist", ar: "الخيميائي" }, value: { en: "150 EGP", ar: "150 جنيه" } }
     answer: [honest]
     misconceptions:
       - id: MC-P12-023
@@ -108,7 +155,7 @@ steps:
       ar: "ذِكر البيانات الناقصة يضع الثقة في مكانها، ويقول للناس كيف يحسّنون الاختيارات."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U03-01
     part: guided
     rules: [R06]
@@ -120,12 +167,62 @@ steps:
       en: "Each book in the row gets a small \"Why this?\" link. A customer taps it on a novel."
       ar: "كل كتاب في الصفّ أصبح له رابط صغير «لماذا هذا؟». ويضغطه عميل على رواية."
     prompt:
-      en: "What should it show?"
-      ar: "ماذا يجب أن يعرض؟"
+      en: "Tap each option to see it. What should it show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يعرض؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: waraq
+      appbar: { title: { en: "Palace Walk", ar: "بين القصرين" }, back: true }
+      blocks:
+        - { kind: image, art: book }
+        - { kind: price, text: { en: "190 EGP", ar: "190 جنيه" }, gap: s }
+        - { kind: link, icon: info, text: { en: "Why this?", ar: "لماذا هذا؟" }, gap: xs }
     options:
-      - { id: reason, text: { en: "\"You've read 3 novels by Naguib Mahfouz. Readers like you often buy this one.\"", ar: "«قرأت 3 روايات لنجيب محفوظ. والقرّاء مثلك يشترون هذه كثيرًا.»" } }
-      - { id: full, text: { en: "\"Our model scores 200 signals, including clicks, time on page and purchase history.\"", ar: "«نموذجنا يقيّم 200 إشارة، منها النقرات ووقت البقاء في الصفحة وسجلّ الشراء.»" } }
-      - { id: vague, text: { en: "\"Recommended by AI.\"", ar: "«مقترح من الذكاء الاصطناعي.»" } }
+      - id: reason
+        text: { en: "\"You've read 3 novels by Naguib Mahfouz. Readers like you often buy this one.\"", ar: "«قرأت 3 روايات لنجيب محفوظ. والقرّاء مثلك يشترون هذه كثيرًا.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: { title: { en: "Palace Walk", ar: "بين القصرين" }, back: true }
+          blocks:
+            - { kind: image, art: book }
+            - { kind: price, text: { en: "190 EGP", ar: "190 جنيه" }, gap: s }
+            - { kind: link, icon: info, text: { en: "Why this?", ar: "لماذا هذا؟" }, gap: xs }
+          overlay:
+            type: sheet
+            title: { en: "Why this book?", ar: "لماذا هذا الكتاب؟" }
+            blocks:
+              - { kind: text, text: { en: "You've read 3 novels by Naguib Mahfouz. Readers like you often buy this one.", ar: "قرأت 3 روايات لنجيب محفوظ. والقرّاء مثلك يشترون هذه كثيرًا." } }
+      - id: full
+        text: { en: "\"Our model scores 200 signals, including clicks, time on page and purchase history.\"", ar: "«نموذجنا يقيّم 200 إشارة، منها النقرات ووقت البقاء في الصفحة وسجلّ الشراء.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: { title: { en: "Palace Walk", ar: "بين القصرين" }, back: true }
+          blocks:
+            - { kind: image, art: book }
+            - { kind: price, text: { en: "190 EGP", ar: "190 جنيه" }, gap: s }
+            - { kind: link, icon: info, text: { en: "Why this?", ar: "لماذا هذا؟" }, gap: xs }
+          overlay:
+            type: sheet
+            title: { en: "Why this book?", ar: "لماذا هذا الكتاب؟" }
+            blocks:
+              - { kind: text, text: { en: "Our model scores 200 signals, including clicks, time on page and purchase history.", ar: "نموذجنا يقيّم 200 إشارة، منها النقرات ووقت البقاء في الصفحة وسجلّ الشراء." } }
+      - id: vague
+        text: { en: "\"Recommended by AI.\"", ar: "«مقترح من الذكاء الاصطناعي.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: { title: { en: "Palace Walk", ar: "بين القصرين" }, back: true }
+          blocks:
+            - { kind: image, art: book }
+            - { kind: price, text: { en: "190 EGP", ar: "190 جنيه" }, gap: s }
+            - { kind: link, icon: info, text: { en: "Why this?", ar: "لماذا هذا؟" }, gap: xs }
+          overlay:
+            type: sheet
+            title: { en: "Why this book?", ar: "لماذا هذا الكتاب؟" }
+            blocks:
+              - { kind: text, text: { en: "Recommended by AI.", ar: "مقترح من الذكاء الاصطناعي." } }
     answer: [reason]
     misconceptions:
       - id: MC-P12-021
@@ -162,16 +259,16 @@ steps:
     a:
       label: { en: "A: \"Ahmed's birthday is on Friday. Gift ideas →\"", ar: "A: «عيد ميلاد أحمد يوم الجمعة. أفكار هدايا ←»" }
       mock:
-        width: 300
+        screen: lock
         blocks:
-          - { kind: banner, text: { en: "🎁 Ahmed's birthday is on Friday. Gift ideas →", ar: "🎁 عيد ميلاد أحمد يوم الجمعة. أفكار هدايا ←" } }
+          - { kind: notification, app: waraq, title: { en: "Ahmed's birthday is on Friday", ar: "عيد ميلاد أحمد يوم الجمعة" }, text: { en: "Gift ideas →", ar: "أفكار هدايا ←" }, time: { en: "now", ar: "الآن" } }
     b:
       label: { en: "B: The same note, plus \"From your phone contacts · Stop using contacts\"", ar: "B: الرسالة نفسها، مع «من جهات الاتصال في هاتفك · أوقف استخدام جهات الاتصال»" }
       mock:
-        width: 300
+        screen: lock
         blocks:
-          - { kind: banner, text: { en: "🎁 Ahmed's birthday is on Friday. Gift ideas →", ar: "🎁 عيد ميلاد أحمد يوم الجمعة. أفكار هدايا ←" } }
-          - { kind: small, color: muted, text: { en: "From your phone contacts · Stop using contacts", ar: "من جهات الاتصال في هاتفك · أوقف استخدام جهات الاتصال" }, gap: s }
+          - { kind: notification, app: waraq, title: { en: "Ahmed's birthday is on Friday", ar: "عيد ميلاد أحمد يوم الجمعة" }, text: { en: "Gift ideas →", ar: "أفكار هدايا ←" }, time: { en: "now", ar: "الآن" } }
+          - { kind: small, color: white, text: { en: "From your phone contacts · Stop using contacts", ar: "من جهات الاتصال في هاتفك · أوقف استخدام جهات الاتصال" }, gap: xs }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -203,7 +300,7 @@ steps:
       ar: "سطر قصير عن المصدر يمنع الفكرة المفيدة من أن تبدو تجسّسًا."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U03-01
     part: independent
     speaker: nour
@@ -216,12 +313,43 @@ steps:
       en: "I manage a clinic. Our app now suggests to some patients: \"Book a blood test.\" Many call us to ask why."
       ar: "أدير عيادة. وتطبيقنا أصبح يقترح على بعض المرضى: «احجز تحليل دم.» وكثيرون يتّصلون بنا ليسألوا لماذا."
     prompt:
-      en: "What should the suggestion add?"
-      ar: "ماذا يجب أن يضيف الاقتراح؟"
+      en: "Tap each option to see it. What should the suggestion add?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يضيف الاقتراح؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: raha
+      appbar: { logo: true }
+      blocks:
+        - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Suggested", ar: "مقترح" } }, { kind: heading, text: { en: "Book a blood test", ar: "احجز تحليل دم" } }, { kind: button, text: { en: "Book", ar: "احجز" } } ] }
+        - { kind: listitem, icon: calendar-check, text: { en: "My visits", ar: "زياراتي" }, chevron: true, gap: s }
     options:
-      - { id: ai, text: { en: "\"Suggested by our smart assistant.\"", ar: "«مقترح من مساعدنا الذكي.»" } }
-      - { id: record, text: { en: "\"Based on an analysis of your full medical record.\"", ar: "«بناءً على تحليل سجلّك الطبي الكامل.»" } }
-      - { id: reason, text: { en: "\"Your last blood test was 12 months ago. Dr. Ali asks for one every year.\"", ar: "«آخر تحليل دم لك كان قبل 12 شهرًا. ود. علي يطلب تحليلًا كل سنة.»" } }
+      - id: ai
+        text: { en: "\"Suggested by our smart assistant.\"", ar: "«مقترح من مساعدنا الذكي.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { logo: true }
+          blocks:
+            - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Suggested", ar: "مقترح" } }, { kind: heading, text: { en: "Book a blood test", ar: "احجز تحليل دم" } }, { kind: small, color: muted, text: { en: "Suggested by our smart assistant.", ar: "مقترح من مساعدنا الذكي." } }, { kind: button, text: { en: "Book", ar: "احجز" } } ] }
+            - { kind: listitem, icon: calendar-check, text: { en: "My visits", ar: "زياراتي" }, chevron: true, gap: s }
+      - id: record
+        text: { en: "\"Based on an analysis of your full medical record.\"", ar: "«بناءً على تحليل سجلّك الطبي الكامل.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { logo: true }
+          blocks:
+            - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Suggested", ar: "مقترح" } }, { kind: heading, text: { en: "Book a blood test", ar: "احجز تحليل دم" } }, { kind: small, color: muted, text: { en: "Based on an analysis of your full medical record.", ar: "بناءً على تحليل سجلّك الطبي الكامل." } }, { kind: button, text: { en: "Book", ar: "احجز" } } ] }
+            - { kind: listitem, icon: calendar-check, text: { en: "My visits", ar: "زياراتي" }, chevron: true, gap: s }
+      - id: reason
+        text: { en: "\"Your last blood test was 12 months ago. Dr. Ali asks for one every year.\"", ar: "«آخر تحليل دم لك كان قبل 12 شهرًا. ود. علي يطلب تحليلًا كل سنة.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { logo: true }
+          blocks:
+            - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Suggested", ar: "مقترح" } }, { kind: heading, text: { en: "Book a blood test", ar: "احجز تحليل دم" } }, { kind: small, color: muted, text: { en: "Your last blood test was 12 months ago. Dr. Ali asks for one every year.", ar: "آخر تحليل دم لك كان قبل 12 شهرًا. ود. علي يطلب تحليلًا كل سنة." } }, { kind: button, text: { en: "Book", ar: "احجز" } } ] }
+            - { kind: listitem, icon: calendar-check, text: { en: "My visits", ar: "زياراتي" }, chevron: true, gap: s }
     answer: [reason]
     misconceptions:
       - id: MC-P12-021

@@ -16,6 +16,7 @@ import { CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
 import type { ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
 import { Loader } from "@/components/loading/Loader";
+import { markTourSeen, tourSeen } from "@/lib/lesson-tour";
 
 export const GUEST_ID = "guest";
 
@@ -36,6 +37,8 @@ type Props = {
   proNext?: ProNext | null;
   /** The player's strings in the other language. With it, the header shows a language switch that works inside the lesson. */
   other?: OtherLocale;
+  /** The learner's first lesson since signing up: the lesson tour runs once (see lib/lesson-tour.ts). */
+  firstLesson?: boolean;
 };
 
 const LOCALE_PREFIX = /^\/(en|ar)(?=\/|$)/;
@@ -73,7 +76,7 @@ function ViewLocale({ view, locale, other, children }: { view: Locale; locale: L
   return <NextIntlClientProvider locale={view} messages={(view === locale ? base : messages) as never} timeZone={timeZone}>{children}</NextIntlClientProvider>;
 }
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other, firstLesson = false }: Props) {
   const router = useRouter();
   // The language shown. It starts as the page's language; the switch in the player header flips it in place.
   const [view, setView] = useState<Locale>(locale);
@@ -81,6 +84,8 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   const sync = useSyncStatus();
   const [state, setState] = useState<LessonState | null>(null);
   const [finished, setFinished] = useState<LessonState | null>(null);
+  // The tour runs at the start of the sample lesson and of the learner's first lesson, once (the answer is kept in this browser).
+  const [tour, setTour] = useState<"guest" | "first" | undefined>(undefined);
   const [muted, setMutedState] = useState(false);
   const attemptId = useRef("");
   // The mastery round asks different steps each time, so its saved position is keyed by them.
@@ -98,10 +103,14 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       try { saved = await kvGet<LessonState>(key); } catch { /* private mode: start fresh */ }
       const fresh = saved && saved.hash === hash && !saved.done && saved.steps.length === lesson.steps.length ? saved : startLesson(lesson, hash);
       attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
-      if (alive) setState(fresh);
+      if (alive) {
+        setState(fresh);
+        const kind = guest ? "guest" : firstLesson ? "first" : undefined;
+        if (kind && variant === "lesson" && fresh.i === 0 && !tourSeen(kind, userId)) setTour(kind);
+      }
     })();
     return () => { alive = false; };
-  }, [lesson, hash, key, userId]);
+  }, [lesson, hash, key, userId, guest, firstLesson, variant]);
 
   const onState = useCallback((s: LessonState) => { kvSet(key, s).catch(() => {}); }, [key]);
   const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(userId, attemptId.current, e, planKey ? planKey.split(",") : undefined, variant === "review" ? "review" : undefined).then(kick).catch(() => {}); }, [userId, planKey, variant]);
@@ -112,19 +121,13 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   }, [key]);
 
   // Give the last answers a moment to reach the server so Home shows the new XP and streak; offline, leave anyway.
-  const leave = async (to = "/app") => {
+  // Only an app path counts: a click event handed over by mistake goes Home, never to "/en[object]".
+  const leave = async (to: unknown = "/app") => {
+    const href = typeof to === "string" && to.startsWith("/") ? to : "/app";
     await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
-    router.push(to as never, { locale: view });
+    router.push(href as never, { locale: view });
     router.refresh();
   };
-
-  const startOver = useCallback(async () => {
-    await kvDel(key).catch(() => {});
-    const fresh = startLesson(lesson, hash);
-    attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
-    setState(null);
-    setTimeout(() => setState(fresh), 0);
-  }, [key, lesson, hash]);
 
   // A signed address for a clip, asked for when the step opens.
   const videoSource = useCallback(async (id: string) => {
@@ -182,7 +185,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave()} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
   }
 
   return (
@@ -197,9 +200,9 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       onFinish={onFinish}
       variant={variant} guest={guest} saveStatus={saveStatus}
       onReview={guest ? undefined : onReview}
-      onStartOver={startOver}
       videoSource={videoSource} notice={notice}
       onSwitchLocale={other ? switchLocale : undefined}
+      tour={tour} onTourDone={() => { if (tour) markTourSeen(tour, userId); setTour(undefined); }}
     />
     </>
   );

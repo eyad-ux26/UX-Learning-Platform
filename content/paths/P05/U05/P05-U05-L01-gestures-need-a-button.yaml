@@ -26,14 +26,13 @@ steps:
       en: "I'm designing a shopping list app. To remove an item, you swipe it to the left. Nothing on the screen shows that.\n\nIn testing, Mrs. Samia, 70, looked for a way to remove \"Milk\" for two minutes. A blind tester never knew swiping was possible."
       ar: "أصمّم تطبيقًا لقائمة المشتريات. ولحذف عنصر، تسحبه لليسار (Swipe). ولا شيء على الشاشة يوضّح ذلك.\n\nفي الاختبار، ظلّت السيدة سامية، 70 سنة، تبحث عن طريقة لحذف «حليب» دقيقتين. ومختبِر كفيف لم يعرف أبدًا أن السحب ممكن."
     mock:
-      width: 300
+      app: qaima
+      appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+      fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
       blocks:
-        - { kind: title, text: { en: "My list", ar: "قائمتي" } }
-        - { kind: meta, text: { en: "Milk", ar: "حليب" }, gap: s }
-        - { kind: divider }
-        - { kind: meta, text: { en: "Bread", ar: "خبز" } }
-        - { kind: divider }
-        - { kind: meta, text: { en: "Eggs", ar: "بيض" } }
+        - { kind: listitem, icon: square, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" } }
+        - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
+        - { kind: listitem, icon: square, text: { en: "Eggs", ar: "بيض" }, sub: { en: "12", ar: "12" } }
 
   - id: S02
     type: tune
@@ -49,51 +48,44 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل الجميع يستطيعون حذف عنصر؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: qaima
+      appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+      fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
       blocks: &listnow
-        - { kind: meta, text: { en: "Milk", ar: "حليب" } }
-        - { kind: divider }
-        - { kind: meta, text: { en: "Bread", ar: "خبز" } }
-        - { kind: divider }
-        - { kind: meta, text: { en: "Eggs", ar: "بيض" } }
+        - { kind: listitem, icon: square, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" } }
+        - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
+        - { kind: listitem, icon: square, text: { en: "Eggs", ar: "بيض" }, sub: { en: "12", ar: "12" } }
     options:
       - id: tip
         text: { en: "Show a tip once: \"Swipe left to remove\"", ar: "اعرض ملاحظة مرة واحدة: «اسحب لليسار للحذف»" }
         mock:
-          caption: { en: "After this change (first visit only)", ar: "بعد هذا التغيير (أول زيارة فقط)" }
-          width: 300
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: qaima
+          appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+          fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
           blocks:
-            - { kind: banner, text: { en: "💡 Swipe left to remove an item", ar: "💡 اسحب العنصر لليسار لحذفه" } }
-            - { kind: meta, text: { en: "Milk", ar: "حليب" }, gap: s }
-            - { kind: divider }
-            - { kind: meta, text: { en: "Bread", ar: "خبز" } }
-            - { kind: divider }
-            - { kind: meta, text: { en: "Eggs", ar: "بيض" } }
+            - { kind: banner, tone: info, icon: lightbulb, text: { en: "Swipe left to remove an item", ar: "اسحب العنصر لليسار لحذفه" } }
+            - { kind: listitem, icon: square, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" } }
+            - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
+            - { kind: listitem, icon: square, text: { en: "Eggs", ar: "بيض" }, sub: { en: "12", ar: "12" } }
       - id: button
         text: { en: "Add a 🗑 button to each item, and keep the swipe as a shortcut", ar: "أضف زر 🗑 لكل عنصر، وأبقِ السحب كطريق مختصر" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: qaima
+          appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+          fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
           blocks:
-            - kind: row
-              blocks:
-                - { kind: meta, text: { en: "Milk", ar: "حليب" } }
-                - { kind: button, style: plain, text: "🗑" }
-            - { kind: divider }
-            - kind: row
-              blocks:
-                - { kind: meta, text: { en: "Bread", ar: "خبز" } }
-                - { kind: button, style: plain, text: "🗑" }
-            - { kind: divider }
-            - kind: row
-              blocks:
-                - { kind: meta, text: { en: "Eggs", ar: "بيض" } }
-                - { kind: button, style: plain, text: "🗑" }
+            - { kind: listitem, icon: square, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" }, badge: { text: { en: "Remove", ar: "احذف" }, icon: trash, tone: bad } }
+            - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" }, badge: { text: { en: "Remove", ar: "احذف" }, icon: trash, tone: bad } }
+            - { kind: listitem, icon: square, text: { en: "Eggs", ar: "بيض" }, sub: { en: "12", ar: "12" }, badge: { text: { en: "Remove", ar: "احذف" }, icon: trash, tone: bad } }
       - id: short
         text: { en: "Make the swipe shorter, so it's easier to do", ar: "اجعل مسافة السحب أقصر، ليصبح أسهل" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: qaima
+          appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+          fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
           blocks: *listnow
     answer: [button]
     misconceptions:
@@ -142,17 +134,12 @@ steps:
       en: "What should we add?"
       ar: "ماذا يجب أن نضيف؟"
     mock:
-      width: 300
+      app: qaima
+      appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+      fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
       blocks:
-        - kind: row
-          blocks:
-            - { kind: meta, text: { en: "≡  Milk", ar: "≡  حليب" } }
-            - { kind: button, style: plain, text: "⋯" }
-        - { kind: divider }
-        - kind: row
-          blocks:
-            - { kind: meta, text: { en: "≡  Bread", ar: "≡  خبز" } }
-            - { kind: button, style: plain, text: "⋯" }
+        - { kind: listitem, icon: dots-six-vertical, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" }, value: "⋯" }
+        - { kind: listitem, icon: dots-six-vertical, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" }, value: "⋯" }
     options:
       - { id: menu, text: { en: "\"Move up\" and \"Move down\" in each item's ⋯ menu", ar: "«انقل لأعلى» و«انقل لأسفل» في قائمة ⋯ لكل عنصر" } }
       - { id: big, text: { en: "A bigger ≡ handle that's easier to grab", ar: "مقبض ≡ أكبر يسهل الإمساك به" } }
@@ -189,6 +176,14 @@ steps:
     prompt:
       en: "What should happen after a swipe deletes an item?"
       ar: "ماذا يجب أن يحدث بعد أن يحذف السحب عنصرًا؟"
+    mock:
+      app: qaima
+      appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+      fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
+      blocks:
+        - { kind: listitem, icon: square, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" } }
+        - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
+        - { kind: listitem, icon: square, text: { en: "Eggs", ar: "بيض" }, sub: { en: "12", ar: "12" }, swipe: { text: { en: "Delete", ar: "حذف" }, tone: bad } }
     options:
       - { id: sound, text: { en: "Play a short sound", ar: "شغّل صوتًا قصيرًا" } }
       - { id: trash, text: { en: "Move it to a \"Deleted items\" page in Settings", ar: "انقله إلى صفحة «العناصر المحذوفة» في الإعدادات" } }
@@ -234,25 +229,29 @@ steps:
     a:
       label: { en: "A: The item slides far, and its name is cut off.", ar: "A: العنصر ينزلق بعيدًا، ويُقطع اسمه." }
       mock:
-        width: 300
+        app: qaima
+        appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+        fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
         blocks:
           - kind: row
             blocks:
               - { kind: meta, text: { en: "…ilk", ar: "…يب" } }
               - { kind: button, style: danger, text: { en: "Delete", ar: "حذف" } }
-          - { kind: divider }
-          - { kind: meta, text: { en: "Bread", ar: "خبز" } }
+          - { kind: divider, gap: xs }
+          - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
     b:
       label: { en: "B: The item's name stays in view next to Delete.", ar: "B: اسم العنصر يبقى ظاهرًا بجانب زر الحذف." }
       mock:
-        width: 300
+        app: qaima
+        appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
+        fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
         blocks:
           - kind: row
             blocks:
               - { kind: meta, text: { en: "Milk", ar: "حليب" } }
               - { kind: button, style: danger, text: { en: "Delete", ar: "حذف" } }
-          - { kind: divider }
-          - { kind: meta, text: { en: "Bread", ar: "خبز" } }
+          - { kind: divider, gap: xs }
+          - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
     answer: b
     reason:
       prompt: { en: "Why is B safer?", ar: "لماذا B أكثر أمانًا؟" }
@@ -300,10 +299,12 @@ steps:
       en: "What should I change?"
       ar: "ماذا يجب أن أغيّر؟"
     mock:
-      width: 300
+      app: dar
+      appbar: { title: { en: "Dar · Phones", ar: "دار · هواتف" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
       blocks:
-        - { kind: image, size: m, text: { en: "Leather wallet", ar: "محفظة جلد" } }
-        - { kind: meta, weight: bold, text: { en: "Leather wallet · 450 EGP", ar: "محفظة جلد · 450 جنيه" }, gap: s }
+        - { kind: image, art: earbuds }
+        - { kind: heading, text: { en: "Wireless earbuds", ar: "سماعات لاسلكية" }, gap: s }
+        - { kind: price, text: { en: "1,450 EGP", ar: "1,450 جنيه" }, gap: xs }
     options:
       - { id: keep, text: { en: "Nothing. Long press is common; people will learn it", ar: "لا شيء. الضغط المطوّل شائع؛ وسيتعلّمه الناس" } }
       - { id: heart, text: { en: "Add a visible ♡ button on each product", ar: "أضف زر ♡ ظاهرًا على كل منتج" } }

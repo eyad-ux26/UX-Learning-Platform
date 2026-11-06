@@ -15,6 +15,14 @@ steps:
     type: card
     part: hook
     title: { en: "Karim's task manager", ar: "مدير المهام لكريم" }
+    mock:
+      app: { name: { en: "Maham", ar: "مهام" }, color: "#2F6FDB", icon: check-square-offset, domain: maham.example }
+      frame: wide
+      url: maham.example/team/launch
+      navbar: { links: [ { en: "My tasks", ar: "مهامي" }, { en: "Team", ar: "الفريق" }, { en: "Dashboard", ar: "اللوحة" } ], active: 0, actions: [ { icon: bell } ] }
+      blocks:
+        - { kind: listitem, icon: circle, text: { en: "Write the launch post", ar: "اكتب منشور الإطلاق" }, sub: { en: "Due Thu", ar: "الخميس" } }
+        - { kind: listitem, icon: circle, text: { en: "Check the price page", ar: "راجع صفحة الأسعار" }, sub: { en: "Due Fri", ar: "الجمعة" }, gap: s }
     body:
       en: "I'm building a task manager for small teams. People use it all day, every day. Help me review four parts of it.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "أبني أداة لإدارة المهام للفِرق الصغيرة. ويستخدمها الناس طوال اليوم، كل يوم. ساعدني في مراجعة أربعة أجزاء منها.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
@@ -33,6 +41,17 @@ steps:
     prompt:
       en: "What should I add?"
       ar: "ماذا أضيف؟"
+    mock:
+      app: { name: { en: "Maham", ar: "مهام" }, color: "#2F6FDB", icon: check-square-offset, domain: maham.example }
+      appbar: { title: { en: "Write the launch post", ar: "اكتب منشور الإطلاق" }, back: true, actions: [ { icon: dots-three-vertical } ] }
+      blocks:
+        - { kind: small, text: { en: "Due Thu · Mona", ar: "الخميس · منى" } }
+        - { kind: text, text: { en: "Short post for the app stores and social media.", ar: "منشور قصير لمتاجر التطبيقات ووسائل التواصل." }, gap: m }
+      overlay:
+        type: menu
+        blocks:
+          - { kind: listitem, icon: check, text: { en: "Mark as done", ar: "ضع علامة «تمّت»" }, note: { en: "30 times a day: open, ⋯, Mark as done", ar: "30 مرة يوميًا: افتح، ⋯، ضع علامة" } }
+          - { kind: listitem, icon: user-switch, text: { en: "Reassign", ar: "أعِد الإسناد" } }
     options:
       - { id: fast, text: { en: "A checkbox on each task in the list, plus a swipe and a keyboard key; keep the menu option too", ar: "مربع اختيار على كل مهمة في القائمة، مع سحب ومفتاح في لوحة المفاتيح؛ مع إبقاء خيار القائمة أيضًا" } }
       - { id: move, text: { en: "Move \"Mark as done\" to the top of the ⋯ menu", ar: "نقل «ضع علامة تمّت» إلى أعلى قائمة ⋯" } }
@@ -70,6 +89,14 @@ steps:
     prompt:
       en: "What should the app let managers do?"
       ar: "ماذا يجب أن يتيح التطبيق للمديرين؟"
+    mock:
+      app: { name: { en: "Maham", ar: "مهام" }, color: "#2F6FDB", icon: check-square-offset, domain: maham.example }
+      frame: wide
+      url: maham.example/team/people/karim
+      blocks:
+        - { kind: listitem, avatar: { text: "Karim", art: man-1 }, text: { en: "Karim's open tasks (30)", ar: "مهام كريم المفتوحة (30)" }, sub: { en: "Karim left the team", ar: "غادر كريم الفريق" } }
+        - { kind: listitem, icon: circle, text: { en: "Fix the sign-up email", ar: "أصلِح بريد التسجيل" }, value: { en: "Assignee: Karim ▾", ar: "المسؤول: كريم ▾" }, gap: m }
+        - { kind: listitem, icon: circle, text: { en: "Update the FAQ", ar: "حدّث الأسئلة الشائعة" }, value: { en: "Assignee: Karim ▾", ar: "المسؤول: كريم ▾" }, gap: s, note: { en: "Reassigned one task at a time", ar: "تُسند كل مهمة وحدها" } }
     options:
       - { id: bulk, text: { en: "Filter by person, select all, and reassign them in one action", ar: "الفلترة حسب الشخص، واختيار الكل، وإعادة الإسناد بإجراء واحد" } }
       - { id: support, text: { en: "Email our support team to move the tasks", ar: "مراسلة فريق الدعم لنقل المهام" } }
@@ -102,6 +129,23 @@ steps:
     prompt:
       en: "What should the dashboard lead with?"
       ar: "بماذا يجب أن تبدأ اللوحة؟"
+    mock:
+      app: { name: { en: "Maham", ar: "مهام" }, color: "#2F6FDB", icon: check-square-offset, domain: maham.example }
+      frame: wide
+      url: maham.example/team/dashboard
+      navbar: { links: [ { en: "My tasks", ar: "مهامي" }, { en: "Team", ar: "الفريق" }, { en: "Dashboard", ar: "اللوحة" } ], active: 2 }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: chart, type: bar, values: [12, 18, 9, 22] }
+            - { kind: chart, type: line, values: [3, 5, 4, 7] }
+            - { kind: chart, type: bar, values: [6, 2, 8, 5] }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: chart, type: line, values: [9, 7, 8, 6] }
+            - { kind: chart, type: bar, values: [4, 9, 3, 7], highlight: 1 }
+            - { kind: chart, type: line, values: [2, 4, 6, 5], note: { en: "14 charts; overdue tasks are one of them", ar: "14 رسمًا؛ والمهام المتأخرة واحد منها" } }
     options:
       - { id: overdue, text: { en: "An \"Overdue\" list grouped by person at the top; the charts move to a Reports page", ar: "قائمة «متأخرة» مجمّعة حسب الشخص في الأعلى؛ وتنتقل الرسوم إلى صفحة التقارير" } }
       - { id: bigger, text: { en: "Keep all 14 charts and make the overdue chart bigger", ar: "إبقاء الرسوم الأربعة عشر وتكبير رسم المتأخرات" } }
@@ -139,6 +183,13 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا نفعل؟"
+    mock:
+      app: { name: { en: "Maham", ar: "مهام" }, color: "#2F6FDB", icon: check-square-offset, domain: maham.example }
+      appbar: { title: { en: "My tasks", ar: "مهامي" } }
+      blocks:
+        - { kind: listitem, icon: circle, text: { en: "Write the launch post", ar: "اكتب منشور الإطلاق" } }
+        - { kind: listitem, icon: circle, text: { en: "Check the price page", ar: "راجع صفحة الأسعار" }, gap: s }
+        - { kind: listitem, icon: circle, text: { en: "Send the invoice to Dar", ar: "أرسل الفاتورة إلى دار" }, gap: s, note: { en: "Due dates removed from the list", ar: "حُذفت المواعيد من القائمة" } }
     options:
       - { id: back, text: { en: "Bring the due date back to each row, short and quiet, and highlight it when it's close", ar: "إعادة تاريخ الاستحقاق إلى كل صف، قصيرًا وهادئًا، مع إبرازه حين يقترب" } }
       - { id: emails, text: { en: "Keep the clean list, and email people about due dates", ar: "إبقاء القائمة النظيفة، وإرسال بريد للناس عن المواعيد" } }

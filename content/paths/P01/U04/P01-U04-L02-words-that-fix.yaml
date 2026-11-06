@@ -26,11 +26,13 @@ steps:
       en: "Members can invite a friend with a guest pass code. Mahmoud typed the code his friend sent him into our app and got \"Error 403: Invalid request.\"\n\nHe thought the app was broken and called the front desk. The code had simply ended a week earlier."
       ar: "يستطيع الأعضاء دعوة صديق بكود دعوة. كتب محمود الكود الذي أرسله له صديقه في تطبيقنا، فظهرت له «Error 403: Invalid request».\n\nظنّ أن التطبيق معطّل واتصل بالاستقبال. والكود كان قد انتهى ببساطة قبل أسبوع."
     mock:
-      width: 300
+      app: nashat
+      appbar: { title: { en: Guest pass, ar: تذكرة ضيف }, back: true }
       blocks: &gpnow
         - { kind: field, label: &gp_l { en: "Guest pass code", ar: "كود الدعوة" }, filled: true, text: "GP-7731", tone: bad, error: { en: "⚠ Error 403: Invalid request.", ar: "⚠ Error 403: Invalid request." } }
-        - { kind: button, text: &gp_b { en: "Use pass", ar: "استخدم الدعوة" }, gap: m }
 
+      footer:
+        - { kind: button, text: { en: "Use pass", ar: "استخدم الدعوة" } }
   - id: S02
     type: tune
     skill: SK-P01-U04-02
@@ -44,32 +46,42 @@ steps:
       en: "Try each message. Which one should ship?"
       ar: "جرّب كل رسالة. أيّها يجب أن تُطلق؟"
     mock:
+      app: nashat
+      appbar: { title: { en: Guest pass, ar: تذكرة ضيف }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: *gpnow
+      footer:
+        - { kind: button, text: { en: "Use pass", ar: "استخدم الدعوة" } }
     options:
       - id: keep
         text: { en: "Keep it; the code helps our developers", ar: "أبقِها؛ فالكود يساعد المطوّرين عندنا" }
         mock:
+          app: nashat
+          appbar: { title: { en: Guest pass, ar: تذكرة ضيف }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *gpnow
+          footer:
+            - { kind: button, text: { en: "Use pass", ar: "استخدم الدعوة" } }
       - id: vague
         text: { en: "\"Something went wrong. Try again.\"", ar: "«حدث خطأ ما. حاول مرة أخرى.»" }
         mock:
+          app: nashat
+          appbar: { title: { en: Guest pass, ar: تذكرة ضيف }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: *gp_l, filled: true, text: "GP-7731", tone: bad, error: { en: "⚠ Something went wrong. Try again.", ar: "⚠ حدث خطأ ما. حاول مرة أخرى." } }
-            - { kind: button, text: *gp_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Use pass", ar: "استخدم الدعوة" } }
       - id: clear
         text: { en: "Say the pass ended, and what to do instead", ar: "قل إن الدعوة انتهت، وماذا يفعل بدلًا منها" }
         mock:
+          app: nashat
+          appbar: { title: { en: Guest pass, ar: تذكرة ضيف }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: *gp_l, filled: true, text: "GP-7731", tone: bad, error: { en: "⚠ This pass ended on 26 October. Ask your friend for a new one, or buy a day pass.", ar: "⚠ انتهت هذه الدعوة يوم 26 أكتوبر. اطلب دعوة جديدة من صديقك، أو اشترِ تذكرة يوم واحد." } }
-            - { kind: button, text: *gp_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Use pass", ar: "استخدم الدعوة" } }
     answer: [clear]
     misconceptions:
       - id: MC-P01-048
@@ -121,30 +133,36 @@ steps:
       - id: neutral
         text: { en: "\"Yoga at 7 pm just filled up. Join the waiting list, or book 8 pm.\"", ar: "«امتلأت حصة اليوجا في السابعة للتوّ. انضمّي لقائمة الانتظار، أو احجزي الثامنة.»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Book a class, ar: احجز حصة }, back: true }
           blocks:
             - { kind: radio, selected: true, text: &yg_7 { en: "Yoga, 7 pm", ar: "يوجا، 7 مساءً" } }
             - { kind: radio, text: &yg_8 { en: "Yoga, 8 pm", ar: "يوجا، 8 مساءً" }, gap: xs }
             - { kind: small, color: red, text: { en: "⚠ Yoga at 7 pm just filled up. Join the waiting list, or book 8 pm.", ar: "⚠ امتلأت حصة اليوجا في السابعة للتوّ. انضمّي لقائمة الانتظار، أو احجزي الثامنة." }, gap: s }
-            - { kind: button, text: &yg_b { en: "Book", ar: "احجز" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: you
         text: { en: "Keep \"You selected a full class. You must choose another class.\"", ar: "أبقِ «لقد اخترت حصة ممتلئة. يجب أن تختاري حصة أخرى.»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Book a class, ar: احجز حصة }, back: true }
           blocks:
             - { kind: radio, selected: true, text: *yg_7 }
             - { kind: radio, text: *yg_8, gap: xs }
             - { kind: small, color: red, text: { en: "⚠ You selected a full class. You must choose another class.", ar: "⚠ لقد اخترت حصة ممتلئة. يجب أن تختاري حصة أخرى." }, gap: s }
-            - { kind: button, text: *yg_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: oops
         text: { en: "\"Oops! Wrong choice, this class is full.\"", ar: "«عفوًا! اختيار خاطئ، هذه الحصة ممتلئة.»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Book a class, ar: احجز حصة }, back: true }
           blocks:
             - { kind: radio, selected: true, text: *yg_7 }
             - { kind: radio, text: *yg_8, gap: xs }
             - { kind: small, color: red, text: { en: "⚠ Oops! Wrong choice, this class is full.", ar: "⚠ عفوًا! اختيار خاطئ، هذه الحصة ممتلئة." }, gap: s }
-            - { kind: button, text: *yg_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
     answer: [neutral]
     misconceptions:
       - id: MC-P01-049
@@ -182,19 +200,22 @@ steps:
       - id: invalid
         text: { en: "Keep \"Invalid date.\"", ar: "أبقِ «تاريخ غير صالح.»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Freeze membership, ar: تجميد العضوية }, back: true }
           blocks:
             - { kind: field, label: &fz_l { en: "Freeze starts on", ar: "يبدأ التجميد يوم" }, filled: true, text: "02/11/2026", tone: bad, error: { en: "⚠ Invalid date.", ar: "⚠ تاريخ غير صالح." } }
       - id: fix
         text: { en: "\"A freeze can start from tomorrow. Choose 3 November or later.\"", ar: "«يمكن أن يبدأ التجميد من الغد. اختاري 3 نوفمبر أو بعده.»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Freeze membership, ar: تجميد العضوية }, back: true }
           blocks:
             - { kind: field, label: *fz_l, filled: true, text: "02/11/2026", tone: bad, error: { en: "⚠ A freeze can start from tomorrow. Choose 3 November or later.", ar: "⚠ يمكن أن يبدأ التجميد من الغد. اختاري 3 نوفمبر أو بعده." } }
       - id: problem
         text: { en: "\"This date is not accepted for a freeze.\"", ar: "«هذا التاريخ غير مقبول للتجميد.»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Freeze membership, ar: تجميد العضوية }, back: true }
           blocks:
             - { kind: field, label: *fz_l, filled: true, text: "02/11/2026", tone: bad, error: { en: "⚠ This date is not accepted for a freeze.", ar: "⚠ هذا التاريخ غير مقبول للتجميد." } }
     answer: [fix]
@@ -269,13 +290,15 @@ steps:
     a:
       label: { en: "About Asmaa", ar: "عن أسماء" }
       mock:
-        width: 300
+        app: nashat
+        appbar: { title: { en: Your details, ar: بياناتك }, back: true }
         blocks:
           - { kind: field, label: &bd_l { en: "Date of birth", ar: "تاريخ الميلاد" }, filled: true, text: "09/13/1995", tone: bad, error: { en: "⚠ You entered the date wrong. Use day/month/year, like 13/09/1995.", ar: "⚠ أدخلتِ التاريخ بشكل خاطئ. استخدمي يوم/شهر/سنة، مثل 13/09/1995." } }
     b:
       label: { en: "About the date", ar: "عن التاريخ" }
       mock:
-        width: 300
+        app: nashat
+        appbar: { title: { en: Your details, ar: بياناتك }, back: true }
         blocks:
           - { kind: field, label: *bd_l, filled: true, text: "09/13/1995", tone: bad, error: { en: "⚠ There's no month 13. Enter day/month/year, like 13/09/1995.", ar: "⚠ لا يوجد شهر 13. اكتبي يوم/شهر/سنة، مثل 13/09/1995." } }
     answer: b
@@ -328,19 +351,22 @@ steps:
       - id: digits
         text: { en: "\"This number has 12 digits. Our account numbers have 16; check the full number with the receiver.\"", ar: "«هذا الرقم فيه 12 رقمًا. أرقام الحسابات عندنا 16؛ راجع الرقم كاملًا مع المستلم.»" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: field, label: &tr_l { en: "Account number", ar: "رقم الحساب" }, filled: true, text: "⁦1004 2231 9870⁩", tone: bad, error: { en: "⚠ This number has 12 digits. Our account numbers have 16; check the full number with the receiver.", ar: "⚠ هذا الرقم فيه 12 رقمًا. أرقام الحسابات عندنا 16؛ راجع الرقم كاملًا مع المستلم." } }
       - id: you
         text: { en: "Keep \"You entered an invalid account number.\"", ar: "أبقِ «أدخلت رقم حساب غير صالح.»" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: field, label: *tr_l, filled: true, text: "⁦1004 2231 9870⁩", tone: bad, error: { en: "⚠ You entered an invalid account number.", ar: "⚠ أدخلت رقم حساب غير صالح." } }
       - id: careful
         text: { en: "\"You made a mistake. Please be more careful with account numbers.\"", ar: "«لقد أخطأت. يُرجى الانتباه أكثر لأرقام الحسابات.»" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: field, label: *tr_l, filled: true, text: "⁦1004 2231 9870⁩", tone: bad, error: { en: "⚠ You made a mistake. Please be more careful with account numbers.", ar: "⚠ لقد أخطأت. يُرجى الانتباه أكثر لأرقام الحسابات." } }
     answer: [digits]

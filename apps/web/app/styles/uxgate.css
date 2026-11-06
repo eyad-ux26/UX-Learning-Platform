@@ -879,3 +879,131 @@
 .ug .btn-google { background: #FFFFFF; color: #1F1F1F; border: 1px solid #747775; box-shadow: none; margin-bottom: 0; font-family: Roboto, system-ui, 'Segoe UI', sans-serif; font-weight: 500; }
 .ug[data-theme="dark"] .btn-google { background: #131314; color: #E3E3E3; border-color: #8E918F; }
 .ug .btn-google svg { width: 20px; height: 20px; flex: none; }
+
+/* ---- Path page edits (6 Nov 2026, Eyad): side menu paths open and close, path selector on a light fill,
+   steps are links, the welcome back note closes by itself, Sign out in red ---- */
+.ug .dk-path { display: flex; flex-direction: column; }
+.ug .dk-path-row { display: flex; align-items: center; gap: 2px; }
+.ug .dk-path-row > .dk-layer { flex: 1; min-width: 0; }
+.ug .dk-tog { display: grid; place-items: center; width: 32px; height: 34px; flex: none; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--ink-2); cursor: pointer; }
+.ug .dk-tog:hover { background: var(--surface-2); color: var(--ink); }
+.ug .dk-tog .ph { font-size: 16px; transition: transform .16s ease; }
+.ug .dk-tog[aria-expanded="true"] .ph { transform: rotate(180deg); }
+.ug .dk-units { list-style: none; margin: 2px 0 6px; padding: 0; padding-inline-start: 8px; margin-inline-start: 18px; border-inline-start: 2px solid var(--line); display: flex; flex-direction: column; gap: 2px; }
+.ug .dk-unit { display: flex; align-items: flex-start; gap: 8px; min-height: 32px; padding: 6px 8px; border-radius: 8px; font-size: 13px; line-height: 1.35; font-weight: 600; color: var(--ink-2); text-decoration: none; }
+.ug .dk-unit .ph { font-size: 15px; flex: none; margin-top: 1px; }
+.ug .dk-unit:hover { background: var(--surface-2); color: var(--ink); }
+.ug .dk-unit.is-done .ph { color: var(--right-ink); }
+.ug .dk-unit.is-cur { background: var(--sel-bg); color: var(--ink); font-weight: 700; }
+.ug .dk-unit.is-cur .ph { color: var(--link); }
+.ug .dk-unit.is-lock { color: var(--ink-3); }
+@media (prefers-reduced-motion: reduce) { .ug .dk-tog .ph { transition: none; } }
+/* Path selector: a light fill and ledge at rest, so it reads as a button */
+.ug .sw-btn { background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 3px 0 var(--sel-line); padding-inline: 6px 12px; margin-bottom: 3px; }
+.ug .sw-btn:hover, .ug .sw-btn.is-hover { background: var(--panel); border-color: var(--sel-line); }
+.ug .sw-btn.is-open { background: var(--panel); box-shadow: 0 0 0 var(--sel-line); transform: translateY(3px); }
+/* Path map steps: done and next steps are links */
+.ug .map-step { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; color: var(--ink); text-decoration: none; border-radius: 18px; }
+.ug .map-step .map-step-card { position: relative; padding-inline-end: 40px !important; transition: border-color .12s ease, background-color .12s ease; }
+.ug .map-step:hover .map-step-card { border-color: var(--sel-line); }
+.ug .map-step .map-step-go { position: absolute; inset-inline-end: 14px; top: calc(50% - 9px); font-size: 18px; color: var(--ink-3); }
+.ug .map-step:hover .map-step-go { color: var(--link); }
+.ug .map-step:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+/* Welcome back note: calm colours, close icon only, closes by itself after 5 seconds */
+.ug .lp-banner.is-resume { position: relative; overflow: hidden; padding-block: 4px; padding-inline-end: 2px; }
+.ug .lp-banner .lp-banner-x { margin-inline-start: auto; width: 40px; height: 40px; flex: none; color: var(--ink-2); }
+.ug .lp-banner .lp-banner-x .ph { font-size: 18px; }
+.ug .lp-banner-timer { position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: var(--sel-line); transform-origin: left center; animation: lp-banner-timer 5s linear forwards; }
+.ug[dir="rtl"] .lp-banner-timer { transform-origin: right center; }
+.ug .lp-banner.is-resume:hover .lp-banner-timer, .ug .lp-banner.is-resume:focus-within .lp-banner-timer { animation-play-state: paused; }
+@keyframes lp-banner-timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .ug .lp-banner-timer { animation: none; display: none; } }
+/* Sign out: red text and border on the secondary button (Delete account stays the stronger red) */
+.ug .btn-signout { color: var(--wrong-ink); border-color: color-mix(in srgb, var(--wrong-ink) 45%, var(--line)); --ledge-c: color-mix(in srgb, var(--wrong-ink) 45%, var(--ledge)); }
+.ug .btn-signout:hover, .ug .btn-signout.is-hover { background: var(--wrong-bg); border-color: var(--wrong-ink); }
+/* ---- Accordion (6 Nov 2026, Eyad): landing questions. More room, no divider lines inside an item,
+   and a smooth open and close (height, fade and caret move together, 280 ms). Own class names, so the
+   Help page list styles (.faq-q, .faq-a) can't leak in. ---- */
+.ug .acc { display: flex; flex-direction: column; gap: 12px; }
+.ug .acc-item { background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); box-shadow: 0 var(--ledge-h) 0 var(--ledge); transition: border-color .2s ease; }
+.ug .acc-item.is-open { border-color: var(--sel-line); }
+.ug .acc-q { margin: 0; font: inherit; }
+.ug .acc-btn { all: unset; box-sizing: border-box; width: 100%; min-height: 60px; padding-block: 14px; padding-inline: 20px 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; font-weight: 700; font-size: 16px; line-height: 1.4; color: var(--ink); border-radius: calc(var(--r-lg) - 2px); }
+.ug .acc-btn > span:first-child { flex: 1; min-width: 0; }
+.ug .acc-btn:hover .acc-ic { background: var(--sel-bg); color: var(--link); }
+.ug .acc-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ug .acc-ic { display: grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); transition: transform .28s cubic-bezier(.2, .8, .2, 1), background-color .2s ease, color .2s ease; }
+.ug .acc-ic .ph { font-size: 16px; }
+.ug .acc-item.is-open .acc-ic { transform: rotate(180deg); background: var(--sel-bg); color: var(--link); }
+.ug .acc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s cubic-bezier(.2, .8, .2, 1); }
+.ug .acc-item.is-open .acc-panel { grid-template-rows: 1fr; }
+.ug .acc-panel > div { overflow: hidden; min-height: 0; }
+.ug .acc-a { margin: 0; padding: 0 20px 20px; max-width: 68ch; font-size: 15px; line-height: 1.65; color: var(--ink-2); opacity: 0; transform: translateY(-4px); transition: opacity .2s ease, transform .28s cubic-bezier(.2, .8, .2, 1); }
+.ug .acc-item.is-open .acc-a { opacity: 1; transform: none; transition-delay: .05s; }
+.ug .acc.is-lg { gap: 14px; }
+.ug .acc.is-lg .acc-btn { min-height: 68px; padding-inline: 24px 18px; font-size: 17px; }
+.ug .acc.is-lg .acc-a { padding: 0 24px 24px; font-size: 16px; }
+@media (prefers-reduced-motion: reduce) { .ug .acc-item, .ug .acc-ic, .ug .acc-panel, .ug .acc-a { transition: none; } }
+/* Path map, laptop: the steps sit in a row, so the link stacks the dot over the card, and the caret is not needed. */
+@media (min-width: 1024px) {
+  .ug .lessons > li .map-step { flex-direction: column; text-align: center; gap: 10px; inline-size: 100%; }
+  .ug .map-step .map-step-card { padding-inline-end: 0 !important; }
+  .ug .map-step .map-step-go { display: none; }
+}
+.ug .lp-banner.is-resume { background: var(--panel); box-shadow: inset 0 0 0 2px var(--sel-line); color: var(--ink); }
+/* The selector's subtitle stays on one line so the filled button does not grow tall on a phone. */
+.ug .sw-btn .sw-name small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ---- Lesson guide (6 Nov 2026, Eyad, canvas v76): choices visibly drive the live preview, and the first-lesson tour ---- */
+.ug .gd-prev { position: relative; display: flex; flex-direction: column; gap: 8px; border-radius: 22px; }
+.ug .gd-prev-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ug .gd-prev-head .lp-live-label { margin: 0; }
+/* phones: the preview stays at the top while the choices scroll, so a change is always in view */
+@media (max-width: 1023px) {
+  .ug .gd-prev.is-tune { position: sticky; inset-block-start: 58px; z-index: 3; background: var(--ground); padding-block: 4px; }
+}
+.ug .gd-peek { flex: none; font-size: 18px; color: var(--ink-3); opacity: 0; transition: opacity .15s ease; }
+.ug .choice:hover .gd-peek, .ug .choice:focus-visible .gd-peek { opacity: 1; }
+.ug .gd-inprev { flex: none; display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-size: 12px; font-weight: 700; }
+.ug .gd-inprev .ph { font-size: 14px; }
+.ug .gd-showing { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--sel-bg); box-shadow: inset 0 0 0 1.5px var(--sel-line); color: var(--link); font-size: 12px; font-weight: 700; transition: background-color .3s ease, color .3s ease; }
+.ug .gd-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--link); }
+.ug .gd-showing.is-new { background: var(--brand); color: var(--on-brand); box-shadow: none; }
+.ug .gd-showing.is-new .gd-dot { background: var(--hl); }
+@keyframes gd-glow { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--sel-line) 70%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+.ug .gd-prev.is-glow { animation: gd-glow .6s ease-out 1; }
+.ug .gd-changed-box { position: absolute; pointer-events: none; border-radius: 8px; outline: 2.5px dashed var(--hl-ledge); outline-offset: 0; }
+.ug .gd-changed { position: absolute; inset-block-start: -12px; inset-inline-end: -4px; height: 20px; padding: 0 7px; border-radius: 999px; background: var(--hl); color: var(--on-hl); font-size: 11px; font-weight: 800; line-height: 20px; box-shadow: 0 2px 0 var(--hl-ledge); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .ug .gd-prev.is-glow { animation: none; } .ug .gd-showing, .ug .gd-peek { transition: none; } }
+/* tour */
+.ug .lp-tour { position: fixed; inset: 0; z-index: 80; }
+.ug .gd-scrim.is-full { position: absolute; inset: 0; background: rgba(0, 18, 27, .62); }
+.ug .gd-spot { position: fixed; border-radius: 16px; box-shadow: 0 0 0 4px var(--hl), 0 0 0 4000px rgba(0, 18, 27, .62); pointer-events: none; transition: left .2s ease, top .2s ease, width .2s ease, height .2s ease; }
+.ug .gd-tour { position: fixed; z-index: 81; display: flex; flex-direction: column; gap: 8px; padding: 18px 18px 14px; border-radius: 22px; background: var(--surface); border: 2px solid var(--sel-line); box-shadow: 0 4px 0 var(--sel-line), 0 24px 40px -18px rgba(0, 18, 27, .6); color: var(--ink); max-inline-size: calc(100vw - 16px); }
+.ug .gd-tour.is-welcome { inset-inline: 20px; inset-block-start: 50%; transform: translateY(-50%); align-items: flex-start; padding: 24px 22px 18px; }
+@media (min-width: 1024px) { .ug .gd-tour.is-welcome { inset-inline: 0; margin-inline: auto; inline-size: 480px; } }
+.ug .gd-tour-ic { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--hl); color: var(--on-hl); font-size: 28px; box-shadow: 0 4px 0 var(--hl-ledge); margin-bottom: 4px; }
+.ug .gd-tour-n { margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .04em; color: var(--link); text-transform: uppercase; }
+.ug[lang="ar"] .gd-tour-n { letter-spacing: 0; text-transform: none; }
+.ug .gd-tour-t { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.3; }
+.ug .gd-tour.is-welcome .gd-tour-t { font-size: 24px; }
+.ug .gd-tour-b { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.ug .gd-tour-dots { display: flex; gap: 6px; margin-top: 4px; }
+.ug .gd-tour-dots i { width: 8px; height: 8px; border-radius: 999px; background: var(--track); }
+.ug .gd-tour-dots i.is-done { background: var(--sel-line); }
+.ug .gd-tour-dots i.is-on { width: 22px; background: var(--brand); }
+.ug .gd-tour-acts { display: flex; align-items: center; gap: 8px; margin-top: 6px; align-self: stretch; }
+@media (prefers-reduced-motion: reduce) { .ug .gd-spot { transition: none; } }
+
+/* Profile section tabs (design v76) */
+.ug .pf-tabs { position: sticky; inset-block-start: 0; z-index: 5; margin-inline: -20px; padding: 8px 0 6px; border-bottom: 2px solid var(--line); background: var(--bg, var(--surface-2)); }
+.ug .pf-tabs-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 0 20px; scroll-padding-inline: 20px; scroll-snap-type: x proximity; }
+.ug .pf-tabs-row::-webkit-scrollbar { display: none; }
+.ug .pf-tab { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); color: var(--ink-2); font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; scroll-snap-align: start; }
+.ug .pf-tab .ph { font-size: 16px; }
+.ug .pf-tab:hover { border-color: var(--sel-line); color: var(--ink); }
+.ug .pf-tab.is-on { background: var(--brand); border-color: var(--brand); color: var(--on-brand); box-shadow: 0 3px 0 var(--brand-ledge); }
+.ug .pf-tab:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ug .ph-page [id^="pf-"] { scroll-margin-block-start: 72px; }
+@media (min-width: 900px) { .ug .pf-tabs { margin-inline: -40px; } .ug .pf-tabs-row { padding: 0 40px; } }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+.ug button.set-row { inline-size: 100%; background: none; border-inline: 0; border-block-start: 0; font: inherit; text-align: start; cursor: pointer; }

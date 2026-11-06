@@ -21,12 +21,17 @@ steps:
       en: "I'm building an electronics store's website. A customer searched for **wireles charger**, with one letter missing, and nothing matched.\n\nThis is the page they got: two big offers at the top, a small grey line further down, and a joke at the bottom."
       ar: "أبني موقع متجر إلكترونيات. بحث عميل عن **شاحن لاسكي**، بحرف ناقص، ولم يتطابق شيء.\n\nوهذه هي الصفحة التي ظهرت له: عرضان كبيران في الأعلى، وسطر رمادي صغير تحتهما، ونكتة في الأسفل."
     mock:
-      width: 300
+      app: volta
+      appbar: &vbar { title: { en: "Search", ar: "البحث" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
       blocks: &hazem
-        - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-        - { kind: image, size: m, gap: m }
-        - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
-        - { kind: image, size: s, gap: m }
+        - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+        - kind: card
+          art: tv
+          gap: m
+          blocks:
+            - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
+        - { kind: image, art: laptop, size: s, alt: { en: "Laptop offer", ar: "عرض لابتوب" }, gap: m }
         - { kind: small, color: pale, text: { en: "0 results for \"wireles charger\"", ar: "0 نتيجة لـ«شاحن لاسكي»" }, gap: m }
         - { kind: meta, text: { en: "Oops! Our search robot got lost too 🤖", ar: "عفوًا! روبوت البحث تاه هو كمان 🤖" }, gap: m }
 
@@ -48,30 +53,38 @@ steps:
       - id: keep
         text: { en: "Keep the page as it is", ar: "أبقِ الصفحة كما هي" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks: *hazem
       - id: clear
         text: { en: "Clear message at the top, a spelling fix and similar searches", ar: "رسالة واضحة في الأعلى، وتصحيح للإملاء، وعمليات بحث مشابهة" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: m }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: magnifying-glass, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: s }
             - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
             - { kind: meta, text: { en: "Similar searches:", ar: "عمليات بحث مشابهة:" }, gap: m }
             - kind: row
               blocks:
-                - { kind: chip, text: { en: "phone charger", ar: "شاحن موبايل" } }
-                - { kind: chip, text: { en: "power bank", ar: "باور بانك" } }
+                - { kind: chip, icon: magnifying-glass, text: { en: "phone charger", ar: "شاحن موبايل" } }
+                - { kind: chip, icon: magnifying-glass, text: { en: "power bank", ar: "باور بانك" } }
       - id: home
         text: { en: "Send people straight back to the home page", ar: "أعد الناس مباشرة إلى الصفحة الرئيسية" }
         mock:
-          width: 300
           caption: { en: "The search silently opens the home page", ar: "البحث يفتح الصفحة الرئيسية بدون أي رسالة" }
+          app: volta
+          appbar: { title: { en: "Volta Electronics", ar: "فولتا للإلكترونيات" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: title, text: { en: "Volta Electronics", ar: "فولتا للإلكترونيات" } }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: searchbar, text: { en: "Search Volta", ar: "ابحث في فولتا" } }
+            - kind: card
+              art: tv
+              gap: m
+              blocks:
+                - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+                - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
     answer: [clear]
     misconceptions:
       - id: MC-P14-027
@@ -138,30 +151,40 @@ steps:
       - id: line
         text: { en: "Small grey line under the offers", ar: "سطر رمادي صغير تحت العروض" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - kind: card
+              art: tv
+              gap: m
+              blocks:
+                - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+                - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
             - { kind: small, color: pale, text: { en: "0 results for \"wireles charger\"", ar: "0 نتيجة لـ«شاحن لاسكي»" }, gap: m }
       - id: heading
         text: { en: "Heading at the top, offers below it", ar: "عنوان في الأعلى، والعروض تحته" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
             - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: m }
             - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
-            - { kind: image, size: s, gap: l }
-            - { kind: meta, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: listitem, art: tv, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, chevron: true, gap: l }
       - id: dialog
         text: { en: "A dialog people have to close first", ar: "نافذة Dialog يجب على الناس إغلاقها أولًا" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - kind: card
+              art: tv
+              gap: m
+              blocks:
+                - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+                - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
           overlay:
             type: dialog
             blocks:
@@ -211,30 +234,35 @@ steps:
       - id: again
         text: { en: "\"Please try again\" and the search box", ar: "«حاول مرة أخرى» ومربع البحث" }
         mock:
-          width: 300
+          app: dar
+          appbar: &dbar { title: { en: "Dar · Sports", ar: "دار · رياضة" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
+            - { kind: icon, icon: sneaker-move, size: l, color: brand }
+            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" }, gap: s }
             - { kind: meta, text: { en: "Please try again.", ar: "حاول مرة أخرى." }, gap: s }
-            - { kind: field, text: { en: "Search the shop", ar: "ابحث في المتجر" }, gap: m }
+            - { kind: searchbar, text: { en: "Search the shop", ar: "ابحث في المتجر" }, gap: m }
       - id: ways
         text: { en: "A tip to use fewer words, and similar searches with results", ar: "نصيحة باستخدام كلمات أقل، وعمليات بحث مشابهة لها نتائج" }
         mock:
-          width: 300
+          app: dar
+          appbar: *dbar
           blocks:
             - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
             - { kind: meta, text: { en: "Try fewer words. These searches have results:", ar: "جرّب كلمات أقل. عمليات البحث هذه لها نتائج:" }, gap: s }
-            - { kind: link, text: { en: "red running shoes (14)", ar: "حذاء جري أحمر (14)" }, gap: s }
-            - { kind: link, text: { en: "waterproof running shoes (9)", ar: "حذاء جري مقاوم للماء (9)" }, gap: s }
-            - { kind: link, text: { en: "running shoes size 47 (6)", ar: "حذاء جري مقاس 47 (6)" }, gap: s }
+            - { kind: listitem, art: sneakers, text: { en: "red running shoes", ar: "حذاء جري أحمر" }, value: "14", chevron: true, gap: s }
+            - { kind: listitem, art: sneakers, text: { en: "waterproof running shoes", ar: "حذاء جري مقاوم للماء" }, value: "9", chevron: true }
+            - { kind: listitem, art: sneakers, text: { en: "running shoes size 47", ar: "حذاء جري مقاس 47" }, value: "6", chevron: true }
       - id: contact
         text: { en: "A form to contact customer service", ar: "نموذج للتواصل مع خدمة العملاء" }
         mock:
-          width: 300
+          app: dar
+          appbar: *dbar
           blocks:
             - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
             - { kind: meta, text: { en: "Tell us what you were looking for.", ar: "أخبرنا بما كنت تبحث عنه." }, gap: s }
             - { kind: field, label: { en: "Your message", ar: "رسالتك" }, text: "", gap: m }
-            - { kind: button, text: { en: "Send", ar: "أرسل" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Send", ar: "أرسل" } }
     answer: [ways]
     misconceptions:
       - id: MC-P14-028
@@ -272,24 +300,33 @@ steps:
       - id: joke
         text: { en: "\"Oops! Our search is as lost as you are 😅\"", ar: "«عفوًا! البحث تايه زيّك بالظبط 😅»" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: heading, text: { en: "Oops! Our search is as lost as you are 😅", ar: "عفوًا! البحث تايه زيّك بالظبط 😅" } }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: robot, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "Oops! Our search is as lost as you are 😅", ar: "عفوًا! البحث تايه زيّك بالظبط 😅" }, gap: s }
             - { kind: meta, text: { en: "Nothing for \"wireles charger\".", ar: "لا شيء لـ«شاحن لاسكي»." }, gap: s }
       - id: plain
         text: { en: "\"No results for … Check the spelling or try other words.\"", ar: "«لا توجد نتائج لـ… تأكّد من الإملاء أو جرّب كلمات أخرى.»" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" } }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: magnifying-glass, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: s }
             - { kind: meta, text: { en: "Check the spelling or try other words.", ar: "تأكّد من الإملاء أو جرّب كلمات أخرى." }, gap: s }
             - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
       - id: blame
         text: { en: "\"You must have typed it wrong.\"", ar: "«أكيد كتبتها غلط.»" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: heading, text: { en: "You must have typed it wrong.", ar: "أكيد كتبتها غلط." } }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: warning-circle, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "You must have typed it wrong.", ar: "أكيد كتبتها غلط." }, gap: s }
             - { kind: meta, text: { en: "Nothing for \"wireles charger\".", ar: "لا شيء لـ«شاحن لاسكي»." }, gap: s }
     answer: [plain]
     misconceptions:
@@ -323,18 +360,22 @@ steps:
     a:
       label: { en: "Version A: clear message and similar searches", ar: "النسخة A: رسالة واضحة وعمليات بحث مشابهة" }
       mock:
-        width: 260
+        app: dawaa
+        appbar: &pbar { title: { en: "Search", ar: "البحث" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" } }
+          - { kind: searchbar, text: { en: "fluzal day night", ar: "فلوزال داي نايت" }, filled: true }
+          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" }, gap: m }
           - { kind: meta, text: { en: "Did you mean one of these?", ar: "هل تقصد أحد هذين؟" }, gap: s }
-          - { kind: link, text: { en: "Fluzal Day", ar: "فلوزال داي" }, gap: s }
-          - { kind: link, text: { en: "Fluzal Night", ar: "فلوزال نايت" }, gap: s }
+          - { kind: listitem, art: medicine, text: { en: "Fluzal Day", ar: "فلوزال داي" }, sub: { en: "20 tablets", ar: "20 قرصًا" }, value: { en: "EGP 48", ar: "48 جنيه" }, chevron: true, gap: s }
+          - { kind: listitem, art: medicine, text: { en: "Fluzal Night", ar: "فلوزال نايت" }, sub: { en: "20 tablets", ar: "20 قرصًا" }, value: { en: "EGP 52", ar: "52 جنيه" }, chevron: true }
     b:
       label: { en: "Version B: clear message only", ar: "النسخة B: رسالة واضحة فقط" }
       mock:
-        width: 260
+        app: dawaa
+        appbar: *pbar
         blocks:
-          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" } }
+          - { kind: searchbar, text: { en: "fluzal day night", ar: "فلوزال داي نايت" }, filled: true }
+          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" }, gap: m }
           - { kind: meta, text: { en: "We couldn't find any products matching your search.", ar: "لم نجد أي منتجات تطابق بحثك." }, gap: s }
     answer: a
     misconceptions:
@@ -371,28 +412,37 @@ steps:
       - id: best
         text: { en: "Show the week's best sellers, with no message", ar: "اعرض الأكثر مبيعًا هذا الأسبوع، بدون رسالة" }
         mock:
-          width: 300
+          app: safha
+          appbar: &sbar { title: { en: "Search", ar: "البحث" }, back: true }
           blocks:
-            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
-            - { kind: text, weight: bold, text: { en: "Ten Small Habits", ar: "عشر عادات صغيرة" }, gap: m }
-            - { kind: meta, text: { en: "Omar Fathy", ar: "عمر فتحي" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "The Quiet River", ar: "النهر الهادئ" }, gap: m }
-            - { kind: meta, text: { en: "Salma Adel", ar: "سلمى عادل" }, gap: xs }
+            - { kind: searchbar, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: small, text: { en: "Bestsellers", ar: "الأكثر مبيعًا" }, gap: m }
+            - { kind: listitem, art: book, text: { en: "Ten Small Habits", ar: "عشر عادات صغيرة" }, sub: { en: "Omar Fathy · audiobook", ar: "عمر فتحي · كتاب صوتي" }, gap: s }
+            - { kind: listitem, art: book, text: { en: "The Quiet River", ar: "النهر الهادئ" }, sub: { en: "Salma Adel · audiobook", ar: "سلمى عادل · كتاب صوتي" } }
       - id: drop
         text: { en: "Clear message, and a link without \"audiobooks\"", ar: "رسالة واضحة، ورابط بدون كلمة «صوتية»" }
         mock:
-          width: 300
+          app: safha
+          appbar: *sbar
           blocks:
-            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
-            - { kind: heading, text: { en: "No audiobooks by Naguib Mahfouz yet", ar: "لا توجد كتب صوتية لنجيب محفوظ بعد" }, gap: m }
+            - { kind: searchbar, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: icon, icon: headphones, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No audiobooks by Naguib Mahfouz yet", ar: "لا توجد كتب صوتية لنجيب محفوظ بعد" }, gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, art: book, size: s, alt: { en: "Book cover", ar: "غلاف كتاب" } }
+                - { kind: image, art: book, size: s, alt: { en: "Book cover", ar: "غلاف كتاب" } }
+                - { kind: image, art: book, size: s, alt: { en: "Book cover", ar: "غلاف كتاب" } }
             - { kind: link, text: { en: "See his 12 books (print and e-book)", ar: "اعرض كتبه الـ12 (ورقية وإلكترونية)" }, gap: s }
       - id: joke
         text: { en: "A sad cartoon and \"This page is empty, like our shelves\"", ar: "رسمة حزينة و«الصفحة فاضية زي رفوفنا»" }
         mock:
-          width: 300
+          app: safha
+          appbar: *sbar
           blocks:
-            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
-            - { kind: image, size: m, gap: m }
+            - { kind: searchbar, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: image, art: shelf, size: m, alt: { en: "An empty shelf", ar: "رف فارغ" }, gap: m }
             - { kind: heading, text: { en: "This page is empty, like our shelves", ar: "الصفحة فاضية زي رفوفنا" }, gap: s }
     answer: [drop]
     misconceptions:

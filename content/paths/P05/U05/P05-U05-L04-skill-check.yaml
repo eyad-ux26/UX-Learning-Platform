@@ -26,11 +26,16 @@ steps:
       en: "I'm building a bus ticket app. Before launch, I want it to work for people with shaky hands, people who get dizzy, and people who read slowly.\n\nYour job: check five parts.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "أبني تطبيقًا لتذاكر الحافلات. وقبل الإطلاق، أريده أن يناسب من تهتزّ يداه، ومن يصيبه الدوار، ومن يقرأ ببطء.\n\nمهمّتك: افحص خمسة أجزاء.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: rehla
+      appbar: { title: { en: "Your trip", ar: "رحلتك" }, back: true }
       blocks:
-        - { kind: meta, weight: bold, text: { en: "Cairo → Alexandria · 10:30", ar: "القاهرة ← الإسكندرية · 10:30" } }
-        - { kind: small, color: muted, text: { en: "Seat 14 · Gate 3", ar: "مقعد 14 · بوابة 3" }, gap: xs }
-        - { kind: button, text: { en: "Choose seat", ar: "اختر المقعد" }, gap: m }
+        - kind: card
+          art: bus
+          blocks:
+            - { kind: heading, text: { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" } }
+            - { kind: small, color: muted, text: { en: "Today · 10:30 · Gate 3", ar: "اليوم · 10:30 · بوابة 3" }, gap: xs }
+            - { kind: price, text: { en: "180 EGP", ar: "180 جنيه" }, gap: xs }
+        - { kind: button, icon: armchair, text: { en: "Choose seat", ar: "اختر المقعد" }, gap: m }
 
   - id: S02
     type: choose
@@ -48,10 +53,14 @@ steps:
       en: "What should I change?"
       ar: "ماذا يجب أن أغيّر؟"
     mock:
-      width: 300
+      app: rehla
+      appbar: { title: { en: "Choose seat", ar: "اختر المقعد" }, back: true }
       blocks:
-        - { kind: meta, text: "🧍   [12] [13] [14] [15]" }
-        - { kind: small, color: muted, text: { en: "Drag 🧍 to a seat", ar: "اجرر 🧍 إلى مقعد" }, gap: xs }
+        - kind: row
+          blocks:
+            - { kind: icon, icon: person, size: l, color: brand, note: { en: "Drag me to a seat", ar: "اسحبني إلى مقعد" } }
+            - { kind: small, color: muted, text: { en: "Drag the person to a free seat", ar: "اسحب الشخص إلى مقعد فارغ" } }
+        - { kind: seatmap, rows: 5, cols: 4, aisle: 2, taken: [ [0,0], [0,1], [1,3], [2,2], [3,0], [4,1] ], gap: s }
     options:
       - { id: snap, text: { en: "Make the icon snap to the nearest seat", ar: "اجعل الأيقونة تقفز إلى أقرب مقعد" } }
       - { id: tap, text: { en: "Let people tap a seat to pick it", ar: "اجعل الناس يضغطون على المقعد لاختياره" } }
@@ -82,6 +91,13 @@ steps:
     prompt:
       en: "What should happen after each swipe?"
       ar: "ماذا يجب أن يحدث بعد كل سحبة؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "Trip history", ar: "سجلّ الرحلات" }, back: true }
+      blocks:
+        - { kind: listitem, icon: bus, text: { en: "Cairo → Tanta", ar: "القاهرة ← طنطا" }, sub: { en: "2 Oct · 95 EGP", ar: "2 أكتوبر · 95 جنيه" }, swipe: { text: { en: "Delete", ar: "حذف" }, tone: bad } }
+        - { kind: listitem, icon: bus, text: { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" }, sub: { en: "18 Sep · 180 EGP", ar: "18 سبتمبر · 180 جنيه" } }
+        - { kind: listitem, icon: bus, text: { en: "Giza → Fayoum", ar: "الجيزة ← الفيوم" }, sub: { en: "3 Sep · 70 EGP", ar: "3 سبتمبر · 70 جنيه" } }
     options:
       - { id: undo, text: { en: "Show \"Trip removed · Undo\" in a clear bar", ar: "اعرض «تم حذف الرحلة · تراجع» في شريط واضح" } }
       - { id: ask, text: { en: "Ask \"Are you sure?\" every time", ar: "اسأل «هل أنت متأكد؟» كل مرة" } }
@@ -117,6 +133,13 @@ steps:
     prompt:
       en: "What should this user see?"
       ar: "ماذا يجب أن يرى هذا المستخدم؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" }, back: true }
+      blocks:
+        - { kind: image, art: map-route, note: { en: "Bus drives along as you scroll", ar: "الحافلة تتحرّك وأنت تمرّر" } }
+        - { kind: small, color: muted, text: { en: "Today · 10:30 · 2 h 45 min", ar: "اليوم · 10:30 · ساعتان و45 دقيقة" }, gap: s }
+        - { kind: button, text: { en: "Choose seat", ar: "اختر المقعد" }, gap: s }
     options:
       - { id: slow, text: { en: "The same bus, moving more slowly", ar: "نفس الحافلة، تتحرّك ببطء أكثر" } }
       - { id: once, text: { en: "The moving bus, but only on the first visit", ar: "الحافلة المتحرّكة، لكن في أول زيارة فقط" } }
@@ -147,6 +170,16 @@ steps:
     prompt:
       en: "What should the timing be?"
       ar: "كم يجب أن تكون المدة؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "Your trip", ar: "رحلتك" }, back: true }
+      blocks:
+        - { kind: heading, text: { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" } }
+      overlay:
+        type: sheet
+        title: { en: "Choose seat", ar: "اختر المقعد" }
+        blocks:
+          - { kind: seatmap, rows: 4, cols: 4, aisle: 2, taken: [ [0,1], [1,3], [2,0] ], note: { en: "Slides up in 800 ms", ar: "تصعد خلال 800 ms" } }
     options:
       - { id: keep, text: { en: "Keep 800 ms; it's a big panel", ar: "تبقى 800 ms؛ فهي لوحة كبيرة" } }
       - { id: right, text: { en: "About 250 ms", ar: "نحو 250 ms" } }
@@ -177,6 +210,16 @@ steps:
     prompt:
       en: "How should the gate change be shown?"
       ar: "كيف يجب أن يُعرض تغيير البوابة؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "Your ticket", ar: "تذكرتك" }, back: true }
+      blocks:
+        - { kind: image, art: qr }
+        - { kind: listitem, icon: door-open, text: { en: "Gate 3", ar: "بوابة 3" }, sub: { en: "Cairo → Alexandria · 10:30", ar: "القاهرة ← الإسكندرية · 10:30" }, gap: s }
+      overlay:
+        type: banner
+        blocks:
+          - { kind: small, text: { en: "Now boarding at Gate 7", ar: "الصعود الآن من بوابة 7" }, note: { en: "Gone after 3 s", ar: "تختفي بعد 3 ث" } }
     options:
       - { id: big, text: { en: "The same message, but bigger", ar: "نفس الرسالة، لكن أكبر" } }
       - { id: sound, text: { en: "The same message, plus a sound", ar: "نفس الرسالة، مع صوت" } }

@@ -25,18 +25,22 @@ steps:
       en: "I own a gym. Members book classes in our app, and popular classes fill up fast.\n\nI asked an AI chatbot for the message people see when a class is full. It gave me something I could put in any app."
       ar: "أملك ناديًا رياضيًا. والأعضاء يحجزون الحصص في تطبيقنا، والحصص المشهورة تمتلئ بسرعة.\n\nطلبت من روبوت محادثة بالذكاء الاصطناعي الرسالة التي يراها الناس حين تمتلئ الحصة. فأعطاني شيئًا يمكن وضعه في أي تطبيق."
     mock:
-      width: 300
+      app: fikra
+      frame: wide
+      url: fikra.example/chat
+      footer:
+      - kind: composer
+        text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
       blocks:
-        - kind: group
-          tone: tint
-          blocks:
-            - { kind: small, color: muted, text: { en: "My prompt", ar: "طلبي" } }
-            - { kind: text, text: { en: "Write an error message.", ar: "اكتب رسالة خطأ." } }
-        - kind: group
-          gap: s
-          blocks:
-            - { kind: small, color: muted, text: { en: "AI", ar: "الذكاء الاصطناعي" } }
-            - { kind: text, text: { en: "Oops! Something went wrong. Please try again later.", ar: "عذرًا! حدث خطأ ما. يرجى المحاولة لاحقًا." } }
+      - kind: chat
+        text: {en: Write an error message., ar: اكتب رسالة خطأ.}
+        from: me
+      - kind: chat
+        text:
+          en: "Oops! Something went wrong. Please try again later."
+          ar: "عذرًا! حدث خطأ ما. يرجى المحاولة لاحقًا."
+        from: ai
+        actions: [copy, regenerate]
 
   - id: S02
     type: choose
@@ -138,35 +142,92 @@ steps:
       en: "Tap each option to see the change. Which ask gives me something I can use with my team?"
       ar: "اضغط على كل خيار لترى التغيير. أي طلب يعطيني شيئًا أستطيع استخدامه مع فريقي؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: fikra
+      frame: wide
+      url: fikra.example/chat
+      footer:
+      - kind: composer
+        text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
       blocks:
-        - { kind: small, color: muted, text: { en: "Ask: (empty)", ar: "الطلب: (فارغ)" } }
+      - kind: chat
+        text:
+          en: "Context: our gym app, Nashat. A member taps Book on a class that is already full."
+          ar: "السياق: تطبيق النادي «نشاط». عضو يضغط «احجز» على حصة ممتلئة بالفعل."
+        from: me
+      caption: {en: Now, ar: الآن}
     options:
       - id: some
         text: { en: "\"Write something for this.\"", ar: "«اكتب شيئًا لهذا.»" }
         mock:
-          width: 300
-          caption: { en: "AI's answer", ar: "إجابة الذكاء الاصطناعي" }
+          app: fikra
+          frame: wide
+          url: fikra.example/chat
+          footer:
+          - kind: composer
+            text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
           blocks:
-            - { kind: text, text: { en: "Fitness is a journey, and sometimes classes fill up because so many people love them! Don't be discouraged. There are many ways to stay active, such as…", ar: "اللياقة رحلة، وأحيانًا تمتلئ الحصص لأن كثيرًا من الناس يحبّونها! لا تُحبَط. فهناك طرق كثيرة لتبقى نشيطًا، مثل…" } }
+          - kind: chat
+            text:
+              en: "Context: our gym app, Nashat. A member taps Book on a class that is already full."
+              ar: "السياق: تطبيق النادي «نشاط». عضو يضغط «احجز» على حصة ممتلئة بالفعل."
+            from: me
+          - kind: chat
+            text: {en: Write something for this., ar: اكتب شيئًا لهذا.}
+            from: me
+          - kind: chat
+            text:
+              en: "Fitness is a journey, and sometimes classes fill up because so many people love them! Don't be discouraged. There are many ways to stay active, such as…"
+              ar: "اللياقة رحلة، وأحيانًا تمتلئ الحصص لأن كثيرًا من الناس يحبّونها! لا تُحبَط. فهناك طرق كثيرة لتبقى نشيطًا، مثل…"
+            from: ai
+          caption: {en: After this change, ar: بعد هذا التغيير}
       - id: specific
         text: { en: "\"Write 5 different messages for the full class. Show them as a numbered list.\"", ar: "«اكتب 5 رسائل مختلفة للحصة الممتلئة. واعرضها كقائمة مرقّمة.»" }
         mock:
-          width: 300
-          caption: { en: "AI's answer", ar: "إجابة الذكاء الاصطناعي" }
+          app: fikra
+          frame: wide
+          url: fikra.example/chat
+          footer:
+          - kind: composer
+            text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
           blocks:
-            - { kind: small, text: { en: "1. This class is full. Join the waitlist?", ar: "1. هذه الحصة ممتلئة. هل تنضمّ إلى قائمة الانتظار؟" } }
-            - { kind: small, text: { en: "2. No spots left. See the next class at 7 PM.", ar: "2. لا أماكن متبقية. شاهد الحصة التالية الساعة 7 مساءً." }, gap: xs }
-            - { kind: small, text: { en: "3. Full for now. We'll tell you if a spot opens.", ar: "3. ممتلئة الآن. سنخبرك إذا فُتح مكان." }, gap: xs }
-            - { kind: small, color: muted, text: { en: "4. … 5. …", ar: "4. … 5. …" }, gap: xs }
+          - kind: chat
+            text:
+              en: "Context: our gym app, Nashat. A member taps Book on a class that is already full."
+              ar: "السياق: تطبيق النادي «نشاط». عضو يضغط «احجز» على حصة ممتلئة بالفعل."
+            from: me
+          - kind: chat
+            text: {en: Write 5 different messages for the full class. Show them as a numbered list., ar: اكتب 5 رسائل مختلفة للحصة الممتلئة. واعرضها كقائمة مرقّمة.}
+            from: me
+          - kind: chat
+            text:
+              en: "1. This class is full. Join the waitlist?\n2. No spots left. See the next class at 7 PM.\n3. Full for now. We'll tell you if a spot opens.\n4. … 5. …"
+              ar: "1. هذه الحصة ممتلئة. هل تنضمّ إلى قائمة الانتظار؟\n2. لا أماكن متبقية. شاهد الحصة التالية الساعة 7 مساءً.\n3. ممتلئة الآن. سنخبرك إذا فُتح مكان.\n4. … 5. …"
+            from: ai
+          caption: {en: After this change, ar: بعد هذا التغيير}
       - id: good
         text: { en: "\"Make it good.\"", ar: "«اجعلها جيدة.»" }
         mock:
-          width: 300
-          caption: { en: "AI's answer", ar: "إجابة الذكاء الاصطناعي" }
+          app: fikra
+          frame: wide
+          url: fikra.example/chat
+          footer:
+          - kind: composer
+            text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
           blocks:
-            - { kind: text, text: { en: "Sorry, this class is unavailable at the moment.", ar: "عذرًا، هذه الحصة غير متاحة حاليًا." } }
+          - kind: chat
+            text:
+              en: "Context: our gym app, Nashat. A member taps Book on a class that is already full."
+              ar: "السياق: تطبيق النادي «نشاط». عضو يضغط «احجز» على حصة ممتلئة بالفعل."
+            from: me
+          - kind: chat
+            text: {en: Make it good., ar: اجعلها جيدة.}
+            from: me
+          - kind: chat
+            text:
+              en: "Sorry, this class is unavailable at the moment."
+              ar: عذرًا، هذه الحصة غير متاحة حاليًا.
+            from: ai
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [specific]
     misconceptions:
       - id: MC-P13-012
@@ -202,18 +263,28 @@ steps:
     a:
       label: { en: "A: one sentence", ar: "A: جملة واحدة" }
       mock:
-        width: 300
-        blocks:
-          - { kind: small, text: { en: "\"Give me a name for our waitlist feature.\"", ar: "«أعطني اسمًا لميزة قائمة الانتظار.»" } }
+        app: fikra
+        frame: wide
+        url: fikra.example/chat
+        footer:
+        - kind: composer
+          text: {en: Give me a name for our waitlist feature., ar: أعطني اسمًا لميزة قائمة الانتظار.}
+        blocks: []
     b:
       label: { en: "B: three numbered lines", ar: "B: ثلاثة أسطر مرقّمة" }
       mock:
-        width: 300
+        app: fikra
+        frame: wide
+        url: fikra.example/chat
+        footer:
+        - kind: composer
+          text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
         blocks:
-          - { kind: small, text: { en: "\"Follow these steps:", ar: "«اتّبع هذه الخطوات:" } }
-          - { kind: small, text: { en: "1. Write 15 names for our waitlist feature.", ar: "1. اكتب 15 اسمًا لميزة قائمة الانتظار." }, gap: xs }
-          - { kind: small, text: { en: "2. Pick the 5 clearest for busy members.", ar: "2. اختر أوضح 5 للأعضاء المشغولين." }, gap: xs }
-          - { kind: small, text: { en: "3. Rank them and say why.\"", ar: "3. رتّبها واذكر السبب.»" }, gap: xs }
+        - kind: chat
+          text:
+            en: "Follow these steps:\n1. Write 15 names for our waitlist feature.\n2. Pick the 5 clearest for busy members.\n3. Rank them and say why."
+            ar: "اتّبع هذه الخطوات:\n1. اكتب 15 اسمًا لميزة قائمة الانتظار.\n2. اختر أوضح 5 للأعضاء المشغولين.\n3. رتّبها واذكر السبب."
+          from: me
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }

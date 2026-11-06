@@ -24,11 +24,15 @@ steps:
       en: "I manage a clinic. Our phone line now has an AI assistant that books appointments.\n\nWhen it doesn't understand, it says \"Sorry, I didn't understand\" again and again. Older patients hang up. Those who reach the receptionist have to explain everything from the start."
       ar: "أدير عيادة. وخطّ الهاتف عندنا أصبح فيه مساعد بالذكاء الاصطناعي يحجز المواعيد.\n\nوحين لا يفهم، يقول «عذرًا، لم أفهم» مرة بعد مرة. فيُغلق المرضى الكبار في السن الخط. ومن يصل إلى موظّفة الاستقبال يضطرّ أن يشرح كل شيء من البداية."
     mock:
-      width: 300
+      app: raha
+      appbar: { title: { en: "Call log · Booking line", ar: "سجل المكالمات · خط الحجز" }, back: true }
       blocks:
-        - { kind: meta, text: { en: "🤖 Sorry, I didn't understand.", ar: "🤖 عذرًا، لم أفهم." } }
-        - { kind: meta, text: { en: "🤖 Sorry, I didn't understand.", ar: "🤖 عذرًا، لم أفهم." }, gap: s }
-        - { kind: meta, text: { en: "🤖 Sorry, I didn't understand.", ar: "🤖 عذرًا، لم أفهم." }, gap: s }
+        - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "I want Dr. Ali, next week… the day after the market.", ar: "أريد د. علي، الأسبوع القادم… اليوم الذي بعد السوق." }, time: "10:02" }
+        - { kind: chat, from: ai, text: { en: "Sorry, I didn't understand.", ar: "عذرًا، لم أفهم." }, time: "10:02" }
+        - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "After the market day!", ar: "بعد يوم السوق!" }, time: "10:03" }
+        - { kind: chat, from: ai, text: { en: "Sorry, I didn't understand.", ar: "عذرًا، لم أفهم." }, time: "10:03" }
+        - { kind: chat, from: ai, text: { en: "Sorry, I didn't understand.", ar: "عذرًا، لم أفهم." }, time: "10:03" }
+        - { kind: small, color: muted, icon: phone-x, text: { en: "Caller hung up · 1:48", ar: "أغلق المتّصل الخط · 1:48" }, gap: s }
 
   - id: S02
     type: choose
@@ -73,7 +77,7 @@ steps:
       ar: "- **توقّف مبكرًا:** بعد محاولتين فاشلتين، توقّف عن التكرار.\n- **سلّم المهمة** لشخص، أو للطريقة اليدوية.\n- **انقل ما هو معروف،** حتى لا يبدأ أحد من الصفر.\n- **قل ماذا سيحدث بعد ذلك،** ولماذا.\n- **لا تتوقّف فجأة أبدًا** حين قد يترك ذلك الناس عالقين أو في خطر."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U05-04
     part: guided
     rules: [R06]
@@ -85,12 +89,58 @@ steps:
       en: "When a call is passed on, the receptionist's screen shows something."
       ar: "حين تُحوَّل مكالمة، تعرض شاشة موظّفة الاستقبال شيئًا."
     prompt:
-      en: "What should it show?"
-      ar: "ماذا يجب أن تعرض؟"
+      en: "Tap each option to see it. What should it show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تعرض؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      frame: wide
+      app: raha
+      url: raha.example/reception
+      navbar: { links: [ { en: "Today", ar: "اليوم" }, { en: "Calls", ar: "المكالمات" }, { en: "Doctors", ar: "الأطباء" } ], active: 1 }
+      blocks:
+        - { kind: heading, text: { en: "Incoming call · from the AI assistant", ar: "مكالمة واردة · من المساعد الذكي" } }
+        - { kind: small, color: muted, text: { en: "What the receptionist sees goes here", ar: "هنا ما تراه موظّفة الاستقبال" }, gap: s }
+        - { kind: row, blocks: [ { kind: button, icon: phone, text: { en: "Answer", ar: "ردّ" } }, { kind: button, style: outline, text: { en: "Decline", ar: "رفض" } } ], gap: s }
     options:
-      - { id: ring, text: { en: "Just \"Incoming call\"", ar: "فقط «مكالمة واردة»" } }
-      - { id: record, text: { en: "A recording of the whole call so far", ar: "تسجيل للمكالمة كلها حتى الآن" } }
-      - { id: summary, text: { en: "\"Mrs. Samia · wants Dr. Ali next week · couldn't catch the day\"", ar: "«السيدة سامية · تريد د. علي الأسبوع القادم · لم يُفهم اليوم»" } }
+      - id: ring
+        text: { en: "Just \"Incoming call\"", ar: "فقط «مكالمة واردة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          frame: wide
+          app: raha
+          url: raha.example/reception
+          navbar: { links: [ { en: "Today", ar: "اليوم" }, { en: "Calls", ar: "المكالمات" }, { en: "Doctors", ar: "الأطباء" } ], active: 1 }
+          blocks:
+            - { kind: heading, text: { en: "Incoming call · from the AI assistant", ar: "مكالمة واردة · من المساعد الذكي" } }
+            - { kind: listitem, icon: phone-incoming, text: { en: "Incoming call", ar: "مكالمة واردة" }, sub: "+20 100 555 0192", gap: s }
+            - { kind: row, blocks: [ { kind: button, icon: phone, text: { en: "Answer", ar: "ردّ" } }, { kind: button, style: outline, text: { en: "Decline", ar: "رفض" } } ], gap: s }
+      - id: record
+        text: { en: "A recording of the whole call so far", ar: "تسجيل للمكالمة كلها حتى الآن" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          frame: wide
+          app: raha
+          url: raha.example/reception
+          navbar: { links: [ { en: "Today", ar: "اليوم" }, { en: "Calls", ar: "المكالمات" }, { en: "Doctors", ar: "الأطباء" } ], active: 1 }
+          blocks:
+            - { kind: heading, text: { en: "Incoming call · from the AI assistant", ar: "مكالمة واردة · من المساعد الذكي" } }
+            - { kind: listitem, icon: play-circle, text: { en: "Call recording", ar: "تسجيل المكالمة" }, sub: { en: "Listen to the whole call so far", ar: "استمع للمكالمة كلها حتى الآن" }, value: "3:40", gap: s }
+            - { kind: progress, value: 0, gap: xs }
+            - { kind: row, blocks: [ { kind: button, icon: phone, text: { en: "Answer", ar: "ردّ" } }, { kind: button, style: outline, text: { en: "Decline", ar: "رفض" } } ], gap: s }
+      - id: summary
+        text: { en: "\"Mrs. Samia · wants Dr. Ali next week · couldn't catch the day\"", ar: "«السيدة سامية · تريد د. علي الأسبوع القادم · لم يُفهم اليوم»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          frame: wide
+          app: raha
+          url: raha.example/reception
+          navbar: { links: [ { en: "Today", ar: "اليوم" }, { en: "Calls", ar: "المكالمات" }, { en: "Doctors", ar: "الأطباء" } ], active: 1 }
+          blocks:
+            - { kind: heading, text: { en: "Incoming call · from the AI assistant", ar: "مكالمة واردة · من المساعد الذكي" } }
+            - { kind: listitem, icon: user, text: { en: "Patient", ar: "المريضة" }, value: { en: "Mrs. Samia", ar: "السيدة سامية" }, gap: s }
+            - { kind: listitem, icon: calendar-blank, text: { en: "Wants", ar: "تريد" }, value: { en: "Dr. Ali · next week", ar: "د. علي · الأسبوع القادم" } }
+            - { kind: listitem, icon: warning, text: { en: "Missing", ar: "ينقص" }, value: { en: "The day", ar: "اليوم" }, badge: { text: { en: "Couldn't catch", ar: "لم يُفهم" }, tone: warn } }
+            - { kind: row, blocks: [ { kind: button, icon: phone, text: { en: "Answer", ar: "ردّ" } }, { kind: button, style: outline, text: { en: "Decline", ar: "رفض" } } ], gap: s }
     answer: [summary]
     misconceptions:
       - id: MC-P12-042
@@ -109,7 +159,7 @@ steps:
       ar: "تسأل الموظّفة سؤالًا واحدًا، عن اليوم، ويتمّ الحجز."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U05-01
     part: guided
     rules: [R06]
@@ -121,12 +171,53 @@ steps:
       en: "Before passing the call, the assistant says one sentence to the patient."
       ar: "قبل تحويل المكالمة، يقول المساعد جملة واحدة للمريض."
     prompt:
-      en: "What should it say?"
-      ar: "ماذا يجب أن يقول؟"
+      en: "Tap each option to see it. What should it say?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يقول؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: raha
+      appbar: { title: { en: "Booking line · live call", ar: "خط الحجز · مكالمة جارية" } }
+      blocks:
+        - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "Dr. Ali next week, the day after the market.", ar: "د. علي الأسبوع القادم، اليوم الذي بعد السوق." }, time: "10:02" }
+        - { kind: chat, from: ai, text: { en: "Which day works for you?", ar: "أي يوم يناسبك؟" }, time: "10:02" }
+        - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "After the market day!", ar: "بعد يوم السوق!" }, time: "10:03" }
+        - { kind: chat, from: ai, text: { en: "…", ar: "…" }, time: "10:03" }
     options:
-      - { id: explain, text: { en: "\"I couldn't catch the day. I'm putting you through to our receptionist; she can see what you told me.\"", ar: "«لم أفهم اليوم. سأحوّلك إلى موظّفة الاستقبال؛ وهي ترى ما قلته لي.»" } }
-      - { id: hold, text: { en: "\"Please hold.\"", ar: "«انتظر من فضلك.»" } }
-      - { id: error, text: { en: "\"An error has occurred.\"", ar: "«حدث خطأ.»" } }
+      - id: explain
+        text: { en: "\"I couldn't catch the day. I'm putting you through to our receptionist; she can see what you told me.\"", ar: "«لم أفهم اليوم. سأحوّلك إلى موظّفة الاستقبال؛ وهي ترى ما قلته لي.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking line · live call", ar: "خط الحجز · مكالمة جارية" } }
+          blocks:
+            - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "Dr. Ali next week, the day after the market.", ar: "د. علي الأسبوع القادم، اليوم الذي بعد السوق." }, time: "10:02" }
+            - { kind: chat, from: ai, text: { en: "Which day works for you?", ar: "أي يوم يناسبك؟" }, time: "10:02" }
+            - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "After the market day!", ar: "بعد يوم السوق!" }, time: "10:03" }
+            - { kind: chat, from: ai, text: { en: "I couldn't catch the day. I'm putting you through to our receptionist; she can see what you told me.", ar: "لم أفهم اليوم. سأحوّلك إلى موظّفة الاستقبال؛ وهي ترى ما قلته لي." }, time: "10:03" }
+            - { kind: small, color: muted, text: { en: "📞 Putting you through to reception…", ar: "📞 جارٍ التحويل إلى الاستقبال…" }, gap: s }
+      - id: hold
+        text: { en: "\"Please hold.\"", ar: "«انتظر من فضلك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking line · live call", ar: "خط الحجز · مكالمة جارية" } }
+          blocks:
+            - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "Dr. Ali next week, the day after the market.", ar: "د. علي الأسبوع القادم، اليوم الذي بعد السوق." }, time: "10:02" }
+            - { kind: chat, from: ai, text: { en: "Which day works for you?", ar: "أي يوم يناسبك؟" }, time: "10:02" }
+            - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "After the market day!", ar: "بعد يوم السوق!" }, time: "10:03" }
+            - { kind: chat, from: ai, text: { en: "Please hold.", ar: "انتظر من فضلك." }, time: "10:03" }
+            - { kind: small, color: muted, text: { en: "♪ Hold music", ar: "♪ موسيقى الانتظار" }, gap: s }
+      - id: error
+        text: { en: "\"An error has occurred.\"", ar: "«حدث خطأ.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: raha
+          appbar: { title: { en: "Booking line · live call", ar: "خط الحجز · مكالمة جارية" } }
+          blocks:
+            - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "Dr. Ali next week, the day after the market.", ar: "د. علي الأسبوع القادم، اليوم الذي بعد السوق." }, time: "10:02" }
+            - { kind: chat, from: ai, text: { en: "Which day works for you?", ar: "أي يوم يناسبك؟" }, time: "10:02" }
+            - { kind: chat, from: them, name: { en: "Mrs. Samia", ar: "السيدة سامية" }, text: { en: "After the market day!", ar: "بعد يوم السوق!" }, time: "10:03" }
+            - { kind: chat, from: ai, text: { en: "An error has occurred.", ar: "حدث خطأ." }, time: "10:03" }
     answer: [explain]
     misconceptions:
       - id: MC-P12-038
@@ -163,17 +254,24 @@ steps:
     a:
       label: { en: "A: \"Checker offline. Check these 2 medicines in the printed guide (page 14), or ask the doctor before handing them over.\"", ar: "A: «أداة الفحص متوقّفة. افحص هذين الدواءين في الدليل المطبوع (صفحة 14)، أو اسأل الطبيب قبل تسليمهما.»" }
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: "Pharmacy · Order 3018", ar: "الصيدلية · طلب 3018" }, back: true }
         blocks:
-          - { kind: banner, text: { en: "⚠ Checker offline", ar: "⚠ أداة الفحص متوقّفة" } }
-          - { kind: meta, text: { en: "Check these 2 medicines in the printed guide (page 14), or ask the doctor before handing them over.", ar: "افحص هذين الدواءين في الدليل المطبوع (صفحة 14)، أو اسأل الطبيب قبل تسليمهما." }, gap: s }
+          - { kind: listitem, icon: pill, text: { en: "Warfarin 5 mg", ar: "وارفارين 5 مجم" }, sub: { en: "30 tablets", ar: "30 قرصًا" } }
+          - { kind: listitem, icon: pill, text: { en: "Ibuprofen 400 mg", ar: "إيبوبروفين 400 مجم" }, sub: { en: "20 tablets", ar: "20 قرصًا" } }
+          - { kind: banner, tone: bad, icon: warning, text: { en: "Checker offline", ar: "أداة الفحص متوقّفة" }, gap: s }
+          - { kind: text, text: { en: "Check these 2 medicines in the printed guide (page 14), or ask the doctor before handing them over.", ar: "افحص هذين الدواءين في الدليل المطبوع (صفحة 14)، أو اسأل الطبيب قبل تسليمهما." }, gap: xs }
+          - { kind: button, style: outline, icon: phone, text: { en: "Call the doctor", ar: "اتّصل بالطبيب" }, gap: s }
     b:
       label: { en: "B: A small grey \"Offline\" label, and no warnings", ar: "B: علامة رمادية صغيرة «متوقّفة»، دون تنبيهات" }
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: "Pharmacy · Order 3018", ar: "الصيدلية · طلب 3018" }, back: true }
         blocks:
-          - { kind: small, color: muted, text: { en: "Offline", ar: "متوقّفة" } }
-          - { kind: meta, text: { en: "No warnings", ar: "لا توجد تنبيهات" }, gap: s }
+          - { kind: listitem, icon: pill, text: { en: "Warfarin 5 mg", ar: "وارفارين 5 مجم" }, sub: { en: "30 tablets", ar: "30 قرصًا" } }
+          - { kind: listitem, icon: pill, text: { en: "Ibuprofen 400 mg", ar: "إيبوبروفين 400 مجم" }, sub: { en: "20 tablets", ar: "20 قرصًا" } }
+          - { kind: listitem, icon: check-circle, text: { en: "No warnings", ar: "لا توجد تنبيهات" }, badge: { text: { en: "Offline", ar: "متوقّفة" }, tone: neutral }, gap: s }
+          - { kind: button, text: { en: "Hand over", ar: "سلّم الدواء" }, gap: s }
     answer: a
     reason:
       prompt: { en: "Why is A better?", ar: "لماذا A أفضل؟" }
@@ -205,25 +303,80 @@ steps:
       ar: "الفشل الصامت في أداة سلامة قد يبدو نجاحًا. اجعله واضحًا، وقدّم الطريقة اليدوية."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U05-03
     part: independent
-    speaker: youssef
+    speaker: karim
     rules: [R14]
     value:
       en: "New case. Errors + Graceful Failure (People + AI): when stakes are higher, check that the alternative you offer is actually safe."
       ar: "حالة جديدة. الأخطاء والفشل اللطيف (People + AI): حين يكون الخطر أكبر، تأكّد أن البديل الذي تقدّمه آمن فعلًا."
     ref: { url: "https://pair.withgoogle.com/chapter/errors-failing/", quote: "In the case of higher situational stakes, there should be an additional check to make sure the alternative is indeed a safe option." }
     scenario:
-      en: "I own a restaurant. When a dish is sold out, our ordering app suggests the closest one. A customer with a nut allergy in her profile ordered chicken shawarma, now sold out. The closest dish has a peanut sauce."
-      ar: "أملك مطعمًا. وحين ينفد طبق، يقترح تطبيق الطلبات أقرب طبق له. وعميلة لديها حساسية من المكسّرات في ملفّها طلبت شاورما دجاج، وقد نفدت. وأقرب طبق فيه صلصة فول سوداني."
+      en: "I'm building a restaurant's ordering app. When a dish is sold out, it suggests the closest one. A customer with a nut allergy in her profile ordered chicken shawarma, now sold out. The closest dish has a peanut sauce."
+      ar: "أبني تطبيق طلبات لمطعم. وحين ينفد طبق، يقترح التطبيق أقرب طبق له. وعميلة لديها حساسية من المكسّرات في ملفّها طلبت شاورما دجاج، وقد نفدت. وأقرب طبق فيه صلصة فول سوداني."
     prompt:
-      en: "What should the app suggest?"
-      ar: "ماذا يجب أن يقترح التطبيق؟"
+      en: "Tap each option to see it. What should the app suggest?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يقترح التطبيق؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: { name: { en: "Bait El Shawarma", ar: "بيت الشاورما" }, color: "#B45309", icon: bowl-food, domain: bait-shawarma.example }
+      appbar: { title: { en: "Your order", ar: "طلبك" }, back: true }
+      blocks:
+        - { kind: listitem, art: food-grill, text: { en: "Chicken shawarma", ar: "شاورما دجاج" }, value: { en: "110 EGP", ar: "110 جنيهًا" }, badge: { text: { en: "Sold out", ar: "نفدت" }, tone: bad } }
+        - { kind: small, color: muted, text: { en: "⚠ In your profile: nut allergy", ar: "⚠ في ملفّك: حساسية من المكسّرات" }, gap: s }
+      overlay:
+        type: sheet
+        title: { en: "Chicken shawarma is sold out", ar: "نفدت شاورما الدجاج" }
+        blocks:
+          - { kind: small, color: muted, text: { en: "The suggestion goes here", ar: "هنا يظهر الاقتراح" } }
     options:
-      - { id: closest, text: { en: "The closest dish anyway; she can read the ingredients", ar: "أقرب طبق على أي حال؛ فهي تستطيع قراءة المكوّنات" } }
-      - { id: safe, text: { en: "The closest dish without nuts: \"Shawarma is sold out. Try chicken kebab (nut-free)?\"", ar: "أقرب طبق دون مكسّرات: «نفدت الشاورما. هل تجرّبين كباب الدجاج (خالٍ من المكسّرات)؟»" } }
-      - { id: none, text: { en: "Just \"Sold out\", with no suggestion", ar: "فقط «نفد»، دون اقتراح" } }
+      - id: closest
+        text: { en: "The closest dish anyway; she can read the ingredients", ar: "أقرب طبق على أي حال؛ فهي تستطيع قراءة المكوّنات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: { name: { en: "Bait El Shawarma", ar: "بيت الشاورما" }, color: "#B45309", icon: bowl-food, domain: bait-shawarma.example }
+          appbar: { title: { en: "Your order", ar: "طلبك" }, back: true }
+          blocks:
+            - { kind: listitem, art: food-grill, text: { en: "Chicken shawarma", ar: "شاورما دجاج" }, value: { en: "110 EGP", ar: "110 جنيهًا" }, badge: { text: { en: "Sold out", ar: "نفدت" }, tone: bad } }
+            - { kind: small, color: muted, text: { en: "⚠ In your profile: nut allergy", ar: "⚠ في ملفّك: حساسية من المكسّرات" }, gap: s }
+          overlay:
+            type: sheet
+            title: { en: "Chicken shawarma is sold out", ar: "نفدت شاورما الدجاج" }
+            blocks:
+              - { kind: small, color: muted, text: { en: "Try instead:", ar: "جرّب بدلًا منها:" } }
+              - { kind: listitem, art: food-grill, text: { en: "Chicken with peanut sauce", ar: "دجاج بصوص الفول السوداني" }, value: { en: "120 EGP", ar: "120 جنيهًا" }, gap: xs }
+              - { kind: button, text: { en: "Add to order", ar: "أضف إلى الطلب" }, gap: s }
+      - id: safe
+        text: { en: "The closest dish without nuts: \"Shawarma is sold out. Try chicken kebab (nut-free)?\"", ar: "أقرب طبق دون مكسّرات: «نفدت الشاورما. هل تجرّبين كباب الدجاج (خالٍ من المكسّرات)؟»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: { name: { en: "Bait El Shawarma", ar: "بيت الشاورما" }, color: "#B45309", icon: bowl-food, domain: bait-shawarma.example }
+          appbar: { title: { en: "Your order", ar: "طلبك" }, back: true }
+          blocks:
+            - { kind: listitem, art: food-grill, text: { en: "Chicken shawarma", ar: "شاورما دجاج" }, value: { en: "110 EGP", ar: "110 جنيهًا" }, badge: { text: { en: "Sold out", ar: "نفدت" }, tone: bad } }
+            - { kind: small, color: muted, text: { en: "⚠ In your profile: nut allergy", ar: "⚠ في ملفّك: حساسية من المكسّرات" }, gap: s }
+          overlay:
+            type: sheet
+            title: { en: "Chicken shawarma is sold out", ar: "نفدت شاورما الدجاج" }
+            blocks:
+              - { kind: small, color: muted, text: { en: "Try chicken kebab? It has no nuts.", ar: "هل تجرّبين كباب الدجاج؟ ليس فيه مكسّرات." } }
+              - { kind: listitem, art: food-grill, text: { en: "Chicken kebab", ar: "كباب دجاج" }, value: { en: "115 EGP", ar: "115 جنيهًا" }, badge: { text: { en: "Nut-free", ar: "خالٍ من المكسّرات" }, tone: good }, gap: xs }
+              - { kind: button, text: { en: "Add to order", ar: "أضف إلى الطلب" }, gap: s }
+      - id: none
+        text: { en: "Just \"Sold out\", with no suggestion", ar: "فقط «نفد»، دون اقتراح" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: { name: { en: "Bait El Shawarma", ar: "بيت الشاورما" }, color: "#B45309", icon: bowl-food, domain: bait-shawarma.example }
+          appbar: { title: { en: "Your order", ar: "طلبك" }, back: true }
+          blocks:
+            - { kind: listitem, art: food-grill, text: { en: "Chicken shawarma", ar: "شاورما دجاج" }, value: { en: "110 EGP", ar: "110 جنيهًا" }, badge: { text: { en: "Sold out", ar: "نفدت" }, tone: bad } }
+            - { kind: small, color: muted, text: { en: "⚠ In your profile: nut allergy", ar: "⚠ في ملفّك: حساسية من المكسّرات" }, gap: s }
+          overlay:
+            type: sheet
+            title: { en: "Sold out", ar: "نفدت" }
+            blocks:
+              - { kind: button, style: outline, text: { en: "OK", ar: "حسنًا" }, gap: s }
     answer: [safe]
     misconceptions:
       - id: MC-P12-039
