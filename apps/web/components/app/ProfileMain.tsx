@@ -33,7 +33,7 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
   });
   return (
     <div className="ph-page">
-      <div className="me">
+      <div className="me" id="pf-overview">
         <span className="avatar" aria-hidden="true">{(name || "?").slice(0, 1).toUpperCase()}</span>
         <div className="grow"><b><bdi>{name}</bdi></b>{sub ? <span><bdi>{sub}</bdi></span> : null}</div>
       </div>
@@ -45,7 +45,7 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
         <Link href="/app/skills" className="card stat-tile press" aria-label={`${t("kept")}: ${kept}. ${t("see")}`}><span className="big num">{kept}</span><span className="t-small ink-2">{t("kept")}</span></Link>
       </div>
 
-      <div className="pg-sec"><p className="t-over">{t("pathsN", { count: cards.length })}</p><Link href="/app/paths" className="pg-link">{t("allPaths")}</Link></div>
+      <div className="pg-sec" id="pf-paths"><p className="t-over">{t("pathsN", { count: cards.length })}</p><Link href="/app/paths" className="pg-link">{t("allPaths")}</Link></div>
       <div className="pg-cards">
         {cards.map((c) => (
           <Link key={c.id} href={`/app/path/${c.id}`} className={`pp press${c.current ? " is-current" : ""}`} style={{ textDecoration: "none", color: "var(--ink)" }} aria-label={t("pathAria", { name: c.name, n: c.n, total: c.total, pct: c.pct, kept: c.kept, shown: c.shown, practiced: c.practiced })}>
@@ -62,7 +62,7 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
         ))}
       </div>
 
-      <p className="t-over">{t("certificates")}</p>
+      <p className="t-over" id="pf-certs">{t("certificates")}</p>
       {ids.map((id) => {
         const cert = certificates.find((c) => c.pathId === id);
         const c = pathProgressCounts(id, stateOf);
@@ -77,8 +77,8 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
       })}
       {certificates.length === 0 ? <p className="t-small ink-2">{t("certNone")}</p> : null}
 
-      <Link href="/app/badges" className="card row-card press"><span className="ph ph-medal" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("badges")}</b><span className="t-small ink-2">{t("badgesBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link>
-      {boardOpen ? <Link href="/app/board" className="card row-card press"><span className="ph ph-ranking" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("board")}</b><span className="t-small ink-2">{t("boardBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link> : null}
+      <Link href="/app/badges" id="pf-badges" className="card row-card press"><span className="ph ph-medal" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("badges")}</b><span className="t-small ink-2">{t("badgesBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link>
+      {boardOpen ? <Link href="/app/board" id="pf-board" className="card row-card press"><span className="ph ph-ranking" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("board")}</b><span className="t-small ink-2">{t("boardBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link> : null}
     </div>
   );
 }

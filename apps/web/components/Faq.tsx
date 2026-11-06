@@ -1,22 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
+/** Landing questions. One item open at a time, the first starts open. The answer stays in the DOM so it can animate (grid rows 0fr to 1fr). */
 export function Faq({ items }: { items: { q: string; a: string }[] }) {
   const [open, setOpen] = useState(0);
+  const uid = useId();
   return (
-    <div className="faq">
-      {items.map((f, i) => (
-        <div key={i} className="card faq-item">
-          <h3 className="faq-q">
-            <button type="button" aria-expanded={open === i} aria-controls={`faq-${i}`} onClick={() => setOpen(open === i ? -1 : i)}>
-              <span>{f.q}</span>
-              <span className={`ph ph-caret faq-caret${open === i ? " is-open" : ""}`} aria-hidden="true" />
-            </button>
-          </h3>
-          {open === i ? <p id={`faq-${i}`} className="t-small ink-2 faq-a">{f.a}</p> : null}
-        </div>
-      ))}
+    <div className="acc is-lg">
+      {items.map((f, i) => {
+        const on = open === i;
+        return (
+          <div key={i} className={`acc-item${on ? " is-open" : ""}`}>
+            <h3 className="acc-q">
+              <button type="button" className="acc-btn" aria-expanded={on} aria-controls={`${uid}-${i}`} onClick={() => setOpen(on ? -1 : i)}>
+                <span>{f.q}</span>
+                <span className="acc-ic" aria-hidden="true"><span className="ph ph-caret-down" /></span>
+              </button>
+            </h3>
+            <div id={`${uid}-${i}`} className="acc-panel" inert={!on}>
+              <div><p className="acc-a">{f.a}</p></div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

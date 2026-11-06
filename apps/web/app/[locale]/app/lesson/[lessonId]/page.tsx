@@ -51,5 +51,5 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
     const others = skills.filter((s) => !unit?.skills.some((k) => k.id === s.id));
     pathEnd = { pathId: version.pathId, pathTitle, skills: skills.length, certReady: others.every((s) => isShown(me.skillStates.get(s.id)?.state)) };
   }
-  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} other={other} />;
+  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} other={other} firstLesson={me.progress.finishedLessons.length === 0 && !replay} />;
 }

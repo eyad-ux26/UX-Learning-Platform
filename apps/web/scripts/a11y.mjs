@@ -44,6 +44,7 @@ const axeOn = async (page, label) => {
 };
 for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 664 }, colorScheme: scheme });
+  await ctx.addInitScript(() => { try { localStorage.setItem("ug-tour-guest", "1"); } catch { /* ignore */ } }); // the lesson tour has its own check below
   const page = await ctx.newPage();
   await page.goto(`${base}/${locale}/try/choose`);
   await page.waitForSelector(".ug");
@@ -65,6 +66,23 @@ for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
     if (!back) bad++;
     console.log(`${locale} Esc closes the example and focus returns: ${back ? "ok" : "FAIL"}`);
   }
+  await ctx.close();
+}
+
+// The lesson tour is modal: axe finds nothing serious on it, Esc skips it, and after that the choices take clicks.
+for (const [locale, scheme, vp] of [["en", "light", { width: 1440, height: 900 }], ["ar", "dark", { width: 390, height: 664 }]]) {
+  const ctx = await browser.newContext({ viewport: vp, colorScheme: scheme });
+  const page = await ctx.newPage();
+  await page.goto(`${base}/${locale}/try/choose`);
+  await page.waitForSelector(".lp-tour .gd-tour");
+  await page.waitForTimeout(600);
+  await axeOn(page, `${locale} ${vp.width} lesson tour open`);
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(300);
+  let ok = (await page.locator(".lp-tour").count()) === 0;
+  if (ok) { try { await page.locator(".choice").nth(1).click({ timeout: 3000 }); } catch { ok = false; } }
+  if (!ok) bad++;
+  console.log(`${locale} ${vp.width} Esc skips the tour and the choices take clicks: ${ok ? "ok" : "FAIL"}`);
   await ctx.close();
 }
 await browser.close();
