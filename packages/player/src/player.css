@@ -7,7 +7,8 @@
 .player-label { display: none; }
 .sheet-main, .sheet-hints { display: flex; flex-direction: column; gap: 10px; min-inline-size: 0; }
 .key-hint { display: none; }
-.player-main { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px 20px 24px; max-inline-size: 760px; inline-size: 100%; margin-inline: auto; }
+.player-main { flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px 20px 24px; max-inline-size: 760px; inline-size: 100%; margin-inline: auto; isolation: isolate; }
+/* The step's own layers (video controls, example tags) stay inside the step, so the sticky Check/Continue bar always paints on top while the page scrolls. */
 .player-over { color: var(--link); }
 .player-col, .player-grid, .player-visual, .player-ask { display: flex; flex-direction: column; gap: 12px; min-inline-size: 0; }
 /* Phone: scenario, then the question, then the example screen, then the answers, so the question is on screen first. */
@@ -55,10 +56,10 @@
 .cmp-item { margin: 0; display: flex; flex-direction: column; gap: 6px; min-inline-size: 0; }
 .reason { display: flex; flex-direction: column; gap: 8px; margin-block-start: 8px; }
 .reason-note { margin: 0; padding: 8px 12px; border-radius: 14px; background: var(--mint); color: var(--right-ink); font-weight: 700; font-size: 14px; }
-.player-foot { position: sticky; inset-block-end: 0; padding: 10px 20px 18px; display: flex; flex-direction: column; gap: 10px; border-block-start: 2px solid var(--line); background: var(--surface); }
+.player-foot { position: sticky; inset-block-end: 0; z-index: 5; padding: 10px 20px 18px; display: flex; flex-direction: column; gap: 10px; border-block-start: 2px solid var(--line); background: var(--surface); }
 .player-foot > * { max-inline-size: 760px; inline-size: 100%; margin-inline: auto; }
 .foot-note { margin: 0; text-align: center; }
-.player-sheet { position: sticky; inset-block-end: 0; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+.player-sheet { position: sticky; inset-block-end: 0; z-index: 5; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
 .player-sheet > * { max-inline-size: 720px; inline-size: 100%; margin-inline: auto; }
 .sheet-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .sheet-text { margin: 0; font-size: 15px; color: var(--ink); }
