@@ -32,15 +32,17 @@ steps:
       en: "My client is a home cleaning company. Laila lives in Heliopolis. She's booking a 4-hour cleaning with ironing and windows, on a day the company has a free team. Her building's door code is 0427.\n\nYour job: choose the right control for each part of the booking form.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "عميلي شركة تنظيف منزلي. تعيش ليلى في مصر الجديدة، وتحجز تنظيفًا لمدة 4 ساعات مع كيّ الملابس والنوافذ، في يوم فيه فريق متاح لدى الشركة. ورمز باب عمارتها 0427.\n\nمهمّتك: اختر عنصر التحكّم المناسب لكل جزء من نموذج الحجز.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: nazeef
+      appbar: { title: "@F6a", back: true }
       blocks:
-        - { kind: title, text: "@F6a" }
+        - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
         - { kind: select, label: "@F6addons", text: { en: "Select one…", ar: "اختر واحدًا…" }, gap: m }
         - { kind: select, label: "@F6hours", text: { en: "Select…", ar: "اختر…" }, gap: s }
         - { kind: select, label: "@F6area", filled: true, text: "@F6nasr", gap: s }
         - { kind: toggle, text: "@F6sms", gap: m }
-        - { kind: button, text: "@F6btn", gap: m }
 
+      footer:
+        - { kind: button, text: "@F6btn" }
   - id: S02
     type: tune
     skill: SK-P01-U02-02
@@ -61,22 +63,28 @@ steps:
       - id: select
         text: { en: "A dropdown, one choice", ar: "قائمة منسدلة، اختيار واحد" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: select, label: "@F6addons", filled: true, text: "@F6iron" }
       - id: radio
         text: { en: "Radio buttons", ar: "Radio buttons" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: small, weight: bold, text: "@F6addons" }
             - { kind: radio, selected: true, text: "@F6iron", gap: xs }
             - { kind: radio, text: "@F6windows", gap: xs }
       - id: check
         text: { en: "Checkboxes", ar: "Checkboxes" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: small, weight: bold, text: { en: "Add-ons (tick any)", ar: "خدمات إضافية (حدّد ما تريد)" } }
             - { kind: check, selected: true, text: "@F6iron", gap: xs }
             - { kind: check, selected: true, text: "@F6windows", gap: xs }
@@ -107,35 +115,47 @@ steps:
       en: "Try each control. Which one should ship?"
       ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
     mock:
+      app: nazeef
+      appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &smsnow
+        - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
         - { kind: toggle, text: "@F6sms" }
-        - { kind: button, text: "@F6btn", gap: m }
+      footer:
+        - { kind: button, text: "@F6btn" }
     options:
       - id: keep
         text: { en: "Keep the toggle", ar: "أبقِ الـ Toggle" }
         mock:
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *smsnow
+          footer:
+            - { kind: button, text: "@F6btn" }
       - id: check
         text: { en: "A checkbox, saved with the booking", ar: "Checkbox يُحفظ مع الحجز" }
         mock:
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: check, selected: true, text: "@F6sms" }
-            - { kind: button, text: "@F6btn", gap: m }
+          footer:
+            - { kind: button, text: "@F6btn" }
       - id: segs
         text: { en: "A segmented control: On / Off", ar: "Segmented control: تشغيل / إيقاف" }
         mock:
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: small, text: "@F6sms" }
             - { kind: segmented, options: [{ en: "On", ar: "تشغيل" }, { en: "Off", ar: "إيقاف" }], value: 1, gap: xs }
-            - { kind: button, text: "@F6btn", gap: m }
+          footer:
+            - { kind: button, text: "@F6btn" }
     answer: [check]
     misconceptions:
       - id: MC-P01-018
@@ -172,20 +192,26 @@ steps:
       - id: stepper
         text: { en: "A stepper starting at 4", ar: "Stepper يبدأ من 4" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: stepper, label: "@F6hours", text: "4" }
       - id: select
         text: { en: "A dropdown from 2 to 8", ar: "قائمة منسدلة من 2 إلى 8" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: select, label: "@F6hours", text: { en: "Select…", ar: "اختر…" } }
       - id: slider
         text: { en: "A slider from 2 to 8", ar: "Slider من 2 إلى 8" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: slider, label: "@F6hours", min: 2, max: 8, from: 2, to: 5, text: { en: "Drag to choose", ar: "اسحب للاختيار" } }
     answer: [stepper]
     misconceptions:
@@ -223,8 +249,10 @@ steps:
       - id: open
         text: { en: "Every day open; an error if no team is free", ar: "كل الأيام مفتوحة؛ ورسالة خطأ إذا لم يكن هناك فريق" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - kind: row
               gap: xs
               blocks:
@@ -237,14 +265,18 @@ steps:
       - id: field
         text: { en: "A date field she types into", ar: "حقل تاريخ تكتب فيه" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, label: { en: "Cleaning date", ar: "تاريخ التنظيف" }, text: { en: "e.g. 10 November", ar: "مثلًا: 10 نوفمبر" } }
       - id: blocked
         text: { en: "Only days with a free team can be picked", ar: "لا يمكن اختيار إلا الأيام التي فيها فريق متاح" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - kind: row
               gap: xs
               blocks:
@@ -281,17 +313,21 @@ steps:
       en: "Try each version of the area field. Which one should ship?"
       ar: "جرّب كل نسخة من حقل المنطقة. أيّها يجب أن تُطلق؟"
     mock:
+      app: nazeef
+      appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &areanow
+        - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
         - { kind: select, label: "@F6area", filled: true, text: "@F6nasr" }
     options:
       - id: pin
         text: { en: "Type to search, with Nasr City pinned on top; nothing selected", ar: "اكتب للبحث، مع تثبيت مدينة نصر في الأعلى؛ دون تحديد شيء" }
         mock:
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, label: "@F6area", text: { en: "Type your area", ar: "اكتب منطقتك" } }
             - kind: group
               tone: plain
@@ -302,15 +338,18 @@ steps:
       - id: keep
         text: { en: "Keep Nasr City preselected; it saves most people a step", ar: "أبقِ مدينة نصر محدّدة مسبقًا؛ فهي توفّر خطوة لأغلب الناس" }
         mock:
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *areanow
       - id: radios
         text: { en: "Show all 50 areas as radio buttons", ar: "اعرض الـ 50 منطقة كلها كـ Radio buttons" }
         mock:
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: small, weight: bold, text: "@F6area" }
             - { kind: radio, text: { en: "Abbassia", ar: "العباسية" }, gap: xs }
             - { kind: radio, text: { en: "Agouza", ar: "العجوزة" }, gap: xs }
@@ -352,15 +391,19 @@ steps:
       - id: none
         text: { en: "\"No results\"", ar: "«لا توجد نتائج»" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, label: "@F6area", filled: true, text: { en: "Heliopolice", ar: "مصر الجديده" } }
             - { kind: small, text: { en: "No results.", ar: "لا توجد نتائج." }, gap: xs }
       - id: suggest
         text: { en: "Suggest the closest area", ar: "اقترح أقرب منطقة" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, label: "@F6area", filled: true, text: { en: "Heliopolice", ar: "مصر الجديده" } }
             - kind: group
               tone: plain
@@ -370,8 +413,10 @@ steps:
       - id: rule
         text: { en: "Say \"Check your spelling\"", ar: "قل «تحقّق من الإملاء»" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, tone: bad, label: "@F6area", filled: true, text: { en: "Heliopolice", ar: "مصر الجديده" }, error: { en: "Check your spelling.", ar: "تحقّق من الإملاء." } }
     answer: [suggest]
     misconceptions:
@@ -404,15 +449,19 @@ steps:
       - id: number
         text: { en: "A number field", ar: "حقل رقم" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, label: { en: "Door code", ar: "رمز الباب" }, filled: true, text: "427" }
             - { kind: small, color: red, text: { en: "Saved as 427: the leading 0 is gone", ar: "حُفظ هكذا: 427، واختفى الصفر في أوله" }, gap: xs }
       - id: steps
         text: { en: "Four steppers, one per digit", ar: "أربعة Steppers، واحد لكل رقم" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: small, weight: bold, text: { en: "Door code", ar: "رمز الباب" } }
             - kind: row
               gap: xs
@@ -422,8 +471,10 @@ steps:
       - id: text
         text: { en: "A text field that opens the number pad", ar: "حقل نص يفتح لوحة الأرقام" }
         mock:
-          width: 300
+          app: nazeef
+          appbar: { title: { en: Book a cleaning, ar: احجز تنظيفًا }, back: true }
           blocks:
+            - { kind: "listitem", icon: "sparkle", text: { en: "Home cleaning · 4 hours", ar: "تنظيف المنزل · 4 ساعات" }, sub: { en: "Heliopolis", ar: "مصر الجديدة" }, value: { en: "EGP 600", ar: "600 جنيه" } }
             - { kind: field, label: { en: "Door code", ar: "رمز الباب" }, filled: true, text: "0427" }
             - { kind: small, text: { en: "Keyboard: 1 2 3 … 0", ar: "لوحة المفاتيح: 1 2 3 … 0" }, gap: xs }
     answer: [text]

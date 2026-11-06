@@ -28,7 +28,12 @@ steps:
       en: "Salma tried to join my gym on our website. She filled in everything and tapped Join. A red line appeared at the very top: \"There's a problem with your form.\"\n\nShe looked at each field and couldn't see anything wrong. In the end, she walked to the front desk and signed up on paper."
       ar: "حاولت سلمى الاشتراك في نادي الرياضي من موقعنا. ملأت كل شيء وضغطت «اشترك». فظهر سطر أحمر في أعلى الصفحة: «هناك مشكلة في النموذج».\n\nنظرت إلى كل حقل ولم ترَ أي خطأ. وفي النهاية، ذهبت إلى مكتب الاستقبال واشتركت على الورق."
     mock:
-      width: 300
+      app: nashat
+      frame: wide
+      url: nashat.example/join
+      navbar:
+        links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+        active: 2
       blocks: &jnnow
         - { kind: banner, tone: bad, text: { en: "There's a problem with your form.", ar: "هناك مشكلة في النموذج." } }
         - { kind: field, label: &jn_n { en: "Full name", ar: "الاسم الكامل" }, filled: true, text: { en: "Salma Fathy", ar: "سلمى فتحي" }, gap: m }
@@ -52,15 +57,25 @@ steps:
       en: "Try each version of my form. Which one should ship?"
       ar: "جرّب كل نسخة من نموذجي. أيّها يجب أن تُطلق؟"
     mock:
+      app: nashat
+      frame: wide
+      url: nashat.example/join
+      navbar:
+        links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+        active: 2
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: *jnnow
     options:
       - id: top
         text: { en: "Keep the message at the top, but name the problem", ar: "أبقِ الرسالة في الأعلى، لكن اذكر المشكلة" }
         mock:
+          app: nashat
+          frame: wide
+          url: nashat.example/join
+          navbar:
+            links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+            active: 2
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: banner, tone: bad, text: { en: "Mobile number needs 11 digits.", ar: "رقم الموبايل يحتاج 11 رقمًا." } }
             - { kind: field, label: *jn_n, filled: true, text: { en: "Salma Fathy", ar: "سلمى فتحي" }, gap: m }
@@ -70,18 +85,28 @@ steps:
       - id: inline
         text: { en: "Mark the mobile field and put the message under it", ar: "علّم حقل الموبايل وضع الرسالة تحته" }
         mock:
+          app: nashat
+          frame: wide
+          url: nashat.example/join
+          navbar:
+            links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+            active: 2
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: *jn_n, filled: true, text: { en: "Salma Fathy", ar: "سلمى فتحي" } }
-            - { kind: field, label: *jn_p, filled: true, text: "⁦0101 234 567⁩", tone: bad, error: &jn_e { en: "⚠ Mobile number needs 11 digits. This one has 10.", ar: "⚠ رقم الموبايل يحتاج 11 رقمًا. هذا الرقم فيه 10." }, gap: s }
+            - { kind: field, label: *jn_p, filled: true, text: "⁦0101 234 567⁩", tone: bad, error: { en: "⚠ Mobile number needs 11 digits. This one has 10.", ar: "⚠ رقم الموبايل يحتاج 11 رقمًا. هذا الرقم فيه 10." }, gap: s }
             - { kind: field, label: *jn_s, filled: true, text: "01/12/2026", gap: s }
             - { kind: button, text: *jn_b, gap: m }
       - id: keep
         text: { en: "Keep it; people can check their own answers", ar: "أبقِه؛ يستطيع الناس مراجعة إجاباتهم بأنفسهم" }
         mock:
+          app: nashat
+          frame: wide
+          url: nashat.example/join
+          navbar:
+            links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+            active: 2
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *jnnow
     answer: [inline]
     misconceptions:
@@ -134,24 +159,30 @@ steps:
       - id: red
         text: { en: "Keep the red border only", ar: "أبقِ الإطار الأحمر فقط" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Book a trainer, ar: احجز مدربًا }, back: true }
           blocks:
             - { kind: field, label: &pt_e { en: "Email", ar: "البريد الإلكتروني" }, filled: true, text: "khaled.mail.com", tone: bad }
-            - { kind: button, text: &pt_b { en: "Book", ar: "احجز" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: grey
         text: { en: "Keep the red border, and grey out Book until it's fixed", ar: "أبقِ الإطار الأحمر، واجعل «احجز» رماديًا حتى يُصلَح" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Book a trainer, ar: احجز مدربًا }, back: true }
           blocks:
             - { kind: field, label: *pt_e, filled: true, text: "khaled.mail.com", tone: bad }
-            - { kind: button, tone: off, text: *pt_b, gap: m }
+          footer:
+            - { kind: button, tone: off, text: { en: "Book", ar: "احجز" } }
       - id: words
         text: { en: "Keep the red border, and add an icon and a message", ar: "أبقِ الإطار الأحمر، وأضف أيقونة ورسالة" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Book a trainer, ar: احجز مدربًا }, back: true }
           blocks:
             - { kind: field, label: *pt_e, filled: true, text: "khaled.mail.com", tone: bad, error: { en: "⚠ This email is missing @. For example: name@mail.com", ar: "⚠ هذا البريد ينقصه @. مثال: name@mail.com" } }
-            - { kind: button, text: *pt_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
     answer: [words]
     misconceptions:
       - id: MC-P01-045
@@ -194,7 +225,12 @@ steps:
       - id: inline
         text: { en: "Only mark each field with its error", ar: "علّم كل حقل بخطئه فقط" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/join
+          navbar:
+            links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+            active: 2
           blocks:
             - { kind: title, text: &hf_t { en: "Health form", ar: "الاستمارة الصحية" } }
             - { kind: field, label: &hf_w { en: "Weight (kg)", ar: "الوزن (كجم)" }, filled: true, text: "68", gap: m }
@@ -203,7 +239,12 @@ steps:
       - id: both
         text: { en: "List all 3 errors at the top, and mark each field", ar: "اعرض الأخطاء الثلاثة في قائمة بالأعلى، وعلّم كل حقل" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/join
+          navbar:
+            links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+            active: 2
           blocks:
             - { kind: title, text: *hf_t }
             - { kind: banner, tone: bad, text: { en: "3 answers need a fix: Height, Injuries, Emergency phone.", ar: "3 إجابات تحتاج إصلاحًا: الطول، الإصابات، هاتف الطوارئ." }, gap: s }
@@ -213,7 +254,12 @@ steps:
       - id: list
         text: { en: "List all 3 errors at the top, and leave the fields unmarked", ar: "اعرض الأخطاء الثلاثة في قائمة بالأعلى، واترك الحقول بلا علامات" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/join
+          navbar:
+            links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+            active: 2
           blocks:
             - { kind: title, text: *hf_t }
             - { kind: banner, tone: bad, text: { en: "3 answers need a fix: Height, Injuries, Emergency phone.", ar: "3 إجابات تحتاج إصلاحًا: الطول، الإصابات، هاتف الطوارئ." }, gap: s }
@@ -262,28 +308,33 @@ steps:
       - id: toast
         text: { en: "Keep the 3-second message at the bottom", ar: "أبقِ رسالة الثواني الثلاث في الأسفل" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: &py_c { en: "Card number", ar: "رقم البطاقة" }, filled: true, text: "⁦4512 7731 0098 21⁩" }
             - { kind: field, label: &py_x { en: "Expiry date", ar: "تاريخ الانتهاء" }, filled: true, text: "08/28", gap: s }
-            - { kind: button, text: &py_b { en: "Pay 900 EGP", ar: "ادفع 900 جنيه" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Pay 900 EGP", ar: "ادفع 900 جنيه" } }
       - id: long
         text: { en: "Keep it at the bottom, but for 10 seconds", ar: "أبقِها في الأسفل، لكن لمدة 10 ثوانٍ" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: *py_c, filled: true, text: "⁦4512 7731 0098 21⁩" }
             - { kind: field, label: *py_x, filled: true, text: "08/28", gap: s }
-            - { kind: button, text: *py_b, gap: m }
+            - { kind: button, text: { en: "Pay 900 EGP", ar: "ادفع 900 جنيه" }, gap: m }
             - { kind: banner, tone: bad, text: { en: "Card number is incomplete.", ar: "رقم البطاقة غير مكتمل." }, gap: l }
       - id: field
         text: { en: "Show it under the card number until it's fixed", ar: "اعرضها تحت رقم البطاقة حتى يُصلَح" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: *py_c, filled: true, text: "⁦4512 7731 0098 21⁩", tone: bad, error: { en: "⚠ Card number needs 16 digits. This one has 14.", ar: "⚠ رقم البطاقة يحتاج 16 رقمًا. هذا الرقم فيه 14." } }
             - { kind: field, label: *py_x, filled: true, text: "08/28", gap: s }
-            - { kind: button, text: *py_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Pay 900 EGP", ar: "ادفع 900 جنيه" } }
     answer: [field]
     misconceptions:
       - id: MC-P01-044
@@ -324,13 +375,23 @@ steps:
     a:
       label: { en: "General", ar: "عام" }
       mock:
-        width: 300
+        app: nashat
+        frame: wide
+        url: nashat.example/join
+        navbar:
+          links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+          active: 2
         blocks:
           - { kind: banner, tone: bad, text: { en: "Some fields have errors. Please check the form.", ar: "بعض الحقول فيها أخطاء. يُرجى مراجعة النموذج." } }
     b:
       label: { en: "Listed", ar: "مُعدَّد" }
       mock:
-        width: 300
+        app: nashat
+        frame: wide
+        url: nashat.example/join
+        navbar:
+          links: [{ en: Classes, ar: الحصص }, { en: Branches, ar: الفروع }, { en: Join, ar: اشترك }]
+          active: 2
         blocks:
           - { kind: banner, tone: bad, text: { en: "2 answers need a fix: Employee 3 phone, Billing email.", ar: "إجابتان تحتاجان إصلاحًا: هاتف الموظف 3، بريد الفاتورة." } }
     answer: b
@@ -384,7 +445,12 @@ steps:
       - id: label
         text: { en: "Keep the red label only", ar: "أبقِ العنوان الأحمر فقط" }
         mock:
-          width: 300
+          app: raha
+          frame: wide
+          url: raha.example/book
+          navbar:
+            links: [{ en: Doctors, ar: الأطباء }, { en: Book, ar: احجز }, { en: My visits, ar: زياراتي }]
+            active: 1
           blocks:
             - { kind: field, label: &cl_d { en: "Appointment day", ar: "يوم الموعد" }, filled: true, text: { en: "Sunday 6 Dec", ar: "الأحد 6 ديسمبر" } }
             - { kind: small, weight: bold, color: red, text: &cl_i { en: "Insurance number", ar: "رقم التأمين" }, gap: s }
@@ -393,7 +459,12 @@ steps:
       - id: both
         text: { en: "Red label and red border", ar: "عنوان أحمر وإطار أحمر" }
         mock:
-          width: 300
+          app: raha
+          frame: wide
+          url: raha.example/book
+          navbar:
+            links: [{ en: Doctors, ar: الأطباء }, { en: Book, ar: احجز }, { en: My visits, ar: زياراتي }]
+            active: 1
           blocks:
             - { kind: field, label: *cl_d, filled: true, text: { en: "Sunday 6 Dec", ar: "الأحد 6 ديسمبر" } }
             - { kind: small, weight: bold, color: red, text: *cl_i, gap: s }
@@ -402,7 +473,12 @@ steps:
       - id: message
         text: { en: "Red border, an icon, and a message under the field", ar: "إطار أحمر، وأيقونة، ورسالة تحت الحقل" }
         mock:
-          width: 300
+          app: raha
+          frame: wide
+          url: raha.example/book
+          navbar:
+            links: [{ en: Doctors, ar: الأطباء }, { en: Book, ar: احجز }, { en: My visits, ar: زياراتي }]
+            active: 1
           blocks:
             - { kind: field, label: *cl_d, filled: true, text: { en: "Sunday 6 Dec", ar: "الأحد 6 ديسمبر" } }
             - { kind: field, label: *cl_i, text: "", tone: bad, error: { en: "⚠ Enter your insurance number, or choose \"I'll pay myself\" below.", ar: "⚠ اكتب رقم التأمين، أو اختر «سأدفع بنفسي» بالأسفل." }, gap: s }

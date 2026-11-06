@@ -112,4 +112,9 @@ describe("MockView details", () => {
     expect(html).toContain(`--mock-brand:${accessibleBrand("#F97316")}`);
     expect(html).toContain("background:#F97316"); // the label swatch keeps the exact colour
   });
+  it("quotes the screen reader strip with the language's own quote marks", () => {
+    const mock = { blocks: [], reader: T("Button, Pay", "زر، ادفع") } as never;
+    expect(render(mock, "en")).toContain("“Button, Pay”");
+    expect(render(mock, "ar")).toContain("«زر، ادفع»");
+  });
 });

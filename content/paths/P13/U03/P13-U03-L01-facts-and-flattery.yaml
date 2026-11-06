@@ -28,13 +28,24 @@ steps:
       en: "I'm a designer on a bus app. I want to pitch a new feature: live bus locations on the map.\n\nI asked an AI chatbot for numbers to support it. It gave me a strong one, with the name of a study."
       ar: "أعمل مصممًا في تطبيق للحافلات. وأريد أن أعرض ميزة جديدة: مواقع الحافلات المباشرة على الخريطة.\n\nفطلبت من روبوت محادثة بالذكاء الاصطناعي أرقامًا تدعمها. فأعطاني رقمًا قويًا، مع اسم دراسة."
     mock:
-      width: 300
+      app: fikra
+      frame: wide
+      url: fikra.example/chat
+      footer:
+      - kind: composer
+        text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
       blocks:
-        - kind: group
-          tone: tint
-          blocks:
-            - { kind: small, color: muted, text: { en: "AI", ar: "الذكاء الاصطناعي" } }
-            - { kind: text, text: { en: "68% of riders are more likely to use an app with live bus tracking (Urban Transit Study, 2022).", ar: "68% من الركّاب أكثر ميلًا لاستخدام تطبيق فيه تتبّع مباشر للحافلات (دراسة النقل الحضري، 2022)." } }
+      - kind: chat
+        text:
+          en: "Is live bus tracking worth building? Any numbers?"
+          ar: هل يستحق التتبّع المباشر للحافلات أن نبنيه؟ هل من أرقام؟
+        from: me
+      - kind: chat
+        text:
+          en: "68% of riders are more likely to use an app with live bus tracking (Urban Transit Study, 2022)."
+          ar: "68% من الركّاب أكثر ميلًا لاستخدام تطبيق فيه تتبّع مباشر للحافلات (دراسة النقل الحضري، 2022)."
+        from: ai
+        actions: [copy, regenerate]
 
   - id: S02
     type: choose
@@ -175,17 +186,42 @@ steps:
     a:
       label: { en: "A: in the same chat, right after the hour", ar: "A: في المحادثة نفسها، بعد الساعة مباشرة" }
       mock:
-        width: 300
+        app: fikra
+        frame: wide
+        url: fikra.example/chat
+        footer:
+        - kind: composer
+          text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
         blocks:
-          - { kind: small, color: muted, text: { en: "…60 minutes of messages above…", ar: "…رسائل 60 دقيقة في الأعلى…" } }
-          - { kind: small, text: { en: "Me: \"Now be honest. What are the weak points of the live map?\"", ar: "أنا: «والآن كن صادقًا. ما نقاط ضعف الخريطة المباشرة؟»" }, gap: xs }
+        - {kind: divider}
+        - kind: small
+          text: {en: …60 minutes of messages above…, ar: …رسائل 60 دقيقة في الأعلى…}
+          color: muted
+          gap: xs
+        - kind: chat
+          text:
+            en: "Now be honest. What are the weak points of the live map?"
+            ar: والآن كن صادقًا. ما نقاط ضعف الخريطة المباشرة؟
+          from: me
     b:
       label: { en: "B: in a new chat, with only the facts", ar: "B: في محادثة جديدة، بالمعلومات فقط" }
       mock:
-        width: 300
+        app: fikra
+        frame: wide
+        url: fikra.example/chat
+        footer:
+        - kind: composer
+          text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
         blocks:
-          - { kind: small, color: muted, text: { en: "New chat", ar: "محادثة جديدة" } }
-          - { kind: small, text: { en: "Me: \"Here's a feature idea for a bus app: live bus locations on the map. What are its weak points and risks?\"", ar: "أنا: «هذه فكرة ميزة لتطبيق حافلات: مواقع الحافلات المباشرة على الخريطة. ما نقاط ضعفها ومخاطرها؟»" }, gap: xs }
+        - kind: badge
+          text: {en: New chat, ar: محادثة جديدة}
+          tone: neutral
+          icon: plus
+        - kind: chat
+          text:
+            en: "Here's a feature idea for a bus app: live bus locations on the map. What are its weak points and risks?"
+            ar: "هذه فكرة ميزة لتطبيق حافلات: مواقع الحافلات المباشرة على الخريطة. ما نقاط ضعفها ومخاطرها؟"
+          from: me
     answer: b
     reason:
       prompt: { en: "Why is B more honest?", ar: "لماذا B أصدق؟" }

@@ -32,13 +32,18 @@ steps:
       en: "Ahmed, one of our patients, opened his profile in our clinic app to update his phone number. On the same screen, he switched visit reminders off. Then he closed the app without pressing Save.\n\nThe reminders kept coming."
       ar: "فتح أحمد، أحد مرضانا، ملفه الشخصي في تطبيق عيادتنا لتحديث رقم هاتفه. وفي الشاشة نفسها، أطفأ تذكيرات المواعيد. ثم أغلق التطبيق دون أن يضغط «حفظ».\n\nوظلّت التذكيرات تصل."
     mock:
-      width: 300
+      app: raha
+      appbar: { title: { en: "My profile", ar: "ملفي الشخصي" }, back: true }
+      tabbar:
+        active: 2
+        items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
       blocks: &profnow
-        - { kind: title, text: { en: "My profile", ar: "ملفي الشخصي" } }
+        - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
         - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "⁦010 9876 5432⁩", gap: m }
         - { kind: toggle, text: { en: "Visit reminders", ar: "تذكيرات المواعيد" }, gap: m }
-        - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
 
+      footer:
+        - { kind: button, text: { en: "Save", ar: "حفظ" } }
   - id: S02
     type: tune
     skill: SK-P01-U02-01
@@ -55,37 +60,59 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: raha
+      appbar: { title: { en: "My profile", ar: "ملفي الشخصي" }, back: true }
+      tabbar:
+        active: 2
+        items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: *profnow
+      footer:
+        - { kind: button, text: { en: "Save", ar: "حفظ" } }
     options:
       - id: note
         text: { en: "Keep the toggle; add \"Press Save to apply changes\"", ar: "أبقِ الـ Toggle؛ وأضف «اضغط حفظ لتطبيق التغييرات»" }
         mock:
+          app: raha
+          appbar: { title: { en: "My profile", ar: "ملفي الشخصي" }, back: true }
+          tabbar:
+            active: 2
+            items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: { en: "My profile", ar: "ملفي الشخصي" } }
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "⁦010 9876 5432⁩", gap: m }
             - { kind: toggle, text: { en: "Visit reminders", ar: "تذكيرات المواعيد" }, gap: m }
             - { kind: small, text: { en: "Press Save to apply changes.", ar: "اضغط «حفظ» لتطبيق التغييرات." }, gap: s }
-            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: s }
+          footer:
+            - { kind: button, text: { en: "Save", ar: "حفظ" } }
       - id: check
         text: { en: "Use a checkbox that's saved with the form", ar: "استخدم Checkbox يُحفظ مع النموذج" }
         mock:
+          app: raha
+          appbar: { title: { en: "My profile", ar: "ملفي الشخصي" }, back: true }
+          tabbar:
+            active: 2
+            items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
-            - { kind: title, text: { en: "My profile", ar: "ملفي الشخصي" } }
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "⁦010 9876 5432⁩", gap: m }
             - { kind: check, selected: true, text: { en: "Send me visit reminders", ar: "أرسل لي تذكيرات المواعيد" }, gap: m }
-            - { kind: button, text: { en: "Save", ar: "حفظ" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Save", ar: "حفظ" } }
       - id: keep
         text: { en: "Keep it as it is; people know to press Save", ar: "أبقِه كما هو؛ فالناس يعرفون أن يضغطوا «حفظ»" }
         mock:
+          app: raha
+          appbar: { title: { en: "My profile", ar: "ملفي الشخصي" }, back: true }
+          tabbar:
+            active: 2
+            items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *profnow
+          footer:
+            - { kind: button, text: { en: "Save", ar: "حفظ" } }
     answer: [check]
     misconceptions:
       - id: MC-P01-018
@@ -137,22 +164,28 @@ steps:
       - id: dropdown
         text: { en: "A dropdown", ar: "قائمة منسدلة" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Book a visit, ar: احجز زيارة }, back: true }
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: select, label: { en: "Visit type", ar: "نوع الزيارة" }, text: { en: "Select…", ar: "اختر…" } }
       - id: checks
         text: { en: "Two checkboxes", ar: "مربّعا Checkbox" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Book a visit, ar: احجز زيارة }, back: true }
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: small, weight: bold, text: { en: "Visit type", ar: "نوع الزيارة" } }
             - { kind: check, text: { en: "In person", ar: "حضوري" }, gap: xs }
             - { kind: check, text: { en: "Video call", ar: "مكالمة فيديو" }, gap: xs }
       - id: radios
         text: { en: "Two radio buttons", ar: "زرّا Radio" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Book a visit, ar: احجز زيارة }, back: true }
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: small, weight: bold, text: { en: "Visit type", ar: "نوع الزيارة" } }
             - { kind: radio, text: { en: "In person", ar: "حضوري" }, gap: xs }
             - { kind: radio, text: { en: "Video call", ar: "مكالمة فيديو" }, gap: xs }
@@ -198,8 +231,10 @@ steps:
       - id: radio
         text: { en: "Radio buttons", ar: "Radio buttons" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: small, weight: bold, text: { en: "Allergies", ar: "الحساسية" } }
             - { kind: radio, selected: true, text: { en: "Penicillin", ar: "البنسلين" }, gap: xs }
             - { kind: radio, text: { en: "Nuts", ar: "المكسّرات" }, gap: xs }
@@ -207,8 +242,10 @@ steps:
       - id: check
         text: { en: "Checkboxes", ar: "Checkboxes" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: small, weight: bold, text: { en: "Allergies (tick all that apply)", ar: "الحساسية (حدّد كل ما ينطبق)" } }
             - { kind: check, selected: true, text: { en: "Penicillin", ar: "البنسلين" }, gap: xs }
             - { kind: check, selected: true, text: { en: "Nuts", ar: "المكسّرات" }, gap: xs }
@@ -216,8 +253,10 @@ steps:
       - id: select
         text: { en: "A dropdown", ar: "قائمة منسدلة" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: select, label: { en: "Allergies", ar: "الحساسية" }, filled: true, text: { en: "Penicillin", ar: "البنسلين" } }
     answer: [check]
     misconceptions:
@@ -252,9 +291,11 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: raha
+      appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &marnow
+        - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
         - { kind: small, weight: bold, text: { en: "Marital status", ar: "الحالة الاجتماعية" } }
         - { kind: radio, selected: true, text: { en: "Married", ar: "متزوّج" }, gap: xs }
         - { kind: radio, text: { en: "Single", ar: "أعزب" }, gap: xs }
@@ -264,9 +305,11 @@ steps:
       - id: none
         text: { en: "No option selected; he chooses", ar: "بلا خيار محدّد؛ وهو يختار" }
         mock:
+          app: raha
+          appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: small, weight: bold, text: { en: "Marital status", ar: "الحالة الاجتماعية" } }
             - { kind: radio, text: { en: "Married", ar: "متزوّج" }, gap: xs }
             - { kind: radio, text: { en: "Single", ar: "أعزب" }, gap: xs }
@@ -275,15 +318,18 @@ steps:
       - id: keep
         text: { en: "Keep \"Married\" preselected; it's the most common", ar: "أبقِ «متزوّج» محدّدًا مسبقًا؛ فهو الأكثر شيوعًا" }
         mock:
+          app: raha
+          appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *marnow
       - id: hide
         text: { en: "Move it into a dropdown, with \"Married\" showing", ar: "انقله إلى قائمة منسدلة، تظهر فيها «متزوّج»" }
         mock:
+          app: raha
+          appbar: { title: { en: Health form, ar: النموذج الصحي }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: select, label: { en: "Marital status", ar: "الحالة الاجتماعية" }, filled: true, text: { en: "Married", ar: "متزوّج" } }
     answer: [none]
     misconceptions:
@@ -325,16 +371,26 @@ steps:
       ar: "أي نسخة يجب أن تُطلق؟"
     a:
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: Reminders, ar: التذكيرات }, back: true }
+        tabbar:
+          active: 2
+          items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
         blocks:
+          - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
           - { kind: small, weight: bold, text: { en: "Remind me", ar: "ذكّرني" } }
           - { kind: radio, text: { en: "1 day before", ar: "قبل الموعد بيوم" }, gap: xs }
           - { kind: radio, text: { en: "2 hours before", ar: "قبل الموعد بساعتين" }, gap: xs }
           - { kind: radio, text: { en: "Both", ar: "الاثنان" }, gap: xs }
     b:
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: Reminders, ar: التذكيرات }, back: true }
+        tabbar:
+          active: 2
+          items: [{ icon: "house", text: { en: "Home", ar: "الرئيسية" } }, { icon: "calendar", text: { en: "Bookings", ar: "الحجوزات" } }, { icon: "user", text: { en: "Profile", ar: "حسابي" } }]
         blocks:
+          - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
           - { kind: small, weight: bold, text: { en: "Remind me", ar: "ذكّرني" } }
           - { kind: radio, selected: true, text: { en: "1 day before", ar: "قبل الموعد بيوم" }, gap: xs }
           - { kind: radio, text: { en: "2 hours before", ar: "قبل الموعد بساعتين" }, gap: xs }
@@ -386,37 +442,49 @@ steps:
       en: "Try each control. Which one should ship?"
       ar: "جرّب كل عنصر. أيّها يجب أن يُطلق؟"
     mock:
+      app: lamma
+      appbar: { title: { en: Checkout, ar: الدفع }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &doornow
+        - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
         - { kind: field, label: "@F2addr", filled: true, text: { en: "12 Nile St, 3rd floor", ar: "12 شارع النيل، الدور الثالث" } }
         - { kind: toggle, text: { en: "Leave it at the door", ar: "اتركه عند الباب" }, gap: m }
-        - { kind: button, text: "@F2btn", gap: m }
+      footer:
+        - { kind: button, text: "@F2btn" }
     options:
       - id: select
         text: { en: "A dropdown: Yes / No", ar: "قائمة منسدلة: نعم / لا" }
         mock:
+          app: lamma
+          appbar: { title: { en: Checkout, ar: الدفع }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: field, label: "@F2addr", filled: true, text: { en: "12 Nile St, 3rd floor", ar: "12 شارع النيل، الدور الثالث" } }
             - { kind: select, label: { en: "Leave it at the door?", ar: "تتركه عند الباب؟" }, text: { en: "Select…", ar: "اختر…" }, gap: m }
-            - { kind: button, text: "@F2btn", gap: m }
+          footer:
+            - { kind: button, text: "@F2btn" }
       - id: keep
         text: { en: "Keep the toggle", ar: "أبقِ الـ Toggle" }
         mock:
+          app: lamma
+          appbar: { title: { en: Checkout, ar: الدفع }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *doornow
+          footer:
+            - { kind: button, text: "@F2btn" }
       - id: check
         text: { en: "A checkbox, sent with the order", ar: "Checkbox يُرسل مع الطلب" }
         mock:
+          app: lamma
+          appbar: { title: { en: Checkout, ar: الدفع }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
+            - { kind: "listitem", avatar: { text: "Ahmed Samir", art: "man-1" }, text: { en: "Ahmed Samir", ar: "أحمد سمير" }, sub: { en: "Patient since 2024", ar: "مريض منذ 2024" } }
             - { kind: field, label: "@F2addr", filled: true, text: { en: "12 Nile St, 3rd floor", ar: "12 شارع النيل، الدور الثالث" } }
             - { kind: check, text: { en: "Leave it at the door", ar: "اتركه عند الباب" }, gap: m }
-            - { kind: button, text: "@F2btn", gap: m }
+          footer:
+            - { kind: button, text: "@F2btn" }
     answer: [check]
     misconceptions:
       - id: MC-P01-018
