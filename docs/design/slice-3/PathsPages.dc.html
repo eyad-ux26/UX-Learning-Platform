@@ -27,8 +27,21 @@ body{margin:0}
         <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
       </sc-for>
       <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <!-- 6 Nov 2026 (Eyad): each path can open to show its units; all paths start closed -->
       <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
-        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+        <div class="dk-path">
+          <div class="dk-path-row">
+            <a class="{{p.cls}}" href="#path" aria-current="{{p.cur}}"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+            <button class="dk-tog" type="button" aria-expanded="{{p.open}}" aria-controls="{{p.uid}}" aria-label="{{p.togLabel}}"><span class="ph ph-caret-down" aria-hidden="true"></span></button>
+          </div>
+          <sc-if value="{{p.isOpen}}" hint-placeholder-val="{{false}}">
+            <ul class="dk-units" id="{{p.uid}}">
+              <sc-for list="{{p.units}}" as="u" hint-placeholder-count="5">
+                <li><a class="{{u.cls}}" href="#unit" aria-current="{{u.cur}}"><span class="{{u.icon}}" aria-hidden="true"></span><span>{{u.title}}</span></a></li>
+              </sc-for>
+            </ul>
+          </sc-if>
+        </div>
       </sc-for>
       <a class="dk-layer" href="#paths" style="color: var(--link);"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addPath}}</a>
       <div style="flex: 1;"></div>
@@ -335,11 +348,24 @@ body{margin:0}
               <span aria-hidden="true" style="position: absolute; top: 24px; bottom: 30px; inset-inline-start: 21px; width: 4px; border-radius: 4px; background: {{mp.lineBg}};"></span>
               <sc-for list="{{lessons}}" as="l" hint-placeholder-count="4">
                 <li style="display: flex; align-items: center; gap: 12px; position: relative;">
-                  <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
-                  <div class="{{l.cardCls}}" style="{{l.cardStyle}}">
-                    <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
-                    <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
-                  </div>
+                  <!-- 6 Nov 2026 (Eyad): a done or next step is one link (dot and card); locked steps stay plain -->
+                  <sc-if value="{{l.link}}" hint-placeholder-val="{{true}}">
+                    <a href="#lesson" class="map-step press" aria-label="{{l.aria}}">
+                      <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
+                      <span class="{{l.cardCls}} map-step-card" style="{{l.cardStyle}}">
+                        <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
+                        <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
+                        <span class="ph ph-caret flip map-step-go" aria-hidden="true"></span>
+                      </span>
+                    </a>
+                  </sc-if>
+                  <sc-if value="{{l.plain}}" hint-placeholder-val="{{false}}">
+                    <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
+                    <div class="{{l.cardCls}}" style="{{l.cardStyle}}">
+                      <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
+                      <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
+                    </div>
+                  </sc-if>
                 </li>
               </sc-for>
             </ol>
@@ -517,7 +543,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"team":{"editor":"enum","options":["off","on"],"default":"off"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"rail":{"editor":"enum","options":["closed","open"],"default":"closed"},"team":{"editor":"enum","options":["off","on"],"default":"off"},"$preview":{"width":390,"height":844}}'>
 /* Slice 3 · several paths: Paths tab, path detail, home, path map switcher, onboarding. Spec §4.4b, EN-11, EN-11b. */
 const IMG = {
   forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
@@ -576,6 +602,7 @@ const C = {
     goContOver: 'Next up · Unit 2, Lesson 3', goContTitle: 'Long lists: let people type', goContMeta: '6 min · 6 of 20 lessons done', goContBtn: 'Continue this path',
     goDoneOver: 'Path complete', goDoneTitle: 'You finished Forms That Flow', goDoneMeta: '20 of 20 lessons · all 40 skills shown', goDoneBtn: 'Review this path', goDoneLink: 'See your certificate',
     u2Why: 'Opens after the Unit 1 skill check', p01Start: 'Unit 1 of 5 · 0 of 20 lessons', p01Done: 'All 5 units · 20 of 20 lessons',
+    railUnits: (n) => n + ': units', stepGo: 'Continue', stepReplay: 'Replay',
     u4Title: 'Errors people can fix', u5Title: 'Forms everyone can finish',
     lessonsU1: [['Every field costs something', 'next', '8 min'], ['Required or optional? Show it on every field', 'lock', '8 min'], ['Ask so people can answer', 'lock', '8 min'], ['Skill check: ask only what you need', 'check', 'New case, no hints']],
     /* loading */
@@ -626,6 +653,7 @@ const C = {
     goContOver: 'التالي · الوحدة 2، الدرس 3', goContTitle: 'القوائم الطويلة: دع الناس يكتبون', goContMeta: '6 دقائق · أنهيت 6 دروس من 20', goContBtn: 'تابع هذا المسار',
     goDoneOver: 'اكتمل المسار', goDoneTitle: 'أنهيت مسار Forms That Flow', goDoneMeta: '20 درسًا من 20 · أثبتّ المهارات الـ40 كلها', goDoneBtn: 'راجع هذا المسار', goDoneLink: 'اعرض شهادتك',
     u2Why: 'تُفتح بعد اختبار مهارة الوحدة 1', p01Start: 'الوحدة 1 من 5 · 0 دروس من 20', p01Done: 'الوحدات الخمس · 20 درسًا من 20',
+    railUnits: (n) => 'وحدات ' + n, stepGo: 'تابع', stepReplay: 'أعد الدرس',
     u4Title: 'أخطاء يستطيع الناس إصلاحها', u5Title: 'نماذج يستطيع الجميع إكمالها',
     lessonsU1: [['لكل حقل ثمن', 'next', '8 دقائق'], ['إلزامي أم اختياري؟ وضّحه في كل حقل', 'lock', '8 دقائق'], ['اسأل بطريقة يستطيع الناس الإجابة عنها', 'lock', '8 دقائق'], ['اختبار المهارة: اسأل فقط عمّا تحتاجه', 'check', 'حالة جديدة بدون تلميحات']],
     ldLabel: 'جارٍ التحميل', ldTip: 'نضبط الطبقات على الشبكة…',
@@ -726,7 +754,8 @@ class Component extends DCLogic {
     const mapState = view === 'mapStart' ? 'start' : view === 'mapDone' ? 'done' : 'continue';
     const lessons = (mapState === 'start' ? c.lessonsU1 : c.lessonsP01).map(([title, st, meta]) => {
       const done = st === 'done', next = st === 'next';
-      return { title, over: done ? (c.doneChip + ' · ' + meta) : meta, overColor: done ? 'var(--right-ink)' : (next ? 'var(--link)' : 'var(--ink-3)'),
+      const link = done || next;
+      return { title, link, plain: !link, aria: title + '. ' + (done ? c.stepReplay : c.stepGo), over: done ? (c.doneChip + ' · ' + meta) : meta, overColor: done ? 'var(--right-ink)' : (next ? 'var(--link)' : 'var(--ink-3)'),
         icon: done ? 'ph ph-check' : (next ? 'ph ph-play' : 'ph ph-lock-fill'),
         dot: DOT + (done ? 'background: var(--right-line); color: #01241A; box-shadow: 0 4px 0 #2A7F5F;' : next ? 'background: var(--brand); color: var(--on-brand); box-shadow: 0 4px 0 var(--brand-ledge);' : 'background: var(--disabled-bg); color: var(--disabled-ink);'),
         cardCls: next ? 'card' : 'card',
@@ -783,7 +812,15 @@ class Component extends DCLogic {
       showRail: isDesk && !isOb && load !== 'full', showNav: !isDesk && !isOb && !isDetail && load !== 'full',
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
-      railPaths: (view === 'pathStarted' ? [Object.assign({}, all[2], { isCurrent: true, pct: '0%' }), Object.assign({}, all[0], { isCurrent: false }), all[1]] : [all[0], all[1]]).map((p) => ({ name: p.name, img: p.img, pct: p.pct, cls: 'dk-layer' + (p.isCurrent ? ' is-on' : '') })),
+      railPaths: (view === 'pathStarted' ? [Object.assign({}, all[2], { isCurrent: true, pct: '0%' }), Object.assign({}, all[0], { isCurrent: false }), all[1]] : [all[0], all[1]]).map((p, i) => {
+        const isOpen = this.props.rail === 'open' && p.isCurrent;
+        const units = isOpen ? [c.u1Title, c.u2Title, c.u3Title, c.u4Title, c.u5Title].map((t, k) => {
+          const st = k < 1 ? 'done' : k === 1 ? 'cur' : 'lock';
+          return { title: t, cur: st === 'cur' ? 'step' : 'false', cls: 'dk-unit is-' + st, icon: 'ph ' + (st === 'done' ? 'ph-check-circle-fill' : st === 'cur' ? 'ph-play-fill' : 'ph-lock') };
+        }) : [];
+        return { name: p.name, img: p.img, pct: p.pct, cls: 'dk-layer' + (p.isCurrent ? ' is-on' : ''), cur: p.isCurrent ? 'true' : 'false',
+          isOpen, open: isOpen ? 'true' : 'false', uid: 'rail-u-' + i + '-' + lang + '-' + theme + '-' + device + '-' + view, togLabel: c.railUnits(p.name), units };
+      }),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       mark: theme === 'dark' ? '/_blob/5667904a660c43335758c7e0120ae2b8' : '/_blob/68b36b698602cc0ac59d5b87ca709073',
       is: { paths: view === 'paths', detail: isDetail, home: isHome, map: isMap, ob: isOb },
