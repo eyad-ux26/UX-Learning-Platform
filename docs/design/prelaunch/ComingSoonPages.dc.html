@@ -34,12 +34,12 @@ body{margin:0}
           <h1 id="soon-h1-{{lang}}-{{theme}}-{{device}}-{{view}}">{{h.title}}</h1>
           <p class="soon-lead">{{h.lead1}}<sc-if value="{{h.leadMail}}" hint-placeholder-val="{{false}}"><bdi class="soon-mail">yasmin.adel@example.com</bdi>{{h.lead2}}</sc-if></p>
 
-          <!-- Launch-notify form: idle, busy, invalid, network error -->
+          <!-- Launch-notify form: idle, busy, invalid, network error, too many tries, expired confirmation link -->
           <sc-if value="{{is.form}}" hint-placeholder-val="{{true}}">
             <form class="soon-form" novalidate aria-labelledby="soon-lbl-{{lang}}-{{theme}}-{{device}}-{{view}}">
               <label class="soon-lbl" id="soon-lbl-{{lang}}-{{theme}}-{{device}}-{{view}}" for="soon-email-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.formLbl}}</label>
               <sc-if value="{{f.alert}}" hint-placeholder-val="{{false}}">
-                <div class="form-alert" role="alert"><span class="ph ph-wifi-slash" aria-hidden="true"></span><div><b>{{c.netTitle}}</b><p>{{c.netBody}}</p></div></div>
+                <div class="form-alert" role="alert"><span class="{{f.aIcon}}" aria-hidden="true"></span><div><b>{{f.aTitle}}</b><p>{{f.aBody}}</p></div></div>
               </sc-if>
               <div class="soon-row">
                 <div class="{{f.inputCls}}"><span class="ph ph-mail" aria-hidden="true"></span><input id="soon-email-{{lang}}-{{theme}}-{{device}}-{{view}}" type="email" name="email" autocomplete="email" inputmode="email" placeholder="name@example.com" dir="ltr" value="{{f.val}}" aria-invalid="{{f.inv}}" aria-describedby="{{f.desc}}"></div>
@@ -66,6 +66,19 @@ body{margin:0}
               </div>
             </div>
           </sc-if>
+          <!-- Team access (hidden page at /team): one team password, then the normal sign-in -->
+          <sc-if value="{{is.team}}" hint-placeholder-val="{{false}}">
+            <form class="soon-form soon-team-form" novalidate>
+              <div class="field">
+                <label for="team-pw-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.teamLbl}}</label>
+                <div class="{{t.inputCls}}"><span class="ph ph-lock" aria-hidden="true"></span><input id="team-pw-{{lang}}-{{theme}}-{{device}}-{{view}}" type="password" name="team-password" autocomplete="current-password" dir="ltr" value="{{t.val}}" aria-invalid="{{t.inv}}" aria-describedby="{{t.desc}}"><button class="icon-btn plain" type="button" aria-label="{{c.show}}" aria-pressed="false" style="width: 40px; height: 40px; margin-inline-end: -8px;"><span class="ph ph-eye" aria-hidden="true"></span></button></div>
+                <sc-if value="{{t.err}}" hint-placeholder-val="{{false}}"><span class="err" id="team-err-{{lang}}-{{theme}}-{{device}}-{{view}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{c.teamWrong}}</span></sc-if>
+                <span class="help" id="team-help-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.teamHelp}}</span>
+              </div>
+              <button class="{{t.btnCls}}" type="submit">{{c.teamGo}}</button>
+              <a href="#home" class="pg-link soon-back"><span class="ph ph-arrow" aria-hidden="true" style="{{t.backStyle}}"></span>{{c.teamBack}}</a>
+            </form>
+          </sc-if>
         </div>
 
         <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
@@ -83,6 +96,7 @@ body{margin:0}
         </sc-if>
       </section>
 
+      <sc-if value="{{is.public}}" hint-placeholder-val="{{true}}">
       <section class="soon-get" aria-labelledby="soon-get-{{lang}}-{{theme}}-{{device}}-{{view}}">
         <h2 id="soon-get-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.getTitle}}</h2>
         <ul>
@@ -91,6 +105,18 @@ body{margin:0}
           </sc-for>
         </ul>
       </section>
+
+      <!-- Prices at launch: shown on the domain for Paddle's website review -->
+      <section class="soon-get soon-price" aria-labelledby="soon-price-{{lang}}-{{theme}}-{{device}}-{{view}}">
+        <h2 id="soon-price-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.priceTitle}}</h2>
+        <ul>
+          <sc-for list="{{prices}}" as="r" hint-placeholder-count="3">
+            <li><span class="soon-get-ic" aria-hidden="true"><span class="{{r.icon}}"></span></span><span class="soon-get-text"><b>{{r.region}}</b><span class="soon-price-main"><bdi>{{r.month}}</bdi> <small>{{c.perMonth}}</small></span><span><bdi>{{r.year}}</bdi> {{c.perYear}}</span></span></li>
+          </sc-for>
+        </ul>
+        <p class="soon-price-note">{{c.taxNote}}</p>
+      </section>
+      </sc-if>
     </main>
 
     <footer class="soon-foot">
@@ -98,18 +124,20 @@ body{margin:0}
       <nav aria-label="{{c.footNav}}">
         <a href="#privacy">{{c.privacy}}</a>
         <a href="#terms">{{c.terms}}</a>
+        <a href="#refunds">{{c.refunds}}</a>
         <a href="#help" class="ltr">support@uxgate.org</a>
-        <a href="#signin" class="soon-team">{{c.team}}</a>
       </nav>
     </footer>
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["idle","busy","sent","already","invalid","network","confirmed","member"],"default":"idle"},"part":{"editor":"enum","options":["top","foot"],"default":"top"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["idle","busy","sent","already","invalid","network","tooMany","expired","confirmed","member","team","teamWrong"],"default":"idle"},"part":{"editor":"enum","options":["top","prices","foot"],"default":"top"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
 /* Pre-launch (5 Nov 2026): uxgate.org shows this Coming soon page to everyone who is not an admin.
    One launch-notify field with double opt-in. Form states follow design audit U1: the message sits under the field,
    the field gets aria-invalid and aria-describedby, and what the person typed stays in the field.
-   "Team sign-in" in the footer opens the normal sign-in page; admin access comes from the admin role checked on the server. */
+   v73 (6 Nov 2026), matching PR #173: no team link in the footer. The team signs in from a hidden page (/team) that asks for one
+   team password, then shows the normal sign-in; admin access still comes from the admin role checked on the server.
+   Prices at launch sit under "What you'll get", and Refund policy is in the footer. */
 const C = {
   en: { otherLang: 'عربي', initial: 'Y', chip: 'Opening soon', over: 'UX practice in Arabic and English',
     title: 'Practise real design decisions.', lead: 'Short lessons where you fix real screens, get feedback that explains why, and prove each skill on a new case.',
@@ -123,7 +151,13 @@ const C = {
     memPT: 'We’ll email you at launch', memPB1: 'One email to ', memPB2: ' on launch day. Your account stays as it is until then.', signOut: 'Sign out',
     getTitle: 'What you’ll get', artTag: 'UXGate · launch',
     get: [['ph-cursor', 'Make a real decision', 'Each step puts a real screen in front of you and asks what you would change.'], ['ph-chat', 'Get feedback that explains why', 'Right or not, you see what your choice does to the people using it.'], ['ph-seal', 'Prove it on a new case', 'Each unit ends with a skill check on a screen you have not seen.'], ['ph-globe', 'Arabic and English', 'Every lesson in both languages. Switch at any time, even mid-lesson.']],
-    footNav: 'Site', team: 'Team sign-in' },
+    footNav: 'Site', refunds: 'Refund policy',
+    manyTitle: 'Too many tries', manyBody: 'Wait a few minutes, then try again. What you typed is still here.',
+    expTitle: 'This link has expired', expBody: 'Confirmation links work for 7 days. Enter your email again and we’ll send a new one.',
+    priceTitle: 'Prices at launch', perMonth: 'a month', perYear: 'a year', taxNote: 'Tax is added to dollar prices where it applies. Students get 40% off.',
+    prices: [['ph-map', 'Egypt', '249 EGP', '2,249 EGP'], ['ph-globe', 'Other Arab countries', '$5', '$45'], ['ph-globe', 'Gulf and the rest of the world', '$8', '$72']],
+    teamChip: 'Team only', teamT: 'Team access', teamLead: 'Enter the team password, then sign in with your own account.', teamLbl: 'Team password', show: 'Show password',
+    teamHelp: 'Admins get this from the product lead.', teamWrong: 'That password isn’t right. Check it and try again.', teamGo: 'Continue', teamBack: 'Back to UXGate' },
   ar: { otherLang: 'English', initial: 'ي', chip: 'قريبًا', over: 'تدرّب على UX بالعربية والإنجليزية',
     title: 'تدرّب على قرارات تصميم حقيقية.', lead: 'دروس قصيرة تُصلح فيها شاشات حقيقية، وتحصل على ملاحظات تشرح السبب، ثم تُثبت كل مهارة على حالة جديدة.',
     formLbl: 'نرسل لك رسالة واحدة عند الإطلاق', notify: 'أخبرني عند الإطلاق', sending: 'نضيفك إلى القائمة…', badEmail: 'اكتب بريدًا إلكترونيًا مثل ‎name@example.com‎.',
@@ -136,9 +170,15 @@ const C = {
     memPT: 'سنراسلك عند الإطلاق', memPB1: 'رسالة واحدة إلى ', memPB2: ' يوم الإطلاق. يبقى حسابك كما هو حتى ذلك الحين.', signOut: 'تسجيل الخروج',
     getTitle: 'ما الذي ستحصل عليه', artTag: 'UXGate · الإطلاق',
     get: [['ph-cursor', 'اتخذ قرارًا حقيقيًا', 'كل خطوة تضع أمامك شاشة حقيقية وتسألك ماذا ستغيّر.'], ['ph-chat', 'ملاحظات تشرح السبب', 'سواء أصبت أم لا، ترى أثر اختيارك على من يستخدم الشاشة.'], ['ph-seal', 'أثبت المهارة على حالة جديدة', 'تنتهي كل وحدة باختبار مهارة على شاشة لم ترها من قبل.'], ['ph-globe', 'بالعربية والإنجليزية', 'كل درس باللغتين، ويمكنك التبديل في أي وقت، حتى في منتصف الدرس.']],
-    footNav: 'الموقع', team: 'دخول الفريق' }
+    footNav: 'الموقع', refunds: 'سياسة الاسترداد',
+    manyTitle: 'محاولات كثيرة', manyBody: 'انتظر بضع دقائق ثم حاول مرة أخرى. ما كتبته ما زال هنا.',
+    expTitle: 'انتهت صلاحية هذا الرابط', expBody: 'يعمل رابط التأكيد لمدة 7 أيام. اكتب بريدك مرة أخرى وسنرسل لك رابطًا جديدًا.',
+    priceTitle: 'الأسعار عند الإطلاق', perMonth: 'شهريًا', perYear: 'سنويًا', taxNote: 'تُضاف الضريبة إلى الأسعار بالدولار حيث تنطبق. وللطلاب خصم 40%.',
+    prices: [['ph-map', 'مصر', '249 ج.م', '2,249 ج.م'], ['ph-globe', 'الدول العربية الأخرى', '5$', '45$'], ['ph-globe', 'الخليج وباقي العالم', '8$', '72$']],
+    teamChip: 'للفريق فقط', teamT: 'دخول الفريق', teamLead: 'اكتب كلمة مرور الفريق، ثم سجّل الدخول بحسابك.', teamLbl: 'كلمة مرور الفريق', show: 'إظهار كلمة المرور',
+    teamHelp: 'يحصل عليها المشرفون (Admins) من مسؤول المنتج.', teamWrong: 'كلمة المرور غير صحيحة. تحقّق منها وحاول مرة أخرى.', teamGo: 'متابعة', teamBack: 'العودة إلى UXGate' }
 };
-const VIEWS = ['idle', 'busy', 'sent', 'already', 'invalid', 'network', 'confirmed', 'member'];
+const VIEWS = ['idle', 'busy', 'sent', 'already', 'invalid', 'network', 'tooMany', 'expired', 'confirmed', 'member', 'team', 'teamWrong'];
 class Component extends DCLogic {
   renderVals() {
     const lang = this.props.lang === 'ar' ? 'ar' : 'en';
@@ -148,10 +188,13 @@ class Component extends DCLogic {
     const isDesk = device === 'desktop';
     const c = C[lang];
     const sfx = lang + '-' + theme + '-' + device + '-' + view;
-    const isForm = ['idle', 'busy', 'invalid', 'network'].indexOf(view) >= 0;
+    const isForm = ['idle', 'busy', 'invalid', 'network', 'tooMany', 'expired'].indexOf(view) >= 0;
+    const isTeam = view === 'team' || view === 'teamWrong';
     const isPanel = ['sent', 'already', 'member'].indexOf(view) >= 0;
-    const val = view === 'idle' ? '' : (view === 'invalid' ? 'yasmin.adel@example' : 'yasmin.adel@example.com');
-    const f = { val, busy: view === 'busy' ? 'true' : 'false', err: view === 'invalid', alert: view === 'network', inv: view === 'invalid' ? 'true' : 'false',
+    const val = (view === 'idle' || view === 'expired') ? '' : (view === 'invalid' ? 'yasmin.adel@example' : 'yasmin.adel@example.com');
+    const f = { val, busy: view === 'busy' ? 'true' : 'false', err: view === 'invalid', alert: ['network', 'tooMany', 'expired'].indexOf(view) >= 0,
+      aIcon: 'ph ' + ({ network: 'ph-wifi-slash', tooMany: 'ph-hourglass', expired: 'ph-clock' }[view] || 'ph-warning'),
+      aTitle: { network: c.netTitle, tooMany: c.manyTitle, expired: c.expTitle }[view] || '', aBody: { network: c.netBody, tooMany: c.manyBody, expired: c.expBody }[view] || '', inv: view === 'invalid' ? 'true' : 'false',
       desc: (view === 'invalid' ? 'soon-err-' + sfx + ' ' : '') + 'soon-consent-' + sfx,
       inputCls: 'input' + (view === 'invalid' ? ' is-error is-focus' : ''), btn: c.notify, btnCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block') };
     const P = {
@@ -160,15 +203,20 @@ class Component extends DCLogic {
       member: { cls: 'soon-done is-info', icon: 'ph ph-bell', title: c.memPT, body1: c.memPB1, body2: c.memPB2, btn: c.signOut }
     }[view] || {};
     const p = Object.assign({ cls: 'soon-done', icon: '', title: '', body1: '', body2: '', note: '', link: '', btn: '' }, P, { hasNote: !!P.note, hasLink: !!P.link, hasBtn: !!P.btn });
-    const h = view === 'confirmed' ? { chip: c.confChip, chipCls: 'kind kind-free', chipIcon: 'ph ph-check-circle-fill', showOver: false, title: c.confT, lead1: c.confL1, leadMail: true, lead2: c.confL2 }
+    const tw = view === 'teamWrong';
+    const t = { val: tw ? 'launchday' : '', err: tw, inv: tw ? 'true' : 'false', desc: (tw ? 'team-err-' + sfx + ' ' : '') + 'team-help-' + sfx,
+      inputCls: 'input' + (tw ? ' is-error is-focus' : ''), btnCls: 'btn btn-primary btn-lg press btn-block', backStyle: lang === 'ar' ? '' : 'transform: scaleX(-1);' };
+    const h = isTeam ? { chip: c.teamChip, chipCls: 'kind kind-current', chipIcon: 'ph ph-lock', showOver: false, title: c.teamT, lead1: c.teamLead, leadMail: false, lead2: '' }
+      : view === 'confirmed' ? { chip: c.confChip, chipCls: 'kind kind-free', chipIcon: 'ph ph-check-circle-fill', showOver: false, title: c.confT, lead1: c.confL1, leadMail: true, lead2: c.confL2 }
       : view === 'member' ? { chip: c.memChip, chipCls: 'kind kind-current', chipIcon: 'ph ph-user', showOver: false, title: c.memT, lead1: c.memL, leadMail: false, lead2: '' }
       : { chip: c.chip, chipCls: 'kind kind-soon', chipIcon: 'ph ph-hourglass', showOver: true, title: c.title, lead1: c.lead, leadMail: false, lead2: '' };
     return {
       lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, f, p, h, isDesk,
-      is: { form: isForm, panel: isPanel, member: view === 'member' },
+      is: { form: isForm, panel: isPanel, member: view === 'member', team: isTeam, public: !isTeam },
+      t, prices: c.prices.map(([icon, region, month, year]) => ({ icon: 'ph ' + icon, region, month, year })),
       get: c.get.map(([icon, title, text]) => ({ icon: 'ph ' + icon, title, text })),
       rootCls: 'ug pg pg-pub pg-soon pg-' + device,
-      scrollStyle: this.props.part === 'foot' ? (isDesk ? 'margin-top: -140px;' : 'margin-top: -500px;') : '',
+      scrollStyle: this.props.part === 'foot' ? (isDesk ? 'margin-top: -440px;' : 'margin-top: -1100px;') : this.props.part === 'prices' ? (isDesk ? 'margin-top: -300px;' : 'margin-top: -760px;') : '',
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       logoStyle: isDesk ? 'height: 34px; width: auto;' : 'height: 26px; width: auto;',
       otherCode: lang === 'ar' ? 'en' : 'ar'
