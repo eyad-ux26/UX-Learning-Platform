@@ -27,11 +27,12 @@ steps:
       en: "My team made a new home page for a travel company. The background moves at a different speed as you scroll, cards fly in from the sides, and the menu takes a full second to slide open.\n\nA tester with an inner-ear problem felt dizzy after one minute and stopped."
       ar: "صمّم فريقي صفحة رئيسية جديدة لشركة سفر. الخلفية تتحرّك بسرعة مختلفة وأنت تمرّر الصفحة، والبطاقات تطير من الجانبين، والقائمة تأخذ ثانية كاملة لتنفتح.\n\nومختبِرة عندها مشكلة في الأذن الداخلية شعرت بالدوار بعد دقيقة وتوقّفت."
     mock:
-      width: 300
+      app: zad
+      appbar: { logo: true, actions: [ { icon: user, aria: { en: "Account", ar: "الحساب" } } ] }
       blocks:
-        - { kind: image, size: m, tone: photo-dark, text: { en: "↕ Moving beach background", ar: "↕ خلفية شاطئ متحرّكة" } }
-        - { kind: meta, weight: bold, text: { en: "→ Dahab · ← Luxor · → Siwa", ar: "→ دهب · ← الأقصر · → سيوة" }, gap: s }
-        - { kind: small, color: muted, text: { en: "Cards fly in from the sides as you scroll", ar: "البطاقات تطير من الجانبين وأنت تمرّر" }, gap: xs }
+        - { kind: image, art: beach, text: { en: "Summer by the sea", ar: "صيف على البحر" }, note: { en: "Background moves as you scroll", ar: "الخلفية تتحرّك وأنت تمرّر" } }
+        - { kind: listitem, art: beach, text: { en: "Dahab · 3 nights", ar: "دهب · 3 ليالٍ" }, value: { en: "4,200 EGP", ar: "4,200 جنيه" }, note: { en: "Flies in from the right", ar: "تطير من اليمين" }, gap: s }
+        - { kind: listitem, art: desert, text: { en: "Luxor · 2 nights", ar: "الأقصر · ليلتان" }, value: { en: "3,600 EGP", ar: "3,600 جنيه" }, note: { en: "Flies in from the left", ar: "تطير من اليسار" } }
 
   - id: S02
     type: choose
@@ -48,6 +49,13 @@ steps:
     prompt:
       en: "What should the page do when \"Reduce motion\" is on?"
       ar: "ماذا يجب أن تفعل الصفحة حين يكون «تقليل الحركة» مفعّلًا؟"
+    mock:
+      app: { name: { en: "Settings", ar: "الإعدادات" }, color: "#6B7280", icon: gear, domain: settings.example }
+      appbar: { title: { en: "Accessibility", ar: "إمكانية الوصول" }, back: true }
+      blocks:
+        - { kind: listitem, icon: text-aa, text: { en: "Bold text", ar: "نص عريض" }, toggle: false }
+        - { kind: listitem, icon: sparkle, text: { en: "Reduce motion", ar: "تقليل الحركة" }, sub: { en: "Less movement on screen", ar: "حركة أقل على الشاشة" }, toggle: true, ring: brand }
+        - { kind: listitem, icon: magnifying-glass-plus, text: { en: "Zoom", ar: "التكبير" }, toggle: false }
     options:
       - { id: keep, text: { en: "Keep the motion; it's part of our brand", ar: "تُبقي الحركة؛ فهي جزء من هويتنا" } }
       - { id: slow, text: { en: "Slow every animation down, so it feels gentler", ar: "تُبطئ كل الحركات، لتبدو ألطف" } }
@@ -99,12 +107,17 @@ steps:
       en: "What should I tell them?"
       ar: "ماذا يجب أن أقول لهم؟"
     mock:
-      width: 300
+      app: zad
+      appbar: { title: { en: "Trips", ar: "الرحلات" }, back: true }
       blocks:
-        - kind: row
+        - kind: card
+          art: beach
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Dahab · 3 nights", ar: "دهب · 3 ليالٍ" } }
-            - { kind: chip, tone: bad, text: { en: "⚡ Last seats!", ar: "⚡ آخر المقاعد!" } }
+            - kind: row
+              blocks:
+                - { kind: heading, text: { en: "Dahab · 3 nights", ar: "دهب · 3 ليالٍ" } }
+                - { kind: badge, tone: bad, text: { en: "Last seats!", ar: "آخر المقاعد!" }, note: { en: "Flashes 3× a second", ar: "تومض 3 مرات في الثانية" } }
+            - { kind: price, text: { en: "4,200 EGP", ar: "4,200 جنيه" }, gap: xs }
     options:
       - { id: steady, text: { en: "No flashing. Use a steady red label with clear words", ar: "بدون وميض. استخدموا علامة حمراء ثابتة بكلمات واضحة" } }
       - { id: setting, text: { en: "Flash only when \"Reduce motion\" is off", ar: "تومض فقط حين يكون «تقليل الحركة» غير مفعّل" } }
@@ -142,12 +155,17 @@ steps:
       en: "How long should it take?"
       ar: "كم يجب أن تأخذ؟"
     mock:
-      width: 300
+      app: zad
+      appbar: { logo: true, actions: [ { icon: list, aria: { en: "Menu", ar: "القائمة" } } ] }
       blocks:
-        - kind: row
-          blocks:
-            - { kind: button, style: plain, text: "☰" }
-            - { kind: small, color: muted, text: { en: "⏱ Menu opens in 1,000 ms", ar: "⏱ القائمة تنفتح في 1,000 ms" } }
+        - { kind: image, art: beach }
+      overlay:
+        type: side
+        title: { en: "Menu", ar: "القائمة" }
+        blocks:
+          - { kind: listitem, icon: airplane-tilt, text: { en: "Flights", ar: "الطيران" }, note: { en: "Slides in over 1,000 ms", ar: "تنزلق خلال 1,000 ms" } }
+          - { kind: listitem, icon: bed, text: { en: "Hotels", ar: "الفنادق" } }
+          - { kind: listitem, icon: suitcase, text: { en: "My trips", ar: "رحلاتي" } }
     options:
       - { id: blink, text: { en: "About 30 ms, so it's almost instant", ar: "نحو 30 ms، لتكون فورية تقريبًا" } }
       - { id: right, text: { en: "About 250 ms", ar: "نحو 250 ms" } }
@@ -193,17 +211,21 @@ steps:
     a:
       label: { en: "A: The switch moves across in 100 ms.", ar: "A: المفتاح يتحرّك في 100 ms." }
       mock:
-        width: 300
+        app: zad
+        appbar: { title: { en: "Dahab · 3 nights", ar: "دهب · 3 ليالٍ" }, back: true }
         blocks:
-          - { kind: toggle, selected: true, text: { en: "Price alerts", ar: "تنبيهات السعر" } }
-          - { kind: small, color: muted, text: { en: "⏱ 100 ms", ar: "⏱ 100 ms" }, gap: xs }
+          - { kind: image, art: beach }
+          - { kind: price, text: { en: "4,200 EGP", ar: "4,200 جنيه" }, gap: s }
+          - { kind: listitem, icon: bell, text: { en: "Price alerts", ar: "تنبيهات السعر" }, toggle: true, note: { en: "100 ms", ar: "100 ms" }, gap: s }
     b:
       label: { en: "B: The switch moves in 700 ms, with a bounce and a glow.", ar: "B: المفتاح يتحرّك في 700 ms، مع ارتداد ووهج." }
       mock:
-        width: 300
+        app: zad
+        appbar: { title: { en: "Dahab · 3 nights", ar: "دهب · 3 ليالٍ" }, back: true }
         blocks:
-          - { kind: toggle, selected: true, text: { en: "Price alerts", ar: "تنبيهات السعر" } }
-          - { kind: small, color: muted, text: { en: "⏱ 700 ms · bounce · glow ✨", ar: "⏱ 700 ms · ارتداد · وهج ✨" }, gap: xs }
+          - { kind: image, art: beach }
+          - { kind: price, text: { en: "4,200 EGP", ar: "4,200 جنيه" }, gap: s }
+          - { kind: listitem, icon: bell, text: { en: "Price alerts", ar: "تنبيهات السعر" }, toggle: true, note: { en: "700 ms · bounce · glow", ar: "700 ms · ارتداد · وهج" }, gap: s }
     answer: a
     reason:
       prompt: { en: "Why is A better?", ar: "لماذا A أفضل؟" }
@@ -251,10 +273,11 @@ steps:
       en: "What should I do with the scooter?"
       ar: "ماذا أفعل بالسكوتر؟"
     mock:
-      width: 300
+      app: lamma
+      appbar: { title: { en: "Your cart", ar: "سلّتك" }, back: true }
       blocks:
-        - { kind: meta, text: "🛵 · · · · · · →", weight: bold }
-        - { kind: small, color: muted, text: { en: "⏱ 2,000 ms before the cart shows", ar: "⏱ 2,000 ms قبل أن تظهر السلة" }, gap: xs }
+        - { kind: icon, icon: moped, size: l, color: brand, note: { en: "Drives across for 2,000 ms before the cart shows", ar: "تعبر الشاشة لمدة 2,000 ms قبل أن تظهر السلة" } }
+        - { kind: small, color: muted, text: { en: "Your cart is coming…", ar: "سلّتك في الطريق…" }, gap: m }
     options:
       - { id: keep, text: { en: "Keep it. People love fun details", ar: "أبقيه. الناس يحبّون التفاصيل الممتعة" } }
       - { id: cut, text: { en: "Remove it, or make it a quick touch while the cart shows at once", ar: "أزِله، أو اجعله لمسة سريعة بينما تظهر السلة فورًا" } }
