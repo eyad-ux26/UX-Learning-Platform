@@ -20,17 +20,19 @@ steps:
     type: card
     part: hook
     title: { en: "Fifty prices, one by one", ar: "خمسون سعرًا، واحدًا واحدًا" }
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products/paint-roller-23cm
+      navbar: { links: [ { en: "Products", ar: "المنتجات" }, { en: "Orders", ar: "الطلبات" }, { en: "Reports", ar: "التقارير" } ], active: 0, actions: [ { icon: user } ] }
+      blocks:
+        - { kind: title, text: { en: "Edit product", ar: "تعديل منتج" } }
+        - { kind: listitem, art: box, text: { en: "Paint roller, 23 cm", ar: "رولة دهان، 23 سم" }, sub: { en: "Product 7 of 50 to update", ar: "المنتج 7 من 50 للتحديث" }, gap: m }
+        - { kind: field, label: { en: "Price", ar: "السعر" }, text: { en: "EGP 120", ar: "120 جنيه" }, filled: true, focus: true, gap: m }
+        - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
     body:
       en: "Every month my supplier raises prices, and I update my shop. In my dashboard, that means opening each product, editing the price and saving it.\n\nLast month it was 50 products. It took me a whole evening, and I made two typos."
       ar: "كل شهر يرفع المورّد الأسعار، فأحدّث متجري. وفي لوحة التحكم، يعني هذا فتح كل منتج، وتعديل سعره، وحفظه.\n\nفي الشهر الماضي كانت 50 منتجًا. أخذ ذلك مني مساءً كاملًا، وأخطأت في الكتابة مرتين."
-    mock:
-      width: 300
-      blocks:
-        - { kind: title, text: { en: "Edit product", ar: "تعديل منتج" } }
-        - { kind: meta, text: { en: "Paint roller, 23 cm", ar: "رولة دهان، 23 سم" }, gap: s }
-        - { kind: field, label: { en: "Price", ar: "السعر" }, text: { en: "EGP 120", ar: "120 جنيه" }, filled: true, gap: m }
-        - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: l }
-
   - id: S02
     type: choose
     part: try
@@ -44,6 +46,16 @@ steps:
     prompt:
       en: "What would help me most?"
       ar: "ما الذي يساعدني أكثر؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products
+      navbar: { links: [ { en: "Products", ar: "المنتجات" }, { en: "Orders", ar: "الطلبات" }, { en: "Reports", ar: "التقارير" } ], active: 0 }
+      blocks:
+        - { kind: title, text: { en: "Products (50)", ar: "المنتجات (50)" } }
+        - { kind: listitem, art: box, text: { en: "Paint roller, 23 cm", ar: "رولة دهان، 23 سم" }, value: { en: "EGP 120", ar: "120 جنيه" }, chevron: true, gap: m }
+        - { kind: listitem, art: box, text: { en: "Pipe wrench", ar: "مفتاح مواسير" }, value: { en: "EGP 210", ar: "210 جنيه" }, chevron: true, gap: s }
+        - { kind: listitem, art: box, text: { en: "Garden hose 20 m", ar: "خرطوم حديقة 20 م" }, value: { en: "EGP 340", ar: "340 جنيه" }, chevron: true, gap: s, note: { en: "Each price is edited one by one", ar: "كل سعر يُعدّل وحده" } }
     options:
       - { id: bulk, text: { en: "Select many products and raise all their prices at once, by an amount or a %", ar: "أختار منتجات كثيرة وأرفع أسعارها كلها مرة واحدة، بمبلغ أو بنسبة" } }
       - { id: faster, text: { en: "Make the product edit page load faster", ar: "أن تُفتح صفحة تعديل المنتج أسرع" } }
@@ -109,6 +121,18 @@ steps:
     prompt:
       en: "How should the dashboard make them known?"
       ar: "كيف تعرّف لوحة التحكم الناس بها؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products
+      navbar: { links: [ { en: "Products", ar: "المنتجات" }, { en: "Orders", ar: "الطلبات" }, { en: "Help", ar: "المساعدة" } ], active: 0 }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: button, icon: plus, text: { en: "New product", ar: "منتج جديد" } }
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث في المنتجات" } }
+            - { kind: button, icon: pencil-simple, text: { en: "Edit", ar: "تعديل" }, style: outline }
+        - { kind: small, text: { en: "Shortcuts N, / and E are listed only under Help", ar: "الاختصارات N و/ وE مكتوبة فقط في المساعدة" }, tone: faint, gap: m }
     options:
       - { id: inline, text: { en: "Show each shortcut next to its button or menu item, and in its tooltip", ar: "عرض كل اختصار بجانب زرّه أو عنصره في القائمة، وفي الـ Tooltip الخاص به" } }
       - { id: popup, text: { en: "A pop-up on every login listing all shortcuts", ar: "نافذة منبثقة عند كل تسجيل دخول تعرض كل الاختصارات" } }
@@ -150,6 +174,15 @@ steps:
     prompt:
       en: "What should change?"
       ar: "ماذا يجب أن يتغيّر؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products/new/step-1
+      blocks:
+        - { kind: progress, value: 16, label: { en: "Step 1 of 6: Name", ar: "الخطوة 1 من 6: الاسم" } }
+        - { kind: field, label: { en: "Product name", ar: "اسم المنتج" }, text: { en: "e.g. Electric kettle", ar: "مثال: غلاية كهربائية" }, gap: m }
+        - { kind: banner, icon: lightbulb, tone: info, text: { en: "Tip: use the name customers search for.", ar: "نصيحة: استخدم الاسم الذي يبحث عنه العملاء." }, gap: m }
+        - { kind: button, text: { en: "Next", ar: "التالي" }, gap: m }
     options:
       - { id: remove, text: { en: "Remove the step-by-step screens for everyone", ar: "حذف الشاشات المتتالية للجميع" } }
       - { id: oneform, text: { en: "Keep the guided steps for new sellers, and offer a \"Quick add\" form on one page for those who know it", ar: "إبقاء الخطوات الموجّهة للبائعين الجدد، وعرض نموذج «إضافة سريعة» في صفحة واحدة لمن يعرف الطريقة" } }
@@ -195,21 +228,26 @@ steps:
     a:
       label: { en: "Version A: the same for everyone", ar: "النسخة A: واحدة للجميع" }
       mock:
-        width: 260
+        app: lokma
+        appbar: { logo: true, actions: [ { icon: shopping-cart } ] }
         blocks:
-          - { kind: field, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
+          - { kind: searchbar, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
           - { kind: heading, text: { en: "Popular near you", ar: "الأشهر بالقرب منك" }, gap: m }
-          - { kind: image, size: s, gap: s }
-          - { kind: image, size: s, gap: s }
+          - { kind: listitem, art: food-pizza, text: { en: "Pizza Roma", ar: "بيتزا روما" }, sub: { en: "25 min · EGP 15 delivery", ar: "25 د · توصيل 15 جنيه" }, gap: s }
+          - { kind: listitem, art: food-burger, text: { en: "Burger Lab", ar: "برجر لاب" }, sub: { en: "30 min · free delivery", ar: "30 د · توصيل مجاني" }, gap: s }
     b:
       label: { en: "Version B: with Order again", ar: "النسخة B: مع «اطلب مرة أخرى»" }
       mock:
-        width: 260
+        app: lokma
+        appbar: { logo: true, actions: [ { icon: shopping-cart } ] }
         blocks:
-          - { kind: field, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
-          - { kind: heading, text: { en: "Order again", ar: "اطلب مرة أخرى" }, gap: m }
-          - { kind: meta, text: { en: "Koshary, large + salad · Koshary El Nil", ar: "كشري كبير + سلطة · كشري النيل" }, gap: s }
-          - { kind: button, text: { en: "Reorder · EGP 95", ar: "أعد الطلب · 95 جنيه" }, gap: xs }
+          - { kind: searchbar, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
+          - kind: card
+            gap: m
+            blocks:
+              - { kind: small, text: { en: "Order again", ar: "اطلب مرة أخرى" } }
+              - { kind: listitem, art: food-koshary, text: { en: "Koshary, large + salad", ar: "كشري كبير + سلطة" }, sub: { en: "Koshary El Nil · Tue", ar: "كشري النيل · الثلاثاء" } }
+              - { kind: button, text: { en: "Reorder · EGP 95", ar: "أعد الطلب · 95 جنيه" } }
           - { kind: heading, text: { en: "Popular near you", ar: "الأشهر بالقرب منك" }, gap: m }
     answer: b
     misconceptions:
@@ -241,6 +279,14 @@ steps:
     prompt:
       en: "What should the app offer them?"
       ar: "ماذا يجب أن يقدّم لهم التطبيق؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Pharmacy", ar: "الصيدلية" }, back: true }
+      blocks:
+        - { kind: searchbar, text: { en: "metf", ar: "ميتف" }, filled: true, suggest: [ { icon: pill, text: { en: "metf**ormin 500 mg**", ar: "ميتف**ورمين 500 مجم**" } } ] }
+        - { kind: listitem, art: medicine, text: { en: "Metformin 500 mg · 30 tabs", ar: "ميتفورمين 500 مجم · 30 قرصًا" }, value: { en: "EGP 48", ar: "48 جنيه" }, gap: m, note: { en: "The same order, typed in again every month", ar: "الطلب نفسه، يُكتب من جديد كل شهر" } }
+      footer:
+        - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" } }
     options:
       - { id: auto, text: { en: "\"Refill every month\": the same order goes out on a set day, with a reminder two days before to change or skip it", ar: "«أعِد الصرف كل شهر»: يُرسل الطلب نفسه في يوم محدد، مع تذكير قبلها بيومين لتعديله أو تخطّيه" } }
       - { id: banner, text: { en: "A banner on the home page: \"Don't forget your medicine!\"", ar: "Banner في الصفحة الرئيسية: «لا تنسَ دواءك!»" } }
