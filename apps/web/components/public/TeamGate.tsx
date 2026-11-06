@@ -54,14 +54,14 @@ export function TeamGate() {
                 <div className={`input${wrong ? " is-error" : ""}`}>
                   <span className="ph ph-lock" aria-hidden="true" />
                   <input ref={field} id="team-pw" type={show ? "text" : "password"} autoComplete="current-password" dir="ltr" value={pw} onChange={(e) => setPw(e.target.value)}
-                    aria-invalid={wrong} aria-describedby={wrong ? "team-err" : undefined} />
+                    aria-invalid={wrong} aria-describedby={wrong ? "team-err" : "team-help"} />
                   <button type="button" className="icon-btn plain" style={{ inlineSize: 44, blockSize: 44, marginInlineEnd: -10 }} aria-label={show ? t("hide") : t("show")} aria-pressed={show} onClick={() => setShow((v) => !v)}>
                     <span className={`ph ph-${show ? "eye-slash" : "eye"}`} aria-hidden="true" />
                   </button>
                 </div>
                 <button type="submit" className="btn btn-primary btn-lg press" aria-busy={busy || undefined}>{t("go")}</button>
               </div>
-              {wrong ? <span className="err" id="team-err"><span className="ph ph-x-circle-fill" aria-hidden="true" />{t("wrong")}</span> : null}
+              {wrong ? <span className="err" id="team-err"><span className="ph ph-x-circle-fill" aria-hidden="true" />{t("wrong")}</span> : <span className="soon-consent" id="team-help">{t("help")}</span>}
               <Link href="/" className="pg-link">{t("back")}</Link>
             </form>
           </div>

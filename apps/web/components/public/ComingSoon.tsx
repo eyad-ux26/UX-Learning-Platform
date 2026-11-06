@@ -10,7 +10,7 @@ import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { LogoMotion } from "@/components/loading/LogoMotion";
 import { WaitlistForm } from "./WaitlistForm";
 import { SoonSignOut } from "./SoonSignOut";
-import { PRICES, formatMoney, moneyCls, type Region } from "@/lib/billing/pricing";
+import { DISCOUNTS, PRICES, formatMoney, moneyCls, type Region } from "@/lib/billing/pricing";
 
 export type SoonView = { kind: "public" } | { kind: "expired" } | { kind: "confirmed"; email: string } | { kind: "member"; email: string; name: string | null };
 
@@ -103,7 +103,7 @@ export async function ComingSoon({ locale, view }: { locale: string; view: SoonV
                 );
               })}
             </ul>
-            <p className="soon-tax">{t("plusTax")}</p>
+            <p className="soon-tax">{t("plusTax")} {t("students", { percent: DISCOUNTS.student.percent })}</p>
           </section>
         </main>
 
