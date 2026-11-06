@@ -22,17 +22,19 @@ steps:
     type: card
     part: hook
     title: { en: "Back before she left", ar: "عادت قبل أن تسافر" }
+    mock:
+      app: rehla
+      appbar: { title: { en: "Round trip", ar: "ذهاب وعودة" }, back: true }
+      blocks:
+        - { kind: listitem, icon: bus, text: { en: "Cairo → Aswan", ar: "القاهرة ← أسوان" }, sub: { en: "1 passenger", ar: "راكب واحد" } }
+        - { kind: field, label: { en: "Leave", ar: "الذهاب" }, text: { en: "Wed 12 Nov", ar: "الأربعاء 12 نوفمبر" }, filled: true, icon: calendar-blank, gap: m }
+        - { kind: field, label: { en: "Return", ar: "العودة" }, text: { en: "Sun 2 Nov", ar: "الأحد 2 نوفمبر" }, filled: true, icon: calendar-blank, gap: m, note: { en: "Accepted, 10 days before the trip", ar: "قُبل، قبل الرحلة بعشرة أيام" } }
+        - { kind: price, text: { en: "EGP 820", ar: "820 جنيه" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Book both trips", ar: "احجز الرحلتين" } }
     body:
       en: "I manage a bus ticket app. Marwa booked a trip from Cairo to Aswan on the 12th, and a return on the 2nd. She meant the 22nd.\n\nThe app accepted it. She found out at the station on the 22nd, with no seat."
       ar: "أدير تطبيقًا لتذاكر الحافلات. حجزت مروة رحلة من القاهرة إلى أسوان يوم 12، ورحلة عودة يوم 2. وكانت تقصد يوم 22.\n\nقبِل التطبيق الحجز. واكتشفت الخطأ في المحطة يوم 22، دون مقعد."
-    mock:
-      width: 300
-      blocks:
-        - { kind: title, text: { en: "Round trip", ar: "ذهاب وعودة" } }
-        - { kind: field, label: { en: "Leave", ar: "الذهاب" }, text: { en: "12 November", ar: "12 نوفمبر" }, filled: true, gap: m }
-        - { kind: field, label: { en: "Return", ar: "العودة" }, text: { en: "2 November", ar: "2 نوفمبر" }, filled: true, gap: m }
-        - { kind: button, text: { en: "Book both trips", ar: "احجز الرحلتين" }, gap: l }
-
   - id: S02
     type: choose
     part: try
@@ -46,6 +48,12 @@ steps:
     prompt:
       en: "What would have stopped Marwa's mistake?"
       ar: "ما الذي كان سيمنع خطأ مروة؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "Return date", ar: "تاريخ العودة" }, back: true }
+      blocks:
+        - { kind: small, text: { en: "Leaving Wed 12 Nov", ar: "الذهاب الأربعاء 12 نوفمبر" } }
+        - { kind: calendar, months: [ { title: { en: "November 2026", ar: "نوفمبر 2026" }, start: 0, days: 30 } ], pick: [0, 2], gap: s, note: { en: "Every day can be picked", ar: "كل الأيام قابلة للاختيار" } }
     options:
       - { id: email, text: { en: "Send the tickets by email so she can check them", ar: "إرسال التذاكر بالبريد لتراجعها" } }
       - { id: limit, text: { en: "In the return calendar, grey out every day before the 12th", ar: "في تقويم العودة، تعطيل كل الأيام قبل يوم 12" } }
@@ -113,6 +121,13 @@ steps:
     prompt:
       en: "What should the field do?"
       ar: "ماذا يجب أن يفعل الحقل؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
+      keyboard: number
+      blocks:
+        - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "010 1234 5678", filled: true, error: { en: "Invalid number", ar: "رقم غير صالح" }, focus: true }
+        - { kind: price, text: { en: "EGP 820", ar: "820 جنيه" }, gap: m }
     options:
       - { id: hint, text: { en: "Keep the rule, and add \"No spaces\" under the field", ar: "تبقى القاعدة، مع إضافة «بدون مسافات» تحت الحقل" } }
       - { id: forgive, text: { en: "Accept spaces and dashes, remove them behind the scenes, and show the number in groups as people type", ar: "يقبل المسافات والشرطات، ويحذفها خلف الكواليس، ويعرض الرقم مقسّمًا أثناء الكتابة" } }
@@ -149,6 +164,20 @@ steps:
     prompt:
       en: "What should the confirmation say?"
       ar: "ماذا يجب أن يقول التأكيد؟"
+    mock:
+      app: rehla
+      appbar: { title: { en: "My tickets", ar: "تذاكري" } }
+      blocks:
+        - { kind: listitem, icon: bus, text: { en: "Cairo → Aswan · 12 Nov", ar: "القاهرة ← أسوان · 12 نوفمبر" }, sub: { en: "9:00 pm · seat 14 · EGP 450", ar: "9:00 م · المقعد 14 · 450 جنيه" } }
+      overlay:
+        type: dialog
+        blocks:
+          - { kind: heading, text: { en: "Are you sure?", ar: "هل أنت متأكد؟" } }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: button, text: { en: "Yes", ar: "نعم" } }
+              - { kind: button, text: { en: "No", ar: "لا" }, style: outline }
     options:
       - { id: same, text: { en: "Keep it short: \"Are you sure? Yes / No\"", ar: "يبقى قصيرًا: «هل أنت متأكد؟ نعم / لا»" } }
       - { id: specific, text: { en: "\"Cancel Cairo → Aswan, 12 Nov? You'll get EGP 360 of 450 back.\" Buttons: Cancel ticket / Keep ticket", ar: "«إلغاء القاهرة ← أسوان، 12 نوفمبر؟ سيُرد لك 360 من 450 جنيهًا». الأزرار: ألغِ التذكرة / أبقِ التذكرة" } }
@@ -189,27 +218,30 @@ steps:
     a:
       label: { en: "Version A: confirm every time", ar: "النسخة A: تأكيد في كل مرة" }
       mock:
-        width: 260
+        app: naghma
+        appbar: { title: { en: "Road trip", ar: "رحلة الطريق" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Road trip", ar: "رحلة الطريق" } }
-          - { kind: meta, text: { en: "Song 1 · Song 2 · Song 3", ar: "أغنية 1 · أغنية 2 · أغنية 3" }, gap: s }
+          - { kind: listitem, icon: music-note, text: { en: "Ya Msafer", ar: "يا مسافر" }, sub: "3:45" }
+          - { kind: listitem, icon: music-note, text: { en: "El Leila", ar: "الليلة" }, sub: "4:10", gap: s }
+          - { kind: listitem, icon: music-note, text: { en: "Bahebak", ar: "بحبك" }, sub: "3:20", gap: s }
         overlay:
           type: dialog
           blocks:
             - { kind: heading, text: { en: "Remove this song?", ar: "حذف هذه الأغنية؟" } }
             - { kind: button, text: { en: "Remove", ar: "احذف" }, gap: m }
-            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: plain, gap: s }
+            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text, gap: s }
     b:
       label: { en: "Version B: remove, with Undo", ar: "النسخة B: احذف، مع تراجع" }
       mock:
-        width: 260
+        app: naghma
+        appbar: { title: { en: "Road trip", ar: "رحلة الطريق" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Road trip", ar: "رحلة الطريق" } }
-          - { kind: meta, text: { en: "Song 1 · Song 3", ar: "أغنية 1 · أغنية 3" }, gap: s }
+          - { kind: listitem, icon: music-note, text: { en: "Ya Msafer", ar: "يا مسافر" }, sub: "3:45" }
+          - { kind: listitem, icon: music-note, text: { en: "Bahebak", ar: "بحبك" }, sub: "3:20", gap: s }
         overlay:
           type: toast
           blocks:
-            - { kind: text, text: { en: "Song 2 removed · Undo", ar: "حُذفت أغنية 2 · تراجع" } }
+            - { kind: row, blocks: [ { kind: text, text: { en: "\"El Leila\" removed", ar: "حُذفت «الليلة»" } }, { kind: link, text: { en: "Undo", ar: "تراجع" } } ] }
     answer: b
     misconceptions:
       - id: MC-P02-023
@@ -241,6 +273,14 @@ steps:
     prompt:
       en: "What should the reminder screen offer?"
       ar: "ماذا يجب أن تعرض شاشة التذكير؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Medicine reminder", ar: "تذكير الدواء" }, back: true }
+      keyboard: number
+      blocks:
+        - { kind: listitem, art: medicine, text: { en: "Metformin 500 mg", ar: "ميتفورمين 500 مجم" }, sub: { en: "Twice a day", ar: "مرتين يوميًا" } }
+        - { kind: field, label: { en: "Reminder 1", ar: "التذكير 1" }, text: "8:00 am", filled: true, gap: m }
+        - { kind: field, label: { en: "Reminder 2", ar: "التذكير 2" }, text: "8:00 am", filled: true, focus: true, gap: m, note: { en: "Meant 8:00 pm", ar: "كان يقصد 8:00 مساءً" } }
     options:
       - { id: presets, text: { en: "Presets that match the prescription, such as \"Twice a day: 9 am and 9 pm\", that patients can adjust", ar: "اختيارات جاهزة تطابق الوصفة، مثل «مرتين يوميًا: 9 صباحًا و9 مساءً»، يستطيع المرضى تعديلها" } }
       - { id: bold, text: { en: "Make am and pm bigger and bolder in the field", ar: "تكبير «صباحًا» و«مساءً» وجعلهما أعرض في الحقل" } }

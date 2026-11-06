@@ -30,10 +30,16 @@ steps:
       en: "What should I change?"
       ar: "ماذا يجب أن أغيّر؟"
     mock:
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Classes", ar: "الحصص" } }
+      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
       blocks:
-        - { kind: meta, weight: bold, text: { en: "Yoga · Mon 19:00", ar: "يوجا · الإثنين 19:00" } }
-        - { kind: small, color: muted, text: { en: "6 places left", ar: "باقي 6 أماكن" }, gap: xs }
+        - kind: card
+          art: gym
+          blocks:
+            - { kind: heading, text: { en: "Yoga · Mon 19:00", ar: "يوجا · الإثنين 19:00" } }
+            - { kind: small, color: muted, text: { en: "6 places left", ar: "باقي 6 أماكن" }, gap: xs }
+        - { kind: listitem, icon: barbell, text: { en: "Boxing · Tue 18:00", ar: "ملاكمة · الثلاثاء 18:00" }, sub: { en: "2 places left", ar: "باقي مكانان" }, gap: s }
     options:
       - { id: poster, text: { en: "Put a poster in the gym: \"Swipe right to book\"", ar: "علّق لافتة في النادي: «اسحب لليمين للحجز»" } }
       - { id: arrow, text: { en: "Add a small → arrow on each card", ar: "أضف سهمًا صغيرًا → على كل بطاقة" } }
@@ -100,6 +106,12 @@ steps:
     prompt:
       en: "How should undo work?"
       ar: "كيف يجب أن يعمل التراجع؟"
+    mock:
+      app: dar
+      appbar: { title: { en: "Cart", ar: "السلة" }, back: true }
+      blocks:
+        - { kind: listitem, icon: wallet, text: { en: "Leather wallet", ar: "محفظة جلد" }, sub: { en: "450 EGP", ar: "450 جنيه" }, swipe: { text: { en: "Remove", ar: "احذف" }, tone: bad } }
+        - { kind: listitem, art: earbuds, text: { en: "Wireless earbuds", ar: "سماعات لاسلكية" }, sub: { en: "1,450 EGP", ar: "1,450 جنيه" } }
     options:
       - { id: keep, text: { en: "Keep it in History; it's there if people need it", ar: "يبقى في السجل؛ موجود إن احتاجه الناس" } }
       - { id: bar, text: { en: "Show \"Wallet removed · Undo\" right after the swipe", ar: "اعرض «تم حذف المحفظة · تراجع» بعد السحب مباشرة" } }
@@ -133,6 +145,12 @@ steps:
     prompt:
       en: "What should the swipe do?"
       ar: "ماذا يجب أن يفعل السحب؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "My appointments", ar: "مواعيدي" }, back: true }
+      blocks:
+        - { kind: listitem, avatar: { text: "Salma Adel", art: doctor }, text: { en: "Tue 10:30 · Dr. Salma", ar: "الثلاثاء 10:30 · د. سلمى" }, sub: { en: "Children's doctor", ar: "طبيبة أطفال" }, swipe: { text: { en: "Cancel", ar: "إلغاء" }, tone: bad } }
+        - { kind: listitem, avatar: { text: "Karim Nabil", art: man-1 }, text: { en: "Thu 17:00 · Dr. Karim", ar: "الخميس 17:00 · د. كريم" }, sub: { en: "Dentist", ar: "طبيب أسنان" } }
     options:
       - { id: sound, text: { en: "Cancel at once and play a sound", ar: "يلغي فورًا ويشغّل صوتًا" } }
       - { id: hide, text: { en: "Cancel at once and hide the appointment", ar: "يلغي فورًا ويُخفي الموعد" } }
@@ -303,6 +321,15 @@ steps:
     prompt:
       en: "How should we show this news?"
       ar: "كيف نعرض هذه الأخبار؟"
+    mock:
+      app: nashat
+      frame: wide
+      url: nashat.example
+      navbar: { links: [ { en: "Classes", ar: "الحصص" }, { en: "Prices", ar: "الأسعار" } ], actions: [ { icon: user } ] }
+      blocks:
+        - { kind: banner, tone: info, icon: megaphone, text: { en: "Yoga moves to 20:00 · See new times · Pool closed Friday…", ar: "اليوجا تنتقل إلى 20:00 · شاهد المواعيد الجديدة · المسبح مغلق الجمعة…" }, note: { en: "Scrolls across all the time", ar: "يتحرّك عبر الشاشة طوال الوقت" } }
+        - { kind: image, art: gym, gap: s }
+        - { kind: button, text: { en: "Book your free trial", ar: "احجز حصتك التجريبية المجانية" }, gap: s }
     options:
       - { id: slow, text: { en: "Keep the moving line, but slower", ar: "أبقِ السطر المتحرّك، لكن أبطأ" } }
       - { id: still, text: { en: "A still notice box with each item and a \"See new times\" link", ar: "صندوق تنبيه ثابت فيه كل خبر ورابط «شاهد المواعيد الجديدة»" } }

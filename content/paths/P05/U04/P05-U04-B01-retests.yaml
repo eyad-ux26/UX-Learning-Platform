@@ -28,10 +28,13 @@ steps:
       en: "What should the photo's alt text be?"
       ar: "ماذا يجب أن يكون النص البديل للصورة؟"
     mock:
-      width: 300
+      app: lamha
+      appbar: { title: { en: "Lamha · Men", ar: "لمحة · رجال" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
       blocks:
-        - { kind: image, size: m, text: "CAIRO RUNNERS 2026" }
-        - { kind: meta, weight: bold, text: { en: "White T-shirt · 350 EGP", ar: "تيشيرت أبيض · 350 جنيه" }, gap: s }
+        - { kind: image, art: shirt, text: "CAIRO RUNNERS 2026" }
+        - { kind: heading, text: { en: "White T-shirt", ar: "تيشيرت أبيض" }, gap: s }
+        - { kind: price, text: { en: "350 EGP", ar: "350 جنيه" }, gap: xs }
+        - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" }, gap: s }
     options:
       - { id: empty, text: { en: "Empty; the name already says it's a T-shirt", ar: "فارغ؛ الاسم يقول إنه تيشيرت أصلًا" } }
       - { id: plain, text: { en: "\"White cotton T-shirt.\"", ar: "«تيشيرت قطن أبيض.»" } }
@@ -66,15 +69,18 @@ steps:
       en: "What should the ✕ icon's alt text be?"
       ar: "ماذا يجب أن يكون النص البديل لأيقونة ✕؟"
     mock:
-      width: 300
+      app: sallah
+      appbar: { logo: true, actions: [ { icon: basket, aria: { en: "Basket", ar: "السلة" } } ] }
       blocks:
-        - kind: group
-          tone: tint
-          blocks:
-            - kind: row
-              blocks:
-                - { kind: meta, weight: bold, text: { en: "20% off your first order", ar: "خصم 20% على أول طلب" } }
-                - { kind: button, style: plain, text: "✕" }
+        - { kind: searchbar, text: { en: "Search Sallah", ar: "ابحث في سلّة" } }
+        - { kind: listitem, art: bread, text: { en: "Baladi bread", ar: "عيش بلدي" }, value: { en: "10 EGP", ar: "10 جنيه" } }
+      overlay:
+        type: dialog
+        close: true
+        blocks:
+          - { kind: heading, text: { en: "20% off your first order", ar: "خصم 20% على أول طلب" } }
+          - { kind: text, text: { en: "Use code HELLO20 at checkout.", ar: "استخدم الكود HELLO20 عند الدفع." }, gap: xs }
+          - { kind: button, text: { en: "Shop now", ar: "تسوّق الآن" }, gap: s }
     options:
       - { id: close, text: { en: "\"Close offer.\"", ar: "«أغلق العرض.»" } }
       - { id: cross, text: { en: "\"Grey cross icon.\"", ar: "«أيقونة علامة × رمادية.»" } }
@@ -190,9 +196,12 @@ steps:
       en: "What should the chart's alt text be?"
       ar: "ماذا يجب أن يكون النص البديل للرسم البياني؟"
     mock:
-      width: 300
+      app: waraq
+      appbar: { title: { en: "News", ar: "الأخبار" }, back: true }
       blocks:
-        - { kind: image, size: m, text: { en: "Line chart: downloads, Jan to Jun", ar: "رسم بخط: التحميلات، من يناير إلى يونيو" } }
+        - { kind: heading, text: { en: "Half a year of growth", ar: "نصف عام من النمو" } }
+        - { kind: chart, type: line, values: [12, 14, 17, 19, 22, 25], labels: [ { en: "Jan", ar: "يناير" }, { en: "Feb", ar: "فبراير" }, { en: "Mar", ar: "مارس" }, { en: "Apr", ar: "أبريل" }, { en: "May", ar: "مايو" }, { en: "Jun", ar: "يونيو" } ], gap: s }
+        - { kind: small, color: muted, text: { en: "Monthly downloads, in thousands", ar: "التحميلات الشهرية، بالآلاف" }, gap: xs }
     options:
       - { id: point, text: { en: "\"Downloads doubled from January to June, rising every month.\"", ar: "«تضاعفت التحميلات من يناير إلى يونيو، وزادت كل شهر.»" } }
       - { id: numbers, text: { en: "\"January 12,400. February 14,100. March 16,800. April…\"", ar: "«يناير 12,400. فبراير 14,100. مارس 16,800. أبريل…»" } }
@@ -308,9 +317,19 @@ steps:
       en: "What should the buttons say?"
       ar: "ماذا يجب أن تقول الأزرار؟"
     mock:
-      width: 300
+      reader: { en: "Download, button. Download, button. Download, button.", ar: "تحميل، زر. تحميل، زر. تحميل، زر." }
+      app: nashat
+      frame: wide
+      url: nashat.example/members
+      navbar: { actions: [ { icon: user } ] }
       blocks:
-        - { kind: banner, text: { en: "🔊 \"Download, button. Download, button. Download, button.\"", ar: "🔊 «تحميل، زر. تحميل، زر. تحميل، زر.»" } }
+        - { kind: heading, text: { en: "Member files", ar: "ملفات الأعضاء" } }
+        - { kind: listitem, icon: calendar, text: { en: "Class timetable", ar: "جدول الحصص" }, sub: "PDF · 1 MB" }
+        - { kind: button, style: outline, icon: download-simple, text: { en: "Download", ar: "تحميل" }, gap: xs }
+        - { kind: listitem, icon: receipt, text: { en: "Price list", ar: "قائمة الأسعار" }, sub: "PDF · 0.5 MB", gap: s }
+        - { kind: button, style: outline, icon: download-simple, text: { en: "Download", ar: "تحميل" }, gap: xs }
+        - { kind: listitem, icon: list-checks, text: { en: "Gym rules", ar: "قواعد النادي" }, sub: "PDF · 0.3 MB", gap: s }
+        - { kind: button, style: outline, icon: download-simple, text: { en: "Download", ar: "تحميل" }, gap: xs }
     options:
       - { id: one, text: { en: "\"Download 1\", \"Download 2\", \"Download 3\"", ar: "«تحميل 1»، «تحميل 2»، «تحميل 3»" } }
       - { id: names, text: { en: "\"Download timetable\", \"Download prices\", \"Download rules\"", ar: "«تحميل جدول الحصص»، «تحميل الأسعار»، «تحميل القواعد»" } }
@@ -344,6 +363,20 @@ steps:
     prompt:
       en: "Where should focus go when the form opens?"
       ar: "إلى أين يجب أن يذهب التركيز حين يُفتح النموذج؟"
+    mock:
+      reader: { en: "Fresh today, heading. Tomatoes, 25 pounds.", ar: "طازج اليوم، عنوان. طماطم، 25 جنيهًا." }
+      app: sallah
+      appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
+      blocks:
+        - { kind: heading, text: { en: "Fresh today", ar: "طازج اليوم" } }
+        - { kind: listitem, art: food-salad, text: { en: "Tomatoes", ar: "طماطم" }, value: { en: "25 EGP", ar: "25 جنيه" } }
+      overlay:
+        type: sheet
+        title: { en: "New address", ar: "عنوان جديد" }
+        blocks:
+          - { kind: field, label: { en: "Street", ar: "الشارع" }, text: { en: "e.g. 12 Tahrir St.", ar: "مثال: 12 شارع التحرير" } }
+          - { kind: field, label: { en: "Building and flat", ar: "العمارة والشقة" }, text: { en: "e.g. Building 4, flat 7", ar: "مثال: عمارة 4، شقة 7" }, gap: s }
+          - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: s }
     options:
       - { id: stay, text: { en: "Stay on \"Add address\", so the customer knows where they are", ar: "يبقى على «أضف عنوانًا»، ليعرف العميل أين هو" } }
       - { id: save, text: { en: "Go to the \"Save\" button at the bottom of the form", ar: "يذهب إلى زر «احفظ» في أسفل النموذج" } }
@@ -382,6 +415,14 @@ steps:
     prompt:
       en: "What's the most likely cause?"
       ar: "ما السبب الأرجح؟"
+    mock:
+      reader: { en: "Mona Adel, button.", ar: "منى عادل، زر." }
+      app: hakawy
+      appbar: { title: { en: "Chats", ar: "المحادثات" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+      blocks:
+        - { kind: listitem, avatar: { text: "Mona Adel", art: woman-1 }, text: { en: "Mona Adel", ar: "منى عادل" }, sub: { en: "See you tomorrow", ar: "أراك غدًا" }, value: "10:42", ring: brand }
+        - { kind: listitem, avatar: { text: "Omar Samy", art: man-2 }, text: { en: "Omar Samy", ar: "عمر سامي" }, sub: { en: "Thanks!", ar: "شكرًا!" }, value: "09:15" }
+        - { kind: listitem, avatar: { text: "Laila Hassan", art: woman-3 }, text: { en: "Laila Hassan", ar: "ليلى حسن" }, sub: { en: "Photo", ar: "صورة" }, value: { en: "Yesterday", ar: "أمس" } }
     options:
       - { id: focus, text: { en: "The chat opened, but focus stayed on the name, so he thought nothing happened", ar: "المحادثة فُتحت، لكن التركيز بقي على الاسم، فظن أنه لم يحدث شيء" } }
       - { id: slow, text: { en: "The app is slow, so it needs a loading spinner", ar: "التطبيق بطيء، فيحتاج علامة تحميل" } }

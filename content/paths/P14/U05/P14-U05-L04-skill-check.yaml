@@ -76,30 +76,29 @@ steps:
     a:
       label: { en: "Version A: two columns", ar: "النسخة A: عمودان" }
       mock:
-        width: 320
+        app: kalima
+        frame: wide
+        url: kalima.example/school/enrol
+        navbar: { links: [ { en: "Courses", ar: "الدورات" }, { en: "Evening school", ar: "المدرسة المسائية" }, { en: "Prices", ar: "الأسعار" } ], active: 1, actions: [ { icon: user } ] }
         blocks:
-          - { kind: heading, text: { en: "Enrol in a class", ar: "سجّل في فصل" } }
-          - kind: row
-            gap: s
-            blocks:
-              - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: "" }
-              - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "" }
-          - kind: row
-            blocks:
-              - { kind: select, label: { en: "Level", ar: "المستوى" }, text: { en: "Choose", ar: "اختر" } }
-              - { kind: select, label: { en: "Class time", ar: "موعد الفصل" }, text: { en: "Choose", ar: "اختر" } }
-          - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+          - {"kind": "heading", "text": {"en": "Enrol in a class", "ar": "سجّل في فصل"}}
+          - {"kind": "row", "gap": "s", "blocks": [{"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": ""}, {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": ""}]}
+          - {"kind": "row", "blocks": [{"kind": "select", "label": {"en": "Level", "ar": "المستوى"}, "text": {"en": "Choose", "ar": "اختر"}}, {"kind": "select", "label": {"en": "Class time", "ar": "موعد الفصل"}, "text": {"en": "Choose", "ar": "اختر"}}]}
+          - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}, "gap": "m"}
     b:
       label: { en: "Version B: one column", ar: "النسخة B: عمود واحد" }
       mock:
-        width: 320
+        app: kalima
+        frame: wide
+        url: kalima.example/school/enrol
+        navbar: { links: [ { en: "Courses", ar: "الدورات" }, { en: "Evening school", ar: "المدرسة المسائية" }, { en: "Prices", ar: "الأسعار" } ], active: 1, actions: [ { icon: user } ] }
         blocks:
-          - { kind: heading, text: { en: "Enrol in a class", ar: "سجّل في فصل" } }
-          - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: "", gap: s }
-          - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "" }
-          - { kind: select, label: { en: "Level", ar: "المستوى" }, text: { en: "Choose", ar: "اختر" } }
-          - { kind: select, label: { en: "Class time", ar: "موعد الفصل" }, text: { en: "Choose", ar: "اختر" } }
-          - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+          - {"kind": "heading", "text": {"en": "Enrol in a class", "ar": "سجّل في فصل"}}
+          - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": "", "gap": "s"}
+          - {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": ""}
+          - {"kind": "select", "label": {"en": "Level", "ar": "المستوى"}, "text": {"en": "Choose", "ar": "اختر"}}
+          - {"kind": "select", "label": {"en": "Class time", "ar": "موعد الفصل"}, "text": {"en": "Choose", "ar": "اختر"}}
+          - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}, "gap": "m"}
     answer: b
     misconceptions:
       - id: MC-P14-043
@@ -131,21 +130,27 @@ steps:
     a:
       label: { en: "Version A: names inside the fields", ar: "النسخة A: الأسماء داخل الحقول" }
       mock:
-        width: 300
+        app: kalima
+        appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
         blocks:
-          - { kind: heading, text: { en: "Contact numbers", ar: "أرقام التواصل" } }
-          - { kind: field, text: "0111 222 3344", filled: true, gap: s }
-          - { kind: field, text: "0100 987 6543", filled: true }
-          - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+          - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+          - {"kind": "heading", "text": {"en": "Contact numbers", "ar": "أرقام التواصل"}}
+          - {"kind": "field", "text": "0111 222 3344", "filled": true, "gap": "s"}
+          - {"kind": "field", "text": "0100 987 6543", "filled": true}
+        footer:
+          - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
     b:
       label: { en: "Version B: labels above the fields", ar: "النسخة B: الأسماء فوق الحقول" }
       mock:
-        width: 300
+        app: kalima
+        appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
         blocks:
-          - { kind: heading, text: { en: "Contact numbers", ar: "أرقام التواصل" } }
-          - { kind: field, label: { en: "Student's mobile", ar: "موبايل الطالب" }, text: "0111 222 3344", filled: true, gap: s }
-          - { kind: field, label: { en: "Parent's mobile", ar: "موبايل ولي الأمر" }, text: "0100 987 6543", filled: true }
-          - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+          - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+          - {"kind": "heading", "text": {"en": "Contact numbers", "ar": "أرقام التواصل"}}
+          - {"kind": "field", "label": {"en": "Student's mobile", "ar": "موبايل الطالب"}, "text": "0111 222 3344", "filled": true, "gap": "s"}
+          - {"kind": "field", "label": {"en": "Parent's mobile", "ar": "موبايل ولي الأمر"}, "text": "0100 987 6543", "filled": true}
+        footer:
+          - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
     answer: b
     misconceptions:
       - id: MC-P14-046
@@ -179,27 +184,36 @@ steps:
       - id: select
         text: { en: "A drop-down", ar: "Dropdown" }
         mock:
-          width: 300
+          app: kalima
+          appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
           blocks:
-            - { kind: select, label: { en: "Level *", ar: "المستوى *" }, text: { en: "Choose your level", ar: "اختر مستواك" } }
-            - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: l }
+            - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+            - {"kind": "select", "label": {"en": "Level *", "ar": "المستوى *"}, "text": {"en": "Choose your level", "ar": "اختر مستواك"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
       - id: field
         text: { en: "A text field to type the level", ar: "حقل نصي لكتابة المستوى" }
         mock:
-          width: 300
+          app: kalima
+          appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
           blocks:
-            - { kind: field, label: { en: "Level *", ar: "المستوى *" }, text: "" }
-            - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: l }
+            - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+            - {"kind": "field", "label": {"en": "Level *", "ar": "المستوى *"}, "text": ""}
+          footer:
+            - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
       - id: radio
         text: { en: "Three radio buttons", ar: "ثلاثة Radio buttons" }
         mock:
-          width: 300
+          app: kalima
+          appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
           blocks:
-            - { kind: small, text: { en: "Level *", ar: "المستوى *" } }
-            - { kind: radio, text: { en: "Beginner", ar: "مبتدئ" }, selected: true }
-            - { kind: radio, text: { en: "Intermediate", ar: "متوسط" } }
-            - { kind: radio, text: { en: "Advanced", ar: "متقدّم" } }
-            - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+            - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+            - {"kind": "small", "text": {"en": "Level *", "ar": "المستوى *"}}
+            - {"kind": "radio", "text": {"en": "Beginner", "ar": "مبتدئ"}, "selected": true}
+            - {"kind": "radio", "text": {"en": "Intermediate", "ar": "متوسط"}}
+            - {"kind": "radio", "text": {"en": "Advanced", "ar": "متقدّم"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
     answer: [radio]
     misconceptions:
       - id: MC-P14-049
@@ -238,28 +252,37 @@ steps:
       - id: top
         text: { en: "A red message at the top: \"Something went wrong\"", ar: "رسالة حمراء في الأعلى: «حدث خطأ ما»" }
         mock:
-          width: 300
+          app: kalima
+          appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
           blocks:
-            - { kind: banner, tone: bad, text: { en: "Something went wrong. Please try again.", ar: "حدث خطأ ما. من فضلك حاول مرة أخرى." } }
-            - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: { en: "Ayman Nabil", ar: "أيمن نبيل" }, filled: true, gap: m }
-            - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "0111 222 334", filled: true }
-            - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+            - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+            - {"kind": "banner", "tone": "bad", "text": {"en": "Something went wrong. Please try again.", "ar": "حدث خطأ ما. من فضلك حاول مرة أخرى."}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Ayman Nabil", "ar": "أيمن نبيل"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": "0111 222 334", "filled": true}
+          footer:
+            - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
       - id: border
         text: { en: "A red border on the mobile field", ar: "إطار أحمر على حقل الموبايل" }
         mock:
-          width: 300
+          app: kalima
+          appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
           blocks:
-            - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: { en: "Ayman Nabil", ar: "أيمن نبيل" }, filled: true }
-            - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "0111 222 334", filled: true, tone: bad }
-            - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+            - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Ayman Nabil", "ar": "أيمن نبيل"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": "0111 222 334", "filled": true, "tone": "bad"}
+          footer:
+            - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
       - id: inline
         text: { en: "An icon and a message on the mobile field", ar: "رمز ورسالة على حقل الموبايل" }
         mock:
-          width: 300
+          app: kalima
+          appbar: {"title": {"en": "Enrol in a class", "ar": "سجّل في فصل"}, "back": true}
           blocks:
-            - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: { en: "Ayman Nabil", ar: "أيمن نبيل" }, filled: true }
-            - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "0111 222 334", filled: true, tone: bad, error: { en: "⚠ This number has 10 digits. Mobile numbers have 11.", ar: "⚠ هذا الرقم من 10 أرقام. ورقم الموبايل من 11 رقمًا." } }
-            - { kind: button, text: { en: "Enrol", ar: "سجّل" }, gap: m }
+            - {"kind": "listitem", "icon": "translate", "text": {"en": "English · Evening school", "ar": "الإنجليزية · المدرسة المسائية"}, "sub": {"en": "Sun and Tue, 7 pm", "ar": "الأحد والثلاثاء، 7 م"}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Ayman Nabil", "ar": "أيمن نبيل"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": "0111 222 334", "filled": true, "tone": "bad", "error": {"en": "⚠ This number has 10 digits. Mobile numbers have 11.", "ar": "⚠ هذا الرقم من 10 أرقام. ورقم الموبايل من 11 رقمًا."}}
+          footer:
+            - {"kind": "button", "text": {"en": "Enrol", "ar": "سجّل"}}
     answer: [inline]
     misconceptions:
       - id: MC-P14-051

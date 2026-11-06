@@ -15,6 +15,14 @@ steps:
     type: card
     part: hook
     title: { en: "Mona's car insurance site", ar: "موقع تأمين السيارات لمنى" }
+    mock:
+      app: aman
+      frame: wide
+      url: aman.example
+      navbar: { links: [ { en: "Car", ar: "السيارات" }, { en: "Health", ar: "الصحة" }, { en: "Claims", ar: "المطالبات" } ], active: 2, actions: [ { icon: user } ] }
+      blocks:
+        - { kind: image, art: car, size: m }
+        - { kind: title, text: { en: "Had an accident? We're here.", ar: "تعرّضت لحادث؟ نحن هنا." }, gap: m }
     body:
       en: "My team is redesigning a car insurance website. People use it when something has already gone wrong, so errors and help matter a lot. Help me review four parts.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "يعيد فريقي تصميم موقع لتأمين السيارات. ويستخدمه الناس حين يكون شيء قد ساء أصلًا، فالأخطاء والمساعدة مهمة جدًا هنا. ساعدني في مراجعة أربعة أجزاء.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
@@ -33,6 +41,15 @@ steps:
     prompt:
       en: "What should the message say?"
       ar: "ماذا يجب أن تقول الرسالة؟"
+    mock:
+      app: aman
+      frame: wide
+      url: aman.example/claims/new/photos
+      blocks:
+        - { kind: title, text: { en: "Photos of the damage", ar: "صور الضرر" } }
+        - { kind: listitem, art: car, text: "IMG_2041.jpg", sub: "18 MB", gap: m }
+        - { kind: banner, icon: warning-circle, tone: bad, text: { en: "An error occurred.", ar: "حدث خطأ." }, gap: s }
+        - { kind: button, icon: upload-simple, text: { en: "Upload photos", ar: "ارفع الصور" }, gap: m }
     options:
       - { id: precise, text: { en: "\"This photo is 18 MB; the limit is 10 MB. Choose a smaller photo, or let us shrink it.\" with a Shrink photo button", ar: "«حجم هذه الصورة 18 ميجابايت؛ والحد 10 ميجابايت. اختر صورة أصغر، أو دَعنا نصغّرها.» مع زر «صغّر الصورة»" } }
       - { id: retry, text: { en: "\"Upload failed. Please try again later.\"", ar: "«فشل الرفع. حاول مرة أخرى لاحقًا.»" } }
@@ -70,6 +87,15 @@ steps:
     prompt:
       en: "How should a field with a problem look?"
       ar: "كيف يجب أن يبدو الحقل الذي فيه مشكلة؟"
+    mock:
+      app: aman
+      frame: wide
+      url: aman.example/claims/new/details
+      blocks:
+        - { kind: title, text: { en: "What happened?", ar: "ماذا حدث؟" } }
+        - { kind: field, label: { en: "Date of the accident", ar: "تاريخ الحادث" }, text: "", tone: bad, gap: m, note: { en: "Only a thin red border, no text", ar: "إطار أحمر رفيع فقط، بلا نص" } }
+        - { kind: field, label: { en: "Place", ar: "المكان" }, text: { en: "Ring Road, Cairo", ar: "الطريق الدائري، القاهرة" }, filled: true, gap: m }
+        - { kind: button, text: { en: "Submit claim", ar: "أرسل المطالبة" }, gap: m }
     options:
       - { id: full, text: { en: "A thicker red border, a ⚠ icon and a short message under the field", ar: "إطار أحمر أعرض، وأيقونة ⚠، ورسالة قصيرة تحت الحقل" } }
       - { id: shake, text: { en: "Keep the thin border, and make the whole form shake", ar: "إبقاء الإطار الرفيع، مع اهتزاز النموذج كله" } }
@@ -102,6 +128,14 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا نفعل؟"
+    mock:
+      app: aman
+      frame: wide
+      url: aman.example/claims/new
+      blocks:
+        - { kind: title, text: { en: "Start a claim", ar: "ابدأ مطالبة" } }
+        - { kind: field, label: { en: "Policy number", ar: "رقم الوثيقة" }, text: "", focus: true, gap: m, note: { en: "Explained only in the home page tour", ar: "مشروح فقط في جولة الصفحة الرئيسية" } }
+        - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
     options:
       - { id: pull, text: { en: "Add \"Where's my policy number?\" under the field, showing where it is on the policy card and in the confirmation email", ar: "إضافة «أين رقم وثيقتي؟» تحت الحقل، تُظهر مكانه في بطاقة الوثيقة وفي بريد التأكيد" } }
       - { id: longer, text: { en: "Make the home page tour longer and more detailed", ar: "جعل جولة الصفحة الرئيسية أطول وأكثر تفصيلًا" } }
@@ -134,6 +168,15 @@ steps:
     prompt:
       en: "What should we fix?"
       ar: "ماذا نصلح؟"
+    mock:
+      app: aman
+      frame: wide
+      url: aman.example/help?q=accident
+      navbar: { links: [ { en: "Car", ar: "السيارات" }, { en: "Help", ar: "المساعدة" } ], active: 1 }
+      blocks:
+        - { kind: searchbar, text: { en: "accident", ar: "حادث" }, filled: true }
+        - { kind: icon, icon: magnifying-glass-minus, size: l, gap: l }
+        - { kind: heading, text: { en: "No results for \"accident\"", ar: "لا نتائج لـ «حادث»" }, gap: s, note: { en: "The article is called \"Submitting a first notice of loss\"", ar: "اسم المقال «تقديم الإخطار الأول بالخسارة»" } }
     options:
       - { id: search, text: { en: "Rename it \"I had an accident: how to make a claim\", and make search match words like accident, crash and damage", ar: "تغيير اسمه إلى «تعرّضت لحادث: كيف أقدّم مطالبة»، وجعل البحث يطابق كلمات مثل حادث وتصادم وضرر" } }
       - { id: glossary, text: { en: "Add a glossary page explaining \"first notice of loss\"", ar: "إضافة صفحة مصطلحات تشرح «الإخطار الأول بالخسارة»" } }

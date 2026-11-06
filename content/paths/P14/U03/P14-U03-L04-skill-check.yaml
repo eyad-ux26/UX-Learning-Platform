@@ -40,30 +40,48 @@ steps:
       - id: rest
         text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Sallah", ar: "سلّة" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: field, text: { en: "milk", ar: "لبن" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**Full-cream** milk **1 L**", ar: "لبن **كامل الدسم 1 لتر**" }, gap: s }
-            - { kind: text, text: { en: "milk **chocolate bar**", ar: "**شوكولاتة بالـ**لبن" }, gap: s }
-            - { kind: text, text: { en: "**Coconut** milk", ar: "لبن **جوز الهند**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "milk", "ar": "لبن"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "basket", "text": {"en": "**Full-cream** milk **1 L**", "ar": "لبن **كامل الدسم 1 لتر**"}}
+                - {"icon": "basket", "text": {"en": "milk **chocolate bar**", "ar": "**شوكولاتة بالـ**لبن"}}
+                - {"icon": "basket", "text": {"en": "**Coconut** milk", "ar": "لبن **جوز الهند**"}}
+          keyboard: text
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Sallah", ar: "سلّة" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: field, text: { en: "milk", ar: "لبن" }, filled: true, focus: true }
-            - { kind: text, text: { en: "Full-cream milk 1 L", ar: "لبن كامل الدسم 1 لتر" }, gap: s }
-            - { kind: text, text: { en: "Milk chocolate bar", ar: "شوكولاتة باللبن" }, gap: s }
-            - { kind: text, text: { en: "Coconut milk", ar: "لبن جوز الهند" }, gap: s }
+            - kind: searchbar
+              text: {"en": "milk", "ar": "لبن"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "basket", "text": {"en": "Full-cream milk 1 L", "ar": "لبن كامل الدسم 1 لتر"}}
+                - {"icon": "basket", "text": {"en": "Milk chocolate bar", "ar": "شوكولاتة باللبن"}}
+                - {"icon": "basket", "text": {"en": "Coconut milk", "ar": "لبن جوز الهند"}}
+          keyboard: text
       - id: query
         text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Sallah", ar: "سلّة" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: field, text: { en: "milk", ar: "لبن" }, filled: true, focus: true }
-            - { kind: text, text: { en: "Full-cream **milk** 1 L", ar: "**لبن** كامل الدسم 1 لتر" }, gap: s }
-            - { kind: text, text: { en: "**Milk** chocolate bar", ar: "شوكولاتة بالـ**لبن**" }, gap: s }
-            - { kind: text, text: { en: "Coconut **milk**", ar: "**لبن** جوز الهند" }, gap: s }
+            - kind: searchbar
+              text: {"en": "milk", "ar": "لبن"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "basket", "text": {"en": "Full-cream **milk** 1 L", "ar": "**لبن** كامل الدسم 1 لتر"}}
+                - {"icon": "basket", "text": {"en": "**Milk** chocolate bar", "ar": "شوكولاتة بالـ**لبن**"}}
+                - {"icon": "basket", "text": {"en": "Coconut **milk**", "ar": "**لبن** جوز الهند"}}
+          keyboard: text
     answer: [query]
     misconceptions:
       - id: MC-P14-026
@@ -97,31 +115,38 @@ steps:
       - id: now
         text: { en: "Keep Country of origin and Packaging first", ar: "أبقِ بلد المنشأ والتغليف أولًا" }
         mock:
-          width: 300
+          app: sallah
+          appbar: &fbar { title: { en: "Filters", ar: "الفلاتر" }, actions: [ { icon: x, aria: { en: "Close", ar: "إغلاق" } } ] }
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Country of origin ▾", ar: "بلد المنشأ ▾" }, gap: m }
-            - { kind: heading, text: { en: "Packaging ▾", ar: "التغليف ▾" }, gap: m }
-            - { kind: heading, text: { en: "Aisle ▾", ar: "القسم ▾" }, gap: m }
-            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+            - { kind: small, text: { en: "Sallah · results for \"rice\"", ar: "سلّة · نتائج «أرز»" } }
+            - { kind: accordion, text: { en: "Country of origin", ar: "بلد المنشأ" }, gap: s }
+            - { kind: accordion, text: { en: "Packaging", ar: "التغليف" } }
+            - { kind: accordion, text: { en: "Aisle", ar: "القسم" } }
+            - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+          footer: &show
+            - { kind: button, text: { en: "Show 38 products", ar: "اعرض 38 منتجًا" } }
       - id: used
         text: { en: "Aisle and Price first, the rest below", ar: "القسم والسعر أولًا، والباقي تحتهما" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Aisle ▾", ar: "القسم ▾" }, gap: m }
-            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Country of origin ▾", ar: "بلد المنشأ ▾" }, gap: m }
-            - { kind: heading, text: { en: "Packaging ▾", ar: "التغليف ▾" }, gap: m }
+            - { kind: small, text: { en: "Sallah · results for \"rice\"", ar: "سلّة · نتائج «أرز»" } }
+            - { kind: accordion, text: { en: "Aisle", ar: "القسم" }, gap: s }
+            - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+            - { kind: accordion, text: { en: "Country of origin", ar: "بلد المنشأ" } }
+            - { kind: accordion, text: { en: "Packaging", ar: "التغليف" } }
+          footer: *show
       - id: hide
         text: { en: "Aisle and Price only; remove the other two", ar: "القسم والسعر فقط؛ واحذف الآخرين" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Aisle ▾", ar: "القسم ▾" }, gap: m }
-            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+            - { kind: small, text: { en: "Sallah · results for \"rice\"", ar: "سلّة · نتائج «أرز»" } }
+            - { kind: accordion, text: { en: "Aisle", ar: "القسم" }, gap: s }
+            - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+          footer: *show
     answer: [used]
     misconceptions:
       - id: MC-P14-032
@@ -160,27 +185,32 @@ steps:
       - id: offers
         text: { en: "Show today's offers, with no message", ar: "اعرض عروض اليوم، بدون رسالة" }
         mock:
-          width: 300
+          app: sallah
+          appbar: &sbar { title: { en: "Search", ar: "البحث" }, back: true }
           blocks:
-            - { kind: field, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
+            - { kind: searchbar, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
             - { kind: text, weight: bold, text: { en: "Today's offers", ar: "عروض اليوم" }, gap: m }
-            - { kind: meta, text: { en: "Sunflower oil 1 L · EGP 85", ar: "زيت عباد الشمس 1 لتر · 85 جنيه" }, gap: s }
-            - { kind: meta, text: { en: "Pasta 400 g · EGP 22", ar: "مكرونة 400 جم · 22 جنيه" }, gap: s }
+            - { kind: listitem, icon: drop, text: { en: "Sunflower oil 1 L", ar: "زيت عباد الشمس 1 لتر" }, value: { en: "EGP 85", ar: "85 جنيه" }, gap: s }
+            - { kind: listitem, icon: bowl-food, text: { en: "Pasta 400 g", ar: "مكرونة 400 جم" }, value: { en: "EGP 22", ar: "22 جنيه" } }
       - id: fix
         text: { en: "\"No results for basmati rise\", and \"Did you mean basmati rice?\"", ar: "«لا توجد نتائج لأرز بسمتى»، و«هل تقصد أرز بسمتي؟»" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *sbar
           blocks:
-            - { kind: field, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
-            - { kind: heading, text: { en: "No results for \"basmati rise\"", ar: "لا توجد نتائج لـ«أرز بسمتى»" }, gap: m }
+            - { kind: searchbar, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
+            - { kind: icon, icon: magnifying-glass, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No results for \"basmati rise\"", ar: "لا توجد نتائج لـ«أرز بسمتى»" }, gap: s }
             - { kind: text, text: { en: "Did you mean **basmati rice**? (8 products)", ar: "هل تقصد **أرز بسمتي**؟ (8 منتجات)" }, gap: s }
       - id: oops
         text: { en: "\"Oops! Nothing here but crumbs 🍞\"", ar: "«عفوًا! مافيش هنا غير الفتافيت 🍞»" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *sbar
           blocks:
-            - { kind: field, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
-            - { kind: heading, text: { en: "Oops! Nothing here but crumbs 🍞", ar: "عفوًا! مافيش هنا غير الفتافيت 🍞" }, gap: m }
+            - { kind: searchbar, text: { en: "basmati rise", ar: "أرز بسمتى" }, filled: true }
+            - { kind: image, art: bread, size: s, alt: { en: "Bread crumbs", ar: "فتافيت عيش" }, gap: m }
+            - { kind: heading, text: { en: "Oops! Nothing here but crumbs 🍞", ar: "عفوًا! مافيش هنا غير الفتافيت 🍞" }, gap: s }
     answer: [fix]
     misconceptions:
       - id: MC-P14-027
@@ -219,9 +249,10 @@ steps:
       - id: codes
         text: { en: "Keep the short codes", ar: "أبقِ الاختصارات" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: small, text: { en: "Sallah · Bakery", ar: "سلّة · المخبوزات" } }
             - { kind: heading, text: { en: "Diet", ar: "النظام الغذائي" }, gap: m }
             - kind: row
               blocks:
@@ -229,23 +260,27 @@ steps:
                 - { kind: chip, text: "LF" }
                 - { kind: chip, text: "V" }
                 - { kind: chip, text: "VG" }
+          footer: *show
       - id: words
         text: { en: "Gluten-free, Lactose-free, Vegetarian, Vegan", ar: "خالٍ من الجلوتين، خالٍ من اللاكتوز، نباتي، نباتي صرف" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: small, text: { en: "Sallah · Bakery", ar: "سلّة · المخبوزات" } }
             - { kind: heading, text: { en: "Diet", ar: "النظام الغذائي" }, gap: m }
             - { kind: check, text: { en: "Gluten-free", ar: "خالٍ من الجلوتين" }, gap: s }
             - { kind: check, text: { en: "Lactose-free", ar: "خالٍ من اللاكتوز" }, gap: s }
             - { kind: check, text: { en: "Vegetarian", ar: "نباتي" }, gap: s }
             - { kind: check, text: { en: "Vegan (no animal products)", ar: "نباتي صرف (بدون أي منتج حيواني)" }, gap: s }
+          footer: *show
       - id: icons
         text: { en: "Replace the codes with small icons", ar: "استبدل الاختصارات بأيقونات صغيرة" }
         mock:
-          width: 300
+          app: sallah
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: small, text: { en: "Sallah · Bakery", ar: "سلّة · المخبوزات" } }
             - { kind: heading, text: { en: "Diet", ar: "النظام الغذائي" }, gap: m }
             - kind: row
               blocks:
@@ -253,6 +288,7 @@ steps:
                 - { kind: chip, text: "🥛⃠" }
                 - { kind: chip, text: "🥕" }
                 - { kind: chip, text: "🌱" }
+          footer: *show
     answer: [words]
     misconceptions:
       - id: MC-P14-031
@@ -286,27 +322,44 @@ steps:
       - id: copied
         text: { en: "The copied list, as it is", ar: "القائمة المنسوخة، كما هي" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Sallah", ar: "سلّة" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: field, text: { en: "tomato", ar: "طماطم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "tomatoes **cherry**", ar: "طماطم **شيري**" }, gap: s }
-            - { kind: text, text: { en: "tomatoes **peeled, canned**", ar: "طماطم **مقشّرة معلّبة**" }, gap: s }
-            - { kind: text, text: { en: "tomatoes **1 kg**", ar: "طماطم **بلدي 1 كيلو**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "tomato", "ar": "طماطم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "basket", "text": {"en": "tomatoes **cherry**", "ar": "طماطم **شيري**"}}
+                - {"icon": "basket", "text": {"en": "tomatoes **peeled, canned**", "ar": "طماطم **مقشّرة معلّبة**"}}
+                - {"icon": "basket", "text": {"en": "tomatoes **1 kg**", "ar": "طماطم **بلدي 1 كيلو**"}}
+          keyboard: text
       - id: stock
         text: { en: "Only searches that find products in the app", ar: "فقط عمليات البحث التي تجد منتجات في التطبيق" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Sallah", ar: "سلّة" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: field, text: { en: "tomato", ar: "طماطم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "tomatoes **peeled, canned**", ar: "طماطم **مقشّرة معلّبة**" }, gap: s }
-            - { kind: text, text: { en: "tomatoes **1 kg**", ar: "طماطم **بلدي 1 كيلو**" }, gap: s }
-            - { kind: text, text: { en: "tomatoes **sun-dried**", ar: "طماطم **مجفّفة**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "tomato", "ar": "طماطم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "basket", "text": {"en": "tomatoes **peeled, canned**", "ar": "طماطم **مقشّرة معلّبة**"}}
+                - {"icon": "basket", "text": {"en": "tomatoes **1 kg**", "ar": "طماطم **بلدي 1 كيلو**"}}
+                - {"icon": "basket", "text": {"en": "tomatoes **sun-dried**", "ar": "طماطم **مجفّفة**"}}
+          keyboard: text
       - id: none
         text: { en: "No suggestions until the list is fixed", ar: "بدون اقتراحات حتى تُصلَح القائمة" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Sallah", ar: "سلّة" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: field, text: { en: "tomato", ar: "طماطم" }, filled: true, focus: true }
+            - kind: searchbar
+              text: {"en": "tomato", "ar": "طماطم"}
+              filled: true
+              focus: true
+          keyboard: text
     answer: [stock]
     misconceptions:
       - id: MC-P14-025

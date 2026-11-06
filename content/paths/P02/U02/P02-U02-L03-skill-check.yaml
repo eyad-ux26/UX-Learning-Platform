@@ -17,6 +17,12 @@ steps:
     type: card
     part: hook
     title: { en: "Hana's gym, online", ar: "نادي هناء على الإنترنت" }
+    mock:
+      app: nashat
+      appbar: { logo: true, actions: [ { icon: bell } ] }
+      tabbar: { active: 0, items: [ { icon: calendar-blank, text: { en: "Classes", ar: "الحصص" } }, { icon: ticket, text: { en: "Bookings", ar: "حجوزاتي" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: card, art: gym, blocks: [ { kind: heading, text: { en: "New: evening Pilates", ar: "جديد: Pilates مسائي" } }, { kind: small, text: { en: "Sun and Wed, 8 pm", ar: "الأحد والأربعاء، 8 م" } } ] }
     body:
       en: "My gym has a new website and app. Before we tell all our members, help me check four things that confused people in our first test.\n\nThis is a skill check: no hints, and you'll see how you did at the end."
       ar: "لناديّ موقع وتطبيق جديدان. وقبل أن نخبر كل الأعضاء، ساعدني في مراجعة أربعة أشياء أربكت الناس في أول تجربة لنا.\n\nهذا اختبار مهارة: بدون تلميحات، وسترى نتيجتك في النهاية."
@@ -35,6 +41,19 @@ steps:
     prompt:
       en: "What should the window have?"
       ar: "ماذا يجب أن يكون في النافذة؟"
+    mock:
+      app: nashat
+      frame: wide
+      url: nashat.example/timetable
+      navbar: { links: [ { en: "Timetable", ar: "الجدول" }, { en: "Prices", ar: "الأسعار" }, { en: "Branches", ar: "الفروع" } ], active: 0 }
+      blocks:
+        - { kind: table, head: [ { en: "Time", ar: "الوقت" }, { en: "Class", ar: "الحصة" } ], rows: [ [ "6:00 pm", { en: "Yoga", ar: "يوغا" } ], [ "7:00 pm", "Spinning" ] ] }
+      overlay:
+        type: dialog
+        blocks:
+          - { kind: image, art: gym, size: s }
+          - { kind: heading, text: { en: "Start your free week!", ar: "ابدأ أسبوعك المجاني!" }, gap: s }
+          - { kind: button, text: { en: "Start free trial", ar: "ابدأ التجربة المجانية" }, gap: m }
     options:
       - { id: close, text: { en: "A clear ✕ and a \"Just browsing\" link that opens the timetable", ar: "علامة ✕ واضحة ورابط «أتصفّح فقط» يفتح الجدول" } }
       - { id: timer, text: { en: "Close by itself after 15 seconds", ar: "أن تُغلق وحدها بعد 15 ثانية" } }
@@ -67,6 +86,14 @@ steps:
     prompt:
       en: "What should happen after the tap?"
       ar: "ماذا يجب أن يحدث بعد الضغطة؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "My bookings", ar: "حجوزاتي" } }
+      blocks:
+        - kind: card
+          blocks:
+            - { kind: listitem, art: gym, text: { en: "Spinning · Thu 7 pm", ar: "Spinning · الخميس 7 م" }, sub: { en: "Coach Omar · 18 of 20 spots taken", ar: "المدرّب عمر · 18 من 20 مكانًا محجوز" } }
+            - { kind: link, text: { en: "Cancel booking", ar: "ألغِ الحجز" }, style: dangerlink, gap: xs, note: { en: "One tap cancels and gives the spot away", ar: "ضغطة واحدة تلغي وتعطي المكان لغيرك" } }
     options:
       - { id: nothing, text: { en: "Nothing new; members should be more careful", ar: "لا شيء جديد؛ على الأعضاء أن ينتبهوا أكثر" } }
       - { id: undo, text: { en: "Show \"Booking cancelled · Undo\", and hold the spot for a few seconds before passing it on", ar: "يظهر «أُلغي الحجز · تراجع»، ويبقى المكان محجوزًا بضع ثوانٍ قبل أن ينتقل لغيره" } }
@@ -99,6 +126,12 @@ steps:
     prompt:
       en: "What should I do?"
       ar: "ماذا أفعل؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "Spinning · Thu 7 pm", ar: "Spinning · الخميس 7 م" }, back: true }
+      blocks:
+        - { kind: tabs, options: [ { en: "Classes", ar: "حصص" }, { en: "Sessions", ar: "جلسات" }, { en: "Workouts", ar: "تمارين" } ], value: 1, note: { en: "One thing, three names", ar: "شيء واحد بثلاثة أسماء" } }
+        - { kind: listitem, icon: receipt, text: { en: "Receipt: 1 workout · EGP 120", ar: "الإيصال: تمرين واحد · 120 جنيه" }, gap: m }
     options:
       - { id: one, text: { en: "Call them \"Classes\" everywhere", ar: "أسمّيها «حصصًا» في كل مكان" } }
       - { id: variety, text: { en: "Keep the variety; it makes the app sound less repetitive", ar: "أُبقي التنوّع؛ فهو يجعل التطبيق أقل تكرارًا" } }
@@ -131,6 +164,19 @@ steps:
     prompt:
       en: "What should I change?"
       ar: "ماذا أغيّر؟"
+    mock:
+      app: nashat
+      frame: wide
+      url: nashat.example/prices
+      navbar: { links: [ { en: "Timetable", ar: "الجدول" }, { en: "Prices", ar: "الأسعار" }, { en: "Branches", ar: "الفروع" } ], active: 1 }
+      blocks:
+        - { kind: title, text: { en: "Membership prices", ar: "أسعار الاشتراك" }, note: { en: "Clicking the Nashat logo does nothing", ar: "الضغط على شعار نشاط لا يفعل شيئًا" } }
+        - kind: row
+          gap: m
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: "Silver" }, { kind: price, text: { en: "EGP 600", ar: "600 جنيه" }, per: { en: "/ month", ar: "/ شهريًا" } } ] }
+            - { kind: card, blocks: [ { kind: heading, text: "Gold" }, { kind: price, text: { en: "EGP 900", ar: "900 جنيه" }, per: { en: "/ month", ar: "/ شهريًا" } } ] }
+        - { kind: small, text: { en: "Home · About · Contact", ar: "الرئيسية · من نحن · تواصل معنا" }, tone: faint, gap: l }
     options:
       - { id: footer, text: { en: "Nothing; the footer link works", ar: "لا شيء؛ فرابط أسفل الصفحة يعمل" } }
       - { id: logo, text: { en: "Make the logo go to the home page, as on other sites", ar: "أجعل الشعار يذهب إلى الصفحة الرئيسية، كما في المواقع الأخرى" } }

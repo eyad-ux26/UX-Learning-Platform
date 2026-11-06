@@ -20,20 +20,23 @@ steps:
     type: card
     part: hook
     title: { en: "The button that moved", ar: "الزر الذي تحرّك" }
-    body:
-      en: "I build the web app a company's staff use to request time off and claim expenses. Each form was built by a different developer.\n\nIn the leave form, **Submit** is green on the right. In the expense form, **Send** is blue on the left, where Cancel sits in the leave form. Staff keep cancelling claims they meant to send."
-      ar: "أبني تطبيق الويب الذي يستخدمه موظفو شركة لطلب الإجازات وتقديم المصروفات. وكل نموذج بناه مطوّر مختلف.\n\nفي نموذج الإجازة، زر **إرسال** أخضر على اليمين. وفي نموذج المصروفات، زر **أرسِل** أزرق على اليسار، في مكان «إلغاء» في نموذج الإجازة. والموظفون يلغون باستمرار طلبات كانوا يريدون إرسالها."
     mock:
+      app: nafaqat
       frame: wide
+      url: nafaqat.example/claims/new
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" }, { en: "My requests", ar: "طلباتي" } ], active: 1, actions: [ { icon: bell }, { icon: user } ] }
       blocks:
         - { kind: title, text: { en: "Expense claim", ar: "طلب مصروفات" } }
-        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: { en: "EGP 1,250", ar: "1250 جنيه" }, filled: true, gap: m }
+        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: { en: "EGP 1,250", ar: "1,250 جنيه" }, filled: true, gap: m }
+        - { kind: field, label: { en: "Receipt", ar: "الإيصال" }, text: "taxi-03-nov.jpg", filled: true, icon: paperclip, gap: m }
         - kind: row
           gap: l
           blocks:
-            - { kind: button, text: { en: "Send", ar: "أرسِل" } }
-            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: plain }
-
+            - { kind: button, text: { en: "Send", ar: "أرسِل" }, note: { en: "The leave form has Cancel here", ar: "في نموذج الإجازة يقع «إلغاء» هنا" } }
+            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text }
+    body:
+      en: "I build the web app a company's staff use to request time off and claim expenses. Each form was built by a different developer.\n\nIn the leave form, **Submit** is green on the right. In the expense form, **Send** is blue on the left, where Cancel sits in the leave form. Staff keep cancelling claims they meant to send."
+      ar: "أبني تطبيق الويب الذي يستخدمه موظفو شركة لطلب الإجازات وتقديم المصروفات. وكل نموذج بناه مطوّر مختلف.\n\nفي نموذج الإجازة، زر **إرسال** أخضر على اليمين. وفي نموذج المصروفات، زر **أرسِل** أزرق على اليسار، في مكان «إلغاء» في نموذج الإجازة. والموظفون يلغون باستمرار طلبات كانوا يريدون إرسالها."
   - id: S02
     type: choose
     part: try
@@ -47,6 +50,19 @@ steps:
     prompt:
       en: "What's the best fix?"
       ar: "ما أفضل إصلاح؟"
+    mock:
+      app: nafaqat
+      frame: wide
+      url: nafaqat.example/leave/new
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" }, { en: "My requests", ar: "طلباتي" } ], active: 0, actions: [ { icon: bell }, { icon: user } ] }
+      blocks:
+        - { kind: title, text: { en: "Leave request", ar: "طلب إجازة" } }
+        - { kind: field, label: { en: "First day", ar: "أول يوم" }, text: { en: "Sun 9 Nov", ar: "الأحد 9 نوفمبر" }, filled: true, icon: calendar-blank, gap: m }
+        - kind: row
+          gap: l
+          blocks:
+            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text }
+            - { kind: button, text: { en: "Submit", ar: "إرسال" } }
     options:
       - { id: same, text: { en: "Use one button style for every form: same word, same colour, same place", ar: "أستخدم شكل زر واحدًا لكل النماذج: الكلمة نفسها، واللون نفسه، والمكان نفسه" } }
       - { id: confirm, text: { en: "Ask \"Are you sure you want to cancel?\" in the expense form", ar: "أسأل «هل أنت متأكد أنك تريد الإلغاء؟» في نموذج المصروفات" } }
@@ -110,6 +126,16 @@ steps:
     prompt:
       en: "What should I do?"
       ar: "ماذا أفعل؟"
+    mock:
+      app: nafaqat
+      frame: wide
+      url: nafaqat.example/requests/drafts
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" }, { en: "My requests", ar: "طلباتي" } ], active: 2 }
+      blocks:
+        - { kind: title, text: { en: "Drafts", ar: "المسودّات" } }
+        - { kind: listitem, icon: airplane-tilt, text: { en: "Leave · 9–12 Nov", ar: "إجازة · 9–12 نوفمبر" }, value: { en: "Remove", ar: "أزِل" }, gap: m }
+        - { kind: listitem, icon: receipt, text: { en: "Taxi · EGP 180", ar: "تاكسي · 180 جنيه" }, value: { en: "Delete", ar: "احذف" }, gap: s }
+        - { kind: listitem, icon: laptop, text: { en: "Laptop bag · EGP 650", ar: "حقيبة لابتوب · 650 جنيه" }, value: { en: "Discard", ar: "تجاهَل" }, gap: s }
     options:
       - { id: one, text: { en: "Pick one word, \"Delete draft\", and use it on every screen", ar: "أختار كلمة واحدة، «احذف المسودّة»، وأستخدمها في كل شاشة" } }
       - { id: keep, text: { en: "Keep them; each one fits its screen's tone", ar: "أبقيها؛ فكل كلمة تناسب أسلوب شاشتها" } }
@@ -151,6 +177,15 @@ steps:
     prompt:
       en: "How should the form ask for the date?"
       ar: "كيف يطلب النموذج التاريخ؟"
+    mock:
+      app: nafaqat
+      frame: wide
+      url: nafaqat.example/leave/new
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" } ], active: 0 }
+      blocks:
+        - { kind: title, text: { en: "Leave request", ar: "طلب إجازة" } }
+        - { kind: field, label: { en: "First day off", ar: "أول يوم إجازة" }, text: "3/11", filled: true, focus: true, gap: m, note: { en: "Others typed \"Nov 3\" and \"3-11-2026\"", ar: "كتب آخرون «3 نوفمبر» و«3-11-2026»" } }
+        - { kind: field, label: { en: "Days", ar: "عدد الأيام" }, text: "4", filled: true, gap: m }
     options:
       - { id: hint, text: { en: "Keep the field and add \"Use YYYY-MM-DD\" under it", ar: "يبقى الحقل مع إضافة «استخدم الصيغة YYYY-MM-DD» تحته" } }
       - { id: picker, text: { en: "A date field that opens a calendar, like other booking forms", ar: "حقل تاريخ يفتح تقويمًا، مثل نماذج الحجز الأخرى" } }
@@ -191,23 +226,21 @@ steps:
     a:
       label: { en: "Version A: binoculars", ar: "النسخة A: منظار" }
       mock:
-        width: 260
+        app: zad
+        appbar: { logo: true, actions: [ { icon: binoculars, aria: { en: "Search", ar: "بحث" } } ] }
         blocks:
-          - kind: row
-            blocks:
-              - { kind: title, text: { en: "Trips", ar: "الرحلات" } }
-              - { kind: iconbtn, text: "🔭" }
-          - { kind: image, size: m, gap: m }
+          - { kind: image, art: desert, size: l }
+          - { kind: heading, text: { en: "Weekend in Siwa", ar: "عطلة في سيوة" }, gap: m }
+          - { kind: price, text: { en: "from EGP 4,900", ar: "من 4,900 جنيه" } }
     b:
       label: { en: "Version B: magnifying glass", ar: "النسخة B: عدسة مكبّرة" }
       mock:
-        width: 260
+        app: zad
+        appbar: { logo: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
         blocks:
-          - kind: row
-            blocks:
-              - { kind: title, text: { en: "Trips", ar: "الرحلات" } }
-              - { kind: iconbtn, text: "🔍" }
-          - { kind: image, size: m, gap: m }
+          - { kind: image, art: desert, size: l }
+          - { kind: heading, text: { en: "Weekend in Siwa", ar: "عطلة في سيوة" }, gap: m }
+          - { kind: price, text: { en: "from EGP 4,900", ar: "من 4,900 جنيه" } }
     answer: b
     misconceptions:
       - id: MC-P02-019
@@ -238,6 +271,16 @@ steps:
     prompt:
       en: "What should I recommend?"
       ar: "بماذا أنصح؟"
+    mock:
+      app: lamha
+      frame: wide
+      url: lamha.example/women/dresses
+      navbar: { links: [ { en: "Women", ar: "نساء" }, { en: "Men", ar: "رجال" }, { en: "Kids", ar: "أطفال" } ], active: 0, actions: [ { icon: coat-hanger, count: 2, aria: { en: "Cart", ar: "السلة" } }, { icon: user } ] }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: card, art: shirt, blocks: [ { kind: small, text: { en: "Linen dress", ar: "فستان كتان" } }, { kind: price, text: { en: "EGP 890", ar: "890 جنيه" } } ] }
+            - { kind: card, art: shirt, blocks: [ { kind: small, text: { en: "Cotton abaya", ar: "عباية قطن" } }, { kind: price, text: { en: "EGP 1,150", ar: "1,150 جنيه" } } ] }
     options:
       - { id: hanger, text: { en: "Use the hanger; it's memorable and fits the brand", ar: "نستخدم الشمّاعة؛ فهي مميزة وتناسب العلامة التجارية" } }
       - { id: tour, text: { en: "Use the hanger, with a tour on the first visit that explains it", ar: "نستخدم الشمّاعة، مع جولة تعريفية في الزيارة الأولى تشرحها" } }

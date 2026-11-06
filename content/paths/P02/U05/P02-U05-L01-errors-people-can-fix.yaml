@@ -22,17 +22,20 @@ steps:
     type: card
     part: hook
     title: { en: "Error 05", ar: "الخطأ 05" }
+    mock:
+      app: volta
+      frame: wide
+      url: volta.example/checkout/payment
+      navbar: { links: [ { en: "Laptops", ar: "لابتوب" }, { en: "Phones", ar: "هواتف" } ], active: 0, actions: [ { icon: shopping-cart, count: 1 } ] }
+      blocks:
+        - { kind: title, text: { en: "Payment", ar: "الدفع" } }
+        - { kind: banner, icon: warning-circle, tone: bad, text: { en: "Error 05: DO_NOT_HONOR. Transaction failed.", ar: "Error 05: DO_NOT_HONOR. فشلت العملية." }, gap: m }
+        - { kind: listitem, art: laptop, text: { en: "Laptop 14\", 16 GB", ar: "لابتوب 14 بوصة، 16 GB" }, value: { en: "EGP 24,500", ar: "24,500 جنيه" }, gap: m }
+        - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "4921 •••• •••• 7710", filled: true, icon: credit-card, gap: m }
+        - { kind: button, text: { en: "Pay EGP 24,500", ar: "ادفع 24,500 جنيه" }, gap: m }
     body:
       en: "I'm redesigning the checkout of an online electronics shop. Hany tried to pay for a laptop and saw this message.\n\nHe didn't know if his card was blocked, if he'd typed something wrong, or if the shop was broken. He bought the laptop somewhere else."
       ar: "أعيد تصميم صفحة الدفع في متجر إلكترونيات على الإنترنت. حاول هاني أن يدفع ثمن حاسوب محمول فرأى هذه الرسالة.\n\nلم يعرف إن كانت بطاقته موقوفة، أم أنه كتب شيئًا خطأ، أم أن المتجر به عطل. فاشترى الحاسوب من مكان آخر."
-    mock:
-      width: 300
-      blocks:
-        - { kind: title, text: { en: "Payment", ar: "الدفع" } }
-        - { kind: banner, text: { en: "Error 05: DO_NOT_HONOR. Transaction failed.", ar: "Error 05: DO_NOT_HONOR. فشلت العملية." } }
-        - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "4921 •••• •••• 7710", filled: true, gap: m }
-        - { kind: button, text: { en: "Pay EGP 24,500", ar: "ادفع 24,500 جنيه" }, gap: l }
-
   - id: S02
     type: choose
     part: try
@@ -46,6 +49,14 @@ steps:
     prompt:
       en: "What should the message say?"
       ar: "ماذا يجب أن تقول الرسالة؟"
+    mock:
+      app: volta
+      frame: wide
+      url: volta.example/checkout/payment
+      blocks:
+        - { kind: banner, icon: warning-circle, tone: bad, text: { en: "Error 05: DO_NOT_HONOR. Transaction failed.", ar: "Error 05: DO_NOT_HONOR. فشلت العملية." } }
+        - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "4921 •••• •••• 7710", filled: true, icon: credit-card, gap: m }
+        - { kind: button, text: { en: "Pay EGP 24,500", ar: "ادفع 24,500 جنيه" }, gap: m }
     options:
       - { id: generic, text: { en: "\"Something went wrong. Please try again.\"", ar: "«حدث خطأ ما. حاول مرة أخرى.»" } }
       - { id: plain, text: { en: "\"Your bank declined this payment. You haven't been charged. Try another card, or call your bank to allow it.\"", ar: "«رفض البنك هذه العملية. لم يُخصم منك شيء. جرّب بطاقة أخرى، أو اتصل بالبنك ليسمح بها.»" } }
@@ -117,6 +128,17 @@ steps:
     prompt:
       en: "Where should the errors appear?"
       ar: "أين يجب أن تظهر الأخطاء؟"
+    mock:
+      app: volta
+      appbar: { title: { en: "Delivery details", ar: "بيانات التوصيل" }, back: true }
+      blocks:
+        - { kind: banner, icon: warning-circle, tone: bad, text: { en: "Please fix the errors below.", ar: "يرجى إصلاح الأخطاء أدناه." } }
+        - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: { en: "Hany Fouad", ar: "هاني فؤاد" }, filled: true, gap: m }
+        - { kind: field, label: { en: "City", ar: "المدينة" }, text: { en: "Giza", ar: "الجيزة" }, filled: true, gap: s }
+        - { kind: field, label: { en: "Street", ar: "الشارع" }, text: { en: "Haram St", ar: "شارع الهرم" }, filled: true, gap: s }
+        - { kind: field, label: { en: "Building", ar: "العمارة" }, text: "", gap: s, note: { en: "Fields 5 to 9 are below the fold", ar: "الحقول من 5 إلى 9 تحت الشاشة" } }
+      footer:
+        - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
       - { id: field, text: { en: "Under each field that needs fixing, with the field outlined, and the page scrolls to the first one", ar: "تحت كل حقل يحتاج إلى إصلاح، مع تحديد الحقل، وتنتقل الصفحة إلى أول حقل منها" } }
       - { id: list, text: { en: "A list of all errors at the top", ar: "قائمة بكل الأخطاء في الأعلى" } }
@@ -153,6 +175,12 @@ steps:
     prompt:
       en: "When should the email field check the address?"
       ar: "متى يجب أن يتحقّق حقل البريد من العنوان؟"
+    mock:
+      app: volta
+      appbar: { title: { en: "Create account", ar: "أنشئ حسابًا" }, back: true }
+      keyboard: text
+      blocks:
+        - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "m", filled: true, focus: true, error: { en: "Invalid email", ar: "بريد غير صالح" }, note: { en: "Red after the first letter", ar: "أحمر بعد أول حرف" } }
     options:
       - { id: blur, text: { en: "When people leave the field or press Continue", ar: "حين يغادر الناس الحقل أو يضغطون «متابعة»" } }
       - { id: keys, text: { en: "On every key, as now, but in orange instead of red", ar: "مع كل حرف، كما الآن، لكن بالبرتقالي بدل الأحمر" } }
@@ -198,15 +226,21 @@ steps:
     a:
       label: { en: "Version A", ar: "النسخة A" }
       mock:
-        width: 260
+        app: rehla
+        frame: wide
+        url: rehla.example/intercity/passenger
         blocks:
-          - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, text: "1998/24/03", filled: true, error: { en: "Invalid input! Illegal date format.", ar: "إدخال غير صالح! صيغة تاريخ غير مسموحة." } }
+          - { kind: title, text: { en: "Passenger details", ar: "بيانات الراكب" } }
+          - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, text: "1998/24/03", filled: true, error: { en: "Invalid input! Illegal date format.", ar: "إدخال غير صالح! صيغة تاريخ غير مسموحة." }, gap: m }
     b:
       label: { en: "Version B", ar: "النسخة B" }
       mock:
-        width: 260
+        app: rehla
+        frame: wide
+        url: rehla.example/intercity/passenger
         blocks:
-          - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, text: "1998/24/03", filled: true, error: { en: "Enter the day, then the month: 24/03/1998", ar: "اكتب اليوم ثم الشهر: 24/03/1998" } }
+          - { kind: title, text: { en: "Passenger details", ar: "بيانات الراكب" } }
+          - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, text: "1998/24/03", filled: true, error: { en: "Enter the day, then the month: 24/03/1998", ar: "اكتب اليوم ثم الشهر: 24/03/1998" }, gap: m }
     answer: b
     misconceptions:
       - id: MC-P02-040
@@ -238,6 +272,16 @@ steps:
     prompt:
       en: "What should happen instead?"
       ar: "ماذا يجب أن يحدث بدلًا من ذلك؟"
+    mock:
+      app: nashat
+      frame: wide
+      url: nashat.example/join
+      navbar: { links: [ { en: "Timetable", ar: "الجدول" }, { en: "Prices", ar: "الأسعار" }, { en: "Join", ar: "اشترك" } ], active: 2 }
+      blocks:
+        - { kind: banner, icon: warning-circle, tone: bad, text: { en: "There was a problem with your form.", ar: "حدثت مشكلة في النموذج." } }
+        - { kind: field, label: { en: "Full name", ar: "الاسم بالكامل" }, text: "", gap: m }
+        - { kind: field, label: { en: "Phone", ar: "الهاتف" }, text: "", gap: s }
+        - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, text: "", gap: s, note: { en: "All 12 answers cleared after one typo", ar: "مُسحت الإجابات الـ 12 بسبب خطأ واحد" } }
     options:
       - { id: keep, text: { en: "Keep all 12 answers, mark the phone field, and say what to fix there", ar: "إبقاء الإجابات الاثنتي عشرة، وتحديد حقل الهاتف، وقول ما يجب إصلاحه فيه" } }
       - { id: clear, text: { en: "Clear only the phone field", ar: "مسح حقل الهاتف فقط" } }
