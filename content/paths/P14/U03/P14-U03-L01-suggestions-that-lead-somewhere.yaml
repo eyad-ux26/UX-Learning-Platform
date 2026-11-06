@@ -20,12 +20,18 @@ steps:
       en: "I work on a recipe site. When people tap the search box, a list of suggestions drops down under it.\n\nMy team fills that list from the most popular food searches on the web. Some of them, like **lentil burger**, have no recipe on our site at all."
       ar: "أعمل على موقع للوصفات. وحين يضغط الناس على مربع البحث، تظهر تحته قائمة اقتراحات.\n\nويملأ فريقي هذه القائمة من أشهر عمليات البحث عن الطعام على الإنترنت. وبعضها، مثل **شوربة البصل الفرنسية**، ليس له أي وصفة في موقعنا."
     mock:
-      width: 300
-      blocks: &lentil
-        - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
-        - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
-        - { kind: text, text: { en: "lentil **burger**", ar: "شوربة **بصل فرنسية**" }, gap: s }
-        - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+      app: tabkha
+      appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
+      blocks:
+        - kind: searchbar
+          text: {"en": "lentil", "ar": "شوربة"}
+          filled: true
+          focus: true
+          suggest:
+            - {"icon": "cooking-pot", "text": {"en": "lentil **soup**", "ar": "شوربة **عدس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+            - {"icon": "cooking-pot", "text": {"en": "lentil **burger**", "ar": "شوربة **بصل فرنسية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+            - {"icon": "cooking-pot", "text": {"en": "lentil **salad**", "ar": "شوربة **لسان عصفور**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+      keyboard: text
 
   - id: S02
     type: tune
@@ -45,29 +51,46 @@ steps:
       - id: web
         text: { en: "Popular web searches, including dishes the site doesn't have", ar: "أشهر عمليات البحث على الإنترنت، ومعها أطباق ليست في الموقع" }
         mock:
-          width: 300
-          caption: { en: "No recipe on the site for burger or pasta", ar: "لا وصفة في الموقع لشوربة البصل ولا لشوربة الكاري" }
+          caption: {"en": "No recipe on the site for burger or pasta", "ar": "لا وصفة في الموقع لشوربة البصل ولا لشوربة الكاري"}
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
-            - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
-            - { kind: text, text: { en: "lentil **burger**", ar: "شوربة **بصل فرنسية**" }, gap: s }
-            - { kind: text, text: { en: "lentil **pasta**", ar: "شوربة **كريمة بالكاري**" }, gap: s }
-            - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lentil", "ar": "شوربة"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "lentil **soup**", "ar": "شوربة **عدس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **burger**", "ar": "شوربة **بصل فرنسية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **pasta**", "ar": "شوربة **كريمة بالكاري**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **salad**", "ar": "شوربة **لسان عصفور**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: site
         text: { en: "Only searches that find recipes on this site", ar: "فقط عمليات البحث التي تجد وصفات في هذا الموقع" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
-            - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
-            - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
-            - { kind: text, text: { en: "lentil **with rice (koshari)**", ar: "شوربة **خضار**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lentil", "ar": "شوربة"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "lentil **soup**", "ar": "شوربة **عدس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **salad**", "ar": "شوربة **لسان عصفور**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **with rice (koshari)**", "ar": "شوربة **خضار**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: none
         text: { en: "No suggestions; people type the whole search", ar: "بدون اقتراحات؛ يكتب الناس البحث كاملًا" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
+            - kind: searchbar
+              text: {"en": "lentil", "ar": "شوربة"}
+              filled: true
+              focus: true
+          keyboard: text
     answer: [site]
     misconceptions:
       - id: MC-P14-025
@@ -149,30 +172,48 @@ steps:
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
-            - { kind: text, text: { en: "chicken shawarma", ar: "فراخ بانيه" }, gap: s }
-            - { kind: text, text: { en: "chicken with potatoes", ar: "فراخ بالبطاطس" }, gap: s }
-            - { kind: text, text: { en: "chicken soup", ar: "فراخ مشوية" }, gap: s }
+            - kind: searchbar
+              text: {"en": "chicken", "ar": "فراخ"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "chicken shawarma", "ar": "فراخ بانيه"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken with potatoes", "ar": "فراخ بالبطاطس"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken soup", "ar": "فراخ مشوية"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: typed
         text: { en: "Bold the typed word", ar: "الكلمة المكتوبة بخط عريض" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**chicken** shawarma", ar: "**فراخ** بانيه" }, gap: s }
-            - { kind: text, text: { en: "**chicken** with potatoes", ar: "**فراخ** بالبطاطس" }, gap: s }
-            - { kind: text, text: { en: "**chicken** soup", ar: "**فراخ** مشوية" }, gap: s }
+            - kind: searchbar
+              text: {"en": "chicken", "ar": "فراخ"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "**chicken** shawarma", "ar": "**فراخ** بانيه"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**chicken** with potatoes", "ar": "**فراخ** بالبطاطس"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**chicken** soup", "ar": "**فراخ** مشوية"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: added
         text: { en: "Bold the suggested words", ar: "الكلمات المقترحة بخط عريض" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
-            - { kind: text, text: { en: "chicken **shawarma**", ar: "فراخ **بانيه**" }, gap: s }
-            - { kind: text, text: { en: "chicken **with potatoes**", ar: "فراخ **بالبطاطس**" }, gap: s }
-            - { kind: text, text: { en: "chicken **soup**", ar: "فراخ **مشوية**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "chicken", "ar": "فراخ"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "chicken **shawarma**", "ar": "فراخ **بانيه**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken **with potatoes**", "ar": "فراخ **بالبطاطس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken **soup**", "ar": "فراخ **مشوية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
     answer: [added]
     misconceptions:
       - id: MC-P14-026
@@ -210,30 +251,48 @@ steps:
       - id: rest
         text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**grilled fish with** lemon", ar: "**سمك مشوي بالـ**ليمون" }, gap: s }
-            - { kind: text, text: { en: "lemon **cake**", ar: "**كيكة** ليمون" }, gap: s }
-            - { kind: text, text: { en: "**chicken with** lemon **and garlic**", ar: "**فراخ بالـ**ليمون **والثوم**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lemon", "ar": "ليمون"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "**grilled fish with** lemon", "ar": "**سمك مشوي بالـ**ليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lemon **cake**", "ar": "**كيكة** ليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**chicken with** lemon **and garlic**", "ar": "**فراخ بالـ**ليمون **والثوم**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: query
         text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
-            - { kind: text, text: { en: "grilled fish with **lemon**", ar: "سمك مشوي بالـ**ليمون**" }, gap: s }
-            - { kind: text, text: { en: "**lemon** cake", ar: "كيكة **ليمون**" }, gap: s }
-            - { kind: text, text: { en: "chicken with **lemon** and garlic", ar: "فراخ بالـ**ليمون** والثوم" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lemon", "ar": "ليمون"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "grilled fish with **lemon**", "ar": "سمك مشوي بالـ**ليمون**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**lemon** cake", "ar": "كيكة **ليمون**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken with **lemon** and garlic", "ar": "فراخ بالـ**ليمون** والثوم"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
-            - { kind: text, text: { en: "grilled fish with lemon", ar: "سمك مشوي بالليمون" }, gap: s }
-            - { kind: text, text: { en: "lemon cake", ar: "كيكة ليمون" }, gap: s }
-            - { kind: text, text: { en: "chicken with lemon and garlic", ar: "فراخ بالليمون والثوم" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lemon", "ar": "ليمون"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "grilled fish with lemon", "ar": "سمك مشوي بالليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lemon cake", "ar": "كيكة ليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken with lemon and garlic", "ar": "فراخ بالليمون والثوم"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
     answer: [query]
     misconceptions:
       - id: MC-P14-026
@@ -270,21 +329,33 @@ steps:
     a:
       label: { en: "Version A: last year's popular searches", ar: "النسخة A: أشهر عمليات البحث في العام الماضي" }
       mock:
-        width: 260
+        app: volta
+        appbar: { title: { en: "Volta", ar: "فولتا" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
         blocks:
-          - { kind: field, text: { en: "earbuds", ar: "سماعات" }, filled: true, focus: true }
-          - { kind: text, text: { en: "earbuds **X2**", ar: "سماعات **X2**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **with noise cancelling**", ar: "سماعات **بعزل الضوضاء**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **for sports**", ar: "سماعات **للرياضة**" }, gap: s }
+          - kind: searchbar
+            text: {"en": "earbuds", "ar": "سماعات"}
+            filled: true
+            focus: true
+            suggest:
+              - {"icon": "headphones", "text": {"en": "earbuds **X2**", "ar": "سماعات **X2**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **with noise cancelling**", "ar": "سماعات **بعزل الضوضاء**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **for sports**", "ar": "سماعات **للرياضة**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+        keyboard: text
     b:
       label: { en: "Version B: only searches with products in the store", ar: "النسخة B: فقط عمليات البحث التي لها منتجات في المتجر" }
       mock:
-        width: 260
+        app: volta
+        appbar: { title: { en: "Volta", ar: "فولتا" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
         blocks:
-          - { kind: field, text: { en: "earbuds", ar: "سماعات" }, filled: true, focus: true }
-          - { kind: text, text: { en: "earbuds **with noise cancelling**", ar: "سماعات **بعزل الضوضاء**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **for sports**", ar: "سماعات **للرياضة**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **under EGP 1,000**", ar: "سماعات **أقل من 1,000 جنيه**" }, gap: s }
+          - kind: searchbar
+            text: {"en": "earbuds", "ar": "سماعات"}
+            filled: true
+            focus: true
+            suggest:
+              - {"icon": "headphones", "text": {"en": "earbuds **with noise cancelling**", "ar": "سماعات **بعزل الضوضاء**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **for sports**", "ar": "سماعات **للرياضة**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **under EGP 1,000**", "ar": "سماعات **أقل من 1,000 جنيه**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+        keyboard: text
     answer: b
     misconceptions:
       - id: MC-P14-025
@@ -320,28 +391,46 @@ steps:
       - id: typed
         text: { en: "Suggest the common misspelling as typed", ar: "اقترح الإملاء الشائع كما كتبه الناس" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
-            - { kind: text, text: { en: "mulu**khia**", ar: "ملو**خيا**" }, gap: s }
-            - { kind: text, text: { en: "mulu**khia with rabbit**", ar: "ملو**خيا بالأرانب**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "mulu", "ar": "ملو"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "mulu**khia**", "ar": "ملو**خيا**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "mulu**khia with rabbit**", "ar": "ملو**خيا بالأرانب**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: fixed
         text: { en: "Suggest the spelling that finds recipes", ar: "اقترح الإملاء الذي يجد وصفات" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**molokhia**", ar: "**ملوخية**" }, gap: s }
-            - { kind: text, text: { en: "**molokhia with rabbit**", ar: "**ملوخية بالأرانب**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "mulu", "ar": "ملو"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia**", "ar": "**ملوخية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia with rabbit**", "ar": "**ملوخية بالأرانب**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: both
         text: { en: "Suggest both spellings", ar: "اقترح الإملاءين" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
-            - { kind: text, text: { en: "mulu**khia**", ar: "ملو**خيا**" }, gap: s }
-            - { kind: text, text: { en: "**molokhia**", ar: "**ملوخية**" }, gap: s }
-            - { kind: text, text: { en: "**molokhia with rabbit**", ar: "**ملوخية بالأرانب**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "mulu", "ar": "ملو"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "mulu**khia**", "ar": "ملو**خيا**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia**", "ar": "**ملوخية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia with rabbit**", "ar": "**ملوخية بالأرانب**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
     answer: [fixed]
     misconceptions:
       - id: MC-P14-025
@@ -380,30 +469,48 @@ steps:
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: wazifa
+          appbar: { title: { en: "Find a job", ar: "ابحث عن وظيفة" }, logo: true }
           blocks:
-            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "Senior UX design lead", ar: "قائد فريق تصميم UX" }, gap: s }
-            - { kind: text, text: { en: "Design engineer", ar: "مهندس تصميم" }, gap: s }
-            - { kind: text, text: { en: "Interior design intern", ar: "متدرّب تصميم داخلي" }, gap: s }
+            - kind: searchbar
+              text: {"en": "design", "ar": "تصميم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "briefcase", "text": {"en": "Senior UX design lead", "ar": "قائد فريق تصميم UX"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Design engineer", "ar": "مهندس تصميم"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Interior design intern", "ar": "متدرّب تصميم داخلي"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+          keyboard: text
       - id: query
         text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
         mock:
-          width: 300
+          app: wazifa
+          appbar: { title: { en: "Find a job", ar: "ابحث عن وظيفة" }, logo: true }
           blocks:
-            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "Senior UX **design** lead", ar: "قائد فريق **تصميم** UX" }, gap: s }
-            - { kind: text, text: { en: "**Design** engineer", ar: "مهندس **تصميم**" }, gap: s }
-            - { kind: text, text: { en: "Interior **design** intern", ar: "متدرّب **تصميم** داخلي" }, gap: s }
+            - kind: searchbar
+              text: {"en": "design", "ar": "تصميم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "briefcase", "text": {"en": "Senior UX **design** lead", "ar": "قائد فريق **تصميم** UX"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "**Design** engineer", "ar": "مهندس **تصميم**"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Interior **design** intern", "ar": "متدرّب **تصميم** داخلي"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+          keyboard: text
       - id: rest
         text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
         mock:
-          width: 300
+          app: wazifa
+          appbar: { title: { en: "Find a job", ar: "ابحث عن وظيفة" }, logo: true }
           blocks:
-            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**Senior UX** design **lead**", ar: "**قائد فريق** تصميم **UX**" }, gap: s }
-            - { kind: text, text: { en: "Design **engineer**", ar: "**مهندس** تصميم" }, gap: s }
-            - { kind: text, text: { en: "**Interior** design **intern**", ar: "**متدرّب** تصميم **داخلي**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "design", "ar": "تصميم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "briefcase", "text": {"en": "**Senior UX** design **lead**", "ar": "**قائد فريق** تصميم **UX**"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Design **engineer**", "ar": "**مهندس** تصميم"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "**Interior** design **intern**", "ar": "**متدرّب** تصميم **داخلي**"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+          keyboard: text
     answer: [query]
     misconceptions:
       - id: MC-P14-026
