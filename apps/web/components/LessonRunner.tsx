@@ -16,7 +16,7 @@ import { CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
 import type { ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
 import { Loader } from "@/components/loading/Loader";
-import { markTourSeen, tourSeen } from "@/lib/lesson-tour";
+import { markTourSeen, tourKind } from "@/lib/lesson-tour";
 
 export const GUEST_ID = "guest";
 
@@ -105,8 +105,8 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
       if (alive) {
         setState(fresh);
-        const kind = guest ? "guest" : firstLesson ? "first" : undefined;
-        if (kind && variant === "lesson" && fresh.i === 0 && !tourSeen(kind, userId)) setTour(kind);
+        const kind = variant === "lesson" ? tourKind({ guest, firstLesson, userId, atStart: fresh.i === 0 }) : undefined;
+        if (kind) setTour(kind);
       }
     })();
     return () => { alive = false; };
