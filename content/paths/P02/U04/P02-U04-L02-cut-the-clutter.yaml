@@ -20,21 +20,22 @@ steps:
     type: card
     part: hook
     title: { en: "Where is Transfer?", ar: "أين التحويل؟" }
-    body:
-      en: "I lead the design team of a bank's app. Our home screen has grown: the balance, three offer banners, a news slider, a tip of the day, a currency table and a quiz.\n\nIn our last test, four out of six people couldn't find **Transfer** in under a minute. It's there, under the quiz."
-      ar: "أقود فريق التصميم لتطبيق بنك. وقد امتلأت الشاشة الرئيسية: الرصيد، وثلاثة Banners للعروض، وشريط أخبار متحرّك، ونصيحة اليوم، وجدول عملات، ومسابقة.\n\nفي آخر تجربة، لم يجد أربعة من ستة أشخاص زر **تحويل** في أقل من دقيقة. وهو موجود، تحت المسابقة."
     mock:
-      width: 300
-      blocks: &crowded
-        - { kind: meta, text: { en: "Balance: EGP 12,480", ar: "الرصيد: 12,480 جنيه" } }
-        - { kind: banner, text: { en: "New! 0% installments on phones", ar: "جديد! تقسيط بدون فوائد على الهواتف" }, gap: s }
-        - { kind: banner, text: { en: "Win a trip with your card", ar: "اربح رحلة مع بطاقتك" }, gap: xs }
-        - { kind: image, size: s, gap: xs }
+      app: rasid
+      appbar: { logo: true, actions: [ { icon: bell, count: 4 } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: credit-card, text: { en: "Cards", ar: "البطاقات" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: card, blocks: [ { kind: small, text: { en: "Balance", ar: "الرصيد" } }, { kind: price, text: { en: "EGP 12,480", ar: "12,480 جنيه" }, size: l } ] }
+        - { kind: banner, icon: megaphone, tone: info, text: { en: "New! 0% installments on phones", ar: "جديد! تقسيط بدون فوائد على الهواتف" }, gap: s }
+        - { kind: banner, icon: airplane-tilt, tone: info, text: { en: "Win a trip with your card", ar: "اربح رحلة مع بطاقتك" }, gap: xs }
+        - { kind: image, art: city-night, size: s, gap: xs }
         - { kind: small, text: { en: "Tip of the day: save 10% of your salary", ar: "نصيحة اليوم: ادّخر 10% من راتبك" }, gap: xs }
         - { kind: small, text: { en: "USD 48.9 · EUR 52.7 · SAR 13.0", ar: "دولار 48.9 · يورو 52.7 · ريال 13.0" }, gap: xs }
         - { kind: link, text: { en: "Quiz: how smart is your spending?", ar: "مسابقة: ما مدى ذكاء إنفاقك؟" }, gap: xs }
-        - { kind: button, text: { en: "Transfer", ar: "تحويل" }, gap: s, style: plain }
-
+        - { kind: button, icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" }, style: text, gap: xs, note: { en: "Here, under the quiz", ar: "هنا، تحت المسابقة" } }
+    body:
+      en: "I lead the design team of a bank's app. Our home screen has grown: the balance, three offer banners, a news slider, a tip of the day, a currency table and a quiz.\n\nIn our last test, four out of six people couldn't find **Transfer** in under a minute. It's there, under the quiz."
+      ar: "أقود فريق التصميم لتطبيق بنك. وقد امتلأت الشاشة الرئيسية: الرصيد، وثلاثة Banners للعروض، وشريط أخبار متحرّك، ونصيحة اليوم، وجدول عملات، ومسابقة.\n\nفي آخر تجربة، لم يجد أربعة من ستة أشخاص زر **تحويل** في أقل من دقيقة. وهو موجود، تحت المسابقة."
   - id: S02
     type: choose
     part: try
@@ -48,6 +49,17 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا نفعل؟"
+    mock:
+      app: rasid
+      appbar: { logo: true, actions: [ { icon: bell, count: 4 } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: credit-card, text: { en: "Cards", ar: "البطاقات" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: card, blocks: [ { kind: small, text: { en: "Balance", ar: "الرصيد" } }, { kind: price, text: { en: "EGP 12,480", ar: "12,480 جنيه" }, size: l } ] }
+        - { kind: banner, icon: megaphone, tone: info, text: { en: "New! 0% installments on phones", ar: "جديد! تقسيط بدون فوائد على الهواتف" }, gap: s }
+        - { kind: banner, icon: airplane-tilt, tone: info, text: { en: "Win a trip with your card", ar: "اربح رحلة مع بطاقتك" }, gap: xs }
+        - { kind: image, art: city-night, size: s, gap: xs }
+        - { kind: link, text: { en: "Quiz: how smart is your spending?", ar: "مسابقة: ما مدى ذكاء إنفاقك؟" }, gap: xs }
+        - { kind: button, icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" }, style: text, gap: xs }
     options:
       - { id: red, text: { en: "Make Transfer a big red button", ar: "نجعل «تحويل» زرًا أحمر كبيرًا" } }
       - { id: cut, text: { en: "Keep the balance and the main actions on top; move offers, news and the quiz to an \"Offers\" tab", ar: "نُبقي الرصيد والإجراءات الرئيسية في الأعلى؛ وننقل العروض والأخبار والمسابقة إلى قسم «العروض»" } }
@@ -115,6 +127,19 @@ steps:
     prompt:
       en: "How should the screen handle the other fields?"
       ar: "كيف تتعامل الشاشة مع الحقول الأخرى؟"
+    mock:
+      app: rasid
+      appbar: { title: { en: "Transfer", ar: "تحويل" }, back: true }
+      blocks:
+        - { kind: field, label: { en: "To account", ar: "إلى الحساب" }, text: "", icon: user }
+        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: "", gap: s }
+        - { kind: field, label: { en: "Purpose", ar: "الغرض" }, text: "", gap: s }
+        - { kind: field, label: { en: "Reference code", ar: "الرمز المرجعي" }, text: "", gap: s }
+        - { kind: field, label: "SWIFT", text: "", gap: s }
+        - { kind: select, label: { en: "Schedule", ar: "الجدولة" }, text: { en: "Now", ar: "الآن" }, gap: s }
+        - { kind: select, label: { en: "Fees paid by", ar: "الرسوم على" }, text: { en: "Me", ar: "أنا" }, gap: s }
+      footer:
+        - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
       - { id: all, text: { en: "Keep them all visible; someone might need them", ar: "تبقى كلها ظاهرة؛ فقد يحتاجها أحد" } }
       - { id: more, text: { en: "Show account and amount; put the rest under \"More options\", and ask for SWIFT only for transfers abroad", ar: "تعرض الحساب والمبلغ؛ وتضع الباقي تحت «خيارات أخرى»، ولا تطلب SWIFT إلا للتحويل إلى الخارج" } }
@@ -156,6 +181,17 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا نفعل؟"
+    mock:
+      app: rasid
+      blocks:
+        - { kind: icon, icon: bank, size: l, color: brand }
+        - { kind: heading, text: { en: "Sign in", ar: "تسجيل الدخول" }, gap: m }
+        - { kind: small, text: { en: "Username", ar: "اسم المستخدم" }, tone: faint, gap: l }
+        - { kind: line, gap: xs }
+        - { kind: small, text: { en: "Password", ar: "كلمة المرور" }, tone: faint, gap: l, note: { en: "No borders, no labels: only grey placeholder text", ar: "بلا حدود ولا أسماء: نص رمادي فقط" } }
+        - { kind: line, gap: xs }
+      footer:
+        - { kind: button, text: { en: "Sign in", ar: "دخول" } }
     options:
       - { id: keep, text: { en: "Keep it; less is more", ar: "نُبقيها؛ فالأقل أكثر" } }
       - { id: back, text: { en: "Bring back visible field borders and labels above the fields", ar: "نعيد حدود الحقول الظاهرة والأسماء فوق الحقول" } }
@@ -196,21 +232,23 @@ steps:
     a:
       label: { en: "Version A: very calm", ar: "النسخة A: هادئة جدًا" }
       mock:
-        width: 260
+        app: dar
+        appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Checkout", ar: "الدفع" } }
-          - { kind: meta, text: { en: "3 items", ar: "3 منتجات" }, gap: s }
-          - { kind: button, text: { en: "Pay", ar: "ادفع" }, gap: xl }
+          - { kind: listitem, art: box, text: { en: "3 items", ar: "3 منتجات" } }
+        footer:
+          - { kind: button, text: { en: "Pay", ar: "ادفع" } }
     b:
       label: { en: "Version B: calm, with the facts", ar: "النسخة B: هادئة، مع الحقائق" }
       mock:
-        width: 260
+        app: dar
+        appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Checkout", ar: "الدفع" } }
-          - { kind: meta, text: { en: "3 items · EGP 1,340", ar: "3 منتجات · 1,340 جنيه" }, gap: s }
-          - { kind: meta, text: { en: "Delivery EGP 40 · arrives Thu 6 Nov", ar: "التوصيل 40 جنيه · يصل الخميس 6 نوفمبر" }, gap: xs }
-          - { kind: heading, text: { en: "Total EGP 1,380", ar: "الإجمالي 1,380 جنيه" }, gap: s }
-          - { kind: button, text: { en: "Pay EGP 1,380", ar: "ادفع 1,380 جنيه" }, gap: m }
+          - { kind: listitem, art: box, text: { en: "3 items", ar: "3 منتجات" }, value: { en: "EGP 1,340", ar: "1,340 جنيه" } }
+          - { kind: listitem, icon: truck, text: { en: "Delivery · arrives Thu 6 Nov", ar: "التوصيل · يصل الخميس 6 نوفمبر" }, value: { en: "EGP 40", ar: "40 جنيه" }, gap: s }
+          - { kind: price, text: { en: "Total EGP 1,380", ar: "الإجمالي 1,380 جنيه" }, gap: m }
+        footer:
+          - { kind: button, text: { en: "Pay EGP 1,380", ar: "ادفع 1,380 جنيه" } }
     answer: b
     misconceptions:
       - id: MC-P02-034
@@ -242,6 +280,17 @@ steps:
     prompt:
       en: "How should the timetable show each class?"
       ar: "كيف يعرض الجدول كل حصة؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "Timetable · Thursday", ar: "الجدول · الخميس" } }
+      blocks:
+        - kind: card
+          art: gym
+          blocks:
+            - { kind: heading, text: { en: "Coach Mai", ar: "المدرّبة مي" } }
+            - { kind: small, text: { en: "10 years of yoga teaching, certified in Bali and Cairo. Loves sunrise sessions and strong tea.", ar: "10 سنوات في تدريب اليوغا، معتمدة في بالي والقاهرة. تحب جلسات الشروق والشاي الثقيل." } }
+            - { kind: small, text: { en: "\"Breathe in, the day is yours.\"", ar: "«خذ نفسًا، اليوم لك.»" }, tone: faint }
+            - { kind: badge, text: { en: "Yoga · 6 pm · 4 spots left", ar: "يوغا · 6 م · بقي 4 أماكن" }, tone: neutral, gap: s, note: { en: "Time and spots come last", ar: "الوقت والأماكن في الآخر" } }
     options:
       - { id: row, text: { en: "A compact row: time, class, trainer's name, spots left and Book; the bio opens on tap", ar: "صف مختصر: الوقت، والحصة، واسم المدرّب، والأماكن المتبقية، و«احجز»؛ وتُفتح النبذة عند الضغط" } }
       - { id: smaller, text: { en: "The same card with a smaller photo", ar: "البطاقة نفسها بصورة أصغر" } }
