@@ -40,7 +40,8 @@ export default async function middleware(req: NextRequest) {
   // Coming Soon gate (lib/coming-soon.ts): pages other than the open ones need an admin session while it is on; the
   // sign-in pages also open with a team pass, the cookie the team password page sets (lib/team-access.ts).
   const gate = comingSoonOn() ? gateStep(req.nextUrl.pathname) : null;
-  if ((gate?.kind === "open" && !gate.index) || gate?.kind === "team") res.headers.set("X-Robots-Tag", "noindex");
+  // Nothing but the home address and the legal pages may be indexed, whoever is looking (an admin's app pages too).
+  if (gate && gate.kind !== "pass" && !gate.index) res.headers.set("X-Robots-Tag", "noindex");
   const adminOnly = gate?.kind === "admin" || (gate?.kind === "team" && !(await teamPassValid(req.cookies.get(TEAM_COOKIE)?.value)));
   if ((hasSupabase() && SIGNED_IN_AREA.test(req.nextUrl.pathname)) || adminOnly) {
     if (!hasSupabase()) return comingSoon(req, gate, res);

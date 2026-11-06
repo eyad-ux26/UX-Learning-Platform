@@ -24,7 +24,7 @@ Open to everyone while the gate is on:
 - `/maintenance`, `/offline`
 - every `/api/*` route (webhooks, cron, auth callback, video), static files and `/_next`
 
-`/signin`, `/forgot` and `/reset` open only with a team pass or an admin session. Everything else shows Coming Soon. Search engines may index the home address and the legal pages only. Every other page carries `X-Robots-Tag: noindex`, and the sitemap lists only the home address and the approved legal pages.
+`/signin`, `/forgot` and `/reset` open only with a team pass or an admin session. Everything else shows Coming Soon. Search engines may index the home address and the legal pages only. Every other page carries `X-Robots-Tag: noindex`, for admins too. The sitemap lists the home address, and the legal pages only once their text is approved (`LEGAL_STATUS.approved` in `apps/web/lib/legal-text.ts`, which waits for the admins' sign-off on the placeholders). Until then it lists only `/en` and `/ar`.
 
 The server also refuses, for anyone but an admin:
 
