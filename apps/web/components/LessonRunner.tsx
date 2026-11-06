@@ -112,9 +112,11 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   }, [key]);
 
   // Give the last answers a moment to reach the server so Home shows the new XP and streak; offline, leave anyway.
-  const leave = async (to = "/app") => {
+  // Only an app path counts: a click event handed over by mistake goes Home, never to "/en[object]".
+  const leave = async (to: unknown = "/app") => {
+    const href = typeof to === "string" && to.startsWith("/") ? to : "/app";
     await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
-    router.push(to as never, { locale: view });
+    router.push(href as never, { locale: view });
     router.refresh();
   };
 
@@ -182,7 +184,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave()} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
   }
 
   return (
