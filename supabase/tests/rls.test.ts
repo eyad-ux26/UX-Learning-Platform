@@ -263,3 +263,36 @@ describe("my_lesson_progress (per-lesson summary)", () => {
     await expect(as("anon", null, `select * from my_lesson_progress()`)).rejects.toThrow(/permission denied/);
   });
 });
+
+describe("my_learner_state (migration 0039: the app shell's reads in one call)", () => {
+  type State = { profile: { display_name: string; locale: string; week_start: number } | null; lessons: { lesson_id: string; finished: boolean; xp: number }[]; skills: unknown[]; streak: unknown; unread: number; leaderboard_open: boolean; entitlement: unknown; activity: { day: string }[] };
+  const state = async (who: "authenticated" | "anon", uid: string | null) =>
+    (await as<{ s: State }>(who, uid, `select public.my_learner_state('2020-01-01') as s`))[0].s;
+  it("returns the caller's own rows, the same lesson summary as my_lesson_progress, and nothing of another learner", async () => {
+    await db.query(`insert into notifications (user_id, kind) values ($1, 'goal'), ($1, 'goal'), ($2, 'goal')`, [A, B]);
+    await db.query(`insert into daily_activity (user_id, day, lessons_done) values ($1, '2026-11-01', 2), ($2, '2026-11-02', 1) on conflict do nothing`, [A, B]);
+    try {
+      const a = await state("authenticated", A);
+      expect(a.profile).toMatchObject({ display_name: "a", locale: "ar", week_start: expect.any(Number) });
+      expect(a.lessons).toEqual(await as("authenticated", A, `select * from my_lesson_progress()`));
+      expect(a.unread).toBe(2);
+      expect(a.activity.map((d) => d.day)).toContain("2026-11-01");
+      expect(a.activity.map((d) => d.day)).not.toContain("2026-11-02");
+      expect(a.streak).not.toBeNull();
+      expect(a.entitlement).toBeNull();
+      expect(a.leaderboard_open).toBe(false);
+      const b = await state("authenticated", B);
+      expect(b.unread).toBe(1);
+      expect(b.activity.map((d) => d.day)).toContain("2026-11-02");
+      expect(b.activity.map((d) => d.day)).not.toContain("2026-11-01");
+    } finally {
+      await db.query(`delete from notifications where user_id in ($1, $2)`, [A, B]);
+      await db.query(`delete from daily_activity where (user_id = $1 and day = '2026-11-01') or (user_id = $2 and day = '2026-11-02')`, [A, B]);
+    }
+  });
+  it("a request with no learner id gets empty lists, and a signed-out visitor cannot call it", async () => {
+    const none = await state("authenticated", null);
+    expect(none).toMatchObject({ profile: null, lessons: [], skills: [], streak: null, unread: 0 });
+    await expect(as("anon", null, `select public.my_learner_state('2020-01-01')`)).rejects.toThrow(/permission denied/);
+  });
+});

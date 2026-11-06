@@ -8,6 +8,7 @@ import { redirect } from "@/i18n/navigation";
 import { buildPathView, canPlay } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
 import { decideReplay } from "@/lib/replay";
+import { paidReplayStarts } from "@/lib/server/replays";
 import { upNextOf, type PathEnd } from "@/lib/up-next";
 import { isShown, pathSkills } from "@/lib/certificate";
 import { lessonOpen } from "@/lib/billing/access";
@@ -38,8 +39,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   let replay = null as ReturnType<typeof decideReplay>;
   if (me.progress.finishedLessons.includes(lessonId)) {
     // Only finished paid replays count here, so resuming the replay in progress still shows it as paid.
-    const paid = me.db ? await me.db.from("attempts").select("started_at").eq("lesson_id", lessonId).eq("replay_kind", "paid").not("finished_at", "is", null) : null;
-    replay = decideReplay(true, (paid?.data ?? []).map((p) => p.started_at as string), new Date(), me.timeZone);
+    replay = decideReplay(true, await paidReplayStarts(me.db, lessonId), new Date(), me.timeZone);
   }
   // Where the end page points: the next lesson of this path, or (after its last lesson) the certificate and other paths.
   // A free learner at the end of the free unit sees the Pro card instead of a next lesson they cannot open.

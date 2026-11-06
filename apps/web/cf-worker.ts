@@ -3,14 +3,32 @@
 import handler from "./.open-next/worker.js";
 
 import { isPrivateContent, notFound } from "./lib/private-content";
+import { serverTiming, traceLine, withTrace } from "./lib/server/db-trace";
 
 type Env = { CRON_SECRET?: string };
 
 export default {
   // Lesson files are read by the server through ASSETS only: a request from outside gets 404.
-  fetch(req: Request, env: unknown, ctx: unknown) {
+  async fetch(req: Request, env: unknown, ctx: unknown) {
     if (isPrivateContent(new URL(req.url).pathname)) return notFound();
-    return handler.fetch(req, env, ctx);
+    const url = new URL(req.url);
+    // Issue #184: every Supabase call this request makes is counted and timed (lib/server/db-trace.ts). The response
+    // gets a Server-Timing header (browser dev tools > Network > Timing), and pages that make calls log one line.
+    const t0 = Date.now();
+    const { trace, result } = withTrace(() => handler.fetch(req, env, ctx) as Promise<Response>);
+    const res = await result;
+    const ms = Date.now() - t0;
+    if (trace.calls.length) console.log(traceLine(req.method, url.pathname, res.status, ms, trace));
+    if (res.status === 101) return res;
+    try {
+      res.headers.append("Server-Timing", serverTiming(trace, ms));
+      return res;
+    } catch {
+      // Headers of some responses cannot be changed; copy it.
+      const out = new Response(res.body, res);
+      out.headers.append("Server-Timing", serverTiming(trace, ms));
+      return out;
+    }
   },
   async scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
     // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts (slice 4). Up to 4 calls of 25.
