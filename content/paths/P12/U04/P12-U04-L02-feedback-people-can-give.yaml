@@ -24,10 +24,19 @@ steps:
       en: "I'm a junior designer on a recipe app. After every recipe, we ask: \"How did we do? 😂 Rate us 1 to 10!\" Almost nobody answers.\n\nAnd the app treats every recipe you open as \"I want more like this\". One user opened a fish recipe once, just curious. Now half her suggestions are fish."
       ar: "أنا مصمّم مبتدئ في تطبيق وصفات. بعد كل وصفة، نسأل: «كيف كان أداؤنا؟ 😂 قيّمنا من 1 إلى 10!» ولا أحد تقريبًا يجيب.\n\nوالتطبيق يعتبر كل وصفة تفتحها «أريد المزيد مثلها». فتحت إحدى المستخدمات وصفة سمك مرة واحدة، بدافع الفضول فقط. والآن نصف اقتراحاتها سمك."
     mock:
-      width: 300
+      app: tabkha
+      appbar: { title: { en: "For you", ar: "لك" } }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "For you", ar: "لك" } }, { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }, { icon: bookmark-simple, text: { en: "Saved", ar: "المحفوظة" } } ] }
       blocks:
-        - { kind: title, text: { en: "How did we do? 😂", ar: "كيف كان أداؤنا؟ 😂" } }
-        - { kind: meta, text: { en: "1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10", ar: "1 · 2 · 3 · 4 · 5 · 6 · 7 · 8 · 9 · 10" }, gap: s }
+        - { kind: listitem, art: food-grill, text: { en: "Grilled fish with rice", ar: "سمك مشوي بالأرز" }, sub: { en: "35 min", ar: "35 دقيقة" } }
+        - { kind: listitem, art: food-grill, text: { en: "Fish tagine", ar: "طاجن سمك" }, sub: { en: "50 min", ar: "50 دقيقة" } }
+        - { kind: listitem, art: food-salad, text: { en: "Tuna salad", ar: "سلطة تونة" }, sub: { en: "10 min", ar: "10 دقائق" } }
+      overlay:
+        type: sheet
+        title: { en: "How did we do? 😂", ar: "كيف كان أداؤنا؟ 😂" }
+        blocks:
+          - { kind: small, color: muted, text: { en: "Rate us 1 to 10!", ar: "قيّمنا من 1 إلى 10!" } }
+          - { kind: chips, items: [ { text: "1" }, { text: "2" }, { text: "3" }, { text: "4" }, { text: "5" }, { text: "6" }, { text: "7" }, { text: "8" }, { text: "9" }, { text: "10" } ], gap: xs }
 
   - id: S02
     type: choose
@@ -72,7 +81,7 @@ steps:
       ar: "- **خيارات بسيطة لا تتداخل:** 👍 / 👎 أفضل من مقياس من 1 إلى 10.\n- **استخدم كلمات الناس:** «تأخذ وقتًا طويلًا»، لا «صلة منخفضة».\n- **اجعل الأسلوب مناسبًا:** لا نكات حين يكون الموضوع جادًا.\n- **فعل واحد ليس رغبة:** الفتح أو المشاهدة أو الشراء قد يعني أشياء كثيرة. وحين لا يكون واضحًا، اسأل."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U04-03
     part: guided
     rules: [R06]
@@ -84,12 +93,47 @@ steps:
       en: "We're replacing \"Rate us 1 to 10\" under each recipe."
       ar: "نستبدل «قيّمنا من 1 إلى 10» تحت كل وصفة."
     prompt:
-      en: "Which options should we use?"
-      ar: "أي خيارات يجب أن نستخدم؟"
+      en: "Tap each option to see it. Which options should we use?"
+      ar: "اضغط على كل خيار لتراه. أي خيارات يجب أن نستخدم؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: tabkha
+      appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+      blocks:
+        - { kind: image, art: food-koshary }
+        - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+        - { kind: chips, items: [ { text: "1" }, { text: "2" }, { text: "3" }, { text: "4" }, { text: "5" }, { text: "6" }, { text: "7" }, { text: "8" }, { text: "9" }, { text: "10" } ], gap: xs }
     options:
-      - { id: words, text: { en: "Love it / Like it / It's OK / It's fine / Meh", ar: "أحببتها / أعجبتني / لا بأس / مقبولة / عادية" } }
-      - { id: scale, text: { en: "A 1 to 10 scale, but with stars", ar: "مقياس من 1 إلى 10، لكن بنجوم" } }
-      - { id: thumbs, text: { en: "👍 Good recipe / 👎 Not for me", ar: "👍 وصفة جيدة / 👎 لا تناسبني" } }
+      - id: words
+        text: { en: "Love it / Like it / It's OK / It's fine / Meh", ar: "أحببتها / أعجبتني / لا بأس / مقبولة / عادية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: tabkha
+          appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+            - { kind: chips, items: [ { text: { en: "Love it", ar: "أحببتها" } }, { text: { en: "Like it", ar: "أعجبتني" } }, { text: { en: "It's OK", ar: "لا بأس" } }, { text: { en: "It's fine", ar: "مقبولة" } }, { text: { en: "Meh", ar: "عادية" } } ], gap: xs }
+      - id: scale
+        text: { en: "A 1 to 10 scale, but with stars", ar: "مقياس من 1 إلى 10، لكن بنجوم" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: tabkha
+          appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+            - { kind: text, px: 20, color: brand, text: "★★★★★★★★★★", gap: xs }
+      - id: thumbs
+        text: { en: "👍 Good recipe / 👎 Not for me", ar: "👍 وصفة جيدة / 👎 لا تناسبني" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: tabkha
+          appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: thumbs-up, text: { en: "Good recipe", ar: "وصفة جيدة" } }, { kind: button, style: outline, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } } ], gap: xs }
     answer: [thumbs]
     misconceptions:
       - id: MC-P12-032
@@ -108,7 +152,7 @@ steps:
       ar: "كل إجابة تعني شيئًا واحدًا، فيفهمها الناس والتطبيق معًا."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U04-03
     part: guided
     rules: [R06]
@@ -120,12 +164,66 @@ steps:
       en: "After 👎, we can ask one short follow-up question."
       ar: "بعد 👎، نستطيع أن نسأل سؤالًا قصيرًا واحدًا للمتابعة."
     prompt:
-      en: "Which follow-up is best?"
-      ar: "أي سؤال متابعة هو الأفضل؟"
+      en: "Tap each option to see it. Which follow-up is best?"
+      ar: "اضغط على كل خيار لتراه. أي سؤال متابعة هو الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: tabkha
+      appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+      blocks:
+        - { kind: image, art: food-koshary }
+        - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+        - { kind: chip, selected: true, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } }
+      overlay:
+        type: sheet
+        blocks:
+          - { kind: small, color: muted, text: { en: "One short follow-up question goes here", ar: "هنا سؤال متابعة قصير واحد" } }
     options:
-      - { id: people, text: { en: "\"What's wrong? Takes too long · Don't like an ingredient · Too costly\"", ar: "«ما المشكلة؟ تأخذ وقتًا طويلًا · لا أحب أحد المكوّنات · مكلفة»" } }
-      - { id: tech, text: { en: "\"Which signal was wrong? Cuisine · Embedding · Popularity\"", ar: "«أي إشارة كانت خطأ؟ نوع المطبخ · التمثيل الرقمي · الشعبية»" } }
-      - { id: text, text: { en: "A large empty text box", ar: "مربّع نص كبير فارغ" } }
+      - id: people
+        text: { en: "\"What's wrong? Takes too long · Don't like an ingredient · Too costly\"", ar: "«ما المشكلة؟ تأخذ وقتًا طويلًا · لا أحب أحد المكوّنات · مكلفة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: tabkha
+          appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+            - { kind: chip, selected: true, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "What's wrong?", ar: "ما المشكلة؟" } }
+              - { kind: chips, items: [ { text: { en: "Takes too long", ar: "تأخذ وقتًا طويلًا" } }, { text: { en: "Don't like an ingredient", ar: "لا أحب أحد المكوّنات" } }, { text: { en: "Too costly", ar: "مكلفة" } } ], gap: s }
+      - id: tech
+        text: { en: "\"Which signal was wrong? Cuisine · Embedding · Popularity\"", ar: "«أي إشارة كانت خطأ؟ نوع المطبخ · التمثيل الرقمي · الشعبية»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: tabkha
+          appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+            - { kind: chip, selected: true, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "Which signal was wrong?", ar: "أي إشارة كانت خطأ؟" } }
+              - { kind: chips, items: [ { text: { en: "Cuisine", ar: "نوع المطبخ" } }, { text: { en: "Embedding", ar: "التمثيل الرقمي" } }, { text: { en: "Popularity", ar: "الشعبية" } } ], gap: s }
+      - id: text
+        text: { en: "A large empty text box", ar: "مربّع نص كبير فارغ" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: tabkha
+          appbar: { title: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: small, color: muted, text: { en: "Done cooking? Tell us:", ar: "انتهيت من الطبخ؟ أخبرنا:" }, gap: s }
+            - { kind: chip, selected: true, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: heading, text: { en: "Tell us more", ar: "أخبرنا أكثر" } }
+              - { kind: field, height: 120, text: "" , gap: s }
     answer: [people]
     misconceptions:
       - id: MC-P12-032
@@ -162,25 +260,23 @@ steps:
     a:
       label: { en: "A: \"Was this allergy alert right?\" Yes / No, it's wrong", ar: "A: «هل كان تنبيه الحساسية صحيحًا؟» نعم / لا، إنه خطأ" }
       mock:
-        width: 300
+        app: tabkha
+        appbar: { title: { en: "Date cake", ar: "كيكة التمر" }, back: true }
         blocks:
-          - { kind: meta, text: { en: "Was this allergy alert right?", ar: "هل كان تنبيه الحساسية صحيحًا؟" } }
-          - kind: row
-            gap: s
-            blocks:
-              - { kind: chip, text: { en: "Yes", ar: "نعم" } }
-              - { kind: chip, text: { en: "No, it's wrong", ar: "لا، إنه خطأ" } }
+          - { kind: image, art: food-dessert }
+          - { kind: banner, tone: warn, icon: warning, text: { en: "This recipe may contain nuts.", ar: "قد تحتوي هذه الوصفة على مكسّرات." }, gap: s }
+          - { kind: text, text: { en: "Was this allergy alert right?", ar: "هل كان تنبيه الحساسية صحيحًا؟" }, gap: s }
+          - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "Yes", ar: "نعم" } }, { kind: button, style: outline, text: { en: "No, it's wrong", ar: "لا، إنه خطأ" } } ], gap: xs }
     b:
       label: { en: "B: \"Nutty or not? 🥜😂\" Yes / Nope 🙃", ar: "B: «مكسّرات أم لا؟ 🥜😂» نعم / لا 🙃" }
       mock:
-        width: 300
+        app: tabkha
+        appbar: { title: { en: "Date cake", ar: "كيكة التمر" }, back: true }
         blocks:
-          - { kind: meta, text: { en: "Nutty or not? 🥜😂", ar: "مكسّرات أم لا؟ 🥜😂" } }
-          - kind: row
-            gap: s
-            blocks:
-              - { kind: chip, text: { en: "Yes", ar: "نعم" } }
-              - { kind: chip, text: { en: "Nope 🙃", ar: "لا 🙃" } }
+          - { kind: image, art: food-dessert }
+          - { kind: banner, tone: warn, icon: warning, text: { en: "This recipe may contain nuts.", ar: "قد تحتوي هذه الوصفة على مكسّرات." }, gap: s }
+          - { kind: text, text: { en: "Nutty or not? 🥜😂", ar: "مكسّرات أم لا؟ 🥜😂" }, gap: s }
+          - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "Yes", ar: "نعم" } }, { kind: button, style: outline, text: { en: "Nope 🙃", ar: "لا 🙃" } } ], gap: xs }
     answer: a
     reason:
       prompt: { en: "Why is A better?", ar: "لماذا A أفضل؟" }
@@ -212,7 +308,7 @@ steps:
       ar: "أسلوب السؤال يقول للناس كم تهتمّ بالإجابة."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U04-04
     part: independent
     speaker: hana
@@ -225,12 +321,49 @@ steps:
       en: "My gym app suggests classes. A member liked a 7 a.m. class with Coach Omar, because it fits before work. Now the app suggests every Omar class, even at 9 p.m."
       ar: "تطبيق ناديّ يقترح حصصًا. أعجبت إحدى العضوات بحصة الساعة 7 صباحًا مع المدرّب عمر، لأنها تناسبها قبل العمل. والآن يقترح التطبيق كل حصص عمر، حتى الساعة 9 مساءً."
     prompt:
-      en: "What should the app do when she likes a class?"
-      ar: "ماذا يجب أن يفعل التطبيق حين تُعجب بحصة؟"
+      en: "Tap each option to see it. What should the app do when she likes a class?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يفعل التطبيق حين تُعجب بحصة؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: nashat
+      appbar: { title: { en: "Classes", ar: "الحصص" } }
+      blocks:
+        - { kind: card, blocks: [ { kind: heading, text: { en: "Spinning · 7:00 · Coach Omar", ar: "دراجات · 7:00 · الكوتش عمر" } }, { kind: chip, selected: true, icon: heart, text: { en: "Liked", ar: "أعجبتني" } } ] }
     options:
-      - { id: ask, text: { en: "Ask once: \"More like this: same coach, same time, or same type?\"", ar: "يسأل مرة واحدة: «المزيد مثلها: المدرّب نفسه، أم الوقت نفسه، أم النوع نفسه؟»" } }
-      - { id: coach, text: { en: "Keep suggesting the same coach", ar: "يستمرّ في اقتراح المدرّب نفسه" } }
-      - { id: all, text: { en: "Suggest more of everything about that class", ar: "يقترح المزيد من كل ما يخصّ تلك الحصة" } }
+      - id: ask
+        text: { en: "Ask once: \"More like this: same coach, same time, or same type?\"", ar: "يسأل مرة واحدة: «المزيد مثلها: المدرّب نفسه، أم الوقت نفسه، أم النوع نفسه؟»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Classes", ar: "الحصص" } }
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Spinning · 7:00 · Coach Omar", ar: "دراجات · 7:00 · الكوتش عمر" } }, { kind: chip, selected: true, icon: heart, text: { en: "Liked", ar: "أعجبتني" } } ] }
+          overlay:
+            type: sheet
+            title: { en: "More like this:", ar: "المزيد مثلها:" }
+            blocks:
+              - { kind: chips, items: [ { text: { en: "Same coach", ar: "المدرّب نفسه" } }, { text: { en: "Same time", ar: "الوقت نفسه" } }, { text: { en: "Same type", ar: "النوع نفسه" } } ] }
+      - id: coach
+        text: { en: "Keep suggesting the same coach", ar: "يستمرّ في اقتراح المدرّب نفسه" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Classes", ar: "الحصص" } }
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Spinning · 7:00 · Coach Omar", ar: "دراجات · 7:00 · الكوتش عمر" } }, { kind: chip, selected: true, icon: heart, text: { en: "Liked", ar: "أعجبتني" } } ] }
+            - { kind: small, color: muted, text: { en: "Suggested next:", ar: "المقترح بعدها:" }, gap: s }
+            - { kind: listitem, icon: barbell, text: { en: "Boxing · 21:00 · Coach Omar", ar: "ملاكمة · 21:00 · الكوتش عمر" }, badge: { text: { en: "Suggested", ar: "مقترح" }, icon: sparkle } }
+      - id: all
+        text: { en: "Suggest more of everything about that class", ar: "يقترح المزيد من كل ما يخصّ تلك الحصة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Classes", ar: "الحصص" } }
+          blocks:
+            - { kind: card, blocks: [ { kind: heading, text: { en: "Spinning · 7:00 · Coach Omar", ar: "دراجات · 7:00 · الكوتش عمر" } }, { kind: chip, selected: true, icon: heart, text: { en: "Liked", ar: "أعجبتني" } } ] }
+            - { kind: small, color: muted, text: { en: "Suggested next:", ar: "المقترح بعدها:" }, gap: s }
+            - { kind: listitem, icon: barbell, text: { en: "Spinning · 21:00 · Coach Omar", ar: "دراجات · 21:00 · الكوتش عمر" }, badge: { text: { en: "Suggested", ar: "مقترح" }, icon: sparkle } }
+            - { kind: listitem, icon: barbell, text: { en: "Spinning · 6:00 · Coach Omar", ar: "دراجات · 6:00 · الكوتش عمر" }, badge: { text: { en: "Suggested", ar: "مقترح" }, icon: sparkle } }
     answer: [ask]
     misconceptions:
       - id: MC-P12-033

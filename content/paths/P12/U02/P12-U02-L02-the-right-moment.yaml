@@ -25,15 +25,14 @@ steps:
       en: "I'm designing a notes app with three AI features: summarise a long note, suggest tags, and turn a whiteboard photo into text.\n\nRight now, new users see a 6-screen tour of all three before they can write anything. Most skip it, and later nobody knows the features exist."
       ar: "أصمّم تطبيق ملاحظات فيه ثلاث ميزات ذكاء اصطناعي: تلخيص الملاحظة الطويلة، واقتراح وسوم، وتحويل صورة السبورة إلى نص.\n\nحاليًا، يرى المستخدمون الجدد جولة من 6 شاشات عن الميزات الثلاث قبل أن يكتبوا أي شيء. وأغلبهم يتخطّاها، ولاحقًا لا أحد يعرف أن الميزات موجودة."
     mock:
-      width: 300
+      app: mudawwana
       blocks:
-        - { kind: title, text: { en: "Welcome! (1 of 6)", ar: "أهلًا! (1 من 6)" } }
-        - { kind: text, text: { en: "Meet our AI: Summarise, Smart tags, Whiteboard to text…", ar: "تعرّف على ذكائنا الاصطناعي: التلخيص، والوسوم الذكية، والسبورة إلى نص…" }, gap: s }
-        - kind: row
-          gap: m
-          blocks:
-            - { kind: button, style: plain, text: { en: "Skip", ar: "تخطَّ" } }
-            - { kind: button, text: { en: "Next", ar: "التالي" } }
+        - { kind: image, art: document }
+        - { kind: title, text: { en: "Welcome! (1 of 6)", ar: "أهلًا! (1 من 6)" }, gap: s }
+        - { kind: text, text: { en: "Meet our AI: Summarise, Smart tags, Whiteboard to text…", ar: "تعرّف على ذكائنا الاصطناعي: التلخيص، والوسوم الذكية، والسبورة إلى نص…" }, gap: xs }
+        - { kind: small, color: muted, text: "● ○ ○ ○ ○ ○", gap: s }
+      footer:
+        - { kind: row, blocks: [ { kind: button, style: text, text: { en: "Skip", ar: "تخطَّ" } }, { kind: button, text: { en: "Next", ar: "التالي" } } ] }
 
   - id: S02
     type: choose
@@ -78,7 +77,7 @@ steps:
       ar: "- **في اللحظة المناسبة:** أظهر الميزة حين تكون مفيدة، لا في جولة طويلة في البداية.\n- **قصير:** سطر أو سطران، حيث يحتاجه الناس.\n- **لا تقاطع:** لا تُظهر ميزة جديدة فجأة والناس مشغولون بشيء آخر.\n- **دع الناس يجرّبون بأمان:** اقترح إجراءً صغيرًا يمكن التراجع عنه.\n- **قل كيف يتعلّم:** إذا كانت الملاحظات تحسّنه، فقل ماذا يتغيّر ومتى."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U02-02
     part: guided
     rules: [R06]
@@ -90,12 +89,47 @@ steps:
       en: "A user taps \"Summarise this note?\" for the first time. They don't know what it will do to their note."
       ar: "مستخدم يضغط «تلخيص هذه الملاحظة؟» لأول مرة. ولا يعرف ماذا سيفعل بملاحظته."
     prompt:
-      en: "What should happen?"
-      ar: "ماذا يجب أن يحدث؟"
+      en: "Tap each option to see it. What should happen?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يحدث؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: mudawwana
+      appbar: { title: { en: "Trip planning", ar: "تخطيط الرحلة" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+      blocks:
+        - { kind: chip, icon: sparkle, selected: true, text: { en: "Summarise this note?", ar: "تلخيص هذه الملاحظة؟" } }
+        - { kind: text, text: { en: "Flights: compare EgyptAir and Nile Air, prices change on Thursdays. Hotel: near the sea, under 2,000 a night. Ask Mona about the visa. Book the bus from the airport…", ar: "الطيران: قارن بين شركتين، والأسعار تتغيّر يوم الخميس. الفندق: قريب من البحر، أقل من 2,000 في الليلة. اسأل منى عن التأشيرة. احجز الحافلة من المطار…" } }
     options:
-      - { id: preview, text: { en: "Show the summary above the note, with \"Keep\" and \"Remove\"; the note stays as it is", ar: "يظهر التلخيص فوق الملاحظة، مع «احتفظ» و«احذف»؛ والملاحظة تبقى كما هي" } }
-      - { id: replace, text: { en: "Replace the note with the summary", ar: "يستبدل الملاحظة بالتلخيص" } }
-      - { id: all, text: { en: "Offer to summarise all their notes at once", ar: "يعرض تلخيص كل ملاحظاته مرة واحدة" } }
+      - id: preview
+        text: { en: "Show the summary above the note, with \"Keep\" and \"Remove\"; the note stays as it is", ar: "يظهر التلخيص فوق الملاحظة، مع «احتفظ» و«احذف»؛ والملاحظة تبقى كما هي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: mudawwana
+          appbar: { title: { en: "Trip planning", ar: "تخطيط الرحلة" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Summary", ar: "التلخيص" } }, { kind: list, style: bullet, items: [ { en: "Compare 2 airlines by Thursday", ar: "قارن شركتي الطيران قبل الخميس" }, { en: "Hotel by the sea, under 2,000", ar: "فندق على البحر، أقل من 2,000" }, { en: "Ask Mona about the visa", ar: "اسأل منى عن التأشيرة" } ] }, { kind: row, blocks: [ { kind: button, style: outline, text: { en: "Remove", ar: "احذف" } }, { kind: button, text: { en: "Keep", ar: "احتفظ" } } ] } ] }
+            - { kind: text, text: { en: "Flights: compare EgyptAir and Nile Air, prices change on Thursdays. Hotel: near the sea, under 2,000 a night. Ask Mona about the visa. Book the bus from the airport…", ar: "الطيران: قارن بين شركتين، والأسعار تتغيّر يوم الخميس. الفندق: قريب من البحر، أقل من 2,000 في الليلة. اسأل منى عن التأشيرة. احجز الحافلة من المطار…" } }
+      - id: replace
+        text: { en: "Replace the note with the summary", ar: "يستبدل الملاحظة بالتلخيص" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: mudawwana
+          appbar: { title: { en: "Trip planning", ar: "تخطيط الرحلة" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: list, style: bullet, items: [ { en: "Compare 2 airlines by Thursday", ar: "قارن شركتي الطيران قبل الخميس" }, { en: "Hotel by the sea, under 2,000", ar: "فندق على البحر، أقل من 2,000" }, { en: "Ask Mona about the visa", ar: "اسأل منى عن التأشيرة" } ] }
+            - { kind: small, color: muted, text: { en: "Your original note is gone.", ar: "ملاحظتك الأصلية اختفت." }, gap: s }
+      - id: all
+        text: { en: "Offer to summarise all their notes at once", ar: "يعرض تلخيص كل ملاحظاته مرة واحدة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: mudawwana
+          appbar: { title: { en: "Trip planning", ar: "تخطيط الرحلة" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: text, text: { en: "Flights: compare EgyptAir and Nile Air, prices change on Thursdays. Hotel: near the sea, under 2,000 a night. Ask Mona about the visa. Book the bus from the airport…", ar: "الطيران: قارن بين شركتين، والأسعار تتغيّر يوم الخميس. الفندق: قريب من البحر، أقل من 2,000 في الليلة. اسأل منى عن التأشيرة. احجز الحافلة من المطار…" } }
+          overlay:
+            type: dialog
+            blocks:
+              - { kind: heading, text: { en: "Summarise all 214 notes?", ar: "تلخيص كل الملاحظات الـ 214؟" } }
+              - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "Not now", ar: "ليس الآن" } }, { kind: button, text: { en: "Summarise all", ar: "لخّص الكل" } } ], gap: s }
     answer: [preview]
     misconceptions:
       - id: MC-P12-015
@@ -114,7 +148,7 @@ steps:
       ar: "حين تكون التجربة آمنة، يستكشف الناس ويتعلّمون ما يجيده الذكاء الاصطناعي."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U02-05
     part: guided
     rules: [R06]
@@ -126,12 +160,49 @@ steps:
       en: "Tag suggestions get better when people accept or reject them. We want to tell people this, next to the first suggested tags."
       ar: "اقتراحات الوسوم تتحسّن حين يقبلها الناس أو يرفضونها. ونريد أن نخبرهم بذلك، بجانب أول وسوم مقترحة."
     prompt:
-      en: "Which message is best?"
-      ar: "أي رسالة هي الأفضل؟"
+      en: "Tap each option to see it. Which message is best?"
+      ar: "اضغط على كل خيار لتراه. أي رسالة هي الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: mudawwana
+      appbar: { title: { en: "Shopping", ar: "المشتريات" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+      blocks:
+        - { kind: text, text: { en: "Milk, bread, eggs, rice, olive oil", ar: "حليب، خبز، بيض، أرز، زيت زيتون" } }
+        - { kind: small, color: muted, text: { en: "Suggested tags", ar: "وسوم مقترحة" }, gap: m }
+        - { kind: chips, items: [ { text: { en: "✨ #groceries ✓ ✕", ar: "✨ #بقالة ✓ ✕" } }, { text: { en: "✨ #weekly ✓ ✕", ar: "✨ #أسبوعي ✓ ✕" } } ] }
     options:
-      - { id: none, text: { en: "No message; it learns quietly in the background", ar: "بلا رسالة؛ يتعلّم بهدوء في الخلفية" } }
-      - { id: clear, text: { en: "\"Tap ✓ or ✕. The app learns the tags you use, and suggestions improve within a few days.\"", ar: "«اضغط ✓ أو ✕. التطبيق يتعلّم الوسوم التي تستخدمها، وتتحسّن الاقتراحات خلال أيام.»" } }
-      - { id: tech, text: { en: "\"Our model uses reinforcement learning from your interactions.\"", ar: "«نموذجنا يستخدم التعلّم المعزّز من تفاعلاتك.»" } }
+      - id: none
+        text: { en: "No message; it learns quietly in the background", ar: "بلا رسالة؛ يتعلّم بهدوء في الخلفية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: mudawwana
+          appbar: { title: { en: "Shopping", ar: "المشتريات" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: text, text: { en: "Milk, bread, eggs, rice, olive oil", ar: "حليب، خبز، بيض، أرز، زيت زيتون" } }
+            - { kind: small, color: muted, text: { en: "Suggested tags", ar: "وسوم مقترحة" }, gap: m }
+            - { kind: chips, items: [ { text: { en: "✨ #groceries ✓ ✕", ar: "✨ #بقالة ✓ ✕" } }, { text: { en: "✨ #weekly ✓ ✕", ar: "✨ #أسبوعي ✓ ✕" } } ] }
+      - id: clear
+        text: { en: "\"Tap ✓ or ✕. The app learns the tags you use, and suggestions improve within a few days.\"", ar: "«اضغط ✓ أو ✕. التطبيق يتعلّم الوسوم التي تستخدمها، وتتحسّن الاقتراحات خلال أيام.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: mudawwana
+          appbar: { title: { en: "Shopping", ar: "المشتريات" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: text, text: { en: "Milk, bread, eggs, rice, olive oil", ar: "حليب، خبز، بيض، أرز، زيت زيتون" } }
+            - { kind: small, color: muted, text: { en: "Suggested tags", ar: "وسوم مقترحة" }, gap: m }
+            - { kind: chips, items: [ { text: { en: "✨ #groceries ✓ ✕", ar: "✨ #بقالة ✓ ✕" } }, { text: { en: "✨ #weekly ✓ ✕", ar: "✨ #أسبوعي ✓ ✕" } } ] }
+            - { kind: small, text: { en: "Tap ✓ or ✕. The app learns the tags you use, and suggestions improve within a few days.", ar: "اضغط ✓ أو ✕. التطبيق يتعلّم الوسوم التي تستخدمها، وتتحسّن الاقتراحات خلال أيام." }, gap: xs }
+      - id: tech
+        text: { en: "\"Our model uses reinforcement learning from your interactions.\"", ar: "«نموذجنا يستخدم التعلّم المعزّز من تفاعلاتك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: mudawwana
+          appbar: { title: { en: "Shopping", ar: "المشتريات" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: text, text: { en: "Milk, bread, eggs, rice, olive oil", ar: "حليب، خبز، بيض، أرز، زيت زيتون" } }
+            - { kind: small, color: muted, text: { en: "Suggested tags", ar: "وسوم مقترحة" }, gap: m }
+            - { kind: chips, items: [ { text: { en: "✨ #groceries ✓ ✕", ar: "✨ #بقالة ✓ ✕" } }, { text: { en: "✨ #weekly ✓ ✕", ar: "✨ #أسبوعي ✓ ✕" } } ] }
+            - { kind: small, text: { en: "Our model uses reinforcement learning from your interactions.", ar: "نموذجنا يستخدم التعلّم المعزّز من تفاعلاتك." }, gap: xs }
     answer: [clear]
     misconceptions:
       - id: MC-P12-017
@@ -173,21 +244,26 @@ steps:
     a:
       label: { en: "A: A full-screen pop-up while people are typing a note.", ar: "A: نافذة تملأ الشاشة والناس يكتبون ملاحظة." }
       mock:
-        width: 300
+        app: mudawwana
+        appbar: { title: { en: "Meeting", ar: "الاجتماع" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+        keyboard: text
         blocks:
-          - kind: group
-            tone: tint
-            blocks:
-              - { kind: title, text: { en: "🎉 New! Whiteboard to text", ar: "🎉 جديد! السبورة إلى نص" } }
-              - { kind: button, text: { en: "Try it now", ar: "جرّبها الآن" }, gap: s }
-          - { kind: small, color: muted, text: { en: "(covering the note being typed)", ar: "(فوق الملاحظة التي تُكتب)" }, gap: xs }
+          - { kind: text, text: { en: "Ideas for the launch: price, date, ads…", ar: "أفكار للإطلاق: السعر، والموعد، والإعلانات…" } }
+        overlay:
+          type: full
+          close: true
+          blocks:
+            - { kind: icon, icon: confetti, size: l, color: brand }
+            - { kind: title, text: { en: "New! Whiteboard to text", ar: "جديد! السبورة إلى نص" }, gap: s }
+            - { kind: button, text: { en: "Try it now", ar: "جرّبه الآن" }, gap: m }
     b:
       label: { en: "B: A short tip the next time someone adds a photo of a whiteboard.", ar: "B: تلميح قصير في المرة القادمة التي يضيف فيها أحد صورة سبورة." }
       mock:
-        width: 300
+        app: mudawwana
+        appbar: { title: { en: "Meeting", ar: "الاجتماع" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
         blocks:
-          - { kind: image, size: s, text: { en: "Whiteboard photo", ar: "صورة سبورة" } }
-          - { kind: banner, text: { en: "💡 Turn this photo into text you can edit?", ar: "💡 تحويل هذه الصورة إلى نص يمكنك تعديله؟" }, gap: s }
+          - { kind: image, art: document, text: { en: "Whiteboard photo", ar: "صورة السبورة" } }
+          - { kind: banner, tone: info, icon: lightbulb, text: { en: "Turn this photo into text you can edit?", ar: "تحويل هذه الصورة إلى نص يمكنك تعديله؟" }, gap: s }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -219,7 +295,7 @@ steps:
       ar: "أعلن عن الميزة حيث تناسب المهمة، لا فوق مهمة أخرى."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U02-05
     part: independent
     speaker: tarek
@@ -232,12 +308,39 @@ steps:
       en: "Our pharmacy app reminds customers to reorder their regular medicine. The AI learns from their answers when to remind them. We're adding a question after each reminder."
       ar: "تطبيق صيدليتنا يذكّر العملاء بإعادة طلب أدويتهم المعتادة. والذكاء الاصطناعي يتعلّم من إجاباتهم متى يذكّرهم. ونضيف سؤالًا بعد كل تذكير."
     prompt:
-      en: "Which question should we use?"
-      ar: "أي سؤال يجب أن نستخدم؟"
+      en: "Tap each option to see it. Which question should we use?"
+      ar: "اضغط على كل خيار لتراه. أي سؤال يجب أن نستخدم؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      screen: lock
+      blocks:
+        - { kind: notification, app: dawaa, title: { en: "Time to reorder Glucophage?", ar: "حان وقت طلب جلوكوفاج؟" }, text: { en: "About 5 days left in your pack.", ar: "باقي نحو 5 أيام في العلبة." }, time: { en: "now", ar: "الآن" } }
+        - { kind: notification, app: dawaa, title: { en: "Quick question", ar: "سؤال سريع" }, text: { en: "…", ar: "…" }, time: { en: "now", ar: "الآن" }, gap: s }
     options:
-      - { id: train, text: { en: "\"Help us train our AI. Rate this reminder.\"", ar: "«ساعدنا في تدريب ذكائنا الاصطناعي. قيّم هذا التذكير.»" } }
-      - { id: rate, text: { en: "\"Rate this reminder from 1 to 5.\"", ar: "«قيّم هذا التذكير من 1 إلى 5.»" } }
-      - { id: value, text: { en: "\"Was this on time? Your answer helps us remind you before you run out.\"", ar: "«هل جاء في وقته؟ إجابتك تساعدنا أن نذكّرك قبل أن ينفد دواؤك.»" } }
+      - id: train
+        text: { en: "\"Help us train our AI. Rate this reminder.\"", ar: "«ساعدنا في تدريب ذكائنا الاصطناعي. قيّم هذا التذكير.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          screen: lock
+          blocks:
+            - { kind: notification, app: dawaa, title: { en: "Time to reorder Glucophage?", ar: "حان وقت طلب جلوكوفاج؟" }, text: { en: "About 5 days left in your pack.", ar: "باقي نحو 5 أيام في العلبة." }, time: { en: "now", ar: "الآن" } }
+            - { kind: notification, app: dawaa, title: { en: "Quick question", ar: "سؤال سريع" }, text: { en: "Help us train our AI. Rate this reminder.", ar: "ساعدنا في تدريب ذكائنا الاصطناعي. قيّم هذا التذكير." }, time: { en: "now", ar: "الآن" }, gap: s }
+      - id: rate
+        text: { en: "\"Rate this reminder from 1 to 5.\"", ar: "«قيّم هذا التذكير من 1 إلى 5.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          screen: lock
+          blocks:
+            - { kind: notification, app: dawaa, title: { en: "Time to reorder Glucophage?", ar: "حان وقت طلب جلوكوفاج؟" }, text: { en: "About 5 days left in your pack.", ar: "باقي نحو 5 أيام في العلبة." }, time: { en: "now", ar: "الآن" } }
+            - { kind: notification, app: dawaa, title: { en: "Quick question", ar: "سؤال سريع" }, text: { en: "Rate this reminder from 1 to 5.", ar: "قيّم هذا التذكير من 1 إلى 5." }, time: { en: "now", ar: "الآن" }, gap: s }
+      - id: value
+        text: { en: "\"Was this on time? Your answer helps us remind you before you run out.\"", ar: "«هل جاء في وقته؟ إجابتك تساعدنا أن نذكّرك قبل أن ينفد دواؤك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          screen: lock
+          blocks:
+            - { kind: notification, app: dawaa, title: { en: "Time to reorder Glucophage?", ar: "حان وقت طلب جلوكوفاج؟" }, text: { en: "About 5 days left in your pack.", ar: "باقي نحو 5 أيام في العلبة." }, time: { en: "now", ar: "الآن" } }
+            - { kind: notification, app: dawaa, title: { en: "Quick question", ar: "سؤال سريع" }, text: { en: "Was this on time? Your answer helps us remind you before you run out.", ar: "هل جاء في وقته؟ إجابتك تساعدنا أن نذكّرك قبل أن ينفد دواؤك." }, time: { en: "now", ar: "الآن" }, gap: s }
     answer: [value]
     misconceptions:
       - id: MC-P12-017

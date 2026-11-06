@@ -23,11 +23,15 @@ steps:
       en: "I'm the PM of a supermarket app. Its \"Smart basket\" fills your weekly order for you, from what you bought before.\n\nOne customer baked cakes for her sister's wedding and bought 5 kg of sugar. Since then, the app adds 5 kg of sugar to her basket every week. She has paid for it twice without noticing."
       ar: "أنا مدير منتج لتطبيق سوبرماركت. وفيه «السلّة الذكية» التي تملأ طلبك الأسبوعي نيابةً عنك، ممّا اشتريته من قبل.\n\nخبزت إحدى العميلات كعكًا لزفاف أختها واشترت 5 كغ سكّر. ومنذ ذلك الحين، يضيف التطبيق 5 كغ سكّر إلى سلّتها كل أسبوع. ودفعت ثمنه مرتين دون أن تلاحظ."
     mock:
-      width: 300
+      app: sallah
+      appbar: { title: { en: "Smart basket · this week", ar: "السلّة الذكية · هذا الأسبوع" } }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
       blocks:
-        - { kind: title, text: { en: "Smart basket · this week", ar: "السلّة الذكية · هذا الأسبوع" } }
-        - { kind: meta, text: { en: "Milk 2 L · Bread · Eggs 10 · Sugar 5 kg", ar: "حليب 2 لتر · خبز · بيض 10 · سكّر 5 كغ" }, gap: s }
-        - { kind: button, text: { en: "Pay now", ar: "ادفع الآن" }, gap: m }
+        - { kind: listitem, icon: drop, text: { en: "Milk 2 L", ar: "حليب 2 لتر" }, value: { en: "70 EGP", ar: "70 جنيهًا" } }
+        - { kind: listitem, icon: bread, text: { en: "Bread", ar: "خبز" }, value: { en: "20 EGP", ar: "20 جنيهًا" } }
+        - { kind: listitem, icon: egg, text: { en: "Eggs 10", ar: "بيض 10" }, value: { en: "75 EGP", ar: "75 جنيهًا" } }
+        - { kind: listitem, icon: cube, text: { en: "Sugar 5 kg", ar: "سكّر 5 كغ" }, value: { en: "190 EGP", ar: "190 جنيهًا" } }
+        - { kind: button, text: { en: "Pay now · 355 EGP", ar: "ادفع الآن · 355 جنيهًا" }, gap: s }
 
   - id: S02
     type: choose
@@ -72,7 +76,7 @@ steps:
       ar: "الذكاء الاصطناعي لا يرى لماذا يفعل الناس الأشياء: زفاف، أو ضيف، أو حمية.\n\n- **تصرّف فقط حين يكون متأكّدًا جدًا،** مثل الأشياء التي تُشترى كل أسبوع.\n- **اقترح الباقي:** «تشتريه مرة أخرى؟» يترك الناس يقولون نعم أو لا.\n- **انتبه للأنماط التي لها سبب** لا يراه الذكاء الاصطناعي.\n- **لا تحرّك ما يضغطه الناس بحكم العادة.** ضع اختيارات الذكاء الاصطناعي في مساحتها الخاصة."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U05-02
     part: guided
     rules: [R06]
@@ -84,12 +88,61 @@ steps:
       en: "We're changing how the smart basket handles items."
       ar: "نغيّر طريقة تعامل السلّة الذكية مع المنتجات."
     prompt:
-      en: "Which rule is best?"
-      ar: "أي قاعدة هي الأفضل؟"
+      en: "Tap each option to see it. Which rule is best?"
+      ar: "اضغط على كل خيار لتراه. أي قاعدة هي الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sallah
+      appbar: { title: { en: "Smart basket · this week", ar: "السلّة الذكية · هذا الأسبوع" } }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+      blocks:
+        - { kind: listitem, icon: drop, text: { en: "Milk 2 L", ar: "حليب 2 لتر" }, value: { en: "70 EGP", ar: "70 جنيهًا" } }
+        - { kind: listitem, icon: bread, text: { en: "Bread", ar: "خبز" }, value: { en: "20 EGP", ar: "20 جنيهًا" } }
+        - { kind: listitem, icon: egg, text: { en: "Eggs 10", ar: "بيض 10" }, value: { en: "75 EGP", ar: "75 جنيهًا" } }
+        - { kind: listitem, icon: cube, text: { en: "Sugar 5 kg", ar: "سكّر 5 كغ" }, value: { en: "190 EGP", ar: "190 جنيهًا" } }
+        - { kind: button, text: { en: "Pay now · 355 EGP", ar: "ادفع الآن · 355 جنيهًا" }, gap: s }
     options:
-      - { id: all, text: { en: "Add everything bought in the last month", ar: "نضيف كل ما اشتُري في الشهر الماضي" } }
-      - { id: none, text: { en: "Stop filling the basket at all", ar: "نتوقّف عن ملء السلّة تمامًا" } }
-      - { id: sure, text: { en: "Add only items bought almost every week. Show others under \"Buy again?\"", ar: "نضيف فقط ما يُشترى كل أسبوع تقريبًا. ونعرض الباقي تحت «تشتريه مرة أخرى؟»" } }
+      - id: all
+        text: { en: "Add everything bought in the last month", ar: "نضيف كل ما اشتُري في الشهر الماضي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { title: { en: "Smart basket · this week", ar: "السلّة الذكية · هذا الأسبوع" } }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+          blocks:
+            - { kind: listitem, icon: drop, text: { en: "Milk 2 L", ar: "حليب 2 لتر" }, value: { en: "70 EGP", ar: "70 جنيهًا" } }
+            - { kind: listitem, icon: bread, text: { en: "Bread", ar: "خبز" }, value: { en: "20 EGP", ar: "20 جنيهًا" } }
+            - { kind: listitem, icon: egg, text: { en: "Eggs 10", ar: "بيض 10" }, value: { en: "75 EGP", ar: "75 جنيهًا" } }
+            - { kind: listitem, icon: cube, text: { en: "Sugar 5 kg", ar: "سكّر 5 كغ" }, value: { en: "190 EGP", ar: "190 جنيهًا" } }
+            - { kind: listitem, icon: cake, text: { en: "Birthday candles", ar: "شموع عيد ميلاد" }, value: { en: "35 EGP", ar: "35 جنيهًا" } }
+            - { kind: listitem, icon: cookie, text: { en: "Vanilla × 10", ar: "فانيليا × 10" }, value: { en: "60 EGP", ar: "60 جنيهًا" } }
+            - { kind: button, text: { en: "Pay now · 450 EGP", ar: "ادفع الآن · 450 جنيهًا" }, gap: s }
+      - id: none
+        text: { en: "Stop filling the basket at all", ar: "نتوقّف عن ملء السلّة تمامًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { title: { en: "Smart basket · this week", ar: "السلّة الذكية · هذا الأسبوع" } }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+          blocks:
+            - { kind: icon, icon: basket, gap: m }
+            - { kind: text, text: { en: "Your basket is empty.", ar: "سلّتك فارغة." }, gap: s }
+            - { kind: small, color: muted, text: { en: "Add your items one by one.", ar: "أضف أغراضك واحدًا تلو الآخر." }, gap: xs }
+            - { kind: button, style: outline, text: { en: "Start shopping", ar: "ابدأ التسوّق" }, gap: s }
+      - id: sure
+        text: { en: "Add only items bought almost every week. Show others under \"Buy again?\"", ar: "نضيف فقط ما يُشترى كل أسبوع تقريبًا. ونعرض الباقي تحت «تشتريه مرة أخرى؟»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { title: { en: "Smart basket · this week", ar: "السلّة الذكية · هذا الأسبوع" } }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+          blocks:
+            - { kind: listitem, icon: drop, text: { en: "Milk 2 L", ar: "حليب 2 لتر" }, value: { en: "70 EGP", ar: "70 جنيهًا" } }
+            - { kind: listitem, icon: bread, text: { en: "Bread", ar: "خبز" }, value: { en: "20 EGP", ar: "20 جنيهًا" } }
+            - { kind: listitem, icon: egg, text: { en: "Eggs 10", ar: "بيض 10" }, value: { en: "75 EGP", ar: "75 جنيهًا" } }
+            - { kind: small, color: muted, text: { en: "Buy again?", ar: "تشتريه مرة أخرى؟" }, gap: s }
+            - { kind: listitem, icon: cube, text: { en: "Sugar 5 kg", ar: "سكّر 5 كغ" }, sub: { en: "Bought once, 3 weeks ago", ar: "اشتريته مرة واحدة، قبل 3 أسابيع" }, badge: { text: { en: "Add", ar: "أضف" }, icon: plus } }
+            - { kind: button, text: { en: "Pay now · 165 EGP", ar: "ادفع الآن · 165 جنيهًا" }, gap: s }
     answer: [sure]
     misconceptions:
       - id: MC-P12-040
@@ -108,7 +161,7 @@ steps:
       ar: "الحليب كل أسبوع عادة. والسكّر مرة واحدة قصة لا يعرفها التطبيق."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U05-05
     part: guided
     rules: [R06]
@@ -120,12 +173,55 @@ steps:
       en: "The team wants AI to reorder the home screen buttons every day: Basket, Offers, Orders, Help."
       ar: "الفريق يريد أن يعيد الذكاء الاصطناعي ترتيب أزرار الشاشة الرئيسية كل يوم: السلّة، والعروض، والطلبات، والمساعدة."
     prompt:
-      en: "What should we do?"
-      ar: "ماذا يجب أن نفعل؟"
+      en: "Tap each option to see it. What should we do?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن نفعل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sallah
+      appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+      blocks:
+        - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+        - { kind: row, blocks: [ { kind: button, style: outline, icon: basket, text: { en: "Basket", ar: "السلّة" } }, { kind: button, style: outline, icon: tag, text: { en: "Offers", ar: "العروض" } } ], gap: s }
+        - { kind: row, blocks: [ { kind: button, style: outline, icon: receipt, text: { en: "Orders", ar: "الطلبات" } }, { kind: button, style: outline, icon: question, text: { en: "Help", ar: "المساعدة" } } ], gap: xs }
     options:
-      - { id: fixed, text: { en: "Keep the 4 buttons fixed, and add one \"For you\" row that AI can change", ar: "نُبقي الأزرار الأربعة ثابتة، ونضيف صفًّا واحدًا «لك» يغيّره الذكاء الاصطناعي" } }
-      - { id: daily, text: { en: "Reorder them every day, by what each person uses most", ar: "نعيد ترتيبها كل يوم، حسب ما يستخدمه كل شخص أكثر" } }
-      - { id: weekly, text: { en: "Reorder them once a week, so it's less confusing", ar: "نعيد ترتيبها مرة في الأسبوع، ليكون أقل إرباكًا" } }
+      - id: fixed
+        text: { en: "Keep the 4 buttons fixed, and add one \"For you\" row that AI can change", ar: "نُبقي الأزرار الأربعة ثابتة، ونضيف صفًّا واحدًا «لك» يغيّره الذكاء الاصطناعي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: basket, text: { en: "Basket", ar: "السلّة" } }, { kind: button, style: outline, icon: tag, text: { en: "Offers", ar: "العروض" } } ], gap: s }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: receipt, text: { en: "Orders", ar: "الطلبات" } }, { kind: button, style: outline, icon: question, text: { en: "Help", ar: "المساعدة" } } ], gap: xs }
+            - { kind: small, color: muted, text: { en: "✨ For you", ar: "✨ لك" }, gap: m }
+            - { kind: chips, items: [ { text: { en: "Dates for Ramadan", ar: "تمر لرمضان" } }, { text: { en: "Rice 5 kg", ar: "أرز 5 كغ" } }, { text: { en: "Tea", ar: "شاي" } } ], gap: xs }
+      - id: daily
+        text: { en: "Reorder them every day, by what each person uses most", ar: "نعيد ترتيبها كل يوم، حسب ما يستخدمه كل شخص أكثر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: question, text: { en: "Help", ar: "المساعدة" } }, { kind: button, style: outline, icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ], gap: s }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: tag, text: { en: "Offers", ar: "العروض" } }, { kind: button, style: outline, icon: basket, text: { en: "Basket", ar: "السلّة" } } ], gap: xs }
+            - { kind: small, color: muted, icon: arrows-clockwise, text: { en: "✨ Buttons reordered today, by what you use most", ar: "✨ أُعيد ترتيب الأزرار اليوم، حسب ما تستخدمه أكثر" }, gap: s }
+      - id: weekly
+        text: { en: "Reorder them once a week, so it's less confusing", ar: "نعيد ترتيبها مرة في الأسبوع، ليكون أقل إرباكًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: receipt, text: { en: "Orders", ar: "الطلبات" } }, { kind: button, style: outline, icon: basket, text: { en: "Basket", ar: "السلّة" } } ], gap: s }
+            - { kind: row, blocks: [ { kind: button, style: outline, icon: question, text: { en: "Help", ar: "المساعدة" } }, { kind: button, style: outline, icon: tag, text: { en: "Offers", ar: "العروض" } } ], gap: xs }
+            - { kind: small, color: muted, text: { en: "✨ Buttons reordered every Saturday", ar: "✨ يُعاد ترتيب الأزرار كل سبت" }, gap: s }
     answer: [fixed]
     misconceptions:
       - id: MC-P12-041
@@ -162,20 +258,25 @@ steps:
     a:
       label: { en: "A: A banner: \"Things moved! Swipe to find Reorder.\"", ar: "A: شريط: «تغيّرت الأماكن! اسحب لتجد إعادة الطلب.»" }
       mock:
-        width: 300
+        app: sallah
+        appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+        tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
         blocks:
-          - { kind: banner, text: { en: "Things moved! Swipe to find Reorder.", ar: "تغيّرت الأماكن! اسحب لتجد إعادة الطلب." } }
+          - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+          - { kind: banner, tone: info, icon: info, text: { en: "Things moved! Swipe to find Reorder.", ar: "تغيّرت الأماكن! اسحب لتجد إعادة الطلب." }, gap: s }
+          - { kind: row, blocks: [ { kind: button, style: outline, icon: tag, text: { en: "Offers", ar: "العروض" } }, { kind: button, style: outline, icon: arrows-clockwise, text: { en: "Reorder", ar: "أعد الطلب" } } ], gap: s }
+          - { kind: row, blocks: [ { kind: button, style: outline, icon: basket, text: { en: "Basket", ar: "السلّة" } }, { kind: button, style: outline, icon: question, text: { en: "Help", ar: "المساعدة" } } ], gap: xs }
     b:
       label: { en: "B: \"New layout. Keep it · Go back to classic\"", ar: "B: «تصميم جديد. احتفظ به · عُد إلى التصميم المعتاد»" }
       mock:
-        width: 300
+        app: sallah
+        appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+        tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: basket, text: { en: "Basket", ar: "السلّة" } }, { icon: receipt, text: { en: "Orders", ar: "الطلبات" } } ] }
         blocks:
-          - { kind: meta, text: { en: "New layout", ar: "تصميم جديد" } }
-          - kind: row
-            gap: s
-            blocks:
-              - { kind: button, style: plain, text: { en: "Keep it", ar: "احتفظ به" } }
-              - { kind: button, text: { en: "Go back to classic", ar: "عُد إلى المعتاد" } }
+          - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+          - { kind: card, gap: s, blocks: [ { kind: text, text: { en: "✨ New layout", ar: "✨ تصميم جديد" } }, { kind: row, gap: s, blocks: [ { kind: button, style: outline, text: { en: "Keep it", ar: "احتفظ به" } }, { kind: button, text: { en: "Go back to classic", ar: "عُد إلى المعتاد" } } ] } ] }
+          - { kind: row, blocks: [ { kind: button, style: outline, icon: tag, text: { en: "Offers", ar: "العروض" } }, { kind: button, style: outline, icon: arrows-clockwise, text: { en: "Reorder", ar: "أعد الطلب" } } ], gap: s }
+          - { kind: row, blocks: [ { kind: button, style: outline, icon: basket, text: { en: "Basket", ar: "السلّة" } }, { kind: button, style: outline, icon: question, text: { en: "Help", ar: "المساعدة" } } ], gap: xs }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -207,7 +308,7 @@ steps:
       ar: "شرح التغيير يساعد قليلًا. والسماح للناس بإلغائه يساعد أكثر."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U05-02
     part: independent
     speaker: hana
@@ -220,12 +321,53 @@ steps:
       en: "A member missed 3 weeks at my gym; she was ill. The app lowered her plan to \"Beginner\" and sent: \"Losing motivation? 😢\""
       ar: "غابت عضوة عن ناديّ 3 أسابيع؛ كانت مريضة. فخفّض التطبيق خطتها إلى «مبتدئ» وأرسل: «هل فقدتِ الحماس؟ 😢»"
     prompt:
-      en: "What should the app do after a long break?"
-      ar: "ماذا يجب أن يفعل التطبيق بعد غياب طويل؟"
+      en: "Tap each option to see it. What should the app do after a long break?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يفعل التطبيق بعد غياب طويل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: nashat
+      appbar: { title: { en: "Welcome back, Salma", ar: "أهلًا بعودتك يا سلمى" } }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar-blank, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: banner, tone: warn, text: { en: "Losing motivation? 😢", ar: "هل فقدتِ الحماس؟ 😢" }, gap: s }
+        - { kind: card, blocks: [ { kind: small, color: muted, text: { en: "Your plan", ar: "خطتك" } }, { kind: heading, text: { en: "Beginner", ar: "مبتدئ" } }, { kind: small, color: muted, text: { en: "Changed by the app · was Intermediate", ar: "غيّرها التطبيق · كانت متوسّط" } } ] }
     options:
-      - { id: same, text: { en: "Keep doing this; it worked for some", ar: "يستمرّ في ذلك؛ فقد نجح مع البعض" } }
-      - { id: guilt, text: { en: "Send a stronger push: \"Don't give up now!\"", ar: "يرسل رسالة أقوى: «لا تستسلمي الآن!»" } }
-      - { id: ask, text: { en: "Ask: \"Welcome back! Pick up where you left off, or ease back in?\"", ar: "يسأل: «أهلًا بعودتك! تكملين من حيث توقّفتِ، أم تبدئين بهدوء؟»" } }
+      - id: same
+        text: { en: "Keep doing this; it worked for some", ar: "يستمرّ في ذلك؛ فقد نجح مع البعض" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Welcome back, Salma", ar: "أهلًا بعودتك يا سلمى" } }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar-blank, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: banner, tone: warn, text: { en: "Losing motivation? 😢", ar: "هل فقدتِ الحماس؟ 😢" }, gap: s }
+            - { kind: card, blocks: [ { kind: small, color: muted, text: { en: "Your plan", ar: "خطتك" } }, { kind: heading, text: { en: "Beginner", ar: "مبتدئ" } }, { kind: small, color: muted, text: { en: "Changed by the app · was Intermediate", ar: "غيّرها التطبيق · كانت متوسّط" } } ] }
+      - id: guilt
+        text: { en: "Send a stronger push: \"Don't give up now!\"", ar: "يرسل رسالة أقوى: «لا تستسلمي الآن!»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Welcome back, Salma", ar: "أهلًا بعودتك يا سلمى" } }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar-blank, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: banner, tone: bad, icon: fire, text: { en: "Don't give up now! 💪", ar: "لا تستسلمي الآن! 💪" }, gap: s }
+            - { kind: card, blocks: [ { kind: small, color: muted, text: { en: "Your plan", ar: "خطتك" } }, { kind: heading, text: { en: "Beginner", ar: "مبتدئ" } }, { kind: small, color: muted, text: { en: "Changed by the app · was Intermediate", ar: "غيّرها التطبيق · كانت متوسّط" } } ] }
+      - id: ask
+        text: { en: "Ask: \"Welcome back! Pick up where you left off, or ease back in?\"", ar: "يسأل: «أهلًا بعودتك! تكملين من حيث توقّفتِ، أم تبدئين بهدوء؟»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: nashat
+          appbar: { title: { en: "Welcome back, Salma", ar: "أهلًا بعودتك يا سلمى" } }
+          tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar-blank, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+          blocks:
+            - { kind: card, blocks: [ { kind: small, color: muted, text: { en: "Your plan", ar: "خطتك" } }, { kind: heading, text: { en: "Intermediate", ar: "متوسّط" } } ] }
+          overlay:
+            type: sheet
+            title: { en: "Welcome back!", ar: "أهلًا بعودتك!" }
+            blocks:
+              - { kind: text, text: { en: "Pick up where you left off, or ease back in?", ar: "تكملين من حيث توقّفتِ، أم تبدئين بهدوء؟" } }
+              - { kind: button, text: { en: "Pick up where I left off", ar: "أكمل من حيث توقّفت" }, gap: s }
+              - { kind: button, style: outline, text: { en: "Ease back in", ar: "أبدأ بهدوء" }, gap: xs }
     answer: [ask]
     misconceptions:
       - id: MC-P12-040

@@ -20,16 +20,15 @@ steps:
       en: "I build the front end of a work email app. A new feature sorts your mail into \"Important\" and \"Other\" by itself. I'm reviewing it before launch.\n\nYour job: check five parts.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "أبني واجهة تطبيق بريد للعمل. وميزة جديدة تصنّف رسائلك إلى «مهمّ» و«أخرى» بنفسها. وأراجعها قبل الإطلاق.\n\nمهمّتك: افحص خمسة أجزاء.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: bareed
+      appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
       blocks:
-        - kind: row
-          blocks:
-            - { kind: chip, text: { en: "Important · 4", ar: "مهمّ · 4" } }
-            - { kind: chip, text: { en: "Other · 31", ar: "أخرى · 31" } }
-        - { kind: meta, text: { en: "Client: Contract ready to sign", ar: "العميل: العقد جاهز للتوقيع" }, gap: s }
+        - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 1 }
+        - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+        - { kind: listitem, avatar: { text: "Deals" }, text: { en: "Deals Weekly", ar: "عروض الأسبوع" }, sub: { en: "50% off this weekend", ar: "خصم 50% هذا الأسبوع" }, value: "8:40" }
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P12-U04-01
     part: check
     rules: [R19]
@@ -41,12 +40,55 @@ steps:
       en: "An urgent email from a client landed in \"Other\"."
       ar: "رسالة عاجلة من عميل وصلت إلى «أخرى»."
     prompt:
-      en: "What should people be able to do?"
-      ar: "ماذا يجب أن يستطيع الناس فعله؟"
+      en: "Tap each option to see it. What should people be able to do?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يستطيع الناس فعله؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: bareed
+      appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+      blocks:
+        - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 1 }
+        - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+        - { kind: listitem, avatar: { text: "Deals" }, text: { en: "Deals Weekly", ar: "عروض الأسبوع" }, sub: { en: "50% off this weekend", ar: "خصم 50% هذا الأسبوع" }, value: "8:40" }
     options:
-      - { id: report, text: { en: "Fill in a form to report the mistake", ar: "ملء نموذج للإبلاغ عن الخطأ" } }
-      - { id: move, text: { en: "\"Move to Important\" on the email, and a setting to turn sorting off", ar: "«انقل إلى مهمّ» على الرسالة، وإعداد لإيقاف التصنيف" } }
-      - { id: nothing, text: { en: "Nothing; it will learn in time", ar: "لا شيء؛ سيتعلّم مع الوقت" } }
+      - id: report
+        text: { en: "Fill in a form to report the mistake", ar: "ملء نموذج للإبلاغ عن الخطأ" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 1 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+            - { kind: listitem, avatar: { text: "Deals" }, text: { en: "Deals Weekly", ar: "عروض الأسبوع" }, sub: { en: "50% off this weekend", ar: "خصم 50% هذا الأسبوع" }, value: "8:40" }
+          overlay:
+            type: full
+            title: { en: "Report a sorting mistake", ar: "أبلغ عن خطأ في التصنيف" }
+            blocks:
+              - { kind: field, label: { en: "Email subject", ar: "موضوع الرسالة" }, text: "" }
+              - { kind: field, label: { en: "What went wrong?", ar: "ما الخطأ؟" }, text: "", gap: s }
+              - { kind: button, text: { en: "Send report", ar: "أرسل البلاغ" }, gap: s }
+      - id: move
+        text: { en: "\"Move to Important\" on the email, and a setting to turn sorting off", ar: "«انقل إلى مهمّ» على الرسالة، وإعداد لإيقاف التصنيف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 1 }
+            - { kind: small, color: muted, text: { en: "Settings › Sorting: On / Off", ar: "الإعدادات › التصنيف: تشغيل / إيقاف" }, gap: xs }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12", swipe: { text: { en: "Move to Important", ar: "انقل إلى مهمّ" }, tone: brand } }
+            - { kind: listitem, avatar: { text: "Deals" }, text: { en: "Deals Weekly", ar: "عروض الأسبوع" }, sub: { en: "50% off this weekend", ar: "خصم 50% هذا الأسبوع" }, value: "8:40" }
+      - id: nothing
+        text: { en: "Nothing; it will learn in time", ar: "لا شيء؛ سيتعلّم مع الوقت" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 1 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+            - { kind: listitem, avatar: { text: "Deals" }, text: { en: "Deals Weekly", ar: "عروض الأسبوع" }, sub: { en: "50% off this weekend", ar: "خصم 50% هذا الأسبوع" }, value: "8:40" }
     answer: [move]
     misconceptions:
       - id: MC-P12-030
@@ -59,7 +101,7 @@ steps:
       ar: "من الدرس 1: أعطِ الناس طريقة لإصلاحه، ولإيقافه."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P12-U04-02
     part: check
     rules: [R19]
@@ -71,12 +113,42 @@ steps:
       en: "A user changed teams. Mail from her old team still lands in \"Important\", and her new team's mail goes to \"Other\"."
       ar: "مستخدمة انتقلت إلى فريق آخر. وما زالت رسائل فريقها القديم تصل إلى «مهمّ»، ورسائل فريقها الجديد تذهب إلى «أخرى»."
     prompt:
-      en: "What should she be able to do?"
-      ar: "ماذا يجب أن تستطيع أن تفعل؟"
+      en: "Tap each option to see it. What should she be able to do?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تستطيع أن تفعل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: bareed
+      appbar: { title: { en: "Sorting", ar: "التصنيف" }, back: true }
+      blocks:
+        - { kind: listitem, icon: sparkle, text: { en: "Sort my mail", ar: "صنّف بريدي" }, toggle: true }
     options:
-      - { id: wait, text: { en: "Move emails one by one for a few weeks until it learns", ar: "تنقل الرسائل واحدة واحدة لبضعة أسابيع حتى يتعلّم" } }
-      - { id: new, text: { en: "Make a new account", ar: "تنشئ حسابًا جديدًا" } }
-      - { id: reset, text: { en: "\"Reset what sorting learned\" in Settings, and start fresh", ar: "«أعِد ضبط ما تعلّمه التصنيف» في الإعدادات، وتبدأ من جديد" } }
+      - id: wait
+        text: { en: "Move emails one by one for a few weeks until it learns", ar: "تنقل الرسائل واحدة واحدة لبضعة أسابيع حتى يتعلّم" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Sorting", ar: "التصنيف" }, back: true }
+          blocks:
+            - { kind: listitem, icon: sparkle, text: { en: "Sort my mail", ar: "صنّف بريدي" }, toggle: true }
+            - { kind: small, color: muted, text: { en: "Tip: keep moving emails. Sorting learns in a few weeks.", ar: "نصيحة: استمر في نقل الرسائل. التصنيف يتعلّم خلال بضعة أسابيع." }, gap: s }
+      - id: new
+        text: { en: "Make a new account", ar: "تنشئ حسابًا جديدًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Sorting", ar: "التصنيف" }, back: true }
+          blocks:
+            - { kind: listitem, icon: sparkle, text: { en: "Sort my mail", ar: "صنّف بريدي" }, toggle: true }
+            - { kind: listitem, icon: user-plus, text: { en: "Add another account", ar: "أضف حسابًا آخر" }, chevron: true }
+      - id: reset
+        text: { en: "\"Reset what sorting learned\" in Settings, and start fresh", ar: "«أعِد ضبط ما تعلّمه التصنيف» في الإعدادات، وتبدأ من جديد" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Sorting", ar: "التصنيف" }, back: true }
+          blocks:
+            - { kind: listitem, icon: sparkle, text: { en: "Sort my mail", ar: "صنّف بريدي" }, toggle: true }
+            - { kind: listitem, icon: arrow-counter-clockwise, text: { en: "Reset what sorting learned", ar: "أعِد ضبط ما تعلّمه التصنيف" }, sub: { en: "Start fresh", ar: "ابدأ من جديد" }, chevron: true }
     answer: [reset]
     misconceptions:
       - id: MC-P12-031
@@ -89,7 +161,7 @@ steps:
       ar: "من الدرس 1: حين تتغيّر الاحتياجات، اسمح للناس بمسح ما تعلّمه."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U04-03
     part: check
     rules: [R19]
@@ -101,12 +173,64 @@ steps:
       en: "When someone moves an email to Important, we can ask one quick question."
       ar: "حين ينقل شخص رسالة إلى «مهمّ»، نستطيع أن نسأل سؤالًا سريعًا واحدًا."
     prompt:
-      en: "Which question is best?"
-      ar: "أي سؤال هو الأفضل؟"
+      en: "Tap each option to see it. Which question is best?"
+      ar: "اضغط على كل خيار لتراه. أي سؤال هو الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: bareed
+      appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+      blocks:
+        - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+        - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+        - { kind: listitem, avatar: { text: "Hany" }, text: { en: "Hany", ar: "هاني" }, sub: { en: "Budget review", ar: "مراجعة الميزانية" }, value: "8:02" }
+      overlay:
+        type: toast
+        blocks:
+          - { kind: small, text: { en: "Moved to Important", ar: "نُقلت إلى مهمّ" } }
     options:
-      - { id: clear, text: { en: "\"Always mark mail from this sender as Important?\" Yes / Just this once", ar: "«هل نصنّف رسائل هذا المرسِل دائمًا كمهمّة؟» نعم / هذه المرة فقط" } }
-      - { id: scale, text: { en: "\"Rate our sorting from 1 to 10\"", ar: "«قيّم التصنيف من 1 إلى 10»" } }
-      - { id: vague, text: { en: "\"Was this helpful? Yes / Somewhat / Kind of / No\"", ar: "«هل كان هذا مفيدًا؟ نعم / إلى حدّ ما / نوعًا ما / لا»" } }
+      - id: clear
+        text: { en: "\"Always mark mail from this sender as Important?\" Yes / Just this once", ar: "«هل نصنّف رسائل هذا المرسِل دائمًا كمهمّة؟» نعم / هذه المرة فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+            - { kind: listitem, avatar: { text: "Hany" }, text: { en: "Hany", ar: "هاني" }, sub: { en: "Budget review", ar: "مراجعة الميزانية" }, value: "8:02" }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: small, text: { en: "Always mark mail from this sender as Important?", ar: "هل نصنّف رسائل هذا المرسِل دائمًا كمهمّة؟" } }
+              - { kind: row, blocks: [ { kind: button, style: text, text: { en: "Yes", ar: "نعم" } }, { kind: button, style: text, text: { en: "Just this once", ar: "هذه المرة فقط" } } ] }
+      - id: scale
+        text: { en: "\"Rate our sorting from 1 to 10\"", ar: "«قيّم التصنيف من 1 إلى 10»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+            - { kind: listitem, avatar: { text: "Hany" }, text: { en: "Hany", ar: "هاني" }, sub: { en: "Budget review", ar: "مراجعة الميزانية" }, value: "8:02" }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: small, text: { en: "Rate our sorting from 1 to 10", ar: "قيّم التصنيف من 1 إلى 10" } }
+      - id: vague
+        text: { en: "\"Was this helpful? Yes / Somewhat / Kind of / No\"", ar: "«هل كان هذا مفيدًا؟ نعم / إلى حدّ ما / نوعًا ما / لا»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+            - { kind: listitem, avatar: { text: "Hany" }, text: { en: "Hany", ar: "هاني" }, sub: { en: "Budget review", ar: "مراجعة الميزانية" }, value: "8:02" }
+          overlay:
+            type: toast
+            blocks:
+              - { kind: small, text: { en: "Was this helpful? Yes / Somewhat / Kind of / No", ar: "هل كان هذا مفيدًا؟ نعم / إلى حدّ ما / نوعًا ما / لا" } }
     answer: [clear]
     misconceptions:
       - id: MC-P12-032
@@ -133,6 +257,14 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا يجب أن نفعل؟"
+    mock:
+      app: bareed
+      appbar: { title: { en: "Deals Weekly", ar: "عروض الأسبوع" }, back: true }
+      blocks:
+        - { kind: heading, text: { en: "50% off this weekend", ar: "خصم 50% هذا الأسبوع" } }
+        - { kind: image, art: shelf, gap: s }
+        - { kind: link, text: { en: "Unsubscribe", ar: "إلغاء الاشتراك" }, gap: m }
+        - { kind: small, color: muted, text: { en: "Many people open this email only to find this link.", ar: "كثيرون يفتحون هذه الرسالة فقط ليجدوا هذا الرابط." }, gap: xs }
     options:
       - { id: count, text: { en: "Count every open as important", ar: "نعتبر كل فتح أنه مهمّ" } }
       - { id: clear, text: { en: "Don't treat opens as \"important\". Learn from clear signals, like replies and moves to Important.", ar: "لا نعتبر الفتح «مهمًّا». نتعلّم من الإشارات الواضحة، مثل الردود والنقل إلى «مهمّ»." } }
@@ -149,7 +281,7 @@ steps:
       ar: "من الدرس 2: الفعل الواحد قد يعني أشياء كثيرة. تعلّم من الإشارات الواضحة."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P12-U04-05
     part: check
     rules: [R19]
@@ -161,12 +293,45 @@ steps:
       en: "Sorting learns from who you reply to and how fast. Right now, nothing in the app says so."
       ar: "التصنيف يتعلّم ممّن تردّ عليهم وبأي سرعة. وحاليًا، لا شيء في التطبيق يقول ذلك."
     prompt:
-      en: "What should we add?"
-      ar: "ماذا يجب أن نضيف؟"
+      en: "Tap each option to see it. What should we add?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن نضيف؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: bareed
+      appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+      blocks:
+        - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+        - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
     options:
-      - { id: privacy, text: { en: "A paragraph in the privacy policy", ar: "فقرة في سياسة الخصوصية" } }
-      - { id: badge, text: { en: "An \"AI-powered\" badge on the Important tab", ar: "شارة «يعمل بالذكاء الاصطناعي» على تبويب «مهمّ»" } }
-      - { id: line, text: { en: "A line at the top of Important: \"Sorted using who you reply to. See or change in Settings › Sorting\"", ar: "سطر أعلى «مهمّ»: «مصنّف حسب من تردّ عليهم. اعرضه أو غيّره في الإعدادات › التصنيف»" } }
+      - id: privacy
+        text: { en: "A paragraph in the privacy policy", ar: "فقرة في سياسة الخصوصية" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+            - { kind: small, color: muted, text: { en: "(Explained in paragraph 14 of the privacy policy)", ar: "(مشروح في الفقرة 14 من سياسة الخصوصية)" }, gap: m }
+      - id: badge
+        text: { en: "An \"AI-powered\" badge on the Important tab", ar: "شارة «يعمل بالذكاء الاصطناعي» على تبويب «مهمّ»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" } }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4) ✨ AI-powered", ar: "مهمّ (4) ✨ بالذكاء الاصطناعي" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
+      - id: line
+        text: { en: "A line at the top of Important: \"Sorted using who you reply to. See or change in Settings › Sorting\"", ar: "سطر أعلى «مهمّ»: «مصنّف حسب من تردّ عليهم. اعرضه أو غيّره في الإعدادات › التصنيف»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: bareed
+          appbar: { title: { en: "Inbox", ar: "البريد الوارد" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          blocks:
+            - { kind: tabs, options: [ { en: "Important (4)", ar: "مهمّ (4)" }, { en: "Other (31)", ar: "أخرى (31)" } ], value: 0 }
+            - { kind: banner, tone: info, icon: info, text: { en: "Sorted using who you reply to. See or change in Settings › Sorting", ar: "مصنّف حسب من تردّ عليهم. اعرضه أو غيّره في الإعدادات › التصنيف" }, gap: xs }
+            - { kind: listitem, avatar: { text: "Nile Foods" }, text: { en: "Nile Foods", ar: "نايل فودز" }, sub: { en: "Contract ready to sign", ar: "العقد جاهز للتوقيع" }, value: "9:12" }
     answer: [line]
     misconceptions:
       - id: MC-P12-034

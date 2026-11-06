@@ -24,10 +24,13 @@ steps:
       en: "I added a photo search to my shop app. You snap a photo, and it finds similar products. Our ad said: \"AI magic! Find anything with a photo.\"\n\nIt works well for bags and clothes. But customers snap rings and earrings, get strange results, and leave one-star reviews."
       ar: "أضفت بحثًا بالصور لتطبيق متجري. تلتقط صورة، فيجد منتجات مشابهة. وإعلاننا قال: «سحر الذكاء الاصطناعي! ابحث عن أي شيء بصورة.»\n\nيعمل جيدًا مع الحقائب والملابس. لكن العملاء يصوّرون خواتم وأقراطًا، فتظهر نتائج غريبة، ويكتبون تقييمات بنجمة واحدة."
     mock:
-      width: 300
+      app: dar
+      appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
       blocks:
-        - { kind: banner, text: { en: "✨ AI magic! Find anything with a photo.", ar: "✨ سحر الذكاء الاصطناعي! ابحث عن أي شيء بصورة." } }
-        - { kind: small, color: muted, text: { en: "★☆☆☆☆ \"I searched a ring and got a door handle.\"", ar: "★☆☆☆☆ «بحثت عن خاتم فظهر لي مقبض باب.»" }, gap: s }
+        - { kind: searchbar, text: { en: "Search Dar", ar: "ابحث في دار" } }
+        - { kind: banner, tone: info, icon: sparkle, text: { en: "AI magic! Find anything with a photo.", ar: "سحر الذكاء الاصطناعي! ابحث عن أي شيء بصورة." }, gap: s }
+        - { kind: heading, text: { en: "Latest reviews", ar: "أحدث التقييمات" }, gap: m }
+        - { kind: listitem, avatar: { text: "Salma Nabil", art: woman-2 }, text: { en: "Salma · ★☆☆☆☆", ar: "سلمى · ★☆☆☆☆" }, sub: { en: "\"I searched a ring and got a door handle.\"", ar: "«بحثت عن خاتم فظهر لي مقبض باب.»" } }
 
   - id: S02
     type: choose
@@ -72,7 +75,7 @@ steps:
       ar: "يكوّن الناس صورة عمّا تستطيعه الميزة من أول شيء يسمعونه.\n\n- **قل ما تستطيعه وما لا تستطيعه بعد،** من أول مرة يقابلها الناس.\n- **اعرض مثالًا** لعملها، ليرى الناس قيمتها.\n- **تحدّث عن الفائدة، لا التقنية:** «ابحث عن حقائب مشابهة» أفضل من «يعمل بالتعلّم العميق».\n- **بلا سحر:** الوعود الكبيرة تجعل الناس يتوقّعون أكثر من اللازم، ثم يتوقّفون عن الثقة."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U02-04
     part: guided
     rules: [R06]
@@ -84,12 +87,47 @@ steps:
       en: "We're writing a new title for the photo search button."
       ar: "نكتب عنوانًا جديدًا لزر البحث بالصور."
     prompt:
-      en: "Which title is best?"
-      ar: "أي عنوان هو الأفضل؟"
+      en: "Tap each option to see it. Which title is best?"
+      ar: "اضغط على كل خيار لتراه. أي عنوان هو الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: dar
+      appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+      blocks:
+        - { kind: searchbar, text: { en: "Search clothes and bags", ar: "ابحث في الملابس والحقائب" } }
+        - { kind: button, style: outline, icon: camera, text: { en: "Photo search", ar: "البحث بالصور" }, gap: s }
+        - { kind: listitem, art: shirt, text: { en: "Linen shirt", ar: "قميص كتان" }, value: { en: "650 EGP", ar: "650 جنيه" }, gap: m }
     options:
-      - { id: tech, text: { en: "\"Powered by our new neural network\"", ar: "«يعمل بشبكتنا العصبية الجديدة»" } }
-      - { id: engine, text: { en: "\"AI visual search engine\"", ar: "«محرّك بحث بصري بالذكاء الاصطناعي»" } }
-      - { id: benefit, text: { en: "\"Snap a bag or an outfit, see similar ones we sell\"", ar: "«صوّر حقيبة أو ملابس، وشاهد مثلها عندنا»" } }
+      - id: tech
+        text: { en: "\"Powered by our new neural network\"", ar: "«يعمل بشبكتنا العصبية الجديدة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search clothes and bags", ar: "ابحث في الملابس والحقائب" } }
+            - { kind: button, style: outline, icon: camera, text: { en: "Powered by our new neural network", ar: "يعمل بشبكتنا العصبية الجديدة" }, gap: s }
+            - { kind: listitem, art: shirt, text: { en: "Linen shirt", ar: "قميص كتان" }, value: { en: "650 EGP", ar: "650 جنيه" }, gap: m }
+      - id: engine
+        text: { en: "\"AI visual search engine\"", ar: "«محرّك بحث بصري بالذكاء الاصطناعي»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search clothes and bags", ar: "ابحث في الملابس والحقائب" } }
+            - { kind: button, style: outline, icon: camera, text: { en: "AI visual search engine", ar: "محرّك بحث بصري بالذكاء الاصطناعي" }, gap: s }
+            - { kind: listitem, art: shirt, text: { en: "Linen shirt", ar: "قميص كتان" }, value: { en: "650 EGP", ar: "650 جنيه" }, gap: m }
+      - id: benefit
+        text: { en: "\"Snap a bag or an outfit, see similar ones we sell\"", ar: "«صوّر حقيبة أو ملابس، وشاهد مثلها عندنا»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          blocks:
+            - { kind: searchbar, text: { en: "Search clothes and bags", ar: "ابحث في الملابس والحقائب" } }
+            - { kind: button, style: outline, icon: camera, text: { en: "Snap a bag or an outfit, see similar ones we sell", ar: "صوّر حقيبة أو ملابس، وشاهد مثلها عندنا" }, gap: s }
+            - { kind: listitem, art: shirt, text: { en: "Linen shirt", ar: "قميص كتان" }, value: { en: "650 EGP", ar: "650 جنيه" }, gap: m }
     answer: [benefit]
     misconceptions:
       - id: MC-P12-012
@@ -108,7 +146,7 @@ steps:
       ar: "العنوان الذي يبدأ بالفائدة يقول للناس لماذا يضغطونه، وذِكر الحقائب والملابس يضع الحدود بهدوء."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U02-01
     part: guided
     rules: [R06]
@@ -120,12 +158,60 @@ steps:
       en: "The first time a customer opens photo search, we have room for one small screen before the camera."
       ar: "أول مرة يفتح فيها العميل البحث بالصور، عندنا مساحة لشاشة صغيرة واحدة قبل الكاميرا."
     prompt:
-      en: "What should that screen show?"
-      ar: "ماذا يجب أن تعرض هذه الشاشة؟"
+      en: "Tap each option to see it. What should that screen show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تعرض هذه الشاشة؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: dar
+      appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+      blocks:
+        - { kind: image, art: photo, text: { en: "Camera", ar: "الكاميرا" } }
+        - { kind: small, color: muted, text: { en: "First time: one small screen before the camera opens", ar: "أول مرة: شاشة صغيرة واحدة قبل أن تُفتح الكاميرا" }, gap: s }
     options:
-      - { id: example, text: { en: "One example: a photo of a red bag and the 4 similar bags it found, plus \"Not for jewellery yet\"", ar: "مثال واحد: صورة حقيبة حمراء و4 حقائب مشابهة وجدها، مع «لا يعمل مع المجوهرات بعد»" } }
-      - { id: list, text: { en: "A full list of the 60 product types it supports", ar: "قائمة كاملة بأنواع المنتجات الـ 60 التي يدعمها" } }
-      - { id: video, text: { en: "A 2-minute video about how the AI was trained", ar: "فيديو مدته دقيقتان عن طريقة تدريب الذكاء الاصطناعي" } }
+      - id: example
+        text: { en: "One example: a photo of a red bag and the 4 similar bags it found, plus \"Not for jewellery yet\"", ar: "مثال واحد: صورة حقيبة حمراء و4 حقائب مشابهة وجدها، مع «لا يعمل مع المجوهرات بعد»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          blocks:
+            - { kind: image, art: photo }
+          overlay:
+            type: sheet
+            title: { en: "Search with a photo", ar: "ابحث بصورة" }
+            blocks:
+              - { kind: listitem, art: photo, text: { en: "Your photo: a red bag", ar: "صورتك: حقيبة حمراء" }, sub: { en: "4 similar bags found", ar: "وجدنا 4 حقائب مشابهة" } }
+              - { kind: banner, tone: warn, icon: info, text: { en: "Not for jewellery yet", ar: "لا يعمل مع المجوهرات بعد" }, gap: s }
+              - { kind: button, icon: camera, text: { en: "Open camera", ar: "افتح الكاميرا" }, gap: s }
+      - id: list
+        text: { en: "A full list of the 60 product types it supports", ar: "قائمة كاملة بأنواع المنتجات الـ 60 التي يدعمها" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          blocks:
+            - { kind: image, art: photo }
+          overlay:
+            type: sheet
+            title: { en: "60 product types we support", ar: "60 نوع منتج ندعمها" }
+            blocks:
+              - { kind: list, style: bullet, items: [ { en: "Bags", ar: "حقائب" }, { en: "Shirts", ar: "قمصان" }, { en: "Dresses", ar: "فساتين" }, { en: "Shoes", ar: "أحذية" }, { en: "Scarves", ar: "أوشحة" }, { en: "Belts", ar: "أحزمة" } ] }
+              - { kind: small, color: muted, text: { en: "+ 54 more…", ar: "+ 54 نوعًا آخر…" }, gap: xs }
+              - { kind: button, icon: camera, text: { en: "Open camera", ar: "افتح الكاميرا" }, gap: s }
+      - id: video
+        text: { en: "A 2-minute video about how the AI was trained", ar: "فيديو مدته دقيقتان عن طريقة تدريب الذكاء الاصطناعي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dar
+          appbar: { title: { en: "Dar · Clothes", ar: "دار · ملابس" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          blocks:
+            - { kind: image, art: photo }
+          overlay:
+            type: sheet
+            title: { en: "How our AI was trained", ar: "كيف درّبنا ذكاءنا الاصطناعي" }
+            blocks:
+              - { kind: image, art: chart, text: { en: "▶ 2:00", ar: "▶ 2:00" } }
+              - { kind: button, icon: camera, text: { en: "Open camera", ar: "افتح الكاميرا" }, gap: s }
     answer: [example]
     misconceptions:
       - id: MC-P12-013
@@ -162,15 +248,19 @@ steps:
     a:
       label: { en: "A: \"Smarter than ever. Our AI finds anything you can imagine.\"", ar: "A: «أذكى من أي وقت. ذكاؤنا الاصطناعي يجد أي شيء تتخيّله.»" }
       mock:
-        width: 300
+        app: dar
+        appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
         blocks:
-          - { kind: banner, text: { en: "✨ Smarter than ever. Our AI finds anything you can imagine.", ar: "✨ أذكى من أي وقت. ذكاؤنا الاصطناعي يجد أي شيء تتخيّله." } }
+          - { kind: searchbar, text: { en: "Search Dar", ar: "ابحث في دار" } }
+          - { kind: card, art: shirt, blocks: [ { kind: badge, icon: sparkle, text: { en: "Photo search", ar: "البحث بالصور" } }, { kind: heading, text: { en: "Smarter than ever. Our AI finds anything you can imagine.", ar: "أذكى من أي وقت. ذكاؤنا الاصطناعي يجد أي شيء تتخيّله." } }, { kind: button, text: { en: "Try it", ar: "جرّبه" } } ], gap: s }
     b:
       label: { en: "B: \"Snap a bag or an outfit, see similar ones. Jewellery coming soon.\"", ar: "B: «صوّر حقيبة أو ملابس، وشاهد مثلها. المجوهرات قريبًا.»" }
       mock:
-        width: 300
+        app: dar
+        appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
         blocks:
-          - { kind: banner, text: { en: "📷 Snap a bag or an outfit, see similar ones. Jewellery coming soon.", ar: "📷 صوّر حقيبة أو ملابس، وشاهد مثلها. المجوهرات قريبًا." } }
+          - { kind: searchbar, text: { en: "Search Dar", ar: "ابحث في دار" } }
+          - { kind: card, art: shirt, blocks: [ { kind: badge, icon: camera, text: { en: "Photo search", ar: "البحث بالصور" } }, { kind: heading, text: { en: "Snap a bag or an outfit, see similar ones. Jewellery coming soon.", ar: "صوّر حقيبة أو ملابس، وشاهد مثلها. المجوهرات قريبًا." } }, { kind: button, text: { en: "Try it", ar: "جرّبه" } } ], gap: s }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -202,7 +292,7 @@ steps:
       ar: "الحدود الصادقة ليست ضعفًا. بل توجّه الناس إلى حيث تتميّز الميزة."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U02-04
     part: independent
     speaker: sara
@@ -215,12 +305,55 @@ steps:
       en: "I'm designing a banking app. A new feature sorts each payment into groups like food, transport and bills. I need its one-line description."
       ar: "أصمّم تطبيقًا بنكيًا. وميزة جديدة تصنّف كل دفعة في مجموعات مثل الطعام والمواصلات والفواتير. وأحتاج وصفها في سطر واحد."
     prompt:
-      en: "Which line is best?"
-      ar: "أي سطر هو الأفضل؟"
+      en: "Tap each option to see it. Which line is best?"
+      ar: "اضغط على كل خيار لتراه. أي سطر هو الأفضل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: rasid
+      appbar: { title: { en: "Spending groups", ar: "مجموعات الصرف" }, back: true }
+      blocks:
+        - { kind: badge, icon: sparkle, text: { en: "New", ar: "جديد" } }
+        - { kind: text, text: { en: "One line about this feature goes here", ar: "هنا سطر واحد يصف هذه الميزة" }, gap: xs }
+        - { kind: listitem, icon: fork-knife, text: { en: "Food", ar: "الطعام" }, value: { en: "2,300 EGP", ar: "2,300 جنيه" }, gap: s }
+        - { kind: listitem, icon: bus, text: { en: "Transport", ar: "المواصلات" }, value: { en: "900 EGP", ar: "900 جنيه" } }
+        - { kind: listitem, icon: lightning, text: { en: "Bills", ar: "الفواتير" }, value: { en: "1,400 EGP", ar: "1,400 جنيه" } }
     options:
-      - { id: ml, text: { en: "\"Uses machine learning to classify your transactions\"", ar: "«يستخدم تعلّم الآلة لتصنيف معاملاتك»" } }
-      - { id: benefit, text: { en: "\"See where your money goes each month\"", ar: "«اعرف أين تذهب أموالك كل شهر»" } }
-      - { id: smart, text: { en: "\"Our smartest AI yet\"", ar: "«أذكى ذكاء اصطناعي عندنا حتى الآن»" } }
+      - id: ml
+        text: { en: "\"Uses machine learning to classify your transactions\"", ar: "«يستخدم تعلّم الآلة لتصنيف معاملاتك»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar: { title: { en: "Spending groups", ar: "مجموعات الصرف" }, back: true }
+          blocks:
+            - { kind: badge, icon: sparkle, text: { en: "New", ar: "جديد" } }
+            - { kind: text, text: { en: "Uses machine learning to classify your transactions", ar: "يستخدم تعلّم الآلة لتصنيف معاملاتك" }, gap: xs }
+            - { kind: listitem, icon: fork-knife, text: { en: "Food", ar: "الطعام" }, value: { en: "2,300 EGP", ar: "2,300 جنيه" }, gap: s }
+            - { kind: listitem, icon: bus, text: { en: "Transport", ar: "المواصلات" }, value: { en: "900 EGP", ar: "900 جنيه" } }
+            - { kind: listitem, icon: lightning, text: { en: "Bills", ar: "الفواتير" }, value: { en: "1,400 EGP", ar: "1,400 جنيه" } }
+      - id: benefit
+        text: { en: "\"See where your money goes each month\"", ar: "«اعرف أين تذهب أموالك كل شهر»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar: { title: { en: "Spending groups", ar: "مجموعات الصرف" }, back: true }
+          blocks:
+            - { kind: badge, icon: sparkle, text: { en: "New", ar: "جديد" } }
+            - { kind: text, text: { en: "See where your money goes each month", ar: "اعرف أين تذهب أموالك كل شهر" }, gap: xs }
+            - { kind: listitem, icon: fork-knife, text: { en: "Food", ar: "الطعام" }, value: { en: "2,300 EGP", ar: "2,300 جنيه" }, gap: s }
+            - { kind: listitem, icon: bus, text: { en: "Transport", ar: "المواصلات" }, value: { en: "900 EGP", ar: "900 جنيه" } }
+            - { kind: listitem, icon: lightning, text: { en: "Bills", ar: "الفواتير" }, value: { en: "1,400 EGP", ar: "1,400 جنيه" } }
+      - id: smart
+        text: { en: "\"Our smartest AI yet\"", ar: "«أذكى ذكاء اصطناعي عندنا حتى الآن»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar: { title: { en: "Spending groups", ar: "مجموعات الصرف" }, back: true }
+          blocks:
+            - { kind: badge, icon: sparkle, text: { en: "New", ar: "جديد" } }
+            - { kind: text, text: { en: "Our smartest AI yet", ar: "أذكى ذكاء اصطناعي عندنا حتى الآن" }, gap: xs }
+            - { kind: listitem, icon: fork-knife, text: { en: "Food", ar: "الطعام" }, value: { en: "2,300 EGP", ar: "2,300 جنيه" }, gap: s }
+            - { kind: listitem, icon: bus, text: { en: "Transport", ar: "المواصلات" }, value: { en: "900 EGP", ar: "900 جنيه" } }
+            - { kind: listitem, icon: lightning, text: { en: "Bills", ar: "الفواتير" }, value: { en: "1,400 EGP", ar: "1,400 جنيه" } }
     answer: [benefit]
     misconceptions:
       - id: MC-P12-012
