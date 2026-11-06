@@ -21,13 +21,16 @@ steps:
       en: "I run an online shoe store. Its filter panel has **Item type**, **Color**, **Price** and **Brand**.\n\nIn interviews, customers say they scroll through pages of shoes that turn out not to come in their size."
       ar: "أدير متجر أحذية على الإنترنت. وفي لوحة الفلاتر فيه: **نوع العنصر**، و**اللون**، و**السعر**، و**الماركة**.\n\nوفي المقابلات، يقول العملاء إنهم يتصفّحون صفحات من الأحذية ثم يكتشفون أنها غير متوفّرة بمقاسهم."
     mock:
-      width: 300
+      app: dar
+      appbar: &fbar { title: { en: "Filters", ar: "الفلاتر" }, actions: [ { icon: x, aria: { en: "Close", ar: "إغلاق" } } ] }
       blocks: &shoes
-        - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-        - { kind: heading, text: { en: "Item type ▾", ar: "نوع العنصر ▾" }, gap: m }
-        - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
-        - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
-        - { kind: heading, text: { en: "Brand ▾", ar: "الماركة ▾" }, gap: m }
+        - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+        - { kind: accordion, text: { en: "Item type", ar: "نوع العنصر" }, gap: s }
+        - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+        - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+        - { kind: accordion, text: { en: "Brand", ar: "الماركة" } }
+      footer: &show86
+        - { kind: button, text: { en: "Show 86 results", ar: "اعرض 86 نتيجة" } }
 
   - id: S02
     type: tune
@@ -47,41 +50,47 @@ steps:
       - id: season
         text: { en: "Collection season", ar: "موسم المجموعة" }
         mock:
-          width: 300
+          app: dar
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Collection season", ar: "موسم المجموعة" }, gap: m }
-            - { kind: check, text: { en: "Spring–Summer 2026", ar: "ربيع وصيف 2026" }, gap: s }
-            - { kind: check, text: { en: "Autumn–Winter 2026", ar: "خريف وشتاء 2026" }, gap: s }
-            - { kind: heading, text: { en: "Item type ▾", ar: "نوع العنصر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
+            - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+            - { kind: accordion, text: { en: "Collection season", ar: "موسم المجموعة" }, open: true, gap: s, blocks: [ { kind: check, text: { en: "Spring–Summer 2026", ar: "ربيع وصيف 2026" } }, { kind: check, text: { en: "Autumn–Winter 2026", ar: "خريف وشتاء 2026" }, gap: s } ] }
+            - { kind: accordion, text: { en: "Item type", ar: "نوع العنصر" } }
+            - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+          footer: *show86
       - id: size
         text: { en: "Size", ar: "المقاس" }
         mock:
-          width: 300
+          app: dar
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Size", ar: "المقاس" }, gap: m }
-            - kind: row
+            - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+            - kind: accordion
+              text: { en: "Size", ar: "المقاس" }
+              open: true
+              gap: s
               blocks:
-                - { kind: chip, text: "39" }
-                - { kind: chip, text: "40" }
-                - { kind: chip, text: "41" }
-                - { kind: chip, text: "42" }
-                - { kind: chip, text: "43" }
-            - { kind: heading, text: { en: "Item type ▾", ar: "نوع العنصر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
+                - kind: row
+                  blocks:
+                    - { kind: chip, text: "39" }
+                    - { kind: chip, text: "40" }
+                    - { kind: chip, text: "41" }
+                    - { kind: chip, text: "42" }
+                    - { kind: chip, text: "43" }
+            - { kind: accordion, text: { en: "Item type", ar: "نوع العنصر" } }
+            - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+          footer: *show86
       - id: warehouse
         text: { en: "Warehouse", ar: "المخزن" }
         mock:
-          width: 300
+          app: dar
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Warehouse", ar: "المخزن" }, gap: m }
-            - { kind: check, text: { en: "Cairo – Obour", ar: "القاهرة – العبور" }, gap: s }
-            - { kind: check, text: { en: "Alexandria – Borg", ar: "الإسكندرية – برج العرب" }, gap: s }
-            - { kind: heading, text: { en: "Item type ▾", ar: "نوع العنصر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
+            - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+            - { kind: accordion, text: { en: "Warehouse", ar: "المخزن" }, open: true, gap: s, blocks: [ { kind: check, text: { en: "Cairo – Obour", ar: "القاهرة – العبور" } }, { kind: check, text: { en: "Alexandria – Borg", ar: "الإسكندرية – برج العرب" }, gap: s } ] }
+            - { kind: accordion, text: { en: "Item type", ar: "نوع العنصر" } }
+            - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+          footer: *show86
     answer: [size]
     misconceptions:
       - id: MC-P14-030
@@ -153,33 +162,43 @@ steps:
       - id: item
         text: { en: "Keep \"Item type\"", ar: "أبقِ «نوع العنصر»" }
         mock:
-          width: 300
+          app: dar
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Item type ▾", ar: "نوع العنصر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Size ▾", ar: "المقاس ▾" }, gap: m }
-            - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
+            - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+            - { kind: accordion, text: { en: "Item type", ar: "نوع العنصر" }, gap: s }
+            - { kind: accordion, text: { en: "Size", ar: "المقاس" } }
+            - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+          footer: *show86
       - id: style
         text: { en: "\"Shoe style\", with sandals, boots, sneakers and heels shown", ar: "«شكل الحذاء»، وتظهر تحته الصنادل والبوتات والرياضية والكعب" }
         mock:
-          width: 300
+          app: dar
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Shoe style", ar: "شكل الحذاء" }, gap: m }
-            - { kind: check, text: { en: "Sandals", ar: "صنادل" }, gap: s }
-            - { kind: check, text: { en: "Boots", ar: "بوتات" }, gap: s }
-            - { kind: check, text: { en: "Sneakers", ar: "أحذية رياضية" }, gap: s }
-            - { kind: check, text: { en: "Heels", ar: "كعب عالٍ" }, gap: s }
-            - { kind: heading, text: { en: "Size ▾", ar: "المقاس ▾" }, gap: m }
+            - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+            - kind: accordion
+              text: { en: "Shoe style", ar: "شكل الحذاء" }
+              open: true
+              gap: s
+              blocks:
+                - { kind: check, text: { en: "Sandals", ar: "صنادل" } }
+                - { kind: check, text: { en: "Boots", ar: "بوتات" }, gap: s }
+                - { kind: check, text: { en: "Sneakers", ar: "أحذية رياضية" }, gap: s }
+                - { kind: check, text: { en: "Heels", ar: "كعب عالٍ" }, gap: s }
+            - { kind: accordion, text: { en: "Size", ar: "المقاس" } }
+          footer: *show86
       - id: more
         text: { en: "Move these values into \"More filters\"", ar: "انقل هذه القيم إلى «فلاتر أخرى»" }
         mock:
-          width: 300
+          app: dar
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Size ▾", ar: "المقاس ▾" }, gap: m }
-            - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
-            - { kind: heading, text: { en: "More filters ▾", ar: "فلاتر أخرى ▾" }, gap: m }
+            - { kind: small, text: { en: "Dar · Women's shoes", ar: "دار · أحذية حريمي" } }
+            - { kind: accordion, text: { en: "Size", ar: "المقاس" }, gap: s }
+            - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+            - { kind: accordion, text: { en: "More filters", ar: "فلاتر أخرى" } }
+          footer: *show86
     answer: [style]
     misconceptions:
       - id: MC-P14-031
@@ -219,9 +238,10 @@ steps:
       - id: codes
         text: { en: "Keep the codes A to D", ar: "أبقِ الرموز من A إلى D" }
         mock:
-          width: 300
+          app: dawra
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: image, art: car, size: s, alt: { en: "Rental car", ar: "سيارة إيجار" } }
             - { kind: heading, text: { en: "Class", ar: "الفئة" }, gap: m }
             - kind: row
               blocks:
@@ -229,35 +249,42 @@ steps:
                 - { kind: chip, text: "B" }
                 - { kind: chip, text: "C" }
                 - { kind: chip, text: "D" }
+          footer: &show24
+            - { kind: button, text: { en: "Show 24 cars", ar: "اعرض 24 سيارة" } }
       - id: info
         text: { en: "Keep the codes, with an ⓘ that explains them", ar: "أبقِ الرموز، مع ⓘ يشرحها" }
         mock:
-          width: 300
+          app: dawra
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: image, art: car, size: s, alt: { en: "Rental car", ar: "سيارة إيجار" } }
             - kind: row
+              gap: m
               blocks:
                 - { kind: heading, text: { en: "Class", ar: "الفئة" } }
-                - { kind: iconbtn, text: "ⓘ" }
+                - { kind: iconbtn, icon: info, aria: { en: "What the classes mean", ar: "معنى الفئات" } }
             - kind: row
               blocks:
                 - { kind: chip, text: "A" }
                 - { kind: chip, text: "B" }
                 - { kind: chip, text: "C" }
                 - { kind: chip, text: "D" }
+          footer: *show24
       - id: plain
         text: { en: "\"Car size\": Small, Medium, Large, 7 seats", ar: "«حجم السيارة»: صغيرة، متوسطة، كبيرة، 7 مقاعد" }
         mock:
-          width: 300
+          app: dawra
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: image, art: car, size: s, alt: { en: "Rental car", ar: "سيارة إيجار" } }
             - { kind: heading, text: { en: "Car size", ar: "حجم السيارة" }, gap: m }
             - kind: row
               blocks:
-                - { kind: chip, text: { en: "Small", ar: "صغيرة" } }
-                - { kind: chip, text: { en: "Medium", ar: "متوسطة" } }
-                - { kind: chip, text: { en: "Large", ar: "كبيرة" } }
-                - { kind: chip, text: { en: "7 seats", ar: "7 مقاعد" } }
+                - { kind: chip, icon: car-simple, text: { en: "Small", ar: "صغيرة" } }
+                - { kind: chip, icon: car-simple, text: { en: "Medium", ar: "متوسطة" } }
+                - { kind: chip, icon: car-profile, text: { en: "Large", ar: "كبيرة" } }
+                - { kind: chip, icon: van, text: { en: "7 seats", ar: "7 مقاعد" } }
+          footer: *show24
     answer: [plain]
     misconceptions:
       - id: MC-P14-031
@@ -296,36 +323,43 @@ steps:
       - id: tech
         text: { en: "Keep the technical filters first", ar: "أبقِ الفلاتر التقنية أولًا" }
         mock:
-          width: 300
+          app: kadr
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Lens mount ▾", ar: "تركيب العدسة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Max aperture ▾", ar: "أقصى فتحة عدسة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Sensor size ▾", ar: "حجم الحساس ▾" }, gap: m }
-            - { kind: heading, text: { en: "Brand ▾", ar: "الماركة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+            - { kind: small, text: { en: "Kadr · Cameras", ar: "كادر · كاميرات" } }
+            - { kind: accordion, text: { en: "Lens mount", ar: "تركيب العدسة" }, gap: s }
+            - { kind: accordion, text: { en: "Max aperture", ar: "أقصى فتحة عدسة" } }
+            - { kind: accordion, text: { en: "Sensor size", ar: "حجم الحساس" } }
+            - { kind: accordion, text: { en: "Brand", ar: "الماركة" } }
+            - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+          footer: &show42
+            - { kind: button, text: { en: "Show 42 cameras", ar: "اعرض 42 كاميرا" } }
       - id: general
         text: { en: "Brand and Price first, technical ones below", ar: "الماركة والسعر أولًا، والتقنية تحتهما" }
         mock:
-          width: 300
+          app: kadr
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Brand ▾", ar: "الماركة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Sensor size ▾", ar: "حجم الحساس ▾" }, gap: m }
-            - { kind: heading, text: { en: "Lens mount ▾", ar: "تركيب العدسة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Max aperture ▾", ar: "أقصى فتحة عدسة ▾" }, gap: m }
+            - { kind: small, text: { en: "Kadr · Cameras", ar: "كادر · كاميرات" } }
+            - { kind: accordion, text: { en: "Brand", ar: "الماركة" }, gap: s }
+            - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+            - { kind: accordion, text: { en: "Sensor size", ar: "حجم الحساس" } }
+            - { kind: accordion, text: { en: "Lens mount", ar: "تركيب العدسة" } }
+            - { kind: accordion, text: { en: "Max aperture", ar: "أقصى فتحة عدسة" } }
+          footer: *show42
       - id: abc
         text: { en: "Alphabetical order", ar: "ترتيب أبجدي" }
         mock:
-          width: 300
+          app: kadr
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: { en: "Brand ▾", ar: "أقصى فتحة عدسة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Lens mount ▾", ar: "تركيب العدسة ▾" }, gap: m }
-            - { kind: heading, text: { en: "Max aperture ▾", ar: "حجم الحساس ▾" }, gap: m }
-            - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
-            - { kind: heading, text: { en: "Sensor size ▾", ar: "الماركة ▾" }, gap: m }
+            - { kind: small, text: { en: "Kadr · Cameras", ar: "كادر · كاميرات" } }
+            - { kind: accordion, text: { en: "Brand", ar: "أقصى فتحة عدسة" }, gap: s }
+            - { kind: accordion, text: { en: "Lens mount", ar: "تركيب العدسة" } }
+            - { kind: accordion, text: { en: "Max aperture", ar: "حجم الحساس" } }
+            - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+            - { kind: accordion, text: { en: "Sensor size", ar: "الماركة" } }
+          footer: *show42
     answer: [general]
     misconceptions:
       - id: MC-P14-032
@@ -362,26 +396,35 @@ steps:
     a:
       label: { en: "Version A: Color, Material, Price", ar: "النسخة A: اللون، الخامة، السعر" }
       mock:
-        width: 260
+        app: beit
+        appbar: *fbar
         blocks:
-          - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-          - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
-          - { kind: heading, text: { en: "Material ▾", ar: "الخامة ▾" }, gap: m }
-          - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
+          - { kind: small, text: { en: "Beit · Sofas", ar: "بيت · كنب" } }
+          - { kind: accordion, text: { en: "Color", ar: "اللون" }, gap: s }
+          - { kind: accordion, text: { en: "Material", ar: "الخامة" } }
+          - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+        footer: &show31
+          - { kind: button, text: { en: "Show 31 sofas", ar: "اعرض 31 كنبة" } }
     b:
       label: { en: "Version B: Width, Price, Color", ar: "النسخة B: العرض، السعر، اللون" }
       mock:
-        width: 260
+        app: beit
+        appbar: *fbar
         blocks:
-          - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-          - { kind: heading, text: { en: "Width", ar: "العرض" }, gap: m }
-          - kind: row
+          - { kind: small, text: { en: "Beit · Sofas", ar: "بيت · كنب" } }
+          - kind: accordion
+            text: { en: "Width", ar: "العرض" }
+            open: true
+            gap: s
             blocks:
-              - { kind: chip, text: { en: "Up to 180 cm", ar: "حتى 180 سم" } }
-              - { kind: chip, text: { en: "180–220 cm", ar: "180–220 سم" } }
-              - { kind: chip, text: { en: "Over 220 cm", ar: "أكثر من 220 سم" } }
-          - { kind: heading, text: { en: "Price ▾", ar: "السعر ▾" }, gap: m }
-          - { kind: heading, text: { en: "Color ▾", ar: "اللون ▾" }, gap: m }
+              - kind: row
+                blocks:
+                  - { kind: chip, text: { en: "Up to 180 cm", ar: "حتى 180 سم" } }
+                  - { kind: chip, text: { en: "180–220 cm", ar: "180–220 سم" } }
+                  - { kind: chip, text: { en: "Over 220 cm", ar: "أكثر من 220 سم" } }
+          - { kind: accordion, text: { en: "Price", ar: "السعر" } }
+          - { kind: accordion, text: { en: "Color", ar: "اللون" } }
+        footer: *show31
     answer: b
     misconceptions:
       - id: MC-P14-030
@@ -417,37 +460,44 @@ steps:
       - id: codes
         text: { en: "Keep the codes", ar: "أبقِ الرموز" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
-            - { kind: heading, text: "Board" , gap: m }
+            - { kind: small, text: { en: "Nuzul · Hurghada · 3 nights", ar: "نُزُل · الغردقة · 3 ليالٍ" } }
+            - { kind: heading, text: "Board", gap: m }
             - { kind: check, text: "RO", gap: s }
             - { kind: check, text: "BB", gap: s }
             - { kind: check, text: "HB", gap: s }
             - { kind: check, text: "FB", gap: s }
+          footer: &show57
+            - { kind: button, text: { en: "Show 57 hotels", ar: "اعرض 57 فندقًا" } }
       - id: legend
         text: { en: "Keep the codes, with a key at the bottom of the page", ar: "أبقِ الرموز، مع شرح لها في أسفل الصفحة" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: small, text: { en: "Nuzul · Hurghada · 3 nights", ar: "نُزُل · الغردقة · 3 ليالٍ" } }
             - { kind: heading, text: "Board", gap: m }
             - { kind: check, text: "RO", gap: s }
             - { kind: check, text: "BB", gap: s }
             - { kind: check, text: "HB", gap: s }
             - { kind: check, text: "FB", gap: s }
             - { kind: small, text: { en: "RO = room only, BB = bed and breakfast, HB = half board, FB = full board", ar: "RO = غرفة فقط، BB = مبيت وإفطار، HB = نصف إقامة، FB = إقامة كاملة" }, gap: l }
+          footer: *show57
       - id: meals
         text: { en: "\"Meals included\": None, Breakfast, Breakfast and dinner, All meals", ar: "«الوجبات المشمولة»: بدون، إفطار، إفطار وعشاء، كل الوجبات" }
         mock:
-          width: 300
+          app: nuzul
+          appbar: *fbar
           blocks:
-            - { kind: title, text: { en: "Filters", ar: "الفلاتر" } }
+            - { kind: small, text: { en: "Nuzul · Hurghada · 3 nights", ar: "نُزُل · الغردقة · 3 ليالٍ" } }
             - { kind: heading, text: { en: "Meals included", ar: "الوجبات المشمولة" }, gap: m }
             - { kind: check, text: { en: "None", ar: "بدون" }, gap: s }
             - { kind: check, text: { en: "Breakfast", ar: "إفطار" }, gap: s }
             - { kind: check, text: { en: "Breakfast and dinner", ar: "إفطار وعشاء" }, gap: s }
             - { kind: check, text: { en: "All meals", ar: "كل الوجبات" }, gap: s }
+          footer: *show57
     answer: [meals]
     misconceptions:
       - id: MC-P14-031
