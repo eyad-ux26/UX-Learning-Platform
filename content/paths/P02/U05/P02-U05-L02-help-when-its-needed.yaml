@@ -20,16 +20,15 @@ steps:
     type: card
     part: hook
     title: { en: "Page 27 of the manual", ar: "الصفحة 27 من الدليل" }
+    mock:
+      app: raha
+      appbar: { title: { en: "Help", ar: "مساعدة" }, back: true }
+      blocks:
+        - { kind: listitem, icon: file-pdf, text: { en: "Raha Clinic app user manual", ar: "دليل مستخدم تطبيق عيادة راحة" }, sub: { en: "v3.2 · 40 pages · PDF", ar: "الإصدار 3.2 · 40 صفحة · PDF" } }
+        - { kind: image, art: document, size: l, gap: m, note: { en: "Page 27 of 40 has the answer", ar: "الإجابة في الصفحة 27 من 40" } }
     body:
       en: "Our clinic app has a **Help** button. It opens a 40-page PDF manual.\n\nMr. Fathy wanted to move his appointment to next week. He opened Help, scrolled for a while, gave up, and called the front desk. The answer was on page 27."
       ar: "في تطبيق عيادتنا زر **مساعدة**. وهو يفتح دليلًا بصيغة PDF من 40 صفحة.\n\nأراد الأستاذ فتحي أن ينقل موعده إلى الأسبوع القادم. ففتح «مساعدة»، ومرّر الصفحات فترة، ثم استسلم واتصل بالاستقبال. وكانت الإجابة في الصفحة 27."
-    mock:
-      width: 300
-      blocks:
-        - { kind: title, text: { en: "Help", ar: "مساعدة" } }
-        - { kind: meta, text: { en: "Clinic app user manual · v3.2 · 40 pages (PDF)", ar: "دليل مستخدم تطبيق العيادة · الإصدار 3.2 · 40 صفحة (PDF)" }, gap: s }
-        - { kind: button, text: { en: "Open manual", ar: "افتح الدليل" }, gap: m }
-
   - id: S02
     type: choose
     part: try
@@ -43,6 +42,12 @@ steps:
     prompt:
       en: "What should Help open instead?"
       ar: "ماذا يجب أن يفتح زر «مساعدة» بدلًا من ذلك؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Help", ar: "مساعدة" }, back: true }
+      blocks:
+        - { kind: image, art: document, size: l }
+        - { kind: small, text: { en: "1. Introduction · 2. Installing the app · 3. Account settings …", ar: "1. مقدمة · 2. تثبيت التطبيق · 3. إعدادات الحساب …" }, gap: m }
     options:
       - { id: index, text: { en: "The same PDF, with a table of contents on the first page", ar: "ملف PDF نفسه، مع فهرس في الصفحة الأولى" } }
       - { id: tasks, text: { en: "A search box, and short answers named by task: \"Change my appointment\", \"Cancel a visit\", \"Get my results\"", ar: "مربع بحث، وإجابات قصيرة مسمّاة بالمهام: «غيّر موعدي»، «ألغِ زيارة»، «احصل على نتائجي»" } }
@@ -120,6 +125,14 @@ steps:
     prompt:
       en: "Where should the help be?"
       ar: "أين يجب أن تكون المساعدة؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Book a visit", ar: "احجز زيارة" }, back: true }
+      blocks:
+        - { kind: progress, value: 75, label: { en: "Step 3 of 4", ar: "الخطوة 3 من 4" } }
+        - { kind: field, label: { en: "Insurance number", ar: "رقم التأمين" }, text: "", focus: true, gap: m, note: { en: "Many don't know where to find it", ar: "كثيرون لا يعرفون أين يجدونه" } }
+      footer:
+        - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
       - { id: tip, text: { en: "A \"Where do I find it?\" link under the field, showing a picture of the card with the number marked", ar: "رابط «أين أجده؟» تحت الحقل، يعرض صورة البطاقة والرقم محدّد عليها" } }
       - { id: faq, text: { en: "A clearer FAQ entry about insurance numbers", ar: "سؤال أوضح عن رقم التأمين في الأسئلة الشائعة" } }
@@ -156,6 +169,11 @@ steps:
     prompt:
       en: "How should the answer be written?"
       ar: "كيف يجب أن تُكتب الإجابة؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Change my appointment", ar: "تغيير موعدي" }, back: true }
+      blocks:
+        - { kind: text, text: { en: "We allow patients to change appointments because plans change, and our policy is to keep schedules flexible. Changes made less than 24 hours before the visit may have a fee. To change it, open My visits, tap the visit and choose Change time, then pick a new slot. Changes are confirmed by text message.", ar: "نسمح للمرضى بتغيير المواعيد لأن الخطط تتغيّر، وسياستنا أن تبقى المواعيد مرنة. وقد تُفرض رسوم على التغيير قبل الزيارة بأقل من 24 ساعة. ولتغييره، افتح «زياراتي» واضغط الزيارة واختر «غيّر الموعد»، ثم اختر موعدًا جديدًا. ويُؤكَّد التغيير برسالة نصية." }, note: { en: "The steps are in the middle of the paragraph", ar: "الخطوات في منتصف الفقرة" } }
     options:
       - { id: steps, text: { en: "Numbered steps first (1. Open My visits 2. Tap the visit 3. Tap Change time), then the late-change rule in one line", ar: "خطوات مرقّمة أولًا (1. افتح زياراتي 2. اضغط الزيارة 3. اضغط «غيّر الموعد»)، ثم قاعدة التغيير المتأخر في سطر واحد" } }
       - { id: bold, text: { en: "The same paragraph, with the key sentence in bold", ar: "الفقرة نفسها، مع الجملة المهمة بخط عريض" } }
@@ -201,9 +219,10 @@ steps:
     a:
       label: { en: "Version A: a 7-step tour", ar: "النسخة A: جولة من 7 خطوات" }
       mock:
-        width: 260
+        app: suwar
+        theme: dark
         blocks:
-          - { kind: image, size: l }
+          - { kind: image, art: beach, size: xl }
         overlay:
           type: dialog
           blocks:
@@ -212,10 +231,12 @@ steps:
     b:
       label: { en: "Version B: one skippable tip", ar: "النسخة B: نصيحة واحدة يمكن تخطّيها" }
       mock:
-        width: 260
+        app: suwar
+        theme: dark
         blocks:
-          - { kind: image, size: l }
-          - { kind: small, text: { en: "Tip: tap any tool to see what it does · Got it", ar: "نصيحة: اضغط أي أداة لترى ما تفعله · فهمت" }, gap: s }
+          - { kind: image, art: beach, size: xl }
+          - { kind: tip, text: { en: "Tap any tool to see what it does", ar: "اضغط أي أداة لترى ما تفعله" } }
+          - { kind: link, text: { en: "Got it", ar: "فهمت" }, gap: xs }
     answer: b
     misconceptions:
       - id: MC-P02-045
@@ -246,6 +267,14 @@ steps:
     prompt:
       en: "What should the help centre's first screen show?"
       ar: "ماذا يجب أن تعرض الشاشة الأولى في مركز المساعدة؟"
+    mock:
+      app: rasid
+      appbar: { title: { en: "Help centre", ar: "مركز المساعدة" }, back: true }
+      blocks:
+        - { kind: listitem, text: { en: "Account statements", ar: "كشوف الحساب" }, chevron: true }
+        - { kind: listitem, text: { en: "ATM locations", ar: "أماكن ماكينات الصرف" }, chevron: true, gap: s }
+        - { kind: listitem, text: { en: "Beneficiaries", ar: "المستفيدون" }, chevron: true, gap: s }
+        - { kind: listitem, text: { en: "Blocked card", ar: "بطاقة موقوفة" }, chevron: true, gap: s, note: { en: "300 articles, A to Z", ar: "300 مقال، أبجديًا" } }
     options:
       - { id: top, text: { en: "A search box, the three top questions as big buttons, and topics like Cards, Transfers and Sign-in", ar: "مربع بحث، والأسئلة الثلاثة الأشهر أزرارًا كبيرة، وموضوعات مثل البطاقات والتحويلات وتسجيل الدخول" } }
       - { id: abc, text: { en: "All 300 articles, A to Z, so nothing is hidden", ar: "كل المقالات الثلاثمئة أبجديًا، حتى لا يُخفى شيء" } }

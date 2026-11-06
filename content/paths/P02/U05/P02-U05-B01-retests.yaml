@@ -28,6 +28,15 @@ steps:
     prompt:
       en: "What should the page say?"
       ar: "ماذا يجب أن تقول الصفحة؟"
+    mock:
+      app: dar
+      appbar: { title: { en: "Electric drill 650 W", ar: "مثقاب كهربائي 650 وات" }, back: true, actions: [ { icon: heart } ] }
+      blocks:
+        - { kind: image, art: box, size: m }
+        - { kind: price, text: { en: "EGP 1,250", ar: "1,250 جنيه" }, gap: m }
+        - { kind: badge, text: { en: "Out of stock", ar: "نفد من المخزون" }, tone: bad, gap: s }
+      footer:
+        - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" }, tone: off }
     options:
       - { id: advice, text: { en: "\"Back in stock around 15 Nov. Notify me\" and a similar drill that's available now", ar: "«يعود إلى المخزون نحو 15 نوفمبر. نبّهني» مع مثقاب مشابه متوفّر الآن" } }
       - { id: sorry, text: { en: "\"Sorry! This item is currently unavailable.\"", ar: "«نأسف! هذا المنتج غير متاح حاليًا.»" } }
@@ -61,6 +70,14 @@ steps:
     prompt:
       en: "What should the message say?"
       ar: "ماذا يجب أن تقول الرسالة؟"
+    mock:
+      app: rasid
+      appbar: { title: { en: "New beneficiary", ar: "مستفيد جديد" }, back: true }
+      blocks:
+        - { kind: field, label: { en: "Name", ar: "الاسم" }, text: { en: "Omar Hany", ar: "عمر هاني" }, filled: true }
+        - { kind: field, label: { en: "Account number (IBAN)", ar: "رقم الحساب (IBAN)" }, text: "EG38 0019 0005 0000 0000 2631 801", filled: true, error: "ERR_IBAN_CHECKSUM", gap: m }
+      footer:
+        - { kind: button, text: { en: "Save", ar: "احفظ" } }
     options:
       - { id: plain, text: { en: "\"This account number looks incomplete: it has 28 digits instead of 29. Check it against the one you were given.\"", ar: "«يبدو رقم الحساب هذا ناقصًا: فيه 28 رقمًا بدل 29. راجعه مع الرقم الذي أُعطي لك.»" } }
       - { id: iban, text: { en: "\"IBAN checksum validation failed.\"", ar: "«فشل التحقّق من رمز الـ IBAN.»" } }
@@ -100,6 +117,14 @@ steps:
     prompt:
       en: "How should the weak-but-allowed password be shown?"
       ar: "كيف تُعرض كلمة المرور الضعيفة المسموحة؟"
+    mock:
+      app: dar
+      appbar: { title: { en: "Create account", ar: "أنشئ حسابًا" }, back: true }
+      blocks:
+        - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "mona@mail.example", filled: true }
+        - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, error: { en: "Weak password", ar: "كلمة مرور ضعيفة" }, gap: m, note: { en: "Allowed, but shown like a blocking error, with an error sound", ar: "مسموحة، لكنها تُعرض كخطأ يمنع المتابعة، مع صوت خطأ" } }
+      footer:
+        - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
     options:
       - { id: soft, text: { en: "A calm hint under the field: \"Fair. Add a number or symbol to make it stronger\", and let people continue", ar: "تلميح هادئ تحت الحقل: «متوسطة. أضف رقمًا أو رمزًا لتقويها»، مع السماح بالمتابعة" } }
       - { id: same, text: { en: "Keep the red error; weak passwords are risky", ar: "إبقاء الخطأ الأحمر؛ فكلمات المرور الضعيفة خطرة" } }
@@ -138,6 +163,18 @@ steps:
     prompt:
       en: "What should happen instead?"
       ar: "ماذا يجب أن يحدث بدلًا من ذلك؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "Bring a guest", ar: "أحضِر ضيفًا" }, back: true }
+      blocks:
+        - { kind: field, label: { en: "Guest's name", ar: "اسم الضيف" }, text: { en: "Salma", ar: "سلمى" }, filled: true }
+        - { kind: field, label: { en: "Guest's age", ar: "عمر الضيف" }, text: "", gap: m }
+      footer:
+        - { kind: button, text: { en: "Book", ar: "احجز" } }
+      overlay:
+        type: toast
+        blocks:
+          - { kind: text, text: { en: "Please check the form", ar: "يرجى مراجعة النموذج" }, note: { en: "Gone after 3 s", ar: "يختفي بعد 3 ثوانٍ" } }
     options:
       - { id: field, text: { en: "Mark the age field and show \"Add your guest's age\" under it until it's fixed", ar: "تحديد حقل العمر، وإظهار «أضِف عمر ضيفك» تحته حتى يُصلح" } }
       - { id: longer, text: { en: "Keep the toast on screen for ten seconds", ar: "إبقاء الرسالة المؤقتة على الشاشة عشر ثوانٍ" } }
@@ -172,6 +209,17 @@ steps:
     prompt:
       en: "What should the tip be?"
       ar: "ماذا يجب أن تكون النصيحة؟"
+    mock:
+      app: masroof
+      appbar: { title: { en: "New expense", ar: "مصروف جديد" }, back: true }
+      blocks:
+        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: { en: "EGP 240", ar: "240 جنيه" }, filled: true }
+      overlay:
+        type: sheet
+        title: { en: "How Masroof works", ar: "كيف يعمل مصروف" }
+        blocks:
+          - { kind: small, text: { en: "Categories help you understand where your money goes. Each expense can have one category, and you can create your own…", ar: "الفئات تساعدك على فهم أين يذهب مالك. ولكل مصروف فئة واحدة، ويمكنك إنشاء فئاتك…" } }
+          - { kind: small, text: { en: "Budgets let you set a limit per month for each category…", ar: "الميزانيات تتيح لك تحديد حد شهري لكل فئة…" }, gap: s, note: { en: "6 paragraphs in all", ar: "6 فقرات في المجمل" } }
     options:
       - { id: short, text: { en: "One line next to the category field: \"Pick a category to see where your money goes\", with Got it", ar: "سطر واحد بجانب حقل الفئة: «اختر فئة لترى أين يذهب مالك»، مع «فهمت»" } }
       - { id: same, text: { en: "The same six paragraphs, with headings", ar: "الفقرات الست نفسها، مع عناوين" } }
@@ -210,6 +258,13 @@ steps:
     prompt:
       en: "What should I add?"
       ar: "ماذا أضيف؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "Membership", ar: "الاشتراك" }, back: true }
+      blocks:
+        - { kind: card, blocks: [ { kind: heading, text: { en: "Gold · monthly", ar: "Gold · شهري" } }, { kind: small, text: { en: "Renews 1 Dec", ar: "يتجدّد 1 ديسمبر" } } ] }
+        - { kind: listitem, icon: credit-card, text: { en: "Payment method", ar: "طريقة الدفع" }, chevron: true, gap: m }
+        - { kind: listitem, icon: question, text: { en: "Help", ar: "المساعدة" }, chevron: true, gap: s, note: { en: "The freeze tip isn't here any more", ar: "نصيحة التجميد لم تعد هنا" } }
     options:
       - { id: help, text: { en: "Keep the tip, and also put \"How to freeze my membership\" in Help and next to the membership details", ar: "إبقاء النصيحة، مع وضع «كيف أجمّد اشتراكي» أيضًا في المساعدة وبجانب تفاصيل الاشتراك" } }
       - { id: force, text: { en: "Make the tip impossible to dismiss until it's read", ar: "جعل النصيحة لا تُغلق حتى تُقرأ" } }
@@ -244,6 +299,14 @@ steps:
     prompt:
       en: "How should I organize it?"
       ar: "كيف أنظّمها؟"
+    mock:
+      app: lokma
+      appbar: { title: { en: "Help", ar: "المساعدة" }, back: true }
+      blocks:
+        - { kind: listitem, text: { en: "How do I add a promo code?", ar: "كيف أضيف رمز خصم؟" }, chevron: true }
+        - { kind: listitem, text: { en: "Can I change my phone number?", ar: "هل أستطيع تغيير رقم هاتفي؟" }, chevron: true, gap: s }
+        - { kind: listitem, text: { en: "My order is late", ar: "طلبي متأخر" }, chevron: true, gap: s }
+        - { kind: listitem, text: { en: "How do I delete my account?", ar: "كيف أحذف حسابي؟" }, chevron: true, gap: s, note: { en: "60 questions, in the order they were written", ar: "60 سؤالًا، بترتيب كتابتها" } }
     options:
       - { id: groups, text: { en: "Group them by task: My order, Payments, Account, Delivery problems, with search on top", ar: "جمعها حسب المهمة: طلبي، والمدفوعات، والحساب، ومشكلات التوصيل، مع بحث في الأعلى" } }
       - { id: date, text: { en: "Keep one list, newest questions first", ar: "إبقاء قائمة واحدة، الأسئلة الأحدث أولًا" } }
@@ -277,6 +340,11 @@ steps:
     prompt:
       en: "How should the answer start?"
       ar: "بماذا يجب أن تبدأ الإجابة؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Add results from another lab", ar: "أضِف نتائج من معمل آخر" }, back: true }
+      blocks:
+        - { kind: text, text: { en: "We accept results from other labs to keep your medical record complete. Our system supports PDF, JPG and PNG files up to 10 MB, scanned or photographed…", ar: "نقبل نتائج المعامل الأخرى ليكتمل ملفك الطبي. ويدعم نظامنا ملفات PDF وJPG وPNG حتى 10 ميجابايت، ممسوحة أو مصوّرة…" }, note: { en: "The steps come after two paragraphs", ar: "الخطوات تأتي بعد فقرتين" } }
     options:
       - { id: steps, text: { en: "\"1. Open My results 2. Tap Add from another lab 3. Take a photo or choose a PDF\", then one line on file types", ar: "«1. افتح نتائجي 2. اضغط أضِف من معمل آخر 3. التقط صورة أو اختر ملف PDF»، ثم سطر واحد عن أنواع الملفات" } }
       - { id: why, text: { en: "Keep the explanation first; people should understand before they act", ar: "إبقاء الشرح أولًا؛ فيجب أن يفهم الناس قبل أن يتصرفوا" } }

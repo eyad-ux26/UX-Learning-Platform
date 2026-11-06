@@ -24,11 +24,13 @@ steps:
       en: "I manage a clinic, and Ashraf is booking a check-up in our app. On the last screen, he sees four buttons, all the same size and the same blue: **Confirm booking**, **Change time**, **Add to calendar** and **Cancel**.\n\nHe stops and reads all four before he dares to tap one."
       ar: "أدير عيادة، ويحجز أشرف كشفًا في تطبيقنا. وفي الشاشة الأخيرة، يرى أربعة أزرار، كلها بالحجم نفسه واللون الأزرق نفسه: **أكّد الحجز**، و**غيّر الموعد**، و**أضف إلى التقويم**، و**إلغاء**.\n\nفيتوقّف ويقرأ الأربعة قبل أن يجرؤ على الضغط على أحدها."
     mock:
-      width: 300
-      blocks: &four
-        - { kind: title, text: { en: "Your appointment", ar: "موعدك" } }
-        - { kind: meta, text: { en: "Dr. Samia · Sun 10:30 am", ar: "د. سامية · الأحد 10:30 ص" }, gap: s }
-        - { kind: button, text: { en: "Confirm booking", ar: "أكّد الحجز" }, gap: l }
+      app: raha
+      appbar: &rbar { title: { en: "Your appointment", ar: "موعدك" }, back: true }
+      blocks: &visit
+        - { kind: listitem, avatar: { text: "Samia Hassan", art: doctor }, text: { en: "Dr. Samia", ar: "د. سامية" }, sub: { en: "Family doctor · 4.8 ★", ar: "طبيبة أسرة · 4.8 ★" } }
+        - { kind: listitem, icon: calendar-blank, text: { en: "Sun 10:30 am", ar: "الأحد 10:30 ص" }, sub: { en: "Raha Clinic, Dokki", ar: "عيادة راحة، الدقي" }, value: { en: "EGP 450", ar: "450 جنيه" }, gap: s }
+      footer:
+        - { kind: button, text: { en: "Confirm booking", ar: "أكّد الحجز" } }
         - { kind: button, text: { en: "Change time", ar: "غيّر الموعد" }, gap: s }
         - { kind: button, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: s }
         - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, gap: s }
@@ -51,33 +53,33 @@ steps:
       - id: colors
         text: { en: "Give each button its own color", ar: "أعطِ كل زر لونًا خاصًا به" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Your appointment", ar: "موعدك" } }
-            - { kind: meta, text: { en: "Dr. Samia · Sun 10:30 am", ar: "د. سامية · الأحد 10:30 ص" }, gap: s }
-            - { kind: button, text: { en: "Confirm booking", ar: "أكّد الحجز" }, gap: l }
+          app: raha
+          appbar: *rbar
+          blocks: *visit
+          footer:
+            - { kind: button, text: { en: "Confirm booking", ar: "أكّد الحجز" } }
             - { kind: button, tone: warn, text: { en: "Change time", ar: "غيّر الموعد" }, gap: s }
             - { kind: button, tone: off, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: s }
             - { kind: button, style: danger, text: { en: "Cancel", ar: "إلغاء" }, gap: s }
       - id: one
         text: { en: "Keep Confirm filled; make the other three outlined or text", ar: "أبقِ «أكّد الحجز» ممتلئًا؛ واجعل الثلاثة الأخرى بإطار فقط أو نصًا" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Your appointment", ar: "موعدك" } }
-            - { kind: meta, text: { en: "Dr. Samia · Sun 10:30 am", ar: "د. سامية · الأحد 10:30 ص" }, gap: s }
-            - { kind: button, text: { en: "Confirm booking", ar: "أكّد الحجز" }, gap: l }
-            - { kind: button, emphasis: low, text: { en: "Change time", ar: "غيّر الموعد" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: s }
-            - { kind: button, style: plain, text: { en: "Cancel", ar: "إلغاء" }, gap: s }
+          app: raha
+          appbar: *rbar
+          blocks: *visit
+          footer:
+            - { kind: button, text: { en: "Confirm booking", ar: "أكّد الحجز" } }
+            - { kind: button, style: outline, icon: clock, text: { en: "Change time", ar: "غيّر الموعد" }, gap: s }
+            - { kind: button, style: outline, icon: calendar-plus, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: s }
+            - { kind: button, style: text, text: { en: "Cancel", ar: "إلغاء" }, gap: s }
       - id: bold
         text: { en: "Keep all four blue; make the Confirm label bold and bigger", ar: "أبقِ الأربعة باللون الأزرق؛ واجعل نص «أكّد الحجز» عريضًا وأكبر" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Your appointment", ar: "موعدك" } }
-            - { kind: meta, text: { en: "Dr. Samia · Sun 10:30 am", ar: "د. سامية · الأحد 10:30 ص" }, gap: s }
-            - { kind: button, px: 19, text: { en: "Confirm booking", ar: "أكّد الحجز" }, gap: l }
+          app: raha
+          appbar: *rbar
+          blocks: *visit
+          footer:
+            - { kind: button, px: 19, text: { en: "Confirm booking", ar: "أكّد الحجز" } }
             - { kind: button, text: { en: "Change time", ar: "غيّر الموعد" }, gap: s }
             - { kind: button, text: { en: "Add to calendar", ar: "أضف إلى التقويم" }, gap: s }
             - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, gap: s }
@@ -145,30 +147,38 @@ steps:
       - id: both
         text: { en: "Both buttons filled", ar: "الزرّان ممتلئان" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Cart (3)", ar: "السلّة (3)" } }
-            - { kind: meta, text: { en: "Total: EGP 1,450", ar: "الإجمالي: 1,450 جنيه" }, gap: s }
-            - { kind: button, text: { en: "Continue shopping", ar: "متابعة التسوّق" }, gap: l }
+          app: dar
+          appbar: &dbar { title: { en: "Cart (3)", ar: "السلّة (3)" }, back: true }
+          blocks: &cart
+            - { kind: listitem, art: sneakers, text: { en: "Running shoes", ar: "حذاء جري" }, sub: { en: "Size 42 · Qty 1", ar: "مقاس 42 · الكمية 1" }, value: { en: "EGP 950", ar: "950 جنيه" } }
+            - { kind: listitem, art: shirt, text: { en: "Cotton T-shirt", ar: "تيشيرت قطن" }, sub: { en: "M · Qty 2", ar: "M · الكمية 2" }, value: { en: "EGP 500", ar: "500 جنيه" } }
+            - { kind: divider, gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: text, weight: bold, text: { en: "Total", ar: "الإجمالي" } }
+                - { kind: price, text: { en: "EGP 1,450", ar: "1,450 جنيه" } }
+          footer:
+            - { kind: button, text: { en: "Continue shopping", ar: "متابعة التسوّق" } }
             - { kind: button, text: { en: "Checkout", ar: "إتمام الشراء" }, gap: s }
       - id: reversed
         text: { en: "Continue shopping filled; Checkout outlined", ar: "«متابعة التسوّق» ممتلئ؛ و«إتمام الشراء» بإطار فقط" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Cart (3)", ar: "السلّة (3)" } }
-            - { kind: meta, text: { en: "Total: EGP 1,450", ar: "الإجمالي: 1,450 جنيه" }, gap: s }
-            - { kind: button, text: { en: "Continue shopping", ar: "متابعة التسوّق" }, gap: l }
-            - { kind: button, emphasis: low, text: { en: "Checkout", ar: "إتمام الشراء" }, gap: s }
+          app: dar
+          appbar: *dbar
+          blocks: *cart
+          footer:
+            - { kind: button, text: { en: "Continue shopping", ar: "متابعة التسوّق" } }
+            - { kind: button, style: outline, text: { en: "Checkout", ar: "إتمام الشراء" }, gap: s }
       - id: checkout
         text: { en: "Checkout filled; Continue shopping as a text button", ar: "«إتمام الشراء» ممتلئ؛ و«متابعة التسوّق» زر نصي" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Cart (3)", ar: "السلّة (3)" } }
-            - { kind: meta, text: { en: "Total: EGP 1,450", ar: "الإجمالي: 1,450 جنيه" }, gap: s }
-            - { kind: button, text: { en: "Checkout", ar: "إتمام الشراء" }, gap: l }
-            - { kind: button, style: plain, text: { en: "Continue shopping", ar: "متابعة التسوّق" }, gap: s }
+          app: dar
+          appbar: *dbar
+          blocks: *cart
+          footer:
+            - { kind: button, text: { en: "Checkout", ar: "إتمام الشراء" } }
+            - { kind: button, style: text, text: { en: "Continue shopping", ar: "متابعة التسوّق" }, gap: s }
     answer: [checkout]
     misconceptions:
       - id: MC-P14-019
@@ -209,37 +219,34 @@ steps:
       - id: all
         text: { en: "All four as buttons", ar: "الأربعة كأزرار" }
         mock:
-          width: 300
-          blocks:
-            - { kind: title, text: { en: "Dr. Samia", ar: "د. سامية" } }
-            - { kind: meta, text: { en: "Family doctor · 4.8 ★", ar: "طبيبة أسرة · 4.8 ★" }, gap: s }
-            - { kind: button, text: { en: "Book", ar: "احجز" }, gap: l }
-            - { kind: button, emphasis: low, text: { en: "Message", ar: "راسل" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Share", ar: "شارك" }, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Report a problem", ar: "أبلِغ عن مشكلة" }, gap: s }
+          app: raha
+          appbar: { title: { en: "Doctor", ar: "الطبيبة" }, back: true }
+          blocks: &doc
+            - { kind: avatar, text: "Samia Hassan", art: doctor, size: l }
+            - { kind: title, text: { en: "Dr. Samia", ar: "د. سامية" }, gap: s }
+            - { kind: meta, text: { en: "Family doctor · 4.8 ★ · 12 years", ar: "طبيبة أسرة · 4.8 ★ · 12 سنة خبرة" }, gap: xs }
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
+            - { kind: button, style: outline, text: { en: "Message", ar: "راسل" }, gap: s }
+            - { kind: button, style: outline, text: { en: "Share", ar: "شارك" }, gap: s }
+            - { kind: button, style: outline, text: { en: "Report a problem", ar: "أبلِغ عن مشكلة" }, gap: s }
       - id: menu3
         text: { en: "Book as a button; Message, Share and Report in a ⋯ menu", ar: "«احجز» كزر؛ و«راسل» و«شارك» و«أبلِغ» في قائمة ⋯" }
         mock:
-          width: 300
-          blocks:
-            - kind: row
-              blocks:
-                - { kind: title, text: { en: "Dr. Samia", ar: "د. سامية" } }
-                - { kind: iconbtn, text: "⋯" }
-            - { kind: meta, text: { en: "Family doctor · 4.8 ★", ar: "طبيبة أسرة · 4.8 ★" }, gap: s }
-            - { kind: button, text: { en: "Book", ar: "احجز" }, gap: l }
+          app: raha
+          appbar: &dmenu { title: { en: "Doctor", ar: "الطبيبة" }, back: true, actions: [ { icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks: *doc
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: menu2
         text: { en: "Book and Message as buttons; Share and Report in a ⋯ menu", ar: "«احجز» و«راسل» كزرّين؛ و«شارك» و«أبلِغ» في قائمة ⋯" }
         mock:
-          width: 300
-          blocks:
-            - kind: row
-              blocks:
-                - { kind: title, text: { en: "Dr. Samia", ar: "د. سامية" } }
-                - { kind: iconbtn, text: "⋯" }
-            - { kind: meta, text: { en: "Family doctor · 4.8 ★", ar: "طبيبة أسرة · 4.8 ★" }, gap: s }
-            - { kind: button, text: { en: "Book", ar: "احجز" }, gap: l }
-            - { kind: button, emphasis: low, text: { en: "Message", ar: "راسل" }, gap: s }
+          app: raha
+          appbar: *dmenu
+          blocks: *doc
+          footer:
+            - { kind: button, text: { en: "Book", ar: "احجز" } }
+            - { kind: button, style: outline, text: { en: "Message", ar: "راسل" }, gap: s }
     answer: [menu2]
     misconceptions:
       - id: MC-P14-022
@@ -281,26 +288,22 @@ steps:
     a:
       label: { en: "Version A: Edit, Delete and Details all in ⋯", ar: "النسخة A: «عدّل» و«احذف» و«التفاصيل» كلها في ⋯" }
       mock:
-        width: 260
+        app: suwar
+        theme: dark
+        appbar: &vbar { title: { en: "Beach, June", ar: "البحر، يونيو" }, back: true, actions: [ { icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } } ] }
         blocks:
-          - { kind: image, size: l }
-          - kind: row
-            gap: s
-            blocks:
-              - { kind: meta, text: { en: "Beach, June", ar: "البحر، يونيو" } }
-              - { kind: iconbtn, text: "⋯" }
+          - { kind: image, art: beach, size: l, alt: { en: "Beach photo", ar: "صورة البحر" } }
+          - { kind: meta, text: { en: "12 June · 3.2 MB", ar: "12 يونيو · 3.2 ميجابايت" }, gap: s }
     b:
       label: { en: "Version B: Edit on screen; Delete and Details in ⋯", ar: "النسخة B: «عدّل» على الشاشة؛ و«احذف» و«التفاصيل» في ⋯" }
       mock:
-        width: 260
+        app: suwar
+        theme: dark
+        appbar: *vbar
         blocks:
-          - { kind: image, size: l }
-          - kind: row
-            gap: s
-            blocks:
-              - { kind: meta, text: { en: "Beach, June", ar: "البحر، يونيو" } }
-              - { kind: iconbtn, text: "⋯" }
-          - { kind: button, emphasis: low, text: { en: "✎ Edit", ar: "✎ عدّل" }, gap: s }
+          - { kind: image, art: beach, size: l, alt: { en: "Beach photo", ar: "صورة البحر" } }
+          - { kind: meta, text: { en: "12 June · 3.2 MB", ar: "12 يونيو · 3.2 ميجابايت" }, gap: s }
+          - { kind: button, style: outline, icon: pencil-simple, text: { en: "Edit", ar: "عدّل" }, gap: s }
     answer: b
     misconceptions:
       - id: MC-P14-021
@@ -336,36 +339,48 @@ steps:
       - id: submit
         text: { en: "Submit filled; Preview and Save draft outlined", ar: "«أرسل الطلب» ممتلئ؛ و«معاينة» و«احفظ مسودة» بإطار فقط" }
         mock:
+          app: wazifa
           frame: wide
+          url: wazifa.example/apply/review
+          navbar: &wnav { links: [ { en: "Jobs", ar: "الوظائف" }, { en: "My applications", ar: "طلباتي" }, { en: "Profile", ar: "الملف" } ], active: 1, actions: [ { icon: bell }, { icon: user } ] }
           blocks:
-            - { kind: heading, text: { en: "Review and send", ar: "راجِعي وأرسلي" } }
-            - { kind: small, text: { en: "Product designer · Cairo", ar: "مصممة منتجات · القاهرة" }, gap: s }
+            - { kind: progress, value: 100, label: { en: "Step 4 of 4", ar: "الخطوة 4 من 4" } }
+            - { kind: heading, text: { en: "Review and send", ar: "راجِعي وأرسلي" }, gap: s }
+            - { kind: listitem, icon: briefcase, text: { en: "Product designer · Cairo", ar: "مصممة منتجات · القاهرة" }, sub: { en: "CV and portfolio attached", ar: "السيرة الذاتية والأعمال مرفقة" }, gap: s }
             - kind: row
               gap: l
               blocks:
-                - { kind: button, emphasis: low, text: { en: "Preview", ar: "معاينة" } }
-                - { kind: button, emphasis: low, text: { en: "Save draft", ar: "احفظي مسودة" } }
+                - { kind: button, style: outline, text: { en: "Preview", ar: "معاينة" } }
+                - { kind: button, style: outline, text: { en: "Save draft", ar: "احفظي مسودة" } }
                 - { kind: button, text: { en: "Submit application", ar: "أرسلي الطلب" } }
       - id: outlined
         text: { en: "Keep all three outlined", ar: "أبقِ الثلاثة بإطار فقط" }
         mock:
+          app: wazifa
           frame: wide
+          url: wazifa.example/apply/review
+          navbar: *wnav
           blocks:
-            - { kind: heading, text: { en: "Review and send", ar: "راجِعي وأرسلي" } }
-            - { kind: small, text: { en: "Product designer · Cairo", ar: "مصممة منتجات · القاهرة" }, gap: s }
+            - { kind: progress, value: 100, label: { en: "Step 4 of 4", ar: "الخطوة 4 من 4" } }
+            - { kind: heading, text: { en: "Review and send", ar: "راجِعي وأرسلي" }, gap: s }
+            - { kind: listitem, icon: briefcase, text: { en: "Product designer · Cairo", ar: "مصممة منتجات · القاهرة" }, sub: { en: "CV and portfolio attached", ar: "السيرة الذاتية والأعمال مرفقة" }, gap: s }
             - kind: row
               gap: l
               blocks:
-                - { kind: button, emphasis: low, text: { en: "Preview", ar: "معاينة" } }
-                - { kind: button, emphasis: low, text: { en: "Save draft", ar: "احفظي مسودة" } }
-                - { kind: button, emphasis: low, text: { en: "Submit application", ar: "أرسلي الطلب" } }
+                - { kind: button, style: outline, text: { en: "Preview", ar: "معاينة" } }
+                - { kind: button, style: outline, text: { en: "Save draft", ar: "احفظي مسودة" } }
+                - { kind: button, style: outline, text: { en: "Submit application", ar: "أرسلي الطلب" } }
       - id: filled
         text: { en: "Make all three filled", ar: "اجعل الثلاثة ممتلئة" }
         mock:
+          app: wazifa
           frame: wide
+          url: wazifa.example/apply/review
+          navbar: *wnav
           blocks:
-            - { kind: heading, text: { en: "Review and send", ar: "راجِعي وأرسلي" } }
-            - { kind: small, text: { en: "Product designer · Cairo", ar: "مصممة منتجات · القاهرة" }, gap: s }
+            - { kind: progress, value: 100, label: { en: "Step 4 of 4", ar: "الخطوة 4 من 4" } }
+            - { kind: heading, text: { en: "Review and send", ar: "راجِعي وأرسلي" }, gap: s }
+            - { kind: listitem, icon: briefcase, text: { en: "Product designer · Cairo", ar: "مصممة منتجات · القاهرة" }, sub: { en: "CV and portfolio attached", ar: "السيرة الذاتية والأعمال مرفقة" }, gap: s }
             - kind: row
               gap: l
               blocks:

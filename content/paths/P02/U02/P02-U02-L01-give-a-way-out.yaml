@@ -20,22 +20,32 @@ steps:
     type: card
     part: hook
     title: { en: "Thirty photos, gone", ar: "ثلاثون صورة ضاعت" }
-    body:
-      en: "My team makes a photo printing app. Salma picked 30 photos to print, then opened one to look at it full screen.\n\nTo leave the photo, she pressed her phone's Back button. The app took her all the way to the home screen, and her 30 picks were gone."
-      ar: "يصنع فريقي تطبيقًا لطباعة الصور. اختارت سلمى 30 صورة لتطبعها، ثم فتحت واحدة لتراها بملء الشاشة.\n\nولكي تخرج من الصورة، ضغطت زر الرجوع في هاتفها. فأخذها التطبيق إلى الشاشة الرئيسية مباشرة، وضاعت اختياراتها الثلاثون."
     mock:
-      width: 300
+      app: taba
+      appbar: { title: { en: "Your prints · 30 photos", ar: "صورك للطباعة · 30 صورة" }, back: true }
       blocks:
-        - { kind: title, text: { en: "Your prints · 30 photos", ar: "صورك للطباعة · 30 صورة" } }
-        - { kind: image, size: m, gap: s }
-        - { kind: meta, text: { en: "10 × 15 cm · glossy", ar: "10 × 15 سم · لامع" }, gap: s }
-        - { kind: button, text: { en: "Continue to checkout", ar: "تابع إلى الدفع" }, gap: l }
+        - kind: row
+          blocks:
+            - { kind: image, art: photo, size: s }
+            - { kind: image, art: beach, size: s }
+            - { kind: image, art: family, size: s }
+        - kind: row
+          gap: xs
+          blocks:
+            - { kind: image, art: city-night, size: s }
+            - { kind: image, art: desert, size: s }
+            - { kind: image, art: people, size: s }
+        - { kind: small, text: { en: "10 × 15 cm · glossy · EGP 240", ar: "10 × 15 سم · لامع · 240 جنيه" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Continue to checkout", ar: "تابع إلى الدفع" } }
       overlay:
         type: full
         close: true
         blocks:
-          - { kind: image, size: xl }
-
+          - { kind: image, art: beach, size: xl, note: { en: "Phone Back from here goes to Home", ar: "زر الرجوع في الهاتف من هنا يذهب إلى الرئيسية" } }
+    body:
+      en: "My team makes a photo printing app. Salma picked 30 photos to print, then opened one to look at it full screen.\n\nTo leave the photo, she pressed her phone's Back button. The app took her all the way to the home screen, and her 30 picks were gone."
+      ar: "يصنع فريقي تطبيقًا لطباعة الصور. اختارت سلمى 30 صورة لتطبعها، ثم فتحت واحدة لتراها بملء الشاشة.\n\nولكي تخرج من الصورة، ضغطت زر الرجوع في هاتفها. فأخذها التطبيق إلى الشاشة الرئيسية مباشرة، وضاعت اختياراتها الثلاثون."
   - id: S02
     type: choose
     part: try
@@ -49,6 +59,13 @@ steps:
     prompt:
       en: "What should happen when Salma presses Back on the full-screen photo?"
       ar: "ماذا يجب أن يحدث حين تضغط سلمى «رجوع» وهي على الصورة بملء الشاشة؟"
+    mock:
+      app: taba
+      appbar: { title: { en: "Photo 7 of 30", ar: "الصورة 7 من 30" } }
+      theme: dark
+      blocks:
+        - { kind: image, art: beach, size: xl }
+        - { kind: row, gap: m, blocks: [ { kind: iconbtn, icon: x, aria: { en: "Close", ar: "إغلاق" } }, { kind: small, text: { en: "Phone Back pressed", ar: "ضُغط زر الرجوع في الهاتف" } } ] }
     options:
       - { id: warn, text: { en: "Keep going home, but first ask \"Leave and lose your selection?\"", ar: "يذهب إلى الرئيسية كما هو، لكن بعد سؤال: «هل تغادر وتفقد اختياراتك؟»" } }
       - { id: close, text: { en: "Close the photo and return to her 30 picks, as the ✕ does", ar: "يغلق الصورة ويعيدها إلى اختياراتها الثلاثين، كما يفعل ✕" } }
@@ -116,12 +133,15 @@ steps:
       en: "What should each step have?"
       ar: "ماذا يجب أن يكون في كل خطوة؟"
     mock:
-      width: 300
+      app: taba
+      appbar: { title: { en: "Send a photo book", ar: "أرسل ألبوم صور" } }
       blocks:
-        - { kind: meta, text: { en: "Step 2 of 4", ar: "الخطوة 2 من 4" } }
-        - { kind: title, text: { en: "Who is it for?", ar: "لمن الهدية؟" }, gap: s }
-        - { kind: field, label: { en: "Name", ar: "الاسم" }, text: { en: "e.g. Nada", ar: "مثال: ندى" }, gap: m }
-        - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: l }
+        - { kind: progress, value: 50, label: { en: "Step 2 of 4", ar: "الخطوة 2 من 4" } }
+        - { kind: heading, text: { en: "Who is it for?", ar: "لمن الهدية؟" }, gap: m }
+        - { kind: field, label: { en: "Name", ar: "الاسم" }, text: { en: "e.g. Nada", ar: "مثال: ندى" }, gap: s }
+        - { kind: field, label: { en: "Address", ar: "العنوان" }, text: { en: "Street, building, flat", ar: "الشارع، العمارة، الشقة" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Continue", ar: "متابعة" }, note: { en: "The only button on every step", ar: "الزر الوحيد في كل خطوة" } }
     options:
       - { id: back, text: { en: "Nothing new: the phone's Back button can undo the steps one by one", ar: "لا شيء جديد: زر الرجوع في الهاتف يستطيع التراجع عن الخطوات واحدة واحدة" } }
       - { id: cancel, text: { en: "A \"Cancel\" link next to Continue, and a \"Back\" at the top", ar: "رابط «إلغاء» بجانب «متابعة»، و«رجوع» في الأعلى" } }
@@ -158,6 +178,19 @@ steps:
     prompt:
       en: "What should we change?"
       ar: "ماذا نغيّر؟"
+    mock:
+      app: suwar
+      appbar: { title: { en: "Summer 2026", ar: "صيف 2026" }, back: true, actions: [ { icon: dots-three-vertical } ] }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: image, art: beach, size: s }
+            - { kind: image, art: photo, size: s }
+            - { kind: image, art: cafe, size: s }
+      overlay:
+        type: toast
+        blocks:
+          - { kind: row, blocks: [ { kind: text, text: { en: "3 photos deleted", ar: "حُذفت 3 صور" } }, { kind: link, text: { en: "Undo", ar: "تراجع" } } ], note: { en: "Disappears after 3 s", ar: "يختفي بعد 3 ثوانٍ" } }
     options:
       - { id: dialog, text: { en: "Ask \"Delete these photos?\" before every delete", ar: "نسأل «هل تحذف هذه الصور؟» قبل كل حذف" } }
       - { id: longer, text: { en: "Keep Undo on screen for about ten seconds, and keep deleted photos in \"Recently deleted\" for 30 days", ar: "نُبقي «تراجع» على الشاشة نحو عشر ثوانٍ، ونحتفظ بالصور المحذوفة في «المحذوفة مؤخرًا» 30 يومًا" } }
@@ -203,21 +236,23 @@ steps:
     a:
       label: { en: "Version A: an icon only", ar: "النسخة A: أيقونة فقط" }
       mock:
-        width: 260
+        app: mozakra
+        appbar: { title: { en: "Settings", ar: "الإعدادات" } }
         blocks:
-          - { kind: small, text: "‹" }
-          - { kind: title, text: { en: "Settings", ar: "الإعدادات" }, gap: xs }
-          - { kind: toggle, text: { en: "Daily reminder", ar: "تذكير يومي" }, selected: true, gap: m }
-          - { kind: toggle, text: { en: "Sound effects", ar: "المؤثرات الصوتية" }, gap: s }
+          - { kind: small, text: "‹", tone: faint }
+          - { kind: listitem, icon: bell, text: { en: "Daily reminder", ar: "تذكير يومي" }, toggle: true, gap: s }
+          - { kind: listitem, icon: speaker-high, text: { en: "Sound effects", ar: "المؤثرات الصوتية" }, toggle: false, gap: s }
+          - { kind: listitem, icon: text-aa, text: { en: "Text size", ar: "حجم الخط" }, value: { en: "Large", ar: "كبير" }, chevron: true, gap: s }
     b:
       label: { en: "Version B: icon and word", ar: "النسخة B: أيقونة وكلمة" }
       mock:
-        width: 260
+        app: mozakra
+        appbar: { title: { en: "Settings", ar: "الإعدادات" }, back: true }
         blocks:
-          - { kind: link, text: { en: "‹ Back", ar: "‹ رجوع" } }
-          - { kind: title, text: { en: "Settings", ar: "الإعدادات" }, gap: xs }
-          - { kind: toggle, text: { en: "Daily reminder", ar: "تذكير يومي" }, selected: true, gap: m }
-          - { kind: toggle, text: { en: "Sound effects", ar: "المؤثرات الصوتية" }, gap: s }
+          - { kind: link, icon: caret-left, text: { en: "Back", ar: "رجوع" } }
+          - { kind: listitem, icon: bell, text: { en: "Daily reminder", ar: "تذكير يومي" }, toggle: true, gap: s }
+          - { kind: listitem, icon: speaker-high, text: { en: "Sound effects", ar: "المؤثرات الصوتية" }, toggle: false, gap: s }
+          - { kind: listitem, icon: text-aa, text: { en: "Text size", ar: "حجم الخط" }, value: { en: "Large", ar: "كبير" }, chevron: true, gap: s }
     answer: b
     misconceptions:
       - id: MC-P02-013
@@ -249,6 +284,19 @@ steps:
     prompt:
       en: "Where should Back take her?"
       ar: "إلى أين يجب أن يأخذها «رجوع»؟"
+    mock:
+      app: dar
+      appbar: { logo: true, actions: [ { icon: magnifying-glass }, { icon: shopping-cart } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: squares-four, text: { en: "Departments", ar: "الأقسام" } }, { icon: user, text: { en: "Account", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: searchbar, text: { en: "Search Dar", ar: "ابحث في دار" }, note: { en: "After Back from the drill", ar: "بعد «رجوع» من صفحة المثقاب" } }
+        - { kind: card, art: washing-machine, blocks: [ { kind: heading, text: { en: "Washers week", ar: "أسبوع الغسالات" } }, { kind: small, text: { en: "Up to 20% off", ar: "خصم حتى 20%" } } ], gap: m }
+        - kind: chips
+          gap: m
+          items:
+            - { text: { en: "Tools", ar: "أدوات" } }
+            - { text: { en: "Kitchen", ar: "المطبخ" } }
+            - { text: { en: "Shoes", ar: "أحذية" } }
     options:
       - { id: home, text: { en: "The home page, so she can start a fresh search", ar: "الصفحة الرئيسية، لتبدأ بحثًا جديدًا" } }
       - { id: results, text: { en: "The drill results, with her price and brand filters still set", ar: "نتائج المثاقب، مع بقاء فلاتر السعر والماركة" } }
