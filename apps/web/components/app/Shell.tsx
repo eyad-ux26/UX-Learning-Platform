@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
