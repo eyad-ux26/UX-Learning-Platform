@@ -26,12 +26,34 @@ steps:
       en: "I'm a front-end developer on a photo-printing app. I wrote the buttons fast: \"Submit\", \"Next\", \"OK\".\n\nIn tests, people stopped before tapping. One asked: \"Will this pay now, or show me a summary first?\" The buttons didn't say."
       ar: "أنا مطوّر واجهات في تطبيق لطباعة الصور. وكتبت نصوص الأزرار بسرعة: «إرسال» و«التالي» و«موافق».\n\nوفي الاختبارات، توقّف الناس قبل الضغط. وسأل أحدهم: «هل سيدفع هذا الآن، أم سيعرض لي ملخصًا أولًا؟» والأزرار لم تقل."
     mock:
-      width: 300
+      app: taba
+      appbar:
+        title: {en: Checkout, ar: إتمام الطلب}
+        back: true
+      footer:
+      - kind: button
+        text: {en: Next, ar: التالي}
       blocks:
-        - { kind: title, text: { en: "Sowar", ar: "صُوَر" } }
-        - { kind: meta, text: { en: "Step 2 of 3 · Delivery address", ar: "الخطوة 2 من 3 · عنوان التوصيل" }, gap: s }
-        - { kind: field, label: { en: "Address", ar: "العنوان" }, text: { en: "12 Nile St, Giza", ar: "12 شارع النيل، الجيزة" }, filled: true, gap: s }
-        - { kind: button, text: { en: "Next", ar: "التالي" }, gap: m }
+      - kind: progress
+        value: 66
+        label: {en: Step 2 of 3 · Delivery address, ar: الخطوة 2 من 3 · عنوان التوصيل}
+      - kind: field
+        label: {en: Address, ar: العنوان}
+        text:
+          en: "12 Nile St, Giza"
+          ar: "12 شارع النيل، الجيزة"
+        filled: true
+        icon: map-pin
+        gap: m
+      - kind: listitem
+        art: photo
+        text:
+          en: "12 prints · 10×15 cm"
+          ar: "12 صورة · 10×15 سم"
+        value:
+          en: EGP 96
+          ar: "96 جنيهًا"
+        gap: m
 
   - id: S02
     type: choose
@@ -132,36 +154,98 @@ steps:
       en: "Tap each option to see the change. Which label tells people what tapping will do?"
       ar: "اضغط على كل خيار لترى التغيير. أي نص يخبر الناس بما ستفعله الضغطة؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: taba
+      appbar:
+        title: {en: Your photos, ar: صورك}
+        back: true
+      theme: dark
+      caption: {en: Now, ar: الآن}
+      footer:
+      - kind: button
+        text: {en: Print 12 photos · EGP 96, ar: اطبع 12 صورة · 96 جنيهًا}
       blocks:
-        - { kind: image, size: m, text: { en: "Slideshow · 3 of 12", ar: "عرض الصور · 3 من 12" } }
-        - { kind: button, text: { en: "Playing", ar: "قيد التشغيل" }, gap: s }
+      - kind: image
+        art: photo
+        size: l
+        text: {en: Slideshow · 3 of 12, ar: عرض الصور · 3 من 12}
+      - {kind: progress, value: 25, gap: s}
+      - kind: button
+        text: {en: Playing, ar: قيد التشغيل}
+        icon: pause
+        style: outline
+        gap: m
     options:
       - id: pause
         text: { en: "\"Pause\"", ar: "«إيقاف مؤقت»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: taba
+          appbar:
+            title: {en: Your photos, ar: صورك}
+            back: true
+          theme: dark
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Print 12 photos · EGP 96, ar: اطبع 12 صورة · 96 جنيهًا}
           blocks:
-            - { kind: image, size: m, text: { en: "Slideshow · 3 of 12", ar: "عرض الصور · 3 من 12" } }
-            - { kind: button, text: { en: "Pause", ar: "إيقاف مؤقت" }, gap: s }
+          - kind: image
+            art: photo
+            size: l
+            text: {en: Slideshow · 3 of 12, ar: عرض الصور · 3 من 12}
+          - {kind: progress, value: 25, gap: s}
+          - kind: button
+            text: {en: Pause, ar: إيقاف مؤقت}
+            icon: pause
+            style: outline
+            gap: m
       - id: both
         text: { en: "\"Play / Pause\"", ar: "«تشغيل / إيقاف مؤقت»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: taba
+          appbar:
+            title: {en: Your photos, ar: صورك}
+            back: true
+          theme: dark
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Print 12 photos · EGP 96, ar: اطبع 12 صورة · 96 جنيهًا}
           blocks:
-            - { kind: image, size: m, text: { en: "Slideshow · 3 of 12", ar: "عرض الصور · 3 من 12" } }
-            - { kind: button, text: { en: "Play / Pause", ar: "تشغيل / إيقاف مؤقت" }, gap: s }
+          - kind: image
+            art: photo
+            size: l
+            text: {en: Slideshow · 3 of 12, ar: عرض الصور · 3 من 12}
+          - {kind: progress, value: 25, gap: s}
+          - kind: button
+            text: {en: Play / Pause, ar: تشغيل / إيقاف مؤقت}
+            icon: pause
+            style: outline
+            gap: m
       - id: on
         text: { en: "\"Slideshow: on\"", ar: "«العرض: يعمل»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: taba
+          appbar:
+            title: {en: Your photos, ar: صورك}
+            back: true
+          theme: dark
+          caption: {en: After this change, ar: بعد هذا التغيير}
+          footer:
+          - kind: button
+            text: {en: Print 12 photos · EGP 96, ar: اطبع 12 صورة · 96 جنيهًا}
           blocks:
-            - { kind: image, size: m, text: { en: "Slideshow · 3 of 12", ar: "عرض الصور · 3 من 12" } }
-            - { kind: button, text: { en: "Slideshow: on", ar: "العرض: يعمل" }, gap: s }
+          - kind: image
+            art: photo
+            size: l
+            text: {en: Slideshow · 3 of 12, ar: عرض الصور · 3 من 12}
+          - {kind: progress, value: 25, gap: s}
+          - kind: button
+            text:
+              en: "Slideshow: on"
+              ar: "العرض: يعمل"
+            icon: pause
+            style: outline
+            gap: m
     answer: [pause]
     misconceptions:
       - id: MC-P15-024
@@ -203,17 +287,57 @@ steps:
     a:
       label: { en: "A: The button names what it does to the photo.", ar: "A: الزر يذكر ما يفعله بالصورة." }
       mock:
-        width: 300
+        app: taba
+        appbar:
+          title: {en: Edit photo, ar: عدّل الصورة}
+          back: true
+        footer:
+        - kind: button
+          text: {en: Save, ar: احفظ}
         blocks:
-          - { kind: image, size: s, text: { en: "Photo", ar: "صورة" } }
-          - { kind: button, style: plain, text: { en: "Brighten photo", ar: "زِد إضاءة الصورة" }, gap: s }
+        - {kind: image, art: photo, size: l}
+        - kind: row
+          gap: m
+          blocks:
+          - kind: button
+            text: {en: Crop, ar: قصّ}
+            icon: crop
+            style: text
+          - kind: button
+            text: {en: Brighten photo, ar: زِد إضاءة الصورة}
+            icon: sun
+            style: text
+          - kind: button
+            text: {en: Rotate, ar: تدوير}
+            icon: arrow-clockwise
+            style: text
     b:
       label: { en: "B: The button has a catchy feature name.", ar: "B: الزر يحمل اسمًا جذّابًا للميزة." }
       mock:
-        width: 300
+        app: taba
+        appbar:
+          title: {en: Edit photo, ar: عدّل الصورة}
+          back: true
+        footer:
+        - kind: button
+          text: {en: Save, ar: احفظ}
         blocks:
-          - { kind: image, size: s, text: { en: "Photo", ar: "صورة" } }
-          - { kind: button, style: plain, text: { en: "Magic Touch ✨", ar: "اللمسة السحرية ✨" }, gap: s }
+        - {kind: image, art: photo, size: l}
+        - kind: row
+          gap: m
+          blocks:
+          - kind: button
+            text: {en: Crop, ar: قصّ}
+            icon: crop
+            style: text
+          - kind: button
+            text: {en: Magic Touch ✨, ar: اللمسة السحرية ✨}
+            icon: sun
+            style: text
+          - kind: button
+            text: {en: Rotate, ar: تدوير}
+            icon: arrow-clockwise
+            style: text
     answer: a
     reason:
       prompt: { en: "Why does A work better?", ar: "لماذا ينجح A أكثر؟" }
