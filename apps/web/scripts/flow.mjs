@@ -10,6 +10,7 @@ const width = Number(process.argv[4] ?? 390);
 const L = (en, ar) => (locale === "en" ? en : ar);
 const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || undefined });
 const ctx = await browser.newContext({ viewport: { width, height: width > 800 ? 900 : 844 }, colorScheme: locale === "ar" ? "dark" : "light" });
+await ctx.addInitScript(() => { try { localStorage.setItem("ug-tour-guest", "1"); } catch { /* ignore */ } }); // the lesson tour is checked in a11y.mjs
 const page = await ctx.newPage();
 let bad = 0;
 const fail = (m) => { bad++; console.log(`FAIL ${m}`); };
