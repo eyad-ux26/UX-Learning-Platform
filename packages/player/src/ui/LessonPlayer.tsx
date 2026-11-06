@@ -8,6 +8,7 @@ import * as E from "../engine";
 import { faceSrc, sayFace } from "../say";
 import { MockView } from "./MockView";
 import { VideoStepView, type VideoSource } from "./VideoStepView";
+import { VideoSummary, readSummary } from "./VideoSummary";
 import { MatchAnswer, OrderAnswer, SortAnswer, SpotList } from "./Structured";
 import { Rich } from "./Rich";
 
@@ -57,6 +58,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   // The example opened full screen from its phone thumbnail (design audit L4).
   const [example, setExample] = useState<{ mock: Mock; label: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  // "Watch again" on a video summary plays the clip in place; the main button then goes back to the summary.
+  const [replay, setReplay] = useState(false);
   const welcomeBack = initial.i > 0 && initial.steps.some((x) => x.phase !== "answering" || x.tries > 0);
   const [showBack, setShowBack] = useState(welcomeBack);
   const singleTry = E.isSingleTry(lesson);
@@ -76,7 +79,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   }, [onState, onEvent]);
 
   // New step: reset local view state and move focus to the heading so screen readers announce it.
-  useEffect(() => { setWhyOpen(false); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
+  useEffect(() => { setWhyOpen(false); setReplay(false); headingRef.current?.focus({ preventScroll: true }); window.scrollTo(0, 0); }, [state.i]);
   // Feedback appeared: move focus to its main button so keyboard players keep going.
   useEffect(() => { if (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed") sheetBtnRef.current?.focus({ preventScroll: true }); }, [st.phase, st.tries, state.i]);
 
@@ -118,6 +121,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   const prev = state.i > 0 ? lesson.steps[state.i - 1] : undefined;
   const laterInCase = !!(step.scenario && step.speaker && prev?.scenario && prev.speaker === step.speaker && prev.scenario.en === step.scenario.en);
   const finished = E.isFinished(step, st);
+  // Design S2-14: a concept card right after a clip is its video summary, drawn as cards.
+  const summary = step.type === "card" && step.part === "concept" && prev?.type === "video" ? readSummary(step, locale) : null;
   const showSheet = question && (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed" || st.phase === "saved" || st.phase === "missed");
 
   // Enter checks the answer from the answers list (the desktop hint on the Check button).
@@ -155,11 +160,16 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         <p className="lp-banner" role="status"><span className="ph ph-hand-waving" aria-hidden="true" />{t("welcomeBack")}
           <button type="button" className="act" onClick={() => { setShowBack(false); setLayer(null); onStartOver?.(); }}>{t("startOver")}</button></p>
       ) : null}
-      <main className="player-main">
+      <main className={`player-main${summary && !replay ? " is-sum" : ""}`}>
         <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
 
         {step.type === "video" ? (
           <VideoStepView step={step} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
+        ) : summary && replay && prev?.type === "video" ? (
+          <VideoStepView step={prev} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
+        ) : summary && step.type === "card" ? (
+          <VideoSummary step={step} summary={summary} locale={locale} t={t as never} clipLength={prev?.type === "video" ? prev.duration : undefined}
+            onReplay={() => { setReplay(true); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }} headingRef={headingRef} />
         ) : step.type === "card" ? (
           <section className="player-col">
             {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : null}
@@ -192,7 +202,11 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
       ) : (
         <footer className="player-foot">
           {question ? <CheckBar step={step} st={st} t={t} onCheck={doCheck} /> : (
+            replay ? (
+            <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={() => { setReplay(false); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }}>{t("sumBack")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+          ) : (
             <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={doNext}>{state.i === total - 1 ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+          )
           )}
         </footer>
       )}
