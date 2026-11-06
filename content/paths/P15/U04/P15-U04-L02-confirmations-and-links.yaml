@@ -28,18 +28,48 @@ steps:
       en: "I manage a food delivery app. Last week a customer tapped \"Yes\" on a pop-up and lost all her saved addresses. She thought it was asking about one.\n\nOur offer cards also end with \"Learn more\" links that almost nobody taps."
       ar: "أدير تطبيقًا لتوصيل الطعام. والأسبوع الماضي ضغطت عميلة على «نعم» في نافذة منبثقة، فخسرت كل عناوينها المحفوظة. ظنّت أنها تسأل عن عنوان واحد.\n\nوبطاقات العروض عندنا تنتهي بروابط «اعرف المزيد»، ولا يضغط عليها أحد تقريبًا."
     mock:
-      width: 300
-      blocks:
-        - kind: group
-          tone: tint
+      app: lamma
+      appbar:
+        title: {en: Your order, ar: طلبك}
+        back: true
+      overlay:
+        type: dialog
+        blocks:
+        - kind: heading
+          text:
+            en: "Are you sure?"
+            ar: هل أنت متأكد؟
+        - kind: text
+          text:
+            en: "Do you want to continue?"
+            ar: هل تريد المتابعة؟
+          gap: s
+        - kind: row
+          gap: m
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Are you sure?", ar: "هل أنت متأكد؟" } }
-            - { kind: text, text: { en: "Do you want to continue?", ar: "هل تريد المتابعة؟" }, gap: xs }
-            - kind: row
-              gap: m
-              blocks:
-                - { kind: button, style: plain, text: { en: "No", ar: "لا" } }
-                - { kind: button, text: { en: "Yes", ar: "نعم" } }
+          - kind: button
+            text:
+              en: "No"
+              ar: لا
+            style: text
+          - kind: button
+            text:
+              en: "Yes"
+              ar: نعم
+      blocks:
+      - kind: listitem
+        art: food-koshary
+        text: {en: Koshary El Tahrir, ar: كشري التحرير}
+        sub:
+          en: "Order #2041 · 2 items"
+          ar: "الطلب #2041 · منتجان"
+        value:
+          en: EGP 185
+          ar: "185 جنيه"
+      - kind: progress
+        value: 20
+        label: {en: Waiting for the restaurant, ar: في انتظار المطعم}
+        gap: m
 
   - id: S02
     type: choose
@@ -96,18 +126,44 @@ steps:
       en: "People can cancel an order before the restaurant starts cooking. The text is clear, but people keep tapping the wrong button."
       ar: "يستطيع الناس إلغاء الطلب قبل أن يبدأ المطعم في الطهي. والنص واضح، لكن الناس يضغطون الزر الخطأ باستمرار."
     mock:
-      width: 300
-      blocks:
-        - kind: group
-          tone: tint
+      app: lamma
+      appbar:
+        title: {en: Your order, ar: طلبك}
+        back: true
+      overlay:
+        type: dialog
+        blocks:
+        - kind: heading
+          text:
+            en: "Cancel order #2041?"
+            ar: "إلغاء الطلب #2041؟"
+        - kind: text
+          text:
+            en: "The restaurant hasn't started cooking. You'll get a full refund."
+            ar: لم يبدأ المطعم في الطهي. وسيُردّ لك المبلغ كاملًا.
+          gap: s
+        - kind: row
+          gap: m
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Cancel order #2041?", ar: "إلغاء الطلب #2041؟" } }
-            - { kind: text, text: { en: "The restaurant hasn't started cooking. You'll get a full refund.", ar: "لم يبدأ المطعم في الطهي. وسيُردّ لك المبلغ كاملًا." }, gap: xs }
-            - kind: row
-              gap: m
-              blocks:
-                - { kind: button, style: plain, text: { en: "Cancel", ar: "إلغاء" } }
-                - { kind: button, text: { en: "OK", ar: "موافق" } }
+          - kind: button
+            text: {en: Cancel, ar: إلغاء}
+            style: text
+          - kind: button
+            text: {en: OK, ar: موافق}
+      blocks:
+      - kind: listitem
+        art: food-koshary
+        text: {en: Koshary El Tahrir, ar: كشري التحرير}
+        sub:
+          en: "Order #2041 · 2 items"
+          ar: "الطلب #2041 · منتجان"
+        value:
+          en: EGP 185
+          ar: "185 جنيه"
+      - kind: progress
+        value: 20
+        label: {en: Waiting for the restaurant, ar: في انتظار المطعم}
+        gap: m
     prompt:
       en: "Which buttons stop people from tapping the wrong one?"
       ar: "أي أزرار تمنع الناس من الضغط على الزر الخطأ؟"
@@ -151,25 +207,103 @@ steps:
     a:
       label: { en: "A: Every card ends with the same link text.", ar: "A: كل بطاقة تنتهي بنفس نص الرابط." }
       mock:
-        width: 300
+        app: lamma
+        appbar: {logo: true}
+        tabbar:
+          active: 0
+          items:
+          - icon: house
+            text: {en: Home, ar: الرئيسية}
+          - icon: tag
+            text: {en: Offers, ar: العروض}
+          - icon: receipt
+            text: {en: My orders, ar: طلباتي}
+          - icon: user
+            text: {en: Account, ar: حسابي}
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Hungry for a deal?", ar: "تبحث عن عرض؟" } }
-          - { kind: link, text: { en: "Learn more", ar: "اعرف المزيد" }, gap: xs }
-          - { kind: meta, weight: bold, text: { en: "Where's my food?", ar: "أين طعامي؟" }, gap: m }
-          - { kind: link, text: { en: "Learn more", ar: "اعرف المزيد" }, gap: xs }
-          - { kind: meta, weight: bold, text: { en: "Free delivery, all month", ar: "توصيل مجاني طوال الشهر" }, gap: m }
-          - { kind: link, text: { en: "Learn more", ar: "اعرف المزيد" }, gap: xs }
+        - kind: card
+          art: food-pizza
+          blocks:
+          - kind: heading
+            text:
+              en: "Hungry for a deal?"
+              ar: تبحث عن عرض؟
+          - kind: link
+            text: {en: Learn more, ar: اعرف المزيد}
+            gap: xs
+        - kind: card
+          art: map-route
+          gap: s
+          blocks:
+          - kind: heading
+            text:
+              en: "Where's my food?"
+              ar: أين طعامي؟
+          - kind: link
+            text: {en: Learn more, ar: اعرف المزيد}
+            gap: xs
+        - kind: card
+          art: food-burger
+          gap: s
+          blocks:
+          - kind: heading
+            text:
+              en: "Free delivery, all month"
+              ar: توصيل مجاني طوال الشهر
+          - kind: link
+            text: {en: Learn more, ar: اعرف المزيد}
+            gap: xs
     b:
       label: { en: "B: Each link names what it opens.", ar: "B: كل رابط يذكر ما يفتحه." }
       mock:
-        width: 300
+        app: lamma
+        appbar: {logo: true}
+        tabbar:
+          active: 0
+          items:
+          - icon: house
+            text: {en: Home, ar: الرئيسية}
+          - icon: tag
+            text: {en: Offers, ar: العروض}
+          - icon: receipt
+            text: {en: My orders, ar: طلباتي}
+          - icon: user
+            text: {en: Account, ar: حسابي}
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Hungry for a deal?", ar: "تبحث عن عرض؟" } }
-          - { kind: link, text: { en: "See today's offers", ar: "شاهد عروض اليوم" }, gap: xs }
-          - { kind: meta, weight: bold, text: { en: "Where's my food?", ar: "أين طعامي؟" }, gap: m }
-          - { kind: link, text: { en: "Track your order", ar: "تتبّع طلبك" }, gap: xs }
-          - { kind: meta, weight: bold, text: { en: "Free delivery, all month", ar: "توصيل مجاني طوال الشهر" }, gap: m }
-          - { kind: link, text: { en: "Join Lamma Plus", ar: "اشترك في لَمّة بلس" }, gap: xs }
+        - kind: card
+          art: food-pizza
+          blocks:
+          - kind: heading
+            text:
+              en: "Hungry for a deal?"
+              ar: تبحث عن عرض؟
+          - kind: link
+            text:
+              en: "See today's offers"
+              ar: شاهد عروض اليوم
+            gap: xs
+        - kind: card
+          art: map-route
+          gap: s
+          blocks:
+          - kind: heading
+            text:
+              en: "Where's my food?"
+              ar: أين طعامي؟
+          - kind: link
+            text: {en: Track your order, ar: تتبّع طلبك}
+            gap: xs
+        - kind: card
+          art: food-burger
+          gap: s
+          blocks:
+          - kind: heading
+            text:
+              en: "Free delivery, all month"
+              ar: توصيل مجاني طوال الشهر
+          - kind: link
+            text: {en: Join Lamma Plus, ar: اشترك في لَمّة بلس}
+            gap: xs
     answer: b
     reason:
       prompt: { en: "Why does B work better?", ar: "لماذا تنجح B أكثر؟" }

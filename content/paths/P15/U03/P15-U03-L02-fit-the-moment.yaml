@@ -27,11 +27,29 @@ steps:
       en: "Our clinic hired a new writer. She made every message in our app cheerful, with lots of emojis.\n\nPatients liked the booking screens. But some were upset by the surgery page and the error messages. Now I need to decide where cheerful fits, and where it doesn't."
       ar: "عيّنت عيادتنا كاتبة جديدة. فجعلت كل رسالة في تطبيقنا مرحة، مع رموز تعبيرية كثيرة.\n\nأحبّ المرضى شاشات الحجز. لكن بعضهم انزعج من صفحة العمليات ومن رسائل الخطأ. والآن عليّ أن أقرّر أين يناسب المرح، وأين لا يناسب."
     mock:
-      width: 300
+      app: raha
+      appbar:
+        title: {en: Your surgery, ar: عمليتك}
+        back: true
       blocks:
-        - { kind: title, text: { en: "Afia Clinic", ar: "عيادة عافية" } }
-        - { kind: heading, text: { en: "Before your surgery", ar: "قبل عمليتك" }, gap: s }
-        - { kind: text, text: { en: "Surgery day!! 🎉🥳 No snacks, no sneaky coffee ☕😅 for 8 hours!", ar: "يوم العملية!! 🎉🥳 لا وجبات خفيفة، ولا قهوة خفية ☕😅 لمدة 8 ساعات!" }, gap: xs }
+      - {kind: image, art: clinic, size: s}
+      - kind: heading
+        text: {en: Before your surgery, ar: قبل عمليتك}
+        gap: m
+      - kind: listitem
+        icon: calendar-blank
+        text:
+          en: "Thursday 13 March · 8:00 AM"
+          ar: "الخميس 13 مارس · 8:00 ص"
+        sub:
+          en: "Day surgery, floor 2"
+          ar: جراحة اليوم الواحد، الدور 2
+        gap: s
+      - kind: text
+        text:
+          en: "Surgery day!! \U0001F389\U0001F973 No snacks, no sneaky coffee ☕\U0001F605 for 8 hours!"
+          ar: "يوم العملية!! \U0001F389\U0001F973 لا وجبات خفيفة، ولا قهوة خفية ☕\U0001F605 لمدة 8 ساعات!"
+        gap: m
 
   - id: S02
     type: choose
@@ -93,13 +111,32 @@ steps:
       en: "Patients see this error when booking fails. Many see it two or three times in a row."
       ar: "يرى المرضى هذا الخطأ حين يفشل الحجز. وكثيرون يرونه مرتين أو ثلاثًا متتالية."
     mock:
-      width: 300
+      app: raha
+      appbar:
+        title: {en: Book a visit, ar: احجز زيارة}
+        back: true
+      overlay:
+        type: dialog
+        blocks:
+        - kind: heading
+          text:
+            en: "Oopsie! \U0001F92A"
+            ar: "أوبسي! \U0001F92A"
+        - kind: text
+          text:
+            en: "Our system tripped over its own feet. Hehe, happens to the best of us!"
+            ar: "نظامنا تعثّر بقدميه. هههه، يحدث هذا لأفضل الناس!"
+          gap: s
+        - kind: button
+          text: {en: Try again, ar: حاول مرة أخرى}
+          gap: m
       blocks:
-        - kind: group
-          tone: tint
-          blocks:
-            - { kind: meta, weight: bold, text: { en: "Oopsie! 🤪", ar: "أوبسي! 🤪" } }
-            - { kind: text, text: { en: "Our system tripped over its own feet. Hehe, happens to the best of us!", ar: "نظامنا تعثّر بقدميه. هههه، يحدث هذا لأفضل الناس!" }, gap: xs }
+      - kind: listitem
+        avatar: {text: Dr Mona Adel, art: doctor}
+        text: {en: Dr Mona Adel, ar: د. منى عادل}
+        sub:
+          en: "Sunday · 10:30 AM"
+          ar: "الأحد · 10:30 ص"
     prompt:
       en: "Which message fits patients who have just failed to book, again?"
       ar: "أي رسالة تناسب مرضى فشلوا في الحجز للتو، مرة أخرى؟"
@@ -148,19 +185,57 @@ steps:
     a:
       label: { en: "A: Every message has the same excited tone.", ar: "A: كل الرسائل بنفس النبرة المتحمّسة." }
       mock:
-        width: 300
+        app: raha
+        screen: lock
         blocks:
-          - { kind: small, text: { en: "✅ Visit booked! See you Sunday! 🎉", ar: "✅ تمّ حجز الزيارة! نراك يوم الأحد! 🎉" } }
-          - { kind: small, text: { en: "🧪 Your test results are ready!! 🥳", ar: "🧪 نتائج تحاليلك جاهزة!! 🥳" }, gap: xs }
-          - { kind: small, text: { en: "💳 Payment failed! Whoops! 😅", ar: "💳 فشل الدفع! أوبس! 😅" }, gap: xs }
+        - kind: notification
+          title: {en: Visit booked, ar: تمّ الحجز}
+          text:
+            en: "✅ Visit booked! See you Sunday! \U0001F389"
+            ar: "✅ تمّ حجز الزيارة! نراك يوم الأحد! \U0001F389"
+          time: {en: now, ar: الآن}
+        - kind: notification
+          title: {en: Results, ar: النتائج}
+          text:
+            en: "\U0001F9EA Your test results are ready!! \U0001F973"
+            ar: "\U0001F9EA نتائج تحاليلك جاهزة!! \U0001F973"
+          time:
+            en: "1h"
+            ar: ساعة
+        - kind: notification
+          title: {en: Payment, ar: الدفع}
+          text:
+            en: "\U0001F4B3 Payment failed! Whoops! \U0001F605"
+            ar: "\U0001F4B3 فشل الدفع! أوبس! \U0001F605"
+          time:
+            en: "2h"
+            ar: ساعتان
     b:
       label: { en: "B: The same friendly style, with more excitement in some messages than others.", ar: "B: نفس الأسلوب الودّي، مع حماس أكبر في بعض الرسائل من غيرها." }
       mock:
-        width: 300
+        app: raha
+        screen: lock
         blocks:
-          - { kind: small, text: { en: "✅ Visit booked! See you Sunday 😊", ar: "✅ تمّ حجز الزيارة! نراك يوم الأحد 😊" } }
-          - { kind: small, text: { en: "🧪 Your test results are ready. Your doctor will go through them with you.", ar: "🧪 نتائج تحاليلك جاهزة. وسيشرحها لك طبيبك." }, gap: xs }
-          - { kind: small, text: { en: "💳 Your payment didn't go through. Your booking is safe for 24 hours.", ar: "💳 لم يتمّ الدفع. وحجزك محفوظ لمدة 24 ساعة." }, gap: xs }
+        - kind: notification
+          title: {en: Visit booked, ar: تمّ الحجز}
+          text:
+            en: "✅ Visit booked! See you Sunday \U0001F60A"
+            ar: "✅ تمّ حجز الزيارة! نراك يوم الأحد \U0001F60A"
+          time: {en: now, ar: الآن}
+        - kind: notification
+          title: {en: Results, ar: النتائج}
+          text: {en: 🧪 Your test results are ready. Your doctor will go through them with you., ar: 🧪 نتائج تحاليلك جاهزة. وسيشرحها لك طبيبك.}
+          time:
+            en: "1h"
+            ar: ساعة
+        - kind: notification
+          title: {en: Payment, ar: الدفع}
+          text:
+            en: "\U0001F4B3 Your payment didn't go through. Your booking is safe for 24 hours."
+            ar: 💳 لم يتمّ الدفع. وحجزك محفوظ لمدة 24 ساعة.
+          time:
+            en: "2h"
+            ar: ساعتان
     answer: b
     reason:
       prompt: { en: "Why does B fit better?", ar: "لماذا تناسب B أكثر؟" }
