@@ -5,6 +5,7 @@ import { isQuestion } from "@uxgate/player/engine";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { withinDbLimit } from "@/lib/server/rate-limit";
+import { gatedOut } from "@/lib/coming-soon";
 
 const REVIEW_REASONS = ["answer_works", "unclear", "broken", "other"] as const;
 const NOTE_MAX = 280;
@@ -23,6 +24,8 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
+  // Coming Soon: lessons, videos and review requests are for admins until launch (lib/coming-soon.ts).
+  if (gatedOut(auth.user)) return NextResponse.json({ error: "coming_soon" }, { status: 403 });
   const parsed = body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "bad_request" }, { status: 400 });
   const b = parsed.data;

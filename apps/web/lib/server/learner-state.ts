@@ -52,6 +52,8 @@ export type Learner = {
   unread: number | null;
   /** What the Profile page shows beyond the shell, or null when not read with the learner (the page then reads it). */
   profileExtra: { reminderTime: string | null; createdAt: string | null; leaderboardOpen: boolean; certificates: Certificate[] } | null;
+  /** An admin using the tool while the public sees Coming Soon: the shell shows the "Pre-launch · team view" badge. Set by getLearner. */
+  teamView?: boolean;
 };
 
 type ProfileRow = {

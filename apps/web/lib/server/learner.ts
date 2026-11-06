@@ -4,11 +4,12 @@ import { createClient } from "@/lib/supabase/server";
 import { hasSupabase } from "@/lib/supabase/env";
 import { requestHost } from "@/lib/server/billing/account";
 import { readLearner, type Learner } from "@/lib/server/learner-state";
+import { comingSoonOn, isAdmin } from "@/lib/coming-soon";
 
 export type { Learner } from "@/lib/server/learner-state";
 
 const fixture = (): Learner => ({
-  db: null, weekStart: 1, userId: "fixture", email: "nour@example.com", unread: null, profileExtra: null, hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null,
+  db: null, weekStart: 1, userId: "fixture", email: "nour@example.com", unread: null, profileExtra: null, hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null, teamView: process.env.UG_DEV_TEAM === "1",
   practicedSkills: new Set(["SK-P01-U01-01"]),
   joined: [{ pathId: "P01", startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" }], activePathId: "P01",
   skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
@@ -37,7 +38,8 @@ async function loadLearner(): Promise<Learner | null> {
   const userId = auth?.claims?.sub;
   if (!userId) return null;
   // One database call for the whole shell (my_learner_state, issue #184), or one round of separate reads before 0039.
-  return readLearner(db, userId, { email: typeof auth.claims.email === "string" ? auth.claims.email : null, host: await requestHost() });
+  const me = await readLearner(db, userId, { email: typeof auth.claims.email === "string" ? auth.claims.email : null, host: await requestHost() });
+  return { ...me, teamView: comingSoonOn() && isAdmin(auth.claims as { app_metadata?: Record<string, unknown> }) };
 }
 
 /** A page that needs a signed-in learner who has finished (or skipped) onboarding. */

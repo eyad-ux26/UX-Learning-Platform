@@ -8,6 +8,7 @@ import { buildPathView } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 import { appItems } from "@/lib/nav";
 import { BottomNav, RailItems, RailPaths, RailSound, type RailPath } from "./AppNav";
+import { TeamBar, TeamPill } from "./TeamView";
 
 /** The signed-in frame: left rail and side panel on a laptop, bottom toolbar on a phone. */
 export async function Shell({ me, panel, children }: { me: Learner; panel?: React.ReactNode; children: React.ReactNode }) {
@@ -31,6 +32,7 @@ export async function Shell({ me, panel, children }: { me: Learner; panel?: Reac
     <div className={`shell${panel ? "" : " no-panel"}`}>
       <div className="shell-rail">
         <Logo height={34} />
+        {me.teamView ? <TeamPill /> : null}
         <nav aria-label={t("label")} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           <RailItems items={items} />
         </nav>
@@ -41,7 +43,7 @@ export async function Shell({ me, panel, children }: { me: Learner; panel?: Reac
         <RailSound />
         <LocaleSwitch />
       </div>
-      <main className="shell-main">{children}</main>
+      <main className="shell-main">{me.teamView ? <TeamBar /> : null}{children}</main>
       {panel ? <aside className="shell-panel">{panel}</aside> : null}
       <BottomNav items={items} />
     </div>

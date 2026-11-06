@@ -2,12 +2,18 @@ import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { PUBLIC_PATHS, SITE_URL } from "@/lib/public-paths";
 import { LEGAL_STATUS } from "@/lib/legal-text";
+import { comingSoonOn } from "@/lib/coming-soon";
 
-export const dynamic = "force-static";
+// Read at request time: UG_COMING_SOON is a Worker variable, not a build variable.
+export const dynamic = "force-dynamic";
 
-/** Public pages in both languages, each with its hreflang pair. Privacy, terms and the refund policy join once their text is approved. */
+/**
+ * Public pages in both languages, each with its hreflang pair. Privacy, terms and the refund policy join once their text is
+ * approved. While the Coming Soon gate is on, the other pages show Coming Soon with noindex, so only the home address is listed.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/paths", ...PUBLIC_PATHS.map((p) => `/paths/${p.slug}`), ...(LEGAL_STATUS.approved ? ["/privacy", "/terms", "/refund"] : [])];
+  const open = comingSoonOn() ? [""] : ["", "/paths", ...PUBLIC_PATHS.map((p) => `/paths/${p.slug}`)];
+  const pages = [...open, ...(LEGAL_STATUS.approved ? ["/privacy", "/terms", "/refund"] : [])];
   return pages.flatMap((page) => routing.locales.map((locale) => ({
     url: `${SITE_URL}/${locale}${page}`,
     changeFrequency: "weekly" as const,
