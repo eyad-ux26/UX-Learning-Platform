@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Locale, Mock, MockBlock } from "@uxgate/content/types";
@@ -60,6 +61,14 @@ describe("MockView draws every mock in the content", () => {
 
 describe("Mock vocabulary", () => {
   it("draws every art name the validator accepts", () => expect([...ART_NAMES].sort()).toEqual([...vocab.art].sort()));
+  it("lists the props of every block kind, including every prop MockView reads", () => {
+    const props = vocab.props as Record<string, string[]>;
+    expect(KINDS.filter((k) => !props[k])).toEqual([]);
+    const listed = new Set(Object.values(props).flat());
+    const src = readFileSync(new URL("../src/ui/MockView.tsx", import.meta.url), "utf8");
+    const read = new Set([...src.matchAll(/\bb\.([a-zA-Z]+)/g)].map((m) => m[1]));
+    expect([...read].filter((p) => !listed.has(p))).toEqual([]);
+  });
 });
 
 describe("MockView details", () => {

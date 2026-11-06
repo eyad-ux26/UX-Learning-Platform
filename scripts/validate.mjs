@@ -14,6 +14,15 @@ function checkMocks(node, where, errors, inMock = false) {
   if (!node || typeof node !== "object") return;
   if (inMock) {
     if (typeof node.kind === "string" && !VOCAB.kinds.includes(node.kind)) errors.push(`${where}: unknown mock block kind "${node.kind}"`);
+    else if (typeof node.kind === "string") {
+      // A prop the renderer doesn't read draws nothing (e.g. chips with options: instead of items:), so it fails here.
+      const known = [...VOCAB.props.common, ...VOCAB.props[node.kind]];
+      for (const k of Object.keys(node)) {
+        if (known.includes(k)) continue;
+        const swap = { options: "items", items: "options" }[k];
+        errors.push(`${where}: ${node.kind} block has no "${k}" prop${swap && known.includes(swap) ? ` (use "${swap}")` : ""}; see docs/mock-screens.md`);
+      }
+    }
     if (typeof node.art === "string" && !VOCAB.art.includes(node.art)) errors.push(`${where}: unknown art "${node.art}"`);
     if (isIconName(node.icon) && !iconExists(node.icon)) errors.push(`${where}: unknown icon "${node.icon}" (use a Phosphor name)`);
   }
