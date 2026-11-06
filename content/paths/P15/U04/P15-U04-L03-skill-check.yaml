@@ -24,10 +24,41 @@ steps:
       en: "Back to our banking app. People move real money here, so every label must say exactly what will happen.\n\nYour job: fix four labels.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "نعود إلى تطبيقنا البنكي. والناس يحرّكون أموالًا حقيقية هنا، فكل نص يجب أن يقول بالضبط ما سيحدث.\n\nمهمّتك: أصلح أربعة نصوص.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: rasid
+      appbar: {logo: true}
+      tabbar:
+        active: 0
+        items:
+        - icon: wallet
+          text: {en: Accounts, ar: الحسابات}
+        - icon: arrows-left-right
+          text: {en: Transfers, ar: التحويلات}
+        - icon: credit-card
+          text: {en: Cards, ar: البطاقات}
+        - icon: user
+          text: {en: Profile, ar: حسابي}
       blocks:
-        - { kind: title, text: { en: "Rasid", ar: "رصيد" } }
-        - { kind: meta, text: { en: "Accounts · Transfers · Cards", ar: "الحسابات · التحويلات · البطاقات" }, gap: s }
+      - kind: card
+        blocks:
+        - kind: small
+          text: {en: Current account, ar: الحساب الجاري}
+          color: muted
+        - kind: price
+          text:
+            en: "EGP 12,480"
+            ar: "12,480 جنيه"
+          size: l
+      - kind: row
+        gap: m
+        blocks:
+        - kind: button
+          text: {en: Transfer, ar: تحويل}
+          icon: arrows-left-right
+          style: outline
+        - kind: button
+          text: {en: Pay, ar: ادفع}
+          icon: receipt
+          style: outline
 
   - id: S02
     type: choose
@@ -80,40 +111,178 @@ steps:
       en: "Tap each option to see the change. Which label tells people what tapping will do?"
       ar: "اضغط على كل خيار لترى التغيير. أي نص يخبر الناس بما ستفعله الضغطة؟"
     mock:
-      width: 300
-      caption: { en: "Now", ar: "الآن" }
+      app: rasid
+      appbar:
+        title: {en: Cards, ar: البطاقات}
+      tabbar:
+        active: 2
+        items:
+        - icon: wallet
+          text: {en: Accounts, ar: الحسابات}
+        - icon: arrows-left-right
+          text: {en: Transfers, ar: التحويلات}
+        - icon: credit-card
+          text: {en: Cards, ar: البطاقات}
+        - icon: user
+          text: {en: Profile, ar: حسابي}
+      caption: {en: Now, ar: الآن}
       blocks:
-        - { kind: meta, weight: bold, text: { en: "Debit card ·· 4821", ar: "بطاقة الخصم ·· 4821" } }
-        - { kind: chip, tone: warn, text: { en: "Frozen", ar: "مجمّدة" }, gap: xs }
-        - { kind: button, style: plain, text: { en: "Card frozen", ar: "البطاقة مجمّدة" }, gap: s }
+      - kind: image
+        art: bank-card
+        size: m
+        alt: {en: Debit card ending 4821, ar: بطاقة خصم تنتهي بـ 4821}
+      - kind: row
+        gap: s
+        blocks:
+        - kind: meta
+          text: {en: Debit card ·· 4821, ar: بطاقة الخصم ·· 4821}
+          weight: bold
+        - kind: badge
+          text: {en: Frozen, ar: مجمّدة}
+          tone: warn
+          icon: snowflake
+      - kind: button
+        text: {en: Card frozen, ar: البطاقة مجمّدة}
+        icon: snowflake
+        style: outline
+        gap: m
+      - kind: listitem
+        icon: list-bullets
+        text: {en: Card transactions, ar: معاملات البطاقة}
+        chevron: true
+        gap: m
     options:
       - id: unfreeze
         text: { en: "\"Unfreeze card\"", ar: "«ألغِ تجميد البطاقة»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar:
+            title: {en: Cards, ar: البطاقات}
+          tabbar:
+            active: 2
+            items:
+            - icon: wallet
+              text: {en: Accounts, ar: الحسابات}
+            - icon: arrows-left-right
+              text: {en: Transfers, ar: التحويلات}
+            - icon: credit-card
+              text: {en: Cards, ar: البطاقات}
+            - icon: user
+              text: {en: Profile, ar: حسابي}
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Debit card ·· 4821", ar: "بطاقة الخصم ·· 4821" } }
-            - { kind: chip, tone: warn, text: { en: "Frozen", ar: "مجمّدة" }, gap: xs }
-            - { kind: button, style: plain, text: { en: "Unfreeze card", ar: "ألغِ تجميد البطاقة" }, gap: s }
+          - kind: image
+            art: bank-card
+            size: m
+            alt: {en: Debit card ending 4821, ar: بطاقة خصم تنتهي بـ 4821}
+          - kind: row
+            gap: s
+            blocks:
+            - kind: meta
+              text: {en: Debit card ·· 4821, ar: بطاقة الخصم ·· 4821}
+              weight: bold
+            - kind: badge
+              text: {en: Frozen, ar: مجمّدة}
+              tone: warn
+              icon: snowflake
+          - kind: button
+            text: {en: Unfreeze card, ar: ألغِ تجميد البطاقة}
+            icon: snowflake
+            style: outline
+            gap: m
+          - kind: listitem
+            icon: list-bullets
+            text: {en: Card transactions, ar: معاملات البطاقة}
+            chevron: true
+            gap: m
       - id: freeze
         text: { en: "\"Freeze card\"", ar: "«جمّد البطاقة»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar:
+            title: {en: Cards, ar: البطاقات}
+          tabbar:
+            active: 2
+            items:
+            - icon: wallet
+              text: {en: Accounts, ar: الحسابات}
+            - icon: arrows-left-right
+              text: {en: Transfers, ar: التحويلات}
+            - icon: credit-card
+              text: {en: Cards, ar: البطاقات}
+            - icon: user
+              text: {en: Profile, ar: حسابي}
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Debit card ·· 4821", ar: "بطاقة الخصم ·· 4821" } }
-            - { kind: chip, tone: warn, text: { en: "Frozen", ar: "مجمّدة" }, gap: xs }
-            - { kind: button, style: plain, text: { en: "Freeze card", ar: "جمّد البطاقة" }, gap: s }
+          - kind: image
+            art: bank-card
+            size: m
+            alt: {en: Debit card ending 4821, ar: بطاقة خصم تنتهي بـ 4821}
+          - kind: row
+            gap: s
+            blocks:
+            - kind: meta
+              text: {en: Debit card ·· 4821, ar: بطاقة الخصم ·· 4821}
+              weight: bold
+            - kind: badge
+              text: {en: Frozen, ar: مجمّدة}
+              tone: warn
+              icon: snowflake
+          - kind: button
+            text: {en: Freeze card, ar: جمّد البطاقة}
+            icon: snowflake
+            style: outline
+            gap: m
+          - kind: listitem
+            icon: list-bullets
+            text: {en: Card transactions, ar: معاملات البطاقة}
+            chevron: true
+            gap: m
       - id: status
         text: { en: "\"Status: frozen\"", ar: "«الحالة: مجمّدة»" }
         mock:
-          width: 300
-          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: rasid
+          appbar:
+            title: {en: Cards, ar: البطاقات}
+          tabbar:
+            active: 2
+            items:
+            - icon: wallet
+              text: {en: Accounts, ar: الحسابات}
+            - icon: arrows-left-right
+              text: {en: Transfers, ar: التحويلات}
+            - icon: credit-card
+              text: {en: Cards, ar: البطاقات}
+            - icon: user
+              text: {en: Profile, ar: حسابي}
+          caption: {en: After this change, ar: بعد هذا التغيير}
           blocks:
-            - { kind: meta, weight: bold, text: { en: "Debit card ·· 4821", ar: "بطاقة الخصم ·· 4821" } }
-            - { kind: chip, tone: warn, text: { en: "Frozen", ar: "مجمّدة" }, gap: xs }
-            - { kind: button, style: plain, text: { en: "Status: frozen", ar: "الحالة: مجمّدة" }, gap: s }
+          - kind: image
+            art: bank-card
+            size: m
+            alt: {en: Debit card ending 4821, ar: بطاقة خصم تنتهي بـ 4821}
+          - kind: row
+            gap: s
+            blocks:
+            - kind: meta
+              text: {en: Debit card ·· 4821, ar: بطاقة الخصم ·· 4821}
+              weight: bold
+            - kind: badge
+              text: {en: Frozen, ar: مجمّدة}
+              tone: warn
+              icon: snowflake
+          - kind: button
+            text:
+              en: "Status: frozen"
+              ar: "الحالة: مجمّدة"
+            icon: snowflake
+            style: outline
+            gap: m
+          - kind: listitem
+            icon: list-bullets
+            text: {en: Card transactions, ar: معاملات البطاقة}
+            chevron: true
+            gap: m
     answer: [unfreeze]
     misconceptions:
       - id: MC-P15-024

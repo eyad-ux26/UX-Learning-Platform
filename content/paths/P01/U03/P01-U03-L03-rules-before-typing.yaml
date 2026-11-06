@@ -26,11 +26,13 @@ steps:
       en: "Nada is setting a password in my shop's app. The form gives no rules. Each time she taps Create account, she gets \"Password doesn't meet the requirements\".\n\nShe tried three passwords, then left."
       ar: "تضع ندى كلمة مرور في تطبيق متجري. والنموذج لا يذكر أي قواعد. وكل مرة تضغط «أنشئ الحساب»، تظهر لها «كلمة المرور لا تستوفي الشروط».\n\nجرّبت ثلاث كلمات مرور، ثم غادرت."
     mock:
-      width: 300
+      app: dar
+      appbar: { title: { en: Create account, ar: إنشاء حساب }, back: true }
       blocks: &pwnow
         - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••", tone: bad, error: { en: "Password doesn't meet the requirements.", ar: "كلمة المرور لا تستوفي الشروط." } }
-        - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" }, gap: m }
 
+      footer:
+        - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
   - id: S02
     type: tune
     skill: SK-P01-U03-06
@@ -44,35 +46,44 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: dar
+      appbar: { title: { en: Create account, ar: إنشاء حساب }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: *pwnow
+      footer:
+        - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
     options:
       - id: loud
         text: { en: "Keep it, but make the error bigger and bolder", ar: "أبقِه، لكن اجعل رسالة الخطأ أكبر وأوضح" }
         mock:
+          app: dar
+          appbar: { title: { en: Create account, ar: إنشاء حساب }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••", tone: bad }
             - { kind: banner, tone: bad, text: { en: "PASSWORD DOESN'T MEET THE REQUIREMENTS!", ar: "كلمة المرور لا تستوفي الشروط!" }, gap: s }
-            - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
       - id: tip
         text: { en: "Add an ⓘ next to the label that shows the rules", ar: "أضف ⓘ بجانب العنوان تعرض القواعد" }
         mock:
+          app: dar
+          appbar: { title: { en: Create account, ar: إنشاء حساب }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "Password ⓘ", ar: "كلمة المرور ⓘ" }, text: "" }
-            - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
       - id: rules
         text: { en: "Show the rules under the label, before she types", ar: "اعرض القواعد تحت العنوان، قبل أن تكتب" }
         mock:
+          app: dar
+          appbar: { title: { en: Create account, ar: إنشاء حساب }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, hintFirst: true, hint: { en: "At least 8 characters, including one number", ar: "8 أحرف على الأقل، منها رقم واحد" }, text: "" }
-            - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
     answer: [rules]
     misconceptions:
       - id: MC-P01-042
@@ -124,15 +135,18 @@ steps:
       - id: before
         text: { en: "Under the label: \"JPG or PNG, up to 5 MB\"", ar: "تحت العنوان: «JPG أو PNG، حتى 5 MB»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Return an item, ar: إرجاع منتج }, back: true }
           blocks:
             - { kind: small, weight: bold, text: { en: "Photo of the damage", ar: "صورة للتلف" } }
             - { kind: small, text: { en: "JPG or PNG, up to 5 MB", ar: "JPG أو PNG، حتى 5 MB" }, gap: xs }
-            - { kind: button, emphasis: low, text: { en: "Choose a photo", ar: "اختر صورة" }, gap: s }
+          footer:
+            - { kind: button, emphasis: low, text: { en: "Choose a photo", ar: "اختر صورة" } }
       - id: after
         text: { en: "Keep it; the error explains the limit", ar: "أبقِه؛ فرسالة الخطأ تشرح الحدّ" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Return an item, ar: إرجاع منتج }, back: true }
           blocks:
             - { kind: small, weight: bold, text: { en: "Photo of the damage", ar: "صورة للتلف" } }
             - { kind: button, emphasis: low, text: { en: "Choose a photo", ar: "اختر صورة" }, gap: s }
@@ -140,11 +154,13 @@ steps:
       - id: vague
         text: { en: "Under the label: \"Please upload a suitable photo\"", ar: "تحت العنوان: «يُرجى رفع صورة مناسبة»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Return an item, ar: إرجاع منتج }, back: true }
           blocks:
             - { kind: small, weight: bold, text: { en: "Photo of the damage", ar: "صورة للتلف" } }
             - { kind: small, text: { en: "Please upload a suitable photo", ar: "يُرجى رفع صورة مناسبة" }, gap: xs }
-            - { kind: button, emphasis: low, text: { en: "Choose a photo", ar: "اختر صورة" }, gap: s }
+          footer:
+            - { kind: button, emphasis: low, text: { en: "Choose a photo", ar: "اختر صورة" } }
     answer: [before]
     misconceptions:
       - id: MC-P01-042
@@ -183,35 +199,44 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: dar
+      appbar: { title: { en: Refund, ar: استرداد المبلغ }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &ibannow
         - { kind: field, label: { en: "IBAN ⓘ", ar: "رقم الـ IBAN ⓘ" }, text: "" }
-        - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" }, gap: m }
+      footer:
+        - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" } }
     options:
       - id: keep
         text: { en: "Keep the ⓘ; most people know what an IBAN is", ar: "أبقِ ⓘ؛ فأغلب الناس يعرفون ما الـ IBAN" }
         mock:
+          app: dar
+          appbar: { title: { en: Refund, ar: استرداد المبلغ }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *ibannow
+          footer:
+            - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" } }
       - id: hint
         text: { en: "Show the help under the label", ar: "اعرض المساعدة تحت العنوان" }
         mock:
+          app: dar
+          appbar: { title: { en: Refund, ar: استرداد المبلغ }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "IBAN", ar: "رقم الـ IBAN" }, hintFirst: true, hint: { en: "Starts with EG, 29 characters. You'll find it in your bank app.", ar: "يبدأ بـ EG، و29 حرفًا ورقمًا. ستجده في تطبيق البنك." }, text: "" }
-            - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" } }
       - id: link
         text: { en: "Add a link: \"What's an IBAN?\" to our help page", ar: "أضف رابطًا: «ما هو الـ IBAN؟» إلى صفحة المساعدة" }
         mock:
+          app: dar
+          appbar: { title: { en: Refund, ar: استرداد المبلغ }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "IBAN", ar: "رقم الـ IBAN" }, text: "" }
             - { kind: link, text: { en: "What's an IBAN?", ar: "ما هو الـ IBAN؟" }, gap: xs }
-            - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Send my refund", ar: "أرسل المبلغ المسترد" } }
     answer: [hint]
     misconceptions:
       - id: MC-P01-037
@@ -289,13 +314,15 @@ steps:
     a:
       label: { en: "Birthday, optional", ar: "تاريخ الميلاد، اختياري" }
       mock:
-        width: 300
+        app: dar
+        appbar: { title: { en: Your profile, ar: ملفك }, back: true }
         blocks:
           - { kind: field, label: { en: "Birthday (optional) ⓘ", ar: "تاريخ الميلاد (اختياري) ⓘ" }, text: "" }
     b:
       label: { en: "Delivery phone", ar: "هاتف التوصيل" }
       mock:
-        width: 300
+        app: dar
+        appbar: { title: { en: Your profile, ar: ملفك }, back: true }
         blocks:
           - { kind: field, label: { en: "Phone for the driver ⓘ", ar: "رقم هاتف للسائق ⓘ" }, text: "" }
     answer: a
@@ -345,8 +372,9 @@ steps:
       en: "Try each version. Which one should ship?"
       ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
     mock:
+      app: rasid
+      appbar: { title: { en: Transfer, ar: تحويل }, back: true }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
       blocks: &amtnow
         - { kind: field, label: { en: "Amount (EGP)", ar: "المبلغ (جنيه)" }, filled: true, text: "15,000" }
         - { kind: field, label: { en: "To", ar: "إلى" }, filled: true, text: { en: "Landlord", ar: "صاحب الشقة" }, gap: m }
@@ -355,24 +383,27 @@ steps:
       - id: limit
         text: { en: "Show \"Up to 10,000 EGP a day\" under the amount label", ar: "اعرض «حتى 10,000 جنيه يوميًا» تحت عنوان المبلغ" }
         mock:
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "Amount (EGP)", ar: "المبلغ (جنيه)" }, hintFirst: true, hint: { en: "Up to 10,000 EGP a day", ar: "حتى 10,000 جنيه يوميًا" }, text: "" }
             - { kind: field, label: { en: "To", ar: "إلى" }, text: "", gap: m }
       - id: cap
         text: { en: "Quietly stop the field at 10,000", ar: "أوقف الحقل عند 10,000 دون أي رسالة" }
         mock:
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks:
             - { kind: field, label: { en: "Amount (EGP)", ar: "المبلغ (جنيه)" }, filled: true, text: "10,000" }
             - { kind: field, label: { en: "To", ar: "إلى" }, filled: true, text: { en: "Landlord", ar: "صاحب الشقة" }, gap: m }
       - id: keep
         text: { en: "Keep the message at the end", ar: "أبقِ الرسالة في النهاية" }
         mock:
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
           blocks: *amtnow
     answer: [limit]
     misconceptions:

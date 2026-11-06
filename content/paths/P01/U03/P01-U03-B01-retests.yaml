@@ -35,7 +35,9 @@ steps:
       - id: grey
         text: { en: "Keep the grey text inside each box", ar: "أبقِ النص الرمادي داخل كل مربع" }
         mock:
-          width: 300
+          app: dawra
+          frame: wide
+          url: dawra.example
           blocks:
             - { kind: title, text: &cr_t { en: "Book a car", ar: "احجز سيارة" } }
             - { kind: field, filled: true, text: { en: "Cairo", ar: "القاهرة" }, gap: m }
@@ -44,7 +46,9 @@ steps:
       - id: dark
         text: { en: "Make the text inside darker and bold", ar: "اجعل النص الداخلي أغمق وعريضًا" }
         mock:
-          width: 300
+          app: dawra
+          frame: wide
+          url: dawra.example
           blocks:
             - { kind: title, text: *cr_t }
             - { kind: field, filled: true, text: { en: "Cairo", ar: "القاهرة" }, gap: m }
@@ -53,7 +57,9 @@ steps:
       - id: label
         text: { en: "Put a label above each box", ar: "ضع عنوانًا فوق كل مربع" }
         mock:
-          width: 300
+          app: dawra
+          frame: wide
+          url: dawra.example
           blocks:
             - { kind: title, text: *cr_t }
             - { kind: field, label: { en: "Pick-up city", ar: "مدينة الاستلام" }, filled: true, text: { en: "Cairo", ar: "القاهرة" }, gap: m }
@@ -93,21 +99,24 @@ steps:
       - id: outside
         text: { en: "Label above, example under the box, box empty", ar: "عنوان فوق المربع، ومثال تحته، والمربع فارغ" }
         mock:
-          width: 300
+          app: dawaa
+          appbar: { title: { en: Refill, ar: إعادة صرف }, back: true }
           blocks:
             - { kind: field, label: &ph_m { en: "Medicine", ar: "الدواء" }, filled: true, text: { en: "Metformin", ar: "Metformin" } }
             - { kind: field, label: { en: "Dose", ar: "الجرعة" }, hint: { en: "As written on the box, for example 500 mg", ar: "كما هي مكتوبة على العلبة، مثل 500 mg" }, text: "", gap: m }
       - id: inside
         text: { en: "Keep \"500 mg\" in grey inside the box", ar: "أبقِ «500 mg» بالرمادي داخل المربع" }
         mock:
-          width: 300
+          app: dawaa
+          appbar: { title: { en: Refill, ar: إعادة صرف }, back: true }
           blocks:
             - { kind: field, label: *ph_m, filled: true, text: { en: "Metformin", ar: "Metformin" } }
             - { kind: field, text: "500 mg", gap: m }
       - id: prefix
         text: { en: "Change the grey text to \"e.g. 500 mg\"", ar: "غيّر النص الرمادي إلى «مثال: 500 mg»" }
         mock:
-          width: 300
+          app: dawaa
+          appbar: { title: { en: Refill, ar: إعادة صرف }, back: true }
           blocks:
             - { kind: field, label: *ph_m, filled: true, text: { en: "Metformin", ar: "Metformin" } }
             - { kind: field, text: { en: "e.g. 500 mg", ar: "مثال: 500 mg" }, gap: m }
@@ -151,19 +160,22 @@ steps:
       - id: inside
         text: { en: "Inside the box", ar: "داخل المربع" }
         mock:
-          width: 300
+          app: { name: { en: Fasli, ar: فصلي }, color: '#F59F00', icon: backpack, domain: fasli.example }
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
             - { kind: field, label: &sc_l { en: "Child's national ID", ar: "الرقم القومي للطفل" }, filled: true, focus: true, text: "⁦318 0520 01⁩" }
       - id: below
         text: { en: "Under the box", ar: "تحت المربع" }
         mock:
-          width: 300
+          app: { name: { en: Fasli, ar: فصلي }, color: '#F59F00', icon: backpack, domain: fasli.example }
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
             - { kind: field, label: *sc_l, filled: true, focus: true, text: "⁦318 0520 01⁩", hint: { en: "14 digits, on the birth certificate", ar: "14 رقمًا، تجده في شهادة الميلاد" } }
       - id: tip
         text: { en: "Behind an ⓘ next to the label", ar: "خلف ⓘ بجوار العنوان" }
         mock:
-          width: 300
+          app: { name: { en: Fasli, ar: فصلي }, color: '#F59F00', icon: backpack, domain: fasli.example }
+          appbar: { title: { en: Sign up, ar: التسجيل }, back: true }
           blocks:
             - { kind: field, label: { en: "Child's national ID ⓘ", ar: "الرقم القومي للطفل ⓘ" }, filled: true, focus: true, text: "⁦318 0520 01⁩" }
     answer: [below]
@@ -205,19 +217,22 @@ steps:
       - id: inside
         text: { en: "Keep \"MM/YY\" inside the field", ar: "أبقِ «MM/YY» داخل الحقل" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: &ex_l { en: "Expiry date", ar: "تاريخ الانتهاء" }, filled: true, focus: true, text: "2" }
       - id: error
         text: { en: "Say the format only if her date is wrong", ar: "اذكر الصيغة فقط إن كان تاريخها خطأ" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: *ex_l, filled: true, focus: true, text: "2" }
       - id: below
         text: { en: "Under the field: \"Month then year, like 08/27\"", ar: "تحت الحقل: «الشهر ثم السنة، مثل 08/27»" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: Payment, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: *ex_l, filled: true, focus: true, text: "2", hint: { en: "Month then year, like 08/27", ar: "الشهر ثم السنة، مثل 08/27" } }
     answer: [below]
@@ -260,21 +275,27 @@ steps:
       - id: visible
         text: { en: "Show the rule under the label", ar: "اعرض القاعدة تحت العنوان" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/charity-race
           blocks:
-            - { kind: field, label: { en: "Guest name", ar: "اسم الضيف" }, hintFirst: true, hint: &tk_h { en: "Use the name on the guest's ID. We check it at the gate.", ar: "اكتب الاسم كما في بطاقة الضيف. نتحقّق منه عند البوابة." }, text: "" }
+            - { kind: field, label: { en: "Guest name", ar: "اسم الضيف" }, hintFirst: true, hint: { en: "Use the name on the guest's ID. We check it at the gate.", ar: "اكتب الاسم كما في بطاقة الضيف. نتحقّق منه عند البوابة." }, text: "" }
             - { kind: button, text: &tk_b { en: "Buy ticket", ar: "اشترِ التذكرة" }, gap: m }
       - id: tip
         text: { en: "Keep the rule in the ⓘ tooltip", ar: "أبقِ القاعدة في Tooltip الـ ⓘ" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/charity-race
           blocks:
             - { kind: field, label: { en: "Guest name ⓘ", ar: "اسم الضيف ⓘ" }, text: "" }
             - { kind: button, text: *tk_b, gap: m }
       - id: faq
         text: { en: "Put the rule in the FAQ, linked under the button", ar: "ضع القاعدة في الأسئلة الشائعة، برابط تحت الزر" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/charity-race
           blocks:
             - { kind: field, label: { en: "Guest name", ar: "اسم الضيف" }, text: "" }
             - { kind: button, text: *tk_b, gap: m }
@@ -313,14 +334,16 @@ steps:
       - id: hover
         text: { en: "Keep the hover tooltip", ar: "أبقِ التلميح الذي يظهر بالمرور" }
         mock:
-          width: 300
+          app: beit
+          appbar: { title: { en: Checkout, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: &fu_a { en: "Address", ar: "العنوان" }, text: "" }
             - { kind: field, label: &fu_f { en: "Floor", ar: "الدور" }, text: "", gap: s }
       - id: field
         text: { en: "Add a visible question: \"Is there a lift?\"", ar: "أضف سؤالًا ظاهرًا: «هل يوجد مصعد؟»" }
         mock:
-          width: 300
+          app: beit
+          appbar: { title: { en: Checkout, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: *fu_a, text: "" }
             - { kind: field, label: *fu_f, text: "", gap: s }
@@ -330,7 +353,8 @@ steps:
       - id: drop
         text: { en: "Remove the tip; the driver can call", ar: "احذف التلميح؛ يمكن للسائق أن يتصل" }
         mock:
-          width: 300
+          app: beit
+          appbar: { title: { en: Checkout, ar: الدفع }, back: true }
           blocks:
             - { kind: field, label: *fu_a, text: "" }
             - { kind: field, label: *fu_f, text: "", gap: s }
@@ -369,7 +393,8 @@ steps:
       - id: even
         text: { en: "Keep the even gaps", ar: "أبقِ المسافات المتساوية" }
         mock:
-          width: 300
+          app: { name: { en: Nabda, ar: نبضة }, color: '#C92A2A', icon: drop, domain: nabda.example }
+          appbar: { title: { en: Donate blood, ar: تبرّع بالدم }, back: true }
           blocks:
             - { kind: small, weight: bold, text: &bd_a { en: "Age", ar: "العمر" } }
             - { kind: field, text: "", gap: m }
@@ -380,7 +405,8 @@ steps:
       - id: close
         text: { en: "Each label close above its box, more space before the next label", ar: "كل عنوان قريب فوق مربعه، ومسافة أكبر قبل العنوان التالي" }
         mock:
-          width: 300
+          app: { name: { en: Nabda, ar: نبضة }, color: '#C92A2A', icon: drop, domain: nabda.example }
+          appbar: { title: { en: Donate blood, ar: تبرّع بالدم }, back: true }
           blocks:
             - { kind: small, weight: bold, text: *bd_a }
             - { kind: field, text: "", gap: xs }
@@ -391,7 +417,8 @@ steps:
       - id: lines
         text: { en: "Keep the gaps, and add a line between fields", ar: "أبقِ المسافات، وأضف خطًا بين الحقول" }
         mock:
-          width: 300
+          app: { name: { en: Nabda, ar: نبضة }, color: '#C92A2A', icon: drop, domain: nabda.example }
+          appbar: { title: { en: Donate blood, ar: تبرّع بالدم }, back: true }
           blocks:
             - { kind: small, weight: bold, text: *bd_a }
             - { kind: field, text: "", gap: m }
@@ -435,6 +462,9 @@ steps:
       - id: beside
         text: { en: "Keep labels beside the fields", ar: "أبقِ العناوين بجوار الحقول" }
         mock:
+          app: nashat
+          frame: small
+          appbar: { title: { en: Book a class, ar: احجز حصة }, back: true }
           width: 240
           blocks:
             - kind: row
@@ -449,6 +479,9 @@ steps:
       - id: short
         text: { en: "Keep them beside, with shorter labels", ar: "أبقِها بجوار الحقول، بعناوين أقصر" }
         mock:
+          app: nashat
+          frame: small
+          appbar: { title: { en: Book a class, ar: احجز حصة }, back: true }
           width: 240
           blocks:
             - kind: row
@@ -463,6 +496,9 @@ steps:
       - id: above
         text: { en: "Put each label above its field", ar: "ضع كل عنوان فوق حقله" }
         mock:
+          app: nashat
+          frame: small
+          appbar: { title: { en: Book a class, ar: احجز حصة }, back: true }
           width: 240
           blocks:
             - { kind: field, label: *gy_c, filled: true, text: { en: "Morning swimming", ar: "سباحة صباحية" } }
@@ -502,7 +538,9 @@ steps:
       - id: two
         text: { en: "Keep two columns", ar: "أبقِ العمودين" }
         mock:
-          width: 320
+          app: wazifa
+          frame: wide
+          url: wazifa.example/apply
           blocks:
             - kind: row
               blocks:
@@ -517,7 +555,9 @@ steps:
       - id: one
         text: { en: "Put every field in one column", ar: "ضع كل الحقول في عمود واحد" }
         mock:
-          width: 320
+          app: wazifa
+          frame: wide
+          url: wazifa.example/apply
           blocks:
             - { kind: field, label: *jb_n, text: "" }
             - { kind: field, label: *jb_p, text: "", gap: s }
@@ -527,7 +567,9 @@ steps:
       - id: star
         text: { en: "Keep two columns, and mark the year as required", ar: "أبقِ العمودين، وعلّم السنة كحقل مطلوب" }
         mock:
-          width: 320
+          app: wazifa
+          frame: wide
+          url: wazifa.example/apply
           blocks:
             - kind: row
               blocks:
@@ -573,7 +615,9 @@ steps:
       - id: list
         text: { en: "Keep one long list", ar: "أبقِ القائمة الطويلة" }
         mock:
-          width: 300
+          app: nuzul
+          frame: wide
+          url: nuzul.example/book
           blocks:
             - { kind: field, label: &ht_n { en: "Full name", ar: "الاسم الكامل" }, text: "" }
             - { kind: field, label: &ht_p { en: "Phone", ar: "الهاتف" }, text: "", gap: s }
@@ -584,7 +628,9 @@ steps:
       - id: steps
         text: { en: "Number every field from 1 to 6", ar: "رقّم كل حقل من 1 إلى 6" }
         mock:
-          width: 300
+          app: nuzul
+          frame: wide
+          url: nuzul.example/book
           blocks:
             - { kind: field, label: { en: "1. Full name", ar: "1. الاسم الكامل" }, text: "" }
             - { kind: field, label: { en: "2. Phone", ar: "2. الهاتف" }, text: "", gap: s }
@@ -595,7 +641,9 @@ steps:
       - id: groups
         text: { en: "Two groups with headings: \"Your details\" and \"Your stay\"", ar: "مجموعتان بعنوانين: «بياناتك» و«إقامتك»" }
         mock:
-          width: 300
+          app: nuzul
+          frame: wide
+          url: nuzul.example/book
           blocks:
             - { kind: heading, text: { en: "Your details", ar: "بياناتك" } }
             - { kind: field, label: *ht_n, text: "", gap: xs }
@@ -640,19 +688,22 @@ steps:
       - id: strong
         text: { en: "Show \"Choose a strong PIN\" under the label", ar: "اعرض «اختر رمزًا قويًا» تحت العنوان" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Door PIN, ar: رمز الباب }, back: true }
           blocks:
             - { kind: field, label: &pn_l { en: "New PIN", ar: "الرمز السري الجديد" }, hintFirst: true, hint: { en: "Choose a strong PIN", ar: "اختر رمزًا قويًا" }, text: "" }
       - id: after
         text: { en: "Keep the rules in the error after a wrong PIN", ar: "أبقِ الشروط في رسالة الخطأ بعد رمز خاطئ" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Door PIN, ar: رمز الباب }, back: true }
           blocks:
             - { kind: field, label: *pn_l, text: "" }
       - id: exact
         text: { en: "Show the exact rules under the label", ar: "اعرض الشروط بدقة تحت العنوان" }
         mock:
-          width: 300
+          app: nashat
+          appbar: { title: { en: Door PIN, ar: رمز الباب }, back: true }
           blocks:
             - { kind: field, label: *pn_l, hintFirst: true, hint: { en: "6 digits. Not all the same, and not in order like 123456.", ar: "6 أرقام. ليست كلها متشابهة، وليست متتالية مثل 123456." }, text: "" }
     answer: [exact]
@@ -694,7 +745,9 @@ steps:
       - id: valid
         text: { en: "Keep \"Upload a valid file\"", ar: "أبقِ «ارفع ملفًا صالحًا»" }
         mock:
-          width: 300
+          app: wazifa
+          frame: wide
+          url: wazifa.example/careers
           blocks:
             - { kind: small, weight: bold, text: &cv_l { en: "Your CV", ar: "سيرتك الذاتية" } }
             - { kind: button, emphasis: low, text: &cv_b { en: "Choose file", ar: "اختر ملفًا" }, gap: xs }
@@ -702,7 +755,9 @@ steps:
       - id: exact
         text: { en: "Change it to \"PDF only, up to 2 MB\"", ar: "غيّرها إلى «PDF فقط، حتى 2 MB»" }
         mock:
-          width: 300
+          app: wazifa
+          frame: wide
+          url: wazifa.example/careers
           blocks:
             - { kind: small, weight: bold, text: *cv_l }
             - { kind: button, emphasis: low, text: *cv_b, gap: xs }
@@ -710,7 +765,9 @@ steps:
       - id: none
         text: { en: "Remove the line; the error will explain", ar: "احذف السطر؛ رسالة الخطأ ستشرح" }
         mock:
-          width: 300
+          app: wazifa
+          frame: wide
+          url: wazifa.example/careers
           blocks:
             - { kind: small, weight: bold, text: *cv_l }
             - { kind: button, emphasis: low, text: *cv_b, gap: xs }

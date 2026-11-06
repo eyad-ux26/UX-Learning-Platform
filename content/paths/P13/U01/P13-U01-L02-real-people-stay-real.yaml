@@ -31,10 +31,42 @@ steps:
       en: "I manage a food delivery app. Finding customers for interviews takes us two weeks.\n\nNow there are AI tools that make \"synthetic users\": AI-made people who answer your survey in minutes. It's tempting to skip the real ones."
       ar: "أدير تطبيقًا لتوصيل الطعام. والعثور على عملاء للمقابلات يستغرق منا أسبوعين.\n\nوالآن هناك أدوات ذكاء اصطناعي تصنع «مستخدمين اصطناعيين» (Synthetic users): أشخاص يصنعهم الذكاء الاصطناعي ويجيبون عن استبيانك في دقائق. ومن المغري أن نتخطّى العملاء الحقيقيين."
     mock:
-      width: 300
+      app: basira
+      frame: wide
+      url: basira.example/projects/lamma-churn
+      navbar:
+        links:
+        - {en: Plans, ar: الخطط}
+        - {en: Sessions, ar: الجلسات}
+        - {en: Themes, ar: المحاور}
+        active: 0
       blocks:
-        - { kind: meta, weight: bold, text: { en: "120 synthetic respondents · ready in 4 min", ar: "120 مشاركًا اصطناعيًا · جاهزون في 4 دقائق" } }
-        - { kind: small, color: muted, text: { en: "\"I hate waiting for my food.\" · \"Delivery fees are too high.\" · \"I want more healthy options.\"", ar: "«أكره انتظار الطعام.» · «رسوم التوصيل مرتفعة جدًا.» · «أريد خيارات صحية أكثر.»" }, gap: xs }
+      - kind: heading
+        text: {en: Synthetic respondents, ar: مشاركون اصطناعيون}
+      - kind: row
+        gap: xs
+        blocks:
+        - kind: badge
+          text:
+            en: "120 synthetic respondents"
+            ar: "120 مشاركًا اصطناعيًا"
+          icon: sparkle
+        - kind: badge
+          text: {en: Ready in 4 min, ar: جاهزون في 4 دقائق}
+          tone: neutral
+          icon: timer
+      - kind: quote
+        text: {en: I hate waiting for my food., ar: أكره انتظار الطعام.}
+        name: {en: Respondent 12 (AI), ar: المشارك 12 (ذكاء اصطناعي)}
+        gap: m
+      - kind: quote
+        text: {en: Delivery fees are too high., ar: رسوم التوصيل مرتفعة جدًا.}
+        name: {en: Respondent 47 (AI), ar: المشارك 47 (ذكاء اصطناعي)}
+        gap: s
+      - kind: quote
+        text: {en: I want more healthy options., ar: أريد خيارات صحية أكثر.}
+        name: {en: Respondent 88 (AI), ar: المشارك 88 (ذكاء اصطناعي)}
+        gap: s
 
   - id: S02
     type: choose
@@ -143,16 +175,43 @@ steps:
     a:
       label: { en: "A: AI groups 300 real reviews, then a person checks the groups.", ar: "A: الذكاء الاصطناعي يجمّع 300 تقييم حقيقي في مجموعات، ثم يتحقّق شخص من المجموعات." }
       mock:
-        width: 300
+        app: fikra
+        frame: wide
+        url: fikra.example/chat
+        footer:
+        - kind: composer
+          text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
         blocks:
-          - { kind: small, text: { en: "Prompt: \"Here are 300 reviews from customers who stopped ordering. Group the main reasons.\"", ar: "الطلب: «هذه 300 تقييم من عملاء توقّفوا عن الطلب. جمّع الأسباب الرئيسية.»" } }
-          - { kind: small, color: muted, text: { en: "Then: a colleague from support reads 40 reviews to check the groups.", ar: "ثم: تقرأ زميلة من خدمة العملاء 40 تقييمًا لتتحقّق من المجموعات." }, gap: xs }
+        - kind: chat
+          text: {en: Here are 300 reviews from customers who stopped ordering. Group the main reasons., ar: هذه 300 تقييم من عملاء توقّفوا عن الطلب. جمّع الأسباب الرئيسية.}
+          from: me
+        - kind: listitem
+          icon: file-csv
+          text: {en: lamma-reviews.csv, ar: lamma-reviews.csv}
+          sub:
+            en: "300 reviews"
+            ar: "300 تقييم"
+          gap: xs
+        - kind: small
+          text:
+            en: "Then: a colleague from support reads 40 reviews to check the groups."
+            ar: "ثم: تقرأ زميلة من خدمة العملاء 40 تقييمًا لتتحقّق من المجموعات."
+          color: muted
+          gap: m
+          icon: user-check
     b:
       label: { en: "B: AI invents 300 reviews, then groups them.", ar: "B: الذكاء الاصطناعي يخترع 300 تقييم، ثم يجمّعها في مجموعات." }
       mock:
-        width: 300
+        app: fikra
+        frame: wide
+        url: fikra.example/chat
+        footer:
+        - kind: composer
+          text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
         blocks:
-          - { kind: small, text: { en: "Prompt: \"Imagine 300 reviews from customers who stopped ordering from a food app. Group the main reasons.\"", ar: "الطلب: «تخيّل 300 تقييم من عملاء توقّفوا عن الطلب من تطبيق طعام. جمّع الأسباب الرئيسية.»" } }
+        - kind: chat
+          text: {en: Imagine 300 reviews from customers who stopped ordering from a food app. Group the main reasons., ar: تخيّل 300 تقييم من عملاء توقّفوا عن الطلب من تطبيق طعام. جمّع الأسباب الرئيسية.}
+          from: me
     answer: a
     reason:
       prompt: { en: "Why is A more trustworthy?", ar: "لماذا A أجدر بالثقة؟" }

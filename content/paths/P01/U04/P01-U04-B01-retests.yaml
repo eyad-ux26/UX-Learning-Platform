@@ -35,7 +35,8 @@ steps:
       - id: top
         text: { en: "Keep the message at the top", ar: "أبقِ الرسالة في الأعلى" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: Passenger details, ar: بيانات المسافر }, back: true }
           blocks:
             - { kind: banner, tone: bad, text: { en: "Passport not accepted for this trip.", ar: "الجواز غير مقبول لهذه الرحلة." } }
             - { kind: small, color: muted, text: &fl_s { en: "Cairo → Kuala Lumpur, 20 Jan", ar: "القاهرة ← كوالالمبور، 20 يناير" }, gap: s }
@@ -44,7 +45,8 @@ steps:
       - id: both
         text: { en: "Keep the top message, and also turn the date field red", ar: "أبقِ رسالة الأعلى، وحوّل حقل التاريخ إلى الأحمر أيضًا" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: Passenger details, ar: بيانات المسافر }, back: true }
           blocks:
             - { kind: banner, tone: bad, text: { en: "Passport not accepted for this trip.", ar: "الجواز غير مقبول لهذه الرحلة." } }
             - { kind: small, color: muted, text: *fl_s, gap: s }
@@ -53,7 +55,8 @@ steps:
       - id: inline
         text: { en: "Explain it under the expiry date field", ar: "اشرحها تحت حقل تاريخ الانتهاء" }
         mock:
-          width: 300
+          app: zad
+          appbar: { title: { en: Passenger details, ar: بيانات المسافر }, back: true }
           blocks:
             - { kind: small, color: muted, text: *fl_s }
             - { kind: field, label: *fl_n, filled: true, text: "A27718830", gap: m }
@@ -92,27 +95,33 @@ steps:
       - id: popup
         text: { en: "Keep the 2-second pop-up", ar: "أبقِ نافذة الثانيتين" }
         mock:
-          width: 300
+          app: lamma
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
             - { kind: field, label: &fd_s { en: "Street", ar: "الشارع" }, filled: true, text: { en: "El Nasr Rd", ar: "طريق النصر" } }
             - { kind: field, label: &fd_b { en: "Building number", ar: "رقم العمارة" }, text: "", gap: s }
-            - { kind: button, text: &fd_o { en: "Order", ar: "اطلب" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Order", ar: "اطلب" } }
       - id: inline
         text: { en: "Mark the building field and keep the message under it", ar: "علّم حقل العمارة وأبقِ الرسالة تحته" }
         mock:
-          width: 300
+          app: lamma
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
             - { kind: field, label: *fd_s, filled: true, text: { en: "El Nasr Rd", ar: "طريق النصر" } }
             - { kind: field, label: *fd_b, text: "", tone: bad, error: { en: "⚠ Add your building number so the driver finds you.", ar: "⚠ أضف رقم العمارة ليجدك السائق." }, gap: s }
-            - { kind: button, text: *fd_o, gap: m }
+          footer:
+            - { kind: button, text: { en: "Order", ar: "اطلب" } }
       - id: shake
         text: { en: "Shake the Order button instead", ar: "اهزز زر «اطلب» بدلًا من ذلك" }
         mock:
-          width: 300
+          app: lamma
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
             - { kind: field, label: *fd_s, filled: true, text: { en: "El Nasr Rd", ar: "طريق النصر" } }
             - { kind: field, label: *fd_b, text: "", gap: s }
-            - { kind: button, text: *fd_o, gap: m }
+          footer:
+            - { kind: button, text: { en: "Order", ar: "اطلب" } }
     answer: [inline]
     misconceptions:
       - id: MC-P01-044
@@ -148,19 +157,22 @@ steps:
       - id: plain
         text: { en: "\"That password didn't match. Caps Lock is on; turn it off and try again.\"", ar: "«كلمة المرور لم تتطابق. زر Caps Lock مفعّل؛ أوقفيه وحاولي مرة أخرى.»" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Sign in, ar: تسجيل الدخول }, back: true }
           blocks:
             - { kind: field, label: &bk_p { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••••", tone: bad, error: { en: "⚠ That password didn't match. Caps Lock is on; turn it off and try again.", ar: "⚠ كلمة المرور لم تتطابق. زر Caps Lock مفعّل؛ أوقفيه وحاولي مرة أخرى." } }
       - id: code
         text: { en: "Keep \"AUTH_ERR 401\"", ar: "أبقِ «AUTH_ERR 401»" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Sign in, ar: تسجيل الدخول }, back: true }
           blocks:
             - { kind: field, label: *bk_p, filled: true, text: "••••••••", tone: bad, error: { en: "⚠ AUTH_ERR 401", ar: "⚠ AUTH_ERR 401" } }
       - id: auth
         text: { en: "\"Authentication failed.\"", ar: "«فشلت المصادقة.»" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Sign in, ar: تسجيل الدخول }, back: true }
           blocks:
             - { kind: field, label: *bk_p, filled: true, text: "••••••••", tone: bad, error: { en: "⚠ Authentication failed.", ar: "⚠ فشلت المصادقة." } }
     answer: [plain]
@@ -197,7 +209,8 @@ steps:
       - id: large
         text: { en: "Keep \"File too large.\"", ar: "أبقِ «الملف كبير جدًا.»" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Lab results, ar: نتائج التحاليل }, back: true }
           blocks:
             - { kind: small, weight: bold, text: &lb_l { en: "Lab results", ar: "نتائج التحاليل" } }
             - { kind: button, emphasis: low, text: &lb_b { en: "Choose file", ar: "اختر ملفًا" }, gap: xs }
@@ -205,7 +218,8 @@ steps:
       - id: size
         text: { en: "\"This file is 12 MB. The limit is 5 MB.\"", ar: "«هذا الملف 12 MB. والحدّ 5 MB.»" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Lab results, ar: نتائج التحاليل }, back: true }
           blocks:
             - { kind: small, weight: bold, text: *lb_l }
             - { kind: button, emphasis: low, text: *lb_b, gap: xs }
@@ -213,7 +227,8 @@ steps:
       - id: remedy
         text: { en: "Size and limit, plus: take a photo of each page instead", ar: "الحجم والحدّ، مع: صوّر كل صفحة بدلًا من ذلك" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Lab results, ar: نتائج التحاليل }, back: true }
           blocks:
             - { kind: small, weight: bold, text: *lb_l }
             - { kind: button, emphasis: low, text: *lb_b, gap: xs }
@@ -253,19 +268,22 @@ steps:
       - id: you
         text: { en: "Keep \"You entered an address we don't accept.\"", ar: "أبقِ «أدخلتِ عنوانًا لا نقبله.»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
             - { kind: field, label: &zn_l { en: "Area", ar: "المنطقة" }, filled: true, text: { en: "6th of October City", ar: "مدينة 6 أكتوبر" }, tone: bad, error: { en: "⚠ You entered an address we don't accept.", ar: "⚠ أدخلتِ عنوانًا لا نقبله." } }
       - id: zone
         text: { en: "\"We don't deliver to 6th of October City yet. You can pick up from our Dokki store.\"", ar: "«لا نوصّل إلى مدينة 6 أكتوبر بعد. يمكنك الاستلام من فرعنا في الدقي.»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
             - { kind: field, label: *zn_l, filled: true, text: { en: "6th of October City", ar: "مدينة 6 أكتوبر" }, tone: bad, error: { en: "⚠ We don't deliver to 6th of October City yet. You can pick up from our Dokki store.", ar: "⚠ لا نوصّل إلى مدينة 6 أكتوبر بعد. يمكنك الاستلام من فرعنا في الدقي." } }
       - id: wrong
         text: { en: "\"Wrong area. Please enter a valid area.\"", ar: "«منطقة خاطئة. يُرجى إدخال منطقة صحيحة.»" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
           blocks:
             - { kind: field, label: *zn_l, filled: true, text: { en: "6th of October City", ar: "مدينة 6 أكتوبر" }, tone: bad, error: { en: "⚠ Wrong area. Please enter a valid area.", ar: "⚠ منطقة خاطئة. يُرجى إدخال منطقة صحيحة." } }
     answer: [zone]
@@ -302,21 +320,27 @@ steps:
       - id: exceeded
         text: { en: "Keep \"You have exceeded the allowed number of hours.\"", ar: "أبقِ «لقد تجاوزتِ عدد الساعات المسموح.»" }
         mock:
-          width: 300
+          app: jamia
+          frame: wide
+          url: jamia.example/courses
           blocks:
             - { kind: small, weight: bold, text: &un_h { en: "Your plan: 21 hours", ar: "خطتك: 21 ساعة" } }
             - { kind: banner, tone: bad, text: { en: "You have exceeded the allowed number of hours.", ar: "لقد تجاوزتِ عدد الساعات المسموح." }, gap: s }
       - id: too
         text: { en: "\"Too many hours! Please fix your plan.\"", ar: "«ساعات كثيرة جدًا! يُرجى إصلاح خطتك.»" }
         mock:
-          width: 300
+          app: jamia
+          frame: wide
+          url: jamia.example/courses
           blocks:
             - { kind: small, weight: bold, text: *un_h }
             - { kind: banner, tone: bad, text: { en: "Too many hours! Please fix your plan.", ar: "ساعات كثيرة جدًا! يُرجى إصلاح خطتك." }, gap: s }
       - id: precise
         text: { en: "\"This plan has 21 hours; the limit is 18. Remove a 3-hour course to continue.\"", ar: "«هذه الخطة 21 ساعة؛ والحدّ 18. احذفي مقررًا من 3 ساعات للمتابعة.»" }
         mock:
-          width: 300
+          app: jamia
+          frame: wide
+          url: jamia.example/courses
           blocks:
             - { kind: small, weight: bold, text: *un_h }
             - { kind: banner, tone: bad, text: { en: "This plan has 21 hours; the limit is 18. Remove a 3-hour course to continue.", ar: "هذه الخطة 21 ساعة؛ والحدّ 18. احذفي مقررًا من 3 ساعات للمتابعة." }, gap: s }
@@ -355,7 +379,8 @@ steps:
       - id: typing
         text: { en: "Keep checking with every letter", ar: "أبقِ التحقّق مع كل حرف" }
         mock:
-          width: 300
+          app: tazkara
+          appbar: { title: { en: Your ticket, ar: تذكرتك }, back: true }
           blocks:
             - { kind: small, color: muted, text: &ev_1 { en: "While typing", ar: "أثناء الكتابة" } }
             - { kind: field, label: &ev_l { en: "Confirm email", ar: "أكّد البريد الإلكتروني" }, filled: true, focus: true, text: "ibra", tone: bad, error: &ev_e { en: "⚠ This doesn't match the email above. Check both for a typo.", ar: "⚠ هذا لا يطابق البريد بالأعلى. راجع الاثنين بحثًا عن خطأ كتابي." }, gap: xs }
@@ -364,7 +389,8 @@ steps:
       - id: leave
         text: { en: "Check when he leaves the second box", ar: "تحقّق حين يغادر المربع الثاني" }
         mock:
-          width: 300
+          app: tazkara
+          appbar: { title: { en: Your ticket, ar: تذكرتك }, back: true }
           blocks:
             - { kind: small, color: muted, text: *ev_1 }
             - { kind: field, label: *ev_l, filled: true, focus: true, text: "ibra", gap: xs }
@@ -373,7 +399,8 @@ steps:
       - id: never
         text: { en: "Don't check; send the ticket to the first email", ar: "لا تتحقّق؛ أرسل التذكرة إلى البريد الأول" }
         mock:
-          width: 300
+          app: tazkara
+          appbar: { title: { en: Your ticket, ar: تذكرتك }, back: true }
           blocks:
             - { kind: small, color: muted, text: *ev_1 }
             - { kind: field, label: *ev_l, filled: true, focus: true, text: "ibra", gap: xs }
@@ -418,7 +445,9 @@ steps:
       - id: leave
         text: { en: "Check when she leaves the field", ar: "تحقّق حين تغادر الحقل" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/pay
           blocks:
             - { kind: small, color: muted, text: &cd_1 { en: "After 6 digits", ar: "بعد 6 أرقام" } }
             - { kind: field, label: &cd_l { en: "Card number", ar: "رقم البطاقة" }, filled: true, focus: true, text: "⁦4012 88⁩", gap: xs }
@@ -427,7 +456,9 @@ steps:
       - id: typing
         text: { en: "Keep checking from the first digit", ar: "أبقِ التحقّق من أول رقم" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/pay
           blocks:
             - { kind: small, color: muted, text: *cd_1 }
             - { kind: field, label: *cd_l, filled: true, focus: true, text: "⁦4012 88⁩", tone: bad, error: { en: "⚠ Invalid card.", ar: "⚠ بطاقة غير صالحة." }, gap: xs }
@@ -436,7 +467,9 @@ steps:
       - id: typingsoft
         text: { en: "Check from the first digit, with the clearer message", ar: "تحقّق من أول رقم، مع الرسالة الأوضح" }
         mock:
-          width: 300
+          app: nashat
+          frame: wide
+          url: nashat.example/pay
           blocks:
             - { kind: small, color: muted, text: *cd_1 }
             - { kind: field, label: *cd_l, filled: true, focus: true, text: "⁦4012 88⁩", tone: bad, error: { en: "⚠ Card numbers have 16 digits. This one has 6.", ar: "⚠ رقم البطاقة 16 رقمًا. هذا الرقم فيه 6." }, gap: xs }
@@ -477,7 +510,9 @@ steps:
       - id: empty
         text: { en: "Keep it: empty form, \"Invalid URL\" at the top", ar: "أبقِه: نموذج فارغ، و«Invalid URL» في الأعلى" }
         mock:
-          width: 300
+          app: wazifa
+          frame: wide
+          url: wazifa.example/apply
           blocks:
             - { kind: banner, tone: bad, text: { en: "Invalid URL.", ar: "Invalid URL." } }
             - { kind: field, label: &jb_n { en: "Full name", ar: "الاسم الكامل" }, text: "", gap: s }
@@ -486,7 +521,9 @@ steps:
       - id: keep
         text: { en: "Keep every answer, and explain on the link field", ar: "احتفظ بكل الإجابات، واشرح على حقل الرابط" }
         mock:
-          width: 300
+          app: wazifa
+          frame: wide
+          url: wazifa.example/apply
           blocks:
             - { kind: field, label: *jb_n, filled: true, text: { en: "Fady Mounir", ar: "فادي منير" } }
             - { kind: field, label: *jb_w, filled: true, text: { en: "I've designed delivery apps for 3 years and…", ar: "صمّمت تطبيقات توصيل لمدة 3 سنوات و…" }, gap: s }
@@ -494,7 +531,9 @@ steps:
       - id: dropbad
         text: { en: "Keep the other answers, and clear the link", ar: "احتفظ بالإجابات الأخرى، وامسح الرابط" }
         mock:
-          width: 300
+          app: wazifa
+          frame: wide
+          url: wazifa.example/apply
           blocks:
             - { kind: field, label: *jb_n, filled: true, text: { en: "Fady Mounir", ar: "فادي منير" } }
             - { kind: field, label: *jb_w, filled: true, text: { en: "I've designed delivery apps for 3 years and…", ar: "صمّمت تطبيقات توصيل لمدة 3 سنوات و…" }, gap: s }
@@ -538,14 +577,16 @@ steps:
       - id: newcode
         text: { en: "Stay on the code screen, but send a new code and clear the box", ar: "ابقَ في شاشة الكود، لكن أرسل كودًا جديدًا وامسح المربع" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: small, color: muted, text: &ot_s { en: "Sending 2,000 EGP to Wael Samir", ar: "تحويل 2,000 جنيه إلى وائل سمير" } }
             - { kind: field, label: &ot_l { en: "Code from SMS", ar: "الكود من الرسالة" }, text: "", tone: bad, error: { en: "⚠ That code didn't match. We sent a new one.", ar: "⚠ الكود لم يتطابق. أرسلنا كودًا جديدًا." }, gap: s }
       - id: restart
         text: { en: "Keep it: back to the first screen", ar: "أبقِه: العودة إلى الشاشة الأولى" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: small, color: muted, text: { en: "Step 1 of 4", ar: "الخطوة 1 من 4" } }
             - { kind: field, label: { en: "To account", ar: "إلى الحساب" }, text: "", gap: s }
@@ -553,7 +594,8 @@ steps:
       - id: edit
         text: { en: "Stay on the code screen, keep her digits, and explain", ar: "ابقَ في شاشة الكود، واحتفظ بأرقامها، واشرح" }
         mock:
-          width: 300
+          app: rasid
+          appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: small, color: muted, text: *ot_s }
             - { kind: field, label: *ot_l, filled: true, text: "⁦482 951⁩", tone: bad, error: { en: "⚠ That code didn't match. Check the digits in the SMS and fix them here.", ar: "⚠ الكود لم يتطابق. راجعي الأرقام في الرسالة وأصلحيها هنا." }, gap: s }
@@ -597,27 +639,33 @@ steps:
       - id: red
         text: { en: "Keep the red text only", ar: "أبقِ النص الأحمر فقط" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Before your visit, ar: قبل زيارتك }, back: true }
           blocks:
             - { kind: check, text: &rc_t { en: "I agree that the clinic can request my old records", ar: "أوافق على أن تطلب العيادة سجلّاتي القديمة" } }
             - { kind: small, color: red, text: *rc_t, gap: xs }
-            - { kind: button, text: &rc_b { en: "Continue", ar: "تابع" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Continue", ar: "تابع" } }
       - id: words
         text: { en: "Add an icon and a message under the checkbox", ar: "أضف أيقونة ورسالة تحت خانة الاختيار" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Before your visit, ar: قبل زيارتك }, back: true }
           blocks:
             - { kind: check, text: *rc_t }
             - { kind: small, color: red, text: { en: "⚠ We need this to see your past tests. Tick the box to continue.", ar: "⚠ نحتاج هذا لنرى تحاليلك السابقة. علّم الخانة للمتابعة." }, gap: xs }
-            - { kind: button, text: *rc_b, gap: m }
+          footer:
+            - { kind: button, text: { en: "Continue", ar: "تابع" } }
       - id: pale
         text: { en: "Keep the red text, and fade the Continue button", ar: "أبقِ النص الأحمر، واجعل زر «تابع» باهتًا" }
         mock:
-          width: 300
+          app: raha
+          appbar: { title: { en: Before your visit, ar: قبل زيارتك }, back: true }
           blocks:
             - { kind: check, text: *rc_t }
             - { kind: small, color: red, text: *rc_t, gap: xs }
-            - { kind: button, tone: off, text: *rc_b, gap: m }
+          footer:
+            - { kind: button, tone: off, text: { en: "Continue", ar: "تابع" } }
     answer: [words]
     misconceptions:
       - id: MC-P01-045
@@ -652,14 +700,16 @@ steps:
       - id: border
         text: { en: "Red number and a red border", ar: "رقم أحمر وإطار أحمر" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Cart, ar: السلة }, back: true }
           blocks:
             - { kind: small, weight: bold, text: &lp_n { en: "Brass desk lamp", ar: "مصباح مكتب نحاسي" } }
             - { kind: field, label: &lp_q { en: "Quantity", ar: "الكمية" }, filled: true, text: "5", tone: bad, gap: xs }
       - id: red
         text: { en: "Keep the red number only", ar: "أبقِ الرقم الأحمر فقط" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Cart, ar: السلة }, back: true }
           blocks:
             - { kind: small, weight: bold, text: *lp_n }
             - { kind: small, weight: bold, text: *lp_q, gap: s }
@@ -667,7 +717,8 @@ steps:
       - id: words
         text: { en: "Add an icon and a message under the quantity", ar: "أضف أيقونة ورسالة تحت الكمية" }
         mock:
-          width: 300
+          app: dar
+          appbar: { title: { en: Cart, ar: السلة }, back: true }
           blocks:
             - { kind: small, weight: bold, text: *lp_n }
             - { kind: field, label: *lp_q, filled: true, text: "5", tone: bad, error: { en: "⚠ Only 3 left. Change the quantity to 3 or fewer.", ar: "⚠ بقي 3 فقط. غيّري الكمية إلى 3 أو أقل." }, gap: xs }
@@ -706,7 +757,9 @@ steps:
       - id: list
         text: { en: "List all 3 at the top, and mark each field", ar: "اعرض الأخطاء الثلاثة في قائمة بالأعلى، وعلّم كل حقل" }
         mock:
-          width: 300
+          app: jamia
+          frame: wide
+          url: jamia.example/apply
           blocks:
             - { kind: banner, tone: bad, text: { en: "3 answers need a fix: Secondary school grade, Second-choice major, Guardian's phone.", ar: "3 إجابات تحتاج إصلاحًا: مجموع الثانوية، التخصّص الثاني، هاتف ولي الأمر." } }
             - { kind: field, label: &ua_g { en: "Secondary school grade (%)", ar: "مجموع الثانوية (%)" }, filled: true, text: "948", tone: bad, error: &ua_e { en: "⚠ Enter a percentage up to 100, like 94.8.", ar: "⚠ اكتب نسبة حتى 100، مثل 94.8." }, gap: m }
@@ -714,14 +767,18 @@ steps:
       - id: inline
         text: { en: "Keep it: only mark each field", ar: "أبقِه: علّم كل حقل فقط" }
         mock:
-          width: 300
+          app: jamia
+          frame: wide
+          url: jamia.example/apply
           blocks:
             - { kind: field, label: *ua_g, filled: true, text: "948", tone: bad, error: *ua_e }
             - { kind: small, color: muted, text: *ua_m, gap: s }
       - id: count
         text: { en: "Say \"3 errors\" at the top, and mark each field", ar: "قل «3 أخطاء» بالأعلى، وعلّم كل حقل" }
         mock:
-          width: 300
+          app: jamia
+          frame: wide
+          url: jamia.example/apply
           blocks:
             - { kind: banner, tone: bad, text: { en: "The form has 3 errors.", ar: "النموذج فيه 3 أخطاء." } }
             - { kind: field, label: *ua_g, filled: true, text: "948", tone: bad, error: *ua_e, gap: m }
@@ -765,21 +822,27 @@ steps:
       - id: plain
         text: { en: "Keep it: the list at the top is enough", ar: "أبقِه: القائمة في الأعلى تكفي" }
         mock:
-          width: 300
+          app: aman
+          frame: wide
+          url: aman.example/claim
           blocks:
             - { kind: field, label: &ic_p { en: "Police report number", ar: "رقم المحضر" }, filled: true, text: "7731/2026" }
             - { kind: field, label: &ic_d { en: "Accident date", ar: "تاريخ الحادث" }, filled: true, text: "30/11/2026", gap: s }
       - id: redonly
         text: { en: "Turn the date field's border red", ar: "حوّل إطار حقل التاريخ إلى الأحمر" }
         mock:
-          width: 300
+          app: aman
+          frame: wide
+          url: aman.example/claim
           blocks:
             - { kind: field, label: *ic_p, filled: true, text: "7731/2026" }
             - { kind: field, label: *ic_d, filled: true, text: "30/11/2026", tone: bad, gap: s }
       - id: marked
         text: { en: "Mark the field and repeat the message under it", ar: "علّم الحقل وكرّر الرسالة تحته" }
         mock:
-          width: 300
+          app: aman
+          frame: wide
+          url: aman.example/claim
           blocks:
             - { kind: field, label: *ic_p, filled: true, text: "7731/2026" }
             - { kind: field, label: *ic_d, filled: true, text: "30/11/2026", tone: bad, error: { en: "⚠ This date hasn't happened yet. Enter the day of the accident, like 30/10/2026.", ar: "⚠ هذا التاريخ لم يأتِ بعد. اكتبي يوم الحادث، مثل 30/10/2026." }, gap: s }
