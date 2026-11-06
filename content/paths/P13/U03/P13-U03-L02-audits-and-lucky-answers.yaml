@@ -27,13 +27,50 @@ steps:
       en: "I build the front end of a photo-printing app. My manager found an AI tool that reviews screens. It looked at our checkout and listed 10 problems in one minute.\n\nShe wants all 10 fixed this week."
       ar: "أبني الواجهات في تطبيق لطباعة الصور. ووجدت مديرتي أداة ذكاء اصطناعي تراجع الشاشات. فنظرت إلى صفحة الدفع (checkout) وسردت 10 مشكلات في دقيقة واحدة.\n\nوهي تريد إصلاح العشر كلها هذا الأسبوع."
     mock:
-      width: 300
+      app: fikra
+      frame: wide
+      url: fikra.example/review
       blocks:
-        - { kind: heading, text: { en: "AI review: Checkout", ar: "مراجعة الذكاء الاصطناعي: صفحة الدفع" } }
-        - { kind: small, text: { en: "1. Low contrast on the promo code link", ar: "1. تباين ضعيف في رابط رمز الخصم" }, gap: xs }
-        - { kind: small, text: { en: "2. Replace photo thumbnails with dots to reduce clutter", ar: "2. استبدل الصور المصغّرة بنقاط لتقليل الزحام" }, gap: xs }
-        - { kind: small, text: { en: "3. Make the \"Pay\" button larger", ar: "3. كبّر زر «ادفع»" }, gap: xs }
-        - { kind: small, color: muted, text: { en: "…7 more", ar: "…و7 أخرى" }, gap: xs }
+      - kind: heading
+        text:
+          en: "AI review: Checkout"
+          ar: "مراجعة الذكاء الاصطناعي: صفحة الدفع"
+      - kind: listitem
+        art: photo
+        text:
+          en: "Tab'a checkout · screenshot"
+          ar: صفحة الدفع في طبعة · لقطة شاشة
+        sub: {en: Uploaded 2 min ago, ar: رُفعت قبل دقيقتين}
+        gap: s
+      - kind: listitem
+        icon: circle-half
+        text:
+          en: "1. Low contrast on the promo code link"
+          ar: "1. تباين ضعيف في رابط رمز الخصم"
+        badge:
+          text: {en: High, ar: مرتفع}
+          tone: bad
+        gap: m
+      - kind: listitem
+        icon: dots-three
+        text:
+          en: "2. Replace photo thumbnails with dots to reduce clutter"
+          ar: "2. استبدل الصور المصغّرة بنقاط لتقليل الزحام"
+        badge:
+          text: {en: Medium, ar: متوسط}
+          tone: warn
+      - kind: listitem
+        icon: arrows-out
+        text:
+          en: "3. Make the \"Pay\" button larger"
+          ar: "3. كبّر زر «ادفع»"
+        badge:
+          text: {en: Low, ar: منخفض}
+          tone: neutral
+      - kind: small
+        text: {en: …7 more, ar: …و7 أخرى}
+        color: muted
+        gap: xs
 
   - id: S02
     type: choose
@@ -170,17 +207,84 @@ steps:
     a:
       label: { en: "A: one question, asked once", ar: "A: سؤال واحد، طُرح مرة واحدة" }
       mock:
-        width: 300
+        app: taba
+        frame: wide
+        url: taba.example/admin/support-bot/tests
+        navbar:
+          links:
+          - {en: Orders, ar: الطلبات}
+          - {en: Support bot, ar: روبوت الدعم}
+          - {en: Settings, ar: الإعدادات}
+          active: 1
         blocks:
-          - { kind: small, text: { en: "\"Can I cancel a print order?\" → perfect answer", ar: "«هل أستطيع إلغاء طلب طباعة؟» ← إجابة ممتازة" } }
-          - { kind: chip, text: { en: "1 of 1 correct", ar: "1 من 1 صحيحة" }, gap: xs }
+        - kind: heading
+          text: {en: Test results, ar: نتائج الاختبار}
+        - kind: chat
+          text:
+            en: "Can I cancel a print order?"
+            ar: هل أستطيع إلغاء طلب طباعة؟
+          from: me
+        - kind: chat
+          text:
+            en: "Yes. You can cancel within 1 hour of ordering, from My orders."
+            ar: نعم. يمكنك الإلغاء خلال ساعة من الطلب، من «طلباتي».
+          from: ai
+        - kind: badge
+          text:
+            en: "1 of 1 correct"
+            ar: "1 من 1 صحيحة"
+          tone: good
+          icon: check
+          gap: s
     b:
       label: { en: "B: 10 real questions, 5 times each", ar: "B: 10 أسئلة حقيقية، 5 مرات لكل منها" }
       mock:
-        width: 300
+        app: taba
+        frame: wide
+        url: taba.example/admin/support-bot/tests
+        navbar:
+          links:
+          - {en: Orders, ar: الطلبات}
+          - {en: Support bot, ar: روبوت الدعم}
+          - {en: Settings, ar: الإعدادات}
+          active: 1
         blocks:
-          - { kind: small, text: { en: "Cancelling, refunds, delivery, damaged prints… each asked 5 times", ar: "الإلغاء، والاسترداد، والتوصيل، والصور التالفة… كل منها طُرح 5 مرات" } }
-          - { kind: chip, text: { en: "41 of 50 correct", ar: "41 من 50 صحيحة" }, gap: xs }
+        - kind: heading
+          text: {en: Test results, ar: نتائج الاختبار}
+        - kind: table
+          head:
+          - {en: Topic, ar: الموضوع}
+          - {en: Asked, ar: مرات السؤال}
+          - {en: Correct, ar: صحيحة}
+          rows:
+          - - {en: Cancelling, ar: الإلغاء}
+            - "5"
+            - "5"
+          - - {en: Refunds, ar: الاسترداد}
+            - "5"
+            - "3"
+          - - {en: Delivery, ar: التوصيل}
+            - "5"
+            - "4"
+          - - {en: Damaged prints, ar: الصور التالفة}
+            - "5"
+            - "2"
+          - - {en: … 6 more, ar: … و6 أخرى}
+            - "30"
+            - "27"
+          gap: s
+        - kind: small
+          text:
+            en: "Cancelling, refunds, delivery, damaged prints… each asked 5 times"
+            ar: الإلغاء، والاسترداد، والتوصيل، والصور التالفة… كل منها طُرح 5 مرات
+          color: muted
+          gap: s
+        - kind: badge
+          text:
+            en: "41 of 50 correct"
+            ar: "41 من 50 صحيحة"
+          tone: warn
+          gap: s
     answer: b
     reason:
       prompt: { en: "Why does B tell us more, even with a lower score?", ar: "لماذا تخبرنا B أكثر، رغم أن نتيجتها أقل؟" }
