@@ -13,8 +13,8 @@
 .player-col, .player-grid, .player-visual, .player-ask { display: flex; flex-direction: column; gap: 12px; min-inline-size: 0; }
 /* Phone: scenario, then the question, then the example screen, then the answers, so the question is on screen first. */
 .player-visual, .player-ask { display: contents; }
-.player-visual > .scn, .player-visual > .say, .player-ask > .prompt { order: 2; }
-.player-visual > :not(.scn):not(.say):not(.say-chip) { order: 3; }
+.player-say, .player-ask > .prompt { order: 2; }
+.player-visual > * { order: 3; }
 .player-ask > :not(.prompt) { order: 4; }
 .choices.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .player-col h1, .player-ask h1 { outline: none; }
@@ -82,9 +82,16 @@
   .btn:disabled .key-hint { background: transparent; border: 1px solid currentColor; opacity: 0.6; }
   .player-main { max-inline-size: 1240px; padding: 36px 64px 40px; }
   .player-visual, .player-ask { display: flex; }
-  .player-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 56px; align-items: start; }
+  /* The speaker and the problem sit above the question and the answers (right column), the example on the left, so the screen,
+     the problem and the answers are all in view without scrolling (Eyad, 6 Nov). */
+  .player-grid { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "vis say" "vis ask"; gap: 14px 56px; align-items: start; }
+  .player-grid:not(:has(.player-say)) { grid-template-rows: minmax(0, 1fr); grid-template-areas: "vis ask"; }
+  .player-say { grid-area: say; min-inline-size: 0; }
+  .player-visual { grid-area: vis; }
+  .player-ask { grid-area: ask; }
   .cmp { grid-template-columns: 1fr 1fr; }
-  .player-grid:has(.cmp) { grid-template-columns: 1fr; }
+  .player-grid:has(.cmp) { grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: "say" "vis" "ask"; gap: 14px; }
+  .player-grid:has(.cmp):not(:has(.player-say)) { grid-template-areas: "vis" "ask"; }
   .prompt { font-size: 28px; line-height: 1.3; }
   .choices { margin-block-start: 8px; }
   .choice { min-height: 64px; }

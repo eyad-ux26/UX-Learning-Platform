@@ -10,6 +10,7 @@ import { PaywallSheet } from "@/components/billing/PaywallSheet";
 import { formatMoney } from "@/lib/billing/pricing";
 import { loadOffer } from "@/lib/server/billing/plans";
 import { Link } from "@/i18n/navigation";
+import { ProfileTabs } from "@/components/app/ProfileTabs";
 import { BellLink } from "@/components/account/BellLink";
 
 export const dynamic = "force-dynamic";
@@ -49,6 +50,7 @@ export default async function ProfilePage({ params, searchParams }: { params: Pr
         <BellLink me={me} />
       </div>
       <h1 className="t-h1 h1-s">{t("title")}</h1>
+      <ProfileTabs board={boardOpen} />
       <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} since={since} />
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
       <ProfilePlan pro={me.pro} pathTitle={path.title.en} pct={view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0} />
