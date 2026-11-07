@@ -3,13 +3,14 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type T = (key: string, values?: Record<string, string | number>) => string;
-type Tip = { n: 1 | 2 | 3 | 4; targets: string[] };
+type Tip = { n: 1 | 2 | 3 | 4 | 5; targets: string[] };
 // What each tip points at. A tip whose target is not on this step (a card step has no choices) is left out.
 const TIPS: Tip[] = [
   { n: 1, targets: [".player-say"] },
   { n: 2, targets: [".player-visual .gd-prev, .player-visual .lp-ctx"] },
-  { n: 3, targets: [".player-ask .choices", ".player-foot .btn-primary, .player-foot .split"] },
-  { n: 4, targets: [".player-head .progress"] },
+  { n: 3, targets: [".player-ask .choices"] },
+  { n: 4, targets: [".player-foot .split, .player-foot .btn-primary"] },
+  { n: 5, targets: [".player-head .progress"] },
 ];
 type Rect = { x: number; y: number; w: number; h: number };
 const PAD = 8;
@@ -45,7 +46,7 @@ function rectOf(tip: Tip): Rect | null {
 const hits = (a: Rect, b: { x0: number; x1: number; y0: number; y1: number }) => a.x < b.x1 + 8 && a.x + a.w > b.x0 - 8 && a.y < b.y1 + 8 && a.y + a.h > b.y0 - 8;
 
 /**
- * The first-lesson tour: a welcome card, then up to four spotlights (the problem, the screen, the answers and Check, the progress bar).
+ * The first-lesson tour: a welcome card, then up to five spotlights (the problem, the screen, the answers, the Check button, the progress bar), each framing only its own element.
  * A modal dialog: focus moves into it, Tab stays inside, Esc skips. `onDone` runs when it ends, skipped or finished.
  */
 export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T; onDone: () => void }) {
@@ -61,7 +62,7 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   useLayoutEffect(() => {
     if (!tip) { setRect(null); return; }
     const first = tip.targets.map(find).find(Boolean);
-    const sticky = tip.n === 4 || (first && getComputedStyle(first).position === "sticky");
+    const sticky = tip.n === 5 || tip.n === 4 || (first && (getComputedStyle(first).position === "sticky" || !!first.closest(".player-foot")));
     if (first && !sticky) first.scrollIntoView({ block: "center", behavior: "auto" });
     measure();
     const again = requestAnimationFrame(measure);
