@@ -88,6 +88,14 @@ describe("the week start", () => {
   });
 });
 
+describe("the name check flag (migration 0043)", () => {
+  it("starts empty, and the browser cannot set it (the server does)", async () => {
+    expect((await db.query<{ n: string | null }>(`select name_confirmed_at as n from profiles where user_id = $1`, [A])).rows[0].n).toBeNull();
+    await expect(as("authenticated", A, `update profiles set name_confirmed_at = now() where user_id = $1 returning user_id`, [A])).rejects.toThrow(/permission denied/);
+    expect(await as("service_role", null, `update profiles set name_confirmed_at = now() where user_id = $1 returning user_id`, [A])).toHaveLength(1);
+  });
+});
+
 describe("several paths", () => {
   it("a learner joins a published path but not one that is still coming soon", async () => {
     expect(await as("authenticated", C, `insert into enrollments (user_id, path_id) values ($1, 'P10') returning path_id`, [C])).toHaveLength(1);
