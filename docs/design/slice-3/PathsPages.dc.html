@@ -64,19 +64,36 @@ body{margin:0}
       </header>
       <main class="pg-body" style="gap: 10px;">
         <p class="t-small ink-2" style="margin-top: -6px;">{{c.pathsLead}}</p>
-        <div class="pg-sec"><p class="t-over">{{c.secJoined}}</p></div>
+        <div class="pg-sec"><p class="t-over">{{secJoined}}</p></div>
         <div class="pg-grid two">
           <sc-for list="{{joined}}" as="p" hint-placeholder-count="2">
             <a href="#path" class="{{p.cls}}" aria-label="{{p.aria}}">
               <span class="pc-ill"><img src="{{p.img}}" alt=""></span>
               <span class="pc-text">
                 <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
-                <span class="pc-meta"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><span class="kind">{{p.unitNow}}</span></span>
+                <span class="pc-meta"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><sc-if value="{{p.isAlmost}}" hint-placeholder-val="{{false}}"><span class="kind kind-left"><span class="ph ph-target" aria-hidden="true"></span>{{p.left}}</span></sc-if><span class="kind">{{p.unitNow}}</span></span>
                 <span class="pc-prog"><span class="progress progress-sm" role="progressbar" aria-label="{{c.pathProgress}}" aria-valuenow="{{p.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{p.pct}};"></i></span><span class="num">{{p.pct}}</span></span>
               </span>
             </a>
           </sc-for>
         </div>
+        <sc-if value="{{hasDone}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over"><span class="ph ph-seal-check-fill" style="color: var(--right-ink);" aria-hidden="true"></span>{{secDone}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{done}}" as="p" hint-placeholder-count="1">
+              <a href="#path" class="path-card press is-done" aria-label="{{p.doneAria}}">
+                <span class="pc-ill"><img src="{{p.img}}" alt=""><span class="pc-badge" aria-hidden="true"><span class="ph ph-check"></span></span></span>
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
+                  <span class="pc-meta"><span class="kind kind-done"><span class="ph ph-seal-check-fill" aria-hidden="true"></span>{{c.completed}}</span><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span></span>
+                  <span class="pc-done-row"><span class="ph ph-certificate" aria-hidden="true"></span><span>{{p.doneLine}}</span></span>
+                </span>
+                <span class="pc-end"><span class="ph ph-caret flip" aria-hidden="true"></span></span>
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{hasFresh}}" hint-placeholder-val="{{true}}">
         <div class="pg-sec"><p class="t-over">{{c.secNew}}</p></div>
         <div class="pg-grid two">
           <sc-for list="{{fresh}}" as="p" hint-placeholder-count="1">
@@ -91,6 +108,7 @@ body{margin:0}
             </a>
           </sc-for>
         </div>
+        </sc-if>
         <div class="pg-sec"><p class="t-over"><span class="ph ph-hourglass" aria-hidden="true"></span>{{c.secSoon}}</p></div>
         <div class="pg-grid">
           <sc-for list="{{soon}}" as="p" hint-placeholder-count="4">
@@ -543,7 +561,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"rail":{"editor":"enum","options":["closed","open"],"default":"closed"},"team":{"editor":"enum","options":["off","on"],"default":"off"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathsDone","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"rail":{"editor":"enum","options":["closed","open"],"default":"closed"},"team":{"editor":"enum","options":["off","on"],"default":"off"},"$preview":{"width":390,"height":844}}'>
 /* Slice 3 · several paths: Paths tab, path detail, home, path map switcher, onboarding. Spec §4.4b, EN-11, EN-11b. */
 const IMG = {
   forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
@@ -572,7 +590,7 @@ const C = {
     navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', addPath: 'Add a path', addShort: 'Add a path', sound: 'Sound', otherLang: 'العربية',
     back: 'Back', cont: 'Continue', free1: 'Unit 1 free', current: 'Current', soon: 'Coming soon', interactive: 'Interactive', hybrid: 'Hybrid · Video', units: (n) => n + ' units', units5: '5 units',
     pathProgress: 'Path progress', seeAll: 'See all 14 paths', allPaths: 'All paths',
-    pathsTitle: 'Paths', pathsLead: 'Join as many paths as you like. The current one sets your next lesson.', secJoined: 'Your paths · 2', secNew: 'Start a new path', secSoon: 'Coming soon · 11',
+    pathsTitle: 'Paths', pathsLead: 'Join as many paths as you like. The current one sets your next lesson.', secJoined: 'Your paths · 2', secJoinedN: (n) => 'Your paths · ' + n, secDoneN: (n) => 'Completed · ' + n, completed: 'Completed', leftN: (n) => n + ' skills to show', doneLine: (n, d) => n + ' skills Shown · Certificate ready', doneAria: (n) => n + ', completed. Certificate ready', secNew: 'Start a new path', secSoon: 'Coming soon · 11',
     sub: { P01: 'Design forms people can finish, understand and recover from, in English and Arabic.', P10: 'Help people see what matters first, on any screen and in any language.', P14: 'Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.',
       P02: 'Spot where people get stuck, and fix that first.', P03: 'Make sure you solve the problem that matters.', P04: 'Plan the steps people take, from start to done.', P05: 'Design that works for every ability and device.', P06: 'Ask, listen and learn what people really need.',
       P07: 'Go from findings to clear design choices.', P08: 'Run quick tests and fix what they find.', P09: 'Menus and labels that lead to the right page.', P11: 'Build components that stay consistent.', P12: 'AI features people understand and trust.', P13: 'Use AI tools to research and design faster.' },
@@ -627,7 +645,7 @@ const C = {
     navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', addPath: 'أضف مسارًا', addShort: 'أضف مسارًا', sound: 'الصوت', otherLang: 'English',
     back: 'رجوع', cont: 'متابعة', free1: 'الوحدة 1 مجانية', current: 'الحالي', soon: 'قريبًا', interactive: 'تفاعلي', hybrid: 'مختلط · فيديو', units: (n) => n + ' وحدات', units5: '5 وحدات',
     pathProgress: 'تقدّم المسار', seeAll: 'اعرض كل المسارات الـ14', allPaths: 'كل المسارات',
-    pathsTitle: 'المسارات', pathsLead: 'انضمّ إلى أي عدد من المسارات. المسار الحالي هو الذي يحدّد درسك التالي.', secJoined: 'مساراتك · 2', secNew: 'ابدأ مسارًا جديدًا', secSoon: 'قريبًا · 11',
+    pathsTitle: 'المسارات', pathsLead: 'انضمّ إلى أي عدد من المسارات. المسار الحالي هو الذي يحدّد درسك التالي.', secJoined: 'مساراتك · 2', secJoinedN: (n) => 'مساراتك · ' + n, secDoneN: (n) => 'مكتملة · ' + n, completed: 'مكتمل', leftN: (n) => 'باقي ' + n + ' مهارات لتثبتها', doneLine: (n, d) => n + ' مهارة «أثبتت» · الشهادة جاهزة', doneAria: (n) => n + '، مكتمل. الشهادة جاهزة', secNew: 'ابدأ مسارًا جديدًا', secSoon: 'قريبًا · 11',
     sub: { P01: 'صمّم نماذج يستطيع الناس إكمالها وفهمها والتعافي من أخطائها، بالعربية والإنجليزية.', P10: 'ساعد الناس على رؤية الأهم أولًا، على أي شاشة وبأي لغة.', P14: 'اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر.',
       P02: 'اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.', P03: 'تأكّد أنك تحلّ المشكلة التي تهمّ فعلًا.', P04: 'خطّط للخطوات التي يمرّ بها الناس من البداية حتى النهاية.', P05: 'تصميم يناسب كل القدرات وكل الأجهزة.', P06: 'اسأل واستمع، واعرف ما يحتاجه الناس فعلًا.',
       P07: 'انتقل من النتائج إلى قرارات تصميم واضحة.', P08: 'أجرِ اختبارات سريعة وأصلح ما تكشفه.', P09: 'قوائم وعناوين تقود إلى الصفحة الصحيحة.', P11: 'ابنِ مكوّنات تبقى متّسقة.', P12: 'ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.', P13: 'استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.' },
@@ -672,7 +690,7 @@ const C = {
   }
 };
 const DOT = 'display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; flex: none; ';
-const VIEWS = ['paths', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'mapStart', 'mapContinue', 'mapDone', 'obRecommend', 'obAll', 'obGuest'];
+const VIEWS = ['paths', 'pathsDone', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'mapStart', 'mapContinue', 'mapDone', 'obRecommend', 'obAll', 'obGuest'];
 const LOADS = ['none', 'early', 'layer', 'reduced', 'full'];
 /* Week strip (design audit U3). One week start per locale: English starts on Monday, Arabic on Saturday (the PM confirms).
    Short day names, today labelled Today / «اليوم», and each day has an accessible name with its state. */
@@ -708,7 +726,7 @@ class Component extends DCLogic {
         cls: 'path-card press' + (state === 'current' ? ' is-current sel-frame' : ''), aria: state === 'current' ? c.isCurrentAria(name) : name }, kindOf(kind));
     };
     const all = PATHS.map(card);
-    const tab = { paths: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths', mapStart: 'paths', mapContinue: 'paths', mapDone: 'paths' }[view];
+    const tab = { paths: 'paths', pathsDone: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths', mapStart: 'paths', mapContinue: 'paths', mapDone: 'paths' }[view];
     const load = LOADS.indexOf(this.props.loading) >= 0 ? this.props.loading : 'none';
     const navTab = (load === 'none' || load === 'full') ? tab : 'paths'; /* the tapped tab lights up at once */
     const isOb = view.indexOf('ob') === 0;
@@ -823,8 +841,13 @@ class Component extends DCLogic {
       }),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       mark: theme === 'dark' ? '/_blob/5667904a660c43335758c7e0120ae2b8' : '/_blob/68b36b698602cc0ac59d5b87ca709073',
-      is: { paths: view === 'paths', detail: isDetail, home: isHome, map: isMap, ob: isOb },
-      joined: [all[0], all[1]], fresh: [all[2]], soon: all.slice(3),
+      is: { paths: view === 'paths' || view === 'pathsDone', detail: isDetail, home: isHome, map: isMap, ob: isOb },
+      joined: view === 'pathsDone' ? [Object.assign({}, all[1], { isCurrent: true, cls: 'path-card press is-current sel-frame', pct: '55%', pctNum: 55, aria: c.isCurrentAria(all[1].name) }),
+          Object.assign({}, all[2], { isCurrent: false, isAlmost: true, left: c.leftN(3), pct: '100%', pctNum: 100, unitNow: '' })] : [all[0], all[1]],
+      fresh: view === 'pathsDone' ? [] : [all[2]], soon: all.slice(3),
+      hasFresh: view !== 'pathsDone', hasDone: view === 'pathsDone',
+      secJoined: view === 'pathsDone' ? c.secJoinedN(2) : c.secJoined, secDone: c.secDoneN(1),
+      done: [Object.assign({}, all[0], { doneLine: c.doneLine(40), doneAria: c.doneAria(all[0].name) })],
       d, h, chips, week: weekDays.map((w) => ({ label: w.label, aria: w.aria, cls: 'wk-dot is-' + w.state, icon: wkIcon[w.state] })),
       m, lessons, swRows, o, opts, allList, ov,
       kept: [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, where: c.keptWhere[p.id] }))
