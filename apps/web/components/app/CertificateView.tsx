@@ -10,9 +10,10 @@ import type { CertificateFull } from "@/lib/server/certificates";
 import { ShareSwitch } from "./ShareSwitch";
 import { CertArt } from "./CertArt";
 import { CertActions } from "./CertActions";
+import { nameLooksLikeEmail } from "@/lib/cert-name";
 
 /** One certificate per path (design S3-16): the art, Share on LinkedIn, Add to profile, PDF, image and link, and the certificate page switch. */
-export async function CertificateMain({ me, cert }: { me: Learner; cert: CertificateFull }) {
+export async function CertificateMain({ me, cert, nameConfirmed }: { me: Learner; cert: CertificateFull; nameConfirmed: boolean }) {
   const t = await getTranslations("cert");
   const locale = (await getLocale()) as Locale;
   const h = await headers();
@@ -32,6 +33,7 @@ export async function CertificateMain({ me, cert }: { me: Learner; cert: Certifi
           <CertActions
             pathId={cert.pathId} pathName={pathName} name={name} code={cert.code} issuedAt={cert.issuedAt} id={certId(cert.pathId, cert.code)}
             skills={s.skills} checks={s.checks} initialPublic={cert.public}
+            nameConfirmed={nameConfirmed} emailLike={nameLooksLikeEmail(name, me.email)}
             url={publicUrl(origin, locale, cert.code)}
             cardArt={<CertArt d={art} size="card" />}
           />

@@ -14,5 +14,6 @@ export default async function CertificatePage({ params }: { params: Promise<{ lo
   // Issued only when every skill of the path is Shown; anything else is a 404, never an empty certificate.
   const cert = (await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates)).find((c) => c.pathId === pathId);
   if (!cert) notFound();
-  return <Shell me={me}><CertificateMain me={me} cert={cert} /></Shell>;
+  const { data: prof } = me.db ? await me.db.from("profiles").select("name_confirmed_at").eq("user_id", me.userId).maybeSingle() : { data: null };
+  return <Shell me={me}><CertificateMain me={me} cert={cert} nameConfirmed={!!prof?.name_confirmed_at} /></Shell>;
 }
