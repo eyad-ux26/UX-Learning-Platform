@@ -1,15 +1,23 @@
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { certId } from "@/lib/certificate-share";
+import { bidiGroups } from "@/lib/cert-bidi";
 
 export type OgCert = { name: string; pathName: string; shown: number; checks: number; lessons: number; issued: string; code: string; pathId: string; locale: "en" | "ar" };
 
-/** Satori lays Arabic words out left to right, so Arabic text is drawn word by word in a reversed row, which reads right to left (and keeps Latin words intact). */
+/** Satori has no bidi: Arabic text is drawn as a reversed row of words, with each run of Latin words kept whole and in order (lib/cert-bidi.ts). */
 function Txt({ text, ar, style }: { text: string; ar: boolean; style: Record<string, string | number> }) {
   if (!ar) return <div style={{ display: "flex", ...style }}>{text}</div>;
-  const words = text.replace(/[«»]/g, "").split(/\s+/).filter(Boolean);
   const gap = typeof style.fontSize === "number" ? Math.round(style.fontSize * 0.28) : 6;
-  return <div style={{ display: "flex", flexDirection: "row-reverse", flexWrap: "wrap", justifyContent: "flex-start", columnGap: gap, ...style }}>{words.map((w, i) => <div key={i} style={{ display: "flex" }}>{w}</div>)}</div>;
+  return (
+    <div style={{ display: "flex", flexDirection: "row-reverse", flexWrap: "wrap", justifyContent: "flex-start", columnGap: gap, ...style }}>
+      {bidiGroups(text).map((g, i) => (
+        <div key={i} style={{ display: "flex", flexDirection: "row-reverse" }}>
+          {g.map((p, k) => <div key={k} style={{ display: "flex" }}>{p.text}</div>)}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 const get = async (origin: string, path: string) => (await fetch(`${origin}${path}`)).arrayBuffer();
@@ -39,7 +47,7 @@ export async function renderCertPng(c: OgCert, origin: string): Promise<ImageRes
   const foot = (label: string, value: string) => (
     <div style={{ display: "flex", flexDirection: "column", }}>
       <Txt ar={ar} text={label} style={{ fontSize: 13, color: "#6B8A9C" }} />
-      <div style={{ display: "flex", fontSize: 16, fontWeight: 700, color: ink }}>{value}</div>
+      <Txt ar={ar} text={value} style={{ fontSize: 16, fontWeight: 700, color: ink }} />
     </div>
   );
   const bar = { position: "absolute", top: 0, bottom: 0, width: 8, ...(ar ? { left: 0 } : { right: 0 }), background: "linear-gradient(180deg, #78E4FC, #2BB5D9)" } as const; // lint-logical-ignore: Satori has no logical properties
