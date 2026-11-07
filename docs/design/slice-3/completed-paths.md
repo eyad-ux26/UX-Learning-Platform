@@ -2,7 +2,7 @@
 
 Eyad's request: when a path is done, the Paths tab doesn't show it. Show how a finished path looks.
 
-Canvas: page "7 · Slice 3 · Progress", board **S3-17**, component `PathsPages`, view `pathsDone` (the `paths` view sits next to it as "before"). The CSS is the "Completed path cards (S3-17)" block in `system/uxgate.css`.
+Canvas: page "7 · Slice 3 · Progress", board **S3-17**, component `PathsPages`, view `pathsDone` (the `paths` view sits next to it as "before"). The CSS is the "Completed paths on the Paths tab (S3-17)" block in `system/uxgate.css`.
 
 ## When a path counts as completed
 
