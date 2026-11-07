@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;family=Barlow:wght@500;600;700;800&amp;family=Almarai:wght@400;700;800&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -21,10 +21,11 @@ a{color:#005F99}a:hover{color:#003F66}
     <header class="lp-head">
       <a href="#exit" onClick="{{exit}}" class="{{headBtn}}" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
       <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
-        <span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{c.lessonName}}</span>
+        <span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{headName}}</span>
       </sc-if>
       <div class="progress" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="{{stepNo}}" aria-valuemin="0" aria-valuemax="10"><i style="width: {{pct}};"></i></div>
       <span class="t-label num ink-2 lp-count">{{countText}}</span>
+      <button class="lp-lang" type="button" lang="{{langBtn.lang}}" aria-label="{{langBtn.aria}}" onClick="{{switchLang}}"><sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="ph ph-globe" aria-hidden="true"></span></sc-if><span>{{langBtn.label}}</span></button>
       <button class="{{headBtn}}" type="button" aria-label="{{soundLabel}}" aria-pressed="{{soundPressed}}" onClick="{{toggleSound}}"><span class="{{soundIcon}}" aria-hidden="true"></span></button>
     </header>
   </sc-if>
@@ -65,6 +66,9 @@ a{color:#005F99}a:hover{color:#003F66}
                 </div>
               </div>
             </div>
+            <sc-if value="{{v.load}}" hint-placeholder-val="{{false}}">
+              <div class="lp-vload" role="status"><span class="spin" aria-hidden="true"></span><span class="sr-only">{{c.vLoading}}</span></div>
+            </sc-if>
             <sc-if value="{{v.start}}" hint-placeholder-val="{{false}}">
               <button class="lp-vplay" type="button" onClick="{{play}}" aria-label="{{c.vPlay}}"><span class="ph ph-play-fill" aria-hidden="true"></span></button>
             </sc-if>
@@ -150,6 +154,43 @@ a{color:#005F99}a:hover{color:#003F66}
       </section>
     </main>
     <footer style="padding: 12px 20px 18px; display: flex; justify-content: flex-end; border-top: 2px solid var(--line); background: var(--surface);">
+      <a href="#next" class="{{contCls}}" onClick="{{next}}">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+    </footer>
+  </sc-if>
+
+  <!-- Video summary (6 Nov 2026): the key idea, then one card per point. Points that start with "Not…" / «لا…» go in the "When it doesn't fit" group. -->
+  <sc-if value="{{is.summary}}" hint-placeholder-val="{{false}}">
+    <main class="lp-main lp-sum-main">
+      <section class="lp-sum" style="{{sm.scroll}}" aria-labelledby="lp-sum-h-{{sm.sid}}">
+        <header class="lp-sum-head">
+          <div class="lp-sum-titles">
+            <p class="t-over" style="color: var(--link);">{{sm.over}}</p>
+            <h1 class="lp-qt" id="lp-sum-h-{{sm.sid}}">{{c.sumTitle}}</h1>
+          </div>
+          <a href="#replay" class="btn btn-secondary btn-sm press lp-sum-replay"><span class="ph ph-replay" aria-hidden="true"></span>{{c.sumReplay}}<span class="num ltr">{{sm.len}}</span></a>
+        </header>
+        <article class="lp-sum-key">
+          <span class="lp-sum-key-ic" aria-hidden="true"><span class="ph ph-bulb-fill"></span></span>
+          <div class="lp-sum-key-text">
+            <p class="lp-sum-key-over">{{c.sumKey}}</p>
+            <p>{{sm.pre}}<b>{{sm.term}}</b>{{sm.post}}</p>
+          </div>
+        </article>
+        <div class="{{sm.gridCls}}">
+          <sc-for list="{{sm.groups}}" as="g" hint-placeholder-count="2">
+            <section class="{{g.cls}}" aria-labelledby="{{g.hid}}">
+              <h2 id="{{g.hid}}"><span class="{{g.icon}}" aria-hidden="true"></span>{{g.title}}<span class="lp-sum-count num">{{g.count}}</span></h2>
+              <ul>
+                <sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+                  <li class="lp-sum-card"><span class="lp-sum-ic" aria-hidden="true"><span class="{{it.icon}}"></span></span><span class="lp-sum-text"><b>{{it.title}}</b><span>{{it.text}}</span></span></li>
+                </sc-for>
+              </ul>
+            </section>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+    <footer class="lp-sum-foot">
       <a href="#next" class="{{contCls}}" onClick="{{next}}">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
     </footer>
   </sc-if>
@@ -263,12 +304,12 @@ a{color:#005F99}a:hover{color:#003F66}
         <div class="input"><span class="ph ph-mail" aria-hidden="true"></span><input id="lp-su-mail" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr"></div>
       </div>
       <a href="#create" class="btn btn-primary btn-lg btn-block press">{{c.suCreate}}</a>
-      <p class="t-small ink-2" style="text-align: center;">{{c.suHave}} <a href="#signin" style="font-weight: 700;">{{c.suSignin}}</a></p>
+      <p class="t-small ink-2" style="text-align: center;">{{c.suHave}} <a href="#signin" class="hit" style="font-weight: 700;">{{c.suSignin}}</a></p>
     </section>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoTranscript","videoSpeed","videoEnd","concept","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["videoStart","video","videoLoad","videoTranscript","videoSpeed","videoEnd","concept","summary","summaryPoints","checkIntro","checkSummary","masteryIntro","masteryDone","masteryNone","homeResume","offlineEnd","guestEnd","guestSignup"],"default":"video"},"part":{"editor":"enum","options":["top","end"],"default":"top"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson pages: video step, concept card, skill check and mastery pages, resume on home, offline end, guest end. */
 const IMG = { skillCheck: '/_blob/f92a3e6847a208fe460c2076565bb0b0', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b', target: '/_blob/f339db60a2fdc85567ed1a06c7bf9515',
   trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4', empty: '/_blob/db03534bd1e09763438142db3c0a865b', offline: '/_blob/15713cc29474a7a427354bd2c907f463', gate: '/_blob/940849193fa4b01dff04d73c95583da2' };
@@ -285,9 +326,16 @@ const C = {
     exit: 'Leave lesson', close: 'Close', progress: 'Lesson progress', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', cont: 'Continue',
     soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
     vOver: 'Watch · Step 3 · 1 min', vTitle: 'Why every field costs something', vLabel: 'Lesson video', vChapter: 'Every field costs something', vExample: "Example · Hana's Gym",
-    vPlay: 'Play video with sound', vReplay: 'Watch again', vPause: 'Pause', vSeek: 'Video position', vCc: 'Captions', vFull: 'Full screen', vCaptions: 'Captions',
+    vLoading: 'Loading the video', vPlay: 'Play video with sound', vReplay: 'Watch again', vPause: 'Pause', vSeek: 'Video position', vCc: 'Captions', vFull: 'Full screen', vCaptions: 'Captions',
     vSpeed: 'Playback speed', vSpeedBtn: 'Playback speed', vSpeeds: ['0.75×', 'Normal', '1.25×', '1.5×', '2×'], vSpeedNote: 'Kept for your next videos.',
     vTranscript: 'Transcript', vTapLine: 'Tap a line to jump there', vNoAuto: 'Nothing plays until you tap. Captions are on.',
+    /* video summary */
+    sumTitle: 'Video summary', sumReplay: 'Watch again', sumKey: 'The idea', sumFits: 'When it fits', sumNot: 'When it doesn’t fit', sumPoints: 'Key points',
+    sumP14: { over: 'Patterns That Fit · The idea', name: 'Patterns That Fit · Lesson 1 · Block only when it matters', len: '1:48', pre: 'A ', term: 'modal dialog', post: ' sits on top of the screen and blocks it until people respond. That focus is worth it only in a few cases.',
+      points: [['warning', 'A warning before a mistake', 'Something people must notice now, like deleting something that can’t come back.'], ['sign-in', 'Information the task needs now', 'Like signing in to finish a booking. The dialog opens over the task, and people go back to where they were.'], ['list', 'A short task of several steps', 'That fits inside one dialog.'], ['pencil', 'Optional details that save effort later', 'As long as people can close the dialog and skip it.'],
+        ['clock', 'Not for information you can get later', 'Or that doesn’t matter now. Ask in a short message on the page, and open a form only if people agree.', 1], ['credit-card', 'Not during a focused task like checkout', 'People are careful and a bit anxious there, so an interruption hurts.', 1], ['eye-slash', 'Not for decisions that need other information', 'If people must check something the dialog hides, use a non-modal panel or a page.', 1]] },
+    sumP02: { over: 'Usability Heuristics · The idea', name: 'Usability Heuristics · Lesson 1 · Show what’s happening', len: '1:32', pre: 'The first heuristic: ', term: 'always keep people informed about what is going on', post: ', with the right feedback, in a reasonable time.',
+      points: [['hand-tap', 'Answer every action', 'Right away: a pressed state, a spinner, a confirmation.'], ['eye', 'Show where people are', 'And what comes next.'], ['warning', 'Say when something changes', 'That affects them, instead of changing it silently.']] },
     kOver: 'Concept · Step 4', kTitle: 'Every field costs something', kBody: 'Each field costs people time, effort and a little trust. Forms that feel quick get finished. Before you add a field, ask four questions:',
     kQs: [['Essential?', "Can the task happen without it?"], ['Needed now?', 'Could it wait until later?'], ['Used?', 'Will anyone use the answer?'], ['Personal?', 'Then say why you ask.']],
     kNext: 'Next, you use these questions on a real form.',
@@ -333,9 +381,15 @@ const C = {
     exit: 'الخروج من الدرس', close: 'إغلاق', progress: 'تقدّم الدرس', lessonName: 'Forms That Flow · الدرس 1 · كل حقل له تكلفة', cont: 'متابعة',
     soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
     vOver: 'شاهد · الخطوة 3 · دقيقة واحدة', vTitle: 'لماذا لكل حقل تكلفة', vLabel: 'فيديو الدرس', vChapter: 'كل حقل له تكلفة', vExample: 'مثال · نادي هناء',
-    vPlay: 'شغّل الفيديو بالصوت', vReplay: 'شاهد مرة أخرى', vPause: 'إيقاف مؤقت', vSeek: 'موضع الفيديو', vCc: 'الترجمة', vFull: 'ملء الشاشة', vCaptions: 'الترجمة',
+    vLoading: 'جارٍ تحميل الفيديو', vPlay: 'شغّل الفيديو بالصوت', vReplay: 'شاهد مرة أخرى', vPause: 'إيقاف مؤقت', vSeek: 'موضع الفيديو', vCc: 'الترجمة', vFull: 'ملء الشاشة', vCaptions: 'الترجمة',
     vSpeed: 'سرعة التشغيل', vSpeedBtn: 'سرعة التشغيل', vSpeeds: ['0.75×', 'عادية', '1.25×', '1.5×', '2×'], vSpeedNote: 'نحتفظ بها لفيديوهاتك التالية.',
     vTranscript: 'النص المكتوب', vTapLine: 'اضغط سطرًا للانتقال إليه', vNoAuto: 'لا يعمل شيء حتى تضغط. الترجمة مفعّلة.',
+    sumTitle: 'ملخص الفيديو', sumReplay: 'شاهد مرة أخرى', sumKey: 'الفكرة', sumFits: 'متى يناسب', sumNot: 'متى لا يناسب', sumPoints: 'أهم النقاط',
+    sumP14: { over: 'Patterns That Fit · الفكرة', name: 'Patterns That Fit · الدرس 1 · احجب الشاشة فقط عند الحاجة', len: '1:48', pre: 'الـ ', term: 'Modal dialog', post: ' نافذة تظهر فوق الشاشة وتحجبها حتى يردّ الناس. ولا يستحق هذا التركيز إلا في حالات قليلة.',
+      points: [['warning', 'تحذير قبل خطأ', 'شيء يجب أن ينتبه له الناس الآن، مثل حذف شيء لا يمكن استعادته.'], ['sign-in', 'معلومة تحتاجها المهمة الآن', 'مثل تسجيل الدخول لإكمال حجز. فالنافذة تظهر فوق المهمة، ثم يعود الناس إلى ما كانوا فيه.'], ['list', 'مهمة قصيرة من عدة خطوات', 'تكفيها نافذة واحدة.'], ['pencil', 'بيانات اختيارية توفّر الجهد لاحقًا', 'بشرط أن يستطيع الناس إغلاق النافذة وتخطّيها.'],
+        ['clock', 'لا تستخدمه لمعلومة يمكن أخذها لاحقًا', 'أو غير مهمة الآن. اسأل برسالة قصيرة في الصفحة، وافتح النموذج فقط إن وافق الناس.', 1], ['credit-card', 'لا تستخدمه أثناء مهمة تحتاج تركيزًا مثل الـ Checkout (إتمام الشراء)', 'فالناس هناك حريصون وقلقون قليلًا، والمقاطعة تضرّهم.', 1], ['eye-slash', 'لا تستخدمه لقرار يحتاج معلومات أخرى', 'إن احتاج الناس إلى مراجعة شيء تُخفيه النافذة، فاستخدم Non-modal panel (لوحة لا تحجب الشاشة) أو صفحة.', 1]] },
+    sumP02: { over: 'Usability Heuristics · الفكرة', name: 'Usability Heuristics · الدرس 1 · أظهِر ما يحدث', len: '1:32', pre: 'المبدأ الأول: ', term: 'أخبِر الناس دائمًا بما يحدث', post: '، بالردّ المناسب، وفي وقت معقول.',
+      points: [['hand-tap', 'ردّ على كل إجراء', 'فورًا: حالة ضغط، أو مؤشر دوّار، أو تأكيد.'], ['eye', 'أظهِر أين هم الناس', 'وما الخطوة التالية.'], ['warning', 'قل حين يتغيّر شيء', 'يمسّهم، بدل أن يتغيّر بصمت.']] },
     kOver: 'الفكرة · الخطوة 4', kTitle: 'كل حقل له تكلفة', kBody: 'كل حقل يكلّف الناس وقتًا وجهدًا وقليلًا من الثقة. والنماذج التي تبدو سريعة يُكملها الناس. قبل أن تضيف حقلًا، اسأل أربعة أسئلة:',
     kQs: [['ضروري؟', 'هل تتم المهمة بدونه؟'], ['مطلوب الآن؟', 'هل يمكن أن ينتظر؟'], ['مستخدَم؟', 'هل سيستخدم أحد الإجابة؟'], ['شخصي؟', 'إذن اشرح لماذا تسأل.']],
     kNext: 'بعد ذلك ستطبّق هذه الأسئلة على نموذج حقيقي.',
@@ -375,28 +429,39 @@ const C = {
         primary: 'سجّل لتحتفظ بها', primaryIcon: 'ph ph-user-plus', secondary: 'ليس الآن' }
     },
     skills: { 'SK-01': 'احذف الحقول التي لا يحتاجها النموذج', 'SK-02': 'أجّل ما يمكن أن ينتظر', 'SK-03': 'اشرح لماذا تطلب البيانات الشخصية', 'SK-04': 'وضّح الحقول المطلوبة والاختيارية', 'SK-05': 'اجعل التحقّق مطابقًا للعنوان' },
-    chips: { practiced: 'تدرّبت', shown: 'أثبتّ', retry: 'محاولة أخرى', later: 'في المراجعة' }
+    chips: { practiced: 'تدرّبت', shown: 'أثبتت', retry: 'محاولة أخرى', later: 'في المراجعة' }
   }
 };
 const CHIP = { practiced: ['skill skill-practiced', 'ph ph-check'], shown: ['skill skill-shown', 'ph ph-seal-fill'], retry: ['skill skill-retry', 'ph ph-target'], later: ['skill skill-later', 'ph ph-clock'] };
 const ROWICON = { practiced: ['ph ph-check-circle', 'var(--ink-3)'], shown: ['ph ph-seal-fill', 'var(--link)'], retry: ['ph ph-target', 'var(--warn-ink)'], later: ['ph ph-clock', 'var(--ink-3)'] };
-const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoSpeed: { sec: 27, playing: true, spd: true, speed: 1.25 }, videoEnd: { sec: 72, playing: false, end: true } };
+const VIDEO = { videoStart: { sec: 0, playing: false }, video: { sec: 27, playing: true }, videoTranscript: { sec: 27, playing: true, tx: true }, videoSpeed: { sec: 27, playing: true, spd: true, speed: 1.25 }, videoEnd: { sec: 72, playing: false, end: true }, videoLoad: { sec: 14, playing: true, load: true } };
 function fmt(sec) { return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
 class Component extends DCLogic {
   constructor(props) { super(props); this.state = this.fresh(props); }
-  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null, spd: !!v.spd, speed: v.speed || 1 }; }
+  fresh(p) { const v = VIDEO[p.view] || VIDEO.video; return { sound: true, sec: v.sec, playing: v.playing, end: !!v.end, tx: !!v.tx || p.device === 'desktop', cc: true, capLang: null, spd: !!v.spd, speed: v.speed || 1, load: !!v.load }; }
   componentDidUpdate(prev) { if (prev.view !== this.props.view || prev.device !== this.props.device) this.setState(this.fresh(this.props)); }
   sfx(n) { if (this.state.sound && this.props.sfx) this.props.sfx(n); }
   renderVals() {
     const lang = this.props.lang === 'ar' ? 'ar' : 'en';
     const theme = this.props.theme === 'dark' ? 'dark' : 'light';
     const isDesk = this.props.device === 'desktop';
-    const view = C.en.pages[this.props.view] || VIDEO[this.props.view] || this.props.view === 'concept' || this.props.view === 'homeResume' || this.props.view === 'guestSignup' ? this.props.view : 'video';
+    const view = C.en.pages[this.props.view] || VIDEO[this.props.view] || this.props.view === 'concept' || this.props.view === 'summary' || this.props.view === 'summaryPoints' || this.props.view === 'homeResume' || this.props.view === 'guestSignup' ? this.props.view : 'video';
     const c = C[lang]; const s = this.state;
     const nav = this.props.nav;
     const go = (to) => (e) => { if (e) e.preventDefault(); if (nav) nav(to); };
     const isVideo = !!VIDEO[view];
+    const isSum = view === 'summary' || view === 'summaryPoints';
+    /* video summary: points from the card body; a point whose title starts with Not / لا goes to the "doesn't fit" group */
+    const SD = view === 'summaryPoints' ? c.sumP02 : c.sumP14;
+    const sid = lang + '-' + theme + '-' + (isDesk ? 'd' : 'm') + '-' + view;
+    const card = ([icon, title, text]) => ({ icon: 'ph ph-' + icon, title, text });
+    const dos = SD.points.filter((x) => !x[3]).map(card), donts = SD.points.filter((x) => x[3]).map(card);
+    const groups = donts.length
+      ? [{ cls: 'lp-sum-group is-do', icon: 'ph ph-check-circle-fill', title: c.sumFits, items: dos, count: String(dos.length), hid: 'lp-sum-do-' + sid },
+         { cls: 'lp-sum-group is-dont', icon: 'ph ph-x-circle-fill', title: c.sumNot, items: donts, count: String(donts.length), hid: 'lp-sum-dont-' + sid }]
+      : [{ cls: 'lp-sum-group is-points', icon: 'ph ph-list', title: c.sumPoints, items: dos, count: String(dos.length), hid: 'lp-sum-pts-' + sid }];
+    const sm = { sid, scroll: this.props.part === 'end' && !isDesk ? 'margin-top: -600px;' : '', over: SD.over, len: SD.len, pre: SD.pre, term: SD.term, post: SD.post, groups, gridCls: 'lp-sum-grid' + (donts.length ? ' is-split' : '') };
     const pageKey = view === 'guestSignup' ? 'guestEnd' : view;
     const raw = c.pages[pageKey];
     const tags = { check: ['lp-mode is-check', 'ph ph-seal-fill', c.checkTag], mastery: ['lp-mode is-mastery', 'ph ph-target', c.masteryTag], guest: ['lp-mode is-guest', 'ph ph-user', c.guestTag] };
@@ -420,16 +485,20 @@ class Component extends DCLogic {
 
     return {
       lang, dir: lang === 'ar' ? 'rtl' : 'ltr', theme, c, isDesk, isMobile: !isDesk,
+      sm, headName: isSum ? SD.name : c.lessonName,
       rootCls: 'ug lp lp-' + (isDesk ? 'desktop' : 'mobile'), headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
-      is: { player: isVideo || view === 'concept', result: !!raw, video: isVideo, concept: view === 'concept', page: !!raw, home: view === 'homeResume', signup: view === 'guestSignup' },
-      stepNo: view === 'concept' ? 4 : 3, pct: (view === 'concept' ? 34 : 24) + '%', countText: (view === 'concept' ? 4 : 3) + '/10',
+      is: { summary: isSum, player: isVideo || view === 'concept' || isSum, result: !!raw, video: isVideo, concept: view === 'concept', page: !!raw, home: view === 'homeResume', signup: view === 'guestSignup' },
+      stepNo: view === 'concept' || isSum ? 4 : 3, pct: (view === 'concept' || isSum ? 34 : 24) + '%', countText: (view === 'concept' || isSum ? 4 : 3) + '/10',
       tag: tg ? { show: true, cls: tg[0], icon: tg[1], text: tg[2] } : { show: false },
+      /* Lesson language button (PR #164): after the step count, before sound. Desktop: globe + the other language's name; phones: short label. */
+      langBtn: lang === 'ar' ? { label: isDesk ? 'English' : 'EN', lang: 'en', aria: 'Switch the lesson to English' } : { label: 'عربي', lang: 'ar', aria: 'حوّل الدرس إلى العربية' },
+      switchLang: () => {}, saveTextCls: isDesk ? '' : 'sr-only',
       soundIcon: s.sound ? 'ph ph-speaker-high' : 'ph ph-speaker-slash', soundLabel: s.sound ? c.soundOn : c.soundOff, soundPressed: s.sound ? 'false' : 'true',
       toggleSound: () => this.setState({ sound: !s.sound }),
       exit: go('exit'), next: go('next'), primary: go('primary'), secondary: go('secondary'),
       contCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'),
       /* video */
-      videoMain: 'lp-main', videoGrid: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; padding-top: 20px;' : 'gap: 8px; padding-top: 8px;', v: { start: !s.playing && !s.end && s.sec === 0, end: s.end, sec, pctStr },
+      videoMain: 'lp-main', videoGrid: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; padding-top: 20px;' : 'gap: 8px; padding-top: 8px;', v: { start: !s.playing && !s.end && s.sec === 0, end: s.end, load: !!s.load && !s.end, sec, pctStr },
       vMock, vMarked: sec >= 24 && !s.end,
       showCap: s.cc && s.sec > 0 && !s.end, capText: (capLang === 'ar' ? LINES[cur][3] : LINES[cur][2]), capLang, capDir: capLang === 'ar' ? 'rtl' : 'ltr',
       capFont: capLang === 'ar' ? 'var(--font-ar)' : 'var(--font-en)',
@@ -437,7 +506,7 @@ class Component extends DCLogic {
       capToEn: () => this.setState({ capLang: 'en' }), capToAr: () => this.setState({ capLang: 'ar' }),
       timeText: fmt(sec) + ' / 1:12',
       playIcon: s.playing ? 'ph ph-pause-fill' : (s.end ? 'ph ph-replay' : 'ph ph-play-fill'), playLabel: s.playing ? c.vPause : (s.end ? c.vReplay : c.vPlay),
-      play: () => { if (s.end) { this.sfx('ui-tap'); this.setState({ end: false, sec: 1, playing: true }); } else { this.sfx('ui-tap'); this.setState({ playing: !s.playing, sec: s.sec === 0 ? 1 : s.sec }); } },
+      play: () => { if (s.end) { this.sfx('ui-tap'); this.setState({ end: false, sec: 1, playing: true }); } else { this.sfx('ui-tap'); this.setState({ playing: !s.playing, load: false, sec: s.sec === 0 ? 1 : s.sec }); } },
       spdOpen: s.spd, spdOpenStr: s.spd ? 'true' : 'false', toggleSpd: () => { this.sfx('ui-tap'); this.setState({ spd: !s.spd }); },
       spdText: (s.speed === 1 ? '1' : String(s.speed)) + '×', spdLabel: c.vSpeedBtn + ', ' + (s.speed === 1 ? c.vSpeeds[1] : s.speed + '×'),
       spdCls: 'lp-vbtn lp-vspd' + (s.speed !== 1 || s.spd ? ' is-on' : ''),

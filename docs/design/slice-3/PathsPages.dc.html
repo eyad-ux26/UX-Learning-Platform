@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -20,12 +20,28 @@ a{color:#005F99}a:hover{color:#003F66}
   <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
     <nav class="dk-rail" aria-label="{{c.navLabel}}">
       <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-if value="{{tm.on}}" hint-placeholder-val="{{false}}">
+        <a href="#public" class="team-pill" aria-label="{{tm.aria}}"><span><span class="ph ph-eye" aria-hidden="true"></span>{{tm.title}}</span><small>{{tm.sub}}</small></a>
+      </sc-if>
       <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
         <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
       </sc-for>
       <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <!-- 6 Nov 2026 (Eyad): each path can open to show its units; all paths start closed -->
       <sc-for list="{{railPaths}}" as="p" hint-placeholder-count="2">
-        <a class="{{p.cls}}" href="#path"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+        <div class="dk-path">
+          <div class="dk-path-row">
+            <a class="{{p.cls}}" href="#path" aria-current="{{p.cur}}"><img src="{{p.img}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{p.name}}</span><span class="num" style="font-size: 12px; color: var(--ink-3);">{{p.pct}}</span></a>
+            <button class="dk-tog" type="button" aria-expanded="{{p.open}}" aria-controls="{{p.uid}}" aria-label="{{p.togLabel}}"><span class="ph ph-caret-down" aria-hidden="true"></span></button>
+          </div>
+          <sc-if value="{{p.isOpen}}" hint-placeholder-val="{{false}}">
+            <ul class="dk-units" id="{{p.uid}}">
+              <sc-for list="{{p.units}}" as="u" hint-placeholder-count="5">
+                <li><a class="{{u.cls}}" href="#unit" aria-current="{{u.cur}}"><span class="{{u.icon}}" aria-hidden="true"></span><span>{{u.title}}</span></a></li>
+              </sc-for>
+            </ul>
+          </sc-if>
+        </div>
       </sc-for>
       <a class="dk-layer" href="#paths" style="color: var(--link);"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addPath}}</a>
       <div style="flex: 1;"></div>
@@ -35,6 +51,10 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 
   <div class="pg-col">
+    <!-- Pre-launch team view: admins see the full tool; the public sees the Coming soon page -->
+    <sc-if value="{{tm.bar}}" hint-placeholder-val="{{false}}">
+      <a href="#public" class="team-bar" aria-label="{{tm.aria}}"><span class="ph ph-eye" aria-hidden="true"></span><span class="grow">{{tm.title}}</span><small>{{tm.subShort}}</small></a>
+    </sc-if>
 
     <!-- ============ Paths tab ============ -->
     <sc-if value="{{is.paths}}" hint-placeholder-val="{{true}}">
@@ -44,19 +64,36 @@ a{color:#005F99}a:hover{color:#003F66}
       </header>
       <main class="pg-body" style="gap: 10px;">
         <p class="t-small ink-2" style="margin-top: -6px;">{{c.pathsLead}}</p>
-        <div class="pg-sec"><p class="t-over">{{c.secJoined}}</p></div>
+        <div class="pg-sec"><p class="t-over">{{secJoined}}</p></div>
         <div class="pg-grid two">
           <sc-for list="{{joined}}" as="p" hint-placeholder-count="2">
             <a href="#path" class="{{p.cls}}" aria-label="{{p.aria}}">
               <span class="pc-ill"><img src="{{p.img}}" alt=""></span>
               <span class="pc-text">
                 <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
-                <span class="pc-meta"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><span class="kind">{{p.unitNow}}</span></span>
+                <span class="pc-meta"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.current}}</span></sc-if><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span><sc-if value="{{p.isAlmost}}" hint-placeholder-val="{{false}}"><span class="kind kind-left"><span class="ph ph-target" aria-hidden="true"></span>{{p.left}}</span></sc-if><span class="kind">{{p.unitNow}}</span></span>
                 <span class="pc-prog"><span class="progress progress-sm" role="progressbar" aria-label="{{c.pathProgress}}" aria-valuenow="{{p.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{p.pct}};"></i></span><span class="num">{{p.pct}}</span></span>
               </span>
             </a>
           </sc-for>
         </div>
+        <sc-if value="{{hasDone}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over"><span class="ph ph-seal-check-fill" style="color: var(--right-ink);" aria-hidden="true"></span>{{secDone}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{done}}" as="p" hint-placeholder-count="1">
+              <a href="#path" class="path-card press is-done" aria-label="{{p.doneAria}}">
+                <span class="pc-ill"><img src="{{p.img}}" alt=""><span class="pc-badge" aria-hidden="true"><span class="ph ph-check"></span></span></span>
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
+                  <span class="pc-meta"><span class="kind kind-done"><span class="ph ph-seal-check-fill" aria-hidden="true"></span>{{c.completed}}</span><span class="{{p.kindCls}}"><span class="{{p.kindIcon}}" aria-hidden="true"></span>{{p.kind}}</span></span>
+                  <span class="pc-done-row"><span class="ph ph-certificate" aria-hidden="true"></span><span>{{p.doneLine}}</span></span>
+                </span>
+                <span class="pc-end"><span class="ph ph-caret flip" aria-hidden="true"></span></span>
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{hasFresh}}" hint-placeholder-val="{{true}}">
         <div class="pg-sec"><p class="t-over">{{c.secNew}}</p></div>
         <div class="pg-grid two">
           <sc-for list="{{fresh}}" as="p" hint-placeholder-count="1">
@@ -71,6 +108,7 @@ a{color:#005F99}a:hover{color:#003F66}
             </a>
           </sc-for>
         </div>
+        </sc-if>
         <div class="pg-sec"><p class="t-over"><span class="ph ph-hourglass" aria-hidden="true"></span>{{c.secSoon}}</p></div>
         <div class="pg-grid">
           <sc-for list="{{soon}}" as="p" hint-placeholder-count="4">
@@ -173,6 +211,20 @@ a{color:#005F99}a:hover{color:#003F66}
         </sc-if>
         <div class="pg-split" style="{{h.splitStyle}}">
           <div class="pg-stack" style="gap: 14px;">
+            <!-- Your paths sits right under the greeting, above the next lesson (PR #164) -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="pg-sec" style="margin-top: -2px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 44px;">{{c.allPaths}}</a></div>
+              <div class="prow">
+                <sc-for list="{{chips}}" as="p" hint-placeholder-count="2">
+                  <a href="#switch" class="{{p.cls}}" aria-label="{{p.aria}}" aria-current="{{p.cur}}">
+                    <span class="pchip-top"><img src="{{p.img}}" alt=""><span class="pchip-name ltr">{{p.name}}</span></span>
+                    <div class="progress progress-sm" aria-hidden="true"><i style="width: {{p.pct}};"></i></div>
+                    <span class="pchip-sub"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="color: var(--link);" aria-hidden="true"></span></sc-if><span>{{p.sub}}</span></span>
+                  </a>
+                </sc-for>
+                <sc-if value="{{isDesk}}" hint-placeholder-val="{{true}}"><a href="#paths" class="pchip is-add press"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addShort}}</a></sc-if>
+              </div>
+            </div>
             <sc-if value="{{h.next}}" hint-placeholder-val="{{true}}">
               <section class="card-panel" aria-labelledby="pg-next-{{lang}}-{{theme}}-{{device}}" style="position: relative; padding: {{h.cardPad}}; display: flex; flex-direction: column; gap: 12px; border-radius: 24px; overflow: hidden;">
                 <img src="{{img.forms}}" alt="" style="position: absolute; width: {{h.illSize}}px; height: {{h.illSize}}px; top: {{h.illTop}}; inset-inline-end: -8px;">
@@ -212,19 +264,6 @@ a{color:#005F99}a:hover{color:#003F66}
                 </div>
               </section>
             </sc-if>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <div class="pg-sec" style="margin-top: -4px;"><p class="t-over">{{c.yourPaths}}</p><a href="#paths" class="pg-link" style="min-height: 32px;">{{c.allPaths}}</a></div>
-              <div class="prow">
-                <sc-for list="{{chips}}" as="p" hint-placeholder-count="2">
-                  <a href="#switch" class="{{p.cls}}" aria-label="{{p.aria}}" aria-current="{{p.cur}}">
-                    <span class="pchip-top"><img src="{{p.img}}" alt=""><span class="pchip-name ltr">{{p.name}}</span></span>
-                    <div class="progress progress-sm" aria-hidden="true"><i style="width: {{p.pct}};"></i></div>
-                    <span class="pchip-sub"><sc-if value="{{p.isCurrent}}" hint-placeholder-val="{{false}}"><span class="ph ph-check-circle-fill" style="color: var(--link);" aria-hidden="true"></span></sc-if><span>{{p.sub}}</span></span>
-                  </a>
-                </sc-for>
-                <sc-if value="{{isDesk}}" hint-placeholder-val="{{true}}"><a href="#paths" class="pchip is-add press"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addShort}}</a></sc-if>
-              </div>
-            </div>
           </div>
           <div class="pg-stack" style="gap: 14px;">
             <section class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 14px;">
@@ -244,7 +283,7 @@ a{color:#005F99}a:hover{color:#003F66}
                 <div style="flex: 1; min-width: 0;"><p class="t-label" style="font-size: 16px;">{{c.goalTitle}}</p><p class="t-small ink-2">{{c.goalBody}}</p></div>
               </div>
               <div style="height: 2px; background: var(--line); border-radius: 2px;"></div>
-              <a href="#streak" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); min-height: 32px;">
+              <a href="#streak" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); min-height: 44px;">
                 <span class="ph ph-flame-fill" style="font-size: 20px; color: #F59E2B;" aria-hidden="true"></span>
                 <span class="t-label" style="font-size: 15px; flex: 1;">{{c.streak16}}</span>
                 <span class="t-small" style="display: inline-flex; align-items: center; gap: 4px; font-weight: 700; color: var(--link);"><span class="ph ph-freeze-fill" aria-hidden="true"></span>{{h.freezeText}}</span>
@@ -252,7 +291,7 @@ a{color:#005F99}a:hover{color:#003F66}
               </a>
               <div class="wk">
                 <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
-                  <div class="wk-d"><span class="{{d.cls}}" style="width: 32px; height: 32px;"><span class="{{d.icon}}" aria-hidden="true"></span></span><span class="wk-l">{{d.label}}</span></div>
+                  <div class="wk-d" role="img" aria-label="{{d.aria}}"><span aria-hidden="true" class="{{d.cls}}" style="width: 32px; height: 32px;"><span class="{{d.icon}}" aria-hidden="true"></span></span><span class="wk-l" aria-hidden="true">{{d.label}}</span></div>
                 </sc-for>
               </div>
             </section>
@@ -266,7 +305,7 @@ a{color:#005F99}a:hover{color:#003F66}
       <header class="pg-top" style="gap: 6px; position: relative;">
         <button class="{{m.swCls}}" type="button" aria-haspopup="dialog" aria-expanded="{{m.swOpen}}">
           <img src="{{img.forms}}" alt="">
-          <span class="sw-name"><span class="ltr">Forms That Flow</span><small>{{c.unit2of5}}</small></span>
+          <span class="sw-name"><span class="ltr">Forms That Flow</span><small>{{mp.sub}}</small></span>
           <span class="ph ph-caret-down caret" aria-hidden="true"></span>
         </button>
         <div style="flex: 1;"></div>
@@ -286,55 +325,89 @@ a{color:#005F99}a:hover{color:#003F66}
       <main class="pg-body" style="gap: 12px;">
         <div class="pg-split" style="{{m.splitStyle}}">
           <div class="pg-stack" style="gap: 12px;">
-            <a href="#unit1" class="card press" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);">
-              <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--right-line); color: #01241A; flex: none; box-shadow: 0 3px 0 #2A7F5F;"><span class="ph ph-check" style="font-size: 22px;" aria-hidden="true"></span></span>
-              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
-                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unit1}} · {{c.done}}</span>
-                <span class="t-label" style="font-size: 15px;">{{c.u1Title}}</span>
-                <span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="skill skill-shown" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-seal-fill" style="font-size: 13px;" aria-hidden="true"></span>6 · {{c.shown}}</span><span class="skill skill-kept" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-star-fill" style="font-size: 13px;" aria-hidden="true"></span>2 · {{c.kept}}</span></span>
-              </span>
-              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
-            </a>
+            <section class="path-go" aria-labelledby="pgo-{{lang}}-{{theme}}-{{device}}-{{view}}">
+              <span class="{{mp.icCls}}" aria-hidden="true"><span class="{{mp.icon}}"></span></span>
+              <div class="pgo-text">
+                <p class="pgo-over">{{mp.over}}</p>
+                <h2 class="pgo-title" id="pgo-{{lang}}-{{theme}}-{{device}}-{{view}}">{{mp.title}}</h2>
+                <p class="pgo-meta">{{mp.meta}}</p>
+              </div>
+              <sc-if value="{{mp.hasProg}}" hint-placeholder-val="{{true}}">
+                <div class="pgo-prog"><span class="progress progress-sm" role="progressbar" aria-label="{{c.pathProgress}}" aria-valuenow="{{mp.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{mp.pct}};"></i></span><span class="num">{{mp.pct}}</span></div>
+              </sc-if>
+              <div class="pgo-acts">
+                <a href="{{mp.href}}" class="btn btn-primary btn-lg btn-block press">{{mp.btn}}<span class="{{mp.btnIcon}}" aria-hidden="true"></span></a>
+                <sc-if value="{{mp.hasLink}}" hint-placeholder-val="{{false}}">
+                  <a href="#certificate" class="pg-link"><span class="ph ph-certificate" aria-hidden="true"></span>{{c.goDoneLink}}</a>
+                </sc-if>
+              </div>
+            </section>
+            <sc-for list="{{mp.doneUnits}}" as="u" hint-placeholder-count="1">
+              <a href="#{{u.id}}" class="card press" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);">
+                <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--right-line); color: #01241A; flex: none; box-shadow: 0 3px 0 #2A7F5F;"><span class="ph ph-check" style="font-size: 22px;" aria-hidden="true"></span></span>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                  <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{u.over}}</span>
+                  <span class="t-label" style="font-size: 15px;">{{u.title}}</span>
+                  <span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="skill skill-shown" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-seal-fill" style="font-size: 13px;" aria-hidden="true"></span>{{u.shownN}} · {{c.shown}}</span><span class="skill skill-kept" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-star-fill" style="font-size: 13px;" aria-hidden="true"></span>{{u.keptN}} · {{c.kept}}</span></span>
+                </span>
+                <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+              </a>
+            </sc-for>
+            <sc-if value="{{mp.hasCur}}" hint-placeholder-val="{{true}}">
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                <span class="t-over">{{c.unit2}}</span>
-                <span class="skill skill-practiced" style="height: 22px; font-size: 12px; padding: 0 9px;"><span class="ph ph-check-circle" style="font-size: 13px;" aria-hidden="true"></span>5 · {{c.practiced}}</span>
-                <span class="skill" style="height: 22px; font-size: 12px; padding: 0 9px; box-shadow: inset 0 0 0 1.5px var(--line-field); color: var(--ink-2);">3 · {{c.notYet}}</span>
+                <span class="t-over">{{mp.curOver}}</span>
+                <sc-if value="{{mp.hasPr}}" hint-placeholder-val="{{true}}"><span class="skill skill-practiced" style="height: 22px; font-size: 12px; padding: 0 9px;"><span class="ph ph-check-circle" style="font-size: 13px;" aria-hidden="true"></span>{{mp.prN}} · {{c.practiced}}</span></sc-if>
+                <span class="skill" style="height: 22px; font-size: 12px; padding: 0 9px; box-shadow: inset 0 0 0 1.5px var(--line-field); color: var(--ink-2);">{{mp.nyN}} · {{c.notYet}}</span>
               </div>
-              <h2 class="t-h2" style="font-size: 22px;">{{c.u2Title}}</h2>
+              <h2 class="t-h2" style="font-size: 22px;">{{mp.curTitle}}</h2>
             </div>
             <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; position: relative;">
-              <span aria-hidden="true" style="position: absolute; top: 24px; bottom: 30px; inset-inline-start: 21px; width: 4px; border-radius: 4px; background: linear-gradient(180deg, var(--right-line) 0 46%, var(--sel-line) 46% 70%, var(--line) 70% 100%);"></span>
+              <span aria-hidden="true" style="position: absolute; top: 24px; bottom: 30px; inset-inline-start: 21px; width: 4px; border-radius: 4px; background: {{mp.lineBg}};"></span>
               <sc-for list="{{lessons}}" as="l" hint-placeholder-count="4">
                 <li style="display: flex; align-items: center; gap: 12px; position: relative;">
-                  <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
-                  <div class="{{l.cardCls}}" style="{{l.cardStyle}}">
-                    <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
-                    <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
-                  </div>
+                  <!-- 6 Nov 2026 (Eyad): a done or next step is one link (dot and card); locked steps stay plain -->
+                  <sc-if value="{{l.link}}" hint-placeholder-val="{{true}}">
+                    <a href="#lesson" class="map-step press" aria-label="{{l.aria}}">
+                      <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
+                      <span class="{{l.cardCls}} map-step-card" style="{{l.cardStyle}}">
+                        <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
+                        <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
+                        <span class="ph ph-caret flip map-step-go" aria-hidden="true"></span>
+                      </span>
+                    </a>
+                  </sc-if>
+                  <sc-if value="{{l.plain}}" hint-placeholder-val="{{false}}">
+                    <span style="{{l.dot}}"><span class="{{l.icon}}" style="font-size: 20px;" aria-hidden="true"></span></span>
+                    <div class="{{l.cardCls}}" style="{{l.cardStyle}}">
+                      <span class="t-small" style="font-weight: 700; font-size: 13px; color: {{l.overColor}};">{{l.over}}</span>
+                      <span class="t-label" style="font-size: 15px;">{{l.title}}</span>
+                    </div>
+                  </sc-if>
                 </li>
               </sc-for>
             </ol>
             <button class="card" type="button" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-style: dashed; text-align: start; font: inherit; color: var(--ink); cursor: pointer;">
               <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--disabled-bg); color: var(--disabled-ink); flex: none;"><span class="ph ph-lock-fill" style="font-size: 22px;" aria-hidden="true"></span></span>
               <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
-                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unit3}}</span>
-                <span class="t-label">{{c.u3Title}}</span>
-                <span class="t-small ink-2" style="font-size: 13px; display: inline-flex; gap: 6px; align-items: center;"><span class="ph ph-info" aria-hidden="true"></span>{{c.u3Why}}</span>
+                <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{mp.lockOver}}</span>
+                <span class="t-label">{{mp.lockTitle}}</span>
+                <span class="t-small ink-2" style="font-size: 13px; display: inline-flex; gap: 6px; align-items: center;"><span class="ph ph-info" aria-hidden="true"></span>{{mp.lockWhy}}</span>
               </span>
             </button>
+            </sc-if>
           </div>
           <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
             <aside class="pg-stack">
               <section class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
                 <p class="t-over">{{c.pathProgress}}</p>
-                <div style="display: flex; align-items: baseline; gap: 8px;"><b class="num" style="font-size: 30px;">30%</b><span class="t-small ink-2">{{c.p01Progress}}</span></div>
-                <div class="progress progress-sm"><i style="width: 30%;"></i></div>
+                <div style="display: flex; align-items: baseline; gap: 8px;"><b class="num" style="font-size: 30px;">{{mp.pct}}</b><span class="t-small ink-2">{{mp.progText}}</span></div>
+                <div class="progress progress-sm"><i style="width: {{mp.pct}};"></i></div>
                 <p class="t-over" style="margin-top: 6px;">{{c.skillsTitle}}</p>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                  <span class="skill skill-practiced"><span class="ph ph-check-circle" aria-hidden="true"></span>5 · {{c.practiced}}</span>
-                  <span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>6 · {{c.shown}}</span>
-                  <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>2 · {{c.kept}}</span>
+                  <span class="skill skill-practiced"><span class="ph ph-check-circle" aria-hidden="true"></span>{{mp.aPr}} · {{c.practiced}}</span>
+                  <span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>{{mp.aSh}} · {{c.shown}}</span>
+                  <span class="skill skill-kept"><span class="ph ph-star-fill" aria-hidden="true"></span>{{mp.aKp}} · {{c.kept}}</span>
                 </div>
                 <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.statesNote}}</span></p>
               </section>
@@ -406,6 +479,28 @@ a{color:#005F99}a:hover{color:#003F66}
     </sc-if>
   </div>
 
+  <!-- ============ Loading between screens (built in PR #155) ============ -->
+  <sc-if value="{{ld.line}}" hint-placeholder-val="{{false}}">
+    <div class="{{ld.lineCls}}" aria-hidden="true"><span class="nav-line-bar" style="{{ld.lineStyle}}"></span></div>
+  </sc-if>
+  <sc-if value="{{ld.layer}}" hint-placeholder-val="{{false}}">
+    <div class="{{ld.layerCls}}" aria-busy="true">
+      <div class="ug-loader">
+        <div class="ug-loader-art">
+          <span class="ug-loader-tag"><span class="ph ph-hash" aria-hidden="true"></span>{{ld.name}}</span>
+          <div class="ug-loader-frame sel-frame">
+            <svg class="ugm ugm--loading" viewBox="0 0 487.5 495" width="64" height="65" aria-hidden="true" focusable="false" style="--ugm-grad: url(#ugm-{{lang}}-{{theme}}-{{device}}-{{view}}-{{ld.kind}}) #005F99;"><defs><linearGradient id="ugm-{{lang}}-{{theme}}-{{device}}-{{view}}-{{ld.kind}}" gradientUnits="userSpaceOnUse" x1="30.47" y1="49.45" x2="396.55" y2="351.54"><stop offset="0" stop-color="#60BEBB"></stop><stop offset="0.102" stop-color="#54B3B7"></stop><stop offset="0.663" stop-color="#187CA4"></stop><stop offset="0.93" stop-color="#00669C"></stop><stop offset="1" stop-color="#005F99"></stop></linearGradient></defs><g class="door"><path d="M353.9,12.8c-3.6-3.5-223,26-257.8,30.7c-2.7,0.4-4.6,2.6-4.6,5.3v283.5c0,25.6,3.9,47.9,11.7,67c7.8,19.1,18.4,35,31.9,47.8c13.4,12.8,28.9,22.5,46.4,29c17.5,6.6,36.2,9.8,56.2,9.8c18.7,0,36.9-3.1,54.3-9.4c17.5-6.2,33-15.8,46.4-28.6c13.4-12.8,24-28.9,31.9-48.3c7.8-19.4,11.7-41.9,11.7-67.5V40.9C382,25.4,369.4,12.8,353.9,12.8L353.9,12.8z M344,388.1c-6.6,15.9-15.1,29-25.8,39.4c-10.6,10.3-23,18-37,23c-14.1,5-28.6,7.5-43.6,7.5c-15.6,0-30.6-2.7-45-8c-6.2-2.3-12-5-17.5-8.2c-12.5-7.3-20.2-20.7-20-35.2l2.4-269.8c0.1-11.2,6.9-21.3,17.2-25.7l167.4-70.3c5.6-2.3,11.8,1.8,11.8,7.8v283.8C353.9,353.6,350.6,372.2,344,388.1z"></path></g><circle class="eye" cx="228.4" cy="286" r="23.9"></circle><path class="smile" d="M202.9,414.4c-0.3,0-0.5,0-0.8,0c-3.6-0.2-6.2-3.5-5.7-7l1.2-8.5l-1,7.5l0.2-1.7c0.4-3.2,3.2-5.5,6.4-5.4c14.1,0.7,52-0.1,78.3-25.3c2.3-2.2,5.9-2.2,8.3,0l2,1.8c2.7,2.4,2.7,6.6,0.1,9.2C261.6,414,219.8,415.2,202.9,414.4z"></path></svg>
+            <span class="ug-loader-line"></span>
+            <span class="ug-loader-line is-short"></span>
+            <span class="ug-loader-cursor" aria-hidden="true"><span class="ph ph-cursor-fill"></span></span>
+          </div>
+        </div>
+        <p class="ug-loader-tip">{{c.ldTip}}</p>
+        <p class="sr-only" role="status">{{c.ldLabel}}</p>
+      </div>
+    </div>
+  </sc-if>
+
   <!-- ============ Overlays ============ -->
   <sc-if value="{{ov.any}}" hint-placeholder-val="{{false}}">
     <div class="pg-scrim"></div>
@@ -466,7 +561,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","obRecommend","obAll","obGuest"],"default":"paths"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["paths","pathsDone","pathNew","pathJoined","pathStarted","home","homeResume","homeFreeze","mapSwitch","mapLocked","mapStart","mapContinue","mapDone","obRecommend","obAll","obGuest"],"default":"paths"},"loading":{"editor":"enum","options":["none","early","layer","reduced","full"],"default":"none"},"rail":{"editor":"enum","options":["closed","open"],"default":"closed"},"team":{"editor":"enum","options":["off","on"],"default":"off"},"$preview":{"width":390,"height":844}}'>
 /* Slice 3 · several paths: Paths tab, path detail, home, path map switcher, onboarding. Spec §4.4b, EN-11, EN-11b. */
 const IMG = {
   forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
@@ -495,7 +590,7 @@ const C = {
     navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', addPath: 'Add a path', addShort: 'Add a path', sound: 'Sound', otherLang: 'العربية',
     back: 'Back', cont: 'Continue', free1: 'Unit 1 free', current: 'Current', soon: 'Coming soon', interactive: 'Interactive', hybrid: 'Hybrid · Video', units: (n) => n + ' units', units5: '5 units',
     pathProgress: 'Path progress', seeAll: 'See all 14 paths', allPaths: 'All paths',
-    pathsTitle: 'Paths', pathsLead: 'Join as many paths as you like. The current one sets your next lesson.', secJoined: 'Your paths · 2', secNew: 'Start a new path', secSoon: 'Coming soon · 11',
+    pathsTitle: 'Paths', pathsLead: 'Join as many paths as you like. The current one sets your next lesson.', secJoined: 'Your paths · 2', secJoinedN: (n) => 'Your paths · ' + n, secDoneN: (n) => 'Completed · ' + n, completed: 'Completed', leftN: (n) => n + ' skills to show', doneLine: (n, d) => n + ' skills Shown · Certificate ready', doneAria: (n) => n + ', completed. Certificate ready', secNew: 'Start a new path', secSoon: 'Coming soon · 11',
     sub: { P01: 'Design forms people can finish, understand and recover from, in English and Arabic.', P10: 'Help people see what matters first, on any screen and in any language.', P14: 'Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.',
       P02: 'Spot where people get stuck, and fix that first.', P03: 'Make sure you solve the problem that matters.', P04: 'Plan the steps people take, from start to done.', P05: 'Design that works for every ability and device.', P06: 'Ask, listen and learn what people really need.',
       P07: 'Go from findings to clear design choices.', P08: 'Run quick tests and fix what they find.', P09: 'Menus and labels that lead to the right page.', P11: 'Build components that stay consistent.', P12: 'AI features people understand and trust.', P13: 'Use AI tools to research and design faster.' },
@@ -519,6 +614,17 @@ const C = {
     goalTitle: "Today's goal", goalBody: 'One more lesson, in any path.', streak16: '16 day streak', freezes1: '1 freeze ready', freezes0: 'Earn a freeze this week',
     fzKept: 'A freeze kept your streak', fzKeptBody: 'You missed yesterday, so a freeze covered it. Your streak is still 16 days.', dismiss: 'Dismiss',
     days: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    /* path page main action (5 Nov 2026) */
+    unit1of5: 'Unit 1 of 5', allUnitsDone: 'All 5 units done',
+    goStartOver: 'Start here · Unit 1, Lesson 1', goStartTitle: 'Every field costs something', goStartMeta: '8 min · 5 units, 20 lessons', goStartBtn: 'Start this path',
+    goContOver: 'Next up · Unit 2, Lesson 3', goContTitle: 'Long lists: let people type', goContMeta: '6 min · 6 of 20 lessons done', goContBtn: 'Continue this path',
+    goDoneOver: 'Path complete', goDoneTitle: 'You finished Forms That Flow', goDoneMeta: '20 of 20 lessons · all 40 skills shown', goDoneBtn: 'Review this path', goDoneLink: 'See your certificate',
+    u2Why: 'Opens after the Unit 1 skill check', p01Start: 'Unit 1 of 5 · 0 of 20 lessons', p01Done: 'All 5 units · 20 of 20 lessons',
+    railUnits: (n) => n + ': units', stepGo: 'Continue', stepReplay: 'Replay',
+    u4Title: 'Errors people can fix', u5Title: 'Forms everyone can finish',
+    lessonsU1: [['Every field costs something', 'next', '8 min'], ['Required or optional? Show it on every field', 'lock', '8 min'], ['Ask so people can answer', 'lock', '8 min'], ['Skill check: ask only what you need', 'check', 'New case, no hints']],
+    /* loading */
+    ldLabel: 'Loading', ldTip: 'Snapping layers to the grid…',
     /* map */
     unit2of5: 'Unit 2 of 5', switchTitle: 'Switch path', switchBody: 'Your next lesson follows the path you pick. Nothing is lost on the others.',
     unit1: 'Unit 1', unit3: 'Unit 3', done: 'Done', u1Title: 'Ask only what you need', u2Title: 'Pick the right control', u3Title: 'Labels and hints that stay visible',
@@ -539,7 +645,7 @@ const C = {
     navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', addPath: 'أضف مسارًا', addShort: 'أضف مسارًا', sound: 'الصوت', otherLang: 'English',
     back: 'رجوع', cont: 'متابعة', free1: 'الوحدة 1 مجانية', current: 'الحالي', soon: 'قريبًا', interactive: 'تفاعلي', hybrid: 'مختلط · فيديو', units: (n) => n + ' وحدات', units5: '5 وحدات',
     pathProgress: 'تقدّم المسار', seeAll: 'اعرض كل المسارات الـ14', allPaths: 'كل المسارات',
-    pathsTitle: 'المسارات', pathsLead: 'انضمّ إلى أي عدد من المسارات. المسار الحالي هو الذي يحدّد درسك التالي.', secJoined: 'مساراتك · 2', secNew: 'ابدأ مسارًا جديدًا', secSoon: 'قريبًا · 11',
+    pathsTitle: 'المسارات', pathsLead: 'انضمّ إلى أي عدد من المسارات. المسار الحالي هو الذي يحدّد درسك التالي.', secJoined: 'مساراتك · 2', secJoinedN: (n) => 'مساراتك · ' + n, secDoneN: (n) => 'مكتملة · ' + n, completed: 'مكتمل', leftN: (n) => 'باقي ' + n + ' مهارات لتثبتها', doneLine: (n, d) => n + ' مهارة «أثبتت» · الشهادة جاهزة', doneAria: (n) => n + '، مكتمل. الشهادة جاهزة', secNew: 'ابدأ مسارًا جديدًا', secSoon: 'قريبًا · 11',
     sub: { P01: 'صمّم نماذج يستطيع الناس إكمالها وفهمها والتعافي من أخطائها، بالعربية والإنجليزية.', P10: 'ساعد الناس على رؤية الأهم أولًا، على أي شاشة وبأي لغة.', P14: 'اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر.',
       P02: 'اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.', P03: 'تأكّد أنك تحلّ المشكلة التي تهمّ فعلًا.', P04: 'خطّط للخطوات التي يمرّ بها الناس من البداية حتى النهاية.', P05: 'تصميم يناسب كل القدرات وكل الأجهزة.', P06: 'اسأل واستمع، واعرف ما يحتاجه الناس فعلًا.',
       P07: 'انتقل من النتائج إلى قرارات تصميم واضحة.', P08: 'أجرِ اختبارات سريعة وأصلح ما تكشفه.', P09: 'قوائم وعناوين تقود إلى الصفحة الصحيحة.', P11: 'ابنِ مكوّنات تبقى متّسقة.', P12: 'ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.', P13: 'استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.' },
@@ -560,11 +666,20 @@ const C = {
     goalTitle: 'هدف اليوم', goalBody: 'درس واحد آخر، في أي مسار.', streak16: '16 يومًا متتاليًا', freezes1: 'تجميد واحد متاح', freezes0: 'اكسب تجميدًا هذا الأسبوع',
     fzKept: 'حافظ التجميد على سلسلتك', fzKeptBody: 'فاتك يوم أمس، فغطّاه تجميد. وما زالت سلسلتك 16 يومًا.', dismiss: 'إغلاق',
     days: ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح'],
+    unit1of5: 'الوحدة 1 من 5', allUnitsDone: 'أنهيت الوحدات الخمس',
+    goStartOver: 'ابدأ من هنا · الوحدة 1، الدرس 1', goStartTitle: 'لكل حقل ثمن', goStartMeta: '8 دقائق · 5 وحدات، 20 درسًا', goStartBtn: 'ابدأ هذا المسار',
+    goContOver: 'التالي · الوحدة 2، الدرس 3', goContTitle: 'القوائم الطويلة: دع الناس يكتبون', goContMeta: '6 دقائق · أنهيت 6 دروس من 20', goContBtn: 'تابع هذا المسار',
+    goDoneOver: 'اكتمل المسار', goDoneTitle: 'أنهيت مسار Forms That Flow', goDoneMeta: '20 درسًا من 20 · أثبتّ المهارات الـ40 كلها', goDoneBtn: 'راجع هذا المسار', goDoneLink: 'اعرض شهادتك',
+    u2Why: 'تُفتح بعد اختبار مهارة الوحدة 1', p01Start: 'الوحدة 1 من 5 · 0 دروس من 20', p01Done: 'الوحدات الخمس · 20 درسًا من 20',
+    railUnits: (n) => 'وحدات ' + n, stepGo: 'تابع', stepReplay: 'أعد الدرس',
+    u4Title: 'أخطاء يستطيع الناس إصلاحها', u5Title: 'نماذج يستطيع الجميع إكمالها',
+    lessonsU1: [['لكل حقل ثمن', 'next', '8 دقائق'], ['إلزامي أم اختياري؟ وضّحه في كل حقل', 'lock', '8 دقائق'], ['اسأل بطريقة يستطيع الناس الإجابة عنها', 'lock', '8 دقائق'], ['اختبار المهارة: اسأل فقط عمّا تحتاجه', 'check', 'حالة جديدة بدون تلميحات']],
+    ldLabel: 'جارٍ التحميل', ldTip: 'نضبط الطبقات على الشبكة…',
     unit2of5: 'الوحدة 2 من 5', switchTitle: 'غيّر المسار', switchBody: 'درسك التالي يتبع المسار الذي تختاره، ولا يضيع شيء من المسارات الأخرى.',
     unit1: 'الوحدة 1', unit3: 'الوحدة 3', done: 'مكتملة', u1Title: 'اسأل فقط عمّا تحتاجه', u2Title: 'اختر عنصر التحكّم المناسب', u3Title: 'عناوين وتلميحات تبقى ظاهرة',
-    u3Why: 'تُفتح بعد اختبار مهارة الوحدة 2', shown: 'أثبتّ', kept: 'أتقنت', practiced: 'تدرّبت', notYet: 'لم تبدأ',
+    u3Why: 'تُفتح بعد اختبار مهارة الوحدة 2', shown: 'أثبتت', kept: 'أتقنت', practiced: 'تدرّبت', notYet: 'لم تبدأ',
     lessonsP01: [['خيار واحد، أم عدة خيارات، أم Toggle؟', 'done', '+60 XP'], ['تكتب، أم تختار، أم تزيد وتنقص؟', 'done', '+50 XP'], ['القوائم الطويلة: دع الناس يكتبون', 'next', '6 دقائق'], ['اختبار المهارة: اختر عنصر التحكّم المناسب', 'check', 'حالة جديدة بدون تلميحات']],
-    p01Progress: 'الوحدة 2 من 5 · 6 دروس من 20', skillsTitle: 'مهارات هذا المسار', statesNote: 'تدرّبت: أجبت صحيحًا في درس. أثبتّ: أجبت صحيحًا على حالة جديدة في اختبار المهارة. أتقنت: أجبت صحيحًا مرة أخرى في المراجعة بعد 3 أيام أو أكثر.',
+    p01Progress: 'الوحدة 2 من 5 · 6 دروس من 20', skillsTitle: 'مهارات هذا المسار', statesNote: 'تدرّبت: أجبت صحيحًا في درس. أثبتت: أجبت صحيحًا على حالة جديدة في اختبار المهارة. أتقنت: أجبت صحيحًا مرة أخرى في المراجعة بعد 3 أيام أو أكثر.',
     lkBody: 'تُفتح هذه الوحدة عند اكتمال الأمرين:', lkCheck: 'اجتز اختبار مهارة الوحدة 2', lkCheckSub: 'أنهِ الدرس 3، ثم ابدأ الاختبار', lkLeft: 'بقي 2',
     lkSub: 'الاشتراك', lkSubSub: 'الوحدات من 2 إلى 5 ضمن الاشتراك، واشتراكك فعّال.', lkGo: 'تابع الوحدة 2', lkTest: 'ابدأ اختبار مهارة الوحدة 2 الآن',
     obStep: 'السؤال 2 من 3', obQ: 'بماذا تريد أن تبدأ؟', obSub: 'نختار مسار بدايتك من إجابتك، ويمكنك إضافة مسارات أخرى لاحقًا.',
@@ -575,7 +690,26 @@ const C = {
   }
 };
 const DOT = 'display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; flex: none; ';
-const VIEWS = ['paths', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'obRecommend', 'obAll', 'obGuest'];
+const VIEWS = ['paths', 'pathsDone', 'pathNew', 'pathJoined', 'pathStarted', 'home', 'homeResume', 'homeFreeze', 'mapSwitch', 'mapLocked', 'mapStart', 'mapContinue', 'mapDone', 'obRecommend', 'obAll', 'obGuest'];
+const LOADS = ['none', 'early', 'layer', 'reduced', 'full'];
+/* Week strip (design audit U3). One week start per locale: English starts on Monday, Arabic on Saturday (the PM confirms).
+   Short day names, today labelled Today / «اليوم», and each day has an accessible name with its state. */
+const WK = {
+  en: { order: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], sep: ', ', today: 'Today',
+    short: { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' },
+    full: { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' },
+    st: { goal: 'goal met', done: 'goal met', part: 'practised, goal not met', freeze: 'freeze used', today: 'today', next: 'still to come', future: 'still to come' } },
+  ar: { order: ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'], sep: '، ', today: 'اليوم',
+    short: { sat: 'سبت', sun: 'أحد', mon: 'اثنين', tue: 'ثلاثاء', wed: 'أربعاء', thu: 'خميس', fri: 'جمعة' },
+    full: { sat: 'السبت', sun: 'الأحد', mon: 'الاثنين', tue: 'الثلاثاء', wed: 'الأربعاء', thu: 'الخميس', fri: 'الجمعة' },
+    st: { goal: 'اكتمل الهدف', done: 'اكتمل الهدف', part: 'تدرّبت ولم يكتمل الهدف', freeze: 'استُخدم تجميد', today: 'اليوم', next: 'لم يأتِ بعد', future: 'لم يأتِ بعد' } }
+};
+/* past: the state of each day before today, by weekday; days after today in the locale's week are still to come */
+function weekStrip(lang, past, today, nextName) {
+  const w = WK[lang === 'ar' ? 'ar' : 'en']; const at = w.order.indexOf(today);
+  return w.order.map((d, i) => { const s = i < at ? (past[d] || 'part') : i === at ? 'today' : (nextName || 'next');
+    return { key: d, state: s, label: s === 'today' ? w.today : w.short[d], aria: w.full[d] + w.sep + w.st[s] }; });
+}
 class Component extends DCLogic {
   renderVals() {
     const lang = this.props.lang === 'ar' ? 'ar' : 'en';
@@ -592,13 +726,15 @@ class Component extends DCLogic {
         cls: 'path-card press' + (state === 'current' ? ' is-current sel-frame' : ''), aria: state === 'current' ? c.isCurrentAria(name) : name }, kindOf(kind));
     };
     const all = PATHS.map(card);
-    const tab = { paths: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths' }[view];
+    const tab = { paths: 'paths', pathsDone: 'paths', pathNew: 'paths', pathJoined: 'paths', pathStarted: 'paths', home: 'home', homeResume: 'home', homeFreeze: 'home', mapSwitch: 'paths', mapLocked: 'paths', mapStart: 'paths', mapContinue: 'paths', mapDone: 'paths' }[view];
+    const load = LOADS.indexOf(this.props.loading) >= 0 ? this.props.loading : 'none';
+    const navTab = (load === 'none' || load === 'full') ? tab : 'paths'; /* the tapped tab lights up at once */
     const isOb = view.indexOf('ob') === 0;
-    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: tab === id ? 'page' : 'false', icon: 'ph ' + (tab === id ? iconOn : icon) });
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: navTab === id ? 'page' : 'false', icon: 'ph ' + (navTab === id ? iconOn : icon) });
     const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
     const isDetail = view === 'pathNew' || view === 'pathJoined' || view === 'pathStarted';
     const isHome = view === 'home' || view === 'homeResume' || view === 'homeFreeze';
-    const isMap = view === 'mapSwitch' || view === 'mapLocked';
+    const isMap = view.indexOf('map') === 0;
 
     /* path detail */
     let d = {};
@@ -624,7 +760,7 @@ class Component extends DCLogic {
 
     /* home */
     const freezeView = view === 'homeFreeze';
-    const weekStates = freezeView ? ['goal', 'goal', 'freeze', 'today', 'next', 'next', 'next'] : ['goal', 'part', 'goal', 'goal', 'today', 'next', 'next'];
+    const weekDays = freezeView ? weekStrip(lang, { sat: 'goal', sun: 'goal', mon: 'goal', tue: 'goal', wed: 'freeze' }, 'thu') : weekStrip(lang, { sat: 'part', sun: 'part', mon: 'goal', tue: 'part', wed: 'goal', thu: 'goal' }, 'fri');
     const wkIcon = { goal: 'ph ph-check', part: 'ph ph-check', freeze: 'ph ph-freeze-fill', today: 'ph ph-flame-fill', next: '' };
     const h = { next: view !== 'homeResume', resume: view === 'homeResume', freeze: freezeView, freezeText: freezeView ? c.freezes0 : c.freezes1,
       splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 400px;' : '', cardPad: isDesk ? '28px 32px' : '16px 16px 14px', illSize: isDesk ? 180 : 120, illTop: isDesk ? '20px' : '-4px',
@@ -633,14 +769,37 @@ class Component extends DCLogic {
       sub: p.isCurrent ? c.current + ' · ' + p.where : p.where, cls: 'pchip press' + (p.isCurrent ? ' is-current' : ''), aria: p.isCurrent ? c.isCurrentAria(p.name) : c.switchTo(p.name) }));
 
     /* map */
-    const lessons = c.lessonsP01.map(([title, st, meta]) => {
+    const mapState = view === 'mapStart' ? 'start' : view === 'mapDone' ? 'done' : 'continue';
+    const lessons = (mapState === 'start' ? c.lessonsU1 : c.lessonsP01).map(([title, st, meta]) => {
       const done = st === 'done', next = st === 'next';
-      return { title, over: done ? (c.doneChip + ' · ' + meta) : meta, overColor: done ? 'var(--right-ink)' : (next ? 'var(--link)' : 'var(--ink-3)'),
+      const link = done || next;
+      return { title, link, plain: !link, aria: title + '. ' + (done ? c.stepReplay : c.stepGo), over: done ? (c.doneChip + ' · ' + meta) : meta, overColor: done ? 'var(--right-ink)' : (next ? 'var(--link)' : 'var(--ink-3)'),
         icon: done ? 'ph ph-check' : (next ? 'ph ph-play' : 'ph ph-lock-fill'),
         dot: DOT + (done ? 'background: var(--right-line); color: #01241A; box-shadow: 0 4px 0 #2A7F5F;' : next ? 'background: var(--brand); color: var(--on-brand); box-shadow: 0 4px 0 var(--brand-ledge);' : 'background: var(--disabled-bg); color: var(--disabled-ink);'),
         cardCls: next ? 'card' : 'card',
         cardStyle: 'flex: 1; min-width: 0; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; border-radius: 16px;' + (next ? ' background: var(--sel-bg); border-color: var(--sel-line); box-shadow: 0 4px 0 var(--sel-line);' : (st === 'check' ? ' border-style: dashed; background: transparent;' : '')) };
     });
+
+    /* path page main action: Start path (not started), Continue path (started), Review this path (finished) */
+    const UNITS = [['u1', c.u1Title, 6, 2], ['u2', c.u2Title, 5, 3], ['u3', c.u3Title, 6, 2], ['u4', c.u4Title, 7, 1], ['u5', c.u5Title, 8, 0]];
+    const doneUnit = ([id, title, sh, kp], i) => ({ id, title, over: c.unitN(i + 1) + ' · ' + c.done, shownN: sh, keptN: kp });
+    const MP = {
+      start: { sub: c.unit1of5, icCls: 'pgo-ic', icon: 'ph ph-cursor-fill', over: c.goStartOver, title: c.goStartTitle, meta: c.goStartMeta, btn: c.goStartBtn, btnIcon: 'ph ph-arrow flip', href: '#lesson-1-1',
+        hasProg: false, hasLink: false, pct: '0%', pctNum: 0, doneUnits: [], hasCur: true, curOver: c.unitN(1), curTitle: c.u1Title, hasPr: false, prN: 0, nyN: 8,
+        lineBg: 'linear-gradient(180deg, var(--sel-line) 0 24%, var(--line) 24% 100%)', lockOver: c.unitN(2), lockTitle: c.u2Title, lockWhy: c.u2Why, progText: c.p01Start, aPr: 0, aSh: 0, aKp: 0 },
+      continue: { sub: c.unit2of5, icCls: 'pgo-ic', icon: 'ph ph-play-fill', over: c.goContOver, title: c.goContTitle, meta: c.goContMeta, btn: c.goContBtn, btnIcon: 'ph ph-arrow flip', href: '#lesson-2-3',
+        hasProg: true, hasLink: false, pct: '30%', pctNum: 30, doneUnits: UNITS.slice(0, 1).map(doneUnit), hasCur: true, curOver: c.unit2, curTitle: c.u2Title, hasPr: true, prN: 5, nyN: 3,
+        lineBg: 'linear-gradient(180deg, var(--right-line) 0 46%, var(--sel-line) 46% 70%, var(--line) 70% 100%)', lockOver: c.unit3, lockTitle: c.u3Title, lockWhy: c.u3Why, progText: c.p01Progress, aPr: 5, aSh: 6, aKp: 2 },
+      done: { sub: c.allUnitsDone, icCls: 'pgo-ic is-done', icon: 'ph ph-trophy-fill', over: c.goDoneOver, title: c.goDoneTitle, meta: c.goDoneMeta, btn: c.goDoneBtn, btnIcon: 'ph ph-review', href: '#review-path',
+        hasProg: false, hasLink: true, pct: '100%', pctNum: 100, doneUnits: UNITS.map(doneUnit), hasCur: false, curOver: '', curTitle: '', hasPr: false, prN: 0, nyN: 0,
+        lineBg: 'none', lockOver: '', lockTitle: '', lockWhy: '', progText: c.p01Done, aPr: 0, aSh: 32, aKp: 8 }
+    };
+    const mp = MP[mapState];
+
+    /* loading between screens: Home is on screen, Paths was tapped */
+    const ld = { kind: load, line: load === 'early' || load === 'layer' || load === 'reduced', layer: load === 'layer' || load === 'reduced' || load === 'full',
+      lineCls: 'nav-line' + (load === 'reduced' ? ' is-still' : ''), lineStyle: 'animation: none; inline-size: ' + ({ early: '34%', layer: '72%', reduced: '90%' }[load] || '0') + ';',
+      layerCls: 'nav-layer' + (load === 'full' ? ' is-full' : '') + (load === 'reduced' ? ' is-still' : ''), name: load === 'full' ? 'UXGate' : c.nav.paths };
     const swOpen = view === 'mapSwitch';
     const m = { swCls: 'sw-btn' + (swOpen ? ' is-open' : ''), swOpen: swOpen ? 'true' : 'false', pop: swOpen && isDesk, splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px;' : '' };
     const swRows = [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, pct: p.pct, where: c.where[p.id] + ' · ' + p.pct, cls: 'sw-row' + (p.isCurrent ? ' is-on' : ''), cur: p.isCurrent ? 'true' : 'false', endIcon: p.isCurrent ? 'ph ph-check-circle-fill' : '' }));
@@ -662,16 +821,34 @@ class Component extends DCLogic {
 
     return {
       lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, img: IMG,
-      rootCls: 'ug pg pg-' + device,
-      showRail: isDesk && !isOb, showNav: !isDesk && !isOb && !isDetail,
+      view, mp, ld,
+      tm: { on: this.props.team === 'on' && isDesk && !isOb, bar: this.props.team === 'on' && !isDesk && !isOb,
+        title: lang === 'ar' ? 'قبل الإطلاق · عرض الفريق' : 'Pre-launch · team view', sub: lang === 'ar' ? 'يرى الزوار صفحة «قريبًا»' : 'The public sees the Coming soon page',
+        subShort: lang === 'ar' ? 'الزوار يرون «قريبًا»' : 'Public sees Coming soon',
+        aria: lang === 'ar' ? 'قبل الإطلاق، عرض الفريق. يرى الزوار صفحة «قريبًا». افتح الصفحة العامة' : 'Pre-launch team view. The public sees the Coming soon page. Open the public page' },
+      rootCls: 'ug pg pg-' + device + ((load === 'early' || load === 'layer' || load === 'reduced') ? ' is-navbusy' : ''),
+      showRail: isDesk && !isOb && load !== 'full', showNav: !isDesk && !isOb && !isDetail && load !== 'full',
       railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
-      railPaths: (view === 'pathStarted' ? [Object.assign({}, all[2], { isCurrent: true, pct: '0%' }), Object.assign({}, all[0], { isCurrent: false }), all[1]] : [all[0], all[1]]).map((p) => ({ name: p.name, img: p.img, pct: p.pct, cls: 'dk-layer' + (p.isCurrent ? ' is-on' : '') })),
+      railPaths: (view === 'pathStarted' ? [Object.assign({}, all[2], { isCurrent: true, pct: '0%' }), Object.assign({}, all[0], { isCurrent: false }), all[1]] : [all[0], all[1]]).map((p, i) => {
+        const isOpen = this.props.rail === 'open' && p.isCurrent;
+        const units = isOpen ? [c.u1Title, c.u2Title, c.u3Title, c.u4Title, c.u5Title].map((t, k) => {
+          const st = k < 1 ? 'done' : k === 1 ? 'cur' : 'lock';
+          return { title: t, cur: st === 'cur' ? 'step' : 'false', cls: 'dk-unit is-' + st, icon: 'ph ' + (st === 'done' ? 'ph-check-circle-fill' : st === 'cur' ? 'ph-play-fill' : 'ph-lock') };
+        }) : [];
+        return { name: p.name, img: p.img, pct: p.pct, cls: 'dk-layer' + (p.isCurrent ? ' is-on' : ''), cur: p.isCurrent ? 'true' : 'false',
+          isOpen, open: isOpen ? 'true' : 'false', uid: 'rail-u-' + i + '-' + lang + '-' + theme + '-' + device + '-' + view, togLabel: c.railUnits(p.name), units };
+      }),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       mark: theme === 'dark' ? '/_blob/5667904a660c43335758c7e0120ae2b8' : '/_blob/68b36b698602cc0ac59d5b87ca709073',
-      is: { paths: view === 'paths', detail: isDetail, home: isHome, map: isMap, ob: isOb },
-      joined: [all[0], all[1]], fresh: [all[2]], soon: all.slice(3),
-      d, h, chips, week: weekStates.map((s, i) => ({ label: c.days[i], cls: 'wk-dot is-' + s, icon: wkIcon[s] })),
+      is: { paths: view === 'paths' || view === 'pathsDone', detail: isDetail, home: isHome, map: isMap, ob: isOb },
+      joined: view === 'pathsDone' ? [Object.assign({}, all[1], { isCurrent: true, cls: 'path-card press is-current sel-frame', pct: '55%', pctNum: 55, aria: c.isCurrentAria(all[1].name) }),
+          Object.assign({}, all[2], { isCurrent: false, isAlmost: true, left: c.leftN(3), pct: '100%', pctNum: 100, unitNow: '' })] : [all[0], all[1]],
+      fresh: view === 'pathsDone' ? [] : [all[2]], soon: all.slice(3),
+      hasFresh: view !== 'pathsDone', hasDone: view === 'pathsDone',
+      secJoined: view === 'pathsDone' ? c.secJoinedN(2) : c.secJoined, secDone: c.secDoneN(1),
+      done: [Object.assign({}, all[0], { doneLine: c.doneLine(40), doneAria: c.doneAria(all[0].name) })],
+      d, h, chips, week: weekDays.map((w) => ({ label: w.label, aria: w.aria, cls: 'wk-dot is-' + w.state, icon: wkIcon[w.state] })),
       m, lessons, swRows, o, opts, allList, ov,
       kept: [all[0], all[1]].map((p) => ({ name: p.name, img: p.img, where: c.keptWhere[p.id] }))
     };

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Accordion · landing questions</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+  <section class="{{secCls}}" aria-labelledby="faq-h-{{lang}}-{{theme}}-{{device}}-{{view}}">
+    <div class="faq-acc-side">
+      <h2 id="faq-h-{{lang}}-{{theme}}-{{device}}-{{view}}">{{c.title}}</h2>
+      <a href="#help" class="pg-link" style="padding: 0;"><span class="ph ph-chat" aria-hidden="true"></span>{{c.help}}</a>
+    </div>
+    <div class="{{accCls}}">
+      <sc-for list="{{faq}}" as="f" hint-placeholder-count="5">
+        <div class="{{f.cls}}">
+          <h3 class="acc-q"><button class="acc-btn" type="button" id="{{f.bid}}" aria-expanded="{{f.open}}" aria-controls="{{f.id}}"><span>{{f.q}}</span><span class="acc-ic" aria-hidden="true"><span class="ph ph-caret-down"></span></span></button></h3>
+          <div class="acc-panel" id="{{f.id}}" role="region" aria-labelledby="{{f.bid}}" style="{{f.panelStyle}}"><div><p class="acc-a" style="{{f.aStyle}}">{{f.a}}</p></div></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["open","closed","opening"],"default":"open"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+/* 6 Nov 2026 (Eyad): the landing questions as a calmer accordion. One item opens at a time.
+   view=open: the first item open. view=closed: all closed. view=opening: the second item halfway through its 280 ms open
+   (height, fade and caret move together). The same .acc classes are used on the landing boards. */
+const C = {
+  en: { title: 'Questions', help: 'Need help?', faq: [['Do I need design experience?', 'No. Paths start with everyday screens and build up. If you already work as a designer, onboarding points you to a path that fits.'], ['How long is a lesson?', '5 to 10 minutes. You can stop at any step; your answers are saved.'], ['What is free?', 'The first unit of every path, review, and your profile. The subscription unlocks every other unit and certificates.'], ['Can I cancel?', 'Yes, any time. You keep access until the end of the period you paid for, and you can ask for a refund within 7 days of a charge.'], ['Is it in Arabic?', 'Every lesson is in Arabic and English. Switch the language any time; UX terms stay in English with a short explanation.']] },
+  ar: { title: 'الأسئلة الشائعة', help: 'تحتاج مساعدة؟', faq: [['هل أحتاج خبرة في التصميم؟', 'لا. تبدأ المسارات بشاشات يومية ثم تتدرّج. وإن كنت تعمل مصممًا، يقترح عليك الإعداد مسارًا يناسبك.'], ['كم مدة الدرس؟', 'من 5 إلى 10 دقائق. يمكنك التوقف عند أي خطوة، وإجاباتك محفوظة.'], ['ما المجاني؟', 'الوحدة الأولى من كل مسار، والمراجعة، وملفك الشخصي. والاشتراك يفتح باقي الوحدات والشهادات.'], ['هل يمكنني الإلغاء؟', 'نعم، في أي وقت. يبقى وصولك حتى نهاية المدة المدفوعة، ويمكنك طلب استرداد خلال 7 أيام من الدفع.'], ['هل المحتوى بالعربية؟', 'كل درس بالعربية والإنجليزية. بدّل اللغة في أي وقت، وتبقى مصطلحات UX بالإنجليزية مع شرح قصير.']] }
+};
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = ['open', 'closed', 'opening'].indexOf(this.props.view) >= 0 ? this.props.view : 'open';
+    const c = C[lang]; const sfx = lang + '-' + theme + '-' + device + '-' + view;
+    const openIdx = view === 'open' ? 0 : view === 'opening' ? 1 : -1;
+    const faq = c.faq.map(([q, a], i) => {
+      const on = i === openIdx; const half = on && view === 'opening';
+      return { q, a, open: on ? 'true' : 'false', cls: 'acc-item' + (on ? ' is-open' : ''), id: 'faq-a-' + i + '-' + sfx, bid: 'faq-q-' + i + '-' + sfx,
+        panelStyle: half ? 'transition: none; grid-template-rows: 0.55fr;' : '', aStyle: half ? 'transition: none; opacity: 0.6; transform: translateY(-2px);' : '' };
+    });
+    return { lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, faq,
+      rootCls: 'ug pg pg-pub pg-' + device + ' faq-acc-page', secCls: 'faq-acc' + (device === 'desktop' ? ' is-desk' : ''), accCls: 'acc' + (device === 'desktop' ? ' is-lg' : '') };
+  }
+}
+</script>
+</body>
+</html>

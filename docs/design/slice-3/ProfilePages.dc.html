@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -74,8 +74,16 @@ a{color:#005F99}a:hover{color:#003F66}
         <h1 class="pg-title" style="flex: 1;">{{c.profileTitle}}</h1>
         <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#settings" class="icon-btn plain" aria-label="{{c.settings}}"><span class="ph ph-gear" aria-hidden="true"></span></a></sc-if>
       </header>
+      <!-- 6 Nov 2026 (Eyad): section tabs that stay under the title and scroll sideways on phones; the active tab follows the scroll -->
+      <nav class="pf-tabs" aria-label="{{c.pfTabsLabel}}">
+        <div class="pf-tabs-row">
+          <sc-for list="{{pfTabs}}" as="b" hint-placeholder-count="5">
+            <a href="#{{b.id}}" class="{{b.cls}}" aria-current="{{b.cur}}"><span class="{{b.icon}}" aria-hidden="true"></span>{{b.label}}</a>
+          </sc-for>
+        </div>
+      </nav>
       <main class="pg-body" style="gap: 14px;">
-        <div class="pg-split" style="{{splitStyle}}">
+        <div class="pg-split" style="{{pfSplitStyle}}">
           <div class="pg-stack" style="gap: 14px;">
             <div class="me">
               <span class="avatar" aria-hidden="true">{{c.initial}}</span>
@@ -336,7 +344,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["profile","profileReminder","certificate","publicShare","publicPage","boardOptIn","board","boardLeave"],"default":"profile"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"pfTab":{"editor":"enum","options":["overview","certs"],"default":"overview"},"view":{"editor":"enum","options":["profile","profileReminder","certificate","publicShare","publicPage","boardOptIn","board","boardLeave"],"default":"profile"},"$preview":{"width":390,"height":844}}'>
 /* Slice 3 · profile across paths, reminder with the time picker, certificate, public achievement page, opt-in leaderboard. Spec §4.2, §4.4b, §4.6, §4.7. */
 const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', cert: '/_blob/d9eda267550722d49fbe378d64d9eb01', trophy: '/_blob/88919613cc6d0ad07645f0e62a6deac4' };
 const C = {
@@ -345,6 +353,7 @@ const C = {
     initial: 'Y', fullName: 'Yasmin Adel', joined: '@yasmin · learning since October 2026', edit: 'Edit', profileTitle: 'Profile', settings: 'Settings', secLearning: 'Learning',
     tiles: [['ph-bolt-fill', '1,860', 'XP, all paths', 'var(--hl-ledge)'], ['ph-flame-fill', '16', 'Day streak', '#F59E2B'], ['ph-seal-fill', '13', 'Skills Shown', 'var(--brand)'], ['ph-star-fill', '2', 'Skills Kept', 'var(--gold-ledge)']], whyAria: (l) => l + '. See why it changed',
     p01Where: 'Unit 2 of 5 · 30%', p10Where: 'Unit 2 of 5 · 20%', shown: 'Shown', kept: 'Kept', practiced: 'Practiced',
+    pfTabsLabel: 'Profile sections', pfTabNames: ['Overview', 'Paths', 'Certificates', 'Badges', 'Leaderboard'],
     certsTitle: 'Certificates', certText: (n, t) => n + ' of ' + t + ' skills Shown. All ' + t + ' earn the certificate.', badgesLink: '15 badges', boardTitle: 'Weekly leaderboard',
     reminder: 'Daily reminder', remSub: 'Points to your next lesson in the current path.', remindMe: 'Remind me', remOn: 'One reminder a day at this time.', remOff: 'No reminders.',
     pickTitle: 'Reminder time', quick: 'Quick picks', hour: 'Hour', minute: 'Minute', period: 'AM/PM', ampm: ['AM', 'PM'], cancel: 'Cancel', setTime: 'Set time', done: 'Done',
@@ -365,7 +374,8 @@ const C = {
     navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', allPaths: 'كل المسارات', addPath: 'أضف مسارًا', sound: 'الصوت', otherLang: 'English', back: 'رجوع', current: 'الحالي', off: 'متوقّف', on: 'يعمل',
     initial: 'ي', fullName: 'ياسمين عادل', joined: '@yasmin · تتعلّم منذ أكتوبر 2026', edit: 'تعديل', profileTitle: 'حسابي', settings: 'الإعدادات', secLearning: 'التعلّم',
     tiles: [['ph-bolt-fill', '1,860', 'نقاط XP، كل المسارات', 'var(--hl-ledge)'], ['ph-flame-fill', '16', 'يومًا متتاليًا', '#F59E2B'], ['ph-seal-fill', '13', 'مهارة أثبتّها', 'var(--brand)'], ['ph-star-fill', '2', 'مهارتان أتقنتهما', 'var(--gold-ledge)']], whyAria: (l) => l + '. اعرف سبب التغيّر',
-    p01Where: 'الوحدة 2 من 5 · 30%', p10Where: 'الوحدة 2 من 5 · 20%', shown: 'أثبتّ', kept: 'أتقنت', practiced: 'تدرّبت',
+    p01Where: 'الوحدة 2 من 5 · 30%', p10Where: 'الوحدة 2 من 5 · 20%', shown: 'أثبتت', kept: 'أتقنت', practiced: 'تدرّبت',
+    pfTabsLabel: 'أقسام حسابك', pfTabNames: ['نظرة عامة', 'المسارات', 'الشهادات', 'الأوسمة', 'لوحة الصدارة'],
     certsTitle: 'الشهادات', certText: (n, t) => 'أثبتّ ' + n + ' من ' + t + ' مهارة. إثبات الـ' + t + ' كلها يمنحك الشهادة.', badgesLink: '15 شارة', boardTitle: 'لوحة الصدارة الأسبوعية',
     reminder: 'تذكير يومي', remSub: 'يأخذك إلى درسك التالي في مسارك الحالي.', remindMe: 'ذكّرني', remOn: 'تذكير واحد في اليوم في هذا الوقت.', remOff: 'بدون تذكيرات.',
     pickTitle: 'وقت التذكير', quick: 'اختيارات سريعة', hour: 'الساعة', minute: 'الدقيقة', period: 'الفترة', ampm: ['ص', 'م'], cancel: 'إلغاء', setTime: 'حفظ الوقت', done: 'تم',
@@ -379,7 +389,7 @@ const C = {
     pubUnits: [['اطلب ما تحتاجه فقط', 8], ['اختر عنصر التحكم المناسب', 8], ['عناوين وتلميحات تبقى ظاهرة', 8], ['أخطاء يستطيع الناس إصلاحها', 8], ['نماذج يُكملها الناس', 8]], unitMeta: (n, k) => 'الوحدة ' + n + ' · أثبتت ' + k + ' مهارات',
     optTitle: 'هل تنضم إلى لوحة الصدارة الأسبوعية؟', optBody: 'شاهد نقاطك الأسبوعية بجانب نحو 30 متعلّمًا. تُحسب النقاط من كل مساراتك، وتبدأ من جديد كل اثنين.', showXp: 'نقاطك الأسبوعية', hideStreak: 'لا سلسلتك', hideAnswers: 'لا إجاباتك',
     join: 'انضم إلى اللوحة', notNow: 'ليس الآن', optFoot: 'اللوحة متوقّفة حتى تنضم. ويمكنك المغادرة في أي وقت.',
-    leave: 'غادر', myWeek: 'أنت: 315 XP هذا الأسبوع · الثالث', weekEnds: 'ينتهي ليلة الأحد. الدروس والإعادات والمراجعة في أي مسار تُحسب.', you: 'أنت', boardHow: 'كيف تعمل', boardRules: [{ icon: 'ph ph-calendar', text: 'أسبوع واحد، من الاثنين إلى الأحد. ثم يبدأ الجميع من 0.' }, { icon: 'ph ph-stack', text: 'تُحسب النقاط من كل مسار انضممت إليه.' }, { icon: 'ph ph-eye-slash', text: 'يرى الآخرون اسمك ونقاطك الأسبوعية فقط.' }],
+    leave: 'غادر', myWeek: 'أنت: 315 XP هذا الأسبوع · الثالث', weekEnds: 'ينتهي ليلة الجمعة. الدروس والإعادات والمراجعة في أي مسار تُحسب.', you: 'أنت', boardHow: 'كيف تعمل', boardRules: [{ icon: 'ph ph-calendar', text: 'أسبوع واحد، من الاثنين إلى الأحد. ثم يبدأ الجميع من 0.' }, { icon: 'ph ph-stack', text: 'تُحسب النقاط من كل مسار انضممت إليه.' }, { icon: 'ph ph-eye-slash', text: 'يرى الآخرون اسمك ونقاطك الأسبوعية فقط.' }],
     leaveTitle: 'هل تغادر لوحة الصدارة؟', leaveBody: 'يمكنك الانضمام مرة أخرى لاحقًا من حسابي.', leaveKeep: 'تقدّمك باقٍ', leaveKeepBody: 'لا تتغيّر نقاطك ولا سلسلتك ولا مهاراتك ولا شاراتك.', leaveHide: 'يتوقف ظهور اسمك', leaveHideBody: 'لن يرى الآخرون اسمك ولا نقاطك الأسبوعية.', leaveGo: 'غادر لوحة الصدارة', stay: 'ابقَ'
   }
 };
@@ -444,7 +454,10 @@ class Component extends DCLogic {
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
       railPaths: [{ name: 'Forms That Flow', img: IMG.forms, pct: '30%', cls: 'dk-layer is-on' }, { name: 'Visual Hierarchy in Action', img: IMG.hier, pct: '20%', cls: 'dk-layer' }],
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
-      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 420px;' : '', asideStyle: isDesk ? '' : 'display: none;',
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 420px;' : '',
+      pfSplitStyle: (isDesk ? 'grid-template-columns: minmax(0, 1fr) 420px;' : '') + (this.props.pfTab === 'certs' && !isDesk ? ' margin-top: -560px;' : ''),
+      pfTabs: ['overview', 'paths', 'certs', 'badges', 'board'].map((id, i) => { const on = id === (this.props.pfTab === 'certs' ? 'certs' : 'overview');
+        return { id: 'pf-' + id, label: c.pfTabNames[i], cur: on ? 'true' : 'false', cls: 'pf-tab' + (on ? ' is-on' : ''), icon: 'ph ' + ['ph-squares-four', 'ph-path', 'ph-certificate', 'ph-medal', 'ph-ranking'][i] }; }), asideStyle: isDesk ? '' : 'display: none;',
       tiles: c.tiles.map(([icon, v, l, color]) => ({ icon: 'ph ' + icon, v, l, iconStyle: 'color: ' + color + ';', aria: v + ' ' + l + '. ' + c.whyAria('') })),
       pps, certs, setRows,
       certSplit: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px; gap: 32px;' : '',

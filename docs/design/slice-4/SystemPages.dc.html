@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0}
-a{color:#005F99}a:hover{color:#003F66}
+
 </style>
 </helmet>
 <div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
@@ -46,15 +46,19 @@ a{color:#005F99}a:hover{color:#003F66}
         <h1 class="t-h1" style="font-size: 28px;">{{a.title}}</h1>
         <p class="t-small ink-2" style="font-size: 15px;">{{a.lead}}</p>
       </div>
+      <sc-if value="{{er.alert}}" hint-placeholder-val="{{false}}">
+        <div class="form-alert" role="alert"><span class="ph ph-warning" aria-hidden="true"></span><div><b>{{er.aTitle}}</b><p>{{er.aBody}}</p><a href="#{{er.aId}}" class="form-alert-act">{{er.aAct}}</a></div></div>
+      </sc-if>
       <div class="pg-stack" style="gap: 10px;">
         <button class="btn btn-block btn-apple" type="button"><span class="ph ph-apple" aria-hidden="true"></span>{{a.apple}}</button>
         <button class="btn btn-block btn-google" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>{{a.google}}</button>
       </div>
       <div class="auth-or" aria-hidden="true"><i></i><span class="t-small ink-3" style="font-weight: 700;">{{c.or}}</span><i></i></div>
-      <div class="field"><label for="au-email-{{lang}}-{{device}}-{{view}}">{{c.email}}</label><div class="input"><span class="ph ph-mail" aria-hidden="true"></span><input id="au-email-{{lang}}-{{device}}-{{view}}" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr"></div></div>
-      <div class="field"><label for="au-pw-{{lang}}-{{device}}-{{view}}">{{c.password}}</label><div class="input"><span class="ph ph-lock" aria-hidden="true"></span><input id="au-pw-{{lang}}-{{device}}-{{view}}" type="password" autocomplete="{{a.pwAuto}}"><button class="icon-btn plain" type="button" aria-label="{{c.show}}" style="width: 40px; height: 40px; margin-inline-end: -8px;"><span class="ph ph-eye" aria-hidden="true"></span></button></div>
-        <sc-if value="{{a.isUp}}" hint-placeholder-val="{{true}}"><span class="help">{{c.pwHelp}}</span></sc-if>
-        <sc-if value="{{a.isIn}}" hint-placeholder-val="{{false}}"><a href="#forgot" style="align-self: flex-end; font-weight: 700; font-size: 14px; color: var(--link); min-height: 32px; display: inline-flex; align-items: center;">{{c.forgotQ}}</a></sc-if>
+      <div class="field"><label for="au-email-{{lang}}-{{device}}-{{view}}">{{c.email}}</label><div class="{{er.emailCls}}"><span class="ph ph-mail" aria-hidden="true"></span><input id="au-email-{{lang}}-{{device}}-{{view}}" type="email" autocomplete="email" placeholder="name@example.com" dir="ltr" value="{{er.emailVal}}" aria-invalid="{{er.emailInv}}" aria-describedby="{{er.emailDesc}}"></div><sc-if value="{{er.emailErr}}" hint-placeholder-val="{{false}}"><span class="err" id="au-email-err-{{lang}}-{{device}}-{{view}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{er.msg}}</span></sc-if></div>
+      <div class="field"><label for="au-pw-{{lang}}-{{device}}-{{view}}">{{c.password}}</label><div class="{{er.pwCls}}"><span class="ph ph-lock" aria-hidden="true"></span><input id="au-pw-{{lang}}-{{device}}-{{view}}" type="password" autocomplete="{{a.pwAuto}}" value="{{er.pwVal}}" aria-invalid="{{er.pwInv}}" aria-describedby="{{er.pwDesc}}"><button class="icon-btn plain" type="button" aria-label="{{c.show}}" style="width: 40px; height: 40px; margin-inline-end: -8px;"><span class="ph ph-eye" aria-hidden="true"></span></button></div>
+        <sc-if value="{{er.pwErr}}" hint-placeholder-val="{{false}}"><span class="err" id="au-pw-err-{{lang}}-{{device}}-{{view}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{er.msg}}</span></sc-if>
+        <sc-if value="{{a.showPwHelp}}" hint-placeholder-val="{{true}}"><span class="help">{{c.pwHelp}}</span></sc-if>
+        <sc-if value="{{a.isIn}}" hint-placeholder-val="{{false}}"><a href="#forgot" style="align-self: flex-end; font-weight: 700; font-size: 14px; color: var(--link); min-height: 44px; display: inline-flex; align-items: center;">{{c.forgotQ}}</a></sc-if>
       </div>
       <a href="#go" class="btn btn-primary btn-lg btn-block press">{{a.submit}}</a>
       <button class="btn btn-ghost btn-block" type="button" style="min-height: 44px; margin-top: -4px;"><span class="ph ph-mail" aria-hidden="true"></span>{{c.magic}}</button>
@@ -73,7 +77,7 @@ a{color:#005F99}a:hover{color:#003F66}
         <h1 class="t-h1" style="font-size: 28px;">{{c.fTitle}}</h1>
         <p class="t-small ink-2" style="font-size: 15px; max-width: 34ch;">{{c.fLead}}</p>
       </div>
-      <div class="field"><label for="fp-email-{{lang}}-{{device}}">{{c.email}}</label><div class="input"><span class="ph ph-mail" aria-hidden="true"></span><input id="fp-email-{{lang}}-{{device}}" type="email" autocomplete="email" value="yasmin.adel@example.com" dir="ltr"></div></div>
+      <div class="field"><label for="fp-email-{{lang}}-{{device}}">{{c.email}}</label><div class="{{er.emailCls}}"><span class="ph ph-mail" aria-hidden="true"></span><input id="fp-email-{{lang}}-{{device}}" type="email" autocomplete="email" value="{{er.fpVal}}" dir="ltr" aria-invalid="{{er.emailInv}}" aria-describedby="{{er.fpDesc}}"></div><sc-if value="{{er.emailErr}}" hint-placeholder-val="{{false}}"><span class="err" id="fp-email-err-{{lang}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{er.msg}}</span></sc-if></div>
       <a href="#sent" class="btn btn-primary btn-lg btn-block press">{{c.fSend}}</a>
       <p class="pg-note"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.fNote}}</span></p>
       <a href="#signin" class="btn btn-ghost btn-block" style="min-height: 44px; margin-top: auto;"><span class="ph ph-arrow" aria-hidden="true" style="{{backFlip}}"></span>{{c.backIn}}</a>
@@ -98,7 +102,7 @@ a{color:#005F99}a:hover{color:#003F66}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["notFound","error","offline","maintenance","signup","signin","forgot","linkSent"],"default":"notFound"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["notFound","error","offline","maintenance","signup","signin","forgot","linkSent"],"default":"notFound"},"error":{"editor":"enum","options":["none","email","taken","short","wrong","link","tooMany"],"default":"none"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
 const IMG = { search: '/_blob/45dca903fb1d2f855f86e5ed32a2a286', error: '/_blob/d7554f850e27653fedf6b88760ca689d', offline: '/_blob/c60e7e4f9deb062a72ad9940cfd42918', rocket: '/_blob/e594bb3a340eff88e5cb77c7f6aeb364' };
 const C = {
   en: { otherLang: 'عربي', close: 'Close', or: 'or', email: 'Email', password: 'Password', show: 'Show password', pwHelp: 'At least 8 characters.',
@@ -130,6 +134,26 @@ const C = {
     sTitle: 'افتح بريدك', sLead: 'أرسلنا رابط دخول إلى', sOnce: 'الرابط يعمل مرة واحدة، لمدة ساعة.', sSpam: 'لم تجده؟ ابحث في الرسائل غير المرغوب فيها (spam) أو العروض.',
     sAgain: 'أعد الإرسال بعد', sOther: 'استخدم بريدًا آخر' }
 };
+/* Design audit U1: form errors. The message sits under the field, the field gets aria-invalid and aria-describedby,
+   focus moves to the first field in error, and what the learner typed stays in the field. */
+const ERR = {
+  en: {
+    email: { field: 'email', val: 'yasmin.adel@example', msg: 'Enter an email like name@example.com.' },
+    taken: { field: 'email', val: 'yasmin.adel@example.com', msg: 'This email already has an account. Sign in instead, or reset your password if you forgot it.' },
+    short: { field: 'pw', val: 'yasmin.adel@example.com', pw: 'ux26a', msg: 'Use at least 8 characters. This one has 5.' },
+    wrong: { field: 'pw', val: 'yasmin.adel@example.com', pw: 'uxgate2025', msg: "That email and password don't match. Try again, or reset your password." },
+    link: { alert: ['This sign-in link has expired', 'A sign-in link works once, for 1 hour. Send yourself a new one, or sign in with your password below.', 'Send a new link', 'resend'] },
+    tooMany: { alert: ['Too many tries', 'To keep your account safe, signing in with a password is paused for 15 minutes. You can reset your password now, or use an email link.', 'Reset password', 'forgot'], val: 'yasmin.adel@example.com' }
+  },
+  ar: {
+    email: { field: 'email', val: 'yasmin.adel@example', msg: 'اكتب بريدًا إلكترونيًا مثل ‎name@example.com‎.' },
+    taken: { field: 'email', val: 'yasmin.adel@example.com', msg: 'هذا البريد له حساب بالفعل. سجّل الدخول، أو أعد تعيين كلمة المرور إذا نسيتها.' },
+    short: { field: 'pw', val: 'yasmin.adel@example.com', pw: 'ux26a', msg: 'استخدم 8 أحرف على الأقل. هذه الكلمة فيها 5 أحرف.' },
+    wrong: { field: 'pw', val: 'yasmin.adel@example.com', pw: 'uxgate2025', msg: 'البريد الإلكتروني وكلمة المرور غير متطابقين. حاول مرة أخرى، أو أعد تعيين كلمة المرور.' },
+    link: { alert: ['انتهت صلاحية رابط تسجيل الدخول', 'يعمل رابط تسجيل الدخول مرة واحدة، لمدة ساعة. أرسل لنفسك رابطًا جديدًا، أو سجّل الدخول بكلمة المرور أدناه.', 'أرسل رابطًا جديدًا', 'resend'] },
+    tooMany: { alert: ['محاولات كثيرة', 'لحماية حسابك، أوقفنا تسجيل الدخول بكلمة المرور لمدة 15 دقيقة. يمكنك إعادة تعيين كلمة المرور الآن، أو استخدام رابط عبر البريد.', 'أعد تعيين كلمة المرور', 'forgot'], val: 'yasmin.adel@example.com' }
+  }
+};
 class Component extends DCLogic {
   renderVals() {
     const lang = this.props.lang === 'ar' ? 'ar' : 'en';
@@ -144,8 +168,15 @@ class Component extends DCLogic {
       acts: S.acts.map(([id, label, icon, primary]) => ({ id, label, icon: 'ph ph-' + icon, cls: 'btn ' + (primary ? 'btn-primary' : 'btn-secondary') + ' btn-lg press' + (isDesk ? '' : ' btn-block') })) };
     const A = c[view === 'signin' ? 'signin' : 'signup'];
     const a = Object.assign({}, A, { isUp: view === 'signup', isIn: view === 'signin' });
+    const E = (ERR[lang][this.props.error] || null);
+    const sfx = lang + '-' + device + '-' + view;
+    const er = { emailCls: 'input', pwCls: 'input', emailVal: '', pwVal: '', fpVal: 'yasmin.adel@example.com', emailInv: 'false', pwInv: 'false', emailDesc: '', pwDesc: '', fpDesc: '', emailErr: false, pwErr: false, msg: '', alert: false };
+    if (E && E.alert) Object.assign(er, { alert: true, aTitle: E.alert[0], aBody: E.alert[1], aAct: E.alert[2], aId: E.alert[3], emailVal: E.val || '' });
+    if (E && E.field === 'email') Object.assign(er, { emailCls: 'input is-error is-focus', emailVal: E.val, fpVal: E.val, emailInv: 'true', emailDesc: 'au-email-err-' + sfx, fpDesc: 'fp-email-err-' + lang + '-' + device, emailErr: true, msg: E.msg });
+    if (E && E.field === 'pw') Object.assign(er, { pwCls: 'input is-error is-focus', emailVal: E.val, pwVal: E.pw, pwInv: 'true', pwDesc: 'au-pw-err-' + sfx, pwErr: true, msg: E.msg });
+    a.showPwHelp = a.isUp && !er.pwErr;
     return {
-      lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, s, a,
+      lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, s, a, er,
       is: { sys: isSys, auth: view === 'signup' || view === 'signin', forgot: view === 'forgot', sent: view === 'linkSent' },
       rootCls: 'ug pg pg-pub pg-' + device,
       showClose: !isSys && !isDesk,

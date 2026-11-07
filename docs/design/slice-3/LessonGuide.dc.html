@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson guide · live preview and first-lesson tour</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+  <header class="lp-head">
+    <a href="#home" class="icon-btn plain" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+    <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{c.lessonName}}</span></sc-if>
+    <div class="{{spot.prog}}" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="3" aria-valuemin="0" aria-valuemax="10"><i style="width: 30%;"></i></div>
+    <span class="t-label num ink-2 lp-count">3/10</span>
+    <button class="lp-lang" type="button" lang="{{otherCode}}"><span>{{c.langShort}}</span></button>
+  </header>
+
+  <main class="gd-main">
+    <!-- 6 Nov 2026 (Eyad): on desktop the speaker and the problem sit above the choices, so the screen, the problem and the answers fit without scrolling -->
+    <section class="gd-ask">
+      <div class="{{spot.say}}">
+        <p class="t-over" style="color: var(--link);">{{c.over}}</p>
+        <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+          <div class="say">
+            <img class="say-face" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9ImhhbmEtdGFsay1hdmF0YXItdCI+PHRpdGxlIGlkPSJoYW5hLXRhbGstYXZhdGFyLXQiPkhhbmEsIGd5bSBvd25lciAodGFsayk8L3RpdGxlPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iaGFuYS10YWxrLWF2YXRhci1nMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0NGOUE2QyIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjQTk3MTRBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQTk3MTRBIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImhhbmEtdGFsay1hdmF0YXItZzIiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNCOEYxRkUiLz48c3RvcCBvZmZzZXQ9Ii41NSIgc3RvcC1jb2xvcj0iIzc4RTRGQyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJCQjVERSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJoYW5hLXRhbGstYXZhdGFyLWczIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkE1QjdDIi8+PHN0b3Agb2Zmc2V0PSIuNTUiIHN0b3AtY29sb3I9IiMwRTNENUUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMTJFNEIiLz48L2xpbmVhckdyYWRpZW50PjxmaWx0ZXIgaWQ9ImhhbmEtdGFsay1hdmF0YXItYjQiIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIuMiIvPjwvZmlsdGVyPjxyYWRpYWxHcmFkaWVudCBpZD0iaGFuYS10YWxrLWF2YXRhci1yNSIgY3g9IjAuMzIiIGN5PSIwLjI2IiByPSIwLjk1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNFQkMyOUMiLz48c3RvcCBvZmZzZXQ9Ii42IiBzdG9wLWNvbG9yPSIjQ0Y5QTZDIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQTk3MTRBIi8+PC9yYWRpYWxHcmFkaWVudD48ZmlsdGVyIGlkPSJoYW5hLXRhbGstYXZhdGFyLWI2IiB4PSItNTAlIiB5PSItNTAlIiB3aWR0aD0iMjAwJSIgaGVpZ2h0PSIyMDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIyLjIiLz48L2ZpbHRlcj48Y2xpcFBhdGggaWQ9ImhhbmEtdGFsay1hdmF0YXItYzciPjxwYXRoIGQ9Ik04OS41IDEwMyBhMzAuNSAzMy41IDAgMSAwIDYxLjAgMCBhMzAuNSAzMy41IDAgMSAwIC02MS4wIDBaIi8+PC9jbGlwUGF0aD48bGluZWFyR3JhZGllbnQgaWQ9ImhhbmEtdGFsay1hdmF0YXItZzgiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzQThGQzQiLz48c3RvcCBvZmZzZXQ9Ii41NSIgc3RvcC1jb2xvcj0iIzAwNUY5OSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwM0Y2NiIvPjwvbGluZWFyR3JhZGllbnQ+PGZpbHRlciBpZD0iaGFuYS10YWxrLWF2YXRhci1iOSIgeD0iLTUwJSIgeT0iLTUwJSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS4yIi8+PC9maWx0ZXI+PGxpbmVhckdyYWRpZW50IGlkPSJoYW5hLXRhbGstYXZhdGFyLWcxMCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzJBNUI3QyIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjMEUzRDVFIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDEyRTRCIi8+PC9saW5lYXJHcmFkaWVudD48ZmlsdGVyIGlkPSJoYW5hLXRhbGstYXZhdGFyLWIxMSIgeD0iLTUwJSIgeT0iLTUwJSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS42Ii8+PC9maWx0ZXI+PGZpbHRlciBpZD0iaGFuYS10YWxrLWF2YXRhci1iMTIiIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIuMiIvPjwvZmlsdGVyPjxyYWRpYWxHcmFkaWVudCBpZD0iaGFuYS10YWxrLWF2YXRhci1yMTMiIGN4PSIwLjMiIGN5PSIwLjIiIHI9IjEuMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRUFGQkZGIi8+PHN0b3Agb2Zmc2V0PSIuNiIgc3RvcC1jb2xvcj0iI0QyRjVGRSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0E2RTlGQSIvPjwvcmFkaWFsR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJoYW5hLXRhbGstYXZhdGFyLWMxNCI+PGNpcmNsZSBjeD0iMTIwIiBjeT0iMTI0IiByPSIxMDAiLz48L2NsaXBQYXRoPjwvZGVmcz48Y2lyY2xlIGN4PSIxMjAiIGN5PSIxMjQiIHI9IjEwMCIgZmlsbD0idXJsKCNoYW5hLXRhbGstYXZhdGFyLXIxMykiLz48ZyBjbGlwLXBhdGg9InVybCgjaGFuYS10YWxrLWF2YXRhci1jMTQpIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMjAgMTI4KSBzY2FsZSgxLjE2KSB0cmFuc2xhdGUoLTEyMCAtMTE4KSI+PHBhdGggZD0iTTEwNiAxMjAgSDEzNCBWMTU4IEMxMzQgMTY2IDEwNiAxNjYgMTA2IDE1OCBaIiBmaWxsPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItZzEpIi8+PHBhdGggZD0iTTQ0IDIzNiBDNDQgMTkwIDYyIDE2NCAxMDAgMTU0IEwxNDAgMTU0IEMxNzggMTY0IDE5NiAxOTAgMTk2IDIzNiBaIiBmaWxsPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItZzIpIi8+PHBhdGggZD0iTTExMCAxNjggSDEzMCBWMjM2IEgxMTAgWiIgZmlsbD0idXJsKCNoYW5hLXRhbGstYXZhdGFyLWczKSIgb3BhY2l0eT0iLjAiLz48cGF0aCBkPSJNMTIwIDE3MiBWMjM2IiBzdHJva2U9IiMwRTNENUUiIHN0cm9rZS13aWR0aD0iMyIvPjxyZWN0IHg9IjExNiIgeT0iMTg0IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiMwRTNENUUiLz48cGF0aCBkPSJNNjAgMjM2IEM2MiAyMTAgNzAgMTkwIDg0IDE3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjQiIG9wYWNpdHk9Ii43IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTgwIDIzNiBDMTc4IDIxMCAxNzAgMTkwIDE1NiAxNzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBvcGFjaXR5PSIuNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTU4IDIyNiBDNTggMjAwIDY4IDE4MiA4OCAxNzAgQzc2IDE4NCA3MCAyMDQgNzAgMjI2IFoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuNDUiIGZpbHRlcj0idXJsKCNoYW5hLXRhbGstYXZhdGFyLWI0KSIvPjxwYXRoIGQ9Ik0xMjAgNTAgQzE0NiA1MCAxNjIgNzAgMTYyIDEwMCBDMTYyIDEyNiAxNjAgMTQyIDE2NiAxNTQgQzE3MCAxNjYgMTUyIDE3NiAxMjAgMTc2IEM4OCAxNzYgNzAgMTY2IDc0IDE1NCBDODAgMTQyIDc4IDEyNiA3OCAxMDAgQzc4IDcwIDk0IDUwIDEyMCA1MCBaIiBmaWxsPSIjMDEyRTRCIi8+PGVsbGlwc2UgY3g9IjEyMCIgY3k9IjEwMCIgcng9IjMzIiByeT0iMzYiIGZpbGw9InVybCgjaGFuYS10YWxrLWF2YXRhci1yNSkiLz48cGF0aCBkPSJNOTMgMTE2IEM5NiAxNDAgMTQ0IDE0MCAxNDcgMTE2IEMxNDAgMTM0IDEwMCAxMzQgOTMgMTE2WiIgZmlsbD0iI0E5NzE0QSIgb3BhY2l0eT0iLjE4Ii8+PGVsbGlwc2UgY3g9IjEwMCIgY3k9IjExNCIgcng9IjciIHJ5PSI0IiBmaWxsPSIjRTk4NjdBIiBvcGFjaXR5PSIuMjIiLz48ZWxsaXBzZSBjeD0iMTQwIiBjeT0iMTE0IiByeD0iNyIgcnk9IjQiIGZpbGw9IiNFOTg2N0EiIG9wYWNpdHk9Ii4yMiIvPjxwYXRoIGQ9Ik05NyA4NiBRMTA1IDgxIDExMiA4NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkUyMTFCIiBzdHJva2Utd2lkdGg9IjMuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTEyOCA4NCBRMTM1IDgxIDE0MyA4NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkUyMTFCIiBzdHJva2Utd2lkdGg9IjMuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGVsbGlwc2UgY3g9IjEwNSIgY3k9IjEwMCIgcng9IjQuMiIgcnk9IjUuMiIgZmlsbD0iIzFDMjczMyIvPjxjaXJjbGUgY3g9IjEwMy42IiBjeT0iOTgiIHI9IjEuNCIgZmlsbD0iI2ZmZiIvPjxlbGxpcHNlIGN4PSIxMzUiIGN5PSIxMDAiIHJ4PSI0LjIiIHJ5PSI1LjIiIGZpbGw9IiMxQzI3MzMiLz48Y2lyY2xlIGN4PSIxMzMuNiIgY3k9Ijk4IiByPSIxLjQiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTAwIDk3IEw5Ny41IDk0LjUgTTE0MCA5NyBMMTQyLjUgOTQuNSIgc3Ryb2tlPSIjMUMyNzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMTggMTA0IFExMTYgMTEyIDEyMCAxMTMgUTEyMyAxMTMgMTI0IDExMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQTk3MTRBIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTExMCAxMjEgUTEyMCAxMjAgMTMwIDEyMSBRMTI4IDEzMyAxMjAgMTMzIFExMTIgMTMzIDExMCAxMjFaIiBmaWxsPSIjN0EyRTNBIi8+PHBhdGggZD0iTTExMiAxMjIgUTEyMCAxMjEuNCAxMjggMTIyIEwxMjcuNCAxMjQuNiBRMTIwIDEyNCAxMTIuNiAxMjQuNloiIGZpbGw9IiNmZmYiLz48ZWxsaXBzZSBjeD0iMTIwIiBjeT0iMTMwIiByeD0iNSIgcnk9IjIuNCIgZmlsbD0iI0Q5NzA3QyIvPjxwYXRoIGQ9Ik05MiA5MiBDOTEgNzggOTggNjggMTA4IDY2IEMxMDAgNzIgOTYgODIgOTYgOTYgWiIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC40IiBmaWx0ZXI9InVybCgjaGFuYS10YWxrLWF2YXRhci1iNikiLz48ZyBjbGlwLXBhdGg9InVybCgjaGFuYS10YWxrLWF2YXRhci1jNykiPjxwYXRoIGQ9Ik04MCA1MCBIMTYwIFY4MCBRMTIwIDY4IDgwIDgwIFoiIGZpbGw9InVybCgjaGFuYS10YWxrLWF2YXRhci1nOCkiLz48cGF0aCBkPSJNODAgODAgUTEyMCA2OCAxNjAgODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwM0Y2NiIgc3Ryb2tlLXdpZHRoPSIzIiBvcGFjaXR5PSIuNSIgZmlsdGVyPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYjkpIi8+PC9nPjxwYXRoIGQ9Ik0xMjAgNTAgQzE0NiA1MCAxNjIgNzAgMTYyIDEwMCBDMTYyIDEyNiAxNjAgMTQyIDE2NiAxNTQgQzE3MCAxNjYgMTUyIDE3NiAxMjAgMTc2IEM4OCAxNzYgNzAgMTY2IDc0IDE1NCBDODAgMTQyIDc4IDEyNiA3OCAxMDAgQzc4IDcwIDk0IDUwIDEyMCA1MCBaIE04OS41IDEwMyBhMzAuNSAzMy41IDAgMSAwIDYxLjAgMCBhMzAuNSAzMy41IDAgMSAwIC02MS4wIDBaIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGZpbGw9InVybCgjaGFuYS10YWxrLWF2YXRhci1nMTApIi8+PGcgY2xpcC1wYXRoPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYzcpIj48cGF0aCBkPSJNODkuNSAxMDMgYTMwLjUgMzMuNSAwIDEgMCA2MS4wIDAgYTMwLjUgMzMuNSAwIDEgMCAtNjEuMCAwWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDEyRTRCIiBzdHJva2Utd2lkdGg9IjUiIG9wYWNpdHk9Ii4zNSIgZmlsdGVyPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYjExKSIvPjwvZz48cGF0aCBkPSJNOTggMTQwIEMxMDggMTQ4IDEzMiAxNDggMTQyIDE0MCBDMTM0IDE1MiAxMDYgMTUyIDk4IDE0MFoiIGZpbGw9IiMwMTJFNEIiIG9wYWNpdHk9Ii40NSIvPjxwYXRoIGQ9Ik04NCA3MiBDNzggOTIgNzggMTI0IDg0IDE0NiBDODYgMTI0IDg2IDk0IDkyIDc0IFoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYjEyKSIvPjxwYXRoIGQ9Ik0xNTYgODAgQzE2MCAxMTIgMTUwIDE0MCAxMTYgMTUwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMTJFNEIiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iLjQ1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTU3IDg0IEMxNjAgMTEyIDE1MSAxMzggMTIwIDE0NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkE1QjdDIiBzdHJva2Utd2lkdGg9IjEuNiIgb3BhY2l0eT0iLjU1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==" alt="" width="88" height="88">
+            <div class="say-bubble"><span class="say-name">{{c.who}}</span><p class="lp-scn">{{c.says}}</p></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+          <div class="say">
+            <img class="say-face" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNDAgMjQwIiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjI0MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsbGVkYnk9ImhhbmEtdGFsay1hdmF0YXItdCI+PHRpdGxlIGlkPSJoYW5hLXRhbGstYXZhdGFyLXQiPkhhbmEsIGd5bSBvd25lciAodGFsayk8L3RpdGxlPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iaGFuYS10YWxrLWF2YXRhci1nMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI0NGOUE2QyIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjQTk3MTRBIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQTk3MTRBIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImhhbmEtdGFsay1hdmF0YXItZzIiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNCOEYxRkUiLz48c3RvcCBvZmZzZXQ9Ii41NSIgc3RvcC1jb2xvcj0iIzc4RTRGQyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJCQjVERSIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJoYW5hLXRhbGstYXZhdGFyLWczIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMkE1QjdDIi8+PHN0b3Agb2Zmc2V0PSIuNTUiIHN0b3AtY29sb3I9IiMwRTNENUUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMTJFNEIiLz48L2xpbmVhckdyYWRpZW50PjxmaWx0ZXIgaWQ9ImhhbmEtdGFsay1hdmF0YXItYjQiIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIuMiIvPjwvZmlsdGVyPjxyYWRpYWxHcmFkaWVudCBpZD0iaGFuYS10YWxrLWF2YXRhci1yNSIgY3g9IjAuMzIiIGN5PSIwLjI2IiByPSIwLjk1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNFQkMyOUMiLz48c3RvcCBvZmZzZXQ9Ii42IiBzdG9wLWNvbG9yPSIjQ0Y5QTZDIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjQTk3MTRBIi8+PC9yYWRpYWxHcmFkaWVudD48ZmlsdGVyIGlkPSJoYW5hLXRhbGstYXZhdGFyLWI2IiB4PSItNTAlIiB5PSItNTAlIiB3aWR0aD0iMjAwJSIgaGVpZ2h0PSIyMDAlIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIyLjIiLz48L2ZpbHRlcj48Y2xpcFBhdGggaWQ9ImhhbmEtdGFsay1hdmF0YXItYzciPjxwYXRoIGQ9Ik04OS41IDEwMyBhMzAuNSAzMy41IDAgMSAwIDYxLjAgMCBhMzAuNSAzMy41IDAgMSAwIC02MS4wIDBaIi8+PC9jbGlwUGF0aD48bGluZWFyR3JhZGllbnQgaWQ9ImhhbmEtdGFsay1hdmF0YXItZzgiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzQThGQzQiLz48c3RvcCBvZmZzZXQ9Ii41NSIgc3RvcC1jb2xvcj0iIzAwNUY5OSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwM0Y2NiIvPjwvbGluZWFyR3JhZGllbnQ+PGZpbHRlciBpZD0iaGFuYS10YWxrLWF2YXRhci1iOSIgeD0iLTUwJSIgeT0iLTUwJSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS4yIi8+PC9maWx0ZXI+PGxpbmVhckdyYWRpZW50IGlkPSJoYW5hLXRhbGstYXZhdGFyLWcxMCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzJBNUI3QyIvPjxzdG9wIG9mZnNldD0iLjU1IiBzdG9wLWNvbG9yPSIjMEUzRDVFIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDEyRTRCIi8+PC9saW5lYXJHcmFkaWVudD48ZmlsdGVyIGlkPSJoYW5hLXRhbGstYXZhdGFyLWIxMSIgeD0iLTUwJSIgeT0iLTUwJSIgd2lkdGg9IjIwMCUiIGhlaWdodD0iMjAwJSI+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMS42Ii8+PC9maWx0ZXI+PGZpbHRlciBpZD0iaGFuYS10YWxrLWF2YXRhci1iMTIiIHg9Ii01MCUiIHk9Ii01MCUiIHdpZHRoPSIyMDAlIiBoZWlnaHQ9IjIwMCUiPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIuMiIvPjwvZmlsdGVyPjxyYWRpYWxHcmFkaWVudCBpZD0iaGFuYS10YWxrLWF2YXRhci1yMTMiIGN4PSIwLjMiIGN5PSIwLjIiIHI9IjEuMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRUFGQkZGIi8+PHN0b3Agb2Zmc2V0PSIuNiIgc3RvcC1jb2xvcj0iI0QyRjVGRSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0E2RTlGQSIvPjwvcmFkaWFsR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJoYW5hLXRhbGstYXZhdGFyLWMxNCI+PGNpcmNsZSBjeD0iMTIwIiBjeT0iMTI0IiByPSIxMDAiLz48L2NsaXBQYXRoPjwvZGVmcz48Y2lyY2xlIGN4PSIxMjAiIGN5PSIxMjQiIHI9IjEwMCIgZmlsbD0idXJsKCNoYW5hLXRhbGstYXZhdGFyLXIxMykiLz48ZyBjbGlwLXBhdGg9InVybCgjaGFuYS10YWxrLWF2YXRhci1jMTQpIj48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMjAgMTI4KSBzY2FsZSgxLjE2KSB0cmFuc2xhdGUoLTEyMCAtMTE4KSI+PHBhdGggZD0iTTEwNiAxMjAgSDEzNCBWMTU4IEMxMzQgMTY2IDEwNiAxNjYgMTA2IDE1OCBaIiBmaWxsPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItZzEpIi8+PHBhdGggZD0iTTQ0IDIzNiBDNDQgMTkwIDYyIDE2NCAxMDAgMTU0IEwxNDAgMTU0IEMxNzggMTY0IDE5NiAxOTAgMTk2IDIzNiBaIiBmaWxsPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItZzIpIi8+PHBhdGggZD0iTTExMCAxNjggSDEzMCBWMjM2IEgxMTAgWiIgZmlsbD0idXJsKCNoYW5hLXRhbGstYXZhdGFyLWczKSIgb3BhY2l0eT0iLjAiLz48cGF0aCBkPSJNMTIwIDE3MiBWMjM2IiBzdHJva2U9IiMwRTNENUUiIHN0cm9rZS13aWR0aD0iMyIvPjxyZWN0IHg9IjExNiIgeT0iMTg0IiB3aWR0aD0iOCIgaGVpZ2h0PSIxMiIgcng9IjMiIGZpbGw9IiMwRTNENUUiLz48cGF0aCBkPSJNNjAgMjM2IEM2MiAyMTAgNzAgMTkwIDg0IDE3NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjQiIG9wYWNpdHk9Ii43IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTgwIDIzNiBDMTc4IDIxMCAxNzAgMTkwIDE1NiAxNzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBvcGFjaXR5PSIuNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTU4IDIyNiBDNTggMjAwIDY4IDE4MiA4OCAxNzAgQzc2IDE4NCA3MCAyMDQgNzAgMjI2IFoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuNDUiIGZpbHRlcj0idXJsKCNoYW5hLXRhbGstYXZhdGFyLWI0KSIvPjxwYXRoIGQ9Ik0xMjAgNTAgQzE0NiA1MCAxNjIgNzAgMTYyIDEwMCBDMTYyIDEyNiAxNjAgMTQyIDE2NiAxNTQgQzE3MCAxNjYgMTUyIDE3NiAxMjAgMTc2IEM4OCAxNzYgNzAgMTY2IDc0IDE1NCBDODAgMTQyIDc4IDEyNiA3OCAxMDAgQzc4IDcwIDk0IDUwIDEyMCA1MCBaIiBmaWxsPSIjMDEyRTRCIi8+PGVsbGlwc2UgY3g9IjEyMCIgY3k9IjEwMCIgcng9IjMzIiByeT0iMzYiIGZpbGw9InVybCgjaGFuYS10YWxrLWF2YXRhci1yNSkiLz48cGF0aCBkPSJNOTMgMTE2IEM5NiAxNDAgMTQ0IDE0MCAxNDcgMTE2IEMxNDAgMTM0IDEwMCAxMzQgOTMgMTE2WiIgZmlsbD0iI0E5NzE0QSIgb3BhY2l0eT0iLjE4Ii8+PGVsbGlwc2UgY3g9IjEwMCIgY3k9IjExNCIgcng9IjciIHJ5PSI0IiBmaWxsPSIjRTk4NjdBIiBvcGFjaXR5PSIuMjIiLz48ZWxsaXBzZSBjeD0iMTQwIiBjeT0iMTE0IiByeD0iNyIgcnk9IjQiIGZpbGw9IiNFOTg2N0EiIG9wYWNpdHk9Ii4yMiIvPjxwYXRoIGQ9Ik05NyA4NiBRMTA1IDgxIDExMiA4NCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkUyMTFCIiBzdHJva2Utd2lkdGg9IjMuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTEyOCA4NCBRMTM1IDgxIDE0MyA4NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkUyMTFCIiBzdHJva2Utd2lkdGg9IjMuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGVsbGlwc2UgY3g9IjEwNSIgY3k9IjEwMCIgcng9IjQuMiIgcnk9IjUuMiIgZmlsbD0iIzFDMjczMyIvPjxjaXJjbGUgY3g9IjEwMy42IiBjeT0iOTgiIHI9IjEuNCIgZmlsbD0iI2ZmZiIvPjxlbGxpcHNlIGN4PSIxMzUiIGN5PSIxMDAiIHJ4PSI0LjIiIHJ5PSI1LjIiIGZpbGw9IiMxQzI3MzMiLz48Y2lyY2xlIGN4PSIxMzMuNiIgY3k9Ijk4IiByPSIxLjQiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTAwIDk3IEw5Ny41IDk0LjUgTTE0MCA5NyBMMTQyLjUgOTQuNSIgc3Ryb2tlPSIjMUMyNzMzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0xMTggMTA0IFExMTYgMTEyIDEyMCAxMTMgUTEyMyAxMTMgMTI0IDExMSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQTk3MTRBIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTExMCAxMjEgUTEyMCAxMjAgMTMwIDEyMSBRMTI4IDEzMyAxMjAgMTMzIFExMTIgMTMzIDExMCAxMjFaIiBmaWxsPSIjN0EyRTNBIi8+PHBhdGggZD0iTTExMiAxMjIgUTEyMCAxMjEuNCAxMjggMTIyIEwxMjcuNCAxMjQuNiBRMTIwIDEyNCAxMTIuNiAxMjQuNloiIGZpbGw9IiNmZmYiLz48ZWxsaXBzZSBjeD0iMTIwIiBjeT0iMTMwIiByeD0iNSIgcnk9IjIuNCIgZmlsbD0iI0Q5NzA3QyIvPjxwYXRoIGQ9Ik05MiA5MiBDOTEgNzggOTggNjggMTA4IDY2IEMxMDAgNzIgOTYgODIgOTYgOTYgWiIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC40IiBmaWx0ZXI9InVybCgjaGFuYS10YWxrLWF2YXRhci1iNikiLz48ZyBjbGlwLXBhdGg9InVybCgjaGFuYS10YWxrLWF2YXRhci1jNykiPjxwYXRoIGQ9Ik04MCA1MCBIMTYwIFY4MCBRMTIwIDY4IDgwIDgwIFoiIGZpbGw9InVybCgjaGFuYS10YWxrLWF2YXRhci1nOCkiLz48cGF0aCBkPSJNODAgODAgUTEyMCA2OCAxNjAgODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwM0Y2NiIgc3Ryb2tlLXdpZHRoPSIzIiBvcGFjaXR5PSIuNSIgZmlsdGVyPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYjkpIi8+PC9nPjxwYXRoIGQ9Ik0xMjAgNTAgQzE0NiA1MCAxNjIgNzAgMTYyIDEwMCBDMTYyIDEyNiAxNjAgMTQyIDE2NiAxNTQgQzE3MCAxNjYgMTUyIDE3NiAxMjAgMTc2IEM4OCAxNzYgNzAgMTY2IDc0IDE1NCBDODAgMTQyIDc4IDEyNiA3OCAxMDAgQzc4IDcwIDk0IDUwIDEyMCA1MCBaIE04OS41IDEwMyBhMzAuNSAzMy41IDAgMSAwIDYxLjAgMCBhMzAuNSAzMy41IDAgMSAwIC02MS4wIDBaIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGZpbGw9InVybCgjaGFuYS10YWxrLWF2YXRhci1nMTApIi8+PGcgY2xpcC1wYXRoPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYzcpIj48cGF0aCBkPSJNODkuNSAxMDMgYTMwLjUgMzMuNSAwIDEgMCA2MS4wIDAgYTMwLjUgMzMuNSAwIDEgMCAtNjEuMCAwWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDEyRTRCIiBzdHJva2Utd2lkdGg9IjUiIG9wYWNpdHk9Ii4zNSIgZmlsdGVyPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYjExKSIvPjwvZz48cGF0aCBkPSJNOTggMTQwIEMxMDggMTQ4IDEzMiAxNDggMTQyIDE0MCBDMTM0IDE1MiAxMDYgMTUyIDk4IDE0MFoiIGZpbGw9IiMwMTJFNEIiIG9wYWNpdHk9Ii40NSIvPjxwYXRoIGQ9Ik04NCA3MiBDNzggOTIgNzggMTI0IDg0IDE0NiBDODYgMTI0IDg2IDk0IDkyIDc0IFoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2hhbmEtdGFsay1hdmF0YXItYjEyKSIvPjxwYXRoIGQ9Ik0xNTYgODAgQzE2MCAxMTIgMTUwIDE0MCAxMTYgMTUwIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMTJFNEIiIHN0cm9rZS13aWR0aD0iMyIgb3BhY2l0eT0iLjQ1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48cGF0aCBkPSJNMTU3IDg0IEMxNjAgMTEyIDE1MSAxMzggMTIwIDE0NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkE1QjdDIiBzdHJva2Utd2lkdGg9IjEuNiIgb3BhY2l0eT0iLjU1IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L2c+PC9nPjwvc3ZnPg==" alt="" width="56" height="56" style="width: 56px; height: 56px;">
+            <div class="say-bubble"><span class="say-name">{{c.who}}</span><p class="lp-scn" style="font-size: 15px;">{{c.says}}</p></div>
+          </div>
+        </sc-if>
+      </div>
+      <h1 class="lp-qt gd-qt">{{c.question}}</h1>
+      <div class="{{spot.opts}}">
+        <div class="lp-opts" role="radiogroup" aria-label="{{c.question}}">
+          <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+            <button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.checked}}" aria-controls="gd-prev-{{sfx}}">
+              <span class="key">{{o.key}}</span>
+              <span class="grow">{{o.label}}</span>
+              <sc-if value="{{o.on}}" hint-placeholder-val="{{false}}"><span class="gd-inprev"><span class="ph ph-eye" aria-hidden="true"></span>{{c.inPreview}}</span></sc-if>
+              <sc-if value="{{o.off}}" hint-placeholder-val="{{true}}"><span class="ph ph-eye gd-peek" aria-hidden="true"></span></sc-if>
+            </button>
+          </sc-for>
+        </div>
+        <div class="gd-bar">
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span style="flex: 1;"></span></sc-if>
+          <button class="{{checkCls}}" type="button">{{c.check}}</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="gd-ctx" aria-label="{{c.livePreview}}">
+      <div class="{{spot.prev}}">
+        <div class="gd-prev-head">
+          <span class="frame-label lp-live-label"><span class="ph ph-play-circle" aria-hidden="true"></span>{{c.livePreview}}</span>
+          <span class="{{pv.chipCls}}" aria-hidden="true"><span class="gd-dot"></span>{{pv.chip}}</span>
+        </div>
+        <div class="{{pv.frameCls}}" id="gd-prev-{{sfx}}" aria-live="polite">
+          <span class="sr-only">{{pv.sr}}</span>
+          <div class="gd-site" aria-hidden="true">
+            <div class="gd-site-brand"><span class="gd-site-mark">H</span><b>{{c.gym}}</b></div>
+            <p class="gd-site-title">{{c.become}}</p>
+            <span class="gd-site-lbl">{{c.fName}}</span><span class="gd-site-in">Salma Adel</span>
+            <span class="gd-site-lbl">{{c.fPhone}}</span><span class="gd-site-in ltr">010 1234 5678</span>
+            <span class="{{pv.btnCls}}">{{pv.btn}}<sc-if value="{{pv.changed}}" hint-placeholder-val="{{false}}"><span class="gd-changed">{{c.changed}}</span></sc-if></span>
+          </div>
+        </div>
+        <p class="gd-prev-note"><span class="ph ph-info" aria-hidden="true"></span>{{c.prevNote}}</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- First-lesson tour: the sample lesson for guests, and the first lesson after sign-in. Shown once. -->
+  <sc-if value="{{t.on}}" hint-placeholder-val="{{false}}">
+    <div class="{{t.scrimCls}}" aria-hidden="true"></div>
+    <div class="{{t.tipCls}}" style="{{t.tipStyle}}" role="dialog" aria-modal="true" aria-labelledby="gd-tt-{{sfx}}" aria-describedby="gd-tb-{{sfx}}">
+      <sc-if value="{{t.welcome}}" hint-placeholder-val="{{false}}">
+        <span class="gd-tour-ic" aria-hidden="true"><span class="ph ph-sparkle"></span></span>
+      </sc-if>
+      <sc-if value="{{t.stepped}}" hint-placeholder-val="{{true}}">
+        <p class="gd-tour-n">{{t.n}}</p>
+      </sc-if>
+      <h2 class="gd-tour-t" id="gd-tt-{{sfx}}">{{t.title}}</h2>
+      <p class="gd-tour-b" id="gd-tb-{{sfx}}">{{t.body}}</p>
+      <div class="gd-tour-dots" aria-hidden="true"><sc-for list="{{t.dots}}" as="d" hint-placeholder-count="4"><i class="{{d.cls}}"></i></sc-for></div>
+      <div class="gd-tour-acts">
+        <button class="btn btn-ghost btn-sm" type="button">{{t.skip}}</button>
+        <span style="flex: 1;"></span>
+        <sc-if value="{{t.back}}" hint-placeholder-val="{{false}}"><button class="btn btn-secondary btn-sm press" type="button">{{c.tBack}}</button></sc-if>
+        <button class="btn btn-primary btn-sm press" type="button">{{t.next}}</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["layout","changed","tour0","tour1","tour2","tour3","tour4"],"default":"layout"},"who":{"editor":"enum","options":["guest","first"],"default":"first"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+/* 6 Nov 2026 (Eyad): three lesson player changes, shown on a "tune" step (each choice changes a live preview).
+   1. Desktop: the speaker and the problem sit above the choices (right column), not above the preview.
+   2. The link between a choice and the preview is visible: an eye on every choice, an "In preview" chip on the picked one,
+      a "Showing B" chip on the preview, and on each change a short glow on the preview and a "Changed" tag on the part that changed.
+   3. A short tour at the start of the sample lesson (guests) and of the first lesson after sign-in: a welcome card, then
+      4 spotlights (problem, screen, answers and Check, progress). Skip at any time; shown once. */
+const C = {
+  en: { exit: 'Leave the lesson', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', progress: 'Lesson progress', langShort: 'عربي',
+    over: 'Tune · Step 3', who: 'Hana · Gym owner', says: 'People open the form and leave. They tell me they don’t know what happens when they tap the button.',
+    question: 'Which button label tells people what happens next?', opts: ['Submit', 'Join now', 'Start my free week'], keys: ['A', 'B', 'C'],
+    inPreview: 'In preview', check: 'Check', livePreview: 'Live preview', showing: (k) => 'Showing ' + k, changedTo: (k, l) => 'Preview changed to ' + k + ': ' + l,
+    gym: 'HANA’S GYM', become: 'Become a member', fName: 'Full name', fPhone: 'Phone', changed: 'Changed', prevNote: 'Each answer changes this screen. Try them before you check.',
+    tBack: 'Back', skip: 'Skip tour', next: 'Next', start: 'Start the lesson',
+    welcome: { guest: ['Welcome to a sample lesson', 'Each step shows a real screen and a real problem. You pick the fix you’d ship. Four quick tips first, about 20 seconds.', 'Show me'],
+      first: ['Your first lesson', 'Each step shows a real screen and a real problem. You pick the fix you’d ship. Four quick tips first, about 20 seconds.', 'Show me'] },
+    tips: [['Start with the problem', 'Someone from a real team tells you what’s going wrong.'], ['Look at the screen', 'This is the screen they mean. When you pick an answer, it changes here.'],
+      ['Pick, then Check', 'Choose the fix you’d ship and press Check. A wrong answer is fine: you see why, then try again.'], ['Finish the steps', '8 to 12 steps per lesson. Each unit ends with a skill check on a new case.']],
+    nOf: (n) => n + ' of 4' },
+  ar: { exit: 'اخرج من الدرس', lessonName: 'Forms That Flow · الدرس 1 · لكل حقل ثمن', progress: 'تقدّم الدرس', langShort: 'EN',
+    over: 'ضبط · الخطوة 3', who: 'هناء · صاحبة نادٍ رياضي', says: 'يفتح الناس النموذج ثم يغادرون. يقولون إنهم لا يعرفون ماذا سيحدث عند الضغط على الزر.',
+    question: 'أي نص للزر يخبر الناس بما سيحدث بعد ذلك؟', opts: ['إرسال', 'انضم الآن', 'ابدأ أسبوعك المجاني'], keys: ['أ', 'ب', 'ج'],
+    inPreview: 'في المعاينة', check: 'تحقّق', livePreview: 'معاينة مباشرة', showing: (k) => 'يعرض ' + k, changedTo: (k, l) => 'تغيّرت المعاينة إلى ' + k + ': ' + l,
+    gym: 'نادي هناء', become: 'اشترك الآن', fName: 'الاسم الكامل', fPhone: 'رقم الهاتف', changed: 'تغيّر', prevNote: 'كل إجابة تغيّر هذه الشاشة. جرّبها قبل أن تتحقّق.',
+    tBack: 'رجوع', skip: 'تخطَّ الجولة', next: 'التالي', start: 'ابدأ الدرس',
+    welcome: { guest: ['أهلًا بك في درس تجريبي', 'كل خطوة تعرض شاشة حقيقية ومشكلة حقيقية، وتختار أنت الحل الذي كنت ستطلقه. أولًا 4 نصائح سريعة، في نحو 20 ثانية.', 'أرني'],
+      first: ['درسك الأول', 'كل خطوة تعرض شاشة حقيقية ومشكلة حقيقية، وتختار أنت الحل الذي كنت ستطلقه. أولًا 4 نصائح سريعة، في نحو 20 ثانية.', 'أرني'] },
+    tips: [['ابدأ بالمشكلة', 'شخص من فريق حقيقي يخبرك بما يحدث من خطأ.'], ['انظر إلى الشاشة', 'هذه هي الشاشة التي يقصدها. عندما تختار إجابة، تتغيّر هنا.'],
+      ['اختر، ثم تحقّق', 'اختر الحل الذي كنت ستطلقه واضغط «تحقّق». لا بأس بالخطأ: سترى السبب ثم تحاول مرة أخرى.'], ['أكمل الخطوات', 'من 8 إلى 12 خطوة في كل درس، وتنتهي كل وحدة باختبار مهارة على حالة جديدة.']],
+    nOf: (n) => n + ' من 4' }
+};
+const VIEWS = ['layout', 'changed', 'tour0', 'tour1', 'tour2', 'tour3', 'tour4'];
+/* tip positions: [mobile, desktop] */
+const POS = {
+  1: ['inset-inline: 12px; bottom: 16px;', 'inset-inline-start: 680px; top: 300px; width: 400px;'],
+  2: ['inset-inline: 12px; top: 72px;', 'inset-inline-start: 680px; top: 120px; width: 400px;'],
+  3: ['inset-inline: 12px; top: 72px;', 'inset-inline-end: 836px; top: 330px; width: 400px;'],
+  4: ['inset-inline: 12px; bottom: 16px;', 'inset-inline-start: 520px; top: 96px; width: 400px;']
+};
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = VIEWS.indexOf(this.props.view) >= 0 ? this.props.view : 'layout';
+    const who = this.props.who === 'guest' ? 'guest' : 'first';
+    const isDesk = device === 'desktop'; const c = C[lang];
+    const sfx = lang + '-' + theme + '-' + device + '-' + view;
+    const tourN = view.indexOf('tour') === 0 ? +view.slice(4) : -1;
+    const pick = view === 'changed' ? 2 : view === 'layout' ? 1 : -1;
+    const opts = c.opts.map((label, i) => ({ label, key: c.keys[i], on: i === pick, off: i !== pick, checked: i === pick ? 'true' : 'false',
+      cls: 'choice press gd-choice' + (i === pick ? ' is-selected' : '') }));
+    const shown = pick >= 0 ? pick : 1;
+    const pv = { chip: c.showing(c.keys[shown]), chipCls: 'gd-showing' + (view === 'changed' ? ' is-new' : ''), btn: c.opts[shown], changed: view === 'changed',
+      btnCls: 'gd-site-btn' + (view === 'changed' ? ' is-changed' : ''), frameCls: 'gd-frame' + (view === 'changed' ? ' is-glow' : ''),
+      sr: view === 'changed' ? c.changedTo(c.keys[2], c.opts[2]) : '' };
+    const sp = (n) => tourN === n ? ' gd-spot' : '';
+    const spot = { say: 'gd-say' + sp(1), prev: 'gd-prev' + sp(2), opts: 'gd-optwrap' + sp(3), prog: 'progress' + (tourN === 4 ? ' gd-spot gd-spot-bar' : '') };
+    const t = { on: tourN >= 0, welcome: tourN === 0, stepped: tourN > 0, back: tourN > 1, n: tourN > 0 ? c.nOf(tourN) : '',
+      scrimCls: 'gd-scrim' + (tourN === 0 ? ' is-full' : ''), tipCls: 'gd-tour' + (tourN === 0 ? ' is-welcome' : ''),
+      tipStyle: tourN > 0 ? POS[tourN][isDesk ? 1 : 0] : '', skip: c.skip,
+      title: tourN === 0 ? c.welcome[who][0] : tourN > 0 ? c.tips[tourN - 1][0] : '', body: tourN === 0 ? c.welcome[who][1] : tourN > 0 ? c.tips[tourN - 1][1] : '',
+      next: tourN === 0 ? c.welcome[who][2] : tourN === 4 ? c.start : c.next,
+      dots: [1, 2, 3, 4].map((n) => ({ cls: n === tourN ? 'is-on' : (n < tourN ? 'is-done' : '') })) };
+    return { lang, theme, device, view, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, sfx, opts, pv, spot, t,
+      otherCode: lang === 'ar' ? 'en' : 'ar', checkCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'),
+      rootCls: 'ug lp lp-' + device + ' gd' + (tourN >= 0 ? ' is-touring' : '') };
+  }
+}
+</script>
+</body>
+</html>

@@ -51,7 +51,7 @@ On every question screen a scenario character now tells the scenario in first pe
 
 The desktop home has no search bar: learner search is not planned yet, so it was removed rather than shipped as a box that does nothing.
 
-Placeholders still open: `[PRICE]` on the landing. The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
+Prices replaced `[PRICE]` on the landing in slice 5 (249 EGP a month in Egypt, $8 in the Gulf, $5 in other Arab countries, approved 2 November). The second hint on Hana's gym step and the five landing FAQs now use the copy from the slice 2 brief. Skill states are Practiced تدرّبت · Shown أثبتّ · Kept أتقنت (approved 30 October).
 
 ## Slice 2: the full lesson player
 
@@ -64,3 +64,7 @@ Paths tab, choosing and switching paths, home with several paths, onboarding cha
 ## Slice 4: account, notifications and public pages
 
 Settings with notification choices per kind and channel, download and delete account, our push ask before the browser’s, the notifications inbox, help and review requests, seven email templates, public path pages (interactive, hybrid, coming soon), privacy and terms, 404, error, offline and maintenance pages, sign in with Apple, and the illustration and sound map. See `slice-4/README.md`. On the canvas they are on the page "8 · Slice 4 · Account and public", and the five editable components are on "Screen parts".
+
+## Slice 5: subscriptions
+
+The paywall from a locked unit and from a certificate, the plans page (monthly or annual, Free next to Pro, codes and the student price), the checkout hand-off to Paymob (Egypt) or Paddle (everyone else), the four checkout results, Plan and billing in Settings, change plan, cancel, refund request, payment problems, six billing emails, locked states for a free learner, and the illustration and sound map. See `slice-5/README.md`. On the canvas they are on the page "9 · Slice 5 · Subscriptions", and the two new editable components are on "Screen parts".
