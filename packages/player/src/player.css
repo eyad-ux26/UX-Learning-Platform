@@ -213,3 +213,87 @@
   .ug .lp-sum-group.is-points ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .ug .lp-sum-group.is-points .lp-sum-card { grid-template-columns: 1fr; padding: 16px; }
 }
+
+/* Idea cards (design S2-15, docs/design/slice-2/idea-cards.md): text-only concept and recap cards drawn as blocks from the card body. */
+.ug .lp-idea { display: flex; flex-direction: column; gap: 14px; inline-size: 100%; padding-block-end: 8px; }
+.ug .lp-idea-head { display: flex; flex-direction: column; gap: 2px; }
+.ug .lp-idea-head .t-over, .ug .lp-idea-head .lp-qt { margin: 0; }
+.ug .lp-idea-key { margin-block-end: var(--ledge-h); }
+.ug .lp-idea-ic { display: grid; place-items: center; inline-size: 40px; block-size: 40px; flex: none; border-radius: 12px; background: var(--sel-bg); color: var(--link); font-size: 22px; }
+.ug .lp-idea-text { display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
+.ug .lp-idea-text b { font-size: 15px; line-height: 1.35; color: var(--ink); }
+.ug .lp-idea-text span { font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+/* points: one card per "- **Title:** text" line */
+.ug .lp-idea-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ug .lp-idea-card { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 14px; border-radius: 16px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--ledge); }
+/* compare (layout: compare): the first two points side by side, their text split into items; the rest become rule strips */
+.ug .lp-idea-vs { position: relative; display: grid; gap: 28px; }
+.ug .lp-idea-side { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 20px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--ledge); }
+.ug .lp-idea-side.is-a { border-color: var(--sel-line); background: linear-gradient(160deg, var(--sel-bg) 0%, var(--surface) 60%); }
+.ug .lp-idea-side.is-b { background: linear-gradient(160deg, var(--mint) 0%, var(--surface) 60%); }
+.ug .lp-idea-side.is-b .lp-idea-ic { background: var(--mint); color: var(--right-ink); }
+.ug .lp-idea-side h2 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 16px; line-height: 1.35; color: var(--ink); }
+.ug .lp-idea-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ug .lp-idea-side li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+.ug .lp-idea-side li .ph { font-size: 16px; margin-block-start: 3px; color: var(--link); }
+.ug .lp-idea-side.is-b li .ph { color: var(--right-ink); }
+.ug .lp-idea-or { position: absolute; inset-inline-start: 50%; inset-block-start: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; min-inline-size: 40px; block-size: 40px; padding: 0 10px; border-radius: 20px; background: var(--hl); color: var(--on-hl); font-weight: 800; font-size: 14px; box-shadow: 0 3px 0 var(--hl-ledge); }
+[dir="rtl"] .lp-idea-or { transform: translate(50%, -50%); }
+.ug .lp-idea-rule { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px 14px; border-radius: 16px; background: var(--panel); color: var(--panel-ink); border-inline-start: 6px solid var(--hl); }
+.ug .lp-idea-rule .lp-idea-ic { background: var(--hl); color: var(--on-hl); }
+.ug .lp-idea-rule .lp-idea-text b, .ug .lp-idea-rule .lp-idea-text span { color: inherit; }
+/* topics: "**Title (Term).** text" paragraph + its "- " lines = one card */
+.ug .lp-idea-topics { display: grid; gap: 12px; }
+.ug .lp-idea-topic { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 20px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--ledge); }
+.ug .lp-idea-topic header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ug .lp-idea-topic h2 { margin: 0; font-size: 17px; line-height: 1.3; color: var(--ink); }
+.ug .lp-idea-n { display: grid; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 10px; background: var(--hl); color: var(--on-hl); font-weight: 800; font-size: 16px; box-shadow: 0 2px 0 var(--hl-ledge); }
+.ug .lp-idea-term { padding: 2px 10px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); font-size: 12px; font-weight: 700; }
+.ug .lp-idea-topic > p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+.ug .lp-idea-topic h3 { display: flex; align-items: center; gap: 6px; margin: 4px 0 0; font-size: 13px; font-weight: 700; color: var(--right-ink); }
+.ug .lp-idea-topic ul { list-style: none; margin: 0; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; border-radius: 14px; background: var(--mint); }
+.ug .lp-idea-topic li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+.ug .lp-idea-topic li .ph { font-size: 14px; margin-block-start: 4px; color: var(--right-ink); }
+/* scales: a point whose title holds "↔" is drawn as two ends on a track */
+.ug .lp-idea-scales { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ug .lp-idea-scales li { display: grid; grid-template-columns: auto minmax(40px, 1fr) auto; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--ledge); }
+.ug .lp-idea-scales small { grid-column: 1 / -1; margin-block-start: -4px; text-align: center; font-size: 12px; color: var(--ink-3); }
+.ug .lp-idea-end { font-size: 15px; font-weight: 700; color: var(--ink); }
+.ug .lp-idea-end:first-child { color: var(--link); }
+.ug .lp-idea-track { position: relative; display: flex; justify-content: space-between; align-items: center; block-size: 14px; }
+.ug .lp-idea-track::before { content: ''; position: absolute; inset-inline: 0; inset-block-start: 50%; block-size: 4px; margin-block-start: -2px; border-radius: 2px; background: linear-gradient(90deg, var(--link), var(--hl)); opacity: .45; }
+[dir="rtl"] .lp-idea-track::before { background: linear-gradient(270deg, var(--link), var(--hl)); }
+.ug .lp-idea-track i { position: relative; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--surface); border: 2px solid var(--line-strong, var(--ink-3)); }
+.ug .lp-idea-track i:first-child, .ug .lp-idea-track i:last-child { inline-size: 12px; block-size: 12px; border-color: var(--link); background: var(--link); }
+.ug .lp-idea-track i:last-child { border-color: var(--hl); background: var(--hl); }
+/* closing paragraphs = one "Keep in mind" note; "Next lesson: …" = a next row */
+.ug .lp-idea-note { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 16px; background: var(--panel); color: var(--panel-ink); border-inline-start: 6px solid var(--link); }
+.ug .lp-idea-note p { margin: 0; font-size: 15px; line-height: 1.55; }
+.ug .lp-idea-note .lp-idea-note-over { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: .02em; opacity: .8; }
+/* recap: what you did, as done rows */
+.ug .lp-idea-done { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; counter-reset: done; }
+.ug .lp-idea-done li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 14px; border-radius: 16px; background: var(--surface); border: 2px solid var(--line); box-shadow: 0 3px 0 var(--ledge); }
+.ug .lp-idea-tick { display: grid; place-items: center; inline-size: 32px; block-size: 32px; border-radius: 50%; background: var(--right-ink); color: var(--surface); font-size: 18px; }
+.ug .lp-idea-next { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; padding: 12px 16px; border-radius: 16px; border: 2px dashed var(--sel-line); color: var(--ink); font-size: 15px; line-height: 1.45; }
+.ug .lp-idea-next-over { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--sel-bg); color: var(--link); font-size: 12px; font-weight: 700; }
+@media (min-width: 1024px) {
+  .ug .lp-idea { gap: 20px; }
+  .ug .lp-idea-grid { gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ug .lp-idea-grid.n2, .ug .lp-idea-grid.n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ug .lp-idea-grid.n1 { grid-template-columns: minmax(0, 1fr); }
+  .ug .lp-idea-card { grid-template-columns: 1fr; align-content: start; gap: 14px; padding: 18px; border-radius: 20px; }
+  .ug .lp-idea-card .lp-idea-ic { inline-size: 48px; block-size: 48px; font-size: 26px; border-radius: 14px; }
+  .ug .lp-idea-text b { font-size: 17px; }
+  .ug .lp-idea-text span { font-size: 15px; }
+  .ug .lp-idea-vs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; align-items: stretch; }
+  .ug .lp-idea-side { padding: 22px; gap: 14px; }
+  .ug .lp-idea-side h2 { font-size: 18px; }
+  .ug .lp-idea-side li { font-size: 15px; }
+  .ug .lp-idea-topics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  .ug .lp-idea-topic { padding: 22px; }
+  .ug .lp-idea-scales { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .ug .lp-idea-scales li { padding: 18px 20px; }
+  .ug .lp-idea-end { font-size: 17px; }
+  .ug .lp-idea-done { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .ug .lp-idea * { transition: none; } }

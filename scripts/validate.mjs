@@ -149,6 +149,11 @@ export function validate(paths) {
           if (s.speaker !== undefined) need(castIds.includes(s.speaker), `${sw}: unknown speaker ${s.speaker}`);
           if (s.type === "card") {
             need(s.body || s.mock || s.points, `${sw}: a card needs a body, points or a mock`);
+            if (s.layout !== undefined) {
+              need(s.layout === "compare", `${sw}: layout must be compare`);
+              const lead = (s.body?.en ?? "").split("\n").filter((l) => /^- \*\*/.test(l.trim())).length;
+              need(lead >= 2, `${sw}: layout compare needs 2 or more "- **Title:** text" points in the body`);
+            }
             if (s.points !== undefined) {
               need(Array.isArray(s.points) && s.points.length >= 1 && s.points.length <= 4, `${sw}: points holds 1 to 4 items`);
               for (const [k, x] of (Array.isArray(s.points) ? s.points : []).entries()) {
@@ -158,6 +163,7 @@ export function validate(paths) {
             }
             continue;
           }
+          need(s.layout === undefined, `${sw}: layout is for cards only`);
           if (s.type === "video") {
             need(typeof s.video === "string" && s.video, `${sw}: a video needs a video id`);
             need(s.duration > 0, `${sw}: a video needs a duration in seconds`);
