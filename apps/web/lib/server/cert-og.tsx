@@ -26,7 +26,7 @@ const get = async (origin: string, path: string) => (await fetch(`${origin}${pat
  * The certificate as a 1200 x 628 PNG (the LinkedIn link-preview size), drawn with next/og from the same parts as the page art
  * (components/app/CertArt.tsx). Fonts are the app's own (Cairo, Titillium Web), read from /og so Arabic and Latin both draw.
  */
-export async function renderCertPng(c: OgCert, origin: string): Promise<ImageResponse> {
+export async function renderCertPng(c: OgCert, origin: string, scale = 1): Promise<ImageResponse> {
   const t = await getTranslations({ locale: c.locale, namespace: "cert" });
   const ar = c.locale === "ar";
   const [a7, a8, l7, l8, tt, logo, seal] = await Promise.all([
@@ -53,7 +53,8 @@ export async function renderCertPng(c: OgCert, origin: string): Promise<ImageRes
   const bar = { position: "absolute", top: 0, bottom: 0, width: 8, ...(ar ? { left: 0 } : { right: 0 }), background: "linear-gradient(180deg, #78E4FC, #2BB5D9)" } as const; // lint-logical-ignore: Satori has no logical properties
   return new ImageResponse(
     (
-      <div style={{ width: 1200, height: 628, display: "flex", flexDirection: ar ? "row-reverse" : "row", background: "#fff", color: ink, fontFamily: font }}>
+      <div style={{ width: 1200 * scale, height: 628 * scale, display: "flex" }}>
+      <div style={{ width: 1200, height: 628, display: "flex", flexDirection: ar ? "row-reverse" : "row", background: "#fff", color: ink, fontFamily: font, transform: `scale(${scale})`, transformOrigin: "top left" }}>
         <div style={{ width: 340, display: "flex", flexDirection: "column", alignItems: ar ? "flex-end" : "flex-start", padding: "44px 40px", background: "linear-gradient(160deg, #034A73 0%, #012E4B 70%)", position: "relative" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={`data:image/svg+xml;base64,${b64(logo)}`} width={152} height={40} alt="" />
@@ -81,9 +82,10 @@ export async function renderCertPng(c: OgCert, origin: string): Promise<ImageRes
           </div>
         </div>
       </div>
+      </div>
     ),
     {
-      width: 1200, height: 628,
+      width: 1200 * scale, height: 628 * scale,
       fonts: [
         { name: "Cairo", data: a7, weight: 700, style: "normal" }, { name: "Cairo", data: a8, weight: 800, style: "normal" },
         { name: "Cairo", data: l7, weight: 700, style: "normal" }, { name: "Cairo", data: l8, weight: 800, style: "normal" },
