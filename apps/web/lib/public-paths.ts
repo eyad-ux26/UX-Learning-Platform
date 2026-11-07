@@ -100,7 +100,7 @@ export const PUBLIC_PATHS: PublicPath[] = [
     },
   },
   {
-    id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "interactive", status: "open",
+    id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "hybrid", status: "open",
     sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا."),
     sample: {
       unit: 1, lesson: 1, speaker: "sara",
