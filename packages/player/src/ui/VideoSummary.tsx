@@ -8,8 +8,8 @@ export const SUMMARY_ICONS: Record<string, string> = icons;
 export type SummaryPoint = { title: string; text: string; not: boolean; icon: string };
 export type Summary = { intro: string[]; points: SummaryPoint[] };
 
-const NOT = (s: string) => /^not\b/i.test(s) || /^لا\s/.test(s);
-const POINT = /^\*\*(.+?)\*\*\s*(.*)$/;
+export const NOT = (s: string) => /^not\b/i.test(s) || /^لا\s/.test(s);
+export const POINT = /^\*\*(.+?)\*\*\s*(.*)$/;
 
 function pointsOf(body: string) {
   const intro: string[] = [];
@@ -50,7 +50,7 @@ export function readSummary(step: CardStep, locale: Locale): Summary | null {
   };
 }
 
-const inline = (s: string): ReactNode[] =>
+export const inline = (s: string): ReactNode[] =>
   s.split(/(\*\*.+?\*\*|\*[^*\s][^*]*?\*)/g).map((part, i) =>
     part.startsWith("**") ? <b key={i}>{part.slice(2, -2)}</b> : part.length > 2 && part.startsWith("*") && part.endsWith("*") ? <i key={i}>{part.slice(1, -1)}</i> : part,
   );

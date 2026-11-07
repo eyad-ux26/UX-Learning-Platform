@@ -12,6 +12,8 @@ import { VideoSummary, readSummary } from "./VideoSummary";
 import { MatchAnswer, OrderAnswer, SortAnswer, SpotList } from "./Structured";
 import { Rich } from "./Rich";
 import { LessonTour } from "./LessonTour";
+import { IdeaCards } from "./IdeaCards";
+import { readIdea } from "./idea";
 
 export type PlayerProps = {
   lesson: Lesson;
@@ -152,6 +154,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
   const finished = E.isFinished(step, st);
   // Design S2-14: a concept card right after a clip is its video summary, drawn as cards.
   const summary = step.type === "card" && step.part === "concept" && prev?.type === "video" ? readSummary(step, locale) : null;
+  // Design S2-15: any other text-only card (a body, no mock, no video summary) is drawn as an idea card.
+  const idea = step.type === "card" && !summary && !step.points?.length ? readIdea(step, locale) : null;
   const showSheet = question && (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed" || st.phase === "saved" || st.phase === "missed");
 
   // Enter checks the answer from the answers list (the desktop hint on the Check button).
@@ -186,7 +190,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
 
       {guest ? <p className="lp-banner" role="note"><span className="ph ph-user-plus" aria-hidden="true" />{t("guestBanner")}</p> : null}
       {showBack && !guest ? <ResumeNote text={t("welcomeBack")} close={t("close")} onClose={closeBack} /> : null}
-      <main className={`player-main${summary && !replay ? " is-sum" : ""}`}>
+      <main className={`player-main${(summary && !replay) || idea ? " is-sum" : ""}`}>
         <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
 
         {step.type === "video" ? (
@@ -196,6 +200,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         ) : summary && step.type === "card" ? (
           <VideoSummary step={step} summary={summary} locale={locale} t={t as never} clipLength={prev?.type === "video" ? prev.duration : undefined}
             onReplay={() => { setReplay(true); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }} headingRef={headingRef} />
+        ) : idea && step.type === "card" ? (
+          <IdeaCards step={step} idea={idea} locale={locale} t={t as never} headingRef={headingRef} />
         ) : step.type === "card" ? (
           <section className="player-col">
             {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : null}

@@ -49,6 +49,14 @@ function checkStep(s, where, errors) {
     });
     return;
   }
+  if (s.layout !== undefined) {
+    if (s.type !== "card") errors.push(`${where}: layout is for cards only`);
+    else {
+      const lead = (s.body?.en ?? "").split("\n").filter((l) => /^- \*\*/.test(l.trim())).length;
+      if (s.layout !== "compare") errors.push(`${where}: layout must be compare`);
+      else if (lead < 2) errors.push(`${where}: layout compare needs 2 or more "- **Title:** text" points in the body`);
+    }
+  }
   if (s.type === "card") {
     if (s.points !== undefined) {
       const p = s.points;
