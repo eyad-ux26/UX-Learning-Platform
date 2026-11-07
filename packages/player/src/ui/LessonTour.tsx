@@ -21,15 +21,28 @@ function find(sel: string): HTMLElement | null {
   return el && el.getBoundingClientRect().width > 0 ? el : null;
 }
 
-function rectOf(targets: string[]): Rect | null {
-  const rs = targets.map(find).filter((e): e is HTMLElement => !!e).map((e) => e.getBoundingClientRect());
+const rectsOf = (targets: string[]) => targets.map(find).filter((e): e is HTMLElement => !!e).map((e) => e.getBoundingClientRect());
+
+/** The spotlight, kept inside the window. Tips 1 and 2 also stay between the header and the Check bar, so those are never inside the cut-out. */
+function rectOf(tip: Tip): Rect | null {
+  const rs = rectsOf(tip.targets);
   if (!rs.length) return null;
-  const x1 = Math.min(...rs.map((r) => r.left)), y1 = Math.min(...rs.map((r) => r.top));
-  const x2 = Math.max(...rs.map((r) => r.right)), y2 = Math.max(...rs.map((r) => r.bottom));
-  // Choices and Check are far apart on a tall screen: then spotlight the choices alone and let the text name Check.
-  if (rs.length > 1 && y2 - y1 > window.innerHeight * 0.85) { const r = rs[0]; return { x: r.left, y: r.top, w: r.width, h: r.height }; }
+  let x1 = Math.min(...rs.map((r) => r.left)), y1 = Math.min(...rs.map((r) => r.top));
+  let x2 = Math.max(...rs.map((r) => r.right)), y2 = Math.max(...rs.map((r) => r.bottom));
+  let top = 4, bottom = window.innerHeight - 4;
+  if (tip.n === 1 || tip.n === 2) {
+    const head = document.querySelector<HTMLElement>(".player-head")?.getBoundingClientRect();
+    const foot = document.querySelector<HTMLElement>(".player-foot")?.getBoundingClientRect();
+    if (head && head.bottom < bottom) top = Math.max(top, head.bottom + 4);
+    if (foot && foot.top > top) bottom = Math.min(bottom, foot.top - 4);
+  }
+  x1 = Math.max(x1, 4); x2 = Math.min(x2, window.innerWidth - 4);
+  y1 = Math.max(y1, top); y2 = Math.min(y2, bottom);
+  if (x2 <= x1 || y2 <= y1) return null;
   return { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
 }
+
+const hits = (a: Rect, b: DOMRect) => a.x < b.right + 8 && a.x + a.w > b.left - 8 && a.y < b.bottom + 8 && a.y + a.h > b.top - 8;
 
 /**
  * The first-lesson tour: a welcome card, then up to four spotlights (the problem, the screen, the answers and Check, the progress bar).
@@ -44,7 +57,7 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   const box = useRef<HTMLDivElement>(null);
   const tip = at > 0 ? tips[at - 1] ?? null : null;
 
-  const measure = useCallback(() => setRect(tip ? rectOf(tip.targets) : null), [tip]);
+  const measure = useCallback(() => setRect(tip ? rectOf(tip) : null), [tip]);
   useLayoutEffect(() => {
     if (!tip) { setRect(null); return; }
     const first = tip.targets.map(find).find(Boolean);
@@ -92,14 +105,26 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   const desk = vw >= 1024;
   let pos: React.CSSProperties = {};
   if (tip && rect) {
-    if (!desk) pos = rect.y + rect.h / 2 < vh / 2 ? { insetInline: 12, insetBlockEnd: 16 } : { insetInline: 12, insetBlockStart: 72 };
-    else {
-      const wdt = 400;
+    // Every candidate place for the card; the first one that covers none of the tip's targets wins.
+    const parts = rectsOf(tip.targets);
+    const free = (c: Rect) => !parts.some((r) => hits(c, r));
+    if (!desk) {
+      const h = 220;
+      const bottom: Rect = { x: 12, y: vh - 16 - h, w: vw - 24, h }, topc: Rect = { x: 12, y: 72, w: vw - 24, h };
+      const useBottom = free(bottom) || !free(topc) ? rect.y + rect.h / 2 < vh / 2 : false;
+      pos = useBottom ? { insetInline: 12, insetBlockEnd: 16 } : { insetInline: 12, insetBlockStart: 72 };
+    } else {
+      const wdt = 400, h = 240;
       const room = vw - (rect.x + rect.w) - PAD - 24;
-      const left = room >= wdt ? rect.x + rect.w + PAD + 16 : rect.x - PAD - 16 - wdt >= 8 ? rect.x - PAD - 16 - wdt : Math.max(8, Math.min(vw - wdt - 8, rect.x));
-      const side = room >= wdt || rect.x - PAD - 16 - wdt >= 8;
-      const top = side ? Math.max(8, Math.min(vh - 260, rect.y)) : Math.min(vh - 260, rect.y + rect.h + PAD + 16);
-      pos = { insetInlineStart: inl(left, wdt), insetBlockStart: top, inlineSize: wdt };
+      const cands: Rect[] = [
+        { x: rect.x + rect.w + PAD + 16, y: Math.max(8, Math.min(vh - h - 8, rect.y)), w: wdt, h },
+        { x: rect.x - PAD - 16 - wdt, y: Math.max(8, Math.min(vh - h - 8, rect.y)), w: wdt, h },
+        { x: 8, y: 72, w: wdt, h }, { x: vw - wdt - 8, y: 72, w: wdt, h },
+        { x: 8, y: vh - h - 24, w: wdt, h }, { x: vw - wdt - 8, y: vh - h - 24, w: wdt, h },
+        { x: (vw - wdt) / 2, y: 72, w: wdt, h },
+      ].filter((c) => c.x >= 8 && c.x + c.w <= vw - 8);
+      const pick = cands.find(free) ?? cands[0] ?? { x: Math.max(8, room > wdt ? rect.x + rect.w + PAD + 16 : 8), y: 72, w: wdt, h };
+      pos = { insetInlineStart: inl(pick.x, wdt), insetBlockStart: pick.y, inlineSize: wdt };
     }
   }
   const total = tips.length;
