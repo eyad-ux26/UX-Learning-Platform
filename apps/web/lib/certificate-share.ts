@@ -26,3 +26,11 @@ export function linkedInProfileUrl(p: { pathName: string; issuedAt: string; url:
   });
   return `https://www.linkedin.com/profile/add?${q.toString()}`;
 }
+
+/** A download file name from the learner's name and the path: "UXGate certificate - Salma Ahmed - Forms That Flow.pdf". `ascii` is the safe fallback for old browsers. */
+export function certFileName(name: string, pathName: string, ext: string): { utf8: string; ascii: string } {
+  const clean = (s: string) => s.replace(/[\\/:*?"<>|\u0000-\u001f]+/g, " ").replace(/\s+/g, " ").trim();
+  const utf8 = `UXGate certificate - ${clean(name) || "learner"} - ${clean(pathName)}.${ext}`;
+  const ascii = utf8.replace(/[^\x20-\x7e]/g, "").replace(/\s+/g, " ").replace(/-\s+-/g, "-").trim() || `uxgate-certificate.${ext}`;
+  return { utf8, ascii: ascii.includes(`.${ext}`) ? ascii : `${ascii}.${ext}` };
+}
