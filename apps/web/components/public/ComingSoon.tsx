@@ -1,8 +1,8 @@
 // The Coming Soon page (canvas v70, docs/design/prelaunch/README.md): what UXGate is, the launch-notify form, what you'll
-// get, the launch prices and the footer with the legal pages. No link leads to sign-in: the team opens /team, which asks
+// get and the footer with the legal pages. No link leads to sign-in: the team opens /team, which asks
 // for the team password first (lib/team-access.ts). Shared by /coming-soon and its
 // confirmation link. Views: "public" (the form), "member" (signed in, not an admin), "confirmed" and "expired" (from the
-// confirmation link). The prices are not on the canvas: Paddle's website review looks for them.
+// confirmation link).
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/Logo";
@@ -10,23 +10,13 @@ import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { LogoMotion } from "@/components/loading/LogoMotion";
 import { WaitlistForm } from "./WaitlistForm";
 import { SoonSignOut } from "./SoonSignOut";
-import { DISCOUNTS, PRICES, formatMoney, moneyCls, type Region } from "@/lib/billing/pricing";
 
 export type SoonView = { kind: "public" } | { kind: "expired" } | { kind: "confirmed"; email: string } | { kind: "member"; email: string; name: string | null };
 
-const TIERS: { region: Region; label: "tierEg" | "tierArab" | "tierWorld" }[] = [
-  { region: "eg", label: "tierEg" }, { region: "arab", label: "tierArab" }, { region: "world", label: "tierWorld" },
-];
 const GET = [["ph-cursor", 1], ["ph-chat", 2], ["ph-seal", 3], ["ph-globe", 4]] as const;
 const mail = (chunks: React.ReactNode) => <bdi className="soon-mail">{chunks}</bdi>;
-/** Dollar amounts read left to right inside Arabic too ("$8"); pounds follow the page ("249 ج.م"). */
-function money(currency: string) {
-  return function Money(chunks: React.ReactNode) { return <bdi className={moneyCls(currency)}>{chunks}</bdi>; };
-}
-
-export async function ComingSoon({ locale, view }: { locale: string; view: SoonView }) {
+export async function ComingSoon({ view }: { locale?: string; view: SoonView }) {
   const t = await getTranslations("soon");
-  const loc = locale === "ar" ? "ar" : "en";
   const chip = view.kind === "confirmed" ? { cls: "kind kind-free", icon: "ph-check-circle-fill", text: t("confChip") }
     : view.kind === "member" ? { cls: "kind kind-current", icon: "ph-user", text: t("memChip") }
     : { cls: "kind kind-soon", icon: "ph-hourglass", text: t("chip") };
@@ -86,24 +76,6 @@ export async function ComingSoon({ locale, view }: { locale: string; view: SoonV
                 <li key={n}><span className="soon-get-ic" aria-hidden="true"><span className={`ph ${icon}`} /></span><span className="soon-get-text"><b>{t(`get${n}t`)}</b><span>{t(`get${n}b`)}</span></span></li>
               ))}
             </ul>
-          </section>
-
-          <section className="soon-prices" aria-labelledby="soon-prices">
-            <h2 id="soon-prices">{t("pricesTitle")}</h2>
-            <p>{t("pricesLead")}</p>
-            <ul>
-              {TIERS.map(({ region, label }) => {
-                const p = PRICES[region];
-                return (
-                  <li key={region}>
-                    <span className="t-over">{t(label)}</span>
-                    <b>{t.rich("perMonth", { amount: formatMoney(p.month, p.currency, loc), m: money(p.currency) })}</b>
-                    <span>{t.rich("orYear", { amount: formatMoney(p.year, p.currency, loc), m: money(p.currency) })}</span>
-                  </li>
-                );
-              })}
-            </ul>
-            <p className="soon-tax">{t("plusTax")} {t("students", { percent: DISCOUNTS.student.percent })}</p>
           </section>
         </main>
 
