@@ -46,7 +46,11 @@ export function CertActions(p: Props) {
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
   const opener = useRef<HTMLButtonElement>(null);
-  const text = postText({ intro: t("postIntro", { path: p.pathName, skills: p.skills, checks: p.checks }), seeIt: t("postSee"), tags: t("postTags") }, p.url);
+  const versions = [1, 2, 3].map((n) => postText({ intro: t(n === 1 ? "postIntro" : (`postIntro${n}` as "postIntro2"), { path: p.pathName, skills: p.skills, checks: p.checks }), seeIt: t("postSee"), tags: t("postTags") }, p.url));
+  const [ver, setVer] = useState(0);
+  const [draft, setDraft] = useState(versions[0]);
+  const text = draft;
+  const pick = (i: number) => { setVer(i); setDraft(versions[i]); };
   const say = (m: string) => { setLive(""); setTimeout(() => setLive(m), 30); };
   // The confirmation toast goes away by itself after 4 seconds, and has a close button.
   useEffect(() => { if (!live) return; const id = setTimeout(() => setLive(""), 4000); return () => clearTimeout(id); }, [live]);
@@ -59,11 +63,24 @@ export function CertActions(p: Props) {
   };
   const copy = async (s: string) => { try { await navigator.clipboard.writeText(s); return true; } catch { return false; } };
   // The new tab opens in the click itself, so a pop-up blocker allows it, and is pointed at LinkedIn once the page is on.
-  const openTab = () => window.open("about:blank", "_blank");
+  // On phones a blank tab opened first never reaches the LinkedIn app, so there the same tab goes to LinkedIn.
+  const isPhone = () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+  const openTab = () => (isPhone() ? null : window.open("about:blank", "_blank"));
   const go = (w: Window | null, to: string) => { if (w) { w.opener = null; w.location.href = to; } else window.location.href = to; };
 
   const share = () => {
     if (gate()) return;
+    // LinkedIn's phone app ignores the text in a link, so on phones the share sheet carries it: choosing LinkedIn there opens its composer with the text filled in.
+    if (isPhone() && typeof navigator.share === "function") {
+      start(async () => {
+        setFailed(false);
+        if (!(await ensureOn())) return;
+        const copied = await copy(text);
+        try { await navigator.share({ text }); if (copied) say(t("copiedLive")); }
+        catch (e) { if ((e as Error)?.name !== "AbortError") go(null, linkedInFeedUrl(text)); }
+      });
+      return;
+    }
     const w = openTab();
     start(async () => {
       setFailed(false);
@@ -165,9 +182,12 @@ export function CertActions(p: Props) {
               <button type="button" className="icon-btn plain" aria-label={t("close")} onClick={() => { setOpen(false); opener.current?.focus(); }}><span className="ph ph-x" aria-hidden="true" /></button>
             </header>
             <p className="cxs-label">{t("shPost")}</p>
-            <div className="cxs-post" tabIndex={0} role="group" aria-label={t("shPost")}>
-              {text.split("\n\n").map((line, i) => <p key={i}>{line}</p>)}
+            <div className="cxs-vers" role="radiogroup" aria-label={t("vLabel")}>
+              {[t("v1"), t("v2"), t("v3")].map((l, i) => <button key={i} type="button" role="radio" aria-checked={ver === i} className={`chip${ver === i ? " is-on" : ""}`} onClick={() => pick(i)}>{l}</button>)}
             </div>
+            <label className="lp-sr" htmlFor="cxs-text">{t("postEdit")}</label>
+            <textarea id="cxs-text" className="cxs-post cxs-edit" dir="auto" rows={9} value={draft} onChange={(e) => setDraft(e.target.value)} />
+            <p className="t-small ink-2">{t("editHint")}</p>
             <p className="cxs-label">{t("preview")}</p>
             <div className="cxs-card">
               {p.cardArt}
@@ -175,7 +195,7 @@ export function CertActions(p: Props) {
             </div>
             {!on ? <p className="cxs-notice"><span className="ph ph-info" aria-hidden="true" /><span>{t("notice")}</span></p> : null}
             <div className="cxs-acts">
-              <button type="button" data-autofocus className="btn btn-primary btn-lg press" onClick={share} disabled={pending} aria-busy={pending || undefined}><span className="li-glyph" aria-hidden="true">in</span>{t("open")}</button>
+              <button type="button" data-autofocus className="btn btn-primary btn-lg press" onClick={share} disabled={pending || !draft.trim()} aria-busy={pending || undefined}><span className="li-glyph" aria-hidden="true">in</span>{t("open")}</button>
               <button type="button" className="btn btn-ghost press" onClick={() => { setOpen(false); opener.current?.focus(); }}>{t("cancel")}</button>
             </div>
             <p className="t-small ink-2 cxs-foot">{t("openNote")}</p>
