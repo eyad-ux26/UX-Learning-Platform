@@ -69,7 +69,7 @@ Migration `0038_waitlist.sql` adds `public.waitlist`. Only the service role read
 
 1. The form posts to `/api/waitlist`. The visitor's address is stored unconfirmed, with its language and the consent line, and the confirmation email (`launchConfirm`) goes out from `hello@uxgate.org`.
 2. The email's link is `/{locale}/coming-soon/confirm?t=…` on the host the visitor used. It works for 7 days. Opening it puts the address on the list and shows "You're on the list".
-3. Unconfirmed addresses are deleted after 30 days, by the daily job (`prune_waitlist`).
+3. An unconfirmed address is deleted 30 days after its last confirmation email, by the daily job (`prune_waitlist`, 0040). An address whose email has not gone out yet (queued, below) is never deleted; its 30 days start once the daily job sends its link.
 4. On launch day, confirmed addresses get one email (`launchLive`), with a link to leave the list. That email and its sender are built at launch.
 
 Guards:
@@ -88,7 +88,7 @@ To read or export the list, open the `waitlist` table in the Supabase table edit
 
 ## Before turning it on
 
-1. Run `0038_waitlist.sql` in the Supabase SQL editor.
+1. Run `0038_waitlist.sql`, then `0040_waitlist_prune_after_send.sql`, in the Supabase SQL editor.
 2. Make your own account and the QA accounts admins (above).
 3. Set the `UG_TEAM_PASSWORD` secret in Cloudflare.
 4. Later, once uxgate.org's DNS is on Cloudflare: verify the domain in Resend and set `RESEND_API_KEY` (one secrets window with `UG_TEAM_PASSWORD` if possible). The form works before that; it queues the confirmations.
