@@ -8,7 +8,7 @@ import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import { useRouter } from "@/i18n/navigation";
-import { FOCUSES, GOALS, type OnboardingInput } from "@/lib/onboarding";
+import { FOCUSES, GOALS, focusOpen, type OnboardingInput } from "@/lib/onboarding";
 import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
@@ -20,7 +20,6 @@ type Focus = (typeof FOCUSES)[number];
 const GOAL_ICON: Record<Goal, string> = { g1: "target", g2: "star", g3: "sparkle", g4: "map" };
 const FOCUS_IMG: Record<Focus, string | null> = { forms: "path-forms", hier: "path-hierarchy", usab: "path-usability", none: null };
 const FOCUS_NAME: Record<Focus, string> = { forms: "Forms That Flow", hier: "Visual Hierarchy in Action", usab: "Find and Fix Usability", none: "" };
-const OPEN_PATHS = new Set<Focus>(["forms"]); // paths whose lessons exist today
 
 /** `playable`: ids of the paths that have lessons (the rest show as Coming soon), passed in so no content ships to the browser. */
 export function Onboarding({ playable }: { playable: string[] }) {
@@ -61,11 +60,11 @@ export function Onboarding({ playable }: { playable: string[] }) {
   const title = { 1: t("q1"), 2: t("q2"), 3: t("q3") }[step];
   const sub = { 1: t("q1sub"), 2: t("q2sub"), 3: t("q3sub") }[step];
   const rest = focus ? (focus === "none" ? <span>{t("sugg_none")}</span> : <>{t(`sugg_${focus}`).replace(/^[,،]\s*/, "")}</>) : null;
-  const soon = focus && focus !== "none" && !OPEN_PATHS.has(focus) ? <span style={{ display: "block", marginBlockStart: 4 }}>{t("suggSoon")}</span> : null;
+  const soon = focus && focus !== "none" && !focusOpen(focus, playable) ? <span style={{ display: "block", marginBlockStart: 4 }}>{t("suggSoon")}</span> : null;
   const sugg = focus ? (
     <>
       {focus === "none" ? <span>{t("sugg_none")}</span> : <><b className="ltr">{FOCUS_NAME[focus]}</b>{t(`sugg_${focus}`)}</>}
-      {focus !== "none" && !OPEN_PATHS.has(focus) ? <span style={{ display: "block", marginBlockStart: 4 }}>{t("suggSoon")}</span> : null}
+      {focus !== "none" && !focusOpen(focus, playable) ? <span style={{ display: "block", marginBlockStart: 4 }}>{t("suggSoon")}</span> : null}
     </>
   ) : null;
 
