@@ -1,21 +1,18 @@
 import { ImageResponse } from "next/og";
 import { getTranslations } from "next-intl/server";
 import { certId } from "@/lib/certificate-share";
-import { bidiGroups } from "@/lib/cert-bidi";
+import { bidiLines } from "@/lib/cert-bidi";
 
 export type OgCert = { name: string; pathName: string; shown: number; checks: number; lessons: number; issued: string; code: string; pathId: string; locale: "en" | "ar" };
 
-/** Satori has no bidi: Arabic text is drawn as a reversed row of words, with each run of Latin words kept whole and in order (lib/cert-bidi.ts). */
-function Txt({ text, ar, style }: { text: string; ar: boolean; style: Record<string, string | number> }) {
+/** Satori has no bidi: each Arabic line is built in visual order as one text node (lib/cert-bidi.ts), so word spacing stays even. */
+function Txt({ text, ar, style, max = 700 }: { text: string; ar: boolean; style: Record<string, string | number>; max?: number }) {
   if (!ar) return <div style={{ display: "flex", ...style }}>{text}</div>;
-  const gap = typeof style.fontSize === "number" ? Math.round(style.fontSize * 0.28) : 6;
+  const size = typeof style.fontSize === "number" ? style.fontSize : 16;
+  const lines = bidiLines(text, size, typeof style.maxWidth === "number" ? style.maxWidth : max);
   return (
-    <div style={{ display: "flex", flexDirection: "row-reverse", flexWrap: "wrap", justifyContent: "flex-start", columnGap: gap, ...style }}>
-      {bidiGroups(text).map((g, i) => (
-        <div key={i} style={{ display: "flex", flexDirection: "row-reverse" }}>
-          {g.map((p, k) => <div key={k} style={{ display: "flex" }}>{p.text}</div>)}
-        </div>
-      ))}
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", ...style }}>
+      {lines.map((l, i) => <div key={i} style={{ display: "flex", whiteSpace: "nowrap" }}>{l}</div>)}
     </div>
   );
 }

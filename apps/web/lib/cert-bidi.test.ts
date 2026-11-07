@@ -21,3 +21,17 @@ describe("bidiGroups (Arabic text for the certificate image)", () => {
     expect(flat("«مرحبا» 12 نوفمبر 2026")).toEqual(["مرحبا", "12", "نوفمبر", "2026"].map((x) => x));
   });
 });
+
+import { bidiLines } from "./cert-bidi";
+describe("bidiLines (one node per Arabic line, in visual order)", () => {
+  it("reverses the word order so the first word is at the right", () => {
+    expect(bidiLines("أنهت مسار Forms That Flow بنجاح", 18, 900)).toEqual(["بنجاح Forms That Flow مسار أنهت"]);
+  });
+  it("moves a comma to the left of its word and a final dot to the far left", () => {
+    expect(bidiLines("في حالات جديدة، على UXGate.", 18, 900)).toEqual([".UXGate على ،جديدة حالات في"]);
+  });
+  it("keeps a date together in order and breaks long text into lines from the top", () => {
+    expect(bidiLines("7 نوفمبر 2026", 16, 900)).toEqual(["2026 نوفمبر 7"]);
+    expect(bidiLines("كلمة ".repeat(40).trim(), 18, 300).length).toBeGreaterThan(1);
+  });
+});
