@@ -26,11 +26,28 @@ steps:
       en: "I own an online electronics shop. When a product sells out, we show a short message on its page.\n\nMy prompt had context and a clear ask: 5 messages for a sold-out phone. The AI got the situation right, but wrote jokes, and the messages are too long for the space."
       ar: "أملك متجرًا إلكترونيًا للأجهزة. وحين يَنفد منتج، نعرض رسالة قصيرة في صفحته.\n\nكان في طلبي سياق وطلب واضح: 5 رسائل لهاتف نفد. ففهم الذكاء الاصطناعي الموقف جيدًا، لكنه كتب نكاتًا، والرسائل أطول من المساحة المتاحة."
     mock:
-      width: 300
+      app: dar
+      appbar:
+        title: {en: Phones, ar: هواتف}
+        back: true
       blocks:
-        - { kind: heading, text: { en: "Nova X phone", ar: "هاتف Nova X" } }
-        - { kind: chip, text: { en: "Sold out", ar: "نفدت الكمية" }, gap: xs }
-        - { kind: small, text: { en: "Whoa, everyone wanted this one! 🏃 Our shelves are as empty as a phone at 1% battery, but don't worry, more are coming soon, probably, we hope!", ar: "واو، الجميع أراد هذا الهاتف! 🏃 رفوفنا فارغة مثل هاتف بطاريته 1%، لكن لا تقلق، المزيد قادم قريبًا، على الأغلب، نأمل ذلك!" }, gap: s }
+      - {kind: image, art: phone, size: m}
+      - kind: heading
+        text: {en: Nova X phone, ar: هاتف Nova X}
+        gap: s
+      - kind: price
+        text:
+          en: "EGP 18,999"
+          ar: "18,999 جنيه"
+      - kind: badge
+        text: {en: Sold out, ar: نفدت الكمية}
+        tone: bad
+        gap: xs
+      - kind: small
+        text:
+          en: "Whoa, everyone wanted this one! \U0001F3C3 Our shelves are as empty as a phone at 1% battery, but don't worry, more are coming soon, probably, we hope!"
+          ar: "واو، الجميع أراد هذا الهاتف! \U0001F3C3 رفوفنا فارغة مثل هاتف بطاريته 1%، لكن لا تقلق، المزيد قادم قريبًا، على الأغلب، نأمل ذلك!"
+        gap: s
 
   - id: S02
     type: choose
@@ -124,13 +141,19 @@ steps:
       en: "My new prompt said: no jokes, under 80 characters. Here are the 5 messages."
       ar: "قال طلبي الجديد: بلا نكات، وأقل من 80 حرفًا. وهذه هي الرسائل الخمس."
     mock:
-      width: 300
+      app: fikra
+      frame: wide
+      url: fikra.example/chat
+      footer:
+      - kind: composer
+        text: {en: Ask Fikra anything, ar: اسأل فكرة أي شيء}
       blocks:
-        - { kind: small, text: { en: "1. Sold out. Back on May 3.", ar: "1. نفدت الكمية. يعود يوم 3 مايو." } }
-        - { kind: small, text: { en: "2. Gone in a flash! ⚡ Even our robots are sad about it.", ar: "2. اختفى في لمح البصر! ⚡ حتى روبوتاتنا حزينة." }, gap: xs }
-        - { kind: small, text: { en: "3. Sold out. Want an alert when it's back?", ar: "3. نفدت الكمية. هل تريد تنبيهًا حين يعود؟" }, gap: xs }
-        - { kind: small, text: { en: "4. We're very sorry, but this product has sold out because of high demand, and new stock should arrive on May 3, so please check back then.", ar: "4. نعتذر كثيرًا، لكن هذا المنتج نفد بسبب الطلب الكبير، ومن المتوقّع وصول كمية جديدة يوم 3 مايو، فيرجى العودة حينها." }, gap: xs }
-        - { kind: small, text: { en: "5. Out of stock. See similar phones.", ar: "5. غير متوفّر. شاهد هواتف مشابهة." }, gap: xs }
+      - kind: chat
+        text:
+          en: "1. Sold out. Back on May 3.\n2. Gone in a flash! ⚡ Even our robots are sad about it.\n3. Sold out. Want an alert when it's back?\n4. We're very sorry, but this product has sold out because of high demand, and new stock should arrive on May 3, so please check back then.\n5. Out of stock. See similar phones."
+          ar: "1. نفدت الكمية. يعود يوم 3 مايو.\n2. اختفى في لمح البصر! ⚡ حتى روبوتاتنا حزينة.\n3. نفدت الكمية. هل تريد تنبيهًا حين يعود؟\n4. نعتذر كثيرًا، لكن هذا المنتج نفد بسبب الطلب الكبير، ومن المتوقّع وصول كمية جديدة يوم 3 مايو، فيرجى العودة حينها.\n5. غير متوفّر. شاهد هواتف مشابهة."
+        from: ai
+        actions: [copy, regenerate]
     prompt:
       en: "What should I do next?"
       ar: "ماذا أفعل بعد ذلك؟"
@@ -178,18 +201,55 @@ steps:
     a:
       label: { en: "A: message 1 as the AI wrote it", ar: "A: الرسالة 1 كما كتبها الذكاء الاصطناعي" }
       mock:
-        width: 300
+        app: dar
+        appbar:
+          title: {en: Phones, ar: هواتف}
+          back: true
         blocks:
-          - { kind: chip, text: { en: "Sold out", ar: "نفدت الكمية" } }
-          - { kind: small, text: { en: "Sold out. Back on May 3.", ar: "نفدت الكمية. يعود يوم 3 مايو." }, gap: xs }
+        - {kind: image, art: phone, size: m}
+        - kind: heading
+          text: {en: Nova X phone, ar: هاتف Nova X}
+          gap: s
+        - kind: price
+          text:
+            en: "EGP 18,999"
+            ar: "18,999 جنيه"
+        - kind: badge
+          text: {en: Sold out, ar: نفدت الكمية}
+          tone: bad
+          gap: xs
+        - kind: small
+          text: {en: Sold out. Back on May 3., ar: نفدت الكمية. يعود يوم 3 مايو.}
+          gap: s
     b:
       label: { en: "B: messages 1 and 3 joined, plus a button", ar: "B: الرسالتان 1 و3 معًا، مع زر" }
       mock:
-        width: 300
+        app: dar
+        appbar:
+          title: {en: Phones, ar: هواتف}
+          back: true
         blocks:
-          - { kind: chip, text: { en: "Sold out", ar: "نفدت الكمية" } }
-          - { kind: small, text: { en: "Sold out. Back on May 3.", ar: "نفدت الكمية. يعود يوم 3 مايو." }, gap: xs }
-          - { kind: button, text: { en: "Alert me when it's back", ar: "نبّهني حين يعود" }, gap: s }
+        - {kind: image, art: phone, size: m}
+        - kind: heading
+          text: {en: Nova X phone, ar: هاتف Nova X}
+          gap: s
+        - kind: price
+          text:
+            en: "EGP 18,999"
+            ar: "18,999 جنيه"
+        - kind: badge
+          text: {en: Sold out, ar: نفدت الكمية}
+          tone: bad
+          gap: xs
+        - kind: small
+          text: {en: Sold out. Back on May 3., ar: نفدت الكمية. يعود يوم 3 مايو.}
+          gap: s
+        - kind: button
+          text:
+            en: "Alert me when it's back"
+            ar: نبّهني حين يعود
+          icon: bell
+          gap: s
     answer: b
     misconceptions:
       - id: MC-P13-001

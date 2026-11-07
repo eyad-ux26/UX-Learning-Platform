@@ -3,7 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
 import { catalogEntry, catalogFor, pathArtUrl, type CatalogRow } from "@/lib/catalog";
-import { buildPathView, type PathView } from "@/lib/learning";
+import { buildPathView, pathBegun, type PathView } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 import { ChoosePath } from "./ChoosePath";
 
@@ -81,6 +81,10 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
   const pct = pctOf(view);
   const other = me.activePathId !== pathId ? catalogEntry(me.activePathId) : null;
   const next = view?.next;
+  // One main button: Start this path (nothing opened yet) or Continue this path, straight into the next lesson.
+  const mainLabel = joined && view && pathBegun(view) ? t("continueCta") : t("startCta");
+  const mapHref = `/app/path/${pathId}`;
+  const goHref = next ? `/app/lesson/${next.lesson.lessonId}` : mapHref;
   const facts: string[] = joined
     ? [next ? t("nextIs", { title: next.lesson.body.title[locale], minutes: next.lesson.minutes }) : "", t("factGoal")].filter(Boolean)
     : [...(entry.kind === "hybrid" ? [t("factVideo"), t("factPractice")] : []), t("factCheck")];
@@ -107,6 +111,18 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
           <span className="t-small ink-2">{t("progressText", { done: view.doneCount, total: view.totalCount })}</span>
         </div>
       ) : null}
+      {/* The main button sits above the unit list, so a phone shows it without scrolling. */}
+      {isCurrent ? (
+        <>
+          {next ? <Link href={goHref} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{mainLabel}</Link> : null}
+          <Link href={mapHref} className={`btn ${next ? "btn-secondary" : "btn-primary"} btn-lg btn-block press`}>{t("seeMap")}</Link>
+        </>
+      ) : (
+        <>
+          <ChoosePath pathId={pathId} label={mainLabel} to={goHref} />
+          <p className="t-small ink-2">{other && joined ? t("keepNamed", { name: other.name }) : t("keep")}</p>
+        </>
+      )}
       <p className="t-over">{t("unitsTitle")}</p>
       <ol className="pg-units">
         {view?.units.map((u) => (
@@ -120,14 +136,6 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
         <p className="t-over">{joined ? t("aboutContinue") : t("aboutStart")}</p>
         <ul>{facts.map((f) => <li key={f} className="t-small">{f}</li>)}</ul>
       </section>
-      {isCurrent ? (
-        <Link href={`/app/path/${pathId}`} className="btn btn-primary btn-lg press">{t("seeMap")}</Link>
-      ) : (
-        <>
-          <ChoosePath pathId={pathId} label={joined ? t("continueCta") : t("startCta")} to={`/app/paths/${pathId}/started`} />
-          <p className="t-small ink-2">{other && joined ? t("keepNamed", { name: other.name }) : t("keep")}</p>
-        </>
-      )}
     </div>
   );
 }

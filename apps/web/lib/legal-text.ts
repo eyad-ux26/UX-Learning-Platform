@@ -1,4 +1,4 @@
-// Privacy policy and terms of use, in English and Arabic. One file, so the approved text replaces this one in a single change.
+// Privacy policy, terms of use and refund policy, in English and Arabic. One file, so the approved text replaces this one in a single change.
 // SAMPLE TEXT: this is the design's suggested draft (canvas v63). It is not approved. Keep every [PLACEHOLDER] until the admins
 // fill it in. When the admins sign off, paste the approved text, set `approved: true` and set `updated` to the date it applies.
 import type { Locale } from "../i18n/routing";
@@ -12,7 +12,7 @@ export type LegalSection = {
   key?: string;
 };
 export type LegalDoc = { title: string; sections: LegalSection[] };
-export type LegalKind = "privacy" | "terms";
+export type LegalKind = "privacy" | "terms" | "refund";
 
 /** false while the text is the sample draft: the pages show the "SAMPLE TEXT" cap and ask search engines not to index them. */
 export const LEGAL_STATUS: { approved: boolean; updated: string } = { approved: false, updated: "[DATE]" };
@@ -236,7 +236,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         {
           h: "Subscription, cancelling and refunds",
           ps: [],
-          key: "A monthly or an annual plan, priced by region: in Egypt 249 EGP a month or 2,249 EGP a year, in the Gulf $8 or $72, in other Arab countries $5 or $45. No trial. A plan renews at the end of each period until you cancel. Payments go through Paymob in Egypt and Paddle elsewhere. Cancel any time in Settings and keep access until the end of the period you paid for. Ask for a refund within 7 days of a charge.",
+          key: "A monthly or an annual plan, priced by region: in Egypt 249 EGP a month or 2,249 EGP a year, in the Gulf $8 or $72, in other Arab countries $5 or $45, and in all other countries $8 or $72. No trial. A plan renews at the end of each period until you cancel. Payments go through Paymob in Egypt and Paddle elsewhere. Cancel any time in Settings and keep access until the end of the period you paid for. Ask for a refund within 7 days of a charge.",
         },
         {
           h: "Fair use",
@@ -309,7 +309,7 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         {
           h: "الاشتراك والإلغاء والاسترداد",
           ps: [],
-          key: "خطة شهرية أو سنوية، بسعر حسب المنطقة: في مصر 249 ج.م شهريًا أو 2,249 ج.م سنويًا، وفي الخليج 8$ أو 72$، وفي باقي الدول العربية 5$ أو 45$. بدون فترة تجريبية. تتجدّد الخطة في نهاية كل مدة حتى تلغيها. يتم الدفع عبر Paymob في مصر وPaddle خارجها. ألغِ متى شئت من الإعدادات ويبقى وصولك حتى نهاية المدة المدفوعة. اطلب استرداد المبلغ خلال 7 أيام من الدفع.",
+          key: "خطة شهرية أو سنوية، بسعر حسب المنطقة: في مصر 249 ج.م شهريًا أو 2,249 ج.م سنويًا، وفي الخليج 8$ أو 72$، وفي باقي الدول العربية 5$ أو 45$، وفي كل الدول الأخرى 8$ أو 72$. بدون فترة تجريبية. تتجدّد الخطة في نهاية كل مدة حتى تلغيها. يتم الدفع عبر Paymob في مصر وPaddle خارجها. ألغِ متى شئت من الإعدادات ويبقى وصولك حتى نهاية المدة المدفوعة. اطلب استرداد المبلغ خلال 7 أيام من الدفع.",
         },
         {
           h: "الاستخدام العادل",
@@ -352,6 +352,104 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         {
           h: "التواصل",
           ps: ["راسلنا على support@uxgate.org."],
+        },
+      ],
+    },
+  },
+  // The refund policy Paddle's website approval asks for. Drafted from the terms' refund section and the in-app refund
+  // form (7 days, asked in Plan and billing, answered by email). Sample text until the admins sign it off.
+  refund: {
+    en: {
+      title: "Refund policy",
+      sections: [
+        {
+          h: "Seven days to change your mind",
+          ps: [
+            "You can ask for a refund within 7 days of any charge: your first payment or a renewal, on a monthly or an annual plan.",
+            "A refund gives back that charge in full. We don’t refund part of a period.",
+          ],
+        },
+        {
+          h: "How to ask",
+          ps: ["Ask from your account, so we can find the charge quickly:"],
+          list: [
+            "Open Settings, then Plan and billing, then Ask for a refund.",
+            "Ask for a refund for your latest charge and tell us why in a few words. One line is enough.",
+            "Or write to support@uxgate.org from the email on your account.",
+          ],
+          key: "You get an email when the team answers. Pro stays on until then.",
+        },
+        {
+          h: "After a refund",
+          ps: [
+            "The money goes back to the card or wallet you paid with. Your bank or wallet decides how long it takes to show, usually [N] business days.",
+            "Pro ends and the plan stops renewing. Your progress, streak, badges and certificates stay in your account, and Unit 1 of every path stays open.",
+          ],
+        },
+        {
+          h: "After the 7 days",
+          ps: [
+            "A charge older than 7 days can’t be refunded, but you can cancel any time in Plan and billing. Nothing more is charged, and Pro stays on until the end of the period you paid for.",
+            "Charged twice, or a charge you don’t recognise? Write to support@uxgate.org at any time and we’ll look into it.",
+          ],
+        },
+        {
+          h: "Who takes your payment",
+          ps: [
+            "In Egypt, payments go through Paymob, in Egyptian pounds. Everywhere else, Paddle (paddle.com) is our reseller and merchant of record: it takes the payment, and its name may appear on your statement. Paddle’s buyer terms also apply to those payments.",
+            "Whichever provider took the payment, you ask for a refund the same way, from Plan and billing.",
+          ],
+        },
+        {
+          h: "Contact",
+          ps: ["[COMPANY LEGAL NAME], [ADDRESS]. Email support@uxgate.org."],
+        },
+      ],
+    },
+    ar: {
+      title: "سياسة الاسترداد",
+      sections: [
+        {
+          h: "سبعة أيام لتغيير رأيك",
+          ps: [
+            "يمكنك طلب استرداد المبلغ خلال 7 أيام من أي دفعة: الدفعة الأولى أو التجديد، في الخطة الشهرية أو السنوية.",
+            "الاسترداد يعيد مبلغ تلك الدفعة كاملًا. لا نسترد جزءًا من مدة.",
+          ],
+        },
+        {
+          h: "كيف تطلب الاسترداد",
+          ps: ["اطلبه من حسابك حتى نجد الدفعة بسرعة:"],
+          list: [
+            "افتح الإعدادات، ثم «الخطة والدفع»، ثم «اطلب استرداد المبلغ».",
+            "اطلب استرداد مبلغ آخر دفعة واكتب السبب في كلمات قليلة. سطر واحد يكفي.",
+            "أو راسل support@uxgate.org من البريد المسجَّل في حسابك.",
+          ],
+          key: "تصلك رسالة بالبريد عندما يردّ الفريق. ويبقى Pro مفعّلًا حتى ذلك الوقت.",
+        },
+        {
+          h: "بعد الاسترداد",
+          ps: [
+            "يعود المبلغ إلى البطاقة أو المحفظة التي دفعت بها. يحدّد البنك أو المحفظة مدة ظهوره، وهي عادةً [N] أيام عمل.",
+            "ينتهي Pro ويتوقف تجديد الخطة. ويبقى تقدّمك وسلسلتك وشاراتك وشهاداتك في حسابك، والوحدة 1 من كل مسار متاحة.",
+          ],
+        },
+        {
+          h: "بعد مرور 7 أيام",
+          ps: [
+            "لا يمكن استرداد دفعة مرّ عليها أكثر من 7 أيام، لكن يمكنك الإلغاء في أي وقت من «الخطة والدفع». لن يُخصم منك شيء بعد ذلك، ويبقى Pro مفعّلًا حتى نهاية المدة التي دفعتها.",
+            "خُصم منك مرتين، أو ترى دفعة لا تعرفها؟ راسل support@uxgate.org في أي وقت وسنراجعها.",
+          ],
+        },
+        {
+          h: "من يستلم دفعتك",
+          ps: [
+            "في مصر يتم الدفع عبر Paymob بالجنيه المصري. وفي باقي الدول، Paddle (paddle.com) هو الموزّع والبائع المسجَّل (merchant of record، أي الجهة التي تبيع وتستلم الدفع رسميًا)، وقد يظهر اسمه في كشف حسابك. وتنطبق شروط المشتري في Paddle على هذه الدفعات.",
+            "أيًّا كانت الجهة التي استلمت الدفع، تطلب الاسترداد بالطريقة نفسها من «الخطة والدفع».",
+          ],
+        },
+        {
+          h: "التواصل",
+          ps: ["[COMPANY LEGAL NAME]، [ADDRESS]. البريد: support@uxgate.org."],
         },
       ],
     },

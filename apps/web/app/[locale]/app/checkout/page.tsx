@@ -2,8 +2,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { Logo } from "@/components/Logo";
 import { PaddleLinkCheckout, PayButton } from "@/components/billing/CheckoutView";
-import { paddleLinkTxn } from "@/lib/billing/paddle";
+import { cookies } from "next/headers";
+import { paddleLinkLocale, paddleLinkTxn } from "@/lib/billing/paddle-link";
 import { paddleConfig } from "@/lib/server/billing/config";
+import { ownPaddleTxn } from "@/lib/server/billing/paddle-link";
 import { formatMoney, moneyCls, UNKNOWN_COUNTRY } from "@/lib/billing/pricing";
 import { requireLearner } from "@/lib/server/learner";
 import { loadOffer } from "@/lib/server/billing/plans";
@@ -21,8 +23,12 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
   // signed-in learners only, without a checkout of ours. Pro learners too, so this comes before the Pro redirect.
   const ptxn = paddleLinkTxn(sp._ptxn);
   if (ptxn) {
+    // Paddle's links all point at the English page: an Arabic learner is moved to their own language, link kept.
+    const own = paddleLinkLocale(locale, me.locale, (await cookies()).get("NEXT_LOCALE")?.value);
+    if (own) return redirect({ href: { pathname: "/app/checkout", query: { _ptxn: ptxn } }, locale: own }) as never;
     const c = paddleConfig();
-    if (!c.clientToken) return redirect({ href: "/app/settings/billing", locale }) as never;
+    // Only the learner's own transaction opens: a link to someone else's (a crafted "renew your plan") goes to billing.
+    if (!c.clientToken || !(await ownPaddleTxn(me.userId, ptxn))) return redirect({ href: "/app/settings/billing", locale }) as never;
     return (
       <div className="chk-page">
         <header className="pub-head"><Logo height={30} /></header>
@@ -78,7 +84,7 @@ export default async function CheckoutPage({ params, searchParams }: { params: P
         {offer.mode === "mock" ? <p className="pg-note" style={{ fontSize: 13 }}><span className="ph ph-info" aria-hidden="true" /><span>{t("testMode")}</span></p> : null}
         <div style={{ flex: 1 }} />
         <PayButton label={t(`prov.${prov}.go`)} period={period} code={q.code} intl={intl} locale={locale as "en" | "ar"} disabled={offer.mode === "off" || !me.db} />
-        <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12.5 }}>{t("agree")} <Link href="/terms" className="hit" style={{ fontWeight: 700 }}>{t("terms")}</Link></p>
+        <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12.5 }}>{t("agree")} <Link href="/terms" className="hit" style={{ fontWeight: 700 }}>{t("terms")}</Link> {t("andRefund")}{locale === "ar" ? "" : " "}<Link href="/refund" className="hit" style={{ fontWeight: 700 }}>{t("refundPolicy")}</Link></p>
       </main>
     </div>
   );

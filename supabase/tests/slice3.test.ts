@@ -77,6 +77,15 @@ describe("the week start", () => {
     await expect(as("authenticated", ar, `update profiles set week_start = 1 where user_id = $1 returning user_id`, [ar])).rejects.toThrow(/permission denied/);
     await expect(db.query(`update profiles set week_start = 9 where user_id = $1`, [ar])).rejects.toThrow(/check/);
   });
+  it("a Google sign-up on the Arabic page ends up Arabic, with a Saturday week (the sign-in callback's writes)", async () => {
+    // Google's own claims, no language of ours: the trigger makes it English.
+    const g = (await db.query<{ id: string }>(`insert into auth.users (email, raw_user_meta_data) values ('g@example.com', '{"full_name":"G","locale":"en-GB"}') returning id`)).rows[0].id;
+    const row = async () => (await db.query<{ locale: string; week_start: number }>(`select locale, week_start from profiles where user_id = $1`, [g])).rows[0];
+    expect(await row()).toEqual({ locale: "en", week_start: 1 });
+    // The callback saves the page's language as the learner (RLS lets them), then the week start with the service role.
+    expect(await as("authenticated", g, `update profiles set locale = 'ar' where user_id = $1 returning locale`, [g])).toEqual([{ locale: "ar" }]);
+    expect(await as("service_role", null, `update profiles set week_start = 6 where user_id = $1 returning week_start`, [g])).toEqual([{ week_start: 6 }]);
+  });
 });
 
 describe("several paths", () => {

@@ -9,11 +9,14 @@ import { kvDel, kvGet, kvSet } from "@/lib/idb";
 import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
 import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
-import { useTranslations } from "next-intl";
+import { NextIntlClientProvider, useMessages, useTimeZone, useTranslations } from "next-intl";
+import type { OtherLocale } from "@/lib/server/lesson-messages";
 import { LessonEnd, type ProNext } from "./LessonEnd";
 import { CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
 import type { ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
+import { Loader } from "@/components/loading/Loader";
+import { markTourSeen, tourKind } from "@/lib/lesson-tour";
 
 export const GUEST_ID = "guest";
 
@@ -32,14 +35,57 @@ type Props = {
   pathEnd?: PathEnd | null;
   /** The next unit, when it is part of Pro and the learner is on the free plan (slice 5). */
   proNext?: ProNext | null;
+  /** The player's strings in the other language. With it, the header shows a language switch that works inside the lesson. */
+  other?: OtherLocale;
+  /** The learner's first lesson since signing up: the lesson tour runs once (see lib/lesson-tour.ts). */
+  firstLesson?: boolean;
 };
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null }: Props) {
+const LOCALE_PREFIX = /^\/(en|ar)(?=\/|$)/;
+const dirOf = (l: string) => (l === "ar" ? "rtl" : "ltr");
+
+/**
+ * Shows the lesson in `view` when the learner switched language inside it. The lesson text has both languages already;
+ * the player's own strings come from `other`. The page keeps its place, its answers and any open sheet.
+ */
+function OfflineBar() {
+  const t = useTranslations("sync");
+  return <p className="offline-bar" role="status"><span className="ph ph-wifi-slash" aria-hidden="true" />{t("offlineBanner")}</p>;
+}
+
+function ViewLocale({ view, locale, other, children }: { view: Locale; locale: Locale; other?: OtherLocale; children: React.ReactNode }) {
+  const base = useMessages() as Record<string, Record<string, unknown>>;
+  const timeZone = useTimeZone();
+  const messages = useMemo(() => {
+    if (!other) return base;
+    const out: Record<string, unknown> = { ...base };
+    for (const [ns, v] of Object.entries(other.messages)) out[ns] = { ...(base[ns] ?? {}), ...(v as Record<string, unknown>) };
+    return out;
+  }, [base, other]);
+  // The page's direction, language and font follow the language shown. When the learner leaves, the address decides.
+  useEffect(() => {
+    if (view === locale) return;
+    const html = document.documentElement;
+    html.lang = view; html.dir = dirOf(view);
+    return () => {
+      const shown = location.pathname.match(LOCALE_PREFIX)?.[1] ?? locale;
+      html.lang = shown; html.dir = dirOf(shown);
+    };
+  }, [view, locale]);
+  // Always the same element, so switching never remounts the player (that would lose the answer in progress).
+  return <NextIntlClientProvider locale={view} messages={(view === locale ? base : messages) as never} timeZone={timeZone}>{children}</NextIntlClientProvider>;
+}
+
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other, firstLesson = false }: Props) {
   const router = useRouter();
+  // The language shown. It starts as the page's language; the switch in the player header flips it in place.
+  const [view, setView] = useState<Locale>(locale);
   const t = useTranslations("sync");
   const sync = useSyncStatus();
   const [state, setState] = useState<LessonState | null>(null);
   const [finished, setFinished] = useState<LessonState | null>(null);
+  // The tour runs at the start of the sample lesson and of the learner's first lesson, once (the answer is kept in this browser).
+  const [tour, setTour] = useState<"guest" | "first" | undefined>(undefined);
   const [muted, setMutedState] = useState(false);
   const attemptId = useRef("");
   // The mastery round asks different steps each time, so its saved position is keyed by them.
@@ -57,10 +103,14 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       try { saved = await kvGet<LessonState>(key); } catch { /* private mode: start fresh */ }
       const fresh = saved && saved.hash === hash && !saved.done && saved.steps.length === lesson.steps.length ? saved : startLesson(lesson, hash);
       attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
-      if (alive) setState(fresh);
+      if (alive) {
+        setState(fresh);
+        const kind = variant === "lesson" ? tourKind({ guest, firstLesson, userId, atStart: fresh.i === 0 }) : undefined;
+        if (kind) setTour(kind);
+      }
     })();
     return () => { alive = false; };
-  }, [lesson, hash, key, userId]);
+  }, [lesson, hash, key, userId, guest, firstLesson, variant]);
 
   const onState = useCallback((s: LessonState) => { kvSet(key, s).catch(() => {}); }, [key]);
   const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(userId, attemptId.current, e, planKey ? planKey.split(",") : undefined, variant === "review" ? "review" : undefined).then(kick).catch(() => {}); }, [userId, planKey, variant]);
@@ -71,19 +121,13 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
   }, [key]);
 
   // Give the last answers a moment to reach the server so Home shows the new XP and streak; offline, leave anyway.
-  const leave = async (to = "/app") => {
+  // Only an app path counts: a click event handed over by mistake goes Home, never to "/en[object]".
+  const leave = async (to: unknown = "/app") => {
+    const href = typeof to === "string" && to.startsWith("/") ? to : "/app";
     await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
-    router.push(to as never);
+    router.push(href as never, { locale: view });
     router.refresh();
   };
-
-  const startOver = useCallback(async () => {
-    await kvDel(key).catch(() => {});
-    const fresh = startLesson(lesson, hash);
-    attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
-    setState(null);
-    setTimeout(() => setState(fresh), 0);
-  }, [key, lesson, hash]);
 
   // A signed address for a clip, asked for when the step opens.
   const videoSource = useCallback(async (id: string) => {
@@ -120,30 +164,49 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     return sync.pending > 0 ? ("saving" as const) : ("saved" as const);
   }, [guest, sync.online, sync.pending]);
 
-  if (!state) return <div className="player-loading" aria-busy="true" />;
+  // Switch the language inside the lesson: no reload, so the step, the answer picked and the timer all stay.
+  // The address and the language cookie follow, so a refresh and the screens after the lesson keep the choice.
+  const switchLocale = useCallback(() => {
+    if (!other) return;
+    const next: Locale = view === locale ? other.locale : locale;
+    setView(next);
+    play("ui-toggle-on");
+    try {
+      const url = location.pathname.replace(LOCALE_PREFIX, `/${next}`) + location.search + location.hash;
+      history.replaceState(history.state?.lessonLayer ? { lessonLayer: true } : null, "", url);
+      document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; samesite=lax`;
+    } catch { /* the switch still works for this screen */ }
+  }, [other, view, locale]);
+
+  function body() {
+  if (!state) return <div className="player-loading" aria-busy="true"><Loader full /></div>;
   if (finished) {
-    if (guest) return <GuestEnd lesson={lesson} state={finished} locale={locale} />;
-    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={locale} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
-    if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
-    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={locale} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={leave} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
+    if (guest) return <GuestEnd lesson={lesson} state={finished} locale={view} />;
+    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
+    if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
+    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave()} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
   }
 
   return (
     <>
-    {!sync.online && !guest ? <p className="offline-bar" role="status"><span className="ph ph-wifi-slash" aria-hidden="true" />{t("offlineBanner")}</p> : null}
+    {!sync.online && !guest ? <OfflineBar /> : null}
     <LessonPlayer
-      lesson={lesson} locale={locale} initial={state} pathLabel={pathLabel} lessonNo={lessonNo}
+      lesson={lesson} locale={view} initial={state} pathLabel={pathLabel} lessonNo={lessonNo}
       muted={muted}
       onToggleMute={() => { const v = !muted; setMuted(v); setMutedState(v); if (!v) play("ui-toggle-on"); }}
       onSound={play} onState={onState} onEvent={onEvent}
-      onExit={() => (guest ? router.push("/") : leave())}
+      onExit={() => (guest ? router.push("/", { locale: view }) : leave())}
       onFinish={onFinish}
       variant={variant} guest={guest} saveStatus={saveStatus}
       onReview={guest ? undefined : onReview}
-      onStartOver={startOver}
       videoSource={videoSource} notice={notice}
+      onSwitchLocale={other ? switchLocale : undefined}
+      tour={tour} onTourDone={() => { if (tour) markTourSeen(tour, userId); setTour(undefined); }}
     />
     </>
   );
+  }
+
+  return <ViewLocale view={view} locale={locale} other={other}>{body()}</ViewLocale>;
 }

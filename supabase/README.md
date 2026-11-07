@@ -4,7 +4,7 @@ The database lives in `migrations/`. The sign-in emails live in `templates/`. No
 
 ## 1. Create the project
 1. New Supabase project named `uxgate-staging` (later `uxgate-production`). **Region: Frankfurt (eu-central-1).** There is no Middle East region, Frankfurt is the closest, and the region cannot be changed after creation.
-2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then (slice 3) `migrations/0016_progress_paths.sql`, then (slice 4) `migrations/0026_account_notifications.sql`, then (slice 5) `migrations/0036_billing.sql` (plans, payments, refunds) and `migrations/0037_billing_refused.sql` (refused foreign cards), then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
+2. In the SQL editor, run `migrations/0001_core_loop.sql`, then `migrations/0002_current_path.sql`, then `migrations/0003_server_guards.sql`, then `migrations/0004_replays.sql`, then `migrations/0005_email_locale.sql`, then (slice 2) `migrations/0006_banks.sql`, `migrations/0007_mastery_and_review.sql` and `migrations/0008_lesson_progress_summary.sql`, then (slice 3) `migrations/0016_progress_paths.sql`, then (slice 4) `migrations/0026_account_notifications.sql`, then (slice 5) `migrations/0036_billing.sql` (plans, payments, refunds) and `migrations/0037_billing_refused.sql` (refused foreign cards), then `migrations/0039_learner_state.sql` (faster signed-in pages), then `seed/content.sql` (all are paste-ready; the seed is generated from the compiled lessons and is safe to run again). No service key is needed for either.
 3. Regenerate the content file after any lesson change with `npm run seed:sql` and commit it. The tests fail if it is stale.
 
 ## 2. Where each key goes
@@ -108,3 +108,10 @@ To take it back:
 ```sql
 update public.entitlements set plan = 'free', valid_until = null, pro_since = null, pro_ended_at = now(), source = 'live', updated_at = now() where source = 'manual' and user_id = (select id from auth.users where email = 'qa@example.com');
 ```
+
+## 13. Faster signed-in pages (0039, issue #184)
+Run once in the SQL editor, after 0036. It changes no data and is safe to read before running.
+1. Paste `migrations/0039_learner_state.sql` and run it. It adds `my_learner_state()`, which returns everything the app shell shows about the signed-in learner in one call, instead of 10 to 14 separate reads per page.
+2. Check: `select proname from pg_proc where proname = 'my_learner_state';` returns one row.
+3. The app works before it too, only slower: until the function exists it uses the separate reads.
+4. To see the effect, open a signed-in page with the browser's developer tools, Network tab, and look at the page request's Timing: `db` shows the database wait and the number of calls. `wrangler tail` shows one `db ...` line per page with each call.

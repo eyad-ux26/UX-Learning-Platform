@@ -8,9 +8,11 @@ import { redirect } from "@/i18n/navigation";
 import { buildPathView, canPlay } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
 import { decideReplay } from "@/lib/replay";
+import { paidReplayStarts } from "@/lib/server/replays";
 import { upNextOf, type PathEnd } from "@/lib/up-next";
 import { isShown, pathSkills } from "@/lib/certificate";
 import { lessonOpen } from "@/lib/billing/access";
+import { otherLocaleMessages } from "@/lib/server/lesson-messages";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +20,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   const { locale, lessonId } = await params;
   setRequestLocale(locale);
   // The lesson file and the learner's data load side by side.
-  const [me, version] = await Promise.all([requireLearner(locale), getLessonVersion(lessonId)]);
+  const [me, version, other] = await Promise.all([requireLearner(locale), getLessonVersion(lessonId), otherLocaleMessages(locale)]);
   if (!version) notFound();
   // Units after Unit 1 are part of Pro: a free learner lands on the path map with the paywall open.
   if (!lessonOpen(lessonId, me.pro)) return redirect({ href: `/app/path/${version.pathId}?paywall=${version.unitId}`, locale }) as never;
@@ -37,8 +39,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   let replay = null as ReturnType<typeof decideReplay>;
   if (me.progress.finishedLessons.includes(lessonId)) {
     // Only finished paid replays count here, so resuming the replay in progress still shows it as paid.
-    const paid = me.db ? await me.db.from("attempts").select("started_at").eq("lesson_id", lessonId).eq("replay_kind", "paid").not("finished_at", "is", null) : null;
-    replay = decideReplay(true, (paid?.data ?? []).map((p) => p.started_at as string), new Date(), me.timeZone);
+    replay = decideReplay(true, await paidReplayStarts(me.db, lessonId), new Date(), me.timeZone);
   }
   // Where the end page points: the next lesson of this path, or (after its last lesson) the certificate and other paths.
   // A free learner at the end of the free unit sees the Pro card instead of a next lesson they cannot open.
@@ -50,5 +51,5 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
     const others = skills.filter((s) => !unit?.skills.some((k) => k.id === s.id));
     pathEnd = { pathId: version.pathId, pathTitle, skills: skills.length, certReady: others.every((s) => isShown(me.skillStates.get(s.id)?.state)) };
   }
-  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} />;
+  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} other={other} firstLesson={me.progress.finishedLessons.length === 0 && !replay} />;
 }

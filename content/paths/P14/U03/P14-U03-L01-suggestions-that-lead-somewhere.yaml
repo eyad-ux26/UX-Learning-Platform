@@ -20,12 +20,18 @@ steps:
       en: "I work on a recipe site. When people tap the search box, a list of suggestions drops down under it.\n\nMy team fills that list from the most popular food searches on the web. Some of them, like **lentil burger**, have no recipe on our site at all."
       ar: "أعمل على موقع للوصفات. وحين يضغط الناس على مربع البحث، تظهر تحته قائمة اقتراحات.\n\nويملأ فريقي هذه القائمة من أشهر عمليات البحث عن الطعام على الإنترنت. وبعضها، مثل **شوربة البصل الفرنسية**، ليس له أي وصفة في موقعنا."
     mock:
-      width: 300
-      blocks: &lentil
-        - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
-        - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
-        - { kind: text, text: { en: "lentil **burger**", ar: "شوربة **بصل فرنسية**" }, gap: s }
-        - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+      app: tabkha
+      appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
+      blocks:
+        - kind: searchbar
+          text: {"en": "lentil", "ar": "شوربة"}
+          filled: true
+          focus: true
+          suggest:
+            - {"icon": "cooking-pot", "text": {"en": "lentil **soup**", "ar": "شوربة **عدس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+            - {"icon": "cooking-pot", "text": {"en": "lentil **burger**", "ar": "شوربة **بصل فرنسية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+            - {"icon": "cooking-pot", "text": {"en": "lentil **salad**", "ar": "شوربة **لسان عصفور**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+      keyboard: text
 
   - id: S02
     type: tune
@@ -45,29 +51,46 @@ steps:
       - id: web
         text: { en: "Popular web searches, including dishes the site doesn't have", ar: "أشهر عمليات البحث على الإنترنت، ومعها أطباق ليست في الموقع" }
         mock:
-          width: 300
-          caption: { en: "No recipe on the site for burger or pasta", ar: "لا وصفة في الموقع لشوربة البصل ولا لشوربة الكاري" }
+          caption: {"en": "No recipe on the site for burger or pasta", "ar": "لا وصفة في الموقع لشوربة البصل ولا لشوربة الكاري"}
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
-            - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
-            - { kind: text, text: { en: "lentil **burger**", ar: "شوربة **بصل فرنسية**" }, gap: s }
-            - { kind: text, text: { en: "lentil **pasta**", ar: "شوربة **كريمة بالكاري**" }, gap: s }
-            - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lentil", "ar": "شوربة"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "lentil **soup**", "ar": "شوربة **عدس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **burger**", "ar": "شوربة **بصل فرنسية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **pasta**", "ar": "شوربة **كريمة بالكاري**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **salad**", "ar": "شوربة **لسان عصفور**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: site
         text: { en: "Only searches that find recipes on this site", ar: "فقط عمليات البحث التي تجد وصفات في هذا الموقع" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
-            - { kind: text, text: { en: "lentil **soup**", ar: "شوربة **عدس**" }, gap: s }
-            - { kind: text, text: { en: "lentil **salad**", ar: "شوربة **لسان عصفور**" }, gap: s }
-            - { kind: text, text: { en: "lentil **with rice (koshari)**", ar: "شوربة **خضار**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lentil", "ar": "شوربة"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "lentil **soup**", "ar": "شوربة **عدس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **salad**", "ar": "شوربة **لسان عصفور**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lentil **with rice (koshari)**", "ar": "شوربة **خضار**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: none
         text: { en: "No suggestions; people type the whole search", ar: "بدون اقتراحات؛ يكتب الناس البحث كاملًا" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lentil", ar: "شوربة" }, filled: true, focus: true }
+            - kind: searchbar
+              text: {"en": "lentil", "ar": "شوربة"}
+              filled: true
+              focus: true
+          keyboard: text
     answer: [site]
     misconceptions:
       - id: MC-P14-025
@@ -90,18 +113,41 @@ steps:
       en: "Every suggestion in the list opens real recipes, so picking one is always a good move. People type less and still land on something."
       ar: "كل اقتراح في القائمة يفتح وصفات حقيقية، فاختيار أي واحد منها خطوة صحيحة دائمًا. ويكتب الناس أقل ويصلون إلى شيء."
 
+  - id: S10
+    type: video
+    part: concept
+    title: { en: "Suggestions that lead somewhere", ar: "اقتراحات توصل إلى شيء" }
+    video: 94bc590f-d13d-43dc-8723-f72fb8531361
+    duration: 378
+    transcript:
+      - { t: 2.5, en: "Another of the most important things that makes search effective is the suggestions and results that can appear while the user searches, as soon as they tap the search bar.", ar: "برضه من أهم الحاجات اللي بتخلّي السيرش Effective هي الـ Suggestions والنتايج اللي ممكن تظهر لليوزر وهو بيعمل السيرش، يعني أول ما اليوزر يدوس على الـ Search bar." }
+      - { t: 13.1, en: "Before I even start, suggestions may appear in the search bar itself, as a menu or list under it, and as I type, suggestions can appear based on what I'm typing.", ar: "عشان أبدأ السيرش ممكن تظهر لي اقتراحات في الـ Search bar نفسها، على شكل Menu أو List تحت السيرش، ولما أكتب ممكن تبدأ تظهر اقتراحات بناءً على اللي بكتبه." }
+      - { t: 24.6, en: "This is very important in making search easier: the search suggestions themselves. So we'll go through some notes that can improve them as they appear to the user.", ar: "دي من الحاجات المهمة جدًا اللي بتسهّل عملية الـ Search، الـ Search suggestions نفسها. فهنقول فيها برضه بعض الملاحظات اللي ممكن تحسّنها وهي بتظهر لليوزر." }
+      - { t: 37.19, en: "First, as we said, as soon as the user types the query, a dropdown with these suggestions starts to appear so they can pick from it.", ar: "أول حاجة، زي ما قلنا، اليوزر أول ما يكتب الكويري هتبدأ تظهر له زي Drop down فيها الاقتراحات دي، عشان يبدأ يختار منها." }
+      - { t: 46.34, en: "So what's special about them? Why do I put these suggestions there at all? First, when users pick one, they've picked something appropriate: something that really brings them suitable results, because I'm the one who suggested it.", ar: "إيه المميز أصلًا؟ أنا ليه أصلًا بحط الـ Suggestions دي أو الاقتراحات دي؟ أول حاجة: اليوزر لما يختار منها، هو اختار حاجة مناسبة. يعني حاجة تطلع له فعلًا نتايج مناسبة، بما إني أنا اللي اقترحتها عليه." }
+      - { t: 57.24, en: "They typed a few letters or words in the query and suggestions appeared, and if they pick one of them, they'll definitely get results that really exist on the website.", ar: "هو كيوزر كتب كام حرف أو كام كلمة في الكويري فظهرت له اقتراحات، ولو اختار واحد منها فأكيد هتطلع له نتايج موجودة فعلًا في الـ Website." }
+      - { t: 69.74, en: "If they finish the search themselves they may find no results, or results that aren't what they wanted. But if they type a few characters and a suggestion appears, that suggestion most likely has good results in my website or product, so if they pick it and it fits what they're after, they'll get good results.", ar: "لو كمّل السيرش بنفسه ممكن يلاقي إن مفيش نتايج، أو النتايج اللي طلعت مش اللي عايزها. لكن لو كتب بعض الحروف وطلع له اقتراح، فالأغلب إن للاقتراح ده نتايج كويسة في الـ Website أو الـ Product بتاعي، فلو اختاره، وهو مناسب لللي بيدوّر عليه، هتطلع له نتايج كويسة." }
+      - { t: 88.14, en: "It matters for interaction cost too: they don't spend mental or physical effort typing everything. As soon as they type a few characters suggestions appear, and if one fits, the interaction cost is very low: a few characters, then straight to choosing.", ar: "وده مهم برضه لفكرة الـ Interaction cost: هو مش هيبذل مجهود ذهني أو بدني عشان يكتب الكلام كامل. مجرد ما يكتب كام حرف هتظهر له اقتراحات، ولو واحد منها مناسب فالـ Interaction cost قليل جدًا: كتب كام حرف واختار على طول." }
+      - { t: 109.34, en: "Also typos: I've spared the user spelling mistakes that could have shown no results, or the wrong ones, because they picked from the suggestions. These are the benefits of using suggestions.", ar: "وبرضه فكرة الـ Typos أو الأخطاء الإملائية: أنا كده منعت اليوزر من أخطاء إملائية كانت ممكن ماتظهرش له نتايج أو تظهر له نتايج مش اللي عايزها، لأنه اختار من الاقتراحات على طول. دي الفوايد اللي بتحصل لما بنستخدم الـ Suggestions." }
+      - { t: 127.74, en: "To make suggestions as good as they can be, here are a few tips for search that will help.", ar: "ولو عايزين نخلّي الاقتراحات دي بأفضل شكل، فيه شوية Tips في السيرش هتساعدنا نخلّي الاقتراحات دي كويسة." }
+      - { t: 142.24, en: "First: don't show a suggestion if picking it gives few results, or none related to it in the website or product. If I'm a UI/UX designer at a product company and notice this problem, I should flag it to be fixed.", ar: "أول حاجة: ماأحطّش اقتراحات لو اليوزر اختارها يلاقي نتايج قليلة، أو مفيش أصلًا نتايج في الـ Website أو الـ Product ليها علاقة بالاقتراح اللي ظهر له. لو أنا UI/UX Designer في Product company ولاحظت المشكلة دي، لازم أنبّه إنها تتصلّح." }
+      - { t: 166.34, en: "Because the experience suffers badly if the user picks a suggestion and gets few results; their trust drops and they probably won't try again.", ar: "لأن الـ Experience هتتأثر سلبًا جدًا لو اليوزر اختار واحد من الاقتراحات ونتيجته طلعت قليلة، وغالبًا ثقته هتقل ومش هيحاول تاني." }
+      - { t: 173.54, en: "Second important thing about suggestions: I should distinguish the style of the suggestion text, between what the user typed themselves and the completion the website suggested.", ar: "تاني حاجة مهمة في الاقتراحات اللي بتظهر في السيرش: إني أفرّق في الـ Style بين النص الظاهر للاقتراح، يعني بين الحاجة اللي اليوزر كتبها نفسه والتكملة اللي الـ Website اقترحها." }
+      - { t: 189.74, en: "For example, if I type \"basketball\" and the suggestions are \"basketball hoop\" and others, as a designer I need to distinguish between the word the user typed and the completion the website suggests.", ar: "على سبيل المثال لو أنا كـ User كتبت كلمة basketball والاقتراحات هي basketball hoop وغيرها، محتاج أنا كـ UI/UX Designer أميّز بين الكلمة اللي هو كتبها في السيرش وبين التكملة المقترحة من الـ Website." }
+      - { t: 203.84, en: "So how do I distinguish them? Do I highlight the suggested part, or what the user typed? Those are two options. Think about it for a minute and let's see the answer together.", ar: "طب أميّز بأنهي طريقة؟ أخلّي الحاجة المقترحة هي الـ Highlighted بشكل ما، ولا الحاجة اللي اليوزر كتبها؟ دي حالتين. فكّروا في ده دقيقة وخلّونا نشوف الإجابة مع بعض." }
+      - { t: 225.65, en: "Do I highlight what the user typed, or the completion the website suggests?", ar: "هل أخلّي الحاجة اللي اليوزر كتبها هي الـ Highlighted، ولا أخلّي التكملة المقترحة من الـ Website هي اللي بتتميّز؟" }
+      - { t: 235.55, en: "Now we have two different cases. In one kind of search, when the user types a word, the suggestions only continue that word: if I type \"basketball\", every suggestion continues it, like \"basketball hoop\".", ar: "عندنا دلوقتي حالتين مختلفتين. في حالة من السيرش، لما اليوزر يكتب الكلمة، الاقتراحات اللي بتظهر له بس بتكمّل على الكلمة اللي كتبها: لو كتبت basketball، الاقتراحات كلها هتكمّل عليها زي basketball hoop." }
+      - { t: 256.65, en: "In the other kind of search, if I type any word, the suggestions contain it anywhere: at the start, middle or end. So in which case do we highlight the user's text, and in which the suggested text?", ar: "لكن في حالة تانية من السيرش، لو كتبت أي كلمة، الاقتراحات هتبقى الكلمة دي موجودة فيها في أي مكان: في أولها أو نصها أو آخرها. فإحنا في أي حالة هنميّز النص اللي اليوزر كتبه، وفي أي حالة هنميّز النص المقترح؟" }
+      - { t: 276.19, en: "In the first case, the suggestions all continue what the user typed, those exact letters, not in the middle or at the end. Like our example: we typed \"uxd\" and suggestions appeared, all starting with \"uxd\" and completing it.", ar: "في الحالة الأولى، الاقتراحات كلها بتكمّل على اللي اليوزر كتبه، على الحروف دي، مش في النص أو الآخر. زي المثال اللي قدامنا: كتبنا uxd وبدأت الاقتراحات تظهر، كلها أولها uxd، والباقي بيكمّل الجزء ده." }
+      - { t: 300.9, en: "Here we highlight the part the website suggests, not the user's part, because the user's part sits in the same place at the start of every option, so they don't need help spotting it. They need to spot the completion, and if it's highlighted they'll see it faster and choose faster.", ar: "في الحالة دي محتاجين نعمل Highlight للجزء المقترح من الـ Website، مش جزء اليوزر، لأن جزء اليوزر موجود في نفس المكان في الأول في كل الاختيارات، فمش محتاجين اليوزر يميّزه. محتاجينه يميّز التكملة، ولو بقت Highlighted هيشوفها بشكل أسرع ويختار أسرع." }
+      - { t: 332.8, en: "In the second case, what I typed may be at the start, middle or end, so it isn't lined up. I need the user to see where their text is so they can read what comes before and after it. Suggestions can be long, so I highlight the text the user typed in the search query.", ar: "لكن في الحالة التانية، الكلام اللي كتبته ممكن يبقى في النص أو في الآخر أو في الأول، فمش تحت بعض، فمحتاج أخلّي اليوزر يميّز اللي هو كتبه فين، عشان يشوف التكملة اللي قبله أو بعده. الاقتراحات ممكن تبقى طويلة، فأعمل Highlight للنص اللي اليوزر كتبه في الـ Search query." }
+      - { t: 359.9, en: "So now we know some tips and guidelines for building suggestions into the search flow, and suggestions are one of the things that make search effective.", ar: "فكده عرفنا بعض الـ Tips والـ Guidelines اللي هتساعدنا لما نعمل اقتراحات في الـ Flow بتاع السيرش، والاقتراحات دي واحدة من الحاجات اللي بتخلّي السيرش Effective." }
+
   - id: S03
     type: card
     part: concept
     icons: [text, list, ok, warn, eye]
-    video:
-      src: clips/P14-C07.mp4
-      captions: { ar: P14-C07.ar.vtt, en: P14-C07.en.vtt }
-      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
-      transcript:
-        en: "Another of the most important things that makes search effective is the suggestions and results that can appear while the user searches, as soon as they tap the search bar. Before I even start, suggestions may appear in the search bar itself, as a menu or list under it, and as I type, suggestions can appear based on what I'm typing. This is very important in making search easier: the search suggestions themselves. So we'll go through some notes that can improve them as they appear to the user. First, as we said, as soon as the user types the query, a dropdown with these suggestions starts to appear so they can pick from it. So what's special about them? Why do I put these suggestions there at all? First, when users pick one, they've picked something appropriate: something that really brings them suitable results, because I'm the one who suggested it. They typed a few letters or words in the query and suggestions appeared, and if they pick one of them, they'll definitely get results that really exist on the website. If they finish the search themselves they may find no results, or results that aren't what they wanted. But if they type a few characters and a suggestion appears, that suggestion most likely has good results in my website or product, so if they pick it and it fits what they're after, they'll get good results. It matters for interaction cost too: they don't spend mental or physical effort typing everything. As soon as they type a few characters suggestions appear, and if one fits, the interaction cost is very low: a few characters, then straight to choosing. Also typos: I've spared the user spelling mistakes that could have shown no results, or the wrong ones, because they picked from the suggestions. These are the benefits of using suggestions. To make suggestions as good as they can be, here are a few tips for search that will help. First: don't show a suggestion if picking it gives few results, or none related to it in the website or product. If I'm a UI/UX designer at a product company and notice this problem, I should flag it to be fixed. Because the experience suffers badly if the user picks a suggestion and gets few results; their trust drops and they probably won't try again. Second important thing about suggestions: I should distinguish the style of the suggestion text, between what the user typed themselves and the completion the website suggested. For example, if I type \"basketball\" and the suggestions are \"basketball hoop\" and others, as a designer I need to distinguish between the word the user typed and the completion the website suggests. So how do I distinguish them? Do I highlight the suggested part, or what the user typed? Those are two options. Think about it for a minute and let's see the answer together. Do I highlight what the user typed, or the completion the website suggests? Now we have two different cases. In one kind of search, when the user types a word, the suggestions only continue that word: if I type \"basketball\", every suggestion continues it, like \"basketball hoop\". In the other kind of search, if I type any word, the suggestions contain it anywhere: at the start, middle or end. So in which case do we highlight the user's text, and in which the suggested text? In the first case, the suggestions all continue what the user typed, those exact letters, not in the middle or at the end. Like our example: we typed \"uxd\" and suggestions appeared, all starting with \"uxd\" and completing it. Here we highlight the part the website suggests, not the user's part, because the user's part sits in the same place at the start of every option, so they don't need help spotting it. They need to spot the completion, and if it's highlighted they'll see it faster and choose faster. In the second case, what I typed may be at the start, middle or end, so it isn't lined up. I need the user to see where their text is so they can read what comes before and after it. Suggestions can be long, so I highlight the text the user typed in the search query. So now we know some tips and guidelines for building suggestions into the search flow, and suggestions are one of the things that make search effective."
-        ar: "برضه من أهم الحاجات اللي بتخلّي السيرش Effective هي الـ Suggestions والنتايج اللي ممكن تظهر لليوزر وهو بيعمل السيرش، يعني أول ما اليوزر يدوس على الـ Search bar. عشان أبدأ السيرش ممكن تظهر لي اقتراحات في الـ Search bar نفسها، على شكل Menu أو List تحت السيرش، ولما أكتب ممكن تبدأ تظهر اقتراحات بناءً على اللي بكتبه. دي من الحاجات المهمة جدًا اللي بتسهّل عملية الـ Search، الـ Search suggestions نفسها. فهنقول فيها برضه بعض الملاحظات اللي ممكن تحسّنها وهي بتظهر لليوزر. أول حاجة، زي ما قلنا، اليوزر أول ما يكتب الكويري هتبدأ تظهر له زي Drop down فيها الاقتراحات دي، عشان يبدأ يختار منها. إيه المميز أصلًا؟ أنا ليه أصلًا بحط الـ Suggestions دي أو الاقتراحات دي؟ أول حاجة: اليوزر لما يختار منها، هو اختار حاجة مناسبة. يعني حاجة تطلع له فعلًا نتايج مناسبة، بما إني أنا اللي اقترحتها عليه. هو كيوزر كتب كام حرف أو كام كلمة في الكويري فظهرت له اقتراحات، ولو اختار واحد منها فأكيد هتطلع له نتايج موجودة فعلًا في الـ Website. لو كمّل السيرش بنفسه ممكن يلاقي إن مفيش نتايج، أو النتايج اللي طلعت مش اللي عايزها. لكن لو كتب بعض الحروف وطلع له اقتراح، فالأغلب إن للاقتراح ده نتايج كويسة في الـ Website أو الـ Product بتاعي، فلو اختاره، وهو مناسب لللي بيدوّر عليه، هتطلع له نتايج كويسة. وده مهم برضه لفكرة الـ Interaction cost: هو مش هيبذل مجهود ذهني أو بدني عشان يكتب الكلام كامل. مجرد ما يكتب كام حرف هتظهر له اقتراحات، ولو واحد منها مناسب فالـ Interaction cost قليل جدًا: كتب كام حرف واختار على طول. وبرضه فكرة الـ Typos أو الأخطاء الإملائية: أنا كده منعت اليوزر من أخطاء إملائية كانت ممكن ماتظهرش له نتايج أو تظهر له نتايج مش اللي عايزها، لأنه اختار من الاقتراحات على طول. دي الفوايد اللي بتحصل لما بنستخدم الـ Suggestions. ولو عايزين نخلّي الاقتراحات دي بأفضل شكل، فيه شوية Tips في السيرش هتساعدنا نخلّي الاقتراحات دي كويسة. أول حاجة: ماأحطّش اقتراحات لو اليوزر اختارها يلاقي نتايج قليلة، أو مفيش أصلًا نتايج في الـ Website أو الـ Product ليها علاقة بالاقتراح اللي ظهر له. لو أنا UI/UX Designer في Product company ولاحظت المشكلة دي، لازم أنبّه إنها تتصلّح. لأن الـ Experience هتتأثر سلبًا جدًا لو اليوزر اختار واحد من الاقتراحات ونتيجته طلعت قليلة، وغالبًا ثقته هتقل ومش هيحاول تاني. تاني حاجة مهمة في الاقتراحات اللي بتظهر في السيرش: إني أفرّق في الـ Style بين النص الظاهر للاقتراح، يعني بين الحاجة اللي اليوزر كتبها نفسه والتكملة اللي الـ Website اقترحها. على سبيل المثال لو أنا كـ User كتبت كلمة basketball والاقتراحات هي basketball hoop وغيرها، محتاج أنا كـ UI/UX Designer أميّز بين الكلمة اللي هو كتبها في السيرش وبين التكملة المقترحة من الـ Website. طب أميّز بأنهي طريقة؟ أخلّي الحاجة المقترحة هي الـ Highlighted بشكل ما، ولا الحاجة اللي اليوزر كتبها؟ دي حالتين. فكّروا في ده دقيقة وخلّونا نشوف الإجابة مع بعض. هل أخلّي الحاجة اللي اليوزر كتبها هي الـ Highlighted، ولا أخلّي التكملة المقترحة من الـ Website هي اللي بتتميّز؟ عندنا دلوقتي حالتين مختلفتين. في حالة من السيرش، لما اليوزر يكتب الكلمة، الاقتراحات اللي بتظهر له بس بتكمّل على الكلمة اللي كتبها: لو كتبت basketball، الاقتراحات كلها هتكمّل عليها زي basketball hoop. لكن في حالة تانية من السيرش، لو كتبت أي كلمة، الاقتراحات هتبقى الكلمة دي موجودة فيها في أي مكان: في أولها أو نصها أو آخرها. فإحنا في أي حالة هنميّز النص اللي اليوزر كتبه، وفي أي حالة هنميّز النص المقترح؟ في الحالة الأولى، الاقتراحات كلها بتكمّل على اللي اليوزر كتبه، على الحروف دي، مش في النص أو الآخر. زي المثال اللي قدامنا: كتبنا uxd وبدأت الاقتراحات تظهر، كلها أولها uxd، والباقي بيكمّل الجزء ده. في الحالة دي محتاجين نعمل Highlight للجزء المقترح من الـ Website، مش جزء اليوزر، لأن جزء اليوزر موجود في نفس المكان في الأول في كل الاختيارات، فمش محتاجين اليوزر يميّزه. محتاجينه يميّز التكملة، ولو بقت Highlighted هيشوفها بشكل أسرع ويختار أسرع. لكن في الحالة التانية، الكلام اللي كتبته ممكن يبقى في النص أو في الآخر أو في الأول، فمش تحت بعض، فمحتاج أخلّي اليوزر يميّز اللي هو كتبه فين، عشان يشوف التكملة اللي قبله أو بعده. الاقتراحات ممكن تبقى طويلة، فأعمل Highlight للنص اللي اليوزر كتبه في الـ Search query. فكده عرفنا بعض الـ Tips والـ Guidelines اللي هتساعدنا لما نعمل اقتراحات في الـ Flow بتاع السيرش، والاقتراحات دي واحدة من الحاجات اللي بتخلّي السيرش Effective."
-    title: { en: "Suggestions that lead somewhere", ar: "اقتراحات توصل إلى شيء" }
+    title: { en: "Video summary", ar: "ملخص الفيديو" }
     body:
       en: "People often can't phrase a search that gets good results, and many don't try a second time. Suggestions help them get there on the first try.\n\n- **A hint in the box:** short text like \"Search recipes or ingredients\" says what people can search for.\n- **Suggestions as they type:** a list appears under the box as soon as people tap it, and updates with each letter.\n- **Less typing, fewer typos:** picking a suggestion is quicker than typing the whole search, and it's spelled right.\n- **Only real results:** every suggestion must open good, relevant results. A suggestion that leads nowhere is worse than none.\n- **Show the difference:** style the suggested words differently from what people typed, so they can scan the list fast."
       ar: "كثيرًا ما لا يعرف الناس كيف يصيغون بحثًا يأتي بنتائج جيدة، وكثيرون لا يحاولون مرة ثانية. والاقتراحات تساعدهم على الوصول من أول محاولة.\n\n- **تلميح داخل المربع:** نص قصير مثل «ابحث عن وصفة أو مكوّن» يقول ما يمكن البحث عنه.\n- **اقتراحات أثناء الكتابة:** تظهر قائمة تحت المربع بمجرد الضغط عليه، وتتغيّر مع كل حرف.\n- **كتابة أقل، وأخطاء أقل:** اختيار اقتراح أسرع من كتابة البحث كاملًا، ومكتوب بشكل صحيح.\n- **نتائج حقيقية فقط:** كل اقتراح يجب أن يفتح نتائج جيدة ومرتبطة. والاقتراح الذي لا يوصل إلى شيء أسوأ من عدم وجوده.\n- **وضّح الفرق:** اجعل شكل الكلمات المقترحة مختلفًا عمّا كتبه الناس، حتى يتصفّحوا القائمة بسرعة."
@@ -126,30 +172,48 @@ steps:
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
-            - { kind: text, text: { en: "chicken shawarma", ar: "فراخ بانيه" }, gap: s }
-            - { kind: text, text: { en: "chicken with potatoes", ar: "فراخ بالبطاطس" }, gap: s }
-            - { kind: text, text: { en: "chicken soup", ar: "فراخ مشوية" }, gap: s }
+            - kind: searchbar
+              text: {"en": "chicken", "ar": "فراخ"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "chicken shawarma", "ar": "فراخ بانيه"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken with potatoes", "ar": "فراخ بالبطاطس"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken soup", "ar": "فراخ مشوية"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: typed
         text: { en: "Bold the typed word", ar: "الكلمة المكتوبة بخط عريض" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**chicken** shawarma", ar: "**فراخ** بانيه" }, gap: s }
-            - { kind: text, text: { en: "**chicken** with potatoes", ar: "**فراخ** بالبطاطس" }, gap: s }
-            - { kind: text, text: { en: "**chicken** soup", ar: "**فراخ** مشوية" }, gap: s }
+            - kind: searchbar
+              text: {"en": "chicken", "ar": "فراخ"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "**chicken** shawarma", "ar": "**فراخ** بانيه"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**chicken** with potatoes", "ar": "**فراخ** بالبطاطس"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**chicken** soup", "ar": "**فراخ** مشوية"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: added
         text: { en: "Bold the suggested words", ar: "الكلمات المقترحة بخط عريض" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "chicken", ar: "فراخ" }, filled: true, focus: true }
-            - { kind: text, text: { en: "chicken **shawarma**", ar: "فراخ **بانيه**" }, gap: s }
-            - { kind: text, text: { en: "chicken **with potatoes**", ar: "فراخ **بالبطاطس**" }, gap: s }
-            - { kind: text, text: { en: "chicken **soup**", ar: "فراخ **مشوية**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "chicken", "ar": "فراخ"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "chicken **shawarma**", "ar": "فراخ **بانيه**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken **with potatoes**", "ar": "فراخ **بالبطاطس**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken **soup**", "ar": "فراخ **مشوية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
     answer: [added]
     misconceptions:
       - id: MC-P14-026
@@ -187,30 +251,48 @@ steps:
       - id: rest
         text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**grilled fish with** lemon", ar: "**سمك مشوي بالـ**ليمون" }, gap: s }
-            - { kind: text, text: { en: "lemon **cake**", ar: "**كيكة** ليمون" }, gap: s }
-            - { kind: text, text: { en: "**chicken with** lemon **and garlic**", ar: "**فراخ بالـ**ليمون **والثوم**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lemon", "ar": "ليمون"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "**grilled fish with** lemon", "ar": "**سمك مشوي بالـ**ليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lemon **cake**", "ar": "**كيكة** ليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**chicken with** lemon **and garlic**", "ar": "**فراخ بالـ**ليمون **والثوم**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: query
         text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
-            - { kind: text, text: { en: "grilled fish with **lemon**", ar: "سمك مشوي بالـ**ليمون**" }, gap: s }
-            - { kind: text, text: { en: "**lemon** cake", ar: "كيكة **ليمون**" }, gap: s }
-            - { kind: text, text: { en: "chicken with **lemon** and garlic", ar: "فراخ بالـ**ليمون** والثوم" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lemon", "ar": "ليمون"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "grilled fish with **lemon**", "ar": "سمك مشوي بالـ**ليمون**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**lemon** cake", "ar": "كيكة **ليمون**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken with **lemon** and garlic", "ar": "فراخ بالـ**ليمون** والثوم"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "lemon", ar: "ليمون" }, filled: true, focus: true }
-            - { kind: text, text: { en: "grilled fish with lemon", ar: "سمك مشوي بالليمون" }, gap: s }
-            - { kind: text, text: { en: "lemon cake", ar: "كيكة ليمون" }, gap: s }
-            - { kind: text, text: { en: "chicken with lemon and garlic", ar: "فراخ بالليمون والثوم" }, gap: s }
+            - kind: searchbar
+              text: {"en": "lemon", "ar": "ليمون"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "grilled fish with lemon", "ar": "سمك مشوي بالليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "lemon cake", "ar": "كيكة ليمون"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "chicken with lemon and garlic", "ar": "فراخ بالليمون والثوم"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
     answer: [query]
     misconceptions:
       - id: MC-P14-026
@@ -247,21 +329,33 @@ steps:
     a:
       label: { en: "Version A: last year's popular searches", ar: "النسخة A: أشهر عمليات البحث في العام الماضي" }
       mock:
-        width: 260
+        app: volta
+        appbar: { title: { en: "Volta", ar: "فولتا" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
         blocks:
-          - { kind: field, text: { en: "earbuds", ar: "سماعات" }, filled: true, focus: true }
-          - { kind: text, text: { en: "earbuds **X2**", ar: "سماعات **X2**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **with noise cancelling**", ar: "سماعات **بعزل الضوضاء**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **for sports**", ar: "سماعات **للرياضة**" }, gap: s }
+          - kind: searchbar
+            text: {"en": "earbuds", "ar": "سماعات"}
+            filled: true
+            focus: true
+            suggest:
+              - {"icon": "headphones", "text": {"en": "earbuds **X2**", "ar": "سماعات **X2**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **with noise cancelling**", "ar": "سماعات **بعزل الضوضاء**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **for sports**", "ar": "سماعات **للرياضة**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+        keyboard: text
     b:
       label: { en: "Version B: only searches with products in the store", ar: "النسخة B: فقط عمليات البحث التي لها منتجات في المتجر" }
       mock:
-        width: 260
+        app: volta
+        appbar: { title: { en: "Volta", ar: "فولتا" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
         blocks:
-          - { kind: field, text: { en: "earbuds", ar: "سماعات" }, filled: true, focus: true }
-          - { kind: text, text: { en: "earbuds **with noise cancelling**", ar: "سماعات **بعزل الضوضاء**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **for sports**", ar: "سماعات **للرياضة**" }, gap: s }
-          - { kind: text, text: { en: "earbuds **under EGP 1,000**", ar: "سماعات **أقل من 1,000 جنيه**" }, gap: s }
+          - kind: searchbar
+            text: {"en": "earbuds", "ar": "سماعات"}
+            filled: true
+            focus: true
+            suggest:
+              - {"icon": "headphones", "text": {"en": "earbuds **with noise cancelling**", "ar": "سماعات **بعزل الضوضاء**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **for sports**", "ar": "سماعات **للرياضة**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+              - {"icon": "headphones", "text": {"en": "earbuds **under EGP 1,000**", "ar": "سماعات **أقل من 1,000 جنيه**"}, "value": {"en": "Audio", "ar": "صوتيات"}}
+        keyboard: text
     answer: b
     misconceptions:
       - id: MC-P14-025
@@ -297,28 +391,46 @@ steps:
       - id: typed
         text: { en: "Suggest the common misspelling as typed", ar: "اقترح الإملاء الشائع كما كتبه الناس" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
-            - { kind: text, text: { en: "mulu**khia**", ar: "ملو**خيا**" }, gap: s }
-            - { kind: text, text: { en: "mulu**khia with rabbit**", ar: "ملو**خيا بالأرانب**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "mulu", "ar": "ملو"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "mulu**khia**", "ar": "ملو**خيا**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "mulu**khia with rabbit**", "ar": "ملو**خيا بالأرانب**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: fixed
         text: { en: "Suggest the spelling that finds recipes", ar: "اقترح الإملاء الذي يجد وصفات" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**molokhia**", ar: "**ملوخية**" }, gap: s }
-            - { kind: text, text: { en: "**molokhia with rabbit**", ar: "**ملوخية بالأرانب**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "mulu", "ar": "ملو"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia**", "ar": "**ملوخية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia with rabbit**", "ar": "**ملوخية بالأرانب**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
       - id: both
         text: { en: "Suggest both spellings", ar: "اقترح الإملاءين" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: { title: { en: "Search recipes", ar: "ابحث عن وصفة" }, back: true }
           blocks:
-            - { kind: field, text: { en: "mulu", ar: "ملو" }, filled: true, focus: true }
-            - { kind: text, text: { en: "mulu**khia**", ar: "ملو**خيا**" }, gap: s }
-            - { kind: text, text: { en: "**molokhia**", ar: "**ملوخية**" }, gap: s }
-            - { kind: text, text: { en: "**molokhia with rabbit**", ar: "**ملوخية بالأرانب**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "mulu", "ar": "ملو"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "cooking-pot", "text": {"en": "mulu**khia**", "ar": "ملو**خيا**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia**", "ar": "**ملوخية**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+                - {"icon": "cooking-pot", "text": {"en": "**molokhia with rabbit**", "ar": "**ملوخية بالأرانب**"}, "value": {"en": "Recipe", "ar": "وصفة"}}
+          keyboard: text
     answer: [fixed]
     misconceptions:
       - id: MC-P14-025
@@ -357,30 +469,48 @@ steps:
       - id: plain
         text: { en: "All text in the same style", ar: "كل النص بالشكل نفسه" }
         mock:
-          width: 300
+          app: wazifa
+          appbar: { title: { en: "Find a job", ar: "ابحث عن وظيفة" }, logo: true }
           blocks:
-            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "Senior UX design lead", ar: "قائد فريق تصميم UX" }, gap: s }
-            - { kind: text, text: { en: "Design engineer", ar: "مهندس تصميم" }, gap: s }
-            - { kind: text, text: { en: "Interior design intern", ar: "متدرّب تصميم داخلي" }, gap: s }
+            - kind: searchbar
+              text: {"en": "design", "ar": "تصميم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "briefcase", "text": {"en": "Senior UX design lead", "ar": "قائد فريق تصميم UX"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Design engineer", "ar": "مهندس تصميم"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Interior design intern", "ar": "متدرّب تصميم داخلي"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+          keyboard: text
       - id: query
         text: { en: "Bold the typed word, wherever it appears", ar: "الكلمة المكتوبة بخط عريض، أينما ظهرت" }
         mock:
-          width: 300
+          app: wazifa
+          appbar: { title: { en: "Find a job", ar: "ابحث عن وظيفة" }, logo: true }
           blocks:
-            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "Senior UX **design** lead", ar: "قائد فريق **تصميم** UX" }, gap: s }
-            - { kind: text, text: { en: "**Design** engineer", ar: "مهندس **تصميم**" }, gap: s }
-            - { kind: text, text: { en: "Interior **design** intern", ar: "متدرّب **تصميم** داخلي" }, gap: s }
+            - kind: searchbar
+              text: {"en": "design", "ar": "تصميم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "briefcase", "text": {"en": "Senior UX **design** lead", "ar": "قائد فريق **تصميم** UX"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "**Design** engineer", "ar": "مهندس **تصميم**"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Interior **design** intern", "ar": "متدرّب **تصميم** داخلي"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+          keyboard: text
       - id: rest
         text: { en: "Bold everything except the typed word", ar: "كل شيء بخط عريض ما عدا الكلمة المكتوبة" }
         mock:
-          width: 300
+          app: wazifa
+          appbar: { title: { en: "Find a job", ar: "ابحث عن وظيفة" }, logo: true }
           blocks:
-            - { kind: field, text: { en: "design", ar: "تصميم" }, filled: true, focus: true }
-            - { kind: text, text: { en: "**Senior UX** design **lead**", ar: "**قائد فريق** تصميم **UX**" }, gap: s }
-            - { kind: text, text: { en: "Design **engineer**", ar: "**مهندس** تصميم" }, gap: s }
-            - { kind: text, text: { en: "**Interior** design **intern**", ar: "**متدرّب** تصميم **داخلي**" }, gap: s }
+            - kind: searchbar
+              text: {"en": "design", "ar": "تصميم"}
+              filled: true
+              focus: true
+              suggest:
+                - {"icon": "briefcase", "text": {"en": "**Senior UX** design **lead**", "ar": "**قائد فريق** تصميم **UX**"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "Design **engineer**", "ar": "**مهندس** تصميم"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+                - {"icon": "briefcase", "text": {"en": "**Interior** design **intern**", "ar": "**متدرّب** تصميم **داخلي**"}, "value": {"en": "Job title", "ar": "مسمّى وظيفي"}}
+          keyboard: text
     answer: [query]
     misconceptions:
       - id: MC-P14-026

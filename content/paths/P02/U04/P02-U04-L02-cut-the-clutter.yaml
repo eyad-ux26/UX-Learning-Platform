@@ -20,21 +20,22 @@ steps:
     type: card
     part: hook
     title: { en: "Where is Transfer?", ar: "أين التحويل؟" }
-    body:
-      en: "I lead the design team of a bank's app. Our home screen has grown: the balance, three offer banners, a news slider, a tip of the day, a currency table and a quiz.\n\nIn our last test, four out of six people couldn't find **Transfer** in under a minute. It's there, under the quiz."
-      ar: "أقود فريق التصميم لتطبيق بنك. وقد امتلأت الشاشة الرئيسية: الرصيد، وثلاثة Banners للعروض، وشريط أخبار متحرّك، ونصيحة اليوم، وجدول عملات، ومسابقة.\n\nفي آخر تجربة، لم يجد أربعة من ستة أشخاص زر **تحويل** في أقل من دقيقة. وهو موجود، تحت المسابقة."
     mock:
-      width: 300
-      blocks: &crowded
-        - { kind: meta, text: { en: "Balance: EGP 12,480", ar: "الرصيد: 12,480 جنيه" } }
-        - { kind: banner, text: { en: "New! 0% installments on phones", ar: "جديد! تقسيط بدون فوائد على الهواتف" }, gap: s }
-        - { kind: banner, text: { en: "Win a trip with your card", ar: "اربح رحلة مع بطاقتك" }, gap: xs }
-        - { kind: image, size: s, gap: xs }
+      app: rasid
+      appbar: { logo: true, actions: [ { icon: bell, count: 4 } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: credit-card, text: { en: "Cards", ar: "البطاقات" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: card, blocks: [ { kind: small, text: { en: "Balance", ar: "الرصيد" } }, { kind: price, text: { en: "EGP 12,480", ar: "12,480 جنيه" }, size: l } ] }
+        - { kind: banner, icon: megaphone, tone: info, text: { en: "New! 0% installments on phones", ar: "جديد! تقسيط بدون فوائد على الهواتف" }, gap: s }
+        - { kind: banner, icon: airplane-tilt, tone: info, text: { en: "Win a trip with your card", ar: "اربح رحلة مع بطاقتك" }, gap: xs }
+        - { kind: image, art: city-night, size: s, gap: xs }
         - { kind: small, text: { en: "Tip of the day: save 10% of your salary", ar: "نصيحة اليوم: ادّخر 10% من راتبك" }, gap: xs }
         - { kind: small, text: { en: "USD 48.9 · EUR 52.7 · SAR 13.0", ar: "دولار 48.9 · يورو 52.7 · ريال 13.0" }, gap: xs }
         - { kind: link, text: { en: "Quiz: how smart is your spending?", ar: "مسابقة: ما مدى ذكاء إنفاقك؟" }, gap: xs }
-        - { kind: button, text: { en: "Transfer", ar: "تحويل" }, gap: s, style: plain }
-
+        - { kind: button, icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" }, style: text, gap: xs, note: { en: "Here, under the quiz", ar: "هنا، تحت المسابقة" } }
+    body:
+      en: "I lead the design team of a bank's app. Our home screen has grown: the balance, three offer banners, a news slider, a tip of the day, a currency table and a quiz.\n\nIn our last test, four out of six people couldn't find **Transfer** in under a minute. It's there, under the quiz."
+      ar: "أقود فريق التصميم لتطبيق بنك. وقد امتلأت الشاشة الرئيسية: الرصيد، وثلاثة Banners للعروض، وشريط أخبار متحرّك، ونصيحة اليوم، وجدول عملات، ومسابقة.\n\nفي آخر تجربة، لم يجد أربعة من ستة أشخاص زر **تحويل** في أقل من دقيقة. وهو موجود، تحت المسابقة."
   - id: S02
     type: choose
     part: try
@@ -48,6 +49,17 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا نفعل؟"
+    mock:
+      app: rasid
+      appbar: { logo: true, actions: [ { icon: bell, count: 4 } ] }
+      tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: credit-card, text: { en: "Cards", ar: "البطاقات" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      blocks:
+        - { kind: card, blocks: [ { kind: small, text: { en: "Balance", ar: "الرصيد" } }, { kind: price, text: { en: "EGP 12,480", ar: "12,480 جنيه" }, size: l } ] }
+        - { kind: banner, icon: megaphone, tone: info, text: { en: "New! 0% installments on phones", ar: "جديد! تقسيط بدون فوائد على الهواتف" }, gap: s }
+        - { kind: banner, icon: airplane-tilt, tone: info, text: { en: "Win a trip with your card", ar: "اربح رحلة مع بطاقتك" }, gap: xs }
+        - { kind: image, art: city-night, size: s, gap: xs }
+        - { kind: link, text: { en: "Quiz: how smart is your spending?", ar: "مسابقة: ما مدى ذكاء إنفاقك؟" }, gap: xs }
+        - { kind: button, icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" }, style: text, gap: xs }
     options:
       - { id: red, text: { en: "Make Transfer a big red button", ar: "نجعل «تحويل» زرًا أحمر كبيرًا" } }
       - { id: cut, text: { en: "Keep the balance and the main actions on top; move offers, news and the quiz to an \"Offers\" tab", ar: "نُبقي الرصيد والإجراءات الرئيسية في الأعلى؛ وننقل العروض والأخبار والمسابقة إلى قسم «العروض»" } }
@@ -69,18 +81,33 @@ steps:
       en: "Most people open a bank app to check their balance or move money. With the noise moved away, Transfer stands out without shouting, and the offers are still there for anyone who wants them."
       ar: "يفتح أغلب الناس تطبيق البنك ليعرفوا رصيدهم أو يحوّلوا مالًا. وحين يُنقل الضجيج بعيدًا، يبرز «تحويل» دون صياح، وتبقى العروض موجودة لمن يريدها."
 
+  - id: S09
+    type: video
+    part: concept
+    title: { en: "Aesthetic and minimalist design", ar: "التصميم الجمالي البسيط (Aesthetic and minimalist design)" }
+    video: 7b78bc7d-20d4-40f7-a726-a3870a1859b2
+    duration: 154
+    transcript:
+      - { t: 2.5, en: "Let's look at this example. What do you think of it, in terms of the signal-to-noise ratio?", ar: "تعال نبص على المثال ده: إيه رأيك فيه بالنسبة لموضوع الـ Signal to noise ratio؟" }
+      - { t: 8.19, en: "Here you're supposed to book a trip, a flight. As you can see, this is what the website looks like.", ar: "ده مثال المفروض إنك من هنا بتحجز رحلة، بتحجز طيارة. زي ما إنت شايف، ده شكل الـ Website." }
+      - { t: 18.19, en: "Is the signal high here, or the noise? Is the signal higher than the noise? Did the designer manage the noise,", ar: "هنا الـ Signal عالية ولا الـ Noise عالية؟ هل الـ Signal أعلى من الـ Noise هنا؟ هل فعلًا المصمم هنا قدر يتعامل مع الـ Noise،" }
+      - { t: 34.19, en: "the visual elements, options or actions that don't matter in the user's context? Clearly, here he didn't get the signal-to-noise ratio right.", ar: "الحاجات اللي ممكن تكون Visual elements أو Options أو Actions مش مهمة بالنسبة لسياق اليوزر؟ هنا بوضوح ما وُفّقش إنه يحقّق الـ Signal to noise ratio." }
+      - { t: 46.19, en: "Why? Because, as you can see, there are lots of colours, lots of images and far too many options for someone who wants to book a flight.", ar: "ليه؟ لأن زي ما إنت شايف، فيه ألوان كتير، وصور كتير، و Options كتير جدًا، بالنسبة لواحد داخل عايز يحجز طيارة." }
+      - { t: 56.19, en: "What matters most to them may be where they're going, entering the date, and searching. There can be some options and some information,", ar: "ممكن يكون أهم حاجة بالنسبة له: هو رايح فين، ويدخل التاريخ، ويبحث. ممكن يبقى فيه بعض الـ Options وبعض المعلومات،" }
+      - { t: 66.19, en: "and it can give a feeling of travel and all those lovely things, but not with an image filling the background like this, full of colours and details.", ar: "وممكن يحسّسه بإحساس إنه هيسافر والحاجات الجميلة دي كلها، لكن مش بصورة مالية الخلفية بالشكل ده، مالية ألوان ومالية تفاصيل." }
+      - { t: 76.19, en: "All of that will compete, as we agreed, with the visual elements that matter most in this context.", ar: "كل ده هينافس، زي ما اتفقنا، الـ Visuals أو العناصر البصرية الأكثر أهمية في السياق ده." }
+      - { t: 86.19, en: "Now, you'll see almost the same goal, the same function, done much better in Google Flights.", ar: "طيب، هتشوف تقريبًا نفس الـ Goal أو نفس الـ Function محقّقة بشكل أفضل بكتير في Google Flights." }
+      - { t: 96.19, en: "The main focus is on the box in the middle, where the user enters where they're going.", ar: "هتلاقي إن الفوكس الأساسي على المربع اللي في النص، اللي من خلاله اليوزر بيدخل هو رايح فين." }
+      - { t: 106.19, en: "And the Explore button has elevation and a shadow, and stands out in the primary colour, used very sensibly.", ar: "وهتلاقي الزرار اللي اسمه Explore واخد Elevation، واخد Shadow، وبارز وباللون الـ Primary. استخدام اللون الـ Primary هنا بطريقة عقلانية جدًا." }
+      - { t: 120.19, en: "It conveys the feeling of travelling, there's even some emotion in it, but calmly,", ar: "قدر يوصّل Feeling إنك مسافر، يعني فيه حتى Emotion في الموضوع، لكن بطريقة هادية،" }
+      - { t: 128.19, en: "in a way that doesn't make the user lose focus on the main task, the main part they need to concentrate on,", ar: "بطريقة ما تخلّيش اليوزر يـ Lose الفوكس أو يفقد تركيزه عن المهمة الأساسية أو الجزء الأساسي اللي هو محتاج يركّز فيه،" }
+      - { t: 140.19, en: "which is entering where they're going and the date, and starting to explore the available flights.", ar: "وهو إنه يبدأ يدخل هو رايح فين، وإيه التاريخ، ويبدأ يـ Explore الـ Flights المتاحة." }
+
   - id: S03
     type: card
     part: concept
     icons: [cut, eye, ok]
-    video:
-      src: clips/P02-C08.mp4
-      captions: { ar: P02-C08.ar.vtt, en: P02-C08.en.vtt }
-      who: { en: "UXGate instructor", ar: "مدرّب UXGate" }
-      transcript:
-        en: "@C08en"
-        ar: "@C08ar"
-    title: { en: "Aesthetic and minimalist design", ar: "التصميم الجمالي البسيط (Aesthetic and minimalist design)" }
+    title: { en: "Video summary", ar: "ملخص الفيديو" }
     body:
       en: "The eighth heuristic: interfaces **should not contain information that is irrelevant or rarely needed**. Everything extra competes with what matters.\n\n- **Cut or move back** what doesn't help the task. Show rare details only when they're needed.\n- **Minimalist doesn't mean empty:** keep every label, sign and fact the task needs.\n- **Looks matter too,** but clarity wins over decoration."
       ar: "المبدأ الثامن: **لا يجب أن تحتوي الواجهات على معلومات غير مهمة أو نادرًا ما تُحتاج**. فكل شيء زائد ينافس ما يهمّ.\n\n- **احذف أو أخّر** ما لا يساعد المهمة. واعرض التفاصيل النادرة فقط حين تُحتاج.\n- **البساطة لا تعني الفراغ:** أبقِ كل اسم وعلامة ومعلومة تحتاجها المهمة.\n- **الشكل مهم أيضًا،** لكن الوضوح يغلب الزخرفة."
@@ -100,6 +127,19 @@ steps:
     prompt:
       en: "How should the screen handle the other fields?"
       ar: "كيف تتعامل الشاشة مع الحقول الأخرى؟"
+    mock:
+      app: rasid
+      appbar: { title: { en: "Transfer", ar: "تحويل" }, back: true }
+      blocks:
+        - { kind: field, label: { en: "To account", ar: "إلى الحساب" }, text: "", icon: user }
+        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: "", gap: s }
+        - { kind: field, label: { en: "Purpose", ar: "الغرض" }, text: "", gap: s }
+        - { kind: field, label: { en: "Reference code", ar: "الرمز المرجعي" }, text: "", gap: s }
+        - { kind: field, label: "SWIFT", text: "", gap: s }
+        - { kind: select, label: { en: "Schedule", ar: "الجدولة" }, text: { en: "Now", ar: "الآن" }, gap: s }
+        - { kind: select, label: { en: "Fees paid by", ar: "الرسوم على" }, text: { en: "Me", ar: "أنا" }, gap: s }
+      footer:
+        - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
       - { id: all, text: { en: "Keep them all visible; someone might need them", ar: "تبقى كلها ظاهرة؛ فقد يحتاجها أحد" } }
       - { id: more, text: { en: "Show account and amount; put the rest under \"More options\", and ask for SWIFT only for transfers abroad", ar: "تعرض الحساب والمبلغ؛ وتضع الباقي تحت «خيارات أخرى»، ولا تطلب SWIFT إلا للتحويل إلى الخارج" } }
@@ -141,6 +181,17 @@ steps:
     prompt:
       en: "What should we do?"
       ar: "ماذا نفعل؟"
+    mock:
+      app: rasid
+      blocks:
+        - { kind: icon, icon: bank, size: l, color: brand }
+        - { kind: heading, text: { en: "Sign in", ar: "تسجيل الدخول" }, gap: m }
+        - { kind: small, text: { en: "Username", ar: "اسم المستخدم" }, tone: faint, gap: l }
+        - { kind: line, gap: xs }
+        - { kind: small, text: { en: "Password", ar: "كلمة المرور" }, tone: faint, gap: l, note: { en: "No borders, no labels: only grey placeholder text", ar: "بلا حدود ولا أسماء: نص رمادي فقط" } }
+        - { kind: line, gap: xs }
+      footer:
+        - { kind: button, text: { en: "Sign in", ar: "دخول" } }
     options:
       - { id: keep, text: { en: "Keep it; less is more", ar: "نُبقيها؛ فالأقل أكثر" } }
       - { id: back, text: { en: "Bring back visible field borders and labels above the fields", ar: "نعيد حدود الحقول الظاهرة والأسماء فوق الحقول" } }
@@ -181,21 +232,23 @@ steps:
     a:
       label: { en: "Version A: very calm", ar: "النسخة A: هادئة جدًا" }
       mock:
-        width: 260
+        app: dar
+        appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Checkout", ar: "الدفع" } }
-          - { kind: meta, text: { en: "3 items", ar: "3 منتجات" }, gap: s }
-          - { kind: button, text: { en: "Pay", ar: "ادفع" }, gap: xl }
+          - { kind: listitem, art: box, text: { en: "3 items", ar: "3 منتجات" } }
+        footer:
+          - { kind: button, text: { en: "Pay", ar: "ادفع" } }
     b:
       label: { en: "Version B: calm, with the facts", ar: "النسخة B: هادئة، مع الحقائق" }
       mock:
-        width: 260
+        app: dar
+        appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Checkout", ar: "الدفع" } }
-          - { kind: meta, text: { en: "3 items · EGP 1,340", ar: "3 منتجات · 1,340 جنيه" }, gap: s }
-          - { kind: meta, text: { en: "Delivery EGP 40 · arrives Thu 6 Nov", ar: "التوصيل 40 جنيه · يصل الخميس 6 نوفمبر" }, gap: xs }
-          - { kind: heading, text: { en: "Total EGP 1,380", ar: "الإجمالي 1,380 جنيه" }, gap: s }
-          - { kind: button, text: { en: "Pay EGP 1,380", ar: "ادفع 1,380 جنيه" }, gap: m }
+          - { kind: listitem, art: box, text: { en: "3 items", ar: "3 منتجات" }, value: { en: "EGP 1,340", ar: "1,340 جنيه" } }
+          - { kind: listitem, icon: truck, text: { en: "Delivery · arrives Thu 6 Nov", ar: "التوصيل · يصل الخميس 6 نوفمبر" }, value: { en: "EGP 40", ar: "40 جنيه" }, gap: s }
+          - { kind: price, text: { en: "Total EGP 1,380", ar: "الإجمالي 1,380 جنيه" }, gap: m }
+        footer:
+          - { kind: button, text: { en: "Pay EGP 1,380", ar: "ادفع 1,380 جنيه" } }
     answer: b
     misconceptions:
       - id: MC-P02-034
@@ -227,6 +280,17 @@ steps:
     prompt:
       en: "How should the timetable show each class?"
       ar: "كيف يعرض الجدول كل حصة؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "Timetable · Thursday", ar: "الجدول · الخميس" } }
+      blocks:
+        - kind: card
+          art: gym
+          blocks:
+            - { kind: heading, text: { en: "Coach Mai", ar: "المدرّبة مي" } }
+            - { kind: small, text: { en: "10 years of yoga teaching, certified in Bali and Cairo. Loves sunrise sessions and strong tea.", ar: "10 سنوات في تدريب اليوغا، معتمدة في بالي والقاهرة. تحب جلسات الشروق والشاي الثقيل." } }
+            - { kind: small, text: { en: "\"Breathe in, the day is yours.\"", ar: "«خذ نفسًا، اليوم لك.»" }, tone: faint }
+            - { kind: badge, text: { en: "Yoga · 6 pm · 4 spots left", ar: "يوغا · 6 م · بقي 4 أماكن" }, tone: neutral, gap: s, note: { en: "Time and spots come last", ar: "الوقت والأماكن في الآخر" } }
     options:
       - { id: row, text: { en: "A compact row: time, class, trainer's name, spots left and Book; the bio opens on tap", ar: "صف مختصر: الوقت، والحصة، واسم المدرّب، والأماكن المتبقية، و«احجز»؛ وتُفتح النبذة عند الضغط" } }
       - { id: smaller, text: { en: "The same card with a smaller photo", ar: "البطاقة نفسها بصورة أصغر" } }

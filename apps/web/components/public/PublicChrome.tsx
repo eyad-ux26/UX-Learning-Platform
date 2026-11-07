@@ -1,4 +1,4 @@
-// Header and footer of the public pages (path pages, privacy, terms) and the minimal header of the system pages.
+// Header and footer of the public pages (path pages, privacy, terms, refunds) and the minimal header of the system pages.
 // No "use client": they render on the server in public pages, and inside the client error boundary too.
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -55,6 +55,7 @@ export function PubFooter() {
         <Link href="/#faq">{t("footHelp")}</Link>
         <Link href="/terms">{t("footTerms")}</Link>
         <Link href="/privacy">{t("footPrivacy")}</Link>
+        <Link href="/refund">{t("footRefund")}</Link>
       </nav>
       <a href="mailto:support@uxgate.org" className="mail ltr">support@uxgate.org</a>
     </footer>

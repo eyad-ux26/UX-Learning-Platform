@@ -45,7 +45,7 @@ export function PushAsk() {
           <ul className="ask-list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
             {[["ph-bell", "l1"], ["ph-chat-text", "l2"], ["ph-gear", "l3"]].map(([icon, k]) => <li key={k} style={{ display: "flex", gap: 10, fontSize: 14, lineHeight: 1.45 }}><span className={`ph ${icon}`} style={{ fontSize: 20, color: "var(--link)", flex: "none" }} aria-hidden="true" /><span>{t(k)}</span></li>)}
           </ul>
-          <button type="button" className="btn btn-primary btn-lg btn-block press" style={{ marginBlockStart: 4 }} onClick={yes} disabled={busy}><span className="ph ph-bell" aria-hidden="true" />{t("yes")}</button>
+          <button type="button" className="btn btn-primary btn-lg btn-block press" style={{ marginBlockStart: 4 }} onClick={yes} disabled={busy} aria-busy={busy || undefined}><span className="ph ph-bell" aria-hidden="true" />{t("yes")}</button>
           <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={later} disabled={busy}>{t("notNow")}</button>
           <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12.5, margin: 0 }}>{t("foot")}</p>
         </Sheet>

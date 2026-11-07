@@ -42,41 +42,44 @@ steps:
       - id: keep
         text: { en: "Keep the rating dialog when people place an order", ar: "أبقِ Dialog التقييم عند إرسال الطلب" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
           blocks: &checkout
-            - { kind: title, text: { en: "Checkout", ar: "الدفع" } }
-            - { kind: meta, text: { en: "12 items · EGP 1,140", ar: "12 منتجًا · 1140 جنيه" }, gap: s }
-            - { kind: button, text: { en: "Place order", ar: "أرسل الطلب" }, gap: xl }
-          overlay:
+            - { kind: listitem, icon: basket, text: { en: "12 items", ar: "12 منتجًا" }, sub: { en: "Milk, bread, eggs and 9 more", ar: "لبن، عيش، بيض و9 غيرها" }, value: { en: "EGP 1,140", ar: "1140 جنيه" } }
+            - { kind: listitem, icon: clock, text: { en: "Today, 7–9 pm", ar: "اليوم، من 7 إلى 9 مساءً" }, sub: { en: "Delivery slot", ar: "موعد التوصيل" }, chevron: true }
+            - { kind: listitem, icon: credit-card, text: { en: "Visa •••• 1177", ar: "Visa •••• 1177" }, chevron: true }
+          footer: &cofooter
+            - { kind: button, text: { en: "Place order · EGP 1,140", ar: "أرسل الطلب · 1140 جنيه" } }
+          overlay: &rate
             type: dialog
             close: true
             blocks:
-              - { kind: heading, text: { en: "Enjoying the app?", ar: "هل يعجبك التطبيق؟" } }
-              - { kind: text, text: "★ ★ ★ ★ ★", gap: s }
+              - { kind: heading, text: { en: "Enjoying Sallah?", ar: "هل يعجبك سلّة؟" } }
+              - { kind: text, text: "★ ★ ★ ★ ★", size: l, gap: s }
               - { kind: button, text: { en: "Rate us", ar: "قيّمنا" }, gap: m }
       - id: third
         text: { en: "Show the same dialog only from the third order", ar: "اعرض الـ Dialog نفسه بدءًا من الطلب الثالث فقط" }
         mock:
           caption: { en: "Third order", ar: "الطلب الثالث" }
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
           blocks: *checkout
-          overlay:
-            type: dialog
-            close: true
-            blocks:
-              - { kind: heading, text: { en: "Enjoying the app?", ar: "هل يعجبك التطبيق؟" } }
-              - { kind: text, text: "★ ★ ★ ★ ★", gap: s }
-              - { kind: button, text: { en: "Rate us", ar: "قيّمنا" }, gap: m }
+          footer: *cofooter
+          overlay: *rate
       - id: after
         text: { en: "Ask for a rating on the order screen once it's delivered", ar: "اطلب التقييم في شاشة الطلب بعد توصيله" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Order delivered", ar: "تم التوصيل" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Delivered", ar: "تم التوصيل" } }
-            - { kind: meta, text: { en: "12 items · Today 6:40 pm", ar: "12 منتجًا · اليوم 6:40 مساءً" }, gap: s }
-            - { kind: divider, gap: l }
-            - { kind: small, text: { en: "How was this order?", ar: "كيف كان هذا الطلب؟" }, gap: m }
-            - { kind: text, text: "★ ★ ★ ★ ★", gap: s }
+            - { kind: icon, icon: check-circle-fill, size: l, color: brand }
+            - { kind: heading, text: { en: "Delivered", ar: "تم التوصيل" }, gap: s }
+            - { kind: small, text: { en: "12 items · Today 6:40 pm", ar: "12 منتجًا · اليوم 6:40 مساءً" }, gap: xs }
+            - kind: card
+              gap: l
+              blocks:
+                - { kind: small, text: { en: "How was this order?", ar: "كيف كان هذا الطلب؟" } }
+                - { kind: text, text: "★ ★ ★ ★ ★", size: l, gap: s }
     answer: [after]
     misconceptions:
       - id: MC-P14-001
@@ -115,11 +118,14 @@ steps:
       - id: modal
         text: { en: "Keep the times in the dialog", ar: "أبقِ المواعيد في الـ Dialog" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Cart", ar: "السلّة" }, back: true }
           blocks: &cartfz
-            - { kind: title, text: { en: "Cart", ar: "السلّة" } }
-            - { kind: banner, text: { en: "Frozen items must be delivered within 2 hours of packing.", ar: "المنتجات المجمّدة يجب أن تُوصَّل خلال ساعتين من تجهيزها." }, gap: m }
-            - { kind: button, text: { en: "Choose delivery time", ar: "اختر وقت التوصيل" }, gap: xl }
+            - { kind: banner, icon: snowflake, tone: info, text: { en: "Frozen items must be delivered within 2 hours of packing.", ar: "المنتجات المجمّدة يجب أن تُوصَّل خلال ساعتين من تجهيزها." } }
+            - { kind: listitem, art: box, text: { en: "Frozen peas, 400 g", ar: "بسلة مجمّدة، 400 جم" }, badge: { text: { en: "Frozen", ar: "مجمّد" }, tone: neutral }, value: { en: "EGP 45", ar: "45 جنيه" }, gap: s }
+            - { kind: listitem, art: bread, text: { en: "Baladi bread × 10", ar: "عيش بلدي × 10" }, value: { en: "EGP 20", ar: "20 جنيه" } }
+          footer:
+            - { kind: button, text: { en: "Choose delivery time", ar: "اختر وقت التوصيل" } }
           overlay:
             type: dialog
             blocks:
@@ -129,8 +135,11 @@ steps:
       - id: link
         text: { en: "Keep the dialog; add a \"See cart\" link that closes it", ar: "أبقِ الـ Dialog؛ وأضف رابط «اعرض السلّة» يغلقه" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Cart", ar: "السلّة" }, back: true }
           blocks: *cartfz
+          footer:
+            - { kind: button, text: { en: "Choose delivery time", ar: "اختر وقت التوصيل" } }
           overlay:
             type: dialog
             blocks:
@@ -141,12 +150,14 @@ steps:
       - id: page
         text: { en: "Choose the time on the checkout page, under the frozen-items note", ar: "اختر الوقت في صفحة الدفع، تحت ملاحظة المجمّدات" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Delivery time", ar: "وقت التوصيل" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Delivery time", ar: "وقت التوصيل" } }
-            - { kind: banner, text: { en: "You have frozen items: pick a time within 2 hours of packing.", ar: "لديك منتجات مجمّدة: اختر وقتًا خلال ساعتين من التجهيز." }, gap: m }
+            - { kind: banner, icon: snowflake, tone: info, text: { en: "You have frozen items: pick a time within 2 hours of packing.", ar: "لديك منتجات مجمّدة: اختر وقتًا خلال ساعتين من التجهيز." } }
             - { kind: radio, text: { en: "Today, 7–9 pm", ar: "اليوم، من 7 إلى 9 مساءً" }, gap: m }
             - { kind: radio, text: { en: "Tomorrow, 10 am–12 pm", ar: "غدًا، من 10 صباحًا إلى 12 ظهرًا" }, gap: xs }
+          footer:
+            - { kind: button, text: { en: "Confirm time", ar: "أكّد الموعد" } }
     answer: [page]
     misconceptions:
       - id: MC-P14-005
@@ -180,43 +191,46 @@ steps:
       - id: stack
         text: { en: "Keep the second sheet on top", ar: "أبقِ الـ Sheet الثاني فوق الأول" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Dairy", ar: "الألبان" }, back: true, actions: [ { icon: shopping-cart, count: 12, aria: { en: "Cart", ar: "السلة" } } ] }
           blocks: &aisle
-            - { kind: title, text: { en: "Dairy", ar: "الألبان" } }
-            - { kind: meta, text: { en: "Yogurt · EGP 18", ar: "زبادي · 18 جنيه" }, gap: m }
-            - { kind: meta, text: { en: "Cheese · EGP 75", ar: "جبنة · 75 جنيه" }, gap: s }
+            - { kind: listitem, art: box, text: { en: "Low-fat milk, 1 L", ar: "لبن قليل الدسم، 1 لتر" }, badge: { text: { en: "Out of stock", ar: "نفد" }, tone: warn }, value: { en: "EGP 38", ar: "38 جنيه" } }
+            - { kind: listitem, art: box, text: { en: "Yogurt, 4 cups", ar: "زبادي، 4 علب" }, value: { en: "EGP 18", ar: "18 جنيه" } }
+            - { kind: listitem, art: box, text: { en: "White cheese, 500 g", ar: "جبنة بيضاء، 500 جم" }, value: { en: "EGP 75", ar: "75 جنيه" } }
           overlay:
             type: sheet
+            title: { en: "Choose a replacement", ar: "اختر بديلًا" }
             blocks:
-              - { kind: heading, text: { en: "Choose a replacement", ar: "اختر بديلًا" } }
-              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" }, gap: s }
-              - { kind: small, text: { en: "(on top of the \"Out of stock\" sheet)", ar: "(فوق Sheet «نفد المنتج»)" }, gap: s }
+              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" } }
+              - { kind: small, text: { en: "Opened on top of the \"Out of stock\" sheet", ar: "فُتحت فوق Sheet «نفد المنتج»" }, note: { en: "2nd sheet", ar: "Sheet ثانية" }, gap: s }
       - id: one
         text: { en: "One sheet: the message and the three replacements together", ar: "Sheet واحد: الرسالة والبدائل الثلاثة معًا" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Dairy", ar: "الألبان" }, back: true, actions: [ { icon: shopping-cart, count: 12, aria: { en: "Cart", ar: "السلة" } } ] }
           blocks: *aisle
           overlay:
             type: sheet
             close: true
+            title: { en: "Low-fat milk is out of stock", ar: "نفد اللبن قليل الدسم" }
             blocks:
-              - { kind: heading, text: { en: "Low-fat milk is out of stock", ar: "نفد اللبن قليل الدسم" } }
-              - { kind: small, text: { en: "Pick a replacement:", ar: "اختر بديلًا:" }, gap: s }
-              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" }, gap: s }
-              - { kind: radio, text: { en: "Skimmed milk, 1 L", ar: "لبن خالي الدسم، 1 لتر" }, gap: xs }
+              - { kind: small, text: { en: "Pick a replacement:", ar: "اختر بديلًا:" } }
+              - { kind: radio, text: { en: "Full-fat milk, 1 L · EGP 40", ar: "لبن كامل الدسم، 1 لتر · 40 جنيه" }, gap: s }
+              - { kind: radio, text: { en: "Skimmed milk, 1 L · EGP 39", ar: "لبن خالي الدسم، 1 لتر · 39 جنيه" }, gap: xs }
               - { kind: radio, text: { en: "No replacement", ar: "بدون بديل" }, gap: xs }
       - id: full
         text: { en: "Open the replacements in a full-screen sheet on top", ar: "افتح البدائل في Sheet بملء الشاشة فوقه" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Dairy", ar: "الألبان" }, back: true, actions: [ { icon: shopping-cart, count: 12, aria: { en: "Cart", ar: "السلة" } } ] }
           blocks: *aisle
           overlay:
             type: full
+            title: { en: "Choose a replacement", ar: "اختر بديلًا" }
             blocks:
-              - { kind: heading, text: { en: "Choose a replacement", ar: "اختر بديلًا" } }
-              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" }, gap: s }
+              - { kind: radio, text: { en: "Full-fat milk, 1 L", ar: "لبن كامل الدسم، 1 لتر" } }
               - { kind: radio, text: { en: "Skimmed milk, 1 L", ar: "لبن خالي الدسم، 1 لتر" }, gap: xs }
-              - { kind: small, text: { en: "(still on top of the \"Out of stock\" sheet)", ar: "(ما زال فوق Sheet «نفد المنتج»)" }, gap: s }
+              - { kind: small, text: { en: "Still on top of the \"Out of stock\" sheet", ar: "ما زال فوق Sheet «نفد المنتج»" }, note: { en: "On top of a sheet", ar: "فوق Sheet" }, gap: s }
     answer: [one]
     misconceptions:
       - id: MC-P14-006
@@ -250,26 +264,39 @@ steps:
       - id: tip
         text: { en: "Keep the rule in the tooltip", ar: "أبقِ الشرط في الـ Tooltip" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Cart", ar: "السلّة" }, back: true }
           blocks:
-            - { kind: meta, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" } }
-            - { kind: field, label: { en: "Promo code ⓘ", ar: "كود الخصم ⓘ" }, text: "", gap: m }
-            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: s }
+            - { kind: listitem, icon: truck, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" }, value: { en: "− EGP 25", ar: "− 25 جنيه" } }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: field, label: { en: "Promo code", ar: "كود الخصم" }, trail: info, text: "" }
+                - { kind: button, text: { en: "Apply", ar: "طبّق" }, style: outline }
       - id: shown
         text: { en: "Show the rule under the code field", ar: "اعرض الشرط تحت حقل الكود" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Cart", ar: "السلّة" }, back: true }
           blocks:
-            - { kind: meta, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" } }
-            - { kind: field, label: { en: "Promo code", ar: "كود الخصم" }, text: "", hint: { en: "A code replaces free delivery. You can't use both.", ar: "الكود يحلّ محلّ التوصيل المجاني. لا يمكن استخدامهما معًا." }, gap: m }
-            - { kind: button, text: { en: "Apply", ar: "طبّق" }, gap: s }
+            - { kind: listitem, icon: truck, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" }, value: { en: "− EGP 25", ar: "− 25 جنيه" } }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: field, label: { en: "Promo code", ar: "كود الخصم" }, text: "", hint: { en: "A code replaces free delivery. You can't use both.", ar: "الكود يحلّ محلّ التوصيل المجاني. لا يمكن استخدامهما معًا." } }
+                - { kind: button, text: { en: "Apply", ar: "طبّق" }, style: outline }
       - id: longtip
         text: { en: "Keep the tooltip, and add the full promo terms to it", ar: "أبقِ الـ Tooltip، وأضف إليه كل شروط العروض" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Cart", ar: "السلّة" }, back: true }
           blocks:
-            - { kind: meta, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" } }
-            - { kind: field, label: { en: "Promo code ⓘ", ar: "كود الخصم ⓘ" }, text: "", gap: m }
+            - { kind: listitem, icon: truck, text: { en: "Free delivery applied", ar: "تم تطبيق التوصيل المجاني" }, value: { en: "− EGP 25", ar: "− 25 جنيه" } }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: field, label: { en: "Promo code", ar: "كود الخصم" }, trail: info, text: "" }
+                - { kind: button, text: { en: "Apply", ar: "طبّق" }, style: outline }
             - { kind: tip, text: { en: "Codes are valid once per customer, for orders over EGP 300, until the end date shown, and can't be combined with other offers, including free delivery.", ar: "الأكواد صالحة مرة واحدة لكل عميل، للطلبات فوق 300 جنيه، حتى تاريخ الانتهاء الظاهر، ولا تُجمع مع عروض أخرى، ومنها التوصيل المجاني." } }
     answer: [shown]
     misconceptions:
@@ -304,10 +331,27 @@ steps:
       - id: snack
         text: { en: "A snackbar the next time they open the app", ar: "Snackbar في المرة القادمة التي يفتحون فيها التطبيق" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Good evening, Mahmoud", ar: "مساء الخير يا محمود" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          tabbar: &stabs
+            active: 0
+            items:
+              - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+              - { icon: squares-four, text: { en: "Aisles", ar: "الأقسام" } }
+              - { icon: receipt, text: { en: "Orders", ar: "طلباتي" } }
+              - { icon: user, text: { en: "Account", ar: "حسابي" } }
           blocks: &home2
-            - { kind: title, text: { en: "Good evening", ar: "مساء الخير" } }
-            - { kind: meta, text: { en: "Reorder: your usual basket", ar: "أعد الطلب: سلّتك المعتادة" }, gap: m }
+            - { kind: searchbar, text: { en: "Search Sallah", ar: "ابحث في سلّة" } }
+            - kind: card
+              gap: m
+              blocks:
+                - { kind: listitem, icon: arrow-counter-clockwise, text: { en: "Reorder your usual basket", ar: "أعد طلب سلّتك المعتادة" }, sub: { en: "14 items · EGP 1,060", ar: "14 منتجًا · 1060 جنيه" }, chevron: true }
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: chip, icon: drop, text: { en: "Dairy", ar: "الألبان" } }
+                - { kind: chip, icon: carrot, text: { en: "Vegetables", ar: "الخضار" } }
+                - { kind: chip, icon: bread, text: { en: "Bakery", ar: "المخبوزات" } }
           overlay:
             type: toast
             blocks:
@@ -315,16 +359,23 @@ steps:
       - id: banner
         text: { en: "A banner with \"Update card\" that stays until it's updated", ar: "Banner فيه «حدّث البطاقة» يبقى حتى تُحدَّث" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Good evening, Mahmoud", ar: "مساء الخير يا محمود" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          tabbar: *stabs
           blocks:
-            - { kind: banner, text: { en: "Your Visa ending 1177 expires on 31 October.", ar: "بطاقة Visa التي تنتهي بـ 1177 تنتهي صلاحيتها في 31 أكتوبر." } }
+            - { kind: banner, icon: credit-card, tone: warn, text: { en: "Your Visa ending 1177 expires on 31 October.", ar: "بطاقة Visa التي تنتهي بـ 1177 تنتهي صلاحيتها في 31 أكتوبر." } }
             - { kind: link, text: { en: "Update card", ar: "حدّث البطاقة" }, gap: s }
-            - { kind: title, text: { en: "Good evening", ar: "مساء الخير" }, gap: m }
-            - { kind: meta, text: { en: "Reorder: your usual basket", ar: "أعد الطلب: سلّتك المعتادة" }, gap: m }
+            - { kind: searchbar, text: { en: "Search Sallah", ar: "ابحث في سلّة" }, gap: m }
+            - kind: card
+              gap: m
+              blocks:
+                - { kind: listitem, icon: arrow-counter-clockwise, text: { en: "Reorder your usual basket", ar: "أعد طلب سلّتك المعتادة" }, sub: { en: "14 items · EGP 1,060", ar: "14 منتجًا · 1060 جنيه" }, chevron: true }
       - id: dialog
         text: { en: "A dialog that blocks the app until the card is updated", ar: "Dialog يحجب التطبيق حتى تُحدَّث البطاقة" }
         mock:
-          width: 300
+          app: sallah
+          appbar: { title: { en: "Good evening, Mahmoud", ar: "مساء الخير يا محمود" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+          tabbar: *stabs
           blocks: *home2
           overlay:
             type: dialog

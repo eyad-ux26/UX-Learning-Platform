@@ -20,20 +20,23 @@ steps:
     type: card
     part: hook
     title: { en: "The button that moved", ar: "الزر الذي تحرّك" }
-    body:
-      en: "I build the web app a company's staff use to request time off and claim expenses. Each form was built by a different developer.\n\nIn the leave form, **Submit** is green on the right. In the expense form, **Send** is blue on the left, where Cancel sits in the leave form. Staff keep cancelling claims they meant to send."
-      ar: "أبني تطبيق الويب الذي يستخدمه موظفو شركة لطلب الإجازات وتقديم المصروفات. وكل نموذج بناه مطوّر مختلف.\n\nفي نموذج الإجازة، زر **إرسال** أخضر على اليمين. وفي نموذج المصروفات، زر **أرسِل** أزرق على اليسار، في مكان «إلغاء» في نموذج الإجازة. والموظفون يلغون باستمرار طلبات كانوا يريدون إرسالها."
     mock:
+      app: nafaqat
       frame: wide
+      url: nafaqat.example/claims/new
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" }, { en: "My requests", ar: "طلباتي" } ], active: 1, actions: [ { icon: bell }, { icon: user } ] }
       blocks:
         - { kind: title, text: { en: "Expense claim", ar: "طلب مصروفات" } }
-        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: { en: "EGP 1,250", ar: "1250 جنيه" }, filled: true, gap: m }
+        - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: { en: "EGP 1,250", ar: "1,250 جنيه" }, filled: true, gap: m }
+        - { kind: field, label: { en: "Receipt", ar: "الإيصال" }, text: "taxi-03-nov.jpg", filled: true, icon: paperclip, gap: m }
         - kind: row
           gap: l
           blocks:
-            - { kind: button, text: { en: "Send", ar: "أرسِل" } }
-            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: plain }
-
+            - { kind: button, text: { en: "Send", ar: "أرسِل" }, note: { en: "The leave form has Cancel here", ar: "في نموذج الإجازة يقع «إلغاء» هنا" } }
+            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text }
+    body:
+      en: "I build the web app a company's staff use to request time off and claim expenses. Each form was built by a different developer.\n\nIn the leave form, **Submit** is green on the right. In the expense form, **Send** is blue on the left, where Cancel sits in the leave form. Staff keep cancelling claims they meant to send."
+      ar: "أبني تطبيق الويب الذي يستخدمه موظفو شركة لطلب الإجازات وتقديم المصروفات. وكل نموذج بناه مطوّر مختلف.\n\nفي نموذج الإجازة، زر **إرسال** أخضر على اليمين. وفي نموذج المصروفات، زر **أرسِل** أزرق على اليسار، في مكان «إلغاء» في نموذج الإجازة. والموظفون يلغون باستمرار طلبات كانوا يريدون إرسالها."
   - id: S02
     type: choose
     part: try
@@ -47,6 +50,19 @@ steps:
     prompt:
       en: "What's the best fix?"
       ar: "ما أفضل إصلاح؟"
+    mock:
+      app: nafaqat
+      frame: wide
+      url: nafaqat.example/leave/new
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" }, { en: "My requests", ar: "طلباتي" } ], active: 0, actions: [ { icon: bell }, { icon: user } ] }
+      blocks:
+        - { kind: title, text: { en: "Leave request", ar: "طلب إجازة" } }
+        - { kind: field, label: { en: "First day", ar: "أول يوم" }, text: { en: "Sun 9 Nov", ar: "الأحد 9 نوفمبر" }, filled: true, icon: calendar-blank, gap: m }
+        - kind: row
+          gap: l
+          blocks:
+            - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text }
+            - { kind: button, text: { en: "Submit", ar: "إرسال" } }
     options:
       - { id: same, text: { en: "Use one button style for every form: same word, same colour, same place", ar: "أستخدم شكل زر واحدًا لكل النماذج: الكلمة نفسها، واللون نفسه، والمكان نفسه" } }
       - { id: confirm, text: { en: "Ask \"Are you sure you want to cancel?\" in the expense form", ar: "أسأل «هل أنت متأكد أنك تريد الإلغاء؟» في نموذج المصروفات" } }
@@ -68,18 +84,29 @@ steps:
       en: "Staff learn where the main button is from the first form they use. When every form keeps it in the same place, with the same word and colour, that habit works for them instead of against them."
       ar: "يتعلّم الموظفون مكان الزر الرئيسي من أول نموذج يستخدمونه. وحين يبقيه كل نموذج في المكان نفسه، بالكلمة واللون نفسيهما، تعمل هذه العادة لصالحهم لا ضدهم."
 
+  - id: S09
+    type: video
+    part: concept
+    title: { en: "Consistency and standards", ar: "الاتساق والمعايير (Consistency and standards)" }
+    video: ebf7df23-5f3d-4df7-ab63-cb6667d0e536
+    duration: 122
+    transcript:
+      - { t: 2.5, en: "In short, a pattern is a group of components that together form a certain pattern or layout,", ar: "الـ Pattern باختصار: إن إنت عندك مجموعة من الـ Components مع بعض كوّنوا Pattern أو Layout معين،" }
+      - { t: 9.82, en: "which you use to solve a certain problem or perform a certain function, in certain contexts.", ar: "إنت بتستخدم الـ Layout ده لحل مشكلة معينة، أو لأداء Function معينة، في Context أو سياقات معينة." }
+      - { t: 18.94, en: "You also shouldn't change that pattern, that group of components.", ar: "ما ينفعش برضو إنك تغيّر الـ Pattern ده، الحاجة اللي هي عبارة عن مجموعة من الـ Components." }
+      - { t: 24.52, en: "As you can see, he uses a form where the user fills in some details. Look with me: in this example, the Next button was the first button on the left, and Finish later was in the middle.", ar: "زي ما إنت شايف، هو هنا مستخدم Form بيملا فيها الـ User بعض التفاصيل. لو بصّيت معايا، هتلاقي إنه في المثال ده الـ Next button كان أول Button ناحية الشمال، وزرار Finish later كان في النص." }
+      - { t: 38.26, en: "In the second step, Finish later became the last button, Back took Next's place at the start, and Next moved to the middle.", ar: "في تاني خطوة، زرار Finish later بقى آخر زرار، وزرار Back بقى هو اللي في الأول مكان الـ Next، والـ Next بقى هو اللي في النص." }
+      - { t: 47.16, en: "That's an inconsistency in the pattern. If users got used to pressing Next in a certain place,", ar: "طبعًا ده Inconsistency في الـ Pattern. والمستخدم هنا لو اتعوّد إنه يضغط مثلًا على الـ Next في مكان معين،" }
+      - { t: 56.56, en: "it's very likely that after the next step they press Next and find they pressed Back, because Back took Next's place. The same goes for the other buttons, and any components or pattern where we move things around.", ar: "وارد جدًا إنه لما يخلّص الخطوة اللي بعدها، ييجي يدوس Next، يلاقي نفسه داس Back، عشان زرار Back هو اللي جه مكان زرار Next. وهكذا في باقي الـ Buttons، وفي أي Components أو أي Pattern بنغيّر فيه أماكن الـ Components." }
+      - { t: 69.62, en: "So what's the fix? Airbnb, as you can see, is perfectly consistent: Next stays in one fixed place through all the steps, and Back in another,", ar: "طيب، الحل إيه؟ برضو Airbnb، زي ما إنت شايف، منتهى التناسق والانتظام: حط الـ Next في مكان ثابت طول الـ Steps، والـ Back في مكان ثابت طول الـ Steps،" }
+      - { t: 83.22, en: "and Exit is at the top left, with lower hierarchy but also in a fixed place. The button positions stay the same through every step, so the pattern is consistent.", ar: "والـ Exit موجود فوق على الشمال، بـ Hierarchy أقل، لكن في مكان برضو ثابت. محافظ على الأماكن الخاصة بالـ Buttons في الـ Pattern اللي استخدموه طول الخطوات، فهنا حقّق الـ Consistency في الـ Pattern." }
+      - { t: 99.24, en: "And by the way, consistent patterns also mean that when the steps are used elsewhere, even for a different task, the pattern is kept as it is.", ar: "وبالمناسبة، تحقيق الـ Consistency في الـ Patterns كمان إنه لما ييجي يستخدم موضوع الـ Steps ده في مكان تاني، حتى لو مش بيعمل نفس الـ Function أو نفس المهمة، يحاول يحافظ برضو على الـ Pattern كما هو." }
+
   - id: S03
     type: card
     part: concept
     icons: [layers, eye, ok]
-    video:
-      src: clips/P02-C04.mp4
-      captions: { ar: P02-C04.ar.vtt, en: P02-C04.en.vtt }
-      who: { en: "UXGate instructor", ar: "مدرّب UXGate" }
-      transcript:
-        en: "@C04en"
-        ar: "@C04ar"
-    title: { en: "Consistency and standards", ar: "الاتساق والمعايير (Consistency and standards)" }
+    title: { en: "Video summary", ar: "ملخص الفيديو" }
     body:
       en: "The fourth heuristic: people should not have to wonder whether different words, situations or actions mean the same thing.\n\n- **Internal consistency:** inside your product, the same action uses the same word, look and place on every screen.\n- **External consistency:** people spend most of their time in other products, so follow the conventions they bring from there.\n- **Break a convention only** when it clearly helps the task, because a new pattern costs people effort to learn."
       ar: "المبدأ الرابع: لا يجب أن يتساءل الناس إن كانت الكلمات أو المواقف أو الإجراءات المختلفة تعني الشيء نفسه.\n\n- **الاتساق الداخلي (Internal consistency):** داخل منتجك، يستخدم الإجراء نفسه الكلمة والشكل والمكان نفسها في كل شاشة.\n- **الاتساق الخارجي (External consistency):** يقضي الناس أغلب وقتهم في منتجات أخرى، فاتبع الأعراف التي يأتون بها من هناك.\n- **لا تكسر عُرفًا** إلا إذا كان ذلك يساعد المهمة بوضوح، لأن النمط الجديد يكلّف الناس جهدًا ليتعلّموه."
@@ -99,6 +126,16 @@ steps:
     prompt:
       en: "What should I do?"
       ar: "ماذا أفعل؟"
+    mock:
+      app: nafaqat
+      frame: wide
+      url: nafaqat.example/requests/drafts
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" }, { en: "My requests", ar: "طلباتي" } ], active: 2 }
+      blocks:
+        - { kind: title, text: { en: "Drafts", ar: "المسودّات" } }
+        - { kind: listitem, icon: airplane-tilt, text: { en: "Leave · 9–12 Nov", ar: "إجازة · 9–12 نوفمبر" }, value: { en: "Remove", ar: "أزِل" }, gap: m }
+        - { kind: listitem, icon: receipt, text: { en: "Taxi · EGP 180", ar: "تاكسي · 180 جنيه" }, value: { en: "Delete", ar: "احذف" }, gap: s }
+        - { kind: listitem, icon: laptop, text: { en: "Laptop bag · EGP 650", ar: "حقيبة لابتوب · 650 جنيه" }, value: { en: "Discard", ar: "تجاهَل" }, gap: s }
     options:
       - { id: one, text: { en: "Pick one word, \"Delete draft\", and use it on every screen", ar: "أختار كلمة واحدة، «احذف المسودّة»، وأستخدمها في كل شاشة" } }
       - { id: keep, text: { en: "Keep them; each one fits its screen's tone", ar: "أبقيها؛ فكل كلمة تناسب أسلوب شاشتها" } }
@@ -140,6 +177,15 @@ steps:
     prompt:
       en: "How should the form ask for the date?"
       ar: "كيف يطلب النموذج التاريخ؟"
+    mock:
+      app: nafaqat
+      frame: wide
+      url: nafaqat.example/leave/new
+      navbar: { links: [ { en: "Leave", ar: "الإجازات" }, { en: "Expenses", ar: "المصروفات" } ], active: 0 }
+      blocks:
+        - { kind: title, text: { en: "Leave request", ar: "طلب إجازة" } }
+        - { kind: field, label: { en: "First day off", ar: "أول يوم إجازة" }, text: "3/11", filled: true, focus: true, gap: m, note: { en: "Others typed \"Nov 3\" and \"3-11-2026\"", ar: "كتب آخرون «3 نوفمبر» و«3-11-2026»" } }
+        - { kind: field, label: { en: "Days", ar: "عدد الأيام" }, text: "4", filled: true, gap: m }
     options:
       - { id: hint, text: { en: "Keep the field and add \"Use YYYY-MM-DD\" under it", ar: "يبقى الحقل مع إضافة «استخدم الصيغة YYYY-MM-DD» تحته" } }
       - { id: picker, text: { en: "A date field that opens a calendar, like other booking forms", ar: "حقل تاريخ يفتح تقويمًا، مثل نماذج الحجز الأخرى" } }
@@ -180,23 +226,21 @@ steps:
     a:
       label: { en: "Version A: binoculars", ar: "النسخة A: منظار" }
       mock:
-        width: 260
+        app: zad
+        appbar: { logo: true, actions: [ { icon: binoculars, aria: { en: "Search", ar: "بحث" } } ] }
         blocks:
-          - kind: row
-            blocks:
-              - { kind: title, text: { en: "Trips", ar: "الرحلات" } }
-              - { kind: iconbtn, text: "🔭" }
-          - { kind: image, size: m, gap: m }
+          - { kind: image, art: desert, size: l }
+          - { kind: heading, text: { en: "Weekend in Siwa", ar: "عطلة في سيوة" }, gap: m }
+          - { kind: price, text: { en: "from EGP 4,900", ar: "من 4,900 جنيه" } }
     b:
       label: { en: "Version B: magnifying glass", ar: "النسخة B: عدسة مكبّرة" }
       mock:
-        width: 260
+        app: zad
+        appbar: { logo: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
         blocks:
-          - kind: row
-            blocks:
-              - { kind: title, text: { en: "Trips", ar: "الرحلات" } }
-              - { kind: iconbtn, text: "🔍" }
-          - { kind: image, size: m, gap: m }
+          - { kind: image, art: desert, size: l }
+          - { kind: heading, text: { en: "Weekend in Siwa", ar: "عطلة في سيوة" }, gap: m }
+          - { kind: price, text: { en: "from EGP 4,900", ar: "من 4,900 جنيه" } }
     answer: b
     misconceptions:
       - id: MC-P02-019
@@ -227,6 +271,16 @@ steps:
     prompt:
       en: "What should I recommend?"
       ar: "بماذا أنصح؟"
+    mock:
+      app: lamha
+      frame: wide
+      url: lamha.example/women/dresses
+      navbar: { links: [ { en: "Women", ar: "نساء" }, { en: "Men", ar: "رجال" }, { en: "Kids", ar: "أطفال" } ], active: 0, actions: [ { icon: coat-hanger, count: 2, aria: { en: "Cart", ar: "السلة" } }, { icon: user } ] }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: card, art: shirt, blocks: [ { kind: small, text: { en: "Linen dress", ar: "فستان كتان" } }, { kind: price, text: { en: "EGP 890", ar: "890 جنيه" } } ] }
+            - { kind: card, art: shirt, blocks: [ { kind: small, text: { en: "Cotton abaya", ar: "عباية قطن" } }, { kind: price, text: { en: "EGP 1,150", ar: "1,150 جنيه" } } ] }
     options:
       - { id: hanger, text: { en: "Use the hanger; it's memorable and fits the brand", ar: "نستخدم الشمّاعة؛ فهي مميزة وتناسب العلامة التجارية" } }
       - { id: tour, text: { en: "Use the hanger, with a tour on the first visit that explains it", ar: "نستخدم الشمّاعة، مع جولة تعريفية في الزيارة الأولى تشرحها" } }

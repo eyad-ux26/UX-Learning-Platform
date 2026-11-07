@@ -18,6 +18,7 @@ import { lessonOpen } from "@/lib/billing/access";
 import { readPro } from "@/lib/server/billing/account";
 import { hostOf } from "@/lib/server/billing/config";
 import { loadRound } from "@/lib/server/mastery";
+import { gatedOut } from "@/lib/coming-soon";
 
 const tooMany = () => NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "60" } });
 const PER_MINUTE = 60;
@@ -31,6 +32,8 @@ export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
+  // Coming Soon: lessons, videos and review requests are for admins until launch (lib/coming-soon.ts).
+  if (gatedOut(auth.user)) return NextResponse.json({ error: "coming_soon" }, { status: 403 });
 
   if (!withinMemoryLimit(`attempts:${auth.user.id}`, PER_MINUTE, 60_000)) return tooMany();
 

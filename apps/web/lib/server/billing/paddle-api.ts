@@ -45,6 +45,13 @@ export const cancelSubscription = (sub: Sub) =>
 /** Ends a Paddle subscription now (a duplicate one the engine refused). */
 export const cancelSubscriptionNow = (providerSubId: string) => call("POST", `/subscriptions/${encodeURIComponent(providerSubId)}/cancel`, { effective_from: "immediately" });
 
+/** Who a transaction belongs to, for Paddle's own payment links (?_ptxn=). */
+export async function transactionOwner(transactionId: string) {
+  const r = await call<{ data: { customer_id?: string | null; subscription_id?: string | null; custom_data?: { user_id?: unknown } | null } }>("GET", `/transactions/${encodeURIComponent(transactionId)}`);
+  const uid = r.data.custom_data?.user_id;
+  return { customerId: r.data.customer_id ?? null, subscriptionId: r.data.subscription_id ?? null, userId: typeof uid === "string" ? uid : null };
+}
+
 /** Gives a whole transaction back (a duplicate or late charge the engine refused). */
 export const refundTransaction = (transactionId: string, reason: string) =>
   call("POST", "/adjustments", { action: "refund", type: "full", transaction_id: transactionId, reason });

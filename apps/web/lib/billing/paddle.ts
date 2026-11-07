@@ -93,9 +93,23 @@ export function paddleEvents(body: Obj): BillingEvent[] {
       return [{ ...base, type: "resumed", providerSubId: subId }];
     }
     case "adjustment.created":
-    case "adjustment.updated":
-      if (data.action === "refund" && data.status === "approved" && s(data.transaction_id)) return [{ ...base, type: "refunded", paymentId: s(data.transaction_id)! }];
-      return [{ ...base, type: "ignored", eventType: `${type}:${String(data.status ?? "")}` }];
+    case "adjustment.updated": {
+      // A refund counts once Paddle approves it; a chargeback is final when Paddle reports it. Its amount decides whether
+      // the whole payment went back (#156). A chargeback reversal (money back to us) changes nothing on its own.
+      const action = s(data.action);
+      const txnId = s(data.transaction_id);
+      if (txnId && data.status === "approved" && (action === "refund" || action === "chargeback")) {
+        const totals = o(data.totals);
+        const raw = totals.total ?? totals.subtotal;
+        const amount = raw === undefined || raw === null || raw === "" ? NaN : Number(raw);
+        return [{
+          ...base, type: "refunded", paymentId: txnId, chargeback: action === "chargeback",
+          amountMinor: Number.isFinite(amount) ? amount : null, currency: s(totals.currency_code) ?? s(data.currency_code),
+          full: data.type === "full" ? true : data.type === "partial" ? false : null,
+        }];
+      }
+      return [{ ...base, type: "ignored", eventType: `${type}:${action ?? ""}:${String(data.status ?? "")}` }];
+    }
     default:
       return [{ ...base, type: "ignored", eventType: type }];
   }
@@ -114,11 +128,4 @@ export async function verifyPaddle(body: string, header: string | null, secret: 
   return { ok: true, events: paddleEvents(json), eventType: String(json.event_type), eventId: String(json.event_id) };
 }
 
-/**
- * A transaction id from Paddle's own payment links (card updates, invoices). Paddle sends them to the default payment
- * link (our Check and pay page) as ?_ptxn=txn_…. Anything that doesn't look like a Paddle transaction id is ignored.
- */
-export function paddleLinkTxn(v: string | string[] | undefined | null): string | null {
-  const s = Array.isArray(v) ? v[0] : v;
-  return s && /^txn_[a-z0-9]{10,40}$/i.test(s) ? s : null;
-}
+export { paddleLinkTxn } from "./paddle-link";

@@ -22,7 +22,7 @@ export function ChoosePath({ pathId, label, to, className = "btn btn-primary btn
   });
   return (
     <>
-      <button type="button" className={className} onClick={go} disabled={pending}><span className={`ph ph-${icon}`} aria-hidden="true" />{label}</button>
+      <button type="button" className={className} onClick={go} disabled={pending} aria-busy={pending || undefined}><span className={`ph ph-${icon}`} aria-hidden="true" />{label}</button>
       {failed ? <p className="ob-err" role="alert">{t("failed")}</p> : null}
     </>
   );

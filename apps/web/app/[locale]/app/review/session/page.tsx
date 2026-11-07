@@ -7,6 +7,7 @@ import { LessonRunner } from "@/components/LessonRunner";
 import { requireLearner } from "@/lib/server/learner";
 import { loadReviewSession } from "@/lib/server/review-session";
 import { catalogEntry } from "@/lib/catalog";
+import { otherLocaleMessages } from "@/lib/server/lesson-messages";
 
 export const dynamic = "force-dynamic";
 
@@ -17,13 +18,13 @@ export default async function ReviewSessionPage({ params }: { params: Promise<{ 
   const me = await requireLearner(locale);
   const session = me.db ? await loadReviewSession(me.db, me.userId, new Date(), me.skillStates) : null;
   const unit = session ? getUnit(session.unitId) : undefined;
-  const bank = session ? await getBank(session.unitId) : null;
+  const [bank, other] = await Promise.all([session ? getBank(session.unitId) : null, otherLocaleMessages(locale)]);
   if (!session || !unit || !bank) return redirect({ href: "/app/review", locale }) as never;
   const lesson: Lesson = { ...bank.body, id: bank.lessonId, mode: "bank", steps: session.steps };
   return (
     <LessonRunner
       lesson={lesson} hash={bank.hash} locale={locale as Locale} pathLabel={catalogEntry(unit.pathId)?.name ?? unit.pathId} lessonNo={0}
-      unitId={unit.id} streak={0} userId={me.userId} replay={null} variant="review" plan={session.steps.map((s) => s.id)}
+      unitId={unit.id} streak={0} userId={me.userId} replay={null} other={other} variant="review" plan={session.steps.map((s) => s.id)}
       unitSkills={unit.skills.filter((k) => session.skills.includes(k.id))}
     />
   );

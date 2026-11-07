@@ -23,10 +23,12 @@ steps:
       en: "I design a bill-paying app. You take a photo of your electricity bill, and AI reads the account number and amount.\n\nWhen it can't read the photo, it says: \"Error. Try again.\" People try again, and again, with the same blurry photo. Then they give up and pay at the counter."
       ar: "أصمّم تطبيقًا لدفع الفواتير. تلتقط صورة لفاتورة الكهرباء، فيقرأ الذكاء الاصطناعي رقم الحساب والمبلغ.\n\nوحين لا يستطيع قراءة الصورة، يقول: «خطأ. حاول مرة أخرى.» فيحاول الناس مرة بعد مرة، بالصورة الضبابية نفسها. ثم يستسلمون ويدفعون عند الشبّاك."
     mock:
-      width: 300
+      app: wasl
+      appbar: { title: { en: "Scan your bill", ar: "امسح فاتورتك" }, back: true }
       blocks:
-        - { kind: image, size: s, text: { en: "Blurry bill photo", ar: "صورة فاتورة ضبابية" } }
-        - { kind: banner, text: { en: "⚠ Error. Try again.", ar: "⚠ خطأ. حاول مرة أخرى." }, gap: s }
+        - { kind: image, art: receipt }
+        - { kind: banner, tone: bad, icon: warning, text: { en: "Error. Try again.", ar: "خطأ. حاول مرة أخرى." }, gap: s }
+        - { kind: button, icon: camera, text: { en: "Try again", ar: "حاول مرة أخرى" }, gap: s }
 
   - id: S02
     type: choose
@@ -71,7 +73,7 @@ steps:
       ar: "سيفشل الذكاء الاصطناعي بطرق لم تخطّط لها. والمهم هو ما يستطيع الناس فعله بعدها.\n\n- **قل ما لم يستطع فعله،** بوضوح: «لم نستطع قراءة رقم الحساب.»\n- **قل ما يحتاجه:** صورة أوضح، النصف العلوي من الفاتورة.\n- **قدّم طريقة أخرى:** «أو اكتب الرقم.»\n- **اجعل الخطوة التالية آمنة،** خصوصًا مع المال أو الصحة."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U05-01
     part: guided
     rules: [R06]
@@ -83,12 +85,50 @@ steps:
       en: "The app reads bills from the two electricity companies only. A user scans a water bill."
       ar: "التطبيق يقرأ فواتير شركتَي الكهرباء فقط. ويمسح أحد المستخدمين فاتورة مياه."
     prompt:
-      en: "What should the message say?"
-      ar: "ماذا يجب أن تقول الرسالة؟"
+      en: "Tap each option to see it. What should the message say?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تقول الرسالة؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: wasl
+      appbar: { title: { en: "Scan your bill", ar: "امسح فاتورتك" }, back: true }
+      blocks:
+        - { kind: image, art: receipt }
+        - { kind: small, color: muted, text: { en: "Your photo: water bill", ar: "صورتك: فاتورة مياه" }, gap: xs }
+        - { kind: small, color: muted, text: { en: "The message goes here", ar: "هنا تظهر الرسالة" }, gap: s }
     options:
-      - { id: unknown, text: { en: "\"Unknown document.\"", ar: "«مستند غير معروف.»" } }
-      - { id: learning, text: { en: "\"Oops! Our AI is still learning 🤖\"", ar: "«عذرًا! ذكاؤنا الاصطناعي ما زال يتعلّم 🤖»" } }
-      - { id: limit, text: { en: "\"We can read electricity bills only. For water bills, type the account number.\"", ar: "«نستطيع قراءة فواتير الكهرباء فقط. لفواتير المياه، اكتب رقم الحساب.»" } }
+      - id: unknown
+        text: { en: "\"Unknown document.\"", ar: "«مستند غير معروف.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: wasl
+          appbar: { title: { en: "Scan your bill", ar: "امسح فاتورتك" }, back: true }
+          blocks:
+            - { kind: image, art: receipt }
+            - { kind: small, color: muted, text: { en: "Your photo: water bill", ar: "صورتك: فاتورة مياه" }, gap: xs }
+            - { kind: banner, tone: bad, icon: warning, text: { en: "Unknown document.", ar: "مستند غير معروف." }, gap: s }
+            - { kind: button, icon: camera, text: { en: "Try again", ar: "حاول مرة أخرى" }, gap: s }
+      - id: learning
+        text: { en: "\"Oops! Our AI is still learning 🤖\"", ar: "«عذرًا! ذكاؤنا الاصطناعي ما زال يتعلّم 🤖»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: wasl
+          appbar: { title: { en: "Scan your bill", ar: "امسح فاتورتك" }, back: true }
+          blocks:
+            - { kind: image, art: receipt }
+            - { kind: small, color: muted, text: { en: "Your photo: water bill", ar: "صورتك: فاتورة مياه" }, gap: xs }
+            - { kind: banner, tone: info, icon: robot, text: { en: "Oops! Our AI is still learning 🤖", ar: "عذرًا! ذكاؤنا الاصطناعي ما زال يتعلّم 🤖" }, gap: s }
+            - { kind: button, icon: camera, text: { en: "Try again", ar: "حاول مرة أخرى" }, gap: s }
+      - id: limit
+        text: { en: "\"We can read electricity bills only. For water bills, type the account number.\"", ar: "«نستطيع قراءة فواتير الكهرباء فقط. لفواتير المياه، اكتب رقم الحساب.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: wasl
+          appbar: { title: { en: "Scan your bill", ar: "امسح فاتورتك" }, back: true }
+          blocks:
+            - { kind: image, art: receipt }
+            - { kind: small, color: muted, text: { en: "Your photo: water bill", ar: "صورتك: فاتورة مياه" }, gap: xs }
+            - { kind: banner, tone: warn, icon: info, text: { en: "We can read electricity bills only. For water bills, type the account number.", ar: "نستطيع قراءة فواتير الكهرباء فقط. لفواتير المياه، اكتب رقم الحساب." }, gap: s }
+            - { kind: button, icon: keyboard, text: { en: "Type the account number", ar: "اكتب رقم الحساب" }, gap: s }
     answer: [limit]
     misconceptions:
       - id: MC-P12-038
@@ -107,7 +147,7 @@ steps:
       ar: "الخطأ الذي يعلّم الحدّ يمنع الناس من تجربة الشيء نفسه مرة أخرى."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U05-03
     part: guided
     rules: [R06]
@@ -119,12 +159,50 @@ steps:
       en: "The app read the amount, 640, but not the account number."
       ar: "قرأ التطبيق المبلغ، 640، لكنه لم يقرأ رقم الحساب."
     prompt:
-      en: "What should happen next?"
-      ar: "ماذا يجب أن يحدث بعد ذلك؟"
+      en: "Tap each option to see it. What should happen next?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يحدث بعد ذلك؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: wasl
+      appbar: { title: { en: "Check your bill", ar: "راجع فاتورتك" }, back: true }
+      blocks:
+        - { kind: listitem, icon: lightning, text: { en: "Cairo Electricity", ar: "كهرباء القاهرة" }, sub: { en: "From your photo", ar: "من صورتك" } }
+        - { kind: listitem, text: { en: "Amount", ar: "المبلغ" }, value: { en: "640 EGP", ar: "640 جنيهًا" }, check: true }
+        - { kind: listitem, text: { en: "Account number", ar: "رقم الحساب" }, badge: { text: { en: "Not read", ar: "لم يُقرأ" }, tone: bad } }
     options:
-      - { id: fill, text: { en: "Keep 640, and ask them to type only the account number", ar: "نُبقي 640، ونطلب منهم كتابة رقم الحساب فقط" } }
-      - { id: guess, text: { en: "Fill in the account number from last month's bill, and pay", ar: "نملأ رقم الحساب من فاتورة الشهر الماضي، وندفع" } }
-      - { id: restart, text: { en: "Fail the whole scan and start over", ar: "نُلغي المسح كله ونبدأ من جديد" } }
+      - id: fill
+        text: { en: "Keep 640, and ask them to type only the account number", ar: "نُبقي 640، ونطلب منهم كتابة رقم الحساب فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: wasl
+          appbar: { title: { en: "Check your bill", ar: "راجع فاتورتك" }, back: true }
+          blocks:
+            - { kind: listitem, icon: lightning, text: { en: "Cairo Electricity", ar: "كهرباء القاهرة" }, sub: { en: "From your photo", ar: "من صورتك" } }
+            - { kind: field, label: { en: "Amount", ar: "المبلغ" }, text: { en: "640 EGP", ar: "640 جنيهًا" }, gap: s }
+            - { kind: field, label: { en: "Account number", ar: "رقم الحساب" }, text: "", ring: true, gap: s }
+            - { kind: small, color: muted, text: { en: "We couldn't read the account number. Type it from the top of the bill.", ar: "لم نستطع قراءة رقم الحساب. اكتبه من أعلى الفاتورة." }, gap: xs }
+            - { kind: button, text: { en: "Pay 640 EGP", ar: "ادفع 640 جنيهًا" }, gap: s }
+      - id: guess
+        text: { en: "Fill in the account number from last month's bill, and pay", ar: "نملأ رقم الحساب من فاتورة الشهر الماضي، وندفع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: wasl
+          appbar: { title: { en: "Check your bill", ar: "راجع فاتورتك" }, back: true }
+          blocks:
+            - { kind: listitem, icon: lightning, text: { en: "Cairo Electricity", ar: "كهرباء القاهرة" }, sub: { en: "From your photo", ar: "من صورتك" } }
+            - { kind: listitem, text: { en: "Amount", ar: "المبلغ" }, value: { en: "640 EGP", ar: "640 جنيهًا" } }
+            - { kind: listitem, text: { en: "Account number", ar: "رقم الحساب" }, value: "40213377", sub: { en: "From last month's bill", ar: "من فاتورة الشهر الماضي" } }
+            - { kind: button, text: { en: "Pay 640 EGP", ar: "ادفع 640 جنيهًا" }, gap: s }
+      - id: restart
+        text: { en: "Fail the whole scan and start over", ar: "نُلغي المسح كله ونبدأ من جديد" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: wasl
+          appbar: { title: { en: "Scan your bill", ar: "امسح فاتورتك" }, back: true }
+          blocks:
+            - { kind: image, art: receipt }
+            - { kind: banner, tone: bad, icon: warning, text: { en: "Scan failed. Start over.", ar: "فشل المسح. ابدأ من جديد." }, gap: s }
+            - { kind: button, icon: camera, text: { en: "Scan again", ar: "امسح مرة أخرى" }, gap: s }
     answer: [fill]
     misconceptions:
       - id: MC-P12-039
@@ -161,18 +239,23 @@ steps:
     a:
       label: { en: "A: \"No results for electrcity\"", ar: "A: «لا توجد نتائج لـ كهربا»" }
       mock:
-        width: 300
+        app: wasl
+        appbar: { title: { en: "Pay a bill", ar: "ادفع فاتورة" }, back: true }
         blocks:
-          - { kind: field, text: { en: "electrcity", ar: "كهربا" } }
-          - { kind: meta, text: { en: "No results for \"electrcity\"", ar: "لا توجد نتائج لـ «كهربا»" }, gap: s }
+          - { kind: searchbar, text: { en: "electrcity", ar: "كهربا" } }
+          - { kind: icon, icon: magnifying-glass, gap: m }
+          - { kind: text, text: { en: "No results for \"electrcity\"", ar: "لا توجد نتائج لـ «كهربا»" }, gap: s }
     b:
       label: { en: "B: \"Showing results for electricity\", with \"Search for electrcity instead\"", ar: "B: «نعرض نتائج كهرباء»، مع «ابحث عن كهربا بدلًا من ذلك»" }
       mock:
-        width: 300
+        app: wasl
+        appbar: { title: { en: "Pay a bill", ar: "ادفع فاتورة" }, back: true }
         blocks:
-          - { kind: field, text: { en: "electrcity", ar: "كهربا" } }
-          - { kind: meta, text: { en: "Showing results for electricity", ar: "نعرض نتائج «كهرباء»" }, gap: s }
-          - { kind: link, text: { en: "Search for \"electrcity\" instead", ar: "ابحث عن «كهربا» بدلًا من ذلك" }, gap: s }
+          - { kind: searchbar, text: { en: "electrcity", ar: "كهربا" } }
+          - { kind: small, text: { en: "Showing results for electricity", ar: "نعرض نتائج «كهرباء»" }, gap: s }
+          - { kind: link, text: { en: "Search for \"electrcity\" instead", ar: "ابحث عن «كهربا» بدلًا من ذلك" } }
+          - { kind: listitem, icon: lightning, text: { en: "Cairo Electricity", ar: "كهرباء القاهرة" }, chevron: true, gap: s }
+          - { kind: listitem, icon: lightning, text: { en: "Delta Electricity", ar: "كهرباء الدلتا" }, chevron: true }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -204,7 +287,7 @@ steps:
       ar: "التخمين الجيد مع طريق للعودة أفضل من «لا توجد نتائج»."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U05-01
     part: independent
     speaker: karim
@@ -217,12 +300,70 @@ steps:
       en: "I'm building voice search for a grocery app. When people say a long sentence, like \"I want the big bottle of the oil I usually get\", it fails and says \"Sorry, I didn't get that.\""
       ar: "أبني البحث الصوتي لتطبيق بقالة. وحين يقول الناس جملة طويلة، مثل «أريد الزجاجة الكبيرة من الزيت الذي أشتريه عادةً»، يفشل ويقول «عذرًا، لم أفهم.»"
     prompt:
-      en: "What should it say instead?"
-      ar: "ماذا يجب أن يقول بدلًا من ذلك؟"
+      en: "Tap each option to see it. What should it say instead?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يقول بدلًا من ذلك؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sallah
+      appbar: { title: { en: "Search", ar: "بحث" }, back: true }
+      blocks:
+        - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+      overlay:
+        type: sheet
+        blocks:
+          - { kind: icon, icon: microphone }
+          - { kind: small, color: muted, text: { en: "You said:", ar: "قلت:" }, gap: s }
+          - { kind: text, text: { en: "\"I want the big bottle of the oil I usually get\"", ar: "«أريد الزجاجة الكبيرة من الزيت الذي أشتريه عادةً»" }, gap: xs }
+          - { kind: banner, tone: bad, text: { en: "Sorry, I didn't get that.", ar: "عذرًا، لم أفهم." }, gap: s }
     options:
-      - { id: sorry, text: { en: "\"Sorry, I didn't get that. Please try again.\"", ar: "«عذرًا، لم أفهم. حاول مرة أخرى من فضلك.»" } }
-      - { id: needs, text: { en: "\"Try a short phrase, like \"sunflower oil 2 litres\". Or type it.\"", ar: "«جرّب عبارة قصيرة، مثل «زيت عبّاد الشمس 2 لتر». أو اكتبها.»" } }
-      - { id: louder, text: { en: "\"Please speak louder.\"", ar: "«تحدّث بصوت أعلى من فضلك.»" } }
+      - id: sorry
+        text: { en: "\"Sorry, I didn't get that. Please try again.\"", ar: "«عذرًا، لم أفهم. حاول مرة أخرى من فضلك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { title: { en: "Search", ar: "بحث" }, back: true }
+          blocks:
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: icon, icon: microphone }
+              - { kind: small, color: muted, text: { en: "You said:", ar: "قلت:" }, gap: s }
+              - { kind: text, text: { en: "\"I want the big bottle of the oil I usually get\"", ar: "«أريد الزجاجة الكبيرة من الزيت الذي أشتريه عادةً»" }, gap: xs }
+              - { kind: banner, tone: bad, text: { en: "Sorry, I didn't get that. Please try again.", ar: "عذرًا، لم أفهم. حاول مرة أخرى من فضلك." }, gap: s }
+              - { kind: button, icon: microphone, text: { en: "Try again", ar: "حاول مرة أخرى" }, gap: s }
+      - id: needs
+        text: { en: "\"Try a short phrase, like \"sunflower oil 2 litres\". Or type it.\"", ar: "«جرّب عبارة قصيرة، مثل «زيت عبّاد الشمس 2 لتر». أو اكتبها.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { title: { en: "Search", ar: "بحث" }, back: true }
+          blocks:
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: icon, icon: microphone }
+              - { kind: small, color: muted, text: { en: "You said:", ar: "قلت:" }, gap: s }
+              - { kind: text, text: { en: "\"I want the big bottle of the oil I usually get\"", ar: "«أريد الزجاجة الكبيرة من الزيت الذي أشتريه عادةً»" }, gap: xs }
+              - { kind: banner, tone: info, icon: lightbulb, text: { en: "Try a short phrase, like \"sunflower oil 2 litres\". Or type it.", ar: "جرّب عبارة قصيرة، مثل «زيت عبّاد الشمس 2 لتر». أو اكتبها." }, gap: s }
+              - { kind: row, blocks: [ { kind: button, icon: microphone, text: { en: "Speak again", ar: "تحدّث مجددًا" } }, { kind: button, style: outline, icon: keyboard, text: { en: "Type it", ar: "اكتبها" } } ], gap: s }
+      - id: louder
+        text: { en: "\"Please speak louder.\"", ar: "«تحدّث بصوت أعلى من فضلك.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sallah
+          appbar: { title: { en: "Search", ar: "بحث" }, back: true }
+          blocks:
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث عن منتجات" } }
+          overlay:
+            type: sheet
+            blocks:
+              - { kind: icon, icon: microphone }
+              - { kind: small, color: muted, text: { en: "You said:", ar: "قلت:" }, gap: s }
+              - { kind: text, text: { en: "\"I want the big bottle of the oil I usually get\"", ar: "«أريد الزجاجة الكبيرة من الزيت الذي أشتريه عادةً»" }, gap: xs }
+              - { kind: banner, tone: warn, icon: speaker-high, text: { en: "Please speak louder.", ar: "تحدّث بصوت أعلى من فضلك." }, gap: s }
+              - { kind: button, icon: microphone, text: { en: "Try again", ar: "حاول مرة أخرى" }, gap: s }
     answer: [needs]
     misconceptions:
       - id: MC-P12-038

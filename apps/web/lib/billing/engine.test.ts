@@ -316,6 +316,62 @@ describe("Paddle", () => {
     await deliverPaddle({ event_id: "evt_adj", event_type: "adjustment.updated", occurred_at: clock, data: { id: "adj_1", action: "refund", status: "approved", transaction_id: "txn_1" } });
     expect(pro()).toBe(false);
   });
+
+  describe("refund amounts and chargebacks (#156)", () => {
+    const paid = async () => {
+      store.learners.set(U, { email: "y@example.com", locale: "en", name: "Yasmin" });
+      const s = session({ provider: "paddle", region: "gulf", country: "SA", period: "year", currency: "USD", amountMinor: 7200, renewAmountMinor: 7200 });
+      const t = txn({ details: { totals: { grand_total: "7871" } } }); // $72 + tax
+      (t.data.custom_data as Record<string, string>).session_id = s.id;
+      await deliverPaddle(t);
+      sent = [];
+    };
+    const adj = (id: string, data: Record<string, unknown>) =>
+      deliverPaddle({ event_id: id, event_type: "adjustment.created", occurred_at: clock, data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_1", ...data } });
+    const payment = () => [...store.payments.values()].find((p) => p.providerPaymentId === "txn_1")!;
+
+    it("a 'partial' refund of the whole total (how the dashboard sent it) is a full refund: Pro ends, refund email", async () => {
+      await paid();
+      await adj("a1", { action: "refund", type: "partial", totals: { total: "7871", currency_code: "USD" } });
+      expect(payment().status).toBe("refunded");
+      expect(sub().status).toBe("refunded");
+      expect(pro()).toBe(false);
+      expect(sent).toHaveLength(1);
+    });
+
+    it("a true partial refund (goodwill) keeps the plan, Pro and the payment, and sends no refund email", async () => {
+      await paid();
+      const r = await adj("a2", { action: "refund", type: "partial", totals: { total: "200", currency_code: "USD" } });
+      expect(r[0]).toMatchObject({ status: "applied", note: expect.stringContaining("partial refund 200 of 7871") });
+      expect(payment().status).toBe("paid");
+      expect(sub().status).toBe("active");
+      expect(pro()).toBe(true);
+      expect(sent).toEqual([]);
+      // A later full refund still ends it.
+      await adj("a3", { action: "refund", type: "full", totals: { total: "7671", currency_code: "USD" } });
+      expect(pro()).toBe(false);
+    });
+
+    it("a chargeback ends Pro like a full refund, with no 'refund approved' email; its reversal changes nothing", async () => {
+      await paid();
+      const r = await adj("c1", { action: "chargeback", type: "full", totals: { total: "7871", currency_code: "USD" } });
+      expect(r[0]).toMatchObject({ status: "applied", note: "chargeback" });
+      expect(payment().status).toBe("refunded");
+      expect(sub().status).toBe("refunded");
+      expect(pro()).toBe(false);
+      expect(sent).toEqual([]);
+      const back = await adj("c2", { action: "chargeback_reverse", totals: { total: "7871", currency_code: "USD" } });
+      expect(back[0].status).toBe("ignored");
+      expect(pro()).toBe(false);
+    });
+
+    it("a refund that is not approved yet changes nothing", async () => {
+      await paid();
+      const r = await adj("p1", { action: "refund", status: "pending_approval", type: "full", totals: { total: "7871" } });
+      expect(r[0].status).toBe("ignored");
+      expect(pro()).toBe(true);
+    });
+  });
 });
 
 describe("wallet payers (Paymob cannot renew wallets)", () => {
@@ -531,6 +587,37 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     expect(r[0].status).toBe("ignored");
     expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_r3"]);
     expect(sub().currentPeriodEnd).toBe("2027-11-03T09:00:00Z");
+  });
+
+  it("a whole refund or a chargeback that ends the plan also cancels the Paddle subscription; a partial refund does not (#159)", async () => {
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    const adj = (id: string, data: Record<string, unknown>) =>
+      deliverPaddle({ event_id: id, event_type: "adjustment.created", occurred_at: clock, data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_a", ...data } });
+    await adj("p", { action: "refund", type: "partial", totals: { total: "100", currency_code: "USD" } });
+    expect(calls).toEqual([]);
+    await adj("f", { action: "refund", type: "full", totals: { total: "7100", currency_code: "USD" } });
+    expect(calls).toEqual(["cancel paddle sub_a"]);
+    expect(sub().status).toBe("refunded");
+    // Paddle's own "canceled" notice then changes nothing.
+    await deliverPaddle({ event_id: "evt_c", event_type: "subscription.canceled", occurred_at: clock, data: { id: "sub_a", status: "canceled" } });
+    expect(sub().status).toBe("refunded");
+
+    const b = paddleSession();
+    await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
+    calls = [];
+    await deliverPaddle({ event_id: "evt_cb", event_type: "adjustment.created", occurred_at: clock, data: { id: "adj_cb", action: "chargeback", status: "approved", transaction_id: "txn_b", totals: { total: "7200", currency_code: "USD" } } });
+    expect(calls).toEqual(["cancel paddle sub_b"]);
+    expect(pro()).toBe(false);
+  });
+
+  it("a failed Paddle cancel after a refund is logged, and the refund still ends Pro", async () => {
+    engine.actions = { ...engine.actions, cancelNow: async () => { throw new Error("paddle down"); } };
+    const a = paddleSession();
+    await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
+    const r = await deliverPaddle({ event_id: "evt_f", event_type: "adjustment.created", occurred_at: clock, data: { id: "adj_f", action: "refund", status: "approved", type: "full", transaction_id: "txn_a" } });
+    expect(r[0].status).toBe("applied");
+    expect(pro()).toBe(false);
   });
 
   it("cancel in the grace period ends the plan now and asks Paddle to cancel now; a late charge is refunded", async () => {

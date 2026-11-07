@@ -76,7 +76,7 @@ By type:
 
 | Type | Fields | `when` in a misconception |
 | --- | --- | --- |
-| `card` | `title`, `body`, optional `points` (concept cards). `points` is a list of 1 to 4 items `{ icon, en, ar }`, `icon` a Phosphor name such as `eye`. When `points` is present the body is not shown and may be left out. Icons used in `points` are added to the stylesheet by `npm run assets -w @uxgate/web` | none |
+| `card` | `title`, `body`, optional `layout: compare`, optional `points` (concept cards). `points` is a list of 1 to 4 items `{ icon, en, ar }`, `icon` a Phosphor name such as `eye`. When `points` is present the body is not shown and may be left out. Text-only cards (a body, no mock) are drawn as idea cards: the first paragraph becomes "The idea", `- **Title:** text` lines become point cards (icons from `icons` when there is one per point, numbers otherwise), `**Title (Term).** text` followed by `- ` lines becomes a topic card, `- **A ↔ b**` lines become scales, closing paragraphs become "Keep in mind" and `Next lesson: …` its own row. `layout: compare` (cards with 2 or more bold-lead points only) shows the first two points side by side, their text split at commas, and turns the rest into rule strips. Icons used in `points` are added to the stylesheet by `npm run assets -w @uxgate/web` | none |
 | `video` | `title`, `video` (Bunny Stream id), `duration` (seconds), `transcript` (list of `{ t, en, ar }`, `t` in seconds, increasing). Not graded. The captions are the transcript lines, so they exist in both languages. Never autoplays | none |
 | `choose`, `words`, `fix` | `options`, `answer: [ids]`, optional `multi`, `also_ok`, `reason` | `[option ids]`, matches if any was picked |
 | `predict` | as `choose`; with `any_ok: true` it's ungraded and needs `reveal`; `recall: S02` shows the learner's earlier answer | as `choose` |
@@ -91,7 +91,7 @@ By type:
 
 ## Mocks
 
-A mock is a phone-sized screen made of blocks, top to bottom:
+A mock is a phone-sized screen made of blocks, top to bottom. To make it look like a real app or site (product name and colour, status bar, app bar, tab bar, browser bar, lists, cards, chat, illustrations), use the vocabulary in [mock-screens.md](mock-screens.md).
 
 ```yaml
 mock:
@@ -105,12 +105,12 @@ mock:
     - { kind: button, text: "@W1f", gap: m, region: button }
 ```
 
-| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `field`, `select`, `radio`, `check`, `toggle`, `stepper`, `segmented`, `slider`, `divider`, `group`, `row` |
+| Kinds | `title`, `heading`, `text`, `meta`, `small`, `chip`, `pill`, `line`, `button`, `link`, `image`, `banner`, `tip`, `iconbtn`, `field`, `select`, `radio`, `check`, `toggle`, `stepper`, `segmented`, `slider`, `calendar`, `wheel`, `chips`, `divider`, `group`, `row` |
 | --- | --- |
 | `gap` | Space above the block: `xs` (none), `s`, `m`, `l`, `xl` |
 | `size` | `s`, `m`, `l`, `xl` (images: height) |
 | `emphasis` | `high` or `low` |
-| `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text), `plain` or `tint` (group) |
+| `tone` | `warn`, `bad` (chips, fields), `off` (button), `faint` (text), `plain`, `tint`, `night` (a dark panel) or `raised` (inside `night`) (group), `photo-light`, `photo-busy`, `photo-dark`, `photo-fade`, `photo-box` (image: a photo-like background, for text-on-image lessons) |
 | `color` | Exact text colors on white, for contrast lessons: `ink` 16.8:1, `muted` 5.3:1, `pale` 3.0:1, `faint` 2.3:1, `brand` 6.8:1, plus `green`, `red`, `orange` |
 | `weight` | `regular` or `bold` |
 | `px` | Exact font size in pixels, when the size itself is being taught |
@@ -126,8 +126,39 @@ mock:
 | `stepper` | `label` and a value in `text`, between − and + buttons |
 | `segmented` | `options` (a list of texts) and `value`, the index of the selected one |
 | `slider` | `label`, a two-handle range track, and the chosen range in `text`. With `min`, `max`, `from`, `to` and a `format` such as "From {a} to {b}", learners can drag it |
+| `slider` (one thumb) | `value` instead of `from`/`to`. `bubble: above` shows the value over the thumb, `bubble: thumb` prints it on the thumb, `finger: true` (or the thumb's index) draws a fingertip over it, `ticks` is a list of labels under the track, `step` sets the drag step |
+| `stepper` limits | `min`/`max` grey out − or + when `text` is at the limit; `size: s` is the small version; `editable: true` draws the value as a typing box; `hint` goes under it |
+| `radio`, `check` extras | `marker: round` or `square` swaps the marker shape (to teach the wrong one); `hit: box` makes only the marker tappable |
+| `calendar` | `months`: a list of `{ title, start, days }` (`start` is the empty cells before day 1). `from`/`to` are `[month index, day]` for a range, `pick` one day, `today` an outlined day, `weekdays` overrides the letters, `text` a line under it |
+| `wheel` | `columns`: lists of 5 values each; the middle row is the chosen one. Optional `label` |
+| `chips` | A wrapping row of UI chips. `items`: `{ text, on, x, icon }` (`on` is selected with ✓, `x` is removable with ✕). `boxed: true` draws a field around them; `label`, `lead` (text before) and `after` (text after) are optional |
+| `tip` | A dark tooltip with a pointer, under the block above it |
+| `iconbtn` | A small round icon button; `text` is the icon character |
+| `ring` | A focus ring on any block, for keyboard lessons: `default`, `brand`, `flush`, `white`, `double`, `faint`, `tint` |
 
-A mock can also set `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
+`npm run validate` rejects a prop that a block kind doesn't take, such as `options` on `chips` (it takes `items`). The props each kind takes are listed under `props` in `packages/player/src/mock-vocab.json`.
+
+A mock can also set `height` (the screen's minimum height in pixels), `width` (pixels, to show a narrow screen), `frame: wide` (to show a desktop layout), `dir: rtl` or `ltr` (to fix the direction whatever the learner's language), `gray: true` (to show the screen in grayscale, as a colour-only check), and `caption` (a small label such as "360 px").
+
+Any text in a mock can use `**bold**`.
+
+A mock can show one layer over the screen with `overlay`:
+
+```yaml
+mock:
+  width: 300
+  blocks: [ ... ]            # the screen under the layer
+  overlay:
+    type: dialog             # dialog, sheet (bottom sheet), full, toast or banner (top)
+    close: true              # optional ✕ in the corner
+    blocks:
+      - { kind: heading, text: { en: "Remove Visa ending 4821?", ar: "حذف Visa التي تنتهي بـ 4821؟" } }
+      - { kind: button, text: { en: "Remove card", ar: "احذف البطاقة" }, style: danger, gap: m }
+```
+
+Dialogs and sheets dim the screen; set `scrim: false` to keep it bright, or `scrim: true` to dim under a toast or banner. A sheet has a grab handle unless `handle: false`, and `tall: true` makes it nearly full height. Blocks inside the overlay can carry a `region` for spot steps.
+
+`fab` adds a floating action button in the bottom corner: `fab: { icon: "+", text: { en: "New", ar: "جديد" } }`. `text` makes it an extended FAB; a list stacks up to three.
 
 In Arabic text anywhere in a lesson, the player keeps tokens that mix Latin letters and digits (such as `WS-204` or `A14`) and space-separated numbers (such as `010 1234 5678`) in left-to-right order automatically. To show a deliberately broken code inside a mock, put it in `code` so it displays exactly as written.
 

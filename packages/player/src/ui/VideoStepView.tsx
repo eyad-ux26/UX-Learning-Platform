@@ -20,6 +20,8 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
+  /** The clip is fetching its address or buffering: a spinner sits on the frame until it plays. */
+  const [waiting, setWaiting] = useState(false);
   const [time, setTime] = useState(0);
   const [dur, setDur] = useState(step.duration);
   const [cc, setCc] = useState(true);
@@ -34,6 +36,8 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   }, [getSource, step.video]);
   useEffect(() => { load(); }, [load]);
   useEffect(() => { setOpen(window.matchMedia("(min-width: 1024px)").matches); }, []);
+  // The language switch in the header also moves the captions to the language now shown.
+  useEffect(() => { setCapLang(locale); }, [locale]);
 
   // Attach the source. Safari plays HLS itself; other browsers get hls.js, loaded only when a clip needs it.
   useEffect(() => {
@@ -71,12 +75,13 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
           {/* eslint-disable-next-line jsx-a11y/media-has-caption -- captions are drawn from the transcript below, in both languages */}
           <video
             ref={ref} playsInline preload="metadata" className="lp-videoel" aria-label={step.title?.[locale] ?? t("videoLabel")}
-            onPlay={() => { setPlaying(true); setStarted(true); }} onPause={() => setPlaying(false)}
+            onPlay={() => { setPlaying(true); setStarted(true); }} onWaiting={() => setWaiting(true)} onPlaying={() => setWaiting(false)} onCanPlay={() => setWaiting(false)} onPause={() => setPlaying(false)}
             onEnded={() => { setPlaying(false); setEnded(true); }}
             onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
             onLoadedMetadata={(e) => { if (Number.isFinite(e.currentTarget.duration)) setDur(e.currentTarget.duration); }}
             onError={() => setSrc("error")}
           />
+          {src === "loading" || (waiting && playing) ? <div className="lp-vload" aria-hidden="true"><span className="spin" /></div> : null}
           {src === "error" ? (
             <div className="lp-vmsg" role="alert"><span className="ph ph-wifi-slash" aria-hidden="true" /><p>{t("videoError")}</p><button type="button" className="btn btn-secondary press" onClick={load}>{t("videoRetry")}</button></div>
           ) : null}

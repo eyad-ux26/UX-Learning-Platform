@@ -22,8 +22,11 @@ export type BillingEvent =
   | (Base & { type: "pending"; sessionId: string })
   /** A charge was declined. */
   | (Base & { type: "failed"; sessionId: string | null; providerSubId: string | null; recurring: boolean })
-  /** Money went back to the payer for this charge. */
-  | (Base & { type: "refunded"; paymentId: string })
+  /**
+   * Money went back to the payer for this charge. Paddle also says how much (`amountMinor`, in `currency`) and whether
+   * it called it full; a chargeback (the payer's bank took it back) always counts as the whole payment.
+   */
+  | (Base & { type: "refunded"; paymentId: string; amountMinor?: number | null; currency?: string | null; full?: boolean | null; chargeback?: boolean })
   /** Paddle: the plan will not renew (cancelled in Paddle, or by our own cancel call). */
   | (Base & { type: "cancel_scheduled"; providerSubId: string; effectiveAt: string | null })
   /** Paddle: a scheduled cancel was removed. */

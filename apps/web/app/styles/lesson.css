@@ -64,7 +64,7 @@
 .ug .lp-switch .ph { font-size: 18px; }
 
 /* Video step: the clip is the UXGate layer (night stage); the example inside keeps its own style */
-.ug .lp-video { position: relative; border-radius: 20px; overflow: hidden; background: #00121B; aspect-ratio: 1 / 1; color: #EAF7FC; box-shadow: 0 4px 0 #021C26; }
+.ug .lp-video { position: relative; isolation: isolate; border-radius: 20px; overflow: hidden; background: #00121B; aspect-ratio: 1 / 1; color: #EAF7FC; box-shadow: 0 4px 0 #021C26; }
 .ug .lp-video .stage { position: absolute; inset: 0; background: radial-gradient(circle at 1px 1px, rgba(156,195,211,0.12) 1.1px, transparent 1.6px) 0 0 / 16px 16px, radial-gradient(110% 60% at 85% 0%, rgba(30,127,166,0.35) 0%, rgba(3,46,59,0) 60%); }
 .ug .lp-video .cap { position: absolute; inset-inline: 14px; bottom: 58px; display: flex; justify-content: center; }
 .ug .lp-video .cap span { padding: 6px 12px; border-radius: 10px; background: rgba(0, 18, 27, 0.86); color: #FFFFFF; font-weight: 700; font-size: 15px; line-height: 1.45; text-align: center; max-width: 100%; }
@@ -194,7 +194,8 @@
   .ug .lp-over .actions { flex-direction: row-reverse; }
   .ug .lp-buckets { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .ug .lp-bucket { min-height: 180px; padding: 12px; }
-  .ug .lp-video { aspect-ratio: 16 / 9; max-height: 500px; }
+  /* 16:9, and short enough that the clip, its title and the Continue bar fit one screen (header ~76px, title ~60px, bar ~96px). */
+  .ug .lp-video { aspect-ratio: 16 / 9; inline-size: 100%; max-inline-size: max(420px, min(889px, calc((100dvh - 290px) * 16 / 9))); margin-inline: auto; }
   .ug .lp-video .cap span { font-size: 20px; }
   .ug .lp-qs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .ug .lp-page { padding: 40px 64px 0; gap: 16px; }
@@ -264,3 +265,24 @@
 .ug .lp-roundhd { margin: 4px 0 0; font-weight: 800; }
 .ug .lp-skillrow .grow > span { display: block; font-size: 13px; color: var(--ink-2); }
 
+
+/* Language switch in the player header: shows the lesson in the other language without leaving it. 44px tall tap area. */
+.ug .lp-lang { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; padding: 0 10px; border: 2px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink-2); font: inherit; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer; }
+.ug .lp-lang .ph { font-size: 16px; }
+.ug .lp-lang [lang="ar"] { font-family: var(--font-ar); }
+.ug .lp-lang [lang="en"] { font-family: var(--font-en); }
+.ug .lp-lang:hover { color: var(--ink); }
+.ug .lp-lang:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+/* Phones: a short label ("ع" / "EN") so the progress bar keeps its room. */
+.ug .lp-lang-short { display: none; }
+@media (max-width: 599px) {
+  .ug .lp-lang { min-width: 44px; justify-content: center; padding: 0 8px; }
+  .ug .lp-lang .ph, .ug .lp-lang-long { display: none; }
+  .ug .lp-lang-short { display: inline; font-size: 15px; }
+}
+/* Small phones (360-419 px): the saving chip keeps its icon and reads its word to screen readers only, so the progress bar keeps its room next to the language button. */
+@media (max-width: 419px) {
+  .ug .player-head { gap: 6px; }
+  .ug .lp-save { padding: 0 4px; }
+  .ug .lp-save-txt { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
