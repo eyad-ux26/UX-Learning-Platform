@@ -86,3 +86,9 @@ Update (6 November 2026, canvas v76): board S3-15, the second batch of Eyad's ed
 
 - The Arabic skill label for Shown is now «أثبتت» everywhere it is used as a label (skill chips, legends, path and profile rows, emails). Sentences that use the verb (for example «أثبتّ مهارة») keep «أثبتّ».
 - The lesson tour is remembered per browser. Settings > Help gets a new row: "Show the lesson tour again" / «اعرض جولة الدرس مرة أخرى», with the note "On this browser, at the start of your next lesson" / «على هذا المتصفح، في بداية درسك التالي».
+
+## App updates noted on the canvas (v82, 7 Nov 2026)
+
+- **Tap the video to play or pause** (PR #205), on board S2-2: a tap or click on the picture toggles play and pause, and so does the control bar button. Design hint: show the play or pause icon in the centre for 0.6 s (a 64px circle, 50% black, white icon), with no flash under reduced motion. The control bar button keeps its label for screen readers.
+- **Onboarding preview card** (PR #204), on board S3-4: it shows only paths that are live and playable.
+- **Certificate page and Share on LinkedIn** (PR #203): board S3-16, spec `slice-3/certificate.md`.
