@@ -48,9 +48,9 @@ export function CertActions(p: Props) {
   const opener = useRef<HTMLButtonElement>(null);
   const versions = [1, 2, 3].map((n) => postText({ intro: t(n === 1 ? "postIntro" : (`postIntro${n}` as "postIntro2"), { path: p.pathName, skills: p.skills, checks: p.checks }), seeIt: t("postSee"), tags: t("postTags") }, p.url));
   const [ver, setVer] = useState(0);
-  const [draft, setDraft] = useState(versions[0]);
-  const text = draft;
-  const pick = (i: number) => { setVer(i); setDraft(versions[i]); };
+  const [postDraft, setPostDraft] = useState(versions[0]);
+  const text = postDraft;
+  const pick = (i: number) => { setVer(i); setPostDraft(versions[i]); };
   const say = (m: string) => { setLive(""); setTimeout(() => setLive(m), 30); };
   // The confirmation toast goes away by itself after 4 seconds, and has a close button.
   useEffect(() => { if (!live) return; const id = setTimeout(() => setLive(""), 4000); return () => clearTimeout(id); }, [live]);
@@ -186,7 +186,7 @@ export function CertActions(p: Props) {
               {[t("v1"), t("v2"), t("v3")].map((l, i) => <button key={i} type="button" role="radio" aria-checked={ver === i} className={`chip${ver === i ? " is-on" : ""}`} onClick={() => pick(i)}>{l}</button>)}
             </div>
             <label className="lp-sr" htmlFor="cxs-text">{t("postEdit")}</label>
-            <textarea id="cxs-text" className="cxs-post cxs-edit" dir="auto" rows={9} value={draft} onChange={(e) => setDraft(e.target.value)} />
+            <textarea id="cxs-text" className="cxs-post cxs-edit" dir="auto" rows={9} value={postDraft} onChange={(e) => setPostDraft(e.target.value)} />
             <p className="t-small ink-2">{t("editHint")}</p>
             <p className="cxs-label">{t("preview")}</p>
             <div className="cxs-card">
@@ -195,7 +195,7 @@ export function CertActions(p: Props) {
             </div>
             {!on ? <p className="cxs-notice"><span className="ph ph-info" aria-hidden="true" /><span>{t("notice")}</span></p> : null}
             <div className="cxs-acts">
-              <button type="button" data-autofocus className="btn btn-primary btn-lg press" onClick={share} disabled={pending || !draft.trim()} aria-busy={pending || undefined}><span className="li-glyph" aria-hidden="true">in</span>{t("open")}</button>
+              <button type="button" data-autofocus className="btn btn-primary btn-lg press" onClick={share} disabled={pending || !postDraft.trim()} aria-busy={pending || undefined}><span className="li-glyph" aria-hidden="true">in</span>{t("open")}</button>
               <button type="button" className="btn btn-ghost press" onClick={() => { setOpen(false); opener.current?.focus(); }}>{t("cancel")}</button>
             </div>
             <p className="t-small ink-2 cxs-foot">{t("openNote")}</p>
