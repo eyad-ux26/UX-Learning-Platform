@@ -73,6 +73,7 @@
             <a href="#copy" class="cxp-mini-btn press"><span class="ph ph-link" aria-hidden="true"></span>{{c.link}}</a>
           </div>
           <div class="set">
+            <a href="#edit-name" class="set-row"><span class="ph ph-pencil" aria-hidden="true"></span><span class="set-l">{{c.nameRow}}<small>{{c.name}}</small></span><span class="set-v">{{c.edit}}<span class="ph ph-caret" aria-hidden="true"></span></span></a>
             <div class="set-row"><span class="ph ph-globe" aria-hidden="true"></span><span class="set-l">{{c.pageTitle}}<small>{{pageState}}</small></span><button class="{{swCls}}" type="button" role="switch" aria-checked="{{swAria}}" aria-label="{{c.pageTitle}}"><span class="track" aria-hidden="true"></span></button></div>
             <div class="set-row"><span class="ph ph-seal-check-fill" aria-hidden="true"></span><span class="set-l">{{c.verifyRow}}<small class="ltr" style="text-align: start;">uxgate.org/c/7K3Q · UXG-P01-7K3Q</small></span></div>
           </div>
@@ -90,6 +91,32 @@
     </sc-if>
    </div>
 
+    <sc-if value="{{is.name}}" hint-placeholder-val="{{false}}">
+      <div class="cxs-scrim" aria-hidden="true"></div>
+      <section class="cxs cxn" role="dialog" aria-modal="true" aria-labelledby="cxn-h-{{sid}}" aria-describedby="cxn-d-{{sid}}">
+        <header class="cxs-head">
+          <span class="cxn-ic" aria-hidden="true"><span class="ph ph-certificate"></span></span>
+          <h2 id="cxn-h-{{sid}}">{{c.nTitle}}</h2>
+        </header>
+        <p class="cxn-body" id="cxn-d-{{sid}}">{{nm.body}}</p>
+        <sc-if value="{{nm.fix}}" hint-placeholder-val="{{false}}">
+          <div class="field">
+            <label for="cxn-in-{{sid}}">{{c.nLabel}}</label>
+            <div class="input is-focus"><span class="ph ph-user" style="color: var(--link);" aria-hidden="true"></span><input id="cxn-in-{{sid}}" type="text" value="yasmin.adel88" dir="auto" autocomplete="name" aria-describedby="cxn-help-{{sid}}"></div>
+            <span class="help" id="cxn-help-{{sid}}">{{c.nHelp}}</span>
+          </div>
+        </sc-if>
+        <div class="cxn-preview">
+          <span class="cxn-over">{{c.nShows}}</span>
+          <span class="cxn-paper" lang="{{nm.nameLang}}" dir="{{nm.nameDir}}"><span class="cx-namebox"><i></i><i></i><i></i><i></i><span class="cx-name">{{nm.value}}</span></span></span>
+        </div>
+        <div class="cxs-acts">
+          <a href="#use-name" class="btn btn-primary btn-lg press">{{nm.primary}}</a>
+          <sc-if value="{{nm.read}}" hint-placeholder-val="{{true}}"><a href="#edit-name" class="btn btn-secondary press"><span class="ph ph-pencil" aria-hidden="true"></span>{{c.nEdit}}</a></sc-if>
+        </div>
+        <p class="t-small ink-2 cxs-foot">{{c.nNote}}</p>
+      </section>
+    </sc-if>
     <sc-if value="{{is.share}}" hint-placeholder-val="{{false}}">
       <div class="cxs-scrim" aria-hidden="true"></div>
       <section class="cxs" role="dialog" aria-modal="true" aria-labelledby="cxs-h-{{sid}}">
@@ -192,12 +219,17 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["cert","share","public"],"default":"cert"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["cert","nameCheck","nameFix","share","public"],"default":"cert"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
 /* Certificate, Share on LinkedIn and the public certificate page (S3-16, 7 Nov 2026). Spec: docs/design/slice-3/certificate.md
    The certificate art is drawn at 1200 x 628 (the LinkedIn link-preview size), so the same art is the page, the PNG and the og:image.
    Phones show a tall version of the same art. It always stays light, like paper, in both themes. */
 const C = {
   en: { title: 'Certificate', back: 'Profile', close: 'Close', nav: 'Main', navHome: 'Home', navPaths: 'Paths', navReview: 'Review', navProfile: 'Profile', yourPaths: 'Your paths', addPath: 'Add a path',
+    nameRow: 'Name on certificates', edit: 'Edit',
+    nTitle: 'Your first certificate is ready', nRead: 'Check the name it will show. It’s printed on every certificate, and on LinkedIn when you share one.',
+    nFix: 'Your name came from your email. Write it the way you want it on your certificate.', nLabel: 'Name on your certificates', nHelp: 'Your full name, as you’d write it on a CV. 2 to 60 characters.',
+    nShows: 'Your certificate will show', nUse: 'Yes, use this name', nSave: 'Save and see my certificate', nEdit: 'Edit the name',
+    nNote: 'You can change it later in Settings. Copies you’ve already shared keep the old name.',
     over: 'Certificate of skill', certifies: 'This certifies that', name: 'Yasmin Adel', showed: 'showed every skill of the path', path: 'Forms That Flow',
     how: 'on new cases, with no hints, in 5 UXGate skill checks.',
     stats: [['40', 'skills Shown'], ['5', 'skill checks'], ['20', 'lessons']],
@@ -215,6 +247,11 @@ const C = {
     meanTitle: 'What this means', mean: 'Every skill of this path was shown on new cases, with no hints, in UXGate skill checks. Each skill is a real design decision on a screen the learner hadn’t seen before.',
     cta: 'Start learning on UXGate', ctaSub: 'Unit 1 of every path is free.' },
   ar: { title: 'الشهادة', back: 'حسابي', close: 'إغلاق', nav: 'الرئيسية', navHome: 'الرئيسية', navPaths: 'المسارات', navReview: 'المراجعة', navProfile: 'حسابي', yourPaths: 'مساراتك', addPath: 'أضف مسارًا',
+    nameRow: 'الاسم على الشهادات', edit: 'تعديل',
+    nTitle: 'شهادتك الأولى جاهزة', nRead: 'تحقّق من الاسم الذي ستعرضه. فهو يُطبع على كل شهاداتك، ويظهر على LinkedIn حين تشارك إحداها.',
+    nFix: 'أخذنا اسمك من بريدك الإلكتروني. اكتبه كما تريده أن يظهر على شهادتك.', nLabel: 'الاسم على شهاداتك', nHelp: 'اسمك الكامل كما تكتبه في سيرتك الذاتية. من حرفين إلى 60 حرفًا.',
+    nShows: 'ستعرض شهادتك', nUse: 'نعم، استخدم هذا الاسم', nSave: 'احفظ واعرض شهادتي', nEdit: 'عدّل الاسم',
+    nNote: 'يمكنك تغييره لاحقًا من الإعدادات. والنسخ التي شاركتها من قبل تبقى بالاسم القديم.',
     over: 'شهادة مهارة', certifies: 'نشهد أن', name: 'ياسمين عادل', showed: 'أثبتت كل مهارات مسار', path: 'نماذج تسير بسلاسة',
     how: 'في حالات جديدة، بدون تلميحات، في 5 اختبارات مهارة على UXGate.',
     stats: [['40', 'مهارة «أثبتت»'], ['5', 'اختبارات مهارة'], ['20', 'درسًا']],
@@ -232,7 +269,7 @@ const C = {
     meanTitle: 'ماذا تعني هذه الشهادة', mean: 'تعني أن كل مهارات هذا المسار أُثبتت في حالات جديدة، بدون تلميحات، في اختبارات المهارة على UXGate. وكل مهارة قرار تصميم حقيقي على شاشة لم يرها المتعلّم من قبل.',
     cta: 'ابدأ التعلّم على UXGate', ctaSub: 'الوحدة الأولى من كل مسار مجانية.' }
 };
-const VIEWS = ['cert', 'share', 'public'];
+const VIEWS = ['cert', 'nameCheck', 'nameFix', 'share', 'public'];
 /* The landscape art is 1200 x 628, scaled into its box. */
 const land = (w) => { const s = w / 1200; return { cls: 'cx', box: 'width: ' + w + 'px; height: ' + Math.round(628 * s) + 'px;', inner: 'transform: scale(' + s.toFixed(4) + ');' }; };
 const tall = { cls: 'cx is-tall', box: 'width: 100%;', inner: '' };
@@ -249,16 +286,19 @@ class Component extends DCLogic {
       postLines: raw.postLines.map((t) => ({ t })),
       facts: raw.facts.map(([k, v, l]) => ({ k, v, cls: l ? 'ltr' : '' }))
     });
+    if (view === 'nameFix') c.name = 'yasmin.adel88';
     const isPublic = view === 'public';
-    const on = view !== 'cert';
+    const on = view === 'share' || view === 'public';
     return {
       lang, theme, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, sid: lang + '-' + theme + '-' + (isDesk ? 'd' : 'm') + '-' + view,
-      is: { app: !isPublic, share: view === 'share', public: isPublic },
+      is: { app: !isPublic, share: view === 'share', public: isPublic, name: view === 'nameCheck' || view === 'nameFix' },
+      nm: view === 'nameFix' ? { fix: true, read: false, body: raw.nFix, value: 'yasmin.adel88', primary: raw.nSave, nameLang: 'en', nameDir: 'ltr' }
+        : { fix: false, read: true, body: raw.nRead, value: raw.name, primary: raw.nUse, nameLang: lang, nameDir: lang === 'ar' ? 'rtl' : 'ltr' },
       art: isDesk ? land(isPublic ? 1000 : 720) : tall,
       og: land(isDesk ? 500 : 350),
       showNav: !isDesk && !isPublic, showRail: isDesk && !isPublic,
       pageState: on ? raw.pageOn : raw.pageOff, swCls: 'switch sw-only' + (on ? ' is-on' : ''), swAria: on ? 'true' : 'false',
-      rootCls: 'ug pg ' + (isPublic ? 'pg-pub cxv ' : 'pg-app cxp ') + 'pg-' + (isDesk ? 'desktop' : 'mobile') + (view === 'share' ? ' has-sheet' : ''),
+      rootCls: 'ug pg ' + (isPublic ? 'pg-pub cxv ' : 'pg-app cxp ') + 'pg-' + (isDesk ? 'desktop' : 'mobile') + (view === 'share' || view === 'nameCheck' || view === 'nameFix' ? ' has-sheet' : ''),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       logoStyle: isDesk ? 'height: 34px; width: auto;' : 'height: 26px; width: auto;', otherCode: lang === 'ar' ? 'en' : 'ar'
     };

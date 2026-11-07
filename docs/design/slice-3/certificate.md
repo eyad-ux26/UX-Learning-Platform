@@ -79,3 +79,18 @@ Canvas: page "7 · Slice 3 · Progress", board **S3-16**, component `CertPages`.
 - The share sheet is a modal dialog: focus moves into it, Esc closes it, and focus returns to the button.
 - The post preview is read-only text.
 - "Copied" is announced in a polite live region.
+
+## Proposal for Eyad: check the name before the first certificate (7 Nov, canvas v83)
+
+The name printed on a certificate is hard to take back once it's on LinkedIn, and Google sign-ups used to get their email prefix as their name. The proposal adds two things.
+
+1. **A one-time check** the first time a certificate is issued (views `nameCheck` and `nameFix`). It opens as a sheet over the certificate page before anything can be shared or downloaded.
+   - Title "Your first certificate is ready" / «شهادتك الأولى جاهزة», with a certificate icon.
+   - A preview of the name in the certificate's selection frame, under "Your certificate will show" / «ستعرض شهادتك».
+   - **Normal name** (`nameCheck`): "Yes, use this name" (primary) and "Edit the name" (secondary). Edit turns the sheet into the field state.
+   - **Name looks like part of an email** (`nameFix`): it contains `@`, a digit, `.` or `_`, or it equals the email's local part. The sheet opens with the "Name on your certificates" field already focused and the line "Your name came from your email. Write it the way you want it on your certificate." The preview updates as the learner types. The button is "Save and see my certificate". The rule is 2 to 60 characters after trimming, with the error under the field (design audit U1).
+   - Footnote: "You can change it later in Settings. Copies you've already shared keep the old name."
+   - Store `profiles.name_confirmed_at`. The sheet shows only while it's empty, so it appears once per account, not once per certificate. Saving updates `display_name` too.
+2. **A quiet row afterwards:** "Name on certificates · {name} · Edit" at the top of the certificate page's settings card. It opens Settings > Profile > Name.
+
+Esc or the scrim closes the sheet without confirming. The sheet comes back on the next visit, and Share, Add to profile, PDF and Image open it first until the name is confirmed.
