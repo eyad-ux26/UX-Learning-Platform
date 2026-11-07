@@ -70,7 +70,7 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
           <div className="stage" aria-hidden="true" />
           {/* eslint-disable-next-line jsx-a11y/media-has-caption -- captions are drawn from the transcript below, in both languages */}
           <video
-            ref={ref} playsInline preload="metadata" className="lp-videoel" aria-label={step.title?.[locale] ?? t("videoLabel")}
+            ref={ref} playsInline preload="metadata" className="lp-videoel" onClick={() => { if (ready && !ended) toggle(); }} aria-label={step.title?.[locale] ?? t("videoLabel")}
             onPlay={() => { setPlaying(true); setStarted(true); }} onPause={() => setPlaying(false)}
             onEnded={() => { setPlaying(false); setEnded(true); }}
             onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
