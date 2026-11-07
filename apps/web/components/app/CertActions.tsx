@@ -74,7 +74,7 @@ export function CertActions(p: Props) {
       <button ref={opener} type="button" className="btn btn-primary btn-lg press cxp-li" onClick={() => setOpen(true)}><span className="li-glyph" aria-hidden="true">in</span>{t("li")}</button>
       <button type="button" className="btn btn-secondary press" onClick={addProfile} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-plus" aria-hidden="true" />{t("addProfile")}</button>
       <div className="cxp-mini" role="group" aria-label={t("more")}>
-        <button type="button" className="cxp-mini-btn press" onClick={() => window.print()}><span className="ph ph-download" aria-hidden="true" />{t("pdf")}</button>
+        <a className="cxp-mini-btn press" href={`/${locale}/app/certificate/${p.pathId}/pdf`} download><span className="ph ph-download" aria-hidden="true" />{t("pdf")}</a>
         <a className="cxp-mini-btn press" href={`/${locale}/app/certificate/${p.pathId}/og.png`} download={`uxgate-certificate-${p.pathId}.png`}><span className="ph ph-download" aria-hidden="true" />{t("img")}</a>
         <button type="button" className="cxp-mini-btn press" onClick={copyLink} disabled={pending}><span className="ph ph-link" aria-hidden="true" />{t("copyLink")}</button>
       </div>

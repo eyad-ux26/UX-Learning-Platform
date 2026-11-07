@@ -6,13 +6,12 @@ export type CertArtData = { name: string; pathName: string; shown: number; check
 
 /**
  * The certificate art (design S3-16): drawn at 1200 x 628, the LinkedIn link-preview size, and scaled by `--s` in CSS.
- * Always light, like paper. Phones get the stacked `is-tall` version of the same parts; only one of the two is shown (display: none
- * removes the other from the reading order). The og image (/c/[code]/og.png) draws the same art for LinkedIn.
+ * Always light, like paper. Phones get the same landscape layout, scaled down to fit. The og image (/c/[code]/og.png) draws the same art for LinkedIn.
  */
 export async function CertArt({ d, size = "page" }: { d: CertArtData; size?: "page" | "public" | "card" }) {
   const t = await getTranslations({ locale: d.locale, namespace: "cert" });
-  const body = (tall: boolean) => (
-    <article className={`cx${tall ? " is-tall" : ""}`} lang={d.locale} dir={d.locale === "ar" ? "rtl" : "ltr"} aria-label={t("art")}>
+  const body = () => (
+    <article className="cx" lang={d.locale} dir={d.locale === "ar" ? "rtl" : "ltr"} aria-label={t("art")}>
       <div className="cx-band">
         <img className="cx-logo" src="/brand/logo-white.svg" alt="UXGate" />
         <span className="cx-over">{t("over")}</span>
@@ -39,8 +38,7 @@ export async function CertArt({ d, size = "page" }: { d: CertArtData; size?: "pa
   );
   return (
     <div className={`cx-pair is-${size}`}>
-      <div className="cx-box is-land">{body(false)}</div>
-      {size === "card" ? null : <div className="cx-box is-stack">{body(true)}</div>}
+      <div className="cx-box is-land">{body()}</div>
     </div>
   );
 }
