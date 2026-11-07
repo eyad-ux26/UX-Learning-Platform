@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { Link } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -48,6 +48,8 @@ export function CertActions(p: Props) {
   const opener = useRef<HTMLButtonElement>(null);
   const text = postText({ intro: t("postIntro", { path: p.pathName, skills: p.skills, checks: p.checks }), seeIt: t("postSee"), tags: t("postTags") }, p.url);
   const say = (m: string) => { setLive(""); setTimeout(() => setLive(m), 30); };
+  // The confirmation toast goes away by itself after 4 seconds, and has a close button.
+  useEffect(() => { if (!live) return; const id = setTimeout(() => setLive(""), 4000); return () => clearTimeout(id); }, [live]);
 
   const ensureOn = async (): Promise<boolean> => {
     if (on) return true;
@@ -116,7 +118,7 @@ export function CertActions(p: Props) {
       <p className="cxp-note"><span className="ph ph-eye" aria-hidden="true" /><span>{t("sees2")}</span></p>
       {failed ? <p className="ob-err" role="alert">{t("failed2")}</p> : null}
       <p className="lp-sr" role="status" aria-live="polite">{live}</p>
-      {live ? <div className="toast pop s4-toast" aria-hidden="true"><span className="ph ph-check-circle-fill" /><span style={{ flex: 1 }}>{live}</span></div> : null}
+      {live ? <div className="toast pop s4-toast"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span style={{ flex: 1 }} aria-hidden="true">{live}</span><button type="button" className="icon-btn plain" aria-label={t("close")} onClick={() => setLive("")}><span className="ph ph-x" aria-hidden="true" /></button></div> : null}
 
       {nameSheet ? (
         <Sheet titleId="cxn-h" onClose={closeName}>
