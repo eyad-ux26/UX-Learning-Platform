@@ -104,4 +104,4 @@ Esc or the scrim closes the sheet without confirming. The sheet comes back on th
 
 - The share sheet offers 3 post versions as chips above the post. The post text can be edited before sharing, and the edited text is what gets copied and opened in LinkedIn.
 - The phone share sheet was fixed.
-- The S3-16 board's share frame still shows one fixed, read-only post. The note under "Accessibility" that the post preview is read-only no longer applies: it's now an editable text field with a label.
+- The S3-16 board's share frame still shows one fixed, read-only post. The note under "Accessibility" that the post preview is read-only no longer applies: it should be an editable text field with a visible label.
