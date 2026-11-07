@@ -57,3 +57,12 @@ Without the field, the card uses rule 2. Add it to the validator as optional: al
 - Icons, the "or" badge, the scale track and tick circles are `aria-hidden`. The words carry the meaning.
 - Text contrast is unchanged from the current body text. The scale track is decorative.
 - Focus goes to the h1 when the step loads, as now.
+
+## Build notes (PR #202, accepted)
+
+- Compare items: only the last item drops its leading "and" / «و». Middle items keep theirs when the text has them.
+- Hook cards (no mock) show their paragraphs without "The idea" over-line on the first one.
+- A bold-only line without a full stop followed by a list (such as `**Links**`) also becomes a topic card.
+- Desktop layout starts at a 1024px media query.
+
+The S2-15 board still matches the four content examples, because none of them hits these cases.
