@@ -13,17 +13,17 @@ sources:
 review_labels:
   MC-P14-001: { en: "Don't block a task with an unrelated offer", ar: "لا تحجب المهمة بعرض لا علاقة له بها" }
   MC-P14-002: { en: "Delaying an interruption doesn't make it related", ar: "تأخير المقاطعة لا يجعلها مرتبطة بالمهمة" }
-  MC-P14-003: { en: "Confirm what can't be undone, in a dialog", ar: "أكِّد ما لا يمكن التراجع عنه، في نافذة" }
-  MC-P14-004: { en: "Ask for what's missing where the task happens", ar: "اطلب الناقص في مكان المهمة نفسها" }
+  MC-P14-003: { en: "Confirm what can't be undone, in a dialog", ar: "اطلب التأكيد في Dialog قبل ما لا يمكن التراجع عنه" }
+  MC-P14-004: { en: "Ask for what's missing where the task happens", ar: "اطلب المعلومة الناقصة في مكان المهمة نفسه" }
   MC-P14-005: { en: "A modal hides what people need to compare", ar: "الـ Modal يُخفي ما يحتاج الناس إلى مقارنته" }
 steps:
   - id: S01
     type: card
     part: hook
-    title: { en: "Hassan's electricity bill", ar: "فاتورة الكهرباء لحسن" }
+    title: { en: "Hassan's electricity bill", ar: "فاتورة كهرباء حسن" }
     body:
       en: "I'm designing a wallet app. Hassan is paying his electricity bill in it. He has checked the amount and is about to confirm.\n\nAs he taps **Pay now**, a window covers the screen: an offer for our new credit card. He closes it, loses his place, and decides to pay later."
-      ar: "أصمّم تطبيق محفظة. يدفع فيه حسن فاتورة الكهرباء. راجع المبلغ وهو على وشك التأكيد.\n\nوحين ضغط **ادفع الآن**، غطّت نافذة الشاشة: عرض لبطاقة الائتمان الجديدة عندنا. أغلقها، فضاع مكانه، وقرّر أن يدفع لاحقًا."
+      ar: "أصمّم تطبيق محفظة. يدفع فيه حسن فاتورة الكهرباء. راجع المبلغ وهو على وشك التأكيد.\n\nوحين ضغط **ادفع الآن**، غطّت الشاشةَ نافذةٌ فيها عرض لبطاقتنا الائتمانية الجديدة. أغلقها، فنسي أين توقّف، وقرّر أن يدفع لاحقًا."
     mock:
       app: kanz
       appbar: { title: { en: "Pay bill", ar: "دفع الفاتورة" }, back: true }
@@ -56,7 +56,7 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/modal-nonmodal-dialog/", quote: "Avoid modal dialogs that interrupt high-stake processes such as checkout flows." }
     prompt:
       en: "The team still wants people to see the card offer. Try each version. Which one should ship?"
-      ar: "ما زال الفريق يريد أن يرى الناس عرض البطاقة. جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+      ar: "ما زال الفريق يريد أن يرى الناس عرض البطاقة. جرّب كل نسخة. أيّ نسخة تعرض البطاقة دون أن تقطع على حسن الدفع؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
       app: kanz
@@ -75,7 +75,7 @@ steps:
           footer: *payfooter
           overlay: *promo
       - id: after
-        text: { en: "Remove the window; show the offer as a line on the \"Payment done\" screen", ar: "احذف النافذة؛ واعرض العرض سطرًا في شاشة «تمّ الدفع»" }
+        text: { en: "Remove the window; show the offer as a line on the \"Payment done\" screen", ar: "احذف النافذة؛ واذكر العرض في سطر بشاشة «تمّ الدفع»" }
         mock:
           caption: { en: "After this change (once paid)", ar: "بعد هذا التغيير (بعد الدفع)" }
           app: kanz
@@ -89,7 +89,7 @@ steps:
               gap: xl
               blocks:
                 - { kind: listitem, art: bank-card, text: { en: "5% cashback on bills", ar: "استرداد 5% على الفواتير" }, sub: { en: "With the Kanz credit card", ar: "مع بطاقة كنز الائتمانية" } }
-                - { kind: link, text: { en: "See the card", ar: "اعرف البطاقة" }, gap: xs }
+                - { kind: link, text: { en: "See the card", ar: "اعرض البطاقة" }, gap: xs }
       - id: smaller
         text: { en: "Keep the window, but make it smaller with a big Close button", ar: "أبقِ النافذة، لكن صغّرها وكبّر زر الإغلاق" }
         mock:
@@ -123,7 +123,7 @@ steps:
       ar: "دَع الدفع يكتمل، واعرض البطاقة بعده."
     explain:
       en: "A window that blocks the screen should help the task in front of people. An unrelated offer in the middle of paying makes people lose their place and leave. After the payment, the same offer interrupts nothing."
-      ar: "النافذة التي تحجب الشاشة يجب أن تخدم المهمة التي أمام الناس. والعرض غير المرتبط وسط الدفع يجعل الناس يفقدون مكانهم ويغادرون. وبعد الدفع، العرض نفسه لا يقاطع شيئًا."
+      ar: "النافذة التي تحجب الشاشة يجب أن تخدم المهمة التي أمام الناس. والعرض الذي لا علاقة له بالدفع، إن ظهر في وسطه، يُنسي الناس أين توقّفوا فيغادرون. وبعد الدفع، العرض نفسه لا يقاطع شيئًا."
 
   - id: S09
     type: video
@@ -179,7 +179,7 @@ steps:
       ar: "في تطبيق المحفظة الذي أصمّمه، يستطيع حسن حذف بطاقة بنكية محفوظة. وبعد حذفها، عليه أن يضيفها من جديد بالكامل، برمز من البنك."
     prompt:
       en: "Try each version of what happens when he taps Remove. Which one should ship?"
-      ar: "جرّب كل نسخة لما يحدث حين يضغط «حذف». أيّها يجب أن تُطلق؟"
+      ar: "جرّب ما يحدث في كل نسخة حين يضغط حسن «حذف». أيّ نسخة تحميه من حذف بطاقته بالخطأ؟"
     start: instant
     options:
       - id: instant
@@ -203,7 +203,7 @@ steps:
           overlay:
             type: dialog
             blocks:
-              - { kind: heading, text: { en: "Remove Visa ending 4821?", ar: "حذف Visa التي تنتهي بـ 4821؟" } }
+              - { kind: heading, text: { en: "Remove Visa ending 4821?", ar: "هل تحذف بطاقة Visa المنتهية بـ 4821؟" } }
               - { kind: small, text: { en: "To use it again, you'll need to add it and get a code from your bank.", ar: "لاستخدامها مرة أخرى، ستحتاج إلى إضافتها والحصول على رمز من البنك." }, gap: s }
               - { kind: button, text: { en: "Remove card", ar: "احذف البطاقة" }, style: danger, gap: m }
               - { kind: button, text: { en: "Keep card", ar: "أبقِ البطاقة" }, style: text, gap: s }
@@ -227,7 +227,7 @@ steps:
           ar: "إن ضغط حسن «حذف» بالخطأ، تكون البطاقة قد حُذفت، واستعادتها تحتاج رمزًا من البنك. والرسالة بعد الحذف لا تمنع ذلك."
     correct:
       en: "Can't be undone: ask first, in a dialog."
-      ar: "لا يمكن التراجع عنه: اسأل أولًا، في نافذة."
+      ar: "لا يمكن التراجع عنه، فاسأل أولًا في نافذة."
     explain:
       en: "Removing the card can't be undone, so this is worth a dialog. It names the card and labels the buttons \"Remove card\" and \"Keep card\", so Hassan knows exactly what each one does."
       ar: "حذف البطاقة لا يمكن التراجع عنه، لذلك يستحق نافذة. وهي تذكر البطاقة، وعلى أزرارها «احذف البطاقة» و«أبقِ البطاقة»، فيعرف حسن بالضبط ما يفعله كل زر."
@@ -247,7 +247,7 @@ steps:
       ar: "أبني تطبيقًا لتوصيل الطعام. ملأ زياد سلّته وضغط **اطلب**. لم يحفظ أي عنوان توصيل من قبل، ولا يمكن إرسال الطلب دون عنوان."
     prompt:
       en: "Try each version. Which one should ship?"
-      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة. أيّ نسخة تترك لبنى تُكمل بيانات المسافرين دون مقاطعة؟"
     start: settings
     options:
       - id: settings
@@ -320,7 +320,7 @@ steps:
       ar: "أصمّم تطبيقًا لتذاكر الحفلات. تشتري مريم تذكرة. ونوع التذكرة يحدّد مكان جلوسها، لذلك تريد أن تراجع خريطة المقاعد وهي تختار."
     prompt:
       en: "Which version lets Mariam make this choice?"
-      ar: "أيّ نسخة تتيح لمريم أن تتّخذ هذا القرار؟"
+      ar: "أيّ نسخة تترك مريم ترى خريطة المقاعد وهي تختار نوع التذكرة؟"
     a:
       label: { en: "Version A: types in a dialog", ar: "النسخة A: الأنواع في نافذة" }
       mock:
@@ -338,7 +338,7 @@ steps:
             - { kind: radio, text: { en: "Gold · EGP 1,500", ar: "Gold · 1500 جنيه" }, gap: s }
             - { kind: radio, text: { en: "Silver · EGP 900", ar: "Silver · 900 جنيه" }, gap: xs }
             - { kind: radio, text: { en: "Standard · EGP 450", ar: "Standard · 450 جنيه" }, gap: xs }
-            - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
+            - { kind: button, text: { en: "Continue", ar: "تابع" }, gap: m }
     b:
       label: { en: "Version B: types on the page", ar: "النسخة B: الأنواع في الصفحة" }
       mock:
@@ -347,11 +347,11 @@ steps:
         blocks:
           - { kind: small, text: { en: "Fri 14 Nov · 9 pm · Cairo Opera House", ar: "الجمعة 14 نوفمبر · 9 م · دار الأوبرا" } }
           - { kind: seatmap, rows: 6, cols: 8, aisle: 4, taken: [ [0,1], [0,6], [2,3], [4,5] ], gap: m }
-          - { kind: radio, text: { en: "Gold · rows 1–2 · EGP 1,500", ar: "Gold · الصفان 1–2 · 1500 جنيه" }, gap: m }
-          - { kind: radio, text: { en: "Silver · rows 3–4 · EGP 900", ar: "Silver · الصفان 3–4 · 900 جنيه" }, gap: xs }
-          - { kind: radio, text: { en: "Standard · rows 5–6 · EGP 450", ar: "Standard · الصفان 5–6 · 450 جنيه" }, gap: xs }
+          - { kind: radio, text: { en: "Gold · rows 1–2 · EGP 1,500", ar: "Gold · الصفّان 1 و2 · 1500 جنيه" }, gap: m }
+          - { kind: radio, text: { en: "Silver · rows 3–4 · EGP 900", ar: "Silver · الصفّان 3 و4 · 900 جنيه" }, gap: xs }
+          - { kind: radio, text: { en: "Standard · rows 5–6 · EGP 450", ar: "Standard · الصفّان 5 و6 · 450 جنيه" }, gap: xs }
         footer:
-          - { kind: button, text: { en: "Continue", ar: "متابعة" } }
+          - { kind: button, text: { en: "Continue", ar: "تابع" } }
     answer: b
     misconceptions:
       - id: MC-P14-005
@@ -364,7 +364,7 @@ steps:
       ar: "B: الاختيار بجانب الخريطة التي يعتمد عليها."
     explain:
       en: "In B, Mariam can see each zone while she picks a type. A dialog fits a quick answer, not a choice that depends on information behind it."
-      ar: "في B، ترى مريم كل منطقة وهي تختار النوع. والنافذة تناسب إجابة سريعة، لا اختيارًا يعتمد على معلومات خلفها."
+      ar: "في B، ترى مريم كل منطقة وهي تختار النوع. والنافذة تناسب إجابة سريعة، لا اختيارًا يعتمد على معلومات تختفي خلفها."
 
   - id: S07
     type: tune
@@ -382,7 +382,7 @@ steps:
       ar: "في تطبيق شركة الاتصالات الذي أديره، تريد فريدة باقة إنترنت أكبر. ولكي تختار، تحتاج أن تعرف كم GB استهلكت في الشهور الأخيرة. واستهلاكها في الشاشة الرئيسية، والباقات تُفتح في Dialog."
     prompt:
       en: "Try each version. Which one should ship?"
-      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة. أيّ نسخة تترك لبنى تُكمل بيانات المسافرين دون مقاطعة؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
       app: khatt
@@ -398,7 +398,7 @@ steps:
         - { kind: heading, text: { en: "Usage, last 3 months", ar: "الاستهلاك في آخر 3 شهور" }, gap: m }
         - { kind: chart, type: bar, values: [128, 141, 150], labels: [ { en: "Aug", ar: "أغسطس" }, { en: "Sep", ar: "سبتمبر" }, { en: "Oct", ar: "أكتوبر" } ], highlight: 2, gap: s }
         - { kind: small, text: { en: "Aug 128 GB · Sep 141 GB · Oct 150 GB", ar: "أغسطس 128 GB · سبتمبر 141 GB · أكتوبر 150 GB" }, gap: xs }
-        - { kind: button, text: { en: "Upgrade package", ar: "رقِّ الباقة" }, gap: l }
+        - { kind: button, text: { en: "Upgrade package", ar: "ترقية الباقة" }, gap: l }
       overlay:
         type: dialog
         close: true
@@ -438,7 +438,7 @@ steps:
             - { kind: radio, text: { en: "200 GB · EGP 520", ar: "200 GB · 520 جنيه" }, gap: xs }
             - { kind: radio, text: { en: "250 GB · EGP 600", ar: "250 GB · 600 جنيه" }, gap: xs }
           footer:
-            - { kind: button, text: { en: "Continue", ar: "متابعة" } }
+            - { kind: button, text: { en: "Continue", ar: "تابع" } }
       - id: bigger
         text: { en: "Keep the dialog, but make it cover the whole screen", ar: "أبقِ النافذة، لكن اجعلها تغطّي الشاشة كلها" }
         mock:
@@ -476,4 +476,4 @@ steps:
     title: { en: "What you practised", ar: "ما تدرّبت عليه" }
     body:
       en: "- **A modal dialog blocks everything,** so it must serve the task on the screen.\n- **Use it** for a warning before something that can't be undone, or for the one thing the task needs to continue.\n- **Move it out** when it's unrelated, or when the choice needs information the dialog hides.\n\nNext: smaller helpers, the bottom sheet and the tooltip."
-      ar: "- **الـ Modal dialog يحجب كل شيء،** لذلك يجب أن يخدم المهمة التي على الشاشة.\n- **استخدمه** لتحذير قبل شيء لا يمكن التراجع عنه، أو للشيء الوحيد الذي تحتاجه المهمة لتستمر.\n- **أخرِجه** حين لا علاقة له بالمهمة، أو حين يحتاج الاختيار معلومات تُخفيها النافذة.\n\nالتالي: مساعدات أصغر، الـ Bottom sheet والـ Tooltip."
+      ar: "- **الـ Modal dialog يحجب كل شيء،** لذلك يجب أن يخدم المهمة التي على الشاشة.\n- **استخدمه** لتحذير قبل شيء لا يمكن التراجع عنه، أو للشيء الوحيد الذي تحتاجه المهمة لتستمر.\n- **أخرِجه** حين لا علاقة له بالمهمة، أو حين يحتاج الاختيار معلومات تُخفيها النافذة.\n\nالتالي: أدوات مساعدة أصغر: الـ Bottom sheet والـ Tooltip."
