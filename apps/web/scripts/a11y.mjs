@@ -6,7 +6,7 @@ import AxeBuilder from "@axe-core/playwright";
 const { chromium } = createRequire(import.meta.url)("playwright-core"); // comes with @axe-core/playwright; the browser is installed by `npx playwright-core install chromium`
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/paths", "/app/paths/P01", "/app/review", "/app/streak", "/app/skills", "/app/badges", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video", "/app/settings", "/app/settings/notifications", "/app/settings/data", "/app/inbox", "/app/help", "/app/requests", "/app/requests/00000000-0000-4000-9000-000000000001", "/goodbye", "/paths", "/paths/forms-that-flow", "/paths/patterns-that-fit", "/privacy", "/terms", "/offline", "/maintenance", "/no-such-page", "/forgot",
+const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/paths", "/app/paths/P01", "/app/review", "/app/streak", "/app/skills", "/app/badges", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video", "/app/settings", "/app/settings/notifications", "/app/settings/data", "/app/inbox", "/app/help", "/app/requests", "/app/requests/00000000-0000-4000-9000-000000000001", "/goodbye", "/paths", "/paths/forms-that-flow", "/paths/patterns-that-fit", "/privacy", "/terms", "/refund", "/coming-soon", "/coming-soon/confirm?t=x", "/offline", "/maintenance", "/no-such-page", "/forgot",
   // Slice 5: paywall, plans, checkout, results and billing (fixture states, no database).
   "/app/path/P01?paywall=P01-U02", "/app/profile?paywall=cert", "/app/plans", "/app/plans?offer=founding&country=SA", "/app/checkout?period=year",
   "/app/checkout/return?state=success", "/app/checkout/return?state=failed", "/app/checkout/return?state=refused", "/app/checkout?period=year&intl=1", "/app/settings/billing", "/app/settings/billing?state=failed",
@@ -44,6 +44,7 @@ const axeOn = async (page, label) => {
 };
 for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 664 }, colorScheme: scheme });
+  await ctx.addInitScript(() => { try { localStorage.setItem("ug-tour-guest", "1"); } catch { /* ignore */ } }); // the lesson tour has its own check below
   const page = await ctx.newPage();
   await page.goto(`${base}/${locale}/try/choose`);
   await page.waitForSelector(".ug");
@@ -65,6 +66,23 @@ for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
     if (!back) bad++;
     console.log(`${locale} Esc closes the example and focus returns: ${back ? "ok" : "FAIL"}`);
   }
+  await ctx.close();
+}
+
+// The lesson tour is modal: axe finds nothing serious on it, Esc skips it, and after that the choices take clicks.
+for (const [locale, scheme, vp] of [["en", "light", { width: 1440, height: 900 }], ["ar", "dark", { width: 390, height: 664 }]]) {
+  const ctx = await browser.newContext({ viewport: vp, colorScheme: scheme });
+  const page = await ctx.newPage();
+  await page.goto(`${base}/${locale}/try/choose`);
+  await page.waitForSelector(".lp-tour .gd-tour");
+  await page.waitForTimeout(600);
+  await axeOn(page, `${locale} ${vp.width} lesson tour open`);
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(300);
+  let ok = (await page.locator(".lp-tour").count()) === 0;
+  if (ok) { try { await page.locator(".choice").nth(1).click({ timeout: 3000 }); } catch { ok = false; } }
+  if (!ok) bad++;
+  console.log(`${locale} ${vp.width} Esc skips the tour and the choices take clicks: ${ok ? "ok" : "FAIL"}`);
   await ctx.close();
 }
 await browser.close();

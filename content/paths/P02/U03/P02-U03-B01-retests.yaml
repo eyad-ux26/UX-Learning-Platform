@@ -34,6 +34,15 @@ steps:
     prompt:
       en: "What should the form use?"
       ar: "ماذا يجب أن يستخدم النموذج؟"
+    mock:
+      app: nashat
+      appbar: { title: { en: "Bring a guest", ar: "أحضِر ضيفًا" }, back: true }
+      keyboard: number
+      blocks:
+        - { kind: listitem, art: gym, text: { en: "Spinning · Thu 7 pm", ar: "Spinning · الخميس 7 م" } }
+        - { kind: field, label: { en: "Number of guests", ar: "عدد الضيوف" }, text: "20", filled: true, focus: true, gap: m, note: { en: "Allowed: 2 a month", ar: "المسموح: ضيفان شهريًا" } }
+      footer:
+        - { kind: button, text: { en: "Book", ar: "احجز" } }
     options:
       - { id: stepper, text: { en: "A − / + control from 0 to 2, showing \"2 guests left this month\"", ar: "عنصر − / + من 0 إلى 2، مع «بقي لك ضيفان هذا الشهر»" } }
       - { id: rule, text: { en: "Keep the text box, and print the rule under it", ar: "يبقى مربع النص، مع كتابة القاعدة تحته" } }
@@ -70,9 +79,12 @@ steps:
     a:
       label: { en: "Version A: two matching buttons", ar: "النسخة A: زرّان متطابقان" }
       mock:
-        width: 260
+        app: bareed
+        frame: wide
+        url: bareed.example/campaigns/november-news
         blocks:
           - { kind: title, text: { en: "November news", ar: "أخبار نوفمبر" } }
+          - { kind: small, text: { en: "To: 40,000 subscribers", ar: "إلى: 40 ألف مشترك" } }
           - kind: row
             gap: l
             blocks:
@@ -81,10 +93,12 @@ steps:
     b:
       label: { en: "Version B: different and apart", ar: "النسخة B: مختلفان ومتباعدان" }
       mock:
-        width: 260
+        app: bareed
+        frame: wide
+        url: bareed.example/campaigns/november-news
         blocks:
           - { kind: title, text: { en: "November news", ar: "أخبار نوفمبر" } }
-          - { kind: link, text: { en: "Send a test to me (me@mynews.com)", ar: "أرسل تجربة إليّ (me@mynews.com)" }, gap: m }
+          - { kind: link, icon: paper-plane-tilt, text: { en: "Send a test to me (me@mynews.example)", ar: "أرسل تجربة إليّ (me@mynews.example)" }, gap: m }
           - { kind: button, text: { en: "Send to 40,000 subscribers…", ar: "أرسل إلى 40 ألف مشترك…" }, gap: xl }
     answer: b
     misconceptions:
@@ -116,6 +130,22 @@ steps:
     prompt:
       en: "What should the dialog show?"
       ar: "ماذا يجب أن تعرض النافذة؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products
+      blocks:
+        - { kind: listitem, icon: check-square, text: { en: "Electric drill 650 W", ar: "مثقاب كهربائي 650 وات" }, value: { en: "320 sold", ar: "بيع 320" } }
+        - { kind: listitem, icon: check-square, text: { en: "Old paint roller", ar: "رولة دهان قديمة" }, value: { en: "2 sold", ar: "بيع 2" }, gap: s }
+      overlay:
+        type: dialog
+        blocks:
+          - { kind: heading, text: { en: "Delete 2 items?", ar: "حذف عنصرين؟" } }
+          - kind: row
+            gap: m
+            blocks:
+              - { kind: button, text: { en: "OK", ar: "موافق" } }
+              - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: outline }
     options:
       - { id: names, text: { en: "The product names and photos, and buttons \"Delete 2 products\" / \"Keep them\"", ar: "أسماء المنتجات وصورها، وأزرار «احذف المنتجين» / «أبقِهما»" } }
       - { id: red, text: { en: "The same text in red", ar: "النص نفسه باللون الأحمر" } }
@@ -149,6 +179,16 @@ steps:
     prompt:
       en: "Which one should ask for confirmation?"
       ar: "أيّهما يجب أن يطلب تأكيدًا؟"
+    mock:
+      app: rasid
+      appbar: { title: { en: "Savings account", ar: "حساب التوفير" }, back: true, actions: [ { icon: dots-three-vertical } ] }
+      blocks:
+        - { kind: price, text: { en: "EGP 48,200", ar: "48,200 جنيه" }, size: l }
+      overlay:
+        type: menu
+        blocks:
+          - { kind: listitem, icon: pencil-simple, text: { en: "Rename account", ar: "غيّر اسم الحساب" } }
+          - { kind: listitem, icon: prohibit, text: { en: "Close account", ar: "أغلق الحساب" }, note: { en: "Closes at once, can't be reopened", ar: "يُغلق فورًا، ولا يُعاد فتحه" } }
     options:
       - { id: both, text: { en: "Both, to be safe", ar: "كلاهما، للاحتياط" } }
       - { id: close, text: { en: "Only Close account, with a dialog that names the account and what happens to its balance", ar: "«أغلق الحساب» فقط، بنافذة تذكر الحساب وما سيحدث لرصيده" } }
@@ -188,6 +228,15 @@ steps:
     prompt:
       en: "What should the system do?"
       ar: "ماذا يجب أن يفعل النظام؟"
+    mock:
+      app: raha
+      frame: wide
+      url: raha.example/staff/bookings/new
+      navbar: { links: [ { en: "Today", ar: "اليوم" }, { en: "Patients", ar: "المرضى" }, { en: "Bookings", ar: "الحجوزات" } ], active: 2 }
+      blocks:
+        - { kind: title, text: { en: "New follow-up visit", ar: "زيارة متابعة جديدة" } }
+        - { kind: field, label: { en: "Patient file number", ar: "رقم ملف المريض" }, text: "", focus: true, gap: m, note: { en: "Typed from memory after switching screens", ar: "يُكتب من الذاكرة بعد الانتقال بين الشاشات" } }
+        - { kind: field, label: { en: "Doctor", ar: "الطبيب" }, text: { en: "Dr. Samir Fahmy", ar: "د. سمير فهمي" }, filled: true, gap: m }
     options:
       - { id: button, text: { en: "Add a \"Book follow-up\" button inside the patient's file that fills in the patient", ar: "إضافة زر «احجز متابعة» داخل ملف المريض يملأ بيانات المريض تلقائيًا" } }
       - { id: check, text: { en: "Ask receptionists to read the number twice", ar: "أن يُطلب من الموظفين قراءة الرقم مرتين" } }
@@ -221,6 +270,13 @@ steps:
     prompt:
       en: "What should the search box do after a search?"
       ar: "ماذا يجب أن يفعل مربع البحث بعد البحث؟"
+    mock:
+      app: tabkha
+      appbar: { title: { en: "Search", ar: "بحث" }, back: true }
+      blocks:
+        - { kind: searchbar, text: { en: "Search recipes", ar: "ابحث عن وصفة" }, note: { en: "Emptied after the search", ar: "فرغ بعد البحث" } }
+        - { kind: listitem, art: food-grill, text: { en: "Chicken and rice, stovetop", ar: "دجاج بالأرز على البوتاجاز" }, sub: { en: "40 min", ar: "40 دقيقة" }, gap: m }
+        - { kind: listitem, art: food-salad, text: { en: "Rice salad, no cooking", ar: "سلطة أرز بدون طهي" }, sub: { en: "15 min", ar: "15 دقيقة" }, gap: s }
     options:
       - { id: keep, text: { en: "Keep the words in the box, ready to edit", ar: "يُبقي الكلمات في المربع، جاهزة للتعديل" } }
       - { id: empty, text: { en: "Empty itself, ready for a new search", ar: "يُفرغ نفسه، جاهزًا لبحث جديد" } }
@@ -255,6 +311,12 @@ steps:
     prompt:
       en: "What should we add?"
       ar: "ماذا نضيف؟"
+    mock:
+      app: satr
+      appbar: { title: { en: "Meeting notes", ar: "ملاحظات الاجتماع" }, back: true }
+      keyboard: text
+      blocks:
+        - { kind: text, text: { en: "Launch plan\n/strike", ar: "خطة الإطلاق\n/strike" }, note: { en: "Only works if you remember the command", ar: "يعمل فقط إن تذكّرت الأمر" } }
     options:
       - { id: menu, text: { en: "Typing / opens a list of all commands with names and previews; people pick one", ar: "كتابة / تفتح قائمة بكل الأوامر بأسمائها ومعاينتها؛ ويختار الناس منها" } }
       - { id: cheat, text: { en: "A printable cheat sheet of commands", ar: "ورقة أوامر قابلة للطباعة" } }
@@ -293,6 +355,14 @@ steps:
     prompt:
       en: "What should I do instead?"
       ar: "ماذا أفعل بدلًا من ذلك؟"
+    mock:
+      app: masroof
+      blocks:
+        - { kind: image, art: chart, size: l }
+        - { kind: heading, text: { en: "Set monthly budgets", ar: "حدّد ميزانيات شهرية" }, gap: m }
+        - { kind: small, text: { en: "Tip 4 of 8", ar: "النصيحة 4 من 8" }, gap: s }
+      footer:
+        - { kind: button, text: { en: "Next", ar: "التالي" } }
     options:
       - { id: longer, text: { en: "Add two more tour screens about splitting bills", ar: "أضيف شاشتين أخريين للجولة عن تقسيم الفواتير" } }
       - { id: context, text: { en: "Show a short tip next to a new expense: \"Shared this? Split it\", the first few times", ar: "أعرض نصيحة قصيرة بجانب المصروف الجديد: «شاركت فيه؟ قسّمه»، في المرات الأولى" } }

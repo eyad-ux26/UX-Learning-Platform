@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { settleLearner } from "@/lib/server/settle";
 import { resolveWeekStart } from "@/lib/freeze";
+import { sendQueuedConfirmations } from "@/lib/server/waitlist-mail";
 
 export const dynamic = "force-dynamic";
 // Each learner costs a handful of database calls and a Worker request has a subrequest budget, so a run settles 100
@@ -18,6 +19,10 @@ export async function GET(req: Request) {
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   const db = createAdminClient();
+  // Launch list (0038): unconfirmed addresses go after 30 days. Cheap and safe to repeat; an error (before 0038) is ignored.
+  const { data: pruned } = await db.rpc("prune_waitlist");
+  // Addresses that joined while email could not go out get their confirmation link once it can (no-op until then).
+  const confirmations = await sendQueuedConfirmations(db).catch(() => ({ sent: 0, failed: 0 }));
   // Only learners whose settled day is before their own yesterday (in their time zone), oldest first: a learner west of
   // UTC who is already settled up to their local yesterday is not picked again, so every call makes progress (#139).
   const { data: rows, error } = await db.rpc("settle_candidates", { p_limit: BATCH });
@@ -41,5 +46,5 @@ export async function GET(req: Request) {
     }
     console.warn(`WARN daily job: could not settle ${id}: ${r.error}`);
   }
-  return NextResponse.json({ settled, failed, stoppedEarly, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
+  return NextResponse.json({ settled, failed, stoppedEarly, pruned: typeof pruned === "number" ? pruned : null, confirmations, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
 }

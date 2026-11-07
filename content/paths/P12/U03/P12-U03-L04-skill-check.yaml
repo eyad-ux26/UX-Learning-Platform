@@ -20,14 +20,16 @@ steps:
       en: "I'm a junior designer on a food app. You take a photo of your meal, and it guesses the calories. I'm reviewing it before launch.\n\nYour job: check five parts.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "أنا مصمّم مبتدئ في تطبيق طعام. تلتقط صورة لوجبتك، فيقدّر سعراتها الحرارية. وأراجعه قبل الإطلاق.\n\nمهمّتك: افحص خمسة أجزاء.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: sahn
+      appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
       blocks:
-        - { kind: title, text: { en: "Lunch · about 650 kcal", ar: "الغداء · حوالي 650 سعرة" } }
-        - { kind: meta, text: { en: "Rice · grilled chicken · salad", ar: "أرز · دجاج مشوي · سلطة" }, gap: s }
-        - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: s }
+        - { kind: image, art: food-grill }
+        - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+        - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+        - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P12-U03-01
     part: check
     rules: [R19]
@@ -39,12 +41,60 @@ steps:
       en: "Under \"About 650 kcal\" there's a \"Why?\" link."
       ar: "تحت «حوالي 650 سعرة» يوجد رابط «لماذا؟»."
     prompt:
-      en: "What should it show?"
-      ar: "ماذا يجب أن يعرض؟"
+      en: "Tap each option to see it. What should it show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يعرض؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sahn
+      appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+      blocks:
+        - { kind: image, art: food-grill }
+        - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+        - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+        - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
     options:
-      - { id: tech, text: { en: "\"Estimated by a vision model trained on 2 million meal photos.\"", ar: "«مقدَّر بنموذج رؤية مدرّب على مليونَي صورة وجبة.»" } }
-      - { id: parts, text: { en: "\"We see rice, grilled chicken and salad. Portions are guessed from the plate size.\"", ar: "«نرى أرزًا ودجاجًا مشويًا وسلطة. والكميات مقدَّرة من حجم الطبق.»" } }
-      - { id: none, text: { en: "Remove the link; people just want the number", ar: "نحذف الرابط؛ فالناس يريدون الرقم فقط" } }
+      - id: tech
+        text: { en: "\"Estimated by a vision model trained on 2 million meal photos.\"", ar: "«مقدَّر بنموذج رؤية مدرّب على مليونَي صورة وجبة.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+          overlay:
+            type: sheet
+            title: { en: "Why about 650 kcal?", ar: "لماذا حوالي 650 سعرة؟" }
+            blocks:
+              - { kind: text, text: { en: "Estimated by a vision model trained on 2 million meal photos.", ar: "مقدَّر بنموذج رؤية مدرّب على مليونَي صورة وجبة." } }
+      - id: parts
+        text: { en: "\"We see rice, grilled chicken and salad. Portions are guessed from the plate size.\"", ar: "«نرى أرزًا ودجاجًا مشويًا وسلطة. والكميات مقدَّرة من حجم الطبق.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+          overlay:
+            type: sheet
+            title: { en: "Why about 650 kcal?", ar: "لماذا حوالي 650 سعرة؟" }
+            blocks:
+              - { kind: text, text: { en: "We see rice, grilled chicken and salad. Portions are guessed from the plate size.", ar: "نرى أرزًا ودجاجًا مشويًا وسلطة. والكميات مقدَّرة من حجم الطبق." } }
+      - id: none
+        text: { en: "Remove the link; people just want the number", ar: "نحذف الرابط؛ فالناس يريدون الرقم فقط" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
     answer: [parts]
     misconceptions:
       - id: MC-P12-021
@@ -57,7 +107,7 @@ steps:
       ar: "من الدرس 1: اذكر السبب الذي يستطيع الناس التأكّد منه، لا النظام كله."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P12-U03-02
     part: check
     rules: [R19]
@@ -69,12 +119,53 @@ steps:
       en: "A photo can't show oil or butter, but they add a lot of calories."
       ar: "الصورة لا تُظهر الزيت أو الزبدة، لكنهما يضيفان سعرات كثيرة."
     prompt:
-      en: "What should the result add?"
-      ar: "ماذا يجب أن تضيف النتيجة؟"
+      en: "Tap each option to see it. What should the result add?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن تضيف النتيجة؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sahn
+      appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+      blocks:
+        - { kind: image, art: food-grill }
+        - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+        - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+        - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
     options:
-      - { id: note, text: { en: "\"Photos don't show oil or butter. Used some? Add it.\"", ar: "«الصور لا تُظهر الزيت أو الزبدة. استخدمت بعضًا منهما؟ أضِفه.»" } }
-      - { id: nothing, text: { en: "Nothing; most meals have little oil", ar: "لا شيء؛ فأغلب الوجبات فيها زيت قليل" } }
-      - { id: quiet, text: { en: "Quietly add 100 kcal to every meal", ar: "نضيف 100 سعرة لكل وجبة دون أن نقول" } }
+      - id: note
+        text: { en: "\"Photos don't show oil or butter. Used some? Add it.\"", ar: "«الصور لا تُظهر الزيت أو الزبدة. استخدمت بعضًا منهما؟ أضِفه.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+            - { kind: banner, tone: info, icon: drop, text: { en: "Photos don't show oil or butter. Used some? Add it.", ar: "الصور لا تُظهر الزيت أو الزبدة. استخدمت بعضًا منهما؟ أضِفه." }, gap: s }
+      - id: nothing
+        text: { en: "Nothing; most meals have little oil", ar: "لا شيء؛ فأغلب الوجبات فيها زيت قليل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+      - id: quiet
+        text: { en: "Quietly add 100 kcal to every meal", ar: "نضيف 100 سعرة لكل وجبة دون أن نقول" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 750 kcal", ar: "حوالي 750 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+            - { kind: small, color: muted, text: { en: "(100 kcal added without telling the user)", ar: "(أُضيفت 100 سعرة دون إخبار المستخدم)" }, gap: xs }
     answer: [note]
     misconceptions:
       - id: MC-P12-023
@@ -87,7 +178,7 @@ steps:
       ar: "من الدرس 1: قل ما لا يعرفه الذكاء الاصطناعي، ليكمل الناس النقص."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U03-03
     part: check
     rules: [R19]
@@ -99,12 +190,51 @@ steps:
       en: "Some users count carbs to decide their insulin dose. The app shows them a carb estimate too."
       ar: "بعض المستخدمين يحسبون الكربوهيدرات ليحدّدوا جرعة الإنسولين. والتطبيق يعرض لهم تقديرًا للكربوهيدرات أيضًا."
     prompt:
-      en: "What should they see?"
-      ar: "ماذا يجب أن يروا؟"
+      en: "Tap each option to see it. What should they see?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يروا؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sahn
+      appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+      blocks:
+        - { kind: image, art: food-grill }
+        - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+        - { kind: badge, icon: syringe, text: { en: "Carb counting is on", ar: "حساب الكربوهيدرات مفعّل" }, gap: s }
+        - { kind: heading, text: { en: "Carbs: 70 g", ar: "الكربوهيدرات: 70 غ" }, gap: xs }
     options:
-      - { id: number, text: { en: "\"Carbs: 70 g\", the same as everyone", ar: "«الكربوهيدرات: 70 غ»، مثل الجميع" } }
-      - { id: big, text: { en: "\"Carbs: 70 g\" in a bigger font", ar: "«الكربوهيدرات: 70 غ» بخط أكبر" } }
-      - { id: why, text: { en: "\"Carbs: about 70 g, mostly from 1 cup of rice. Photo guesses can be off, so check before you dose.\"", ar: "«الكربوهيدرات: حوالي 70 غ، أغلبها من كوب أرز. تقدير الصور قد يخطئ، فراجِع قبل الجرعة.»" } }
+      - id: number
+        text: { en: "\"Carbs: 70 g\", the same as everyone", ar: "«الكربوهيدرات: 70 غ»، مثل الجميع" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: badge, icon: syringe, text: { en: "Carb counting is on", ar: "حساب الكربوهيدرات مفعّل" }, gap: s }
+            - { kind: heading, text: { en: "Carbs: 70 g", ar: "الكربوهيدرات: 70 غ" }, gap: xs }
+      - id: big
+        text: { en: "\"Carbs: 70 g\" in a bigger font", ar: "«الكربوهيدرات: 70 غ» بخط أكبر" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: badge, icon: syringe, text: { en: "Carb counting is on", ar: "حساب الكربوهيدرات مفعّل" }, gap: s }
+            - { kind: heading, px: 28, text: { en: "Carbs: 70 g", ar: "الكربوهيدرات: 70 غ" }, gap: xs }
+      - id: why
+        text: { en: "\"Carbs: about 70 g, mostly from 1 cup of rice. Photo guesses can be off, so check before you dose.\"", ar: "«الكربوهيدرات: حوالي 70 غ، أغلبها من كوب أرز. تقدير الصور قد يخطئ، فراجِع قبل الجرعة.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: badge, icon: syringe, text: { en: "Carb counting is on", ar: "حساب الكربوهيدرات مفعّل" }, gap: s }
+            - { kind: heading, text: { en: "Carbs: about 70 g, mostly from 1 cup of rice. Photo guesses can be off, so check before you dose.", ar: "الكربوهيدرات: حوالي 70 غ، أغلبها من كوب أرز. تقدير الصور قد يخطئ، فراجِع قبل الجرعة." }, gap: xs }
     answer: [why]
     misconceptions:
       - id: MC-P12-024
@@ -117,7 +247,7 @@ steps:
       ar: "من الدرس 2: حين قد يؤذي الخطأ، اعرض السبب وما يجب مراجعته."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U03-04
     part: check
     rules: [R19]
@@ -129,12 +259,51 @@ steps:
       en: "The team wants the total to read \"643.27 kcal (88.4% sure)\"."
       ar: "الفريق يريد أن يظهر المجموع هكذا: «643.27 سعرة (متأكّد 88.4%)»."
     prompt:
-      en: "What should it show?"
-      ar: "ماذا يجب أن يعرض؟"
+      en: "Tap each option to see it. What should it show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يعرض؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sahn
+      appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+      blocks:
+        - { kind: image, art: food-grill }
+        - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+        - { kind: heading, text: { en: "643.27 kcal (88.4% sure)", ar: "643.27 سعرة (متأكّد 88.4%)" }, gap: s }
+        - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
     options:
-      - { id: exact, text: { en: "Keep \"643.27 kcal (88.4% sure)\"", ar: "يبقى «643.27 سعرة (متأكّد 88.4%)»" } }
-      - { id: about, text: { en: "\"About 650 kcal\"", ar: "«حوالي 650 سعرة»" } }
-      - { id: nopct, text: { en: "\"643.27 kcal\" without the percentage", ar: "«643.27 سعرة» دون النسبة" } }
+      - id: exact
+        text: { en: "Keep \"643.27 kcal (88.4% sure)\"", ar: "يبقى «643.27 سعرة (متأكّد 88.4%)»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "643.27 kcal (88.4% sure)", ar: "643.27 سعرة (متأكّد 88.4%)" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+      - id: about
+        text: { en: "\"About 650 kcal\"", ar: "«حوالي 650 سعرة»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "About 650 kcal", ar: "حوالي 650 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
+      - id: nopct
+        text: { en: "\"643.27 kcal\" without the percentage", ar: "«643.27 سعرة» دون النسبة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-grill }
+            - { kind: chips, items: [ { text: { en: "Rice", ar: "أرز" } }, { text: { en: "Grilled chicken", ar: "دجاج مشوي" } }, { text: { en: "Salad", ar: "سلطة" } } ], gap: xs }
+            - { kind: heading, text: { en: "643.27 kcal", ar: "643.27 سعرة" }, gap: s }
+            - { kind: link, text: { en: "Why?", ar: "لماذا؟" }, gap: xs }
     answer: [about]
     misconceptions:
       - id: MC-P12-026
@@ -147,7 +316,7 @@ steps:
       ar: "من الدرس 3: اعرض الثقة فقط إذا غيّرت القرار، ولا تصطنع الدقة."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P12-U03-05
     part: check
     rules: [R19]
@@ -159,12 +328,46 @@ steps:
       en: "Sometimes the app can't tell koshari from lentil rice. They look alike in photos."
       ar: "أحيانًا لا يستطيع التطبيق التمييز بين الكشري والأرز بالعدس. فهما متشابهان في الصور."
     prompt:
-      en: "What should it show?"
-      ar: "ماذا يجب أن يعرض؟"
+      en: "Tap each option to see it. What should it show?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن يعرض؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: sahn
+      appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+      blocks:
+        - { kind: image, art: food-koshary }
+        - { kind: small, color: muted, text: { en: "Koshari or lentil rice? They look alike in photos.", ar: "كشري أم أرز بالعدس؟ يتشابهان في الصور." }, gap: s }
     options:
-      - { id: pick, text: { en: "\"Koshari or lentil rice? Tap the right one.\"", ar: "«كشري أم أرز بالعدس؟ اضغط على الصحيح.»" } }
-      - { id: guess, text: { en: "\"Koshari\", its best guess", ar: "«كشري»، تخمينه الأرجح" } }
-      - { id: pct, text: { en: "\"Koshari (52%)\"", ar: "«كشري (52%)»" } }
+      - id: pick
+        text: { en: "\"Koshari or lentil rice? Tap the right one.\"", ar: "«كشري أم أرز بالعدس؟ اضغط على الصحيح.»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: text, text: { en: "Koshari or lentil rice? Tap the right one.", ar: "كشري أم أرز بالعدس؟ اضغط على الصحيح." }, gap: s }
+            - { kind: chips, items: [ { text: { en: "Koshari", ar: "كشري" } }, { text: { en: "Lentil rice", ar: "أرز بالعدس" } } ], gap: xs }
+      - id: guess
+        text: { en: "\"Koshari\", its best guess", ar: "«كشري»، تخمينه الأرجح" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: heading, text: { en: "Koshari", ar: "كشري" }, gap: s }
+            - { kind: small, color: muted, text: { en: "About 700 kcal", ar: "حوالي 700 سعرة" }, gap: xs }
+      - id: pct
+        text: { en: "\"Koshari (52%)\"", ar: "«كشري (52%)»" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: sahn
+          appbar: { title: { en: "Your meal", ar: "وجبتك" }, back: true }
+          blocks:
+            - { kind: image, art: food-koshary }
+            - { kind: heading, text: { en: "Koshari (52%)", ar: "كشري (52%)" }, gap: s }
+            - { kind: small, color: muted, text: { en: "About 700 kcal", ar: "حوالي 700 سعرة" }, gap: xs }
     answer: [pick]
     misconceptions:
       - id: MC-P12-029

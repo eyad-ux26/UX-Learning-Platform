@@ -26,15 +26,31 @@ steps:
       en: "I'm redesigning the home screen of a bookshop app. Kamal is one of our customers. He is blind and uses a screen reader. He wanted this week's offer on Arabic novels.\n\nThe offers are in a carousel: slides that show one at a time. Kamal had to go through them one by one. The novels offer was slide 6 of 8."
       ar: "أعيد تصميم الشاشة الرئيسية لتطبيق مكتبة تبيع الكتب. كمال أحد عملائنا، وهو كفيف ويستخدم قارئ الشاشة. وكان يريد عرض هذا الأسبوع على الروايات العربية.\n\nالعروض موجودة في Carousel، أي شرائح تظهر واحدة بعد الأخرى. فاضطر كمال أن يمرّ عليها واحدة واحدة. وكان عرض الروايات هو الشريحة 6 من 8."
     mock:
-      width: 300
+      app: waraq
+      appbar: &waraqbar { logo: true, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } }, { icon: shopping-cart, aria: { en: "Basket", ar: "السلة" } } ] }
+      tabbar: &waraqtabs
+        active: 0
+        items:
+          - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+          - { icon: books, text: { en: "Categories", ar: "الأقسام" } }
+          - { icon: receipt, text: { en: "Orders", ar: "طلباتي" } }
+          - { icon: user, text: { en: "Account", ar: "حسابي" } }
+      reader: { en: "Children's books, 20% off. Slide 1 of 8", ar: "كتب الأطفال، خصم 20%. الشريحة 1 من 8" }
       blocks: &carousel
-        - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-        - { kind: image, size: m, text: { en: "Offer: children's books", ar: "عرض: كتب الأطفال" }, gap: s }
+        - { kind: heading, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" } }
+        - kind: card
+          art: book
+          gap: s
+          blocks:
+            - { kind: badge, text: { en: "20% off", ar: "خصم 20%" } }
+            - { kind: heading, text: { en: "Children's books", ar: "كتب الأطفال" }, gap: xs }
         - kind: row
           gap: xs
           blocks:
-            - { kind: meta, text: { en: "1 / 8", ar: "1 من 8" } }
-            - { kind: button, style: plain, text: { en: "Next ›", ar: "التالي ‹" } }
+            - { kind: small, color: muted, text: { en: "1 of 8", ar: "1 من 8" } }
+            - { kind: button, style: text, icon: caret-right, text: { en: "Next", ar: "التالي" } }
+        - { kind: heading, text: { en: "Best sellers", ar: "الأكثر مبيعًا" }, gap: m }
+        - { kind: listitem, art: book, text: { en: "The Nile Diaries", ar: "يوميات النيل" }, sub: { en: "Novel · Salma Fawzy", ar: "رواية · سلمى فوزي" }, value: { en: "EGP 180", ar: "180 جنيه" } }
 
   - id: S02
     type: tune
@@ -50,40 +66,60 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي تغيير يُوصل كمال إلى عرض الروايات بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: waraq
+      appbar: *waraqbar
+      tabbar: *waraqtabs
+      reader: { en: "Children's books, 20% off. Slide 1 of 8", ar: "كتب الأطفال، خصم 20%. الشريحة 1 من 8" }
       blocks: *carousel
     options:
       - id: auto
         text: { en: "Make the slides change by themselves every 3 seconds", ar: "اجعل الشرائح تتغيّر وحدها كل 3 ثوانٍ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *waraqbar
+          tabbar: *waraqtabs
           blocks:
-            - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-            - { kind: image, size: m, text: { en: "Offer: children's books", ar: "عرض: كتب الأطفال" }, gap: s }
-            - { kind: meta, text: { en: "1 / 8 · next slide in 3 s", ar: "1 من 8 · الشريحة التالية بعد 3 ثوانٍ" }, gap: xs }
+            - { kind: heading, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" } }
+            - kind: card
+              art: book
+              gap: s
+              note: { en: "Moves to the next slide every 3 s", ar: "ينتقل إلى الشريحة التالية كل 3 ثوانٍ" }
+              blocks:
+                - { kind: badge, text: { en: "20% off", ar: "خصم 20%" } }
+                - { kind: heading, text: { en: "Children's books", ar: "كتب الأطفال" }, gap: xs }
+            - { kind: small, color: muted, text: { en: "1 of 8", ar: "1 من 8" }, gap: xs }
       - id: list
         text: { en: "Show the 8 offers as a short list of links, each with its name", ar: "اعرض العروض الثمانية كقائمة قصيرة من الروابط، كل رابط باسم عرضه" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *waraqbar
+          tabbar: *waraqtabs
+          reader: { en: "This week's offers, heading. Children's books: 20% off, link. 1 of 8", ar: "عروض هذا الأسبوع، عنوان. كتب الأطفال: خصم 20%، رابط. 1 من 8" }
           blocks:
-            - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-            - { kind: heading, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" }, gap: s }
-            - { kind: link, text: { en: "Children's books: 20% off", ar: "كتب الأطفال: خصم 20%" }, gap: xs }
-            - { kind: link, text: { en: "Cookbooks: buy 2, get 1", ar: "كتب الطبخ: اشترِ 2 واحصل على 1" }, gap: xs }
-            - { kind: link, text: { en: "Arabic novels: 30% off", ar: "الروايات العربية: خصم 30%" }, gap: xs }
-            - { kind: link, text: { en: "See all 8 offers", ar: "اعرض العروض الثمانية" }, gap: xs }
+            - { kind: heading, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" } }
+            - { kind: listitem, icon: tag, text: { en: "Children's books: 20% off", ar: "كتب الأطفال: خصم 20%" }, chevron: true, gap: s }
+            - { kind: listitem, icon: tag, text: { en: "Cookbooks: buy 2, get 1", ar: "كتب الطبخ: اشترِ 2 واحصل على 1" }, chevron: true }
+            - { kind: listitem, icon: tag, text: { en: "Arabic novels: 30% off", ar: "الروايات العربية: خصم 30%" }, chevron: true }
+            - { kind: link, text: { en: "See all 8 offers", ar: "اعرض العروض الثمانية" }, gap: s }
       - id: bigger
         text: { en: "Make the Next button bigger and easier to find", ar: "كبّر زر «التالي» واجعله أسهل في الوصول" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *waraqbar
+          tabbar: *waraqtabs
           blocks:
-            - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-            - { kind: image, size: m, text: { en: "Offer: children's books", ar: "عرض: كتب الأطفال" }, gap: s }
-            - { kind: meta, text: { en: "1 / 8", ar: "1 من 8" }, gap: xs }
-            - { kind: button, text: { en: "Next offer", ar: "العرض التالي" }, gap: xs }
+            - { kind: heading, text: { en: "This week's offers", ar: "عروض هذا الأسبوع" } }
+            - kind: card
+              art: book
+              gap: s
+              blocks:
+                - { kind: badge, text: { en: "20% off", ar: "خصم 20%" } }
+                - { kind: heading, text: { en: "Children's books", ar: "كتب الأطفال" }, gap: xs }
+            - { kind: small, color: muted, text: { en: "1 of 8", ar: "1 من 8" }, gap: xs }
+            - { kind: button, icon: caret-right, text: { en: "Next offer", ar: "العرض التالي" }, gap: s }
     answer: [list]
     misconceptions:
       - id: MC-P05-006
@@ -132,50 +168,53 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي تغيير يُوصل كمال إلى الموضوع 6 بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: waraq
+      appbar: &helpbar { title: { en: "Delivery and returns", ar: "التوصيل والإرجاع" }, back: true }
       blocks: &helpnow
-        - { kind: title, text: { en: "Delivery and returns", ar: "التوصيل والإرجاع" } }
-        - { kind: heading, text: { en: "1. Delivery areas", ar: "1. مناطق التوصيل" }, gap: m }
+        - { kind: heading, text: { en: "1. Delivery areas", ar: "1. مناطق التوصيل" } }
         - { kind: text, text: { en: "We deliver to all governorates. Cairo and Giza orders arrive in…", ar: "نوصّل إلى كل المحافظات. وتصل طلبات القاهرة والجيزة خلال…" }, gap: xs }
         - { kind: heading, text: { en: "2. Delivery fees", ar: "2. رسوم التوصيل" }, gap: m }
-        - { kind: text, text: { en: "Orders over 500 EGP ship free. Smaller orders…", ar: "التوصيل مجاني للطلبات فوق 500 جنيه. والطلبات الأصغر…" }, gap: xs }
+        - { kind: text, text: { en: "Orders over EGP 500 ship free. Smaller orders…", ar: "التوصيل مجاني للطلبات فوق 500 جنيه. والطلبات الأصغر…" }, gap: xs }
         - { kind: small, color: muted, text: { en: "… 5 more topics below …", ar: "… 5 مواضيع أخرى في الأسفل …" }, gap: m }
     options:
       - id: top
         text: { en: "Add a \"Back to top\" button at the bottom", ar: "أضف زر «العودة إلى الأعلى» في آخر الصفحة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *helpbar
           blocks:
-            - { kind: title, text: { en: "Delivery and returns", ar: "التوصيل والإرجاع" } }
-            - { kind: heading, text: { en: "1. Delivery areas", ar: "1. مناطق التوصيل" }, gap: m }
+            - { kind: heading, text: { en: "1. Delivery areas", ar: "1. مناطق التوصيل" } }
             - { kind: text, text: { en: "We deliver to all governorates. Cairo and Giza orders arrive in…", ar: "نوصّل إلى كل المحافظات. وتصل طلبات القاهرة والجيزة خلال…" }, gap: xs }
             - { kind: small, color: muted, text: { en: "… 6 more topics below …", ar: "… 6 مواضيع أخرى في الأسفل …" }, gap: m }
-            - { kind: button, style: plain, text: { en: "↑ Back to top", ar: "↑ العودة إلى الأعلى" }, gap: m }
+            - { kind: button, style: text, icon: arrow-up, text: { en: "Back to top", ar: "العودة إلى الأعلى" }, gap: m }
       - id: pages
         text: { en: "Split it into 7 pages with Next and Previous buttons", ar: "قسّمها إلى 7 صفحات، بزرّي «التالي» و«السابق»" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *helpbar
           blocks:
-            - { kind: title, text: { en: "Delivery and returns", ar: "التوصيل والإرجاع" } }
-            - { kind: meta, text: { en: "Topic 1 of 7", ar: "الموضوع 1 من 7" }, gap: xs }
+            - { kind: progress, value: 14, label: { en: "Topic 1 of 7", ar: "الموضوع 1 من 7" } }
             - { kind: heading, text: { en: "Delivery areas", ar: "مناطق التوصيل" }, gap: m }
             - { kind: text, text: { en: "We deliver to all governorates. Cairo and Giza orders arrive in…", ar: "نوصّل إلى كل المحافظات. وتصل طلبات القاهرة والجيزة خلال…" }, gap: xs }
-            - { kind: button, text: { en: "Next topic", ar: "الموضوع التالي" }, gap: m }
+          footer:
+            - { kind: button, icon: caret-right, text: { en: "Next topic", ar: "الموضوع التالي" } }
       - id: jump
         text: { en: "Add links to the 7 topics at the top of the page", ar: "أضف روابط للمواضيع السبعة في أعلى الصفحة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *helpbar
           blocks:
-            - { kind: title, text: { en: "Delivery and returns", ar: "التوصيل والإرجاع" } }
-            - { kind: small, weight: bold, text: { en: "On this page", ar: "في هذه الصفحة" }, gap: s }
-            - { kind: link, text: { en: "Delivery areas", ar: "مناطق التوصيل" }, gap: xs }
-            - { kind: link, text: { en: "Delivery fees", ar: "رسوم التوصيل" }, gap: xs }
-            - { kind: small, color: muted, text: { en: "… 3 more …", ar: "… 3 روابط أخرى …" }, gap: xs }
-            - { kind: link, text: { en: "Days to return a book", ar: "مدة إرجاع الكتاب" }, gap: xs }
-            - { kind: link, text: { en: "Refunds", ar: "استرجاع المبلغ" }, gap: xs }
+            - kind: card
+              blocks:
+                - { kind: small, weight: bold, text: { en: "On this page", ar: "في هذه الصفحة" } }
+                - { kind: link, text: { en: "Delivery areas", ar: "مناطق التوصيل" }, gap: xs }
+                - { kind: link, text: { en: "Delivery fees", ar: "رسوم التوصيل" }, gap: xs }
+                - { kind: small, color: muted, text: { en: "… 3 more …", ar: "… 3 روابط أخرى …" }, gap: xs }
+                - { kind: link, text: { en: "Days to return a book", ar: "مدة إرجاع الكتاب" }, gap: xs }
+                - { kind: link, text: { en: "Refunds", ar: "استرجاع المبلغ" }, gap: xs }
             - { kind: heading, text: { en: "1. Delivery areas", ar: "1. مناطق التوصيل" }, gap: m }
     answer: [jump]
     misconceptions:
@@ -200,7 +239,7 @@ steps:
       ar: "قائمة الروابط القصيرة في الأعلى تخبر الجميع بما في الصفحة، وتسمح لهم بالقفز إليه. وهي تفيد المبصرين على شاشة الهاتف الصغيرة كما تفيد كمال."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P05-U01-03
     part: guided
     rules: [R06]
@@ -212,20 +251,44 @@ steps:
       en: "Our help on \"How to return a book\" is only a 4-minute video. There's no text. Kamal only needs step 3: where to drop off the book."
       ar: "الشرح عندنا عن «كيف ترجع كتابًا» هو فيديو مدته 4 دقائق فقط، بلا أي نص. وكمال يحتاج الخطوة 3 فقط: أين يسلّم الكتاب."
     prompt:
-      en: "Which change lets Kamal go straight to step 3?"
-      ar: "أي تغيير يجعل كمال يذهب مباشرة إلى الخطوة 3؟"
+      en: "Tap each option to see the change. Which change lets Kamal go straight to step 3?"
+      ar: "اضغط على كل خيار لترى التغيير. أي تغيير يجعل كمال يذهب مباشرة إلى الخطوة 3؟"
     mock:
-      width: 300
+      caption: { en: "Now", ar: "الآن" }
+      app: waraq
+      appbar: &returnbar { title: { en: "How to return a book", ar: "كيف ترجع كتابًا" }, back: true }
       blocks:
-        - { kind: title, text: { en: "How to return a book", ar: "كيف ترجع كتابًا" } }
-        - { kind: image, size: m, text: { en: "▶ Video · 4:00", ar: "▶ فيديو · 4:00" }, gap: s }
+        - { kind: image, art: book, size: m, text: { en: "▶ Video · 4:00", ar: "▶ فيديو · 4:00" } }
+        - { kind: small, color: muted, text: { en: "No text version", ar: "لا توجد نسخة مكتوبة" }, gap: s }
     options:
       - id: steps
         text: { en: "Add the steps under the video as numbered text", ar: "أضف الخطوات تحت الفيديو، مكتوبة ومرقّمة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: *returnbar
+          blocks:
+            - { kind: image, art: book, size: s, text: { en: "▶ Video · 4:00", ar: "▶ فيديو · 4:00" } }
+            - { kind: heading, text: { en: "Steps", ar: "الخطوات" }, gap: m }
+            - { kind: list, style: number, gap: xs, items: [ { en: "Open My orders and pick the book", ar: "افتح «طلباتي» واختر الكتاب" }, { en: "Tap Return and print the label", ar: "اضغط «إرجاع» واطبع الملصق" }, { en: "Drop it at any Waraq branch or post office", ar: "سلّمه في أي فرع لورق أو مكتب بريد" } ] }
       - id: short
         text: { en: "Cut the video down to 2 minutes", ar: "اختصر الفيديو إلى دقيقتين" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: *returnbar
+          blocks:
+            - { kind: image, art: book, size: m, text: { en: "▶ Video · 2:00", ar: "▶ فيديو · 2:00" } }
+            - { kind: small, color: muted, text: { en: "No text version", ar: "لا توجد نسخة مكتوبة" }, gap: s }
       - id: speed
         text: { en: "Add a button to play the video at double speed", ar: "أضف زرًا لتشغيل الفيديو بسرعة مضاعفة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: waraq
+          appbar: *returnbar
+          blocks:
+            - { kind: image, art: book, size: m, text: { en: "▶ Video · 4:00", ar: "▶ فيديو · 4:00" } }
+            - { kind: button, style: outline, icon: fast-forward, text: { en: "Play at 2× speed", ar: "شغّل بسرعة 2×" }, gap: s }
     answer: [steps]
     misconceptions:
       - id: MC-P05-006
@@ -260,39 +323,42 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل كمال يجد الكتاب بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: waraq
+      appbar: &waraqlogo { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Basket", ar: "السلة" } } ] }
+      tabbar: *waraqtabs
       blocks: &searchnow
-        - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-        - { kind: field, text: { en: "Search books or authors", ar: "ابحث عن كتاب أو كاتب" }, gap: s }
-        - { kind: image, size: s, text: { en: "Banner", ar: "بانر" }, gap: s }
+        - { kind: searchbar, text: { en: "Search books or authors", ar: "ابحث عن كتاب أو كاتب" } }
+        - { kind: card, art: book, gap: s, blocks: [ { kind: heading, text: { en: "Book fair week: up to 40% off", ar: "أسبوع معرض الكتاب: خصم حتى 40%" } } ] }
     options:
       - id: menu
         text: { en: "Move search into the ☰ menu, and make the banner bigger", ar: "انقل البحث إلى القائمة ☰، وكبّر البانر" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: { logo: true, actions: [ { icon: list, aria: { en: "Menu (search is inside)", ar: "القائمة (البحث بداخلها)" } } ] }
+          tabbar: *waraqtabs
           blocks:
-            - kind: row
-              blocks:
-                - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-                - { kind: meta, text: "☰" }
-            - { kind: image, size: l, text: { en: "Banner", ar: "بانر" }, gap: s }
+            - { kind: card, art: book, size: l, blocks: [ { kind: title, text: { en: "Book fair week: up to 40% off", ar: "أسبوع معرض الكتاب: خصم حتى 40%" } } ] }
+            - { kind: small, color: muted, text: { en: "Search is now inside the ☰ menu", ar: "البحث الآن داخل القائمة ☰" }, gap: s }
       - id: keep
         text: { en: "Keep the search box at the top of the screen", ar: "أبقِ مربع البحث في أعلى الشاشة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *waraqlogo
+          tabbar: *waraqtabs
           blocks: *searchnow
       - id: bottom
         text: { en: "Move search below the banner and the offers", ar: "انقل البحث تحت البانر والعروض" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: waraq
+          appbar: *waraqlogo
+          tabbar: *waraqtabs
           blocks:
-            - { kind: title, text: { en: "Bookshop", ar: "المكتبة" } }
-            - { kind: image, size: l, text: { en: "Banner", ar: "بانر" }, gap: s }
+            - { kind: card, art: book, size: l, blocks: [ { kind: title, text: { en: "Book fair week: up to 40% off", ar: "أسبوع معرض الكتاب: خصم حتى 40%" } } ] }
             - { kind: small, color: muted, text: { en: "… offers …", ar: "… العروض …" }, gap: s }
-            - { kind: field, text: { en: "Search books or authors", ar: "ابحث عن كتاب أو كاتب" }, gap: s }
+            - { kind: searchbar, text: { en: "Search books or authors", ar: "ابحث عن كتاب أو كاتب" }, gap: s }
     answer: [keep]
     misconceptions:
       - id: MC-P05-007
@@ -334,19 +400,23 @@ steps:
     a:
       label: { en: "A: Reading a novel, chapter by chapter", ar: "A: قراءة رواية، فصلًا بعد فصل" }
       mock:
-        width: 300
+        app: waraq
+        appbar: { title: { en: "The Night Train", ar: "قطار الليل" }, back: true }
         blocks:
-          - { kind: meta, text: { en: "Chapter 3 of 12", ar: "الفصل 3 من 12" } }
+          - { kind: small, color: muted, text: { en: "Chapter 3 of 12", ar: "الفصل 3 من 12" } }
           - { kind: text, text: { en: "The train left the station before dawn, and Mariam still hadn't…", ar: "غادر القطار المحطة قبل الفجر، ومريم لم…" }, gap: s }
-          - { kind: button, text: { en: "Next chapter", ar: "الفصل التالي" }, gap: m }
+        footer:
+          - { kind: button, icon: caret-right, text: { en: "Next chapter", ar: "الفصل التالي" } }
     b:
       label: { en: "B: This week's 8 offers, one by one", ar: "B: عروض هذا الأسبوع الثمانية، عرضًا بعد عرض" }
       mock:
-        width: 300
+        app: waraq
+        appbar: { title: { en: "This week's offers", ar: "عروض هذا الأسبوع" }, back: true }
         blocks:
-          - { kind: meta, text: { en: "Offer 3 of 8", ar: "العرض 3 من 8" } }
-          - { kind: image, size: s, text: { en: "Cookbooks: buy 2, get 1", ar: "كتب الطبخ: اشترِ 2 واحصل على 1" }, gap: s }
-          - { kind: button, text: { en: "Next offer", ar: "العرض التالي" }, gap: m }
+          - { kind: small, color: muted, text: { en: "Offer 3 of 8", ar: "العرض 3 من 8" } }
+          - { kind: card, art: book, gap: s, blocks: [ { kind: heading, text: { en: "Cookbooks: buy 2, get 1", ar: "كتب الطبخ: اشترِ 2 واحصل على 1" } } ] }
+        footer:
+          - { kind: button, icon: caret-right, text: { en: "Next offer", ar: "العرض التالي" } }
     answer: a
     reason:
       prompt: { en: "Why is \"Next\" fine for the novel?", ar: "لماذا زر «التالي» مناسب للرواية؟" }
@@ -395,35 +465,51 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يُوصل المريض إلى طبيب الأطفال بأسرع شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: raha
+      frame: wide
+      url: raha.example/doctors
+      navbar: &rahanav
+        links: [ { en: "Doctors", ar: "الأطباء" }, { en: "Services", ar: "الخدمات" }, { en: "Book a visit", ar: "احجز زيارة" } ]
+        active: 0
       blocks: &docsnow
         - { kind: title, text: { en: "Our doctors", ar: "أطباؤنا" } }
-        - { kind: image, size: s, text: { en: "Dr. Hesham · Heart", ar: "د. هشام · القلب" }, gap: s }
+        - kind: card
+          gap: s
+          blocks:
+            - { kind: listitem, avatar: { text: "Hesham Ali", art: doctor }, text: { en: "Dr. Hesham Ali", ar: "د. هشام علي" }, sub: { en: "Heart", ar: "القلب" } }
         - kind: row
           gap: xs
           blocks:
-            - { kind: meta, text: { en: "1 / 24", ar: "1 من 24" } }
-            - { kind: button, style: plain, text: { en: "Next ›", ar: "التالي ‹" } }
+            - { kind: small, color: muted, text: { en: "1 of 24", ar: "1 من 24" } }
+            - { kind: button, style: text, icon: caret-right, text: { en: "Next", ar: "التالي" } }
     options:
       - id: arrows
         text: { en: "Add arrows on both sides and dots under the slider", ar: "أضف أسهمًا على الجانبين ونقاطًا تحت الشرائح" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          frame: wide
+          url: raha.example/doctors
+          navbar: *rahanav
           blocks:
             - { kind: title, text: { en: "Our doctors", ar: "أطباؤنا" } }
             - kind: row
               gap: s
               blocks:
-                - { kind: meta, text: "‹" }
-                - { kind: image, size: s, text: { en: "Dr. Hesham · Heart", ar: "د. هشام · القلب" } }
-                - { kind: meta, text: "›" }
+                - { kind: iconbtn, icon: caret-left, aria: { en: "Previous", ar: "السابق" } }
+                - kind: card
+                  blocks:
+                    - { kind: listitem, avatar: { text: "Hesham Ali", art: doctor }, text: { en: "Dr. Hesham Ali", ar: "د. هشام علي" }, sub: { en: "Heart", ar: "القلب" } }
+                - { kind: iconbtn, icon: caret-right, aria: { en: "Next", ar: "التالي" } }
             - { kind: small, color: muted, text: "● ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○", gap: xs }
       - id: list
         text: { en: "A list grouped by specialty, with a link to each specialty at the top", ar: "قائمة مقسّمة حسب التخصص، مع رابط لكل تخصص في الأعلى" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          frame: wide
+          url: raha.example/doctors
+          navbar: *rahanav
           blocks:
             - { kind: title, text: { en: "Our doctors", ar: "أطباؤنا" } }
             - kind: row
@@ -434,18 +520,26 @@ steps:
                 - { kind: link, text: { en: "Children", ar: "الأطفال" } }
                 - { kind: link, text: { en: "More", ar: "المزيد" } }
             - { kind: heading, text: { en: "Heart", ar: "القلب" }, gap: m }
-            - { kind: text, text: { en: "Dr. Hesham · Dr. Laila · Dr. Amir", ar: "د. هشام · د. ليلى · د. أمير" }, gap: xs }
+            - { kind: listitem, avatar: { text: "Hesham Ali", art: doctor }, text: { en: "Dr. Hesham Ali", ar: "د. هشام علي" }, chevron: true }
+            - { kind: listitem, avatar: { text: "Laila Nabil", art: woman-2 }, text: { en: "Dr. Laila Nabil", ar: "د. ليلى نبيل" }, chevron: true }
             - { kind: heading, text: { en: "Skin", ar: "الجلدية" }, gap: m }
-            - { kind: text, text: { en: "Dr. Mai · Dr. Sherif", ar: "د. مي · د. شريف" }, gap: xs }
+            - { kind: listitem, avatar: { text: "Mai Hassan", art: woman-1 }, text: { en: "Dr. Mai Hassan", ar: "د. مي حسن" }, chevron: true }
       - id: auto
         text: { en: "Let the slider move by itself so patients see every doctor", ar: "اجعل الشرائح تتحرّك وحدها ليرى المرضى كل الأطباء" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          frame: wide
+          url: raha.example/doctors
+          navbar: *rahanav
           blocks:
             - { kind: title, text: { en: "Our doctors", ar: "أطباؤنا" } }
-            - { kind: image, size: s, text: { en: "Dr. Hesham · Heart", ar: "د. هشام · القلب" }, gap: s }
-            - { kind: meta, text: { en: "1 / 24 · next in 3 s", ar: "1 من 24 · التالي بعد 3 ثوانٍ" }, gap: xs }
+            - kind: card
+              gap: s
+              note: { en: "Moves to the next doctor every 3 s", ar: "ينتقل إلى الطبيب التالي كل 3 ثوانٍ" }
+              blocks:
+                - { kind: listitem, avatar: { text: "Hesham Ali", art: doctor }, text: { en: "Dr. Hesham Ali", ar: "د. هشام علي" }, sub: { en: "Heart", ar: "القلب" } }
+            - { kind: small, color: muted, text: { en: "1 of 24", ar: "1 من 24" }, gap: xs }
     answer: [list]
     misconceptions:
       - id: MC-P05-006

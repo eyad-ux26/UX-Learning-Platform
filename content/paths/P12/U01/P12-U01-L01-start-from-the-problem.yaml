@@ -25,11 +25,33 @@ steps:
       en: "I manage an online grocery app. Our CEO came back from a conference and said: \"Every app has AI now. Add AI to ours.\"\n\nI have one month of the team's time. Where should it go?"
       ar: "أدير تطبيق بقالة أونلاين. ورجع مديرنا التنفيذي من مؤتمر وقال: «كل التطبيقات فيها ذكاء اصطناعي الآن. أضيفوه لتطبيقنا.»\n\nعندي شهر واحد من وقت الفريق. أين أضعه؟"
     mock:
-      width: 300
+      app: sallah
+      tabbar: &sallahtabs
+        active: 0
+        items:
+          - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+          - { icon: tag, text: { en: "Offers", ar: "العروض" } }
+          - { icon: receipt, text: { en: "Orders", ar: "طلباتي" } }
+          - { icon: user, text: { en: "Account", ar: "حسابي" } }
+      appbar: { logo: true, actions: [ { icon: shopping-cart, count: 3 } ] }
       blocks:
-        - { kind: title, text: { en: "Fresh Basket", ar: "سلة طازجة" } }
-        - { kind: field, label: { en: "Search", ar: "بحث" }, text: { en: "Tomatoes, rice…", ar: "طماطم، أرز…" }, gap: s }
-        - { kind: button, text: { en: "Order again", ar: "اطلب مرة أخرى" }, gap: m }
+        - { kind: searchbar, text: { en: "Search tomatoes, rice, milk…", ar: "ابحث عن طماطم، أرز، حليب…" } }
+        - kind: card
+          gap: m
+          blocks:
+            - { kind: heading, text: { en: "Your last order", ar: "طلبك السابق" } }
+            - { kind: small, text: { en: "14 items · EGP 860 · Thursday", ar: "14 منتجًا · 860 جنيه · الخميس" }, gap: xs }
+            - { kind: button, style: outline, icon: arrow-counter-clockwise, text: { en: "Order again", ar: "اطلب مرة أخرى" }, gap: s }
+        - { kind: heading, text: { en: "Fresh today", ar: "طازج اليوم" }, gap: m }
+        - { kind: listitem, art: food-salad, text: { en: "Tomatoes", ar: "طماطم" }, sub: { en: "1 kg", ar: "1 كجم" }, value: { en: "EGP 25", ar: "25 جنيه" } }
+        - { kind: listitem, art: bread, text: { en: "Baladi bread", ar: "خبز بلدي" }, sub: { en: "5 loaves", ar: "5 أرغفة" }, value: { en: "EGP 10", ar: "10 جنيه" } }
+      overlay:
+        type: banner
+        blocks:
+          - kind: listitem
+            avatar: { text: "Adel Fahmy", art: man-2 }
+            text: { en: "Adel (CEO)", ar: "عادل (المدير التنفيذي)" }
+            sub: { en: "Every app has AI now. Add AI to ours.", ar: "كل التطبيقات فيها ذكاء اصطناعي الآن. أضيفوه لتطبيقنا." }
 
   - id: S02
     type: choose
@@ -74,7 +96,7 @@ steps:
       ar: "اسأل «كيف نحلّ هذه المشكلة؟»، لا «هل نستخدم الذكاء الاصطناعي لـ…؟»\n\n- **الذكاء الاصطناعي غالبًا أفضل في:** اقتراحات تختلف لكل شخص، وتوقّع ما سيحدث، وفهم الكلام واللغة، والتعرّف على أشياء مثل الوجوه.\n- **القاعدة البسيطة غالبًا أفضل في:** الأشياء التي يجب أن تبقى في مكانها (الرئيسية، الإلغاء)، والمعلومات البسيطة الثابتة (نموذج بيانات البطاقة)، والحالات التي يحتاج فيها الناس معرفة سبب ما حدث بالضبط.\n- **الأبسط يفوز عند التساوي:** القاعدة أسهل في البناء والشرح والإصلاح."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U01-02
     part: guided
     rules: [R06]
@@ -86,12 +108,54 @@ steps:
       en: "Customers told us their top problem: \"I buy the same things every week, and adding them one by one takes forever.\""
       ar: "أخبرنا العملاء بأكبر مشكلة عندهم: «أشتري نفس الأشياء كل أسبوع، وإضافتها واحدة واحدة تأخذ وقتًا طويلًا جدًا.»"
     prompt:
-      en: "What's the best fix?"
-      ar: "ما أفضل حل؟"
+      en: "Tap each option to see the change. Which one lets customers fill their weekly basket fastest, with no wrong items?"
+      ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل العملاء يملؤون سلة الأسبوع بأسرع شكل، بدون منتجات خطأ؟"
+    mock:
+      app: sallah
+      appbar: &cartbar { title: { en: "Basket", ar: "السلة" }, back: true }
+      caption: { en: "Now", ar: "الآن" }
+      blocks:
+        - { kind: small, text: { en: "Added one by one · 3 of 14 items", ar: "تمت الإضافة واحدًا واحدًا · 3 من 14 منتجًا" }, color: muted }
+        - { kind: listitem, art: food-salad, text: { en: "Tomatoes · 2 kg", ar: "طماطم · 2 كجم" }, value: { en: "EGP 50", ar: "50 جنيه" }, gap: s }
+        - { kind: listitem, art: bread, text: { en: "Baladi bread · 10", ar: "خبز بلدي · 10" }, value: { en: "EGP 20", ar: "20 جنيه" } }
+        - { kind: listitem, art: box, text: { en: "Rice · 5 kg", ar: "أرز · 5 كجم" }, value: { en: "EGP 175", ar: "175 جنيه" } }
+        - { kind: searchbar, text: { en: "Search the next item…", ar: "ابحث عن المنتج التالي…" }, gap: m, note: { en: "11 more searches to go", ar: "باقي 11 بحثًا" } }
+      footer:
+        - { kind: button, text: { en: "Checkout · EGP 245", ar: "الدفع · 245 جنيه" } }
     options:
-      - { id: repeat, text: { en: "A \"Repeat last order\" button that fills the basket, ready to edit", ar: "زر «كرّر الطلب السابق» يملأ السلة، وجاهزة للتعديل" } }
-      - { id: guess, text: { en: "AI that guesses next week's basket and orders it by itself", ar: "ذكاء اصطناعي يتوقّع سلة الأسبوع القادم ويطلبها وحده" } }
-      - { id: chat, text: { en: "An AI chat where customers type what they want", ar: "محادثة ذكاء اصطناعي يكتب فيها العملاء ما يريدون" } }
+      - id: repeat
+        text: { en: "A \"Repeat last order\" button that fills the basket, ready to edit", ar: "زر «كرّر الطلب السابق» يملأ السلة، وجاهزة للتعديل" }
+        mock:
+          app: sallah
+          appbar: *cartbar
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          blocks:
+            - { kind: banner, tone: good, icon: check-circle, text: { en: "14 items added from your last order. Change anything you like.", ar: "أُضيف 14 منتجًا من طلبك السابق. غيّر ما تريد." } }
+            - { kind: listitem, art: food-salad, text: { en: "Tomatoes · 2 kg", ar: "طماطم · 2 كجم" }, value: { en: "EGP 50", ar: "50 جنيه" }, gap: s }
+            - { kind: listitem, art: bread, text: { en: "Baladi bread · 10", ar: "خبز بلدي · 10" }, value: { en: "EGP 20", ar: "20 جنيه" } }
+            - { kind: listitem, art: box, text: { en: "Rice · 5 kg", ar: "أرز · 5 كجم" }, value: { en: "EGP 175", ar: "175 جنيه" } }
+            - { kind: small, text: { en: "+ 11 more items", ar: "+ 11 منتجًا آخر" }, color: muted, gap: s }
+          footer:
+            - { kind: button, text: { en: "Checkout · EGP 860", ar: "الدفع · 860 جنيه" } }
+      - id: guess
+        text: { en: "AI that guesses next week's basket and orders it by itself", ar: "ذكاء اصطناعي يتوقّع سلة الأسبوع القادم ويطلبها وحده" }
+        mock:
+          app: sallah
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          screen: lock
+          blocks:
+            - { kind: notification, title: { en: "We ordered your basket ✨", ar: "طلبنا سلتك ✨" }, text: { en: "Our AI picked 16 items for this week · EGP 910 · arriving Thursday", ar: "اختار الذكاء الاصطناعي 16 منتجًا لهذا الأسبوع · 910 جنيه · يصل الخميس" }, time: { en: "now", ar: "الآن" } }
+      - id: chat
+        text: { en: "An AI chat where customers type what they want", ar: "محادثة ذكاء اصطناعي يكتب فيها العملاء ما يريدون" }
+        mock:
+          app: sallah
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          appbar: { title: { en: "Sallah assistant", ar: "مساعد سلّة" }, back: true }
+          blocks:
+            - { kind: chat, from: ai, text: { en: "Hi! What would you like to buy today?", ar: "أهلًا! ماذا تريد أن تشتري اليوم؟" } }
+            - { kind: chat, from: me, text: { en: "2 kg tomatoes, 10 bread, 5 kg rice, milk, eggs, cheese, oil, sugar, tea…", ar: "2 كجم طماطم، 10 خبز، 5 كجم أرز، حليب، بيض، جبن، زيت، سكر، شاي…" }, time: "9:41" }
+          footer:
+            - { kind: composer, text: { en: "Type the rest of your list…", ar: "اكتب بقية قائمتك…" } }
     answer: [repeat]
     misconceptions:
       - id: MC-P12-002
@@ -115,7 +179,7 @@ steps:
       ar: "حين تكون الإجابة معروفة وثابتة، فالقاعدة أسرع في البناء ولا تخمّن خطأً أبدًا."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U01-02
     part: guided
     rules: [R06]
@@ -127,12 +191,48 @@ steps:
       en: "We listed three more ideas for the month."
       ar: "كتبنا ثلاث أفكار أخرى لهذا الشهر."
     prompt:
-      en: "Which idea really needs AI?"
-      ar: "أي فكرة تحتاج الذكاء الاصطناعي فعلًا؟"
+      en: "Tap each idea to see its screen. Which idea really needs AI?"
+      ar: "اضغط على كل فكرة لترى شاشتها. أي فكرة تحتاج الذكاء الاصطناعي فعلًا؟"
     options:
-      - { id: card, text: { en: "The form where customers type their card details", ar: "النموذج الذي يكتب فيه العملاء بيانات البطاقة" } }
-      - { id: recipes, text: { en: "Recipe ideas that match what each customer usually buys", ar: "أفكار وصفات تناسب ما يشتريه كل عميل عادة" } }
-      - { id: hours, text: { en: "A page with our delivery hours", ar: "صفحة بمواعيد التوصيل" } }
+      - id: card
+        text: { en: "The form where customers type their card details", ar: "النموذج الذي يكتب فيه العملاء بيانات البطاقة" }
+        mock:
+          app: sallah
+          appbar: { title: { en: "Add a card", ar: "أضف بطاقة" }, back: true }
+          blocks:
+            - { kind: image, art: bank-card, size: s }
+            - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "0000 0000 0000 0000", icon: credit-card, gap: m }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: field, label: { en: "Expiry", ar: "تاريخ الانتهاء" }, text: "MM/YY" }
+                - { kind: field, label: "CVV", text: "123" }
+          footer:
+            - { kind: button, text: { en: "Save card", ar: "احفظ البطاقة" } }
+      - id: recipes
+        text: { en: "Recipe ideas that match what each customer usually buys", ar: "أفكار وصفات تناسب ما يشتريه كل عميل عادة" }
+        mock:
+          app: sallah
+          tabbar: *sallahtabs
+          appbar: { logo: true }
+          blocks:
+            - { kind: heading, text: { en: "Cook with what you buy", ar: "اطبخ ممّا تشتريه" } }
+            - kind: card
+              art: food-koshary
+              gap: s
+              blocks:
+                - { kind: badge, icon: sparkle, text: { en: "For you", ar: "لك" } }
+                - { kind: heading, text: { en: "Koshari", ar: "كشري" }, gap: xs }
+                - { kind: small, text: { en: "You often buy rice, lentils and pasta", ar: "تشتري كثيرًا الأرز والعدس والمكرونة" }, gap: xs }
+      - id: hours
+        text: { en: "A page with our delivery hours", ar: "صفحة بمواعيد التوصيل" }
+        mock:
+          app: sallah
+          appbar: { title: { en: "Delivery hours", ar: "مواعيد التوصيل" }, back: true }
+          blocks:
+            - { kind: listitem, icon: clock, text: { en: "Saturday to Thursday", ar: "السبت إلى الخميس" }, value: "8:00–23:00" }
+            - { kind: listitem, icon: clock, text: { en: "Friday", ar: "الجمعة" }, value: "13:00–23:00" }
+            - { kind: listitem, icon: truck, text: { en: "Free delivery", ar: "توصيل مجاني" }, value: { en: "over EGP 300", ar: "فوق 300 جنيه" } }
     answer: [recipes]
     misconceptions:
       - id: MC-P12-004
@@ -169,23 +269,51 @@ steps:
     a:
       label: { en: "A: AI changes the order of the whole menu on every visit.", ar: "A: الذكاء الاصطناعي يغيّر ترتيب القائمة كلها في كل زيارة." }
       mock:
-        width: 300
+        app: sallah
+        appbar: { logo: true }
         blocks:
-          - { kind: small, color: muted, text: { en: "Today's order:", ar: "ترتيب اليوم:" } }
-          - { kind: meta, text: { en: "Recipes · Offers · My orders · Fruit · Search", ar: "وصفات · عروض · طلباتي · فاكهة · بحث" }, gap: xs }
-          - { kind: small, color: muted, text: { en: "Yesterday: Search · Fruit · Recipes · My orders · Offers", ar: "أمس: بحث · فاكهة · وصفات · طلباتي · عروض" }, gap: s }
+          - { kind: searchbar, text: { en: "Search Sallah", ar: "ابحث في سلّة" } }
+          - kind: row
+            gap: m
+            note: { en: "Yesterday: Search · Fruit · Recipes · My orders · Offers", ar: "أمس: بحث · فاكهة · وصفات · طلباتي · عروض" }
+            blocks:
+              - { kind: chip, icon: cooking-pot, text: { en: "Recipes", ar: "وصفات" } }
+              - { kind: chip, icon: tag, text: { en: "Offers", ar: "عروض" } }
+              - { kind: chip, icon: receipt, text: { en: "My orders", ar: "طلباتي" } }
+              - { kind: chip, icon: orange-slice, text: { en: "Fruit", ar: "فاكهة" } }
+          - kind: card
+            art: food-koshary
+            gap: m
+            blocks:
+              - { kind: heading, text: { en: "Koshari tonight?", ar: "كشري الليلة؟" } }
+        tabbar:
+          active: 0
+          items:
+            - { icon: cooking-pot, text: { en: "Recipes", ar: "وصفات" } }
+            - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+            - { icon: user, text: { en: "Account", ar: "حسابي" } }
+            - { icon: receipt, text: { en: "Orders", ar: "طلباتي" } }
     b:
       label: { en: "B: The menu stays the same, and AI fills one \"For you\" section.", ar: "B: القائمة تبقى كما هي، والذكاء الاصطناعي يملأ قسم «لك» واحدًا." }
       mock:
-        width: 300
+        app: sallah
+        tabbar: *sallahtabs
+        appbar: { logo: true }
         blocks:
-          - { kind: meta, text: { en: "Search · My orders · Offers · Fruit", ar: "بحث · طلباتي · عروض · فاكهة" } }
-          - kind: group
-            tone: tint
-            gap: s
+          - { kind: searchbar, text: { en: "Search Sallah", ar: "ابحث في سلّة" } }
+          - kind: row
+            gap: m
             blocks:
-              - { kind: meta, weight: bold, text: { en: "For you", ar: "لك" } }
-              - { kind: small, text: { en: "Koshari tonight? You have rice and lentils in your basket", ar: "كشري الليلة؟ في سلتك أرز وعدس" }, gap: xs }
+              - { kind: chip, icon: receipt, text: { en: "My orders", ar: "طلباتي" } }
+              - { kind: chip, icon: tag, text: { en: "Offers", ar: "عروض" } }
+              - { kind: chip, icon: orange-slice, text: { en: "Fruit", ar: "فاكهة" } }
+          - kind: card
+            art: food-koshary
+            gap: m
+            blocks:
+              - { kind: badge, icon: sparkle, text: { en: "For you", ar: "لك" } }
+              - { kind: heading, text: { en: "Koshari tonight?", ar: "كشري الليلة؟" }, gap: xs }
+              - { kind: small, text: { en: "You have rice and lentils in your basket", ar: "في سلتك أرز وعدس" }, gap: xs }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -217,7 +345,7 @@ steps:
       ar: "استخدم الذكاء الاصطناعي حيث يفيد التنوّع، وأبقِ ما يعتمد عليه الناس في نفس المكان."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U01-01
     part: independent
     speaker: karim
@@ -230,12 +358,70 @@ steps:
       en: "I build a bus ticket app. The team wants an AI chat assistant. Our top complaint: people can't find how to get a refund. The refund button is hidden in Settings."
       ar: "أبني تطبيقًا لتذاكر الحافلات. والفريق يريد مساعد محادثة بالذكاء الاصطناعي. وأكبر شكوى عندنا: الناس لا يجدون كيف يستردّون المال. وزر الاسترداد مخفي في الإعدادات."
     prompt:
-      en: "What should we do first?"
-      ar: "ماذا يجب أن نفعل أولًا؟"
+      en: "Tap each option to see the change. Which one lets people get a refund without asking anyone?"
+      ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل الناس يستردّون المال دون أن يسألوا أحدًا؟"
+    mock:
+      app: rehla
+      tabbar: &rehlatabs
+        active: 1
+        items:
+          - { icon: magnifying-glass, text: { en: "Search", ar: "بحث" } }
+          - { icon: ticket, text: { en: "My tickets", ar: "تذاكري" } }
+          - { icon: gear, text: { en: "Settings", ar: "الإعدادات" } }
+      caption: { en: "Now", ar: "الآن" }
+      appbar: { title: { en: "My tickets", ar: "تذاكري" } }
+      blocks:
+        - kind: card
+          blocks:
+            - { kind: heading, text: { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" } }
+            - { kind: small, text: { en: "Fri 14 Nov · 10:30 · Seat 14", ar: "الجمعة 14 نوفمبر · 10:30 · المقعد 14" }, gap: xs }
+            - { kind: price, text: { en: "EGP 180", ar: "180 جنيه" }, gap: s }
+            - { kind: button, style: outline, icon: qr-code, text: { en: "Show ticket", ar: "اعرض التذكرة" }, gap: s }
     options:
-      - { id: bot, text: { en: "Build the AI chat, so it can explain where the refund button is", ar: "نبني محادثة الذكاء الاصطناعي، لتشرح مكان زر الاسترداد" } }
-      - { id: move, text: { en: "Put a \"Refund\" button on each ticket", ar: "نضع زر «استرداد» على كل تذكرة" } }
-      - { id: predict, text: { en: "Build AI that predicts who will ask for a refund", ar: "نبني ذكاءً اصطناعيًا يتوقّع من سيطلب الاسترداد" } }
+      - id: bot
+        text: { en: "Build the AI chat, so it can explain where the refund button is", ar: "نبني محادثة الذكاء الاصطناعي، لتشرح مكان زر الاسترداد" }
+        mock:
+          app: rehla
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          appbar: { title: { en: "Rehla assistant", ar: "مساعد رحلة" }, back: true }
+          blocks:
+            - { kind: chat, from: me, text: { en: "How do I get my money back?", ar: "كيف أستردّ أموالي؟" }, time: "9:41" }
+            - { kind: chat, from: ai, text: { en: "Go to Settings › Payments › Past trips › choose the ticket › Refund.", ar: "اذهب إلى الإعدادات › المدفوعات › الرحلات السابقة › اختر التذكرة › استرداد." } }
+          footer:
+            - { kind: composer, text: { en: "Ask Rehla anything", ar: "اسأل رحلة أي شيء" } }
+      - id: move
+        text: { en: "Put a \"Refund\" button on each ticket", ar: "نضع زر «استرداد» على كل تذكرة" }
+        mock:
+          app: rehla
+          tabbar: *rehlatabs
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          appbar: { title: { en: "My tickets", ar: "تذاكري" } }
+          blocks:
+            - kind: card
+              blocks:
+                - { kind: heading, text: { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" } }
+                - { kind: small, text: { en: "Fri 14 Nov · 10:30 · Seat 14", ar: "الجمعة 14 نوفمبر · 10:30 · المقعد 14" }, gap: xs }
+                - { kind: price, text: { en: "EGP 180", ar: "180 جنيه" }, gap: s }
+                - kind: row
+                  gap: s
+                  blocks:
+                    - { kind: button, style: outline, icon: qr-code, text: { en: "Show ticket", ar: "اعرض التذكرة" } }
+                    - { kind: button, style: text, icon: arrow-u-up-left, text: { en: "Refund", ar: "استرداد" } }
+      - id: predict
+        text: { en: "Build AI that predicts who will ask for a refund", ar: "نبني ذكاءً اصطناعيًا يتوقّع من سيطلب الاسترداد" }
+        mock:
+          app: rehla
+          frame: wide
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          url: admin.rehla.example/refund-risk
+          blocks:
+            - { kind: title, text: { en: "Refund risk this week", ar: "احتمال الاسترداد هذا الأسبوع" } }
+            - kind: table
+              gap: s
+              head: [ { en: "Passenger", ar: "الراكب" }, { en: "Trip", ar: "الرحلة" }, { en: "Will ask for a refund", ar: "سيطلب استردادًا" } ]
+              rows:
+                - [ { en: "Mostafa Kamel", ar: "مصطفى كامل" }, { en: "Cairo → Alexandria", ar: "القاهرة ← الإسكندرية" }, "82%" ]
+                - [ { en: "Rana Adel", ar: "رنا عادل" }, { en: "Cairo → Hurghada", ar: "القاهرة ← الغردقة" }, "64%" ]
     answer: [move]
     misconceptions:
       - id: MC-P12-001

@@ -30,19 +30,14 @@ steps:
       en: "Mrs. Fatma is 72. She books her check-ups in our clinic app. Last week, she called reception three times for help.\n\nThe app said her phone number was wrong. She couldn't set the time on the time wheel. And the text was too small for her to read."
       ar: "السيدة فاطمة عمرها 72 سنة. وتحجز مواعيد الفحص في تطبيق عيادتنا. والأسبوع الماضي، اتصلت بالاستقبال ثلاث مرات تطلب المساعدة.\n\nقال لها التطبيق إن رقم هاتفها خطأ. ولم تستطع ضبط الوقت على عجلة الوقت. وكان الخط صغيرًا جدًا عليها."
     mock:
-      width: 300
+      app: raha
+      appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
       blocks:
-        - { kind: title, text: { en: "Book a check-up", ar: "احجز موعد فحص" } }
+        - { kind: listitem, avatar: { text: "Mai Hassan", art: woman-1 }, text: { en: "Dr. Mai Hassan", ar: "د. مي حسن" }, sub: { en: "Family doctor · Sunday 16 Nov", ar: "طبيبة أسرة · الأحد 16 نوفمبر" } }
         - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "010-1234-5678", tone: bad, error: { en: "Numbers only", ar: "أرقام فقط" }, gap: m }
-        - { kind: small, weight: bold, text: { en: "Time", ar: "الوقت" }, gap: m }
-        - kind: group
-          tone: plain
-          gap: xs
-          blocks:
-            - { kind: small, color: faint, text: "10:29" }
-            - { kind: text, weight: bold, text: "10:30" }
-            - { kind: small, color: faint, text: "10:31" }
-        - { kind: button, text: { en: "Book", ar: "احجز" }, gap: m }
+        - { kind: wheel, label: { en: "Time", ar: "الوقت" }, columns: [ [ "8", "9", "10", "11", "12" ], [ "27", "28", "29", "30", "31" ] ], gap: m, note: { en: "Moves 1 minute per small swipe", ar: "تتحرّك دقيقة مع كل سحبة صغيرة" } }
+      footer:
+        - { kind: button, text: { en: "Book", ar: "احجز" } }
 
   - id: S02
     type: tune
@@ -61,7 +56,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يسمح للسيدة فاطمة بالحجز بالرقم كما كتبته بالضبط؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: raha
+      appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
       blocks: &phonenow
         - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "010-1234-5678", tone: bad, error: { en: "Numbers only", ar: "أرقام فقط" } }
     options:
@@ -69,7 +65,8 @@ steps:
         text: { en: "Accept the number, and let the app remove the dashes by itself", ar: "اقبل الرقم، واجعل التطبيق يحذف الشرطات بنفسه" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "010-1234-5678" }
             - { kind: small, color: green, text: { en: "✓ Saved", ar: "✓ تم الحفظ" }, gap: xs }
@@ -77,14 +74,16 @@ steps:
         text: { en: "Keep saying no, but with a clearer message", ar: "استمرّ في رفض الرقم، لكن برسالة أوضح" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, filled: true, text: "010-1234-5678", tone: bad, error: { en: "Please type numbers only, with no dashes or spaces.", ar: "من فضلك اكتب الأرقام فقط، بدون شرطات أو مسافات." } }
       - id: boxes
         text: { en: "Split the number into three boxes", ar: "قسّم الرقم إلى ثلاثة مربعات" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: small, weight: bold, text: { en: "Mobile number", ar: "رقم الموبايل" } }
             - kind: row
@@ -141,7 +140,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل السيدة فاطمة تضبط 10:30 بأسهل شكل؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: raha
+      appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
       blocks: &wheelnow
         - { kind: small, weight: bold, text: { en: "Time", ar: "الوقت" } }
         - kind: group
@@ -156,7 +156,8 @@ steps:
         text: { en: "Keep the wheel, with bigger numbers", ar: "أبقِ العجلة، مع أرقام أكبر" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: small, weight: bold, text: { en: "Time", ar: "الوقت" } }
             - kind: group
@@ -170,14 +171,16 @@ steps:
         text: { en: "A box where she can type the time", ar: "مربع تكتب فيه الوقت" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: field, label: { en: "Time", ar: "الوقت" }, filled: true, text: "10:30", hint: { en: "For example 10:30", ar: "مثلًا 10:30" } }
       - id: keep
         text: { en: "Keep the wheel; it never gives a wrong time", ar: "أبقِ العجلة؛ فهي لا تسمح بوقت خطأ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks: *wheelnow
     answer: [type]
     misconceptions:
@@ -213,7 +216,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يسمح له بكتابة اسمها كما هو في البطاقة بالضبط؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: raha
+      appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
       blocks: &namenow
         - { kind: field, label: { en: "Full name", ar: "الاسم الكامل" }, filled: true, text: "Fatma Abdel-", tone: bad, error: { en: "Letters only, up to 12", ar: "حروف فقط، حتى 12 حرفًا" } }
     options:
@@ -221,21 +225,24 @@ steps:
         text: { en: "Ask for the first name only", ar: "اطلب الاسم الأول فقط" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: field, label: { en: "First name", ar: "الاسم الأول" }, filled: true, text: "Fatma" }
       - id: rule
         text: { en: "Keep the rule, and explain it above the box", ar: "أبقِ القاعدة، واشرحها فوق المربع" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: field, label: { en: "Full name", ar: "الاسم الكامل" }, hintFirst: true, hint: { en: "Letters only, no spaces or dashes, up to 12", ar: "حروف فقط، بدون مسافات أو شرطات، حتى 12 حرفًا" }, filled: true, text: "FatmaAbdelAz" }
       - id: allow
         text: { en: "Allow spaces, dashes, the ' sign and long names", ar: "اسمح بالمسافات والشرطات وعلامة ' والأسماء الطويلة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "Book a check-up", ar: "احجز موعد فحص" }, back: true }
           blocks:
             - { kind: field, label: { en: "Full name", ar: "الاسم الكامل" }, filled: true, text: "Fatma Abdel-Aziz El-Sayed" }
     answer: [allow]
@@ -277,7 +284,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل السيدة فاطمة تقرأ النص بالحجم الذي اختارته؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: raha
+      appbar: { title: { en: "My visits", ar: "زياراتي" }, back: true }
       blocks: &sizenow
         - { kind: heading, px: 15, text: { en: "Your next visit", ar: "زيارتك القادمة" } }
         - { kind: text, px: 13, text: { en: "Sunday 10:30 with Dr. Mai. Please arrive 10 minutes early and bring your ID.", ar: "الأحد 10:30 مع د. مي. من فضلك تعالي قبل الموعد بعشر دقائق، ومعك بطاقتك." }, gap: xs }
@@ -286,7 +294,8 @@ steps:
         text: { en: "Let the text follow her phone's size, and let the screen grow with it", ar: "اجعل النص يتبع حجم الخط في هاتفها، ودع الشاشة تتّسع معه" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "My visits", ar: "زياراتي" }, back: true }
           blocks:
             - { kind: heading, px: 24, text: { en: "Your next visit", ar: "زيارتك القادمة" } }
             - { kind: text, px: 21, text: { en: "Sunday 10:30 with Dr. Mai. Please arrive 10 minutes early and bring your ID.", ar: "الأحد 10:30 مع د. مي. من فضلك تعالي قبل الموعد بعشر دقائق، ومعك بطاقتك." }, gap: xs }
@@ -294,13 +303,15 @@ steps:
         text: { en: "Keep the text size fixed so the screen stays neat", ar: "أبقِ حجم الخط ثابتًا لتبقى الشاشة مرتّبة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "My visits", ar: "زياراتي" }, back: true }
           blocks: *sizenow
       - id: bold
         text: { en: "Keep 13 px, but make all the text bold", ar: "أبقِ 13 بكسل، لكن اجعل كل النص عريضًا (Bold)" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: raha
+          appbar: { title: { en: "My visits", ar: "زياراتي" }, back: true }
           blocks:
             - { kind: heading, px: 15, text: { en: "Your next visit", ar: "زيارتك القادمة" } }
             - { kind: text, px: 13, weight: bold, text: { en: "Sunday 10:30 with Dr. Mai. Please arrive 10 minutes early and bring your ID.", ar: "الأحد 10:30 مع د. مي. من فضلك تعالي قبل الموعد بعشر دقائق، ومعك بطاقتك." }, gap: xs }
@@ -340,18 +351,26 @@ steps:
     a:
       label: { en: "A: Make the whole app dark, for everyone", ar: "A: نجعل التطبيق كله داكنًا، للجميع" }
       mock:
-        width: 300
+        app: raha
+        theme: dark
+        appbar: { logo: true }
+        tabbar: { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar, text: { en: "Visits", ar: "زياراتي" } }, { icon: user, text: { en: "Account", ar: "حسابي" } } ] }
         blocks:
-          - { kind: title, text: { en: "Display", ar: "العرض" } }
-          - { kind: banner, text: { en: "New look: the app is now dark for everyone.", ar: "شكل جديد: التطبيق الآن داكن للجميع." }, gap: m }
+          - { kind: banner, tone: info, icon: moon, text: { en: "New look: the app is now dark for everyone.", ar: "شكل جديد: التطبيق الآن داكن للجميع." } }
+          - kind: card
+            gap: m
+            blocks:
+              - { kind: heading, text: { en: "Your next visit", ar: "زيارتك القادمة" } }
+              - { kind: small, text: { en: "Sunday 10:30 · Dr. Mai Hassan", ar: "الأحد 10:30 · د. مي حسن" }, gap: xs }
     b:
       label: { en: "B: Let each person choose light, dark, or like their phone", ar: "B: كل شخص يختار: فاتح، أو داكن، أو مثل هاتفه" }
       mock:
-        width: 300
+        app: raha
+        appbar: { title: { en: "Display", ar: "العرض" }, back: true }
         blocks:
-          - { kind: title, text: { en: "Display", ar: "العرض" } }
-          - { kind: small, weight: bold, text: { en: "Theme", ar: "المظهر" }, gap: m }
-          - { kind: segmented, options: [{ en: "Light", ar: "فاتح" }, { en: "Dark", ar: "داكن" }, { en: "Like my phone", ar: "مثل هاتفي" }], value: 2, gap: xs }
+          - { kind: small, weight: bold, text: { en: "Theme", ar: "المظهر" } }
+          - { kind: segmented, options: [ { en: "Light", ar: "فاتح" }, { en: "Dark", ar: "داكن" }, { en: "Like my phone", ar: "مثل هاتفي" } ], value: 2, gap: xs }
+          - { kind: listitem, icon: text-aa, text: { en: "Text size", ar: "حجم الخط" }, value: { en: "Like my phone", ar: "مثل هاتفي" }, chevron: true, gap: m }
     answer: b
     reason:
       prompt: { en: "Why is B better for older patients?", ar: "لماذا B أفضل للمرضى كبار السن؟" }
@@ -400,7 +419,8 @@ steps:
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعل قراءة الوصفة أسهل عليهم؟"
     mock:
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: { name: { en: "Bahar Spices", ar: "توابل بهار" }, color: "#B45309", icon: pepper, domain: bahar.example }
+      appbar: { title: { en: "Recipes", ar: "الوصفات" }, back: true }
       blocks: &recipenow
         - { kind: title, text: { en: "Koshari spice mix", ar: "خلطة توابل الكشري" } }
         - { kind: text, px: 13, text: { en: "Toast the cumin and coriander for two minutes, then grind them with…", ar: "حمّص الكمّون والكزبرة لدقيقتين، ثم اطحنهما مع…" }, gap: s }
@@ -409,7 +429,8 @@ steps:
         text: { en: "Make the text a lighter grey, for a softer look", ar: "اجعل لون النص رماديًا أفتح، ليبدو أهدأ" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: { name: { en: "Bahar Spices", ar: "توابل بهار" }, color: "#B45309", icon: pepper, domain: bahar.example }
+          appbar: { title: { en: "Recipes", ar: "الوصفات" }, back: true }
           blocks:
             - { kind: title, text: { en: "Koshari spice mix", ar: "خلطة توابل الكشري" } }
             - { kind: text, px: 13, color: pale, text: { en: "Toast the cumin and coriander for two minutes, then grind them with…", ar: "حمّص الكمّون والكزبرة لدقيقتين، ثم اطحنهما مع…" }, gap: s }
@@ -417,13 +438,15 @@ steps:
         text: { en: "Change nothing; it's the same size as the rest of the app", ar: "لا تغيّر شيئًا؛ فهو بنفس حجم باقي النصوص في التطبيق" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: { name: { en: "Bahar Spices", ar: "توابل بهار" }, color: "#B45309", icon: pepper, domain: bahar.example }
+          appbar: { title: { en: "Recipes", ar: "الوصفات" }, back: true }
           blocks: *recipenow
       - id: button
         text: { en: "Add an \"A A\" button that makes the recipe text bigger", ar: "أضف زر «A A» يكبّر نص الوصفة" }
         mock:
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: { name: { en: "Bahar Spices", ar: "توابل بهار" }, color: "#B45309", icon: pepper, domain: bahar.example }
+          appbar: { title: { en: "Recipes", ar: "الوصفات" }, back: true }
           blocks:
             - kind: row
               blocks:

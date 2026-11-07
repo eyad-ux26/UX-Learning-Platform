@@ -6,6 +6,23 @@ export function safeNext(next: string | null | undefined, fallback = "/app"): st
   return next;
 }
 
+/** A sign-up counts as new for this long: the callback may still set what the database fixed when the account was made. */
+export const NEW_ACCOUNT_MS = 10 * 60_000;
+
+/**
+ * What the sign-in callback saves about the language the learner signed in from. Emails and the profile follow it when it
+ * changed. A brand-new Google or Apple account has no language of ours at creation (the provider's own locale claim, if
+ * any, decided it), so its week start, fixed at sign-up (Saturday for Arabic), is set again from the page's language.
+ */
+export function signInLocale(user: { created_at?: string | null; user_metadata?: Record<string, unknown> | null }, locale: "en" | "ar", now = Date.now()) {
+  const meta = user.user_metadata?.locale;
+  const created = user.created_at ? Date.parse(user.created_at) : NaN;
+  const fresh = Number.isFinite(created) && now - created >= 0 && now - created < NEW_ACCOUNT_MS;
+  // The sign-up trigger saved "ar" only for metadata locale "ar", and "en" for anything else.
+  const atSignUp = meta === "ar" ? "ar" : "en";
+  return { save: meta !== locale, weekStart: fresh && atSignUp !== locale ? (locale === "ar" ? 6 : 1) : null };
+}
+
 export type AuthErrorKey = "invalid" | "exists" | "weak" | "emailInvalid" | "rate" | "unconfirmed" | "generic";
 
 /** Turns a Supabase auth error into one of our own messages, so the screen never shows raw English text in Arabic. */

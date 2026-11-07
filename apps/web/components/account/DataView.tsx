@@ -62,7 +62,7 @@ export function DataView() {
             <span className={`check${confirm ? " is-on" : ""}`} style={{ minBlockSize: 0 }}><span className="box" aria-hidden="true"><span className="ph ph-check" /></span></span><span>{t("delConfirm")}</span>
           </button>
           {failed ? <p className="form-alert" role="alert" style={{ margin: 0 }}><span className="ph ph-warning" aria-hidden="true" /><span>{t("delFailed")}</span></p> : null}
-          <button type="button" className={`btn btn-wrong btn-lg btn-block press${confirm ? "" : " is-disabled"}`} aria-disabled={!confirm} onClick={go} disabled={pending}>{t("delGo")}</button>
+          <button type="button" className={`btn btn-wrong btn-lg btn-block press${confirm ? "" : " is-disabled"}`} aria-disabled={!confirm} onClick={go} disabled={pending} aria-busy={pending || undefined}>{t("delGo")}</button>
           <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={() => setAsking(false)} data-autofocus>{t("keep")}</button>
         </Sheet>
       ) : null}

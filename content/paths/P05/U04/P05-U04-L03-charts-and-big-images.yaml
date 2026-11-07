@@ -26,10 +26,11 @@ steps:
       en: "My gym's website shows the class timetable as one big image. A blind member told me his screen reader says only \"Timetable\", so he calls us every week to ask when yoga is."
       ar: "موقع النادي يعرض جدول الحصص كصورة واحدة كبيرة. وأخبرني عضو كفيف أن قارئ الشاشة يقول له «جدول الحصص» فقط، فيتصل بنا كل أسبوع ليسأل عن موعد اليوجا."
     mock:
-      width: 300
+      reader: { en: "Timetable, image.", ar: "جدول الحصص، صورة." }
+      app: nashat
+      appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
       blocks:
         - { kind: image, size: m, text: { en: "Class timetable (image)", ar: "جدول الحصص (صورة)" } }
-        - { kind: banner, text: { en: "🔊 \"Timetable, image.\"", ar: "🔊 «جدول الحصص، صورة.»" }, gap: s }
 
   - id: S02
     type: tune
@@ -44,40 +45,48 @@ steps:
       en: "Tap each option to see the change. Which one lets him find yoga without calling?"
       ar: "اضغط على كل خيار لترى التغيير. أي خيار يجعله يجد موعد اليوجا دون أن يتصل؟"
     mock:
+      reader: { en: "Timetable, image.", ar: "جدول الحصص، صورة." }
       caption: { en: "Now", ar: "الآن" }
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
       blocks:
         - { kind: image, size: m, text: { en: "Class timetable (image)", ar: "جدول الحصص (صورة)" } }
-        - { kind: banner, text: { en: "🔊 \"Timetable, image.\"", ar: "🔊 «جدول الحصص، صورة.»" }, gap: s }
     options:
       - id: page
         text: { en: "Replace the image with a real table on the page", ar: "استبدل الصورة بجدول حقيقي في الصفحة" }
         mock:
+          reader: { en: "Monday, 19:00, Yoga.", ar: "الإثنين، 19:00، يوجا." }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
           blocks:
-            - { kind: heading, text: { en: "Class timetable", ar: "جدول الحصص" } }
-            - { kind: meta, text: { en: "Sunday · 18:00 · Spinning", ar: "الأحد · 18:00 · دراجات" }, gap: s }
-            - { kind: meta, text: { en: "Monday · 19:00 · Yoga", ar: "الإثنين · 19:00 · يوجا" }, gap: xs }
-            - { kind: meta, text: { en: "Tuesday · 18:00 · Boxing", ar: "الثلاثاء · 18:00 · ملاكمة" }, gap: xs }
-            - { kind: meta, text: { en: "Wednesday · 19:00 · Yoga", ar: "الأربعاء · 19:00 · يوجا" }, gap: xs }
-            - { kind: banner, text: { en: "🔊 \"Monday, 19:00, Yoga.\" He moves row by row and stops where he needs.", ar: "🔊 «الإثنين، 19:00، يوجا.» ينتقل صفًا صفًا ويتوقّف حيث يريد." }, gap: m }
+            - kind: table
+              head: [ { en: "Day", ar: "اليوم" }, { en: "Time", ar: "الوقت" }, { en: "Class", ar: "الحصة" } ]
+              rows:
+                - [ { en: "Sunday", ar: "الأحد" }, "18:00", { en: "Spinning", ar: "دراجات" } ]
+                - [ { en: "Monday", ar: "الإثنين" }, "19:00", { en: "Yoga", ar: "يوجا" } ]
+                - [ { en: "Tuesday", ar: "الثلاثاء" }, "18:00", { en: "Boxing", ar: "ملاكمة" } ]
+                - [ { en: "Wednesday", ar: "الأربعاء" }, "19:00", { en: "Yoga", ar: "يوجا" } ]
+            - { kind: small, color: muted, text: { en: "He moves row by row and stops where he needs.", ar: "ينتقل صفًا صفًا ويتوقّف حيث يريد." }, gap: s }
       - id: all
         text: { en: "Put the whole week in the alt text", ar: "اكتب الأسبوع كله في النص البديل" }
         mock:
+          reader: { en: "Sunday 7:00 Pilates, Sunday 18:00 Spinning, Sunday 20:00 Boxing, Monday 7:00 Pilates, Monday 19:00 Yoga, Monday 21:00 Spinning, Tuesday…", ar: "الأحد 7:00 بيلاتس، الأحد 18:00 دراجات، الأحد 20:00 ملاكمة، الإثنين 7:00 بيلاتس، الإثنين 19:00 يوجا، الإثنين 21:00 دراجات، الثلاثاء…" }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
           blocks:
             - { kind: image, size: m, text: { en: "Class timetable (image)", ar: "جدول الحصص (صورة)" } }
-            - { kind: banner, text: { en: "🔊 \"Sunday 7:00 Pilates, Sunday 18:00 Spinning, Sunday 20:00 Boxing, Monday 7:00 Pilates, Monday 19:00 Yoga, Monday 21:00 Spinning, Tuesday…\" (40 more classes)", ar: "🔊 «الأحد 7:00 بيلاتس، الأحد 18:00 دراجات، الأحد 20:00 ملاكمة، الإثنين 7:00 بيلاتس، الإثنين 19:00 يوجا، الإثنين 21:00 دراجات، الثلاثاء…» (40 حصة أخرى)" }, gap: s }
+            - { kind: small, color: muted, text: { en: "(40 more classes)", ar: "(40 حصة أخرى)" }, gap: s }
       - id: better
         text: { en: "Change the alt text to \"Weekly timetable of all our classes\"", ar: "غيّر النص البديل إلى «الجدول الأسبوعي لكل حصصنا»" }
         mock:
+          reader: { en: "Weekly timetable of all our classes, image.", ar: "الجدول الأسبوعي لكل حصصنا، صورة." }
           caption: { en: "After this change", ar: "بعد هذا التغيير" }
-          width: 300
+          app: nashat
+          appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
           blocks:
             - { kind: image, size: m, text: { en: "Class timetable (image)", ar: "جدول الحصص (صورة)" } }
-            - { kind: banner, text: { en: "🔊 \"Weekly timetable of all our classes, image.\"", ar: "🔊 «الجدول الأسبوعي لكل حصصنا، صورة.»" }, gap: s }
     answer: [page]
     misconceptions:
       - id: MC-P05-038
@@ -125,10 +134,12 @@ steps:
       en: "What should the chart's alt text be?"
       ar: "ماذا يجب أن يكون النص البديل للرسم البياني؟"
     mock:
-      width: 300
+      app: nashat
+      appbar: { title: { en: "Timetable", ar: "جدول الحصص" }, back: true }
       blocks:
-        - { kind: meta, weight: bold, text: { en: "How busy is the gym?", ar: "ما مدى زحمة النادي؟" } }
-        - { kind: image, size: m, text: { en: "Bar chart: members per hour, 6:00 to 23:00", ar: "رسم بالأعمدة: عدد الأعضاء كل ساعة، من 6:00 إلى 23:00" }, gap: s }
+        - { kind: heading, text: { en: "How busy is the gym?", ar: "ما مدى زحمة النادي؟" } }
+        - { kind: chart, type: bar, values: [10, 25, 30, 18, 12, 8, 6, 7, 9, 14, 22, 38, 45, 42, 30, 20, 12], labels: [ "6", "", "", "", "10", "", "", "", "14", "", "", "", "18", "", "", "", "22" ], highlight: 12, gap: s }
+        - { kind: small, color: muted, text: { en: "Members per hour, 6:00 to 23:00 (image)", ar: "عدد الأعضاء كل ساعة، من 6:00 إلى 23:00 (صورة)" }, gap: xs }
     options:
       - { id: look, text: { en: "\"Bar chart with purple bars.\"", ar: "«رسم بياني بأعمدة بنفسجية.»" } }
       - { id: every, text: { en: "\"6:00, 10 people. 7:00, 25 people. 8:00, 30 people…\" for all 17 hours", ar: "«6:00، 10 أشخاص. 7:00، 25 شخصًا. 8:00، 30 شخصًا…» لكل الساعات الـ 17" } }
@@ -215,16 +226,18 @@ steps:
     a:
       label: { en: "A: All four branches are written in the map's alt text.", ar: "A: الفروع الأربعة مكتوبة في النص البديل للخريطة." }
       mock:
-        width: 300
+        reader: { en: "Map: Nasr City, 12 Abbas El Akkad Street, 6:00 to 23:00. Maadi, 9 Road 233, 6:00 to 23:00. Dokki, 30 Tahrir Street…", ar: "خريطة: مدينة نصر، 12 شارع عباس العقاد، من 6:00 إلى 23:00. المعادي، 9 شارع 233، من 6:00 إلى 23:00. الدقي، 30 شارع التحرير…" }
+        app: nashat
+        appbar: { title: { en: "Branches", ar: "الفروع" }, back: true }
         blocks:
-          - { kind: image, size: m, text: { en: "Map with 4 pins", ar: "خريطة عليها 4 علامات" } }
-          - { kind: banner, text: { en: "🔊 \"Map: Nasr City, 12 Abbas El Akkad Street, 6:00 to 23:00. Maadi, 9 Road 233, 6:00 to 23:00. Dokki, 30 Tahrir Street…\"", ar: "🔊 «خريطة: مدينة نصر، 12 شارع عباس العقاد، من 6:00 إلى 23:00. المعادي، 9 شارع 233، من 6:00 إلى 23:00. الدقي، 30 شارع التحرير…»" }, gap: s }
+          - { kind: image, art: map, text: { en: "Map with 4 pins", ar: "خريطة عليها 4 علامات" } }
     b:
       label: { en: "B: The map stays, and the branches are a list under it.", ar: "B: الخريطة تبقى، والفروع قائمة تحتها." }
       mock:
-        width: 300
+        app: nashat
+        appbar: { title: { en: "Branches", ar: "الفروع" }, back: true }
         blocks:
-          - { kind: image, size: s, text: { en: "Map with 4 pins", ar: "خريطة عليها 4 علامات" } }
+          - { kind: image, art: map, text: { en: "Map with 4 pins", ar: "خريطة عليها 4 علامات" } }
           - { kind: meta, weight: bold, text: { en: "Nasr City", ar: "مدينة نصر" }, gap: s }
           - { kind: small, color: muted, text: { en: "12 Abbas El Akkad St. · 6:00–23:00", ar: "12 شارع عباس العقاد · 6:00–23:00" }, gap: xs }
           - { kind: meta, weight: bold, text: { en: "Maadi", ar: "المعادي" }, gap: s }
@@ -277,10 +290,13 @@ steps:
       en: "What should the photo's alt text be?"
       ar: "ماذا يجب أن يكون النص البديل للصورة؟"
     mock:
-      width: 300
+      app: { name: { en: "Khobza", ar: "خبزة" }, color: "#B45309", icon: bread, domain: khobza.example }
+      frame: wide
+      url: khobza.example/order
+      navbar: { actions: [ { icon: shopping-bag } ] }
       blocks:
         - { kind: title, text: { en: "Fresh bread every morning", ar: "خبز طازج كل صباح" } }
-        - { kind: image, size: m, text: { en: "Bread on a wooden table", ar: "خبز على طاولة خشب" }, gap: s }
+        - { kind: image, art: bread, gap: s }
         - { kind: button, text: { en: "Order now", ar: "اطلب الآن" }, gap: m }
     options:
       - { id: describe, text: { en: "\"Fresh bread on a wooden table.\"", ar: "«خبز طازج على طاولة خشب.»" } }

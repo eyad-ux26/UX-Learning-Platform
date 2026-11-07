@@ -10,6 +10,7 @@ import { flush, setSyncUser } from "@/lib/sync";
 import { saveSetting } from "@/app/[locale]/app/(shell)/settings/actions";
 import { signOut } from "@/app/[locale]/app/(shell)/profile/actions";
 import { pushState, type PushState } from "@/lib/push-client";
+import { resetTours } from "@/lib/lesson-tour";
 import { Sheet } from "./Sheet";
 import { joinLeaderboard, leaveLeaderboard, setAchievementPage } from "@/app/[locale]/app/(shell)/profile/share-actions";
 
@@ -164,10 +165,11 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
           <h2 className="t-over set-sec">{t("secHelp")}</h2>
           <div className="set">
             <Link href="/app/help" className="set-row"><span className="ph ph-lifebuoy" aria-hidden="true" /><span className="set-l">{t("helpLong")}<small className="ltr" style={{ textAlign: "start" }}>support@uxgate.org</small></span><span className="set-v"><Caret /></span></Link>
+            <button type="button" className="set-row" onClick={() => { resetTours(userId); setToast(t("tourAgainDone")); }}><span className="ph ph-compass" aria-hidden="true" /><span className="set-l">{t("tourAgain")}<small>{t("tourAgainSub")}</small></span></button>
             <Link href="/privacy" className="set-row"><span className="ph ph-shield-check" aria-hidden="true" /><span className="set-l">{t("privacy")}</span><span className="set-v"><Caret /></span></Link>
             <Link href="/terms" className="set-row"><span className="ph ph-article" aria-hidden="true" /><span className="set-l">{t("terms")}</span><span className="set-v"><Caret /></span></Link>
           </div>
-          <button type="button" className="btn btn-secondary btn-block press" style={{ marginBlockStart: 6 }} onClick={doSignOut} disabled={pending}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
+          <button type="button" className="btn btn-secondary btn-signout btn-block press" style={{ marginBlockStart: 6 }} onClick={doSignOut} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
           <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12 }}>{t("version")}</p>
         </div>
       </div>
@@ -180,7 +182,7 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
             <div className="input"><span className="ph ph-user" aria-hidden="true" /><input id="st-name" value={draft} maxLength={60} autoComplete="name" onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") saveName(); }} /></div>
             <span className="help">{t("nameHelp")}</span>
           </div>
-          <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={saveName} disabled={pending || !draft.trim()}>{t("save")}</button>
+          <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={saveName} disabled={pending || !draft.trim()} aria-busy={pending || undefined}>{t("save")}</button>
           <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={() => setEditing(false)}>{t("cancel")}</button>
         </Sheet>
       ) : null}

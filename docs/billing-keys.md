@@ -44,7 +44,7 @@ Paddle notification destination: `https://uxgate.org/api/webhooks/paddle`, event
 Paddle catalog and checkout settings:
 
 - **Quantity 1 only.** Set each price's quantity to minimum 1, maximum 1. That is what hides the quantity picker in Paddle's checkout; Paddle.js v2 has no setting for it. The webhook also refuses and refunds any transaction for more than one plan.
-- **Default payment link:** `https://uxgate-web.uxgate-web.workers.dev/en/app/checkout` (later `https://uxgate.org/en/app/checkout`). Paddle sends its own payment links there with `?_ptxn=txn_…`, and the page opens Paddle's checkout for that transaction (signed-in learners only).
+- **Default payment link:** `https://uxgate-web.uxgate-web.workers.dev/en/app/checkout` (later `https://uxgate.org/en/app/checkout`). Paddle sends its own payment links there with `?_ptxn=txn_…`, and the page opens Paddle's checkout for that transaction, but only when it is the learner's own (asked from Paddle: made for them, their Paddle customer, or their subscription; anything else goes to Plan and billing). It moves the learner to their own language first. A signed-out learner signs in and then comes back to the link: the transaction is kept for 30 minutes in an HttpOnly cookie, `ug_ptxn`.
 
 ## Shared
 

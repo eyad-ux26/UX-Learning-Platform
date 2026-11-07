@@ -23,11 +23,16 @@ steps:
       en: "I lead design for a photo gallery app. It makes albums by itself, like \"Trip to Alexandria\" or \"Best friends\".\n\nPeople love it, until it's wrong. One user's \"Best friends\" album kept showing a friend she no longer speaks to. She couldn't remove him, rename the album, or turn albums off. She deleted the app."
       ar: "أقود التصميم في تطبيق معرض صور. يصنع ألبومات بنفسه، مثل «رحلة الإسكندرية» أو «أفضل الأصدقاء».\n\nالناس يحبّونه، حتى يخطئ. ألبوم «أفضل الأصدقاء» عند إحدى المستخدمات ظلّ يعرض صديقًا لم تعد تكلّمه. ولم تستطع حذفه، ولا تغيير اسم الألبوم، ولا إيقاف الألبومات. فحذفت التطبيق."
     mock:
-      width: 300
+      app: suwar
+      appbar: { title: { en: "Best friends", ar: "أعز الأصدقاء" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
       blocks:
-        - { kind: title, text: { en: "Best friends", ar: "أفضل الأصدقاء" } }
-        - { kind: meta, text: { en: "Made for you · 48 photos", ar: "صُنع لك · 48 صورة" }, gap: s }
-        - { kind: small, color: muted, text: { en: "No edit · No remove · No off", ar: "لا تعديل · لا حذف · لا إيقاف" }, gap: s }
+        - { kind: row, blocks: [ { kind: badge, icon: sparkle, text: { en: "Made for you", ar: "صُنع لك" } }, { kind: small, color: muted, text: { en: "48 photos", ar: "48 صورة" } } ] }
+        - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+        - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
+      overlay:
+        type: menu
+        blocks:
+          - { kind: listitem, icon: share-network, text: { en: "Share", ar: "مشاركة" } }
 
   - id: S02
     type: choose
@@ -72,7 +77,7 @@ steps:
       ar: "سيخطئ الذكاء الاصطناعي أحيانًا مع شخص ما. فاجعل إصلاح ذلك سهلًا.\n\n- **التعديل أو التراجع:** غيّر النتيجة، أو ألغِها.\n- **الإيقاف،** من أول مرة، وإعادة التشغيل لاحقًا.\n- **احتفظ بطريقة يدوية** لأداء المهمة دون الذكاء الاصطناعي.\n- **امسح ما تعلّمه** حين تتغيّر حياة الناس أو احتياجاتهم."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U04-02
     part: guided
     rules: [R06]
@@ -84,12 +89,58 @@ steps:
       en: "A year ago, she tagged that friend in many photos. The app learned he matters to her, and keeps adding him to new albums."
       ar: "قبل سنة، وسمت ذلك الصديق في صور كثيرة. فتعلّم التطبيق أنه مهمّ لها، وما زال يضيفه إلى ألبومات جديدة."
     prompt:
-      en: "What should we give her?"
-      ar: "ماذا يجب أن نعطيها؟"
+      en: "Tap each option to see it. What should we give her?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن نعطيها؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: suwar
+      appbar: { title: { en: "Best friends", ar: "أعز الأصدقاء" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+      blocks:
+        - { kind: small, color: muted, text: { en: "People in this album", ar: "الأشخاص في هذا الألبوم" }, gap: s }
+        - { kind: row, blocks: [ { kind: avatar, art: woman-3, text: "Mai" }, { kind: avatar, art: man-2, text: "Hesham" }, { kind: avatar, art: woman-1, text: "Rana" } ], gap: xs }
+        - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+        - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
     options:
-      - { id: forget, text: { en: "\"Don't make albums with this person\", on his face in People", ar: "«لا تصنع ألبومات مع هذا الشخص»، على صورة وجهه في قسم الأشخاص" } }
-      - { id: tagmore, text: { en: "Advice to tag other friends more, so he slowly drops", ar: "نصيحة بأن تسِم أصدقاء آخرين أكثر، ليقلّ ظهوره تدريجيًا" } }
-      - { id: wait, text: { en: "Nothing; the AI will learn over time", ar: "لا شيء؛ سيتعلّم الذكاء الاصطناعي مع الوقت" } }
+      - id: forget
+        text: { en: "\"Don't make albums with this person\", on his face in People", ar: "«لا تصنع ألبومات مع هذا الشخص»، على صورة وجهه في قسم الأشخاص" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: suwar
+          appbar: { title: { en: "Best friends", ar: "أعز الأصدقاء" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: small, color: muted, text: { en: "People in this album", ar: "الأشخاص في هذا الألبوم" }, gap: s }
+            - { kind: row, blocks: [ { kind: avatar, art: woman-3, text: "Mai" }, { kind: avatar, art: man-2, text: "Hesham" }, { kind: avatar, art: woman-1, text: "Rana" } ], gap: xs }
+            - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+            - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
+          overlay:
+            type: sheet
+            title: { en: "Hesham", ar: "هشام" }
+            blocks:
+              - { kind: listitem, icon: eye-slash, text: { en: "Don't make albums with this person", ar: "لا تصنع ألبومات مع هذا الشخص" } }
+              - { kind: listitem, icon: tag, text: { en: "Rename", ar: "غيّر الاسم" } }
+      - id: tagmore
+        text: { en: "Advice to tag other friends more, so he slowly drops", ar: "نصيحة بأن تسِم أصدقاء آخرين أكثر، ليقلّ ظهوره تدريجيًا" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: suwar
+          appbar: { title: { en: "Best friends", ar: "أعز الأصدقاء" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: small, color: muted, text: { en: "People in this album", ar: "الأشخاص في هذا الألبوم" }, gap: s }
+            - { kind: row, blocks: [ { kind: avatar, art: woman-3, text: "Mai" }, { kind: avatar, art: man-2, text: "Hesham" }, { kind: avatar, art: woman-1, text: "Rana" } ], gap: xs }
+            - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+            - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
+            - { kind: banner, tone: info, icon: lightbulb, text: { en: "Tip: tag other friends more, and he will slowly appear less.", ar: "نصيحة: اوسِم أصدقاء آخرين أكثر، وسيقلّ ظهوره تدريجيًا." }, gap: s }
+      - id: wait
+        text: { en: "Nothing; the AI will learn over time", ar: "لا شيء؛ سيتعلّم الذكاء الاصطناعي مع الوقت" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: suwar
+          appbar: { title: { en: "Best friends", ar: "أعز الأصدقاء" }, back: true, actions: [ { icon: dots-three, aria: { en: "More", ar: "المزيد" } } ] }
+          blocks:
+            - { kind: small, color: muted, text: { en: "People in this album", ar: "الأشخاص في هذا الألبوم" }, gap: s }
+            - { kind: row, blocks: [ { kind: avatar, art: woman-3, text: "Mai" }, { kind: avatar, art: man-2, text: "Hesham" }, { kind: avatar, art: woman-1, text: "Rana" } ], gap: xs }
+            - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+            - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
     answer: [forget]
     misconceptions:
       - id: MC-P12-031
@@ -108,7 +159,7 @@ steps:
       ar: "الناس يتغيّرون. وما تعلّمه التطبيق في السنة الماضية يجب أن يكون سهل التحديث اليوم."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U04-01
     part: guided
     rules: [R06]
@@ -120,12 +171,50 @@ steps:
       en: "The team wants to remove the \"New album\" button, since the AI makes albums now."
       ar: "الفريق يريد حذف زر «ألبوم جديد»، لأن الذكاء الاصطناعي يصنع الألبومات الآن."
     prompt:
-      en: "What should we do?"
-      ar: "ماذا يجب أن نفعل؟"
+      en: "Tap each option to see it. What should we do?"
+      ar: "اضغط على كل خيار لتراه. ماذا يجب أن نفعل؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: suwar
+      appbar: { title: { en: "Albums", ar: "الألبومات" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+      tabbar: { active: 1, items: [ { icon: images, text: { en: "Photos", ar: "الصور" } }, { icon: folder-simple, text: { en: "Albums", ar: "الألبومات" } }, { icon: user-circle, text: { en: "People", ar: "الأشخاص" } } ] }
+      blocks:
+        - { kind: listitem, art: beach, text: { en: "Trip to Alexandria", ar: "رحلة الإسكندرية" }, sub: { en: "✨ Made for you · 120", ar: "✨ صُنع لك · 120" } }
+        - { kind: listitem, art: people, text: { en: "Best friends", ar: "أعز الأصدقاء" }, sub: { en: "✨ Made for you · 48", ar: "✨ صُنع لك · 48" } }
+      fab: { icon: plus, text: { en: "New album", ar: "ألبوم جديد" } }
     options:
-      - { id: remove, text: { en: "Remove it; fewer buttons is cleaner", ar: "نحذفه؛ فالأزرار الأقل أنظف" } }
-      - { id: keep, text: { en: "Keep \"New album\" next to the AI albums", ar: "نُبقي «ألبوم جديد» بجانب ألبومات الذكاء الاصطناعي" } }
-      - { id: bury, text: { en: "Move it deep into Settings", ar: "ننقله إلى مكان بعيد في الإعدادات" } }
+      - id: remove
+        text: { en: "Remove it; fewer buttons is cleaner", ar: "نحذفه؛ فالأزرار الأقل أنظف" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: suwar
+          appbar: { title: { en: "Albums", ar: "الألبومات" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          tabbar: { active: 1, items: [ { icon: images, text: { en: "Photos", ar: "الصور" } }, { icon: folder-simple, text: { en: "Albums", ar: "الألبومات" } }, { icon: user-circle, text: { en: "People", ar: "الأشخاص" } } ] }
+          blocks:
+            - { kind: listitem, art: beach, text: { en: "Trip to Alexandria", ar: "رحلة الإسكندرية" }, sub: { en: "✨ Made for you · 120", ar: "✨ صُنع لك · 120" } }
+            - { kind: listitem, art: people, text: { en: "Best friends", ar: "أعز الأصدقاء" }, sub: { en: "✨ Made for you · 48", ar: "✨ صُنع لك · 48" } }
+      - id: keep
+        text: { en: "Keep \"New album\" next to the AI albums", ar: "نُبقي «ألبوم جديد» بجانب ألبومات الذكاء الاصطناعي" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: suwar
+          appbar: { title: { en: "Albums", ar: "الألبومات" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          tabbar: { active: 1, items: [ { icon: images, text: { en: "Photos", ar: "الصور" } }, { icon: folder-simple, text: { en: "Albums", ar: "الألبومات" } }, { icon: user-circle, text: { en: "People", ar: "الأشخاص" } } ] }
+          blocks:
+            - { kind: listitem, art: beach, text: { en: "Trip to Alexandria", ar: "رحلة الإسكندرية" }, sub: { en: "✨ Made for you · 120", ar: "✨ صُنع لك · 120" } }
+            - { kind: listitem, art: people, text: { en: "Best friends", ar: "أعز الأصدقاء" }, sub: { en: "✨ Made for you · 48", ar: "✨ صُنع لك · 48" } }
+          fab: { icon: plus, text: { en: "New album", ar: "ألبوم جديد" } }
+      - id: bury
+        text: { en: "Move it deep into Settings", ar: "ننقله إلى مكان بعيد في الإعدادات" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: suwar
+          appbar: { title: { en: "Albums", ar: "الألبومات" }, actions: [ { icon: magnifying-glass, aria: { en: "Search", ar: "بحث" } } ] }
+          tabbar: { active: 1, items: [ { icon: images, text: { en: "Photos", ar: "الصور" } }, { icon: folder-simple, text: { en: "Albums", ar: "الألبومات" } }, { icon: user-circle, text: { en: "People", ar: "الأشخاص" } } ] }
+          blocks:
+            - { kind: listitem, art: beach, text: { en: "Trip to Alexandria", ar: "رحلة الإسكندرية" }, sub: { en: "✨ Made for you · 120", ar: "✨ صُنع لك · 120" } }
+            - { kind: listitem, art: people, text: { en: "Best friends", ar: "أعز الأصدقاء" }, sub: { en: "✨ Made for you · 48", ar: "✨ صُنع لك · 48" } }
+            - { kind: small, color: muted, text: { en: "\"New album\" is now in Settings › More › Albums", ar: "«ألبوم جديد» أصبح في الإعدادات › المزيد › الألبومات" }, gap: m }
     answer: [keep]
     misconceptions:
       - id: MC-P12-030
@@ -162,18 +251,34 @@ steps:
     a:
       label: { en: "A: \"We made 3 albums for you!\" with \"See albums\"", ar: "A: «صنعنا لك 3 ألبومات!» مع «اعرض الألبومات»" }
       mock:
-        width: 300
+        app: suwar
+        appbar: { title: { en: "Photos", ar: "الصور" } }
+        tabbar: { active: 0, items: [ { icon: images, text: { en: "Photos", ar: "الصور" } }, { icon: folder-simple, text: { en: "Albums", ar: "الألبومات" } }, { icon: user-circle, text: { en: "People", ar: "الأشخاص" } } ] }
         blocks:
-          - { kind: title, text: { en: "We made 3 albums for you!", ar: "صنعنا لك 3 ألبومات!" } }
-          - { kind: button, text: { en: "See albums", ar: "اعرض الألبومات" }, gap: m }
+          - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+          - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
+        overlay:
+          type: sheet
+          blocks:
+            - { kind: icon, icon: sparkle, size: l, color: brand }
+            - { kind: heading, text: { en: "We made 3 albums for you!", ar: "صنعنا لك 3 ألبومات!" }, gap: s }
+            - { kind: button, text: { en: "See albums", ar: "اعرض الألبومات" }, gap: s }
     b:
       label: { en: "B: The same, plus \"Turn off auto albums\"", ar: "B: البطاقة نفسها، مع «أوقف الألبومات التلقائية»" }
       mock:
-        width: 300
+        app: suwar
+        appbar: { title: { en: "Photos", ar: "الصور" } }
+        tabbar: { active: 0, items: [ { icon: images, text: { en: "Photos", ar: "الصور" } }, { icon: folder-simple, text: { en: "Albums", ar: "الألبومات" } }, { icon: user-circle, text: { en: "People", ar: "الأشخاص" } } ] }
         blocks:
-          - { kind: title, text: { en: "We made 3 albums for you!", ar: "صنعنا لك 3 ألبومات!" } }
-          - { kind: button, text: { en: "See albums", ar: "اعرض الألبومات" }, gap: m }
-          - { kind: link, text: { en: "Turn off auto albums", ar: "أوقف الألبومات التلقائية" }, gap: s }
+          - { kind: row, blocks: [ { kind: image, art: people, size: s }, { kind: image, art: beach, size: s }, { kind: image, art: family, size: s } ], gap: s }
+          - { kind: row, blocks: [ { kind: image, art: cafe, size: s }, { kind: image, art: people, size: s }, { kind: image, art: city-night, size: s } ], gap: xs }
+        overlay:
+          type: sheet
+          blocks:
+            - { kind: icon, icon: sparkle, size: l, color: brand }
+            - { kind: heading, text: { en: "We made 3 albums for you!", ar: "صنعنا لك 3 ألبومات!" }, gap: s }
+            - { kind: button, text: { en: "See albums", ar: "اعرض الألبومات" }, gap: s }
+            - { kind: button, style: text, text: { en: "Turn off auto albums", ar: "أوقف الألبومات التلقائية" }, gap: xs }
     answer: b
     reason:
       prompt: { en: "Why is B better?", ar: "لماذا B أفضل؟" }
@@ -205,7 +310,7 @@ steps:
       ar: "الاختيار من اليوم الأول يقول للناس إنهم أصحاب القرار."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U04-02
     part: independent
     speaker: youssef
@@ -215,15 +320,50 @@ steps:
       ar: "حالة جديدة. الملاحظات والتحكّم (People + AI): تفضيلات الناس تتغيّر مع الوقت، فاسمح لهم بتعديل ما تعلّمه الذكاء الاصطناعي."
     ref: { url: "https://pair.withgoogle.com/chapter/feedback-controls/", quote: "A user’s preferences may change over time, so consider how you’ll give them control over what preferences they communicate to your ML model, and give them the ability to adjust it." }
     scenario:
-      en: "I own a shop. My supplier app suggests what to reorder. It learned from Ramadan, when I sold lots of dates. Ramadan is over, and it still suggests 50 boxes of dates every week."
-      ar: "أملك متجرًا. وتطبيق المورّد يقترح ما أطلبه مرة أخرى. وقد تعلّم من رمضان، حين بعت كميات كبيرة من التمر. انتهى رمضان، وما زال يقترح 50 صندوق تمر كل أسبوع."
+      en: "I own a shop. My supplier app suggests what to reorder. It learned from Ramadan, when I sold lots of lanterns. Ramadan is over, and it still suggests 50 lanterns every week."
+      ar: "أملك متجرًا. وتطبيق المورّد يقترح ما أطلبه مرة أخرى. وقد تعلّم من رمضان، حين بعت كميات كبيرة من الفوانيس. انتهى رمضان، وما زال يقترح 50 فانوسًا كل أسبوع."
     prompt:
-      en: "What would help me most?"
-      ar: "ما الذي يساعدني أكثر؟"
+      en: "Tap each option to see it. What would help me most?"
+      ar: "اضغط على كل خيار لتراه. ما الذي يساعدني أكثر؟"
+    mock:
+      caption: { en: "Now", ar: "الآن" }
+      app: dukkani
+      appbar: { title: { en: "Reorder", ar: "إعادة الطلب" }, back: true }
+      blocks:
+        - { kind: badge, icon: sparkle, text: { en: "Suggested this week", ar: "مقترح هذا الأسبوع" } }
+        - { kind: listitem, icon: lamp, text: { en: "Ramadan lanterns · 50", ar: "فوانيس رمضان · 50" }, sub: { en: "Based on your sales", ar: "بناءً على مبيعاتك" }, value: { en: "Add", ar: "أضف" }, gap: s }
+        - { kind: listitem, icon: package, text: { en: "Electric kettles · 10", ar: "غلايات كهربائية · 10" }, value: { en: "Add", ar: "أضف" } }
     options:
-      - { id: off, text: { en: "Turn off suggestions forever", ar: "إيقاف الاقتراحات للأبد" } }
-      - { id: wait, text: { en: "Keep ignoring it until it adjusts", ar: "أستمرّ في تجاهلها حتى تتعدّل" } }
-      - { id: clear, text: { en: "\"Ignore Ramadan sales in suggestions\", one tap", ar: "«تجاهل مبيعات رمضان في الاقتراحات»، بضغطة واحدة" } }
+      - id: off
+        text: { en: "Turn off suggestions forever", ar: "إيقاف الاقتراحات للأبد" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dukkani
+          appbar: { title: { en: "Reorder", ar: "إعادة الطلب" }, back: true }
+          blocks:
+            - { kind: listitem, icon: sparkle, text: { en: "Reorder suggestions", ar: "اقتراحات إعادة الطلب" }, sub: { en: "Off for good", ar: "متوقّفة نهائيًا" }, toggle: false }
+            - { kind: small, color: muted, text: { en: "You build every order by hand now.", ar: "أصبحت تُعدّ كل طلب بنفسك الآن." }, gap: s }
+      - id: wait
+        text: { en: "Keep ignoring it until it adjusts", ar: "أستمرّ في تجاهلها حتى تتعدّل" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dukkani
+          appbar: { title: { en: "Reorder", ar: "إعادة الطلب" }, back: true }
+          blocks:
+            - { kind: badge, icon: sparkle, text: { en: "Suggested this week", ar: "مقترح هذا الأسبوع" } }
+            - { kind: listitem, icon: lamp, text: { en: "Ramadan lanterns · 50", ar: "فوانيس رمضان · 50" }, sub: { en: "Based on your sales", ar: "بناءً على مبيعاتك" }, value: { en: "Add", ar: "أضف" }, gap: s }
+            - { kind: listitem, icon: package, text: { en: "Electric kettles · 10", ar: "غلايات كهربائية · 10" }, value: { en: "Add", ar: "أضف" } }
+      - id: clear
+        text: { en: "\"Ignore Ramadan sales in suggestions\", one tap", ar: "«تجاهل مبيعات رمضان في الاقتراحات»، بضغطة واحدة" }
+        mock:
+          caption: { en: "After this change", ar: "بعد هذا التغيير" }
+          app: dukkani
+          appbar: { title: { en: "Reorder", ar: "إعادة الطلب" }, back: true }
+          blocks:
+            - { kind: badge, icon: sparkle, text: { en: "Suggested this week", ar: "مقترح هذا الأسبوع" } }
+            - { kind: listitem, icon: lamp, text: { en: "Ramadan lanterns · 50", ar: "فوانيس رمضان · 50" }, sub: { en: "Based on your sales", ar: "بناءً على مبيعاتك" }, value: { en: "Add", ar: "أضف" }, gap: s }
+            - { kind: listitem, icon: package, text: { en: "Electric kettles · 10", ar: "غلايات كهربائية · 10" }, value: { en: "Add", ar: "أضف" } }
+            - { kind: button, style: outline, icon: moon-stars, text: { en: "Ignore Ramadan sales in suggestions", ar: "تجاهل مبيعات رمضان في الاقتراحات" }, gap: m }
     answer: [clear]
     misconceptions:
       - id: MC-P12-031

@@ -24,14 +24,17 @@ steps:
       en: "I'm designing an app for small shop owners. The team wants AI to take over every task: the accounts, the messages to customers, even the shop's flyers.\n\nBut when I talk to owners, some tasks they hate, and some they love."
       ar: "أصمّم تطبيقًا لأصحاب المتاجر الصغيرة. والفريق يريد أن يتولّى الذكاء الاصطناعي كل المهام: الحسابات، والرسائل للعملاء، وحتى إعلانات المتجر.\n\nلكن حين أتحدّث مع أصحاب المتاجر، أجد مهام يكرهونها، ومهام يحبّونها."
     mock:
-      width: 300
+      app: dukkani
+      appbar: { logo: true, actions: [ { icon: bell, count: 3, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+      tabbar: &dktabs { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: wallet, text: { en: "Money", ar: "المال" } }, { icon: users, text: { en: "Customers", ar: "العملاء" } }, { icon: user, text: { en: "Account", ar: "حسابي" } } ] }
       blocks:
-        - { kind: meta, text: { en: "🧾 Sort receipts", ar: "🧾 تصنيف الإيصالات" } }
-        - { kind: meta, text: { en: "💬 Thank-you messages", ar: "💬 رسائل الشكر" }, gap: s }
-        - { kind: meta, text: { en: "🎨 Shop flyer", ar: "🎨 إعلان المتجر" }, gap: s }
+        - { kind: heading, text: { en: "Waiting for you this month", ar: "في انتظارك هذا الشهر" } }
+        - { kind: listitem, icon: receipt, text: { en: "Sort receipts", ar: "تصنيف الإيصالات" }, sub: { en: "300 receipts not sorted", ar: "300 إيصال غير مصنّف" }, chevron: true, gap: s }
+        - { kind: listitem, icon: chat-circle-text, text: { en: "Eid thank-you messages", ar: "رسائل شكر العيد" }, sub: { en: "120 loyal customers", ar: "120 عميلًا دائمًا" }, chevron: true }
+        - { kind: listitem, icon: paint-brush, text: { en: "Shop opening flyer", ar: "إعلان افتتاح المتجر" }, sub: { en: "Opening on 20 Nov", ar: "الافتتاح يوم 20 نوفمبر" }, chevron: true }
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P12-U01-03
     part: try
     rules: [R12]
@@ -43,12 +46,43 @@ steps:
       en: "Every month, owners sort about 300 receipts into groups: rent, stock, transport. They all say they hate it."
       ar: "كل شهر، يصنّف أصحاب المتاجر نحو 300 إيصال إلى مجموعات: إيجار، بضاعة، نقل. وكلهم يقولون إنهم يكرهون ذلك."
     prompt:
-      en: "What should AI do with the receipts?"
-      ar: "ماذا يجب أن يفعل الذكاء الاصطناعي بالإيصالات؟"
+      en: "Tap each option to see it. What should AI do with the receipts?"
+      ar: "اضغط على كل خيار لتراه. ماذا يفعل الذكاء الاصطناعي بالإيصالات؟"
     options:
-      - { id: one, text: { en: "Suggest a group for each receipt, and the owner taps OK on all 300", ar: "يقترح مجموعة لكل إيصال، ويضغط صاحب المتجر «موافق» على الـ 300" } }
-      - { id: auto, text: { en: "Sort them all, then show a summary the owner can check and fix", ar: "يصنّفها كلها، ثم يعرض ملخّصًا يراجعه صاحب المتجر ويصلحه" } }
-      - { id: none, text: { en: "Nothing; money tasks should stay manual", ar: "لا شيء؛ مهام المال يجب أن تبقى يدوية" } }
+      - id: one
+        text: { en: "Suggest a group for each receipt, and the owner taps OK on all 300", ar: "يقترح مجموعة لكل إيصال، ويضغط صاحب المتجر «موافق» على الـ 300" }
+        mock:
+          app: dukkani
+          appbar: &rcptbar { title: { en: "Receipts", ar: "الإيصالات" }, back: true }
+          blocks:
+            - { kind: progress, value: 1, label: { en: "1 of 300 checked", ar: "تمت مراجعة 1 من 300" } }
+            - kind: card
+              gap: m
+              blocks:
+                - { kind: listitem, art: receipt, text: { en: "Cairo Electric · EGP 850", ar: "كهرباء القاهرة · 850 جنيه" }, sub: { en: "3 Nov", ar: "3 نوفمبر" } }
+                - { kind: badge, icon: sparkle, text: { en: "Suggested: Bills", ar: "مقترح: فواتير" }, gap: s }
+                - { kind: button, text: { en: "OK", ar: "موافق" }, gap: s }
+      - id: auto
+        text: { en: "Sort them all, then show a summary the owner can check and fix", ar: "يصنّفها كلها، ثم يعرض ملخّصًا يراجعه صاحب المتجر ويصلحه" }
+        mock:
+          app: dukkani
+          appbar: *rcptbar
+          blocks:
+            - { kind: banner, tone: good, icon: sparkle, text: { en: "300 receipts sorted. Check the groups and fix any mistake.", ar: "تم تصنيف 300 إيصال. راجِع المجموعات وأصلح أي خطأ." } }
+            - { kind: listitem, icon: house, text: { en: "Rent", ar: "الإيجار" }, value: "12", chevron: true, gap: s }
+            - { kind: listitem, icon: package, text: { en: "Stock", ar: "البضاعة" }, value: "210", chevron: true }
+            - { kind: listitem, icon: truck, text: { en: "Transport", ar: "النقل" }, value: "78", chevron: true }
+            - { kind: listitem, icon: question, text: { en: "Not sure", ar: "غير متأكد" }, badge: { text: { en: "9 to check", ar: "9 للمراجعة" }, tone: warn }, chevron: true }
+      - id: none
+        text: { en: "Nothing; money tasks should stay manual", ar: "لا شيء؛ مهام المال يجب أن تبقى يدوية" }
+        mock:
+          app: dukkani
+          appbar: *rcptbar
+          blocks:
+            - { kind: small, color: muted, text: { en: "Pick a group for each receipt", ar: "اختر مجموعة لكل إيصال" } }
+            - { kind: listitem, art: receipt, text: { en: "Cairo Electric · EGP 850", ar: "كهرباء القاهرة · 850 جنيه" }, gap: s }
+            - { kind: select, label: { en: "Group", ar: "المجموعة" }, text: { en: "Choose…", ar: "اختر…" } }
+            - { kind: small, color: muted, text: { en: "299 more receipts", ar: "299 إيصالًا آخر" }, gap: m }
     answer: [auto]
     misconceptions:
       - id: MC-P12-005
@@ -81,7 +115,7 @@ steps:
       ar: "- **الأتمتة (Automate) – الذكاء الاصطناعي يقوم بالمهمة:** للمهام المملّة أو المتكرّرة أو الصعبة أو الخطرة، أو التي لا يملك الناس وقتها أو مهارتها. وهي الأفضل حين يتّفق الجميع على الطريقة الصحيحة.\n- **المساعدة (Augment) – الذكاء الاصطناعي يساعد:** للمهام التي يستمتع بها الناس، أو يشعرون بمسؤوليتها، أو تهمّهم، أو حين تكون المخاطر عالية، أو حين يصعب وصف ما يريدونه بالكلمات.\n- **طريقة للمراجعة دائمًا:** حتى حين يقوم الذكاء الاصطناعي بالمهمة، اجعل الناس يعاينونها أو يعدّلونها أو يتراجعون عنها."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U01-03
     part: guided
     rules: [R06]
@@ -93,12 +127,38 @@ steps:
       en: "Before Eid, owners send thank-you messages to loyal customers. They say these messages keep their customers close."
       ar: "قبل العيد، يرسل أصحاب المتاجر رسائل شكر للعملاء الدائمين. ويقولون إن هذه الرسائل تُبقي عملاءهم قريبين منهم."
     prompt:
-      en: "How should AI help with these messages?"
-      ar: "كيف يجب أن يساعد الذكاء الاصطناعي في هذه الرسائل؟"
+      en: "Tap each option to see it. How should AI help with these messages?"
+      ar: "اضغط على كل خيار لتراه. كيف يساعد الذكاء الاصطناعي في هذه الرسائل؟"
     options:
-      - { id: send, text: { en: "Write and send all the messages by itself", ar: "يكتب كل الرسائل ويرسلها وحده" } }
-      - { id: none, text: { en: "Not at all; owners type every message", ar: "لا يساعد أبدًا؛ أصحاب المتاجر يكتبون كل رسالة" } }
-      - { id: draft, text: { en: "Draft each message with the customer's name, for the owner to edit and send", ar: "يكتب مسودة لكل رسالة باسم العميل، ليعدّلها صاحب المتجر ويرسلها" } }
+      - id: send
+        text: { en: "Write and send all the messages by itself", ar: "يكتب كل الرسائل ويرسلها وحده" }
+        mock:
+          app: dukkani
+          screen: lock
+          blocks:
+            - { kind: notification, title: { en: "120 Eid messages sent ✨", ar: "تم إرسال 120 رسالة عيد ✨" }, text: { en: "Our AI wrote and sent a thank-you to every loyal customer.", ar: "كتب الذكاء الاصطناعي رسالة شكر وأرسلها لكل عميل دائم." }, time: { en: "now", ar: "الآن" } }
+      - id: none
+        text: { en: "Not at all; owners type every message", ar: "لا يساعد أبدًا؛ أصحاب المتاجر يكتبون كل رسالة" }
+        mock:
+          app: dukkani
+          appbar: &eidbar { title: { en: "Eid messages", ar: "رسائل العيد" }, back: true }
+          blocks:
+            - { kind: listitem, avatar: { text: "Mona Saad", art: woman-2 }, text: { en: "Mona Saad", ar: "منى سعد" }, sub: { en: "Customer for 3 years", ar: "عميلة منذ 3 سنوات" } }
+            - { kind: field, label: { en: "Message", ar: "الرسالة" }, text: { en: "Type your message…", ar: "اكتب رسالتك…" }, gap: s }
+            - { kind: small, color: muted, text: { en: "1 of 120 customers", ar: "1 من 120 عميلًا" }, gap: s }
+          footer:
+            - { kind: button, text: { en: "Send", ar: "أرسل" } }
+      - id: draft
+        text: { en: "Draft each message with the customer's name, for the owner to edit and send", ar: "يكتب مسودة لكل رسالة باسم العميل، ليعدّلها صاحب المتجر ويرسلها" }
+        mock:
+          app: dukkani
+          appbar: *eidbar
+          blocks:
+            - { kind: listitem, avatar: { text: "Mona Saad", art: woman-2 }, text: { en: "Mona Saad", ar: "منى سعد" }, sub: { en: "Customer for 3 years", ar: "عميلة منذ 3 سنوات" } }
+            - { kind: badge, icon: sparkle, text: { en: "Draft · edit before you send", ar: "مسودة · عدّلها قبل الإرسال" }, gap: s }
+            - { kind: field, filled: true, text: { en: "Eid Mubarak, Mona! Thank you for 3 years with us. Your favourite dates are back in stock.", ar: "كل عام وأنتِ بخير يا منى! شكرًا لثلاث سنوات معنا. وتمورك المفضّلة عادت إلى المتجر." }, gap: xs }
+          footer:
+            - { kind: button, text: { en: "Send to Mona", ar: "أرسل إلى منى" } }
     answer: [draft]
     misconceptions:
       - id: MC-P12-006
@@ -122,7 +182,7 @@ steps:
       ar: "حين تبني المهمة علاقات، ساعد الناس على أدائها أسرع، لكن اترك الكلمة الأخيرة لهم."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U01-03
     part: guided
     rules: [R06]
@@ -134,12 +194,44 @@ steps:
       en: "Owners make a flyer for their shop's opening. Many say: \"I can picture it, but I can't describe it.\""
       ar: "أصحاب المتاجر يصمّمون إعلانًا لافتتاح متجرهم. وكثيرون يقولون: «أتخيّله، لكن لا أستطيع وصفه.»"
     prompt:
-      en: "How should AI help with the flyer?"
-      ar: "كيف يجب أن يساعد الذكاء الاصطناعي في الإعلان؟"
+      en: "Tap each option to see it. How should AI help with the flyer?"
+      ar: "اضغط على كل خيار لتراه. كيف يساعد الذكاء الاصطناعي في الإعلان؟"
     options:
-      - { id: tools, text: { en: "Offer layouts and colours to try, and let the owner pick and adjust", ar: "يقدّم تصميمات وألوانًا للتجربة، ويختار صاحب المتجر ويعدّل" } }
-      - { id: one, text: { en: "Make the whole flyer from one sentence and print it", ar: "يصمّم الإعلان كله من جملة واحدة ويطبعه" } }
-      - { id: brief, text: { en: "Ask the owner to write a full description first", ar: "يطلب من صاحب المتجر كتابة وصف كامل أولًا" } }
+      - id: tools
+        text: { en: "Offer layouts and colours to try, and let the owner pick and adjust", ar: "يقدّم تصميمات وألوانًا للتجربة، ويختار صاحب المتجر ويعدّل" }
+        mock:
+          app: dukkani
+          appbar: &flybar { title: { en: "Opening flyer", ar: "إعلان الافتتاح" }, back: true }
+          blocks:
+            - { kind: small, weight: bold, text: { en: "Pick a layout to start", ar: "اختر تصميمًا لتبدأ" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: card, art: shelf, blocks: [ { kind: small, text: { en: "Layout 1", ar: "تصميم 1" } } ] }
+                - { kind: card, art: box, blocks: [ { kind: small, text: { en: "Layout 2", ar: "تصميم 2" } } ] }
+                - { kind: card, art: people, blocks: [ { kind: small, text: { en: "Layout 3", ar: "تصميم 3" } } ] }
+            - { kind: chips, label: { en: "Colours", ar: "الألوان" }, items: [ { text: { en: "Green", ar: "أخضر" }, on: true }, { text: { en: "Gold", ar: "ذهبي" } }, { text: { en: "Red", ar: "أحمر" } } ], gap: m }
+          footer:
+            - { kind: button, text: { en: "Edit this layout", ar: "عدّل هذا التصميم" } }
+      - id: one
+        text: { en: "Make the whole flyer from one sentence and print it", ar: "يصمّم الإعلان كله من جملة واحدة ويطبعه" }
+        mock:
+          app: dukkani
+          appbar: *flybar
+          blocks:
+            - { kind: field, filled: true, label: { en: "Describe your flyer in one sentence", ar: "صِف إعلانك في جملة واحدة" }, text: { en: "A flyer for my shop's opening", ar: "إعلان لافتتاح متجري" } }
+            - { kind: card, art: shelf, gap: m, blocks: [ { kind: heading, text: { en: "Grand opening!", ar: "الافتتاح الكبير!" } } ] }
+            - { kind: banner, tone: info, icon: printer, text: { en: "Sent to the printer · 200 copies", ar: "أُرسل إلى الطابعة · 200 نسخة" }, gap: s }
+      - id: brief
+        text: { en: "Ask the owner to write a full description first", ar: "يطلب من صاحب المتجر كتابة وصف كامل أولًا" }
+        mock:
+          app: dukkani
+          appbar: *flybar
+          blocks:
+            - { kind: small, text: { en: "Before we start, describe the flyer in detail: layout, colours, fonts, photos and text.", ar: "قبل أن نبدأ، صِف الإعلان بالتفصيل: التصميم والألوان والخطوط والصور والنص." } }
+            - { kind: field, height: 140, text: { en: "Write at least 100 words…", ar: "اكتب 100 كلمة على الأقل…" }, gap: s }
+          footer:
+            - { kind: button, tone: off, text: { en: "Next", ar: "التالي" } }
     answer: [tools]
     misconceptions:
       - id: MC-P12-006
@@ -181,20 +273,23 @@ steps:
     a:
       label: { en: "A: AI prepares the payments, and the owner approves the list.", ar: "A: الذكاء الاصطناعي يجهّز المدفوعات، وصاحب المتجر يوافق على القائمة." }
       mock:
-        width: 300
+        app: dukkani
+        appbar: { title: { en: "Supplier payments", ar: "مدفوعات الموردين" }, back: true }
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Ready to pay · 3 invoices", ar: "جاهزة للدفع · 3 فواتير" } }
-          - { kind: small, text: { en: "Nile Dairy · 4,200 EGP", ar: "ألبان النيل · 4,200 جنيه" }, gap: xs }
-          - { kind: small, text: { en: "Delta Bakery · 1,150 EGP", ar: "مخبز الدلتا · 1,150 جنيه" }, gap: xs }
-          - { kind: button, text: { en: "Review and pay", ar: "راجِع وادفع" }, gap: s }
+          - { kind: badge, icon: sparkle, text: { en: "Ready to pay · 3 invoices", ar: "جاهزة للدفع · 3 فواتير" } }
+          - { kind: listitem, avatar: { text: "Nile Dairy" }, text: { en: "Nile Dairy", ar: "ألبان النيل" }, sub: { en: "From your email · 2 Nov", ar: "من بريدك · 2 نوفمبر" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" }, check: true, gap: s }
+          - { kind: listitem, avatar: { text: "Delta Bakery" }, text: { en: "Delta Bakery", ar: "مخبز الدلتا" }, sub: { en: "From your email · 3 Nov", ar: "من بريدك · 3 نوفمبر" }, value: { en: "EGP 1,150", ar: "1,150 جنيه" }, check: true }
+        footer:
+          - { kind: button, text: { en: "Review and pay", ar: "راجِع وادفع" } }
     b:
       label: { en: "B: AI pays every invoice it finds, right away.", ar: "B: الذكاء الاصطناعي يدفع كل فاتورة يجدها، فورًا." }
       mock:
-        width: 300
+        app: dukkani
+        appbar: { title: { en: "Supplier payments", ar: "مدفوعات الموردين" }, back: true }
         blocks:
-          - { kind: meta, weight: bold, text: { en: "Paid automatically · 3 invoices", ar: "دُفعت تلقائيًا · 3 فواتير" } }
-          - { kind: small, text: { en: "Nile Dairy · 4,200 EGP ✓", ar: "ألبان النيل · 4,200 جنيه ✓" }, gap: xs }
-          - { kind: small, text: { en: "Delta Bakery · 1,150 EGP ✓", ar: "مخبز الدلتا · 1,150 جنيه ✓" }, gap: xs }
+          - { kind: banner, tone: good, icon: check-circle, text: { en: "Paid automatically · 3 invoices", ar: "دُفعت تلقائيًا · 3 فواتير" } }
+          - { kind: listitem, avatar: { text: "Nile Dairy" }, text: { en: "Nile Dairy", ar: "ألبان النيل" }, sub: { en: "Paid today", ar: "دُفعت اليوم" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" }, badge: { text: { en: "Paid", ar: "مدفوعة" }, tone: good }, gap: s }
+          - { kind: listitem, avatar: { text: "Delta Bakery" }, text: { en: "Delta Bakery", ar: "مخبز الدلتا" }, sub: { en: "Paid today", ar: "دُفعت اليوم" }, value: { en: "EGP 1,150", ar: "1,150 جنيه" }, badge: { text: { en: "Paid", ar: "مدفوعة" }, tone: good } }
     answer: a
     reason:
       prompt: { en: "Why is A better?", ar: "لماذا A أفضل؟" }
@@ -226,7 +321,7 @@ steps:
       ar: "الأتمتة توفّر الوقت. والمعاينة قبل خروج المال تحمي صاحب المتجر."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U01-03
     part: independent
     speaker: hana
@@ -239,12 +334,60 @@ steps:
       en: "Every week I spend 3 hours planning my coaches' shifts. The rules are clear and the coaches agree on them: their free hours, and no more than 30 hours a week."
       ar: "كل أسبوع أقضي 3 ساعات في تخطيط ورديات المدرّبين. والقواعد واضحة والمدرّبون متّفقون عليها: ساعاتهم المتاحة، وألّا تزيد على 30 ساعة أسبوعيًا."
     prompt:
-      en: "How should AI help me?"
-      ar: "كيف يجب أن يساعدني الذكاء الاصطناعي؟"
+      en: "Tap each option to see it. How should AI help me?"
+      ar: "اضغط على كل خيار لتراه. كيف يساعدني الذكاء الاصطناعي؟"
     options:
-      - { id: check, text: { en: "I plan the shifts, and AI checks each one for mistakes", ar: "أخطّط الورديات أنا، والذكاء الاصطناعي يراجع كل واحدة بحثًا عن أخطاء" } }
-      - { id: auto, text: { en: "AI plans the week from the rules, and I check it before it's sent", ar: "الذكاء الاصطناعي يخطّط الأسبوع من القواعد، وأراجعه قبل إرساله" } }
-      - { id: hand, text: { en: "Keep planning by hand; schedules are personal", ar: "أستمر في التخطيط يدويًا؛ فالجداول شخصية" } }
+      - id: check
+        text: { en: "I plan the shifts, and AI checks each one for mistakes", ar: "أخطّط الورديات أنا، والذكاء الاصطناعي يراجع كل واحدة بحثًا عن أخطاء" }
+        mock:
+          app: nashat
+          frame: wide
+          url: admin.nashat.example/shifts
+          blocks:
+            - { kind: title, text: { en: "Coach shifts · week 46", ar: "ورديات المدرّبين · الأسبوع 46" } }
+            - kind: table
+              gap: s
+              head: [ { en: "Coach", ar: "المدرّب" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الاثنين" }, { en: "Hours", ar: "الساعات" } ]
+              rows:
+                - [ { en: "Laila", ar: "ليلى" }, "8–14", "—", "6" ]
+                - [ { en: "Omar", ar: "عمر" }, { en: "type…", ar: "اكتب…" }, "", "" ]
+            - { kind: banner, tone: warn, icon: sparkle, text: { en: "AI check: Omar is over 30 hours.", ar: "مراجعة الذكاء الاصطناعي: عمر تجاوز 30 ساعة." }, gap: s }
+            - { kind: small, color: muted, text: { en: "You fill every cell by hand", ar: "تملأ كل خانة بيدك" }, gap: xs }
+      - id: auto
+        text: { en: "AI plans the week from the rules, and I check it before it's sent", ar: "الذكاء الاصطناعي يخطّط الأسبوع من القواعد، وأراجعه قبل إرساله" }
+        mock:
+          app: nashat
+          frame: wide
+          url: admin.nashat.example/shifts
+          blocks:
+            - { kind: title, text: { en: "Coach shifts · week 46", ar: "ورديات المدرّبين · الأسبوع 46" } }
+            - { kind: badge, icon: sparkle, text: { en: "Draft by AI · follows free hours and the 30-hour rule", ar: "مسودة من الذكاء الاصطناعي · تتبع الساعات الحرة وقاعدة الـ 30 ساعة" }, gap: s }
+            - kind: table
+              gap: s
+              head: [ { en: "Coach", ar: "المدرّب" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الاثنين" }, { en: "Hours", ar: "الساعات" } ]
+              rows:
+                - [ { en: "Laila", ar: "ليلى" }, "8–14", "—", "28" ]
+                - [ { en: "Omar", ar: "عمر" }, "14–20", "8–14", "30" ]
+            - kind: row
+              gap: m
+              blocks:
+                - { kind: button, text: { en: "Send to coaches", ar: "أرسل للمدرّبين" } }
+                - { kind: button, style: outline, text: { en: "Edit", ar: "عدّل" } }
+      - id: hand
+        text: { en: "Keep planning by hand; schedules are personal", ar: "أستمر في التخطيط يدويًا؛ فالجداول شخصية" }
+        mock:
+          app: nashat
+          frame: wide
+          url: admin.nashat.example/shifts
+          blocks:
+            - { kind: title, text: { en: "Coach shifts · week 46", ar: "ورديات المدرّبين · الأسبوع 46" } }
+            - kind: table
+              gap: s
+              head: [ { en: "Coach", ar: "المدرّب" }, { en: "Sun", ar: "الأحد" }, { en: "Mon", ar: "الاثنين" }, { en: "Hours", ar: "الساعات" } ]
+              rows:
+                - [ { en: "Laila", ar: "ليلى" }, "", "", "" ]
+                - [ { en: "Omar", ar: "عمر" }, "", "", "" ]
+            - { kind: small, color: muted, text: { en: "About 3 hours a week", ar: "حوالي 3 ساعات كل أسبوع" }, gap: s, note: { en: "Every week, by hand", ar: "كل أسبوع، يدويًا" } }
     answer: [auto]
     misconceptions:
       - id: MC-P12-005

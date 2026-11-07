@@ -41,39 +41,37 @@ steps:
       - id: acc
         text: { en: "Ingredients and each step collapsed under titles", ar: "المكوّنات وكل خطوة مطويّة تحت عناوين" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: &tbar { title: { en: "Lentil soup", ar: "شوربة عدس" }, back: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "احفظ" } } ] }
           blocks:
-            - { kind: title, text: { en: "Lentil soup", ar: "شوربة عدس" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Ingredients", ar: "المكوّنات" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 1", ar: "الخطوة 1" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 2", ar: "الخطوة 2" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 3", ar: "الخطوة 3" } }, { kind: meta, text: "+" }] }
+            - { kind: image, art: food-salad, size: m, alt: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: meta, text: { en: "20 min · 4 servings · ★ 4.8", ar: "20 دقيقة · 4 أطباق · ★ 4.8" }, gap: s }
+            - { kind: accordion, text: { en: "Ingredients", ar: "المكوّنات" }, gap: m }
+            - { kind: accordion, text: { en: "Step 1", ar: "الخطوة 1" } }
+            - { kind: accordion, text: { en: "Step 2", ar: "الخطوة 2" } }
+            - { kind: accordion, text: { en: "Step 3", ar: "الخطوة 3" } }
       - id: open
         text: { en: "Ingredients and steps open, one after the other", ar: "المكوّنات والخطوات مفتوحة، واحدة بعد الأخرى" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: *tbar
           blocks:
-            - { kind: title, text: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: image, art: food-salad, size: m, alt: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: meta, text: { en: "20 min · 4 servings · ★ 4.8", ar: "20 دقيقة · 4 أطباق · ★ 4.8" }, gap: s }
             - { kind: text, weight: bold, text: { en: "Ingredients", ar: "المكوّنات" }, gap: m }
             - { kind: small, text: { en: "1 cup lentils · 1 onion · 1 carrot · 2 cloves garlic · cumin · salt…", ar: "كوب عدس · بصلة · جزرة · فصّان ثوم · كمّون · ملح…" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "1. Wash the lentils.", ar: "1. اغسل العدس." }, gap: m }
-            - { kind: text, weight: bold, text: { en: "2. Fry the onion for 3 minutes.", ar: "2. حمّر البصل 3 دقائق." }, gap: s }
-            - { kind: text, weight: bold, text: { en: "3. Add everything with 5 cups of water.", ar: "3. أضف كل شيء مع 5 أكواب ماء." }, gap: s }
+            - { kind: list, style: number, gap: m, items: [ { en: "Wash the lentils.", ar: "اغسل العدس." }, { en: "Fry the onion for 3 minutes.", ar: "حمّر البصل 3 دقائق." }, { en: "Add everything with 5 cups of water.", ar: "أضف كل شيء مع 5 أكواب ماء." } ] }
       - id: one
         text: { en: "One step at a time; opening a step closes the one before", ar: "خطوة واحدة في كل مرة؛ وفتح خطوة يغلق السابقة" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: *tbar
           blocks:
-            - { kind: title, text: { en: "Lentil soup", ar: "شوربة عدس" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Ingredients", ar: "المكوّنات" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 1", ar: "الخطوة 1" } }, { kind: meta, text: "−" }] }
-            - { kind: small, text: { en: "Wash the lentils.", ar: "اغسل العدس." }, gap: xs }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Step 2", ar: "الخطوة 2" } }, { kind: meta, text: "+" }] }
+            - { kind: image, art: food-salad, size: m, alt: { en: "Lentil soup", ar: "شوربة عدس" } }
+            - { kind: meta, text: { en: "20 min · 4 servings · ★ 4.8", ar: "20 دقيقة · 4 أطباق · ★ 4.8" }, gap: s }
+            - { kind: accordion, text: { en: "Ingredients", ar: "المكوّنات" }, gap: m }
+            - { kind: accordion, text: { en: "Step 1", ar: "الخطوة 1" }, open: true, blocks: [ { kind: small, text: { en: "Wash the lentils.", ar: "اغسل العدس." } } ] }
+            - { kind: accordion, text: { en: "Step 2", ar: "الخطوة 2" } }
     answer: [open]
     misconceptions:
       - id: MC-P14-016
@@ -108,9 +106,19 @@ steps:
       - id: two
         text: { en: "Show only Battery and Camera; remove the other four", ar: "اعرض البطارية والكاميرا فقط؛ واحذف الأقسام الأربعة الأخرى" }
         mock:
+          app: volta
           frame: wide
+          url: volta.example/phones/x5
+          navbar: &vnav { links: [ { en: "Phones", ar: "الهواتف" }, { en: "Laptops", ar: "اللابتوب" }, { en: "TVs", ar: "الشاشات" } ], active: 0, search: true, actions: [ { icon: shopping-cart }, { icon: user } ] }
           blocks:
-            - { kind: heading, text: { en: "Phone X5 · EGP 14,999", ar: "هاتف X5 · 14,999 جنيه" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, art: phone, size: m, alt: { en: "Phone X5", ar: "هاتف X5" } }
+                - kind: group
+                  blocks:
+                    - { kind: heading, text: { en: "Phone X5", ar: "هاتف X5" } }
+                    - { kind: price, text: { en: "EGP 14,999", ar: "14,999 جنيه" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Battery", ar: "البطارية" }, gap: m }
             - { kind: small, text: { en: "5,000 mAh, about two days of normal use…", ar: "5,000 مللي أمبير، تقريبًا يومان من الاستخدام العادي…" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Camera", ar: "الكاميرا" }, gap: m }
@@ -118,26 +126,41 @@ steps:
       - id: acc
         text: { en: "The six sections as an accordion", ar: "الأقسام الستة كـ Accordion" }
         mock:
+          app: volta
           frame: wide
+          url: volta.example/phones/x5
+          navbar: *vnav
           blocks:
-            - { kind: heading, text: { en: "Phone X5 · EGP 14,999", ar: "هاتف X5 · 14,999 جنيه" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Screen", ar: "الشاشة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Battery", ar: "البطارية" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Camera", ar: "الكاميرا" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Storage", ar: "الذاكرة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "In the box", ar: "ما في العلبة" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Warranty", ar: "الضمان" } }, { kind: meta, text: "+" }] }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, art: phone, size: m, alt: { en: "Phone X5", ar: "هاتف X5" } }
+                - kind: group
+                  blocks:
+                    - { kind: heading, text: { en: "Phone X5", ar: "هاتف X5" } }
+                    - { kind: price, text: { en: "EGP 14,999", ar: "14,999 جنيه" }, gap: xs }
+            - { kind: accordion, text: { en: "Screen", ar: "الشاشة" }, gap: m }
+            - { kind: accordion, text: { en: "Battery", ar: "البطارية" } }
+            - { kind: accordion, text: { en: "Camera", ar: "الكاميرا" } }
+            - { kind: accordion, text: { en: "Storage", ar: "الذاكرة" } }
+            - { kind: accordion, text: { en: "In the box", ar: "ما في العلبة" } }
+            - { kind: accordion, text: { en: "Warranty", ar: "الضمان" } }
       - id: open
         text: { en: "All six sections open", ar: "الأقسام الستة مفتوحة" }
         mock:
+          app: volta
           frame: wide
+          url: volta.example/phones/x5
+          navbar: *vnav
           blocks:
-            - { kind: heading, text: { en: "Phone X5 · EGP 14,999", ar: "هاتف X5 · 14,999 جنيه" } }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, art: phone, size: m, alt: { en: "Phone X5", ar: "هاتف X5" } }
+                - kind: group
+                  blocks:
+                    - { kind: heading, text: { en: "Phone X5", ar: "هاتف X5" } }
+                    - { kind: price, text: { en: "EGP 14,999", ar: "14,999 جنيه" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Screen", ar: "الشاشة" }, gap: m }
             - { kind: small, text: { en: "6.7 inches, 120 Hz, readable in the sun. Glass on the front and the back…", ar: "6.7 بوصة، 120 هرتز، واضحة تحت الشمس. وزجاج في الأمام والخلف…" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Battery", ar: "البطارية" }, gap: m }
@@ -182,35 +205,40 @@ steps:
       - id: terms
         text: { en: "Keep the rule inside Terms", ar: "أبقِ الشرط داخل «الشروط»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: &nbar { title: { en: "Monthly plan", ar: "اشتراك شهري" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Monthly plan · EGP 600", ar: "اشتراك شهري · 600 جنيه" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "What's included", ar: "ما يشمله" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
-            - { kind: button, text: { en: "Join", ar: "اشترك" }, gap: l }
+            - { kind: image, art: gym, size: m, alt: { en: "Gym floor", ar: "صالة النادي" } }
+            - { kind: price, text: { en: "EGP 600", ar: "600 جنيه" }, per: { en: "/ month", ar: "/ شهريًا" }, gap: s }
+            - { kind: accordion, text: { en: "What's included", ar: "ما يشمله" }, gap: m }
+            - { kind: accordion, text: { en: "Terms", ar: "الشروط" } }
+          footer:
+            - { kind: button, text: { en: "Join", ar: "اشترك" } }
       - id: open
         text: { en: "Open Terms by default, with all 12 rules", ar: "افتح «الشروط» تلقائيًا، بقواعدها الـ 12 كلها" }
         mock:
-          width: 300
+          app: nashat
+          appbar: *nbar
           blocks:
-            - { kind: title, text: { en: "Monthly plan · EGP 600", ar: "اشتراك شهري · 600 جنيه" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "What's included", ar: "ما يشمله" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "−" }] }
-            - { kind: small, text: { en: "1. Members must be 16 or older. 2. Bring a towel. 3. Lockers are emptied at closing. 4. Classes must be booked a day ahead. 5. Guests pay a day fee. 6. The plan renews every month…", ar: "1. يجب أن يكون العضو 16 عامًا أو أكثر. 2. أحضر منشفة. 3. تُفرَّغ الخزائن عند الإغلاق. 4. تُحجز الحصص قبلها بيوم. 5. يدفع الضيوف رسم يوم. 6. يتجدّد الاشتراك كل شهر…" }, gap: xs }
-            - { kind: button, text: { en: "Join", ar: "اشترك" }, gap: l }
+            - { kind: image, art: gym, size: m, alt: { en: "Gym floor", ar: "صالة النادي" } }
+            - { kind: price, text: { en: "EGP 600", ar: "600 جنيه" }, per: { en: "/ month", ar: "/ شهريًا" }, gap: s }
+            - { kind: accordion, text: { en: "What's included", ar: "ما يشمله" }, gap: m }
+            - { kind: accordion, text: { en: "Terms", ar: "الشروط" }, open: true, blocks: [ { kind: small, text: { en: "1. Members must be 16 or older. 2. Bring a towel. 3. Lockers are emptied at closing. 4. Classes must be booked a day ahead. 5. Guests pay a day fee. 6. The plan renews every month…", ar: "1. يجب أن يكون العضو 16 عامًا أو أكثر. 2. أحضر منشفة. 3. تُفرَّغ الخزائن عند الإغلاق. 4. تُحجز الحصص قبلها بيوم. 5. يدفع الضيوف رسم يوم. 6. يتجدّد الاشتراك كل شهر…" } } ] }
+          footer:
+            - { kind: button, text: { en: "Join", ar: "اشترك" } }
       - id: line
         text: { en: "A line above Join: \"Renews every month until you cancel\"", ar: "سطر فوق «اشترك»: «يتجدّد كل شهر حتى تلغيه»" }
         mock:
-          width: 300
+          app: nashat
+          appbar: *nbar
           blocks:
-            - { kind: title, text: { en: "Monthly plan · EGP 600", ar: "اشتراك شهري · 600 جنيه" } }
-            - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "What's included", ar: "ما يشمله" } }, { kind: meta, text: "+" }] }
-            - { kind: divider }
-            - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Terms", ar: "الشروط" } }, { kind: meta, text: "+" }] }
+            - { kind: image, art: gym, size: m, alt: { en: "Gym floor", ar: "صالة النادي" } }
+            - { kind: price, text: { en: "EGP 600", ar: "600 جنيه" }, per: { en: "/ month", ar: "/ شهريًا" }, gap: s }
+            - { kind: accordion, text: { en: "What's included", ar: "ما يشمله" }, gap: m }
+            - { kind: accordion, text: { en: "Terms", ar: "الشروط" } }
             - { kind: small, weight: bold, text: { en: "Renews and charges EGP 600 every month until you cancel.", ar: "يتجدّد ويُخصم 600 جنيه كل شهر حتى تلغيه." }, gap: l }
-            - { kind: button, text: { en: "Join", ar: "اشترك" }, gap: s }
+          footer:
+            - { kind: button, text: { en: "Join", ar: "اشترك" } }
     answer: [line]
     misconceptions:
       - id: MC-P14-018
@@ -248,24 +276,28 @@ steps:
     a:
       label: { en: "Version A: the bag rule inside Fare rules", ar: "النسخة A: شرط الحقيبة داخل «قواعد التذكرة»" }
       mock:
-        width: 260
+        app: zad
+        appbar: &zbar { title: { en: "Your fare", ar: "سعر تذكرتك" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "Cairo → Jeddah · EGP 6,300", ar: "القاهرة ← جدة · 6,300 جنيه" } }
-          - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Fare rules", ar: "قواعد التذكرة" } }, { kind: meta, text: "+" }] }
-          - { kind: divider }
-          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Seat", ar: "المقعد" } }, { kind: meta, text: "+" }] }
-          - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: l }
+          - { kind: listitem, icon: airplane-tilt, text: { en: "Cairo → Jeddah", ar: "القاهرة ← جدة" }, sub: { en: "14 Nov · 09:40 · direct", ar: "14 نوفمبر · 09:40 · مباشرة" } }
+          - { kind: price, text: { en: "EGP 6,300", ar: "6,300 جنيه" }, gap: s }
+          - { kind: accordion, text: { en: "Fare rules", ar: "قواعد التذكرة" }, gap: m }
+          - { kind: accordion, text: { en: "Seat", ar: "المقعد" } }
+        footer:
+          - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     b:
       label: { en: "Version B: \"Cabin bag only\" next to the price", ar: "النسخة B: «حقيبة يد فقط» بجانب السعر" }
       mock:
-        width: 260
+        app: zad
+        appbar: *zbar
         blocks:
-          - { kind: heading, text: { en: "Cairo → Jeddah · EGP 6,300", ar: "القاهرة ← جدة · 6,300 جنيه" } }
-          - { kind: chip, tone: warn, text: { en: "Cabin bag only (7 kg) · no checked bag", ar: "حقيبة يد فقط (7 كجم) · بلا حقيبة شحن" }, gap: s }
-          - { kind: row, gap: m, blocks: [{ kind: text, weight: bold, text: { en: "Fare rules", ar: "قواعد التذكرة" } }, { kind: meta, text: "+" }] }
-          - { kind: divider }
-          - { kind: row, blocks: [{ kind: text, weight: bold, text: { en: "Seat", ar: "المقعد" } }, { kind: meta, text: "+" }] }
-          - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: l }
+          - { kind: listitem, icon: airplane-tilt, text: { en: "Cairo → Jeddah", ar: "القاهرة ← جدة" }, sub: { en: "14 Nov · 09:40 · direct", ar: "14 نوفمبر · 09:40 · مباشرة" } }
+          - { kind: price, text: { en: "EGP 6,300", ar: "6,300 جنيه" }, gap: s }
+          - { kind: badge, tone: warn, icon: suitcase-rolling, text: { en: "Cabin bag only (7 kg) · no checked bag", ar: "حقيبة يد فقط (7 كجم) · بلا حقيبة شحن" }, gap: s }
+          - { kind: accordion, text: { en: "Fare rules", ar: "قواعد التذكرة" }, gap: m }
+          - { kind: accordion, text: { en: "Seat", ar: "المقعد" } }
+        footer:
+          - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     answer: b
     misconceptions:
       - id: MC-P14-018
@@ -301,30 +333,32 @@ steps:
       - id: now
         text: { en: "Keep it as it is", ar: "أبقِه كما هو" }
         mock:
-          width: 300
-          blocks:
-            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "wael@mail.com", filled: true }
-            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, gap: s }
-            - { kind: button, emphasis: low, text: { en: "Create account", ar: "أنشئ حسابًا" }, gap: l }
+          app: kalima
+          appbar: &kbar { title: { en: "Create your account", ar: "أنشئ حسابك" }, logo: true }
+          blocks: &kform
+            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, icon: envelope-simple, text: "wael@mail.com", filled: true }
+            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, icon: lock, trail: eye, text: "••••••••", filled: true, gap: s }
+          footer:
+            - { kind: button, style: outline, text: { en: "Create account", ar: "أنشئ حسابًا" } }
             - { kind: button, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
       - id: both
         text: { en: "Make both filled", ar: "اجعل الاثنين ممتلئين" }
         mock:
-          width: 300
-          blocks:
-            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "wael@mail.com", filled: true }
-            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, gap: s }
-            - { kind: button, text: { en: "Create account", ar: "أنشئ حسابًا" }, gap: l }
+          app: kalima
+          appbar: *kbar
+          blocks: *kform
+          footer:
+            - { kind: button, text: { en: "Create account", ar: "أنشئ حسابًا" } }
             - { kind: button, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
       - id: create
         text: { en: "Create account filled; the other as a text button", ar: "«أنشئ حسابًا» ممتلئ؛ والآخر زر نصي" }
         mock:
-          width: 300
-          blocks:
-            - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "wael@mail.com", filled: true }
-            - { kind: field, label: { en: "Password", ar: "كلمة المرور" }, text: "••••••••", filled: true, gap: s }
-            - { kind: button, text: { en: "Create account", ar: "أنشئ حسابًا" }, gap: l }
-            - { kind: button, style: plain, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
+          app: kalima
+          appbar: *kbar
+          blocks: *kform
+          footer:
+            - { kind: button, text: { en: "Create account", ar: "أنشئ حسابًا" } }
+            - { kind: button, style: text, text: { en: "I already have an account", ar: "لديّ حساب بالفعل" }, gap: s }
     answer: [create]
     misconceptions:
       - id: MC-P14-020
@@ -362,29 +396,37 @@ steps:
     a:
       label: { en: "Version A: Send filled; the others outlined", ar: "النسخة A: «أرسل» ممتلئ؛ والباقي بإطار فقط" }
       mock:
+        app: bareed
         frame: wide
+        url: bareed.example/campaigns/new
+        navbar: &bnav { links: [ { en: "Inbox", ar: "الوارد" }, { en: "Campaigns", ar: "الحملات" }, { en: "Contacts", ar: "جهات الاتصال" } ], active: 1, actions: [ { icon: user } ] }
         blocks:
           - { kind: heading, text: { en: "New this week: date cookies", ar: "جديد هذا الأسبوع: كعك التمر" } }
-          - { kind: small, text: { en: "To: 900 customers", ar: "إلى: 900 عميل" }, gap: s }
+          - { kind: listitem, icon: users-three, text: { en: "To: 900 customers", ar: "إلى: 900 عميل" }, sub: { en: "Sweet Corner Bakery list", ar: "قائمة مخبز الركن الحلو" }, gap: s }
+          - { kind: image, art: bread, size: s, alt: { en: "Date cookies", ar: "كعك التمر" }, gap: s }
           - kind: row
             gap: l
             blocks:
-              - { kind: button, emphasis: low, text: { en: "Preview", ar: "معاينة" } }
-              - { kind: button, emphasis: low, text: { en: "Send test to me", ar: "أرسل تجربة لي" } }
-              - { kind: button, text: { en: "Send to 900 customers", ar: "أرسل إلى 900 عميل" } }
+              - { kind: button, style: outline, icon: eye, text: { en: "Preview", ar: "معاينة" } }
+              - { kind: button, style: outline, text: { en: "Send test to me", ar: "أرسل تجربة لي" } }
+              - { kind: button, icon: paper-plane-right, text: { en: "Send to 900 customers", ar: "أرسل إلى 900 عميل" } }
     b:
       label: { en: "Version B: all three filled", ar: "النسخة B: الثلاثة ممتلئة" }
       mock:
+        app: bareed
         frame: wide
+        url: bareed.example/campaigns/new
+        navbar: *bnav
         blocks:
           - { kind: heading, text: { en: "New this week: date cookies", ar: "جديد هذا الأسبوع: كعك التمر" } }
-          - { kind: small, text: { en: "To: 900 customers", ar: "إلى: 900 عميل" }, gap: s }
+          - { kind: listitem, icon: users-three, text: { en: "To: 900 customers", ar: "إلى: 900 عميل" }, sub: { en: "Sweet Corner Bakery list", ar: "قائمة مخبز الركن الحلو" }, gap: s }
+          - { kind: image, art: bread, size: s, alt: { en: "Date cookies", ar: "كعك التمر" }, gap: s }
           - kind: row
             gap: l
             blocks:
-              - { kind: button, text: { en: "Preview", ar: "معاينة" } }
+              - { kind: button, icon: eye, text: { en: "Preview", ar: "معاينة" } }
               - { kind: button, text: { en: "Send test to me", ar: "أرسل تجربة لي" } }
-              - { kind: button, text: { en: "Send to 900 customers", ar: "أرسل إلى 900 عميل" } }
+              - { kind: button, icon: paper-plane-right, text: { en: "Send to 900 customers", ar: "أرسل إلى 900 عميل" } }
     answer: a
     misconceptions:
       - id: MC-P14-019
@@ -420,45 +462,45 @@ steps:
       - id: all
         text: { en: "Reply, Forward, Print and Block as four buttons", ar: "«ردّ» و«إعادة توجيه» و«اطبع» و«احظر» كأربعة أزرار" }
         mock:
-          width: 300
+          app: bareed
+          appbar: { title: "", back: true, actions: [ { icon: archive, aria: { en: "Archive", ar: "أرشفة" } }, { icon: trash, aria: { en: "Delete", ar: "حذف" } } ] }
           blocks:
             - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
-            - { kind: small, text: { en: "From Hala · Please check the numbers before Thursday…", ar: "من هالة · من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
+            - { kind: listitem, avatar: { text: "Hala Samir", art: woman-3 }, text: { en: "Hala", ar: "هالة" }, sub: { en: "to me · 9:12 am", ar: "إليّ · 9:12 ص" }, gap: s }
+            - { kind: small, text: { en: "Please check the numbers before Thursday…", ar: "من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
             - kind: row
               gap: l
               blocks:
-                - { kind: button, emphasis: low, text: { en: "Reply", ar: "ردّ" } }
-                - { kind: button, emphasis: low, text: { en: "Forward", ar: "إعادة توجيه" } }
+                - { kind: button, style: outline, icon: arrow-bend-up-left, text: { en: "Reply", ar: "ردّ" } }
+                - { kind: button, style: outline, icon: arrow-bend-up-right, text: { en: "Forward", ar: "إعادة توجيه" } }
             - kind: row
               gap: s
               blocks:
-                - { kind: button, emphasis: low, text: { en: "Print", ar: "اطبع" } }
-                - { kind: button, emphasis: low, text: { en: "Block", ar: "احظر" } }
+                - { kind: button, style: outline, icon: printer, text: { en: "Print", ar: "اطبع" } }
+                - { kind: button, style: outline, icon: prohibit, text: { en: "Block", ar: "احظر" } }
       - id: two
         text: { en: "Reply and Forward on screen; Print and Block in ⋯", ar: "«ردّ» و«إعادة توجيه» على الشاشة؛ و«اطبع» و«احظر» في ⋯" }
         mock:
-          width: 300
+          app: bareed
+          appbar: &mbar { title: "", back: true, actions: [ { icon: archive, aria: { en: "Archive", ar: "أرشفة" } }, { icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } } ] }
           blocks:
-            - kind: row
-              blocks:
-                - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
-                - { kind: iconbtn, text: "⋯" }
-            - { kind: small, text: { en: "From Hala · Please check the numbers before Thursday…", ar: "من هالة · من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
+            - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
+            - { kind: listitem, avatar: { text: "Hala Samir", art: woman-3 }, text: { en: "Hala", ar: "هالة" }, sub: { en: "to me · 9:12 am", ar: "إليّ · 9:12 ص" }, gap: s }
+            - { kind: small, text: { en: "Please check the numbers before Thursday…", ar: "من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
             - kind: row
               gap: l
               blocks:
-                - { kind: button, emphasis: low, text: { en: "Reply", ar: "ردّ" } }
-                - { kind: button, emphasis: low, text: { en: "Forward", ar: "إعادة توجيه" } }
+                - { kind: button, style: outline, icon: arrow-bend-up-left, text: { en: "Reply", ar: "ردّ" } }
+                - { kind: button, style: outline, icon: arrow-bend-up-right, text: { en: "Forward", ar: "إعادة توجيه" } }
       - id: menu
         text: { en: "All four in ⋯", ar: "الأربعة في ⋯" }
         mock:
-          width: 300
+          app: bareed
+          appbar: *mbar
           blocks:
-            - kind: row
-              blocks:
-                - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
-                - { kind: iconbtn, text: "⋯" }
-            - { kind: small, text: { en: "From Hala · Please check the numbers before Thursday…", ar: "من هالة · من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
+            - { kind: heading, text: { en: "Budget for March", ar: "ميزانية مارس" } }
+            - { kind: listitem, avatar: { text: "Hala Samir", art: woman-3 }, text: { en: "Hala", ar: "هالة" }, sub: { en: "to me · 9:12 am", ar: "إليّ · 9:12 ص" }, gap: s }
+            - { kind: small, text: { en: "Please check the numbers before Thursday…", ar: "من فضلك راجع الأرقام قبل الخميس…" }, gap: s }
     answer: [two]
     misconceptions:
       - id: MC-P14-022
@@ -496,37 +538,35 @@ steps:
     a:
       label: { en: "Version A: everything in ⋯", ar: "النسخة A: كل شيء في ⋯" }
       mock:
-        width: 260
+        app: naghma
+        appbar: &gbar { title: { en: "Today's mix", ar: "تشكيلة اليوم" }, back: true }
         blocks:
           - kind: row
             blocks:
-              - { kind: text, weight: bold, text: { en: "Morning song", ar: "أغنية الصباح" } }
-              - { kind: iconbtn, text: "⋯" }
-          - { kind: meta, text: { en: "Band Wasla · 3:42", ar: "فرقة وصلة · 3:42" }, gap: xs }
+              - { kind: listitem, icon: music-note, text: { en: "Morning song", ar: "أغنية الصباح" }, sub: { en: "Band Wasla · 3:42", ar: "فرقة وصلة · 3:42" } }
+              - { kind: iconbtn, icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } }
           - kind: row
-            gap: m
+            gap: s
             blocks:
-              - { kind: text, weight: bold, text: { en: "Old street", ar: "الشارع القديم" } }
-              - { kind: iconbtn, text: "⋯" }
-          - { kind: meta, text: { en: "Salma Adel · 4:10", ar: "سلمى عادل · 4:10" }, gap: xs }
+              - { kind: listitem, icon: music-note, text: { en: "Old street", ar: "الشارع القديم" }, sub: { en: "Salma Adel · 4:10", ar: "سلمى عادل · 4:10" } }
+              - { kind: iconbtn, icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } }
     b:
       label: { en: "Version B: \"＋ Add\" on each song; the rest in ⋯", ar: "النسخة B: «＋ أضف» في كل أغنية؛ والباقي في ⋯" }
       mock:
-        width: 260
+        app: naghma
+        appbar: *gbar
         blocks:
           - kind: row
             blocks:
-              - { kind: text, weight: bold, text: { en: "Morning song", ar: "أغنية الصباح" } }
-              - { kind: chip, text: { en: "＋ Add", ar: "＋ أضف" } }
-              - { kind: iconbtn, text: "⋯" }
-          - { kind: meta, text: { en: "Band Wasla · 3:42", ar: "فرقة وصلة · 3:42" }, gap: xs }
+              - { kind: listitem, icon: music-note, text: { en: "Morning song", ar: "أغنية الصباح" }, sub: { en: "Band Wasla · 3:42", ar: "فرقة وصلة · 3:42" } }
+              - { kind: chip, icon: plus, text: { en: "Add", ar: "أضف" } }
+              - { kind: iconbtn, icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } }
           - kind: row
-            gap: m
+            gap: s
             blocks:
-              - { kind: text, weight: bold, text: { en: "Old street", ar: "الشارع القديم" } }
-              - { kind: chip, text: { en: "＋ Add", ar: "＋ أضف" } }
-              - { kind: iconbtn, text: "⋯" }
-          - { kind: meta, text: { en: "Salma Adel · 4:10", ar: "سلمى عادل · 4:10" }, gap: xs }
+              - { kind: listitem, icon: music-note, text: { en: "Old street", ar: "الشارع القديم" }, sub: { en: "Salma Adel · 4:10", ar: "سلمى عادل · 4:10" } }
+              - { kind: chip, icon: plus, text: { en: "Add", ar: "أضف" } }
+              - { kind: iconbtn, icon: dots-three-vertical, aria: { en: "More", ar: "المزيد" } }
     answer: b
     misconceptions:
       - id: MC-P14-021
@@ -562,25 +602,38 @@ steps:
       - id: label
         text: { en: "\"⇄ Transfer\"", ar: "«⇄ حوّل»" }
         mock:
-          width: 300
-          fab: { icon: "⇄", text: { en: "Transfer", ar: "حوّل" } }
+          app: rasid
+          appbar: &rbar { title: { en: "Home", ar: "الرئيسية" }, large: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+          tabbar: &rtabs
+            active: 0
+            items:
+              - { icon: house, text: { en: "Home", ar: "الرئيسية" } }
+              - { icon: credit-card, text: { en: "Cards", ar: "البطاقات" } }
+              - { icon: list, text: { en: "More", ar: "المزيد" } }
+          fab: { icon: arrows-left-right, text: { en: "Transfer", ar: "حوّل" } }
           blocks: &bank
-            - { kind: meta, text: { en: "Current account", ar: "الحساب الجاري" } }
-            - { kind: title, text: { en: "EGP 18,240", ar: "18,240 جنيه" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "Recent", ar: "آخر العمليات" }, gap: l }
-            - { kind: meta, text: { en: "Supermarket · −EGP 640", ar: "سوبر ماركت · −640 جنيه" }, gap: s }
-            - { kind: meta, text: { en: "Salary · +EGP 15,000", ar: "الراتب · +15,000 جنيه" }, gap: s }
+            - kind: card
+              blocks:
+                - { kind: small, text: { en: "Current account", ar: "الحساب الجاري" } }
+                - { kind: price, text: { en: "EGP 18,240", ar: "18,240 جنيه" }, size: l, gap: xs }
+            - { kind: text, weight: bold, text: { en: "Recent", ar: "آخر العمليات" }, gap: m }
+            - { kind: listitem, icon: shopping-cart, text: { en: "Supermarket", ar: "سوبر ماركت" }, value: { en: "−EGP 640", ar: "−640 جنيه" }, gap: s }
+            - { kind: listitem, icon: arrow-down-left, text: { en: "Salary", ar: "الراتب" }, value: { en: "+EGP 15,000", ar: "+15,000 جنيه" } }
       - id: icon
         text: { en: "\"⇄\" alone", ar: "«⇄» وحدها" }
         mock:
-          width: 300
-          fab: { icon: "⇄" }
+          app: rasid
+          appbar: *rbar
+          tabbar: *rtabs
+          fab: { icon: arrows-left-right }
           blocks: *bank
       - id: two
         text: { en: "Two floating buttons: \"⇄ Transfer\" and \"🧾 Pay bills\"", ar: "زرّان عائمان: «⇄ حوّل» و«🧾 ادفع الفواتير»" }
         mock:
-          width: 300
-          fab: [{ icon: "⇄", text: { en: "Transfer", ar: "حوّل" } }, { icon: "🧾", text: { en: "Pay bills", ar: "ادفع الفواتير" } }]
+          app: rasid
+          appbar: *rbar
+          tabbar: *rtabs
+          fab: [ { icon: arrows-left-right, text: { en: "Transfer", ar: "حوّل" } }, { icon: receipt, text: { en: "Pay bills", ar: "ادفع الفواتير" } } ]
           blocks: *bank
     answer: [label]
     misconceptions:
@@ -621,24 +674,27 @@ steps:
       - id: share
         text: { en: "\"↗ Share list\"", ar: "«↗ شارك القائمة»" }
         mock:
-          width: 300
-          fab: { icon: "↗", text: { en: "Share list", ar: "شارك القائمة" } }
+          app: qaima
+          appbar: &qbar { title: { en: "This week", ar: "هذا الأسبوع" }, back: true }
+          fab: { icon: share-network, text: { en: "Share list", ar: "شارك القائمة" } }
           blocks: &list
-            - { kind: title, text: { en: "This week", ar: "هذا الأسبوع" } }
-            - { kind: check, text: { en: "Milk", ar: "لبن" }, gap: m }
+            - { kind: check, text: { en: "Milk", ar: "لبن" } }
             - { kind: check, text: { en: "Tomatoes", ar: "طماطم" }, gap: s }
             - { kind: check, selected: true, text: { en: "Bread", ar: "عيش" }, gap: s }
+            - { kind: small, text: { en: "Shared with Amal · edited 5 min ago", ar: "مشتركة مع أمل · عُدّلت قبل 5 دقائق" }, gap: m }
       - id: add
         text: { en: "\"＋ Add item\"", ar: "«＋ أضف منتجًا»" }
         mock:
-          width: 300
-          fab: { icon: "＋", text: { en: "Add item", ar: "أضف منتجًا" } }
+          app: qaima
+          appbar: *qbar
+          fab: { icon: plus, text: { en: "Add item", ar: "أضف منتجًا" } }
           blocks: *list
       - id: delete
         text: { en: "\"🗑 Delete list\"", ar: "«🗑 احذف القائمة»" }
         mock:
-          width: 300
-          fab: { icon: "🗑", text: { en: "Delete list", ar: "احذف القائمة" } }
+          app: qaima
+          appbar: *qbar
+          fab: { icon: trash, text: { en: "Delete list", ar: "احذف القائمة" } }
           blocks: *list
     answer: [add]
     misconceptions:
@@ -675,37 +731,36 @@ steps:
       - id: page
         text: { en: "A Filters button that opens a page with Apply", ar: "زر «فلاتر» يفتح صفحة فيها «طبّق»" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: &dbar { title: { en: "Dinner ideas", ar: "أفكار للعشاء" }, back: true }
           blocks:
-            - { kind: title, text: { en: "Dinner ideas", ar: "أفكار للعشاء" } }
-            - { kind: button, emphasis: low, text: { en: "Filters", ar: "فلاتر" }, gap: s }
-            - { kind: image, size: m, text: { en: "Recipes", ar: "وصفات" }, gap: s }
+            - { kind: button, style: outline, icon: sliders-horizontal, text: { en: "Filters", ar: "فلاتر" } }
+            - { kind: card, art: food-grill, gap: s, blocks: [ { kind: text, weight: bold, text: { en: "Grilled chicken with rice", ar: "فراخ مشوية بالأرز" } }, { kind: meta, text: { en: "40 min", ar: "40 دقيقة" }, gap: xs } ] }
       - id: chips
         text: { en: "Filter chips above the list, applied on tap", ar: "Filter chips فوق القائمة، تُطبَّق عند الضغط" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: *dbar
           blocks:
-            - { kind: title, text: { en: "Dinner ideas", ar: "أفكار للعشاء" } }
             - kind: chips
-              gap: s
               items:
                 - { text: { en: "Vegetarian", ar: "نباتي" }, on: true }
                 - { text: { en: "Quick", ar: "سريع" } }
                 - { text: { en: "Low sugar", ar: "قليل السكر" } }
-            - { kind: image, size: m, text: { en: "Vegetarian recipes", ar: "وصفات نباتية" }, gap: s }
+            - { kind: card, art: food-salad, gap: s, blocks: [ { kind: text, weight: bold, text: { en: "Stuffed peppers", ar: "فلفل محشي" } }, { kind: meta, text: { en: "Vegetarian · 45 min", ar: "نباتي · 45 دقيقة" }, gap: xs } ] }
       - id: loud
         text: { en: "Three filled buttons above the list", ar: "ثلاثة أزرار ممتلئة فوق القائمة" }
         mock:
-          width: 300
+          app: tabkha
+          appbar: *dbar
           blocks:
-            - { kind: title, text: { en: "Dinner ideas", ar: "أفكار للعشاء" } }
             - kind: row
               gap: s
               blocks:
                 - { kind: button, text: { en: "Vegetarian", ar: "نباتي" } }
                 - { kind: button, text: { en: "Quick", ar: "سريع" } }
                 - { kind: button, text: { en: "Low sugar", ar: "قليل السكر" } }
-            - { kind: image, size: m, text: { en: "Recipes", ar: "وصفات" }, gap: s }
+            - { kind: card, art: food-grill, gap: s, blocks: [ { kind: text, weight: bold, text: { en: "Grilled chicken with rice", ar: "فراخ مشوية بالأرز" } }, { kind: meta, text: { en: "40 min", ar: "40 دقيقة" }, gap: xs } ] }
     answer: [chips]
     misconceptions:
       - id: MC-P14-070
@@ -740,7 +795,8 @@ steps:
       - id: locked
         text: { en: "Chips without ✕; Edit profile to change them", ar: "Chips بدون ✕؛ وللتغيير «عدّل الملف»" }
         mock:
-          width: 300
+          app: herfa
+          appbar: &fbar { title: { en: "Your skills", ar: "مهاراتك" }, back: true }
           blocks:
             - kind: chips
               label: { en: "Skills", ar: "المهارات" }
@@ -751,11 +807,13 @@ steps:
                 - { text: { en: "Sales", ar: "المبيعات" } }
                 - { text: { en: "Salsa", ar: "السالسا" } }
             - { kind: link, text: { en: "Edit profile", ar: "عدّل الملف" }, gap: xs }
-            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Save", ar: "احفظ" } }
       - id: chips
         text: { en: "Each skill is a chip with ✕", ar: "كل مهارة Chip عليها ✕" }
         mock:
-          width: 300
+          app: herfa
+          appbar: *fbar
           blocks:
             - kind: chips
               label: { en: "Skills", ar: "المهارات" }
@@ -766,14 +824,17 @@ steps:
                 - { text: { en: "Arabic", ar: "العربية" }, x: true }
                 - { text: { en: "Sales", ar: "المبيعات" }, x: true }
                 - { text: { en: "Salsa", ar: "السالسا" }, x: true }
-            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Save", ar: "احفظ" } }
       - id: text
         text: { en: "One text box, skills separated by commas", ar: "مربع نص واحد، والمهارات تفصلها فواصل" }
         mock:
-          width: 300
+          app: herfa
+          appbar: *fbar
           blocks:
             - { kind: field, label: { en: "Skills", ar: "المهارات" }, text: { en: "Excel, Arabic, Sales, Salsa", ar: "Excel، العربية، المبيعات، السالسا" }, filled: true }
-            - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Save", ar: "احفظ" } }
     answer: [chips]
     misconceptions:
       - id: MC-P14-071

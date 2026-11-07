@@ -21,12 +21,17 @@ steps:
       en: "I'm building an electronics store's website. A customer searched for **wireles charger**, with one letter missing, and nothing matched.\n\nThis is the page they got: two big offers at the top, a small grey line further down, and a joke at the bottom."
       ar: "أبني موقع متجر إلكترونيات. بحث عميل عن **شاحن لاسكي**، بحرف ناقص، ولم يتطابق شيء.\n\nوهذه هي الصفحة التي ظهرت له: عرضان كبيران في الأعلى، وسطر رمادي صغير تحتهما، ونكتة في الأسفل."
     mock:
-      width: 300
+      app: volta
+      appbar: &vbar { title: { en: "Search", ar: "البحث" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
       blocks: &hazem
-        - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-        - { kind: image, size: m, gap: m }
-        - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
-        - { kind: image, size: s, gap: m }
+        - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+        - kind: card
+          art: tv
+          gap: m
+          blocks:
+            - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
+        - { kind: image, art: laptop, size: s, alt: { en: "Laptop offer", ar: "عرض لابتوب" }, gap: m }
         - { kind: small, color: pale, text: { en: "0 results for \"wireles charger\"", ar: "0 نتيجة لـ«شاحن لاسكي»" }, gap: m }
         - { kind: meta, text: { en: "Oops! Our search robot got lost too 🤖", ar: "عفوًا! روبوت البحث تاه هو كمان 🤖" }, gap: m }
 
@@ -48,30 +53,38 @@ steps:
       - id: keep
         text: { en: "Keep the page as it is", ar: "أبقِ الصفحة كما هي" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks: *hazem
       - id: clear
         text: { en: "Clear message at the top, a spelling fix and similar searches", ar: "رسالة واضحة في الأعلى، وتصحيح للإملاء، وعمليات بحث مشابهة" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: m }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: magnifying-glass, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: s }
             - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
             - { kind: meta, text: { en: "Similar searches:", ar: "عمليات بحث مشابهة:" }, gap: m }
             - kind: row
               blocks:
-                - { kind: chip, text: { en: "phone charger", ar: "شاحن موبايل" } }
-                - { kind: chip, text: { en: "power bank", ar: "باور بانك" } }
+                - { kind: chip, icon: magnifying-glass, text: { en: "phone charger", ar: "شاحن موبايل" } }
+                - { kind: chip, icon: magnifying-glass, text: { en: "power bank", ar: "باور بانك" } }
       - id: home
         text: { en: "Send people straight back to the home page", ar: "أعد الناس مباشرة إلى الصفحة الرئيسية" }
         mock:
-          width: 300
           caption: { en: "The search silently opens the home page", ar: "البحث يفتح الصفحة الرئيسية بدون أي رسالة" }
+          app: volta
+          appbar: { title: { en: "Volta Electronics", ar: "فولتا للإلكترونيات" }, logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: title, text: { en: "Volta Electronics", ar: "فولتا للإلكترونيات" } }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: searchbar, text: { en: "Search Volta", ar: "ابحث في فولتا" } }
+            - kind: card
+              art: tv
+              gap: m
+              blocks:
+                - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+                - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
     answer: [clear]
     misconceptions:
       - id: MC-P14-027
@@ -89,18 +102,31 @@ steps:
       en: "The heading tells the customer at once that nothing matched, and \"Did you mean wireless charger?\" fixes the typo in one tap."
       ar: "العنوان يخبر العميل فورًا بأنه لا يوجد تطابق، و«هل تقصد شاحن لاسلكي؟» تصحّح الخطأ بضغطة واحدة."
 
+  - id: S10
+    type: video
+    part: concept
+    title: { en: "Turn no results into a next step", ar: "حوّل «لا توجد نتائج» إلى خطوة تالية" }
+    video: 843f107d-c4a3-4556-a390-0fbef810de56
+    duration: 218
+    transcript:
+      - { t: 2.5, en: "One very important thing in search: if the user types a query, searches, and sees that there are no results related to it, there's a high risk they leave the website.", ar: "من الحاجات المهمة جدًا في السيرش إن اليوزر لو كتب الكويري بتاعه وعمل Search، وظهر له إن مفيش أي نتايج ليها علاقة بالسيرش ده، فهنا فيه Risk عالي إن اليوزر يسيب الـ Website." }
+      - { t: 18.4, en: "So here I need to try to keep the user on my website, to help them, so they don't lose hope and leave right away just because they found nothing related to their query.", ar: "ففي الحالة دي محتاج أحاول أخلّي اليوزر يفضل في الـ Website بتاعي، وأفيده وأساعده، وماينفقدش الأمل ويمشي على طول لمجرد إنه ماقاش نتايج ليها علاقة بالكويري." }
+      - { t: 31.1, en: "So let's think about what to do when there are no search results. The most important guideline for a no-results page is to tell the user clearly that there are no results, so they understand it right away and don't keep looking.", ar: "فنبدأ نفكّر نعمل إيه في حالة No search results. أهم Guideline في الـ No search results page إننا نبيّن لليوزر بوضوح إن مفيش نتايج، عشان يفهم ده من الأول ومايفضلش يدوّر." }
+      - { t: 51.7, en: "In this example the screen has a lot going on and gives it a strong hierarchy, but the message that there are no results is small, up at the top, so the user doesn't notice it and doesn't realize right away that there are none.", ar: "في المثال اللي قدامنا، الـ Screen فيها حاجات كتير وبتاخد Hierarchy كبيرة، لكن الرسالة إن مفيش نتايج مكتوبة بـ Hierarchy صغيرة فوق، فاليوزر مايلاحظهاش، وده بيخلّيه مايفهمش من الأول إن مفيش نتايج أصلًا." }
+      - { t: 76.2, en: "The user has to understand immediately that there are no results for exactly the query they wrote.", ar: "لازم اليوزر يفهم على طول من الأول إن مفيش نتايج للكويري المكتوب ده بالضبط." }
+      - { t: 81.5, en: "Second: I don't block the user; I offer another path. I suggest edits to the query itself, or things close to what they wrote that may return results, or a different way of phrasing it they hadn't thought of.", ar: "تاني حاجة: ماأعطّلش اليوزر، أوفّر له Path تاني. أقترح عليه يعدّل الكويري نفسه، أو أقترح حاجات قريبة من اللي كتبه ممكن تطلع له نتايج، أو ممكن يكتب الكويري بشكل تاني ماجاش في باله." }
+      - { t: 101.2, en: "So they see the suggestions, pick one, and get results. I can also give them a button to go back: cancel the search, browse the whole website, or return to the home page or the page before the search.", ar: "فيشوف الاقتراحات ويختار منها وتطلع له نتايج. وممكن أوفّر له زرار يرجع بيه: يلغي السيرش ويشوف نتايج الـ Website كله، أو يرجع للصفحة الرئيسية أو للصفحة اللي قبل السيرش." }
+      - { t: 126.5, en: "I offer other ways so the user doesn't feel they searched, found nothing, and have nothing left to do, so they leave and get no value from the product.", ar: "فأوفّر طرق تانية، عشان اليوزر ماحسّش إنه دخل ولقاش نتايج وماعادش فيه حاجة يعملها فيمشي ومايستفيدش من الـ Product." }
+      - { t: 137.2, en: "Third: I don't joke or make fun of the user. Humor at these moments can backfire: the user may leave the website, get annoyed by the joke and not come back, or find it silly.", ar: "تالت حاجة: ماهزّرش ولا أسخر من اليوزر. الكوميديا في الأوقات دي ممكن تنقلب عكسها: اليوزر ممكن يمشي من الـ Website أو يضايق من الهزار وماجيش تاني، أو يشوفه سخيف." }
+      - { t: 162.5, en: "When the user is failing at a goal, we don't need to joke or sound sarcastic.", ar: "في الحالات اللي اليوزر بيفشل فيها في هدف معيّن مش محتاجين نهزّر ولا نتكلم بسخرية." }
+      - { t: 169.8, en: "Let's look at this example, which is a great search example with all the guidelines we covered. It's clear there are no search results, the page has a good hierarchy, and there are suggestions below.", ar: "فخلّينا نشوف المثال اللي قدامنا، ده Example ممتاز للسيرش فيه كل الـ Guidelines اللي قلناها. واضح إن مفيش Search results، وفيه Hierarchy كويسة في الصفحة، وفيه اقتراحات تحت." }
+      - { t: 192.8, en: "They can edit the query, check the spelling, try more general words or fewer words, and there are suggested queries to tap to see their results, with no sarcasm anywhere. So this is an excellent example that applies every guideline we discussed for the no-results page.", ar: "ممكن يعدّل الكويري، نتشيك السبيلنج، ممكن يجرّب كلمات أعم أو أقل، وفيه اقتراحات لكويريز تانية يضغط عليها يشوف نتايجها، ومفيش أي سخرية في الموضوع. فده من الأمثلة الممتازة اللي بتطبّق كل الـ Guidelines اللي اتكلمنا عنها في صفحة الـ No search results." }
+
   - id: S03
     type: card
     part: concept
     icons: [eye, idea, list, warn]
-    video:
-      src: clips/P14-C08.mp4
-      captions: { ar: P14-C08.ar.vtt, en: P14-C08.en.vtt }
-      who: { en: "Eyad Mahmoud, UX designer · UXGate", ar: "إياد محمود، مصمم UX · UXGate" }
-      transcript:
-        en: "One very important thing in search: if the user types a query, searches, and sees that there are no results related to it, there's a high risk they leave the website. So here I need to try to keep the user on my website, to help them, so they don't lose hope and leave right away just because they found nothing related to their query. So let's think about what to do when there are no search results. The most important guideline for a no-results page is to tell the user clearly that there are no results, so they understand it right away and don't keep looking. In this example the screen has a lot going on and gives it a strong hierarchy, but the message that there are no results is small, up at the top, so the user doesn't notice it and doesn't realize right away that there are none. The user has to understand immediately that there are no results for exactly the query they wrote. Second: I don't block the user; I offer another path. I suggest edits to the query itself, or things close to what they wrote that may return results, or a different way of phrasing it they hadn't thought of. So they see the suggestions, pick one, and get results. I can also give them a button to go back: cancel the search, browse the whole website, or return to the home page or the page before the search. I offer other ways so the user doesn't feel they searched, found nothing, and have nothing left to do, so they leave and get no value from the product. Third: I don't joke or make fun of the user. Humor at these moments can backfire: the user may leave the website, get annoyed by the joke and not come back, or find it silly. When the user is failing at a goal, we don't need to joke or sound sarcastic. Let's look at this example, which is a great search example with all the guidelines we covered. It's clear there are no search results, the page has a good hierarchy, and there are suggestions below. They can edit the query, check the spelling, try more general words or fewer words, and there are suggested queries to tap to see their results, with no sarcasm anywhere. So this is an excellent example that applies every guideline we discussed for the no-results page."
-        ar: "من الحاجات المهمة جدًا في السيرش إن اليوزر لو كتب الكويري بتاعه وعمل Search، وظهر له إن مفيش أي نتايج ليها علاقة بالسيرش ده، فهنا فيه Risk عالي إن اليوزر يسيب الـ Website. ففي الحالة دي محتاج أحاول أخلّي اليوزر يفضل في الـ Website بتاعي، وأفيده وأساعده، وماينفقدش الأمل ويمشي على طول لمجرد إنه ماقاش نتايج ليها علاقة بالكويري. فنبدأ نفكّر نعمل إيه في حالة No search results. أهم Guideline في الـ No search results page إننا نبيّن لليوزر بوضوح إن مفيش نتايج، عشان يفهم ده من الأول ومايفضلش يدوّر. في المثال اللي قدامنا، الـ Screen فيها حاجات كتير وبتاخد Hierarchy كبيرة، لكن الرسالة إن مفيش نتايج مكتوبة بـ Hierarchy صغيرة فوق، فاليوزر مايلاحظهاش، وده بيخلّيه مايفهمش من الأول إن مفيش نتايج أصلًا. لازم اليوزر يفهم على طول من الأول إن مفيش نتايج للكويري المكتوب ده بالضبط. تاني حاجة: ماأعطّلش اليوزر، أوفّر له Path تاني. أقترح عليه يعدّل الكويري نفسه، أو أقترح حاجات قريبة من اللي كتبه ممكن تطلع له نتايج، أو ممكن يكتب الكويري بشكل تاني ماجاش في باله. فيشوف الاقتراحات ويختار منها وتطلع له نتايج. وممكن أوفّر له زرار يرجع بيه: يلغي السيرش ويشوف نتايج الـ Website كله، أو يرجع للصفحة الرئيسية أو للصفحة اللي قبل السيرش. فأوفّر طرق تانية، عشان اليوزر ماحسّش إنه دخل ولقاش نتايج وماعادش فيه حاجة يعملها فيمشي ومايستفيدش من الـ Product. تالت حاجة: ماهزّرش ولا أسخر من اليوزر. الكوميديا في الأوقات دي ممكن تنقلب عكسها: اليوزر ممكن يمشي من الـ Website أو يضايق من الهزار وماجيش تاني، أو يشوفه سخيف. في الحالات اللي اليوزر بيفشل فيها في هدف معيّن مش محتاجين نهزّر ولا نتكلم بسخرية. فخلّينا نشوف المثال اللي قدامنا، ده Example ممتاز للسيرش فيه كل الـ Guidelines اللي قلناها. واضح إن مفيش Search results، وفيه Hierarchy كويسة في الصفحة، وفيه اقتراحات تحت. ممكن يعدّل الكويري، نتشيك السبيلنج، ممكن يجرّب كلمات أعم أو أقل، وفيه اقتراحات لكويريز تانية يضغط عليها يشوف نتايجها، ومفيش أي سخرية في الموضوع. فده من الأمثلة الممتازة اللي بتطبّق كل الـ Guidelines اللي اتكلمنا عنها في صفحة الـ No search results."
-    title: { en: "Turn no results into a next step", ar: "حوّل «لا توجد نتائج» إلى خطوة تالية" }
+    title: { en: "Video summary", ar: "ملخص الفيديو" }
     body:
       en: "When a search finds nothing, people are close to leaving, even when the site has something related. The page has to keep them going.\n\n- **Say it clearly:** a large heading near the top, such as \"No results for …\", so nobody misses it among offers and other content.\n- **Offer ways forward:** a spelling fix, similar searches that do find results, a tip to use fewer or more general words, or links back to the main sections.\n- **Keep the tone plain:** people who just failed at their goal are already frustrated. A joke or a hint that they typed it wrong pushes them away."
       ar: "حين لا يجد البحث شيئًا، يكون الناس قريبين من المغادرة، حتى لو كان في الموقع شيء مرتبط بما يريدون. ويجب أن تجعلهم الصفحة يكملون.\n\n- **قلها بوضوح:** عنوان كبير قرب الأعلى، مثل «لا توجد نتائج لـ…»، حتى لا يفوت أحدًا وسط العروض والمحتوى الآخر.\n- **اعرض طرقًا للمتابعة:** تصحيح الإملاء، وعمليات بحث مشابهة تجد نتائج فعلًا، ونصيحة باستخدام كلمات أقل أو أعمّ، أو روابط للأقسام الرئيسية.\n- **أبقِ الأسلوب بسيطًا:** من فشل للتو في الوصول إلى هدفه متضايق أصلًا. والنكتة أو التلميح بأنه كتب خطأ يُبعده."
@@ -125,30 +151,40 @@ steps:
       - id: line
         text: { en: "Small grey line under the offers", ar: "سطر رمادي صغير تحت العروض" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - kind: card
+              art: tv
+              gap: m
+              blocks:
+                - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+                - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
             - { kind: small, color: pale, text: { en: "0 results for \"wireles charger\"", ar: "0 نتيجة لـ«شاحن لاسكي»" }, gap: m }
       - id: heading
         text: { en: "Heading at the top, offers below it", ar: "عنوان في الأعلى، والعروض تحته" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
             - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: m }
             - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
-            - { kind: image, size: s, gap: l }
-            - { kind: meta, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: listitem, art: tv, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, chevron: true, gap: l }
       - id: dialog
         text: { en: "A dialog people have to close first", ar: "نافذة Dialog يجب على الناس إغلاقها أولًا" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: field, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
-            - { kind: image, size: m, gap: m }
-            - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: s }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - kind: card
+              art: tv
+              gap: m
+              blocks:
+                - { kind: badge, text: { en: "Summer sale", ar: "تخفيضات الصيف" }, icon: tag }
+                - { kind: text, weight: bold, text: { en: "Summer sale: up to 40% off", ar: "تخفيضات الصيف: حتى 40%" }, gap: xs }
           overlay:
             type: dialog
             blocks:
@@ -198,30 +234,35 @@ steps:
       - id: again
         text: { en: "\"Please try again\" and the search box", ar: "«حاول مرة أخرى» ومربع البحث" }
         mock:
-          width: 300
+          app: dar
+          appbar: &dbar { title: { en: "Dar · Sports", ar: "دار · رياضة" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلّة" } } ] }
           blocks:
-            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
+            - { kind: icon, icon: sneaker-move, size: l, color: brand }
+            - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" }, gap: s }
             - { kind: meta, text: { en: "Please try again.", ar: "حاول مرة أخرى." }, gap: s }
-            - { kind: field, text: { en: "Search the shop", ar: "ابحث في المتجر" }, gap: m }
+            - { kind: searchbar, text: { en: "Search the shop", ar: "ابحث في المتجر" }, gap: m }
       - id: ways
         text: { en: "A tip to use fewer words, and similar searches with results", ar: "نصيحة باستخدام كلمات أقل، وعمليات بحث مشابهة لها نتائج" }
         mock:
-          width: 300
+          app: dar
+          appbar: *dbar
           blocks:
             - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
             - { kind: meta, text: { en: "Try fewer words. These searches have results:", ar: "جرّب كلمات أقل. عمليات البحث هذه لها نتائج:" }, gap: s }
-            - { kind: link, text: { en: "red running shoes (14)", ar: "حذاء جري أحمر (14)" }, gap: s }
-            - { kind: link, text: { en: "waterproof running shoes (9)", ar: "حذاء جري مقاوم للماء (9)" }, gap: s }
-            - { kind: link, text: { en: "running shoes size 47 (6)", ar: "حذاء جري مقاس 47 (6)" }, gap: s }
+            - { kind: listitem, art: sneakers, text: { en: "red running shoes", ar: "حذاء جري أحمر" }, value: "14", chevron: true, gap: s }
+            - { kind: listitem, art: sneakers, text: { en: "waterproof running shoes", ar: "حذاء جري مقاوم للماء" }, value: "9", chevron: true }
+            - { kind: listitem, art: sneakers, text: { en: "running shoes size 47", ar: "حذاء جري مقاس 47" }, value: "6", chevron: true }
       - id: contact
         text: { en: "A form to contact customer service", ar: "نموذج للتواصل مع خدمة العملاء" }
         mock:
-          width: 300
+          app: dar
+          appbar: *dbar
           blocks:
             - { kind: heading, text: { en: "No results for \"red waterproof running shoes size 47\"", ar: "لا توجد نتائج لـ«حذاء جري أحمر مقاوم للماء مقاس 47»" } }
             - { kind: meta, text: { en: "Tell us what you were looking for.", ar: "أخبرنا بما كنت تبحث عنه." }, gap: s }
             - { kind: field, label: { en: "Your message", ar: "رسالتك" }, text: "", gap: m }
-            - { kind: button, text: { en: "Send", ar: "أرسل" }, gap: m }
+          footer:
+            - { kind: button, text: { en: "Send", ar: "أرسل" } }
     answer: [ways]
     misconceptions:
       - id: MC-P14-028
@@ -259,24 +300,33 @@ steps:
       - id: joke
         text: { en: "\"Oops! Our search is as lost as you are 😅\"", ar: "«عفوًا! البحث تايه زيّك بالظبط 😅»" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: heading, text: { en: "Oops! Our search is as lost as you are 😅", ar: "عفوًا! البحث تايه زيّك بالظبط 😅" } }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: robot, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "Oops! Our search is as lost as you are 😅", ar: "عفوًا! البحث تايه زيّك بالظبط 😅" }, gap: s }
             - { kind: meta, text: { en: "Nothing for \"wireles charger\".", ar: "لا شيء لـ«شاحن لاسكي»." }, gap: s }
       - id: plain
         text: { en: "\"No results for … Check the spelling or try other words.\"", ar: "«لا توجد نتائج لـ… تأكّد من الإملاء أو جرّب كلمات أخرى.»" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" } }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: magnifying-glass, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No results for \"wireles charger\"", ar: "لا توجد نتائج لـ«شاحن لاسكي»" }, gap: s }
             - { kind: meta, text: { en: "Check the spelling or try other words.", ar: "تأكّد من الإملاء أو جرّب كلمات أخرى." }, gap: s }
             - { kind: text, text: { en: "Did you mean **wireless charger**?", ar: "هل تقصد **شاحن لاسلكي**؟" }, gap: s }
       - id: blame
         text: { en: "\"You must have typed it wrong.\"", ar: "«أكيد كتبتها غلط.»" }
         mock:
-          width: 300
+          app: volta
+          appbar: *vbar
           blocks:
-            - { kind: heading, text: { en: "You must have typed it wrong.", ar: "أكيد كتبتها غلط." } }
+            - { kind: searchbar, text: { en: "wireles charger", ar: "شاحن لاسكي" }, filled: true }
+            - { kind: icon, icon: warning-circle, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "You must have typed it wrong.", ar: "أكيد كتبتها غلط." }, gap: s }
             - { kind: meta, text: { en: "Nothing for \"wireles charger\".", ar: "لا شيء لـ«شاحن لاسكي»." }, gap: s }
     answer: [plain]
     misconceptions:
@@ -310,18 +360,22 @@ steps:
     a:
       label: { en: "Version A: clear message and similar searches", ar: "النسخة A: رسالة واضحة وعمليات بحث مشابهة" }
       mock:
-        width: 260
+        app: dawaa
+        appbar: &pbar { title: { en: "Search", ar: "البحث" }, back: true }
         blocks:
-          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" } }
+          - { kind: searchbar, text: { en: "fluzal day night", ar: "فلوزال داي نايت" }, filled: true }
+          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" }, gap: m }
           - { kind: meta, text: { en: "Did you mean one of these?", ar: "هل تقصد أحد هذين؟" }, gap: s }
-          - { kind: link, text: { en: "Fluzal Day", ar: "فلوزال داي" }, gap: s }
-          - { kind: link, text: { en: "Fluzal Night", ar: "فلوزال نايت" }, gap: s }
+          - { kind: listitem, art: medicine, text: { en: "Fluzal Day", ar: "فلوزال داي" }, sub: { en: "20 tablets", ar: "20 قرصًا" }, value: { en: "EGP 48", ar: "48 جنيه" }, chevron: true, gap: s }
+          - { kind: listitem, art: medicine, text: { en: "Fluzal Night", ar: "فلوزال نايت" }, sub: { en: "20 tablets", ar: "20 قرصًا" }, value: { en: "EGP 52", ar: "52 جنيه" }, chevron: true }
     b:
       label: { en: "Version B: clear message only", ar: "النسخة B: رسالة واضحة فقط" }
       mock:
-        width: 260
+        app: dawaa
+        appbar: *pbar
         blocks:
-          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" } }
+          - { kind: searchbar, text: { en: "fluzal day night", ar: "فلوزال داي نايت" }, filled: true }
+          - { kind: heading, text: { en: "No results for \"fluzal day night\"", ar: "لا توجد نتائج لـ«فلوزال داي نايت»" }, gap: m }
           - { kind: meta, text: { en: "We couldn't find any products matching your search.", ar: "لم نجد أي منتجات تطابق بحثك." }, gap: s }
     answer: a
     misconceptions:
@@ -358,28 +412,37 @@ steps:
       - id: best
         text: { en: "Show the week's best sellers, with no message", ar: "اعرض الأكثر مبيعًا هذا الأسبوع، بدون رسالة" }
         mock:
-          width: 300
+          app: safha
+          appbar: &sbar { title: { en: "Search", ar: "البحث" }, back: true }
           blocks:
-            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
-            - { kind: text, weight: bold, text: { en: "Ten Small Habits", ar: "عشر عادات صغيرة" }, gap: m }
-            - { kind: meta, text: { en: "Omar Fathy", ar: "عمر فتحي" }, gap: xs }
-            - { kind: text, weight: bold, text: { en: "The Quiet River", ar: "النهر الهادئ" }, gap: m }
-            - { kind: meta, text: { en: "Salma Adel", ar: "سلمى عادل" }, gap: xs }
+            - { kind: searchbar, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: small, text: { en: "Bestsellers", ar: "الأكثر مبيعًا" }, gap: m }
+            - { kind: listitem, art: book, text: { en: "Ten Small Habits", ar: "عشر عادات صغيرة" }, sub: { en: "Omar Fathy · audiobook", ar: "عمر فتحي · كتاب صوتي" }, gap: s }
+            - { kind: listitem, art: book, text: { en: "The Quiet River", ar: "النهر الهادئ" }, sub: { en: "Salma Adel · audiobook", ar: "سلمى عادل · كتاب صوتي" } }
       - id: drop
         text: { en: "Clear message, and a link without \"audiobooks\"", ar: "رسالة واضحة، ورابط بدون كلمة «صوتية»" }
         mock:
-          width: 300
+          app: safha
+          appbar: *sbar
           blocks:
-            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
-            - { kind: heading, text: { en: "No audiobooks by Naguib Mahfouz yet", ar: "لا توجد كتب صوتية لنجيب محفوظ بعد" }, gap: m }
+            - { kind: searchbar, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: icon, icon: headphones, size: l, color: brand, gap: m }
+            - { kind: heading, text: { en: "No audiobooks by Naguib Mahfouz yet", ar: "لا توجد كتب صوتية لنجيب محفوظ بعد" }, gap: s }
+            - kind: row
+              gap: s
+              blocks:
+                - { kind: image, art: book, size: s, alt: { en: "Book cover", ar: "غلاف كتاب" } }
+                - { kind: image, art: book, size: s, alt: { en: "Book cover", ar: "غلاف كتاب" } }
+                - { kind: image, art: book, size: s, alt: { en: "Book cover", ar: "غلاف كتاب" } }
             - { kind: link, text: { en: "See his 12 books (print and e-book)", ar: "اعرض كتبه الـ12 (ورقية وإلكترونية)" }, gap: s }
       - id: joke
         text: { en: "A sad cartoon and \"This page is empty, like our shelves\"", ar: "رسمة حزينة و«الصفحة فاضية زي رفوفنا»" }
         mock:
-          width: 300
+          app: safha
+          appbar: *sbar
           blocks:
-            - { kind: field, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
-            - { kind: image, size: m, gap: m }
+            - { kind: searchbar, text: { en: "Naguib Mahfouz audiobooks", ar: "كتب صوتية لنجيب محفوظ" }, filled: true }
+            - { kind: image, art: shelf, size: m, alt: { en: "An empty shelf", ar: "رف فارغ" }, gap: m }
             - { kind: heading, text: { en: "This page is empty, like our shelves", ar: "الصفحة فاضية زي رفوفنا" }, gap: s }
     answer: [drop]
     misconceptions:

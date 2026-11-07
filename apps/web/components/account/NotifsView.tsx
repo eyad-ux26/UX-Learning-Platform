@@ -102,7 +102,7 @@ export function NotifsView({ initial, reminder }: { initial: Prefs; reminder: st
         <span className="grow" role="status" aria-live="polite"><span className={`ph ${changes ? "ph-pencil" : saved === "saved" ? "ph-check-circle-fill" : "ph-check"}`} aria-hidden="true" />{msg}</span>
         <div className="acts">
           <button type="button" className="btn btn-secondary press" onClick={cancel} disabled={!changes || pending}>{t("cancel")}</button>
-          <button type="button" className="btn btn-primary press" onClick={save} disabled={!changes || pending}>{t("saveChanges")}</button>
+          <button type="button" className="btn btn-primary press" onClick={save} disabled={!changes || pending} aria-busy={pending || undefined}>{t("saveChanges")}</button>
         </div>
       </footer>
     </>

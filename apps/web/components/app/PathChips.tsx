@@ -15,8 +15,10 @@ export function PathChips({ chips, label, addLabel }: { chips: Chip[]; label: st
   const router = useRouter();
   const [pending, start] = useTransition();
   const [failed, setFailed] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
   const pick = (c: Chip) => {
     if (c.current) return;
+    setBusyId(c.id);
     start(async () => {
       setFailed(false);
       const res = await chooseCurrentPath({ pathId: c.id });
@@ -30,7 +32,7 @@ export function PathChips({ chips, label, addLabel }: { chips: Chip[]; label: st
       <p className="t-over">{label}</p>
       <div className="chips-row">
         {chips.map((c) => (
-          <button key={c.id} type="button" className={`chip press${c.current ? " is-selected" : ""}`} aria-pressed={c.current} aria-label={c.current ? t("currentAria", { name: c.name }) : t("switchTo", { name: c.name })} onClick={() => pick(c)} disabled={pending}>
+          <button key={c.id} type="button" className={`chip press${c.current ? " is-selected" : ""}`} aria-pressed={c.current} aria-label={c.current ? t("currentAria", { name: c.name }) : t("switchTo", { name: c.name })} onClick={() => pick(c)} disabled={pending} aria-busy={(pending && busyId === c.id) || undefined}>
             
             <img src={c.art} alt="" style={{ inlineSize: 24, blockSize: 24 }} /><bdi>{c.name}</bdi><span className="num t-small">{c.pct}%</span>
           </button>

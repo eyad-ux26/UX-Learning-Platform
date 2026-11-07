@@ -1,0 +1,93 @@
+/* ---- Loading (Nov 5): navigation line, loading layer, artboard loader, logo motion, busy buttons ----
+   Waits under 400 ms show only the line and a dimmed screen; longer ones show the artboard loader (design system:
+   "logo loading: waits over 400 ms on full screens"). Reduced motion: the line stands still, the logo and cursor stop,
+   busy spinners keep turning slower because they carry meaning. */
+
+/* Logo motion (docs/design/system/logo-motion, loading + thinking). Colour on light, white on night. */
+.ugm { display: inline-block; flex: none; }
+.ugm * { transform-box: fill-box; }
+.ugm .door path { fill: var(--ugm-grad, #005F99); }
+.ugm .eye, .ugm .smile { fill: #005F99; }
+[data-theme="dark"] .ugm .door path, [data-theme="dark"] .ugm .eye, [data-theme="dark"] .ugm .smile { fill: #FFFFFF; }
+.ugm--loading .eye { animation: ugm-look 1600ms ease-in-out infinite; }
+.ugm--loading .smile { transform-origin: 50% 50%; animation: ugm-breathe 1600ms ease-in-out infinite; }
+.ugm--thinking .eye { animation: ugm-think 1400ms ease-in-out infinite; }
+.ugm--thinking .smile { transform-origin: 50% 50%; animation: ugm-flat 1400ms ease-in-out infinite; }
+@keyframes ugm-look { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-34px, -6px); } 50% { transform: translate(0, -14px); } 75% { transform: translate(34px, -6px); } }
+@keyframes ugm-breathe { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.82); } }
+@keyframes ugm-think { 0%, 100% { transform: translate(0, 0); } 35%, 65% { transform: translate(26px, -40px); } }
+@keyframes ugm-flat { 0%, 100% { transform: scaleY(1); } 35%, 65% { transform: scaleY(.55); } }
+
+/* The navigation line: the logo's teal-to-blue gradient ending in a cyan glow, with a selection handle at its head. */
+.nav-line { position: fixed; inset-block-start: 0; inset-inline: 0; block-size: 3px; z-index: 100; pointer-events: none; opacity: 0; }
+.nav-line.is-on { opacity: 1; }
+.nav-line.is-done { opacity: 1; animation: nav-out 200ms 220ms ease-out forwards; }
+.nav-line-bar { position: relative; display: block; block-size: 100%; inline-size: 0;
+  background: linear-gradient(90deg, #60BEBB 0%, #005F99 55%, #78E4FC 100%); box-shadow: 0 0 10px rgba(120, 228, 252, 0.7);
+  animation: nav-trickle 10s cubic-bezier(.08, .8, .2, 1) forwards; }
+[dir="rtl"] .nav-line-bar { background: linear-gradient(270deg, #60BEBB 0%, #005F99 55%, #78E4FC 100%); }
+[data-theme="dark"] .nav-line-bar { background: linear-gradient(90deg, #60BEBB 0%, #4CC3E8 55%, #B8F1FD 100%); }
+[dir="rtl"][data-theme="dark"] .nav-line-bar { background: linear-gradient(270deg, #60BEBB 0%, #4CC3E8 55%, #B8F1FD 100%); }
+.nav-line-bar::after { content: ""; position: absolute; inset-block-start: -3px; inset-inline-end: -4px; inline-size: 9px; block-size: 9px;
+  background: var(--surface); border: 1.5px solid var(--sel-line); box-sizing: border-box; }
+@keyframes nav-trickle { 0% { inline-size: 0; } 6% { inline-size: 28%; } 30% { inline-size: 62%; } 100% { inline-size: 90%; } }
+@keyframes nav-out { to { opacity: 0; } }
+
+/* While the next screen loads, the old one dims and says it is busy. */
+html[data-nav="busy"] { cursor: progress; }
+html[data-nav="busy"] :is(.shell-main, .shell-panel) { opacity: 0.55; transition: opacity var(--t-fast) linear; }
+
+/* The loading layer: covers the content area only, on the app's dotted ground. The phone toolbar (z 20) stays on top. */
+.nav-layer { position: fixed; z-index: 15; display: grid; place-items: center; padding: 24px 20px 112px; background: var(--dots), var(--ground); }
+@media (min-width: 900px) { .nav-layer { padding-block-end: 40px; } }
+.ug-in { animation: ug-fade 160ms linear both; }
+
+/* The artboard loader */
+.ug-loader { display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; }
+.ug-loader.is-full { min-block-size: 100dvh; justify-content: center; padding: 24px; animation: ug-fade 220ms 400ms both; }
+.ug-loader-art { position: relative; padding-block-start: 30px; }
+.ug-loader-tag { position: absolute; inset-block-start: 0; inset-inline-start: -8px; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 700; line-height: 1; color: var(--sel-line); white-space: nowrap; }
+.ug-loader-tag .ph { font-size: 13px; }
+.ug .ug-loader-frame { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; inline-size: 208px; padding: 22px 22px 24px;
+  background: var(--surface); border: 2px solid var(--line); border-radius: var(--r-lg); box-shadow: 0 var(--ledge-h) 0 var(--ledge); }
+.ug .ug-loader-frame::before { inset: calc(-1 * var(--sel-gap) - 2px) calc(-1 * var(--sel-gap) - 2px) calc(-1 * var(--sel-gap) - 2px - var(--ledge-h)); }
+.ug .ug-loader-frame::after { inset: calc(-1 * var(--o)) calc(-1 * var(--o)) calc(-1 * var(--o) - var(--ledge-h)); }
+.ug-loader-frame .ugm { margin-block-end: 4px; }
+.ug .ug-loader-line { display: block; inline-size: 100%; block-size: 10px; border-radius: 6px; background-image: linear-gradient(90deg, var(--line) 0%, var(--skeleton-shine) 50%, var(--line) 100%); }
+.ug .ug-loader-line.is-short { inline-size: 62%; align-self: flex-start; }
+/* A design-tool cursor sketches the wireframe: along the first line, then the second. */
+.ug-loader-cursor { position: absolute; inset-inline-start: 14%; inset-block-start: 66%; color: var(--sel-line); font-size: 20px; line-height: 0;
+  filter: drop-shadow(0 0 1px var(--surface)) drop-shadow(0 1px 1px rgba(1, 46, 75, 0.25)); animation: ug-cursor 2600ms var(--ease-out) infinite; }
+@keyframes ug-cursor {
+  0% { inset-inline-start: 14%; inset-block-start: 66%; }
+  38% { inset-inline-start: 84%; inset-block-start: 66%; }
+  52% { inset-inline-start: 12%; inset-block-start: 80%; }
+  80% { inset-inline-start: 58%; inset-block-start: 80%; }
+  100% { inset-inline-start: 14%; inset-block-start: 66%; }
+}
+.ug-loader-tip { margin: 0; min-block-size: 1.5em; font-size: 15px; font-weight: 600; color: var(--ink-2); animation: ug-fade 260ms linear both; }
+
+/* Busy buttons: aria-busy="true" adds a spinner after the label and keeps the button's colour (not the grey of disabled). */
+.ug .btn[aria-busy="true"] { cursor: progress; }
+.ug .btn[aria-busy="true"]::after { content: ""; flex: none; inline-size: 18px; block-size: 18px; box-sizing: border-box; border-radius: 50%;
+  border: 2.5px solid currentColor; border-inline-end-color: transparent; animation: ug-spin 0.8s linear infinite; }
+.ug .btn-primary[aria-busy="true"]:is([disabled], .is-disabled) { background: var(--brand); color: var(--on-brand); --ledge-c: var(--brand-ledge); }
+.ug .btn-secondary[aria-busy="true"]:is([disabled], .is-disabled) { background: var(--surface); color: var(--link); border-color: var(--line); --ledge-c: var(--ledge); }
+.ug .btn-wrong[aria-busy="true"]:is([disabled], .is-disabled) { background: var(--wrong-ink); color: #FFFFFF; --ledge-c: #7E1426; }
+.ug[data-theme="dark"] .btn-wrong[aria-busy="true"]:is([disabled], .is-disabled) { background: var(--wrong-line); color: #2A0710; --ledge-c: #B8364A; }
+.ug .btn-ghost[aria-busy="true"]:is([disabled], .is-disabled) { color: var(--link); }
+.ug .choice[aria-busy="true"], .ug .chip[aria-busy="true"], .ug .switch[aria-busy="true"] { cursor: progress; }
+.ug .chip[aria-busy="true"]::after { content: ""; flex: none; inline-size: 14px; block-size: 14px; box-sizing: border-box; border-radius: 50%;
+  border: 2px solid currentColor; border-inline-end-color: transparent; animation: ug-spin 0.8s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ug .nav-line-bar { animation: none !important; inline-size: 90%; }
+  .ug .ug-loader-cursor, .ug .ugm * { animation: none !important; }
+  .ug .ug-loader-tip { animation: none !important; }
+  .ug .btn[aria-busy="true"]::after, .ug .chip[aria-busy="true"]::after { animation: ug-spin 1.6s linear infinite !important; animation-duration: 1.6s !important; animation-iteration-count: infinite !important; }
+}
+
+/* Lesson video: a spinner on the frame while the clip's address loads or it buffers. */
+.ug .lp-vload { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; pointer-events: none; color: #FFFFFF; }
+.ug .lp-vload .spin { inline-size: 36px; block-size: 36px; border-width: 4px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)); }

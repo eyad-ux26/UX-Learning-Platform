@@ -22,16 +22,14 @@ steps:
     type: card
     part: hook
     title: { en: "Which phone was that?", ar: "أيّ هاتف كان ذلك؟" }
+    mock:
+      app: volta
+      appbar: { title: { en: "Compare phones", ar: "قارن الهواتف" }, back: true }
+      blocks:
+        - { kind: table, head: [ "", "", "", "" ], rows: [ [ { en: "Battery", ar: "البطارية" }, "5000", "4500", "4800" ], [ { en: "Weight", ar: "الوزن" }, "190 g", "172 g", "201 g" ], [ { en: "Charging", ar: "الشحن" }, "33 W", "25 W", "45 W" ], [ { en: "Price", ar: "السعر" }, "14,999", "18,500", "12,300" ] ], note: { en: "Scrolled down: the phone names are off screen", ar: "بعد التمرير: أسماء الهواتف خارج الشاشة" } }
     body:
       en: "I'm designing a page where people compare up to three phones. The table is long: screen, camera, battery, weight, price and more.\n\nIn our test, Adel scrolled down to the battery row, then scrolled all the way back up. He had forgotten which column was which phone."
       ar: "أصمّم صفحة يقارن فيها الناس حتى ثلاثة هواتف. والجدول طويل: الشاشة، والكاميرا، والبطارية، والوزن، والسعر، وغيرها.\n\nفي تجربتنا، نزل عادل إلى صف البطارية، ثم صعد إلى أعلى الصفحة مرة أخرى. فقد نسي أيّ عمود لأيّ هاتف."
-    mock:
-      width: 300
-      blocks:
-        - { kind: meta, text: { en: "Battery: 5000 · 4500 · 4800 mAh", ar: "البطارية: 5000 · 4500 · 4800 mAh" } }
-        - { kind: meta, text: { en: "Weight: 190 · 172 · 201 g", ar: "الوزن: 190 · 172 · 201 جرام" }, gap: s }
-        - { kind: meta, text: { en: "Price: 14,999 · 18,500 · 12,300", ar: "السعر: 14,999 · 18,500 · 12,300" }, gap: s }
-
   - id: S02
     type: choose
     part: try
@@ -45,6 +43,11 @@ steps:
     prompt:
       en: "What should I change?"
       ar: "ماذا أغيّر؟"
+    mock:
+      app: volta
+      appbar: { title: { en: "Compare phones", ar: "قارن الهواتف" }, back: true }
+      blocks:
+        - { kind: table, head: [ "", "Nova 8", "Zain X", "Mada 5" ], rows: [ [ { en: "Screen", ar: "الشاشة" }, "6.5\"", "6.1\"", "6.7\"" ], [ { en: "Camera", ar: "الكاميرا" }, "50 MP", "48 MP", "64 MP" ], [ { en: "Battery", ar: "البطارية" }, "5000", "4500", "4800" ] ], note: { en: "These names scroll away", ar: "هذه الأسماء تختفي مع التمرير" } }
     options:
       - { id: sticky, text: { en: "Keep the row with the phone names fixed at the top while people scroll", ar: "أثبّت صف أسماء الهواتف في الأعلى أثناء التمرير" } }
       - { id: colors, text: { en: "Give each phone a colour, explained once at the top", ar: "أعطي كل هاتف لونًا، يُشرح مرة واحدة في الأعلى" } }
@@ -71,18 +74,34 @@ steps:
       en: "With the names always on screen, every row can be read on its own. Adel recognises the phone instead of remembering the column."
       ar: "حين تبقى الأسماء على الشاشة دائمًا، يمكن قراءة كل صف وحده. فيتعرّف عادل على الهاتف بدل أن يتذكّر العمود."
 
+  - id: S09
+    type: video
+    part: concept
+    title: { en: "Recognition rather than recall", ar: "التعرّف بدل التذكّر (Recognition rather than recall)" }
+    video: 9895096c-9e8d-4d41-875c-84badaea03ad
+    duration: 154
+    transcript:
+      - { t: 2.5, en: "Let's look at examples of recognition rather than recall: comparing. Your users need to compare several products or items.", ar: "تعال نشوف أمثلة من أمثلة الـ Recognition rather than recall: الـ Compare. اليوزر عندك يبقى عنده Need إنه يقارن بين أكتر من Product أو أكتر من Item." }
+      - { t: 13.42, en: "In this example, you're buying a new phone and want to compare its camera, processor and other features with other phones.", ar: "في المثال ده، إنت بتشتري Mobile phone جديد، وعايز تقارن الكاميرا بتاعته والـ Processor، وباقي الـ Features بتاعته، بموبايلات تانية." }
+      - { t: 21.42, en: "As a designer, you have one of two ways to help. First: just let people open each phone's page and see its details,", ar: "عندك حل من اتنين كديزاينر عشان تساعد اليوزر يقوم بالمهمة دي. أولًا: إنك عادي تخلّيه يدخل على صفحة الموبايل يشوف الـ Details بتاعته،" }
+      - { t: 31.42, en: "then leave and open another phone, and start recalling the first phone's details to compare them with the second.", ar: "وبعد كده يطلع ويدخل على موبايل تاني، ويبدأ يفتكر، يعمل Recall للمعلومات بتاعة الموبايل الأولاني، ويقارنها بالموبايل التاني." }
+      - { t: 40.42, en: "That relies on recall, and it's not the best. The second way is to offer comparison features like this one,", ar: "وده طبعًا بيعتمد على الـ Recall، ومش أحسن حاجة. الحل التاني إنك توفّر Comparison features زي ده،" }
+      - { t: 46.42, en: "as GSM Arena does: it lets people compare phones side by side, so they recognise the data.", ar: "زي حالة GSM Arena: بيوفّر لليوزر إنه يعمل مقارنة بين الموبايلات، ويبقى بيعمل Recognition للداتا." }
+      - { t: 56.42, en: "Want to see the body, the weight, or which takes two SIM cards? One look at the information and they recognise it.", ar: "عايز يشوف الـ Body عامل إزاي، أو الـ Weight، أو مين فيه شريحتين ومين شريحة واحدة، ومجرد ما يبص على المعلومة خلاص بيعمل لها Recognition." }
+      - { t: 70.42, en: "But there's a problem in this design. Look at the website with me and try to work out what it is.", ar: "طيب، فيه مشكلة في التصميم ده. عايزكم تبصّوا معايا على الـ Website وتحاولوا تفكّروا إيه هي المشكلة." }
+      - { t: 76.42, en: "I'm looking at the phones and scrolling. What's the problem, according to recognition rather than recall?", ar: "أنا دلوقتي هبص على الموبايلات وبعمل Scrolling. تفتكر إيه المشكلة في الـ Recognition rather than recall، According للـ Heuristic ده؟" }
+      - { t: 86.42, en: "I'm looking at the features, say the battery, and now I have to remember which was the first phone, the second and the third,", ar: "أنا بصّيت هنا على الـ Features أو على الـ Battery مثلًا، وهنا محتاج أفتكر: مين كان أول موبايل، ومين كان تاني موبايل، ومين كان تالت موبايل،" }
+      - { t: 96.42, en: "or keep scrolling up and down, up and down. Usability will certainly suffer.", ar: "وإلا أضطر أطلع فوق وأنزل تحت، أطلع فوق وأنزل تحت. فالـ Usability بلا شك هتتأثّر." }
+      - { t: 104.42, en: "Let me show you another example that does this better: Mailchimp's pricing plans.", ar: "تعالوا أوريكم مثال تاني قدّم المهمة دي بشكل أنجح، وهو Mailchimp في الـ Pricing plans بتاعته." }
+      - { t: 114.42, en: "It also gives me a comparison, but when I scroll it doesn't do what GSM Arena did, where I lose track of which column is which.", ar: "بص هنا، هو برضو بيدّيني مقارنة، ولما بعمل Scroll ما عملش زي GSM Arena، إني خلاص ما بقيتش عارف أول Column ده كان إيه وتالت Column كان إيه." }
+      - { t: 128.42, en: "No, it fixes the titles, the headers of the comparison table. So all the way down I can see: this is Premium, this is Standard, this is Essentials.", ar: "لأ، هو هنا عمل Fixation، ثبّت الـ Titles أو الـ Headers بتاعة الـ Table الخاص بالمقارنة. فطول ما أنا ماشي في المقارنة، شايف: دي الـ Premium، ودي حاجات الـ Standard، ودي حاجات الـ Essentials." }
+      - { t: 144.42, en: "These are the kinds of ways to achieve recognition rather than recall.", ar: "وما إلى ذلك من الوسائل اللي بتحقّق الـ Recognition rather than recall." }
+
   - id: S03
     type: card
     part: concept
     icons: [eye, list, idea]
-    video:
-      src: clips/P02-C06.mp4
-      captions: { ar: P02-C06.ar.vtt, en: P02-C06.en.vtt }
-      who: { en: "UXGate instructor", ar: "مدرّب UXGate" }
-      transcript:
-        en: "@C06en"
-        ar: "@C06ar"
-    title: { en: "Recognition rather than recall", ar: "التعرّف بدل التذكّر (Recognition rather than recall)" }
+    title: { en: "Video summary", ar: "ملخص الفيديو" }
     body:
       en: "The sixth heuristic: **reduce people's memory load by making things visible**. Recognising something you see is much easier than recalling it from memory.\n\n- **Keep needed information in view,** such as table headers, chosen filters and the search words.\n- **Let people pick from options** rather than type from memory: menus, suggestions, recent items.\n- **Pair icons with labels,** because only a few icons are understood by everyone."
       ar: "المبدأ السادس: **خفّف العبء على ذاكرة الناس بجعل الأشياء ظاهرة**. فالتعرّف على شيء تراه أسهل بكثير من تذكّره.\n\n- **أبقِ المعلومات المطلوبة ظاهرة،** مثل عناوين الجدول، والفلاتر المختارة، وكلمات البحث.\n- **دَع الناس يختارون من خيارات** بدل أن يكتبوا من الذاكرة: القوائم، والاقتراحات، والعناصر الحديثة.\n- **ضع اسمًا مع كل أيقونة،** لأن عددًا قليلًا فقط من الأيقونات يفهمه الجميع."
@@ -102,6 +121,16 @@ steps:
     prompt:
       en: "What should step 3 show?"
       ar: "ماذا يجب أن تعرض الخطوة 3؟"
+    mock:
+      app: volta
+      appbar: { title: { en: "Protect your phone", ar: "احمِ هاتفك" }, back: true }
+      blocks:
+        - { kind: progress, value: 100, label: { en: "Step 3 of 3", ar: "الخطوة 3 من 3" } }
+        - { kind: listitem, icon: shield-check, text: { en: "Screen cover", ar: "تغطية الشاشة" }, value: { en: "EGP 690 / yr", ar: "690 جنيه / سنويًا" }, gap: m }
+        - { kind: listitem, icon: shield-check, text: { en: "Full cover", ar: "تغطية كاملة" }, value: { en: "EGP 1,490 / yr", ar: "1,490 جنيه / سنويًا" }, gap: s }
+        - { kind: small, text: { en: "Price depends on the phone you chose in step 1", ar: "السعر يعتمد على الهاتف الذي اخترته في الخطوة 1" }, tone: faint, gap: m }
+      footer:
+        - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
       - { id: summary, text: { en: "A short summary at the top: \"Phone X · Blue · 256 GB · EGP 18,500\"", ar: "ملخصًا قصيرًا في الأعلى: «هاتف X · أزرق · 256 GB · 18,500 جنيه»" } }
       - { id: back, text: { en: "A \"Back to step 1\" link to check the phone", ar: "رابط «عُد إلى الخطوة 1» لمراجعة الهاتف" } }
@@ -139,18 +168,12 @@ steps:
       en: "What should I change?"
       ar: "ماذا أغيّر؟"
     mock:
-      width: 300
+      app: dar
+      appbar: { logo: true, actions: [ { icon: bell } ] }
+      tabbar: { active: 0, items: [ { icon: house }, { icon: squares-four }, { icon: heart }, { icon: package }, { icon: user } ] }
       blocks:
-        - { kind: title, text: { en: "Home", ar: "الرئيسية" } }
-        - { kind: image, size: m, gap: s }
-        - kind: row
-          gap: xl
-          blocks:
-            - { kind: small, text: "⌂" }
-            - { kind: small, text: "▦" }
-            - { kind: small, text: "♡" }
-            - { kind: small, text: "▣" }
-            - { kind: small, text: "◯" }
+        - { kind: searchbar, text: { en: "Search Dar", ar: "ابحث في دار" } }
+        - { kind: card, art: earbuds, blocks: [ { kind: heading, text: { en: "Earbuds week", ar: "أسبوع السماعات" } } ], gap: m }
     options:
       - { id: labels, text: { en: "Put a short word under each icon: Home, Shop, Saved, Orders, Account", ar: "أضع كلمة قصيرة تحت كل أيقونة: الرئيسية، والمتجر، والمحفوظات، والطلبات، والحساب" } }
       - { id: tour, text: { en: "Show a tour that explains the icons on first launch", ar: "أعرض جولة تشرح الأيقونات عند أول تشغيل" } }
@@ -191,25 +214,32 @@ steps:
     a:
       label: { en: "Version A: filters hidden", ar: "النسخة A: الفلاتر مخفية" }
       mock:
-        width: 260
+        app: dar
+        appbar: { title: { en: "Dar · Shoes", ar: "دار · أحذية" }, back: true, actions: [ { icon: faders } ] }
         blocks:
-          - { kind: title, text: { en: "Shoes · 12 results", ar: "أحذية · 12 نتيجة" } }
-          - { kind: link, text: { en: "Filters", ar: "الفلاتر" }, gap: s }
-          - { kind: image, size: s, gap: m }
-          - { kind: image, size: s, gap: s }
+          - { kind: small, text: { en: "12 results", ar: "12 نتيجة" } }
+          - kind: row
+            gap: s
+            blocks:
+              - { kind: card, art: sneakers, blocks: [ { kind: price, text: { en: "EGP 1,450", ar: "1,450 جنيه" } } ] }
+              - { kind: card, art: sneakers, blocks: [ { kind: price, text: { en: "EGP 1,890", ar: "1,890 جنيه" } } ] }
     b:
       label: { en: "Version B: filters shown", ar: "النسخة B: الفلاتر ظاهرة" }
       mock:
-        width: 260
+        app: dar
+        appbar: { title: { en: "Dar · Shoes", ar: "دار · أحذية" }, back: true, actions: [ { icon: faders } ] }
         blocks:
-          - { kind: title, text: { en: "Shoes · 12 results", ar: "أحذية · 12 نتيجة" } }
           - kind: chips
             items:
               - { text: { en: "Size 42", ar: "مقاس 42" }, x: true }
               - { text: { en: "Running", ar: "جري" }, x: true }
               - { text: { en: "Under EGP 2,000", ar: "أقل من 2000 جنيه" }, x: true }
-          - { kind: image, size: s, gap: m }
-          - { kind: image, size: s, gap: s }
+          - { kind: small, text: { en: "12 results", ar: "12 نتيجة" }, gap: s }
+          - kind: row
+            gap: s
+            blocks:
+              - { kind: card, art: sneakers, blocks: [ { kind: price, text: { en: "EGP 1,450", ar: "1,450 جنيه" } } ] }
+              - { kind: card, art: sneakers, blocks: [ { kind: price, text: { en: "EGP 1,890", ar: "1,890 جنيه" } } ] }
     answer: b
     misconceptions:
       - id: MC-P02-027
@@ -240,6 +270,18 @@ steps:
     prompt:
       en: "What would help them most?"
       ar: "ما الذي يساعدهم أكثر؟"
+    mock:
+      app: dar
+      appbar: { logo: true, actions: [ { icon: magnifying-glass }, { icon: shopping-cart } ] }
+      blocks:
+        - { kind: card, art: washing-machine, blocks: [ { kind: heading, text: { en: "Washers week", ar: "أسبوع الغسالات" } } ] }
+        - { kind: heading, text: { en: "Departments", ar: "الأقسام" }, gap: m }
+        - kind: chips
+          items:
+            - { text: { en: "Tools", ar: "أدوات" } }
+            - { text: { en: "Kitchen", ar: "المطبخ" } }
+            - { text: { en: "Shoes", ar: "أحذية" } }
+        - { kind: small, text: { en: "Nothing here shows the drill she looked at on Monday", ar: "لا شيء هنا يُظهر المثقاب الذي شاهدته يوم الإثنين" }, tone: faint, gap: m }
     options:
       - { id: recent, text: { en: "A \"Recently viewed\" row with photos on the home page", ar: "صف «شوهدت مؤخرًا» بالصور في الصفحة الرئيسية" } }
       - { id: search, text: { en: "A bigger search box on the home page", ar: "مربع بحث أكبر في الصفحة الرئيسية" } }

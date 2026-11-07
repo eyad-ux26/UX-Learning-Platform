@@ -20,10 +20,16 @@ steps:
       en: "I own a gym, and a company offered to add AI to our members' app. Before I pay, I want to know where it really helps.\n\nYour job: answer five questions.\n\nThis is a skill check: there are no hints, and you'll see your result at the end."
       ar: "أملك ناديًا رياضيًا، وعرضت عليّ شركة أن تضيف ذكاءً اصطناعيًا لتطبيق الأعضاء. وقبل أن أدفع، أريد أن أعرف أين يساعد فعلًا.\n\nمهمّتك: أجب عن خمسة أسئلة.\n\nهذا اختبار مهارة: لا توجد تلميحات، وسترى نتيجتك في النهاية."
     mock:
-      width: 300
+      app: nashat
+      appbar: { logo: true, actions: [ { icon: bell, aria: { en: "Notifications", ar: "الإشعارات" } } ] }
+      tabbar: &nshtabs { active: 0, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar-check, text: { en: "Classes", ar: "الحصص" } }, { icon: barbell, text: { en: "My plan", ar: "خطتي" } }, { icon: identification-card, text: { en: "Membership", ar: "الاشتراك" } } ] }
       blocks:
-        - { kind: title, text: { en: "Fit Hub", ar: "فت هب" } }
-        - { kind: meta, text: { en: "Classes · My plan · Membership", ar: "الحصص · خطتي · الاشتراك" }, gap: s }
+        - kind: card
+          art: gym
+          blocks:
+            - { kind: heading, text: { en: "Next class: Spinning · 18:00", ar: "الحصة القادمة: دراجات ثابتة · 18:00" } }
+            - { kind: small, text: { en: "Coach Omar · 4 places left", ar: "الكوتش عمر · باقي 4 أماكن" }, gap: xs }
+        - { kind: listitem, icon: identification-card, text: { en: "Membership", ar: "الاشتراك" }, sub: { en: "Ends 30 Nov", ar: "ينتهي 30 نوفمبر" }, chevron: true, gap: m }
 
   - id: S02
     type: choose
@@ -40,6 +46,20 @@ steps:
     prompt:
       en: "What should I do before choosing?"
       ar: "ماذا يجب أن أفعل قبل الاختيار؟"
+    mock:
+      app: { name: { en: "GymMind AI", ar: "جيم مايند AI" }, color: "#7C3AED", icon: sparkle, domain: gymmind.example }
+      frame: wide
+      navbar: { links: [ { en: "Features", ar: "الميزات" }, { en: "Prices", ar: "الأسعار" } ], active: 0 }
+      blocks:
+        - { kind: title, text: { en: "12 AI features for your gym", ar: "12 ميزة ذكاء اصطناعي لناديك" } }
+        - kind: row
+          gap: s
+          blocks:
+            - { kind: card, blocks: [ { kind: icon, icon: chat-circle-dots }, { kind: small, text: { en: "AI coach chat", ar: "محادثة مدرّب ذكي" } } ] }
+            - { kind: card, blocks: [ { kind: icon, icon: chart-line-up }, { kind: small, text: { en: "Predict who leaves", ar: "توقّع من سيغادر" } } ] }
+            - { kind: card, blocks: [ { kind: icon, icon: music-notes }, { kind: small, text: { en: "Smart playlists", ar: "قوائم موسيقى ذكية" } } ] }
+            - { kind: card, blocks: [ { kind: icon, icon: dots-three }, { kind: small, text: { en: "+ 9 more", ar: "+ 9 ميزات أخرى" } } ] }
+        - { kind: button, text: { en: "Choose your features", ar: "اختر ميزاتك" }, gap: m }
     options:
       - { id: ask, text: { en: "List what members struggle with today, then see which feature solves one of those", ar: "أكتب ما يعانيه الأعضاء اليوم، ثم أرى أي ميزة تحلّ واحدة منها" } }
       - { id: popular, text: { en: "Pick the features other gyms bought most", ar: "أختار الميزات التي اشترتها النوادي الأخرى أكثر" } }
@@ -56,7 +76,7 @@ steps:
       ar: "من الدرس 1: ابدأ من مشكلة الناس الحقيقية، ثم تأكّد إن كان الذكاء الاصطناعي يحلّها."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P12-U01-02
     part: check
     rules: [R19]
@@ -68,12 +88,39 @@ steps:
       en: "Members often forget to renew and lose their discount. The company offers \"AI that predicts when each member will forget\"."
       ar: "الأعضاء ينسون التجديد كثيرًا فيفقدون الخصم. والشركة تعرض «ذكاءً اصطناعيًا يتوقّع متى سينسى كل عضو»."
     prompt:
-      en: "What's the best fix?"
-      ar: "ما أفضل حل؟"
+      en: "Tap each option to see it. What's the best fix?"
+      ar: "اضغط على كل خيار لتراه. ما أفضل حل؟"
     options:
-      - { id: predict, text: { en: "The AI that predicts who will forget", ar: "الذكاء الاصطناعي الذي يتوقّع من سينسى" } }
-      - { id: chat, text: { en: "An AI chat that answers renewal questions", ar: "محادثة ذكاء اصطناعي تجيب عن أسئلة التجديد" } }
-      - { id: rule, text: { en: "A reminder to every member 7 days before the end date", ar: "تذكير لكل عضو قبل تاريخ الانتهاء بـ 7 أيام" } }
+      - id: predict
+        text: { en: "The AI that predicts who will forget", ar: "الذكاء الاصطناعي الذي يتوقّع من سينسى" }
+        mock:
+          app: nashat
+          frame: wide
+          url: admin.nashat.example/renewals
+          blocks:
+            - { kind: title, text: { en: "✨ Members likely to forget", ar: "✨ أعضاء قد ينسون التجديد" } }
+            - kind: table
+              gap: s
+              head: [ { en: "Member", ar: "العضو" }, { en: "Ends", ar: "ينتهي" }, { en: "Chance to forget", ar: "احتمال النسيان" } ]
+              rows:
+                - [ { en: "Salma Fawzy", ar: "سلمى فوزي" }, "30 Nov", "71%" ]
+                - [ { en: "Ahmed Nabil", ar: "أحمد نبيل" }, "2 Dec", "38%" ]
+      - id: chat
+        text: { en: "An AI chat that answers renewal questions", ar: "محادثة ذكاء اصطناعي تجيب عن أسئلة التجديد" }
+        mock:
+          app: nashat
+          appbar: { title: { en: "Nashat assistant", ar: "مساعد نشاط" }, back: true }
+          blocks:
+            - { kind: chat, from: ai, text: { en: "Hi! Ask me anything about renewing.", ar: "أهلًا! اسألني أي شيء عن التجديد." } }
+          footer:
+            - { kind: composer, text: { en: "Type your question…", ar: "اكتب سؤالك…" } }
+      - id: rule
+        text: { en: "A reminder to every member 7 days before the end date", ar: "تذكير لكل عضو قبل تاريخ الانتهاء بـ 7 أيام" }
+        mock:
+          app: nashat
+          screen: lock
+          blocks:
+            - { kind: notification, title: { en: "Your membership ends in 7 days", ar: "اشتراكك ينتهي بعد 7 أيام" }, text: { en: "Renew by 30 Nov to keep your 15% discount.", ar: "جدّد قبل 30 نوفمبر لتحتفظ بخصم 15%." }, time: { en: "now", ar: "الآن" } }
     answer: [rule]
     misconceptions:
       - id: MC-P12-002
@@ -86,7 +133,7 @@ steps:
       ar: "من الدرس 1: حين تكون الإجابة ثابتة ومعروفة، تتفوّق القاعدة البسيطة على الذكاء الاصطناعي."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U01-03
     part: check
     rules: [R19]
@@ -98,12 +145,37 @@ steps:
       en: "My coaches build a training plan for each new member. They love it, members choose a coach for it, and every coach does it a bit differently."
       ar: "المدرّبون عندي يصمّمون خطة تدريب لكل عضو جديد. وهم يحبّون ذلك، والأعضاء يختارون المدرّب من أجله، وكل مدرّب يفعله بطريقة مختلفة قليلًا."
     prompt:
-      en: "How should AI fit in?"
-      ar: "كيف يجب أن يدخل الذكاء الاصطناعي؟"
+      en: "Tap each option to see it. How should AI fit in?"
+      ar: "اضغط على كل خيار لتراه. أين يناسب الذكاء الاصطناعي؟"
     options:
-      - { id: auto, text: { en: "AI writes every plan, so coaches have more free time", ar: "الذكاء الاصطناعي يكتب كل الخطط، ليصبح للمدرّبين وقت فراغ أكثر" } }
-      - { id: help, text: { en: "AI suggests exercises and fills in the details; the coach shapes the plan", ar: "الذكاء الاصطناعي يقترح تمارين ويملأ التفاصيل؛ والمدرّب يشكّل الخطة" } }
-      - { id: none, text: { en: "AI checks the plans after they're sent", ar: "الذكاء الاصطناعي يراجع الخطط بعد إرسالها" } }
+      - id: auto
+        text: { en: "AI writes every plan, so coaches have more free time", ar: "الذكاء الاصطناعي يكتب كل الخطط، ليصبح للمدرّبين وقت فراغ أكثر" }
+        mock:
+          app: nashat
+          appbar: &planbar { title: { en: "Plan for Salma", ar: "خطة سلمى" }, back: true }
+          blocks:
+            - { kind: badge, icon: sparkle, text: { en: "Written by AI · sent to Salma", ar: "كتبها الذكاء الاصطناعي · أُرسلت لسلمى" } }
+            - { kind: listitem, icon: barbell, text: { en: "Squats", ar: "سكوات" }, value: "3 × 12", gap: s }
+            - { kind: listitem, icon: barbell, text: { en: "Push-ups", ar: "ضغط" }, value: "3 × 10" }
+            - { kind: small, color: muted, text: { en: "Coach: none", ar: "المدرّب: لا يوجد" }, gap: s }
+      - id: help
+        text: { en: "AI suggests exercises and fills in the details; the coach shapes the plan", ar: "الذكاء الاصطناعي يقترح تمارين ويملأ التفاصيل؛ والمدرّب يشكّل الخطة" }
+        mock:
+          app: nashat
+          appbar: *planbar
+          blocks:
+            - { kind: listitem, avatar: { text: "Omar Hany", art: man-1 }, text: { en: "Coach Omar is writing this plan", ar: "الكوتش عمر يكتب هذه الخطة" } }
+            - { kind: listitem, icon: barbell, text: { en: "Squats", ar: "سكوات" }, value: "3 × 12", gap: s }
+            - { kind: listitem, icon: sparkle, text: { en: "Suggested: lunges", ar: "مقترح: طعنات" }, sub: { en: "Fits her knee note", ar: "تناسب ملاحظة الركبة" }, value: { en: "Add", ar: "أضف" } }
+            - { kind: listitem, icon: sparkle, text: { en: "Fill in sets and rest times", ar: "املأ المجموعات وأوقات الراحة" }, chevron: true }
+      - id: none
+        text: { en: "AI checks the plans after they're sent", ar: "الذكاء الاصطناعي يراجع الخطط بعد إرسالها" }
+        mock:
+          app: nashat
+          appbar: *planbar
+          blocks:
+            - { kind: listitem, avatar: { text: "Omar Hany", art: man-1 }, text: { en: "Plan sent by Coach Omar", ar: "أرسل الكوتش عمر الخطة" }, sub: { en: "Yesterday", ar: "أمس" } }
+            - { kind: banner, tone: warn, icon: sparkle, text: { en: "AI review: 2 notes on a plan already sent", ar: "مراجعة الذكاء الاصطناعي: ملاحظتان على خطة أُرسلت بالفعل" }, gap: s }
     answer: [help]
     misconceptions:
       - id: MC-P12-006
@@ -130,6 +202,14 @@ steps:
     prompt:
       en: "Which mistake must we avoid most?"
       ar: "أي خطأ يجب أن نتجنّبه أكثر؟"
+    mock:
+      app: nashat
+      frame: tablet
+      appbar: { title: { en: "Live class · Spinning", ar: "حصة مباشرة · دراجات ثابتة" } }
+      blocks:
+        - { kind: listitem, avatar: { text: "Salma Fawzy", art: woman-1 }, text: { en: "Salma", ar: "سلمى" }, value: { en: "142 bpm", ar: "142 نبضة" } }
+        - { kind: listitem, avatar: { text: "Ahmed Nabil", art: man-2 }, text: { en: "Ahmed", ar: "أحمد" }, value: { en: "188 bpm", ar: "188 نبضة" }, badge: { text: { en: "✨ Alert", ar: "✨ تنبيه" }, tone: bad } }
+        - { kind: listitem, avatar: { text: "Noha Ali", art: woman-2 }, text: { en: "Noha", ar: "نهى" }, value: { en: "131 bpm", ar: "131 نبضة" } }
     options:
       - { id: miss, text: { en: "No alert when a member's heart rate really is dangerous", ar: "لا تنبيه حين يكون نبض العضو خطيرًا فعلًا" } }
       - { id: alarm, text: { en: "An alert when the member is fine", ar: "تنبيه والعضو بخير" } }
@@ -146,7 +226,7 @@ steps:
       ar: "من الدرس 3: قيّم كل خطأ بما يكلّفه للناس، واضبط ضد الأسوأ."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P12-U01-05
     part: check
     rules: [R19]
@@ -158,12 +238,42 @@ steps:
       en: "The home screen will show \"Classes you might like\". Members can always see the full timetable."
       ar: "ستعرض الشاشة الرئيسية «حصص قد تعجبك». والأعضاء يستطيعون دائمًا رؤية الجدول الكامل."
     prompt:
-      en: "What should the AI show there?"
-      ar: "ماذا يجب أن يعرض الذكاء الاصطناعي هناك؟"
+      en: "Tap each option to see the home screen. What should the AI show there?"
+      ar: "اضغط على كل خيار لترى الشاشة الرئيسية. ماذا يجب أن يعرض الذكاء الاصطناعي هناك؟"
     options:
-      - { id: all, text: { en: "Every class that might fit, even weak matches", ar: "كل حصة قد تناسب، حتى الأقل تطابقًا" } }
-      - { id: none, text: { en: "Nothing until it's 100% sure", ar: "لا شيء حتى يتأكّد 100%" } }
-      - { id: few, text: { en: "2 or 3 classes it's sure fit the member", ar: "2 أو 3 حصص متأكّد أنها تناسب العضو" } }
+      - id: all
+        text: { en: "Every class that might fit, even weak matches", ar: "كل حصة قد تناسب، حتى الأقل تطابقًا" }
+        mock:
+          app: nashat
+          appbar: &nshhome { logo: true }
+          tabbar: *nshtabs
+          blocks:
+            - { kind: heading, text: { en: "✨ Classes you might like (14)", ar: "✨ حصص قد تعجبك (14)" } }
+            - { kind: listitem, icon: bicycle, text: { en: "Spinning · Sun 18:00", ar: "دراجات ثابتة · الأحد 18:00" }, gap: s }
+            - { kind: listitem, icon: baby, text: { en: "Mum and baby yoga · Mon 10:00", ar: "يوغا للأم والطفل · الاثنين 10:00" } }
+            - { kind: listitem, icon: boxing-glove, text: { en: "Kids boxing · Tue 16:00", ar: "ملاكمة للأطفال · الثلاثاء 16:00" } }
+            - { kind: small, color: muted, text: { en: "… 11 more", ar: "… 11 حصة أخرى" } }
+      - id: none
+        text: { en: "Nothing until it's 100% sure", ar: "لا شيء حتى يتأكّد 100%" }
+        mock:
+          app: nashat
+          appbar: *nshhome
+          tabbar: *nshtabs
+          blocks:
+            - { kind: heading, text: { en: "✨ Classes you might like", ar: "✨ حصص قد تعجبك" } }
+            - { kind: small, color: muted, text: { en: "No suggestions yet", ar: "لا توجد اقتراحات بعد" }, gap: s }
+            - { kind: link, text: { en: "Full timetable", ar: "الجدول الكامل" }, gap: s }
+      - id: few
+        text: { en: "2 or 3 classes it's sure fit the member", ar: "2 أو 3 حصص متأكّد أنها تناسب العضو" }
+        mock:
+          app: nashat
+          appbar: *nshhome
+          tabbar: *nshtabs
+          blocks:
+            - { kind: heading, text: { en: "✨ Classes you might like", ar: "✨ حصص قد تعجبك" } }
+            - { kind: listitem, icon: bicycle, text: { en: "Spinning · Sun 18:00", ar: "دراجات ثابتة · الأحد 18:00" }, chevron: true, gap: s }
+            - { kind: listitem, icon: person-simple-run, text: { en: "Running club · Thu 7:00", ar: "نادي الجري · الخميس 7:00" }, chevron: true }
+            - { kind: link, text: { en: "Full timetable", ar: "الجدول الكامل" }, gap: s }
     answer: [few]
     misconceptions:
       - id: MC-P12-009

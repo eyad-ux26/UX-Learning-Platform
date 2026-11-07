@@ -20,17 +20,19 @@ steps:
     type: card
     part: hook
     title: { en: "Fifty prices, one by one", ar: "خمسون سعرًا، واحدًا واحدًا" }
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products/paint-roller-23cm
+      navbar: { links: [ { en: "Products", ar: "المنتجات" }, { en: "Orders", ar: "الطلبات" }, { en: "Reports", ar: "التقارير" } ], active: 0, actions: [ { icon: user } ] }
+      blocks:
+        - { kind: title, text: { en: "Edit product", ar: "تعديل منتج" } }
+        - { kind: listitem, art: box, text: { en: "Paint roller, 23 cm", ar: "رولة دهان، 23 سم" }, sub: { en: "Product 7 of 50 to update", ar: "المنتج 7 من 50 للتحديث" }, gap: m }
+        - { kind: field, label: { en: "Price", ar: "السعر" }, text: { en: "EGP 120", ar: "120 جنيه" }, filled: true, focus: true, gap: m }
+        - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: m }
     body:
       en: "Every month my supplier raises prices, and I update my shop. In my dashboard, that means opening each product, editing the price and saving it.\n\nLast month it was 50 products. It took me a whole evening, and I made two typos."
       ar: "كل شهر يرفع المورّد الأسعار، فأحدّث متجري. وفي لوحة التحكم، يعني هذا فتح كل منتج، وتعديل سعره، وحفظه.\n\nفي الشهر الماضي كانت 50 منتجًا. أخذ ذلك مني مساءً كاملًا، وأخطأت في الكتابة مرتين."
-    mock:
-      width: 300
-      blocks:
-        - { kind: title, text: { en: "Edit product", ar: "تعديل منتج" } }
-        - { kind: meta, text: { en: "Paint roller, 23 cm", ar: "رولة دهان، 23 سم" }, gap: s }
-        - { kind: field, label: { en: "Price", ar: "السعر" }, text: { en: "EGP 120", ar: "120 جنيه" }, filled: true, gap: m }
-        - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: l }
-
   - id: S02
     type: choose
     part: try
@@ -44,6 +46,16 @@ steps:
     prompt:
       en: "What would help me most?"
       ar: "ما الذي يساعدني أكثر؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products
+      navbar: { links: [ { en: "Products", ar: "المنتجات" }, { en: "Orders", ar: "الطلبات" }, { en: "Reports", ar: "التقارير" } ], active: 0 }
+      blocks:
+        - { kind: title, text: { en: "Products (50)", ar: "المنتجات (50)" } }
+        - { kind: listitem, art: box, text: { en: "Paint roller, 23 cm", ar: "رولة دهان، 23 سم" }, value: { en: "EGP 120", ar: "120 جنيه" }, chevron: true, gap: m }
+        - { kind: listitem, art: box, text: { en: "Pipe wrench", ar: "مفتاح مواسير" }, value: { en: "EGP 210", ar: "210 جنيه" }, chevron: true, gap: s }
+        - { kind: listitem, art: box, text: { en: "Garden hose 20 m", ar: "خرطوم حديقة 20 م" }, value: { en: "EGP 340", ar: "340 جنيه" }, chevron: true, gap: s, note: { en: "Each price is edited one by one", ar: "كل سعر يُعدّل وحده" } }
     options:
       - { id: bulk, text: { en: "Select many products and raise all their prices at once, by an amount or a %", ar: "أختار منتجات كثيرة وأرفع أسعارها كلها مرة واحدة، بمبلغ أو بنسبة" } }
       - { id: faster, text: { en: "Make the product edit page load faster", ar: "أن تُفتح صفحة تعديل المنتج أسرع" } }
@@ -65,18 +77,31 @@ steps:
       en: "A price rise is one decision applied to many products. Selecting them and raising them together turns an evening of typing into a minute, with no typos. Editing one product at a time still works for small changes."
       ar: "رفع الأسعار قرار واحد يُطبَّق على منتجات كثيرة. واختيارها ورفعها معًا يحوّل مساءً من الكتابة إلى دقيقة، دون أخطاء. ويظل تعديل منتج واحد ممكنًا للتغييرات الصغيرة."
 
+  - id: S09
+    type: video
+    part: concept
+    title: { en: "Flexibility and efficiency of use", ar: "المرونة وكفاءة الاستخدام (Flexibility and efficiency of use)" }
+    video: 01c466c4-49a1-4f60-bc6c-5d06e9225ccc
+    duration: 128
+    transcript:
+      - { t: 2.5, en: "You'll see this clearly in design tools. If you use Figma or any design tool, there are always shortcuts.", ar: "هتلاقي المثال ده بيبرز جدًا في الـ Design tools بالنسبة لك كـ Designers. لو إنت بتستخدم Figma أو أي Design tool، هتلاقي إن دايمًا فيه Shortcuts." }
+      - { t: 12.12, en: "Here's our example: in Figma, when you hover over any tool or click it, it tells you which keyboard shortcut you can use.", ar: "وده المثال اللي معانا: زي ما إنت شايف في Figma، أي Tool بتوقف عليها، بتعمل عليها Hovering أو بتضغط عليها، بيقول لك إيه الـ Keyboard shortcut اللي ممكن تستخدمه." }
+      - { t: 24.12, en: "And remember: the keyboard is faster than the mouse. Moving the mouse to a tool and clicking it is much slower than pressing one letter to get the tool.", ar: "ودايمًا خلّي بالك: الـ Keyboard أسرع من الماوس. يعني إنك تروح بالماوس توقف على الـ Tool وتضغط عليها، أبطأ بكتير من إنك تضغط على حرف على الـ Keyboard فيجيب لك الـ Tool." }
+      - { t: 34.12, en: "So users can press letters quickly, and that improves the experience a lot.", ar: "فاليوزر يبقى عنده الـ Capability إنه يضغط على حروف بسرعة، وده بيعمل Enhance للـ Experience جدًا." }
+      - { t: 44.12, en: "That's why a designer who has used a tool for four or five years differs from one who has used it for a month or a few weeks,", ar: "عشان كده تلاقي إن الـ Designer اللي بقى له مثلًا أربع خمس سنين بيستخدم الـ Tool، غير الـ Designer اللي بقى له شهر أو كام أسبوع بيستخدم نفس الـ Tool،" }
+      - { t: 52.12, en: "especially when you provide shortcuts. There's a huge difference in speed, as much as the experienced person has mastered the shortcuts.", ar: "خاصةً لما تـ Provide موضوع الـ Shortcuts. بتلاقي فرق في السرعة كبير جدًا، على قد ما الشخص القديم ده متمكّن من الـ Shortcuts وفاهمها بطريقة صحيحة." }
+      - { t: 66.12, en: "You find that the expert really is an expert, with a higher level of efficiency and speed. Efficiency means speed.", ar: "بتلاقي فعلًا إن الـ Expert هو Expert، وعنده Level of efficiency أعلى وسرعة أعلى. فالـ Efficiency هي السرعة." }
+      - { t: 76.12, en: "So always try to let experts finish their tasks faster. Keyboard shortcuts are one way, as we said, and not just in design tools.", ar: "فدايمًا حاول تخلّي الشخص الـ Expert يخلّص المهام بتاعته بسرعة أكبر، ومن ضمن الوسائل الـ Keyboard shortcuts زي ما ذكرنا، مش بس في الـ Design tools." }
+      - { t: 86.12, en: "Some actions need shortcuts because they're repetitive. It doesn't matter that beginners don't see these shortcuts,", ar: "إنت عارف إن فيه بعض الـ Actions محتاجة Shortcuts لأنها Repetitive. مش مهم في الحالة دي إن الـ Shortcuts تبقى ظاهرة للمبتدئين،" }
+      - { t: 96.12, en: "but they should be easy for anyone to reach, so whoever wants to learn and improve can get to them.", ar: "لكن تبقى سهلة الوصول بالنسبة لأي User، بحيث إنه لو عايز يتعلّمها وعايز يتطوّر تبقى Accessible بالنسبة له." }
+      - { t: 104.12, en: "Like this Figma example: just hovering over or clicking a tool shows the shortcut that opens it directly,", ar: "زي المثال هنا الخاص بـ Figma: مجرد ما بنعمل Hovering على الـ Tool، أو بيضغط عليها، بيبدأ يظهر له الـ Shortcut اللي ممكن يـ Access بيه الـ Tool دي على طول،" }
+      - { t: 114.12, en: "and it also gives full documentation of every shortcut in the system.", ar: "وفي نفس الوقت بيدّيه Documentation كامل لكل الـ Shortcuts اللي موجودة في السيستم." }
+
   - id: S03
     type: card
     part: concept
     icons: [target, layers, person]
-    video:
-      src: clips/P02-C07.mp4
-      captions: { ar: P02-C07.ar.vtt, en: P02-C07.en.vtt }
-      who: { en: "UXGate instructor", ar: "مدرّب UXGate" }
-      transcript:
-        en: "@C07en"
-        ar: "@C07ar"
-    title: { en: "Flexibility and efficiency of use", ar: "المرونة وكفاءة الاستخدام (Flexibility and efficiency of use)" }
+    title: { en: "Video summary", ar: "ملخص الفيديو" }
     body:
       en: "The seventh heuristic: the same product should suit **both beginners and experts**. Shortcuts that beginners don't notice can speed experts up.\n\n- **Accelerators** such as keyboard shortcuts: show them next to the command, so people learn them over time.\n- **Repeated work in one go:** bulk actions, and automating predictable steps.\n- **Personalize:** use what people did before to shorten what they do next."
       ar: "المبدأ السابع: يجب أن يناسب المنتج نفسه **المبتدئين والخبراء معًا**. والاختصارات التي لا يلاحظها المبتدئون تستطيع أن تسرّع الخبراء.\n\n- **المسرّعات (Accelerators)** مثل اختصارات لوحة المفاتيح: اعرضها بجانب الأمر، ليتعلّمها الناس مع الوقت.\n- **العمل المتكرر دفعة واحدة:** الإجراءات الجماعية (Bulk actions)، وجعل الخطوات المتوقعة تلقائية.\n- **التخصيص (Personalization):** استخدم ما فعله الناس من قبل لتختصر ما سيفعلونه بعد ذلك."
@@ -96,6 +121,18 @@ steps:
     prompt:
       en: "How should the dashboard make them known?"
       ar: "كيف تعرّف لوحة التحكم الناس بها؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products
+      navbar: { links: [ { en: "Products", ar: "المنتجات" }, { en: "Orders", ar: "الطلبات" }, { en: "Help", ar: "المساعدة" } ], active: 0 }
+      blocks:
+        - kind: row
+          blocks:
+            - { kind: button, icon: plus, text: { en: "New product", ar: "منتج جديد" } }
+            - { kind: searchbar, text: { en: "Search products", ar: "ابحث في المنتجات" } }
+            - { kind: button, icon: pencil-simple, text: { en: "Edit", ar: "تعديل" }, style: outline }
+        - { kind: small, text: { en: "Shortcuts N, / and E are listed only under Help", ar: "الاختصارات N و/ وE مكتوبة فقط في المساعدة" }, tone: faint, gap: m }
     options:
       - { id: inline, text: { en: "Show each shortcut next to its button or menu item, and in its tooltip", ar: "عرض كل اختصار بجانب زرّه أو عنصره في القائمة، وفي الـ Tooltip الخاص به" } }
       - { id: popup, text: { en: "A pop-up on every login listing all shortcuts", ar: "نافذة منبثقة عند كل تسجيل دخول تعرض كل الاختصارات" } }
@@ -137,6 +174,15 @@ steps:
     prompt:
       en: "What should change?"
       ar: "ماذا يجب أن يتغيّر؟"
+    mock:
+      app: dar
+      frame: wide
+      url: dar.example/seller/products/new/step-1
+      blocks:
+        - { kind: progress, value: 16, label: { en: "Step 1 of 6: Name", ar: "الخطوة 1 من 6: الاسم" } }
+        - { kind: field, label: { en: "Product name", ar: "اسم المنتج" }, text: { en: "e.g. Electric kettle", ar: "مثال: غلاية كهربائية" }, gap: m }
+        - { kind: banner, icon: lightbulb, tone: info, text: { en: "Tip: use the name customers search for.", ar: "نصيحة: استخدم الاسم الذي يبحث عنه العملاء." }, gap: m }
+        - { kind: button, text: { en: "Next", ar: "التالي" }, gap: m }
     options:
       - { id: remove, text: { en: "Remove the step-by-step screens for everyone", ar: "حذف الشاشات المتتالية للجميع" } }
       - { id: oneform, text: { en: "Keep the guided steps for new sellers, and offer a \"Quick add\" form on one page for those who know it", ar: "إبقاء الخطوات الموجّهة للبائعين الجدد، وعرض نموذج «إضافة سريعة» في صفحة واحدة لمن يعرف الطريقة" } }
@@ -182,21 +228,26 @@ steps:
     a:
       label: { en: "Version A: the same for everyone", ar: "النسخة A: واحدة للجميع" }
       mock:
-        width: 260
+        app: lokma
+        appbar: { logo: true, actions: [ { icon: shopping-cart } ] }
         blocks:
-          - { kind: field, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
+          - { kind: searchbar, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
           - { kind: heading, text: { en: "Popular near you", ar: "الأشهر بالقرب منك" }, gap: m }
-          - { kind: image, size: s, gap: s }
-          - { kind: image, size: s, gap: s }
+          - { kind: listitem, art: food-pizza, text: { en: "Pizza Roma", ar: "بيتزا روما" }, sub: { en: "25 min · EGP 15 delivery", ar: "25 د · توصيل 15 جنيه" }, gap: s }
+          - { kind: listitem, art: food-burger, text: { en: "Burger Lab", ar: "برجر لاب" }, sub: { en: "30 min · free delivery", ar: "30 د · توصيل مجاني" }, gap: s }
     b:
       label: { en: "Version B: with Order again", ar: "النسخة B: مع «اطلب مرة أخرى»" }
       mock:
-        width: 260
+        app: lokma
+        appbar: { logo: true, actions: [ { icon: shopping-cart } ] }
         blocks:
-          - { kind: field, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
-          - { kind: heading, text: { en: "Order again", ar: "اطلب مرة أخرى" }, gap: m }
-          - { kind: meta, text: { en: "Koshary, large + salad · Koshary El Nil", ar: "كشري كبير + سلطة · كشري النيل" }, gap: s }
-          - { kind: button, text: { en: "Reorder · EGP 95", ar: "أعد الطلب · 95 جنيه" }, gap: xs }
+          - { kind: searchbar, text: { en: "Search restaurants or dishes", ar: "ابحث عن مطاعم أو أطباق" } }
+          - kind: card
+            gap: m
+            blocks:
+              - { kind: small, text: { en: "Order again", ar: "اطلب مرة أخرى" } }
+              - { kind: listitem, art: food-koshary, text: { en: "Koshary, large + salad", ar: "كشري كبير + سلطة" }, sub: { en: "Koshary El Nil · Tue", ar: "كشري النيل · الثلاثاء" } }
+              - { kind: button, text: { en: "Reorder · EGP 95", ar: "أعد الطلب · 95 جنيه" } }
           - { kind: heading, text: { en: "Popular near you", ar: "الأشهر بالقرب منك" }, gap: m }
     answer: b
     misconceptions:
@@ -228,6 +279,14 @@ steps:
     prompt:
       en: "What should the app offer them?"
       ar: "ماذا يجب أن يقدّم لهم التطبيق؟"
+    mock:
+      app: raha
+      appbar: { title: { en: "Pharmacy", ar: "الصيدلية" }, back: true }
+      blocks:
+        - { kind: searchbar, text: { en: "metf", ar: "ميتف" }, filled: true, suggest: [ { icon: pill, text: { en: "metf**ormin 500 mg**", ar: "ميتف**ورمين 500 مجم**" } } ] }
+        - { kind: listitem, art: medicine, text: { en: "Metformin 500 mg · 30 tabs", ar: "ميتفورمين 500 مجم · 30 قرصًا" }, value: { en: "EGP 48", ar: "48 جنيه" }, gap: m, note: { en: "The same order, typed in again every month", ar: "الطلب نفسه، يُكتب من جديد كل شهر" } }
+      footer:
+        - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" } }
     options:
       - { id: auto, text: { en: "\"Refill every month\": the same order goes out on a set day, with a reminder two days before to change or skip it", ar: "«أعِد الصرف كل شهر»: يُرسل الطلب نفسه في يوم محدد، مع تذكير قبلها بيومين لتعديله أو تخطّيه" } }
       - { id: banner, text: { en: "A banner on the home page: \"Don't forget your medicine!\"", ar: "Banner في الصفحة الرئيسية: «لا تنسَ دواءك!»" } }

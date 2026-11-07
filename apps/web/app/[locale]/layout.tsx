@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -14,6 +15,7 @@ import "@fontsource/titillium-web/700.css";
 import "../globals.css";
 import { GuestHandoff } from "@/components/GuestHandoff";
 import { ThemeSync } from "@/components/ThemeSync";
+import { NavProgress } from "@/components/loading/NavProgress";
 import { routing, isRtl } from "@/i18n/routing";
 import { themeBootScript } from "@/lib/theme";
 
@@ -47,7 +49,7 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <NextIntlClientProvider><ThemeSync /><GuestHandoff />{children}</NextIntlClientProvider>
+        <NextIntlClientProvider><ThemeSync /><GuestHandoff />{children}<Suspense fallback={null}><NavProgress /></Suspense></NextIntlClientProvider>
         <WebAnalytics />
         <ServiceWorker />
       </body>

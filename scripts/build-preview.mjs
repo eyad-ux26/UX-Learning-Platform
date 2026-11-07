@@ -4,8 +4,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
-import { ROOT, loadContent, loadCast, resolveRefs } from "./lib/content.mjs";
+import { ROOT, loadContent, loadCast, resolveAll } from "./lib/content.mjs";
 import { validate } from "./validate.mjs";
+import { build } from "esbuild";
+import { collectIcons, mockIconsCss } from "../packages/content/src/icons.mjs";
 
 const board = process.argv.includes("--board");
 const only = board ? undefined : process.argv[2];
@@ -26,7 +28,7 @@ const bundle = {
       const refErrors = [];
       const units = p.units
         .filter((u) => !only || u.id === only || p.id === only)
-        .map((u) => ({ ...u, lessons: u.lessons.map((l) => resolveRefs(l, p.fixtures, refErrors, l._file)), bank: u.bank.map((l) => resolveRefs(l, p.fixtures, refErrors, l._file)) }));
+        .map((u) => ({ ...u, lessons: u.lessons.map((l) => resolveAll(l, p.fixtures, refErrors, l._file)), bank: u.bank.map((l) => resolveAll(l, p.fixtures, refErrors, l._file)) }));
       return strip({ ...p, units });
     })
     .filter((p) => p.units.length),
@@ -38,9 +40,18 @@ try {
 } catch {}
 const label = [board ? "All paths" : only, rev].filter(Boolean).join(" @ ");
 
+// Realistic mocks (app chrome, lists, cards, overlays...) are drawn by the app's own renderer, bundled into the page.
+const mockJs = (await build({
+  entryPoints: [path.join(ROOT, "scripts/lib/preview-mock.tsx")], bundle: true, write: false, minify: true, format: "iife",
+  platform: "browser", jsx: "automatic", define: { "process.env.NODE_ENV": '"production"' }, logLevel: "error",
+  alias: { "@uxgate/content/types": path.join(ROOT, "packages/content/src/types.ts") },
+})).outputFiles[0].text;
+const mockCss = fs.readFileSync(path.join(ROOT, "packages/player/src/mock.css"), "utf8") + mockIconsCss(collectIcons(bundle.paths));
+
 const template = fs.readFileSync(path.join(ROOT, "preview/player.html"), "utf8");
 const json = JSON.stringify(bundle).replace(/</g, "\\u003c");
-const html = template.replace("/*__CONTENT__*/null", json).replace('/*__BUILD__*/""', JSON.stringify(label)).replace('/*__START__*/""', JSON.stringify(board ? "board" : ""));
+const html = template.replace("/*__CONTENT__*/null", json).replace('/*__BUILD__*/""', JSON.stringify(label)).replace('/*__START__*/""', JSON.stringify(board ? "board" : ""))
+  .replace("/*__MOCKCSS__*/", () => mockCss.replace(/<\/style/gi, "<\\/style")).replace("/*__MOCKJS__*/", () => mockJs.replace(/<\/script/gi, "<\\/script"));
 const out = path.join(ROOT, board ? "preview/dist/board.html" : "preview/dist/index.html");
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, html);

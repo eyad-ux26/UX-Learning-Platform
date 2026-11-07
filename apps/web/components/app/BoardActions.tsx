@@ -23,7 +23,7 @@ export function BoardJoin({ defaultName }: { defaultName: string }) {
         <label htmlFor="bd-name">{t("name")}</label>
         <div className="input"><input id="bd-name" value={name} maxLength={30} onChange={(e) => setName(e.target.value)} /></div>
       </div>
-      <button type="button" className="btn btn-primary btn-lg press" disabled={pending || !name.trim()} onClick={() => start(async () => { setFailed(false); const r = await joinLeaderboard({ name }); if (!r.ok) { setFailed(true); return; } play("ui-toggle-on"); router.refresh(); })}>{t("join")}</button>
+      <button type="button" className="btn btn-primary btn-lg press" disabled={pending || !name.trim()} aria-busy={pending || undefined} onClick={() => start(async () => { setFailed(false); const r = await joinLeaderboard({ name }); if (!r.ok) { setFailed(true); return; } play("ui-toggle-on"); router.refresh(); })}>{t("join")}</button>
       {failed ? <p className="ob-err" role="alert">{t("failed")}</p> : null}
     </section>
   );
@@ -36,7 +36,7 @@ export function BoardLeave() {
   const [pending, start] = useTransition();
   return (
     <section className="card" style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-      <button type="button" className="btn btn-secondary press" disabled={pending} onClick={() => start(async () => { setFailed(false); const r = await leaveLeaderboard(); if (!r.ok) { setFailed(true); return; } router.refresh(); })}>{t("leave")}</button>
+      <button type="button" className="btn btn-secondary press" disabled={pending} aria-busy={pending || undefined} onClick={() => start(async () => { setFailed(false); const r = await leaveLeaderboard(); if (!r.ok) { setFailed(true); return; } router.refresh(); })}>{t("leave")}</button>
       <p className="t-small ink-2">{t("leaveNote")}</p>
       {failed ? <p className="ob-err" role="alert">{t("failed")}</p> : null}
     </section>
