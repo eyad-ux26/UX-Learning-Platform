@@ -18,6 +18,8 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   const ref = useRef<HTMLVideoElement>(null);
   const [src, setSrc] = useState<VideoSource | "loading" | "error">("loading");
   const [playing, setPlaying] = useState(false);
+  const [tapIcon, setTapIcon] = useState<{ n: number; play: boolean } | null>(null); // brief icon after a tap on the video
+  useEffect(() => { if (!tapIcon) return; const id = setTimeout(() => setTapIcon(null), 600); return () => clearTimeout(id); }, [tapIcon]);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
   const [time, setTime] = useState(0);
@@ -70,13 +72,14 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
           <div className="stage" aria-hidden="true" />
           {/* eslint-disable-next-line jsx-a11y/media-has-caption -- captions are drawn from the transcript below, in both languages */}
           <video
-            ref={ref} playsInline preload="metadata" className="lp-videoel" onClick={() => { if (ready && !ended) toggle(); }} aria-label={step.title?.[locale] ?? t("videoLabel")}
+            ref={ref} playsInline preload="metadata" className="lp-videoel" onClick={() => { if (ready && !ended) { setTapIcon((p) => ({ n: (p?.n ?? 0) + 1, play: !!ref.current?.paused })); toggle(); } }} aria-label={step.title?.[locale] ?? t("videoLabel")}
             onPlay={() => { setPlaying(true); setStarted(true); }} onPause={() => setPlaying(false)}
             onEnded={() => { setPlaying(false); setEnded(true); }}
             onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
             onLoadedMetadata={(e) => { if (Number.isFinite(e.currentTarget.duration)) setDur(e.currentTarget.duration); }}
             onError={() => setSrc("error")}
           />
+          {tapIcon ? <span key={tapIcon.n} className="lp-vtap" aria-hidden="true"><span className={`ph ph-${tapIcon.play ? "play" : "pause"}-fill`} /></span> : null}
           {src === "error" ? (
             <div className="lp-vmsg" role="alert"><span className="ph ph-wifi-slash" aria-hidden="true" /><p>{t("videoError")}</p><button type="button" className="btn btn-secondary press" onClick={load}>{t("videoRetry")}</button></div>
           ) : null}
