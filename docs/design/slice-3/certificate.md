@@ -80,7 +80,7 @@ Canvas: page "7 · Slice 3 · Progress", board **S3-16**, component `CertPages`.
 - The post preview is read-only text.
 - "Copied" is announced in a polite live region.
 
-## Proposal for Eyad: check the name before the first certificate (7 Nov, canvas v83)
+## Check the name before the first certificate (approved by Eyad 7 Nov, canvas v83)
 
 The name printed on a certificate is hard to take back once it's on LinkedIn, and Google sign-ups used to get their email prefix as their name. The proposal adds two things.
 
