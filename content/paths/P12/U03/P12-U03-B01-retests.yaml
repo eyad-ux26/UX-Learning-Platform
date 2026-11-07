@@ -22,7 +22,7 @@ steps:
       ar: "تطبيق بنكنا يوقف مؤقتًا دفعة بالبطاقة يراها غير معتادة، ويطلب من العميل التأكيد."
     prompt:
       en: "What should the message say?"
-      ar: "ماذا يجب أن تقول الرسالة؟"
+      ar: "ماذا نكتب في الرسالة، ليعرف العميل فورًا إن كانت الدفعة منه؟"
     mock:
       app: rasid
       appbar: { title: { en: "Cards", ar: "البطاقات" }, back: true }
@@ -32,10 +32,10 @@ steps:
         type: dialog
         blocks:
           - { kind: icon, icon: pause-circle, size: l, color: brand }
-          - { kind: heading, text: { en: "Payment paused", ar: "تم إيقاف الدفع مؤقتًا" }, gap: s }
+          - { kind: heading, text: { en: "Payment paused", ar: "أوقفنا الدفع مؤقتًا" }, gap: s }
           - { kind: text, text: { en: "8,900 EGP · Online store · 02:14", ar: "8,900 جنيه · متجر إلكتروني · 02:14" }, gap: xs }
           - { kind: small, color: muted, text: { en: "Message: ?", ar: "الرسالة: ؟" }, gap: xs }
-          - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "It wasn't me", ar: "لم أكن أنا" } }, { kind: button, text: { en: "It was me", ar: "نعم، أنا" } } ], gap: s }
+          - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "It wasn't me", ar: "ليست مني" } }, { kind: button, text: { en: "It was me", ar: "نعم، مني" } } ], gap: s }
     options:
       - { id: model, text: { en: "\"Our fraud system flagged this payment.\"", ar: "«نظام كشف الاحتيال لدينا أوقف هذه الدفعة.»" } }
       - { id: why, text: { en: "\"This looks unusual for you: your first payment abroad, at 3 a.m. Was it you?\"", ar: "«هذه الدفعة غير معتادة لك: أول دفعة خارج البلد، في الساعة 3 فجرًا. هل هي منك؟»" } }
@@ -46,7 +46,7 @@ steps:
         when: [model, blocked]
         feedback:
           en: "Neither says why. With the reason, the customer can tell at once if it was them, or a thief."
-          ar: "لا أحد منهما يقول لماذا. ومع السبب، يعرف العميل فورًا إن كانت الدفعة منه، أو من لص."
+          ar: "لا تقول أيّ من الرسالتين لماذا. ومع السبب، يعرف العميل فورًا إن كانت الدفعة منه، أو من لص."
     correct:
       en: "Right. The reason lets them answer in a second."
       ar: "صحيح. السبب يجعلهم يجيبون في ثانية."
@@ -76,12 +76,12 @@ steps:
       navbar: { actions: [ { icon: user } ] }
       blocks:
         - { kind: heading, text: { en: "Jobs for you", ar: "وظائف لك" } }
-        - { kind: card, blocks: [ { kind: heading, text: { en: "Senior Product Designer", ar: "مصمّم منتجات أول" } }, { kind: small, color: muted, text: { en: "8+ years · Cairo", ar: "8+ سنوات · القاهرة" } }, { kind: button, style: outline, icon: thumbs-down, text: { en: "Not for me", ar: "ليست لي" } } ], gap: s }
+        - { kind: card, blocks: [ { kind: heading, text: { en: "Senior Product Designer", ar: "مصمّم منتجات أول" } }, { kind: small, color: muted, text: { en: "8+ years · Cairo", ar: "8+ سنوات · القاهرة" } }, { kind: button, style: outline, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } } ], gap: s }
         - { kind: card, blocks: [ { kind: heading, text: { en: "Design Lead", ar: "قائد فريق تصميم" } }, { kind: small, color: muted, text: { en: "10 years · Remote", ar: "10 سنوات · عن بُعد" } } ], gap: s }
     options:
       - { id: thanks, text: { en: "\"Thanks for your feedback.\"", ar: "«شكرًا على ملاحظتك.»" } }
       - { id: hide, text: { en: "Just remove that one job", ar: "نحذف تلك الوظيفة فقط" } }
-      - { id: reason, text: { en: "\"We showed this because your profile says 8 years of experience. Edit profile\"", ar: "«عرضنا هذه لأن ملفّك يقول 8 سنوات خبرة. عدّل الملف»" } }
+      - { id: reason, text: { en: "\"We showed this because your profile says 8 years of experience. Edit profile\"", ar: "«عرضنا هذه الوظيفة لأن ملفّك يذكر 8 سنوات خبرة. عدّل الملف»" } }
     answer: [reason]
     misconceptions:
       - id: MC-P12-021
@@ -91,7 +91,7 @@ steps:
           ar: "ستستمرّ وظائف الكبار في الظهور لها ولن تعرف لماذا. وضغطتها هي اللحظة المناسبة لعرض السبب."
     correct:
       en: "Right. Explain at the moment she acts."
-      ar: "صحيح. اشرح في لحظة تصرّفها."
+      ar: "صحيح. اشرح في اللحظة التي تتصرّف فيها."
     explain:
       en: "She sees the cause, the typo, and fixes it in one step."
       ar: "ترى السبب، وهو الخطأ في الكتابة، وتصلحه بخطوة واحدة."
@@ -127,7 +127,7 @@ steps:
         when: [remove, vague]
         feedback:
           en: "The tip is useful. Members only need to know where the data came from, and how to turn it off."
-          ar: "النصيحة مفيدة. والأعضاء يحتاجون فقط أن يعرفوا من أين جاءت البيانات، وكيف يوقفونها."
+          ar: "النصيحة مفيدة. والأعضاء يحتاجون فقط أن يعرفوا من أين جاءت البيانات، وكيف يوقفون استخدامها."
     correct:
       en: "Right. Name the source, keep the tip."
       ar: "صحيح. اذكر المصدر، واحتفظ بالنصيحة."
@@ -146,20 +146,20 @@ steps:
     ref: { url: "https://pair.withgoogle.com/chapter/explainability-trust/", quote: "Reach. Explain whether the system is personalized to one user or device, or if it is using aggregated data across all users." }
     scenario:
       en: "Our grocery app has a row called \"For you\". It actually shows what people in your area buy most. A single man saw baby food there and asked why."
-      ar: "تطبيق البقالة عندنا فيه صفّ اسمه «لك». وهو في الحقيقة يعرض ما يشتريه الناس في منطقتك أكثر. ورأى رجل أعزب طعام أطفال فيه وسأل لماذا."
+      ar: "تطبيق البقالة عندنا فيه صفّ اسمه «مقترح لك». وهو في الحقيقة يعرض أكثر ما يشتريه الناس في منطقتك. ورأى رجل أعزب طعام أطفال فيه وسأل لماذا."
     prompt:
       en: "What should the row be called?"
-      ar: "ماذا يجب أن يكون اسم الصفّ؟"
+      ar: "ما الاسم الذي يخبر العملاء من أين تأتي اختيارات هذا الصفّ؟"
     mock:
       app: sallah
       appbar: { logo: true, actions: [ { icon: basket, aria: { en: "Basket", ar: "السلة" } } ] }
       blocks:
-        - { kind: row, blocks: [ { kind: heading, text: { en: "For you", ar: "لك" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
+        - { kind: row, blocks: [ { kind: heading, text: { en: "For you", ar: "مقترح لك" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
         - { kind: listitem, art: food-dessert, text: { en: "Baby food, apple", ar: "طعام أطفال، تفاح" }, value: { en: "35 EGP", ar: "35 جنيه" } }
         - { kind: listitem, art: bread, text: { en: "Toast bread", ar: "خبز توست" }, value: { en: "25 EGP", ar: "25 جنيه" } }
-        - { kind: small, color: muted, text: { en: "Really: what people in your area buy most", ar: "في الحقيقة: ما يشتريه الناس في منطقتك أكثر" }, gap: s }
+        - { kind: small, color: muted, text: { en: "Really: what people in your area buy most", ar: "في الحقيقة: أكثر ما يشتريه الناس في منطقتك" }, gap: s }
     options:
-      - { id: foryou, text: { en: "Keep \"For you\"; it sounds personal", ar: "يبقى «لك»؛ فهو يبدو شخصيًا" } }
+      - { id: foryou, text: { en: "Keep \"For you\"; it sounds personal", ar: "يبقى «مقترح لك»؛ فهو يبدو شخصيًا" } }
       - { id: area, text: { en: "\"Popular in your area\"", ar: "«الأكثر طلبًا في منطقتك»" } }
       - { id: smart, text: { en: "\"Smart picks\"", ar: "«اختيارات ذكية»" } }
     answer: [area]
@@ -168,10 +168,10 @@ steps:
         when: [foryou, smart]
         feedback:
           en: "Both hide where the picks come from. He thinks the app knows something about him, when it's just his area."
-          ar: "الاثنان يُخفيان مصدر الاختيارات. فيظنّ أن التطبيق يعرف شيئًا عنه، وهو مجرد منطقته."
+          ar: "كلا الاسمين يُخفي مصدر الاختيارات. فيظنّ أن التطبيق يعرف شيئًا عنه، والأمر كله منطقته فقط."
     correct:
       en: "Right. Say whose data it is."
-      ar: "صحيح. قل بيانات من هذه."
+      ar: "صحيح. قل على بيانات مَن تعتمد الاختيارات."
     explain:
       en: "\"Popular in your area\" explains the baby food at once, and nothing feels personal."
       ar: "«الأكثر طلبًا في منطقتك» يشرح طعام الأطفال فورًا، ولا يبدو شيء شخصيًا."
@@ -190,7 +190,7 @@ steps:
       ar: "في تطبيق متجري، يرفع البائعون صور المنتجات. والتطبيق أصبح يزيد إضاءة الصور الداكنة تلقائيًا."
     prompt:
       en: "What should sellers see?"
-      ar: "ماذا يجب أن يرى البائعون؟"
+      ar: "ماذا يرى البائعون بعد أن يفتّح التطبيق صورتهم؟"
     mock:
       app: dar
       appbar: { title: { en: "Add a product", ar: "أضف منتجًا" }, back: true }
@@ -200,7 +200,7 @@ steps:
       footer:
         - { kind: button, text: { en: "Publish", ar: "انشر" } }
     options:
-      - { id: popup, text: { en: "A pop-up each time: \"AI adjusted brightness, contrast and colour\"", ar: "نافذة كل مرة: «الذكاء الاصطناعي عدّل الإضاءة والتباين والألوان»" } }
+      - { id: popup, text: { en: "A pop-up each time: \"AI adjusted brightness, contrast and colour\"", ar: "نافذة منبثقة (Pop-up) كل مرة: «الذكاء الاصطناعي عدّل الإضاءة والتباين والألوان»" } }
       - { id: tour, text: { en: "A 3-step tour of how the AI edits photos", ar: "جولة من 3 خطوات عن طريقة تعديل الذكاء الاصطناعي للصور" } }
       - { id: plain, text: { en: "The brighter photo, with a small Undo", ar: "الصورة الأوضح، مع زر تراجع صغير" } }
     answer: [plain]
@@ -215,7 +215,7 @@ steps:
       ar: "صحيح. لا شيء يحتاج إلى شرح؛ فقط دعهم يتراجعون."
     explain:
       en: "Low stakes and easy to see: the result explains itself."
-      ar: "خطر قليل وواضح للعين: النتيجة تشرح نفسها."
+      ar: "الخطر قليل والتغيير واضح للعين: النتيجة تشرح نفسها."
 
   - id: S06
     type: choose
@@ -231,7 +231,7 @@ steps:
       ar: "تطبيق عيادتنا أصبح يلخّص نتائج التحاليل بكلمات بسيطة. ولإحدى المريضات قال: «نتائجك تبدو جيدة.» لكن السكّر عندها مرتفع قليلًا."
     prompt:
       en: "What should the summary say?"
-      ar: "ماذا يجب أن يقول الملخّص؟"
+      ar: "ماذا يكتب الملخّص لتعرف المريضة ما يهمّها في نتائجها؟"
     mock:
       app: raha
       appbar: { title: { en: "Lab results", ar: "نتائج التحاليل" }, back: true }
@@ -253,7 +253,7 @@ steps:
         when: [fine]
         feedback:
           en: "\"Fine\" hides the one value she should know about. With health, say what's off and who will check it."
-          ar: "«جيدة» تُخفي القيمة الوحيدة التي يجب أن تعرفها. وفي الصحة، قل ما المختلف ومن سيراجعه."
+          ar: "«جيدة» تُخفي القيمة الوحيدة التي يجب أن تعرفها. وفي الصحة، قل ما الذي خرج عن الطبيعي ومن سيراجعه."
       - id: MC-P12-021
         when: [all]
         feedback:
@@ -264,7 +264,7 @@ steps:
       ar: "صحيح. اذكر المهم، ومن يراجعه."
     explain:
       en: "High stakes need the detail that matters, plus a person to check."
-      ar: "الخطر الكبير يحتاج التفصيل المهم، مع شخص يراجع."
+      ar: "حين يكون الخطر كبيرًا، اذكر التفصيل المهم، ومن سيراجعه."
 
   - id: S07
     type: choose
@@ -280,7 +280,7 @@ steps:
       ar: "أصمّم تطبيقًا لترجمة قوائم الطعام. يعرض درجة بجانب كل سطر: «سمك مشوي · 91.4%». والناس يتجاهلون الدرجات، والقائمة صعبة القراءة."
     prompt:
       en: "What should we change?"
-      ar: "ماذا يجب أن نغيّر؟"
+      ar: "ماذا نغيّر حتى يفهم الأعضاء دور المساعد الصوتي؟"
     mock:
       app: { name: { en: "Tarjim Lens", ar: "عدسة ترجم" }, color: "#0F766E", icon: translate, domain: tarjim.example }
       appbar: { title: { en: "Menu · translated", ar: "القائمة · مترجمة" }, back: true }
@@ -291,7 +291,7 @@ steps:
     options:
       - { id: keep, text: { en: "Keep the scores; more information is always better", ar: "نُبقي الدرجات؛ فالمعلومات الأكثر أفضل دائمًا" } }
       - { id: bigger, text: { en: "Make the scores bigger, so people notice them", ar: "نكبّر الدرجات، ليلاحظها الناس" } }
-      - { id: flag, text: { en: "Remove the scores, and mark only the lines it's unsure about: \"Check with staff\"", ar: "نحذف الدرجات، ونعلّم فقط السطور غير المتأكّد منها: «اسأل الموظّف»" } }
+      - { id: flag, text: { en: "Remove the scores, and mark only the lines it's unsure about: \"Check with staff\"", ar: "نحذف الدرجات، ونضع علامة فقط على السطور التي لم يتأكّد من ترجمتها: «اسأل الموظّف»" } }
     answer: [flag]
     misconceptions:
       - id: MC-P12-026
@@ -301,10 +301,10 @@ steps:
           ar: "الدرجة على كل سطر لا تغيّر شيئًا مما يفعله الناس. والسطور غير المؤكّدة فقط تحتاج انتباههم."
     correct:
       en: "Right. Show doubt only where it changes something."
-      ar: "صحيح. اعرض الشك فقط حيث يغيّر شيئًا."
+      ar: "صحيح. أظهِر عدم التأكّد فقط حيث يغيّر ما يفعله الناس."
     explain:
       en: "A clean menu, plus a clear flag where a wrong dish is likely."
-      ar: "قائمة نظيفة، مع علامة واضحة حيث يُحتمل طبق خطأ."
+      ar: "قائمة سهلة القراءة، مع علامة واضحة حيث قد تكون الترجمة خطأ."
 
   - id: S08
     type: choose
@@ -320,7 +320,7 @@ steps:
       ar: "أصمّم أداة توظيف. تعرض «تطابق: 96%» بخط عريض لكل متقدّم، حتى حين يكون ملفّه شبه فارغ. وتوقّف المديرون عن قراءة السِّيَر الذاتية."
     prompt:
       en: "What should we change?"
-      ar: "ماذا يجب أن نغيّر؟"
+      ar: "ماذا نغيّر حتى يفهم الأعضاء دور المساعد الصوتي؟"
     mock:
       app: { name: { en: "Shaghla", ar: "شغلة" }, color: "#0E7490", icon: briefcase, domain: shaghla.example }
       frame: wide
@@ -345,7 +345,7 @@ steps:
       ar: "صحيح. لا بيانات، إذن لا رقم كبير."
     explain:
       en: "An honest \"not enough info\" sends managers back to the CV when it matters."
-      ar: "عبارة «لا توجد معلومات كافية» الصادقة تعيد المديرين إلى السيرة الذاتية حين يكون ذلك مهمًا."
+      ar: "حين تقول الأداة بصدق «لا توجد معلومات كافية»، يعود المديرون إلى السيرة الذاتية حين يهمّ ذلك."
 
   - id: S09
     type: choose
@@ -361,13 +361,13 @@ steps:
       ar: "تطبيق النادي يتوقّع مدى ازدحام النادي. ويقول: «6 مساءً: احتمال الازدحام 72%.»"
     prompt:
       en: "What should it say?"
-      ar: "ماذا يجب أن يقول؟"
+      ar: "ماذا يكتب التطبيق ليعرف الأعضاء متى يأتون؟"
     mock:
       app: nashat
-      appbar: { title: { en: "Busy times", ar: "أوقات الزحمة" }, back: true }
+      appbar: { title: { en: "Busy times", ar: "أوقات الازدحام" }, back: true }
       blocks:
         - { kind: chart, type: bar, values: [20, 35, 50, 72, 60, 30], labels: [ "13", "15", "17", "18", "19", "21" ], highlight: 3 }
-        - { kind: heading, text: { en: "6 p.m.: 72% chance of busy", ar: "6 مساءً: احتمال زحمة 72%" }, gap: s }
+        - { kind: heading, text: { en: "6 p.m.: 72% chance of busy", ar: "6 مساءً: احتمال الازدحام 72%" }, gap: s }
     options:
       - { id: act, text: { en: "\"6 p.m. is usually busy. Come before 5 for free machines.\"", ar: "«الساعة 6 مساءً مزدحمة عادةً. تعالَ قبل 5 لتجد أجهزة متاحة.»" } }
       - { id: num, text: { en: "Keep \"72% chance of busy\"", ar: "يبقى «احتمال الازدحام 72%»" } }
@@ -384,7 +384,7 @@ steps:
       ar: "صحيح. كلمات بسيطة وخطوة تالية."
     explain:
       en: "\"Usually busy, come before 5\" is something members can act on today."
-      ar: "«مزدحمة عادةً، تعالَ قبل 5» شيء يستطيع الأعضاء العمل به اليوم."
+      ar: "«مزدحمة عادةً، تعالَ قبل 5» شيء يستطيع الأعضاء أن يتصرّفوا بناءً عليه اليوم."
 
   - id: S10
     type: choose
@@ -400,7 +400,7 @@ steps:
       ar: "تطبيق بنكنا يقرأ صور الشيكات. وأحيانًا لا يستطيع أن يعرف هل المبلغ 1,500 أم 7,500."
     prompt:
       en: "What should it show?"
-      ar: "ماذا يجب أن يعرض؟"
+      ar: "ماذا يعرض التطبيق حين لا يعرف المبلغ بالضبط؟"
     mock:
       app: rasid
       appbar: { title: { en: "Deposit a cheque", ar: "إيداع شيك" }, back: true }
@@ -411,7 +411,7 @@ steps:
         - { kind: button, text: { en: "Deposit", ar: "أودِع" } }
     options:
       - { id: guess, text: { en: "Fill in 1,500, its best guess", ar: "يكتب 1,500، تخمينه الأرجح" } }
-      - { id: pct, text: { en: "\"1,500 (55% sure)\"", ar: "«1,500 (متأكّد 55%)»" } }
+      - { id: pct, text: { en: "\"1,500 (55% sure)\"", ar: "«1,500 (متأكّد بنسبة 55%)»" } }
       - { id: ask, text: { en: "\"Is the amount 1,500 or 7,500? Tap the right one.\"", ar: "«هل المبلغ 1,500 أم 7,500؟ اضغط على الصحيح.»" } }
     answer: [ask]
     misconceptions:
@@ -422,7 +422,7 @@ steps:
           ar: "المبلغ الخطأ يكلّف مالًا حقيقيًا. والعميل يحمل الشيك بيده؛ دعه يختار بضغطة واحدة."
     correct:
       en: "Right. When unsure, ask with the options."
-      ar: "صحيح. حين لا يكون متأكّدًا، اسأل مع الخيارات."
+      ar: "صحيح. حين لا يكون متأكّدًا، اسأل واعرض الخيارات."
     explain:
       en: "The action here is confirming the amount, so the display should ask for exactly that."
-      ar: "الفعل هنا هو تأكيد المبلغ، لذلك يجب أن يطلب العرض ذلك تمامًا."
+      ar: "المطلوب هنا تأكيد المبلغ، لذلك يجب أن تطلب الشاشة ذلك بالضبط."
