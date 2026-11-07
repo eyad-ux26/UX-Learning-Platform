@@ -131,12 +131,35 @@ describe("waitlist", () => {
     expect(await join("n3@example.com", "other", 2)).toBe("send");
   });
 
-  it("deletes unconfirmed addresses after 30 days and keeps confirmed ones", async () => {
+  it("deletes an unconfirmed address 30 days after its last confirmation email and keeps confirmed ones", async () => {
     await age("n1@example.com", "created_at", "31 days");
+    await age("n1@example.com", "confirm_sent_at", "31 days");
+    // Joined 40 days ago, but its newest email went out 10 days ago: its link is still recent enough to keep it.
+    await age("n2@example.com", "created_at", "40 days");
+    await age("n2@example.com", "confirm_sent_at", "10 days");
     await age("mona@example.com", "created_at", "31 days");
+    await age("mona@example.com", "confirm_sent_at", "31 days");
     expect((await svc<{ n: number }>(`select public.prune_waitlist() as n`))[0].n).toBe(1);
     expect(await row("n1@example.com")).toBeUndefined();
+    expect(await row("n2@example.com")).toBeDefined();
     expect(await row("mona@example.com")).toBeDefined();
+  });
+
+  it("never deletes a queued address whose confirmation email has not gone out", async () => {
+    expect(await join("waiting@example.com", "ip-q", 5, "w1")).toBe("send");
+    await svc(`select public.waitlist_send_failed('w1')`); // no email service: queued, confirm_sent_at is null
+    await age("waiting@example.com", "created_at", "90 days");
+    expect((await row("waiting@example.com")).confirm_sent_at).toBeNull();
+    expect((await svc<{ n: number }>(`select public.prune_waitlist() as n`))[0].n).toBe(0);
+    expect(await row("waiting@example.com")).toBeDefined();
+    // Once the daily job sends its link, the 30 days start from that email.
+    const id = (await row("waiting@example.com")).id;
+    expect((await svc<{ ok: boolean }>(`select public.waitlist_mark_sent($1, 'w2') as ok`, [id]))[0].ok).toBe(true);
+    await age("waiting@example.com", "confirm_sent_at", "29 days");
+    expect((await svc<{ n: number }>(`select public.prune_waitlist() as n`))[0].n).toBe(0);
+    await age("waiting@example.com", "confirm_sent_at", "2 days");
+    expect((await svc<{ n: number }>(`select public.prune_waitlist() as n`))[0].n).toBe(1);
+    expect(await row("waiting@example.com")).toBeUndefined();
   });
 
   it("refuses malformed addresses", async () => {
