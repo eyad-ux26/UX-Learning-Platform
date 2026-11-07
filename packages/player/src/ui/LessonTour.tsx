@@ -8,7 +8,7 @@ type Tip = { n: 1 | 2 | 3 | 4; targets: string[] };
 const TIPS: Tip[] = [
   { n: 1, targets: [".player-say"] },
   { n: 2, targets: [".player-visual .gd-prev, .player-visual .lp-ctx"] },
-  { n: 3, targets: [".player-ask .choices", ".player-foot"] },
+  { n: 3, targets: [".player-ask .choices", ".player-foot .btn-primary, .player-foot .split"] },
   { n: 4, targets: [".player-head .progress"] },
 ];
 type Rect = { x: number; y: number; w: number; h: number };
@@ -42,7 +42,7 @@ function rectOf(tip: Tip): Rect | null {
   return { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
 }
 
-const hits = (a: Rect, b: DOMRect) => a.x < b.right + 8 && a.x + a.w > b.left - 8 && a.y < b.bottom + 8 && a.y + a.h > b.top - 8;
+const hits = (a: Rect, b: { x0: number; x1: number; y0: number; y1: number }) => a.x < b.x1 + 8 && a.x + a.w > b.x0 - 8 && a.y < b.y1 + 8 && a.y + a.h > b.y0 - 8;
 
 /**
  * The first-lesson tour: a welcome card, then up to four spotlights (the problem, the screen, the answers and Check, the progress bar).
@@ -95,8 +95,13 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   keyRef.current = onKey;
   useEffect(() => {
     const h = (e: KeyboardEvent) => keyRef.current(e);
+    // Modal: if the player moves focus out (it focuses its heading as it mounts), bring it back to the card.
+    const back = (e: FocusEvent) => {
+      if (box.current && e.target instanceof Node && !box.current.contains(e.target)) box.current.querySelector<HTMLElement>("[data-main]")?.focus();
+    };
     document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
+    document.addEventListener("focusin", back);
+    return () => { document.removeEventListener("keydown", h); document.removeEventListener("focusin", back); };
   }, []);
 
   if (!tips.length) return null;
@@ -105,26 +110,28 @@ export function LessonTour({ kind, t, onDone }: { kind: "guest" | "first"; t: T;
   const desk = vw >= 1024;
   let pos: React.CSSProperties = {};
   if (tip && rect) {
-    // Every candidate place for the card; the first one that covers none of the tip's targets wins.
-    const parts = rectsOf(tip.targets);
-    const free = (c: Rect) => !parts.some((r) => hits(c, r));
+    // Every candidate place for the card; the first one that stays clear of the lit area wins.
+    const lit = { x0: rect.x - PAD, x1: rect.x + rect.w + PAD, y0: rect.y - PAD, y1: rect.y + rect.h + PAD };
+    const free = (c: Rect) => !hits(c, lit);
     if (!desk) {
       const h = 220;
       const bottom: Rect = { x: 12, y: vh - 16 - h, w: vw - 24, h }, topc: Rect = { x: 12, y: 72, w: vw - 24, h };
       const useBottom = free(bottom) || !free(topc) ? rect.y + rect.h / 2 < vh / 2 : false;
       pos = useBottom ? { insetInline: 12, insetBlockEnd: 16 } : { insetInline: 12, insetBlockStart: 72 };
     } else {
-      const wdt = 400, h = 240;
-      const room = vw - (rect.x + rect.w) - PAD - 24;
-      const cands: Rect[] = [
-        { x: rect.x + rect.w + PAD + 16, y: Math.max(8, Math.min(vh - h - 8, rect.y)), w: wdt, h },
-        { x: rect.x - PAD - 16 - wdt, y: Math.max(8, Math.min(vh - h - 8, rect.y)), w: wdt, h },
-        { x: 8, y: 72, w: wdt, h }, { x: vw - wdt - 8, y: 72, w: wdt, h },
-        { x: 8, y: vh - h - 24, w: wdt, h }, { x: vw - wdt - 8, y: vh - h - 24, w: wdt, h },
-        { x: (vw - wdt) / 2, y: 72, w: wdt, h },
-      ].filter((c) => c.x >= 8 && c.x + c.w <= vw - 8);
-      const pick = cands.find(free) ?? cands[0] ?? { x: Math.max(8, room > wdt ? rect.x + rect.w + PAD + 16 : 8), y: 72, w: wdt, h };
-      pos = { insetInlineStart: inl(pick.x, wdt), insetBlockStart: pick.y, inlineSize: wdt };
+      const cands: Rect[] = [];
+      for (const [wdt, h] of [[400, 240], [270, 330]] as const) {
+        const y = Math.max(8, Math.min(vh - h - 8, rect.y));
+        cands.push(
+          { x: rect.x + rect.w + PAD + 16, y, w: wdt, h }, { x: rect.x - PAD - 16 - wdt, y, w: wdt, h },
+          { x: 8, y: 72, w: wdt, h }, { x: vw - wdt - 8, y: 72, w: wdt, h },
+          { x: 8, y: 4, w: wdt, h }, { x: vw - wdt - 8, y: 4, w: wdt, h },
+          { x: 8, y: vh - h - 8, w: wdt, h }, { x: vw - wdt - 8, y: vh - h - 8, w: wdt, h },
+        );
+      }
+      const ok = cands.filter((c) => c.x >= 8 && c.x + c.w <= vw - 8 && c.y >= 0 && c.y + c.h <= vh);
+      const pick = ok.find(free) ?? ok[0] ?? { x: 8, y: 72, w: 400, h: 240 };
+      pos = { insetInlineStart: inl(pick.x, pick.w), insetBlockStart: pick.y, inlineSize: pick.w };
     }
   }
   const total = tips.length;

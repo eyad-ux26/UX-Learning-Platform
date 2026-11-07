@@ -4,8 +4,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const isDev = process.env.NODE_ENV !== "production";
-// Cloudflare Web Analytics beacon (loaded only when a token is set).
-const cfBeacon = !isDev && !!process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
+// Cloudflare Web Analytics beacon: Cloudflare injects it into pages on its own, so production always allows it (cookieless, free).
+const cfBeacon = !isDev;
 // Bunny Stream: hls.js fetches the signed playlist and segments (connect-src), Safari plays HLS natively (media-src).
 // The pull zone host is a Worker secret, read at run time, so the build cannot see it: allow Bunny's CDN domain.
 const bunny = " https://*.b-cdn.net";
