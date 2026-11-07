@@ -92,3 +92,8 @@ Update (6 November 2026, canvas v76): board S3-15, the second batch of Eyad's ed
 - **Tap the video to play or pause** (PR #205), on board S2-2: a tap or click on the picture toggles play and pause, and so does the control bar button. Design hint: show the play or pause icon in the centre for 0.6 s (a 64px circle, 50% black, white icon), with no flash under reduced motion. The control bar button keeps its label for screen readers.
 - **Onboarding preview card** (PR #204), on board S3-4: it shows only paths that are live and playable.
 - **Certificate page and Share on LinkedIn** (PR #203): board S3-16, spec `slice-3/certificate.md`.
+
+## App updates noted on the canvas (v86, 7 Nov 2026)
+
+- **Lesson tour: Pick and Check are two steps** (PR #216, after the #192 and #199 tour fixes), on board S3-15: the old "pick, then Check" spotlight is split into Pick, then Check, so the tour has 5 spotlights. Every spotlight now lands on its target in EN and AR, on phone and desktop. The S3-15 frames still show the older 4-step tour.
+- **Certificate** (PR #213), on board S3-16: Download PDF makes a real PDF, and phones keep the landscape certificate instead of the stacked one. See the build notes in `slice-3/certificate.md`.

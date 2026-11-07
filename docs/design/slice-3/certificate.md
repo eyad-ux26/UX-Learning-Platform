@@ -94,3 +94,8 @@ The name printed on a certificate is hard to take back once it's on LinkedIn, an
 2. **A quiet row afterwards:** "Name on certificates · {name} · Edit" at the top of the certificate page's settings card. It opens Settings > Profile > Name.
 
 Esc or the scrim closes the sheet without confirming. The sheet comes back on the next visit, and Share, Add to profile, PDF and Image open it first until the name is confirmed.
+
+## Build notes (PR #213)
+
+- Download PDF makes a real PDF file instead of opening the print dialog.
+- Phones keep the landscape certificate, scaled to fit the width, instead of the stacked tall version (`.cx.is-tall`). The S3-16 board still shows the tall version.
