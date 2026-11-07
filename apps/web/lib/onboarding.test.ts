@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { catalogEntry } from "./catalog-list";
-import { FOCUS_PATH, onboardingSchema } from "./onboarding";
+import { CATALOG, isPlayable } from "./catalog";
+import { FOCUSES, FOCUS_PATH, focusOpen, onboardingSchema } from "./onboarding";
 
 const ok = { goal: "g1", focus: "forms", weeklyTime: "t2", dailyGoal: 2, reminder: "19:30", timeZone: "Africa/Cairo", skipped: false };
 describe("onboardingSchema", () => {
@@ -10,6 +11,21 @@ describe("onboardingSchema", () => {
   it("rejects a bad reminder time or time zone", () => {
     expect(onboardingSchema.safeParse({ ...ok, reminder: "25:00" }).success).toBe(false);
     expect(onboardingSchema.safeParse({ ...ok, timeZone: "Not/AZone" }).success).toBe(false);
+  });
+});
+
+describe("focusOpen (the \"not open yet\" note on an answer\'s preview card)", () => {
+  const playable = CATALOG.filter((p) => isPlayable(p.id)).map((p) => p.id);
+  it("says not open only for answers whose path has no lessons", () => {
+    for (const f of FOCUSES) {
+      const id = FOCUS_PATH[f];
+      expect(focusOpen(f, playable), f).toBe(id === null || isPlayable(id));
+    }
+  });
+  it("follows the playable list, not a fixed set", () => {
+    expect(focusOpen("hier", [])).toBe(false);
+    expect(focusOpen("hier", [FOCUS_PATH.hier!])).toBe(true);
+    expect(focusOpen("none", [])).toBe(true);
   });
 });
 

@@ -20,3 +20,9 @@ export const onboardingSchema = z.object({
   pathId: z.string().regex(/^P\d{2}$/).nullable().optional(),
 });
 export type OnboardingInput = z.infer<typeof onboardingSchema>;
+
+/** True when the path behind this answer has lessons today (`playable` = ids of paths with lessons). "none" has no path, so it is never "not open yet". */
+export function focusOpen(focus: (typeof FOCUSES)[number], playable: readonly string[]): boolean {
+  const id = FOCUS_PATH[focus];
+  return id === null || playable.includes(id);
+}
