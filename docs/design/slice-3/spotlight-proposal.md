@@ -14,7 +14,8 @@ Eyad's asks:
 
 - The crops are in `slice-3/img/` and `/mnt/project-files/media/instructors/`. On the canvas they are stored as uploaded files (`/_blob/…`):
   - `*-avatar.jpg`: 240 × 240, head and shoulders, shown in a circle.
-  - `*-portrait.jpg`: 332 × 448, used for the big cards.
+  - `*-media.jpg`: 660 × 500, head and shoulders with room around them, used in the big cards' picture area.
+  - `*-portrait.jpg`: 332 × 448, used for the option C tile.
 - The sources are Eyad's course covers.
 - **To confirm:** which instructor teaches which path. The canvas assumes P14 Patterns That Fit is taught by Eyad Mahmoud (إياد محمود) and P02 Find and Fix Usability by Mahmoud Raslan (محمود رسلان).
 - Store the instructor on the path (`path.yaml`: `instructor: { name: {en, ar}, photo }`), so a path can show its instructor without a code change.
@@ -25,12 +26,12 @@ Video courses are the `hybrid` paths: P02 and P14 today.
 
 - **A · Two groups, big video cards (recommended).**
   - "Video courses with an instructor" / «كورسات بالفيديو مع مدرّب» comes first.
-  - Each video course is a navy card with:
-    - the instructor's portrait on the end side
-    - a "Video + practice" over-line
-    - the path name and subtitle
-    - the unit count and "Unit 1 free"
-    - the instructor's avatar, name and "Instructor"
+  - Each video course is a white card, like the other path cards (revised 8 Nov after Eyad's review: lighter colours, one photo, calmer type). It has:
+    - **A picture area on top** that shows the path and the instructor as one image. The instructor's photo fills the end side and fades into a light panel colour. The path art sits on the start side in a white tile, with a "Video + practice" pill above it.
+    - **The path name** at 18px, 700 weight (22px on desktop).
+    - **The subtitle** at 14px, regular weight, at most 2 lines.
+    - **A footer row** with "With **{instructor}**" and the chips for the unit count and "Unit 1 free".
+  - The photo appears only once. There's no separate avatar.
   - Phones show the cards in one column. Desktop shows 2 columns.
   - "Interactive paths" / «مسارات تفاعلية» follows in the normal card grid.
 - **B · Instructor spotlight.**
