@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { AccountFrame } from "@/components/account/AccountFrame";
 import { PageTop } from "@/components/account/PageTop";
 import { SettingsView } from "@/components/account/SettingsView";
+import { Link } from "@/i18n/navigation";
 import { requireLearner } from "@/lib/server/learner";
 import type { ThemePref } from "@/lib/theme";
 
@@ -18,6 +19,7 @@ export default async function SettingsPage({ params, searchParams }: { params: P
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("settings");
+  const tt = await getTranslations("teamTools");
   let boardOpen = false;
   let initial = { name: me.progress.displayName ?? "", email: "nour@example.com", provider: "email", theme: "system" as ThemePref, goal: me.progress.dailyGoal as 1 | 2 | 3, reminder: "20:00" as string | null };
   if (me.db) {
@@ -41,6 +43,11 @@ export default async function SettingsPage({ params, searchParams }: { params: P
     <AccountFrame me={me} locale={locale}>
       <PageTop title={t("title")} back="/app/profile" backLabel={t("back")} />
       <SettingsView initial={initial} userId={me.userId} restored={(await searchParams).restored === "1"} sharing={{ pageOn: me.shareEnabled, boardJoined: me.leaderboardJoined, boardOpen }} />
+      {me.teamView ? (
+        <div className="set" style={{ marginBlockStart: 16 }}>
+          <Link href="/app/settings/team" className="set-row"><span className="ph ph-wrench" aria-hidden="true" /><span className="set-l">{tt("link")}<small>{tt("linkSub")}</small></span></Link>
+        </div>
+      ) : null}
     </AccountFrame>
   );
 }
