@@ -27,7 +27,8 @@ Video courses are the `hybrid` paths: P02 and P14 today.
 - **A · Two groups, big video cards (recommended).**
   - "Video courses with an instructor" / «كورسات بالفيديو مع مدرّب» comes first.
   - Each video course is a white card, like the other path cards (revised 8 Nov after Eyad's review: lighter colours, one photo, calmer type). It has:
-    - **A picture area on top** that shows the path and the instructor as one image. The instructor's photo fills the end side and fades into a light panel colour. The path art sits on the start side in a white tile, with a "Video + practice" pill above it.
+    - **A picture area on top** in the light panel colour, with the path's own art centred in a white tile and a "Video + practice" pill in the corner. No instructor photo here (Eyad, v98).
+    - **A small round instructor photo** (32px, 36px on desktop, thin highlight ring) beside "With {name}" under the path name.
     - **The path name** at 18px, 700 weight (22px on desktop).
     - **The subtitle** at 14px, regular weight, at most 2 lines.
     - **A footer row** with "With **{instructor}**" and the chips for the unit count and "Unit 1 free".
