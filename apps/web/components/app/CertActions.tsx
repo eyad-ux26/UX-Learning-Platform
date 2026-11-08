@@ -56,7 +56,9 @@ export function CertActions(p: Props) {
         if (await copy(text)) say(t("copiedPaste"));
         const feed = "https://www.linkedin.com/feed/?shareActive=true";
         const android = /android/i.test(navigator.userAgent);
-        window.setTimeout(() => go(null, android ? `intent://www.linkedin.com/feed/?shareActive=true#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=${encodeURIComponent(feed)};end` : feed), 900);
+        // Android: hand the text straight to the LinkedIn app as a text share (it opens its own composer with the text); without the app, the web composer opens.
+        const send = `intent:#Intent;action=android.intent.action.SEND;type=text/plain;package=com.linkedin.android;S.android.intent.extra.TEXT=${encodeURIComponent(text)};S.browser_fallback_url=${encodeURIComponent(feed)};end`;
+        window.setTimeout(() => go(null, android ? send : feed), 900);
       });
       return;
     }
