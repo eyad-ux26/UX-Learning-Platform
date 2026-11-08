@@ -204,7 +204,7 @@ export function publicPathParams(locales: readonly string[] = routing.locales) {
 export function pageAlternates(locale: string, path: string) {
   return {
     canonical: `${SITE_URL}/${locale}${path}`,
-    languages: { en: `${SITE_URL}/en${path}`, ar: `${SITE_URL}/ar${path}`, "x-default": `${SITE_URL}/en${path}` },
+    languages: { en: `${SITE_URL}/en${path}`, ar: `${SITE_URL}/ar${path}`, "x-default": `${SITE_URL}/ar${path}` },
   };
 }
 
