@@ -82,10 +82,11 @@ export async function ComingSoon({ view }: { locale?: string; view: SoonView }) 
         <footer className="soon-foot">
           <span className="ltr">© 2026 UXGate</span>
           <nav aria-label={t("footNav")}>
+            <Link href="/pricing">{t("pricing")}</Link>
             <Link href="/privacy">{t("privacy")}</Link>
             <Link href="/terms">{t("terms")}</Link>
             <Link href="/refund">{t("refund")}</Link>
-            <a href="mailto:support@uxgate.org" className="ltr">support@uxgate.org</a>
+            <a href="mailto:support@uxgate.org">{t("contact")}</a>
           </nav>
         </footer>
       </div>
