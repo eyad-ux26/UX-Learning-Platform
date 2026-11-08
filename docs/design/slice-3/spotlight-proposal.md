@@ -15,7 +15,7 @@ Eyad's asks:
 - The crops are in `slice-3/img/` and `/mnt/project-files/media/instructors/`. On the canvas they are stored as uploaded files (`/_blob/…`):
   - `*-avatar.jpg`: 240 × 240, head and shoulders, shown in a circle.
   - `*-media.jpg`: 660 × 500, head and shoulders with room around them, used in the big cards' picture area.
-  - `*-portrait.jpg`: 332 × 448, used for the option C tile.
+  - `*-portrait.jpg`: 332 × 448, kept as a spare.
 - The sources are Eyad's course covers.
 - **To confirm:** which instructor teaches which path. The canvas assumes P14 Patterns That Fit is taught by Eyad Mahmoud (إياد محمود) and P02 Find and Fix Usability by Mahmoud Raslan (محمود رسلان).
 - Store the instructor on the path (`path.yaml`: `instructor: { name: {en, ar}, photo }`), so a path can show its instructor without a code change.
@@ -41,7 +41,7 @@ Video courses are the `hybrid` paths: P02 and P14 today.
   - The smallest change.
   - Video course cards get:
     - a light blue gradient and border
-    - a taller picture tile that holds the path and the instructor in one image (Eyad, 8 Nov): the instructor's photo fills the tile, the path art sits in a small badge on the corner, and a play mark shows it's video
+    - a picture tile showing only the instructor's photo, centred on the face, with a thin highlight ring and no extra badges (Eyad, 8 Nov, rev 2)
     - the line "Videos with {name}"
 
 In every option, "Your paths" and "Completed" (S3-17) stay above these sections once the learner has joined a path.
@@ -97,3 +97,14 @@ The page never names Uxcel or any other product. The difference is made by what 
 - Photos in cards are decorative (`alt=""`), because the instructor's name is in the text.
 - The highlighted word in the heading uses `mark`. The heading still reads as one sentence.
 - The carousel in option B needs previous and next buttons, and must not auto-advance.
+
+## Optional: one drawn image per video course
+
+If you want one image that merges the path and the instructor, generate one per course with this prompt (for example in ChatGPT), with the instructor's cover photo attached:
+
+> Square 1:1 course thumbnail for a UX learning app called UXGate. Use the attached photo of the instructor: keep his real face and likeness exactly, as a clean head-and-shoulders cut-out, smiling, centred, filling about 60% of the height. Place him inside a design-tool selection frame: a thin sky-blue (#78E4FC) rectangle with four small white square handles at the corners, slightly larger than his head and shoulders. Behind him use a soft light-blue background (#D8F4FB to #E0F4FD) with a faint navy dot grid. Around him, float 2 or 3 simple flat UI elements that show the course topic: {TOPIC ELEMENTS}. Draw them as clean vector shapes in navy (#012E4B), white and sky blue, with soft shadows and no readable text. Leave a calm margin around everything. Modern, friendly and professional, flat vector style. No logos, no extra people, no words.
+
+- **Patterns That Fit:** "a small dialog box with two buttons, a bottom sheet sliding up from a phone edge, and a toast message bar".
+- **Find and Fix Usability:** "a phone screen with a magnifying glass over it, a small amber warning marker on one button, and a green check mark beside a fixed version".
+
+Export at 1024 × 1024 and crop to 72 px and 160 px tiles. The face must stay centred, so the same image works in the small tile and the big card.
