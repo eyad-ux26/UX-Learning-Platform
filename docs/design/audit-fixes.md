@@ -97,3 +97,14 @@ Update (6 November 2026, canvas v76): board S3-15, the second batch of Eyad's ed
 
 - **Lesson tour: Pick and Check are two steps** (PR #216, after the #192 and #199 tour fixes), on board S3-15: the old "pick, then Check" spotlight is split into Pick, then Check, so the tour has 5 spotlights. Every spotlight now lands on its target in EN and AR, on phone and desktop. The S3-15 frames still show the older 4-step tour.
 - **Certificate** (PR #213), on board S3-16: Download PDF makes a real PDF, and phones keep the landscape certificate instead of the stacked one. See the build notes in `slice-3/certificate.md`.
+
+## App updates noted on the canvas (v92, 8 Nov 2026)
+
+- **Arabic is the default language** (PR #225), on board S3-4. A first visit lands on `/ar` even from an English browser, and a language switch is remembered in a cookie.
+- **Team testing tools** (PR #226), on board S4-1. Admin accounts get a page at `/app/settings/team` that can:
+  - replay the tutorial
+  - mark a path done through unit N, or in full
+  - reset a path
+
+  Learners never see it.
+- **Public Pricing page** (PR #224), on board PL-1. See `prelaunch/README.md`.
