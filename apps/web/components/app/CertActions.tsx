@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Sheet } from "@/components/account/Sheet";
 import { setCertificatePublic } from "@/app/[locale]/app/(shell)/certificate/[pathId]/actions";
@@ -8,7 +8,7 @@ import { linkedInFeedUrl, linkedInProfileUrl, postText } from "@/lib/certificate
 
 type Props = {
   pathId: string; pathName: string; name: string; code: string; issuedAt: string; id: string; skills: number; checks: number;
-  initialPublic: boolean; url: string; cardArt: React.ReactNode;
+  initialPublic: boolean; url: string; posts: { en: string[]; ar: string[] }; cardArt: React.ReactNode;
 };
 
 /**
@@ -25,8 +25,13 @@ export function CertActions(p: Props) {
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
   const opener = useRef<HTMLButtonElement>(null);
-  const text = postText({ intro: t("postIntro", { path: p.pathName, skills: p.skills, checks: p.checks }), seeIt: t("postSee"), tags: t("postTags") }, p.url);
+  const [lang, setLang] = useState<"en" | "ar">("en");
+  const [ver, setVer] = useState(0);
+  const text = p.posts[lang][ver];
+  const toggleLang = () => setLang(lang === "en" ? "ar" : "en");
   const say = (m: string) => { setLive(""); setTimeout(() => setLive(m), 30); };
+  // The confirmation toast goes away by itself after 4 seconds, and has a close button.
+  useEffect(() => { if (!live) return; const id = setTimeout(() => setLive(""), 4000); return () => clearTimeout(id); }, [live]);
 
   const ensureOn = async (): Promise<boolean> => {
     if (on) return true;
@@ -36,10 +41,25 @@ export function CertActions(p: Props) {
   };
   const copy = async (s: string) => { try { await navigator.clipboard.writeText(s); return true; } catch { return false; } };
   // The new tab opens in the click itself, so a pop-up blocker allows it, and is pointed at LinkedIn once the page is on.
-  const openTab = () => window.open("about:blank", "_blank");
+  // On phones a blank tab opened first never reaches the LinkedIn app, so there the same tab goes to LinkedIn.
+  const isPhone = () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+  const openTab = () => (isPhone() ? null : window.open("about:blank", "_blank"));
   const go = (w: Window | null, to: string) => { if (w) { w.opener = null; w.location.href = to; } else window.location.href = to; };
 
   const share = () => {
+    // LinkedIn's phone app cannot take text from a link, so on phones the text is copied and LinkedIn's post composer opens (the app on Android, if it is installed);
+    // the learner pastes the text there and edits it in LinkedIn.
+    if (isPhone()) {
+      start(async () => {
+        setFailed(false);
+        if (!(await ensureOn())) return;
+        if (await copy(text)) say(t("copiedPaste"));
+        const feed = "https://www.linkedin.com/feed/?shareActive=true";
+        const android = /android/i.test(navigator.userAgent);
+        window.setTimeout(() => go(null, android ? `intent://www.linkedin.com/feed/?shareActive=true#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=${encodeURIComponent(feed)};end` : feed), 900);
+      });
+      return;
+    }
     const w = openTab();
     start(async () => {
       setFailed(false);
@@ -72,7 +92,7 @@ export function CertActions(p: Props) {
       <button ref={opener} type="button" className="btn btn-primary btn-lg press cxp-li" onClick={() => setOpen(true)}><span className="li-glyph" aria-hidden="true">in</span>{t("li")}</button>
       <button type="button" className="btn btn-secondary press" onClick={addProfile} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-plus" aria-hidden="true" />{t("addProfile")}</button>
       <div className="cxp-mini" role="group" aria-label={t("more")}>
-        <button type="button" className="cxp-mini-btn press" onClick={() => window.print()}><span className="ph ph-download" aria-hidden="true" />{t("pdf")}</button>
+        <a className="cxp-mini-btn press" href={`/${locale}/app/certificate/${p.pathId}/pdf`} download><span className="ph ph-download" aria-hidden="true" />{t("pdf")}</a>
         <a className="cxp-mini-btn press" href={`/${locale}/app/certificate/${p.pathId}/og.png`} download={`uxgate-certificate-${p.pathId}.png`}><span className="ph ph-download" aria-hidden="true" />{t("img")}</a>
         <button type="button" className="cxp-mini-btn press" onClick={copyLink} disabled={pending}><span className="ph ph-link" aria-hidden="true" />{t("copyLink")}</button>
       </div>
@@ -87,7 +107,7 @@ export function CertActions(p: Props) {
       <p className="cxp-note"><span className="ph ph-eye" aria-hidden="true" /><span>{t("sees2")}</span></p>
       {failed ? <p className="ob-err" role="alert">{t("failed2")}</p> : null}
       <p className="lp-sr" role="status" aria-live="polite">{live}</p>
-      {live ? <div className="toast pop s4-toast" aria-hidden="true"><span className="ph ph-check-circle-fill" /><span style={{ flex: 1 }}>{live}</span></div> : null}
+      {live ? <div className="toast pop s4-toast"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span style={{ flex: 1 }} aria-hidden="true">{live}</span><button type="button" className="icon-btn plain" aria-label={t("close")} onClick={() => setLive("")}><span className="ph ph-x" aria-hidden="true" /></button></div> : null}
 
       {open ? (
         <Sheet titleId="cxs-h" onClose={() => { setOpen(false); opener.current?.focus(); }}>
@@ -98,9 +118,14 @@ export function CertActions(p: Props) {
               <button type="button" className="icon-btn plain" aria-label={t("close")} onClick={() => { setOpen(false); opener.current?.focus(); }}><span className="ph ph-x" aria-hidden="true" /></button>
             </header>
             <p className="cxs-label">{t("shPost")}</p>
-            <div className="cxs-post" tabIndex={0} role="group" aria-label={t("shPost")}>
+            <div className="cxs-vers" role="radiogroup" aria-label={t("vLabel")}>
+              {[t("v1"), t("v2"), t("v3")].map((l, i) => <button key={i} type="button" role="radio" aria-checked={ver === i} className={`chip${ver === i ? " is-selected" : ""}`} onClick={() => setVer(i)}>{ver === i ? <span className="ph ph-check-circle-fill" aria-hidden="true" /> : null}{l}</button>)}
+            </div>
+            <button type="button" className="btn btn-ghost btn-sm press" onClick={toggleLang}><span className="ph ph-translate" aria-hidden="true" />{lang === "en" ? t("toAr") : t("toEn")}</button>
+            <div className="cxs-post" dir="auto" tabIndex={0} role="group" aria-label={t("shPost")}>
               {text.split("\n\n").map((line, i) => <p key={i}>{line}</p>)}
             </div>
+            <p className="t-small ink-2">{t("editHint")}</p>
             <p className="cxs-label">{t("preview")}</p>
             <div className="cxs-card">
               {p.cardArt}

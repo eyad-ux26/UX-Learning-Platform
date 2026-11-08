@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
 import { catalogEntry, catalogFor, pathArtUrl, type CatalogRow } from "@/lib/catalog";
 import { buildPathView, pathBegun, type PathView } from "@/lib/learning";
+import { isShown, pathSkills } from "@/lib/certificate";
 import type { Learner } from "@/lib/server/learner";
 import { ChoosePath } from "./ChoosePath";
 
@@ -12,7 +13,7 @@ type T = Awaited<ReturnType<typeof getTranslations>>;
 const pctOf = (v: PathView | null) => (v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0);
 const kindOf = (p: { kind: string }, t: T) => ({ cls: p.kind === "hybrid" ? "kind kind-hybrid" : "kind", icon: p.kind === "hybrid" ? "video" : "cursor-click", text: p.kind === "hybrid" ? t("hybrid") : t("interactive") });
 
-function Card({ p, view, t, locale }: { p: CatalogRow; view: PathView | null; t: T; locale: Locale }) {
+function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathView | null; t: T; locale: Locale; done?: number; left?: number }) {
   const k = kindOf(p, t);
   const pct = pctOf(view);
   if (p.state === "soon") {
@@ -25,6 +26,23 @@ function Card({ p, view, t, locale }: { p: CatalogRow; view: PathView | null; t:
     );
   }
   const joined = p.state === "current" || p.state === "joined";
+  if (done !== undefined) {
+    // Completed (its certificate exists): mint card, check badge, Completed chip, no % bar (design S3-17).
+    return (
+      <Link href={`/app/paths/${p.id}`} className="path-card is-done press" aria-label={t("doneAria", { name: p.name })}>
+        <span className="pc-ill"><img src={pathArtUrl(p.id)} alt="" /><span className="pc-badge" aria-hidden="true"><span className="ph ph-check" /></span></span>
+        <span className="pc-text">
+          <span className="pc-name"><bdi>{p.name}</bdi></span>
+          <span className="pc-meta">
+            <span className="kind kind-done"><span className="ph ph-seal-check-fill" aria-hidden="true" />{t("completed")}</span>
+            <span className={k.cls}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
+          </span>
+          <span className="pc-done-row"><span className="ph ph-certificate" aria-hidden="true" />{t("doneLine", { count: done })}</span>
+        </span>
+        <span className="pc-end"><span className="ph ph-arrow flip" aria-hidden="true" /></span>
+      </Link>
+    );
+  }
   return (
     <Link href={`/app/paths/${p.id}`} className={`path-card press${p.state === "current" ? " is-current" : ""}`} aria-label={p.state === "current" ? t("currentAria", { name: p.name }) : p.name}>
       <span className="pc-ill"><img src={pathArtUrl(p.id)} alt="" /></span>
@@ -34,6 +52,7 @@ function Card({ p, view, t, locale }: { p: CatalogRow; view: PathView | null; t:
         <span className="pc-meta">
           {p.state === "current" ? <span className="kind kind-current">{t("current")}</span> : null}
           <span className={k.cls}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
+          {left ? <span className="kind kind-left"><span className="ph ph-target" aria-hidden="true" />{t("skillsLeft", { count: left })}</span> : null}
           {!joined ? <><span className="kind">{t("units", { count: p.units })}</span><span className="kind kind-free">{t("free1")}</span></> : null}
         </span>
         {joined ? <span className="pc-prog"><span className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></span><span className="num">{pct}%</span></span> : null}
@@ -49,20 +68,36 @@ export async function PathsMain({ me }: { me: Learner }) {
   const locale = (await getLocale()) as Locale;
   const rows = catalogFor(new Set(me.joined.map((j) => j.pathId)), me.activePathId);
   const group = (s: CatalogRow["state"][]) => rows.filter((r) => s.includes(r.state));
-  const joined = group(["current", "joined"]);
+  // A path is completed when its certificate exists (every skill Shown), not by lesson %.
+  const certified = new Set((me.profileExtra?.certificates ?? []).map((c) => c.pathId));
+  const isDone = (id: string) => certified.has(id);
+  const joined = group(["current", "joined"]).filter((r) => !isDone(r.id));
+  const completed = group(["current", "joined"]).filter((r) => isDone(r.id));
   const fresh = group(["new"]);
   const soon = group(["soon"]);
   const viewOf = (id: string) => buildPathView(id, me.progress, me.practicedSkills);
+  // Lessons all done but skills still to show: an amber chip says the skill check is what is left.
+  const leftOf = (id: string) => {
+    const v = viewOf(id);
+    if (!v || !v.totalCount || v.doneCount < v.totalCount) return 0;
+    return pathSkills(id).filter((sk) => !isShown(me.skillStates.get(sk.id)?.state)).length;
+  };
   return (
     <div className="pg-page">
       <h1 className="t-h1 h1-s">{t("title")}</h1>
       <p className="t-small ink-2">{t("lead")}</p>
       {joined.length ? <>
         <p className="t-over">{t("secJoined", { count: joined.length })}</p>
-        <div className="pg-cards">{joined.map((p) => <Card key={p.id} p={p} view={viewOf(p.id)} t={t} locale={locale} />)}</div>
+        <div className="pg-cards">{joined.map((p) => <Card key={p.id} p={p} view={viewOf(p.id)} t={t} locale={locale} left={leftOf(p.id)} />)}</div>
       </> : null}
-      <p className="t-over">{t("secNew")}</p>
-      {fresh.length ? <div className="pg-cards">{fresh.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} />)}</div> : <p className="t-small ink-2">{t("empty")}</p>}
+      {completed.length ? <>
+        <p className="t-over">{t("secDone", { count: completed.length })}</p>
+        <div className="pg-cards">{completed.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} done={pathSkills(p.id).length} />)}</div>
+      </> : null}
+      {fresh.length ? <>
+        <p className="t-over">{t("secNew")}</p>
+        <div className="pg-cards">{fresh.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} />)}</div>
+      </> : null}
       <p className="t-over"><span className="ph ph-hourglass" aria-hidden="true" /> {t("secSoon", { count: soon.length })}</p>
       <div className="pg-cards pg-cards-soon">{soon.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} />)}</div>
     </div>
@@ -77,6 +112,7 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
   const view = buildPathView(pathId, me.progress, me.practicedSkills);
   const joined = me.joined.some((j) => j.pathId === pathId);
   const isCurrent = joined && me.activePathId === pathId;
+  const finished = (me.profileExtra?.certificates ?? []).some((c) => c.pathId === pathId);
   const k = kindOf(entry, t);
   const pct = pctOf(view);
   const other = me.activePathId !== pathId ? catalogEntry(me.activePathId) : null;
@@ -112,7 +148,12 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
         </div>
       ) : null}
       {/* The main button sits above the unit list, so a phone shows it without scrolling. */}
-      {isCurrent ? (
+      {finished ? (
+        <>
+          <Link href={`/app/certificate/${pathId}`} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-certificate" aria-hidden="true" />{t("seeCert")}</Link>
+          <Link href={mapHref} className="btn btn-secondary btn-lg btn-block press">{t("reviewCta")}</Link>
+        </>
+      ) : isCurrent ? (
         <>
           {next ? <Link href={goHref} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{mainLabel}</Link> : null}
           <Link href={mapHref} className={`btn ${next ? "btn-secondary" : "btn-primary"} btn-lg btn-block press`}>{t("seeMap")}</Link>

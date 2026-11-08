@@ -23,3 +23,15 @@ describe("certificate sharing links", () => {
     expect(Object.fromEntries(p.searchParams)).toEqual({ startTask: "CERTIFICATION_NAME", name: "Forms That Flow certificate", organizationName: "UXGate", issueYear: "2026", issueMonth: "11", certUrl: url, certId: "UXG-P01-7K3Q9A" });
   });
 });
+
+import { certFileName } from "./certificate-share";
+describe("certFileName", () => {
+  it("names the file after the learner and the path", () => {
+    expect(certFileName("Salma Ahmed", "Forms That Flow", "pdf")).toEqual({ utf8: "UXGate certificate - Salma Ahmed - Forms That Flow.pdf", ascii: "UXGate certificate - Salma Ahmed - Forms That Flow.pdf" });
+  });
+  it("keeps Arabic in the UTF-8 name and drops unsafe characters", () => {
+    const f = certFileName('سلمى "أحمد"/x', "Forms That Flow", "pdf");
+    expect(f.utf8).toBe("UXGate certificate - سلمى أحمد x - Forms That Flow.pdf");
+    expect(f.ascii).toMatch(/^[\x20-\x7e]+\.pdf$/);
+  });
+});
