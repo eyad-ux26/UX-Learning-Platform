@@ -1,6 +1,6 @@
 import createMiddleware from "next-intl/middleware";
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
 import { isPrivateContent, notFound } from "./lib/private-content";
 import { hasSupabase, sessionCookieOptions, supabaseAnonKey, supabaseUrl } from "./lib/supabase/env";
@@ -36,7 +36,11 @@ export default async function middleware(req: NextRequest) {
     const locale = pathname.match(HOME)?.[1] ?? routing.defaultLocale;
     return NextResponse.redirect(new URL(`/${locale}/signin?error=link`, req.url));
   }
-  const res = intl(req);
+  // The browser's language does not pick the site language: a first visit opens in Arabic (the default). Only a choice the
+  // visitor made (the NEXT_LOCALE cookie, set when they switch language) changes it, so the Accept-Language header is hidden from next-intl.
+  const hasChoice = req.cookies.has("NEXT_LOCALE");
+  const intlReq = hasChoice || !req.headers.has("accept-language") ? req : (() => { const h = new Headers(req.headers); h.delete("accept-language"); return new NextRequest(req, { headers: h }); })();
+  const res = intl(intlReq);
   // Coming Soon gate (lib/coming-soon.ts): pages other than the open ones need an admin session while it is on; the
   // sign-in pages also open with a team pass, the cookie the team password page sets (lib/team-access.ts).
   const gate = comingSoonOn() ? gateStep(req.nextUrl.pathname) : null;
