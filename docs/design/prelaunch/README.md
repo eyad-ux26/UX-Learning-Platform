@@ -44,3 +44,20 @@ There is no team link on the public page. The team opens a hidden page, `/en/tea
 ## Copy keys
 
 EN and AR are in the component's `C` object. Arabic keeps "UXGate" in Latin script. Emails are wrapped in `<bdi>` so they read correctly inside Arabic sentences.
+
+## Build notes (PR #224, Pricing page for Paddle LIVE approval)
+
+Noted on board PL-1. The frames don't show this yet.
+
+- **New public Pricing page** at `/en/pricing` and `/ar/pricing`, with the public header and footer. It has two cards:
+  - **Free**, $0: Unit 1 of every path, plus skill checks on the free units.
+  - **UXGate Pro**: $8 a month or $72 a year, with a "save" line.
+- Each card lists what's included, the billing period and a cancel-any-time note.
+- **Under the cards:**
+  - Notes on USD, tax and the student discount.
+  - Links to Terms, Privacy and Refund.
+  - A contact line for support@.
+- **Footers:**
+  - The Coming Soon footer links Pricing, Privacy, Terms, Refund and Contact. The contact entry used to show the email address and is now labelled "Contact".
+  - Coming Soon itself still has no pricing section.
+  - The shared public footer's Pricing link goes to `/pricing` instead of `/#plan`.
