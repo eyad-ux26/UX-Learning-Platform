@@ -49,10 +49,10 @@ describe("static pages", () => {
     expect(params).toHaveLength(PUBLIC_PATHS.length * 2);
     for (const locale of ["en", "ar"]) for (const p of PUBLIC_PATHS) expect(params).toContainEqual({ locale, pathId: p.slug });
   });
-  it("link both languages with hreflang and x-default to English", () => {
+  it("link both languages with hreflang and x-default to Arabic (the default language)", () => {
     const a = pageAlternates("ar", "/paths/forms-that-flow");
     expect(a.canonical).toBe("https://uxgate.org/ar/paths/forms-that-flow");
-    expect(a.languages).toEqual({ en: "https://uxgate.org/en/paths/forms-that-flow", ar: "https://uxgate.org/ar/paths/forms-that-flow", "x-default": "https://uxgate.org/en/paths/forms-that-flow" });
+    expect(a.languages).toEqual({ en: "https://uxgate.org/en/paths/forms-that-flow", ar: "https://uxgate.org/ar/paths/forms-that-flow", "x-default": "https://uxgate.org/ar/paths/forms-that-flow" });
   });
 });
 
