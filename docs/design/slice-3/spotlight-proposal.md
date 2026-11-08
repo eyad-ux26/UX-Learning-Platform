@@ -12,7 +12,7 @@ Eyad's asks:
 
 ## Instructor photos
 
-- The crops are in `slice-3/img/` and `/mnt/project-files/media/instructors/`:
+- The crops are in `slice-3/img/` and `/mnt/project-files/media/instructors/`. On the canvas they are stored as uploaded files (`/_blob/…`):
   - `*-avatar.jpg`: 240 × 240, head and shoulders, shown in a circle.
   - `*-portrait.jpg`: 332 × 448, used for the big cards.
 - The sources are Eyad's course covers.
