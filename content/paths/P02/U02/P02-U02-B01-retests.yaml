@@ -12,7 +12,7 @@ sources:
 steps:
   # SK-P02-U02-01: give a clear way out
   - id: S01
-    type: choose
+    type: tune
     speaker: sara
     part: retest
     skill: SK-P02-U02-01
@@ -33,9 +33,31 @@ steps:
         - { kind: image, art: food-grill, size: xl, note: { en: "Controls appear only after a tap on this corner", ar: "تظهر الأزرار فقط بعد الضغط على هذه الزاوية" } }
         - { kind: small, text: "⋯", tone: faint }
     options:
-      - { id: tap, text: { en: "Show the controls, with a clear ✕ Close, whenever people tap anywhere on the video", ar: "أُظهر أزرار التحكم، ومعها «✕ إغلاق» واضح، كلما ضغط الناس على أي مكان في الفيديو" } }
-      - { id: swipe, text: { en: "Let people swipe down with two fingers to leave", ar: "أتيح للناس السحب لأسفل بإصبعين للخروج" } }
-      - { id: end, text: { en: "Close the video by itself when it ends", ar: "أُغلق الفيديو وحده حين ينتهي" } }
+      - id: tap
+        text: {"en": "Show the controls, with a clear ✕ Close, whenever people tap anywhere on the video", "ar": "أُظهر أزرار التحكم، ومعها «✕ إغلاق» واضح، كلما ضغط الناس على أي مكان في الفيديو"}
+        mock:
+          app: "tabkha"
+          theme: "dark"
+          blocks:
+            - {"kind": "button", "style": "text", "icon": "x", "text": {"en": "Close", "ar": "إغلاق"}}
+            - {"kind": "image", "art": "food-grill", "size": "xl", "note": {"en": "A tap anywhere shows the controls", "ar": "ضغطة في أي مكان تُظهر الأزرار"}}
+            - {"kind": "progress", "value": 30, "label": "2:40 / 8:45", "gap": "s"}
+      - id: swipe
+        text: {"en": "Let people swipe down with two fingers to leave", "ar": "أتيح للناس السحب لأسفل بإصبعين للخروج"}
+        mock:
+          app: "tabkha"
+          theme: "dark"
+          blocks:
+            - {"kind": "image", "art": "food-grill", "size": "xl", "note": {"en": "Swipe down with two fingers to leave", "ar": "اسحب لأسفل بإصبعين للخروج"}}
+            - {"kind": "small", "text": "⋯", "tone": "faint"}
+      - id: end
+        text: {"en": "Close the video by itself when it ends", "ar": "أُغلق الفيديو وحده حين ينتهي"}
+        mock:
+          app: "tabkha"
+          theme: "dark"
+          blocks:
+            - {"kind": "image", "art": "food-grill", "size": "xl", "note": {"en": "Closes by itself only when the video ends", "ar": "يُغلق وحده فقط حين ينتهي الفيديو"}}
+            - {"kind": "small", "text": "⋯", "tone": "faint"}
     answer: [tap]
     misconceptions:
       - id: MC-P02-013
@@ -51,7 +73,7 @@ steps:
       ar: "الضغط على أي مكان هو أول ما يجرّبه الناس، ثم يُريهم زر «إغلاق» الواضح كيف يخرجون بالضبط."
 
   - id: S02
-    type: choose
+    type: tune
     speaker: tarek
     part: retest
     skill: SK-P02-U02-01
@@ -74,9 +96,38 @@ steps:
       footer:
         - { kind: button, text: { en: "Send money", ar: "حوّل المبلغ" } }
     options:
-      - { id: x, text: { en: "Keep the ✕; it's a known icon", ar: "تبقى ✕؛ فهي أيقونة معروفة" } }
-      - { id: label, text: { en: "A \"Cancel transfer\" button next to \"Send money\"", ar: "زر «ألغِ التحويل» بجانب «حوّل المبلغ»" } }
-      - { id: red, text: { en: "Make the ✕ red", ar: "أجعل ✕ حمراء" } }
+      - id: x
+        text: {"en": "Keep the ✕; it's a known icon", "ar": "تبقى ✕؛ فهي أيقونة معروفة"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Transfer", "ar": "تحويل"}, "actions": [{"icon": "x", "aria": {"en": "Close", "ar": "إغلاق"}}]}
+          blocks:
+            - {"kind": "listitem", "avatar": {"text": "Omar Hany"}, "text": {"en": "Omar Hany", "ar": "عمر هاني"}, "sub": "EG38 •••• 4417"}
+            - {"kind": "price", "text": {"en": "EGP 3,500", "ar": "3,500 جنيه"}, "size": "l", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Send money", "ar": "حوّل المبلغ"}}
+      - id: label
+        text: {"en": "A \"Cancel transfer\" button next to \"Send money\"", "ar": "زر «ألغِ التحويل» بجانب «حوّل المبلغ»"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Transfer", "ar": "تحويل"}}
+          blocks:
+            - {"kind": "listitem", "avatar": {"text": "Omar Hany"}, "text": {"en": "Omar Hany", "ar": "عمر هاني"}, "sub": "EG38 •••• 4417"}
+            - {"kind": "price", "text": {"en": "EGP 3,500", "ar": "3,500 جنيه"}, "size": "l", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Send money", "ar": "حوّل المبلغ"}}
+            - {"kind": "button", "style": "outline", "text": {"en": "Cancel transfer", "ar": "ألغِ التحويل"}, "gap": "s"}
+      - id: red
+        text: {"en": "Make the ✕ red", "ar": "أجعل ✕ حمراء"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Transfer", "ar": "تحويل"}}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "iconbtn", "icon": "x", "color": "red", "aria": {"en": "Close", "ar": "إغلاق"}, "note": {"en": "Now red; still no word on what it does", "ar": "صارت حمراء؛ وما زال لا شيء يقول ماذا تفعل"}}]}
+            - {"kind": "listitem", "avatar": {"text": "Omar Hany"}, "text": {"en": "Omar Hany", "ar": "عمر هاني"}, "sub": "EG38 •••• 4417"}
+            - {"kind": "price", "text": {"en": "EGP 3,500", "ar": "3,500 جنيه"}, "size": "l", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Send money", "ar": "حوّل المبلغ"}}
     answer: [label]
     misconceptions:
       - id: MC-P02-013
@@ -93,7 +144,7 @@ steps:
 
   # SK-P02-U02-02: let people undo and go back where they expect
   - id: S03
-    type: choose
+    type: tune
     speaker: nour
     part: retest
     skill: SK-P02-U02-02
@@ -116,9 +167,38 @@ steps:
         - { kind: title, text: { en: "Visit notes · Ahmed Samy", ar: "ملاحظات الزيارة · أحمد سامي" } }
         - { kind: text, text: { en: "BP 130/85. Advised less salt.\nFollow up in 2 weeks.", ar: "الضغط 130/85. نُصح بتقليل الملح.\nمتابعة بعد أسبوعين." }, gap: m, note: { en: "A deleted paragraph sat here. Undo only brings back the last line.", ar: "كانت هنا فقرة محذوفة. «تراجع» يعيد آخر سطر فقط." } }
     options:
-      - { id: multi, text: { en: "Undo and Redo for many steps, in the toolbar and with Ctrl+Z", ar: "«تراجع» و«إعادة» لخطوات كثيرة، في شريط الأدوات ومع Ctrl+Z" } }
-      - { id: confirm, text: { en: "A warning before deleting any text", ar: "تحذير قبل حذف أي نص" } }
-      - { id: save, text: { en: "Auto-save every minute", ar: "حفظ تلقائي كل دقيقة" } }
+      - id: multi
+        text: {"en": "Undo and Redo for many steps, in the toolbar and with Ctrl+Z", "ar": "«تراجع» و«إعادة» لخطوات كثيرة، في شريط الأدوات ومع Ctrl+Z"}
+        mock:
+          app: "raha"
+          frame: "wide"
+          url: "raha.example/staff/visits/2291/notes"
+          navbar: {"links": [{"en": "Today", "ar": "اليوم"}, {"en": "Patients", "ar": "المرضى"}], "active": 1, "actions": [{"icon": "arrow-counter-clockwise", "aria": {"en": "Undo", "ar": "تراجع"}}, {"icon": "arrow-clockwise", "aria": {"en": "Redo", "ar": "إعادة"}}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Visit notes · Ahmed Samy", "ar": "ملاحظات الزيارة · أحمد سامي"}}
+            - {"kind": "text", "text": {"en": "Patient reports headaches in the morning, mostly on work days.\nBP 130/85. Advised less salt.\nFollow up in 2 weeks.", "ar": "يشكو المريض من صداع في الصباح، غالبًا في أيام العمل.\nالضغط 130/85. نُصح بتقليل الملح.\nمتابعة بعد أسبوعين."}, "gap": "m", "note": {"en": "Undo ×3 (Ctrl+Z): the paragraph is back", "ar": "«تراجع» 3 مرات (Ctrl+Z): عادت الفقرة"}}
+      - id: confirm
+        text: {"en": "A warning before deleting any text", "ar": "تحذير قبل حذف أي نص"}
+        mock:
+          app: "raha"
+          frame: "wide"
+          url: "raha.example/staff/visits/2291/notes"
+          navbar: {"links": [{"en": "Today", "ar": "اليوم"}, {"en": "Patients", "ar": "المرضى"}], "active": 1, "actions": [{"icon": "arrow-counter-clockwise", "aria": {"en": "Undo", "ar": "تراجع"}}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Visit notes · Ahmed Samy", "ar": "ملاحظات الزيارة · أحمد سامي"}}
+            - {"kind": "text", "text": {"en": "BP 130/85. Advised less salt.\nFollow up in 2 weeks.", "ar": "الضغط 130/85. نُصح بتقليل الملح.\nمتابعة بعد أسبوعين."}, "gap": "m"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Delete this text?", "ar": "هل تحذف هذا النص؟"}}, {"kind": "button", "style": "danger", "text": {"en": "Delete", "ar": "احذف"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "Cancel", "ar": "إلغاء"}, "gap": "s"}]}
+      - id: save
+        text: {"en": "Auto-save every minute", "ar": "حفظ تلقائي كل دقيقة"}
+        mock:
+          app: "raha"
+          frame: "wide"
+          url: "raha.example/staff/visits/2291/notes"
+          navbar: {"links": [{"en": "Today", "ar": "اليوم"}, {"en": "Patients", "ar": "المرضى"}], "active": 1, "actions": [{"icon": "arrow-counter-clockwise", "aria": {"en": "Undo", "ar": "تراجع"}}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Visit notes · Ahmed Samy", "ar": "ملاحظات الزيارة · أحمد سامي"}}
+            - {"kind": "small", "icon": "cloud-check", "color": "muted", "gap": "s", "text": {"en": "Saved automatically 1 min ago", "ar": "حُفظ تلقائيًا منذ دقيقة"}}
+            - {"kind": "text", "text": {"en": "BP 130/85. Advised less salt.\nFollow up in 2 weeks.", "ar": "الضغط 130/85. نُصح بتقليل الملح.\nمتابعة بعد أسبوعين."}, "gap": "m", "note": {"en": "A deleted paragraph sat here. Undo only brings back the last line.", "ar": "كانت هنا فقرة محذوفة. «تراجع» يعيد آخر سطر فقط."}}
     answer: [multi]
     misconceptions:
       - id: MC-P02-015
@@ -139,7 +219,7 @@ steps:
       ar: "مع تراجع لخطوات كثيرة، يستطيع الطبيب أن يرجع إلى ما قبل السطرين حتى الفقرة المحذوفة، ثم يستخدم «إعادة» (Redo) ليستعيد ما يريد الاحتفاظ به."
 
   - id: S04
-    type: choose
+    type: tune
     speaker: rami
     part: retest
     skill: SK-P02-U02-02
@@ -163,9 +243,40 @@ steps:
         - { kind: small, text: { en: "Please start your application again.", ar: "يرجى بدء طلبك من جديد." } }
         - { kind: button, text: { en: "Start again", ar: "ابدأ من جديد" }, gap: m, note: { en: "After browser Back on page 3", ar: "بعد زر الرجوع في المتصفح وهو في الصفحة 3" } }
     options:
-      - { id: block, text: { en: "Disable the browser's Back button on these pages", ar: "تعطيل زر الرجوع في المتصفح في هذه الصفحات" } }
-      - { id: work, text: { en: "Make browser Back open page 2 with everything still filled in", ar: "أن يفتح زر الرجوع في المتصفح الصفحة 2 وكل ما فيها ما زال مكتوبًا" } }
-      - { id: note, text: { en: "Add a note: \"Don't use your browser's Back button\"", ar: "إضافة ملاحظة: «لا تستخدم زر الرجوع في المتصفح»" } }
+      - id: block
+        text: {"en": "Disable the browser's Back button on these pages", "ar": "تعطيل زر الرجوع في المتصفح في هذه الصفحات"}
+        mock:
+          app: "wazifa"
+          frame: "wide"
+          url: "wazifa.example/apply/ux-designer/step-3"
+          blocks:
+            - {"kind": "progress", "value": 100, "label": {"en": "Step 3 of 3: Review", "ar": "الخطوة 3 من 3: المراجعة"}, "note": {"en": "Browser Back is turned off", "ar": "زر الرجوع في المتصفح معطّل"}}
+            - {"kind": "title", "text": {"en": "Review your application", "ar": "راجع طلبك"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Hoda Khaled · UI designer · 4 years", "ar": "هدى خالد · مصممة واجهات · 4 سنوات"}, "gap": "s"}
+            - {"kind": "button", "text": {"en": "Send application", "ar": "أرسل الطلب"}, "gap": "m"}
+      - id: work
+        text: {"en": "Make browser Back open page 2 with everything still filled in", "ar": "أن يفتح زر الرجوع في المتصفح الصفحة 2 وكل ما فيها ما زال مكتوبًا"}
+        mock:
+          app: "wazifa"
+          frame: "wide"
+          url: "wazifa.example/apply/ux-designer/step-2"
+          blocks:
+            - {"kind": "progress", "value": 66, "label": {"en": "Step 2 of 3: Experience", "ar": "الخطوة 2 من 3: الخبرة"}, "note": {"en": "After browser Back on page 3", "ar": "بعد زر الرجوع في المتصفح وهي في الصفحة 3"}}
+            - {"kind": "field", "label": {"en": "Last job title", "ar": "آخر مسمّى وظيفي"}, "text": {"en": "UI designer", "ar": "مصممة واجهات"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Years of experience", "ar": "سنوات الخبرة"}, "text": "4", "filled": true, "gap": "m"}
+            - {"kind": "button", "text": {"en": "Continue", "ar": "تابع"}, "gap": "m"}
+      - id: note
+        text: {"en": "Add a note: \"Don't use your browser's Back button\"", "ar": "إضافة ملاحظة: «لا تستخدم زر الرجوع في المتصفح»"}
+        mock:
+          app: "wazifa"
+          frame: "wide"
+          url: "wazifa.example/apply/ux-designer/step-3"
+          blocks:
+            - {"kind": "banner", "tone": "warn", "icon": "warning", "text": {"en": "Don't use your browser's Back button", "ar": "لا تستخدم زر الرجوع في المتصفح"}}
+            - {"kind": "progress", "value": 100, "label": {"en": "Step 3 of 3: Review", "ar": "الخطوة 3 من 3: المراجعة"}, "gap": "m"}
+            - {"kind": "title", "text": {"en": "Review your application", "ar": "راجع طلبك"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Hoda Khaled · UI designer · 4 years", "ar": "هدى خالد · مصممة واجهات · 4 سنوات"}, "gap": "s"}
+            - {"kind": "button", "text": {"en": "Send application", "ar": "أرسل الطلب"}, "gap": "m"}
     answer: [work]
     misconceptions:
       - id: MC-P02-012
@@ -182,7 +293,7 @@ steps:
 
   # SK-P02-U02-03: keep the same thing the same everywhere
   - id: S05
-    type: choose
+    type: tune
     speaker: youssef
     part: retest
     skill: SK-P02-U02-03
@@ -206,9 +317,39 @@ steps:
       footer:
         - { kind: button, text: { en: "Checkout", ar: "إتمام الشراء" }, tone: off }
     options:
-      - { id: orange, text: { en: "Make it orange, like every other main button", ar: "أجعله برتقاليًا، مثل كل الأزرار الرئيسية الأخرى" } }
-      - { id: grey, text: { en: "Keep it grey; the cart page has a calmer style", ar: "أُبقيه رماديًا؛ فلصفحة السلة أسلوب أهدأ" } }
-      - { id: arrow, text: { en: "Keep it grey and add an arrow →", ar: "أُبقيه رماديًا وأضيف سهمًا ←" } }
+      - id: orange
+        text: {"en": "Make it orange, like every other main button", "ar": "أجعله برتقاليًا، مثل كل الأزرار الرئيسية الأخرى"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Cart", "ar": "السلة"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "box", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "value": {"en": "EGP 1,250", "ar": "1,250 جنيه"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Drill bits, 10 pcs", "ar": "بنط مثقاب، 10 قطع"}, "value": {"en": "EGP 180", "ar": "180 جنيه"}, "gap": "s"}
+            - {"kind": "price", "text": {"en": "Total EGP 1,430", "ar": "الإجمالي 1,430 جنيه"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Checkout", "ar": "إتمام الشراء"}}
+      - id: grey
+        text: {"en": "Keep it grey; the cart page has a calmer style", "ar": "أُبقيه رماديًا؛ فلصفحة السلة أسلوب أهدأ"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Cart", "ar": "السلة"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "box", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "value": {"en": "EGP 1,250", "ar": "1,250 جنيه"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Drill bits, 10 pcs", "ar": "بنط مثقاب، 10 قطع"}, "value": {"en": "EGP 180", "ar": "180 جنيه"}, "gap": "s"}
+            - {"kind": "price", "text": {"en": "Total EGP 1,430", "ar": "الإجمالي 1,430 جنيه"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Checkout", "ar": "إتمام الشراء"}, "tone": "off"}
+      - id: arrow
+        text: {"en": "Keep it grey and add an arrow →", "ar": "أُبقيه رماديًا وأضيف سهمًا ←"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Cart", "ar": "السلة"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "box", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "value": {"en": "EGP 1,250", "ar": "1,250 جنيه"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Drill bits, 10 pcs", "ar": "بنط مثقاب، 10 قطع"}, "value": {"en": "EGP 180", "ar": "180 جنيه"}, "gap": "s"}
+            - {"kind": "price", "text": {"en": "Total EGP 1,430", "ar": "الإجمالي 1,430 جنيه"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Checkout", "ar": "إتمام الشراء"}, "tone": "off", "icon": "arrow-right"}
     answer: [orange]
     misconceptions:
       - id: MC-P02-016
@@ -267,7 +408,7 @@ steps:
 
   # SK-P02-U02-04: follow the conventions people bring from other products
   - id: S07
-    type: choose
+    type: tune
     speaker: karim
     part: retest
     skill: SK-P02-U02-04
@@ -290,9 +431,37 @@ steps:
         - { kind: title, text: { en: "Rents rose 12% this year", ar: "ارتفاع الإيجارات 12% هذا العام" } }
         - { kind: text, text: { en: "Prices rose fastest in **new cities**, while older districts stayed flat. Tenants are moving to **shared flats** to save.", ar: "ارتفعت الأسعار أسرع في **المدن الجديدة**، بينما بقيت الأحياء القديمة ثابتة. ويتجه المستأجرون إلى **الشقق المشتركة** للتوفير." }, gap: m, note: { en: "Bold phrases are blue and underlined, but not links", ar: "العبارات البارزة زرقاء مسطّرة، لكنها ليست روابط" } }
     options:
-      - { id: keep, text: { en: "Keep them; readers will get used to it", ar: "تبقى؛ وسيعتاد القرّاء عليها" } }
-      - { id: bold, text: { en: "Show important phrases in bold, and keep blue underline for links only", ar: "تُعرض العبارات المهمة بخط عريض، ويبقى الأزرق المسطّر للروابط فقط" } }
-      - { id: tip, text: { en: "Keep them, and show \"Not a link\" when people hover", ar: "تبقى، مع ظهور «ليس رابطًا» حين يمرّ الناس عليها بالمؤشر" } }
+      - id: keep
+        text: {"en": "Keep them; readers will get used to it", "ar": "تبقى؛ وسيعتاد القرّاء عليها"}
+        mock:
+          app: "khabar"
+          frame: "wide"
+          url: "khabar.example/economy/rent-prices-2026"
+          navbar: {"links": [{"en": "News", "ar": "أخبار"}, {"en": "Economy", "ar": "اقتصاد"}, {"en": "Sport", "ar": "رياضة"}], "active": 1}
+          blocks:
+            - {"kind": "title", "text": {"en": "Rents rose 12% this year", "ar": "ارتفاع الإيجارات 12% هذا العام"}}
+            - {"kind": "text", "text": {"en": "Prices rose fastest in **new cities**, while older districts stayed flat. Tenants are moving to **shared flats** to save.", "ar": "ارتفعت الأسعار أسرع في **المدن الجديدة**، بينما بقيت الأحياء القديمة ثابتة. ويتجه المستأجرون إلى **الشقق المشتركة** للتوفير."}, "gap": "m", "note": {"en": "Bold phrases are blue and underlined, but not links", "ar": "العبارات البارزة زرقاء مسطّرة، لكنها ليست روابط"}}
+      - id: bold
+        text: {"en": "Show important phrases in bold, and keep blue underline for links only", "ar": "تُعرض العبارات المهمة بخط عريض، ويبقى الأزرق المسطّر للروابط فقط"}
+        mock:
+          app: "khabar"
+          frame: "wide"
+          url: "khabar.example/economy/rent-prices-2026"
+          navbar: {"links": [{"en": "News", "ar": "أخبار"}, {"en": "Economy", "ar": "اقتصاد"}, {"en": "Sport", "ar": "رياضة"}], "active": 1}
+          blocks:
+            - {"kind": "title", "text": {"en": "Rents rose 12% this year", "ar": "ارتفاع الإيجارات 12% هذا العام"}}
+            - {"kind": "text", "text": {"en": "Prices rose fastest in **new cities**, while older districts stayed flat. Tenants are moving to **shared flats** to save.", "ar": "ارتفعت الأسعار أسرع في **المدن الجديدة**، بينما بقيت الأحياء القديمة ثابتة. ويتجه المستأجرون إلى **الشقق المشتركة** للتوفير."}, "gap": "m", "note": {"en": "Important phrases in bold only", "ar": "العبارات المهمة بخط عريض فقط"}}
+            - {"kind": "link", "text": {"en": "Read more: how rents are set", "ar": "اقرأ أيضًا: كيف تُحدَّد الإيجارات"}, "gap": "s", "note": {"en": "Blue underline: links only", "ar": "الأزرق المسطّر للروابط فقط"}}
+      - id: tip
+        text: {"en": "Keep them, and show \"Not a link\" when people hover", "ar": "تبقى، مع ظهور «ليس رابطًا» حين يمرّ الناس عليها بالمؤشر"}
+        mock:
+          app: "khabar"
+          frame: "wide"
+          url: "khabar.example/economy/rent-prices-2026"
+          navbar: {"links": [{"en": "News", "ar": "أخبار"}, {"en": "Economy", "ar": "اقتصاد"}, {"en": "Sport", "ar": "رياضة"}], "active": 1}
+          blocks:
+            - {"kind": "title", "text": {"en": "Rents rose 12% this year", "ar": "ارتفاع الإيجارات 12% هذا العام"}}
+            - {"kind": "text", "text": {"en": "Prices rose fastest in **new cities**, while older districts stayed flat. Tenants are moving to **shared flats** to save.", "ar": "ارتفعت الأسعار أسرع في **المدن الجديدة**، بينما بقيت الأحياء القديمة ثابتة. ويتجه المستأجرون إلى **الشقق المشتركة** للتوفير."}, "gap": "m", "note": {"en": "On hover: \"Not a link\"", "ar": "عند المرور بالمؤشر: «ليس رابطًا»"}}
     answer: [bold]
     misconceptions:
       - id: MC-P02-018
@@ -308,7 +477,7 @@ steps:
       ar: "الخط العريض يعطي التأكيد دون أن يعِد بالضغط. ويحتفظ الأزرق المسطّر بمعناه الوحيد، فتبقى الروابط الحقيقية سهلة الرؤية."
 
   - id: S08
-    type: choose
+    type: tune
     speaker: hana
     part: retest
     skill: SK-P02-U02-04
@@ -331,9 +500,36 @@ steps:
         - { kind: icon, icon: circle-notch, size: l, color: brand, gap: m, note: { en: "Drag to spin: one section at a time", ar: "اسحب لتدوير العجلة: قسم واحد في كل مرة" } }
         - { kind: heading, text: { en: "Timetable", ar: "الجدول" }, gap: s }
     options:
-      - { id: yes, text: { en: "Yes; it makes the site memorable", ar: "نعم؛ فهي تجعل الموقع لا يُنسى" } }
-      - { id: both, text: { en: "Yes, with a short animation showing how to drag it", ar: "نعم، مع حركة قصيرة توضّح كيف تُسحب" } }
-      - { id: no, text: { en: "No; ask for a standard menu that shows all sections at once", ar: "لا؛ أطلب قائمة عادية تعرض كل الأقسام مرة واحدة" } }
+      - id: yes
+        text: {"en": "Yes; it makes the site memorable", "ar": "نعم؛ فهي تجعل الموقع لا يُنسى"}
+        mock:
+          app: "nashat"
+          frame: "wide"
+          url: "nashat.example"
+          blocks:
+            - {"kind": "image", "art": "gym", "size": "m"}
+            - {"kind": "icon", "icon": "circle-notch", "size": "l", "color": "brand", "gap": "m", "note": {"en": "Drag to spin: one section at a time", "ar": "اسحب لتدوير العجلة: قسم واحد في كل مرة"}}
+            - {"kind": "heading", "text": {"en": "Timetable", "ar": "الجدول"}, "gap": "s"}
+      - id: both
+        text: {"en": "Yes, with a short animation showing how to drag it", "ar": "نعم، مع حركة قصيرة توضّح كيف تُسحب"}
+        mock:
+          app: "nashat"
+          frame: "wide"
+          url: "nashat.example"
+          blocks:
+            - {"kind": "image", "art": "gym", "size": "m"}
+            - {"kind": "icon", "icon": "circle-notch", "size": "l", "color": "brand", "gap": "m", "note": {"en": "A short animation shows how to drag it", "ar": "حركة قصيرة توضّح كيف تُسحب"}}
+            - {"kind": "heading", "text": {"en": "Timetable", "ar": "الجدول"}, "gap": "s"}
+      - id: no
+        text: {"en": "No; ask for a standard menu that shows all sections at once", "ar": "لا؛ أطلب قائمة عادية تعرض كل الأقسام مرة واحدة"}
+        mock:
+          app: "nashat"
+          frame: "wide"
+          url: "nashat.example"
+          navbar: {"links": [{"en": "Timetable", "ar": "الجدول"}, {"en": "Prices", "ar": "الأسعار"}, {"en": "Branches", "ar": "الفروع"}, {"en": "Trainers", "ar": "المدرّبون"}, {"en": "Contact", "ar": "تواصل معنا"}], "active": 0}
+          blocks:
+            - {"kind": "image", "art": "gym", "size": "m"}
+            - {"kind": "heading", "text": {"en": "Timetable", "ar": "الجدول"}, "gap": "s"}
     answer: [no]
     misconceptions:
       - id: MC-P02-018

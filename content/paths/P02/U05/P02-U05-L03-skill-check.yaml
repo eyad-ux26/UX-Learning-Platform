@@ -28,7 +28,7 @@ steps:
       ar: "يعيد فريقي تصميم موقع لتأمين السيارات. ويستخدمه الناس بعد أن تقع مشكلة بالفعل، فالأخطاء والمساعدة مهمة جدًا هنا. ساعدني في مراجعة أربعة أجزاء.\n\nهذا اختبار مهارة: دون تلميحات، وسترى نتيجتك في النهاية."
 
   - id: S02
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U05-01
     value:
@@ -51,9 +51,40 @@ steps:
         - { kind: banner, icon: warning-circle, tone: bad, text: { en: "An error occurred.", ar: "حدث خطأ." }, gap: s }
         - { kind: button, icon: upload-simple, text: { en: "Upload photos", ar: "ارفع الصور" }, gap: m }
     options:
-      - { id: precise, text: { en: "\"This photo is 18 MB; the limit is 10 MB. Choose a smaller photo, or let us shrink it.\" with a Shrink photo button", ar: "«حجم هذه الصورة 18 ميجابايت؛ والحد 10 ميجابايت. اختر صورة أصغر، أو دَعنا نصغّرها.» مع زر «صغّر الصورة»" } }
-      - { id: retry, text: { en: "\"Upload failed. Please try again later.\"", ar: "«فشل الرفع. حاول مرة أخرى لاحقًا.»" } }
-      - { id: code, text: { en: "\"Error 413: payload too large.\"", ar: "«Error 413: payload too large.»" } }
+      - id: precise
+        text: {"en": "\"This photo is 18 MB; the limit is 10 MB. Choose a smaller photo, or let us shrink it.\" with a Shrink photo button", "ar": "«حجم هذه الصورة 18 ميجابايت؛ والحد 10 ميجابايت. اختر صورة أصغر، أو دَعنا نصغّرها.» مع زر «صغّر الصورة»"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new/photos"
+          blocks:
+            - {"kind": "title", "text": {"en": "Photos of the damage", "ar": "صور الضرر"}}
+            - {"kind": "listitem", "art": "car", "text": "IMG_2041.jpg", "sub": "18 MB", "gap": "m"}
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "This photo is 18 MB; the limit is 10 MB. Choose a smaller photo, or let us shrink it.", "ar": "حجم هذه الصورة 18 ميجابايت؛ والحد 10 ميجابايت. اختر صورة أصغر، أو دَعنا نصغّرها."}, "gap": "s"}
+            - {"kind": "button", "style": "outline", "icon": "arrows-in", "text": {"en": "Shrink photo", "ar": "صغّر الصورة"}, "gap": "s"}
+            - {"kind": "button", "icon": "upload-simple", "text": {"en": "Upload photos", "ar": "ارفع الصور"}, "gap": "m"}
+      - id: retry
+        text: {"en": "\"Upload failed. Please try again later.\"", "ar": "«فشل الرفع. حاول مرة أخرى لاحقًا.»"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new/photos"
+          blocks:
+            - {"kind": "title", "text": {"en": "Photos of the damage", "ar": "صور الضرر"}}
+            - {"kind": "listitem", "art": "car", "text": "IMG_2041.jpg", "sub": "18 MB", "gap": "m"}
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "Upload failed. Please try again later.", "ar": "فشل الرفع. حاول مرة أخرى لاحقًا."}, "gap": "s"}
+            - {"kind": "button", "icon": "upload-simple", "text": {"en": "Upload photos", "ar": "ارفع الصور"}, "gap": "m"}
+      - id: code
+        text: {"en": "\"Error 413: payload too large.\"", "ar": "«Error 413: payload too large.»"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new/photos"
+          blocks:
+            - {"kind": "title", "text": {"en": "Photos of the damage", "ar": "صور الضرر"}}
+            - {"kind": "listitem", "art": "car", "text": "IMG_2041.jpg", "sub": "18 MB", "gap": "m"}
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": "Error 413: payload too large.", "gap": "s"}
+            - {"kind": "button", "icon": "upload-simple", "text": {"en": "Upload photos", "ar": "ارفع الصور"}, "gap": "m"}
     answer: [precise]
     misconceptions:
       - id: MC-P02-037
@@ -74,7 +105,7 @@ steps:
       ar: "الأحجام تشرح المشكلة، وزر «صغّر الصورة» يصلحها بضغطة واحدة، فلا يحتاج الناس إلى تعلّم تصغير الصور."
 
   - id: S03
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U05-02
     value:
@@ -97,9 +128,39 @@ steps:
         - { kind: field, label: { en: "Place", ar: "المكان" }, text: { en: "Ring Road, Cairo", ar: "الطريق الدائري، القاهرة" }, filled: true, gap: m }
         - { kind: button, text: { en: "Submit claim", ar: "أرسل المطالبة" }, gap: m }
     options:
-      - { id: full, text: { en: "A thicker red border, a ⚠ icon and a short message under the field", ar: "إطار أحمر أعرض، وأيقونة ⚠، ورسالة قصيرة تحت الحقل" } }
-      - { id: shake, text: { en: "Keep the thin border, and make the whole form shake", ar: "إبقاء الإطار الرفيع، مع اهتزاز النموذج كله" } }
-      - { id: darker, text: { en: "Make the border a darker red", ar: "جعل الإطار أحمر أغمق" } }
+      - id: full
+        text: {"en": "A thicker red border, a ⚠ icon and a short message under the field", "ar": "إطار أحمر أعرض، وأيقونة ⚠، ورسالة قصيرة تحت الحقل"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new/details"
+          blocks:
+            - {"kind": "title", "text": {"en": "What happened?", "ar": "ماذا حدث؟"}}
+            - {"kind": "field", "label": {"en": "Date of the accident", "ar": "تاريخ الحادث"}, "text": "", "tone": "bad", "gap": "m", "error": {"en": "Enter the date of the accident", "ar": "أدخل تاريخ الحادث"}, "icon": "warning"}
+            - {"kind": "field", "label": {"en": "Place", "ar": "المكان"}, "text": {"en": "Ring Road, Cairo", "ar": "الطريق الدائري، القاهرة"}, "filled": true, "gap": "m"}
+            - {"kind": "button", "text": {"en": "Submit claim", "ar": "أرسل المطالبة"}, "gap": "m"}
+      - id: shake
+        text: {"en": "Keep the thin border, and make the whole form shake", "ar": "إبقاء الإطار الرفيع، مع اهتزاز النموذج كله"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new/details"
+          blocks:
+            - {"kind": "title", "text": {"en": "What happened?", "ar": "ماذا حدث؟"}}
+            - {"kind": "field", "label": {"en": "Date of the accident", "ar": "تاريخ الحادث"}, "text": "", "tone": "bad", "gap": "m", "note": {"en": "Thin border; the whole form shakes", "ar": "إطار رفيع؛ والنموذج كله يهتز"}}
+            - {"kind": "field", "label": {"en": "Place", "ar": "المكان"}, "text": {"en": "Ring Road, Cairo", "ar": "الطريق الدائري، القاهرة"}, "filled": true, "gap": "m"}
+            - {"kind": "button", "text": {"en": "Submit claim", "ar": "أرسل المطالبة"}, "gap": "m"}
+      - id: darker
+        text: {"en": "Make the border a darker red", "ar": "جعل الإطار أحمر أغمق"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new/details"
+          blocks:
+            - {"kind": "title", "text": {"en": "What happened?", "ar": "ماذا حدث؟"}}
+            - {"kind": "field", "label": {"en": "Date of the accident", "ar": "تاريخ الحادث"}, "text": "", "tone": "bad", "gap": "m", "note": {"en": "Darker red, still no text", "ar": "أحمر أغمق، وما زال بلا نص"}}
+            - {"kind": "field", "label": {"en": "Place", "ar": "المكان"}, "text": {"en": "Ring Road, Cairo", "ar": "الطريق الدائري، القاهرة"}, "filled": true, "gap": "m"}
+            - {"kind": "button", "text": {"en": "Submit claim", "ar": "أرسل المطالبة"}, "gap": "m"}
     answer: [full]
     misconceptions:
       - id: MC-P02-038
@@ -115,7 +176,7 @@ steps:
       ar: "اللون والأيقونة والنص معًا تجعل المشكلة سهلة الملاحظة للجميع، والنص يقول كيف تُصلح."
 
   - id: S04
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U05-03
     value:
@@ -137,9 +198,38 @@ steps:
         - { kind: field, label: { en: "Policy number", ar: "رقم الوثيقة" }, text: "", focus: true, gap: m, note: { en: "Explained only in the home page tour", ar: "مشروح فقط في جولة الصفحة الرئيسية" } }
         - { kind: button, text: { en: "Continue", ar: "متابعة" }, gap: m }
     options:
-      - { id: pull, text: { en: "Add \"Where's my policy number?\" under the field, showing where it is on the policy card and in the confirmation email", ar: "إضافة رابط «أين رقم وثيقتي؟» تحت الحقل، يُظهر مكانه في بطاقة الوثيقة وفي بريد التأكيد" } }
-      - { id: longer, text: { en: "Make the home page tour longer and more detailed", ar: "جعل جولة الصفحة الرئيسية أطول وأكثر تفصيلًا" } }
-      - { id: repeat, text: { en: "Show the tour again every time people log in", ar: "عرض الجولة مرة أخرى في كل تسجيل دخول" } }
+      - id: pull
+        text: {"en": "Add \"Where's my policy number?\" under the field, showing where it is on the policy card and in the confirmation email", "ar": "إضافة رابط «أين رقم وثيقتي؟» تحت الحقل، يُظهر مكانه في بطاقة الوثيقة وفي بريد التأكيد"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new"
+          blocks:
+            - {"kind": "title", "text": {"en": "Start a claim", "ar": "ابدأ مطالبة"}}
+            - {"kind": "field", "label": {"en": "Policy number", "ar": "رقم الوثيقة"}, "text": "", "focus": true, "gap": "m"}
+            - {"kind": "link", "icon": "question", "gap": "s", "text": {"en": "Where's my policy number?", "ar": "أين رقم وثيقتي؟"}}
+            - {"kind": "image", "art": "document", "size": "s", "gap": "s", "note": {"en": "On your policy card and in the confirmation email", "ar": "في بطاقة الوثيقة وفي بريد التأكيد"}}
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}, "gap": "m"}
+      - id: longer
+        text: {"en": "Make the home page tour longer and more detailed", "ar": "جعل جولة الصفحة الرئيسية أطول وأكثر تفصيلًا"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new"
+          blocks:
+            - {"kind": "title", "text": {"en": "Start a claim", "ar": "ابدأ مطالبة"}}
+            - {"kind": "field", "label": {"en": "Policy number", "ar": "رقم الوثيقة"}, "text": "", "focus": true, "gap": "m", "note": {"en": "Still explained only in the home tour, now 9 steps", "ar": "ما زال مشروحًا فقط في جولة الرئيسية، وصارت 9 خطوات"}}
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}, "gap": "m"}
+      - id: repeat
+        text: {"en": "Show the tour again every time people log in", "ar": "عرض الجولة مرة أخرى في كل تسجيل دخول"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/claims/new"
+          blocks:
+            - {"kind": "title", "text": {"en": "Start a claim", "ar": "ابدأ مطالبة"}}
+            - {"kind": "field", "label": {"en": "Policy number", "ar": "رقم الوثيقة"}, "text": "", "focus": true, "gap": "m", "note": {"en": "Explained in the home tour, at every login", "ar": "مشروح في جولة الرئيسية، عند كل تسجيل دخول"}}
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}, "gap": "m"}
     answer: [pull]
     misconceptions:
       - id: MC-P02-045
@@ -155,7 +245,7 @@ steps:
       ar: "يظهر الرابط بالضبط حيث يعلق الناس، ويجيب عن ذلك السؤال تحديدًا، فيُستخدم فعلًا."
 
   - id: S05
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U05-04
     value:
@@ -178,9 +268,39 @@ steps:
         - { kind: icon, icon: magnifying-glass-minus, size: l, gap: l }
         - { kind: heading, text: { en: "No results for \"accident\"", ar: "لا نتائج لـ «حادث»" }, gap: s, note: { en: "The article is called \"Submitting a first notice of loss\"", ar: "اسم المقال «تقديم الإخطار الأول بالخسارة»" } }
     options:
-      - { id: search, text: { en: "Rename it \"I had an accident: how to make a claim\", and make search match words like accident, crash and damage", ar: "تغيير اسمه إلى «تعرّضت لحادث: كيف أقدّم مطالبة»، وجعل البحث يطابق كلمات مثل حادث وتصادم وضرر" } }
-      - { id: glossary, text: { en: "Add a glossary page explaining \"first notice of loss\"", ar: "إضافة صفحة مصطلحات تشرح «الإخطار الأول بالخسارة»" } }
-      - { id: abc, text: { en: "Replace search with an A to Z list of articles", ar: "وضع قائمة أبجدية بالمقالات مكان البحث" } }
+      - id: search
+        text: {"en": "Rename it \"I had an accident: how to make a claim\", and make search match words like accident, crash and damage", "ar": "تغيير اسمه إلى «تعرّضت لحادث: كيف أقدّم مطالبة»، وجعل البحث يطابق كلمات مثل حادث وتصادم وضرر"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/help?q=accident"
+          navbar: {"links": [{"en": "Car", "ar": "السيارات"}, {"en": "Help", "ar": "المساعدة"}], "active": 1}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "accident", "ar": "حادث"}, "filled": true}
+            - {"kind": "listitem", "icon": "file-text", "text": {"en": "I had an accident: how to make a claim", "ar": "تعرّضت لحادث: كيف أقدّم مطالبة"}, "sub": {"en": "Also found by: crash, damage", "ar": "يظهر أيضًا عند البحث عن: تصادم، ضرر"}, "chevron": true, "gap": "m"}
+      - id: glossary
+        text: {"en": "Add a glossary page explaining \"first notice of loss\"", "ar": "إضافة صفحة مصطلحات تشرح «الإخطار الأول بالخسارة»"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/help?q=accident"
+          navbar: {"links": [{"en": "Car", "ar": "السيارات"}, {"en": "Help", "ar": "المساعدة"}], "active": 1}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "accident", "ar": "حادث"}, "filled": true}
+            - {"kind": "icon", "icon": "magnifying-glass-minus", "size": "l", "gap": "l"}
+            - {"kind": "heading", "text": {"en": "No results for \"accident\"", "ar": "لا نتائج لـ «حادث»"}, "gap": "s", "note": {"en": "The article is called \"Submitting a first notice of loss\"", "ar": "اسم المقال «تقديم الإخطار الأول بالخسارة»"}}
+            - {"kind": "link", "icon": "book-open", "gap": "m", "text": {"en": "Glossary: what's a \"first notice of loss\"?", "ar": "المصطلحات: ما «الإخطار الأول بالخسارة»؟"}}
+      - id: abc
+        text: {"en": "Replace search with an A to Z list of articles", "ar": "وضع قائمة أبجدية بالمقالات مكان البحث"}
+        mock:
+          app: "aman"
+          frame: "wide"
+          url: "aman.example/help/a-z"
+          navbar: {"links": [{"en": "Car", "ar": "السيارات"}, {"en": "Help", "ar": "المساعدة"}], "active": 1}
+          blocks:
+            - {"kind": "heading", "text": {"en": "All articles, A to Z", "ar": "كل المقالات، أبجديًا"}}
+            - {"kind": "listitem", "icon": "file-text", "text": {"en": "Adding a driver", "ar": "إضافة سائق"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "file-text", "text": {"en": "Changing your address", "ar": "تغيير عنوانك"}, "chevron": true, "gap": "s", "note": {"en": "120 articles; the claim one is under S", "ar": "120 مقالًا؛ ومقال المطالبة تحت حرف التاء"}}
     answer: [search]
     misconceptions:
       - id: MC-P02-042

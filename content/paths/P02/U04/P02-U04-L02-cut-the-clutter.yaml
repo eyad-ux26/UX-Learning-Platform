@@ -37,7 +37,7 @@ steps:
       en: "I lead the design team of a bank's app. Our home screen has grown: the balance, three offer banners, a news slider, a tip of the day, a currency table and a quiz.\n\nIn our last test, four out of six people couldn't find **Transfer** in under a minute. It's there, under the quiz."
       ar: "أقود فريق التصميم لتطبيق بنك. وقد امتلأت الشاشة الرئيسية: الرصيد، وثلاثة Banners للعروض، وشريط أخبار متحرّك، ونصيحة اليوم، وجدول عملات، ومسابقة.\n\nفي آخر تجربة، لم يجد أربعة من ستة أشخاص زر **تحويل** في أقل من دقيقة. وهو موجود، تحت المسابقة."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U04-03
     rules: [R12]
@@ -61,9 +61,41 @@ steps:
         - { kind: link, text: { en: "Quiz: how smart is your spending?", ar: "مسابقة: ما مدى ذكاء إنفاقك؟" }, gap: xs }
         - { kind: button, icon: arrows-left-right, text: { en: "Transfer", ar: "تحويل" }, style: text, gap: xs }
     options:
-      - { id: red, text: { en: "Make Transfer a big red button", ar: "نجعل «تحويل» زرًا أحمر كبيرًا" } }
-      - { id: cut, text: { en: "Keep the balance and the main actions on top; move offers, news and the quiz to an \"Offers\" tab", ar: "نُبقي الرصيد والإجراءات الرئيسية في الأعلى؛ وننقل العروض والأخبار والمسابقة إلى قسم «العروض»" } }
-      - { id: menu, text: { en: "Add Transfer to the side menu as well", ar: "نضيف «تحويل» إلى القائمة الجانبية أيضًا" } }
+      - id: red
+        text: {"en": "Make Transfer a big red button", "ar": "نجعل «تحويل» زرًا أحمر كبيرًا"}
+        mock:
+          app: "rasid"
+          appbar: {"logo": true, "actions": [{"icon": "bell", "count": 4}]}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "credit-card", "text": {"en": "Cards", "ar": "البطاقات"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "small", "text": {"en": "Balance", "ar": "الرصيد"}}, {"kind": "price", "text": {"en": "EGP 12,480", "ar": "12,480 جنيه"}, "size": "l"}]}
+            - {"kind": "banner", "icon": "megaphone", "tone": "info", "text": {"en": "New! 0% installments on phones", "ar": "جديد! تقسيط بدون فوائد على الهواتف"}, "gap": "s"}
+            - {"kind": "banner", "icon": "airplane-tilt", "tone": "info", "text": {"en": "Cashback on travel with your card", "ar": "استرداد نقدي على السفر مع بطاقتك"}, "gap": "xs"}
+            - {"kind": "image", "art": "city-night", "size": "s", "gap": "xs"}
+            - {"kind": "link", "text": {"en": "Quiz: how smart is your spending?", "ar": "مسابقة: ما مدى ذكاء إنفاقك؟"}, "gap": "xs"}
+            - {"kind": "button", "style": "danger", "size": "l", "icon": "arrows-left-right", "text": {"en": "Transfer", "ar": "تحويل"}, "gap": "s"}
+      - id: cut
+        text: {"en": "Keep the balance and the main actions on top; move offers, news and the quiz to an \"Offers\" tab", "ar": "نُبقي الرصيد والإجراءات الرئيسية في الأعلى؛ وننقل العروض والأخبار والمسابقة إلى قسم «العروض»"}
+        mock:
+          app: "rasid"
+          appbar: {"logo": true, "actions": [{"icon": "bell", "count": 4}]}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "credit-card", "text": {"en": "Cards", "ar": "البطاقات"}}, {"icon": "tag", "text": {"en": "Offers", "ar": "العروض"}, "count": 3}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "small", "text": {"en": "Balance", "ar": "الرصيد"}}, {"kind": "price", "text": {"en": "EGP 12,480", "ar": "12,480 جنيه"}, "size": "l"}]}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "icon": "arrows-left-right", "text": {"en": "Transfer", "ar": "تحويل"}}, {"kind": "button", "style": "outline", "icon": "receipt", "text": {"en": "Pay bills", "ar": "ادفع الفواتير"}}]}
+      - id: menu
+        text: {"en": "Add Transfer to the side menu as well", "ar": "نضيف «تحويل» إلى القائمة الجانبية أيضًا"}
+        mock:
+          app: "rasid"
+          appbar: {"logo": true, "actions": [{"icon": "bell", "count": 4}]}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "credit-card", "text": {"en": "Cards", "ar": "البطاقات"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "small", "text": {"en": "Balance", "ar": "الرصيد"}}, {"kind": "price", "text": {"en": "EGP 12,480", "ar": "12,480 جنيه"}, "size": "l"}]}
+            - {"kind": "banner", "icon": "megaphone", "tone": "info", "text": {"en": "New! 0% installments on phones", "ar": "جديد! تقسيط بدون فوائد على الهواتف"}, "gap": "s"}
+            - {"kind": "banner", "icon": "airplane-tilt", "tone": "info", "text": {"en": "Cashback on travel with your card", "ar": "استرداد نقدي على السفر مع بطاقتك"}, "gap": "xs"}
+            - {"kind": "image", "art": "city-night", "size": "s", "gap": "xs"}
+            - {"kind": "link", "text": {"en": "Quiz: how smart is your spending?", "ar": "مسابقة: ما مدى ذكاء إنفاقك؟"}, "gap": "xs"}
+            - {"kind": "button", "icon": "arrows-left-right", "text": {"en": "Transfer", "ar": "تحويل"}, "style": "text", "gap": "xs", "note": {"en": "Also in the side menu now", "ar": "موجود الآن في القائمة الجانبية أيضًا"}}
     answer: [cut]
     misconceptions:
       - id: MC-P02-032
@@ -113,7 +145,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) الثامن هو تصميم بسيط وجميل بلا زيادات (Aesthetic and minimalist design): **يجب ألّا تحتوي الواجهات على معلومات غير مهمة أو نادرًا ما تُحتاج**. فكل شيء زائد ينافس ما يهمّ.\n\n- **احذف أو أخّر** ما لا يساعد المهمة. واعرض التفاصيل النادرة فقط حين تُحتاج.\n- **البساطة لا تعني الفراغ:** أبقِ كل اسم وعلامة ومعلومة تحتاجها المهمة.\n- **الشكل مهم أيضًا،** لكن الوضوح يغلب الزخرفة."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U04-03
     rules: [R06]
@@ -141,9 +173,43 @@ steps:
       footer:
         - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
-      - { id: all, text: { en: "Keep them all visible; someone might need them", ar: "تبقى كلها ظاهرة؛ فقد يحتاجها أحد" } }
-      - { id: more, text: { en: "Show account and amount; put the rest under \"More options\", and ask for SWIFT only for transfers abroad", ar: "تعرض الحساب والمبلغ؛ وتضع الباقي تحت «خيارات أخرى»، ولا تطلب SWIFT إلا للتحويل إلى الخارج" } }
-      - { id: delete, text: { en: "Remove the extra fields from the app", ar: "تحذف الحقول الإضافية من التطبيق" } }
+      - id: all
+        text: {"en": "Keep them all visible; someone might need them", "ar": "تبقى كلها ظاهرة؛ فقد يحتاجها أحد"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Transfer", "ar": "تحويل"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "To account", "ar": "إلى الحساب"}, "text": "", "icon": "user"}
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": "", "gap": "s"}
+            - {"kind": "field", "label": {"en": "Purpose", "ar": "الغرض"}, "text": "", "gap": "s"}
+            - {"kind": "field", "label": {"en": "Reference code", "ar": "الرمز المرجعي"}, "text": "", "gap": "s"}
+            - {"kind": "field", "label": "SWIFT", "text": "", "gap": "s"}
+            - {"kind": "select", "label": {"en": "Schedule", "ar": "الجدولة"}, "text": {"en": "Now", "ar": "الآن"}, "gap": "s"}
+            - {"kind": "select", "label": {"en": "Fees paid by", "ar": "من يدفع الرسوم"}, "text": {"en": "Me", "ar": "أنا"}, "gap": "s"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: more
+        text: {"en": "Show account and amount; put the rest under \"More options\", and ask for SWIFT only for transfers abroad", "ar": "تعرض الحساب والمبلغ؛ وتضع الباقي تحت «خيارات أخرى»، ولا تطلب SWIFT إلا للتحويل إلى الخارج"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Transfer", "ar": "تحويل"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "To account", "ar": "إلى الحساب"}, "text": "", "icon": "user"}
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": "", "gap": "s"}
+            - {"kind": "accordion", "text": {"en": "More options", "ar": "خيارات أخرى"}, "gap": "m"}
+            - {"kind": "small", "color": "muted", "gap": "s", "text": {"en": "SWIFT is asked only for transfers abroad.", "ar": "يُطلب SWIFT فقط عند التحويل إلى الخارج."}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: delete
+        text: {"en": "Remove the extra fields from the app", "ar": "تحذف الحقول الإضافية من التطبيق"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Transfer", "ar": "تحويل"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "To account", "ar": "إلى الحساب"}, "text": "", "icon": "user"}
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": "", "gap": "s"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
     answer: [more]
     misconceptions:
       - id: MC-P02-033
@@ -167,7 +233,7 @@ steps:
       ar: "يرى أغلب الناس حقلين وينتهون. ومن يحتاج الجدولة أو التحويل إلى الخارج يجد كل الخيارات، على بُعد ضغطة واحدة."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U04-04
     rules: [R06]
@@ -193,9 +259,43 @@ steps:
       footer:
         - { kind: button, text: { en: "Sign in", ar: "دخول" } }
     options:
-      - { id: keep, text: { en: "Keep it; less is more", ar: "نُبقيها؛ فالأقل أفضل" } }
-      - { id: back, text: { en: "Bring back visible field borders and labels above the fields", ar: "نعيد حدود الحقول الظاهرة والأسماء فوق الحقول" } }
-      - { id: dark, text: { en: "Make the placeholder text darker", ar: "نجعل النص الرمادي داخل الحقول أغمق" } }
+      - id: keep
+        text: {"en": "Keep it; less is more", "ar": "نُبقيها؛ فالأقل أفضل"}
+        mock:
+          app: "rasid"
+          blocks:
+            - {"kind": "icon", "icon": "bank", "size": "l", "color": "brand"}
+            - {"kind": "heading", "text": {"en": "Sign in", "ar": "تسجيل الدخول"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Username", "ar": "اسم المستخدم"}, "tone": "faint", "gap": "l"}
+            - {"kind": "line", "gap": "xs"}
+            - {"kind": "small", "text": {"en": "Password", "ar": "كلمة المرور"}, "tone": "faint", "gap": "l", "note": {"en": "No borders, no labels: only grey placeholder text", "ar": "بلا حدود ولا أسماء: نص رمادي فقط"}}
+            - {"kind": "line", "gap": "xs"}
+          footer:
+            - {"kind": "button", "text": {"en": "Sign in", "ar": "دخول"}}
+      - id: back
+        text: {"en": "Bring back visible field borders and labels above the fields", "ar": "نعيد حدود الحقول الظاهرة والأسماء فوق الحقول"}
+        mock:
+          app: "rasid"
+          blocks:
+            - {"kind": "icon", "icon": "bank", "size": "l", "color": "brand"}
+            - {"kind": "heading", "text": {"en": "Sign in", "ar": "تسجيل الدخول"}, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Username", "ar": "اسم المستخدم"}, "text": "", "gap": "l"}
+            - {"kind": "field", "label": {"en": "Password", "ar": "كلمة المرور"}, "text": "", "trail": "eye", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Sign in", "ar": "دخول"}}
+      - id: dark
+        text: {"en": "Make the placeholder text darker", "ar": "نجعل النص الرمادي داخل الحقول أغمق"}
+        mock:
+          app: "rasid"
+          blocks:
+            - {"kind": "icon", "icon": "bank", "size": "l", "color": "brand"}
+            - {"kind": "heading", "text": {"en": "Sign in", "ar": "تسجيل الدخول"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Username", "ar": "اسم المستخدم"}, "gap": "l", "color": "ink"}
+            - {"kind": "line", "gap": "xs"}
+            - {"kind": "small", "text": {"en": "Password", "ar": "كلمة المرور"}, "gap": "l", "note": {"en": "Darker, but still no borders or labels", "ar": "أغمق، لكن ما زال بلا حدود ولا أسماء"}, "color": "ink"}
+            - {"kind": "line", "gap": "xs"}
+          footer:
+            - {"kind": "button", "text": {"en": "Sign in", "ar": "دخول"}}
     answer: [back]
     misconceptions:
       - id: MC-P02-034
@@ -264,7 +364,7 @@ steps:
       ar: "تضيف B فقط ما يقرّر به الناس: التكلفة، والرسوم، وموعد الوصول. فالبساطة تعني ألّا تزيد على ما تحتاجه المهمة، لا أن تنقص عنه."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: hana
     part: independent
     skill: SK-P02-U04-03
@@ -292,9 +392,31 @@ steps:
             - { kind: small, text: { en: "\"Breathe in, the day is yours.\"", ar: "«خذ نفسًا، اليوم لك.»" }, tone: faint }
             - { kind: badge, text: { en: "Yoga · 6 pm · 4 spots left", ar: "يوغا · 6 م · بقي 4 أماكن" }, tone: neutral, gap: s, note: { en: "Time and spots come last", ar: "الوقت والأماكن في الآخر" } }
     options:
-      - { id: row, text: { en: "A compact row: time, class, trainer's name, spots left and Book; the bio opens on tap", ar: "صف مختصر: الوقت، والحصة، واسم المدرّب، والأماكن المتبقية، و«احجز»؛ وتُفتح النبذة عند الضغط" } }
-      - { id: smaller, text: { en: "The same card with a smaller photo", ar: "البطاقة نفسها بصورة أصغر" } }
-      - { id: carousel, text: { en: "Show the cards in a sideways carousel, one at a time", ar: "عرض البطاقات في شريط يتحرّك أفقيًا (Carousel)، بطاقة في كل مرة" } }
+      - id: row
+        text: {"en": "A compact row: time, class, trainer's name, spots left and Book; the bio opens on tap", "ar": "صف مختصر: الوقت، والحصة، واسم المدرّب، والأماكن المتبقية، و«احجز»؛ وتُفتح النبذة عند الضغط"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Timetable · Thursday", "ar": "الجدول · الخميس"}}
+          blocks:
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "6:00 pm · Yoga", "ar": "6:00 م · يوغا"}, "sub": {"en": "Coach Mai · 4 spots left", "ar": "المدرّبة مي · بقي 4 أماكن"}, "value": {"en": "Book", "ar": "احجز"}, "note": {"en": "Tap a row for the trainer's bio", "ar": "اضغط الصف لترى نبذة المدرّب"}}
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "7:00 pm · Spinning", "ar": "7:00 م · Spinning"}, "sub": {"en": "Coach Omar · 2 spots left", "ar": "المدرّب عمر · بقي مكانان"}, "value": {"en": "Book", "ar": "احجز"}, "gap": "s"}
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "8:00 pm · HIIT", "ar": "8:00 م · HIIT"}, "sub": {"en": "Coach Hany · 9 spots left", "ar": "المدرّب هاني · بقي 9 أماكن"}, "value": {"en": "Book", "ar": "احجز"}, "gap": "s"}
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "9:00 pm · Pilates", "ar": "9:00 م · Pilates"}, "sub": {"en": "Coach Mai · Full", "ar": "المدرّبة مي · مكتملة"}, "value": {"en": "Waitlist", "ar": "انتظار"}, "gap": "s"}
+      - id: smaller
+        text: {"en": "The same card with a smaller photo", "ar": "البطاقة نفسها بصورة أصغر"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Timetable · Thursday", "ar": "الجدول · الخميس"}}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "image", "art": "gym", "size": "s"}, {"kind": "heading", "text": {"en": "Coach Mai", "ar": "المدرّبة مي"}, "gap": "s"}, {"kind": "small", "text": {"en": "10 years of yoga teaching, certified in Bali and Cairo. Loves sunrise sessions and strong tea.", "ar": "10 سنوات في تدريب اليوغا، معتمدة في بالي والقاهرة. تحب جلسات الشروق والشاي الثقيل."}}, {"kind": "small", "text": {"en": "\"Breathe in, the day is yours.\"", "ar": "«خذ نفسًا، اليوم لك.»"}, "tone": "faint"}, {"kind": "badge", "text": {"en": "Yoga · 6 pm · 4 spots left", "ar": "يوغا · 6 م · بقي 4 أماكن"}, "tone": "neutral", "gap": "s", "note": {"en": "Still last on the card", "ar": "ما زالت في آخر البطاقة"}}]}
+      - id: carousel
+        text: {"en": "Show the cards in a sideways carousel, one at a time", "ar": "عرض البطاقات في شريط يتحرّك أفقيًا (Carousel)، بطاقة في كل مرة"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Timetable · Thursday", "ar": "الجدول · الخميس"}}
+          blocks:
+            - {"kind": "card", "art": "gym", "blocks": [{"kind": "heading", "text": {"en": "Coach Mai", "ar": "المدرّبة مي"}}, {"kind": "small", "text": {"en": "10 years of yoga teaching, certified in Bali and Cairo. Loves sunrise sessions and strong tea.", "ar": "10 سنوات في تدريب اليوغا، معتمدة في بالي والقاهرة. تحب جلسات الشروق والشاي الثقيل."}}, {"kind": "small", "text": {"en": "\"Breathe in, the day is yours.\"", "ar": "«خذ نفسًا، اليوم لك.»"}, "tone": "faint"}, {"kind": "badge", "text": {"en": "Yoga · 6 pm · 4 spots left", "ar": "يوغا · 6 م · بقي 4 أماكن"}, "tone": "neutral", "gap": "s", "note": {"en": "Time and spots come last", "ar": "الوقت والأماكن في الآخر"}}]}
+            - {"kind": "small", "text": "● ○ ○ ○ ○ ○", "gap": "s", "note": {"en": "One card at a time; swipe for the next", "ar": "بطاقة واحدة كل مرة؛ اسحب للتالية"}}
     answer: [row]
     misconceptions:
       - id: MC-P02-035

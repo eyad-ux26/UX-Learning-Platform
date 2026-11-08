@@ -14,7 +14,7 @@ sources:
 steps:
   # SK-P02-U05-01: write errors people understand and can fix
   - id: S01
-    type: choose
+    type: tune
     speaker: youssef
     part: retest
     skill: SK-P02-U05-01
@@ -38,9 +38,38 @@ steps:
       footer:
         - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" }, tone: off }
     options:
-      - { id: advice, text: { en: "\"Back in stock around 15 Nov. Notify me\" and a similar drill that's available now", ar: "«يعود إلى المخزون نحو 15 نوفمبر. نبّهني» مع مثقاب مشابه متوفّر الآن" } }
-      - { id: sorry, text: { en: "\"Sorry! This item is currently unavailable.\"", ar: "«نأسف! هذا المنتج غير متاح حاليًا.»" } }
-      - { id: hide, text: { en: "Hide the product until it's back", ar: "إخفاء المنتج حتى يعود" } }
+      - id: advice
+        text: {"en": "\"Back in stock around 15 Nov. Notify me\" and a similar drill that's available now", "ar": "«يعود إلى المخزون نحو 15 نوفمبر. نبّهني» مع مثقاب مشابه متوفّر الآن"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "back": true, "actions": [{"icon": "heart"}]}
+          blocks:
+            - {"kind": "image", "art": "box", "size": "m"}
+            - {"kind": "price", "text": {"en": "EGP 1,250", "ar": "1,250 جنيه"}, "gap": "m"}
+            - {"kind": "badge", "tone": "warn", "icon": "clock", "text": {"en": "Back in stock around 15 Nov", "ar": "يعود إلى المخزون نحو 15 نوفمبر"}, "gap": "s"}
+            - {"kind": "heading", "text": {"en": "Available now", "ar": "متوفّر الآن"}, "gap": "m"}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Qowa drill 600 W", "ar": "مثقاب قوة 600 وات"}, "value": {"en": "EGP 1,150", "ar": "1,150 جنيه"}, "chevron": true, "gap": "s"}
+          footer:
+            - {"kind": "button", "style": "outline", "icon": "bell", "text": {"en": "Notify me", "ar": "نبّهني"}}
+      - id: sorry
+        text: {"en": "\"Sorry! This item is currently unavailable.\"", "ar": "«نأسف! هذا المنتج غير متاح حاليًا.»"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "back": true, "actions": [{"icon": "heart"}]}
+          blocks:
+            - {"kind": "image", "art": "box", "size": "m"}
+            - {"kind": "price", "text": {"en": "EGP 1,250", "ar": "1,250 جنيه"}, "gap": "m"}
+            - {"kind": "small", "color": "red", "text": {"en": "Sorry! This item is currently unavailable.", "ar": "نأسف! هذا المنتج غير متاح حاليًا."}, "gap": "s"}
+          footer:
+            - {"kind": "button", "text": {"en": "Add to cart", "ar": "أضف إلى السلة"}, "tone": "off"}
+      - id: hide
+        text: {"en": "Hide the product until it's back", "ar": "إخفاء المنتج حتى يعود"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Drills", "ar": "مثاقب"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "box", "text": {"en": "Qowa drill 600 W", "ar": "مثقاب قوة 600 وات"}, "value": {"en": "EGP 1,150", "ar": "1,150 جنيه"}, "chevron": true, "note": {"en": "The 650 W drill is hidden until it's back", "ar": "مثقاب الـ 650 وات مخفي حتى يعود"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Qowa drill 500 W", "ar": "مثقاب قوة 500 وات"}, "value": {"en": "EGP 980", "ar": "980 جنيه"}, "chevron": true, "gap": "s"}
     answer: [advice]
     misconceptions:
       - id: MC-P02-037
@@ -56,7 +85,7 @@ steps:
       ar: "التاريخ والتنبيه والبديل تعطي العملاء ثلاث طرق للمتابعة بدل طريق مسدود."
 
   - id: S02
-    type: choose
+    type: tune
     speaker: tarek
     part: retest
     skill: SK-P02-U05-01
@@ -79,9 +108,36 @@ steps:
       footer:
         - { kind: button, text: { en: "Save", ar: "احفظ" } }
     options:
-      - { id: plain, text: { en: "\"This account number looks incomplete: it has 28 digits instead of 29. Check it against the one you were given.\"", ar: "«يبدو رقم الحساب هذا ناقصًا: فيه 28 رقمًا بدل 29. راجعه مع الرقم الذي أُعطي لك.»" } }
-      - { id: iban, text: { en: "\"IBAN checksum validation failed.\"", ar: "«فشل التحقّق من رمز الـ IBAN.»" } }
-      - { id: invalid, text: { en: "\"Invalid account number.\"", ar: "«رقم حساب غير صالح.»" } }
+      - id: plain
+        text: {"en": "\"This account number looks incomplete: it has 28 digits instead of 29. Check it against the one you were given.\"", "ar": "«يبدو رقم الحساب هذا ناقصًا: فيه 28 رقمًا بدل 29. راجعه مع الرقم الذي أُعطي لك.»"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "New beneficiary", "ar": "مستفيد جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Name", "ar": "الاسم"}, "text": {"en": "Omar Hany", "ar": "عمر هاني"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Account number (IBAN)", "ar": "رقم الحساب (IBAN)"}, "text": "EG38 0019 0005 0000 0000 2631 801", "filled": true, "error": {"en": "This account number looks incomplete: it has 28 digits instead of 29. Check it against the one you were given.", "ar": "يبدو رقم الحساب هذا ناقصًا: فيه 28 رقمًا بدل 29. راجعه مع الرقم الذي أُعطي لك."}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Save", "ar": "احفظ"}}
+      - id: iban
+        text: {"en": "\"IBAN checksum validation failed.\"", "ar": "«فشل التحقّق من رمز الـ IBAN.»"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "New beneficiary", "ar": "مستفيد جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Name", "ar": "الاسم"}, "text": {"en": "Omar Hany", "ar": "عمر هاني"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Account number (IBAN)", "ar": "رقم الحساب (IBAN)"}, "text": "EG38 0019 0005 0000 0000 2631 801", "filled": true, "error": {"en": "IBAN checksum validation failed.", "ar": "فشل التحقّق من رمز الـ IBAN."}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Save", "ar": "احفظ"}}
+      - id: invalid
+        text: {"en": "\"Invalid account number.\"", "ar": "«رقم حساب غير صالح.»"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "New beneficiary", "ar": "مستفيد جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Name", "ar": "الاسم"}, "text": {"en": "Omar Hany", "ar": "عمر هاني"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Account number (IBAN)", "ar": "رقم الحساب (IBAN)"}, "text": "EG38 0019 0005 0000 0000 2631 801", "filled": true, "error": {"en": "Invalid account number.", "ar": "رقم حساب غير صالح."}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Save", "ar": "احفظ"}}
     answer: [plain]
     misconceptions:
       - id: MC-P02-036
@@ -103,7 +159,7 @@ steps:
 
   # SK-P02-U05-02: show errors where and when they help
   - id: S03
-    type: choose
+    type: tune
     speaker: karim
     part: retest
     skill: SK-P02-U05-02
@@ -126,9 +182,36 @@ steps:
       footer:
         - { kind: button, text: { en: "Create account", ar: "أنشئ الحساب" } }
     options:
-      - { id: soft, text: { en: "A calm hint under the field: \"Fair. Add a number or symbol to make it stronger\", and let people continue", ar: "تلميح هادئ تحت الحقل: «متوسطة. أضف رقمًا أو رمزًا لتقويها»، مع السماح بالمتابعة" } }
-      - { id: same, text: { en: "Keep the red error; weak passwords are risky", ar: "إبقاء الخطأ الأحمر؛ فكلمات المرور الضعيفة خطرة" } }
-      - { id: none, text: { en: "Say nothing, since it's allowed", ar: "عدم قول شيء، فهي مسموحة" } }
+      - id: soft
+        text: {"en": "A calm hint under the field: \"Fair. Add a number or symbol to make it stronger\", and let people continue", "ar": "تلميح هادئ تحت الحقل: «متوسطة. أضف رقمًا أو رمزًا لتقويها»، مع السماح بالمتابعة"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Create account", "ar": "أنشئ حسابًا"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Email", "ar": "البريد الإلكتروني"}, "text": "mona@mail.example", "filled": true}
+            - {"kind": "field", "label": {"en": "Password", "ar": "كلمة المرور"}, "text": "••••••••", "filled": true, "gap": "m", "note": {"en": "No error sound; people can continue", "ar": "بلا صوت خطأ؛ ويستطيع الناس المتابعة"}, "hint": {"en": "Fair. Add a number or symbol to make it stronger.", "ar": "متوسطة. أضف رقمًا أو رمزًا لتقويها."}}
+          footer:
+            - {"kind": "button", "text": {"en": "Create account", "ar": "أنشئ الحساب"}}
+      - id: same
+        text: {"en": "Keep the red error; weak passwords are risky", "ar": "إبقاء الخطأ الأحمر؛ فكلمات المرور الضعيفة خطرة"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Create account", "ar": "أنشئ حسابًا"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Email", "ar": "البريد الإلكتروني"}, "text": "mona@mail.example", "filled": true}
+            - {"kind": "field", "label": {"en": "Password", "ar": "كلمة المرور"}, "text": "••••••••", "filled": true, "error": {"en": "Weak password", "ar": "كلمة مرور ضعيفة"}, "gap": "m", "note": {"en": "Allowed, but shown like a blocking error, with an error sound", "ar": "مسموحة، لكنها تُعرض على أنها خطأ يمنع المتابعة، مع صوت خطأ"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Create account", "ar": "أنشئ الحساب"}}
+      - id: none
+        text: {"en": "Say nothing, since it's allowed", "ar": "عدم قول شيء، فهي مسموحة"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Create account", "ar": "أنشئ حسابًا"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Email", "ar": "البريد الإلكتروني"}, "text": "mona@mail.example", "filled": true}
+            - {"kind": "field", "label": {"en": "Password", "ar": "كلمة المرور"}, "text": "••••••••", "filled": true, "gap": "m", "note": {"en": "Nothing said about strength", "ar": "لا شيء يُقال عن قوتها"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Create account", "ar": "أنشئ الحساب"}}
     answer: [soft]
     misconceptions:
       - id: MC-P02-038
@@ -149,7 +232,7 @@ steps:
       ar: "التلميح الهادئ يُظهر أنها نصيحة لا عائق. والأخطاء الحمراء تبقى للمشكلات التي توقف الناس فعلًا، فتحتفظ بمعناها."
 
   - id: S04
-    type: choose
+    type: tune
     speaker: hana
     part: retest
     skill: SK-P02-U05-02
@@ -176,9 +259,38 @@ steps:
         blocks:
           - { kind: text, text: { en: "Please check the form", ar: "يرجى مراجعة النموذج" }, note: { en: "Gone after 3 s", ar: "يختفي بعد 3 ثوانٍ" } }
     options:
-      - { id: field, text: { en: "Mark the age field and show \"Add your guest's age\" under it until it's fixed", ar: "تمييز حقل العمر، وإظهار «أضِف عمر ضيفك» تحته حتى يُصلح" } }
-      - { id: longer, text: { en: "Keep the toast on screen for ten seconds", ar: "إبقاء الرسالة المؤقتة على الشاشة عشر ثوانٍ" } }
-      - { id: top, text: { en: "Move the same message to the top of the form", ar: "نقل الرسالة نفسها إلى أعلى النموذج" } }
+      - id: field
+        text: {"en": "Mark the age field and show \"Add your guest's age\" under it until it's fixed", "ar": "تمييز حقل العمر، وإظهار «أضِف عمر ضيفك» تحته حتى يُصلح"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Bring a guest", "ar": "أحضِر ضيفًا"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Guest's name", "ar": "اسم الضيف"}, "text": {"en": "Salma", "ar": "سلمى"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Guest's age", "ar": "عمر الضيف"}, "text": "", "gap": "m", "tone": "bad", "error": {"en": "Add your guest's age", "ar": "أضِف عمر ضيفك"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Book", "ar": "احجز"}}
+      - id: longer
+        text: {"en": "Keep the toast on screen for ten seconds", "ar": "إبقاء الرسالة المؤقتة على الشاشة عشر ثوانٍ"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Bring a guest", "ar": "أحضِر ضيفًا"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Guest's name", "ar": "اسم الضيف"}, "text": {"en": "Salma", "ar": "سلمى"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Guest's age", "ar": "عمر الضيف"}, "text": "", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Book", "ar": "احجز"}}
+          overlay: {"type": "toast", "blocks": [{"kind": "text", "text": {"en": "Please check the form", "ar": "يرجى مراجعة النموذج"}, "note": {"en": "Gone after 10 s", "ar": "يختفي بعد 10 ثوانٍ"}}]}
+      - id: top
+        text: {"en": "Move the same message to the top of the form", "ar": "نقل الرسالة نفسها إلى أعلى النموذج"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Bring a guest", "ar": "أحضِر ضيفًا"}, "back": true}
+          blocks:
+            - {"kind": "banner", "tone": "bad", "icon": "warning-circle", "text": {"en": "Please check the form", "ar": "يرجى مراجعة النموذج"}}
+            - {"kind": "field", "label": {"en": "Guest's name", "ar": "اسم الضيف"}, "text": {"en": "Salma", "ar": "سلمى"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Guest's age", "ar": "عمر الضيف"}, "text": "", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Book", "ar": "احجز"}}
     answer: [field]
     misconceptions:
       - id: MC-P02-038
@@ -195,7 +307,7 @@ steps:
 
   # SK-P02-U05-03: offer help at the moment it's needed
   - id: S05
-    type: choose
+    type: tune
     speaker: sara
     part: retest
     skill: SK-P02-U05-03
@@ -221,9 +333,31 @@ steps:
           - { kind: small, text: { en: "Categories help you understand where your money goes. Each expense can have one category, and you can create your own…", ar: "الفئات تساعدك على فهم أين يذهب مالك. ولكل مصروف فئة واحدة، ويمكنك إنشاء فئاتك…" } }
           - { kind: small, text: { en: "Budgets let you set a limit per month for each category…", ar: "الميزانيات تتيح لك تحديد حد شهري لكل فئة…" }, gap: s, note: { en: "6 paragraphs in all", ar: "6 فقرات في المجمل" } }
     options:
-      - { id: short, text: { en: "One line next to the category field: \"Pick a category to see where your money goes\", with Got it", ar: "سطر واحد بجانب حقل الفئة: «اختر فئة لترى أين يذهب مالك»، مع «فهمت»" } }
-      - { id: same, text: { en: "The same six paragraphs, with headings", ar: "الفقرات الست نفسها، مع عناوين" } }
-      - { id: later, text: { en: "Move all six paragraphs to the settings screen", ar: "نقل الفقرات الست كلها إلى شاشة الإعدادات" } }
+      - id: short
+        text: {"en": "One line next to the category field: \"Pick a category to see where your money goes\", with Got it", "ar": "سطر واحد بجانب حقل الفئة: «اختر فئة لترى أين يذهب مالك»، مع «فهمت»"}
+        mock:
+          app: "masroof"
+          appbar: {"title": {"en": "New expense", "ar": "مصروف جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 240", "ar": "240 جنيه"}, "filled": true}
+            - {"kind": "select", "label": {"en": "Category", "ar": "الفئة"}, "text": {"en": "Choose a category", "ar": "اختر فئة"}, "gap": "m"}
+            - {"kind": "tip", "text": {"en": "Pick a category to see where your money goes.", "ar": "اختر فئة لترى أين يذهب مالك."}, "gap": "s"}
+            - {"kind": "link", "text": {"en": "Got it", "ar": "فهمت"}, "gap": "xs"}
+      - id: same
+        text: {"en": "The same six paragraphs, with headings", "ar": "الفقرات الست نفسها، مع عناوين"}
+        mock:
+          app: "masroof"
+          appbar: {"title": {"en": "New expense", "ar": "مصروف جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 240", "ar": "240 جنيه"}, "filled": true}
+          overlay: {"type": "sheet", "title": {"en": "How Masroof works", "ar": "كيف يعمل مصروف"}, "blocks": [{"kind": "heading", "text": {"en": "Categories", "ar": "الفئات"}}, {"kind": "small", "text": {"en": "Categories help you understand where your money goes. Each expense can have one category, and you can create your own…", "ar": "الفئات تساعدك على فهم أين يذهب مالك. ولكل مصروف فئة واحدة، ويمكنك إنشاء فئاتك…"}}, {"kind": "heading", "text": {"en": "Budgets", "ar": "الميزانيات"}, "gap": "s"}, {"kind": "small", "text": {"en": "Budgets let you set a limit per month for each category…", "ar": "الميزانيات تتيح لك تحديد حد شهري لكل فئة…"}, "note": {"en": "Still 6 paragraphs, now with headings", "ar": "ما زالت 6 فقرات، لكن بعناوين"}}]}
+      - id: later
+        text: {"en": "Move all six paragraphs to the settings screen", "ar": "نقل الفقرات الست كلها إلى شاشة الإعدادات"}
+        mock:
+          app: "masroof"
+          appbar: {"title": {"en": "New expense", "ar": "مصروف جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 240", "ar": "240 جنيه"}, "filled": true, "note": {"en": "No tip here; the six paragraphs are in Settings", "ar": "لا نصيحة هنا؛ والفقرات الست في الإعدادات"}}
     answer: [short]
     misconceptions:
       - id: MC-P02-045
@@ -244,7 +378,7 @@ steps:
       ar: "سطر واحد بجانب الحقل يساعد الآن ويسهل إغلاقه. ويمكن أن تحصل الميزانيات والتقارير على نصائحها حين يصل إليها الناس."
 
   - id: S06
-    type: choose
+    type: tune
     speaker: hana
     part: retest
     skill: SK-P02-U05-03
@@ -266,9 +400,36 @@ steps:
         - { kind: listitem, icon: credit-card, text: { en: "Payment method", ar: "طريقة الدفع" }, chevron: true, gap: m }
         - { kind: listitem, icon: question, text: { en: "Help", ar: "المساعدة" }, chevron: true, gap: s, note: { en: "The freeze tip isn't here any more", ar: "نصيحة التجميد لم تعد هنا" } }
     options:
-      - { id: help, text: { en: "Keep the tip, and also put \"How to freeze my membership\" in Help and next to the membership details", ar: "إبقاء النصيحة، مع وضع «كيف أجمّد اشتراكي» أيضًا في المساعدة وبجانب تفاصيل الاشتراك" } }
-      - { id: force, text: { en: "Make the tip impossible to dismiss until it's read", ar: "جعل النصيحة لا تُغلق حتى تُقرأ" } }
-      - { id: monthly, text: { en: "Show the same tip again every month", ar: "عرض النصيحة نفسها مرة أخرى كل شهر" } }
+      - id: help
+        text: {"en": "Keep the tip, and also put \"How to freeze my membership\" in Help and next to the membership details", "ar": "إبقاء النصيحة، مع وضع «كيف أجمّد اشتراكي» أيضًا في المساعدة وبجانب تفاصيل الاشتراك"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Membership", "ar": "الاشتراك"}, "back": true}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "heading", "text": {"en": "Gold · monthly", "ar": "Gold · شهري"}}, {"kind": "small", "text": {"en": "Renews 1 Dec", "ar": "يتجدّد 1 ديسمبر"}}]}
+            - {"kind": "listitem", "icon": "snowflake", "text": {"en": "How to freeze my membership", "ar": "كيف أجمّد اشتراكي"}, "sub": {"en": "Before a trip, for up to a month", "ar": "قبل السفر، لمدة تصل إلى شهر"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payment method", "ar": "طريقة الدفع"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "question", "text": {"en": "Help", "ar": "المساعدة"}, "chevron": true, "gap": "s", "note": {"en": "Help has the same answer", "ar": "وفي المساعدة الإجابة نفسها"}}
+      - id: force
+        text: {"en": "Make the tip impossible to dismiss until it's read", "ar": "جعل النصيحة لا تُغلق حتى تُقرأ"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Membership", "ar": "الاشتراك"}, "back": true}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "heading", "text": {"en": "Gold · monthly", "ar": "Gold · شهري"}}, {"kind": "small", "text": {"en": "Renews 1 Dec", "ar": "يتجدّد 1 ديسمبر"}}]}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payment method", "ar": "طريقة الدفع"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "question", "text": {"en": "Help", "ar": "المساعدة"}, "chevron": true, "gap": "s", "note": {"en": "The freeze tip isn't here any more", "ar": "نصيحة التجميد لم تعد هنا"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "icon", "icon": "snowflake", "size": "l", "color": "brand"}, {"kind": "heading", "gap": "s", "text": {"en": "Tip: freeze your membership before a trip", "ar": "نصيحة: جمّد اشتراكك قبل السفر"}}, {"kind": "button", "text": {"en": "I've read it", "ar": "قرأتها"}, "gap": "m", "note": {"en": "Can't be closed for 10 s", "ar": "لا تُغلق قبل 10 ثوانٍ"}}]}
+      - id: monthly
+        text: {"en": "Show the same tip again every month", "ar": "عرض النصيحة نفسها مرة أخرى كل شهر"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Membership", "ar": "الاشتراك"}, "back": true}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "heading", "text": {"en": "Gold · monthly", "ar": "Gold · شهري"}}, {"kind": "small", "text": {"en": "Renews 1 Dec", "ar": "يتجدّد 1 ديسمبر"}}]}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payment method", "ar": "طريقة الدفع"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "question", "text": {"en": "Help", "ar": "المساعدة"}, "chevron": true, "gap": "s", "note": {"en": "The freeze tip isn't here any more", "ar": "نصيحة التجميد لم تعد هنا"}}
+          overlay: {"type": "banner", "blocks": [{"kind": "text", "text": {"en": "Tip: you can freeze your membership before a trip.", "ar": "نصيحة: تستطيع تجميد اشتراكك قبل السفر."}, "note": {"en": "Shown again every month", "ar": "تظهر مرة أخرى كل شهر"}}]}
     answer: [help]
     misconceptions:
       - id: MC-P02-045
@@ -285,7 +446,7 @@ steps:
 
   # SK-P02-U05-04: make help easy to search and follow
   - id: S07
-    type: choose
+    type: tune
     speaker: rami
     part: retest
     skill: SK-P02-U05-04
@@ -308,9 +469,38 @@ steps:
         - { kind: listitem, text: { en: "My order is late", ar: "طلبي متأخر" }, chevron: true, gap: s }
         - { kind: listitem, text: { en: "How do I delete my account?", ar: "كيف أحذف حسابي؟" }, chevron: true, gap: s, note: { en: "60 questions, in the order they were written", ar: "60 سؤالًا، بترتيب كتابتها" } }
     options:
-      - { id: groups, text: { en: "Group them by task: My order, Payments, Account, Delivery problems, with search on top", ar: "جمعها حسب المهمة: طلبي، والمدفوعات، والحساب، ومشكلات التوصيل، مع بحث في الأعلى" } }
-      - { id: date, text: { en: "Keep one list, newest questions first", ar: "إبقاء قائمة واحدة، الأسئلة الأحدث أولًا" } }
-      - { id: team, text: { en: "Group them by the team that wrote each answer", ar: "جمعها حسب الفريق الذي كتب كل إجابة" } }
+      - id: groups
+        text: {"en": "Group them by task: My order, Payments, Account, Delivery problems, with search on top", "ar": "جمعها حسب المهمة: طلبي، والمدفوعات، والحساب، ومشكلات التوصيل، مع بحث في الأعلى"}
+        mock:
+          app: "lokma"
+          appbar: {"title": {"en": "Help", "ar": "المساعدة"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search help", "ar": "ابحث في المساعدة"}}
+            - {"kind": "listitem", "icon": "bag", "text": {"en": "My order", "ar": "طلبي"}, "sub": {"en": "My order is late, missing items…", "ar": "طلبي متأخر، أصناف ناقصة…"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payments", "ar": "المدفوعات"}, "sub": {"en": "Promo codes, refunds…", "ar": "رموز الخصم، الاسترداد…"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "icon": "user", "text": {"en": "Account", "ar": "الحساب"}, "sub": {"en": "Phone number, delete account…", "ar": "رقم الهاتف، حذف الحساب…"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "icon": "moped", "text": {"en": "Delivery problems", "ar": "مشكلات التوصيل"}, "sub": {"en": "Wrong address, rider can't find me…", "ar": "عنوان خطأ، المندوب لا يجدني…"}, "chevron": true, "gap": "s"}
+      - id: date
+        text: {"en": "Keep one list, newest questions first", "ar": "إبقاء قائمة واحدة، الأسئلة الأحدث أولًا"}
+        mock:
+          app: "lokma"
+          appbar: {"title": {"en": "Help", "ar": "المساعدة"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "text": {"en": "Can I pay with a mobile wallet?", "ar": "هل أستطيع الدفع بمحفظة الموبايل؟"}, "chevron": true}
+            - {"kind": "listitem", "text": {"en": "Can I change my phone number?", "ar": "هل أستطيع تغيير رقم هاتفي؟"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "My order is late", "ar": "طلبي متأخر"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "How do I delete my account?", "ar": "كيف أحذف حسابي؟"}, "chevron": true, "gap": "s", "note": {"en": "Newest first, still one list of 60", "ar": "الأحدث أولًا، وما زالت قائمة واحدة من 60"}}
+      - id: team
+        text: {"en": "Group them by the team that wrote each answer", "ar": "جمعها حسب الفريق الذي كتب كل إجابة"}
+        mock:
+          app: "lokma"
+          appbar: {"title": {"en": "Help", "ar": "المساعدة"}, "back": true}
+          blocks:
+            - {"kind": "heading", "text": {"en": "Customer care team", "ar": "فريق خدمة العملاء"}}
+            - {"kind": "listitem", "text": {"en": "My order is late", "ar": "طلبي متأخر"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "Can I change my phone number?", "ar": "هل أستطيع تغيير رقم هاتفي؟"}, "chevron": true, "gap": "s"}
+            - {"kind": "heading", "text": {"en": "Finance team", "ar": "الفريق المالي"}, "gap": "m"}
+            - {"kind": "listitem", "text": {"en": "How do I add a promo code?", "ar": "كيف أضيف رمز خصم؟"}, "chevron": true, "gap": "s", "note": {"en": "Grouped by who wrote the answer", "ar": "مجمّعة حسب من كتب الإجابة"}}
     answer: [groups]
     misconceptions:
       - id: MC-P02-042
@@ -326,7 +516,7 @@ steps:
       ar: "من تأخّر طلبه يفتح «مشكلات التوصيل» فيرى فقط الأسئلة التي قد تنطبق عليه. والبحث يساعد في باقي الحالات."
 
   - id: S08
-    type: choose
+    type: tune
     speaker: nour
     part: retest
     skill: SK-P02-U05-04
@@ -346,9 +536,29 @@ steps:
       blocks:
         - { kind: text, text: { en: "We accept results from other labs to keep your medical record complete. Our system supports PDF, JPG and PNG files up to 10 MB, scanned or photographed…", ar: "نقبل نتائج المعامل الأخرى ليكتمل ملفك الطبي. ويدعم نظامنا ملفات PDF وJPG وPNG حتى 10 ميجابايت، ممسوحة أو مصوّرة…" }, note: { en: "The steps come after two paragraphs", ar: "الخطوات تأتي بعد فقرتين" } }
     options:
-      - { id: steps, text: { en: "\"1. Open My results 2. Tap Add from another lab 3. Take a photo or choose a PDF\", then one line on file types", ar: "«1. افتح نتائجي 2. اضغط أضِف من معمل آخر 3. التقط صورة أو اختر ملف PDF»، ثم سطر واحد عن أنواع الملفات" } }
-      - { id: why, text: { en: "Keep the explanation first; people should understand before they act", ar: "إبقاء الشرح أولًا؛ فيجب أن يفهم الناس قبل أن يتصرفوا" } }
-      - { id: link, text: { en: "A link to the full user manual", ar: "رابط إلى دليل المستخدم الكامل" } }
+      - id: steps
+        text: {"en": "\"1. Open My results 2. Tap Add from another lab 3. Take a photo or choose a PDF\", then one line on file types", "ar": "«1. افتح نتائجي 2. اضغط أضِف من معمل آخر 3. التقط صورة أو اختر ملف PDF»، ثم سطر واحد عن أنواع الملفات"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Add results from another lab", "ar": "أضِف نتائج من معمل آخر"}, "back": true}
+          blocks:
+            - {"kind": "list", "style": "number", "items": [{"en": "Open **My results**", "ar": "افتح **نتائجي**"}, {"en": "Tap **Add from another lab**", "ar": "اضغط **أضِف من معمل آخر**"}, {"en": "Take a photo or choose a PDF", "ar": "التقط صورة أو اختر ملف PDF"}]}
+            - {"kind": "small", "color": "muted", "gap": "s", "text": {"en": "PDF, JPG or PNG, up to 10 MB.", "ar": "PDF أو JPG أو PNG، حتى 10 ميجابايت."}}
+      - id: why
+        text: {"en": "Keep the explanation first; people should understand before they act", "ar": "إبقاء الشرح أولًا؛ فيجب أن يفهم الناس قبل أن يتصرفوا"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Add results from another lab", "ar": "أضِف نتائج من معمل آخر"}, "back": true}
+          blocks:
+            - {"kind": "text", "text": {"en": "We accept results from other labs to keep your medical record complete. Our system supports PDF, JPG and PNG files up to 10 MB, scanned or photographed…", "ar": "نقبل نتائج المعامل الأخرى ليكتمل ملفك الطبي. ويدعم نظامنا ملفات PDF وJPG وPNG حتى 10 ميجابايت، ممسوحة أو مصوّرة…"}, "note": {"en": "The steps come after two paragraphs", "ar": "الخطوات تأتي بعد فقرتين"}}
+      - id: link
+        text: {"en": "A link to the full user manual", "ar": "رابط إلى دليل المستخدم الكامل"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Add results from another lab", "ar": "أضِف نتائج من معمل آخر"}, "back": true}
+          blocks:
+            - {"kind": "text", "text": {"en": "We accept results from other labs to keep your medical record complete. Our system supports PDF, JPG and PNG files up to 10 MB, scanned or photographed…", "ar": "نقبل نتائج المعامل الأخرى ليكتمل ملفك الطبي. ويدعم نظامنا ملفات PDF وJPG وPNG حتى 10 ميجابايت، ممسوحة أو مصوّرة…"}, "note": {"en": "The steps come after two paragraphs", "ar": "الخطوات تأتي بعد فقرتين"}}
+            - {"kind": "link", "icon": "book-open", "gap": "m", "text": {"en": "Read the full user manual (PDF, 48 pages)", "ar": "اقرأ دليل المستخدم الكامل (PDF، 48 صفحة)"}}
     answer: [steps]
     misconceptions:
       - id: MC-P02-044

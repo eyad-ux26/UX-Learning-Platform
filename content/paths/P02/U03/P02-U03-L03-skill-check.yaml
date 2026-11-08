@@ -32,7 +32,7 @@ steps:
       ar: "أعيد تصميم موقع لحجز السفر. وقد جمع فريق الدعم أكثر أربع مشكلات يتصل بسببها الناس. ساعدني في اختيار إصلاح لكل منها.\n\nهذا اختبار مهارة: دون تلميحات، وسترى نتيجتك في النهاية."
 
   - id: S02
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U03-01
     value:
@@ -55,9 +55,36 @@ steps:
         - { kind: icon, icon: magnifying-glass-minus, size: l, gap: l }
         - { kind: heading, text: { en: "No hotels found", ar: "لا توجد فنادق" }, gap: s }
     options:
-      - { id: suggest, text: { en: "Suggest matching places after the first few letters, so people pick one", ar: "يقترح الأماكن المطابقة بعد أول بضعة أحرف، فيختار الناس واحدًا" } }
-      - { id: hint, text: { en: "Add \"Check your spelling\" to the No hotels message", ar: "يضيف «راجع الإملاء» إلى رسالة «لا توجد فنادق»" } }
-      - { id: list, text: { en: "Replace it with a dropdown of all 300 destinations", ar: "تحلّ محله قائمة منسدلة (Dropdown) بكل الوجهات الثلاثمئة" } }
+      - id: suggest
+        text: {"en": "Suggest matching places after the first few letters, so people pick one", "ar": "يقترح الأماكن المطابقة بعد أول بضعة أحرف، فيختار الناس واحدًا"}
+        mock:
+          app: "zad"
+          frame: "wide"
+          url: "zad.example/hotels"
+          navbar: {"links": [{"en": "Flights", "ar": "طيران"}, {"en": "Hotels", "ar": "فنادق"}, {"en": "My trips", "ar": "رحلاتي"}], "active": 1}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Shar", "ar": "شرم"}, "filled": true, "focus": true, "suggest": [{"icon": "map-pin", "text": {"en": "Sharm El Sheikh", "ar": "شرم الشيخ"}, "value": {"en": "214 hotels", "ar": "214 فندقًا"}}, {"icon": "map-pin", "text": {"en": "Sharjah", "ar": "الشارقة"}, "value": {"en": "96 hotels", "ar": "96 فندقًا"}}]}
+      - id: hint
+        text: {"en": "Add \"Check your spelling\" to the No hotels message", "ar": "يضيف «راجع الإملاء» إلى رسالة «لا توجد فنادق»"}
+        mock:
+          app: "zad"
+          frame: "wide"
+          url: "zad.example/hotels?q=Sharm+El+Shiekh"
+          navbar: {"links": [{"en": "Flights", "ar": "طيران"}, {"en": "Hotels", "ar": "فنادق"}, {"en": "My trips", "ar": "رحلاتي"}], "active": 1}
+          blocks:
+            - {"kind": "field", "label": {"en": "Destination", "ar": "الوجهة"}, "text": {"en": "Sharm El Shiekh", "ar": "شرم الشيح"}, "filled": true, "icon": "map-pin"}
+            - {"kind": "icon", "icon": "magnifying-glass-minus", "size": "l", "gap": "l"}
+            - {"kind": "heading", "text": {"en": "No hotels found", "ar": "لا توجد فنادق"}, "gap": "s"}
+            - {"kind": "small", "gap": "s", "text": {"en": "Check your spelling.", "ar": "راجع الإملاء."}}
+      - id: list
+        text: {"en": "Replace it with a dropdown of all 300 destinations", "ar": "تحلّ محله قائمة منسدلة (Dropdown) بكل الوجهات الثلاثمئة"}
+        mock:
+          app: "zad"
+          frame: "wide"
+          url: "zad.example/hotels"
+          navbar: {"links": [{"en": "Flights", "ar": "طيران"}, {"en": "Hotels", "ar": "فنادق"}, {"en": "My trips", "ar": "رحلاتي"}], "active": 1}
+          blocks:
+            - {"kind": "select", "label": {"en": "Destination", "ar": "الوجهة"}, "text": {"en": "Choose a destination", "ar": "اختر وجهة"}, "icon": "map-pin", "focus": true, "note": {"en": "300 destinations, A to Z", "ar": "300 وجهة، أبجديًا"}}
     answer: [suggest]
     misconceptions:
       - id: MC-P02-020
@@ -78,7 +105,7 @@ steps:
       ar: "بعد «شر»، يرى الناس «شرم الشيخ» فيضغطونها. فلا تصل الزلّة الإملائية إلى البحث أبدًا."
 
   - id: S03
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U03-02
     value:
@@ -102,9 +129,29 @@ steps:
             - { kind: list, style: check, items: [ { en: "Flight", ar: "الطيران" }, { en: "Hotel, 4 nights", ar: "الفندق، 4 ليالٍ" }, { en: "Car", ar: "السيارة" }, { en: "Desert tour", ar: "جولة الصحراء" } ] }
             - { kind: link, text: { en: "Cancel trip", ar: "ألغِ الرحلة" }, style: dangerlink, gap: s, note: { en: "One tap cancels all 4", ar: "ضغطة واحدة تلغي الأربعة" } }
     options:
-      - { id: none, text: { en: "Cancel at once; people know what they tapped", ar: "يُلغى فورًا؛ فالناس يعرفون ما ضغطوه" } }
-      - { id: vague, text: { en: "Ask \"Are you sure?\" with Yes and No", ar: "يسأل «هل أنت متأكد؟» مع «نعم» و«لا»" } }
-      - { id: named, text: { en: "Ask \"Cancel your Dubai trip, 12 to 16 Nov? This cancels 4 bookings; EGP 1,200 in fees can't be refunded.\" Buttons: Cancel trip / Keep trip", ar: "يسأل «إلغاء رحلتك إلى دبي، من 12 إلى 16 نوفمبر؟ ستُلغى 4 حجوزات؛ ولا تُسترد رسوم قدرها 1,200 جنيه». الأزرار: ألغِ الرحلة / أبقِ الرحلة" } }
+      - id: none
+        text: {"en": "Cancel at once; people know what they tapped", "ar": "يُلغى فورًا؛ فالناس يعرفون ما ضغطوه"}
+        mock:
+          app: "zad"
+          appbar: {"title": {"en": "My trips", "ar": "رحلاتي"}}
+          blocks:
+            - {"kind": "card", "art": "city-night", "blocks": [{"kind": "heading", "text": {"en": "Dubai · 12–16 Nov", "ar": "دبي · من 12 إلى 16 نوفمبر"}}, {"kind": "list", "style": "check", "items": [{"en": "Flight", "ar": "الطيران"}, {"en": "Hotel, 4 nights", "ar": "الفندق، 4 ليالٍ"}, {"en": "Car", "ar": "السيارة"}, {"en": "Desert tour", "ar": "جولة الصحراء"}]}, {"kind": "link", "text": {"en": "Cancel trip", "ar": "ألغِ الرحلة"}, "style": "dangerlink", "gap": "s", "note": {"en": "One tap cancels all 4", "ar": "ضغطة واحدة تلغي الأربعة"}}]}
+      - id: vague
+        text: {"en": "Ask \"Are you sure?\" with Yes and No", "ar": "يسأل «هل أنت متأكد؟» مع «نعم» و«لا»"}
+        mock:
+          app: "zad"
+          appbar: {"title": {"en": "My trips", "ar": "رحلاتي"}}
+          blocks:
+            - {"kind": "card", "art": "city-night", "blocks": [{"kind": "heading", "text": {"en": "Dubai · 12–16 Nov", "ar": "دبي · من 12 إلى 16 نوفمبر"}}, {"kind": "list", "style": "check", "items": [{"en": "Flight", "ar": "الطيران"}, {"en": "Hotel, 4 nights", "ar": "الفندق، 4 ليالٍ"}, {"en": "Car", "ar": "السيارة"}, {"en": "Desert tour", "ar": "جولة الصحراء"}]}, {"kind": "link", "text": {"en": "Cancel trip", "ar": "ألغِ الرحلة"}, "style": "dangerlink", "gap": "s", "note": {"en": "One tap cancels all 4", "ar": "ضغطة واحدة تلغي الأربعة"}}]}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Are you sure?", "ar": "هل أنت متأكد؟"}}, {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "Yes", "ar": "نعم"}}, {"kind": "button", "text": {"en": "No", "ar": "لا"}, "style": "outline"}]}]}
+      - id: named
+        text: {"en": "Ask \"Cancel your Dubai trip, 12 to 16 Nov? This cancels 4 bookings; EGP 1,200 in fees can't be refunded.\" Buttons: Cancel trip / Keep trip", "ar": "يسأل «إلغاء رحلتك إلى دبي، من 12 إلى 16 نوفمبر؟ ستُلغى 4 حجوزات؛ ولا تُسترد رسوم قدرها 1,200 جنيه». الأزرار: ألغِ الرحلة / أبقِ الرحلة"}
+        mock:
+          app: "zad"
+          appbar: {"title": {"en": "My trips", "ar": "رحلاتي"}}
+          blocks:
+            - {"kind": "card", "art": "city-night", "blocks": [{"kind": "heading", "text": {"en": "Dubai · 12–16 Nov", "ar": "دبي · من 12 إلى 16 نوفمبر"}}, {"kind": "list", "style": "check", "items": [{"en": "Flight", "ar": "الطيران"}, {"en": "Hotel, 4 nights", "ar": "الفندق، 4 ليالٍ"}, {"en": "Car", "ar": "السيارة"}, {"en": "Desert tour", "ar": "جولة الصحراء"}]}, {"kind": "link", "text": {"en": "Cancel trip", "ar": "ألغِ الرحلة"}, "style": "dangerlink", "gap": "s", "note": {"en": "One tap cancels all 4", "ar": "ضغطة واحدة تلغي الأربعة"}}]}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Cancel your Dubai trip, 12 to 16 Nov?", "ar": "إلغاء رحلتك إلى دبي، من 12 إلى 16 نوفمبر؟"}}, {"kind": "small", "gap": "s", "text": {"en": "This cancels 4 bookings. EGP 1,200 in fees can't be refunded.", "ar": "ستُلغى 4 حجوزات. ولا تُسترد رسوم قدرها 1,200 جنيه."}}, {"kind": "button", "style": "danger", "text": {"en": "Cancel trip", "ar": "ألغِ الرحلة"}, "gap": "m"}, {"kind": "button", "style": "outline", "text": {"en": "Keep trip", "ar": "أبقِ الرحلة"}, "gap": "s"}]}
     answer: [named]
     misconceptions:
       - id: MC-P02-020
@@ -125,7 +172,7 @@ steps:
       ar: "هذا الإجراء خطير ولا يمكن التراجع عنه، فيستحق وقفة. والرحلة وعدد الحجوزات والرسوم تُري الناس التكلفة قبل أن يقرّروا."
 
   - id: S04
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U03-03
     value:
@@ -147,9 +194,37 @@ steps:
       footer:
         - { kind: button, text: { en: "Next", ar: "التالي" } }
     options:
-      - { id: title, text: { en: "A title above it: \"Cairo → Dubai · 12 Nov · 9:40 am\"", ar: "عنوان فوقها: «القاهرة ← دبي · 12 نوفمبر · 9:40 صباحًا»" } }
-      - { id: counter, text: { en: "\"Map 1 of 2\" and \"Map 2 of 2\"", ar: "«الخريطة 1 من 2» و«الخريطة 2 من 2»" } }
-      - { id: before, text: { en: "A note before the maps: \"The first map is your outbound flight\"", ar: "ملاحظة قبل الخريطتين: «الخريطة الأولى لرحلة الذهاب»" } }
+      - id: title
+        text: {"en": "A title above it: \"Cairo → Dubai · 12 Nov · 9:40 am\"", "ar": "عنوان فوقها: «القاهرة ← دبي · 12 نوفمبر · 9:40 صباحًا»"}
+        mock:
+          app: "zad"
+          appbar: {"title": {"en": "Choose seats", "ar": "اختر المقاعد"}, "back": true}
+          blocks:
+            - {"kind": "heading", "text": {"en": "Cairo → Dubai · 12 Nov · 9:40 am", "ar": "القاهرة ← دبي · 12 نوفمبر · 9:40 صباحًا"}}
+            - {"kind": "seatmap", "rows": 6, "cols": 6, "aisle": 3, "taken": [[0, 1], [1, 4], [2, 2], [4, 5]], "picked": [[3, 0]], "gap": "s"}
+          footer:
+            - {"kind": "button", "text": {"en": "Next", "ar": "التالي"}}
+      - id: counter
+        text: {"en": "\"Map 1 of 2\" and \"Map 2 of 2\"", "ar": "«الخريطة 1 من 2» و«الخريطة 2 من 2»"}
+        mock:
+          app: "zad"
+          appbar: {"title": {"en": "Choose seats", "ar": "اختر المقاعد"}, "back": true}
+          blocks:
+            - {"kind": "seatmap", "rows": 6, "cols": 6, "aisle": 3, "taken": [[0, 1], [1, 4], [2, 2], [4, 5]], "picked": [[3, 0]]}
+            - {"kind": "small", "text": {"en": "Map 1 of 2", "ar": "الخريطة 1 من 2"}, "gap": "s", "note": {"en": "Says which map, not which flight", "ar": "يقول أي خريطة، لا أي رحلة"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Next", "ar": "التالي"}}
+      - id: before
+        text: {"en": "A note before the maps: \"The first map is your outbound flight\"", "ar": "ملاحظة قبل الخريطتين: «الخريطة الأولى لرحلة الذهاب»"}
+        mock:
+          app: "zad"
+          appbar: {"title": {"en": "Choose seats", "ar": "اختر المقاعد"}, "back": true}
+          blocks:
+            - {"kind": "small", "text": {"en": "The first map is your outbound flight.", "ar": "الخريطة الأولى لرحلة الذهاب."}, "note": {"en": "Said once, before the maps", "ar": "تُقال مرة واحدة، قبل الخريطتين"}}
+            - {"kind": "seatmap", "rows": 6, "cols": 6, "aisle": 3, "taken": [[0, 1], [1, 4], [2, 2], [4, 5]], "picked": [[3, 0]], "gap": "m"}
+            - {"kind": "small", "text": {"en": "Map 1 of 2", "ar": "الخريطة 1 من 2"}, "gap": "s", "note": {"en": "Map 2 looks the same", "ar": "الخريطة 2 تبدو مثلها"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Next", "ar": "التالي"}}
     answer: [title]
     misconceptions:
       - id: MC-P02-025
@@ -165,7 +240,7 @@ steps:
       ar: "مع المسار والتاريخ والوقت على كل خريطة، يميّز الناس بين الرحلتين في أي لحظة، حتى لو غادروا ثم عادوا."
 
   - id: S05
-    type: choose
+    type: tune
     part: check
     skill: SK-P02-U03-04
     value:
@@ -193,9 +268,40 @@ steps:
             - { kind: field, label: { en: "Travellers", ar: "المسافرون" }, text: "" }
         - { kind: button, text: { en: "Search flights", ar: "ابحث عن رحلات" }, gap: m, note: { en: "Empty every time, even on the 4th search", ar: "فارغ في كل مرة، حتى في البحث الرابع" } }
     options:
-      - { id: recent, text: { en: "\"Recent searches\" under the search form, each one ready to run again in a tap", ar: "«عمليات البحث الأخيرة» تحت نموذج البحث، ويمكن إعادة كل منها بضغطة" } }
-      - { id: save, text: { en: "A \"Save this search\" button people can use if they remember to", ar: "زر «احفظ هذا البحث» يستخدمه الناس إن تذكّروا" } }
-      - { id: email, text: { en: "Email people their search details after each search", ar: "إرسال تفاصيل البحث بالبريد بعد كل بحث" } }
+      - id: recent
+        text: {"en": "\"Recent searches\" under the search form, each one ready to run again in a tap", "ar": "«عمليات البحث الأخيرة» تحت نموذج البحث، ويمكن إعادة كل منها بضغطة"}
+        mock:
+          app: "zad"
+          frame: "wide"
+          url: "zad.example/flights"
+          navbar: {"links": [{"en": "Flights", "ar": "طيران"}, {"en": "Hotels", "ar": "فنادق"}], "active": 0}
+          blocks:
+            - {"kind": "row", "gap": "s", "blocks": [{"kind": "field", "label": {"en": "From", "ar": "من"}, "text": ""}, {"kind": "field", "label": {"en": "To", "ar": "إلى"}, "text": ""}, {"kind": "field", "label": {"en": "Dates", "ar": "التواريخ"}, "text": "", "icon": "calendar-blank"}, {"kind": "field", "label": {"en": "Travellers", "ar": "المسافرون"}, "text": ""}]}
+            - {"kind": "button", "text": {"en": "Search flights", "ar": "ابحث عن رحلات"}, "gap": "m"}
+            - {"kind": "heading", "text": {"en": "Recent searches", "ar": "عمليات البحث الأخيرة"}, "gap": "l"}
+            - {"kind": "listitem", "icon": "clock-counter-clockwise", "text": {"en": "Cairo → Dubai · 12–16 Nov · 2 travellers", "ar": "القاهرة ← دبي · من 12 إلى 16 نوفمبر · مسافران"}, "value": {"en": "Search", "ar": "ابحث"}, "gap": "s"}
+            - {"kind": "listitem", "icon": "clock-counter-clockwise", "text": {"en": "Cairo → Jeddah · 3–10 Dec · 2 travellers", "ar": "القاهرة ← جدة · من 3 إلى 10 ديسمبر · مسافران"}, "value": {"en": "Search", "ar": "ابحث"}, "gap": "s"}
+      - id: save
+        text: {"en": "A \"Save this search\" button people can use if they remember to", "ar": "زر «احفظ هذا البحث» يستخدمه الناس إن تذكّروا"}
+        mock:
+          app: "zad"
+          frame: "wide"
+          url: "zad.example/flights"
+          navbar: {"links": [{"en": "Flights", "ar": "طيران"}, {"en": "Hotels", "ar": "فنادق"}], "active": 0}
+          blocks:
+            - {"kind": "row", "gap": "s", "blocks": [{"kind": "field", "label": {"en": "From", "ar": "من"}, "text": ""}, {"kind": "field", "label": {"en": "To", "ar": "إلى"}, "text": ""}, {"kind": "field", "label": {"en": "Dates", "ar": "التواريخ"}, "text": "", "icon": "calendar-blank"}, {"kind": "field", "label": {"en": "Travellers", "ar": "المسافرون"}, "text": ""}]}
+            - {"kind": "button", "text": {"en": "Search flights", "ar": "ابحث عن رحلات"}, "gap": "m", "note": {"en": "Empty every time, even on the 4th search", "ar": "فارغ في كل مرة، حتى في البحث الرابع"}}
+            - {"kind": "button", "style": "outline", "icon": "bookmark-simple", "text": {"en": "Save this search", "ar": "احفظ هذا البحث"}, "gap": "s", "note": {"en": "Only if people remember to tap it", "ar": "فقط إن تذكّر الناس الضغط عليه"}}
+      - id: email
+        text: {"en": "Email people their search details after each search", "ar": "إرسال تفاصيل البحث بالبريد بعد كل بحث"}
+        mock:
+          app: "zad"
+          frame: "wide"
+          url: "zad.example/flights"
+          navbar: {"links": [{"en": "Flights", "ar": "طيران"}, {"en": "Hotels", "ar": "فنادق"}], "active": 0}
+          blocks:
+            - {"kind": "row", "gap": "s", "blocks": [{"kind": "field", "label": {"en": "From", "ar": "من"}, "text": ""}, {"kind": "field", "label": {"en": "To", "ar": "إلى"}, "text": ""}, {"kind": "field", "label": {"en": "Dates", "ar": "التواريخ"}, "text": "", "icon": "calendar-blank"}, {"kind": "field", "label": {"en": "Travellers", "ar": "المسافرون"}, "text": ""}]}
+            - {"kind": "button", "text": {"en": "Search flights", "ar": "ابحث عن رحلات"}, "gap": "m", "note": {"en": "Details go by email; the form is still empty", "ar": "تصل التفاصيل بالبريد؛ والنموذج ما زال فارغًا"}}
     answer: [recent]
     misconceptions:
       - id: MC-P02-027

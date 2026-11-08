@@ -30,7 +30,7 @@ steps:
       en: "Our clinic app has a **Help** button. It opens a 40-page PDF manual.\n\nMr. Fathy wanted to move his appointment to next week. He opened Help, scrolled for a while, gave up, and called the front desk. The answer was on page 27."
       ar: "في تطبيق عيادتنا زر **مساعدة**. وهو يفتح دليلًا بصيغة PDF من 40 صفحة.\n\nأراد الأستاذ فتحي أن ينقل موعده إلى الأسبوع القادم. ففتح «مساعدة»، ومرّر الصفحات فترة، ثم استسلم واتصل بالاستقبال. وكانت الإجابة في الصفحة 27."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U05-04
     rules: [R12]
@@ -49,9 +49,33 @@ steps:
         - { kind: image, art: document, size: l }
         - { kind: small, text: { en: "1. Introduction · 2. Installing the app · 3. Account settings …", ar: "1. مقدمة · 2. تثبيت التطبيق · 3. إعدادات الحساب …" }, gap: m }
     options:
-      - { id: index, text: { en: "The same PDF, with a table of contents on the first page", ar: "ملف PDF نفسه، مع فهرس في الصفحة الأولى" } }
-      - { id: tasks, text: { en: "A search box, and short answers named by task: \"Change my appointment\", \"Cancel a visit\", \"Get my results\"", ar: "مربع بحث، وإجابات قصيرة مسمّاة بالمهام: «غيّر موعدي»، «ألغِ زيارة»، «احصل على نتائجي»" } }
-      - { id: call, text: { en: "Just the front desk's phone number", ar: "رقم هاتف الاستقبال فقط" } }
+      - id: index
+        text: {"en": "The same PDF, with a table of contents on the first page", "ar": "ملف PDF نفسه، مع فهرس في الصفحة الأولى"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Help", "ar": "مساعدة"}, "back": true}
+          blocks:
+            - {"kind": "image", "art": "document", "size": "l"}
+            - {"kind": "small", "text": {"en": "Contents: 1. Introduction · 2. Installing the app · 3. Account settings … 14. Appointments", "ar": "الفهرس: 1. مقدمة · 2. تثبيت التطبيق · 3. إعدادات الحساب … 14. المواعيد"}, "gap": "m", "note": {"en": "Still the same PDF", "ar": "ما زال ملف PDF نفسه"}}
+      - id: tasks
+        text: {"en": "A search box, and short answers named by task: \"Change my appointment\", \"Cancel a visit\", \"Get my results\"", "ar": "مربع بحث، وإجابات قصيرة مسمّاة بالمهام: «غيّر موعدي»، «ألغِ زيارة»، «احصل على نتائجي»"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Help", "ar": "مساعدة"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search help", "ar": "ابحث في المساعدة"}}
+            - {"kind": "listitem", "icon": "calendar-blank", "text": {"en": "Change my appointment", "ar": "غيّر موعدي"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "x-circle", "text": {"en": "Cancel a visit", "ar": "ألغِ زيارة"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "icon": "file-text", "text": {"en": "Get my results", "ar": "احصل على نتائجي"}, "chevron": true, "gap": "s"}
+      - id: call
+        text: {"en": "Just the front desk's phone number", "ar": "رقم هاتف الاستقبال فقط"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Help", "ar": "مساعدة"}, "back": true}
+          blocks:
+            - {"kind": "icon", "icon": "phone", "size": "l", "color": "brand"}
+            - {"kind": "heading", "text": {"en": "Call the front desk", "ar": "اتصل بالاستقبال"}, "gap": "s"}
+            - {"kind": "button", "icon": "phone", "text": "02 3333 4455", "gap": "m"}
     answer: [tasks]
     misconceptions:
       - id: MC-P02-042
@@ -111,7 +135,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) العاشر هو المساعدة والتوثيق (Help and documentation): الأفضل أن يكون التصميم واضحًا دون شرح، لكن أحيانًا **تكون المساعدة ضرورية، ويجب أن تكون سهلة الإيجاد والاستخدام**.\n\n- **اجعلها قابلة للبحث** ومنظّمة حول مهام الناس.\n- **قدّم المساعدة في سياقها:** نصيحة قصيرة حيث يظهر السؤال، لا جولة طويلة في البداية.\n- **اجعلها قصيرة ومحددة:** خطوات مرقّمة يستطيع الناس اتباعها."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U05-03
     rules: [R06]
@@ -134,9 +158,38 @@ steps:
       footer:
         - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
-      - { id: tip, text: { en: "A \"Where do I find it?\" link under the field, showing a picture of the card with the number marked", ar: "رابط «أين أجده؟» تحت الحقل، يعرض صورة البطاقة وعليها الرقم مميّزًا" } }
-      - { id: faq, text: { en: "A clearer FAQ entry about insurance numbers", ar: "سؤال أوضح عن رقم التأمين في الأسئلة الشائعة" } }
-      - { id: intro, text: { en: "Explain it in the app's welcome tour", ar: "شرحه في الجولة الترحيبية للتطبيق" } }
+      - id: tip
+        text: {"en": "A \"Where do I find it?\" link under the field, showing a picture of the card with the number marked", "ar": "رابط «أين أجده؟» تحت الحقل، يعرض صورة البطاقة وعليها الرقم مميّزًا"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Book a visit", "ar": "احجز زيارة"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 75, "label": {"en": "Step 3 of 4", "ar": "الخطوة 3 من 4"}}
+            - {"kind": "field", "label": {"en": "Insurance number", "ar": "رقم التأمين"}, "text": "", "focus": true, "gap": "m"}
+            - {"kind": "link", "icon": "question", "gap": "s", "text": {"en": "Where do I find it?", "ar": "أين أجده؟"}}
+            - {"kind": "image", "art": "bank-card", "size": "m", "gap": "s", "note": {"en": "The number is marked on the card", "ar": "الرقم مميّز على البطاقة"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: faq
+        text: {"en": "A clearer FAQ entry about insurance numbers", "ar": "سؤال أوضح عن رقم التأمين في الأسئلة الشائعة"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Book a visit", "ar": "احجز زيارة"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 75, "label": {"en": "Step 3 of 4", "ar": "الخطوة 3 من 4"}}
+            - {"kind": "field", "label": {"en": "Insurance number", "ar": "رقم التأمين"}, "text": "", "focus": true, "gap": "m", "note": {"en": "The answer is in the FAQ, outside the booking", "ar": "الإجابة في الأسئلة الشائعة، خارج الحجز"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: intro
+        text: {"en": "Explain it in the app's welcome tour", "ar": "شرحه في الجولة الترحيبية للتطبيق"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Book a visit", "ar": "احجز زيارة"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 75, "label": {"en": "Step 3 of 4", "ar": "الخطوة 3 من 4"}}
+            - {"kind": "field", "label": {"en": "Insurance number", "ar": "رقم التأمين"}, "text": "", "focus": true, "gap": "m", "note": {"en": "Explained once, in the welcome tour", "ar": "شُرح مرة واحدة، في الجولة الترحيبية"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
     answer: [tip]
     misconceptions:
       - id: MC-P02-043
@@ -155,7 +208,7 @@ steps:
       ar: "الرابط يظهر فقط حيث يُحتاج، ويُظهر بالضبط أين ينظر المريض على البطاقة. فيجيب ويكمل الحجز."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U05-04
     rules: [R06]
@@ -175,9 +228,28 @@ steps:
       blocks:
         - { kind: text, text: { en: "We allow patients to change appointments because plans change, and our policy is to keep schedules flexible. Changes made less than 24 hours before the visit may have a fee. To change it, open My visits, tap the visit and choose Change time, then pick a new slot. Changes are confirmed by text message.", ar: "نسمح للمرضى بتغيير المواعيد لأن الخطط تتغيّر، وسياستنا أن تبقى المواعيد مرنة. وقد تُفرض رسوم على التغيير قبل الزيارة بأقل من 24 ساعة. ولتغييره، افتح «زياراتي» واضغط الزيارة واختر «غيّر الموعد»، ثم اختر موعدًا جديدًا. ويُؤكَّد التغيير برسالة نصية." }, note: { en: "The steps are in the middle of the paragraph", ar: "الخطوات في منتصف الفقرة" } }
     options:
-      - { id: steps, text: { en: "Numbered steps first (1. Open My visits 2. Tap the visit 3. Tap Change time), then the late-change rule in one line", ar: "خطوات مرقّمة أولًا (1. افتح زياراتي 2. اضغط الزيارة 3. اضغط «غيّر الموعد»)، ثم قاعدة التغيير المتأخر في سطر واحد" } }
-      - { id: bold, text: { en: "The same paragraph, with the key sentence in bold", ar: "الفقرة نفسها، مع الجملة المهمة بخط عريض" } }
-      - { id: video, text: { en: "Replace it with a 3-minute video", ar: "وضع فيديو مدته 3 دقائق مكانها" } }
+      - id: steps
+        text: {"en": "Numbered steps first (1. Open My visits 2. Tap the visit 3. Tap Change time), then the late-change rule in one line", "ar": "خطوات مرقّمة أولًا (1. افتح زياراتي 2. اضغط الزيارة 3. اضغط «غيّر الموعد»)، ثم قاعدة التغيير المتأخر في سطر واحد"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Change my appointment", "ar": "تغيير موعدي"}, "back": true}
+          blocks:
+            - {"kind": "list", "style": "number", "items": [{"en": "Open **My visits**", "ar": "افتح **زياراتي**"}, {"en": "Tap the visit", "ar": "اضغط الزيارة"}, {"en": "Tap **Change time** and pick a new slot", "ar": "اضغط **غيّر الموعد** واختر موعدًا جديدًا"}]}
+            - {"kind": "small", "color": "muted", "gap": "s", "text": {"en": "Less than 24 hours before the visit, a fee may apply.", "ar": "قبل الزيارة بأقل من 24 ساعة، قد تُفرض رسوم."}}
+      - id: bold
+        text: {"en": "The same paragraph, with the key sentence in bold", "ar": "الفقرة نفسها، مع الجملة المهمة بخط عريض"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Change my appointment", "ar": "تغيير موعدي"}, "back": true}
+          blocks:
+            - {"kind": "text", "text": {"en": "We allow patients to change appointments because plans change, and our policy is to keep schedules flexible. Changes made less than 24 hours before the visit may have a fee. **To change it, open My visits, tap the visit and choose Change time, then pick a new slot.** Changes are confirmed by text message.", "ar": "نسمح للمرضى بتغيير المواعيد لأن الخطط تتغيّر، وسياستنا أن تبقى المواعيد مرنة. وقد تُفرض رسوم على التغيير قبل الزيارة بأقل من 24 ساعة. **ولتغييره، افتح «زياراتي» واضغط الزيارة واختر «غيّر الموعد»، ثم اختر موعدًا جديدًا.** ويُؤكَّد التغيير برسالة نصية."}, "note": {"en": "Still in the middle, now in bold", "ar": "ما زالت في المنتصف، لكن بخط عريض"}}
+      - id: video
+        text: {"en": "Replace it with a 3-minute video", "ar": "وضع فيديو مدته 3 دقائق مكانها"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Change my appointment", "ar": "تغيير موعدي"}, "back": true}
+          blocks:
+            - {"kind": "image", "art": "clinic", "size": "l", "text": "▶ 3:00", "note": {"en": "A 3-minute video, no text", "ar": "فيديو مدته 3 دقائق، بلا نص"}}
     answer: [steps]
     misconceptions:
       - id: MC-P02-044
@@ -252,7 +324,7 @@ steps:
       ar: "تعطي B تلميحًا مفيدًا واحدًا، وتتيح للناس بدء التعديل فورًا، وتترك الباقي ليكتشفوه حين يضغطون أداة."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: tarek
     part: independent
     skill: SK-P02-U05-04
@@ -276,9 +348,37 @@ steps:
         - { kind: listitem, text: { en: "Beneficiaries", ar: "المستفيدون" }, chevron: true, gap: s }
         - { kind: listitem, text: { en: "Blocked card", ar: "بطاقة موقوفة" }, chevron: true, gap: s, note: { en: "300 articles, A to Z", ar: "300 مقال، أبجديًا" } }
     options:
-      - { id: top, text: { en: "A search box, the three top questions as big buttons, and topics like Cards, Transfers and Sign-in", ar: "مربع بحث، والأسئلة الثلاثة الأشهر أزرارًا كبيرة، وموضوعات مثل البطاقات والتحويلات وتسجيل الدخول" } }
-      - { id: abc, text: { en: "All 300 articles, A to Z, so nothing is hidden", ar: "كل المقالات الثلاثمئة أبجديًا، حتى لا يُخفى شيء" } }
-      - { id: new, text: { en: "The newest articles first", ar: "أحدث المقالات أولًا" } }
+      - id: top
+        text: {"en": "A search box, the three top questions as big buttons, and topics like Cards, Transfers and Sign-in", "ar": "مربع بحث، والأسئلة الثلاثة الأشهر أزرارًا كبيرة، وموضوعات مثل البطاقات والتحويلات وتسجيل الدخول"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Help centre", "ar": "مركز المساعدة"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search help", "ar": "ابحث في المساعدة"}}
+            - {"kind": "button", "style": "outline", "icon": "credit-card", "text": {"en": "My card is blocked", "ar": "بطاقتي موقوفة"}, "gap": "m"}
+            - {"kind": "button", "style": "outline", "icon": "arrows-left-right", "text": {"en": "My transfer failed", "ar": "فشل تحويلي"}, "gap": "s"}
+            - {"kind": "button", "style": "outline", "icon": "key", "text": {"en": "I forgot my password", "ar": "نسيت كلمة المرور"}, "gap": "s"}
+            - {"kind": "chips", "gap": "m", "items": [{"text": {"en": "Cards", "ar": "البطاقات"}}, {"text": {"en": "Transfers", "ar": "التحويلات"}}, {"text": {"en": "Sign-in", "ar": "تسجيل الدخول"}}]}
+      - id: abc
+        text: {"en": "All 300 articles, A to Z, so nothing is hidden", "ar": "كل المقالات الثلاثمئة أبجديًا، حتى لا يُخفى شيء"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Help centre", "ar": "مركز المساعدة"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "text": {"en": "Account statements", "ar": "كشوف الحساب"}, "chevron": true}
+            - {"kind": "listitem", "text": {"en": "ATM locations", "ar": "أماكن ماكينات الصرف"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "Beneficiaries", "ar": "المستفيدون"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "Blocked card", "ar": "بطاقة موقوفة"}, "chevron": true, "gap": "s", "note": {"en": "All 300, A to Z: nothing hidden, nothing first", "ar": "كلها، أبجديًا: لا شيء مخفي، ولا شيء في المقدمة"}}
+      - id: new
+        text: {"en": "The newest articles first", "ar": "أحدث المقالات أولًا"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Help centre", "ar": "مركز المساعدة"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "text": {"en": "New: pay bills with a QR code", "ar": "جديد: ادفع الفواتير برمز QR"}, "chevron": true}
+            - {"kind": "listitem", "text": {"en": "Card fees for 2027", "ar": "رسوم البطاقات لعام 2027"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "Cashback on travel", "ar": "الاسترداد النقدي على السفر"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "text": {"en": "Saving goals", "ar": "أهداف الادخار"}, "chevron": true, "gap": "s", "note": {"en": "Newest first; blocked card is far down", "ar": "الأحدث أولًا؛ و«بطاقة موقوفة» في الأسفل بعيدًا"}}
     answer: [top]
     misconceptions:
       - id: MC-P02-042

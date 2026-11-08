@@ -31,7 +31,7 @@ steps:
       en: "I'm designing a page where people compare up to three phones. The table is long: screen, camera, battery, weight, price and more.\n\nIn our test, Adel scrolled down to the battery row, then scrolled all the way back up. He had forgotten which column was which phone."
       ar: "أصمّم صفحة يقارن فيها الناس حتى ثلاثة هواتف. والجدول طويل: الشاشة، والكاميرا، والبطارية، والوزن، والسعر، وغيرها.\n\nفي تجربتنا، نزل عادل إلى صف البطارية، ثم صعد إلى أعلى الصفحة مرة أخرى. فقد نسي أيّ عمود لأيّ هاتف."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U03-03
     rules: [R12]
@@ -49,9 +49,28 @@ steps:
       blocks:
         - { kind: table, head: [ "", "Nova 8", "Zain X", "Mada 5" ], rows: [ [ { en: "Screen", ar: "الشاشة" }, "6.5\"", "6.1\"", "6.7\"" ], [ { en: "Camera", ar: "الكاميرا" }, "50 MP", "48 MP", "64 MP" ], [ { en: "Battery", ar: "البطارية" }, "5000", "4500", "4800" ] ], note: { en: "These names scroll away", ar: "هذه الأسماء تختفي مع التمرير" } }
     options:
-      - { id: sticky, text: { en: "Keep the row with the phone names fixed at the top while people scroll", ar: "أثبّت صف أسماء الهواتف في الأعلى أثناء التمرير" } }
-      - { id: colors, text: { en: "Give each phone a colour, explained once at the top", ar: "أعطي كل هاتف لونًا، يُشرح مرة واحدة في الأعلى" } }
-      - { id: short, text: { en: "Show fewer rows so the table is shorter", ar: "أعرض صفوفًا أقل ليقصر الجدول" } }
+      - id: sticky
+        text: {"en": "Keep the row with the phone names fixed at the top while people scroll", "ar": "أثبّت صف أسماء الهواتف في الأعلى أثناء التمرير"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Compare phones", "ar": "قارن الهواتف"}, "back": true}
+          blocks:
+            - {"kind": "table", "head": ["", "Nova 8", "Zain X", "Mada 5"], "rows": [[{"en": "Screen", "ar": "الشاشة"}, "6.5\"", "6.1\"", "6.7\""], [{"en": "Camera", "ar": "الكاميرا"}, "50 MP", "48 MP", "64 MP"], [{"en": "Battery", "ar": "البطارية"}, "5000", "4500", "4800"]], "note": {"en": "This row stays at the top as people scroll", "ar": "يبقى هذا الصف في الأعلى أثناء التمرير"}}
+      - id: colors
+        text: {"en": "Give each phone a colour, explained once at the top", "ar": "أعطي كل هاتف لونًا، يُشرح مرة واحدة في الأعلى"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Compare phones", "ar": "قارن الهواتف"}, "back": true}
+          blocks:
+            - {"kind": "chips", "items": [{"icon": "🔵", "text": "Nova 8"}, {"icon": "🟢", "text": "Zain X"}, {"icon": "🟠", "text": "Mada 5"}]}
+            - {"kind": "table", "head": ["", "Nova 8", "Zain X", "Mada 5"], "rows": [[{"en": "Screen", "ar": "الشاشة"}, "6.5\"", "6.1\"", "6.7\""], [{"en": "Camera", "ar": "الكاميرا"}, "50 MP", "48 MP", "64 MP"], [{"en": "Battery", "ar": "البطارية"}, "5000", "4500", "4800"]], "note": {"en": "Names still scroll away; only colours are left", "ar": "ما زالت الأسماء تختفي مع التمرير؛ ولا يبقى إلا اللون"}}
+      - id: short
+        text: {"en": "Show fewer rows so the table is shorter", "ar": "أعرض صفوفًا أقل ليقصر الجدول"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Compare phones", "ar": "قارن الهواتف"}, "back": true}
+          blocks:
+            - {"kind": "table", "head": ["", "Nova 8", "Zain X", "Mada 5"], "rows": [[{"en": "Screen", "ar": "الشاشة"}, "6.5\"", "6.1\"", "6.7\""], [{"en": "Camera", "ar": "الكاميرا"}, "50 MP", "48 MP", "64 MP"]], "note": {"en": "Fewer rows; the names still scroll away", "ar": "صفوف أقل؛ وما زالت الأسماء تختفي مع التمرير"}}
     answer: [sticky]
     misconceptions:
       - id: MC-P02-024
@@ -107,7 +126,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) السادس هو التعرّف بدل التذكّر (Recognition rather than recall): **خفّف العبء على ذاكرة الناس بجعل الأشياء ظاهرة**. فالتعرّف على شيء تراه أسهل بكثير من تذكّره.\n\n- **أبقِ المعلومات المطلوبة ظاهرة،** مثل عناوين الجدول، والفلاتر المختارة، وكلمات البحث.\n- **دَع الناس يختارون من خيارات** بدل أن يكتبوا من الذاكرة: القوائم، والاقتراحات، وآخر ما استخدموه.\n- **ضع اسمًا مع كل أيقونة،** لأن عددًا قليلًا فقط من الأيقونات يفهمه الجميع."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U03-03
     rules: [R06]
@@ -132,9 +151,44 @@ steps:
       footer:
         - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
-      - { id: summary, text: { en: "A short summary at the top: \"Phone X · Blue · 256 GB · EGP 18,500\"", ar: "ملخص قصير في الأعلى: «هاتف X · أزرق · 256 GB · 18,500 جنيه»" } }
-      - { id: back, text: { en: "A \"Back to step 1\" link to check the phone", ar: "رابط «عُد إلى الخطوة 1» لمراجعة الهاتف" } }
-      - { id: nothing, text: { en: "Nothing; people just chose it a minute ago", ar: "لا شيء؛ فقد اختاره الناس قبل دقيقة" } }
+      - id: summary
+        text: {"en": "A short summary at the top: \"Phone X · Blue · 256 GB · EGP 18,500\"", "ar": "ملخص قصير في الأعلى: «هاتف X · أزرق · 256 GB · 18,500 جنيه»"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Protect your phone", "ar": "احمِ هاتفك"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 100, "label": {"en": "Step 3 of 3", "ar": "الخطوة 3 من 3"}}
+            - {"kind": "listitem", "art": "phone", "text": {"en": "Phone X · Blue · 256 GB", "ar": "هاتف X · أزرق · 256 GB"}, "value": {"en": "EGP 18,500", "ar": "18,500 جنيه"}, "gap": "m"}
+            - {"kind": "listitem", "icon": "shield-check", "text": {"en": "Screen cover", "ar": "تغطية الشاشة"}, "value": {"en": "EGP 690 / yr", "ar": "690 جنيه / سنويًا"}, "gap": "m"}
+            - {"kind": "listitem", "icon": "shield-check", "text": {"en": "Full cover", "ar": "تغطية كاملة"}, "value": {"en": "EGP 1,490 / yr", "ar": "1,490 جنيه / سنويًا"}, "gap": "s"}
+            - {"kind": "small", "text": {"en": "Price depends on the phone you chose in step 1", "ar": "السعر يعتمد على الهاتف الذي اخترته في الخطوة 1"}, "tone": "faint", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: back
+        text: {"en": "A \"Back to step 1\" link to check the phone", "ar": "رابط «عُد إلى الخطوة 1» لمراجعة الهاتف"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Protect your phone", "ar": "احمِ هاتفك"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 100, "label": {"en": "Step 3 of 3", "ar": "الخطوة 3 من 3"}}
+            - {"kind": "listitem", "icon": "shield-check", "text": {"en": "Screen cover", "ar": "تغطية الشاشة"}, "value": {"en": "EGP 690 / yr", "ar": "690 جنيه / سنويًا"}, "gap": "m"}
+            - {"kind": "listitem", "icon": "shield-check", "text": {"en": "Full cover", "ar": "تغطية كاملة"}, "value": {"en": "EGP 1,490 / yr", "ar": "1,490 جنيه / سنويًا"}, "gap": "s"}
+            - {"kind": "small", "text": {"en": "Price depends on the phone you chose in step 1", "ar": "السعر يعتمد على الهاتف الذي اخترته في الخطوة 1"}, "tone": "faint", "gap": "m"}
+            - {"kind": "link", "icon": "arrow-left", "gap": "s", "text": {"en": "Back to step 1", "ar": "عُد إلى الخطوة 1"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: nothing
+        text: {"en": "Nothing; people just chose it a minute ago", "ar": "لا شيء؛ فقد اختاره الناس قبل دقيقة"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Protect your phone", "ar": "احمِ هاتفك"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 100, "label": {"en": "Step 3 of 3", "ar": "الخطوة 3 من 3"}}
+            - {"kind": "listitem", "icon": "shield-check", "text": {"en": "Screen cover", "ar": "تغطية الشاشة"}, "value": {"en": "EGP 690 / yr", "ar": "690 جنيه / سنويًا"}, "gap": "m"}
+            - {"kind": "listitem", "icon": "shield-check", "text": {"en": "Full cover", "ar": "تغطية كاملة"}, "value": {"en": "EGP 1,490 / yr", "ar": "1,490 جنيه / سنويًا"}, "gap": "s"}
+            - {"kind": "small", "text": {"en": "Price depends on the phone you chose in step 1", "ar": "السعر يعتمد على الهاتف الذي اخترته في الخطوة 1"}, "tone": "faint", "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
     answer: [summary]
     misconceptions:
       - id: MC-P02-025
@@ -153,7 +207,7 @@ steps:
       ar: "الملخص يضع الهاتف بجانب الخطة التي تعتمد عليه، فيقرّر الناس بالنظر، لا بالتذكّر."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U03-04
     rules: [R06]
@@ -175,9 +229,34 @@ steps:
         - { kind: searchbar, text: { en: "Search Dar", ar: "ابحث في دار" } }
         - { kind: card, art: earbuds, blocks: [ { kind: heading, text: { en: "Earbuds week", ar: "أسبوع السماعات" } } ], gap: m }
     options:
-      - { id: labels, text: { en: "Put a short word under each icon: Home, Shop, Saved, Orders, Account", ar: "أضع كلمة قصيرة تحت كل أيقونة: الرئيسية، والمتجر، والمحفوظات، والطلبات، والحساب" } }
-      - { id: tour, text: { en: "Show a tour that explains the icons on first launch", ar: "أعرض جولة تشرح الأيقونات عند أول تشغيل" } }
-      - { id: hold, text: { en: "Show each icon's name when people press and hold it", ar: "أُظهر اسم كل أيقونة حين يضغط الناس عليها مطولًا" } }
+      - id: labels
+        text: {"en": "Put a short word under each icon: Home, Shop, Saved, Orders, Account", "ar": "أضع كلمة قصيرة تحت كل أيقونة: الرئيسية، والمتجر، والمحفوظات، والطلبات، والحساب"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "bell"}]}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "squares-four", "text": {"en": "Shop", "ar": "المتجر"}}, {"icon": "heart", "text": {"en": "Saved", "ar": "المحفوظات"}}, {"icon": "package", "text": {"en": "Orders", "ar": "الطلبات"}}, {"icon": "user", "text": {"en": "Account", "ar": "الحساب"}}]}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search Dar", "ar": "ابحث في دار"}}
+            - {"kind": "card", "art": "earbuds", "blocks": [{"kind": "heading", "text": {"en": "Earbuds week", "ar": "أسبوع السماعات"}}], "gap": "m"}
+      - id: tour
+        text: {"en": "Show a tour that explains the icons on first launch", "ar": "أعرض جولة تشرح الأيقونات عند أول تشغيل"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "bell"}]}
+          tabbar: {"active": 0, "items": [{"icon": "house"}, {"icon": "squares-four"}, {"icon": "heart"}, {"icon": "package"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search Dar", "ar": "ابحث في دار"}}
+            - {"kind": "card", "art": "earbuds", "blocks": [{"kind": "heading", "text": {"en": "Earbuds week", "ar": "أسبوع السماعات"}}], "gap": "m"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "icon", "icon": "package", "size": "l", "color": "brand"}, {"kind": "heading", "gap": "s", "text": {"en": "The box is your Orders", "ar": "الصندوق هو طلباتك"}}, {"kind": "small", "text": {"en": "Tour 4 of 5", "ar": "الجولة 4 من 5"}}, {"kind": "button", "text": {"en": "Next", "ar": "التالي"}, "gap": "m"}]}
+      - id: hold
+        text: {"en": "Show each icon's name when people press and hold it", "ar": "أُظهر اسم كل أيقونة حين يضغط الناس عليها مطولًا"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "bell"}]}
+          tabbar: {"active": 0, "items": [{"icon": "house"}, {"icon": "squares-four"}, {"icon": "heart"}, {"icon": "package"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search Dar", "ar": "ابحث في دار"}}
+            - {"kind": "card", "art": "earbuds", "blocks": [{"kind": "heading", "text": {"en": "Earbuds week", "ar": "أسبوع السماعات"}}], "gap": "m", "note": {"en": "Names show only when people press and hold an icon", "ar": "تظهر الأسماء فقط حين يضغط الناس مطوّلًا على الأيقونة"}}
     answer: [labels]
     misconceptions:
       - id: MC-P02-026
@@ -255,7 +334,7 @@ steps:
       ar: "الشرائح (Chips) تُظهر كل فلتر مفعّل، وتحذفه بضغطة واحدة. فلا يحتاج أحد إلى أن يتذكّر ما اختاره أو يفتح اللوحة ليتأكد."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: youssef
     part: independent
     skill: SK-P02-U03-04
@@ -283,9 +362,38 @@ steps:
             - { text: { en: "Shoes", ar: "أحذية" } }
         - { kind: small, text: { en: "Nothing here shows the drill she looked at on Monday", ar: "لا شيء هنا يُظهر المثقاب الذي شاهدته يوم الإثنين" }, tone: faint, gap: m }
     options:
-      - { id: recent, text: { en: "A \"Recently viewed\" row with photos on the home page", ar: "صف «شوهدت مؤخرًا» بالصور في الصفحة الرئيسية" } }
-      - { id: search, text: { en: "A bigger search box on the home page", ar: "مربع بحث أكبر في الصفحة الرئيسية" } }
-      - { id: email, text: { en: "Tell them to note product names before leaving", ar: "أن أطلب منهم تدوين أسماء المنتجات قبل المغادرة" } }
+      - id: recent
+        text: {"en": "A \"Recently viewed\" row with photos on the home page", "ar": "صف «شوهدت مؤخرًا» بالصور في الصفحة الرئيسية"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "magnifying-glass"}, {"icon": "shopping-cart"}]}
+          blocks:
+            - {"kind": "card", "art": "washing-machine", "blocks": [{"kind": "heading", "text": {"en": "Washers week", "ar": "أسبوع الغسالات"}}]}
+            - {"kind": "heading", "text": {"en": "Recently viewed", "ar": "شوهدت مؤخرًا"}, "gap": "m"}
+            - {"kind": "row", "gap": "s", "blocks": [{"kind": "card", "art": "box", "blocks": [{"kind": "small", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}}, {"kind": "price", "text": {"en": "EGP 1,250", "ar": "1,250 جنيه"}}]}, {"kind": "card", "art": "box", "blocks": [{"kind": "small", "text": {"en": "Pipe wrench", "ar": "مفتاح مواسير"}}, {"kind": "price", "text": {"en": "EGP 210", "ar": "210 جنيه"}}]}]}
+            - {"kind": "heading", "text": {"en": "Departments", "ar": "الأقسام"}, "gap": "m"}
+            - {"kind": "chips", "items": [{"text": {"en": "Tools", "ar": "أدوات"}}, {"text": {"en": "Kitchen", "ar": "المطبخ"}}, {"text": {"en": "Shoes", "ar": "أحذية"}}]}
+      - id: search
+        text: {"en": "A bigger search box on the home page", "ar": "مربع بحث أكبر في الصفحة الرئيسية"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "magnifying-glass"}, {"icon": "shopping-cart"}]}
+          blocks:
+            - {"kind": "searchbar", "size": "l", "text": {"en": "Search Dar", "ar": "ابحث في دار"}}
+            - {"kind": "card", "art": "washing-machine", "blocks": [{"kind": "heading", "text": {"en": "Washers week", "ar": "أسبوع الغسالات"}}], "gap": "m"}
+            - {"kind": "heading", "text": {"en": "Departments", "ar": "الأقسام"}, "gap": "m"}
+            - {"kind": "chips", "items": [{"text": {"en": "Tools", "ar": "أدوات"}}, {"text": {"en": "Kitchen", "ar": "المطبخ"}}, {"text": {"en": "Shoes", "ar": "أحذية"}}]}
+            - {"kind": "small", "text": {"en": "Nothing here shows the drill she looked at on Monday", "ar": "لا شيء هنا يُظهر المثقاب الذي شاهدته يوم الإثنين"}, "tone": "faint", "gap": "m"}
+      - id: email
+        text: {"en": "Tell them to note product names before leaving", "ar": "أن أطلب منهم تدوين أسماء المنتجات قبل المغادرة"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "magnifying-glass"}, {"icon": "shopping-cart"}]}
+          blocks:
+            - {"kind": "card", "art": "washing-machine", "blocks": [{"kind": "heading", "text": {"en": "Washers week", "ar": "أسبوع الغسالات"}}]}
+            - {"kind": "heading", "text": {"en": "Departments", "ar": "الأقسام"}, "gap": "m"}
+            - {"kind": "chips", "items": [{"text": {"en": "Tools", "ar": "أدوات"}}, {"text": {"en": "Kitchen", "ar": "المطبخ"}}, {"text": {"en": "Shoes", "ar": "أحذية"}}]}
+            - {"kind": "small", "text": {"en": "Nothing here shows the drill she looked at on Monday", "ar": "لا شيء هنا يُظهر المثقاب الذي شاهدته يوم الإثنين"}, "tone": "faint", "gap": "m", "note": {"en": "Customers are told to write product names down", "ar": "يُطلب من العملاء تدوين أسماء المنتجات"}}
     answer: [recent]
     misconceptions:
       - id: MC-P02-026

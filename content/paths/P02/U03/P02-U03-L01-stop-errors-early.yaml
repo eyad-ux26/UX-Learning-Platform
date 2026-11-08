@@ -36,7 +36,7 @@ steps:
       en: "I manage a bus ticket app. Marwa booked a trip from Cairo to Aswan on the 12th, and a return on the 2nd. She meant the 22nd.\n\nThe app accepted it. She found out at the station on the 22nd, with no seat."
       ar: "أدير تطبيقًا لتذاكر الحافلات. حجزت مروة رحلة من القاهرة إلى أسوان يوم 12، ورحلة عودة يوم 2. وكانت تقصد يوم 22.\n\nقبِل التطبيق الحجز. واكتشفت الخطأ في المحطة يوم 22، ولم يكن لها مقعد."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U03-01
     rules: [R12]
@@ -55,9 +55,31 @@ steps:
         - { kind: small, text: { en: "Leaving Wed 12 Nov", ar: "الذهاب الأربعاء 12 نوفمبر" } }
         - { kind: calendar, months: [ { title: { en: "November 2026", ar: "نوفمبر 2026" }, start: 0, days: 30 } ], pick: [0, 2], gap: s, note: { en: "Every day can be picked", ar: "كل الأيام قابلة للاختيار" } }
     options:
-      - { id: email, text: { en: "Send the tickets by email so she can check them", ar: "إرسال التذاكر بالبريد لتراجعها" } }
-      - { id: limit, text: { en: "In the return calendar, grey out every day before the 12th", ar: "في تقويم العودة، تعطيل كل الأيام قبل يوم 12" } }
-      - { id: error, text: { en: "Show an error after she taps Book: \"Check your dates\"", ar: "إظهار خطأ بعد أن تضغط «احجز»: «راجع التواريخ»" } }
+      - id: email
+        text: {"en": "Send the tickets by email so she can check them", "ar": "إرسال التذاكر بالبريد لتراجعها"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "Return date", "ar": "تاريخ العودة"}, "back": true}
+          blocks:
+            - {"kind": "small", "text": {"en": "Leaving Wed 12 Nov", "ar": "الذهاب الأربعاء 12 نوفمبر"}}
+            - {"kind": "calendar", "months": [{"title": {"en": "November 2026", "ar": "نوفمبر 2026"}, "start": 0, "days": 30}], "pick": [0, 2], "gap": "s", "note": {"en": "Every day can be picked; tickets come by email after", "ar": "كل الأيام قابلة للاختيار؛ وتصل التذاكر بالبريد بعدها"}}
+      - id: limit
+        text: {"en": "In the return calendar, grey out every day before the 12th", "ar": "في تقويم العودة، تعطيل كل الأيام قبل يوم 12"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "Return date", "ar": "تاريخ العودة"}, "back": true}
+          blocks:
+            - {"kind": "small", "text": {"en": "Leaving Wed 12 Nov", "ar": "الذهاب الأربعاء 12 نوفمبر"}}
+            - {"kind": "calendar", "months": [{"title": {"en": "November 2026", "ar": "نوفمبر 2026"}, "start": 0, "days": 30}], "gap": "s", "note": {"en": "Days before the 12th are greyed out", "ar": "الأيام قبل يوم 12 معطّلة"}, "today": [0, 12]}
+      - id: error
+        text: {"en": "Show an error after she taps Book: \"Check your dates\"", "ar": "إظهار خطأ بعد أن تضغط «احجز»: «راجع التواريخ»"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "Return date", "ar": "تاريخ العودة"}, "back": true}
+          blocks:
+            - {"kind": "small", "text": {"en": "Leaving Wed 12 Nov", "ar": "الذهاب الأربعاء 12 نوفمبر"}}
+            - {"kind": "calendar", "months": [{"title": {"en": "November 2026", "ar": "نوفمبر 2026"}, "start": 0, "days": 30}], "pick": [0, 2], "gap": "s", "note": {"en": "Every day can be picked", "ar": "كل الأيام قابلة للاختيار"}}
+            - {"kind": "banner", "tone": "bad", "icon": "warning-circle", "text": {"en": "Check your dates", "ar": "راجع التواريخ"}, "gap": "m", "note": {"en": "Shown after she taps Book", "ar": "يظهر بعد أن تضغط «احجز»"}}
     answer: [limit]
     misconceptions:
       - id: MC-P02-020
@@ -107,7 +129,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) الخامس هو منع الأخطاء (Error prevention): رسائل الخطأ الجيدة مهمة، لكن **أفضل التصميمات تمنع المشكلات من البداية**.\n\n- **الزلّات (Slips)** تحدث حين يعمل الناس بحكم العادة دون تركيز. امنعها بالحدود، والقيم الافتراضية الجيدة (Defaults)، وقبول أكثر من طريقة للكتابة.\n- **الأخطاء الواعية (Mistakes)** تحدث حين لا يطابق التصميم ما يظنه الناس. امنعها بعرض ما يحتاجونه والتحذير مبكرًا.\n- **لا تطلب التأكيد إلا للإجراءات الخطيرة،** وقل بالضبط ما سيحدث، حتى لا يضغط الناس «نعم» دون قراءة."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U03-01
     rules: [R06]
@@ -129,9 +151,33 @@ steps:
         - { kind: field, label: { en: "Mobile number", ar: "رقم الموبايل" }, text: "010 1234 5678", filled: true, error: { en: "Invalid number", ar: "رقم غير صالح" }, focus: true }
         - { kind: price, text: { en: "EGP 820", ar: "820 جنيه" }, gap: m }
     options:
-      - { id: hint, text: { en: "Keep the rule, and add \"No spaces\" under the field", ar: "تبقى القاعدة، مع إضافة «بدون مسافات» تحت الحقل" } }
-      - { id: forgive, text: { en: "Accept spaces and dashes, remove them behind the scenes, and show the number in groups as people type", ar: "يقبل المسافات والشرطات، ويحذفها خلف الكواليس، ويعرض الرقم مقسّمًا أثناء الكتابة" } }
-      - { id: three, text: { en: "Split it into three boxes of 3, 4 and 4 digits", ar: "يقسّمه إلى ثلاثة مربعات من 3 و4 و4 أرقام" } }
+      - id: hint
+        text: {"en": "Keep the rule, and add \"No spaces\" under the field", "ar": "تبقى القاعدة، مع إضافة «بدون مسافات» تحت الحقل"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "Checkout", "ar": "الدفع"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": "010 1234 5678", "filled": true, "error": {"en": "Invalid number", "ar": "رقم غير صالح"}, "focus": true, "hint": {"en": "No spaces", "ar": "بدون مسافات"}}
+            - {"kind": "price", "text": {"en": "EGP 820", "ar": "820 جنيه"}, "gap": "m"}
+      - id: forgive
+        text: {"en": "Accept spaces and dashes, remove them behind the scenes, and show the number in groups as people type", "ar": "يقبل المسافات والشرطات، ويحذفها خلف الكواليس، ويعرض الرقم مقسّمًا أثناء الكتابة"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "Checkout", "ar": "الدفع"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": "010 1234 5678", "filled": true, "focus": true, "trail": "check-circle", "note": {"en": "Spaces are fine; grouped as you type", "ar": "المسافات مقبولة؛ ويُقسَّم الرقم أثناء الكتابة"}}
+            - {"kind": "price", "text": {"en": "EGP 820", "ar": "820 جنيه"}, "gap": "m"}
+      - id: three
+        text: {"en": "Split it into three boxes of 3, 4 and 4 digits", "ar": "يقسّمه إلى ثلاثة مربعات من 3 و4 و4 أرقام"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "Checkout", "ar": "الدفع"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "field", "label": {"en": "Mobile number", "ar": "رقم الموبايل"}, "text": "010", "filled": true}, {"kind": "field", "label": " ", "text": "1234", "filled": true}, {"kind": "field", "label": " ", "text": "5678", "filled": true, "focus": true}]}
+            - {"kind": "price", "text": {"en": "EGP 820", "ar": "820 جنيه"}, "gap": "m"}
     answer: [forgive]
     misconceptions:
       - id: MC-P02-021
@@ -150,7 +196,7 @@ steps:
       ar: "مجموعات الأرقام أسهل في القراءة والمراجعة، فيكتشف الناس أخطاءهم في الكتابة. ويستطيع النظام حذف المسافات في لحظة؛ فلا داعي لأن يفعل الشخص ذلك."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U03-02
     rules: [R06, R15]
@@ -179,9 +225,30 @@ steps:
               - { kind: button, text: { en: "Yes", ar: "نعم" } }
               - { kind: button, text: { en: "No", ar: "لا" }, style: outline }
     options:
-      - { id: same, text: { en: "Keep it short: \"Are you sure? Yes / No\"", ar: "يبقى قصيرًا: «هل أنت متأكد؟ نعم / لا»" } }
-      - { id: specific, text: { en: "\"Cancel Cairo → Aswan, 12 Nov? You'll get EGP 360 of 450 back.\" Buttons: Cancel ticket / Keep ticket", ar: "«إلغاء رحلة القاهرة ← أسوان، 12 نوفمبر؟ سيُردّ لك 360 جنيهًا من 450». الأزرار: ألغِ التذكرة / أبقِ التذكرة" } }
-      - { id: twice, text: { en: "Ask \"Are you sure?\" twice in a row", ar: "يسأل «هل أنت متأكد؟» مرتين متتاليتين" } }
+      - id: same
+        text: {"en": "Keep it short: \"Are you sure? Yes / No\"", "ar": "يبقى قصيرًا: «هل أنت متأكد؟ نعم / لا»"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "My tickets", "ar": "تذاكري"}}
+          blocks:
+            - {"kind": "listitem", "icon": "bus", "text": {"en": "Cairo → Aswan · 12 Nov", "ar": "القاهرة ← أسوان · 12 نوفمبر"}, "sub": {"en": "9:00 pm · seat 14 · EGP 450", "ar": "9:00 م · المقعد 14 · 450 جنيه"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Are you sure?", "ar": "هل أنت متأكد؟"}}, {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "Yes", "ar": "نعم"}}, {"kind": "button", "text": {"en": "No", "ar": "لا"}, "style": "outline"}]}]}
+      - id: specific
+        text: {"en": "\"Cancel Cairo → Aswan, 12 Nov? You'll get EGP 360 of 450 back.\" Buttons: Cancel ticket / Keep ticket", "ar": "«إلغاء رحلة القاهرة ← أسوان، 12 نوفمبر؟ سيُردّ لك 360 جنيهًا من 450». الأزرار: ألغِ التذكرة / أبقِ التذكرة"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "My tickets", "ar": "تذاكري"}}
+          blocks:
+            - {"kind": "listitem", "icon": "bus", "text": {"en": "Cairo → Aswan · 12 Nov", "ar": "القاهرة ← أسوان · 12 نوفمبر"}, "sub": {"en": "9:00 pm · seat 14 · EGP 450", "ar": "9:00 م · المقعد 14 · 450 جنيه"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Cancel Cairo → Aswan, 12 Nov?", "ar": "إلغاء رحلة القاهرة ← أسوان، 12 نوفمبر؟"}}, {"kind": "small", "gap": "s", "text": {"en": "You'll get EGP 360 of 450 back.", "ar": "سيُردّ لك 360 جنيهًا من 450."}}, {"kind": "button", "style": "danger", "text": {"en": "Cancel ticket", "ar": "ألغِ التذكرة"}, "gap": "m"}, {"kind": "button", "style": "outline", "text": {"en": "Keep ticket", "ar": "أبقِ التذكرة"}, "gap": "s"}]}
+      - id: twice
+        text: {"en": "Ask \"Are you sure?\" twice in a row", "ar": "يسأل «هل أنت متأكد؟» مرتين متتاليتين"}
+        mock:
+          app: "rehla"
+          appbar: {"title": {"en": "My tickets", "ar": "تذاكري"}}
+          blocks:
+            - {"kind": "listitem", "icon": "bus", "text": {"en": "Cairo → Aswan · 12 Nov", "ar": "القاهرة ← أسوان · 12 نوفمبر"}, "sub": {"en": "9:00 pm · seat 14 · EGP 450", "ar": "9:00 م · المقعد 14 · 450 جنيه"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Are you sure?", "ar": "هل أنت متأكد؟"}, "note": {"en": "Asked a second time", "ar": "يُسأل للمرة الثانية"}}, {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "Yes", "ar": "نعم"}}, {"kind": "button", "text": {"en": "No", "ar": "لا"}, "style": "outline"}]}]}
     answer: [specific]
     misconceptions:
       - id: MC-P02-022
@@ -257,7 +324,7 @@ steps:
       ar: "الحلقة المحذوفة سهلة الاسترجاع، فيكفي «تراجع». واحتفظ بالتأكيد للإجراءات النادرة التي لا يمكن التراجع عنها، حتى يظل الناس يقرؤونه."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: nour
     part: independent
     skill: SK-P02-U03-01
@@ -282,9 +349,37 @@ steps:
         - { kind: field, label: { en: "Reminder 1", ar: "التذكير 1" }, text: "8:00 am", filled: true, gap: m }
         - { kind: field, label: { en: "Reminder 2", ar: "التذكير 2" }, text: "8:00 am", filled: true, focus: true, gap: m, note: { en: "Meant 8:00 pm", ar: "كان يقصد 8:00 مساءً" } }
     options:
-      - { id: presets, text: { en: "Presets that match the prescription, such as \"Twice a day: 9 am and 9 pm\", that patients can adjust", ar: "اختيارات جاهزة تطابق الوصفة، مثل «مرتين يوميًا: 9 صباحًا و9 مساءً»، يستطيع المرضى تعديلها" } }
-      - { id: bold, text: { en: "Make am and pm bigger and bolder in the field", ar: "تكبير «صباحًا» و«مساءً» وكتابتهما بخط أعرض في الحقل" } }
-      - { id: check, text: { en: "Ask \"Is this time right?\" after every reminder", ar: "سؤال «هل هذا الوقت صحيح؟» بعد كل تذكير" } }
+      - id: presets
+        text: {"en": "Presets that match the prescription, such as \"Twice a day: 9 am and 9 pm\", that patients can adjust", "ar": "اختيارات جاهزة تطابق الوصفة، مثل «مرتين يوميًا: 9 صباحًا و9 مساءً»، يستطيع المرضى تعديلها"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Medicine reminder", "ar": "تذكير الدواء"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "medicine", "text": {"en": "Metformin 500 mg", "ar": "ميتفورمين 500 مجم"}, "sub": {"en": "Twice a day", "ar": "مرتين يوميًا"}}
+            - {"kind": "badge", "icon": "sparkle", "gap": "m", "text": {"en": "Twice a day, from your prescription", "ar": "مرتين يوميًا، حسب وصفتك"}}
+            - {"kind": "listitem", "icon": "sun", "text": {"en": "Morning", "ar": "صباحًا"}, "value": "9:00 am", "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "icon": "moon", "text": {"en": "Evening", "ar": "مساءً"}, "value": "9:00 pm", "chevron": true, "gap": "s"}
+      - id: bold
+        text: {"en": "Make am and pm bigger and bolder in the field", "ar": "تكبير «صباحًا» و«مساءً» وكتابتهما بخط أعرض في الحقل"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Medicine reminder", "ar": "تذكير الدواء"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "listitem", "art": "medicine", "text": {"en": "Metformin 500 mg", "ar": "ميتفورمين 500 مجم"}, "sub": {"en": "Twice a day", "ar": "مرتين يوميًا"}}
+            - {"kind": "field", "label": {"en": "Reminder 1", "ar": "التذكير 1"}, "text": "8:00 AM", "filled": true, "gap": "m", "weight": "bold", "px": 18}
+            - {"kind": "field", "label": {"en": "Reminder 2", "ar": "التذكير 2"}, "text": "8:00 AM", "filled": true, "focus": true, "gap": "m", "note": {"en": "Meant 8:00 pm", "ar": "كان يقصد 8:00 مساءً"}, "weight": "bold", "px": 18}
+      - id: check
+        text: {"en": "Ask \"Is this time right?\" after every reminder", "ar": "سؤال «هل هذا الوقت صحيح؟» بعد كل تذكير"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Medicine reminder", "ar": "تذكير الدواء"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "listitem", "art": "medicine", "text": {"en": "Metformin 500 mg", "ar": "ميتفورمين 500 مجم"}, "sub": {"en": "Twice a day", "ar": "مرتين يوميًا"}}
+            - {"kind": "field", "label": {"en": "Reminder 1", "ar": "التذكير 1"}, "text": "8:00 am", "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Reminder 2", "ar": "التذكير 2"}, "text": "8:00 am", "filled": true, "focus": true, "gap": "m", "note": {"en": "Meant 8:00 pm", "ar": "كان يقصد 8:00 مساءً"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Is this time right?", "ar": "هل هذا الوقت صحيح؟"}}, {"kind": "small", "text": {"en": "Reminder 2: 8:00 am", "ar": "التذكير 2: 8:00 صباحًا"}, "gap": "s"}, {"kind": "button", "text": {"en": "Yes", "ar": "نعم"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "Change", "ar": "غيّر"}, "gap": "s"}]}
     answer: [presets]
     misconceptions:
       - id: MC-P02-020
