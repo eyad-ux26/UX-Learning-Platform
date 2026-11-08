@@ -121,3 +121,8 @@ Esc or the scrim closes the sheet without confirming. The sheet comes back on th
   - Other phones use the normal LinkedIn link.
   - A toast tells the learner to paste the text.
 - The "Translate to Arabic" button shows the translate icon.
+
+## Build notes (PR #223)
+
+- **Phones:** the toast says "Text copied. In LinkedIn, tap Start a post, then paste", in EN and AR. The same note shows in the share sheet.
+- LinkedIn opens on the feed after a 2.2 s pause, so the learner can read the toast first.
