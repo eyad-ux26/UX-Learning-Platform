@@ -453,7 +453,7 @@ steps:
       ar: "السطور المنفصلة تجعل العناصر سهلة المقارنة. ولا تضع أرقامًا حين لا يهمّ الترتيب."
 
   - id: S08
-    type: choose
+    type: tune
     skill: SK-P15-U01-04
     part: retest
     speaker: tarek
@@ -482,7 +482,7 @@ steps:
           text:
             en: EGP 49
             ar: "49 جنيه"
-          per: {en: / month, ar: "/ شهر"}
+          per: {en: / month, ar: / شهر}
           gap: s
         - kind: heading
           text:
@@ -497,13 +497,127 @@ steps:
             ar: "تحصل على خصم 10% كل عطلة نهاية أسبوع"
           - {en: You get a faster support line, ar: تحصل على خط دعم أسرع}
           gap: xs
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "What change makes the three benefits easiest to tell apart?"
       ar: "ما التغيير الذي يجعل الفوائد الثلاث أسهل في التمييز؟"
     options:
-      - { id: bold, text: { en: "Make \"You get\" bold in every item", ar: "اجعل «تحصل على» بخط عريض في كل عنصر" } }
-      - { id: cut, text: { en: "Cut \"You get\" so each item starts with the benefit: \"Free delivery…\", \"10% off…\", \"Faster support…\"", ar: "احذف «تحصل على» ليبدأ كل عنصر بالفائدة: «توصيل مجاني…»، «خصم 10%…»، «دعم أسرع…»" } }
-      - { id: number, text: { en: "Number the items 1, 2 and 3", ar: "رقّم العناصر 1 و2 و3" } }
+      - id: bold
+        text:
+          en: "Make \"You get\" bold in every item"
+          ar: اجعل «تحصل على» بخط عريض في كل عنصر
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Lamma Plus, ar: لَمّة Plus}
+            back: true
+          footer:
+          - kind: button
+            text: {en: Join Plus, ar: اشترك في Plus}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              text: {en: Lamma Plus, ar: لَمّة Plus}
+              icon: crown
+            - kind: price
+              text:
+                en: EGP 49
+                ar: "49 جنيه"
+              per: {en: / month, ar: / شهر}
+              gap: s
+            - kind: heading
+              text:
+                en: "Plus adds:"
+                ar: "باقة Plus تضيف:"
+              gap: m
+            - kind: list
+              style: bullet
+              items:
+              - en: "**You get** free delivery on all orders"
+                ar: "**تحصل على** توصيل مجاني لكل الطلبات"
+              - en: "**You get** 10% off every weekend"
+                ar: "**تحصل على** خصم 10% كل عطلة نهاية أسبوع"
+              - en: "**You get** a faster support line"
+                ar: "**تحصل على** خط دعم أسرع"
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: cut
+        text:
+          en: "Cut \"You get\" so each item starts with the benefit: \"Free delivery…\", \"10% off…\", \"Faster support…\""
+          ar: "احذف «تحصل على» ليبدأ كل عنصر بالفائدة: «توصيل مجاني…»، «خصم 10%…»، «دعم أسرع…»"
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Lamma Plus, ar: لَمّة Plus}
+            back: true
+          footer:
+          - kind: button
+            text: {en: Join Plus, ar: اشترك في Plus}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              text: {en: Lamma Plus, ar: لَمّة Plus}
+              icon: crown
+            - kind: price
+              text:
+                en: EGP 49
+                ar: "49 جنيه"
+              per: {en: / month, ar: / شهر}
+              gap: s
+            - kind: heading
+              text:
+                en: "Plus adds:"
+                ar: "باقة Plus تضيف:"
+              gap: m
+            - kind: list
+              style: bullet
+              items:
+              - {en: Free delivery on all orders, ar: توصيل مجاني لكل الطلبات}
+              - en: "10% off every weekend"
+                ar: "خصم 10% كل عطلة نهاية أسبوع"
+              - {en: Faster support line, ar: خط دعم أسرع}
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: number
+        text:
+          en: "Number the items 1, 2 and 3"
+          ar: رقّم العناصر 1 و2 و3
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Lamma Plus, ar: لَمّة Plus}
+            back: true
+          footer:
+          - kind: button
+            text: {en: Join Plus, ar: اشترك في Plus}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              text: {en: Lamma Plus, ar: لَمّة Plus}
+              icon: crown
+            - kind: price
+              text:
+                en: EGP 49
+                ar: "49 جنيه"
+              per: {en: / month, ar: / شهر}
+              gap: s
+            - kind: heading
+              text:
+                en: "Plus adds:"
+                ar: "باقة Plus تضيف:"
+              gap: m
+            - kind: list
+              style: number
+              items:
+              - {en: You get free delivery on all orders, ar: تحصل على توصيل مجاني لكل الطلبات}
+              - en: "You get 10% off every weekend"
+                ar: "تحصل على خصم 10% كل عطلة نهاية أسبوع"
+              - {en: You get a faster support line, ar: تحصل على خط دعم أسرع}
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [cut]
     misconceptions:
       - id: MC-P15-007

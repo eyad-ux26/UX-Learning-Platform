@@ -250,7 +250,7 @@ steps:
       ar: "القائمة الرأسية تُظهر عدد العناصر، وتجعل الناس يجدون العنصر الذي يهمّهم."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P15-U01-04
     part: guided
     confidence: true
@@ -265,7 +265,7 @@ steps:
     mock:
       app: nashat
       appbar:
-        title: {en: Pay for your plan, ar: "دفع الاشتراك"}
+        title: {en: Pay for your plan, ar: دفع الاشتراك}
         back: true
       footer:
       - kind: button
@@ -275,7 +275,7 @@ steps:
         text:
           en: EGP 850
           ar: "850 جنيه"
-        per: {en: / month, ar: "/ شهر"}
+        per: {en: / month, ar: / شهر}
       - kind: heading
         text: {en: How to pay, ar: طرق الدفع}
         gap: m
@@ -286,13 +286,94 @@ steps:
         - {en: Cash at the desk, ar: نقدًا في الاستقبال}
         - {en: Mobile wallet, ar: المحفظة الإلكترونية}
         gap: xs
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "What should I change so members see they need only one way?"
       ar: "ماذا أغيّر حتى يرى الأعضاء أنهم يحتاجون طريقة واحدة فقط؟"
     options:
-      - { id: keep, text: { en: "Nothing. Numbers make any list easier to follow", ar: "لا شيء. الأرقام تجعل أي قائمة أسهل" } }
-      - { id: bullets, text: { en: "Use bullets instead of numbers, with the lead-in \"Pay in any one of these ways:\"", ar: "استخدم نقاطًا بدل الأرقام، مع جملة تمهيد: «ادفع بإحدى هذه الطرق:»" } }
-      - { id: sentence, text: { en: "Put the three ways in one sentence", ar: "ضع الطرق الثلاث في جملة واحدة" } }
+      - id: keep
+        text: {en: Nothing. Numbers make any list easier to follow, ar: لا شيء. الأرقام تجعل أي قائمة أسهل}
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Pay for your plan, ar: دفع الاشتراك}
+            back: true
+          footer:
+          - kind: button
+            text: {en: Continue, ar: متابعة}
+          blocks:
+          - kind: price
+            text:
+              en: EGP 850
+              ar: "850 جنيه"
+            per: {en: / month, ar: / شهر}
+          - kind: heading
+            text: {en: How to pay, ar: طرق الدفع}
+            gap: m
+          - kind: list
+            style: number
+            items:
+            - {en: Card, ar: البطاقة}
+            - {en: Cash at the desk, ar: نقدًا في الاستقبال}
+            - {en: Mobile wallet, ar: المحفظة الإلكترونية}
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: bullets
+        text:
+          en: "Use bullets instead of numbers, with the lead-in \"Pay in any one of these ways:\""
+          ar: "استخدم نقاطًا بدل الأرقام، مع جملة تمهيد: «ادفع بإحدى هذه الطرق:»"
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Pay for your plan, ar: دفع الاشتراك}
+            back: true
+          footer:
+          - kind: button
+            text: {en: Continue, ar: متابعة}
+          blocks:
+          - kind: price
+            text:
+              en: EGP 850
+              ar: "850 جنيه"
+            per: {en: / month, ar: / شهر}
+          - kind: heading
+            text:
+              en: "Pay in any one of these ways:"
+              ar: "ادفع بإحدى هذه الطرق:"
+            gap: m
+          - kind: list
+            style: bullet
+            items:
+            - {en: Card, ar: البطاقة}
+            - {en: Cash at the desk, ar: نقدًا في الاستقبال}
+            - {en: Mobile wallet, ar: المحفظة الإلكترونية}
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: sentence
+        text: {en: Put the three ways in one sentence, ar: ضع الطرق الثلاث في جملة واحدة}
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Pay for your plan, ar: دفع الاشتراك}
+            back: true
+          footer:
+          - kind: button
+            text: {en: Continue, ar: متابعة}
+          blocks:
+          - kind: price
+            text:
+              en: EGP 850
+              ar: "850 جنيه"
+            per: {en: / month, ar: / شهر}
+          - kind: heading
+            text: {en: How to pay, ar: طرق الدفع}
+            gap: m
+          - kind: text
+            text:
+              en: "Card, cash at the desk, mobile wallet."
+              ar: البطاقة، نقدًا في الاستقبال، المحفظة الإلكترونية.
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [bullets]
     misconceptions:
       - id: MC-P15-006
@@ -316,7 +397,7 @@ steps:
       ar: "رقّم القائمة فقط حين يهمّ الترتيب أو العدد، مثل خطوات حجز حصة. أما الخيارات فلها نقاط وجملة تمهيد واضحة."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P15-U01-04
     part: guided
     rules: [R06]
@@ -346,13 +427,79 @@ steps:
           ar: الهاتف؟ ليس في الصالة من فضلك
         - {en: It is important to put weights back, ar: من المهم إعادة الأوزان لمكانها}
         gap: xs
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "Which rewrite makes the rules easiest to scan?"
       ar: "أي صياغة تجعل القواعد أسهل في التصفّح؟"
     options:
-      - { id: mixed, text: { en: "Keep the items, but add \"Rule:\" before each one", ar: "أبقِ العناصر، لكن أضف «قاعدة:» قبل كل واحد" } }
-      - { id: para, text: { en: "Join all four rules into one friendly paragraph", ar: "اجمع القواعد الأربع في فقرة واحدة لطيفة" } }
-      - { id: verbs, text: { en: "Start every item with a verb: \"Bring a towel · Wear clean shoes · Keep your phone in the locker · Put weights back\"", ar: "ابدأ كل عنصر بفعل: «أحضِر منشفة · البس حذاءً نظيفًا · اترك هاتفك في الخزانة · أعِد الأوزان لمكانها»" } }
+      - id: mixed
+        text:
+          en: "Keep the items, but add \"Rule:\" before each one"
+          ar: "أبقِ العناصر، لكن أضف «قاعدة:» قبل كل واحد"
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Gym rules, ar: قواعد النادي}
+            back: true
+          blocks:
+          - {kind: image, art: gym, size: s}
+          - kind: heading
+            text: {en: Gym rules, ar: قواعد النادي}
+            gap: m
+          - kind: list
+            style: bullet
+            items:
+            - en: "Rule: Bring a towel"
+              ar: "قاعدة: أحضِر منشفة"
+            - en: "Rule: Clean shoes are required on the floor"
+              ar: "قاعدة: الأحذية النظيفة مطلوبة في الصالة"
+            - en: "Rule: Phones? Not on the floor, please"
+              ar: "قاعدة: الهاتف؟ ليس في الصالة من فضلك"
+            - en: "Rule: It is important to put weights back"
+              ar: "قاعدة: من المهم إعادة الأوزان لمكانها"
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: para
+        text: {en: Join all four rules into one friendly paragraph, ar: اجمع القواعد الأربع في فقرة واحدة لطيفة}
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Gym rules, ar: قواعد النادي}
+            back: true
+          blocks:
+          - {kind: image, art: gym, size: s}
+          - kind: heading
+            text: {en: Gym rules, ar: قواعد النادي}
+            gap: m
+          - kind: text
+            gap: xs
+            text:
+              en: "Welcome! Please bring a towel, and clean shoes are required on the floor. Phones? Not on the floor, please. And it is important to put weights back. Thanks!"
+              ar: "أهلًا بك! من فضلك أحضِر منشفة، والأحذية النظيفة مطلوبة في الصالة. الهاتف؟ ليس في الصالة من فضلك. ومن المهم إعادة الأوزان لمكانها. شكرًا!"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: verbs
+        text:
+          en: "Start every item with a verb: \"Bring a towel · Wear clean shoes · Keep your phone in the locker · Put weights back\""
+          ar: "ابدأ كل عنصر بفعل: «أحضِر منشفة · البس حذاءً نظيفًا · اترك هاتفك في الخزانة · أعِد الأوزان لمكانها»"
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Gym rules, ar: قواعد النادي}
+            back: true
+          blocks:
+          - {kind: image, art: gym, size: s}
+          - kind: heading
+            text: {en: Gym rules, ar: قواعد النادي}
+            gap: m
+          - kind: list
+            style: bullet
+            items:
+            - {en: Bring a towel, ar: أحضِر منشفة}
+            - {en: Wear clean shoes, ar: البس حذاءً نظيفًا}
+            - {en: Keep your phone in the locker, ar: اترك هاتفك في الخزانة}
+            - {en: Put weights back, ar: أعِد الأوزان لمكانها}
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [verbs]
     misconceptions:
       - id: MC-P15-007
@@ -498,7 +645,7 @@ steps:
       ar: "كثيرًا ما تظهر العناوين وحدها: في نتائج البحث والمحادثات والإشعارات. فاكتبها بحيث تُفهم هناك أيضًا."
 
   - id: S08
-    type: choose
+    type: tune
     skill: SK-P15-U01-03
     part: independent
     speaker: karim
@@ -528,10 +675,118 @@ steps:
           ar: "3 نتائج"
         color: muted
         gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: know, text: { en: "\"Everything you need to know about your card\"", ar: "«كل ما تحتاج معرفته عن بطاقتك»" } }
-      - { id: pin, text: { en: "\"Get a new card PIN by SMS\"", ar: "«احصل على رقم سري جديد للبطاقة برسالة نصية»" } }
-      - { id: worry, text: { en: "\"Forgot something? Don't worry!\"", ar: "«نسيت شيئًا؟ لا تقلق!»" } }
+      - id: know
+        text:
+          en: "\"Everything you need to know about your card\""
+          ar: «كل ما تحتاج معرفته عن بطاقتك»
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Help, ar: المساعدة}
+            back: true
+          blocks:
+          - kind: searchbar
+            text: {en: forgot pin, ar: نسيت الرقم السري}
+            filled: true
+          - kind: small
+            text:
+              en: "3 results"
+              ar: "3 نتائج"
+            color: muted
+            gap: s
+          - kind: listitem
+            icon: article
+            text: {en: Everything you need to know about your card, ar: كل ما تحتاج معرفته عن بطاقتك}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+            gap: s
+          - kind: listitem
+            icon: article
+            text: {en: Change your card limit, ar: غيّر حد بطاقتك}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+          - kind: listitem
+            icon: article
+            text: {en: Freeze a lost card, ar: جمّد بطاقة مفقودة}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: pin
+        text:
+          en: "\"Get a new card PIN by SMS\""
+          ar: «احصل على رقم سري جديد للبطاقة برسالة نصية»
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Help, ar: المساعدة}
+            back: true
+          blocks:
+          - kind: searchbar
+            text: {en: forgot pin, ar: نسيت الرقم السري}
+            filled: true
+          - kind: small
+            text:
+              en: "3 results"
+              ar: "3 نتائج"
+            color: muted
+            gap: s
+          - kind: listitem
+            icon: article
+            text: {en: Get a new card PIN by SMS, ar: احصل على رقم سري جديد للبطاقة برسالة نصية}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+            gap: s
+          - kind: listitem
+            icon: article
+            text: {en: Change your card limit, ar: غيّر حد بطاقتك}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+          - kind: listitem
+            icon: article
+            text: {en: Freeze a lost card, ar: جمّد بطاقة مفقودة}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: worry
+        text:
+          en: "\"Forgot something? Don't worry!\""
+          ar: "«نسيت شيئًا؟ لا تقلق!»"
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Help, ar: المساعدة}
+            back: true
+          blocks:
+          - kind: searchbar
+            text: {en: forgot pin, ar: نسيت الرقم السري}
+            filled: true
+          - kind: small
+            text:
+              en: "3 results"
+              ar: "3 نتائج"
+            color: muted
+            gap: s
+          - kind: listitem
+            icon: article
+            text:
+              en: "Forgot something? Don't worry!"
+              ar: "نسيت شيئًا؟ لا تقلق!"
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+            gap: s
+          - kind: listitem
+            icon: article
+            text: {en: Change your card limit, ar: غيّر حد بطاقتك}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+          - kind: listitem
+            icon: article
+            text: {en: Freeze a lost card, ar: جمّد بطاقة مفقودة}
+            sub: {en: Help article, ar: مقال مساعدة}
+            chevron: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [pin]
     misconceptions:
       - id: MC-P15-004
