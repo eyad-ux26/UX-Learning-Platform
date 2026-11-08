@@ -50,13 +50,12 @@ In every option, "Your paths" and "Completed" (S3-17) stay above these sections 
 ## Profile, Certificates tab: earned first
 
 - **Earned · N** / «حصلت عليها · N» comes first. Each earned certificate is a green-outlined mint card with:
-  - the certificate picture, with a check stamp
   - an "Earned" chip
   - the path name
   - "{n} skills Shown · {date}"
   - **Share on LinkedIn** (primary), which opens the S3-16 share sheet
   - **View certificate** (secondary)
-- On phones, the picture spans the card width.
+- No certificate picture on the card, to keep it compact (Eyad, v99). **View certificate** opens it.
 - **In progress · N** follows: grey cards with a locked certificate thumbnail, "{n} of {t} skills Shown…" and a progress bar.
 
 ## Landing: «المميزات المختلفة في UXGate»
