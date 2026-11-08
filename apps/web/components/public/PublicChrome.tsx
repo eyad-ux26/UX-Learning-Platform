@@ -51,7 +51,7 @@ export function PubFooter() {
       <span className="pub-grow" />
       <nav aria-label={t("footNav")}>
         <Link href="/paths">{t("footPaths")}</Link>
-        <Link href="/#plan">{t("footPricing")}</Link>
+        <Link href="/pricing">{t("footPricing")}</Link>
         <Link href="/#faq">{t("footHelp")}</Link>
         <Link href="/terms">{t("footTerms")}</Link>
         <Link href="/privacy">{t("footPrivacy")}</Link>

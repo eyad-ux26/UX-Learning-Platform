@@ -5,7 +5,7 @@ afterEach(() => { delete process.env.UG_COMING_SOON; });
 
 describe("gateStep", () => {
   it("keeps the page, its confirm link, the team password page and the legal pages open", () => {
-    for (const p of ["/en/coming-soon", "/ar/coming-soon/confirm", "/en/team", "/en/terms", "/ar/privacy", "/en/refund/", "/en/maintenance", "/ar/offline"]) {
+    for (const p of ["/en/coming-soon", "/ar/coming-soon/confirm", "/en/team", "/en/pricing", "/ar/pricing/", "/en/terms", "/ar/privacy", "/en/refund/", "/en/maintenance", "/ar/offline"]) {
       expect(gateStep(p).kind, p).toBe("open");
     }
   });
@@ -20,6 +20,8 @@ describe("gateStep", () => {
   });
   it("lets only the legal pages be indexed among the open ones", () => {
     expect(gateStep("/en/terms")).toEqual({ kind: "open", index: true });
+    expect(gateStep("/ar/pricing")).toEqual({ kind: "open", index: true });
+    for (const p of ["/en/pricingx", "/en/pricing/extra", "/en/app/plans", "/en/app/pricing"]) expect(gateStep(p).kind, p).toBe("admin");
     expect(gateStep("/en/team")).toEqual({ kind: "open", index: false });
     expect(gateStep("/en/coming-soon")).toEqual({ kind: "open", index: false }); // indexed under the home address instead
   });
