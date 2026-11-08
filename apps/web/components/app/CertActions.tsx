@@ -56,7 +56,7 @@ export function CertActions(p: Props) {
         if (await copy(text)) say(t("copiedPaste"));
         const feed = "https://www.linkedin.com/feed/?shareActive=true";
         const android = /android/i.test(navigator.userAgent);
-        window.setTimeout(() => go(null, android ? `intent://www.linkedin.com/feed/?shareActive=true#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=${encodeURIComponent(feed)};end` : feed), 900);
+        window.setTimeout(() => go(null, android ? `intent://www.linkedin.com/feed/?shareActive=true#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=${encodeURIComponent(feed)};end` : feed), 2200);
       });
       return;
     }
