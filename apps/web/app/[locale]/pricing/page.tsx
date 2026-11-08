@@ -28,7 +28,7 @@ export default async function PricingPage({ params }: Params) {
   const L = locale as Locale;
   const w = PRICES.world;
   const $ = (n: number) => formatMoney(n, w.currency, L);
-  const link = (href: "/terms" | "/privacy" | "/refund") => (c: React.ReactNode) => <Link href={href} className="pub-link">{c}</Link>;
+  const to = (href: "/terms" | "/privacy" | "/refund", c: React.ReactNode) => <Link href={href} className="pub-link">{c}</Link>;
   return (
     <div className="s4-pub">
       <PubHeader />
@@ -49,7 +49,7 @@ export default async function PricingPage({ params }: Params) {
               <p><b>{t("yearly")}</b>: <b className="num ltr">{$(w.year)}</b> {t("perYear")} · {t.rich("save", { amount: $(yearlySaving("world")), m: (c) => <span className="ltr">{c}</span> })}</p>
             </section>
             <p>{t("notes", { percent: DISCOUNTS.student.percent })}</p>
-            <p>{t.rich("policies", { terms: link("/terms"), privacy: link("/privacy"), refund: link("/refund") })}</p>
+            <p>{t.rich("policies", { terms: (c) => to("/terms", c), privacy: (c) => to("/privacy", c), refund: (c) => to("/refund", c) })}</p>
             <p>{t.rich("questions", { mail: (c) => <a href="mailto:support@uxgate.org" className="ltr pub-link">{c}</a> })}</p>
           </div>
         </div>
