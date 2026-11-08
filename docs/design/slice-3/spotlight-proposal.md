@@ -40,7 +40,7 @@ Video courses are the `hybrid` paths: P02 and P14 today.
   - The smallest change.
   - Video course cards get:
     - a light blue gradient and border
-    - the instructor's avatar on the path picture
+    - a taller picture tile that holds the path and the instructor in one image (Eyad, 8 Nov): the instructor's photo fills the tile, the path art sits in a small badge on the corner, and a play mark shows it's video
     - the line "Videos with {name}"
 
 In every option, "Your paths" and "Completed" (S3-17) stay above these sections once the learner has joined a path.
