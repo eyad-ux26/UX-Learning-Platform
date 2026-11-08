@@ -89,6 +89,9 @@ export function validate(paths) {
     checkMisconceptions(r.misconceptions, `${where}.reason`, (when, w) => subset(when, opts, `${w}.when`));
   };
 
+  // One Arabic question shared by steps with different scenarios must not name something
+  // (a person, a task) that only some of those steps contain: it would ask about the wrong case.
+  const sharedPrompts = new Map();
   for (const p of paths) {
     const pw = p._file;
     need(/^P\d{2}$/.test(p.id || ""), `${pw}: id must look like P10`);
@@ -126,6 +129,13 @@ export function validate(paths) {
         for (const [i, x] of (l.sources || []).entries()) need(x.title && /^https:\/\//.test(x.url || ""), `${lw}.sources[${i}]: title and an https url are required`);
         const steps = l.steps || [];
         unique(steps.map((s) => s.id), lw);
+        for (const s of steps) {
+          const ar = s.prompt && typeof s.prompt === "object" ? s.prompt.ar : null;
+          if (!ar) continue;
+          const key = `${p.id}|${ar}`;
+          if (!sharedPrompts.has(key)) sharedPrompts.set(key, []);
+          sharedPrompts.get(key).push({ where: `${lw} ${s.id}`, scenario: scenarioOf(l, s), en: s.prompt.en || "", ar });
+        }
         const graded = steps.filter((s) => s.type !== "card" && s.type !== "video" && !s.any_ok).length;
         for (const s of steps.filter((s) => s.type !== "card" && s.type !== "video" && !s.any_ok)) {
           if (!skillIds.length) continue;
@@ -241,6 +251,14 @@ export function validate(paths) {
         if (v.length < 4 || sc < 4 || re < 2) warnings.push(`${uw} ${id}: ${v.length} versions, ${sc} scenarios, ${re} re-tests (needs 4, 4 and 2)`);
       }
     }
+  }
+  // The English frame ("Which one should ship?") fits any case; an Arabic question much longer than
+  // it names one case's person and task, so it can't be shared across scenarios.
+  const count = (t) => t.split(/\s+/).filter(Boolean).length;
+  for (const group of sharedPrompts.values()) {
+    if (new Set(group.map((g) => g.scenario)).size < 2) continue;
+    if (count(group[0].ar) <= count(group[0].en) * 1.4 + 2) continue;
+    for (const g of group) errors.push(`${g.where}: this Arabic question is shared by ${group.length} steps with different scenarios, but it is much more specific than the English one; write each step its own question`);
   }
   return { errors, warnings };
 }
