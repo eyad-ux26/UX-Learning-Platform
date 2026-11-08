@@ -33,7 +33,7 @@ steps:
         - { kind: button, text: { en: "Change dates", ar: "غيّر التواريخ" }, gap: m }
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P05-U04-01
     part: check
     rules: [R19]
@@ -49,15 +49,78 @@ steps:
       ar: "ماذا يجب أن يكون النص البديل للنجوم؟"
     mock:
       app: zad
-      appbar: { title: { en: "Hotel", ar: "الفندق" }, back: true, actions: [ { icon: heart, aria: { en: "Save", ar: "حفظ" } } ] }
+      appbar:
+        title: {en: Hotel, ar: الفندق}
+        back: true
+        actions:
+        - icon: heart
+          aria: {en: Save, ar: حفظ}
       blocks:
-        - { kind: image, art: hotel-room }
-        - { kind: meta, weight: bold, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" } }
-        - { kind: small, color: muted, text: "★★★★☆", gap: xs }
+      - {kind: image, art: hotel-room}
+      - kind: meta
+        weight: bold
+        text: {en: Nile View Hotel, ar: فندق نايل فيو}
+      - {kind: small, color: muted, text: ★★★★☆, gap: xs}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: rated, text: { en: "\"Rated 4 out of 5.\"", ar: "«التقييم 4 من 5.»" } }
-      - { id: look, text: { en: "\"Four yellow stars and one grey star.\"", ar: "«أربع نجوم صفراء ونجمة رمادية.»" } }
-      - { id: empty, text: { en: "Empty; stars are decoration", ar: "فارغ؛ النجوم للزينة" } }
+      - id: rated
+        text:
+          en: "\"Rated 4 out of 5.\""
+          ar: «التقييم 4 من 5.»
+        mock:
+          app: zad
+          appbar:
+            title: {en: Hotel, ar: الفندق}
+            back: true
+            actions:
+            - icon: heart
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - {kind: image, art: hotel-room}
+          - kind: meta
+            weight: bold
+            text: {en: Nile View Hotel, ar: فندق نايل فيو}
+          - {kind: small, color: muted, text: ★★★★☆, gap: xs}
+          reader: {en: Nile View Hotel. Rated 4 out of 5., ar: فندق نايل فيو. التقييم 4 من 5.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: look
+        text:
+          en: "\"Four yellow stars and one grey star.\""
+          ar: «أربع نجوم صفراء ونجمة رمادية.»
+        mock:
+          app: zad
+          appbar:
+            title: {en: Hotel, ar: الفندق}
+            back: true
+            actions:
+            - icon: heart
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - {kind: image, art: hotel-room}
+          - kind: meta
+            weight: bold
+            text: {en: Nile View Hotel, ar: فندق نايل فيو}
+          - {kind: small, color: muted, text: ★★★★☆, gap: xs}
+          reader: {en: Nile View Hotel. Four yellow stars and one grey star., ar: فندق نايل فيو. أربع نجوم صفراء ونجمة رمادية.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: empty
+        text: {en: Empty; stars are decoration, ar: فارغ؛ النجوم للزينة}
+        mock:
+          app: zad
+          appbar:
+            title: {en: Hotel, ar: الفندق}
+            back: true
+            actions:
+            - icon: heart
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - {kind: image, art: hotel-room}
+          - kind: meta
+            weight: bold
+            text: {en: Nile View Hotel, ar: فندق نايل فيو}
+          - {kind: small, color: muted, text: ★★★★☆, gap: xs}
+          reader: {en: Nile View Hotel., ar: فندق نايل فيو.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [rated]
     misconceptions:
       - id: MC-P05-037
@@ -110,7 +173,7 @@ steps:
       ar: "من الدرس 1: قصير، والكلمات المهمة أولًا، بلا «صورة لـ»."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U04-03
     part: check
     rules: [R19]
@@ -126,13 +189,93 @@ steps:
       ar: "كيف نصلحها لمستخدمي قارئ الشاشة؟"
     mock:
       app: zad
-      appbar: { title: { en: "Flight to Aswan", ar: "رحلة الطيران إلى أسوان" }, back: true }
+      appbar:
+        title: {en: Flight to Aswan, ar: رحلة الطيران إلى أسوان}
+        back: true
       blocks:
-        - { kind: image, size: m, text: { en: "Baggage rules (image)\nBasic · Standard · Flex", ar: "قواعد الحقائب (صورة)\nأساسي · عادي · مرن" } }
+      - kind: image
+        size: m
+        text: {en: 'Baggage rules (image)
+
+            Basic · Standard · Flex', ar: 'قواعد الحقائب (صورة)
+
+            أساسي · عادي · مرن'}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: name, text: { en: "Alt text: \"Baggage rules for each ticket type.\"", ar: "النص البديل: «قواعد الحقائب لكل نوع تذكرة.»" } }
-      - { id: table, text: { en: "Show the rules as a real table on the page", ar: "اعرض القواعد كجدول حقيقي في الصفحة" } }
-      - { id: all, text: { en: "Put all the rules for all 3 tickets in the alt text", ar: "اكتب كل القواعد للتذاكر الثلاث في النص البديل" } }
+      - id: name
+        text:
+          en: "Alt text: \"Baggage rules for each ticket type.\""
+          ar: "النص البديل: «قواعد الحقائب لكل نوع تذكرة.»"
+        mock:
+          app: zad
+          appbar:
+            title: {en: Flight to Aswan, ar: رحلة الطيران إلى أسوان}
+            back: true
+          blocks:
+          - kind: image
+            size: m
+            text: {en: 'Baggage rules (image)
+
+                Basic · Standard · Flex', ar: 'قواعد الحقائب (صورة)
+
+                أساسي · عادي · مرن'}
+          reader:
+            en: "Baggage rules for each ticket type, image."
+            ar: قواعد الحقائب لكل نوع تذكرة، صورة.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: table
+        text: {en: Show the rules as a real table on the page, ar: اعرض القواعد كجدول حقيقي في الصفحة}
+        mock:
+          app: zad
+          appbar:
+            title: {en: Flight to Aswan, ar: رحلة الطيران إلى أسوان}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Baggage rules, ar: قواعد الحقائب}
+          - kind: table
+            gap: s
+            head:
+            - {en: Ticket, ar: التذكرة}
+            - {en: Bags, ar: الحقائب}
+            - {en: Weight, ar: الوزن}
+            rows:
+            - - {en: Basic, ar: أساسي}
+              - en: "1 hand bag"
+                ar: حقيبة يد واحدة
+              - en: "7 kg"
+                ar: "7 كجم"
+            - - {en: Standard, ar: عادي}
+              - {en: Hand bag + 1 bag, ar: حقيبة يد + حقيبة}
+              - en: "20 kg"
+                ar: "20 كجم"
+            - - {en: Flex, ar: مرن}
+              - {en: Hand bag + 2 bags, ar: حقيبة يد + حقيبتان}
+              - en: "23 kg each"
+                ar: "23 كجم لكل حقيبة"
+          reader:
+            en: "Baggage rules, heading. Table, 3 rows, 3 columns."
+            ar: قواعد الحقائب، عنوان. جدول، 3 صفوف، 3 أعمدة.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: all
+        text: {en: Put all the rules for all 3 tickets in the alt text, ar: اكتب كل القواعد للتذاكر الثلاث في النص البديل}
+        mock:
+          app: zad
+          appbar:
+            title: {en: Flight to Aswan, ar: رحلة الطيران إلى أسوان}
+            back: true
+          blocks:
+          - kind: image
+            size: m
+            text: {en: 'Baggage rules (image)
+
+                Basic · Standard · Flex', ar: 'قواعد الحقائب (صورة)
+
+                أساسي · عادي · مرن'}
+          reader:
+            en: "Basic: 1 hand bag, 7 kg. Standard: hand bag and 1 bag, 20 kg. Flex: hand bag and 2 bags, 23 kg each. Image."
+            ar: "أساسي: حقيبة يد واحدة، 7 كجم. عادي: حقيبة يد وحقيبة، 20 كجم. مرن: حقيبة يد وحقيبتان، 23 كجم لكل حقيبة. صورة."
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [table]
     misconceptions:
       - id: MC-P05-040
@@ -224,7 +367,7 @@ steps:
       ar: "من الدرس 2: الرابط يذكر وجهته، فيكون مفهومًا وحده."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P05-U04-05
     part: check
     rules: [R19]
@@ -239,21 +382,142 @@ steps:
       en: "What should happen when the panel opens?"
       ar: "ماذا يجب أن يحدث حين تُفتح اللوحة، حتى يعرف الضيف الكفيف أنها فُتحت؟"
     mock:
-      reader: { en: "Change dates, button.", ar: "غيّر التواريخ، زر." }
+      reader:
+        en: "Change dates, button."
+        ar: غيّر التواريخ، زر.
       app: zad
-      appbar: { title: { en: "Hotel", ar: "الفندق" }, back: true, actions: [ { icon: heart, aria: { en: "Save", ar: "حفظ" } } ] }
+      appbar:
+        title: {en: Hotel, ar: الفندق}
+        back: true
+        actions:
+        - icon: heart
+          aria: {en: Save, ar: حفظ}
       blocks:
-        - { kind: button, ring: brand, text: { en: "Change dates", ar: "غيّر التواريخ" } }
-        - kind: group
-          gap: s
-          blocks:
-            - { kind: meta, weight: bold, text: { en: "Choose your dates", ar: "اختر التواريخ" } }
-            - { kind: small, color: muted, text: { en: "Mon 5 · Tue 6 · Wed 7 · Thu 8", ar: "الاثنين 5 · الثلاثاء 6 · الأربعاء 7 · الخميس 8" }, gap: xs }
-        - { kind: small, color: muted, text: { en: "(nothing more)", ar: "(ولا شيء بعدها)" }, gap: s }
+      - kind: button
+        ring: brand
+        text: {en: Change dates, ar: غيّر التواريخ}
+      - kind: group
+        gap: s
+        blocks:
+        - kind: meta
+          weight: bold
+          text: {en: Choose your dates, ar: اختر التواريخ}
+        - kind: small
+          color: muted
+          text: {en: Mon 5 · Tue 6 · Wed 7 · Thu 8, ar: الاثنين 5 · الثلاثاء 6 · الأربعاء 7 · الخميس 8}
+          gap: xs
+      - kind: small
+        color: muted
+        text: {en: (nothing more), ar: (ولا شيء بعدها)}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: sound, text: { en: "Play a sound to say something opened", ar: "شغّل صوتًا يقول إن شيئًا فُتح" } }
-      - { id: help, text: { en: "Add a tip: \"After tapping, swipe to find the calendar\"", ar: "أضف ملاحظة: «بعد الضغط، اسحب لتجد التقويم»" } }
-      - { id: move, text: { en: "Move focus to \"Choose your dates\" at the top of the panel", ar: "انقل التركيز إلى «اختر التواريخ» في أعلى اللوحة" } }
+      - id: sound
+        text: {en: Play a sound to say something opened, ar: شغّل صوتًا يقول إن شيئًا فُتح}
+        mock:
+          reader:
+            en: "Change dates, button. (A sound plays.)"
+            ar: غيّر التواريخ، زر. (يُسمع صوت.)
+          app: zad
+          appbar:
+            title: {en: Hotel, ar: الفندق}
+            back: true
+            actions:
+            - icon: heart
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - kind: button
+            ring: brand
+            text: {en: Change dates, ar: غيّر التواريخ}
+          - kind: group
+            gap: s
+            blocks:
+            - kind: meta
+              weight: bold
+              text: {en: Choose your dates, ar: اختر التواريخ}
+            - kind: small
+              color: muted
+              text: {en: Mon 5 · Tue 6 · Wed 7 · Thu 8, ar: الاثنين 5 · الثلاثاء 6 · الأربعاء 7 · الخميس 8}
+              gap: xs
+          - kind: small
+            color: muted
+            text: {en: (nothing more), ar: (ولا شيء بعدها)}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: help
+        text:
+          en: "Add a tip: \"After tapping, swipe to find the calendar\""
+          ar: "أضف ملاحظة: «بعد الضغط، اسحب لتجد التقويم»"
+        mock:
+          reader:
+            en: "Change dates, button."
+            ar: غيّر التواريخ، زر.
+          app: zad
+          appbar:
+            title: {en: Hotel, ar: الفندق}
+            back: true
+            actions:
+            - icon: heart
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - kind: button
+            ring: brand
+            text: {en: Change dates, ar: غيّر التواريخ}
+          - kind: small
+            text:
+              en: "After tapping, swipe to find the calendar"
+              ar: بعد الضغط، اسحب لتجد التقويم
+            color: muted
+            gap: xs
+          - kind: group
+            gap: s
+            blocks:
+            - kind: meta
+              weight: bold
+              text: {en: Choose your dates, ar: اختر التواريخ}
+            - kind: small
+              color: muted
+              text: {en: Mon 5 · Tue 6 · Wed 7 · Thu 8, ar: الاثنين 5 · الثلاثاء 6 · الأربعاء 7 · الخميس 8}
+              gap: xs
+          - kind: small
+            color: muted
+            text: {en: (nothing more), ar: (ولا شيء بعدها)}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: move
+        text:
+          en: "Move focus to \"Choose your dates\" at the top of the panel"
+          ar: انقل التركيز إلى «اختر التواريخ» في أعلى اللوحة
+        mock:
+          reader:
+            en: "Choose your dates, heading."
+            ar: اختر التواريخ، عنوان.
+          app: zad
+          appbar:
+            title: {en: Hotel, ar: الفندق}
+            back: true
+            actions:
+            - icon: heart
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - kind: button
+            text: {en: Change dates, ar: غيّر التواريخ}
+          - kind: group
+            gap: s
+            blocks:
+            - kind: meta
+              weight: bold
+              text: {en: Choose your dates, ar: اختر التواريخ}
+            - kind: small
+              color: muted
+              text: {en: Mon 5 · Tue 6 · Wed 7 · Thu 8, ar: الاثنين 5 · الثلاثاء 6 · الأربعاء 7 · الخميس 8}
+              gap: xs
+            ring: brand
+          - kind: small
+            color: muted
+            text: {en: (nothing more), ar: (ولا شيء بعدها)}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [move]
     misconceptions:
       - id: MC-P05-043

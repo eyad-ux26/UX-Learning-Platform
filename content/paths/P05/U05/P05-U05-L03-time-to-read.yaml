@@ -113,7 +113,7 @@ steps:
       ar: "- **لا حركة تلقائية:** البانرات والـ Carousel تتغيّر فقط حين يطلب الناس. والمحتوى المتحرّك صعب قراءته وصعب الضغط عليه.\n- **رسائل تبقى:** الأخطاء وكل ما يجب أن يتصرّف فيه الناس تبقى حتى يغلقوها أو يحلّوا المشكلة.\n- **الاختفاء مقبول للأخبار الصغيرة:** «تم الحفظ» أو «أُضيف إلى المفضّلة» يمكن أن تختفي، لأنه لا يضيع شيء إذا فاتت.\n- **ليس داخل الـ Carousel فقط:** كل شيء مهم يأخذ أيضًا مكانًا ثابتًا في الصفحة."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U05-05
     part: guided
     rules: [R06]
@@ -129,14 +129,70 @@ steps:
       ar: "كيف نُصلح الرسالة حتى لا يظل العميل ينتظر طلبًا لن يأتي؟"
     mock:
       app: dawaa
-      appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
+      appbar:
+        title: {en: Checkout, ar: الدفع}
+        back: true
       blocks:
-        - { kind: title, text: { en: "Processing your order…", ar: "جارٍ تنفيذ طلبك…" } }
-        - { kind: banner, text: { en: "Payment failed · disappears in 3 s", ar: "فشل الدفع · تختفي بعد 3 ث" }, gap: xl }
+      - kind: title
+        text: {en: Processing your order…, ar: جارٍ تنفيذ طلبك…}
+      - kind: banner
+        text: {en: Payment failed · disappears in 3 s, ar: فشل الدفع · تختفي بعد 3 ث}
+        gap: xl
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: longer, text: { en: "Keep it on screen for 6 seconds", ar: "أبقِها على الشاشة 6 ثوانٍ" } }
-      - { id: red, text: { en: "Make the small message red, so it gets noticed", ar: "اجعل الرسالة الصغيرة حمراء، لتُلاحَظ" } }
-      - { id: stay, text: { en: "Show the error on the payment screen, with \"Try again\", until it's fixed", ar: "اعرض الخطأ في شاشة الدفع، مع «حاول مرة أخرى»، حتى يُحلّ" } }
+      - id: longer
+        text: {en: Keep it on screen for 6 seconds, ar: أبقِها على الشاشة 6 ثوانٍ}
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Checkout, ar: الدفع}
+            back: true
+          blocks:
+          - kind: title
+            text: {en: Processing your order…, ar: جارٍ تنفيذ طلبك…}
+          - kind: banner
+            text: {en: Payment failed · disappears in 6 s, ar: فشل الدفع · تختفي بعد 6 ث}
+            gap: xl
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: red
+        text:
+          en: "Make the small message red, so it gets noticed"
+          ar: اجعل الرسالة الصغيرة حمراء، لتُلاحَظ
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Checkout, ar: الدفع}
+            back: true
+          blocks:
+          - kind: title
+            text: {en: Processing your order…, ar: جارٍ تنفيذ طلبك…}
+          - kind: banner
+            text: {en: Payment failed · disappears in 3 s, ar: فشل الدفع · تختفي بعد 3 ث}
+            gap: xl
+            tone: bad
+            icon: warning
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: stay
+        text:
+          en: "Show the error on the payment screen, with \"Try again\", until it's fixed"
+          ar: اعرض الخطأ في شاشة الدفع، مع «حاول مرة أخرى»، حتى يُحلّ
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Checkout, ar: الدفع}
+            back: true
+          blocks:
+          - kind: title
+            text: {en: Payment failed, ar: فشل الدفع}
+          - kind: banner
+            text: {en: Your card was declined. Nothing was charged., ar: رُفضت بطاقتك. لم يُخصم أي مبلغ.}
+            tone: bad
+            icon: warning
+            gap: s
+          - kind: button
+            text: {en: Try again, ar: حاول مرة أخرى}
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [stay]
     misconceptions:
       - id: MC-P05-052
@@ -258,7 +314,7 @@ steps:
       ar: "اسأل: ماذا لو فاتتهم؟ إذا لم يضع شيء، يمكن أن تختفي. وإذا تعطّل شيء، تبقى."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P05-U05-05
     part: independent
     speaker: nour
@@ -277,15 +333,92 @@ steps:
       app: raha
       frame: wide
       url: raha.example/booking/done
-      navbar: { actions: [ { icon: user } ] }
+      navbar:
+        actions:
+        - {icon: user}
       blocks:
-        - { kind: icon, icon: check-circle, size: l, color: brand }
-        - { kind: title, text: { en: "Booked! Your number: A14", ar: "تم الحجز! رقمك: A14" } }
-        - { kind: small, color: muted, text: { en: "Going back home in 5 s…", ar: "الرجوع للرئيسية بعد 5 ث…" }, gap: s }
+      - {kind: icon, icon: check-circle, size: l, color: brand}
+      - kind: title
+        text:
+          en: "Booked! Your number: A14"
+          ar: "تم الحجز! رقمك: A14"
+      - kind: small
+        color: muted
+        text: {en: Going back home in 5 s…, ar: الرجوع للرئيسية بعد 5 ث…}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: stay, text: { en: "Stay until the patient leaves, with the number and a \"Done\" button", ar: "تبقى حتى يغادر المريض، مع الرقم وزر «تم»" } }
-      - { id: ten, text: { en: "Stay for 10 seconds instead of 5", ar: "تبقى 10 ثوانٍ بدل 5" } }
-      - { id: count, text: { en: "Show a big countdown: 5, 4, 3…", ar: "تعرض عدًّا تنازليًا كبيرًا: 5، 4، 3…" } }
+      - id: stay
+        text:
+          en: "Stay until the patient leaves, with the number and a \"Done\" button"
+          ar: تبقى حتى يغادر المريض، مع الرقم وزر «تم»
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example/booking/done
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - {kind: icon, icon: check-circle, size: l, color: brand}
+          - kind: title
+            text:
+              en: "Booked! Your number: A14"
+              ar: "تم الحجز! رقمك: A14"
+          - kind: button
+            text: {en: Done, ar: تم}
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: ten
+        text: {en: Stay for 10 seconds instead of 5, ar: تبقى 10 ثوانٍ بدل 5}
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example/booking/done
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - {kind: icon, icon: check-circle, size: l, color: brand}
+          - kind: title
+            text:
+              en: "Booked! Your number: A14"
+              ar: "تم الحجز! رقمك: A14"
+          - kind: small
+            color: muted
+            text: {en: Going back home in 10 s…, ar: الرجوع للرئيسية بعد 10 ث…}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: count
+        text:
+          en: "Show a big countdown: 5, 4, 3…"
+          ar: "تعرض عدًّا تنازليًا كبيرًا: 5، 4، 3…"
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example/booking/done
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - {kind: icon, icon: check-circle, size: l, color: brand}
+          - kind: title
+            text:
+              en: "Booked! Your number: A14"
+              ar: "تم الحجز! رقمك: A14"
+          - kind: title
+            text:
+              en: "5"
+              ar: "5"
+            gap: m
+            note:
+              en: "5, 4, 3…"
+              ar: "5، 4، 3…"
+          - kind: small
+            text: {en: Going back home…, ar: الرجوع للرئيسية…}
+            color: muted
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [stay]
     misconceptions:
       - id: MC-P05-052

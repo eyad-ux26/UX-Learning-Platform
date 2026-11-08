@@ -13,7 +13,7 @@ sources:
     url: "https://www.nngroup.com/articles/screen-reader-users-on-mobile/"
 steps:
   - id: S01
-    type: choose
+    type: tune
     skill: SK-P05-U04-01
     part: retest
     speaker: youssef
@@ -29,16 +29,114 @@ steps:
       ar: "ماذا يجب أن يكون النص البديل (Alt text) للصورة؟"
     mock:
       app: lamha
-      appbar: { title: { en: "Lamha · Men", ar: "لمحة · رجال" }, back: true, actions: [ { icon: shopping-bag, aria: { en: "Bag", ar: "الحقيبة" } } ] }
+      appbar:
+        title: {en: Lamha · Men, ar: لمحة · رجال}
+        back: true
+        actions:
+        - icon: shopping-bag
+          aria: {en: Bag, ar: الحقيبة}
       blocks:
-        - { kind: image, art: shirt, text: "CAIRO RUNNERS 2026" }
-        - { kind: heading, text: { en: "White T-shirt", ar: "تيشيرت أبيض" }, gap: s }
-        - { kind: price, text: { en: "350 EGP", ar: "350 جنيه" }, gap: xs }
-        - { kind: button, text: { en: "Add to bag", ar: "أضف إلى الحقيبة" }, gap: s }
+      - {kind: image, art: shirt, text: CAIRO RUNNERS 2026}
+      - kind: heading
+        text: {en: White T-shirt, ar: تيشيرت أبيض}
+        gap: s
+      - kind: price
+        text:
+          en: "350 EGP"
+          ar: "350 جنيه"
+        gap: xs
+      - kind: button
+        text: {en: Add to bag, ar: أضف إلى الحقيبة}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: empty, text: { en: "Empty; the name already says it's a T-shirt", ar: "فارغ؛ الاسم يقول إنه تيشيرت أصلًا" } }
-      - { id: plain, text: { en: "\"White cotton T-shirt.\"", ar: "«تيشيرت قطن أبيض.»" } }
-      - { id: words, text: { en: "\"White T-shirt printed with 'Cairo Runners 2026'.\"", ar: "«تيشيرت أبيض مطبوع عليه \"Cairo Runners 2026\".»" } }
+      - id: empty
+        text:
+          en: "Empty; the name already says it's a T-shirt"
+          ar: فارغ؛ الاسم يقول إنه تيشيرت أصلًا
+        mock:
+          app: lamha
+          appbar:
+            title: {en: Lamha · Men, ar: لمحة · رجال}
+            back: true
+            actions:
+            - icon: shopping-bag
+              aria: {en: Bag, ar: الحقيبة}
+          blocks:
+          - {kind: image, art: shirt, text: CAIRO RUNNERS 2026}
+          - kind: heading
+            text: {en: White T-shirt, ar: تيشيرت أبيض}
+            gap: s
+          - kind: price
+            text:
+              en: "350 EGP"
+              ar: "350 جنيه"
+            gap: xs
+          - kind: button
+            text: {en: Add to bag, ar: أضف إلى الحقيبة}
+            gap: s
+          reader:
+            en: "White T-shirt, heading. 350 EGP."
+            ar: تيشيرت أبيض، عنوان. 350 جنيه.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: plain
+        text:
+          en: "\"White cotton T-shirt.\""
+          ar: «تيشيرت قطن أبيض.»
+        mock:
+          app: lamha
+          appbar:
+            title: {en: Lamha · Men, ar: لمحة · رجال}
+            back: true
+            actions:
+            - icon: shopping-bag
+              aria: {en: Bag, ar: الحقيبة}
+          blocks:
+          - {kind: image, art: shirt, text: CAIRO RUNNERS 2026}
+          - kind: heading
+            text: {en: White T-shirt, ar: تيشيرت أبيض}
+            gap: s
+          - kind: price
+            text:
+              en: "350 EGP"
+              ar: "350 جنيه"
+            gap: xs
+          - kind: button
+            text: {en: Add to bag, ar: أضف إلى الحقيبة}
+            gap: s
+          reader:
+            en: "White cotton T-shirt, image. White T-shirt, heading."
+            ar: تيشيرت قطن أبيض، صورة. تيشيرت أبيض، عنوان.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: words
+        text:
+          en: "\"White T-shirt printed with 'Cairo Runners 2026'.\""
+          ar: "«تيشيرت أبيض مطبوع عليه \"Cairo Runners 2026\".»"
+        mock:
+          app: lamha
+          appbar:
+            title: {en: Lamha · Men, ar: لمحة · رجال}
+            back: true
+            actions:
+            - icon: shopping-bag
+              aria: {en: Bag, ar: الحقيبة}
+          blocks:
+          - {kind: image, art: shirt, text: CAIRO RUNNERS 2026}
+          - kind: heading
+            text: {en: White T-shirt, ar: تيشيرت أبيض}
+            gap: s
+          - kind: price
+            text:
+              en: "350 EGP"
+              ar: "350 جنيه"
+            gap: xs
+          - kind: button
+            text: {en: Add to bag, ar: أضف إلى الحقيبة}
+            gap: s
+          reader:
+            en: "White T-shirt printed with 'Cairo Runners 2026', image. White T-shirt, heading."
+            ar: "تيشيرت أبيض مطبوع عليه \"Cairo Runners 2026\"، صورة. تيشيرت أبيض، عنوان."
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [words]
     misconceptions:
       - id: MC-P05-037
@@ -54,7 +152,7 @@ steps:
       ar: "النص البديل يعطي الرسالة التي تضيفها الصورة. وهنا هي الكلمات المطبوعة على التيشيرت."
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P05-U04-01
     part: retest
     speaker: tarek
@@ -70,21 +168,148 @@ steps:
       ar: "ماذا يجب أن يكون النص البديل لأيقونة ✕؟"
     mock:
       app: sallah
-      appbar: { logo: true, actions: [ { icon: basket, aria: { en: "Basket", ar: "السلة" } } ] }
+      appbar:
+        logo: true
+        actions:
+        - icon: basket
+          aria: {en: Basket, ar: السلة}
       blocks:
-        - { kind: searchbar, text: { en: "Search Sallah", ar: "ابحث في سلّة" } }
-        - { kind: listitem, art: bread, text: { en: "Baladi bread", ar: "عيش بلدي" }, value: { en: "10 EGP", ar: "10 جنيه" } }
+      - kind: searchbar
+        text: {en: Search Sallah, ar: ابحث في سلّة}
+      - kind: listitem
+        art: bread
+        text: {en: Baladi bread, ar: عيش بلدي}
+        value:
+          en: "10 EGP"
+          ar: "10 جنيه"
       overlay:
         type: dialog
         close: true
         blocks:
-          - { kind: heading, text: { en: "20% off your first order", ar: "خصم 20% على أول طلب" } }
-          - { kind: text, text: { en: "Use code HELLO20 at checkout.", ar: "استخدم الكود HELLO20 عند الدفع." }, gap: xs }
-          - { kind: button, text: { en: "Shop now", ar: "تسوّق الآن" }, gap: s }
+        - kind: heading
+          text:
+            en: "20% off your first order"
+            ar: "خصم 20% على أول طلب"
+        - kind: text
+          text: {en: Use code HELLO20 at checkout., ar: استخدم الكود HELLO20 عند الدفع.}
+          gap: xs
+        - kind: button
+          text: {en: Shop now, ar: تسوّق الآن}
+          gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: close, text: { en: "\"Close offer.\"", ar: "«أغلق العرض.»" } }
-      - { id: cross, text: { en: "\"Grey cross icon.\"", ar: "«أيقونة علامة × رمادية.»" } }
-      - { id: empty, text: { en: "Empty; it's a tiny icon", ar: "فارغ؛ إنها أيقونة صغيرة" } }
+      - id: close
+        text:
+          en: "\"Close offer.\""
+          ar: «أغلق العرض.»
+        mock:
+          app: sallah
+          appbar:
+            logo: true
+            actions:
+            - icon: basket
+              aria: {en: Basket, ar: السلة}
+          blocks:
+          - kind: searchbar
+            text: {en: Search Sallah, ar: ابحث في سلّة}
+          - kind: listitem
+            art: bread
+            text: {en: Baladi bread, ar: عيش بلدي}
+            value:
+              en: "10 EGP"
+              ar: "10 جنيه"
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+            - kind: heading
+              text:
+                en: "20% off your first order"
+                ar: "خصم 20% على أول طلب"
+            - kind: text
+              text: {en: Use code HELLO20 at checkout., ar: استخدم الكود HELLO20 عند الدفع.}
+              gap: xs
+            - kind: button
+              text: {en: Shop now, ar: تسوّق الآن}
+              gap: s
+          reader:
+            en: "Close offer, button."
+            ar: أغلق العرض، زر.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: cross
+        text:
+          en: "\"Grey cross icon.\""
+          ar: «أيقونة علامة × رمادية.»
+        mock:
+          app: sallah
+          appbar:
+            logo: true
+            actions:
+            - icon: basket
+              aria: {en: Basket, ar: السلة}
+          blocks:
+          - kind: searchbar
+            text: {en: Search Sallah, ar: ابحث في سلّة}
+          - kind: listitem
+            art: bread
+            text: {en: Baladi bread, ar: عيش بلدي}
+            value:
+              en: "10 EGP"
+              ar: "10 جنيه"
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+            - kind: heading
+              text:
+                en: "20% off your first order"
+                ar: "خصم 20% على أول طلب"
+            - kind: text
+              text: {en: Use code HELLO20 at checkout., ar: استخدم الكود HELLO20 عند الدفع.}
+              gap: xs
+            - kind: button
+              text: {en: Shop now, ar: تسوّق الآن}
+              gap: s
+          reader:
+            en: "Grey cross icon, button."
+            ar: أيقونة علامة × رمادية، زر.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: empty
+        text:
+          en: "Empty; it's a tiny icon"
+          ar: فارغ؛ إنها أيقونة صغيرة
+        mock:
+          app: sallah
+          appbar:
+            logo: true
+            actions:
+            - icon: basket
+              aria: {en: Basket, ar: السلة}
+          blocks:
+          - kind: searchbar
+            text: {en: Search Sallah, ar: ابحث في سلّة}
+          - kind: listitem
+            art: bread
+            text: {en: Baladi bread, ar: عيش بلدي}
+            value:
+              en: "10 EGP"
+              ar: "10 جنيه"
+          overlay:
+            type: dialog
+            close: true
+            blocks:
+            - kind: heading
+              text:
+                en: "20% off your first order"
+                ar: "خصم 20% على أول طلب"
+            - kind: text
+              text: {en: Use code HELLO20 at checkout., ar: استخدم الكود HELLO20 عند الدفع.}
+              gap: xs
+            - kind: button
+              text: {en: Shop now, ar: تسوّق الآن}
+              gap: s
+          reader: {en: Button., ar: زر.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [close]
     misconceptions:
       - id: MC-P05-036
@@ -181,7 +406,7 @@ steps:
       ar: "اجعل النص البديل في حدود جملة واحدة، وابدأ بما جاء الناس من أجله."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P05-U04-03
     part: retest
     speaker: karim
@@ -197,15 +422,128 @@ steps:
       ar: "ماذا يجب أن يكون النص البديل للرسم البياني؟"
     mock:
       app: waraq
-      appbar: { title: { en: "News", ar: "الأخبار" }, back: true }
+      appbar:
+        title: {en: News, ar: الأخبار}
+        back: true
       blocks:
-        - { kind: heading, text: { en: "Half a year of growth", ar: "نصف عام من النمو" } }
-        - { kind: chart, type: line, values: [12, 14, 17, 19, 22, 25], labels: [ { en: "Jan", ar: "يناير" }, { en: "Feb", ar: "فبراير" }, { en: "Mar", ar: "مارس" }, { en: "Apr", ar: "أبريل" }, { en: "May", ar: "مايو" }, { en: "Jun", ar: "يونيو" } ], gap: s }
-        - { kind: small, color: muted, text: { en: "Monthly downloads, in thousands", ar: "التحميلات الشهرية، بالآلاف" }, gap: xs }
+      - kind: heading
+        text: {en: Half a year of growth, ar: نصف عام من النمو}
+      - kind: chart
+        type: line
+        values: [12, 14, 17, 19, 22, 25]
+        labels:
+        - {en: Jan, ar: يناير}
+        - {en: Feb, ar: فبراير}
+        - {en: Mar, ar: مارس}
+        - {en: Apr, ar: أبريل}
+        - {en: May, ar: مايو}
+        - {en: Jun, ar: يونيو}
+        gap: s
+      - kind: small
+        color: muted
+        text:
+          en: "Monthly downloads, in thousands"
+          ar: التحميلات الشهرية، بالآلاف
+        gap: xs
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: point, text: { en: "\"Downloads doubled from January to June, rising every month.\"", ar: "«تضاعفت التحميلات من يناير إلى يونيو، وزادت كل شهر.»" } }
-      - { id: numbers, text: { en: "\"January 12,400. February 14,100. March 16,800. April…\"", ar: "«يناير 12,400. فبراير 14,100. مارس 16,800. أبريل…»" } }
-      - { id: type, text: { en: "\"Line chart of downloads.\"", ar: "«رسم بياني بخط للتحميلات.»" } }
+      - id: point
+        text:
+          en: "\"Downloads doubled from January to June, rising every month.\""
+          ar: «تضاعفت التحميلات من يناير إلى يونيو، وزادت كل شهر.»
+        mock:
+          app: waraq
+          appbar:
+            title: {en: News, ar: الأخبار}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Half a year of growth, ar: نصف عام من النمو}
+          - kind: chart
+            type: line
+            values: [12, 14, 17, 19, 22, 25]
+            labels:
+            - {en: Jan, ar: يناير}
+            - {en: Feb, ar: فبراير}
+            - {en: Mar, ar: مارس}
+            - {en: Apr, ar: أبريل}
+            - {en: May, ar: مايو}
+            - {en: Jun, ar: يونيو}
+            gap: s
+          - kind: small
+            color: muted
+            text:
+              en: "Monthly downloads, in thousands"
+              ar: التحميلات الشهرية، بالآلاف
+            gap: xs
+          reader:
+            en: "Downloads doubled from January to June, rising every month. Image."
+            ar: تضاعفت التحميلات من يناير إلى يونيو، وزادت كل شهر. صورة.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: numbers
+        text:
+          en: "\"January 12,400. February 14,100. March 16,800. April…\""
+          ar: "«يناير 12,400. فبراير 14,100. مارس 16,800. أبريل…»"
+        mock:
+          app: waraq
+          appbar:
+            title: {en: News, ar: الأخبار}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Half a year of growth, ar: نصف عام من النمو}
+          - kind: chart
+            type: line
+            values: [12, 14, 17, 19, 22, 25]
+            labels:
+            - {en: Jan, ar: يناير}
+            - {en: Feb, ar: فبراير}
+            - {en: Mar, ar: مارس}
+            - {en: Apr, ar: أبريل}
+            - {en: May, ar: مايو}
+            - {en: Jun, ar: يونيو}
+            gap: s
+          - kind: small
+            color: muted
+            text:
+              en: "Monthly downloads, in thousands"
+              ar: التحميلات الشهرية، بالآلاف
+            gap: xs
+          reader:
+            en: "January 12,400. February 14,100. March 16,800. April… Image."
+            ar: "يناير 12,400. فبراير 14,100. مارس 16,800. أبريل… صورة."
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: type
+        text:
+          en: "\"Line chart of downloads.\""
+          ar: «رسم بياني بخط للتحميلات.»
+        mock:
+          app: waraq
+          appbar:
+            title: {en: News, ar: الأخبار}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Half a year of growth, ar: نصف عام من النمو}
+          - kind: chart
+            type: line
+            values: [12, 14, 17, 19, 22, 25]
+            labels:
+            - {en: Jan, ar: يناير}
+            - {en: Feb, ar: فبراير}
+            - {en: Mar, ar: مارس}
+            - {en: Apr, ar: أبريل}
+            - {en: May, ar: مايو}
+            - {en: Jun, ar: يونيو}
+            gap: s
+          - kind: small
+            color: muted
+            text:
+              en: "Monthly downloads, in thousands"
+              ar: التحميلات الشهرية، بالآلاف
+            gap: xs
+          reader: {en: Line chart of downloads. Image., ar: رسم بياني بخط للتحميلات. صورة.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [point]
     misconceptions:
       - id: MC-P05-040
@@ -302,7 +640,7 @@ steps:
       ar: "الرابط يجب أن يقول وجهته في أول كلماته."
 
   - id: S08
-    type: choose
+    type: tune
     skill: SK-P05-U04-04
     part: retest
     speaker: hana
@@ -317,23 +655,190 @@ steps:
       en: "What should the buttons say?"
       ar: "ماذا نكتب على الأزرار حتى يعرف العضو أي ملف سيحمّل؟"
     mock:
-      reader: { en: "Download, button. Download, button. Download, button.", ar: "تحميل، زر. تحميل، زر. تحميل، زر." }
+      reader:
+        en: "Download, button. Download, button. Download, button."
+        ar: تحميل، زر. تحميل، زر. تحميل، زر.
       app: nashat
       frame: wide
       url: nashat.example/members
-      navbar: { actions: [ { icon: user } ] }
+      navbar:
+        actions:
+        - {icon: user}
       blocks:
-        - { kind: heading, text: { en: "Member files", ar: "ملفات الأعضاء" } }
-        - { kind: listitem, icon: calendar, text: { en: "Class timetable", ar: "جدول الحصص" }, sub: "PDF · 1 MB" }
-        - { kind: button, style: outline, icon: download-simple, text: { en: "Download", ar: "تحميل" }, gap: xs }
-        - { kind: listitem, icon: receipt, text: { en: "Price list", ar: "قائمة الأسعار" }, sub: "PDF · 0.5 MB", gap: s }
-        - { kind: button, style: outline, icon: download-simple, text: { en: "Download", ar: "تحميل" }, gap: xs }
-        - { kind: listitem, icon: list-checks, text: { en: "Gym rules", ar: "قواعد النادي" }, sub: "PDF · 0.3 MB", gap: s }
-        - { kind: button, style: outline, icon: download-simple, text: { en: "Download", ar: "تحميل" }, gap: xs }
+      - kind: heading
+        text: {en: Member files, ar: ملفات الأعضاء}
+      - kind: listitem
+        icon: calendar
+        text: {en: Class timetable, ar: جدول الحصص}
+        sub: PDF · 1 MB
+      - kind: button
+        style: outline
+        icon: download-simple
+        text: {en: Download, ar: تحميل}
+        gap: xs
+      - kind: listitem
+        icon: receipt
+        text: {en: Price list, ar: قائمة الأسعار}
+        sub: PDF · 0.5 MB
+        gap: s
+      - kind: button
+        style: outline
+        icon: download-simple
+        text: {en: Download, ar: تحميل}
+        gap: xs
+      - kind: listitem
+        icon: list-checks
+        text: {en: Gym rules, ar: قواعد النادي}
+        sub: PDF · 0.3 MB
+        gap: s
+      - kind: button
+        style: outline
+        icon: download-simple
+        text: {en: Download, ar: تحميل}
+        gap: xs
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: one, text: { en: "\"Download 1\", \"Download 2\", \"Download 3\"", ar: "«تحميل 1»، «تحميل 2»، «تحميل 3»" } }
-      - { id: names, text: { en: "\"Download timetable\", \"Download prices\", \"Download rules\"", ar: "«تحميل جدول الحصص»، «تحميل الأسعار»، «تحميل القواعد»" } }
-      - { id: icon, text: { en: "Keep \"Download\" and add a ⬇ icon", ar: "أبقِ «تحميل» وأضف أيقونة ⬇" } }
+      - id: one
+        text:
+          en: "\"Download 1\", \"Download 2\", \"Download 3\""
+          ar: «تحميل 1»، «تحميل 2»، «تحميل 3»
+        mock:
+          reader:
+            en: "Download 1, button. Download 2, button. Download 3, button."
+            ar: تحميل 1، زر. تحميل 2، زر. تحميل 3، زر.
+          app: nashat
+          frame: wide
+          url: nashat.example/members
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: heading
+            text: {en: Member files, ar: ملفات الأعضاء}
+          - kind: listitem
+            icon: calendar
+            text: {en: Class timetable, ar: جدول الحصص}
+            sub: PDF · 1 MB
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download 1, ar: تحميل 1}
+            gap: xs
+          - kind: listitem
+            icon: receipt
+            text: {en: Price list, ar: قائمة الأسعار}
+            sub: PDF · 0.5 MB
+            gap: s
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download 2, ar: تحميل 2}
+            gap: xs
+          - kind: listitem
+            icon: list-checks
+            text: {en: Gym rules, ar: قواعد النادي}
+            sub: PDF · 0.3 MB
+            gap: s
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download 3, ar: تحميل 3}
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: names
+        text:
+          en: "\"Download timetable\", \"Download prices\", \"Download rules\""
+          ar: «تحميل جدول الحصص»، «تحميل الأسعار»، «تحميل القواعد»
+        mock:
+          reader:
+            en: "Download timetable, button. Download prices, button. Download rules, button."
+            ar: تحميل جدول الحصص، زر. تحميل الأسعار، زر. تحميل القواعد، زر.
+          app: nashat
+          frame: wide
+          url: nashat.example/members
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: heading
+            text: {en: Member files, ar: ملفات الأعضاء}
+          - kind: listitem
+            icon: calendar
+            text: {en: Class timetable, ar: جدول الحصص}
+            sub: PDF · 1 MB
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download timetable, ar: تحميل جدول الحصص}
+            gap: xs
+          - kind: listitem
+            icon: receipt
+            text: {en: Price list, ar: قائمة الأسعار}
+            sub: PDF · 0.5 MB
+            gap: s
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download prices, ar: تحميل الأسعار}
+            gap: xs
+          - kind: listitem
+            icon: list-checks
+            text: {en: Gym rules, ar: قواعد النادي}
+            sub: PDF · 0.3 MB
+            gap: s
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download rules, ar: تحميل القواعد}
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: icon
+        text:
+          en: "Keep \"Download\" and add a ⬇ icon"
+          ar: أبقِ «تحميل» وأضف أيقونة ⬇
+        mock:
+          reader:
+            en: "Download, button. Download, button. Download, button."
+            ar: تحميل، زر. تحميل، زر. تحميل، زر.
+          app: nashat
+          frame: wide
+          url: nashat.example/members
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: heading
+            text: {en: Member files, ar: ملفات الأعضاء}
+          - kind: listitem
+            icon: calendar
+            text: {en: Class timetable, ar: جدول الحصص}
+            sub: PDF · 1 MB
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download, ar: تحميل}
+            gap: xs
+          - kind: listitem
+            icon: receipt
+            text: {en: Price list, ar: قائمة الأسعار}
+            sub: PDF · 0.5 MB
+            gap: s
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download, ar: تحميل}
+            gap: xs
+          - kind: listitem
+            icon: list-checks
+            text: {en: Gym rules, ar: قواعد النادي}
+            sub: PDF · 0.3 MB
+            gap: s
+          - kind: button
+            style: outline
+            icon: download-simple
+            text: {en: Download, ar: تحميل}
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [names]
     misconceptions:
       - id: MC-P05-041
@@ -349,7 +854,7 @@ steps:
       ar: "الأزرار والروابط كثيرًا ما تُسمع كقائمة. وكل واحد يحتاج كلمات مفهومة وحدها."
 
   - id: S09
-    type: choose
+    type: tune
     skill: SK-P05-U04-05
     part: retest
     speaker: tarek
@@ -364,23 +869,163 @@ steps:
       en: "Where should focus go when the form opens?"
       ar: "إلى أين يجب أن يذهب التركيز حين يُفتح النموذج؟"
     mock:
-      reader: { en: "Fresh today, heading. Tomatoes, 25 pounds.", ar: "طازج اليوم، عنوان. طماطم، 25 جنيهًا." }
+      reader:
+        en: "Fresh today, heading. Tomatoes, 25 pounds."
+        ar: طازج اليوم، عنوان. طماطم، 25 جنيهًا.
       app: sallah
-      appbar: { title: { en: "Checkout", ar: "الدفع" }, back: true }
+      appbar:
+        title: {en: Checkout, ar: الدفع}
+        back: true
       blocks:
-        - { kind: heading, text: { en: "Fresh today", ar: "طازج اليوم" } }
-        - { kind: listitem, art: food-salad, text: { en: "Tomatoes", ar: "طماطم" }, value: { en: "25 EGP", ar: "25 جنيه" } }
+      - kind: heading
+        text: {en: Fresh today, ar: طازج اليوم}
+      - kind: listitem
+        art: food-salad
+        text: {en: Tomatoes, ar: طماطم}
+        value:
+          en: "25 EGP"
+          ar: "25 جنيه"
       overlay:
         type: sheet
-        title: { en: "New address", ar: "عنوان جديد" }
+        title: {en: New address, ar: عنوان جديد}
         blocks:
-          - { kind: field, label: { en: "Street", ar: "الشارع" }, text: { en: "e.g. 12 Tahrir St.", ar: "مثال: 12 شارع التحرير" } }
-          - { kind: field, label: { en: "Building and flat", ar: "العمارة والشقة" }, text: { en: "e.g. Building 4, flat 7", ar: "مثال: عمارة 4، شقة 7" }, gap: s }
-          - { kind: button, text: { en: "Save", ar: "احفظ" }, gap: s }
+        - kind: field
+          label: {en: Street, ar: الشارع}
+          text:
+            en: e.g. 12 Tahrir St.
+            ar: "مثال: 12 شارع التحرير"
+        - kind: field
+          label: {en: Building and flat, ar: العمارة والشقة}
+          text:
+            en: "e.g. Building 4, flat 7"
+            ar: "مثال: عمارة 4، شقة 7"
+          gap: s
+        - kind: button
+          text: {en: Save, ar: احفظ}
+          gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: stay, text: { en: "Stay on \"Add address\", so the customer knows where they are", ar: "يبقى على «أضف عنوانًا»، ليعرف العميل أين هو" } }
-      - { id: save, text: { en: "Go to the \"Save\" button at the bottom of the form", ar: "يذهب إلى زر «احفظ» في أسفل النموذج" } }
-      - { id: top, text: { en: "Go to the form's title, \"New address\", at the top", ar: "يذهب إلى عنوان النموذج «عنوان جديد» في الأعلى" } }
+      - id: stay
+        text:
+          en: "Stay on \"Add address\", so the customer knows where they are"
+          ar: يبقى على «أضف عنوانًا»، ليعرف العميل أين هو
+        mock:
+          reader:
+            en: "Add address, button."
+            ar: أضف عنوانًا، زر.
+          app: sallah
+          appbar:
+            title: {en: Checkout, ar: الدفع}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Fresh today, ar: طازج اليوم}
+          - kind: listitem
+            art: food-salad
+            text: {en: Tomatoes, ar: طماطم}
+            value:
+              en: "25 EGP"
+              ar: "25 جنيه"
+          overlay:
+            type: sheet
+            title: {en: New address, ar: عنوان جديد}
+            blocks:
+            - kind: field
+              label: {en: Street, ar: الشارع}
+              text:
+                en: e.g. 12 Tahrir St.
+                ar: "مثال: 12 شارع التحرير"
+            - kind: field
+              label: {en: Building and flat, ar: العمارة والشقة}
+              text:
+                en: "e.g. Building 4, flat 7"
+                ar: "مثال: عمارة 4، شقة 7"
+              gap: s
+            - kind: button
+              text: {en: Save, ar: احفظ}
+              gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: save
+        text:
+          en: "Go to the \"Save\" button at the bottom of the form"
+          ar: يذهب إلى زر «احفظ» في أسفل النموذج
+        mock:
+          reader:
+            en: "Save, button."
+            ar: احفظ، زر.
+          app: sallah
+          appbar:
+            title: {en: Checkout, ar: الدفع}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Fresh today, ar: طازج اليوم}
+          - kind: listitem
+            art: food-salad
+            text: {en: Tomatoes, ar: طماطم}
+            value:
+              en: "25 EGP"
+              ar: "25 جنيه"
+          overlay:
+            type: sheet
+            title: {en: New address, ar: عنوان جديد}
+            blocks:
+            - kind: field
+              label: {en: Street, ar: الشارع}
+              text:
+                en: e.g. 12 Tahrir St.
+                ar: "مثال: 12 شارع التحرير"
+            - kind: field
+              label: {en: Building and flat, ar: العمارة والشقة}
+              text:
+                en: "e.g. Building 4, flat 7"
+                ar: "مثال: عمارة 4، شقة 7"
+              gap: s
+            - kind: button
+              text: {en: Save, ar: احفظ}
+              gap: s
+              ring: brand
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: top
+        text:
+          en: "Go to the form's title, \"New address\", at the top"
+          ar: يذهب إلى عنوان النموذج «عنوان جديد» في الأعلى
+        mock:
+          reader:
+            en: "New address, heading."
+            ar: عنوان جديد، عنوان.
+          app: sallah
+          appbar:
+            title: {en: Checkout, ar: الدفع}
+            back: true
+          blocks:
+          - kind: heading
+            text: {en: Fresh today, ar: طازج اليوم}
+          - kind: listitem
+            art: food-salad
+            text: {en: Tomatoes, ar: طماطم}
+            value:
+              en: "25 EGP"
+              ar: "25 جنيه"
+          overlay:
+            type: sheet
+            title: {en: New address, ar: عنوان جديد}
+            blocks:
+            - kind: field
+              label: {en: Street, ar: الشارع}
+              text:
+                en: e.g. 12 Tahrir St.
+                ar: "مثال: 12 شارع التحرير"
+            - kind: field
+              label: {en: Building and flat, ar: العمارة والشقة}
+              text:
+                en: "e.g. Building 4, flat 7"
+                ar: "مثال: عمارة 4، شقة 7"
+              gap: s
+            - kind: button
+              text: {en: Save, ar: احفظ}
+              gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [top]
     misconceptions:
       - id: MC-P05-043

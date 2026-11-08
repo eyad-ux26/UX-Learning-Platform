@@ -307,7 +307,7 @@ steps:
       ar: "حين يحمل كل رابط اسم الهدف، يصل الناس مباشرة إلى القصة التي تناسبهم، سواء استمعوا بقارئ الشاشة أو قرأوا بأعينهم."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P05-U01-03
     part: retest
     speaker: karim
@@ -323,17 +323,105 @@ steps:
       ar: "أي تغيير يجعل الناس يجدون كمية مكوّن واحد فورًا؟"
     mock:
       app: tabkha
-      appbar: { title: { en: "Recipe", ar: "الوصفة" }, back: true }
+      appbar:
+        title: {en: Recipe, ar: الوصفة}
+        back: true
       blocks:
-        - { kind: title, text: { en: "Molokhia with chicken", ar: "ملوخية بالفراخ" } }
-        - { kind: image, art: food-grill, size: m, text: { en: "▶ Video · 6:00", ar: "▶ فيديو · 6:00" }, gap: s }
+      - kind: title
+        text: {en: Molokhia with chicken, ar: ملوخية بالفراخ}
+      - kind: image
+        art: food-grill
+        size: m
+        text:
+          en: "▶ Video · 6:00"
+          ar: "▶ فيديو · 6:00"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
       - id: replay
         text: { en: "Add a \"Back 10 seconds\" button to the video", ar: "أضف زر «رجوع 10 ثوانٍ» إلى الفيديو" }
+        mock:
+          app: tabkha
+          appbar:
+            title: {en: Recipe, ar: الوصفة}
+            back: true
+          blocks:
+          - kind: title
+            text: {en: Molokhia with chicken, ar: ملوخية بالفراخ}
+          - kind: image
+            art: food-grill
+            size: m
+            text:
+              en: "▶ Video · 6:00"
+              ar: "▶ فيديو · 6:00"
+            gap: s
+          - kind: button
+            text: {en: Back 10 seconds, ar: رجوع 10 ثوانٍ}
+            icon: arrow-counter-clockwise
+            style: outline
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
       - id: autoplay
         text: { en: "Make the video start as soon as the recipe opens", ar: "اجعل الفيديو يبدأ فور فتح الوصفة" }
+        mock:
+          app: tabkha
+          appbar:
+            title: {en: Recipe, ar: الوصفة}
+            back: true
+          blocks:
+          - kind: title
+            text: {en: Molokhia with chicken, ar: ملوخية بالفراخ}
+          - kind: image
+            art: food-grill
+            size: m
+            text:
+              en: "❚❚ Playing · 0:03"
+              ar: "❚❚ يعمل · 0:03"
+            gap: s
+            note: {en: Starts as soon as the recipe opens, ar: يبدأ فور فتح الوصفة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
       - id: text
         text: { en: "Add the ingredients and steps as text under the video", ar: "أضف المكوّنات والخطوات مكتوبة تحت الفيديو" }
+        mock:
+          app: tabkha
+          appbar:
+            title: {en: Recipe, ar: الوصفة}
+            back: true
+          blocks:
+          - kind: title
+            text: {en: Molokhia with chicken, ar: ملوخية بالفراخ}
+          - kind: image
+            art: food-grill
+            size: m
+            text:
+              en: "▶ Video · 6:00"
+              ar: "▶ فيديو · 6:00"
+            gap: s
+          - kind: heading
+            text: {en: Ingredients, ar: المكوّنات}
+            gap: m
+          - kind: list
+            style: bullet
+            gap: xs
+            items:
+            - en: "Molokhia: 500 g"
+              ar: "ملوخية: 500 جم"
+            - en: "Chicken: 1 whole"
+              ar: "فرخة: واحدة كاملة"
+            - en: "Garlic: 6 cloves"
+              ar: "ثوم: 6 فصوص"
+            - en: "Ground coriander: 1 tbsp"
+              ar: "كزبرة مطحونة: ملعقة كبيرة"
+          - kind: heading
+            text: {en: Steps, ar: الخطوات}
+            gap: m
+          - kind: list
+            style: number
+            gap: xs
+            items:
+            - {en: Boil the chicken for 40 minutes., ar: اسلق الفرخة 40 دقيقة.}
+            - {en: Add the molokhia to the stock and stir., ar: أضف الملوخية إلى المرق وقلّب.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [text]
     misconceptions:
       - id: MC-P05-006
@@ -486,7 +574,7 @@ steps:
 
   # SK-P05-U01-05: let people change text size and theme
   - id: S09
-    type: choose
+    type: tune
     skill: SK-P05-U01-05
     part: retest
     speaker: tarek
@@ -502,20 +590,84 @@ steps:
       ar: "ماذا نفعل بالزر، حتى يستطيع من يحتاج خطًا أكبر أن يقرأ؟"
     mock:
       app: mirsad
-      appbar: { logo: true, actions: [ { icon: bookmark-simple, aria: { en: "Save", ar: "حفظ" } } ] }
+      appbar:
+        logo: true
+        actions:
+        - icon: bookmark-simple
+          aria: {en: Save, ar: حفظ}
       blocks:
-        - kind: row
-          blocks:
-            - { kind: meta, text: { en: "Economy · 5 min read", ar: "اقتصاد · 5 دقائق قراءة" } }
-            - { kind: chip, text: "A A" }
-        - { kind: title, text: { en: "Bread prices stay the same this month", ar: "أسعار الخبز ثابتة هذا الشهر" }, gap: s }
+      - kind: row
+        blocks:
+        - kind: meta
+          text: {en: Economy · 5 min read, ar: اقتصاد · 5 دقائق قراءة}
+        - {kind: chip, text: A A}
+      - kind: title
+        text: {en: Bread prices stay the same this month, ar: أسعار الخبز ثابتة هذا الشهر}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
       - id: keep
         text: { en: "Keep it on article screens", ar: "نُبقيه في شاشات المقالات" }
+        mock:
+          app: mirsad
+          appbar:
+            logo: true
+            actions:
+            - icon: bookmark-simple
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - kind: row
+            blocks:
+            - kind: meta
+              text: {en: Economy · 5 min read, ar: اقتصاد · 5 دقائق قراءة}
+            - {kind: chip, text: A A}
+          - kind: title
+            text: {en: Bread prices stay the same this month, ar: أسعار الخبز ثابتة هذا الشهر}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
       - id: remove
         text: { en: "Remove it; 6% is too few people", ar: "نحذفه؛ فـ 6% عدد قليل" }
+        mock:
+          app: mirsad
+          appbar:
+            logo: true
+            actions:
+            - icon: bookmark-simple
+              aria: {en: Save, ar: حفظ}
+          blocks:
+          - kind: row
+            blocks:
+            - kind: meta
+              text: {en: Economy · 5 min read, ar: اقتصاد · 5 دقائق قراءة}
+          - kind: title
+            text: {en: Bread prices stay the same this month, ar: أسعار الخبز ثابتة هذا الشهر}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
       - id: bury
         text: { en: "Move it to Settings › Display › Advanced", ar: "ننقله إلى الإعدادات › العرض › متقدّم" }
+        mock:
+          app: mirsad
+          appbar:
+            title: {en: Advanced, ar: متقدّم}
+            back: true
+          blocks:
+          - kind: small
+            text: {en: Settings › Display › Advanced, ar: الإعدادات › العرض › متقدّم}
+            color: muted
+          - kind: listitem
+            text: {en: Text size, ar: حجم النص}
+            icon: text-aa
+            chevron: true
+            gap: s
+          - kind: listitem
+            text: {en: Data saver, ar: توفير البيانات}
+            icon: cell-signal-low
+            toggle: false
+          - kind: listitem
+            text: {en: Clear cache, ar: مسح الذاكرة المؤقتة}
+            icon: trash
+            chevron: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [keep]
     misconceptions:
       - id: MC-P05-012
