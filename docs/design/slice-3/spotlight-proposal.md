@@ -108,3 +108,7 @@ If you want one image that merges the path and the instructor, generate one per 
 - **Find and Fix Usability:** "a phone screen with a magnifying glass over it, a small amber warning marker on one button, and a green check mark beside a fixed version".
 
 Export at 1024 × 1024 and crop to 72 px and 160 px tiles. The face must stay centred, so the same image works in the small tile and the big card.
+
+## Build note: where "hybrid" comes from (PM, 8 Nov)
+
+`paths.kind` in the database is still `interactive` for every path, P02 and P14 included, because the seed never writes it. The code catalog is correct: `apps/web/lib/catalog-list.ts` and `apps/web/lib/public-paths.ts` both mark P14 and P02 as `kind: "hybrid"` (checked on main, 8 Nov). Before any grouping, sorting or instructor card keys off kind, either read kind from the code catalog or make the content seed upsert `paths.kind`. Do not key off the database column as it is today.
