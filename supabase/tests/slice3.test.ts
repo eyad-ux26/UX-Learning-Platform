@@ -88,6 +88,14 @@ describe("the week start", () => {
   });
 });
 
+describe("the name check flag (migration 0043)", () => {
+  it("starts empty, and the browser cannot set it (the server does)", async () => {
+    expect((await db.query<{ n: string | null }>(`select name_confirmed_at as n from profiles where user_id = $1`, [A])).rows[0].n).toBeNull();
+    await expect(as("authenticated", A, `update profiles set name_confirmed_at = now() where user_id = $1 returning user_id`, [A])).rejects.toThrow(/permission denied/);
+    expect(await as("service_role", null, `update profiles set name_confirmed_at = now() where user_id = $1 returning user_id`, [A])).toHaveLength(1);
+  });
+});
+
 describe("the display name at sign-up (migration 0042)", () => {
   it("uses display_name, then Google's full_name, then name, then the email prefix; blanks are skipped", async () => {
     const name = async (email: string, meta: object) => {
