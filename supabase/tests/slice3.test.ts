@@ -96,6 +96,20 @@ describe("the name check flag (migration 0043)", () => {
   });
 });
 
+describe("the display name at sign-up (migration 0042)", () => {
+  it("uses display_name, then Google's full_name, then name, then the email prefix; blanks are skipped", async () => {
+    const name = async (email: string, meta: object) => {
+      const id = (await db.query<{ id: string }>(`insert into auth.users (email, raw_user_meta_data) values ($1, $2) returning id`, [email, JSON.stringify(meta)])).rows[0].id;
+      return (await db.query<{ display_name: string }>(`select display_name from profiles where user_id = $1`, [id])).rows[0].display_name;
+    };
+    expect(await name("n1@example.com", { display_name: "Chosen", full_name: "Full", name: "N" })).toBe("Chosen");
+    expect(await name("n2@example.com", { full_name: "Eyad Ahmed", name: "Eyad" })).toBe("Eyad Ahmed");
+    expect(await name("n3@example.com", { name: "Eyad" })).toBe("Eyad");
+    expect(await name("eyad.0588@example.com", {})).toBe("eyad.0588");
+    expect(await name("n5@example.com", { display_name: "  ", full_name: "" })).toBe("n5");
+  });
+});
+
 describe("several paths", () => {
   it("a learner joins a published path but not one that is still coming soon", async () => {
     expect(await as("authenticated", C, `insert into enrollments (user_id, path_id) values ($1, 'P10') returning path_id`, [C])).toHaveLength(1);

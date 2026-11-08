@@ -29,7 +29,7 @@ steps:
       ar: "أصمّم تطبيقًا لحجز الطيران. ينتهي جواز يارا بعد شهرين، وشركة الطيران تحتاج 6 أشهر. ونعرض «الجواز غير مقبول لهذه الرحلة» في أعلى الصفحة تمامًا، فوق ملخّص الرحلة."
     prompt:
       en: "Try each version. Which one should ship?"
-      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة. أيّ نسخة تُخبر عصام بوضوح أنه يستطيع تجاوز الحقلين؟"
     start: top
     options:
       - id: top
@@ -43,7 +43,7 @@ steps:
             - { kind: field, label: &fl_n { en: "Passport number", ar: "رقم الجواز" }, filled: true, text: "A27718830", gap: m }
             - { kind: field, label: &fl_d { en: "Passport expiry date", ar: "تاريخ انتهاء الجواز" }, filled: true, text: "15/03/2027", gap: s }
       - id: both
-        text: { en: "Keep the top message, and also turn the date field red", ar: "أبقِ رسالة الأعلى، وحوّل حقل التاريخ إلى الأحمر أيضًا" }
+        text: { en: "Keep the top message, and also turn the date field red", ar: "أبقِ رسالة الأعلى، واجعل حقل التاريخ أحمر أيضًا" }
         mock:
           app: zad
           appbar: { title: { en: Passenger details, ar: بيانات المسافر }, back: true }
@@ -53,7 +53,7 @@ steps:
             - { kind: field, label: *fl_n, filled: true, text: "A27718830", gap: m }
             - { kind: field, label: *fl_d, filled: true, text: "15/03/2027", tone: bad, gap: s }
       - id: inline
-        text: { en: "Explain it under the expiry date field", ar: "اشرحها تحت حقل تاريخ الانتهاء" }
+        text: { en: "Explain it under the expiry date field", ar: "اشرح المشكلة تحت حقل تاريخ الانتهاء" }
         mock:
           app: zad
           appbar: { title: { en: Passenger details, ar: بيانات المسافر }, back: true }
@@ -67,13 +67,13 @@ steps:
         when: [top, both]
         feedback:
           en: "Yara reads the problem at the top and has to guess which part of the passport it's about. Say it on the date field, with the date it must reach."
-          ar: "تقرأ يارا المشكلة في الأعلى، وعليها أن تخمّن أي جزء من الجواز تقصده. قلها على حقل التاريخ، مع التاريخ المطلوب."
+          ar: "تقرأ يارا المشكلة في الأعلى، وعليها أن تخمّن أي جزء من الجواز تقصده. اكتبها عند حقل التاريخ، مع التاريخ المطلوب."
     correct:
       en: "Right. The message is on the date that causes it."
-      ar: "صحيح. الرسالة على التاريخ الذي سبّبها."
+      ar: "صحيح. الرسالة عند حقل التاريخ الذي سبّب المشكلة."
     explain:
       en: "An error on its field answers \"which one?\" by itself, and stays where the fixing happens."
-      ar: "الخطأ على حقله يجيب عن «أيّ واحد؟» بنفسه، ويبقى حيث يحدث الإصلاح."
+      ar: "رسالة الخطأ عند حقلها تجيب وحدها عن سؤال «أيّ حقل؟»، وتبقى حيث يُصلح الشخص الخطأ."
 
   - id: S02
     type: tune
@@ -86,14 +86,14 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/errors-forms-design-guidelines/", quote: "users can see the error message while fixing the error instead of having to remember it." }
     scenario:
       en: "I'm working on a food delivery app. When the building number is missing, a pop-up says so for 2 seconds. Hesham was looking at the street sign and missed it."
-      ar: "أعمل على تطبيق لتوصيل الطعام. حين يكون رقم العمارة ناقصًا، تظهر نافذة صغيرة تقول ذلك لمدة ثانيتين. وكان هشام ينظر إلى لافتة الشارع ففاتته."
+      ar: "أعمل على تطبيق لتوصيل الطعام. حين يكون رقم العمارة ناقصًا، تظهر نافذة منبثقة (Pop-up) تقول ذلك لمدة ثانيتين. وكان هشام ينظر إلى لافتة الشارع ففاتته."
     prompt:
       en: "Try each version, a few seconds after he taps Order. Which one should ship?"
-      ar: "جرّب كل نسخة، بعد ثوانٍ من ضغطه «اطلب». أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة، بعد ثوانٍ من ضغطه «اطلب». أيّ نسخة تُبقي هشام يعرف ما الناقص حين ينظر إلى الشاشة مرة أخرى؟"
     start: popup
     options:
       - id: popup
-        text: { en: "Keep the 2-second pop-up", ar: "أبقِ نافذة الثانيتين" }
+        text: { en: "Keep the 2-second pop-up", ar: "أبقِ النافذة التي تظهر لثانيتين" }
         mock:
           app: lamma
           appbar: { title: { en: Delivery address, ar: عنوان التوصيل }, back: true }
@@ -128,7 +128,7 @@ steps:
         when: [popup, shake]
         feedback:
           en: "A few seconds later, Hesham's screen looks normal again. Nothing says what's missing or where. Keep the message on the field."
-          ar: "بعد ثوانٍ، تبدو شاشة هشام عادية مرة أخرى. ولا شيء يقول ما الناقص أو أين. أبقِ الرسالة على الحقل."
+          ar: "بعد ثوانٍ، تبدو شاشة هشام عادية مرة أخرى. ولا شيء يوضّح ما الناقص أو أين. أبقِ الرسالة على الحقل."
     correct:
       en: "Right. Whenever Hesham looks back, the message is on the empty field."
       ar: "صحيح. كلما نظر هشام، وجد الرسالة على الحقل الفارغ."
@@ -148,19 +148,19 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/error-message-guidelines/", quote: "Hide or minimize the use of obscure error codes or abbreviations; show them for technical diagnostic purposes only." }
     scenario:
       en: "I'm building a bank app's sign-in. Nagwa's caps lock was on, so her password failed. The screen says \"AUTH_ERR 401\"."
-      ar: "أبني شاشة الدخول في تطبيق بنك. كان زر الأحرف الكبيرة (Caps Lock) مفعّلًا عند نجوى، ففشلت كلمة مرورها. والشاشة تقول «AUTH_ERR 401»."
+      ar: "أبني شاشة الدخول في تطبيق بنك. كان زر الأحرف الكبيرة (Caps Lock) مفعّلًا عند نجوى، ففشلت كلمة مرورها. والشاشة تعرض «AUTH_ERR 401»."
     prompt:
       en: "Try each message. Which one should ship?"
-      ar: "جرّب كل رسالة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل رسالة. أيّ رسالة تخبر نجوى بكلمات بسيطة سبب الفشل وكيف تصلحه؟"
     start: code
     options:
       - id: plain
-        text: { en: "\"That password didn't match. Caps Lock is on; turn it off and try again.\"", ar: "«كلمة المرور لم تتطابق. زر Caps Lock مفعّل؛ أوقفيه وحاولي مرة أخرى.»" }
+        text: { en: "\"That password didn't match. Caps Lock is on; turn it off and try again.\"", ar: "«كلمة المرور غير صحيحة. زر Caps Lock مفعّل؛ أوقفيه وحاولي مرة أخرى.»" }
         mock:
           app: rasid
           appbar: { title: { en: Sign in, ar: تسجيل الدخول }, back: true }
           blocks:
-            - { kind: field, label: &bk_p { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••••", tone: bad, error: { en: "⚠ That password didn't match. Caps Lock is on; turn it off and try again.", ar: "⚠ كلمة المرور لم تتطابق. زر Caps Lock مفعّل؛ أوقفيه وحاولي مرة أخرى." } }
+            - { kind: field, label: &bk_p { en: "Password", ar: "كلمة المرور" }, filled: true, text: "••••••••", tone: bad, error: { en: "⚠ That password didn't match. Caps Lock is on; turn it off and try again.", ar: "⚠ كلمة المرور غير صحيحة. زر Caps Lock مفعّل؛ أوقفيه وحاولي مرة أخرى." } }
       - id: code
         text: { en: "Keep \"AUTH_ERR 401\"", ar: "أبقِ «AUTH_ERR 401»" }
         mock:
@@ -181,7 +181,7 @@ steps:
         when: [code, auth]
         feedback:
           en: "\"AUTH_ERR\" and \"Authentication\" are system words. Nagwa needs to hear that the password didn't match, and what to check."
-          ar: "«AUTH_ERR» و«المصادقة» كلمات نظام. ونجوى تحتاج أن تسمع أن كلمة المرور لم تتطابق، وماذا تراجع."
+          ar: "«AUTH_ERR» و«المصادقة» كلمات نظام. ونجوى تحتاج أن تعرف أن كلمة المرور غير صحيحة، وماذا تراجع."
     correct:
       en: "Right. Plain words, and the likely cause."
       ar: "صحيح. كلمات بسيطة، والسبب المحتمل."
@@ -200,10 +200,10 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/error-message-guidelines/", quote: "Merely stating the problem is also not enough; offer some potential remedies." }
     scenario:
       en: "Patients upload lab results before a visit at my clinic. Adham's scan was 12 MB, and our limit is 5 MB. He got \"File too large\" and gave up."
-      ar: "يرفع المرضى نتائج التحاليل قبل الزيارة في عيادتي. وكان ملف أدهم 12 MB، والحدّ عندنا 5 MB. فظهرت له «الملف كبير جدًا» واستسلم."
+      ar: "يرفع المرضى نتائج التحاليل قبل الزيارة في عيادتي. وكان ملف أدهم 12 MB، والحدّ عندنا 5 MB. فظهرت له «الملف كبير جدًا» فترك الرفع."
     prompt:
       en: "Try each message. Which one should ship?"
-      ar: "جرّب كل رسالة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل رسالة. أيّ رسالة تخبر نجوى بكلمات بسيطة سبب الفشل وكيف تصلحه؟"
     start: large
     options:
       - id: large
@@ -225,7 +225,7 @@ steps:
             - { kind: button, emphasis: low, text: *lb_b, gap: xs }
             - { kind: small, color: red, text: { en: "⚠ This file is 12 MB. The limit is 5 MB.", ar: "⚠ هذا الملف 12 MB. والحدّ 5 MB." }, gap: xs }
       - id: remedy
-        text: { en: "Size and limit, plus: take a photo of each page instead", ar: "الحجم والحدّ، مع: صوّر كل صفحة بدلًا من ذلك" }
+        text: { en: "Size and limit, plus: take a photo of each page instead", ar: "اذكر الحجم والحدّ، واقترح تصوير كل صفحة بدلًا من ذلك" }
         mock:
           app: raha
           appbar: { title: { en: Lab results, ar: نتائج التحاليل }, back: true }
@@ -242,7 +242,7 @@ steps:
           ar: "يعرف أدهم الآن أن الملف كبير، وربما بكم، لكن أغلب الناس لا يعرفون كيف يصغّرون ملف PDF. اعرض طريقة تناسبهم."
     correct:
       en: "Right. He knows the problem and has a way to finish."
-      ar: "صحيح. يعرف المشكلة ولديه طريقة للإنهاء."
+      ar: "صحيح. يعرف المشكلة، ولديه طريقة لإكمال الرفع."
     explain:
       en: "A good error ends with a step people can take. If the fix is hard, offer another way."
       ar: "رسالة الخطأ الجيدة تنتهي بخطوة يستطيع الناس اتّخاذها. وإن كان الإصلاح صعبًا، فاعرض طريقة أخرى."
@@ -262,7 +262,7 @@ steps:
       ar: "متجري يوصّل داخل القاهرة والجيزة فقط. وكتبت سها عنوانًا في مدينة 6 أكتوبر. ورسالتنا تقول «أدخلتِ عنوانًا لا نقبله.»"
     prompt:
       en: "Try each message. Which one should ship?"
-      ar: "جرّب كل رسالة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل رسالة. أيّ رسالة تخبر نجوى بكلمات بسيطة سبب الفشل وكيف تصلحه؟"
     start: you
     options:
       - id: you
@@ -292,13 +292,13 @@ steps:
         when: [you, wrong]
         feedback:
           en: "Soha's area isn't wrong; it's where she lives. The limit is ours. Say what we can't do, and what we can."
-          ar: "منطقة سها ليست خاطئة؛ إنها حيث تسكن. والحدّ من عندنا نحن. قل ما لا نستطيعه، وما نستطيعه."
+          ar: "منطقة سها ليست خاطئة؛ إنها المكان الذي تسكن فيه. والحدّ من عندنا نحن. اذكر ما لا نستطيع فعله، وما نستطيع."
     correct:
       en: "Right. The limit is ours, and she still has a way to buy."
       ar: "صحيح. الحدّ من عندنا، وما زال لديها طريقة للشراء."
     explain:
       en: "When the problem is our limit, say so in our name (\"We don't deliver…\"), and offer what still works."
-      ar: "حين تكون المشكلة في حدودنا، قلها باسمنا («لا نوصّل…»)، واعرض ما زال ممكنًا."
+      ar: "حين تكون المشكلة في حدودنا، فانسبها إلينا («لا نوصّل…»)، واعرض ما زال ممكنًا."
 
   - id: S06
     type: tune
@@ -314,7 +314,7 @@ steps:
       ar: "يصمّم فريقي نظام تسجيل المقررات لجامعة. يستطيع الطلاب أخذ 18 ساعة كحدّ أقصى في الفصل. واختارت مي 21 ساعة فظهرت لها «لقد تجاوزتِ عدد الساعات المسموح.»"
     prompt:
       en: "Try each message. Which one should ship?"
-      ar: "جرّب كل رسالة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل رسالة. أيّ رسالة تخبر نجوى بكلمات بسيطة سبب الفشل وكيف تصلحه؟"
     start: exceeded
     options:
       - id: exceeded
@@ -353,10 +353,10 @@ steps:
           ar: "الرسالتان تشيران إلى مي وتتجاهلان الأرقام. صِف الخطة (21 من 18) والخطوة الوحيدة التي تُصلحها."
     correct:
       en: "Right. About the plan, not Mai, with exact numbers and a fix."
-      ar: "صحيح. عن الخطة، لا عن مي، بأرقام دقيقة وإصلاح."
+      ar: "صحيح. الرسالة عن الخطة لا عن مي، وفيها أرقام دقيقة وطريقة للإصلاح."
     explain:
       en: "Polite and precise go together: describe the input with real numbers, then give the step that solves it."
-      ar: "الأدب والدقة يسيران معًا: صِف المُدخل بأرقام حقيقية، ثم أعطِ الخطوة التي تحلّه."
+      ar: "الأدب والدقة يسيران معًا: صِف ما أدخله الشخص بأرقام حقيقية، ثم أعطِ الخطوة التي تحلّ المشكلة."
 
   # SK-P01-U04-04: wait until people leave the field
   - id: S07
@@ -373,7 +373,7 @@ steps:
       ar: "أنا مدير المنتج لتطبيق فعاليات. يكتب إبراهيم بريده مرتين ليستلم تذكرته. ومن أول حرف في المربع الثاني، تظهر «البريدان غير متطابقين» بالأحمر."
     prompt:
       en: "Try each timing. Each preview shows two moments. Which one should ship?"
-      ar: "جرّب كل توقيت. كل معاينة تُظهر لحظتين. أيّها يجب أن يُطلق؟"
+      ar: "جرّب كل توقيت. كل معاينة تُظهر لحظتين. أيّ توقيت يُظهر الخطأ لإبراهيم في اللحظة التي تفيده؟"
     start: typing
     options:
       - id: typing
@@ -412,7 +412,7 @@ steps:
         when: [typing]
         feedback:
           en: "Half an email never matches a whole one. The red while typing is noise; it only means something once Ibrahim is done."
-          ar: "نصف بريد لا يطابق بريدًا كاملًا أبدًا. والأحمر أثناء الكتابة ضجيج؛ لا يعني شيئًا إلا حين ينتهي إبراهيم."
+          ar: "نصف بريد لا يطابق بريدًا كاملًا أبدًا. واللون الأحمر أثناء الكتابة إزعاج بلا معنى؛ لا يعني شيئًا إلا حين ينتهي إبراهيم."
       - id: MC-P01-050
         when: [never]
         feedback:
@@ -420,7 +420,7 @@ steps:
           ar: "عندها يمرّ الحرفان المبدّلان دون ملاحظة، وربما يكون الخطأ في المربع الأول. تحقّق، لكن في اللحظة الصحيحة: حين يغادر المربع."
     correct:
       en: "Right. Silent while he types, clear once he's done."
-      ar: "صحيح. صامت أثناء الكتابة، وواضح حين ينتهي."
+      ar: "صحيح. لا شيء أثناء الكتابة، ورسالة واضحة حين ينتهي."
     explain:
       en: "Check a field when the person leaves it. That's when the answer is complete, and fixing it is still easy."
       ar: "تحقّق من الحقل حين يغادره الشخص. حينها تكون الإجابة كاملة، والإصلاح ما زال سهلًا."
@@ -436,10 +436,10 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/hostile-error-messages/", quote: "Displaying error messages while the user types feels like an unwarranted scolding and can be irritating." }
     scenario:
       en: "Members pay for my gym's yearly plan on our site. The card number field says \"Invalid card\" from the first digit. Lobna asked the front desk whether her card was blocked."
-      ar: "يدفع الأعضاء الاشتراك السنوي لنادينا من موقعنا. وحقل رقم البطاقة يقول «بطاقة غير صالحة» من أول رقم. فسألت لبنى الاستقبال هل بطاقتها موقوفة."
+      ar: "يدفع الأعضاء الاشتراك السنوي لنادينا من موقعنا. وحقل رقم البطاقة يعرض «بطاقة غير صالحة» من أول رقم. فسألت لبنى الاستقبال هل بطاقتها موقوفة."
     prompt:
       en: "Try each timing. Each preview shows two moments. Which one should ship?"
-      ar: "جرّب كل توقيت. كل معاينة تُظهر لحظتين. أيّها يجب أن يُطلق؟"
+      ar: "جرّب كل توقيت. كل معاينة تُظهر لحظتين. أيّ توقيت يُظهر الخطأ لإبراهيم في اللحظة التي تفيده؟"
     start: typing
     options:
       - id: leave
@@ -452,7 +452,7 @@ steps:
             - { kind: small, color: muted, text: &cd_1 { en: "After 6 digits", ar: "بعد 6 أرقام" } }
             - { kind: field, label: &cd_l { en: "Card number", ar: "رقم البطاقة" }, filled: true, focus: true, text: "⁦4012 88⁩", gap: xs }
             - { kind: small, color: muted, text: &cd_2 { en: "After she moves on with 15 digits", ar: "بعد أن تنتقل وفيه 15 رقمًا" }, gap: l }
-            - { kind: field, label: *cd_l, filled: true, text: "⁦4012 8888 8888 188⁩", tone: bad, error: &cd_e { en: "⚠ Card numbers have 16 digits. This one has 15.", ar: "⚠ رقم البطاقة 16 رقمًا. هذا الرقم فيه 15." }, gap: xs }
+            - { kind: field, label: *cd_l, filled: true, text: "⁦4012 8888 8888 188⁩", tone: bad, error: &cd_e { en: "⚠ Card numbers have 16 digits. This one has 15.", ar: "⚠ رقم البطاقة 16 رقمًا، وأدخلتِ 15." }, gap: xs }
       - id: typing
         text: { en: "Keep checking from the first digit", ar: "أبقِ التحقّق من أول رقم" }
         mock:
@@ -472,7 +472,7 @@ steps:
           url: nashat.example/pay
           blocks:
             - { kind: small, color: muted, text: *cd_1 }
-            - { kind: field, label: *cd_l, filled: true, focus: true, text: "⁦4012 88⁩", tone: bad, error: { en: "⚠ Card numbers have 16 digits. This one has 6.", ar: "⚠ رقم البطاقة 16 رقمًا. هذا الرقم فيه 6." }, gap: xs }
+            - { kind: field, label: *cd_l, filled: true, focus: true, text: "⁦4012 88⁩", tone: bad, error: { en: "⚠ Card numbers have 16 digits. This one has 6.", ar: "⚠ رقم البطاقة 16 رقمًا، وأدخلتِ 6." }, gap: xs }
             - { kind: small, color: muted, text: *cd_2, gap: l }
             - { kind: field, label: *cd_l, filled: true, text: "⁦4012 8888 8888 188⁩", tone: bad, error: *cd_e, gap: xs }
     answer: [leave]
@@ -487,7 +487,7 @@ steps:
       ar: "صحيح. لا شيء أثناء الكتابة؛ ورسالة واضحة حين ينقص رقم."
     explain:
       en: "Good words at the wrong moment still scold. Time the check to when the field is finished."
-      ar: "الكلمات الجيدة في اللحظة الخاطئة ما زالت توبّخ. اجعل التحقّق حين ينتهي الحقل."
+      ar: "الكلمات الجيدة في اللحظة الخاطئة ما زالت توبّخ. اجعل التحقّق حين ينتهي الشخص من الحقل."
 
   # SK-P01-U04-05: keep what people typed
   - id: S09
@@ -504,11 +504,11 @@ steps:
       ar: "أصمّم صفحة للتقدّم إلى وظيفة. لصق فادي رابط أعماله بدون «https://». وبعد «قدّم»، أُعيد تحميل الصفحة وكل الحقول فارغة، و«Invalid URL» في الأعلى."
     prompt:
       en: "Try each version of the page after Apply. Which one should ship?"
-      ar: "جرّب كل نسخة للصفحة بعد «قدّم». أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة للصفحة بعد «قدّم». أيّ نسخة تتيح لفادي أن يصلح الرابط دون أن يعيد كتابة شيء؟"
     start: empty
     options:
       - id: empty
-        text: { en: "Keep it: empty form, \"Invalid URL\" at the top", ar: "أبقِه: نموذج فارغ، و«Invalid URL» في الأعلى" }
+        text: { en: "Keep it: empty form, \"Invalid URL\" at the top", ar: "أبقِ الصفحة كما هي: نموذج فارغ، و«Invalid URL» في الأعلى" }
         mock:
           app: wazifa
           frame: wide
@@ -519,7 +519,7 @@ steps:
             - { kind: field, label: &jb_w { en: "Why this job?", ar: "لماذا هذه الوظيفة؟" }, text: "", gap: s }
             - { kind: field, label: &jb_p { en: "Portfolio link", ar: "رابط أعمالك" }, text: "", gap: s }
       - id: keep
-        text: { en: "Keep every answer, and explain on the link field", ar: "احتفظ بكل الإجابات، واشرح على حقل الرابط" }
+        text: { en: "Keep every answer, and explain on the link field", ar: "احتفظ بكل الإجابات، واشرح المشكلة عند حقل الرابط" }
         mock:
           app: wazifa
           frame: wide
@@ -544,7 +544,7 @@ steps:
         when: [empty]
         feedback:
           en: "Fady loses his whole cover note over 8 missing characters. Keep everything he wrote."
-          ar: "يفقد فادي رسالته كلها بسبب 8 أحرف ناقصة. احتفظ بكل ما كتبه."
+          ar: "يفقد فادي رسالة التقديم كلها بسبب 8 أحرف ناقصة. احتفظ بكل ما كتبه."
       - id: MC-P01-051
         when: [dropbad]
         feedback:
@@ -552,10 +552,10 @@ steps:
           ar: "كل ما يحتاجه هو إضافة «https://» لما كتبه. ومسحه يجعله يبحث عن الرابط ويلصقه من جديد."
     correct:
       en: "Right. One small fix, and nothing to retype."
-      ar: "صحيح. إصلاح صغير واحد، ولا شيء يُعاد كتابته."
+      ar: "صحيح. إصلاح صغير واحد، ولا يعيد كتابة شيء."
     explain:
       en: "Keep every answer, the wrong one included. Then the fix is an edit, not a do-over."
-      ar: "احتفظ بكل إجابة، والخاطئة منها. فيصبح الإصلاح تعديلًا، لا إعادة."
+      ar: "احتفظ بكل إجابة، حتى الخاطئة منها. فيصبح الإصلاح تعديلًا، لا بداية من جديد."
 
   - id: S10
     type: tune
@@ -571,19 +571,19 @@ steps:
       ar: "أبني خطوات التحويل في تطبيق بنك: الحساب، والمبلغ، والملاحظة، ثم كود من 6 أرقام برسالة SMS. وحين أخطأت شيماء في رقم واحد من الكود، عاد التطبيق إلى الشاشة الأولى وكل شيء فارغ."
     prompt:
       en: "Try each version of what Shaimaa sees after a wrong code. Which one should ship?"
-      ar: "جرّب كل نسخة لما تراه شيماء بعد كود خاطئ. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة لما تراه شيماء بعد كود خاطئ. أيّ نسخة تتيح لشيماء أن تُصلح الرقم الخاطئ بأقل جهد؟"
     start: restart
     options:
       - id: newcode
-        text: { en: "Stay on the code screen, but send a new code and clear the box", ar: "ابقَ في شاشة الكود، لكن أرسل كودًا جديدًا وامسح المربع" }
+        text: { en: "Stay on the code screen, but send a new code and clear the box", ar: "أبقِها في شاشة الكود، لكن أرسل كودًا جديدًا وامسح المربع" }
         mock:
           app: rasid
           appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: small, color: muted, text: &ot_s { en: "Sending 2,000 EGP to Wael Samir", ar: "تحويل 2,000 جنيه إلى وائل سمير" } }
-            - { kind: field, label: &ot_l { en: "Code from SMS", ar: "الكود من الرسالة" }, text: "", tone: bad, error: { en: "⚠ That code didn't match. We sent a new one.", ar: "⚠ الكود لم يتطابق. أرسلنا كودًا جديدًا." }, gap: s }
+            - { kind: field, label: &ot_l { en: "Code from SMS", ar: "الكود من الرسالة" }, text: "", tone: bad, error: { en: "⚠ That code didn't match. We sent a new one.", ar: "⚠ الكود غير صحيح. أرسلنا كودًا جديدًا." }, gap: s }
       - id: restart
-        text: { en: "Keep it: back to the first screen", ar: "أبقِه: العودة إلى الشاشة الأولى" }
+        text: { en: "Keep it: back to the first screen", ar: "أبقِ التصميم كما هو: العودة إلى الشاشة الأولى" }
         mock:
           app: rasid
           appbar: { title: { en: Transfer, ar: تحويل }, back: true }
@@ -592,13 +592,13 @@ steps:
             - { kind: field, label: { en: "To account", ar: "إلى الحساب" }, text: "", gap: s }
             - { kind: field, label: { en: "Amount (EGP)", ar: "المبلغ (جنيه)" }, text: "", gap: s }
       - id: edit
-        text: { en: "Stay on the code screen, keep her digits, and explain", ar: "ابقَ في شاشة الكود، واحتفظ بأرقامها، واشرح" }
+        text: { en: "Stay on the code screen, keep her digits, and explain", ar: "أبقِها في شاشة الكود، واحتفظ بأرقامها، واشرح المشكلة" }
         mock:
           app: rasid
           appbar: { title: { en: Transfer, ar: تحويل }, back: true }
           blocks:
             - { kind: small, color: muted, text: *ot_s }
-            - { kind: field, label: *ot_l, filled: true, text: "⁦482 951⁩", tone: bad, error: { en: "⚠ That code didn't match. Check the digits in the SMS and fix them here.", ar: "⚠ الكود لم يتطابق. راجعي الأرقام في الرسالة وأصلحيها هنا." }, gap: s }
+            - { kind: field, label: *ot_l, filled: true, text: "⁦482 951⁩", tone: bad, error: { en: "⚠ That code didn't match. Check the digits in the SMS and fix them here.", ar: "⚠ الكود غير صحيح. راجعي الأرقام في الرسالة وأصلحيها هنا." }, gap: s }
     answer: [edit]
     misconceptions:
       - id: MC-P01-051
@@ -616,7 +616,7 @@ steps:
       ar: "صحيح. تُصلح رقمًا واحدًا وتنتهي."
     explain:
       en: "The smallest fix wins: keep the person on the step with the problem, with their input still there to edit."
-      ar: "أصغر إصلاح هو الأفضل: أبقِ الشخص في الخطوة التي فيها المشكلة، ومُدخله ما زال موجودًا للتعديل."
+      ar: "أصغر إصلاح هو الأفضل: أبقِ الشخص في الخطوة التي فيها المشكلة، وما أدخله ما زال موجودًا ليعدّله."
 
   # SK-P01-U04-06: signal errors with more than color
   - id: S11
@@ -630,10 +630,10 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/web-form-design/", quote: "Errors should be signaled through a variety of cues, not solely through color:" }
     scenario:
       en: "Before a first visit at my clinic, patients must agree that we can request their old records. If they skip the checkbox, we only turn its text red. Wael tapped Continue four times."
-      ar: "قبل الزيارة الأولى في عيادتي، يجب أن يوافق المرضى على أن نطلب سجلّاتهم القديمة. وإن تخطّوا خانة الاختيار، نكتفي بتحويل نصّها إلى الأحمر. وضغط وائل «تابع» أربع مرات."
+      ar: "قبل الزيارة الأولى في عيادتي، يجب أن يوافق المرضى على أن نطلب سجلّاتهم القديمة. وإن تخطّوا الـ Checkbox، نكتفي بتحويل نصّه إلى الأحمر. وضغط وائل «تابع» أربع مرات."
     prompt:
       en: "Try each version. Which one should ship?"
-      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة. أيّ نسخة تُخبر عصام بوضوح أنه يستطيع تجاوز الحقلين؟"
     start: red
     options:
       - id: red
@@ -647,7 +647,7 @@ steps:
           footer:
             - { kind: button, text: { en: "Continue", ar: "تابع" } }
       - id: words
-        text: { en: "Add an icon and a message under the checkbox", ar: "أضف أيقونة ورسالة تحت خانة الاختيار" }
+        text: { en: "Add an icon and a message under the checkbox", ar: "أضف أيقونة ورسالة تحت الـ Checkbox" }
         mock:
           app: raha
           appbar: { title: { en: Before your visit, ar: قبل زيارتك }, back: true }
@@ -672,10 +672,10 @@ steps:
         when: [red, pale]
         feedback:
           en: "Red text and a faded button are both signals without words. Wael still doesn't know the checkbox is the problem. Say it."
-          ar: "النص الأحمر والزر الباهت إشارتان بلا كلمات. وما زال وائل لا يعرف أن خانة الاختيار هي المشكلة. قلها."
+          ar: "النص الأحمر والزر الباهت إشارتان بلا كلمات. وما زال وائل لا يعرف أن الـ Checkbox هو المشكلة. اكتب ذلك بالكلمات."
     correct:
       en: "Right. Words and an icon say what's missing, for everyone."
-      ar: "صحيح. الكلمات والأيقونة تقول ما الناقص، للجميع."
+      ar: "صحيح. الكلمات والأيقونة توضّح للجميع ما الناقص."
     explain:
       en: "Color supports a message; it can't replace it. Add words that name the problem and an icon that catches the eye."
       ar: "اللون يدعم الرسالة؛ ولا يحلّ محلّها. أضف كلمات تذكر المشكلة وأيقونة تلفت النظر."
@@ -694,7 +694,7 @@ steps:
       ar: "في سلّة متجري، بقي عندي 3 قطع من مصباح. كتبت دعاء 5، فتحوّل الرقم إلى الأحمر. وظنّت أن الأحمر يعني خصمًا وحاولت الدفع."
     prompt:
       en: "Try each version. Which one should ship?"
-      ar: "جرّب كل نسخة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة. أيّ نسخة تُخبر عصام بوضوح أنه يستطيع تجاوز الحقلين؟"
     start: red
     options:
       - id: border
@@ -748,10 +748,10 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/errors-forms-design-guidelines/", quote: "A validation summary can give the user a global understanding of all the errors in a form" }
     scenario:
       en: "My team designs a university application with 20 fields. After Submit, Hany had 3 errors, but only the first was on screen. He fixed it, submitted, and was sent back twice more."
-      ar: "يصمّم فريقي طلب التحاق بجامعة فيه 20 حقلًا. وبعد «أرسل»، كان عند هاني 3 أخطاء، لكن الأول فقط كان ظاهرًا على الشاشة. فأصلحه، وأرسل، وأُعيد مرتين أخريين."
+      ar: "يصمّم فريقي طلب التحاق بجامعة فيه 20 حقلًا. وبعد «أرسل»، كان عند هاني 3 أخطاء، لكن الأول فقط كان ظاهرًا على الشاشة. فأصلحه، وأرسل، فأعاده النموذج مرتين أخريين."
     prompt:
       en: "Try each version of the top of the page after Submit. Which one should ship?"
-      ar: "جرّب كل نسخة من أعلى الصفحة بعد «أرسل». أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة من أعلى الصفحة بعد «أرسل». أيّ نسخة تجعل هاني يعرف كل أخطائه وأماكنها من أول مرة؟"
     start: inline
     options:
       - id: list
@@ -765,7 +765,7 @@ steps:
             - { kind: field, label: &ua_g { en: "Secondary school grade (%)", ar: "مجموع الثانوية (%)" }, filled: true, text: "948", tone: bad, error: &ua_e { en: "⚠ Enter a percentage up to 100, like 94.8.", ar: "⚠ اكتب نسبة حتى 100، مثل 94.8." }, gap: m }
             - { kind: small, color: muted, text: &ua_m { en: "18 more fields below", ar: "18 حقلًا آخر بالأسفل" }, gap: s }
       - id: inline
-        text: { en: "Keep it: only mark each field", ar: "أبقِه: علّم كل حقل فقط" }
+        text: { en: "Keep it: only mark each field", ar: "أبقِ الصفحة كما هي: علّم كل حقل فقط" }
         mock:
           app: jamia
           frame: wide
@@ -774,7 +774,7 @@ steps:
             - { kind: field, label: *ua_g, filled: true, text: "948", tone: bad, error: *ua_e }
             - { kind: small, color: muted, text: *ua_m, gap: s }
       - id: count
-        text: { en: "Say \"3 errors\" at the top, and mark each field", ar: "قل «3 أخطاء» بالأعلى، وعلّم كل حقل" }
+        text: { en: "Say \"3 errors\" at the top, and mark each field", ar: "اكتب «3 أخطاء» بالأعلى، وعلّم كل حقل" }
         mock:
           app: jamia
           frame: wide
@@ -789,7 +789,7 @@ steps:
         when: [inline]
         feedback:
           en: "Hany sees one error and thinks it's the only one. Nothing on screen says two more are waiting."
-          ar: "يرى هاني خطأ واحدًا ويظن أنه الوحيد. ولا شيء على الشاشة يقول إن خطأين آخرين ينتظرانه."
+          ar: "يرى هاني خطأ واحدًا ويظن أنه الوحيد. ولا شيء على الشاشة يوضّح أن خطأين آخرين ينتظرانه."
       - id: MC-P01-046
         when: [count]
         feedback:
@@ -797,7 +797,7 @@ steps:
           ar: "الآن يعرف أنها 3، لكن عليه أن يبحث بين 18 حقلًا عن الاثنين الآخرين. اذكرهما."
     correct:
       en: "Right. He knows how many and where, and each field explains itself."
-      ar: "صحيح. يعرف كم وأين، وكل حقل يشرح نفسه."
+      ar: "صحيح. يعرف عدد الأخطاء وأماكنها، وكل حقل يشرح مشكلته."
     explain:
       en: "On long forms: a list at the top that names each field, plus the message on the field itself."
       ar: "في النماذج الطويلة: قائمة بالأعلى تذكر كل حقل، مع الرسالة على الحقل نفسه."
@@ -816,11 +816,11 @@ steps:
       ar: "أنا مدير المنتج لنموذج مطالبة تأمين سيارات فيه 18 حقلًا. وبعد «أرسل»، نعرض الأخطاء في قائمة بالأعلى، لكن الحقول نفسها تبدو عادية. ومرّت رشا على «تاريخ الحادث» مرتين دون أن تراه."
     prompt:
       en: "Try each version of the \"Accident date\" field, further down the page. Which one should ship?"
-      ar: "جرّب كل نسخة لحقل «تاريخ الحادث»، في أسفل الصفحة. أيّها يجب أن تُطلق؟"
+      ar: "جرّب كل نسخة لحقل «تاريخ الحادث»، في أسفل الصفحة. أيّ نسخة تجعل رشا تلاحظ الحقل وتعرف ما الخطأ فيه؟"
     start: plain
     options:
       - id: plain
-        text: { en: "Keep it: the list at the top is enough", ar: "أبقِه: القائمة في الأعلى تكفي" }
+        text: { en: "Keep it: the list at the top is enough", ar: "أبقِ الحقل كما هو: القائمة في الأعلى تكفي" }
         mock:
           app: aman
           frame: wide
@@ -860,7 +860,7 @@ steps:
           ar: "الإطار الأحمر يساعدها على رؤيته، لكنه ما زال لونًا فقط، ولا يقول إن التاريخ في المستقبل."
     correct:
       en: "Right. The list says where to go; the field says what to fix."
-      ar: "صحيح. القائمة تقول إلى أين تذهب؛ والحقل يقول ماذا تُصلح."
+      ar: "صحيح. القائمة تدلّها إلى أين تذهب؛ والحقل يوضّح ماذا تُصلح."
     explain:
       en: "A summary and inline messages do different jobs. Long forms need both."
       ar: "الملخّص والرسائل بجوار الحقول يؤدّيان مهام مختلفة. والنماذج الطويلة تحتاج الاثنين."
