@@ -9,7 +9,7 @@ sources:
     url: "https://pair.withgoogle.com/chapter/explainability-trust/"
 steps:
   - id: S01
-    type: choose
+    type: tune
     skill: SK-P12-U03-01
     part: retest
     speaker: mona
@@ -25,21 +25,160 @@ steps:
       ar: "ماذا نكتب في الرسالة، ليعرف العميل فورًا إن كانت الدفعة منه؟"
     mock:
       app: rasid
-      appbar: { title: { en: "Cards", ar: "البطاقات" }, back: true }
+      appbar:
+        title: {en: Cards, ar: البطاقات}
+        back: true
       blocks:
-        - { kind: listitem, icon: credit-card, text: { en: "Visa ending 4821", ar: "Visa تنتهي بـ 4821" }, sub: { en: "Active", ar: "مفعّلة" } }
+      - kind: listitem
+        icon: credit-card
+        text: {en: Visa ending 4821, ar: Visa تنتهي بـ 4821}
+        sub: {en: Active, ar: مفعّلة}
       overlay:
         type: dialog
         blocks:
-          - { kind: icon, icon: pause-circle, size: l, color: brand }
-          - { kind: heading, text: { en: "Payment paused", ar: "أوقفنا الدفع مؤقتًا" }, gap: s }
-          - { kind: text, text: { en: "8,900 EGP · Online store · 02:14", ar: "8,900 جنيه · متجر إلكتروني · 02:14" }, gap: xs }
-          - { kind: small, color: muted, text: { en: "Message: ?", ar: "الرسالة: ؟" }, gap: xs }
-          - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "It wasn't me", ar: "ليست مني" } }, { kind: button, text: { en: "It was me", ar: "نعم، مني" } } ], gap: s }
+        - {kind: icon, icon: pause-circle, size: l, color: brand}
+        - kind: heading
+          text: {en: Payment paused, ar: أوقفنا الدفع مؤقتًا}
+          gap: s
+        - kind: text
+          text:
+            en: "8,900 EGP · Online store · 02:14"
+            ar: "8,900 جنيه · متجر إلكتروني · 02:14"
+          gap: xs
+        - kind: small
+          color: muted
+          text:
+            en: "Message: ?"
+            ar: "الرسالة: ؟"
+          gap: xs
+        - kind: row
+          blocks:
+          - kind: button
+            style: outline
+            text:
+              en: "It wasn't me"
+              ar: ليست مني
+          - kind: button
+            text: {en: It was me, ar: نعم، مني}
+          gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: model, text: { en: "\"Our fraud system flagged this payment.\"", ar: "«نظام كشف الاحتيال لدينا أوقف هذه الدفعة.»" } }
-      - { id: why, text: { en: "\"This looks unusual for you: your first payment abroad, at 3 a.m. Was it you?\"", ar: "«هذه الدفعة غير معتادة لك: أول دفعة خارج البلد، في الساعة 3 فجرًا. هل هي منك؟»" } }
-      - { id: blocked, text: { en: "\"Payment paused. Call us.\"", ar: "«الدفعة متوقّفة. اتّصل بنا.»" } }
+      - id: model
+        text:
+          en: "\"Our fraud system flagged this payment.\""
+          ar: «نظام كشف الاحتيال لدينا أوقف هذه الدفعة.»
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Cards, ar: البطاقات}
+            back: true
+          blocks:
+          - kind: listitem
+            icon: credit-card
+            text: {en: Visa ending 4821, ar: Visa تنتهي بـ 4821}
+            sub: {en: Active, ar: مفعّلة}
+          overlay:
+            type: dialog
+            blocks:
+            - {kind: icon, icon: pause-circle, size: l, color: brand}
+            - kind: heading
+              text: {en: Payment paused, ar: أوقفنا الدفع مؤقتًا}
+              gap: s
+            - kind: text
+              text:
+                en: "8,900 EGP · Online store · 02:14"
+                ar: "8,900 جنيه · متجر إلكتروني · 02:14"
+              gap: xs
+            - kind: text
+              text: {en: Our fraud system flagged this payment., ar: نظام كشف الاحتيال لدينا أوقف هذه الدفعة.}
+              gap: xs
+            - kind: row
+              blocks:
+              - kind: button
+                style: outline
+                text:
+                  en: "It wasn't me"
+                  ar: ليست مني
+              - kind: button
+                text: {en: It was me, ar: نعم، مني}
+              gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: why
+        text:
+          en: "\"This looks unusual for you: your first payment abroad, at 3 a.m. Was it you?\""
+          ar: "«هذه الدفعة غير معتادة لك: أول دفعة خارج البلد، في الساعة 3 فجرًا. هل هي منك؟»"
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Cards, ar: البطاقات}
+            back: true
+          blocks:
+          - kind: listitem
+            icon: credit-card
+            text: {en: Visa ending 4821, ar: Visa تنتهي بـ 4821}
+            sub: {en: Active, ar: مفعّلة}
+          overlay:
+            type: dialog
+            blocks:
+            - {kind: icon, icon: pause-circle, size: l, color: brand}
+            - kind: heading
+              text: {en: Payment paused, ar: أوقفنا الدفع مؤقتًا}
+              gap: s
+            - kind: text
+              text:
+                en: "8,900 EGP · Online store · 02:14"
+                ar: "8,900 جنيه · متجر إلكتروني · 02:14"
+              gap: xs
+            - kind: text
+              text:
+                en: "This looks unusual for you: your first payment abroad, at 3 a.m. Was it you?"
+                ar: "هذه الدفعة غير معتادة لك: أول دفعة خارج البلد، في الساعة 3 فجرًا. هل هي منك؟"
+              gap: xs
+            - kind: row
+              blocks:
+              - kind: button
+                style: outline
+                text:
+                  en: "It wasn't me"
+                  ar: ليست مني
+              - kind: button
+                text: {en: It was me, ar: نعم، مني}
+              gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: blocked
+        text:
+          en: "\"Payment paused. Call us.\""
+          ar: «الدفعة متوقّفة. اتّصل بنا.»
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Cards, ar: البطاقات}
+            back: true
+          blocks:
+          - kind: listitem
+            icon: credit-card
+            text: {en: Visa ending 4821, ar: Visa تنتهي بـ 4821}
+            sub: {en: Active, ar: مفعّلة}
+          overlay:
+            type: dialog
+            blocks:
+            - {kind: icon, icon: pause-circle, size: l, color: brand}
+            - kind: heading
+              text: {en: Payment paused, ar: أوقفنا الدفع مؤقتًا}
+              gap: s
+            - kind: text
+              text:
+                en: "8,900 EGP · Online store · 02:14"
+                ar: "8,900 جنيه · متجر إلكتروني · 02:14"
+              gap: xs
+            - kind: text
+              text: {en: Payment paused. Call us., ar: الدفعة متوقّفة. اتّصل بنا.}
+              gap: xs
+            - kind: button
+              text: {en: Call us, ar: اتصل بنا}
+              icon: phone
+              gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [why]
     misconceptions:
       - id: MC-P12-021
@@ -55,7 +194,7 @@ steps:
       ar: "«خارج البلد، في الساعة 3 فجرًا» شيء يستطيع العميل مقارنته بما فعله."
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P12-U03-01
     part: retest
     speaker: karim
@@ -70,18 +209,163 @@ steps:
       en: "What should happen right after her tap?"
       ar: "ماذا يجب أن يحدث بعد ضغطتها مباشرة؟"
     mock:
-      app: { name: { en: "Shaghla", ar: "شغلة" }, color: "#0E7490", icon: briefcase, domain: shaghla.example }
+      app:
+        name: {en: Shaghla, ar: شغلة}
+        color: "#0E7490"
+        icon: briefcase
+        domain: shaghla.example
       frame: wide
       url: shaghla.example/jobs
-      navbar: { actions: [ { icon: user } ] }
+      navbar:
+        actions:
+        - {icon: user}
       blocks:
-        - { kind: heading, text: { en: "Jobs for you", ar: "وظائف لك" } }
-        - { kind: card, blocks: [ { kind: heading, text: { en: "Senior Product Designer", ar: "مصمّم منتجات أول" } }, { kind: small, color: muted, text: { en: "8+ years · Cairo", ar: "8+ سنوات · القاهرة" } }, { kind: button, style: outline, icon: thumbs-down, text: { en: "Not for me", ar: "لا تناسبني" } } ], gap: s }
-        - { kind: card, blocks: [ { kind: heading, text: { en: "Design Lead", ar: "قائد فريق تصميم" } }, { kind: small, color: muted, text: { en: "10 years · Remote", ar: "10 سنوات · عن بُعد" } } ], gap: s }
+      - kind: heading
+        text: {en: Jobs for you, ar: وظائف لك}
+      - kind: card
+        blocks:
+        - kind: heading
+          text: {en: Senior Product Designer, ar: مصمّم منتجات أول}
+        - kind: small
+          color: muted
+          text:
+            en: "8+ years · Cairo"
+            ar: "8+ سنوات · القاهرة"
+        - kind: button
+          style: outline
+          icon: thumbs-down
+          text: {en: Not for me, ar: لا تناسبني}
+        gap: s
+      - kind: card
+        blocks:
+        - kind: heading
+          text: {en: Design Lead, ar: قائد فريق تصميم}
+        - kind: small
+          color: muted
+          text:
+            en: "10 years · Remote"
+            ar: "10 سنوات · عن بُعد"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: thanks, text: { en: "\"Thanks for your feedback.\"", ar: "«شكرًا على ملاحظتك.»" } }
-      - { id: hide, text: { en: "Just remove that one job", ar: "نحذف تلك الوظيفة فقط" } }
-      - { id: reason, text: { en: "\"We showed this because your profile says 8 years of experience. Edit profile\"", ar: "«عرضنا هذه الوظيفة لأن ملفّك يذكر 8 سنوات خبرة. عدّل الملف»" } }
+      - id: thanks
+        text:
+          en: "\"Thanks for your feedback.\""
+          ar: «شكرًا على ملاحظتك.»
+        mock:
+          app:
+            name: {en: Shaghla, ar: شغلة}
+            color: "#0E7490"
+            icon: briefcase
+            domain: shaghla.example
+          frame: wide
+          url: shaghla.example/jobs
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: heading
+            text: {en: Jobs for you, ar: وظائف لك}
+          - kind: card
+            blocks:
+            - kind: heading
+              text: {en: Senior Product Designer, ar: مصمّم منتجات أول}
+            - kind: small
+              color: muted
+              text:
+                en: "8+ years · Cairo"
+                ar: "8+ سنوات · القاهرة"
+            - kind: button
+              style: outline
+              icon: thumbs-down
+              text: {en: Not for me, ar: لا تناسبني}
+            gap: s
+          - kind: card
+            blocks:
+            - kind: heading
+              text: {en: Design Lead, ar: قائد فريق تصميم}
+            - kind: small
+              color: muted
+              text:
+                en: "10 years · Remote"
+                ar: "10 سنوات · عن بُعد"
+            gap: s
+          overlay:
+            type: toast
+            blocks:
+            - kind: text
+              text: {en: Thanks for your feedback., ar: شكرًا على ملاحظتك.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: hide
+        text: {en: Just remove that one job, ar: نحذف تلك الوظيفة فقط}
+        mock:
+          app:
+            name: {en: Shaghla, ar: شغلة}
+            color: "#0E7490"
+            icon: briefcase
+            domain: shaghla.example
+          frame: wide
+          url: shaghla.example/jobs
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: heading
+            text: {en: Jobs for you, ar: وظائف لك}
+          - kind: card
+            blocks:
+            - kind: heading
+              text: {en: Design Lead, ar: قائد فريق تصميم}
+            - kind: small
+              color: muted
+              text:
+                en: "10 years · Remote"
+                ar: "10 سنوات · عن بُعد"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: reason
+        text:
+          en: "\"We showed this because your profile says 8 years of experience. Edit profile\""
+          ar: «عرضنا هذه الوظيفة لأن ملفّك يذكر 8 سنوات خبرة. عدّل الملف»
+        mock:
+          app:
+            name: {en: Shaghla, ar: شغلة}
+            color: "#0E7490"
+            icon: briefcase
+            domain: shaghla.example
+          frame: wide
+          url: shaghla.example/jobs
+          navbar:
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: heading
+            text: {en: Jobs for you, ar: وظائف لك}
+          - kind: card
+            blocks:
+            - kind: small
+              text:
+                en: "Hidden: Senior Product Designer"
+                ar: "أخفينا: مصمّم منتجات أول"
+              color: muted
+            - kind: text
+              text: {en: We showed this because your profile says 8 years of experience., ar: عرضنا هذه الوظيفة لأن ملفّك يذكر 8 سنوات خبرة.}
+              gap: xs
+            - kind: link
+              text: {en: Edit profile, ar: عدّل الملف}
+              gap: xs
+            gap: s
+          - kind: card
+            blocks:
+            - kind: heading
+              text: {en: Design Lead, ar: قائد فريق تصميم}
+            - kind: small
+              color: muted
+              text:
+                en: "10 years · Remote"
+                ar: "10 سنوات · عن بُعد"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [reason]
     misconceptions:
       - id: MC-P12-021
@@ -97,7 +381,7 @@ steps:
       ar: "ترى السبب، وهو الخطأ في الكتابة، وتصلحه بخطوة واحدة."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P12-U03-02
     part: retest
     speaker: hana
@@ -113,14 +397,84 @@ steps:
       ar: "كيف نُصلح الرسالة؟"
     mock:
       app: nashat
-      appbar: { title: { en: "Today", ar: "اليوم" } }
+      appbar:
+        title: {en: Today, ar: اليوم}
       blocks:
-        - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Tip", ar: "نصيحة" } }, { kind: heading, text: { en: "You slept 5 hours. Take an easy day.", ar: "نمت 5 ساعات. خذ يومًا خفيفًا." } } ] }
-        - { kind: listitem, icon: person-simple-walk, text: { en: "Light walk · 30 min", ar: "مشي خفيف · 30 دقيقة" }, gap: s }
+      - kind: card
+        blocks:
+        - kind: badge
+          icon: sparkle
+          text: {en: Tip, ar: نصيحة}
+        - kind: heading
+          text: {en: You slept 5 hours. Take an easy day., ar: نمت 5 ساعات. خذ يومًا خفيفًا.}
+      - kind: listitem
+        icon: person-simple-walk
+        text: {en: Light walk · 30 min, ar: مشي خفيف · 30 دقيقة}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: source, text: { en: "Add \"From your watch's sleep data · Stop using sleep data\"", ar: "نضيف «من بيانات النوم في ساعتك · أوقف استخدام بيانات النوم»" } }
-      - { id: remove, text: { en: "Stop giving sleep tips", ar: "نتوقّف عن نصائح النوم" } }
-      - { id: vague, text: { en: "Just \"Take an easy day\", without the hours", ar: "فقط «خذ يومًا خفيفًا»، دون الساعات" } }
+      - id: source
+        text:
+          en: "Add \"From your watch's sleep data · Stop using sleep data\""
+          ar: نضيف «من بيانات النوم في ساعتك · أوقف استخدام بيانات النوم»
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Today, ar: اليوم}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              icon: sparkle
+              text: {en: Tip, ar: نصيحة}
+            - kind: heading
+              text: {en: You slept 5 hours. Take an easy day., ar: نمت 5 ساعات. خذ يومًا خفيفًا.}
+            - kind: small
+              text:
+                en: "From your watch's sleep data"
+                ar: من بيانات النوم في ساعتك
+              color: muted
+              gap: xs
+            - kind: link
+              text: {en: Stop using sleep data, ar: أوقف استخدام بيانات النوم}
+              gap: xs
+          - kind: listitem
+            icon: person-simple-walk
+            text: {en: Light walk · 30 min, ar: مشي خفيف · 30 دقيقة}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: remove
+        text: {en: Stop giving sleep tips, ar: نتوقّف عن نصائح النوم}
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Today, ar: اليوم}
+          blocks:
+          - kind: listitem
+            icon: person-simple-walk
+            text: {en: Light walk · 30 min, ar: مشي خفيف · 30 دقيقة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: vague
+        text:
+          en: "Just \"Take an easy day\", without the hours"
+          ar: فقط «خذ يومًا خفيفًا»، دون الساعات
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Today, ar: اليوم}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              icon: sparkle
+              text: {en: Tip, ar: نصيحة}
+            - kind: heading
+              text: {en: Take an easy day., ar: خذ يومًا خفيفًا.}
+          - kind: listitem
+            icon: person-simple-walk
+            text: {en: Light walk · 30 min, ar: مشي خفيف · 30 دقيقة}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [source]
     misconceptions:
       - id: MC-P12-022
@@ -136,7 +490,7 @@ steps:
       ar: "سطر قصير عن المصدر يحوّل «كيف عرفت؟» إلى «آه، من ساعتي»."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U03-02
     part: retest
     speaker: tarek
@@ -152,16 +506,161 @@ steps:
       ar: "ما الاسم الذي يخبر العملاء من أين تأتي اختيارات هذا الصفّ؟"
     mock:
       app: sallah
-      appbar: { logo: true, actions: [ { icon: basket, aria: { en: "Basket", ar: "السلة" } } ] }
+      appbar:
+        logo: true
+        actions:
+        - icon: basket
+          aria: {en: Basket, ar: السلة}
       blocks:
-        - { kind: row, blocks: [ { kind: heading, text: { en: "For you", ar: "مقترح لك" } }, { kind: badge, icon: sparkle, text: { en: "AI", ar: "ذكاء اصطناعي" } } ] }
-        - { kind: listitem, art: food-dessert, text: { en: "Baby food, apple", ar: "طعام أطفال، تفاح" }, value: { en: "35 EGP", ar: "35 جنيه" } }
-        - { kind: listitem, art: bread, text: { en: "Toast bread", ar: "خبز توست" }, value: { en: "25 EGP", ar: "25 جنيه" } }
-        - { kind: small, color: muted, text: { en: "Really: what people in your area buy most", ar: "في الحقيقة: أكثر ما يشتريه الناس في منطقتك" }, gap: s }
+      - kind: row
+        blocks:
+        - kind: heading
+          text: {en: For you, ar: مقترح لك}
+        - kind: badge
+          icon: sparkle
+          text: {en: AI, ar: ذكاء اصطناعي}
+      - kind: listitem
+        art: food-dessert
+        text:
+          en: "Baby food, apple"
+          ar: طعام أطفال، تفاح
+        value:
+          en: "35 EGP"
+          ar: "35 جنيه"
+      - kind: listitem
+        art: bread
+        text: {en: Toast bread, ar: خبز توست}
+        value:
+          en: "25 EGP"
+          ar: "25 جنيه"
+      - kind: small
+        color: muted
+        text:
+          en: "Really: what people in your area buy most"
+          ar: "في الحقيقة: أكثر ما يشتريه الناس في منطقتك"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: foryou, text: { en: "Keep \"For you\"; it sounds personal", ar: "يبقى «مقترح لك»؛ فهو يبدو شخصيًا" } }
-      - { id: area, text: { en: "\"Popular in your area\"", ar: "«الأكثر طلبًا في منطقتك»" } }
-      - { id: smart, text: { en: "\"Smart picks\"", ar: "«اختيارات ذكية»" } }
+      - id: foryou
+        text:
+          en: "Keep \"For you\"; it sounds personal"
+          ar: يبقى «مقترح لك»؛ فهو يبدو شخصيًا
+        mock:
+          app: sallah
+          appbar:
+            logo: true
+            actions:
+            - icon: basket
+              aria: {en: Basket, ar: السلة}
+          blocks:
+          - kind: row
+            blocks:
+            - kind: heading
+              text: {en: For you, ar: مقترح لك}
+            - kind: badge
+              icon: sparkle
+              text: {en: AI, ar: ذكاء اصطناعي}
+          - kind: listitem
+            art: food-dessert
+            text:
+              en: "Baby food, apple"
+              ar: طعام أطفال، تفاح
+            value:
+              en: "35 EGP"
+              ar: "35 جنيه"
+          - kind: listitem
+            art: bread
+            text: {en: Toast bread, ar: خبز توست}
+            value:
+              en: "25 EGP"
+              ar: "25 جنيه"
+          - kind: small
+            color: muted
+            text:
+              en: "Really: what people in your area buy most"
+              ar: "في الحقيقة: أكثر ما يشتريه الناس في منطقتك"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: area
+        text:
+          en: "\"Popular in your area\""
+          ar: «الأكثر طلبًا في منطقتك»
+        mock:
+          app: sallah
+          appbar:
+            logo: true
+            actions:
+            - icon: basket
+              aria: {en: Basket, ar: السلة}
+          blocks:
+          - kind: row
+            blocks:
+            - kind: heading
+              text: {en: Popular in your area, ar: الأكثر طلبًا في منطقتك}
+            - kind: badge
+              icon: sparkle
+              text: {en: AI, ar: ذكاء اصطناعي}
+          - kind: listitem
+            art: food-dessert
+            text:
+              en: "Baby food, apple"
+              ar: طعام أطفال، تفاح
+            value:
+              en: "35 EGP"
+              ar: "35 جنيه"
+          - kind: listitem
+            art: bread
+            text: {en: Toast bread, ar: خبز توست}
+            value:
+              en: "25 EGP"
+              ar: "25 جنيه"
+          - kind: small
+            color: muted
+            text:
+              en: "Really: what people in your area buy most"
+              ar: "في الحقيقة: أكثر ما يشتريه الناس في منطقتك"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: smart
+        text:
+          en: "\"Smart picks\""
+          ar: «اختيارات ذكية»
+        mock:
+          app: sallah
+          appbar:
+            logo: true
+            actions:
+            - icon: basket
+              aria: {en: Basket, ar: السلة}
+          blocks:
+          - kind: row
+            blocks:
+            - kind: heading
+              text: {en: Smart picks, ar: اختيارات ذكية}
+            - kind: badge
+              icon: sparkle
+              text: {en: AI, ar: ذكاء اصطناعي}
+          - kind: listitem
+            art: food-dessert
+            text:
+              en: "Baby food, apple"
+              ar: طعام أطفال، تفاح
+            value:
+              en: "35 EGP"
+              ar: "35 جنيه"
+          - kind: listitem
+            art: bread
+            text: {en: Toast bread, ar: خبز توست}
+            value:
+              en: "25 EGP"
+              ar: "25 جنيه"
+          - kind: small
+            color: muted
+            text:
+              en: "Really: what people in your area buy most"
+              ar: "في الحقيقة: أكثر ما يشتريه الناس في منطقتك"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [area]
     misconceptions:
       - id: MC-P12-022
@@ -177,7 +676,7 @@ steps:
       ar: "«الأكثر طلبًا في منطقتك» يشرح طعام الأطفال فورًا، ولا يبدو شيء شخصيًا."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U03-03
     part: retest
     speaker: youssef
@@ -193,16 +692,91 @@ steps:
       ar: "ماذا يرى البائعون بعد أن يفتّح التطبيق صورتهم؟"
     mock:
       app: dar
-      appbar: { title: { en: "Add a product", ar: "أضف منتجًا" }, back: true }
+      appbar:
+        title: {en: Add a product, ar: أضف منتجًا}
+        back: true
       blocks:
-        - { kind: image, art: earbuds }
-        - { kind: small, color: muted, text: { en: "The app brightened this photo. What should the seller see?", ar: "التطبيق فتّح هذه الصورة. ماذا يجب أن يرى البائع؟" }, gap: s }
+      - {kind: image, art: earbuds}
+      - kind: small
+        color: muted
+        text:
+          en: "The app brightened this photo. What should the seller see?"
+          ar: التطبيق فتّح هذه الصورة. ماذا يجب أن يرى البائع؟
+        gap: s
       footer:
-        - { kind: button, text: { en: "Publish", ar: "انشر" } }
+      - kind: button
+        text: {en: Publish, ar: انشر}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: popup, text: { en: "A pop-up each time: \"AI adjusted brightness, contrast and colour\"", ar: "نافذة منبثقة (Pop-up) كل مرة: «الذكاء الاصطناعي عدّل الإضاءة والتباين والألوان»" } }
-      - { id: tour, text: { en: "A 3-step tour of how the AI edits photos", ar: "جولة من 3 خطوات عن طريقة تعديل الذكاء الاصطناعي للصور" } }
-      - { id: plain, text: { en: "The brighter photo, with a small Undo", ar: "الصورة الأوضح، مع زر تراجع صغير" } }
+      - id: popup
+        text:
+          en: "A pop-up each time: \"AI adjusted brightness, contrast and colour\""
+          ar: "نافذة منبثقة (Pop-up) كل مرة: «الذكاء الاصطناعي عدّل الإضاءة والتباين والألوان»"
+        mock:
+          app: dar
+          appbar:
+            title: {en: Add a product, ar: أضف منتجًا}
+            back: true
+          blocks:
+          - {kind: image, art: earbuds}
+          footer:
+          - kind: button
+            text: {en: Publish, ar: انشر}
+          overlay:
+            type: dialog
+            blocks:
+            - kind: text
+              text:
+                en: "AI adjusted brightness, contrast and colour"
+                ar: الذكاء الاصطناعي عدّل الإضاءة والتباين والألوان
+            - kind: button
+              text: {en: OK, ar: حسنًا}
+              gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: tour
+        text: {en: A 3-step tour of how the AI edits photos, ar: جولة من 3 خطوات عن طريقة تعديل الذكاء الاصطناعي للصور}
+        mock:
+          app: dar
+          appbar:
+            title: {en: Add a product, ar: أضف منتجًا}
+            back: true
+          blocks:
+          - {kind: image, art: earbuds}
+          footer:
+          - kind: button
+            text: {en: Publish, ar: انشر}
+          overlay:
+            type: sheet
+            title: {en: How AI edits your photos · 1 of 3, ar: كيف يعدّل الذكاء الاصطناعي صورك · 1 من 3}
+            blocks:
+            - kind: text
+              text:
+                en: "First, it finds the product in your photo."
+                ar: أولًا، يجد المنتج في صورتك.
+            - kind: button
+              text: {en: Next, ar: التالي}
+              gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: plain
+        text:
+          en: "The brighter photo, with a small Undo"
+          ar: الصورة الأوضح، مع زر تراجع صغير
+        mock:
+          app: dar
+          appbar:
+            title: {en: Add a product, ar: أضف منتجًا}
+            back: true
+          blocks:
+          - {kind: image, art: earbuds}
+          - kind: button
+            text: {en: Undo, ar: تراجع}
+            style: text
+            icon: arrow-counter-clockwise
+            gap: xs
+          footer:
+          - kind: button
+            text: {en: Publish, ar: انشر}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [plain]
     misconceptions:
       - id: MC-P12-025
@@ -218,7 +792,7 @@ steps:
       ar: "الخطر قليل والتغيير واضح للعين: النتيجة تشرح نفسها."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P12-U03-03
     part: retest
     speaker: nour
@@ -234,19 +808,133 @@ steps:
       ar: "ماذا يكتب الملخّص لتعرف المريضة ما يهمّها في نتائجها؟"
     mock:
       app: raha
-      appbar: { title: { en: "Lab results", ar: "نتائج التحاليل" }, back: true }
+      appbar:
+        title: {en: Lab results, ar: نتائج التحاليل}
+        back: true
       blocks:
-        - { kind: card, blocks: [ { kind: badge, icon: sparkle, text: { en: "Summary", ar: "ملخّص" } }, { kind: heading, text: { en: "Your results look fine.", ar: "نتائجك تبدو جيدة." } } ] }
-        - kind: table
-          gap: s
-          head: [ { en: "Test", ar: "التحليل" }, { en: "Result", ar: "النتيجة" }, { en: "Normal", ar: "الطبيعي" } ]
-          rows:
-            - [ { en: "Sugar (fasting)", ar: "السكر (صائم)" }, "108", "70–100" ]
-            - [ { en: "Haemoglobin", ar: "الهيموجلوبين" }, "13.1", "12–16" ]
+      - kind: card
+        blocks:
+        - kind: badge
+          icon: sparkle
+          text: {en: Summary, ar: ملخّص}
+        - kind: heading
+          text: {en: Your results look fine., ar: نتائجك تبدو جيدة.}
+      - kind: table
+        gap: s
+        head:
+        - {en: Test, ar: التحليل}
+        - {en: Result, ar: النتيجة}
+        - {en: Normal, ar: الطبيعي}
+        rows:
+        - - {en: Sugar (fasting), ar: السكر (صائم)}
+          - "108"
+          - "70–100"
+        - - {en: Haemoglobin, ar: الهيموجلوبين}
+          - "13.1"
+          - "12–16"
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: fine, text: { en: "Keep \"Your results look fine.\"", ar: "يبقى «نتائجك تبدو جيدة.»" } }
-      - { id: why, text: { en: "\"Most results are normal. Sugar is a little high (110). Dr. Ali will go over it with you.\"", ar: "«أغلب النتائج طبيعية. السكّر مرتفع قليلًا (110). سيراجعه د. علي معك.»" } }
-      - { id: all, text: { en: "A table of all 24 values, with their medical names", ar: "جدول بكل القيم الـ 24، بأسمائها الطبية" } }
+      - id: fine
+        text:
+          en: "Keep \"Your results look fine.\""
+          ar: يبقى «نتائجك تبدو جيدة.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Lab results, ar: نتائج التحاليل}
+            back: true
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              icon: sparkle
+              text: {en: Summary, ar: ملخّص}
+            - kind: heading
+              text: {en: Your results look fine., ar: نتائجك تبدو جيدة.}
+          - kind: table
+            gap: s
+            head:
+            - {en: Test, ar: التحليل}
+            - {en: Result, ar: النتيجة}
+            - {en: Normal, ar: الطبيعي}
+            rows:
+            - - {en: Sugar (fasting), ar: السكر (صائم)}
+              - "108"
+              - "70–100"
+            - - {en: Haemoglobin, ar: الهيموجلوبين}
+              - "13.1"
+              - "12–16"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: why
+        text:
+          en: "\"Most results are normal. Sugar is a little high (110). Dr. Ali will go over it with you.\""
+          ar: «أغلب النتائج طبيعية. السكّر مرتفع قليلًا (110). سيراجعه د. علي معك.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Lab results, ar: نتائج التحاليل}
+            back: true
+          blocks:
+          - kind: card
+            blocks:
+            - kind: badge
+              icon: sparkle
+              text: {en: Summary, ar: ملخّص}
+            - kind: heading
+              text: {en: Most results are normal. Sugar is a little high (110). Dr. Ali will go over it with you., ar: أغلب النتائج طبيعية. السكّر مرتفع قليلًا (110). سيراجعه د. علي معك.}
+          - kind: table
+            gap: s
+            head:
+            - {en: Test, ar: التحليل}
+            - {en: Result, ar: النتيجة}
+            - {en: Normal, ar: الطبيعي}
+            rows:
+            - - {en: Sugar (fasting), ar: السكر (صائم)}
+              - "108"
+              - "70–100"
+            - - {en: Haemoglobin, ar: الهيموجلوبين}
+              - "13.1"
+              - "12–16"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: all
+        text:
+          en: "A table of all 24 values, with their medical names"
+          ar: جدول بكل القيم الـ 24، بأسمائها الطبية
+        mock:
+          app: raha
+          appbar:
+            title: {en: Lab results, ar: نتائج التحاليل}
+            back: true
+          blocks:
+          - kind: table
+            gap: s
+            head:
+            - {en: Test, ar: التحليل}
+            - {en: Result, ar: النتيجة}
+            - {en: Normal, ar: الطبيعي}
+            rows:
+            - - {en: Fasting plasma glucose (FPG), ar: جلوكوز البلازما الصائم (FPG)}
+              - "108"
+              - "70–100"
+            - - {en: Haemoglobin (Hb), ar: الهيموجلوبين (Hb)}
+              - "13.1"
+              - "12–16"
+            - - {en: Mean corpuscular volume (MCV), ar: متوسط حجم الكريّة (MCV)}
+              - "88"
+              - "80–100"
+            - - {en: Alanine aminotransferase (ALT), ar: ناقلة أمين الألانين (ALT)}
+              - "22"
+              - "7–56"
+            - - {en: Thyroid-stimulating hormone (TSH), ar: الهرمون المنبّه للغدة الدرقية (TSH)}
+              - "2.1"
+              - "0.4–4.0"
+          - kind: small
+            text:
+              en: "+ 19 more values"
+              ar: "+ 19 قيمة أخرى"
+            color: muted
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [why]
     misconceptions:
       - id: MC-P12-024
@@ -267,7 +955,7 @@ steps:
       ar: "حين يكون الخطر كبيرًا، اذكر التفصيل المهم، ومن سيراجعه."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U03-04
     part: retest
     speaker: rami
@@ -282,16 +970,109 @@ steps:
       en: "What should we change?"
       ar: "ماذا يجب أن نغيّر؟"
     mock:
-      app: { name: { en: "Tarjim Lens", ar: "عدسة ترجم" }, color: "#0F766E", icon: translate, domain: tarjim.example }
-      appbar: { title: { en: "Menu · translated", ar: "القائمة · مترجمة" }, back: true }
+      app:
+        name: {en: Tarjim Lens, ar: عدسة ترجم}
+        color: "#0F766E"
+        icon: translate
+        domain: tarjim.example
+      appbar:
+        title: {en: Menu · translated, ar: القائمة · مترجمة}
+        back: true
       blocks:
-        - { kind: listitem, text: { en: "Grilled fish · 91.4%", ar: "سمك مشوي · 91.4%" } }
-        - { kind: listitem, text: { en: "Stuffed vine leaves · 67.2%", ar: "ورق عنب محشي · 67.2%" } }
-        - { kind: listitem, text: { en: "Lamb with freekeh · 88.9%", ar: "لحم ضأن بالفريك · 88.9%" } }
+      - kind: listitem
+        text:
+          en: "Grilled fish · 91.4%"
+          ar: "سمك مشوي · 91.4%"
+      - kind: listitem
+        text:
+          en: "Stuffed vine leaves · 67.2%"
+          ar: "ورق عنب محشي · 67.2%"
+      - kind: listitem
+        text:
+          en: "Lamb with freekeh · 88.9%"
+          ar: "لحم ضأن بالفريك · 88.9%"
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Keep the scores; more information is always better", ar: "نُبقي الدرجات؛ فالمعلومات الأكثر أفضل دائمًا" } }
-      - { id: bigger, text: { en: "Make the scores bigger, so people notice them", ar: "نكبّر الدرجات، ليلاحظها الناس" } }
-      - { id: flag, text: { en: "Remove the scores, and mark only the lines it's unsure about: \"Check with staff\"", ar: "نحذف الدرجات، ونضع علامة فقط على السطور التي لم يتأكّد من ترجمتها: «اسأل الموظّف»" } }
+      - id: keep
+        text: {en: Keep the scores; more information is always better, ar: نُبقي الدرجات؛ فالمعلومات الأكثر أفضل دائمًا}
+        mock:
+          app:
+            name: {en: Tarjim Lens, ar: عدسة ترجم}
+            color: "#0F766E"
+            icon: translate
+            domain: tarjim.example
+          appbar:
+            title: {en: Menu · translated, ar: القائمة · مترجمة}
+            back: true
+          blocks:
+          - kind: listitem
+            text:
+              en: "Grilled fish · 91.4%"
+              ar: "سمك مشوي · 91.4%"
+          - kind: listitem
+            text:
+              en: "Stuffed vine leaves · 67.2%"
+              ar: "ورق عنب محشي · 67.2%"
+          - kind: listitem
+            text:
+              en: "Lamb with freekeh · 88.9%"
+              ar: "لحم ضأن بالفريك · 88.9%"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: bigger
+        text:
+          en: "Make the scores bigger, so people notice them"
+          ar: نكبّر الدرجات، ليلاحظها الناس
+        mock:
+          app:
+            name: {en: Tarjim Lens, ar: عدسة ترجم}
+            color: "#0F766E"
+            icon: translate
+            domain: tarjim.example
+          appbar:
+            title: {en: Menu · translated, ar: القائمة · مترجمة}
+            back: true
+          blocks:
+          - kind: listitem
+            text: {en: Grilled fish, ar: سمك مشوي}
+            value:
+              en: "**91.4%**"
+              ar: "**91.4%**"
+          - kind: listitem
+            text: {en: Stuffed vine leaves, ar: ورق عنب محشي}
+            value:
+              en: "**67.2%**"
+              ar: "**67.2%**"
+          - kind: listitem
+            text: {en: Lamb with freekeh, ar: لحم ضأن بالفريك}
+            value:
+              en: "**88.9%**"
+              ar: "**88.9%**"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: flag
+        text:
+          en: "Remove the scores, and mark only the lines it's unsure about: \"Check with staff\""
+          ar: "نحذف الدرجات، ونضع علامة فقط على السطور التي لم يتأكّد من ترجمتها: «اسأل الموظّف»"
+        mock:
+          app:
+            name: {en: Tarjim Lens, ar: عدسة ترجم}
+            color: "#0F766E"
+            icon: translate
+            domain: tarjim.example
+          appbar:
+            title: {en: Menu · translated, ar: القائمة · مترجمة}
+            back: true
+          blocks:
+          - kind: listitem
+            text: {en: Grilled fish, ar: سمك مشوي}
+          - kind: listitem
+            text: {en: Stuffed vine leaves, ar: ورق عنب محشي}
+            badge:
+              text: {en: Check with staff, ar: اسأل الموظّف}
+              tone: warn
+              icon: warning
+          - kind: listitem
+            text: {en: Lamb with freekeh, ar: لحم ضأن بالفريك}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [flag]
     misconceptions:
       - id: MC-P12-026
@@ -307,7 +1088,7 @@ steps:
       ar: "قائمة سهلة القراءة، مع علامة واضحة حيث قد تكون الترجمة خطأ."
 
   - id: S08
-    type: choose
+    type: tune
     skill: SK-P12-U03-04
     part: retest
     speaker: sara
@@ -322,17 +1103,142 @@ steps:
       en: "What should we change?"
       ar: "ماذا يجب أن نغيّر؟"
     mock:
-      app: { name: { en: "Shaghla", ar: "شغلة" }, color: "#0E7490", icon: briefcase, domain: shaghla.example }
+      app:
+        name: {en: Shaghla, ar: شغلة}
+        color: "#0E7490"
+        icon: briefcase
+        domain: shaghla.example
       frame: wide
       url: shaghla.example/hiring
       blocks:
-        - { kind: heading, text: { en: "Applicants · UX Designer", ar: "المتقدّمون · مصمّم تجربة مستخدم" } }
-        - { kind: listitem, avatar: { text: "Ali Hassan", art: man-2 }, text: { en: "Ali Hassan", ar: "علي حسن" }, sub: { en: "Profile: 2 lines", ar: "الملف: سطران" }, value: { en: "Match: 96%", ar: "تطابق: 96%" }, gap: s }
-        - { kind: listitem, avatar: { text: "Nada Samir", art: woman-3 }, text: { en: "Nada Samir", ar: "ندى سمير" }, sub: { en: "Profile: complete", ar: "الملف: مكتمل" }, value: { en: "Match: 81%", ar: "تطابق: 81%" } }
+      - kind: heading
+        text: {en: Applicants · UX Designer, ar: المتقدّمون · مصمّم تجربة مستخدم}
+      - kind: listitem
+        avatar: {text: Ali Hassan, art: man-2}
+        text: {en: Ali Hassan, ar: علي حسن}
+        sub:
+          en: "Profile: 2 lines"
+          ar: "الملف: سطران"
+        value:
+          en: "Match: 96%"
+          ar: "تطابق: 96%"
+        gap: s
+      - kind: listitem
+        avatar: {text: Nada Samir, art: woman-3}
+        text: {en: Nada Samir, ar: ندى سمير}
+        sub:
+          en: "Profile: complete"
+          ar: "الملف: مكتمل"
+        value:
+          en: "Match: 81%"
+          ar: "تطابق: 81%"
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: green, text: { en: "Colour scores above 90% green", ar: "نلوّن الدرجات فوق 90% بالأخضر" } }
-      - { id: thin, text: { en: "For thin profiles, replace the score with \"Not enough info to match. Read the CV.\"", ar: "للملفّات الناقصة، نستبدل الدرجة بـ «لا توجد معلومات كافية للمطابقة. اقرأ السيرة الذاتية.»" } }
-      - { id: keep, text: { en: "Keep it; managers are busy", ar: "تبقى كما هي؛ فالمديرون مشغولون" } }
+      - id: green
+        text:
+          en: "Colour scores above 90% green"
+          ar: "نلوّن الدرجات فوق 90% بالأخضر"
+        mock:
+          app:
+            name: {en: Shaghla, ar: شغلة}
+            color: "#0E7490"
+            icon: briefcase
+            domain: shaghla.example
+          frame: wide
+          url: shaghla.example/hiring
+          blocks:
+          - kind: heading
+            text: {en: Applicants · UX Designer, ar: المتقدّمون · مصمّم تجربة مستخدم}
+          - kind: listitem
+            avatar: {text: Ali Hassan, art: man-2}
+            text: {en: Ali Hassan, ar: علي حسن}
+            sub:
+              en: "Profile: 2 lines"
+              ar: "الملف: سطران"
+            gap: s
+            badge:
+              text:
+                en: "Match: 96%"
+                ar: "تطابق: 96%"
+              tone: good
+          - kind: listitem
+            avatar: {text: Nada Samir, art: woman-3}
+            text: {en: Nada Samir, ar: ندى سمير}
+            sub:
+              en: "Profile: complete"
+              ar: "الملف: مكتمل"
+            value:
+              en: "Match: 81%"
+              ar: "تطابق: 81%"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: thin
+        text:
+          en: "For thin profiles, replace the score with \"Not enough info to match. Read the CV.\""
+          ar: للملفّات الناقصة، نستبدل الدرجة بـ «لا توجد معلومات كافية للمطابقة. اقرأ السيرة الذاتية.»
+        mock:
+          app:
+            name: {en: Shaghla, ar: شغلة}
+            color: "#0E7490"
+            icon: briefcase
+            domain: shaghla.example
+          frame: wide
+          url: shaghla.example/hiring
+          blocks:
+          - kind: heading
+            text: {en: Applicants · UX Designer, ar: المتقدّمون · مصمّم تجربة مستخدم}
+          - kind: listitem
+            avatar: {text: Ali Hassan, art: man-2}
+            text: {en: Ali Hassan, ar: علي حسن}
+            sub:
+              en: "Profile: 2 lines"
+              ar: "الملف: سطران"
+            gap: s
+            badge:
+              text: {en: Not enough info to match. Read the CV., ar: لا توجد معلومات كافية للمطابقة. اقرأ السيرة الذاتية.}
+              tone: neutral
+          - kind: listitem
+            avatar: {text: Nada Samir, art: woman-3}
+            text: {en: Nada Samir, ar: ندى سمير}
+            sub:
+              en: "Profile: complete"
+              ar: "الملف: مكتمل"
+            value:
+              en: "Match: 81%"
+              ar: "تطابق: 81%"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: keep
+        text: {en: Keep it; managers are busy, ar: تبقى كما هي؛ فالمديرون مشغولون}
+        mock:
+          app:
+            name: {en: Shaghla, ar: شغلة}
+            color: "#0E7490"
+            icon: briefcase
+            domain: shaghla.example
+          frame: wide
+          url: shaghla.example/hiring
+          blocks:
+          - kind: heading
+            text: {en: Applicants · UX Designer, ar: المتقدّمون · مصمّم تجربة مستخدم}
+          - kind: listitem
+            avatar: {text: Ali Hassan, art: man-2}
+            text: {en: Ali Hassan, ar: علي حسن}
+            sub:
+              en: "Profile: 2 lines"
+              ar: "الملف: سطران"
+            value:
+              en: "Match: 96%"
+              ar: "تطابق: 96%"
+            gap: s
+          - kind: listitem
+            avatar: {text: Nada Samir, art: woman-3}
+            text: {en: Nada Samir, ar: ندى سمير}
+            sub:
+              en: "Profile: complete"
+              ar: "الملف: مكتمل"
+            value:
+              en: "Match: 81%"
+              ar: "تطابق: 81%"
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [thin]
     misconceptions:
       - id: MC-P12-027
@@ -348,7 +1254,7 @@ steps:
       ar: "حين تقول الأداة بصدق «لا توجد معلومات كافية»، يعود المديرون إلى السيرة الذاتية حين يهمّ ذلك."
 
   - id: S09
-    type: choose
+    type: tune
     skill: SK-P12-U03-05
     part: retest
     speaker: hana
@@ -364,14 +1270,109 @@ steps:
       ar: "ماذا يكتب التطبيق ليعرف الأعضاء متى يأتون؟"
     mock:
       app: nashat
-      appbar: { title: { en: "Busy times", ar: "أوقات الازدحام" }, back: true }
+      appbar:
+        title: {en: Busy times, ar: أوقات الازدحام}
+        back: true
       blocks:
-        - { kind: chart, type: bar, values: [20, 35, 50, 72, 60, 30], labels: [ "13", "15", "17", "18", "19", "21" ], highlight: 3 }
-        - { kind: heading, text: { en: "6 p.m.: 72% chance of busy", ar: "6 مساءً: احتمال الازدحام 72%" }, gap: s }
+      - kind: chart
+        type: bar
+        values: [20, 35, 50, 72, 60, 30]
+        labels:
+        - "13"
+        - "15"
+        - "17"
+        - "18"
+        - "19"
+        - "21"
+        highlight: 3
+      - kind: heading
+        text:
+          en: "6 p.m.: 72% chance of busy"
+          ar: "6 مساءً: احتمال الازدحام 72%"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: act, text: { en: "\"6 p.m. is usually busy. Come before 5 for free machines.\"", ar: "«الساعة 6 مساءً مزدحمة عادةً. تعالَ قبل 5 لتجد أجهزة متاحة.»" } }
-      - { id: num, text: { en: "Keep \"72% chance of busy\"", ar: "يبقى «احتمال الازدحام 72%»" } }
-      - { id: more, text: { en: "\"72.4% chance of busy\", to be more exact", ar: "«احتمال الازدحام 72.4%»، ليكون أدقّ" } }
+      - id: act
+        text:
+          en: "\"6 p.m. is usually busy. Come before 5 for free machines.\""
+          ar: «الساعة 6 مساءً مزدحمة عادةً. تعالَ قبل 5 لتجد أجهزة متاحة.»
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Busy times, ar: أوقات الازدحام}
+            back: true
+          blocks:
+          - kind: chart
+            type: bar
+            values: [20, 35, 50, 72, 60, 30]
+            labels:
+            - "13"
+            - "15"
+            - "17"
+            - "18"
+            - "19"
+            - "21"
+            highlight: 3
+          - kind: heading
+            text:
+              en: "6 p.m. is usually busy. Come before 5 for free machines."
+              ar: الساعة 6 مساءً مزدحمة عادةً. تعالَ قبل 5 لتجد أجهزة متاحة.
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: num
+        text:
+          en: "Keep \"72% chance of busy\""
+          ar: "يبقى «احتمال الازدحام 72%»"
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Busy times, ar: أوقات الازدحام}
+            back: true
+          blocks:
+          - kind: chart
+            type: bar
+            values: [20, 35, 50, 72, 60, 30]
+            labels:
+            - "13"
+            - "15"
+            - "17"
+            - "18"
+            - "19"
+            - "21"
+            highlight: 3
+          - kind: heading
+            text:
+              en: "6 p.m.: 72% chance of busy"
+              ar: "6 مساءً: احتمال الازدحام 72%"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: more
+        text:
+          en: "\"72.4% chance of busy\", to be more exact"
+          ar: "«احتمال الازدحام 72.4%»، ليكون أدقّ"
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Busy times, ar: أوقات الازدحام}
+            back: true
+          blocks:
+          - kind: chart
+            type: bar
+            values: [20, 35, 50, 72, 60, 30]
+            labels:
+            - "13"
+            - "15"
+            - "17"
+            - "18"
+            - "19"
+            - "21"
+            highlight: 3
+          - kind: heading
+            text:
+              en: "6 p.m.: 72.4% chance of busy"
+              ar: "6 مساءً: احتمال الازدحام 72.4%"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [act]
     misconceptions:
       - id: MC-P12-028
@@ -387,7 +1388,7 @@ steps:
       ar: "«مزدحمة عادةً، تعالَ قبل 5» شيء يستطيع الأعضاء أن يتصرّفوا بناءً عليه اليوم."
 
   - id: S10
-    type: choose
+    type: tune
     skill: SK-P12-U03-05
     part: retest
     speaker: mona
@@ -403,16 +1404,95 @@ steps:
       ar: "ماذا يعرض التطبيق حين لا يعرف المبلغ بالضبط؟"
     mock:
       app: rasid
-      appbar: { title: { en: "Deposit a cheque", ar: "إيداع شيك" }, back: true }
+      appbar:
+        title: {en: Deposit a cheque, ar: إيداع شيك}
+        back: true
       blocks:
-        - { kind: image, art: receipt }
-        - { kind: small, color: muted, text: { en: "The amount could be 1,500 or 7,500. What should we show?", ar: "قد يكون المبلغ 1,500 أو 7,500. ماذا نعرض؟" }, gap: s }
+      - {kind: image, art: receipt}
+      - kind: small
+        color: muted
+        text:
+          en: "The amount could be 1,500 or 7,500. What should we show?"
+          ar: "قد يكون المبلغ 1,500 أو 7,500. ماذا نعرض؟"
+        gap: s
       footer:
-        - { kind: button, text: { en: "Deposit", ar: "أودِع" } }
+      - kind: button
+        text: {en: Deposit, ar: أودِع}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: guess, text: { en: "Fill in 1,500, its best guess", ar: "يكتب 1,500، تخمينه الأرجح" } }
-      - { id: pct, text: { en: "\"1,500 (55% sure)\"", ar: "«1,500 (متأكّد بنسبة 55%)»" } }
-      - { id: ask, text: { en: "\"Is the amount 1,500 or 7,500? Tap the right one.\"", ar: "«هل المبلغ 1,500 أم 7,500؟ اضغط على الصحيح.»" } }
+      - id: guess
+        text:
+          en: "Fill in 1,500, its best guess"
+          ar: "يكتب 1,500، تخمينه الأرجح"
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Deposit a cheque, ar: إيداع شيك}
+            back: true
+          blocks:
+          - {kind: image, art: receipt}
+          - kind: field
+            label: {en: Amount (EGP), ar: المبلغ (جنيه)}
+            text:
+              en: "1,500"
+              ar: "1,500"
+            filled: true
+            gap: s
+          footer:
+          - kind: button
+            text: {en: Deposit, ar: أودِع}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: pct
+        text:
+          en: "\"1,500 (55% sure)\""
+          ar: "«1,500 (متأكّد بنسبة 55%)»"
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Deposit a cheque, ar: إيداع شيك}
+            back: true
+          blocks:
+          - {kind: image, art: receipt}
+          - kind: field
+            label: {en: Amount (EGP), ar: المبلغ (جنيه)}
+            text:
+              en: "1,500 (55% sure)"
+              ar: "1,500 (متأكّد بنسبة 55%)"
+            filled: true
+            gap: s
+          footer:
+          - kind: button
+            text: {en: Deposit, ar: أودِع}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: ask
+        text:
+          en: "\"Is the amount 1,500 or 7,500? Tap the right one.\""
+          ar: "«هل المبلغ 1,500 أم 7,500؟ اضغط على الصحيح.»"
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Deposit a cheque, ar: إيداع شيك}
+            back: true
+          blocks:
+          - {kind: image, art: receipt}
+          - kind: text
+            text:
+              en: "Is the amount 1,500 or 7,500? Tap the right one."
+              ar: "هل المبلغ 1,500 أم 7,500؟ اضغط على الصحيح."
+            gap: s
+          - kind: chips
+            gap: xs
+            items:
+            - text:
+                en: "1,500"
+                ar: "1,500"
+            - text:
+                en: "7,500"
+                ar: "7,500"
+          footer:
+          - kind: button
+            text: {en: Deposit, ar: أودِع}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [ask]
     misconceptions:
       - id: MC-P12-029

@@ -92,7 +92,7 @@ steps:
       ar: "سؤال «كيف يمكن أن…» (How might we) يُبقي كل الحلول ممكنة، ومنها حلول بلا ذكاء اصطناعي."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P12-U01-02
     part: retest
     speaker: nour
@@ -108,16 +108,124 @@ steps:
       ar: "ما أفضل حل ليعرف المرضى المواعيد والعنوان دون اتصال؟"
     mock:
       app: raha
-      appbar: { logo: true }
+      appbar: {logo: true}
       blocks:
-        - { kind: card, art: clinic, blocks: [ { kind: heading, text: { en: "Welcome to Raha Clinic", ar: "مرحبًا بك في عيادة راحة" } } ] }
-        - { kind: listitem, icon: calendar-check, text: { en: "Book a visit", ar: "احجز زيارة" }, chevron: true, gap: m }
-        - { kind: listitem, icon: flask, text: { en: "Lab results", ar: "نتائج التحاليل" }, chevron: true }
-        - { kind: small, color: muted, text: { en: "Opening hours and address: not on this screen", ar: "المواعيد والعنوان: غير موجودة في هذه الشاشة" }, gap: m }
+      - kind: card
+        art: clinic
+        blocks:
+        - kind: heading
+          text: {en: Welcome to Raha Clinic, ar: مرحبًا بك في عيادة راحة}
+      - kind: listitem
+        icon: calendar-check
+        text: {en: Book a visit, ar: احجز زيارة}
+        chevron: true
+        gap: m
+      - kind: listitem
+        icon: flask
+        text: {en: Lab results, ar: نتائج التحاليل}
+        chevron: true
+      - kind: small
+        color: muted
+        text:
+          en: "Opening hours and address: not on this screen"
+          ar: "المواعيد والعنوان: غير موجودة في هذه الشاشة"
+        gap: m
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: page, text: { en: "Show the hours and address clearly on the home page and in the app", ar: "نعرض المواعيد والعنوان بوضوح في الصفحة الرئيسية والتطبيق" } }
-      - { id: chat, text: { en: "The AI chat, so patients can ask in their own words", ar: "مساعد المحادثة بالذكاء الاصطناعي، ليسأل المرضى بكلماتهم" } }
-      - { id: voice, text: { en: "An AI voice that answers the phone", ar: "صوت ذكاء اصطناعي يردّ على الهاتف" } }
+      - id: page
+        text: {en: Show the hours and address clearly on the home page and in the app, ar: نعرض المواعيد والعنوان بوضوح في الصفحة الرئيسية والتطبيق}
+        mock:
+          app: raha
+          appbar: {logo: true}
+          blocks:
+          - kind: card
+            art: clinic
+            blocks:
+            - kind: heading
+              text: {en: Welcome to Raha Clinic, ar: مرحبًا بك في عيادة راحة}
+          - kind: listitem
+            icon: calendar-check
+            text: {en: Book a visit, ar: احجز زيارة}
+            chevron: true
+            gap: m
+          - kind: listitem
+            icon: flask
+            text: {en: Lab results, ar: نتائج التحاليل}
+            chevron: true
+          - kind: card
+            gap: m
+            blocks:
+            - kind: listitem
+              text:
+                en: "Open Saturday to Thursday, 9 a.m. to 9 p.m."
+                ar: مفتوح من السبت إلى الخميس، 9 صباحًا إلى 9 مساءً
+              icon: clock
+            - kind: listitem
+              text:
+                en: "12 Abbas El Akkad St, Nasr City"
+                ar: "12 شارع عباس العقاد، مدينة نصر"
+              icon: map-pin
+              chevron: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: chat
+        text:
+          en: "The AI chat, so patients can ask in their own words"
+          ar: مساعد المحادثة بالذكاء الاصطناعي، ليسأل المرضى بكلماتهم
+        mock:
+          app: raha
+          appbar: {logo: true}
+          blocks:
+          - kind: card
+            art: clinic
+            blocks:
+            - kind: heading
+              text: {en: Welcome to Raha Clinic, ar: مرحبًا بك في عيادة راحة}
+          - kind: listitem
+            icon: calendar-check
+            text: {en: Book a visit, ar: احجز زيارة}
+            chevron: true
+            gap: m
+          - kind: listitem
+            icon: flask
+            text: {en: Lab results, ar: نتائج التحاليل}
+            chevron: true
+          - kind: chat
+            text:
+              en: "Hi! Ask me anything about the clinic."
+              ar: "أهلًا! اسألني أي شيء عن العيادة."
+            from: ai
+            gap: m
+          - kind: composer
+            text: {en: Ask a question, ar: اكتب سؤالك}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: voice
+        text: {en: An AI voice that answers the phone, ar: صوت ذكاء اصطناعي يردّ على الهاتف}
+        mock:
+          app: raha
+          appbar: {logo: true}
+          blocks:
+          - kind: card
+            art: clinic
+            blocks:
+            - kind: heading
+              text: {en: Welcome to Raha Clinic, ar: مرحبًا بك في عيادة راحة}
+          - kind: listitem
+            icon: calendar-check
+            text: {en: Book a visit, ar: احجز زيارة}
+            chevron: true
+            gap: m
+          - kind: listitem
+            icon: flask
+            text: {en: Lab results, ar: نتائج التحاليل}
+            chevron: true
+          - kind: listitem
+            text:
+              en: "Call us: an AI voice answers"
+              ar: "اتصل بنا: يردّ عليك صوت ذكاء اصطناعي"
+            icon: phone
+            chevron: true
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [page]
     misconceptions:
       - id: MC-P12-002
@@ -357,7 +465,7 @@ steps:
       ar: "ليست كل الأخطاء بنفس الأهمية. ابذل الجهد حيث تكون التكلفة عالية."
 
   - id: S09
-    type: choose
+    type: tune
     skill: SK-P12-U01-05
     part: retest
     speaker: tarek
@@ -373,15 +481,149 @@ steps:
       ar: "ماذا يجب أن تعرض النتائج؟"
     mock:
       app: dawaa
-      appbar: { title: { en: "Find a medicine", ar: "ابحث عن دواء" }, back: true }
+      appbar:
+        title: {en: Find a medicine, ar: ابحث عن دواء}
+        back: true
       blocks:
-        - { kind: searchbar, filled: true, text: { en: "Somatuline 120 mg", ar: "سوماتولين 120 ملجم" } }
-        - { kind: image, art: map, size: s, gap: s }
-        - { kind: small, color: muted, text: { en: "A rare medicine: few pharmacies keep it", ar: "دواء نادر: صيدليات قليلة توفّره" }, gap: s }
+      - kind: searchbar
+        filled: true
+        text: {en: Somatuline 120 mg, ar: سوماتولين 120 ملجم}
+      - {kind: image, art: map, size: s, gap: s}
+      - kind: small
+        color: muted
+        text:
+          en: "A rare medicine: few pharmacies keep it"
+          ar: "دواء نادر: صيدليات قليلة توفّره"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: one, text: { en: "Only the closest pharmacy that surely has it", ar: "أقرب صيدلية نعرف يقينًا أن الدواء عندها، فقط" } }
-      - { id: sure, text: { en: "Only pharmacies that surely have it", ar: "الصيدليات التي نعرف يقينًا أن الدواء عندها، فقط" } }
-      - { id: all, text: { en: "Sure ones first, then ones that may have it, marked \"Call to check\"", ar: "المؤكّدة أولًا، ثم التي قد يكون الدواء عندها، مع علامة «اتصل للتأكّد»" } }
+      - id: one
+        text: {en: Only the closest pharmacy that surely has it, ar: أقرب صيدلية نعرف يقينًا أن الدواء عندها، فقط}
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Find a medicine, ar: ابحث عن دواء}
+            back: true
+          blocks:
+          - kind: searchbar
+            filled: true
+            text: {en: Somatuline 120 mg, ar: سوماتولين 120 ملجم}
+          - {kind: image, art: map, size: s, gap: s}
+          - kind: small
+            color: muted
+            text:
+              en: "A rare medicine: few pharmacies keep it"
+              ar: "دواء نادر: صيدليات قليلة توفّره"
+            gap: s
+          - kind: listitem
+            text: {en: Al Shifa Pharmacy, ar: صيدلية الشفاء}
+            icon: first-aid
+            sub:
+              en: "1.2 km · Nasr City"
+              ar: "1.2 كم · مدينة نصر"
+            badge:
+              text: {en: In stock, ar: متوفّر}
+              tone: good
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: sure
+        text: {en: Only pharmacies that surely have it, ar: الصيدليات التي نعرف يقينًا أن الدواء عندها، فقط}
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Find a medicine, ar: ابحث عن دواء}
+            back: true
+          blocks:
+          - kind: searchbar
+            filled: true
+            text: {en: Somatuline 120 mg, ar: سوماتولين 120 ملجم}
+          - {kind: image, art: map, size: s, gap: s}
+          - kind: small
+            color: muted
+            text:
+              en: "A rare medicine: few pharmacies keep it"
+              ar: "دواء نادر: صيدليات قليلة توفّره"
+            gap: s
+          - kind: listitem
+            text: {en: Al Shifa Pharmacy, ar: صيدلية الشفاء}
+            icon: first-aid
+            sub:
+              en: "1.2 km · Nasr City"
+              ar: "1.2 كم · مدينة نصر"
+            badge:
+              text: {en: In stock, ar: متوفّر}
+              tone: good
+            gap: s
+          - kind: listitem
+            text: {en: Al Nour Pharmacy, ar: صيدلية النور}
+            icon: first-aid
+            sub:
+              en: "6 km · Heliopolis"
+              ar: "6 كم · مصر الجديدة"
+            badge:
+              text: {en: In stock, ar: متوفّر}
+              tone: good
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: all
+        text:
+          en: "Sure ones first, then ones that may have it, marked \"Call to check\""
+          ar: المؤكّدة أولًا، ثم التي قد يكون الدواء عندها، مع علامة «اتصل للتأكّد»
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Find a medicine, ar: ابحث عن دواء}
+            back: true
+          blocks:
+          - kind: searchbar
+            filled: true
+            text: {en: Somatuline 120 mg, ar: سوماتولين 120 ملجم}
+          - {kind: image, art: map, size: s, gap: s}
+          - kind: small
+            color: muted
+            text:
+              en: "A rare medicine: few pharmacies keep it"
+              ar: "دواء نادر: صيدليات قليلة توفّره"
+            gap: s
+          - kind: listitem
+            text: {en: Al Shifa Pharmacy, ar: صيدلية الشفاء}
+            icon: first-aid
+            sub:
+              en: "1.2 km · Nasr City"
+              ar: "1.2 كم · مدينة نصر"
+            badge:
+              text: {en: In stock, ar: متوفّر}
+              tone: good
+            gap: s
+          - kind: listitem
+            text: {en: Al Nour Pharmacy, ar: صيدلية النور}
+            icon: first-aid
+            sub:
+              en: "6 km · Heliopolis"
+              ar: "6 كم · مصر الجديدة"
+            badge:
+              text: {en: In stock, ar: متوفّر}
+              tone: good
+          - kind: listitem
+            text: {en: Hayat Pharmacy, ar: صيدلية حياة}
+            icon: first-aid
+            sub:
+              en: "2 km · may have it"
+              ar: "2 كم · قد يكون متوفّرًا"
+            badge:
+              text: {en: Call to check, ar: اتصل للتأكّد}
+              tone: warn
+              icon: phone
+          - kind: listitem
+            text: {en: Salama Pharmacy, ar: صيدلية سلامة}
+            icon: first-aid
+            sub:
+              en: "3 km · may have it"
+              ar: "3 كم · قد يكون متوفّرًا"
+            badge:
+              text: {en: Call to check, ar: اتصل للتأكّد}
+              tone: warn
+              icon: phone
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [all]
     misconceptions:
       - id: MC-P12-010
