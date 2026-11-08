@@ -11,7 +11,7 @@ import { linkedInFeedUrl, linkedInProfileUrl, postText } from "@/lib/certificate
 
 type Props = {
   pathId: string; pathName: string; name: string; code: string; issuedAt: string; id: string; skills: number; checks: number;
-  initialPublic: boolean; nameConfirmed: boolean; emailLike: boolean; url: string; cardArt: React.ReactNode;
+  initialPublic: boolean; nameConfirmed: boolean; emailLike: boolean; url: string; posts: { en: string[]; ar: string[] }; cardArt: React.ReactNode;
 };
 
 /**
@@ -46,11 +46,10 @@ export function CertActions(p: Props) {
   const [failed, setFailed] = useState(false);
   const [pending, start] = useTransition();
   const opener = useRef<HTMLButtonElement>(null);
-  const versions = [1, 2, 3].map((n) => postText({ intro: t(n === 1 ? "postIntro" : (`postIntro${n}` as "postIntro2"), { path: p.pathName, skills: p.skills, checks: p.checks }), seeIt: t("postSee"), tags: t("postTags") }, p.url));
+  const [lang, setLang] = useState<"en" | "ar">("en");
   const [ver, setVer] = useState(0);
-  const [postDraft, setPostDraft] = useState(versions[0]);
-  const text = postDraft;
-  const pick = (i: number) => { setVer(i); setPostDraft(versions[i]); };
+  const text = p.posts[lang][ver];
+  const toggleLang = () => setLang(lang === "en" ? "ar" : "en");
   const say = (m: string) => { setLive(""); setTimeout(() => setLive(m), 30); };
   // The confirmation toast goes away by itself after 4 seconds, and has a close button.
   useEffect(() => { if (!live) return; const id = setTimeout(() => setLive(""), 4000); return () => clearTimeout(id); }, [live]);
@@ -70,14 +69,16 @@ export function CertActions(p: Props) {
 
   const share = () => {
     if (gate()) return;
-    // LinkedIn's phone app ignores the text in a link, so on phones the share sheet carries it: choosing LinkedIn there opens its composer with the text filled in.
-    if (isPhone() && typeof navigator.share === "function") {
+    // LinkedIn's phone app cannot take text from a link, so on phones the text is copied and LinkedIn's post composer opens (the app on Android, if it is installed);
+    // the learner pastes the text there and edits it in LinkedIn.
+    if (isPhone()) {
       start(async () => {
         setFailed(false);
         if (!(await ensureOn())) return;
-        const copied = await copy(text);
-        try { await navigator.share({ text }); if (copied) say(t("copiedLive")); }
-        catch (e) { if ((e as Error)?.name !== "AbortError") go(null, linkedInFeedUrl(text)); }
+        if (await copy(text)) say(t("copiedPaste"));
+        const feed = "https://www.linkedin.com/feed/?shareActive=true";
+        const android = /android/i.test(navigator.userAgent);
+        window.setTimeout(() => go(null, android ? `intent://www.linkedin.com/feed/?shareActive=true#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=${encodeURIComponent(feed)};end` : feed), 900);
       });
       return;
     }
@@ -183,10 +184,12 @@ export function CertActions(p: Props) {
             </header>
             <p className="cxs-label">{t("shPost")}</p>
             <div className="cxs-vers" role="radiogroup" aria-label={t("vLabel")}>
-              {[t("v1"), t("v2"), t("v3")].map((l, i) => <button key={i} type="button" role="radio" aria-checked={ver === i} className={`chip${ver === i ? " is-on" : ""}`} onClick={() => pick(i)}>{l}</button>)}
+              {[t("v1"), t("v2"), t("v3")].map((l, i) => <button key={i} type="button" role="radio" aria-checked={ver === i} className={`chip${ver === i ? " is-selected" : ""}`} onClick={() => setVer(i)}>{ver === i ? <span className="ph ph-check-circle-fill" aria-hidden="true" /> : null}{l}</button>)}
             </div>
-            <label className="lp-sr" htmlFor="cxs-text">{t("postEdit")}</label>
-            <textarea id="cxs-text" className="cxs-post cxs-edit" dir="auto" rows={9} value={postDraft} onChange={(e) => setPostDraft(e.target.value)} />
+            <button type="button" className="btn btn-ghost btn-sm press" onClick={toggleLang}><span className="ph ph-translate" aria-hidden="true" />{lang === "en" ? t("toAr") : t("toEn")}</button>
+            <div className="cxs-post" dir="auto" tabIndex={0} role="group" aria-label={t("shPost")}>
+              {text.split("\n\n").map((line, i) => <p key={i}>{line}</p>)}
+            </div>
             <p className="t-small ink-2">{t("editHint")}</p>
             <p className="cxs-label">{t("preview")}</p>
             <div className="cxs-card">
@@ -195,7 +198,7 @@ export function CertActions(p: Props) {
             </div>
             {!on ? <p className="cxs-notice"><span className="ph ph-info" aria-hidden="true" /><span>{t("notice")}</span></p> : null}
             <div className="cxs-acts">
-              <button type="button" data-autofocus className="btn btn-primary btn-lg press" onClick={share} disabled={pending || !postDraft.trim()} aria-busy={pending || undefined}><span className="li-glyph" aria-hidden="true">in</span>{t("open")}</button>
+              <button type="button" data-autofocus className="btn btn-primary btn-lg press" onClick={share} disabled={pending} aria-busy={pending || undefined}><span className="li-glyph" aria-hidden="true">in</span>{t("open")}</button>
               <button type="button" className="btn btn-ghost press" onClick={() => { setOpen(false); opener.current?.focus(); }}>{t("cancel")}</button>
             </div>
             <p className="t-small ink-2 cxs-foot">{t("openNote")}</p>
