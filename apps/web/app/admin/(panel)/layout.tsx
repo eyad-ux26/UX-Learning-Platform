@@ -16,7 +16,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
     <div className="a-shell">
       <Nav groups={navFor(ctx.perms)} counts={counts} />
       <div className="a-main">
-        <TopBar name={ctx.name} roleLabel={roleLabel} initials={initials} env={ctx.env} bell={bell} />
+        <TopBar name={ctx.name} roleLabel={roleLabel} initials={initials} env={ctx.env} bell={bell} groups={navFor(ctx.perms)} counts={counts} />
         {children}
       </div>
     </div>

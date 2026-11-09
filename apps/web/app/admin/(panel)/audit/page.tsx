@@ -20,7 +20,18 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
   const f: AuditFilter = { actor: sp.actor, action: sp.action, area: sp.area, targetType: sp.type, targetId: sp.target, from: sp.from, to: sp.to, session: sp.session };
   const page = Math.max(1, Number(sp.page) || 1);
   const areas = auditAreas(ctx.perms);
-  const raw = await auditPage(f, areas, page);
+  const raw = await auditPage(f, areas, page).catch((e: { code?: string; message?: string }) => {
+    console.error("admin audit: list", e?.code, e?.message);
+    return null;
+  });
+  if (!raw) {
+    return (
+      <main className="a-page">
+        <PageHead crumbs={[{ label: "Audit log" }]} title="Audit log" />
+        <Card label="Audit log"><Empty icon="warning" tone="bad" title="The audit log did not load" action={<Link className="a-btn" href="/admin/audit">Clear the filters and try again</Link>}>Nothing was changed. Check the filters (for example the dates), or try again in a minute.</Empty></Card>
+      </main>
+    );
+  }
   // Roles that may not reveal personal data (Analyst) see learner emails and IPs masked here too.
   const open = mayReveal(ctx.perms);
   const { more, total } = raw;

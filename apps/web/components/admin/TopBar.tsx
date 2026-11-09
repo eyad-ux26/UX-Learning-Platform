@@ -4,8 +4,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import type { NavGroup } from "@/lib/admin/permissions";
+import { MobileNav } from "./MobileNav";
 
-export function TopBar({ name, roleLabel, initials, env, bell }: { name: string; roleLabel: string; initials: string; env: "production" | "staging"; bell: number }) {
+export function TopBar({ name, roleLabel, initials, env, bell, groups, counts }: {
+  name: string; roleLabel: string; initials: string; env: "production" | "staging"; bell: number; groups: NavGroup[]; counts: Record<string, { n: number; hot?: boolean }>;
+}) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const menu = useRef<HTMLDivElement>(null);
@@ -21,6 +25,7 @@ export function TopBar({ name, roleLabel, initials, env, bell }: { name: string;
   }, [router]);
   return (
     <header className="a-top">
+      <MobileNav groups={groups} counts={counts} />
       <Link className="a-search" href="/admin/search" aria-label="Search everything, Control K or Command K" aria-keyshortcuts="Control+K Meta+K">
         <span className="i i-magnifying-glass" aria-hidden="true" />
         <span className="ph-txt">Search learners, emails, payments, tickets, certificates…</span>
@@ -38,7 +43,7 @@ export function TopBar({ name, roleLabel, initials, env, bell }: { name: string;
       <div className="a-rel" ref={menu}>
         <button className="a-me" type="button" aria-haspopup="menu" aria-expanded={open} aria-label={`Admin menu: ${name}, ${roleLabel}`} onClick={() => setOpen((o) => !o)}>
           <span className="a-av v1" aria-hidden="true">{initials}</span>
-          <span className="tx" style={{ display: "flex", flexDirection: "column" }}><span className="nm">{name}</span><span className="rl">{roleLabel}</span></span>
+          <span className="tx"><span className="nm">{name}</span><span className="rl">{roleLabel}</span></span>
           <span className="i i-caret-down s14 ink-3" aria-hidden="true" />
         </button>
         {open ? (
