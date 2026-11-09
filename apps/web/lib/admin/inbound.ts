@@ -46,20 +46,42 @@ export function stripQuoted(text: string): string {
   return t || text.trim();
 }
 
+/** The mail server whose results we trust: Cloudflare Email Routing, which receives mail for uxgate.org. */
+export const TRUSTED_AUTHSERV = "mx.cloudflare.net";
+
 /**
- * Did the sender's domain vouch for this email? Read from the Authentication-Results header that Cloudflare's mail
- * server adds on top (the first one; lower ones could come from the sender). DMARC pass, or a DKIM or SPF pass for the
- * From address's own domain, counts. Anything else (no header, fail, softfail, another domain) is unverified.
+ * The authentication results Cloudflare wrote for this email, or null. Headers come top to bottom. Only an
+ * Authentication-Results or ARC-Authentication-Results header whose authserv-id (the first token; after "i=N;" in ARC)
+ * is mx.cloudflare.net counts, and the topmost such header wins. Every other one may have been written by the sender,
+ * so a message without a Cloudflare header is unverified.
+ */
+export function trustedAuthResults(headers: { key: string; value: string }[] | null | undefined): string | null {
+  for (const h of headers ?? []) {
+    const key = h.key.toLowerCase();
+    if (key !== "authentication-results" && key !== "arc-authentication-results") continue;
+    let v = h.value.replace(/\s+/g, " ").trim();
+    if (key === "arc-authentication-results") v = v.replace(/^i\s*=\s*\d+\s*;\s*/i, "");
+    const id = v.split(";")[0].trim().split(/\s+/)[0]?.toLowerCase();
+    if (id === TRUSTED_AUTHSERV) return v.slice(0, 2000);
+  }
+  return null;
+}
+
+/**
+ * Did the sender's domain vouch for this email? Read from the results Cloudflare wrote (see trustedAuthResults; this
+ * also refuses any string whose authserv-id is not Cloudflare's). DMARC pass for the From domain, or a DKIM or SPF pass
+ * for the From address's own domain, counts. Anything else (no header, fail, softfail, another domain) is unverified.
  */
 export function senderVerified(authResults: string | null | undefined, from: string): boolean {
   if (!authResults) return false;
+  if (authResults.split(";")[0].trim().split(/\s+/)[0]?.toLowerCase() !== TRUSTED_AUTHSERV) return false;
   const domain = from.split("@")[1]?.toLowerCase().trim();
   if (!domain) return false;
   const aligned = (d: string | undefined) => !!d && (domain === d.toLowerCase() || domain.endsWith(`.${d.toLowerCase()}`));
   for (const part of authResults.split(";").map((p) => p.trim().toLowerCase())) {
     if (/^dmarc=pass\b/.test(part)) {
       const d = /header\.from=([a-z0-9.-]+)/.exec(part)?.[1];
-      if (!d || aligned(d)) return true;
+      if (aligned(d)) return true;
     }
     if (/^dkim=pass\b/.test(part) && aligned(/header\.d=([a-z0-9.-]+)/.exec(part)?.[1])) return true;
     if (/^spf=pass\b/.test(part)) {

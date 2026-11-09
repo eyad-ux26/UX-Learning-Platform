@@ -5,6 +5,7 @@ import handler from "./.open-next/worker.js";
 import { isPrivateContent, notFound } from "./lib/private-content";
 import { serverTiming, traceLine, withTrace } from "./lib/server/db-trace";
 import PostalMime from "postal-mime";
+import { trustedAuthResults } from "./lib/admin/inbound";
 
 type Env = { CRON_SECRET?: string; SUPPORT_FORWARD_TO?: string };
 type EmailMessage = { from: string; to: string; raw: ReadableStream; headers: Headers; forward(to: string): Promise<void>; setReject(reason: string): void };
@@ -37,12 +38,17 @@ export default {
   async email(message: EmailMessage, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
     const raw = await new Response(message.raw).arrayBuffer();
     const mail = await PostalMime.parse(raw);
+    // Which authentication headers arrived and who wrote them (authserv-id only, no addresses), to confirm what
+    // Cloudflare adds on Worker delivery.
+    console.log("support inbound: auth headers", JSON.stringify((mail.headers ?? [])
+      .filter((h: { key: string }) => /^(arc-)?authentication-results$|^received-spf$|^dkim-signature$/i.test(h.key))
+      .map((h: { key: string; value: string }) => `${h.key.toLowerCase()}: ${h.value.replace(/^i\s*=\s*\d+\s*;\s*/i, "").split(";")[0].trim().slice(0, 80)}`)));
     const payload = {
       from: (mail.from?.address ?? message.from).toLowerCase(), name: mail.from?.name || null, subject: mail.subject ?? "",
       text: mail.text ?? (mail.html ?? "").replace(/<[^>]+>/g, " "), messageId: mail.messageId ?? message.headers.get("message-id"),
       inReplyTo: mail.inReplyTo ?? null, autoSubmitted: message.headers.get("auto-submitted"), attachments: mail.attachments?.length ?? 0,
-      // The top Authentication-Results is the one Cloudflare's mail server added; any below it came with the message.
-      authResults: mail.headers?.find((h: { key: string; value: string }) => h.key.toLowerCase() === "authentication-results")?.value?.slice(0, 2000) ?? null,
+      // Only results written by Cloudflare's mail server count; any other header may come from the sender (QA N1).
+      authResults: trustedAuthResults(mail.headers),
     };
     const res: Response = await handler.fetch(new Request("https://internal/api/support/inbound", {
       method: "POST", headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}`, "content-type": "application/json" }, body: JSON.stringify(payload),

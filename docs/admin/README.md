@@ -59,8 +59,11 @@ with `[#1234]` in the subject from the ticket's own email joins that ticket; any
 bounces and our own mail are skipped. If the app is down and no forward is set, the sender gets a "try again later" bounce
 instead of the mail being lost.
 
-**Sender check.** The From line of an email can be forged. The handler passes on the `Authentication-Results` header that
-Cloudflare adds, and the email counts as verified only when DMARC passes, or DKIM or SPF passes for the From domain. An
+**Sender check.** The From line of an email can be forged. The handler passes on only the authentication results that
+Cloudflare's mail server wrote (an `Authentication-Results` or `ARC-Authentication-Results` header from `mx.cloudflare.net`;
+any other such header may come from the sender and is ignored). The email counts as verified only when DMARC passes for
+the From domain, or DKIM or SPF passes for it. With no Cloudflare results, every email is unverified. Each email logs
+which authentication headers arrived (Workers logs, `support inbound: auth headers`), to confirm what Cloudflare adds. An
 unverified email still opens a ticket, marked "Sender not verified", but it never joins an existing ticket and is not
 linked to a learner account. Check who sent it before acting on it.
 
