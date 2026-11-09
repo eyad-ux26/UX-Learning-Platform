@@ -1,6 +1,16 @@
 # Proposal: video courses, earned certificates, landing (S3-18, 8 November 2026)
 
-**Status: proposal. Eyad picks the Paths option before anything is built.**
+**Status: APPROVED by Eyad, 9 Nov 2026 22:58Z: Paths option B, plus the earned certificates and the two landing sections. Canvas v111. Options A and C stay on the board for reference only and are not built.**
+
+## Build brief (for Dev)
+
+Build these four pieces, matching canvas v111, board S3-18 (frames 2 and 3 = Paths option B and its search state, 5 = Profile certificates, 6 and 7 = landing):
+1. **Paths tab, option B** (`optB`, `optBSearch`): search field, "Featured courses" carousel of the video courses, then "All paths" in catalog order. Card layout, illustrations, search and keywords are specified below under option B. Read `kind` from the code catalog, not `paths.kind` (see the build note at the end).
+2. **Profile, Certificates tab** (`certs`): earned first, compact green-outlined card without a certificate picture.
+3. **Landing, «المميزات المختلفة في UXGate»** (`landDiff`), right after the hero.
+4. **Landing, every path ends with a certificate** (`landCert`).
+
+Path illustrations: `slice-3/img/paths/{id}.svg` and `{id}-dark.svg`. Instructor photos: `slice-3/img/*-avatar.jpg`. The instructor per path is still an assumption (P14 Eyad Mahmoud, P02 Mahmoud Raslan); store it on the path so it can be corrected without code.
 
 Canvas: page "7 · Slice 3 · Progress", board **S3-18**, component `SpotlightPages`. The views are `optA`, `optB`, `optC`, `certs`, `landDiff` and `landCert`. The CSS is the "Proposal 8 Nov 2026 (S3-18)" block at the end of `system/uxgate.css`.
 
