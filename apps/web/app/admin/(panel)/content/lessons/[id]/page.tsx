@@ -43,7 +43,7 @@ export default async function LessonEditorPage({ params }: { params: Promise<{ i
           ) : null}
           {inReview && ed.draft?.releaseId ? <Link className="a-btn" href={`/admin/content/releases/${ed.draft.releaseId}`}><I n="eye" />Open the release</Link> : null}
         </>} />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+      <div className="a-fit" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))" }}>
         <Card title="This lesson" label="This lesson">
           <KV rows={[
             ["Unit", unit ? `${unit.id} · ${unit.title.en}` : ed.meta.unitId],

@@ -131,10 +131,18 @@
 .a-side { display: grid; grid-template-columns: minmax(200px, 260px) minmax(0, 1fr); gap: 16px; align-items: start; }
 .a-side > * { min-inline-size: 0; }
 @media (max-width: 760px) { .a-side { grid-template-columns: minmax(0, 1fr); } }
+/* Cards side by side that wrap; a card never forces the row wider than the screen. */
+.a-fit { display: grid; gap: 16px; }
+.a-fit > * { min-inline-size: 0; }
+/* Lesson editor: the fields, and the checks and preview beside them; one column below 900px. */
+.a-editor { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
+.a-editor > * { min-inline-size: 0; }
+.a-editor-rail { position: sticky; inset-block-start: 72px; }
+@media (max-width: 900px) { .a-editor { grid-template-columns: minmax(0, 1fr); } .a-editor-rail { position: static; } }
 
 /* ---------- surfaces ---------- */
 .a-card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.a-card-h { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); min-height: 48px; }
+.a-card-h { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); min-height: 48px; }
 .a-card-h .t-h3 { flex: 1; }
 .a-card-b { padding: 14px 16px; }
 .a-card.flat { border-radius: 8px; }

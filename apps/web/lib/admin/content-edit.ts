@@ -17,17 +17,27 @@ const isPair = (v: unknown): v is { en: string; ar: string } =>
 // Keys that hold machine values, never words for learners.
 const SKIP = new Set(["id", "type", "part", "skill", "answer", "speaker", "video", "kind", "icon", "icons", "region", "when", "app", "color", "tone", "weight", "size", "gap", "frame", "dir", "url", "code", "layout", "start"]);
 
-/** A short label for a path, such as "Option b · text" or "Hint 2". */
-function labelOf(parts: string[]): string {
-  const out: string[] = [];
+/** Words for content keys, so editors read "Option 2 · example screen · part 1.2 · text", not the file's own path. */
+const WORDS: Record<string, string> = {
+  options: "option", mock: "example screen", blocks: "part", appbar: "top bar", navbar: "nav bar", tabbar: "tab bar",
+  items: "item", links: "link", actions: "action", aria: "screen reader label", sub: "subtitle", misconceptions: "wrong answer",
+  hints: "hint", transcript: "transcript line", a: "side A", b: "side B", overlay: "pop-up",
+};
+
+/** A short label for a path, such as "Option 2 · text" or "Hint 2". Nested parts read as "part 1.2". */
+export function labelOf(parts: string[]): string {
+  const out: { word: string; n: string }[] = [];
   for (let i = 0; i < parts.length; i++) {
     const p = parts[i];
-    const next = parts[i + 1];
     if (/^\d+$/.test(p)) continue;
-    const n = next && /^\d+$/.test(next) ? ` ${Number(next) + 1}` : "";
-    out.push(`${p.replace(/_/g, " ")}${n}`);
+    const next = parts[i + 1];
+    const n = next && /^\d+$/.test(next) ? String(Number(next) + 1) : "";
+    const word = WORDS[p] ?? p.replace(/_/g, " ");
+    const last = out[out.length - 1];
+    if (last && last.word === word && last.n && n) last.n += `.${n}`;
+    else out.push({ word, n });
   }
-  const s = out.join(" · ");
+  const s = out.map((o) => (o.n ? `${o.word} ${o.n}` : o.word)).join(" · ");
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 

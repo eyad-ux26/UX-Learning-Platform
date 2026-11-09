@@ -53,7 +53,10 @@ export async function healthChecks(): Promise<Check[]> {
     { id: "paddle", label: "Paddle", ok: env("PADDLE_API_KEY") && env("PADDLE_WEBHOOK_SECRET"), detail: `${process.env.PADDLE_ENV === "production" ? "Live" : "Sandbox"} · ${env("PADDLE_API_KEY") ? "API key set" : "no API key"} · ${env("PADDLE_WEBHOOK_SECRET") ? "webhook secret set" : "no webhook secret"}` },
     { id: "paymob", label: "Paymob", ok: env("PAYMOB_SECRET_KEY") && env("PAYMOB_HMAC_SECRET") ? true : null, detail: env("PAYMOB_SECRET_KEY") ? "Key set" : "Not set up yet (Egypt payments use the test page on previews)" },
     { id: "bunny", label: "Bunny video", ok: env("BUNNY_STREAM_TOKEN_KEY") && env("BUNNY_STREAM_CDN_HOST"), detail: env("BUNNY_STREAM_TOKEN_KEY") ? "Token key set: videos play" : "No BUNNY_STREAM_TOKEN_KEY: videos do not play" },
-    { id: "links", label: "Email link secret", ok: env("EMAIL_LINK_SECRET"), detail: env("EMAIL_LINK_SECRET") ? "Set" : "No EMAIL_LINK_SECRET: unsubscribe and survey links do not work" },
+    // Links are signed with EMAIL_LINK_SECRET, or else CRON_SECRET (lib/email-token.ts). Adding EMAIL_LINK_SECRET later
+    // changes the key: every turn-off link already emailed stops working and team passes are asked for again.
+    { id: "links", label: "Email link secret", ok: env("EMAIL_LINK_SECRET") || env("CRON_SECRET"),
+      detail: env("EMAIL_LINK_SECRET") ? "Set" : env("CRON_SECRET") ? "Uses the daily job secret (CRON_SECRET). Links work. Setting EMAIL_LINK_SECRET later ends links already emailed and team passes." : "No EMAIL_LINK_SECRET or CRON_SECRET: unsubscribe and survey links do not work" },
     { id: "push", label: "Push notifications", ok: env("VAPID_PRIVATE_KEY") ? true : null, detail: env("VAPID_PRIVATE_KEY") ? "Keys set" : "No VAPID keys: push is off" },
     { id: "cron", label: "Daily job secret", ok: env("CRON_SECRET"), detail: env("CRON_SECRET") ? "Set" : "No CRON_SECRET: the daily job refuses to run" },
   ];

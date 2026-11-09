@@ -41,7 +41,7 @@ export function LessonEditor({ lessonId, base, start, acks0, canEdit, frozen, sa
   const ro = !canEdit || frozen;
 
   return (
-    <div className="a-split" style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 380px", gap: 16, alignItems: "start" }}>
+    <div className="a-editor">
       <div className="a-stack">
         {steps.map((s) => {
           const fs = byStep.get(s.id) ?? [];
@@ -85,7 +85,7 @@ export function LessonEditor({ lessonId, base, start, acks0, canEdit, frozen, sa
           );
         })}
       </div>
-      <aside className="a-stack" style={{ position: "sticky", top: 72 }}>
+      <aside className="a-stack a-editor-rail">
         <section className="a-card" aria-label="Checks">
           <div className="a-card-h"><h2 className="t-h3">Checks</h2><span className="a-grow" />{ok ? <span className="a-st good"><Icon n="check-circle-fill" />Ready</span> : <span className="a-st bad"><Icon n="warning" />Not ready</span>}</div>
           <div className="a-card-b">

@@ -54,7 +54,7 @@ export default async function ReleasePage({ params }: { params: Promise<{ id: st
         </>} />
       {r.status === "in_review" && author ? <Note icon="user-circle">You wrote part of this release, so another publisher must review and publish it.</Note> : null}
       {stale ? <Note icon="warning">A lesson in this release changed since it was sent (a newer version went live). Send it back so the authors can redo the change on the new version.</Note> : null}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+      <div className="a-fit" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))" }}>
         <Card title="About this release" label="About this release">
           <KV rows={[
             ["Asked by", <>{nm(r.requestedBy)} · <When at={r.createdAt} rel /></>],
