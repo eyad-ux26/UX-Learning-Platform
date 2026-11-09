@@ -1,5 +1,6 @@
 import { PathName } from "@/components/PathName";
 import { localPathName } from "@/lib/catalog-list";
+import { pathSkills } from "@/lib/certificate";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthErrorRedirect } from "@/components/AuthErrorRedirect";
 import { LandingPreview } from "@/components/LandingPreview";
@@ -141,14 +142,14 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             <h2 id="cert-h" className="ld-h2">{t("certH")}</h2>
             <ul className="ld-checks">
               {([["seal-check", 1], ["share", 2], ["link", 3]] as const).map(([icon, n]) => (
-                <li key={n}><span className={`ph ph-${icon}`} aria-hidden="true" /><span><b>{t(`cert${n}t`)}</b> {t(`cert${n}b`)}</span></li>
+                <li key={n}><span className={`ph ph-${icon}`} aria-hidden="true" /><span><b>{t(`cert${n}t`)}</b> {t.rich(`cert${n}b`, { link: (c) => <bdi dir="ltr">{c}</bdi> })}</span></li>
               ))}
             </ul>
           </div>
           <div className="ld-cert-art" aria-hidden="true">
             <div className="ld-post">
               <div className="ld-post-top"><span className="ld-post-ava">{t("postName").charAt(0)}</span><span><b>{t("postName")}</b><small>{t("postWhen")}</small></span></div>
-              <p className="ld-post-text">{t("postText")}</p>
+              <p className="ld-post-text">{t("postText", { n: pathSkills("P01").length })}</p>
               <div className="ld-mini">
                 <div className="ld-mini-b"><span className="ph ph-seal-check-fill" /><small>UXGATE</small></div>
                 <div className="ld-mini-m"><small>{t("postCardOver")}</small><small>{t("postCardThis")}</small><span className="ld-mini-name">{t("postName")}</span><small>{t("postCardShowed")}</small><b>{t("postCardPath")}</b></div>

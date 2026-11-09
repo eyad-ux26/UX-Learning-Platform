@@ -79,9 +79,11 @@ export function PathSpotlight({ cards, locale, allHeading }: { cards: SpotCardDa
 
       {searching ? (
         <>
-          <p className="t-over" role="status">{t("results", { count: results.length, q: q.trim() })}</p>
           {results.length ? (
-            <div className="pg-cards">{results.map((r) => <SpotCard key={r.id} c={byId.get(r.id)!} t={t} hit={r.hit} />)}</div>
+            <>
+              <p className="t-over" role="status">{t("results", { count: results.length, q: q.trim() })}</p>
+              <div className="pg-cards">{results.map((r) => <SpotCard key={r.id} c={byId.get(r.id)!} t={t} hit={r.hit} />)}</div>
+            </>
           ) : <p className="t-small ink-2" role="status">{t("noResults", { q: q.trim() })}</p>}
         </>
       ) : (
@@ -92,7 +94,7 @@ export function PathSpotlight({ cards, locale, allHeading }: { cards: SpotCardDa
                 <p className="t-over hy-title"><span className="ph ph-star-fill" aria-hidden="true" />{t("secFeatured")}</p>
                 {featured.length > 1 ? (
                   <span className="hy-nav">
-                    <button type="button" className="hy-btn" aria-label={t("carPrev")} onClick={() => scroll(-1)}><span className="ph ph-caret-start flip" aria-hidden="true" /></button>
+                    <button type="button" className="hy-btn hy-prev" aria-label={t("carPrev")} onClick={() => scroll(-1)}><span className="ph ph-caret-end" aria-hidden="true" /></button>
                     <button type="button" className="hy-btn" aria-label={t("carNext")} onClick={() => scroll(1)}><span className="ph ph-caret-end flip" aria-hidden="true" /></button>
                   </span>
                 ) : null}
