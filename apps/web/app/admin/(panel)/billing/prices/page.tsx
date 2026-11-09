@@ -3,6 +3,7 @@ import { allowed, requireAdmin } from "@/lib/admin/guard";
 import { PRICES, GULF, ARAB, perMonth, type Region } from "@/lib/billing/pricing";
 import { fmtMoney, REGION_LABEL, toUsd } from "@/lib/admin/format";
 import { Card, Id, NoAccess, Note, PageHead } from "@/components/admin/ui";
+import { PriceChanges } from "./PriceChanges";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Prices and plans" };
@@ -24,7 +25,7 @@ export default async function PricesPage() {
   return (
     <main className="a-page">
       <PageHead crumbs={[{ label: "Money" }, { label: "Prices and plans" }]} title="Prices and plans" sub="What each region pays today, and the provider price behind it." />
-      <Note icon="lock-simple">Prices are never edited in place. A price change needs a second person to approve it and creates a new provider price; people already subscribed keep their price. Requesting a change from here comes with Platform settings in Phase 2.</Note>
+      <Note icon="lock-simple">Prices are never edited in place. A price change needs a second person to approve it and creates a new provider price; people already subscribed keep their price.</Note>
       <Card label="Prices" pad={false}>
         <div className="a-tbl-wrap"><table className="a-tbl">
           <thead><tr><th scope="col">Region</th><th scope="col">Who gets it</th><th scope="col">Plan</th><th scope="col" className="num">Price</th><th scope="col" className="num">≈ USD a month</th><th scope="col">Provider</th><th scope="col">Provider price</th></tr></thead>
@@ -40,6 +41,7 @@ export default async function PricesPage() {
           ))}</tbody>
         </table></div>
       </Card>
+      <PriceChanges ctx={ctx} />
       <div className="a-kpis">
         <Card title="How region is chosen"><p className="t-sm">By the country we see at checkout. An unknown country pays the Rest of the world price, never Egypt’s. An Egypt price paid with a card from abroad is refunded and offered at the international price.</p><Link className="t-sm" href="/admin/billing/problems">See payments that bought nothing</Link></Card>
         <Card title="Comp access"><p className="t-sm">Free Pro given by the team. It never charges, has an end date and is counted apart from revenue.</p><Link className="t-sm" href="/admin/billing/subscriptions?tab=comp">See comp access</Link></Card>

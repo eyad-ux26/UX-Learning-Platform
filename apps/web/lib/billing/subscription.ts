@@ -43,7 +43,7 @@ export type Card = { method: PayMethod; brand?: string | null; last4?: string | 
  * `source: "manual"` is Pro granted by admins with SQL (supabase/README.md), with no payment: it counts everywhere,
  * nothing renews it, and plan events leave it alone while it lasts longer than the plan.
  */
-export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null; source?: "live" | "mock" | "manual" };
+export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null; source?: "live" | "mock" | "manual" | "trial" };
 
 export const GRACE_DAYS = 7;
 /** Failed renewals are tried again this many days after the charge date. */

@@ -34,6 +34,29 @@ export function PayNow({ kind, period, label, cls = "btn btn-primary btn-sm pres
   );
 }
 
+/** Starts the free trial (0062); the page then shows Pro with the trial's end date. */
+export function StartTrial({ label }: { label: string }) {
+  const t = useTranslations("billing");
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(false);
+  const go = async () => {
+    if (busy) return;
+    setBusy(true); setErr(false);
+    const r = await billingPost("trial", {});
+    setBusy(false);
+    if (r.ok) router.refresh(); else setErr(true);
+  };
+  return (
+    <>
+      <button type="button" className="btn btn-primary btn-sm press" aria-disabled={busy} aria-busy={busy} onClick={go}>
+        {busy ? <span className="spin" aria-hidden="true" /> : <span className="ph ph-gift" aria-hidden="true" />}{label}
+      </button>
+      {err ? <span className="err" role="alert" style={{ flexBasis: "100%" }}><span className="ph ph-x-circle-fill" aria-hidden="true" />{t("trial.error")}</span> : null}
+    </>
+  );
+}
+
 /** Resume a cancelled plan before it ends. */
 export function ResumeButton({ label }: { label: string }) {
   const t = useTranslations("billing");

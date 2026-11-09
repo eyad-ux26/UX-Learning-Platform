@@ -9,7 +9,7 @@ import { CATEGORY_LABEL, STATUS_LABEL } from "@/lib/admin/data/support";
 import { maskEmail } from "@/lib/admin/mask";
 import { REGION_LABEL } from "@/lib/admin/format";
 import { AGENT_COMP_DAYS } from "@/lib/admin/rules";
-import { FREEZE_MAX } from "@/lib/freeze";
+import { learningRules } from "@/lib/app-config";
 import { ActionForm, Confirm } from "@/components/admin/forms";
 import { ExportButton } from "@/components/admin/Download";
 import { Reveal } from "@/components/admin/Reveal";
@@ -35,7 +35,8 @@ export default async function Learner360Page({ params, searchParams }: { params:
   const tab = (TABS.find((t) => t === sp.tab) ?? "overview") as Tab;
   const d = await learner360(id);
   if (!d) notFound();
-  const [audit, authors] = await Promise.all([learnerAudit(id), people(d.notes.map((n) => n.author_id))]);
+  const [audit, authors, rules] = await Promise.all([learnerAudit(id), people(d.notes.map((n) => n.author_id)), learningRules()]);
+  const FREEZE_MAX = rules.freezeMax; // Learning rules (0061)
   const name = d.profile?.display_name || d.facts.email.split("@")[0]!;
   const L = d.learner;
   const fresh = isFresh(ctx);

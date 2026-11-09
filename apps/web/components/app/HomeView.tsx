@@ -24,7 +24,7 @@ export async function greeting(hour: number, name: string | null) {
   return name ? t("greetName", { greeting: g, name }) : g;
 }
 
-export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView; bell?: React.ReactNode }) {
+export async function HomeMain({ me, view, bell, banner }: { me: Learner; view: PathView; bell?: React.ReactNode; banner?: React.ReactNode }) {
   const { progress, hour } = me;
   const t = await getTranslations("home");
   const locale = (await getLocale()) as Locale;
@@ -65,6 +65,7 @@ export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView
       </div>
       {/* "Your paths" sits at the top, so switching path comes before the lesson card it changes (Eyad, 5 Nov). */}
       {chips.length > 1 ? <PathChips chips={chips} label={t("yourPaths")} addLabel={t("addPath")} /> : null}
+      {banner}
       {me.freezeNote ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
 
       {next ? (

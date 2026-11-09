@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { purgeDeleted, runReminders } from "@/lib/server/reminders";
 import { sameSecret } from "@/lib/server/secret";
+import { jobJson } from "@/lib/server/job-run";
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +18,8 @@ export async function GET(req: Request) {
   try {
     const purged = await purgeDeleted(db);
     const r = await runReminders(db);
-    return NextResponse.json({ job: "reminders", purged, ...r });
+    return jobJson("reminders", { job: "reminders", purged, ...r });
   } catch (e) {
-    return NextResponse.json({ error: (e as Error).message }, { status: 500 });
+    return jobJson("reminders", { error: (e as Error).message }, { status: 500 });
   }
 }

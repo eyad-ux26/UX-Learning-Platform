@@ -36,7 +36,7 @@ export async function billingScreen(v: BillingView, locale: string, now = new Da
   const live = !!s && ["active", "grace", "cancelled"].includes(s.status);
   const wallet = s?.payMethod === "wallet";
 
-  type Notice = { cls: string; icon: string; t: string; b: string; act?: { kind: "renewal" | "card" | "plans"; label: string } };
+  type Notice = { cls: string; icon: string; t: string; b: string; act?: { kind: "renewal" | "card" | "plans" | "trial"; label: string } };
   let notice: Notice | null = null;
   let plan: { name: string; st: string; stCls: string; k1: string; v1: string; k2: string; v2: string; resume: "resume" | "restart" | null; change: boolean } | null = null;
 
@@ -68,6 +68,15 @@ export async function billingScreen(v: BillingView, locale: string, now = new Da
       plan = { ...plan, st: s.status === "refunded" ? t("st.refunded") : t("st.ended"), stCls: "st st-off", k1: t("lastDay"), v1: d(s.endedAt), k2: t("restartK"), v2: t("allKept"), resume: "restart", change: false };
       notice = s.status === "refunded" ? { cls: "notice is-info", icon: "ph ph-info", t: t("n.refundedT"), b: t("n.refundedB") } : { cls: "notice is-info", icon: "ph ph-info", t: t("n.endedT"), b: t("n.endedB") };
     }
+  }
+
+  // A free trial (0062): Pro until the trial ends, no card on file, nothing to cancel.
+  if (v.pro && v.entitlement?.source === "trial" && !live) {
+    plan = { name: t("trial.name"), st: t("trial.st"), stCls: "st st-yes", k1: t("trial.until"), v1: d(v.entitlement.validUntil), k2: t("renewal"), v2: t("trial.noCard"), resume: null, change: false };
+    notice = { cls: "notice is-info", icon: "ph ph-gift", t: t("trial.keepT"), b: t("trial.keepB", { date: d(v.entitlement.validUntil) }), act: { kind: "plans", label: t("trial.keepAct") } };
+  }
+  if (!v.pro && !s && v.trialOffer) {
+    notice = { cls: "notice is-info", icon: "ph ph-gift", t: t("trial.offerT", { days: v.trialOffer.days }), b: t("trial.offerB", { days: v.trialOffer.days }), act: { kind: "trial", label: t("trial.offerAct") } };
   }
 
   // Pro granted by admins (source 'manual'): nothing to renew, change or cancel.

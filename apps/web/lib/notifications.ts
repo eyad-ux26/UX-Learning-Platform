@@ -51,3 +51,14 @@ export function allowed(prefs: Prefs, kind: InboxKind, channel: Channel): boolea
   if (isLocked(k, channel)) return true;
   return prefs[k][channel];
 }
+
+/**
+ * What to store when the learner saves the Notifications screen: their choices for the screen's kinds, plus every other
+ * key already stored (for example `news`, which only the link in campaign emails turns off). Saving the screen must never
+ * undo an opt-out made somewhere else.
+ */
+export function prefsToStore(stored: unknown, prefs: Prefs): Record<string, unknown> {
+  const keep = (stored && typeof stored === "object" && !Array.isArray(stored) ? stored : {}) as Record<string, unknown>;
+  const screen = Object.fromEntries(KINDS.map((k) => [k, Object.fromEntries(CHANNELS.map((c) => [c, prefs[k][c]]))]));
+  return { ...keep, ...screen };
+}

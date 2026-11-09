@@ -3,6 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { settleLearner } from "@/lib/server/settle";
 import { resolveWeekStart } from "@/lib/freeze";
 import { sendQueuedConfirmations } from "@/lib/server/waitlist-mail";
+import { sendTrialEmails } from "@/lib/server/trial-mail";
+import { sendWeeklyReports } from "@/lib/server/report-mail";
+import { jobJson } from "@/lib/server/job-run";
 
 export const dynamic = "force-dynamic";
 // Each learner costs a handful of database calls and a Worker request has a subrequest budget, so a run settles 100
@@ -21,12 +24,18 @@ export async function GET(req: Request) {
   const db = createAdminClient();
   // Launch list (0038): unconfirmed addresses go after 30 days. Cheap and safe to repeat; an error (before 0038) is ignored.
   const { data: pruned } = await db.rpc("prune_waitlist");
+  // System health keeps 30 days of job runs (0063). An error before 0063 is ignored.
+  await db.rpc("job_runs_prune");
   // Addresses that joined while email could not go out get their confirmation link once it can (no-op until then).
   const confirmations = await sendQueuedConfirmations(db).catch(() => ({ sent: 0, failed: 0 }));
+  // Free trials (0062): the "ends in 2 days" and "ended" emails. No-op before 0062 or without email.
+  const trials = await sendTrialEmails(db).catch(() => ({ sent: 0, failed: 0 }));
+  // Admin panel: weekly saved reports to the team (Mondays), and campaign emails in batches (0063). No-ops before 0063.
+  const reports = await sendWeeklyReports(db).catch(() => ({ sent: 0, failed: 0 }));
   // Only learners whose settled day is before their own yesterday (in their time zone), oldest first: a learner west of
   // UTC who is already settled up to their local yesterday is not picked again, so every call makes progress (#139).
   const { data: rows, error } = await db.rpc("settle_candidates", { p_limit: BATCH });
-  if (error) return NextResponse.json({ error: "read_failed" }, { status: 500 });
+  if (error) return jobJson("daily", { error: "read_failed" }, { status: 500 });
   const list = (rows ?? []) as { user_id: string; time_zone: string | null; locale: string | null; week_start: number | null }[];
   const ids = list.map((r) => r.user_id);
   const prof = new Map(list.map((z) => [z.user_id, { tz: z.time_zone ?? null, start: resolveWeekStart(z.week_start, z.locale) }]));
@@ -46,5 +55,5 @@ export async function GET(req: Request) {
     }
     console.warn(`WARN daily job: could not settle ${id}: ${r.error}`);
   }
-  return NextResponse.json({ settled, failed, stoppedEarly, pruned: typeof pruned === "number" ? pruned : null, confirmations, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
+  return jobJson("daily", { settled, failed, stoppedEarly, pruned: typeof pruned === "number" ? pruned : null, confirmations, trials, reports, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
 }

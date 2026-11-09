@@ -7,6 +7,7 @@ import { tokenKey } from "@/lib/server/billing/config";
 import { chargeToken } from "@/lib/server/billing/paymob-api";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Sub } from "@/lib/billing/subscription";
+import { jobJson } from "@/lib/server/job-run";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export async function GET(req: Request) {
   const admin = createAdminClient();
   // Test-mode plans renew only where test payments are on (never in production: BILLING_MOCK is a preview-only var).
   const result = await runDaily(engine, (sub, attempt) => chargeSaved(admin, engine.store, sub, attempt), undefined, { includeMock: process.env.BILLING_MOCK === "1" });
-  return NextResponse.json({ ok: true, job: "billing", at: new Date().toISOString(), ...result });
+  return jobJson("billing", { ok: true, job: "billing", at: new Date().toISOString(), ...result });
 }
 
 /** Charges the plan's saved card. Test-mode plans succeed unless the learner chose a declining test card. */

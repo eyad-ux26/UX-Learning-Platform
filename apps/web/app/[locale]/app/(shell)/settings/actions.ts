@@ -5,7 +5,7 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasServiceKey } from "@/lib/supabase/env";
-import { CHANNELS, KINDS, readPrefs, type Prefs } from "@/lib/notifications";
+import { KINDS, prefsToStore, readPrefs, type Prefs } from "@/lib/notifications";
 import { deleteAfter } from "@/lib/reminder-plan";
 import { onAccountDeletionScheduled } from "@/lib/server/account-hooks";
 import { sendDeletedEmail } from "@/lib/server/account-email";
@@ -48,8 +48,11 @@ export async function saveNotificationPrefs(input: Prefs): Promise<{ ok: boolean
   const { user } = await me();
   if (!user || !hasServiceKey()) return { ok: false };
   const prefs = readPrefs(p.data);
-  const clean = Object.fromEntries(KINDS.map((k) => [k, Object.fromEntries(CHANNELS.map((c) => [c, prefs[k][c]]))]));
-  const { error } = await createAdminClient().from("notification_prefs").upsert({ user_id: user.id, prefs: clean, updated_at: new Date().toISOString() });
+  const admin = createAdminClient();
+  // Keep keys this screen does not show (the news opt-out from campaign emails), so saving never turns them back on.
+  const { data: had, error: readError } = await admin.from("notification_prefs").select("prefs").eq("user_id", user.id).maybeSingle();
+  if (readError) return { ok: false };
+  const { error } = await admin.from("notification_prefs").upsert({ user_id: user.id, prefs: prefsToStore(had?.prefs, prefs), updated_at: new Date().toISOString() }, { onConflict: "user_id" });
   return { ok: !error, prefs };
 }
 

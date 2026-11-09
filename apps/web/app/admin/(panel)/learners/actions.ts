@@ -7,7 +7,8 @@ import { actionAdmin, AdminError, audit, check, requireFresh, run, type ActionRe
 import { reasonFrom, textFrom, uuidFrom } from "@/lib/admin/form";
 import { VIEW_AS_SECONDS } from "@/lib/admin/rules";
 import { sendSignInLink } from "@/lib/admin/data/support";
-import { FREEZE_MAX, resolveWeekStart, shiftDay } from "@/lib/freeze";
+import { resolveWeekStart, shiftDay } from "@/lib/freeze";
+import { learningRules } from "@/lib/app-config";
 import { localDay } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
 import { onAccountDeletionScheduled } from "@/lib/server/account-hooks";
@@ -74,7 +75,8 @@ export async function addFreeze(_: R | null, f: FormData): Promise<R> {
     const db = createAdminClient();
     const { data: s } = await db.from("streaks").select("freezes_available").eq("user_id", user).maybeSingle();
     if (!s) throw new AdminError("invalid", "This learner has no streak yet.");
-    if (s.freezes_available >= FREEZE_MAX) throw new AdminError("conflict", `They already hold ${FREEZE_MAX} freezes, the most anyone can hold.`);
+    const max = (await learningRules()).freezeMax; // Learning rules (0061), not the built-in default
+    if (s.freezes_available >= max) throw new AdminError("conflict", `They already hold ${max} freezes, the most anyone can hold.`);
     check(await db.from("streaks").update({ freezes_available: s.freezes_available + 1 }).eq("user_id", user));
     await audit(ctx, "learners.freeze_added", "learners", { type: "learner", id: user }, { before: { freezes: s.freezes_available }, after: { freezes: s.freezes_available + 1 }, reason });
   }, "Freeze added.");

@@ -51,7 +51,7 @@ export const requestFromRow = (r: Row): RefundRequest => ({
 });
 
 export const entitlementFromRow = (r: Row | null): Entitlement | null =>
-  r ? { plan: r.plan as Entitlement["plan"], validUntil: (r.valid_until as string) ?? null, proSince: (r.pro_since as string) ?? null, proEndedAt: (r.pro_ended_at as string) ?? null, source: r.source === "mock" || r.source === "manual" ? r.source : "live" } : null;
+  r ? { plan: r.plan as Entitlement["plan"], validUntil: (r.valid_until as string) ?? null, proSince: (r.pro_since as string) ?? null, proEndedAt: (r.pro_ended_at as string) ?? null, source: r.source === "mock" || r.source === "manual" || r.source === "trial" ? r.source : "live" } : null;
 
 function must<T>(res: { data: T; error: { message: string } | null }): T {
   if (res.error) throw new Error(res.error.message);

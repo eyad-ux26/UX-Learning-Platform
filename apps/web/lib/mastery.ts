@@ -6,10 +6,12 @@ import { isQuestion } from "@uxgate/player/engine";
 /** The first judged answer of one step in one attempt. */
 export type FirstTry = { lessonId: string; stepId: string; skillId: string; correct: boolean };
 
-/** At most this many mastery misses before a skill is left Practiced (it goes to spaced review in slice 3). */
-export const MAX_MASTERY_MISSES = 2;
-/** At most this many fresh variants of one skill in a round. */
-export const VARIANTS_PER_SKILL = 2;
+import { DEFAULT_RULES } from "./learning-rules";
+
+/** At most this many mastery misses before a skill is left Practiced (it goes to spaced review in slice 3). Default; see Learning rules. */
+export const MAX_MASTERY_MISSES = DEFAULT_RULES.maxMasteryMisses;
+/** At most this many fresh variants of one skill in a round. Default; see Learning rules. */
+export const VARIANTS_PER_SKILL = DEFAULT_RULES.variantsPerSkill;
 
 /**
  * Skills the skill check showed: every step of the skill in the check was right on the first try (the same rule as the
@@ -32,12 +34,12 @@ function missedInUnit(lessonTries: FirstTry[], checkId: string | undefined): Set
  * A skill is missed when the first try of any of its steps in the unit's lessons was wrong, and no mastery step for it
  * was right first try yet. After 2 wrong mastery answers it stays Practiced and stops coming back.
  */
-export function missedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[], checkId?: string): string[] {
+export function missedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: FirstTry[], masteryTries: FirstTry[], checkId?: string, maxMisses: number = MAX_MASTERY_MISSES): string[] {
   const missed = missedInUnit(lessonTries, checkId);
   const won = new Set(masteryTries.filter((t) => t.correct).map((t) => t.skillId));
   const misses = new Map<string, number>();
   for (const t of masteryTries) if (!t.correct) misses.set(t.skillId, (misses.get(t.skillId) ?? 0) + 1);
-  return unit.skills.map((s) => s.id).filter((id) => missed.has(id) && !won.has(id) && (misses.get(id) ?? 0) < MAX_MASTERY_MISSES);
+  return unit.skills.map((s) => s.id).filter((id) => missed.has(id) && !won.has(id) && (misses.get(id) ?? 0) < maxMisses);
 }
 
 /** Skills missed in the unit and not yet won in a mastery round, whether or not a fresh variant is left to ask. */
@@ -48,10 +50,10 @@ export function unresolvedSkills(unit: Pick<UnitMeta, "skills">, lessonTries: Fi
 }
 
 /** Up to 2 fresh bank steps per missed skill, in bank order. A step the learner has already answered in a mastery round is never asked again; a skill with none left is skipped. */
-export function pickRound(bank: Pick<LessonVersion, "body">, missed: string[], seenStepIds: string[]): QuestionStep[] {
+export function pickRound(bank: Pick<LessonVersion, "body">, missed: string[], seenStepIds: string[], perSkill: number = VARIANTS_PER_SKILL): QuestionStep[] {
   const seen = new Set(seenStepIds);
   const steps = bank.body.steps.filter(isQuestion);
-  return missed.flatMap((skill) => steps.filter((s) => s.skill === skill && !seen.has(s.id)).slice(0, VARIANTS_PER_SKILL));
+  return missed.flatMap((skill) => steps.filter((s) => s.skill === skill && !seen.has(s.id)).slice(0, perSkill));
 }
 
 /** Reads the first judged try of every step out of stored step_results rows (kind 'check' with the lowest try_no), per attempt. */

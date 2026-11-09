@@ -56,6 +56,8 @@ const scan = (dir) => {
         if (!/\bn=|\bicon\b|_ICON\b/.test(line)) continue;
         for (const m of line.matchAll(/"([a-z][a-z0-9]*(?:-[a-z0-9]+)*)"/g)) names.add(m[1]);
       }
+      // Status tables such as RELEASE_STATUS: ["good", "eye", "In review"] (tone, icon, label).
+      for (const m of t.matchAll(/\["(?:good|info|wait|bad|off)", "([a-z0-9-]+)"/g)) names.add(m[1]);
     }
   }
 };

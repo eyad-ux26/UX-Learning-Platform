@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyReviewsDue } from "@/lib/server/progress-notify";
+import { jobJson } from "@/lib/server/job-run";
 
 export const dynamic = "force-dynamic";
 // Each notice costs a few database calls (choices, inbox row, push), so a call handles 25 learners and names the next one.
@@ -17,8 +18,8 @@ export async function GET(req: Request) {
   try {
     const r = await notifyReviewsDue(createAdminClient(), new Date(), after && /^[0-9a-f-]{36}$/.test(after) ? after : null, BATCH);
     if (r.stoppedEarly) console.warn(`WARN review notices stopped early: subrequest budget used up after ${r.notified} learners. Turn on Workers Paid before real learners arrive.`);
-    return NextResponse.json(r);
+    return jobJson("review-due", r as Record<string, unknown>);
   } catch (e) {
-    return NextResponse.json({ error: "read_failed", detail: (e as Error).message }, { status: 500 });
+    return jobJson("review-due", { error: "read_failed", detail: (e as Error).message }, { status: 500 });
   }
 }

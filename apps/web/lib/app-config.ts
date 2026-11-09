@@ -1,0 +1,83 @@
+// Flags and settings the Admins change in the panel (0061, app_config()). Edge-safe: the middleware, the server pages
+// and the API routes read it the same way, with one small request per isolate per minute. app_config() holds no secret,
+// so the public key reads it. When the database cannot be reached the app keeps the last answer, or runs on its
+// built-in defaults (every flag off), so a database problem never turns a feature on.
+import { DEFAULT_RULES, rulesFrom, type LearningRules } from "./learning-rules";
+
+export type AppConfig = { flags: Record<string, boolean>; settings: Record<string, unknown>; teamPasswordSet: boolean };
+
+const TTL_MS = 60_000;
+const EMPTY: AppConfig = { flags: {}, settings: {}, teamPasswordSet: false };
+let cached: { at: number; value: AppConfig } | null = null;
+// While one request in this isolate refreshes, others keep the last answer for up to 2 seconds. No promise is shared
+// between requests: on Workers, I/O started by a request that has ended can be cancelled, and a shared promise that never
+// settles would hang every request that waits on it.
+let refreshingUntil = 0;
+
+async function fetchConfig(): Promise<AppConfig> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return EMPTY;
+  const res = await fetch(`${url}/rest/v1/rpc/app_config`, {
+    method: "POST",
+    headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
+    body: "{}",
+    signal: AbortSignal.timeout(1500),
+    cache: "no-store",
+  });
+  if (res.status === 404) return EMPTY; // 0061 not run yet: built-in defaults
+  if (!res.ok) throw new Error(`app_config ${res.status}`);
+  const j = (await res.json()) as { flags?: Record<string, boolean>; settings?: Record<string, unknown>; team_password_set?: boolean } | null;
+  return { flags: j?.flags ?? {}, settings: j?.settings ?? {}, teamPasswordSet: !!j?.team_password_set };
+}
+
+/**
+ * The current flags and settings. Fresh for a minute. After that, the request that finds it old fetches it again and
+ * waits for it (about 50 ms, at most 1.5 s, once a minute per isolate); requests at the same moment keep the last answer
+ * (for up to five minutes old).
+ */
+export async function getAppConfig(now = Date.now()): Promise<AppConfig> {
+  if (process.env.UG_DEV_FIXTURE === "1" || process.env.UG_ADMIN_FIXTURE === "1") return EMPTY;
+  if (cached && now - cached.at < TTL_MS) return cached.value;
+  const stale = cached && now - cached.at < 5 * TTL_MS ? cached.value : null;
+  if (stale && now < refreshingUntil) return stale;
+  refreshingUntil = now + 2_000;
+  try {
+    const value = await fetchConfig();
+    cached = { at: Date.now(), value };
+    return value;
+  } catch (e) {
+    console.warn("app config: kept the last answer", (e as Error).message);
+    if (cached) cached = { at: Date.now() - TTL_MS / 2, value: cached.value }; // try again in 30 s
+    return cached?.value ?? EMPTY;
+  } finally {
+    refreshingUntil = 0;
+  }
+}
+
+/** Forget the cached answer (the panel calls it after a change, so the admin sees it at once on this isolate). */
+export const resetAppConfig = () => { cached = null; refreshingUntil = 0; };
+
+export const flagOn = async (key: string) => (await getAppConfig()).flags[key] === true;
+
+/** The learning rules now in force. */
+export async function learningRules(): Promise<LearningRules> {
+  try { return rulesFrom((await getAppConfig()).settings); } catch { return DEFAULT_RULES; }
+}
+
+export type AccessConfig = {
+  /** true or false when an Admin set it in the panel; null to follow the Worker variable. */
+  comingSoon: boolean | null;
+  maintenance: boolean;
+  maintenanceMessage: { en: string; ar: string } | null;
+};
+
+export function accessFrom(c: AppConfig): AccessConfig {
+  const cs = c.settings["access.coming_soon"];
+  const msg = c.settings["access.maintenance_message"] as { en?: unknown; ar?: unknown } | undefined;
+  return {
+    comingSoon: typeof cs === "boolean" ? cs : null,
+    maintenance: c.settings["access.maintenance"] === true,
+    maintenanceMessage: msg && typeof msg.en === "string" && typeof msg.ar === "string" ? { en: msg.en, ar: msg.ar } : null,
+  };
+}

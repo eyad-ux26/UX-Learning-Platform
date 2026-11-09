@@ -10,7 +10,7 @@ import { deleteRole, saveRole } from "../actions";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Roles" };
 
-const AREA_LABEL: Record<string, string> = { overview: "Overview", learners: "Learners", support: "Support", billing: "Money", certificates: "Certificates", team: "Team", audit: "Audit log", testing: "Testing", phase2: "Phase 2 areas" };
+const AREA_LABEL: Record<string, string> = { overview: "Overview", learners: "Learners", support: "Support", billing: "Money", certificates: "Certificates", team: "Team", audit: "Audit log", testing: "Testing", content: "Content", grow: "Grow", settings: "Settings and health" };
 
 function PermPicker({ have = [] as string[] }) {
   const areas = [...new Set(PERMISSION_KEYS.map((k) => PERMISSIONS[k][0]))];
@@ -38,7 +38,7 @@ export default async function RolesPage() {
   const fresh = isFresh(ctx);
   const builtin = roles.filter((r) => r.builtin);
   const custom = roles.filter((r) => !r.builtin);
-  const keys = PERMISSION_KEYS.filter((k) => PERMISSIONS[k][0] !== "phase2");
+  const keys = PERMISSION_KEYS;
   const Fields = ({ r }: { r?: (typeof roles)[number] }) => (
     <>
       {r ? <input type="hidden" name="id" value={r.id} /> : null}
@@ -85,7 +85,7 @@ export default async function RolesPage() {
           </div>
         )}
       </Card>
-      <Note icon="lock-simple">A custom role can never manage super admins. Phase 2 areas are listed so their menu items can be given now; they open a placeholder until built.</Note>
+      <Note icon="lock-simple">A custom role can never manage super admins.</Note>
     </main>
   );
 }

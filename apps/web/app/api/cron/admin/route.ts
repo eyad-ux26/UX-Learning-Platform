@@ -4,6 +4,8 @@ import { APPROVAL_REMIND_SECONDS } from "@/lib/admin/rules";
 import { sendSurvey } from "@/lib/admin/data/support";
 import { emailLayout, siteOrigin } from "@/lib/server/email/layout";
 import { sendEmail } from "@/lib/server/email/send";
+import { jobJson } from "@/lib/server/job-run";
+import { sendCampaignBatch } from "@/lib/server/campaign-send";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +23,7 @@ export async function GET(req: Request) {
 
   const { data: waiting, error } = await db.from("admin_approvals").select("id, title, permission, requested_by, created_at").eq("status", "waiting").is("reminded_at", null)
     .lt("created_at", new Date(now - APPROVAL_REMIND_SECONDS * 1000).toISOString()).limit(20);
-  if (error) return NextResponse.json({ error: "read_failed", reminded, closed });
+  if (error) return jobJson("admin", { error: "read_failed", reminded, closed }, { status: 500 });
   if (waiting?.length) {
     const { data: members } = await db.from("admin_members").select("user_id, email").eq("status", "active");
     const perms = new Map<string, string[]>();
@@ -54,5 +56,9 @@ export async function GET(req: Request) {
     await sendSurvey(t.id).catch(() => null);
     closed++;
   }
-  return NextResponse.json({ reminded, closed });
+  // Communications (0063): the next batch of a campaign whose time has come. No-op before 0063 or without email.
+  const campaign = await sendCampaignBatch(db).catch(() => null);
+  // Announcements starting soon or running: counted again, and put back to draft if the audience grew past what was allowed.
+  const { data: held } = await db.rpc("announcements_recheck");
+  return jobJson("admin", { reminded, closed, campaign, announcementsHeld: Number(held ?? 0) });
 }
