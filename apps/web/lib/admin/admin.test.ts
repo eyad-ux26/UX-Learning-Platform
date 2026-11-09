@@ -160,3 +160,16 @@ describe("support sender verification", () => {
     expect(trustedAuthResults([{ key: "ARC-Authentication-Results", value: "i=1; x; dmarc=pass header.from=gmail.com" }])).toBeNull();
   });
 });
+
+describe("admin dialogs and drawers", () => {
+  it("hide every closed dialog, even though the design CSS gives them display: flex", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const css = ["admin.css", "admin-app.css"].map((f) => fs.readFileSync(path.join(__dirname, "../../app/admin", f), "utf8")).join("\n");
+    // A class rule that sets display on these dialogs beats the browser's own dialog:not([open]) { display: none }.
+    for (const cls of ["a-dialog", "a-drawer"]) {
+      expect(css).toMatch(new RegExp(`\\.${cls}\\s*\\{[^}]*display:\\s*flex`));
+      expect(css).toMatch(new RegExp(`dialog\\.${cls}:not\\(\\[open\\]\\)[^{]*\\{[^}]*display:\\s*none`));
+    }
+  });
+});

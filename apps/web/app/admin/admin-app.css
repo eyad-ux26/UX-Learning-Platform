@@ -13,6 +13,9 @@ dialog.a-dialog { position: fixed; inset: 0; margin: 10vh auto auto; transform: 
 dialog.a-dialog::backdrop { background: var(--scrim); }
 dialog.a-drawer { position: fixed; inset: 0 0 0 auto; margin: 0; height: 100vh; max-height: 100vh; padding: 0; color: var(--ink); border-top: 0; border-bottom: 0; }
 dialog.a-drawer::backdrop { background: var(--scrim); }
+/* admin.css gives .a-dialog and .a-drawer display: flex, which beats the browser's own "closed dialogs are hidden" rule:
+   every closed dialog stayed on screen and Cancel, X and Esc seemed to do nothing. Closed means hidden. */
+dialog.a-dialog:not([open]), dialog.a-drawer:not([open]) { display: none; }
 .a-drw-b { overflow-y: auto; flex: 1; }
 
 .adm form { margin: 0; }
