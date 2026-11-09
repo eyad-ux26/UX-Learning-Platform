@@ -7,6 +7,7 @@ import { hasSupabase, sessionCookieOptions, supabaseAnonKey, supabaseUrl } from 
 import { paddleLinkStep, PTXN_COOKIE, PTXN_COOKIE_SECONDS } from "./lib/billing/paddle-link";
 import { comingSoonOn, gateStep, isAdmin } from "./lib/coming-soon";
 import { TEAM_COOKIE, teamPassValid } from "./lib/team-access";
+import { accessFrom, getAppConfig } from "./lib/app-config";
 
 const intl = createMiddleware(routing);
 // Only screens that know who the learner is need their session kept fresh.
@@ -16,8 +17,9 @@ const SIGNED_IN_AREA = /^\/(en|ar)\/(app|onboarding|signin|signup|forgot|reset)(
 // error in the query. Show the sign-in page's "that link did not work" message instead of a plain home page.
 const HOME = /^\/(en|ar)?\/?$/;
 
-// Maintenance switch: with UG_MAINTENANCE=1 every page shows /{locale}/maintenance with a 503. The matcher already skips
-// /api, /_next and files; the maintenance page itself passes through.
+// Maintenance switch: with UG_MAINTENANCE=1, or Maintenance mode on in the admin panel (0061, read at most a minute
+// old), every page shows /{locale}/maintenance with a 503. The matcher already skips /api, /_next and files; the
+// maintenance page itself passes through.
 const MAINTENANCE_PAGE = /^\/(en|ar)\/maintenance\/?$/;
 const LOCALE_PREFIX = /^\/(en|ar)(\/|$)/;
 
@@ -29,7 +31,9 @@ export default async function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
   if (isPrivateContent(pathname)) return notFound(); // lesson files: server only (see lib/private-content.ts)
   if (ADMIN.test(pathname)) return adminPass(req);
-  if (process.env.UG_MAINTENANCE === "1" && !MAINTENANCE_PAGE.test(pathname)) {
+  // Access settings from the panel. They can only add to the Worker variables: a database problem never opens the gate.
+  const access = accessFrom(await getAppConfig());
+  if ((process.env.UG_MAINTENANCE === "1" || access.maintenance) && !MAINTENANCE_PAGE.test(pathname)) {
     const url = req.nextUrl.clone();
     const cookie = req.cookies.get("NEXT_LOCALE")?.value;
     const locale = pathname.match(LOCALE_PREFIX)?.[1] ?? (cookie === "ar" || cookie === "en" ? cookie : routing.defaultLocale);
@@ -48,7 +52,8 @@ export default async function middleware(req: NextRequest) {
   const res = intl(intlReq);
   // Coming Soon gate (lib/coming-soon.ts): pages other than the open ones need an admin session while it is on; the
   // sign-in pages also open with a team pass, the cookie the team password page sets (lib/team-access.ts).
-  const gate = comingSoonOn() ? gateStep(req.nextUrl.pathname) : null;
+  // The panel can turn the gate on; turning it off needs UG_COMING_SOON removed in Cloudflare too (Platform settings says so).
+  const gate = comingSoonOn() || access.comingSoon === true ? gateStep(req.nextUrl.pathname) : null;
   // Nothing but the home address and the legal pages may be indexed, whoever is looking (an admin's app pages too).
   if (gate && gate.kind !== "pass" && !gate.index) res.headers.set("X-Robots-Tag", "noindex");
   const adminOnly = gate?.kind === "admin" || (gate?.kind === "team" && !(await teamPassValid(req.cookies.get(TEAM_COOKIE)?.value)));

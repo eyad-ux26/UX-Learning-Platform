@@ -28,10 +28,14 @@ async function fetchConfig(): Promise<AppConfig> {
   return { flags: j?.flags ?? {}, settings: j?.settings ?? {}, teamPasswordSet: !!j?.team_password_set };
 }
 
-/** The current flags and settings (at most a minute old). */
+/**
+ * The current flags and settings. Fresh for a minute; after that the last answer is still used at once (for up to five
+ * minutes) while a new one is fetched, so a page never waits on it except in a brand-new isolate.
+ */
 export async function getAppConfig(now = Date.now()): Promise<AppConfig> {
   if (process.env.UG_DEV_FIXTURE === "1" || process.env.UG_ADMIN_FIXTURE === "1") return EMPTY;
   if (cached && now - cached.at < TTL_MS) return cached.value;
+  const stale = cached && now - cached.at < 5 * TTL_MS ? cached.value : null;
   if (!pending) {
     pending = fetchConfig()
       .then((value) => { cached = { at: Date.now(), value }; return value; })
@@ -42,7 +46,7 @@ export async function getAppConfig(now = Date.now()): Promise<AppConfig> {
       })
       .finally(() => { pending = null; });
   }
-  return pending;
+  return stale ?? pending;
 }
 
 /** Forget the cached answer (the panel calls it after a change, so the admin sees it at once on this isolate). */
