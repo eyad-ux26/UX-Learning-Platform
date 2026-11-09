@@ -148,6 +148,26 @@ export function welcomeEmail(i: WelcomeInput): EmailOut {
   return { subject: name ? fill(w.subject, { name }) : w.subjectNoName, ...out };
 }
 
+// ───────── free trial (0062): ends in 2 days, ended ─────────
+
+export type TrialInput = { locale: EmailLocale; kind: "reminder" | "ended"; endsOn: string; plansHref: string };
+
+export function trialEmail(i: TrialInput): EmailOut {
+  const m = msgs(i.locale).trial;
+  const r = i.kind === "reminder";
+  const out = emailLayout({
+    locale: i.locale,
+    preheader: r ? m.reminderPreheader : m.endedPreheader,
+    heading: r ? fill(m.reminderHeading, { date: i.endsOn }) : m.endedHeading,
+    paragraphs: [r ? m.reminderBody : m.endedBody],
+    button: { label: m.button, href: i.plansHref },
+    ill: "gate",
+    footer: "transactional",
+    why: m.why,
+  });
+  return { subject: r ? fill(m.reminderSubject, { date: i.endsOn }) : m.endedSubject, ...out };
+}
+
 // ───────── badge turned gold (Kept) ─────────
 
 export type BadgeInput = {

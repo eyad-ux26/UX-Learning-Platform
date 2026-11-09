@@ -3,6 +3,7 @@ import { getUnit, getLessonMeta } from "@uxgate/content";
 import { getBank } from "@/lib/server/content";
 import type { QuestionStep } from "@uxgate/content/types";
 import { firstTries, missedSkills, pickRound, unresolvedSkills } from "@/lib/mastery";
+import { learningRules } from "@/lib/app-config";
 
 type Row = { attempt_id: string; step_id: string; skill_id: string | null; try_no: number; kind: string; correct: boolean; attempts: { lesson_id: string; started_at: string; finished_at: string | null; kind: string } | { lesson_id: string; started_at: string; finished_at: string | null; kind: string }[] };
 
@@ -38,7 +39,8 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
   const lessonTries = firstTries(rows.filter((r) => r.attempt.kind !== "mastery" && latest.get(r.attempt.lesson_id) === r.attempt_id).map(asRow));
   const masteryRows = rows.filter((r) => r.attempt.kind === "mastery");
   const masteryTries = firstTries(masteryRows.map(asRow));
-  const missed = missedSkills(unit, lessonTries, masteryTries, checkId);
+  const rules = await learningRules();
+  const missed = missedSkills(unit, lessonTries, masteryTries, checkId, rules.maxMasteryMisses);
   const seen = [...new Set(all.filter((r) => r.attempt.kind === "mastery" || r.attempt.kind === "review").map((r) => r.step_id))];
-  return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, unresolved: unresolvedSkills(unit, lessonTries, masteryTries, checkId), steps: pickRound(bank, missed, seen) };
+  return { unitId, bankId: bank.lessonId, hash: bank.hash, skillCheckDone, missed, unresolved: unresolvedSkills(unit, lessonTries, masteryTries, checkId), steps: pickRound(bank, missed, seen, rules.variantsPerSkill) };
 }

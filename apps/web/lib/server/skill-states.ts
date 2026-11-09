@@ -1,9 +1,12 @@
 import "server-only";
 import type { createAdminClient } from "@/lib/supabase/admin";
 import { applyReview, type SkillRow } from "@/lib/skill-state";
+import { learningRules } from "@/lib/app-config";
+import { DEFAULT_RULES } from "@/lib/learning-rules";
 
 type Db = ReturnType<typeof createAdminClient>;
-export const REVIEW_AFTER_DAYS = 3;
+/** Default; the current value comes from Learning rules. */
+export const REVIEW_AFTER_DAYS = DEFAULT_RULES.reviewAfterDays;
 
 /** Practiced: the learner finished a lesson that tests the skill. Never changes a skill that is already further on. */
 export async function markPracticed(db: Db, userId: string, skillIds: string[]) {
@@ -21,7 +24,7 @@ export async function markShown(db: Db, userId: string, skillIds: string[], now 
   if (!ids.length) return;
   const { data: current } = await db.from("skill_states").select("skill_id, state").eq("user_id", userId).in("skill_id", ids);
   const done = new Set((current ?? []).filter((r) => r.state === "kept" || r.state === "shown").map((r) => r.skill_id as string));
-  const next = new Date(now.getTime() + REVIEW_AFTER_DAYS * 86_400_000).toISOString();
+  const next = new Date(now.getTime() + (await learningRules()).reviewAfterDays * 86_400_000).toISOString();
   const rows = ids.filter((id) => !done.has(id)).map((skill_id) => ({ user_id: userId, skill_id, state: "shown", shown_at: now.toISOString(), next_review_at: next }));
   if (rows.length) await db.from("skill_states").upsert(rows, { onConflict: "user_id,skill_id" });
 }
@@ -36,10 +39,11 @@ export async function markReviewed(db: Db, userId: string, asked: string[], corr
   if (!ids.length) return [];
   const { data } = await db.from("skill_states").select("skill_id, state, shown_at, kept_at, next_review_at").eq("user_id", userId).in("skill_id", ids);
   const ok = new Set(correct);
+  const rules = await learningRules();
   const kept: string[] = [];
   for (const r of data ?? []) {
     const prev: SkillRow = { state: r.state as SkillRow["state"], shownAt: r.shown_at ? new Date(r.shown_at as string) : null, keptAt: r.kept_at ? new Date(r.kept_at as string) : null, nextReviewAt: r.next_review_at ? new Date(r.next_review_at as string) : null };
-    const next = applyReview(prev, ok.has(r.skill_id as string), now);
+    const next = applyReview(prev, ok.has(r.skill_id as string), now, rules);
     if (next === prev) continue;
     await db.from("skill_states")
       .update({ state: next.state, kept_at: next.keptAt?.toISOString() ?? null, next_review_at: next.nextReviewAt?.toISOString() ?? null })

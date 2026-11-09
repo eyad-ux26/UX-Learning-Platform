@@ -1,4 +1,5 @@
 import "server-only";
+import { flagOn, learningRules } from "@/lib/app-config";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 import { providerFor, regionFor, UNKNOWN_COUNTRY, type Period, type Region } from "@/lib/billing/pricing";
@@ -22,6 +23,8 @@ export type BillingView = {
   mode: Mode;
   welcomeBack: boolean;
   student: { verified: boolean; validUntil: string | null };
+  /** A free trial this learner can start now (flag `trials` on, never had Pro or a trial). Checked again when they start it. */
+  trialOffer?: { days: number } | null;
 };
 
 /** The host this page request came to. Never x-forwarded-host: the sender sets it (see hostOf). */
@@ -82,8 +85,15 @@ export async function loadBilling(me: { db: SupabaseClient | null; userId: strin
   const country = (live ? sub!.country : null) ?? country0 ?? UNKNOWN_COUNTRY;
   const region = regionFor(country);
   const provider = providerFor(region);
+  const pro = isPro(entitlement, new Date(), allowMock);
+  let trialOffer: BillingView["trialOffer"] = null;
+  if (!pro && !sub && !entitlement?.proSince && entitlement?.source !== "trial" && (await flagOn("trials"))) {
+    const { data: used, error: te } = await db.from("trials").select("user_id").eq("user_id", userId).maybeSingle();
+    if (!te && !used) trialOffer = { days: (await learningRules()).trialDays };
+  }
   return {
-    pro: isPro(entitlement, new Date(), allowMock), entitlement, sub, payments, requests: (reqs.data ?? []).map(requestFromRow).filter((r) => shown.has(r.paymentId)),
+    trialOffer,
+    pro, entitlement, sub, payments, requests: (reqs.data ?? []).map(requestFromRow).filter((r) => shown.has(r.paymentId)),
     country, region, provider, mode: providerMode(provider, host), welcomeBack: welcomeBackEligible(entitlement),
     // The student check is server-only; the plans page reads it through the admin client when it needs it.
     student: { verified: false, validUntil: null },

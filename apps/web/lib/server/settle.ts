@@ -2,6 +2,7 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { localDay } from "@/lib/progress";
 import { settle, shiftDay, WEEK_START, type DayActivity } from "@/lib/freeze";
+import { learningRules } from "@/lib/app-config";
 
 /**
  * Settles a learner's finished days: counts goal days, earns freezes, uses one for a missed day.
@@ -33,7 +34,7 @@ export async function settleLearner(userId: string, timeZone: string | null, now
     const activity: Record<string, DayActivity> = {};
     for (const d of days ?? []) activity[d.day as string] = { lessons: d.lessons_done as number, goalMet: d.goal_met as boolean };
 
-    const out = settle({ current: row.current, longest: row.longest, freezes: row.freezes_available }, through, yesterday, activity, weekStart);
+    const out = settle({ current: row.current, longest: row.longest, freezes: row.freezes_available }, through, yesterday, activity, weekStart, await learningRules());
 
     // Events and frozen days first: they are keyed, so a second caller repeating them changes nothing.
     if (out.usedDays.length) {

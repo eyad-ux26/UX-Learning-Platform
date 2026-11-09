@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Shell } from "@/components/app/Shell";
-import { ChangePlan, PayNow, RefundLate, ResumeButton, Toast } from "@/components/billing/BillingActions";
+import { ChangePlan, PayNow, RefundLate, ResumeButton, StartTrial, Toast } from "@/components/billing/BillingActions";
 import { FreeProList } from "@/components/billing/FreeProList";
 import { requireLearner } from "@/lib/server/learner";
 import { loadBilling } from "@/lib/server/billing/account";
@@ -36,6 +36,7 @@ export default async function BillingPage({ params, searchParams }: { params: Pr
                 {s.notice.act ? (
                   <span className="acts">
                     {s.notice.act.kind === "plans" ? <Link href="/app/plans" className="btn btn-primary btn-sm press">{s.notice.act.label}</Link>
+                      : s.notice.act.kind === "trial" ? <StartTrial label={s.notice.act.label} />
                       : <PayNow kind={s.notice.act.kind} period={s.period} label={s.notice.act.label} />}
                   </span>
                 ) : null}

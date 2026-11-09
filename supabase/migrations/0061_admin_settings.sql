@@ -33,12 +33,11 @@ create table public.app_settings (
   updated_at timestamptz not null default now()
 );
 
--- The defaults are the code constants of 9 Nov 2026 (lib/freeze.ts, lib/mastery.ts, lib/skill-state.ts).
+-- The defaults are the code constants of 9 Nov 2026 (lib/learning-rules.ts). The week start is not here: it is fixed
+-- per learner at sign-up (Saturday in Arabic, Monday in English), and changing it would move weeks already counted.
 insert into public.app_settings (key, value) values
   ('learning.freeze_goal_days', '5'),
   ('learning.freeze_max', '2'),
-  ('learning.week_start_en', '1'),
-  ('learning.week_start_ar', '6'),
   ('learning.max_mastery_misses', '2'),
   ('learning.variants_per_skill', '2'),
   ('learning.review_after_days', '3'),
@@ -61,8 +60,6 @@ begin
     return case p_key
       when 'learning.freeze_goal_days' then case when n between 1 and 7 then null else 'goal days must be 1 to 7' end
       when 'learning.freeze_max' then case when n between 0 and 5 then null else 'freezes must be 0 to 5' end
-      when 'learning.week_start_en' then case when n between 0 and 6 then null else 'pick a day of the week' end
-      when 'learning.week_start_ar' then case when n between 0 and 6 then null else 'pick a day of the week' end
       when 'learning.max_mastery_misses' then case when n between 1 and 5 then null else 'misses must be 1 to 5' end
       when 'learning.variants_per_skill' then case when n between 1 and 4 then null else 'variants must be 1 to 4' end
       when 'learning.review_after_days' then case when n between 1 and 30 then null else 'review after 1 to 30 days' end

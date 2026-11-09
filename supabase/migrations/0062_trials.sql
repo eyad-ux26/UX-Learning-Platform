@@ -101,14 +101,23 @@ begin
   return v_end;
 end $$;
 
--- For the daily job: trials that end within 2 days (reminder) and trials that ended (end email, status ended).
-create function public.trials_due(p_now timestamptz default now())
-returns table (user_id uuid, kind text, ends_at timestamptz) language sql stable security definer set search_path = public as $$
-  select t.user_id, 'reminder', t.ends_at from public.trials t
-    where t.status = 'active' and t.reminder_sent_at is null and t.ends_at > p_now and t.ends_at <= p_now + interval '2 days'
-  union all
-  select t.user_id, 'ended', t.ends_at from public.trials t
-    where t.status = 'active' and t.ends_at <= p_now and t.ended_sent_at is null
+-- For the daily job: trials that end within 2 days (reminder) and trials that ended (end email, status ended), with
+-- the address and language to write to. At most p_limit rows per run.
+create function public.trials_due(p_now timestamptz default now(), p_limit integer default 100)
+returns table (user_id uuid, kind text, ends_at timestamptz, email text, locale text, display_name text)
+language sql stable security definer set search_path = public as $$
+  select d.user_id, d.kind, d.ends_at, u.email::text, coalesce(p.locale, 'en'), p.display_name
+  from (
+    select t.user_id, 'reminder' as kind, t.ends_at from public.trials t
+      where t.status = 'active' and t.reminder_sent_at is null and t.ends_at > p_now and t.ends_at <= p_now + interval '2 days'
+    union all
+    select t.user_id, 'ended', t.ends_at from public.trials t
+      where t.status = 'active' and t.ends_at <= p_now and t.ended_sent_at is null
+  ) d
+  join auth.users u on u.id = d.user_id
+  left join public.profiles p on p.user_id = d.user_id
+  order by d.ends_at
+  limit p_limit
 $$;
 
 create function public.trial_mark(p_user uuid, p_kind text) returns void language plpgsql security definer set search_path = public as $$
@@ -119,6 +128,6 @@ begin
 end $$;
 
 revoke all on function public.trial_refusal(uuid), public.start_trial(uuid), public.admin_extend_trial(uuid, uuid, integer, text, text, text, uuid),
-  public.trials_due(timestamptz), public.trial_mark(uuid, text) from public, anon, authenticated;
+  public.trials_due(timestamptz, integer), public.trial_mark(uuid, text) from public, anon, authenticated;
 grant execute on function public.trial_refusal(uuid), public.start_trial(uuid), public.admin_extend_trial(uuid, uuid, integer, text, text, text, uuid),
-  public.trials_due(timestamptz), public.trial_mark(uuid, text) to service_role;
+  public.trials_due(timestamptz, integer), public.trial_mark(uuid, text) to service_role;

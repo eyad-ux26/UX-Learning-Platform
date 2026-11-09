@@ -3,8 +3,11 @@
 // daily goal on 5 days, and holds at most 2. A day with no finished lesson uses one freeze if there is one, and the
 // streak carries on; with none left the streak starts again.
 
-export const FREEZE_GOAL_DAYS = 5;
-export const FREEZE_MAX = 2;
+import { DEFAULT_RULES, type LearningRules } from "./learning-rules";
+
+/** Defaults; the Admins can change both in Learning rules (lib/learning-rules.ts). */
+export const FREEZE_GOAL_DAYS = DEFAULT_RULES.freezeGoalDays;
+export const FREEZE_MAX = DEFAULT_RULES.freezeMax;
 
 export type DayActivity = { lessons: number; goalMet: boolean };
 export type SettleState = { current: number; longest: number; freezes: number };
@@ -48,7 +51,7 @@ export const mondayOf = (day: string) => weekStartOf(day, 1);
  * contains the first day settled, so a week that began before it still counts all its goal days.
  * With no `settledThrough` the learner starts at their first active day, so days before they began never count as missed.
  */
-export function settle(state: SettleState, settledThrough: string | null, through: string, activity: Record<string, DayActivity>, start: number = WEEK_START): Settled {
+export function settle(state: SettleState, settledThrough: string | null, through: string, activity: Record<string, DayActivity>, start: number = WEEK_START, rules: Pick<LearningRules, "freezeGoalDays" | "freezeMax"> = DEFAULT_RULES): Settled {
   let { current, longest, freezes } = state;
   const usedDays: string[] = [];
   const earnedDays: string[] = [];
@@ -71,19 +74,19 @@ export function settle(state: SettleState, settledThrough: string | null, throug
       const monday = weekStartOf(d, start);
       let goalDays = 0;
       for (let i = 0; i < 7; i++) if (activity[shiftDay(monday, i)]?.goalMet) goalDays++;
-      if (goalDays >= FREEZE_GOAL_DAYS && freezes < FREEZE_MAX) { freezes += 1; earnedDays.push(d); }
+      if (goalDays >= rules.freezeGoalDays && freezes < rules.freezeMax) { freezes += 1; earnedDays.push(d); }
     }
   }
   return { current, longest, freezes, usedDays, earnedDays, settledThrough: through };
 }
 
 /** Goal days so far in the week that holds `today`, and how many more earn the next freeze (never negative). */
-export function weekGoalProgress(today: string, activity: Record<string, DayActivity>, start: number = WEEK_START) {
+export function weekGoalProgress(today: string, activity: Record<string, DayActivity>, start: number = WEEK_START, goalDays_: number = FREEZE_GOAL_DAYS) {
   const monday = weekStartOf(today, start);
   let goalDays = 0;
   for (let i = 0; i < 7; i++) {
     const d = shiftDay(monday, i);
     if (d <= today && activity[d]?.goalMet) goalDays++;
   }
-  return { goalDays, needed: FREEZE_GOAL_DAYS, more: Math.max(0, FREEZE_GOAL_DAYS - goalDays), monday };
+  return { goalDays, needed: goalDays_, more: Math.max(0, goalDays_ - goalDays), monday };
 }
