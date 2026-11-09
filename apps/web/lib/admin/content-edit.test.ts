@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Lesson, LessonVersion } from "@uxgate/content/types";
 import { content } from "@uxgate/content";
-import { applyEdits, behind, diffText, lessonChecks, textFields } from "./content-edit";
+import { applyEdits, behind, diffText, labelOf, lessonChecks, textFields } from "./content-edit";
 
 const dist = path.resolve(__dirname, "../../../../packages/content/dist/lessons");
 const load = (id: string): Lesson => {
@@ -44,5 +44,14 @@ describe("lesson editor rules", () => {
     expect(lessonChecks(base, base).checks.find((c) => c.id === "changed")?.ok).toBe(false);
     const f = textFields(base)[1];
     expect(lessonChecks(base, applyEdits(base, { [f.path]: { en: "", ar: "" } })).checks.find((c) => c.id === "empty")?.ok).toBe(false);
+  });
+});
+
+describe("field labels", () => {
+  it("read in plain words, with nested parts as 1.2", () => {
+    expect(labelOf(["options", "1", "mock", "blocks", "0", "blocks", "1", "text"])).toBe("Option 2 · example screen · part 1.2 · text");
+    expect(labelOf(["mock", "appbar", "title"])).toBe("Example screen · top bar · title");
+    expect(labelOf(["hints", "1"])).toBe("Hint 2");
+    expect(labelOf(["misconceptions", "0", "feedback"])).toBe("Wrong answer 1 · feedback");
   });
 });
