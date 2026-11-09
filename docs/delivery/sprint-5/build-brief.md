@@ -19,7 +19,7 @@ A free learner sees what is free and what Pro opens, pays through Paymob (Egypt)
 | Design | Canvas https://claude.ai/artifact/2QmAbtRYMcetPvvmCGEuCx v63, page "9 · Slice 5 · Subscriptions" and the audit boards; PR #83 `docs/design/slice-5/README.md` (prices, components, "PM calls") and `docs/design/audit-fixes.md` |
 | Product rules | `docs/product/spec.md` §4.8; design review calls below |
 | Stories | EN-15, EN-16, EN-17, EN-18 in `docs/delivery/user-stories.md` |
-| Prices | 249 EGP / $8 Gulf / $5 other Arab countries monthly; 2,249 EGP / $72 / $45 annual; student 40%, welcome back 40% on annual for 2 years, founding 30% on annual in year 1 |
+| Prices | 249 EGP / $8 Gulf (GCC plus Iraq, from 9 Nov 2026; existing subscribers keep their price) / $5 other Arab countries monthly; 2,249 EGP / $72 / $45 annual; student 40%, welcome back 40% on annual for 2 years, founding 30% on annual in year 1 |
 | Done rules | `docs/delivery/definition-of-done.md` with the tech gate |
 | Credits | `/mnt/project-files/delivery/credits-policy.md`: Sonnet high |
 
