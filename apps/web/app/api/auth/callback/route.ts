@@ -41,5 +41,7 @@ export async function GET(req: NextRequest) {
   // Signing in during the 30 days after a delete request keeps the account; the app says so (?restored=1).
   const restored = await restoreIfDeleting(data.user.id).catch(() => false);
   if (restored) return NextResponse.redirect(`${origin}/${locale}${reset ? "/reset" : "/app/settings"}?restored=1`);
+  // The admin panel lives outside the locale routes.
+  if (next === "/admin" || next.startsWith("/admin/")) return NextResponse.redirect(`${origin}${next}`);
   return NextResponse.redirect(`${origin}/${locale}${next}`);
 }

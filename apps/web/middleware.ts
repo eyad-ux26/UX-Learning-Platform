@@ -21,9 +21,14 @@ const HOME = /^\/(en|ar)?\/?$/;
 const MAINTENANCE_PAGE = /^\/(en|ar)\/maintenance\/?$/;
 const LOCALE_PREFIX = /^\/(en|ar)(\/|$)/;
 
+// The admin panel (app/admin) is English only and outside the locale routes. Middleware only keeps its session cookie
+// fresh and marks it noindex; every admin page and action checks access itself (lib/admin/guard.ts).
+const ADMIN = /^\/admin(\/|$)/;
+
 export default async function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
   if (isPrivateContent(pathname)) return notFound(); // lesson files: server only (see lib/private-content.ts)
+  if (ADMIN.test(pathname)) return adminPass(req);
   if (process.env.UG_MAINTENANCE === "1" && !MAINTENANCE_PAGE.test(pathname)) {
     const url = req.nextUrl.clone();
     const cookie = req.cookies.get("NEXT_LOCALE")?.value;
@@ -71,6 +76,27 @@ export default async function middleware(req: NextRequest) {
       return out;
     }
   }
+  return res;
+}
+
+/** Admin pages: refresh an expiring session cookie, never cache, never index. No access decision is made here. */
+async function adminPass(req: NextRequest) {
+  const headers = { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "private, no-store" };
+  let res = NextResponse.next({ request: req, headers });
+  if (!hasSupabase()) return res;
+  const supabase = createServerClient(supabaseUrl(), supabaseAnonKey(), {
+    cookieOptions: sessionCookieOptions(),
+    cookies: {
+      getAll: () => req.cookies.getAll(),
+      setAll: (list) => {
+        list.forEach(({ name, value }) => req.cookies.set(name, value));
+        // A new response that carries the refreshed cookies to the page (request) and to the browser (response).
+        res = NextResponse.next({ request: req, headers });
+        list.forEach(({ name, value, options }) => res.cookies.set(name, value, options));
+      },
+    },
+  });
+  await supabase.auth.getClaims();
   return res;
 }
 
