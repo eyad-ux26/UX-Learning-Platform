@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Feedback, type Result } from "@/components/admin/forms";
 import { decide } from "./actions";
 
-// Starting text for each verdict. The member edits it; both languages are sent, the learner reads their own.
+// Starting text for each verdict, in the learner's app language. The member edits it before sending.
 const START = {
   accept: {
     en: "You’re right: your answer works here too. We now count it as correct and will update this step so it is clearer.",
@@ -17,34 +17,29 @@ const START = {
   },
 };
 
-export function Decide({ id, quality }: { id: string; quality: boolean }) {
+export function Decide({ id, quality, lang, name }: { id: string; quality: boolean; lang: "en" | "ar"; name: string }) {
   const [verdict, setVerdict] = useState<"accept" | "keep">("accept");
-  const [en, setEn] = useState(START.accept.en);
-  const [ar, setAr] = useState(START.accept.ar);
+  const [text, setText] = useState(START.accept[lang]);
   const [state, formAction, pending] = useActionState<Result | null, FormData>(decide, null);
   const router = useRouter();
   useEffect(() => { if (state?.ok) router.refresh(); }, [state, router]);
   const pick = (v: "accept" | "keep") => {
     // Only swap the text while it is still the untouched starting text.
-    if (en === START[verdict].en) setEn(START[v].en);
-    if (ar === START[verdict].ar) setAr(START[v].ar);
+    if (text === START[verdict][lang]) setText(START[v][lang]);
     setVerdict(v);
   };
   return (
     <form action={formAction} className="a-stack" aria-label="Answer the request">
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="verdict" value={verdict} />
+      <input type="hidden" name="lang" value={lang} />
       <span className="a-seg" role="group" aria-label="Decision">
         <button type="button" aria-pressed={verdict === "accept"} onClick={() => pick("accept")}>Accept: the answer counts</button>
-        <button type="button" aria-pressed={verdict === "keep"} onClick={() => pick("keep")}>Keep the result</button>
+        <button type="button" aria-pressed={verdict === "keep"} onClick={() => pick("keep")}>Reject: keep the result</button>
       </span>
       <div className="a-field">
-        <label htmlFor={`en-${id}`}>Reply in English<span className="req" aria-hidden="true">*</span></label>
-        <textarea id={`en-${id}`} name="reply_en" className="a-ta" rows={3} required maxLength={2000} value={en} onChange={(e) => setEn(e.target.value)} />
-      </div>
-      <div className="a-field">
-        <label htmlFor={`ar-${id}`}>Reply in Arabic<span className="req" aria-hidden="true">*</span></label>
-        <textarea id={`ar-${id}`} name="reply_ar" className="a-ta" rows={3} required maxLength={2000} dir="rtl" lang="ar" value={ar} onChange={(e) => setAr(e.target.value)} />
+        <label htmlFor={`rp-${id}`}>Reply to {name} (sent in {lang === "ar" ? "Arabic" : "English"}, their app language)<span className="req" aria-hidden="true">*</span></label>
+        <textarea id={`rp-${id}`} name="reply" className="a-ta" rows={5} required maxLength={2000} dir={lang === "ar" ? "rtl" : "ltr"} lang={lang} value={text} onChange={(e) => setText(e.target.value)} />
       </div>
       {verdict === "accept" ? (
         <div className="a-field">
@@ -60,7 +55,7 @@ export function Decide({ id, quality }: { id: string; quality: boolean }) {
         Send this step to content quality (the content team fixes it)
       </label>
       <div className="a-row">
-        <button type="submit" className="a-btn pri" disabled={pending} aria-busy={pending}>{pending ? "Sending…" : verdict === "accept" ? "Accept and reply" : "Keep the result and reply"}</button>
+        <button type="submit" className="a-btn pri" disabled={pending} aria-busy={pending}>{pending ? "Sending…" : verdict === "accept" ? "Accept and credit the skill" : "Reject and reply"}</button>
       </div>
       <Feedback state={state} />
     </form>

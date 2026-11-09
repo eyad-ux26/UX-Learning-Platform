@@ -10,7 +10,7 @@ export const metadata = { title: "Appeals and reviews" };
 
 const PER = 50;
 const TABS: { id: AppealTab; label: string }[] = [
-  { id: "open", label: "To answer" }, { id: "accepted", label: "Accepted" }, { id: "declined", label: "Result kept" }, { id: "quality", label: "Sent to quality" },
+  { id: "open", label: "Waiting" }, { id: "accepted", label: "Accepted" }, { id: "declined", label: "Rejected" }, { id: "quality", label: "Sent to quality" },
 ];
 
 export default async function AppealsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
@@ -25,7 +25,7 @@ export default async function AppealsPage({ searchParams }: { searchParams: Prom
   return (
     <main className="a-page">
       <PageHead crumbs={[{ label: "People" }, { label: "Appeals and reviews" }]} title="Appeals and reviews"
-        sub="A learner asked for a second look at one step. Accept and the answer counts; keep the result and say why. Oldest first." />
+        sub="A learner thinks their answer should count. Accepting credits the skill; rejecting keeps the result with a reply that explains why. Oldest first." />
       <Tabs label="Requests" items={TABS.map((t) => ({ href: withQuery("/admin/appeals", { reason: sp.reason, lesson: sp.lesson }, { tab: t.id === "open" ? undefined : t.id }), label: t.label, count: counts[t.id], current: t.id === tab }))} />
       <Card label="Requests" pad={false}>
         <Filters action="/admin/appeals" hidden={{ ...(tab === "open" ? {} : { tab }), ...(sp.lesson ? { lesson: sp.lesson } : {}) }} selects={[
@@ -45,7 +45,7 @@ export default async function AppealsPage({ searchParams }: { searchParams: Prom
                   </td>
                   <td><Who id={r.user_id} name={p?.display_name} email={p?.email} /></td>
                   <td>{REASON_LABEL[r.reason] ?? r.reason}{r.note ? <span className="t-xs ink-3" style={{ display: "block", maxWidth: 260 }} dir="auto">“{r.note.slice(0, 80)}{r.note.length > 80 ? "…" : ""}”</span> : null}</td>
-                  <td>{r.status === "open" ? <St tone="wait">To answer</St> : r.status === "accepted" ? <St tone="good">Accepted{r.xp_added ? ` · +${r.xp_added} XP` : ""}</St> : <St tone="off">Result kept</St>}</td>
+                  <td>{r.status === "open" ? <St tone="wait">To answer</St> : r.status === "accepted" ? <St tone="good">Accepted{r.xp_added ? ` · +${r.xp_added} XP` : ""}</St> : <St tone="off">Rejected</St>}</td>
                   <td><When at={r.created_at} rel /></td>
                 </tr>
               );
