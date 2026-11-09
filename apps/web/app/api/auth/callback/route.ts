@@ -16,12 +16,15 @@ export async function GET(req: NextRequest) {
   const next = safeNext(searchParams.get("next"));
   const reset = next === "/reset";
   const code = searchParams.get("code");
+  // A sign-in link the support team sent (admin panel): a one-time token hash instead of a PKCE code, so it works in
+  // any browser the learner opens it in.
+  const tokenHash = searchParams.get("token_hash");
   // An expired reset link goes back to "Forgot password?", where a new one is one tap away.
   const fail = NextResponse.redirect(`${origin}/${locale}/${reset ? "forgot" : "signin"}?error=link`);
-  if (!code) return fail;
+  if (!code && !(tokenHash && /^[0-9a-f]{20,200}$/i.test(tokenHash))) return fail;
 
   const db = await createClient();
-  const { data, error } = await db.auth.exchangeCodeForSession(code);
+  const { data, error } = code ? await db.auth.exchangeCodeForSession(code) : await db.auth.verifyOtp({ token_hash: tokenHash!, type: "magiclink" });
   if (error || !data.user) return fail;
 
   // Emails follow the language the learner last signed in with. Google sign-ups and existing learners cannot carry a language

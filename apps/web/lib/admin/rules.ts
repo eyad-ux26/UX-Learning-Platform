@@ -35,3 +35,10 @@ export function reasonOf(v: unknown): string | null {
 
 /** The panel's light or night theme, chosen on the Account page. */
 export const ADMIN_THEME_COOKIE = "ug_adm_theme";
+
+/** The public reasons a revoke can show, in both languages (CRT-2). */
+export const REVOKE_REASONS = {
+  asked: { en: "The learner asked us to remove it.", ar: "طلب المتعلم إزالتها." },
+  mistake: { en: "It was issued by mistake.", ar: "صدرت عن طريق الخطأ." },
+  terms: { en: "It broke the UXGate terms of use.", ar: "خالفت شروط استخدام UXGate." },
+} as const;

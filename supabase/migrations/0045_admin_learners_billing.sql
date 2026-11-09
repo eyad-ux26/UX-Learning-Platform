@@ -257,3 +257,14 @@ grant execute on function public.admin_people(uuid[]),
 alter table public.payments
   add column if not exists refund_sent_at timestamptz,
   add column if not exists refund_sent_by uuid references auth.users (id) on delete set null;
+
+-- Webhook events that mention one provider payment or subscription id, newest first (Payments detail).
+create function public.admin_events_for(p_ref text)
+returns table (id uuid, provider text, event_type text, received_at timestamptz, processed_at timestamptz, error text)
+language sql stable security definer set search_path = public as $$
+  select e.id, e.provider, e.event_type, e.received_at, e.processed_at, e.error from public.billing_events e
+  where char_length(p_ref) >= 6 and e.payload::text like '%' || p_ref || '%'
+  order by e.received_at desc limit 20
+$$;
+revoke all on function public.admin_events_for(text) from public, anon, authenticated;
+grant execute on function public.admin_events_for(text) to service_role;

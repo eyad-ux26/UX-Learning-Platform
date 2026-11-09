@@ -6,10 +6,13 @@
 
 create table public.support_settings (
   id smallint primary key default 1 check (id = 1),
-  first_reply_hours integer not null default 24 check (first_reply_hours between 1 and 240),
-  resolve_hours integer not null default 72 check (resolve_hours between 1 and 720),
-  -- Business hours by the learner's language, in Cairo time. 0 = Sunday ... 6 = Saturday.
-  hours jsonb not null default '{"tz": "Africa/Cairo", "ar": {"days": [6, 0, 1, 2, 3, 4], "start": 9, "end": 17}, "en": {"days": [1, 2, 3, 4, 5], "start": 9, "end": 17}}',
+  -- Targets in business hours by priority: first reply and resolution.
+  sla jsonb not null default '{"urgent": {"first": 4, "resolve": 9}, "high": {"first": 8, "resolve": 18}, "normal": {"first": 24, "resolve": 72}, "low": {"first": 48, "resolve": 120}}',
+  -- Business hours by the ticket's language, in Cairo time. 0 = Sunday ... 6 = Saturday. Days off pause every clock.
+  hours jsonb not null default '{"tz": "Africa/Cairo", "ar": {"days": [6, 0, 1, 2, 3, 4], "start": 9, "end": 18}, "en": {"days": [1, 2, 3, 4, 5], "start": 9, "end": 18}}',
+  days_off date[] not null default '{}',
+  -- Tickets waiting on the learner close by themselves after this many days without a reply.
+  auto_close_days integer not null default 3 check (auto_close_days between 1 and 30),
   warn_before_minutes integer not null default 120,
   assignment text not null default 'manual' check (assignment in ('manual', 'round_robin', 'category')),
   category_assignees jsonb not null default '{}',   -- {"billing": "<admin user id>", ...}
@@ -98,6 +101,7 @@ declare
   tz text := coalesce(cfg ->> 'tz', 'Africa/Cairo');
   h jsonb := coalesce(cfg -> coalesce(nullif(p_lang, ''), 'en'), cfg -> 'en');
   v_days int[] := array(select jsonb_array_elements_text(coalesce(h -> 'days', '[1,2,3,4,5]'))::int);
+  v_off date[] := coalesce((select days_off from public.support_settings where id = 1), '{}');
   v_start int := coalesce((h ->> 'start')::int, 9);
   v_end int := coalesce((h ->> 'end')::int, 17);
   v_left interval := make_interval(hours => p_hours);
@@ -108,7 +112,7 @@ begin
   if v_end <= v_start or cardinality(v_days) = 0 then return p_from + v_left; end if;
   while i < 400 loop
     d0 := date_trunc('day', t);
-    if extract(dow from d0)::int = any (v_days) then
+    if extract(dow from d0)::int = any (v_days) and not (d0::date = any (v_off)) then
       s := greatest(t, d0 + make_interval(hours => v_start));
       e := d0 + make_interval(hours => v_end);
       if s < e then
@@ -129,8 +133,8 @@ declare
   v_next uuid;
 begin
   select * into cfg from public.support_settings where id = 1;
-  new.first_reply_due := coalesce(new.first_reply_due, public.support_due(new.created_at, coalesce(cfg.first_reply_hours, 24), new.language));
-  new.resolve_due := coalesce(new.resolve_due, public.support_due(new.created_at, coalesce(cfg.resolve_hours, 72), new.language));
+  new.first_reply_due := coalesce(new.first_reply_due, public.support_due(new.created_at, coalesce((cfg.sla -> new.priority ->> 'first')::int, 24), new.language));
+  new.resolve_due := coalesce(new.resolve_due, public.support_due(new.created_at, coalesce((cfg.sla -> new.priority ->> 'resolve')::int, 72), new.language));
   if new.user_id is null then
     select u.id into new.user_id from auth.users u where lower(u.email) = lower(new.email) limit 1;
   end if;
@@ -212,14 +216,14 @@ grant execute on function public.support_due(timestamptz, integer, text) to serv
 -- A few starting macros, in English and Arabic (simple MSA; the panel edits them).
 insert into public.support_macros (title, category, body_en, body_ar, actions) values
   ('Resend the sign-in link', 'account',
-   E'Hi {{name}},\n\nThanks for writing. We just sent you a new sign-in link. It works for one hour. If it is not in your inbox in 5 minutes, please check the spam folder.\n\nThe UXGate team',
-   E'مرحبًا {{name}}،\n\nشكرًا على رسالتك. أرسلنا لك الآن رابط دخول جديدًا، وهو صالح لمدة ساعة. إن لم يصل خلال 5 دقائق، تحقّق من مجلد الرسائل غير المرغوب فيها.\n\nفريق UXGate',
+   E'Hi {first_name},\n\nThanks for writing. We just sent you a new sign-in link. It works for one hour. If it is not in your inbox in 5 minutes, please check the spam folder.\n\n{agent_name}, UXGate support',
+   E'مرحبًا {first_name}،\n\nشكرًا على رسالتك. أرسلنا لك الآن رابط دخول جديدًا، وهو صالح لمدة ساعة. إن لم يصل خلال 5 دقائق، تحقّق من مجلد الرسائل غير المرغوب فيها.\n\n{agent_name}، دعم UXGate',
    array['resend_signin', 'status:waiting_learner']),
   ('Refund approved', 'billing',
-   E'Hi {{name}},\n\nWe approved your refund. The money goes back to the card or wallet you paid with, usually within 5 to 10 working days. Pro ends now.\n\nThe UXGate team',
-   E'مرحبًا {{name}}،\n\nوافقنا على استرداد المبلغ. يعود المبلغ إلى البطاقة أو المحفظة التي دفعت بها، غالبًا خلال 5 إلى 10 أيام عمل. ينتهي اشتراك Pro الآن.\n\nفريق UXGate',
+   E'Hi {first_name},\n\nWe approved your refund. The money goes back to the card or wallet you paid with, usually within 5 to 10 working days. Pro ends now.\n\n{agent_name}, UXGate support',
+   E'مرحبًا {first_name}،\n\nوافقنا على استرداد المبلغ. يعود المبلغ إلى البطاقة أو المحفظة التي دفعت بها، غالبًا خلال 5 إلى 10 أيام عمل. ينتهي اشتراك Pro الآن.\n\n{agent_name}، دعم UXGate',
    array['status:resolved']),
   ('Thanks, we fixed the question', 'content',
-   E'Hi {{name}},\n\nThank you for telling us. You were right, and we fixed the question. Your report helps every learner on UXGate.\n\nThe UXGate team',
-   E'مرحبًا {{name}}،\n\nشكرًا لأنك أخبرتنا. كان معك حق، وأصلحنا السؤال. بلاغك يساعد كل المتعلمين على UXGate.\n\nفريق UXGate',
+   E'Hi {first_name},\n\nThank you for telling us. You were right, and we fixed the question. Your report helps every learner on UXGate.\n\n{agent_name}, UXGate support',
+   E'مرحبًا {first_name}،\n\nشكرًا لأنك أخبرتنا. كان معك حق، وأصلحنا السؤال. بلاغك يساعد كل المتعلمين على UXGate.\n\n{agent_name}، دعم UXGate',
    array['status:resolved']);
