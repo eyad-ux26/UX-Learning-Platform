@@ -36,6 +36,7 @@ Video courses are the `hybrid` paths: P02 and P14 today.
   - "Interactive paths" / «مسارات تفاعلية» follows in the normal card grid.
 - **B · Instructor spotlight.**
   - A swipeable row of video course cards, with dots. Each card (Eyad, 9 Nov, v102) has the path art beside the name and description, like the list cards, then the small round instructor photo with "With {name}", then the same tags as other cards (Video, units, Unit 1 free). No Start button. Light blue gradient and border.
+  - The row has a title above it: "Learn with an instructor" / «تعلّم مع مدرّب» (proposed 9 Nov; other options given to Eyad: Watch, then practice; Start here; Featured courses; Video courses. "Most in demand" / "Most watched" wait for real data).
   - Then one list, video courses first.
 - **C · One list, video first.**
   - The smallest change.
