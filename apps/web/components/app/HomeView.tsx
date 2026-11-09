@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { goalDaysOf } from "@/lib/progress";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -9,7 +10,7 @@ import type { Locale } from "@uxgate/content";
 import { GoalRing, Week } from "./Goal";
 import { FreezeNote } from "./FreezeNote";
 import { PathChips } from "./PathChips";
-import { catalogEntry, pathArtUrl } from "@/lib/catalog";
+import { localPathName, pathArtUrl } from "@/lib/catalog";
 import { buildPathView } from "@/lib/learning";
 import { reviewDue } from "@/lib/skill-state";
 import { pathOfId } from "@/lib/review";
@@ -39,11 +40,11 @@ export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView
     if (j.pathId === view.path.id) continue;
     const other = buildPathView(j.pathId, progress, me.practicedSkills);
     const l = other?.next;
-    if (other && l?.state === "in_progress") { resume = { lessonId: l.lesson.lessonId, title: l.lesson.body.title[locale], pathId: j.pathId, pathName: catalogEntry(j.pathId)?.name ?? j.pathId }; break; }
+    if (other && l?.state === "in_progress") { resume = { lessonId: l.lesson.lessonId, title: l.lesson.body.title[locale], pathId: j.pathId, pathName: localPathName(j.pathId, locale) }; break; }
   }
   const chips = me.joined.map((j) => {
     const v = buildPathView(j.pathId, progress, me.practicedSkills);
-    return { id: j.pathId, name: catalogEntry(j.pathId)?.name ?? j.pathId, art: pathArt(j.pathId), pct: v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0, current: j.pathId === view.path.id };
+    return { id: j.pathId, name: localPathName(j.pathId, locale), art: pathArt(j.pathId), pct: v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0, current: j.pathId === view.path.id };
   });
   const now = new Date();
   const dueSkills = [...me.skillStates].filter(([, r]) => reviewDue(r, now));
@@ -71,7 +72,7 @@ export async function HomeMain({ me, view, bell }: { me: Learner; view: PathView
           
           <img className="next-art" src={pathArt(view.path.id)} alt="" />
           <div className="stack">
-            <div className="row"><span className="tag" style={{ background: "var(--surface)" }}><span className="ltr">{view.path.title.en}</span> · {t("unit", { n: unitNumber })}</span>{next.unit.free ? <span className="tag tag-free">{t("free")}</span> : null}</div>
+            <div className="row"><span className="tag" style={{ background: "var(--surface)" }}><PathName name={localPathName(view.path.id, locale) ?? ""} /> · {t("unit", { n: unitNumber })}</span>{next.unit.free ? <span className="tag tag-free">{t("free")}</span> : null}</div>
             <div className="copy">
               <p className="t-over" style={{ color: "var(--link)" }}>{next.state === "in_progress" ? t("continueUp") : t("nextUp")}</p>
               <h2 className="t-h2" style={{ fontSize: 24, color: "var(--panel-ink)" }}>{lang}</h2>

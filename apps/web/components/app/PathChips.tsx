@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import { PathName } from "@/components/PathName";
 import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
@@ -34,7 +35,7 @@ export function PathChips({ chips, label, addLabel }: { chips: Chip[]; label: st
         {chips.map((c) => (
           <button key={c.id} type="button" className={`chip press${c.current ? " is-selected" : ""}`} aria-pressed={c.current} aria-label={c.current ? t("currentAria", { name: c.name }) : t("switchTo", { name: c.name })} onClick={() => pick(c)} disabled={pending} aria-busy={(pending && busyId === c.id) || undefined}>
             
-            <img src={c.art} alt="" style={{ inlineSize: 24, blockSize: 24 }} /><bdi>{c.name}</bdi><span className="num t-small">{c.pct}%</span>
+            <img src={c.art} alt="" style={{ inlineSize: 24, blockSize: 24 }} /><PathName name={c.name ?? ""} /><span className="num t-small">{c.pct}%</span>
           </button>
         ))}
         <a className="chip" href="paths" onClick={(e) => { e.preventDefault(); router.push("/app/paths"); }}><span className="ph ph-plus" aria-hidden="true" />{addLabel}</a>

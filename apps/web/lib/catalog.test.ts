@@ -33,3 +33,27 @@ describe("current path", () => {
   });
   it("ignores a current path the learner has not joined", () => expect(pickCurrent("P10", ["P01"], null, b)?.id).toBe("P01"));
 });
+
+describe("Arabic path names", () => {
+  it("/ar shows the Arabic name where there is one, English otherwise; /en is always English", async () => {
+    const { localPathName } = await import("./catalog-list");
+    expect(localPathName("P01", "ar")).toBe("نماذج يُكملها الناس بسهولة (Form Design)");
+    expect(localPathName("P01", "en")).toBe("Forms That Flow");
+    expect(localPathName("P03", "ar")).toBe("Frame the Right Problem");
+    expect(localPathName("PX", "ar")).toBe("PX");
+  });
+  it("keeps the English term in brackets so a card can hold it on one line", async () => {
+    const { CATALOG } = await import("./catalog-list");
+    const named = CATALOG.filter((p) => p.nameAr);
+    expect(named).toHaveLength(8);
+    for (const p of named) expect(p.nameAr).toMatch(/\([A-Za-z][^()]*\)/);
+  });
+  it("matches the content title.ar once the content carries the bracketed term (after the Arabic names are seeded)", async () => {
+    const { CATALOG } = await import("./catalog-list");
+    const { content } = await import("@uxgate/content");
+    for (const p of content.paths) {
+      const e = CATALOG.find((c) => c.id === p.id);
+      if (e?.nameAr && /\([A-Za-z]{4,}/.test(p.title.ar)) expect(e.nameAr).toBe(p.title.ar);
+    }
+  });
+});

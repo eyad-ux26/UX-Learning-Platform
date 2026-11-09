@@ -7,7 +7,7 @@ import type { Progress } from "@/lib/progress";
 import { pathArt } from "./HomeView";
 import { PathSwitcher } from "./PathSwitcher";
 import { LockedUnitSheet, type LockedUnitText } from "./LockedUnitSheet";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { buildPathView, testOutCheck } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 import { FreeProList } from "@/components/billing/FreeProList";
@@ -94,7 +94,7 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
     const v = buildPathView(j.pathId, progress, me.practicedSkills);
     const p = v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0;
     const cur = v?.units.find((u) => u.lessons.some((l) => l.state !== "done")) ?? v?.units[v.units.length - 1];
-    return { id: j.pathId, name: catalogEntry(j.pathId)?.name ?? j.pathId, art: pathArt(j.pathId), pct: p, current: j.pathId === view.path.id, where: `${t("unit", { n: cur?.number ?? 1 })} · ${p}%` };
+    return { id: j.pathId, name: localPathName(j.pathId, locale), art: pathArt(j.pathId), pct: p, current: j.pathId === view.path.id, where: `${t("unit", { n: cur?.number ?? 1 })} · ${p}%` };
   });
   const sub = t("sub", { sub: view.path.subtitle[locale], units: view.unitCount });
 

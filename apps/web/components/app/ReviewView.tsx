@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { getLocale, getTranslations } from "next-intl/server";
 import { content, type Locale } from "@uxgate/content";
-import { catalogEntry, pathArtUrl } from "@/lib/catalog";
+import { localPathName, pathArtUrl } from "@/lib/catalog";
 import { Link } from "@/i18n/navigation";
 import { loadQueue, reviewUnitOf } from "@/lib/server/review-session";
 import { buildQueue, pathOfId, sessionSkills, type ReviewSkill } from "@/lib/review";
@@ -54,7 +55,7 @@ export async function ReviewMain({ me }: { me: Learner }) {
                 <img src={pathArtUrl(q.pathId)} alt="" style={{ inlineSize: 40, blockSize: 40, flex: "none" }} />
                 <div className="grow">
                   <p className="t-label">{skillTitle(q.skillId)?.[locale] ?? q.skillId}</p>
-                  <p className="t-small ink-2"><span className="kind"><bdi>{catalogEntry(q.pathId)?.name ?? q.pathId}</bdi></span>{shownAt.get(q.skillId) ? <> · {t("shownOn", { date: fmt.format(shownAt.get(q.skillId)!) })}</> : null}</p>
+                  <p className="t-small ink-2"><span className="kind"><PathName name={localPathName(q.pathId, locale) ?? ""} /></span>{shownAt.get(q.skillId) ? <> · {t("shownOn", { date: fmt.format(shownAt.get(q.skillId)!) })}</> : null}</p>
                   {q.confidentError ? <p className="t-small" style={{ color: "var(--link)", fontWeight: 700 }}><span className="ph ph-bulb" aria-hidden="true" /> {t("sure")}</p> : null}
                 </div>
               </li>
