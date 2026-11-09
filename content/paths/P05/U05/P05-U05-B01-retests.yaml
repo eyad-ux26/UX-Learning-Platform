@@ -15,7 +15,7 @@ sources:
     url: "https://www.nngroup.com/articles/auto-forwarding/"
 steps:
   - id: S01
-    type: choose
+    type: tune
     skill: SK-P05-U05-01
     part: retest
     speaker: hana
@@ -31,19 +31,171 @@ steps:
       ar: "ماذا أغيّر حتى يعرف الأعضاء أنهم يستطيعون الحجز من التطبيق؟"
     mock:
       app: nashat
-      appbar: { title: { en: "Classes", ar: "الحصص" } }
-      tabbar: { active: 1, items: [ { icon: house, text: { en: "Home", ar: "الرئيسية" } }, { icon: calendar, text: { en: "Classes", ar: "الحصص" } }, { icon: user, text: { en: "Me", ar: "حسابي" } } ] }
+      appbar:
+        title: {en: Classes, ar: الحصص}
+      tabbar:
+        active: 1
+        items:
+        - icon: house
+          text: {en: Home, ar: الرئيسية}
+        - icon: calendar
+          text: {en: Classes, ar: الحصص}
+        - icon: user
+          text: {en: Me, ar: حسابي}
       blocks:
-        - kind: card
-          art: gym
-          blocks:
-            - { kind: heading, text: { en: "Yoga · Mon 19:00", ar: "يوغا · الاثنين 19:00" } }
-            - { kind: small, color: muted, text: { en: "6 places left", ar: "6 أماكن متبقية" }, gap: xs }
-        - { kind: listitem, icon: barbell, text: { en: "Boxing · Tue 18:00", ar: "ملاكمة · الثلاثاء 18:00" }, sub: { en: "2 places left", ar: "مكانان متبقيان" }, gap: s }
+      - kind: card
+        art: gym
+        blocks:
+        - kind: heading
+          text:
+            en: "Yoga · Mon 19:00"
+            ar: "يوغا · الاثنين 19:00"
+        - kind: small
+          color: muted
+          text:
+            en: "6 places left"
+            ar: "6 أماكن متبقية"
+          gap: xs
+      - kind: listitem
+        icon: barbell
+        text:
+          en: "Boxing · Tue 18:00"
+          ar: "ملاكمة · الثلاثاء 18:00"
+        sub:
+          en: "2 places left"
+          ar: مكانان متبقيان
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: poster, text: { en: "Put a poster in the gym: \"Swipe right to book\"", ar: "علّق لافتة في النادي: «اسحب لليمين للحجز»" } }
-      - { id: arrow, text: { en: "Add a small → arrow on each card", ar: "أضف سهمًا صغيرًا → على كل بطاقة" } }
-      - { id: book, text: { en: "Add a \"Book\" button on each card, and keep the swipe as a shortcut", ar: "أضف زر «احجز» على كل بطاقة، وأبقِ السحب كطريق مختصر" } }
+      - id: poster
+        text:
+          en: "Put a poster in the gym: \"Swipe right to book\""
+          ar: "علّق لافتة في النادي: «اسحب لليمين للحجز»"
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Classes, ar: الحصص}
+          tabbar:
+            active: 1
+            items:
+            - icon: house
+              text: {en: Home, ar: الرئيسية}
+            - icon: calendar
+              text: {en: Classes, ar: الحصص}
+            - icon: user
+              text: {en: Me, ar: حسابي}
+          blocks:
+          - kind: card
+            art: gym
+            blocks:
+            - kind: heading
+              text:
+                en: "Yoga · Mon 19:00"
+                ar: "يوغا · الاثنين 19:00"
+            - kind: small
+              color: muted
+              text:
+                en: "6 places left"
+                ar: "6 أماكن متبقية"
+              gap: xs
+          - kind: listitem
+            icon: barbell
+            text:
+              en: "Boxing · Tue 18:00"
+              ar: "ملاكمة · الثلاثاء 18:00"
+            sub:
+              en: "2 places left"
+              ar: مكانان متبقيان
+            gap: s
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: arrow
+        text: {en: Add a small → arrow on each card, ar: أضف سهمًا صغيرًا → على كل بطاقة}
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Classes, ar: الحصص}
+          tabbar:
+            active: 1
+            items:
+            - icon: house
+              text: {en: Home, ar: الرئيسية}
+            - icon: calendar
+              text: {en: Classes, ar: الحصص}
+            - icon: user
+              text: {en: Me, ar: حسابي}
+          blocks:
+          - kind: card
+            art: gym
+            blocks:
+            - kind: heading
+              text:
+                en: "Yoga · Mon 19:00  →"
+                ar: "يوغا · الاثنين 19:00  ←"
+            - kind: small
+              color: muted
+              text:
+                en: "6 places left"
+                ar: "6 أماكن متبقية"
+              gap: xs
+          - kind: listitem
+            icon: barbell
+            text:
+              en: "Boxing · Tue 18:00"
+              ar: "ملاكمة · الثلاثاء 18:00"
+            sub:
+              en: "2 places left"
+              ar: مكانان متبقيان
+            gap: s
+            chevron: true
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: book
+        text:
+          en: "Add a \"Book\" button on each card, and keep the swipe as a shortcut"
+          ar: أضف زر «احجز» على كل بطاقة، وأبقِ السحب كطريق مختصر
+        mock:
+          app: nashat
+          appbar:
+            title: {en: Classes, ar: الحصص}
+          tabbar:
+            active: 1
+            items:
+            - icon: house
+              text: {en: Home, ar: الرئيسية}
+            - icon: calendar
+              text: {en: Classes, ar: الحصص}
+            - icon: user
+              text: {en: Me, ar: حسابي}
+          blocks:
+          - kind: card
+            art: gym
+            blocks:
+            - kind: heading
+              text:
+                en: "Yoga · Mon 19:00"
+                ar: "يوغا · الاثنين 19:00"
+            - kind: small
+              color: muted
+              text:
+                en: "6 places left"
+                ar: "6 أماكن متبقية"
+              gap: xs
+            - kind: button
+              text: {en: Book, ar: احجز}
+              gap: s
+          - kind: listitem
+            icon: barbell
+            text:
+              en: "Boxing · Tue 18:00"
+              ar: "ملاكمة · الثلاثاء 18:00"
+            sub:
+              en: "2 places left"
+              ar: مكانان متبقيان
+            gap: s
+          - kind: button
+            text: {en: Book, ar: احجز}
+            style: outline
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [book]
     misconceptions:
       - id: MC-P05-044
@@ -92,7 +244,7 @@ steps:
       ar: "أبقِ الجرّ، وأضف طريقة تعمل بالضغط ولوحة المفاتيح وقارئ الشاشة."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P05-U05-02
     part: retest
     speaker: youssef
@@ -108,14 +260,95 @@ steps:
       ar: "كيف يجب أن يعمل التراجع (Undo) حتى يُرجع العميل المنتج بسهولة؟"
     mock:
       app: dar
-      appbar: { title: { en: "Cart", ar: "السلة" }, back: true }
+      appbar:
+        title: {en: Cart, ar: السلة}
+        back: true
       blocks:
-        - { kind: listitem, icon: wallet, text: { en: "Leather wallet", ar: "محفظة جلد" }, sub: { en: "450 EGP", ar: "450 جنيه" }, swipe: { text: { en: "Remove", ar: "احذف" }, tone: bad } }
-        - { kind: listitem, art: earbuds, text: { en: "Wireless earbuds", ar: "سماعات لاسلكية" }, sub: { en: "1,450 EGP", ar: "1,450 جنيه" } }
+      - kind: listitem
+        icon: wallet
+        text: {en: Leather wallet, ar: محفظة جلد}
+        sub:
+          en: "450 EGP"
+          ar: "450 جنيه"
+        swipe:
+          text: {en: Remove, ar: احذف}
+          tone: bad
+      - kind: listitem
+        art: earbuds
+        text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+        sub:
+          en: "1,450 EGP"
+          ar: "1,450 جنيه"
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Keep it in History; it's there if people need it", ar: "يبقى التراجع في السجل؛ فهو موجود إن احتاجه الناس" } }
-      - { id: bar, text: { en: "Show \"Wallet removed · Undo\" right after the swipe", ar: "اعرض «تم حذف المحفظة · تراجع» بعد السحب مباشرة" } }
-      - { id: email, text: { en: "Email the customer a list of removed items", ar: "أرسل للعميل بريدًا بقائمة المنتجات المحذوفة" } }
+      - id: keep
+        text:
+          en: "Keep it in History; it's there if people need it"
+          ar: يبقى التراجع في السجل؛ فهو موجود إن احتاجه الناس
+        mock:
+          app: dar
+          appbar:
+            title: {en: Cart, ar: السلة}
+            back: true
+          blocks:
+          - kind: listitem
+            icon: wallet
+            text: {en: Leather wallet, ar: محفظة جلد}
+            sub:
+              en: "450 EGP"
+              ar: "450 جنيه"
+            swipe:
+              text: {en: Remove, ar: احذف}
+              tone: bad
+          - kind: listitem
+            art: earbuds
+            text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+            sub:
+              en: "1,450 EGP"
+              ar: "1,450 جنيه"
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: bar
+        text:
+          en: "Show \"Wallet removed · Undo\" right after the swipe"
+          ar: اعرض «تم حذف المحفظة · تراجع» بعد السحب مباشرة
+        mock:
+          app: dar
+          appbar:
+            title: {en: Cart, ar: السلة}
+            back: true
+          blocks:
+          - kind: listitem
+            art: earbuds
+            text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+            sub:
+              en: "1,450 EGP"
+              ar: "1,450 جنيه"
+          overlay:
+            type: toast
+            blocks:
+            - kind: row
+              blocks:
+              - kind: text
+                text: {en: Wallet removed, ar: تم حذف المحفظة}
+              - kind: button
+                text: {en: Undo, ar: تراجع}
+                style: plain
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: email
+        text: {en: Email the customer a list of removed items, ar: أرسل للعميل بريدًا بقائمة المنتجات المحذوفة}
+        mock:
+          app: dar
+          appbar:
+            title: {en: Cart, ar: السلة}
+            back: true
+          blocks:
+          - kind: listitem
+            art: earbuds
+            text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+            sub:
+              en: "1,450 EGP"
+              ar: "1,450 جنيه"
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [bar]
     misconceptions:
       - id: MC-P05-046
@@ -131,7 +364,7 @@ steps:
       ar: "التراجع الجيد أمام الناس مباشرة، مع اسم المنتج، في اللحظة التي يحتاجونه فيها."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U05-02
     part: retest
     speaker: nour
@@ -147,14 +380,113 @@ steps:
       ar: "ماذا يجب أن يفعل السحب حتى لا يخسر المريض موعده بالخطأ؟"
     mock:
       app: raha
-      appbar: { title: { en: "My appointments", ar: "مواعيدي" }, back: true }
+      appbar:
+        title: {en: My appointments, ar: مواعيدي}
+        back: true
       blocks:
-        - { kind: listitem, avatar: { text: "Salma Adel", art: doctor }, text: { en: "Tue 10:30 · Dr. Salma", ar: "الثلاثاء 10:30 · د. سلمى" }, sub: { en: "Children's doctor", ar: "طبيبة أطفال" }, swipe: { text: { en: "Cancel", ar: "إلغاء" }, tone: bad } }
-        - { kind: listitem, avatar: { text: "Karim Nabil", art: man-1 }, text: { en: "Thu 17:00 · Dr. Karim", ar: "الخميس 17:00 · د. كريم" }, sub: { en: "Dentist", ar: "طبيب أسنان" } }
+      - kind: listitem
+        avatar: {text: Salma Adel, art: doctor}
+        text:
+          en: "Tue 10:30 · Dr. Salma"
+          ar: "الثلاثاء 10:30 · د. سلمى"
+        sub:
+          en: "Children's doctor"
+          ar: طبيبة أطفال
+        swipe:
+          text: {en: Cancel, ar: إلغاء}
+          tone: bad
+      - kind: listitem
+        avatar: {text: Karim Nabil, art: man-1}
+        text:
+          en: "Thu 17:00 · Dr. Karim"
+          ar: "الخميس 17:00 · د. كريم"
+        sub: {en: Dentist, ar: طبيب أسنان}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: sound, text: { en: "Cancel at once and play a sound", ar: "يلغي فورًا ويشغّل صوتًا" } }
-      - { id: hide, text: { en: "Cancel at once and hide the appointment", ar: "يلغي فورًا ويُخفي الموعد" } }
-      - { id: confirm, text: { en: "Show \"Cancel Tue 10:30 with Dr. Salma?\" with Yes and No", ar: "يعرض «إلغاء موعد الثلاثاء 10:30 مع د. سلمى؟» مع «نعم» و«لا»" } }
+      - id: sound
+        text: {en: Cancel at once and play a sound, ar: يلغي فورًا ويشغّل صوتًا}
+        mock:
+          app: raha
+          appbar:
+            title: {en: My appointments, ar: مواعيدي}
+            back: true
+          blocks:
+          - kind: listitem
+            avatar: {text: Karim Nabil, art: man-1}
+            text:
+              en: "Thu 17:00 · Dr. Karim"
+              ar: "الخميس 17:00 · د. كريم"
+            sub: {en: Dentist, ar: طبيب أسنان}
+          overlay:
+            type: toast
+            blocks:
+            - {kind: icon, icon: speaker-high, size: s}
+            - kind: text
+              text: {en: (a sound plays), ar: (يُسمع صوت)}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: hide
+        text: {en: Cancel at once and hide the appointment, ar: يلغي فورًا ويُخفي الموعد}
+        mock:
+          app: raha
+          appbar:
+            title: {en: My appointments, ar: مواعيدي}
+            back: true
+          blocks:
+          - kind: listitem
+            avatar: {text: Karim Nabil, art: man-1}
+            text:
+              en: "Thu 17:00 · Dr. Karim"
+              ar: "الخميس 17:00 · د. كريم"
+            sub: {en: Dentist, ar: طبيب أسنان}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: confirm
+        text:
+          en: "Show \"Cancel Tue 10:30 with Dr. Salma?\" with Yes and No"
+          ar: "يعرض «إلغاء موعد الثلاثاء 10:30 مع د. سلمى؟» مع «نعم» و«لا»"
+        mock:
+          app: raha
+          appbar:
+            title: {en: My appointments, ar: مواعيدي}
+            back: true
+          blocks:
+          - kind: listitem
+            avatar: {text: Salma Adel, art: doctor}
+            text:
+              en: "Tue 10:30 · Dr. Salma"
+              ar: "الثلاثاء 10:30 · د. سلمى"
+            sub:
+              en: "Children's doctor"
+              ar: طبيبة أطفال
+            swipe:
+              text: {en: Cancel, ar: إلغاء}
+              tone: bad
+          - kind: listitem
+            avatar: {text: Karim Nabil, art: man-1}
+            text:
+              en: "Thu 17:00 · Dr. Karim"
+              ar: "الخميس 17:00 · د. كريم"
+            sub: {en: Dentist, ar: طبيب أسنان}
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Cancel Tue 10:30 with Dr. Salma?"
+                ar: "إلغاء موعد الثلاثاء 10:30 مع د. سلمى؟"
+            - kind: row
+              gap: m
+              blocks:
+              - kind: button
+                text:
+                  en: "No"
+                  ar: لا
+                style: plain
+              - kind: button
+                text:
+                  en: "Yes"
+                  ar: نعم
+                style: danger
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [confirm]
     misconceptions:
       - id: MC-P05-046
@@ -307,7 +639,7 @@ steps:
       ar: "اجعل الوقت على قدر حجم التغيير، وابقَ تحت 500 ms."
 
   - id: S09
-    type: choose
+    type: tune
     skill: SK-P05-U05-05
     part: retest
     speaker: hana
@@ -325,15 +657,116 @@ steps:
       app: nashat
       frame: wide
       url: nashat.example
-      navbar: { links: [ { en: "Classes", ar: "الحصص" }, { en: "Prices", ar: "الأسعار" } ], actions: [ { icon: user } ] }
+      navbar:
+        links:
+        - {en: Classes, ar: الحصص}
+        - {en: Prices, ar: الأسعار}
+        actions:
+        - {icon: user}
       blocks:
-        - { kind: banner, tone: info, icon: megaphone, text: { en: "Yoga moves to 20:00 · See new times · Pool closed Friday…", ar: "اليوغا تنتقل إلى 20:00 · شاهد المواعيد الجديدة · المسبح مغلق الجمعة…" }, note: { en: "Scrolls across all the time", ar: "يتحرّك عبر الشاشة طوال الوقت" } }
-        - { kind: image, art: gym, gap: s }
-        - { kind: button, text: { en: "Book your free trial", ar: "احجز حصتك التجريبية المجانية" }, gap: s }
+      - kind: banner
+        tone: info
+        icon: megaphone
+        text:
+          en: "Yoga moves to 20:00 · See new times · Pool closed Friday…"
+          ar: "اليوغا تنتقل إلى 20:00 · شاهد المواعيد الجديدة · المسبح مغلق الجمعة…"
+        note: {en: Scrolls across all the time, ar: يتحرّك عبر الشاشة طوال الوقت}
+      - {kind: image, art: gym, gap: s}
+      - kind: button
+        text: {en: Book your free trial, ar: احجز حصتك التجريبية المجانية}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: slow, text: { en: "Keep the moving line, but slower", ar: "أبقِ السطر المتحرّك، لكن أبطأ" } }
-      - { id: still, text: { en: "A still notice box with each item and a \"See new times\" link", ar: "صندوق تنبيه ثابت فيه كل خبر ورابط «شاهد المواعيد الجديدة»" } }
-      - { id: hover, text: { en: "Keep it moving, and stop it when the mouse is over it", ar: "أبقِه متحرّكًا، وأوقفه حين يكون الماوس فوقه" } }
+      - id: slow
+        text:
+          en: "Keep the moving line, but slower"
+          ar: أبقِ السطر المتحرّك، لكن أبطأ
+        mock:
+          app: nashat
+          frame: wide
+          url: nashat.example
+          navbar:
+            links:
+            - {en: Classes, ar: الحصص}
+            - {en: Prices, ar: الأسعار}
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: banner
+            tone: info
+            icon: megaphone
+            text:
+              en: "Yoga moves to 20:00 · See new times · Pool closed Friday…"
+              ar: "اليوغا تنتقل إلى 20:00 · شاهد المواعيد الجديدة · المسبح مغلق الجمعة…"
+            note:
+              en: "Scrolls across, more slowly"
+              ar: يتحرّك عبر الشاشة، أبطأ
+          - {kind: image, art: gym, gap: s}
+          - kind: button
+            text: {en: Book your free trial, ar: احجز حصتك التجريبية المجانية}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: still
+        text:
+          en: "A still notice box with each item and a \"See new times\" link"
+          ar: صندوق تنبيه ثابت فيه كل خبر ورابط «شاهد المواعيد الجديدة»
+        mock:
+          app: nashat
+          frame: wide
+          url: nashat.example
+          navbar:
+            links:
+            - {en: Classes, ar: الحصص}
+            - {en: Prices, ar: الأسعار}
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: heading
+              text: {en: News, ar: أخبار}
+            - kind: list
+              style: bullet
+              gap: xs
+              items:
+              - en: "Yoga moves to 20:00"
+                ar: "اليوغا تنتقل إلى 20:00"
+              - {en: Pool closed Friday, ar: المسبح مغلق الجمعة}
+            - kind: link
+              text: {en: See new times, ar: شاهد المواعيد الجديدة}
+              gap: xs
+          - {kind: image, art: gym, gap: s}
+          - kind: button
+            text: {en: Book your free trial, ar: احجز حصتك التجريبية المجانية}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: hover
+        text:
+          en: "Keep it moving, and stop it when the mouse is over it"
+          ar: أبقِه متحرّكًا، وأوقفه حين يكون الماوس فوقه
+        mock:
+          app: nashat
+          frame: wide
+          url: nashat.example
+          navbar:
+            links:
+            - {en: Classes, ar: الحصص}
+            - {en: Prices, ar: الأسعار}
+            actions:
+            - {icon: user}
+          blocks:
+          - kind: banner
+            tone: info
+            icon: megaphone
+            text:
+              en: "Yoga moves to 20:00 · See new times · Pool closed Friday…"
+              ar: "اليوغا تنتقل إلى 20:00 · شاهد المواعيد الجديدة · المسبح مغلق الجمعة…"
+            note: {en: Scrolls across; stops under the mouse, ar: يتحرّك عبر الشاشة؛ ويتوقّف تحت الماوس}
+          - {kind: image, art: gym, gap: s}
+          - kind: button
+            text: {en: Book your free trial, ar: احجز حصتك التجريبية المجانية}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [still]
     misconceptions:
       - id: MC-P05-051

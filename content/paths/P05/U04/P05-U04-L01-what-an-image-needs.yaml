@@ -83,7 +83,7 @@ steps:
       ar: "اسأل: لماذا هذه الصورة هنا؟\n\n- **زخرفية (Decorative، للشكل فقط):** اترك النص البديل فارغًا، ليتخطّاها قارئ الشاشة.\n- **قابلة للضغط (رابط أو زر):** قل ماذا يحدث، لا كيف تبدو. أيقونة 📞: «اتصل بالعيادة.»\n- **تحمل معلومة:** قل الرسالة التي تضيفها. وإذا كان فيها كلمات مهمة، اكتبها.\n- **قصير:** نحو 150 حرفًا أو أقل، والكلمات المهمة أولًا. ولا تبدأ بـ «صورة لـ»؛ فقارئ الشاشة يقول إنها صورة أصلًا.\n- **بلا تكرار:** إذا كان التعليق المكتوب تحت الصورة يقول المعنى، فلا تكرّره في النص البديل."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U04-01
     part: guided
     rules: [R06]
@@ -102,16 +102,105 @@ steps:
       frame: wide
       url: raha.example
       navbar:
-        links: [ { en: "Doctors", ar: "الأطباء" }, { en: "Services", ar: "الخدمات" } ]
-        actions: [ { icon: phone, aria: { en: "Call the clinic", ar: "اتصل بالعيادة" } } ]
+        links:
+        - {en: Doctors, ar: الأطباء}
+        - {en: Services, ar: الخدمات}
+        actions:
+        - icon: phone
+          aria: {en: Call the clinic, ar: اتصل بالعيادة}
       blocks:
-        - { kind: image, art: clinic }
-        - { kind: heading, text: { en: "Care close to home", ar: "رعاية قريبة منك" }, gap: s }
-        - { kind: button, icon: calendar-plus, text: { en: "Book a visit", ar: "احجز زيارة" }, gap: s }
+      - {kind: image, art: clinic}
+      - kind: heading
+        text: {en: Care close to home, ar: رعاية قريبة منك}
+        gap: s
+      - kind: button
+        icon: calendar-plus
+        text: {en: Book a visit, ar: احجز زيارة}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: call, text: { en: "\"Call the clinic.\"", ar: "«اتصل بالعيادة.»" } }
-      - { id: icon, text: { en: "\"Green phone icon.\"", ar: "«أيقونة هاتف خضراء.»" } }
-      - { id: none, text: { en: "Empty; it's only an icon", ar: "فارغ؛ إنها مجرد أيقونة" } }
+      - id: call
+        text:
+          en: "\"Call the clinic.\""
+          ar: «اتصل بالعيادة.»
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example
+          navbar:
+            links:
+            - {en: Doctors, ar: الأطباء}
+            - {en: Services, ar: الخدمات}
+            actions:
+            - icon: phone
+              aria: {en: Call the clinic, ar: اتصل بالعيادة}
+          blocks:
+          - {kind: image, art: clinic}
+          - kind: heading
+            text: {en: Care close to home, ar: رعاية قريبة منك}
+            gap: s
+          - kind: button
+            icon: calendar-plus
+            text: {en: Book a visit, ar: احجز زيارة}
+            gap: s
+          reader:
+            en: "Call the clinic, link."
+            ar: اتصل بالعيادة، رابط.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: icon
+        text:
+          en: "\"Green phone icon.\""
+          ar: «أيقونة هاتف خضراء.»
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example
+          navbar:
+            links:
+            - {en: Doctors, ar: الأطباء}
+            - {en: Services, ar: الخدمات}
+            actions:
+            - icon: phone
+              aria: {en: Call the clinic, ar: اتصل بالعيادة}
+          blocks:
+          - {kind: image, art: clinic}
+          - kind: heading
+            text: {en: Care close to home, ar: رعاية قريبة منك}
+            gap: s
+          - kind: button
+            icon: calendar-plus
+            text: {en: Book a visit, ar: احجز زيارة}
+            gap: s
+          reader:
+            en: "Green phone icon, link."
+            ar: أيقونة هاتف خضراء، رابط.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: none
+        text:
+          en: "Empty; it's only an icon"
+          ar: فارغ؛ إنها مجرد أيقونة
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example
+          navbar:
+            links:
+            - {en: Doctors, ar: الأطباء}
+            - {en: Services, ar: الخدمات}
+            actions:
+            - icon: phone
+              aria: {en: Call the clinic, ar: اتصل بالعيادة}
+          blocks:
+          - {kind: image, art: clinic}
+          - kind: heading
+            text: {en: Care close to home, ar: رعاية قريبة منك}
+            gap: s
+          - kind: button
+            icon: calendar-plus
+            text: {en: Book a visit, ar: احجز زيارة}
+            gap: s
+          reader: {en: Link., ar: رابط.}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [call]
     misconceptions:
       - id: MC-P05-036
@@ -135,7 +224,7 @@ steps:
       ar: "الصورة القابلة للضغط زر. ونصّها البديل هو اسم الزر."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P05-U04-02
     part: guided
     rules: [R06]
@@ -153,14 +242,100 @@ steps:
       app: raha
       frame: wide
       url: raha.example/doctors
-      navbar: { links: [ { en: "Doctors", ar: "الأطباء" }, { en: "Services", ar: "الخدمات" } ], active: 0, actions: [ { icon: phone } ] }
+      navbar:
+        links:
+        - {en: Doctors, ar: الأطباء}
+        - {en: Services, ar: الخدمات}
+        active: 0
+        actions:
+        - {icon: phone}
       blocks:
-        - { kind: image, art: doctor }
-        - { kind: meta, text: { en: "Dr. Salma Adel, children's doctor", ar: "د. سلمى عادل، طبيبة أطفال" }, gap: xs }
+      - {kind: image, art: doctor}
+      - kind: meta
+        text:
+          en: "Dr. Salma Adel, children's doctor"
+          ar: د. سلمى عادل، طبيبة أطفال
+        gap: xs
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: repeat, text: { en: "\"Dr. Salma Adel, children's doctor.\"", ar: "«د. سلمى عادل، طبيبة أطفال.»" } }
-      - { id: empty, text: { en: "Empty, because the caption already says who she is", ar: "فارغ، لأن التعليق يقول من هي أصلًا" } }
-      - { id: photo, text: { en: "\"Photo of a doctor.\"", ar: "«صورة طبيبة.»" } }
+      - id: repeat
+        text:
+          en: "\"Dr. Salma Adel, children's doctor.\""
+          ar: «د. سلمى عادل، طبيبة أطفال.»
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example/doctors
+          navbar:
+            links:
+            - {en: Doctors, ar: الأطباء}
+            - {en: Services, ar: الخدمات}
+            active: 0
+            actions:
+            - {icon: phone}
+          blocks:
+          - {kind: image, art: doctor}
+          - kind: meta
+            text:
+              en: "Dr. Salma Adel, children's doctor"
+              ar: د. سلمى عادل، طبيبة أطفال
+            gap: xs
+          reader:
+            en: "Dr. Salma Adel, children's doctor, image. Dr. Salma Adel, children's doctor."
+            ar: د. سلمى عادل، طبيبة أطفال، صورة. د. سلمى عادل، طبيبة أطفال.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: empty
+        text:
+          en: "Empty, because the caption already says who she is"
+          ar: فارغ، لأن التعليق يقول من هي أصلًا
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example/doctors
+          navbar:
+            links:
+            - {en: Doctors, ar: الأطباء}
+            - {en: Services, ar: الخدمات}
+            active: 0
+            actions:
+            - {icon: phone}
+          blocks:
+          - {kind: image, art: doctor}
+          - kind: meta
+            text:
+              en: "Dr. Salma Adel, children's doctor"
+              ar: د. سلمى عادل، طبيبة أطفال
+            gap: xs
+          reader:
+            en: "Dr. Salma Adel, children's doctor."
+            ar: د. سلمى عادل، طبيبة أطفال.
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: photo
+        text:
+          en: "\"Photo of a doctor.\""
+          ar: «صورة طبيبة.»
+        mock:
+          app: raha
+          frame: wide
+          url: raha.example/doctors
+          navbar:
+            links:
+            - {en: Doctors, ar: الأطباء}
+            - {en: Services, ar: الخدمات}
+            active: 0
+            actions:
+            - {icon: phone}
+          blocks:
+          - {kind: image, art: doctor}
+          - kind: meta
+            text:
+              en: "Dr. Salma Adel, children's doctor"
+              ar: د. سلمى عادل، طبيبة أطفال
+            gap: xs
+          reader:
+            en: "Photo of a doctor, image. Dr. Salma Adel, children's doctor."
+            ar: صورة طبيبة، صورة. د. سلمى عادل، طبيبة أطفال.
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [empty]
     misconceptions:
       - id: MC-P05-039
@@ -250,7 +425,7 @@ steps:
       ar: "حين تحمل الصورة كلمات مهمة، فهذه الكلمات هي النص البديل. والأفضل أن تعرضها كنص حقيقي في الصفحة."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P05-U04-01
     part: independent
     speaker: sara
@@ -266,21 +441,96 @@ steps:
       en: "Which alt text should the logo have?"
       ar: "أي نص بديل يجب أن يكون للشعار؟"
     mock:
-      reader: { en: "Logo of Aman, a blue shield with a tick inside.", ar: "شعار أمان، درع أزرق وبداخله علامة صح." }
+      reader:
+        en: "Logo of Aman, a blue shield with a tick inside."
+        ar: شعار أمان، درع أزرق وبداخله علامة صح.
       app: aman
       frame: wide
       url: aman.example/car-insurance
       navbar:
-        links: [ { en: "Car", ar: "السيارات" }, { en: "Health", ar: "الصحة" }, { en: "Claims", ar: "المطالبات" } ]
+        links:
+        - {en: Car, ar: السيارات}
+        - {en: Health, ar: الصحة}
+        - {en: Claims, ar: المطالبات}
         active: 0
       blocks:
-        - { kind: heading, text: { en: "Car insurance from 250 EGP a month", ar: "تأمين السيارات من 250 جنيهًا شهريًا" } }
-        - { kind: image, art: car, gap: s }
-        - { kind: button, text: { en: "Get a quote", ar: "اعرف السعر" }, gap: s }
+      - kind: heading
+        text: {en: Car insurance from 250 EGP a month, ar: تأمين السيارات من 250 جنيهًا شهريًا}
+      - {kind: image, art: car, gap: s}
+      - kind: button
+        text: {en: Get a quote, ar: اعرف السعر}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Keep it; it describes the logo well", ar: "يبقى كما هو؛ فهو يصف الشعار جيدًا" } }
-      - { id: home, text: { en: "\"Aman home.\"", ar: "«الصفحة الرئيسية لأمان.»" } }
-      - { id: empty, text: { en: "Empty; logos are decorative", ar: "فارغ؛ فالشعارات زخرفية" } }
+      - id: keep
+        text: {en: Keep it; it describes the logo well, ar: يبقى كما هو؛ فهو يصف الشعار جيدًا}
+        mock:
+          reader:
+            en: "Logo of Aman, a blue shield with a tick inside."
+            ar: شعار أمان، درع أزرق وبداخله علامة صح.
+          app: aman
+          frame: wide
+          url: aman.example/car-insurance
+          navbar:
+            links:
+            - {en: Car, ar: السيارات}
+            - {en: Health, ar: الصحة}
+            - {en: Claims, ar: المطالبات}
+            active: 0
+          blocks:
+          - kind: heading
+            text: {en: Car insurance from 250 EGP a month, ar: تأمين السيارات من 250 جنيهًا شهريًا}
+          - {kind: image, art: car, gap: s}
+          - kind: button
+            text: {en: Get a quote, ar: اعرف السعر}
+            gap: s
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: home
+        text:
+          en: "\"Aman home.\""
+          ar: «الصفحة الرئيسية لأمان.»
+        mock:
+          reader:
+            en: "Aman home, link."
+            ar: الصفحة الرئيسية لأمان، رابط.
+          app: aman
+          frame: wide
+          url: aman.example/car-insurance
+          navbar:
+            links:
+            - {en: Car, ar: السيارات}
+            - {en: Health, ar: الصحة}
+            - {en: Claims, ar: المطالبات}
+            active: 0
+          blocks:
+          - kind: heading
+            text: {en: Car insurance from 250 EGP a month, ar: تأمين السيارات من 250 جنيهًا شهريًا}
+          - {kind: image, art: car, gap: s}
+          - kind: button
+            text: {en: Get a quote, ar: اعرف السعر}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: empty
+        text: {en: Empty; logos are decorative, ar: فارغ؛ فالشعارات زخرفية}
+        mock:
+          reader: {en: Link., ar: رابط.}
+          app: aman
+          frame: wide
+          url: aman.example/car-insurance
+          navbar:
+            links:
+            - {en: Car, ar: السيارات}
+            - {en: Health, ar: الصحة}
+            - {en: Claims, ar: المطالبات}
+            active: 0
+          blocks:
+          - kind: heading
+            text: {en: Car insurance from 250 EGP a month, ar: تأمين السيارات من 250 جنيهًا شهريًا}
+          - {kind: image, art: car, gap: s}
+          - kind: button
+            text: {en: Get a quote, ar: اعرف السعر}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [home]
     misconceptions:
       - id: MC-P05-036

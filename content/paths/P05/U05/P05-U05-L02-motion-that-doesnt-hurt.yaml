@@ -35,7 +35,7 @@ steps:
         - { kind: listitem, art: desert, text: { en: "Luxor · 2 nights", ar: "الأقصر · ليلتان" }, value: { en: "3,600 EGP", ar: "3,600 جنيه" }, note: { en: "Flies in from the left", ar: "تطير من اليسار" } }
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P05-U05-03
     part: try
     rules: [R12]
@@ -50,16 +50,123 @@ steps:
       en: "What should the page do when \"Reduce motion\" is on?"
       ar: "ماذا يجب أن تفعل الصفحة حين يكون «تقليل الحركة» مفعّلًا؟"
     mock:
-      app: { name: { en: "Settings", ar: "الإعدادات" }, color: "#6B7280", icon: gear, domain: settings.example }
-      appbar: { title: { en: "Accessibility", ar: "تسهيلات الاستخدام" }, back: true }
+      app:
+        name: {en: Settings, ar: الإعدادات}
+        color: "#6B7280"
+        icon: gear
+        domain: settings.example
+      appbar:
+        title: {en: Accessibility, ar: تسهيلات الاستخدام}
+        back: true
       blocks:
-        - { kind: listitem, icon: text-aa, text: { en: "Bold text", ar: "نص عريض" }, toggle: false }
-        - { kind: listitem, icon: sparkle, text: { en: "Reduce motion", ar: "تقليل الحركة" }, sub: { en: "Less movement on screen", ar: "حركة أقل على الشاشة" }, toggle: true, ring: brand }
-        - { kind: listitem, icon: magnifying-glass-plus, text: { en: "Zoom", ar: "التكبير" }, toggle: false }
+      - kind: listitem
+        icon: text-aa
+        text: {en: Bold text, ar: نص عريض}
+        toggle: false
+      - kind: listitem
+        icon: sparkle
+        text: {en: Reduce motion, ar: تقليل الحركة}
+        sub: {en: Less movement on screen, ar: حركة أقل على الشاشة}
+        toggle: true
+        ring: brand
+      - kind: listitem
+        icon: magnifying-glass-plus
+        text: {en: Zoom, ar: التكبير}
+        toggle: false
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Keep the motion; it's part of our brand", ar: "تُبقي الحركة؛ فهي جزء من هويتنا" } }
-      - { id: slow, text: { en: "Slow every animation down, so it feels gentler", ar: "تُبطئ كل الحركات، لتبدو ألطف" } }
-      - { id: still, text: { en: "Turn off the moving background and fly-ins, and show content in place", ar: "توقف الخلفية المتحرّكة وطيران البطاقات، وتعرض المحتوى في مكانه" } }
+      - id: keep
+        text:
+          en: "Keep the motion; it's part of our brand"
+          ar: تُبقي الحركة؛ فهي جزء من هويتنا
+        mock:
+          app: zad
+          appbar:
+            logo: true
+            actions:
+            - icon: user
+              aria: {en: Account, ar: الحساب}
+          blocks:
+          - kind: image
+            text: {en: Summer by the sea, ar: صيف على البحر}
+            art: beach
+            note: {en: Background moves as you scroll, ar: الخلفية تتحرّك وأنت تمرّر}
+          - kind: listitem
+            text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+            art: beach
+            value:
+              en: "4,200 EGP"
+              ar: "4,200 جنيه"
+            gap: s
+            note: {en: Flies in from the right, ar: تطير من اليمين}
+          - kind: listitem
+            text: {en: Luxor · 2 nights, ar: الأقصر · ليلتان}
+            art: desert
+            value:
+              en: "3,600 EGP"
+              ar: "3,600 جنيه"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: slow
+        text:
+          en: "Slow every animation down, so it feels gentler"
+          ar: تُبطئ كل الحركات، لتبدو ألطف
+        mock:
+          app: zad
+          appbar:
+            logo: true
+            actions:
+            - icon: user
+              aria: {en: Account, ar: الحساب}
+          blocks:
+          - kind: image
+            text: {en: Summer by the sea, ar: صيف على البحر}
+            art: beach
+            note: {en: Background moves slowly as you scroll, ar: الخلفية تتحرّك ببطء وأنت تمرّر}
+          - kind: listitem
+            text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+            art: beach
+            value:
+              en: "4,200 EGP"
+              ar: "4,200 جنيه"
+            gap: s
+            note: {en: Flies in slowly, ar: تطير ببطء}
+          - kind: listitem
+            text: {en: Luxor · 2 nights, ar: الأقصر · ليلتان}
+            art: desert
+            value:
+              en: "3,600 EGP"
+              ar: "3,600 جنيه"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: still
+        text:
+          en: "Turn off the moving background and fly-ins, and show content in place"
+          ar: توقف الخلفية المتحرّكة وطيران البطاقات، وتعرض المحتوى في مكانه
+        mock:
+          app: zad
+          appbar:
+            logo: true
+            actions:
+            - icon: user
+              aria: {en: Account, ar: الحساب}
+          blocks:
+          - kind: image
+            text: {en: Summer by the sea, ar: صيف على البحر}
+            art: beach
+            note: {en: Still, ar: ثابتة}
+          - kind: listitem
+            text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+            art: beach
+            value:
+              en: "4,200 EGP"
+              ar: "4,200 جنيه"
+            gap: s
+          - kind: listitem
+            text: {en: Luxor · 2 nights, ar: الأقصر · ليلتان}
+            art: desert
+            value:
+              en: "3,600 EGP"
+              ar: "3,600 جنيه"
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [still]
     misconceptions:
       - id: MC-P05-047
@@ -92,7 +199,7 @@ steps:
       ar: "- **بعض الحركة مؤذية:** الخلفية المتحرّكة وتأثيرات التمرير والـ Carousel المنزلق قد تُصيب الناس بالدوار أو الغثيان. والوميض قد يسبّب نوبات صرع.\n- **«تقليل الحركة» (Reduce motion):** إعداد موجود في الهواتف والمتصفّحات. حين يكون مفعّلًا، أزِل تأثيرات الحركة الكبيرة.\n- **قصيرة:** أغلب الحركات تستغرق من 100 إلى 500 جزء من الثانية (ms)، والثانية الواحدة = 1,000 ms. والاستجابة الصغيرة، مثل الـ Toggle، نحو 100 ms. وعند 500 ms تبدأ في أن تبدو بطيئة.\n- **بلا انتظار:** الحركة التي يراها الناس كل مرة يجب أن تكون سريعة، أو لا تكون أصلًا."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U05-03
     part: guided
     rules: [R06]
@@ -108,20 +215,110 @@ steps:
       ar: "ماذا أقول لفريق التسويق حتى تجذب العلامة الانتباه دون خطر على أحد؟"
     mock:
       app: zad
-      appbar: { title: { en: "Trips", ar: "الرحلات" }, back: true }
+      appbar:
+        title: {en: Trips, ar: الرحلات}
+        back: true
       blocks:
-        - kind: card
-          art: beach
+      - kind: card
+        art: beach
+        blocks:
+        - kind: row
           blocks:
+          - kind: heading
+            text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+          - kind: badge
+            tone: bad
+            text:
+              en: "Last seats!"
+              ar: "آخر المقاعد!"
+            note: {en: Flashes 3× a second, ar: تومض 3 مرات في الثانية}
+        - kind: price
+          text:
+            en: "4,200 EGP"
+            ar: "4,200 جنيه"
+          gap: xs
+      caption: {en: Now, ar: الآن}
+    options:
+      - id: steady
+        text: {en: No flashing. Use a steady red label with clear words, ar: بدون وميض. استخدموا علامة حمراء ثابتة بكلمات واضحة}
+        mock:
+          app: zad
+          appbar:
+            title: {en: Trips, ar: الرحلات}
+            back: true
+          blocks:
+          - kind: card
+            art: beach
+            blocks:
             - kind: row
               blocks:
-                - { kind: heading, text: { en: "Dahab · 3 nights", ar: "دهب · 3 ليالٍ" } }
-                - { kind: badge, tone: bad, text: { en: "Last seats!", ar: "آخر المقاعد!" }, note: { en: "Flashes 3× a second", ar: "تومض 3 مرات في الثانية" } }
-            - { kind: price, text: { en: "4,200 EGP", ar: "4,200 جنيه" }, gap: xs }
-    options:
-      - { id: steady, text: { en: "No flashing. Use a steady red label with clear words", ar: "بدون وميض. استخدموا علامة حمراء ثابتة بكلمات واضحة" } }
-      - { id: setting, text: { en: "Flash only when \"Reduce motion\" is off", ar: "تومض فقط حين يكون «تقليل الحركة» غير مفعّل" } }
-      - { id: home, text: { en: "Flash only on the home page", ar: "تومض في الصفحة الرئيسية فقط" } }
+              - kind: heading
+                text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+              - kind: badge
+                tone: bad
+                text: {en: Only 3 seats left, ar: بقي 3 مقاعد فقط}
+            - kind: price
+              text:
+                en: "4,200 EGP"
+                ar: "4,200 جنيه"
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: setting
+        text:
+          en: "Flash only when \"Reduce motion\" is off"
+          ar: تومض فقط حين يكون «تقليل الحركة» غير مفعّل
+        mock:
+          app: zad
+          appbar:
+            title: {en: Trips, ar: الرحلات}
+            back: true
+          blocks:
+          - kind: card
+            art: beach
+            blocks:
+            - kind: row
+              blocks:
+              - kind: heading
+                text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+              - kind: badge
+                tone: bad
+                text:
+                  en: "Last seats!"
+                  ar: "آخر المقاعد!"
+                note: {en: Flashes 3× a second unless Reduce motion is on, ar: تومض 3 مرات في الثانية إلا إذا كان «تقليل الحركة» مفعّلًا}
+            - kind: price
+              text:
+                en: "4,200 EGP"
+                ar: "4,200 جنيه"
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: home
+        text: {en: Flash only on the home page, ar: تومض في الصفحة الرئيسية فقط}
+        mock:
+          app: zad
+          appbar:
+            title: {en: Trips, ar: الرحلات}
+            back: true
+          blocks:
+          - kind: card
+            art: beach
+            blocks:
+            - kind: row
+              blocks:
+              - kind: heading
+                text: {en: Dahab · 3 nights, ar: دهب · 3 ليالٍ}
+              - kind: badge
+                tone: bad
+                text:
+                  en: "Last seats!"
+                  ar: "آخر المقاعد!"
+                note: {en: Flashes on the home page; still here, ar: تومض في الصفحة الرئيسية؛ ثابتة هنا}
+            - kind: price
+              text:
+                en: "4,200 EGP"
+                ar: "4,200 جنيه"
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [steady]
     misconceptions:
       - id: MC-P05-048
@@ -257,7 +454,7 @@ steps:
       ar: "كلما كان التغيير على الشاشة أكبر، قد يحتاج وقتًا أطول. والمفتاح صغير جدًا، فنحو 100 ms."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P05-U05-04
     part: independent
     speaker: rami
@@ -274,14 +471,93 @@ steps:
       ar: "ماذا أفعل بحركة السكوتر حتى لا تُبطئ من يفتح السلة كل يوم؟"
     mock:
       app: lamma
-      appbar: { title: { en: "Your cart", ar: "سلّتك" }, back: true }
+      appbar:
+        title: {en: Your cart, ar: سلّتك}
+        back: true
       blocks:
-        - { kind: icon, icon: moped, size: l, color: brand, note: { en: "Drives across for 2,000 ms before the cart shows", ar: "يعبر الشاشة لمدة 2,000 ms قبل أن تظهر السلة" } }
-        - { kind: small, color: muted, text: { en: "Your cart is coming…", ar: "سلّتك في الطريق…" }, gap: m }
+      - kind: icon
+        icon: moped
+        size: l
+        color: brand
+        note:
+          en: "Drives across for 2,000 ms before the cart shows"
+          ar: "يعبر الشاشة لمدة 2,000 ms قبل أن تظهر السلة"
+      - kind: small
+        color: muted
+        text: {en: Your cart is coming…, ar: سلّتك في الطريق…}
+        gap: m
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Keep it. People love fun details", ar: "أبقِه. الناس يحبّون التفاصيل الممتعة" } }
-      - { id: cut, text: { en: "Remove it, or make it a quick touch while the cart shows at once", ar: "أزِله، أو اجعله لمسة سريعة بينما تظهر السلة فورًا" } }
-      - { id: skip, text: { en: "Add a \"Skip\" button on the animation", ar: "أضف زر «تخطَّ» على الحركة" } }
+      - id: keep
+        text: {en: Keep it. People love fun details, ar: أبقِه. الناس يحبّون التفاصيل الممتعة}
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Your cart, ar: سلّتك}
+            back: true
+          blocks:
+          - kind: icon
+            icon: moped
+            size: l
+            color: brand
+            note:
+              en: "Drives across for 2,000 ms before the cart shows"
+              ar: "يعبر الشاشة لمدة 2,000 ms قبل أن تظهر السلة"
+          - kind: small
+            color: muted
+            text: {en: Your cart is coming…, ar: سلّتك في الطريق…}
+            gap: m
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: cut
+        text:
+          en: "Remove it, or make it a quick touch while the cart shows at once"
+          ar: أزِله، أو اجعله لمسة سريعة بينما تظهر السلة فورًا
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Your cart, ar: سلّتك}
+            back: true
+          blocks:
+          - kind: listitem
+            text: {en: Koshary El Tahrir, ar: كشري التحرير}
+            art: food-koshary
+            value:
+              en: "185 EGP"
+              ar: "185 جنيه"
+          - kind: small
+            text: {en: The cart shows at once; the scooter is a 200 ms touch, ar: السلة تظهر فورًا؛ والدرّاجة لمسة سريعة 200 ms}
+            color: muted
+            gap: s
+          footer:
+          - kind: button
+            text: {en: Checkout, ar: ادفع}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: skip
+        text:
+          en: "Add a \"Skip\" button on the animation"
+          ar: أضف زر «تخطَّ» على الحركة
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Your cart, ar: سلّتك}
+            back: true
+          blocks:
+          - kind: icon
+            icon: moped
+            size: l
+            color: brand
+            note:
+              en: "Drives across for 2,000 ms before the cart shows"
+              ar: "يعبر الشاشة لمدة 2,000 ms قبل أن تظهر السلة"
+          - kind: small
+            color: muted
+            text: {en: Your cart is coming…, ar: سلّتك في الطريق…}
+            gap: m
+          - kind: button
+            text: {en: Skip, ar: تخطَّ}
+            style: plain
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [cut]
     misconceptions:
       - id: MC-P05-050
