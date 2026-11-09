@@ -48,4 +48,12 @@ describe("Arabic path names", () => {
     expect(named).toHaveLength(8);
     for (const p of named) expect(p.nameAr).toMatch(/\([A-Za-z][^()]*\)/);
   });
+  it("matches the content title.ar once the content carries the bracketed term (after the Arabic names are seeded)", async () => {
+    const { CATALOG } = await import("./catalog-list");
+    const { content } = await import("@uxgate/content");
+    for (const p of content.paths) {
+      const e = CATALOG.find((c) => c.id === p.id);
+      if (e?.nameAr && /\([A-Za-z]{4,}/.test(p.title.ar)) expect(e.nameAr).toBe(p.title.ar);
+    }
+  });
 });
