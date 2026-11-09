@@ -1,7 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
-import { actionAdmin, AdminError, allowed, audit, check, run, type ActionResult } from "@/lib/admin/guard";
+import { actionAdmin, AdminError, allowed, audit, check, requireFresh, run, type ActionResult } from "@/lib/admin/guard";
 import { intFrom, reasonFrom, textFrom, uuidFrom } from "@/lib/admin/form";
 import { replyOnTicket, sendSignInLink, updateTicket, type TicketStatus } from "@/lib/admin/data/support";
 
@@ -169,6 +169,11 @@ export async function saveSupportSettings(_: R | null, f: FormData): Promise<R> 
     };
     const db = createAdminClient();
     const { data: before } = await db.from("support_settings").select("sla, hours, days_off, assignment, category_assignees, warn_before_minutes, auto_close_days, survey, refund_limit_usd_minor").eq("id", 1).maybeSingle();
+    // The agent refund limit decides which refunds skip Approvals: only someone who may approve any refund changes it, with a fresh code.
+    if (before && before.refund_limit_usd_minor !== row.refund_limit_usd_minor) {
+      if (!allowed(ctx, "refunds.approve_any")) throw new AdminError("forbidden", "Changing the agent refund limit needs a role that can approve any refund.");
+      await requireFresh(ctx, f.get("code") as string | null);
+    }
     check(await db.from("support_settings").update(row).eq("id", 1));
     await audit(ctx, "support.settings_changed", "support", { type: "settings", id: "support" }, { before, after: row, reason });
   }, "Settings saved. New tickets use them; open tickets keep their due times.");

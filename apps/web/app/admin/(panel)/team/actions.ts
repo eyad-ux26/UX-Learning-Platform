@@ -43,6 +43,7 @@ export async function inviteMember(_: R | null, f: FormData): Promise<R> {
     if (!email.success) throw new AdminError("invalid", "Enter a full email, like name@example.com.");
     const roles = rolesOf(f);
     if (!roles.length) throw new AdminError("invalid", "Choose at least one role. A new person sees nothing until they have a role.");
+    await requireFresh(ctx, f.get("code") as string | null);
     const token = newToken();
     check(await createAdminClient().rpc("admin_invite", { ...who(ctx), p_email: email.data, p_roles: roles, p_token_hash: await sha256Hex(token) }));
     const sent = await sendInvite(email.data, roles, token, ctx.name);
@@ -57,6 +58,7 @@ export async function resendInvite(_: R | null, f: FormData): Promise<R> {
     const db = createAdminClient();
     const { data: inv } = await db.from("admin_invites").select("email, roles").eq("id", id).is("accepted_at", null).is("cancelled_at", null).maybeSingle();
     if (!inv) throw new AdminError("invalid", "That invite is no longer open.");
+    await requireFresh(ctx, f.get("code") as string | null);
     const token = newToken();
     // A fresh invite (new link, new 72 hours) replaces the old one.
     check(await db.rpc("admin_invite", { ...who(ctx), p_email: inv.email, p_roles: inv.roles, p_token_hash: await sha256Hex(token) }));
@@ -159,20 +161,19 @@ export async function saveRole(_: R | null, f: FormData): Promise<R> {
     if (!perms.length) throw new AdminError("invalid", "Tick at least one permission.");
     const description = String(f.get("description") ?? "").trim().slice(0, 300);
     const existing = String(f.get("id") ?? "");
-    const db = createAdminClient();
     const r = reason(f);
+    // Only permissions the editor holds, and never a role the editor holds: checked again in admin_save_role (0048).
+    const mine = new Set(ctx.perms);
+    if (perms.some((p) => !mine.has(p))) throw new AdminError("forbidden", "A role can only hold permissions you have yourself.");
+    if (existing && ctx.roles.includes(existing)) throw new AdminError("forbidden", "You hold this role, so another admin must change it.");
     await requireFresh(ctx, f.get("code") as string | null);
-    if (existing) {
-      const { data: before } = await db.from("admin_roles").select("name, description, permissions, builtin").eq("id", existing).maybeSingle();
-      if (!before || before.builtin) throw new AdminError("invalid", "Built-in roles cannot be changed.");
-      check(await db.from("admin_roles").update({ name, description, permissions: perms }).eq("id", existing));
-      await syncTeamTools(await membersOfRole(existing));
-      check(await db.rpc("admin_log", { ...who(ctx), p_action: "team.role_changed", p_area: "team", p_target_type: "role", p_target_id: existing, p_target_label: name, p_before: before, p_after: { name, description, permissions: perms }, p_reason: r }));
-    } else {
-      const id = `custom_${roleId(name)}`.slice(0, 41);
-      check(await db.from("admin_roles").insert({ id, name, description, permissions: perms, created_by: ctx.userId }));
-      check(await db.rpc("admin_log", { ...who(ctx), p_action: "team.role_created", p_area: "team", p_target_type: "role", p_target_id: id, p_target_label: name, p_before: null, p_after: { name, description, permissions: perms }, p_reason: r }));
+    const id = existing || `custom_${roleId(name)}`.slice(0, 41);
+    if (!existing) {
+      const { data: clash } = await createAdminClient().from("admin_roles").select("id").eq("id", id).maybeSingle();
+      if (clash) throw new AdminError("conflict", "A role with this name already exists. Pick another name.");
     }
+    check(await createAdminClient().rpc("admin_save_role", { ...who(ctx), p_id: id, p_name: name, p_description: description, p_permissions: perms, p_reason: r }));
+    if (existing) await syncTeamTools(await membersOfRole(existing));
   }, "Role saved.");
 }
 
@@ -186,7 +187,7 @@ export async function deleteRole(_: R | null, f: FormData): Promise<R> {
     const { count } = await db.from("admin_member_roles").select("user_id", { count: "exact", head: true }).eq("role_id", id);
     if (count) throw new AdminError("conflict", `${count} people still have this role. Change their roles first.`);
     const r = reason(f);
-    check(await db.from("admin_roles").delete().eq("id", id));
-    check(await db.rpc("admin_log", { ...who(ctx), p_action: "team.role_deleted", p_area: "team", p_target_type: "role", p_target_id: id, p_target_label: before.name, p_before: before, p_after: null, p_reason: r }));
+    await requireFresh(ctx, f.get("code") as string | null);
+    check(await db.rpc("admin_delete_role", { ...who(ctx), p_id: id, p_reason: r }));
   }, "Role deleted.");
 }

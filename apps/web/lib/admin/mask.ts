@@ -24,3 +24,14 @@ export function maskName(name: string | null | undefined): string {
   const w = name.trim().split(/\s+/);
   return w.length > 1 ? `${w[0]} ${w.slice(1).map((x) => x.charAt(0) + ".").join(" ")}` : w[0];
 }
+
+const EMAIL_IN_TEXT = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+/** Every email address inside a piece of text, masked (audit labels, reasons). */
+export const maskEmailsIn = (s: string | null | undefined): string => (s ?? "").replace(EMAIL_IN_TEXT, (m) => maskEmail(m));
+/** A before/after value with every email and IP-looking string masked, for members who may not reveal personal data. */
+export function maskJson(v: unknown): unknown {
+  if (typeof v === "string") return /^\d{1,3}(\.\d{1,3}){3}$/.test(v) || /^[0-9a-f]{0,4}(:[0-9a-f]{0,4}){2,7}$/i.test(v) ? maskIp(v) : maskEmailsIn(v);
+  if (Array.isArray(v)) return v.map(maskJson);
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, maskJson(x)]));
+  return v;
+}

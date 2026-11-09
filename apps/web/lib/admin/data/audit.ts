@@ -12,7 +12,8 @@ export const PAGE = 50;
 
 export async function auditPage(f: AuditFilter, areas: "all" | string[], page: number, limit = PAGE) {
   let q = createAdminClient().from("admin_audit").select("*", { count: page === 1 ? "estimated" : undefined }).order("id", { ascending: false });
-  if (areas !== "all") q = q.in("area", areas.length ? areas : ["-"]);
+  // A support role also sees every action on a learner (comp access is logged in billing, by its own action name).
+  if (areas !== "all") q = areas.includes("learners") ? q.or(`area.in.(${areas.join(",")}),action.like.learners.*`) : q.in("area", areas.length ? areas : ["-"]);
   if (f.actor) q = /^[0-9a-f-]{36}$/.test(f.actor) ? q.eq("actor_id", f.actor) : q.ilike("actor_email", `%${f.actor}%`);
   if (f.action) q = q.like("action", `${f.action.replace(/[%_]/g, "")}%`);
   if (f.area) q = q.eq("area", f.area);

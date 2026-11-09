@@ -26,7 +26,7 @@ async function buckets(email: string) {
 async function logFail(email: string, why: string) {
   // Only failed sign-ins to team accounts are logged, so the public cannot fill the audit log.
   const db = createAdminClient();
-  const { data } = await db.from("admin_members").select("user_id").ilike("email", email).maybeSingle();
+  const { data } = await db.from("admin_members").select("user_id").eq("email", email.trim().toLowerCase()).maybeSingle();
   if (!data) return;
   const h = await headers();
   await db.rpc("admin_log", { p_actor: null, p_action: "auth.sign_in_failed", p_area: "auth", p_target_type: "admin", p_target_id: data.user_id, p_target_label: email,

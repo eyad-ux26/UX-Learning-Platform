@@ -93,7 +93,8 @@ describe("permissions and roles", () => {
     await expect(svc(`update admin_roles set permissions = array['dashboard.view'] where id = 'support_agent'`)).rejects.toThrow(/read only/);
     await expect(svc(`delete from admin_roles where id = 'admin'`)).rejects.toThrow(/cannot be deleted/);
     await expect(svc(`insert into admin_roles (id, name, permissions) values ('sneaky', 'Sneaky', array['team.super'])`)).rejects.toThrow(/cannot manage super admins/);
-    const r = await svc<{ id: string }>(`insert into admin_roles (id, name, permissions) values ('night_support', 'Night support', array['support.view']) returning id`);
+    await expect(svc(`insert into admin_roles (id, name, permissions) values ('night_support', 'Night support', array['support.view'])`)).rejects.toThrow(/admin_save_role/);
+    const r = await svc<{ id: string }>(`select public.admin_save_role($1, 'night_support', 'Night support', '', array['support.view'], 'r', null, null, null) as id`, [F]);
     expect(r[0].id).toBe("night_support");
   });
 });
@@ -352,5 +353,37 @@ describe("dashboard (0047)", () => {
     const funnel = (await db.query<{ step: string }>(`select step from public.admin_funnel(now() - interval '30 days')`)).rows.map((r) => r.step);
     expect(funnel).toEqual(["signup", "lesson", "unit", "subscribe", "path", "share"]);
     await expect(asUser("authenticated", X, `select * from public.admin_funnel(now())`)).rejects.toThrow(/permission denied/);
+  });
+});
+
+describe("custom roles stay within the editor's own permissions (0048)", () => {
+  it("refuses roles with permissions the editor lacks, edits to a role the editor holds, and giving such roles", async () => {
+    const A = (await one<{ id: string }>(`insert into auth.users (email) values ('ops@uxgate.org') returning id`)).id;
+    await svc(`select public.admin_invite($1, 'ops@uxgate.org', array['admin'], 'tok-ops', null, null, null)`, [F]);
+    await svc(`select public.admin_accept_invite($1, 'ops@uxgate.org', 'tok-ops', 'Ops', null, null)`, [A]);
+    // The Admin role has team.roles but not audit.export.
+    await expect(svc(`select public.admin_save_role($1, 'custom_exp', 'Exporter', '', array['audit.export'], 'r', null, null, null)`, [A])).rejects.toThrow(/permissions you have yourself/);
+    // A role made by the founder with audit.export cannot be handed out by the Admin, to an invite or a member.
+    await svc(`select public.admin_save_role($1, 'custom_exp', 'Exporter', '', array['audit.export'], 'r', null, null, null)`, [F]);
+    await expect(svc(`select public.admin_invite($1, 'second@example.com', array['custom_exp'], 'tok-2', null, null, null)`, [A])).rejects.toThrow(/permissions you have yourself/);
+    await expect(svc(`select public.admin_set_roles($1, $2, array['support_agent', 'custom_exp'], 'r', null, null, null)`, [A, S])).rejects.toThrow(/permissions you have yourself/);
+    // Nobody edits a role they hold.
+    await svc(`select public.admin_save_role($1, 'custom_ops', 'Ops', '', array['support.view'], 'r', null, null, null)`, [F]);
+    await svc(`select public.admin_set_roles($1, $2, array['admin', 'custom_ops'], 'r', null, null, null)`, [F, A]);
+    await expect(svc(`select public.admin_save_role($1, 'custom_ops', 'Ops', '', array['support.view', 'learners.view'], 'r', null, null, null)`, [A])).rejects.toThrow(/role they hold/);
+    // Deleting goes through the function too, and only for roles nobody holds.
+    await expect(svc(`delete from admin_roles where id = 'custom_exp'`)).rejects.toThrow(/admin_save_role/);
+    await expect(svc(`select public.admin_delete_role($1, 'custom_ops', 'r', null, null, null)`, [F])).rejects.toThrow(/still have this role/);
+    await svc(`select public.admin_delete_role($1, 'custom_exp', 'r', null, null, null)`, [F]);
+    expect(await one(`select id from admin_roles where id = 'custom_exp'`)).toBeUndefined();
+  });
+
+  it("opens a session once when two first requests arrive together", async () => {
+    const sid = "00000000-0000-4000-8000-0000000000aa";
+    const [a, b] = await Promise.all([
+      svc<{ r: string }>(`select public.admin_touch_session($1, $2, '1.1.1.1', 'ua') r`, [sid, F]),
+      svc<{ r: string }>(`select public.admin_touch_session($1, $2, '1.1.1.1', 'ua') r`, [sid, F]),
+    ]);
+    expect([a[0].r, b[0].r]).toEqual(["ok", "ok"]);
   });
 });

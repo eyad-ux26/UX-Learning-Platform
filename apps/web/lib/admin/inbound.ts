@@ -45,3 +45,27 @@ export function stripQuoted(text: string): string {
   const t = out.join("\n").trim();
   return t || text.trim();
 }
+
+/**
+ * Did the sender's domain vouch for this email? Read from the Authentication-Results header that Cloudflare's mail
+ * server adds on top (the first one; lower ones could come from the sender). DMARC pass, or a DKIM or SPF pass for the
+ * From address's own domain, counts. Anything else (no header, fail, softfail, another domain) is unverified.
+ */
+export function senderVerified(authResults: string | null | undefined, from: string): boolean {
+  if (!authResults) return false;
+  const domain = from.split("@")[1]?.toLowerCase().trim();
+  if (!domain) return false;
+  const aligned = (d: string | undefined) => !!d && (domain === d.toLowerCase() || domain.endsWith(`.${d.toLowerCase()}`));
+  for (const part of authResults.split(";").map((p) => p.trim().toLowerCase())) {
+    if (/^dmarc=pass\b/.test(part)) {
+      const d = /header\.from=([a-z0-9.-]+)/.exec(part)?.[1];
+      if (!d || aligned(d)) return true;
+    }
+    if (/^dkim=pass\b/.test(part) && aligned(/header\.d=([a-z0-9.-]+)/.exec(part)?.[1])) return true;
+    if (/^spf=pass\b/.test(part)) {
+      const mf = /smtp\.mailfrom=([^\s;]+)/.exec(part)?.[1];
+      if (aligned(mf?.includes("@") ? mf.split("@")[1] : mf)) return true;
+    }
+  }
+  return false;
+}

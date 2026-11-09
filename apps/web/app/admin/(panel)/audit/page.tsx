@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { requireAdmin, allowed } from "@/lib/admin/guard";
 import { isFresh } from "@/lib/admin/fresh";
-import { auditAreas } from "@/lib/admin/permissions";
+import { auditAreas, mayReveal } from "@/lib/admin/permissions";
+import { maskEmailsIn, maskIp, maskJson } from "@/lib/admin/mask";
 import { auditPage, targetHref, type AuditFilter } from "@/lib/admin/data/audit";
 import { Card, Empty, NoAccess, PageHead, Pager, When } from "@/components/admin/ui";
 import { ExportButton } from "@/components/admin/Download";
@@ -19,7 +20,12 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
   const f: AuditFilter = { actor: sp.actor, action: sp.action, area: sp.area, targetType: sp.type, targetId: sp.target, from: sp.from, to: sp.to, session: sp.session };
   const page = Math.max(1, Number(sp.page) || 1);
   const areas = auditAreas(ctx.perms);
-  const { rows, more, total } = await auditPage(f, areas, page);
+  const raw = await auditPage(f, areas, page);
+  // Roles that may not reveal personal data (Analyst) see learner emails and IPs masked here too.
+  const open = mayReveal(ctx.perms);
+  const { more, total } = raw;
+  const rows = open ? raw.rows : raw.rows.map((r) => ({ ...r, target_label: r.target_label ? maskEmailsIn(r.target_label) : r.target_label, reason: r.reason ? maskEmailsIn(r.reason) : r.reason,
+    before: maskJson(r.before) as typeof r.before, after: maskJson(r.after) as typeof r.after, ip: r.ip ? maskIp(r.ip) : r.ip }));
   const qs = (p: number) => `/admin/audit?${new URLSearchParams({ ...Object.fromEntries(Object.entries(sp).filter(([k, v]) => v && k !== "page")), page: String(p) } as Record<string, string>)}`;
   return (
     <main className="a-page">

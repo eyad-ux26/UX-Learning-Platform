@@ -12,7 +12,8 @@ import { localDay } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
 import { onAccountDeletionScheduled } from "@/lib/server/account-hooks";
 import { emailLayout, siteOrigin } from "@/lib/server/email/layout";
-import { sendEmail } from "@/lib/server/email/send";
+import { sendEmail, SUPPORT_FROM } from "@/lib/server/email/send";
+import { maskEmail } from "@/lib/admin/mask";
 
 type R = ActionResult;
 
@@ -126,10 +127,13 @@ export async function changeEmail(_: R | null, f: FormData): Promise<R> {
     const reason = reasonFrom(f);
     const next = z.string().email().max(254).safeParse(String(f.get("email") ?? "").trim().toLowerCase());
     if (!next.success) throw new AdminError("invalid", "Enter the new email in full.");
+    const db = createAdminClient();
+    // Team accounts (the founding super admin above all) are never moved from here: the new address would get the sign-in.
+    const { data: team } = await db.from("admin_members").select("user_id").eq("user_id", user).maybeSingle();
+    if (team) throw new AdminError("forbidden", "This is a team account. Its email is changed in Supabase by an owner, not here.");
     await requireFresh(ctx, f.get("code") as string | null);
     const u = await emailOf(user);
     if (!u.email) throw new AdminError("invalid", "This account has no email to change.");
-    const db = createAdminClient();
     const { data, error } = await db.auth.admin.generateLink({ type: "email_change_new", email: u.email, newEmail: next.data });
     if (error || !data?.properties?.hashed_token) throw new AdminError("failed", error?.message?.includes("already") ? "Another account uses that email." : "Supabase did not make the confirm link. Try again.");
     const { data: prof } = await db.from("profiles").select("locale").eq("user_id", user).maybeSingle();
@@ -142,6 +146,15 @@ export async function changeEmail(_: R | null, f: FormData): Promise<R> {
       safety: ar ? "لم تطلب هذا؟ تجاهل الرسالة، فلن يتغير شيء." : "Didn't ask for this? Ignore this email; nothing changes.",
     });
     const sent = await sendEmail({ to: next.data, subject: ar ? "أكّد بريدك الجديد في UXGate" : "Confirm your new UXGate email", html: l.html, text: l.text, kind: "support_email_change", userId: user });
+    // The old address hears about it too, so a change nobody asked for is noticed before the link is opened.
+    const old = emailLayout({
+      locale: ar ? "ar" : "en", preheader: ar ? "طلب لتغيير بريد حسابك" : "A request to change your account email",
+      heading: ar ? "طلب لتغيير بريد حسابك في UXGate" : "A request to change your UXGate email",
+      paragraphs: [ar ? `أرسل فريق الدعم رابط تأكيد إلى عنوان جديد (${maskEmail(next.data)}). لن يتغير بريدك إلا بعد فتح ذلك الرابط.` : `Our support team sent a confirm link to a new address (${maskEmail(next.data)}). Your email changes only when that link is opened.`],
+      safety: ar ? "لم تطلب هذا؟ ردّ على هذه الرسالة فورًا، وسنوقف التغيير." : "Didn't ask for this? Reply to this email right away and we will stop the change.",
+      footer: "transactional",
+    });
+    await sendEmail({ to: u.email, subject: ar ? "طلب لتغيير بريد حسابك في UXGate" : "A request to change your UXGate email", html: old.html, text: old.text, kind: "support_email_change_notice", userId: user, from: SUPPORT_FROM });
     await audit(ctx, "learners.email_change_sent", "learners", { type: "learner", id: user, label: u.email }, { before: { email: u.email }, after: { email: next.data, confirmed: false }, reason });
     if (!sent.ok) throw new AdminError("failed", "The confirm email did not go out. Try again.");
   }, "Confirm link sent to the new address. The email changes when they open it.");

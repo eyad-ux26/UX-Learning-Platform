@@ -41,6 +41,8 @@ export default {
       from: (mail.from?.address ?? message.from).toLowerCase(), name: mail.from?.name || null, subject: mail.subject ?? "",
       text: mail.text ?? (mail.html ?? "").replace(/<[^>]+>/g, " "), messageId: mail.messageId ?? message.headers.get("message-id"),
       inReplyTo: mail.inReplyTo ?? null, autoSubmitted: message.headers.get("auto-submitted"), attachments: mail.attachments?.length ?? 0,
+      // The top Authentication-Results is the one Cloudflare's mail server added; any below it came with the message.
+      authResults: mail.headers?.find((h: { key: string; value: string }) => h.key.toLowerCase() === "authentication-results")?.value?.slice(0, 2000) ?? null,
     };
     const res: Response = await handler.fetch(new Request("https://internal/api/support/inbound", {
       method: "POST", headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}`, "content-type": "application/json" }, body: JSON.stringify(payload),

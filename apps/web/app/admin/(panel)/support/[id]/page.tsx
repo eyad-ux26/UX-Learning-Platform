@@ -6,7 +6,7 @@ import { CATEGORY_LABEL, CHANNEL_LABEL, fillPlaceholders, STATUS_LABEL, TICKET_C
 import { people } from "@/lib/admin/data/billing";
 import { maskEmail, maskName } from "@/lib/admin/mask";
 import { REGION_LABEL } from "@/lib/admin/format";
-import { Card, I, Id, KV, Money, NoAccess, PageHead, St, When, type Tone } from "@/components/admin/ui";
+import { Card, I, Id, KV, Money, NoAccess, Note, PageHead, St, When, type Tone } from "@/components/admin/ui";
 import { Confirm } from "@/components/admin/forms";
 import { AutoSelect, Composer, type MacroOption } from "@/components/admin/Composer";
 import { changeTicket, sendReply } from "../actions";
@@ -60,6 +60,11 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           <St tone={TONE[t.status] ?? "off"}>{STATUS_LABEL[t.status]}</St><Sla t={t} warnMinutes={settings?.warn_before_minutes ?? 120} />
           {t.satisfaction ? <St tone={t.satisfaction === "good" ? "good" : "bad"} icon="smiley">Rated {t.satisfaction === "good" ? "Good" : "Not good"}</St> : null}
         </span>} />
+      {t.sender_unverified ? (
+        <div style={{ marginBottom: 12 }}><Note icon="warning">
+          <b>Sender not verified.</b> The sender’s email provider did not confirm that this email really came from {t.email}, so it is not linked to a learner account. Before you change anything on an account, ask them to write again from that address, or check with them another way.
+        </Note></div>
+      ) : null}
       <div className="a-split">
         <div className="a-main-col">
           {canReply ? (
