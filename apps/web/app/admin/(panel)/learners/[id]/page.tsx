@@ -10,7 +10,7 @@ import { maskEmail } from "@/lib/admin/mask";
 import { REGION_LABEL } from "@/lib/admin/format";
 import { AGENT_COMP_DAYS } from "@/lib/admin/rules";
 import { learningRules } from "@/lib/app-config";
-import { ActionForm, Confirm } from "@/components/admin/forms";
+import { ActionForm, Confirm, Submit } from "@/components/admin/forms";
 import { ExportButton } from "@/components/admin/Download";
 import { Reveal } from "@/components/admin/Reveal";
 import { Card, Empty, I, Id, Kpi, KV, Money, NoAccess, Note, PageHead, St, Tabs, When } from "@/components/admin/ui";
@@ -160,11 +160,11 @@ export default async function Learner360Page({ params, searchParams }: { params:
                 <div key={n.id} className="a-msg"><div className="a-bub note"><div className="a-bub-h"><span className="n">{authors.get(n.author_id as string)?.display_name ?? "Team"}</span><span className="m"><When at={n.created_at as string} /></span></div><p className="t-sm" dir="auto" style={{ whiteSpace: "pre-wrap" }}>{n.body as string}</p></div></div>
               ))}
               {allowed(ctx, "learners.notes") ? (
-                <ActionForm action={addNote}>{(pending) => (
-                  <><input type="hidden" name="user" value={id} />
+                <ActionForm action={addNote}>
+                  <input type="hidden" name="user" value={id} />
                     <div className="a-field"><label htmlFor="note-body" className="sr">Add a note</label><textarea id="note-body" name="body" className="a-ta" rows={2} required maxLength={4000} placeholder="Add a note. Type @ and a name to mention someone." dir="auto" /></div>
-                    <button className="a-btn sm" type="submit" disabled={pending} aria-busy={pending}>{pending ? "Saving…" : "Add note"}</button></>
-                )}</ActionForm>
+                    <Submit busy="Saving…">Add note</Submit>
+                </ActionForm>
               ) : null}
             </div>
           </Card>

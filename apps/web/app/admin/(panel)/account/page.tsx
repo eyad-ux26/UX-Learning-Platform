@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { ADMIN_THEME_COOKIE } from "@/lib/admin/rules";
 import { PERMISSIONS, roleName, type Permission } from "@/lib/admin/permissions";
 import { Card, KV, PageHead, RoleChip, St, When } from "@/components/admin/ui";
-import { ActionForm } from "@/components/admin/forms";
+import { ActionForm, Submit } from "@/components/admin/forms";
 import { setTheme, signOutEverywhere } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -37,16 +37,16 @@ export default async function AccountPage() {
           <p className="t-xs ink-3" style={{ marginTop: 8 }}>Lost your phone? Ask a super admin to reset your two-step sign-in (docs/admin/README.md).</p>
         </Card>
         <Card title="Theme">
-          <ActionForm action={setTheme} reset={false}>{(p) => (
+          <ActionForm action={setTheme} reset={false}>
             <div className="a-row" style={{ gap: 8 }}>
               <label className="a-row t-sm" style={{ gap: 6 }}><input type="radio" name="theme" value="light" defaultChecked={theme === "light"} />Light</label>
               <label className="a-row t-sm" style={{ gap: 6 }}><input type="radio" name="theme" value="dark" defaultChecked={theme === "dark"} />Night</label>
-              <button className="a-btn sm" type="submit" disabled={p}>Save</button>
+              <Submit>Save</Submit>
             </div>
-          )}</ActionForm>
+          </ActionForm>
         </Card>
       </div>
-      <Card title="Sessions" actions={<ActionForm action={signOutEverywhere} reset={false}>{(p) => <button className="a-btn sm danger" type="submit" disabled={p}><span className="i i-sign-out" aria-hidden="true" />Sign out everywhere</button>}</ActionForm>} pad={false}>
+      <Card title="Sessions" actions={<ActionForm action={signOutEverywhere} reset={false}><Submit className="a-btn sm danger"><span className="i i-sign-out" aria-hidden="true" />Sign out everywhere</Submit></ActionForm>} pad={false}>
         <div className="a-tbl-wrap"><table className="a-tbl">
           <thead><tr><th scope="col">Started</th><th scope="col">Last seen</th><th scope="col">Device</th><th scope="col">Status</th></tr></thead>
           <tbody>{(sessions ?? []).map((s) => (

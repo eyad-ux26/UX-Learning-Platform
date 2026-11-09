@@ -3,7 +3,7 @@ import { allowed, requireAdmin } from "@/lib/admin/guard";
 import { CATEGORY_LABEL, CHANNEL_LABEL } from "@/lib/admin/data/support";
 import { fmtDuration } from "@/lib/admin/format";
 import { Card, Kpi, NoAccess, Note, PageHead, Tabs } from "@/components/admin/ui";
-import { ActionForm } from "@/components/admin/forms";
+import { ActionForm, Submit } from "@/components/admin/forms";
 import { saveSupportSettings } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -71,7 +71,7 @@ export default async function SupportSettingsPage({ searchParams }: { searchPara
       {cfg ? (
         <Card title="Settings">
           {!edit ? <Note>Only the Support lead (or an Admin) changes these.</Note> : null}
-          <ActionForm action={saveSupportSettings} reset={false}>{(pending) => (
+          <ActionForm action={saveSupportSettings} reset={false}>
             <fieldset disabled={!edit} className="a-stack" style={{ border: 0, padding: 0, margin: 0 }}>
               <h3 className="t-h3">SLA targets (business hours)</h3>
               <div className="a-tbl-wrap"><table className="a-tbl">
@@ -112,9 +112,9 @@ export default async function SupportSettingsPage({ searchParams }: { searchPara
               <h3 className="t-h3">Refunds</h3>
               <label className="a-field" style={{ maxWidth: 320 }}><span className="t-sm">Support agents refund up to (USD) inside the 7 days</span><input name="refund_limit" type="number" min={0} max={1000} step={1} className="a-in" defaultValue={(cfg.refund_limit_usd_minor ?? 5000) / 100} /></label>
               <label className="a-field"><span className="t-sm">Reason for the change (saved in the audit log)<span className="req" aria-hidden="true">*</span></span><input name="reason" className="a-in" required minLength={3} maxLength={500} /></label>
-              {edit ? <button type="submit" className="a-btn pri" disabled={pending} aria-busy={pending} style={{ alignSelf: "flex-start" }}>{pending ? "Saving…" : "Save settings"}</button> : null}
+              {edit ? <Submit className="a-btn pri" busy="Saving…" style={{ alignSelf: "flex-start" }}>Save settings</Submit> : null}
             </fieldset>
-          )}</ActionForm>
+          </ActionForm>
         </Card>
       ) : null}
     </main>
