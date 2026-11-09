@@ -126,3 +126,7 @@ Esc or the scrim closes the sheet without confirming. The sheet comes back on th
 
 - **Phones:** the toast says "Text copied. In LinkedIn, tap Start a post, then paste", in EN and AR. The same note shows in the share sheet.
 - LinkedIn opens on the feed after a 2.2 s pause, so the learner can read the toast first.
+
+## Build notes: PR #244 (9 Nov)
+
+On /ar, path names are the Arabic names Eyad picked, followed by the English term in brackets that never wraps. This covers path cards, path pages, the certificate, the PDF and the og image. /en is unchanged.
