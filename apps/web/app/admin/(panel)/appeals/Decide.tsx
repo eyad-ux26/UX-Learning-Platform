@@ -8,8 +8,8 @@ import { decide } from "./actions";
 // Starting text for each verdict, in the learner's app language. The member edits it before sending.
 const START = {
   accept: {
-    en: "You’re right: your answer works here too. We now count it as correct and will update this step so it is clearer.",
-    ar: "معك حق: إجابتك صحيحة هنا أيضًا. أصبحنا نحسبها إجابة صحيحة، وسنحدّث هذه الخطوة لتصبح أوضح.",
+    en: "You’re right, your answer works here too. We now count it as correct and will update this step so it is clearer.",
+    ar: "معك حق، إجابتك صحيحة هنا أيضًا. أصبحنا نحسبها إجابة صحيحة، وسنحدّث هذه الخطوة لتصبح أوضح.",
   },
   keep: {
     en: "Thank you for asking. We looked again and kept the result: ",

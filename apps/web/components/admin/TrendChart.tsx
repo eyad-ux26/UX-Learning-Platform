@@ -45,8 +45,8 @@ export function TrendChart({ days, series, unit, title }: { days: string[]; seri
           </svg>
           {h >= 0 ? (
             <>
-              <div className="xh" style={{ left: `${pct}%` }} aria-hidden="true" />
-              <div className="tip" style={pct > 70 ? { right: `${100 - pct}%`, marginRight: 8 } : { left: `${pct}%`, marginLeft: 8 }} aria-hidden="true">
+              <div className="xh" style={{ insetInlineStart: `${pct}%` }} aria-hidden="true" />
+              <div className="tip" style={pct > 70 ? { insetInlineEnd: `${100 - pct}%`, marginInlineEnd: 8 } : { insetInlineStart: `${pct}%`, marginInlineStart: 8 }} aria-hidden="true">
                 <p className="w7">{label(days[h]!)}</p>
                 {series.map((s) => (
                   <p key={s.label} className="a-row" style={{ gap: 6 }}><span style={{ width: 8, height: 8, borderRadius: 99, background: s.color }} /><span className="a-grow">{s.label}</span><b className="num">{fmt(s.values[h] ?? 0)}</b></p>

@@ -17,14 +17,26 @@ const svgOf = (name) => {
 };
 const uri = (name) => `url("data:image/svg+xml;utf8,${encodeURIComponent(svgOf(name))}")`;
 
+// The app's CSS rule (scripts/lint-logical.mjs): logical properties instead of left/right. The panel is laid out left to
+// right, so these give the same result, and Arabic blocks inside it (dir="rtl") line up the right way.
+const logical = (css) => css
+  .replace(/border-(top|bottom)-(left|right)-radius\s*:/g, (_, v, h) => `border-${v === "top" ? "start" : "end"}-${h === "left" ? "start" : "end"}-radius:`)
+  .replace(/(^|[;{\s])(margin|padding|scroll-margin|scroll-padding)-(left|right)\s*:/g, (_, a, p, h) => `${a}${p}-inline-${h === "left" ? "start" : "end"}:`)
+  .replace(/(^|[;{\s])border-(left|right)(-[a-z]+)?\s*:/g, (_, a, h, rest = "") => `${a}border-inline-${h === "left" ? "start" : "end"}${rest}:`)
+  .replace(/(^|[;{\s])(left|right)\s*:/g, (_, a, h) => `${a}inset-inline-${h === "left" ? "start" : "end"}:`)
+  .replace(/text-align\s*:\s*(left|right)/g, (_, h) => `text-align: ${h === "left" ? "start" : "end"}`)
+  .replace(/(^|[;{\s])float\s*:\s*(left|right)/g, (_, a, h) => `${a}float: inline-${h === "left" ? "start" : "end"}`);
+
 const src = process.argv[2];
+const adminCss = path.join(web, "app/admin/admin.css");
+if (!src && fs.existsSync(adminCss)) fs.writeFileSync(adminCss, logical(fs.readFileSync(adminCss, "utf8")));
 if (src) {
   let css = fs.readFileSync(src, "utf8");
   css = css.replace(/^\.i-[a-z0-9-]+\{--i:url\(\/_blob\/[0-9a-f]+\)\}\n/gm, "");
   // The checkbox tick uses the "check" icon.
   css = css.replace(/url\(\/_blob\/0ef956c17c198a820c8c0586d11c8a2d\)/g, uri("check"));
   if (/_blob/.test(css)) throw new Error("admin.css still references /_blob");
-  fs.writeFileSync(path.join(web, "app/admin/admin.css"), `/* Generated from the Phase 1 design by scripts/build-admin-assets.mjs. */\n${css}`);
+  fs.writeFileSync(adminCss, `/* Generated from the Phase 1 design by scripts/build-admin-assets.mjs. */\n${logical(css)}`);
 }
 
 // Icons named anywhere in the admin code.
