@@ -340,3 +340,17 @@ describe("support (0046)", () => {
     await expect(asUser("anon", null, `select * from support_messages`)).rejects.toThrow(/permission denied/);
   });
 });
+
+describe("dashboard (0047)", () => {
+  it("counts the window's key numbers and money by Cairo day", async () => {
+    const rows = (await db.query<{ metric: string; n: number }>(`select metric, n::int from public.admin_dash_counts(now() - interval '1 day', now() + interval '1 minute')`)).rows;
+    const m = Object.fromEntries(rows.map((r) => [r.metric, r.n]));
+    expect(Object.keys(m).sort()).toEqual(["active", "cancellations", "certificates", "signups", "subscribers"]);
+    expect(m.signups).toBeGreaterThan(0);
+    const money = (await db.query<{ provider: string; paid_minor: number }>(`select provider, paid_minor::int from public.admin_dash_money(now() - interval '400 days')`)).rows;
+    expect(money.length).toBeGreaterThan(0);
+    const funnel = (await db.query<{ step: string }>(`select step from public.admin_funnel(now() - interval '30 days')`)).rows.map((r) => r.step);
+    expect(funnel).toEqual(["signup", "lesson", "unit", "subscribe", "path", "share"]);
+    await expect(asUser("authenticated", X, `select * from public.admin_funnel(now())`)).rejects.toThrow(/permission denied/);
+  });
+});
