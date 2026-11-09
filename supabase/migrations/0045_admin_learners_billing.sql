@@ -250,3 +250,10 @@ grant execute on function public.admin_people(uuid[]),
   public.admin_revoke_certificate(uuid, text, jsonb, text, text, text, uuid), public.admin_reissue_certificate(uuid, text, text, text, text, text, uuid),
   public.admin_discount_stats(), public.admin_reset_billing_event(uuid, uuid, text, text, uuid)
   to service_role;
+
+-- ───────── refunds sent from the panel (BIL-3) ─────────
+-- The refund itself happens at the provider; its webhook then marks the payment refunded. Until then the panel shows
+-- "Processing" from these columns.
+alter table public.payments
+  add column if not exists refund_sent_at timestamptz,
+  add column if not exists refund_sent_by uuid references auth.users (id) on delete set null;

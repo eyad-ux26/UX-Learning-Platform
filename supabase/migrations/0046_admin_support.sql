@@ -17,7 +17,7 @@ create table public.support_settings (
   survey boolean not null default true,
   survey_text jsonb not null default '{"en": "How did we do?", "ar": "كيف كانت تجربتك معنا؟"}',
   -- A support agent refunds up to this amount (USD cents, other currencies at the panel's rate); more needs approval.
-  refund_limit_usd_minor integer not null default 1000 check (refund_limit_usd_minor >= 0),
+  refund_limit_usd_minor integer not null default 5000 check (refund_limit_usd_minor >= 0),
   updated_at timestamptz not null default now(),
   updated_by uuid references auth.users (id) on delete set null
 );
