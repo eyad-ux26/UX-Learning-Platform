@@ -19,6 +19,11 @@ export async function checkCode(admin: SupabaseClient, userId: string, raw: stri
   if (!data || !data.active) return { ok: false, error: "invalid" };
   if ((data.starts_at && new Date(data.starts_at) > now) || (data.ends_at && new Date(data.ends_at) <= now)) return { ok: false, error: "expired" };
   if (data.region && data.region !== region) return { ok: false, error: "region" };
+  // A code with a cap (set in the admin panel) ends when that many checkouts have paid with it.
+  if (data.max_uses) {
+    const { count: uses } = await admin.from("checkout_sessions").select("id", { count: "exact", head: true }).eq("code", code).eq("status", "paid");
+    if ((uses ?? 0) >= data.max_uses) return { ok: false, error: "expired" };
+  }
   // One discount per account: a founding code works once.
   const { count } = await admin.from("subscriptions").select("id", { count: "exact", head: true }).eq("user_id", userId).eq("discount", data.kind);
   if ((count ?? 0) > 0) return { ok: false, error: "used" };

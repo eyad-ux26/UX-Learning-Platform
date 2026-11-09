@@ -24,7 +24,11 @@ export type SendEmailInput = {
   headers?: Record<string, string>;
   /** Language of the turn-off page that List-Unsubscribe opens. */
   locale?: "en" | "ar";
+  /** Admin panel support replies only: sent from support@uxgate.org so the learner's answer comes back to the inbox. */
+  from?: typeof SUPPORT_FROM;
 };
+
+export const SUPPORT_FROM = "UXGate Support <support@uxgate.org>";
 
 export type SendEmailResult = { ok: boolean; id?: string; skipped?: boolean; error?: string };
 
@@ -53,7 +57,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
   }
 
   const body = {
-    from: FROM,
+    from: input.from ?? FROM,
     to: [input.to],
     reply_to: REPLY_TO,
     subject: input.subject,
