@@ -142,7 +142,7 @@ export function compileTree(dir) {
     const pathDoc = readYaml(path.join(pDir, "path.yaml"));
     const fxFile = path.join(pDir, "fixtures.yaml");
     const fixtures = fs.existsSync(fxFile) ? readYaml(fxFile) || {} : {};
-    bundle.paths.push({ id: pathDoc.id, title: pathDoc.title, subtitle: pathDoc.subtitle });
+    bundle.paths.push({ id: pathDoc.id, title: pathDoc.title, subtitle: pathDoc.subtitle, ...(pathDoc.instructor ? { instructor: pathDoc.instructor } : {}) });
     for (const u of fs.readdirSync(pDir).sort()) {
       const uDir = path.join(pDir, u);
       if (!/^U\d{2}$/.test(u) || !fs.statSync(uDir).isDirectory()) continue; // e.g. captions/ is not a unit

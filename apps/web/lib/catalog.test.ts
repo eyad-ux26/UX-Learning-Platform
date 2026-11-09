@@ -57,3 +57,21 @@ describe("Arabic path names", () => {
     }
   });
 });
+
+describe("path search (Paths tab)", () => {
+  const ids = ["P01", "P10", "P14", "P02", "P05", "P15", "P12", "P13"];
+  it("matches the name, the description and the keywords; reports the keyword hit", async () => {
+    const { searchPaths } = await import("./catalog-list");
+    expect(searchPaths("forms", "en", ids)[0]).toEqual({ id: "P01" });
+    const c = searchPaths("contrast", "en", ids);
+    expect(c.map((r) => r.id)).toContain("P10");
+    expect(c.find((r) => r.id === "P10")?.hit).toBeTruthy();
+    expect(searchPaths("zzzz", "en", ids)).toEqual([]);
+    expect(searchPaths("", "en", ids)).toHaveLength(8);
+  });
+  it("treats Arabic hamza forms and diacritics as equal", async () => {
+    const { foldSearch } = await import("./catalog-list");
+    expect(foldSearch("أَهمّ")).toBe(foldSearch("اهم"));
+    expect(foldSearch("إختبار")).toBe(foldSearch("اختبار"));
+  });
+});

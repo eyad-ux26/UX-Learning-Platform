@@ -22,6 +22,9 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
   const month = since ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(since)) : null;
   const sub = [me.handle ? `@${me.handle}` : null, month ? (me.handle ? t("since", { month }) : t("sinceAlone", { month })) : null].filter(Boolean).join(" · ");
   // Each joined path: where the learner is, how far, and how many skills sit in each state (design v60, Profile).
+  const certRows = ids.map((id) => ({ id, cert: certificates.find((x) => x.pathId === id), c: pathProgressCounts(id, stateOf) }));
+  const earned = certRows.filter((r) => r.cert);
+  const working = certRows.filter((r) => !r.cert);
   const cards = ids.map((id) => {
     const v = buildPathView(id, me.progress, me.practicedSkills);
     const pct = v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0;
@@ -64,18 +67,42 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
       </div>
 
       <p className="t-over" id="pf-certs">{t("certificates")}</p>
-      {ids.map((id) => {
-        const cert = certificates.find((c) => c.pathId === id);
-        const c = pathProgressCounts(id, stateOf);
-        return (
-          <Link key={id} href={cert ? `/app/certificate/${id}` : `/app/skills`} className="card row-card press">
-            
-            <img src="/ill/uxgate-ill-certificate.png" alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none", opacity: cert ? 1 : 0.4 }} />
-            <span className="grow"><b><PathName name={localPathName(id, locale) ?? ""} /></b><span className="t-small ink-2">{cert ? `${t("certReady")} · ${fmt.format(new Date(cert.issuedAt))}` : t("certProgress", { shown: c.shown, total: c.total })}</span></span>
-            <span className="ph ph-arrow flip" aria-hidden="true" />
-          </Link>
-        );
-      })}
+      {earned.length ? (
+        <>
+          <p className="t-over">{t("certEarned", { count: earned.length })}</p>
+          <div className="ec-list">
+            {earned.map(({ id, cert, c }) => (
+              <div key={id} className="ec-card" role="group" aria-label={t("certEarnedAria", { path: localPathName(id, locale) })}>
+                <span className="ec-text">
+                  <span className="kind kind-done"><span className="ph ph-seal-check-fill" aria-hidden="true" />{t("certEarnedChip")}</span>
+                  <p className="ec-name"><PathName name={localPathName(id, locale)} /></p>
+                  <p className="ec-meta">{t("certEarnedMeta", { n: c.shown, date: fmt.format(new Date(cert!.issuedAt)) })}</p>
+                  <span className="ec-acts">
+                    <Link href={`/app/certificate/${id}?share=1`} className="btn btn-primary press"><span className="li-glyph" aria-hidden="true">in</span>{t("certShare")}</Link>
+                    <Link href={`/app/certificate/${id}`} className="btn btn-secondary press">{t("certView")}</Link>
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
+      {working.length ? (
+        <>
+          {earned.length ? <p className="t-over">{t("certWorking", { count: working.length })}</p> : null}
+          {working.map(({ id, c }) => (
+            <Link key={id} href="/app/skills" className="card row-card press">
+              <img src="/ill/uxgate-ill-certificate.png" alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none", opacity: 0.4 }} />
+              <span className="grow">
+                <b><PathName name={localPathName(id, locale)} /></b>
+                <span className="t-small ink-2">{t("certProgress", { shown: c.shown, total: c.total })}</span>
+                <span className="progress progress-sm" role="progressbar" aria-label={t("certProgress", { shown: c.shown, total: c.total })} aria-valuenow={c.total ? Math.round((c.shown / c.total) * 100) : 0} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${c.total ? Math.round((c.shown / c.total) * 100) : 0}%` }} /></span>
+              </span>
+              <span className="ph ph-arrow flip" aria-hidden="true" />
+            </Link>
+          ))}
+        </>
+      ) : null}
       {certificates.length === 0 ? <p className="t-small ink-2">{t("certNone")}</p> : null}
 
       <Link href="/app/badges" id="pf-badges" className="card row-card press"><span className="ph ph-medal" style={{ fontSize: 26 }} aria-hidden="true" /><span className="grow"><b>{t("badges")}</b><span className="t-small ink-2">{t("badgesBody")}</span></span><span className="ph ph-arrow flip" aria-hidden="true" /></Link>

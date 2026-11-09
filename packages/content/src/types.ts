@@ -130,7 +130,9 @@ export type Lesson = {
 export type LessonVersion = { lessonId: string; unitId: string; pathId: string; order: number; mode: string; minutes: number; hash: string; body: Lesson };
 export type Skill = { id: string; title: Text; can_do: Text };
 export type UnitMeta = { id: string; pathId: string; title: Text; skill: Text; free: boolean; skills: Skill[]; lessons: string[] };
-export type PathMeta = { id: string; title: Text; subtitle: Text };
+/** The instructor of a video (hybrid) path. `photo` names a file in apps/web/public/instructors/ (`{photo}-avatar.jpg`). */
+export type Instructor = { name: Text; photo: string };
+export type PathMeta = { id: string; title: Text; subtitle: Text; instructor?: Instructor };
 /** `lessons` are the playable lessons; `banks` hold each unit's held-back re-test steps for the mastery round (mode "bank"). */
 export type Bundle = { cast: CastMember[]; paths: PathMeta[]; units: UnitMeta[]; lessons: LessonVersion[]; banks: LessonVersion[] };
 /** A lesson without its steps: enough for maps, lists and titles. */

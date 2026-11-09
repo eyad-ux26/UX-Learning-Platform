@@ -3,11 +3,13 @@ import { PathName } from "@/components/PathName";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
-import { catalogEntry, catalogFor, localPathName, pathArtUrl, type CatalogRow } from "@/lib/catalog";
+import { CATALOG, catalogEntry, catalogFor, isPlayable, localPathName, pathArtUrl, type CatalogRow } from "@/lib/catalog";
+import { getPath } from "@uxgate/content";
 import { buildPathView, pathBegun, type PathView } from "@/lib/learning";
 import { isShown, pathSkills } from "@/lib/certificate";
 import type { Learner } from "@/lib/server/learner";
 import { ChoosePath } from "./ChoosePath";
+import { PathSpotlight, type SpotCardData } from "./PathSpotlight";
 
 type T = Awaited<ReturnType<typeof getTranslations>>;
 
@@ -74,8 +76,13 @@ export async function PathsMain({ me }: { me: Learner }) {
   const isDone = (id: string) => certified.has(id);
   const joined = group(["current", "joined"]).filter((r) => !isDone(r.id));
   const completed = group(["current", "joined"]).filter((r) => isDone(r.id));
-  const fresh = group(["new"]);
   const soon = group(["soon"]);
+  // Playable paths for the spotlight (search, Featured courses, All paths), in catalog order. The instructor lives in the path's content.
+  const spot: SpotCardData[] = CATALOG.filter((e) => isPlayable(e.id)).map((e) => {
+    const rows1 = rows.find((r) => r.id === e.id);
+    const ins = getPath(e.id)?.instructor;
+    return { id: e.id, name: localPathName(e.id, locale), sub: e.sub[locale], units: rows1?.units ?? 0, video: e.kind === "hybrid", instructor: ins ? { name: ins.name[locale], photo: ins.photo } : null, joined: me.joined.some((j) => j.pathId === e.id) };
+  });
   const viewOf = (id: string) => buildPathView(id, me.progress, me.practicedSkills);
   // Lessons all done but skills still to show: an amber chip says the skill check is what is left.
   const leftOf = (id: string) => {
@@ -95,10 +102,7 @@ export async function PathsMain({ me }: { me: Learner }) {
         <p className="t-over">{t("secDone", { count: completed.length })}</p>
         <div className="pg-cards">{completed.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} done={pathSkills(p.id).length} />)}</div>
       </> : null}
-      {fresh.length ? <>
-        <p className="t-over">{t("secNew")}</p>
-        <div className="pg-cards">{fresh.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} />)}</div>
-      </> : null}
+      <PathSpotlight cards={spot} locale={locale} allHeading={joined.length || completed.length ? "new" : "all"} />
       <p className="t-over"><span className="ph ph-hourglass" aria-hidden="true" /> {t("secSoon", { count: soon.length })}</p>
       <div className="pg-cards pg-cards-soon">{soon.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} />)}</div>
     </div>
