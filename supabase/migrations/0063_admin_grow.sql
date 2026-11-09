@@ -265,6 +265,22 @@ create function public.help_note_miss(p_term text) returns void language sql sec
   on conflict (term) do update set hits = public.help_misses.hits + 1, last_at = now()
 $$;
 
+-- ───────── system health ─────────
+
+-- One row per scheduled job run (lib/server/job-run.ts), for System health (SYS-2). Kept 30 days by the daily job.
+create table public.job_runs (
+  id bigint generated always as identity primary key,
+  name text not null check (name ~ '^[a-z-]{2,30}$'),
+  ok boolean not null,
+  detail text check (detail is null or char_length(detail) <= 500),
+  finished_at timestamptz not null default now()
+);
+create index job_runs_name_at on public.job_runs (name, finished_at desc);
+
+create function public.job_runs_prune() returns integer language sql security definer set search_path = public as $$
+  with d as (delete from public.job_runs where finished_at < now() - interval '30 days' returning 1) select count(*)::int from d
+$$;
+
 -- ───────── privileges ─────────
 
 alter table public.content_flags enable row level security;
@@ -274,10 +290,11 @@ alter table public.campaigns enable row level security;
 alter table public.campaign_sends enable row level security;
 alter table public.help_articles enable row level security;
 alter table public.help_misses enable row level security;
+alter table public.job_runs enable row level security;
 revoke all on public.content_flags, public.admin_saved_reports, public.announcements, public.campaigns, public.campaign_sends,
-  public.help_articles, public.help_misses from public, anon, authenticated;
+  public.help_articles, public.help_misses, public.job_runs from public, anon, authenticated;
 grant select, insert, update, delete on public.content_flags, public.admin_saved_reports, public.announcements, public.campaigns,
-  public.campaign_sends, public.help_articles, public.help_misses to service_role;
+  public.campaign_sends, public.help_articles, public.help_misses, public.job_runs to service_role;
 -- Published help articles are public (the help pages and the app read them).
 grant select on public.help_articles to anon, authenticated;
 create policy "published help" on public.help_articles for select to anon, authenticated using (status = 'published');
@@ -285,12 +302,12 @@ create policy "published help" on public.help_articles for select to anon, authe
 revoke all on function public.admin_step_stats(text, text, timestamptz), public.admin_misconception_counts(text, timestamptz), public.admin_skill_stats(text),
   public.admin_step_reports(timestamptz), public.admin_set_flag_status(uuid, text, text, text, text, text, text, text, text, uuid),
   public.admin_report_learning(timestamptz, timestamptz), public.admin_report_growth(timestamptz, timestamptz), public.admin_report_money(),
-  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text)
+  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune()
   from public, anon, authenticated;
 grant execute on function public.admin_step_stats(text, text, timestamptz), public.admin_misconception_counts(text, timestamptz), public.admin_skill_stats(text),
   public.admin_step_reports(timestamptz), public.admin_set_flag_status(uuid, text, text, text, text, text, text, text, text, uuid),
   public.admin_report_learning(timestamptz, timestamptz), public.admin_report_growth(timestamptz, timestamptz), public.admin_report_money(),
-  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text)
+  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune()
   to service_role;
 revoke all on function public.my_announcements() from public, anon;
 grant execute on function public.my_announcements() to authenticated, service_role;

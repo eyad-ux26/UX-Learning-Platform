@@ -4,6 +4,7 @@ import { APPROVAL_REMIND_SECONDS } from "@/lib/admin/rules";
 import { sendSurvey } from "@/lib/admin/data/support";
 import { emailLayout, siteOrigin } from "@/lib/server/email/layout";
 import { sendEmail } from "@/lib/server/email/send";
+import { jobJson } from "@/lib/server/job-run";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export async function GET(req: Request) {
 
   const { data: waiting, error } = await db.from("admin_approvals").select("id, title, permission, requested_by, created_at").eq("status", "waiting").is("reminded_at", null)
     .lt("created_at", new Date(now - APPROVAL_REMIND_SECONDS * 1000).toISOString()).limit(20);
-  if (error) return NextResponse.json({ error: "read_failed", reminded, closed });
+  if (error) return jobJson("support", { error: "read_failed", reminded, closed }, { status: 500 });
   if (waiting?.length) {
     const { data: members } = await db.from("admin_members").select("user_id, email").eq("status", "active");
     const perms = new Map<string, string[]>();
@@ -54,5 +55,5 @@ export async function GET(req: Request) {
     await sendSurvey(t.id).catch(() => null);
     closed++;
   }
-  return NextResponse.json({ reminded, closed });
+  return jobJson("support", { reminded, closed });
 }

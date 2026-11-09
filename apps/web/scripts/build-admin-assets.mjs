@@ -38,6 +38,10 @@ const scan = (dir) => {
       for (const m of t.matchAll(/\bi-([a-z0-9]+(?:-[a-z0-9]+)*)\b/g)) names.add(m[1]);
       for (const m of t.matchAll(/icon:\s*"([a-z0-9-]+)"/g)) names.add(m[1]);
       for (const m of t.matchAll(/item\("[a-z0-9]+", "[^"]+", "([a-z0-9-]+)"/g)) names.add(m[1]);
+      // JSX: <I n="eye" />, icon="flag", and expressions such as n={ok ? "check" : "x"}; status tables ["good", "eye", "Live"].
+      for (const m of t.matchAll(/\b(?:n|icon)="([a-z0-9-]+)"/g)) names.add(m[1]);
+      for (const m of t.matchAll(/\b(?:n|icon)=\{([^{}]*)\}/g)) for (const q of m[1].matchAll(/"([a-z0-9-]+)"/g)) names.add(q[1]);
+      for (const m of t.matchAll(/\["(?:good|info|wait|bad|off)", "([a-z0-9-]+)"/g)) names.add(m[1]);
     }
   }
 };

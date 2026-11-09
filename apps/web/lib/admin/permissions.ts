@@ -206,7 +206,7 @@ export const NAV: NavGroup[] = [
       item("learners", "Learners", "users-three", "/admin/learners", ["learners.view"]),
       item("inbox", "Support inbox", "tray", "/admin/support", ["support.view"]),
       item("appeals", "Appeals and reviews", "scales", "/admin/appeals", ["appeals.view"]),
-      item("help", "Help centre", "books", "/admin/phase-2/help", ["help.view"], true),
+      item("help", "Help centre", "books", "/admin/help-centre", ["help.view"]),
     ],
   },
   {
@@ -215,6 +215,7 @@ export const NAV: NavGroup[] = [
       item("payments", "Payments", "credit-card", "/admin/billing/payments", ["payments.view"]),
       item("refunds", "Refunds", "arrow-u-up-left", "/admin/billing/refunds", ["refunds.view"]),
       item("problems", "Billing problems", "warning", "/admin/billing/problems", ["problems.view"]),
+      item("trials", "Free trials", "clock-counter-clockwise", "/admin/billing/trials", ["subs.view", "trials.extend"]),
       item("discounts", "Discounts", "tag", "/admin/billing/discounts", ["discounts.view"]),
       item("prices", "Prices and plans", "receipt", "/admin/billing/prices", ["prices.view"]),
       item("revenue", "Revenue", "chart-line-up", "/admin/billing/revenue", ["revenue.view"]),
@@ -222,19 +223,18 @@ export const NAV: NavGroup[] = [
   },
   {
     label: "Content", items: [
-      item("paths", "Paths", "book-open", "/admin/phase-2/paths", ["content.view"], true),
-      item("lessons", "Units and lessons", "list", "/admin/phase-2/lessons", ["content.view"], true),
-      item("skills", "Skills and misconceptions", "star", "/admin/phase-2/skills", ["content.view"], true),
-      item("media", "Media library", "film-strip", "/admin/phase-2/media", ["media.view"], true),
-      item("instructors", "Instructors", "chalkboard-teacher", "/admin/phase-2/instructors", ["instructors.view"], true),
-      item("quality", "Content quality", "flag", "/admin/phase-2/quality", ["quality.view"], true),
-      item("releases", "Releases", "rocket-launch", "/admin/phase-2/releases", ["releases.view"], true),
+      item("paths", "Paths and lessons", "book-open", "/admin/content", ["content.view"]),
+      item("skills", "Skills and misconceptions", "star", "/admin/content/skills", ["content.view"]),
+      item("media", "Media library", "film-strip", "/admin/media", ["media.view", "media.own"]),
+      item("instructors", "Instructors", "chalkboard-teacher", "/admin/media/instructors", ["instructors.view"]),
+      item("quality", "Content quality", "flag", "/admin/content/quality", ["quality.view"]),
+      item("releases", "Releases", "rocket-launch", "/admin/content/releases", ["releases.view", "content.view"]),
     ],
   },
   {
     label: "Grow", items: [
-      item("reports", "Reports", "chart-bar", "/admin/phase-2/reports", ["reports.view"], true),
-      item("comms", "Communications", "envelope-simple", "/admin/phase-2/communications", ["comms.view"], true),
+      item("reports", "Reports", "chart-bar", "/admin/reports", ["reports.view"]),
+      item("comms", "Communications", "envelope-simple", "/admin/communications", ["comms.view"]),
       item("certs", "Certificates", "certificate", "/admin/certificates", ["certs.view"]),
     ],
   },
@@ -242,8 +242,8 @@ export const NAV: NavGroup[] = [
     label: "Admin", items: [
       item("team", "Team and roles", "user-gear", "/admin/team", ["team.view"]),
       item("audit", "Audit log", "clock-counter-clockwise", "/admin/audit", ["audit.view", "audit.area_support", "audit.area_billing", "audit.area_content"]),
-      item("settings", "Platform settings", "gear-six", "/admin/phase-2/settings", ["settings.view"], true),
-      item("health", "System health", "heartbeat", "/admin/phase-2/health", ["health.view"], true),
+      item("settings", "Platform settings", "gear-six", "/admin/settings", ["settings.view"]),
+      item("health", "System health", "heartbeat", "/admin/health", ["health.view"]),
     ],
   },
 ];
