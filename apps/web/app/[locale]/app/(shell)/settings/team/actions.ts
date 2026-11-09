@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdmin } from "@/lib/coming-soon";
 import { attemptKind, teamPlan } from "@/lib/team-tools";
 
-/** Testing tools for the team: only an account whose app_metadata.role is "admin" may use them (checked on every call). */
+/** Testing tools for the team: an admin account or a member whose roles hold testing.tools (lib/coming-soon.ts isAdmin), checked on every call. */
 async function admin(): Promise<{ id: string } | null> {
   const { data } = await (await createClient()).auth.getUser();
   const u = data.user;

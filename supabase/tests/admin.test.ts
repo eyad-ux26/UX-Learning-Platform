@@ -298,12 +298,17 @@ describe("certificates (0045)", () => {
 
 describe("support (0046)", () => {
   it("counts first-reply time in business hours of the ticket's language", async () => {
-    // Thursday 16:00 Cairo (UTC+2 in November): English hours are Mon to Fri 9 to 17, Arabic Sat to Thu 9 to 17.
+    // Thursday 16:00 Cairo (UTC+2 in November): English hours are Mon to Fri 9 to 18, Arabic Sat to Thu 9 to 18.
     const due = async (lang: string, hours: number) =>
       (await one<{ d: string }>(`select to_char(public.support_due('2026-11-12 14:00+00', $1, $2) at time zone 'Africa/Cairo', 'Dy HH24:MI') d`, [hours, lang])).d;
-    expect(await due("en", 2)).toBe("Fri 10:00");
-    expect(await due("en", 10)).toBe("Mon 10:00");
-    expect(await due("ar", 2)).toBe("Sat 10:00");
+    expect(await due("en", 2)).toBe("Thu 18:00");
+    expect(await due("en", 3)).toBe("Fri 10:00");
+    expect(await due("en", 12)).toBe("Mon 10:00");
+    expect(await due("ar", 3)).toBe("Sat 10:00");
+    // A day off is skipped like a weekend.
+    await db.exec(`update support_settings set days_off = '{2026-11-13}' where id = 1`);
+    expect(await due("en", 3)).toBe("Mon 10:00");
+    await db.exec(`update support_settings set days_off = '{}' where id = 1`);
   });
 
   it("turns refund requests and broken-question reports into tickets, not appeals", async () => {
@@ -333,5 +338,19 @@ describe("support (0046)", () => {
   it("keeps tickets away from learners", async () => {
     await expect(asUser("authenticated", X, `select * from support_tickets`)).rejects.toThrow(/permission denied/);
     await expect(asUser("anon", null, `select * from support_messages`)).rejects.toThrow(/permission denied/);
+  });
+});
+
+describe("dashboard (0047)", () => {
+  it("counts the window's key numbers and money by Cairo day", async () => {
+    const rows = (await db.query<{ metric: string; n: number }>(`select metric, n::int from public.admin_dash_counts(now() - interval '1 day', now() + interval '1 minute')`)).rows;
+    const m = Object.fromEntries(rows.map((r) => [r.metric, r.n]));
+    expect(Object.keys(m).sort()).toEqual(["active", "cancellations", "certificates", "signups", "subscribers"]);
+    expect(m.signups).toBeGreaterThan(0);
+    const money = (await db.query<{ provider: string; paid_minor: number }>(`select provider, paid_minor::int from public.admin_dash_money(now() - interval '400 days')`)).rows;
+    expect(money.length).toBeGreaterThan(0);
+    const funnel = (await db.query<{ step: string }>(`select step from public.admin_funnel(now() - interval '30 days')`)).rows.map((r) => r.step);
+    expect(funnel).toEqual(["signup", "lesson", "unit", "subscribe", "path", "share"]);
+    await expect(asUser("authenticated", X, `select * from public.admin_funnel(now())`)).rejects.toThrow(/permission denied/);
   });
 });

@@ -39,9 +39,16 @@ export async function appealCounts() {
 }
 
 /** How many other learners asked about the same step: a sign the question itself needs work. */
-export async function sameStepCount(lessonId: string, stepId: string) {
-  const { count } = await createAdminClient().from("review_requests").select("id", { count: "exact", head: true }).eq("lesson_id", lessonId).eq("step_id", stepId);
-  return count ?? 0;
+export async function sameStep(r: Pick<AppealRow, "id" | "lesson_id" | "step_id" | "user_id">) {
+  const db = createAdminClient();
+  const [{ data: same }, { data: mine }] = await Promise.all([
+    db.from("review_requests").select("status").eq("lesson_id", r.lesson_id).eq("step_id", r.step_id).neq("id", r.id).limit(500),
+    db.from("review_requests").select("status, replied_at").eq("user_id", r.user_id).neq("id", r.id).order("created_at", { ascending: false }).limit(50),
+  ]);
+  return {
+    others: same?.length ?? 0, othersAccepted: (same ?? []).filter((x) => x.status === "accepted").length,
+    before: mine?.length ?? 0, beforeAccepted: (mine ?? []).filter((x) => x.status === "accepted").length,
+  };
 }
 
 /** The learner's latest try at this step, so "accept" can count it as right. */

@@ -11,8 +11,11 @@ export const comingSoonOn = (): boolean => process.env.UG_COMING_SOON === "1";
 
 type WithAppMeta = { app_metadata?: Record<string, unknown> | null } | null | undefined;
 
-/** True for a user or token claims whose app_metadata.role is "admin". */
-export const isAdmin = (u: WithAppMeta): boolean => u?.app_metadata?.role === "admin";
+/**
+ * True for a user or token claims whose app_metadata.role is "admin", or whose admin-panel roles include the team
+ * testing tools (app_metadata.team_tools, kept in step by lib/admin/team-tools-sync.ts when roles change, TEAM-6).
+ */
+export const isAdmin = (u: WithAppMeta): boolean => u?.app_metadata?.role === "admin" || u?.app_metadata?.team_tools === true;
 
 /** True when the gate is on and this user (or nobody) is not an admin. */
 export const gatedOut = (u: WithAppMeta): boolean => comingSoonOn() && !isAdmin(u);

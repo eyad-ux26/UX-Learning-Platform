@@ -9,7 +9,7 @@ body.adm { margin: 0; min-height: 100vh; }
 .a-top { position: sticky; top: 0; z-index: 4; }
 
 /* native <dialog> */
-dialog.a-dialog { position: fixed; inset: 0; margin: 10vh auto auto; transform: none; left: auto; top: auto; padding: 0; color: var(--ink); max-height: 80vh; overflow: auto; }
+dialog.a-dialog { position: fixed; inset: 0; margin: 10vh auto auto; transform: none; inset-inline-start: auto; top: auto; padding: 0; color: var(--ink); max-height: 80vh; overflow: auto; }
 dialog.a-dialog::backdrop { background: var(--scrim); }
 dialog.a-drawer { position: fixed; inset: 0 0 0 auto; margin: 0; height: 100vh; max-height: 100vh; padding: 0; color: var(--ink); border-top: 0; border-bottom: 0; }
 dialog.a-drawer::backdrop { background: var(--scrim); }
@@ -21,7 +21,7 @@ input.a-in, select.a-in { outline-offset: 2px; }
 textarea.a-ta { resize: vertical; font: inherit; }
 .a-err { color: var(--bad-ink); font-size: 13px; display: flex; gap: 6px; align-items: flex-start; }
 .a-ok { color: var(--good-ink); font-size: 13px; display: flex; gap: 6px; align-items: flex-start; }
-.a-toast-wrap { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 50; }
+.a-toast-wrap { position: fixed; inset-inline-start: 50%; bottom: 24px; transform: translateX(-50%); z-index: 50; }
 .a-stack { display: flex; flex-direction: column; gap: 12px; }
 .a-stack.sm { gap: 8px; }
 .a-hide { display: none !important; }
@@ -31,9 +31,21 @@ textarea.a-ta { resize: vertical; font: inherit; }
 .a-qr img { width: 180px; height: 180px; }
 .a-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; letter-spacing: .04em; word-break: break-all; }
 .a-pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin: 0; }
-.a-menu { position: absolute; right: 0; top: calc(100% + 6px); min-width: 220px; padding: 6px; z-index: 20; display: flex; flex-direction: column; }
-.a-menu a, .a-menu button { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 6px; color: var(--ink); background: none; border: 0; text-align: left; cursor: pointer; font-size: 13.5px; }
+.a-menu { position: absolute; inset-inline-end: 0; top: calc(100% + 6px); min-width: 220px; padding: 6px; z-index: 20; display: flex; flex-direction: column; }
+.a-menu a, .a-menu button { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 6px; color: var(--ink); background: none; border: 0; text-align: start; cursor: pointer; font-size: 13.5px; }
 .a-menu a:hover, .a-menu button:hover { background: var(--surface-2); text-decoration: none; }
 .a-rel { position: relative; }
 .a-th-link { color: inherit; }
 @media (max-width: 760px) { .a-gate-card { padding: 20px; } }
+
+/* Dashboard trend chart: a crosshair and a tooltip follow the pointer; the same numbers are in the table below it. */
+.a-chart { position: relative; height: 228px; }
+.a-chart svg { position: absolute; inset: 0; width: 100%; height: 200px; overflow: visible; }
+.a-chart .hits { position: absolute; inset-inline-start: 0; inset-inline-end: 0; top: 0; height: 200px; display: flex; }
+.a-chart .hits > span { flex: 1; height: 100%; }
+.a-chart .xh { position: absolute; top: 0; height: 200px; width: 1px; background: var(--ink-3); pointer-events: none; }
+.a-chart .tip { position: absolute; top: 6px; min-width: 150px; padding: 8px 10px; background: var(--surface); border: 1px solid var(--line-field); border-radius: 8px; box-shadow: 0 4px 16px rgb(0 0 0 / .12); pointer-events: none; font-size: 12px; }
+.a-chart .x { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; display: flex; justify-content: space-between; }
+.a-chart-y { display: flex; flex-direction: column; justify-content: space-between; text-align: end; width: 44px; height: 208px; margin-top: -4px; }
+.a-funnel { display: grid; grid-template-columns: minmax(120px, 1fr) 3fr auto; gap: 8px 12px; align-items: center; }
+.a-funnel .bar { height: 10px; border-start-end-radius: 4px; border-end-end-radius: 4px; background: var(--s1); min-width: 2px; }

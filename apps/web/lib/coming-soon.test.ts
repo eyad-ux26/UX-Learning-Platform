@@ -47,6 +47,8 @@ describe("admins", () => {
   it("are accounts whose app_metadata.role is admin", () => {
     expect(isAdmin({ app_metadata: { role: "admin" } })).toBe(true);
     expect(isAdmin({ app_metadata: { role: "learner" } })).toBe(false);
+    expect(isAdmin({ app_metadata: { team_tools: true } })).toBe(true);
+    expect(isAdmin({ app_metadata: { team_tools: "true" } })).toBe(false);
     expect(isAdmin({ app_metadata: {} })).toBe(false);
     expect(isAdmin(null)).toBe(false);
     expect(isAdmin(undefined)).toBe(false);
