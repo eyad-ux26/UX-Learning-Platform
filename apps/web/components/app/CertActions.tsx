@@ -12,6 +12,8 @@ import { linkedInFeedUrl, linkedInProfileUrl, postText } from "@/lib/certificate
 type Props = {
   pathId: string; pathName: string; name: string; code: string; issuedAt: string; id: string; skills: number; checks: number;
   initialPublic: boolean; nameConfirmed: boolean; emailLike: boolean; url: string; posts: { en: string[]; ar: string[] }; cardArt: React.ReactNode;
+  /** Open the share sheet on arrival (the Share button on the Profile certificate card links here with ?share=1). */
+  openShare?: boolean;
 };
 
 /**
@@ -24,7 +26,7 @@ export function CertActions(p: Props) {
   const locale = useLocale();
   const [on, setOn] = useState(p.initialPublic);
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!!p.openShare && p.nameConfirmed);
   // The one-time name check: before the name is confirmed, every way of sharing or downloading opens it first.
   const [confirmed, setConfirmed] = useState(p.nameConfirmed);
   const [nameSheet, setNameSheet] = useState(!p.nameConfirmed);

@@ -33,6 +33,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
         <nav className="land-nav" aria-label="UXGate">
           <Link href="/paths">{t("navPaths")}</Link>
           <a href="#how">{t("navHow")}</a>
+          <a href="#certificate">{t("navCert")}</a>
           <a href="#plan">{t("navPricing")}</a>
           <a href="#faq">{t("navFaq")}</a>
         </nav>
@@ -71,6 +72,32 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
           </div>
         </section>
 
+        <section id="different" className="ld-diff" aria-labelledby="diff-h">
+          <p className="ld-kicker">{t("diffKicker")}</p>
+          <h2 id="diff-h" className="ld-h">{t.rich("diffTitle", { mark: (c) => <mark className="ld-mark">{c}</mark> })}</h2>
+          <p className="ld-lead">{t("diffLead")}</p>
+          <ul className="ld-tiles">
+            {([["globe", 1, true], ["video", 2, true], ["cursor-click", 3, false], ["target", 4, false], ["certificate", 5, false], ["book", 6, false]] as const).map(([icon, n, big]) => (
+              <li key={n} className={`ld-tile${big ? " is-big" : ""}`}>
+                <span className="ld-ic"><span className={`ph ph-${icon}`} aria-hidden="true" /></span>
+                <span className="ld-tx">
+                  <b>{t(`diff${n}t`)}</b>
+                  <span>{t(`diff${n}b`)}</span>
+                  {n === 2 ? (
+                    <span className="ld-people">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/instructors/eyad-avatar.jpg" alt="" width={30} height={30} />
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/instructors/mahmoud-avatar.jpg" alt="" width={30} height={30} />
+                      <small>{t("diffPeople")}</small>
+                    </span>
+                  ) : null}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section id="how" className="land-sec">
           <h2 className="t-h2">{t("howTitle")}</h2>
           <div className="how-grid">
@@ -106,6 +133,29 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             ))}
           </div>
           <p className="t-small ink-2 paths-note">{t("pathsNote")} <Link href="/paths" className="hit">{t("seePaths")}</Link></p>
+        </section>
+
+        <section id="certificate" className="ld-cert" aria-labelledby="cert-h">
+          <div className="ld-cert-text">
+            <p className="t-over" style={{ color: "var(--right-ink)" }}><span className="ph ph-certificate" aria-hidden="true" /> {t("certKicker")}</p>
+            <h2 id="cert-h" className="ld-h2">{t("certH")}</h2>
+            <ul className="ld-checks">
+              {([["seal-check", 1], ["share", 2], ["link", 3]] as const).map(([icon, n]) => (
+                <li key={n}><span className={`ph ph-${icon}`} aria-hidden="true" /><span><b>{t(`cert${n}t`)}</b> {t(`cert${n}b`)}</span></li>
+              ))}
+            </ul>
+          </div>
+          <div className="ld-cert-art" aria-hidden="true">
+            <div className="ld-post">
+              <div className="ld-post-top"><span className="ld-post-ava">{t("postName").charAt(0)}</span><span><b>{t("postName")}</b><small>{t("postWhen")}</small></span></div>
+              <p className="ld-post-text">{t("postText")}</p>
+              <div className="ld-mini">
+                <div className="ld-mini-b"><span className="ph ph-seal-check-fill" /><small>UXGATE</small></div>
+                <div className="ld-mini-m"><small>{t("postCardOver")}</small><small>{t("postCardThis")}</small><span className="ld-mini-name">{t("postName")}</span><small>{t("postCardShowed")}</small><b>{t("postCardPath")}</b></div>
+              </div>
+              <div className="ld-post-link"><b>{t("postLinkTitle")}</b><small>uxgate.org</small></div>
+            </div>
+          </div>
         </section>
 
         <section id="plan" className="land-sec">
