@@ -226,7 +226,6 @@ export const NAV: NavGroup[] = [
       item("paths", "Paths and lessons", "book-open", "/admin/content", ["content.view"]),
       item("skills", "Skills and misconceptions", "star", "/admin/content/skills", ["content.view"]),
       item("media", "Media library", "film-strip", "/admin/media", ["media.view", "media.own"]),
-      item("instructors", "Instructors", "chalkboard-teacher", "/admin/media/instructors", ["instructors.view"]),
       item("quality", "Content quality", "flag", "/admin/content/quality", ["quality.view"]),
       item("releases", "Releases", "rocket-launch", "/admin/content/releases", ["releases.view", "content.view"]),
     ],

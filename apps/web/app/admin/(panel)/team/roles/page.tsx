@@ -85,7 +85,7 @@ export default async function RolesPage() {
           </div>
         )}
       </Card>
-      <Note icon="lock-simple">A custom role can never manage super admins. Phase 2 areas are listed so their menu items can be given now; they open a placeholder until built.</Note>
+      <Note icon="lock-simple">A custom role can never manage super admins.</Note>
     </main>
   );
 }
