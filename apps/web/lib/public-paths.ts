@@ -101,7 +101,7 @@ export const PUBLIC_PATHS: PublicPath[] = [
   },
   {
     id: "P02", slug: "find-and-fix-usability", name: "Find and Fix Usability", art: "path-usability", kind: "hybrid", status: "open",
-    sub: t("Spot where people get stuck, and fix that first.", "اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا."),
+    sub: t("Spot where people get stuck, and fix that first.", "استخدم مبادئ سهولة الاستخدام العشرة (Usability heuristics) لتكتشف ما يجعل الشاشة صعبة الاستخدام، وتختار الإصلاح الذي يساعد."),
     sample: {
       unit: 1, lesson: 1, speaker: "sara",
       scenario: t("I'm designing an app for a parcel delivery company. Laila wants a courier to pick up a parcel from her home. She taps Book pickup. For four seconds nothing on the screen changes, so she taps again. Two couriers come to her door the next morning.", "أصمّم تطبيقًا لشركة توصيل طرود. تريد ليلى أن يأتي مندوب ليستلم طردًا من بيتها. ضغطت احجز الاستلام. ولمدة أربع ثوانٍ لم يتغيّر شيء على الشاشة، فضغطت مرة أخرى. وفي الصباح التالي جاء إلى بابها مندوبان."),

@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
-import { catalogEntry, catalogFor, pathArtUrl, type CatalogRow } from "@/lib/catalog";
+import { catalogEntry, catalogFor, localPathName, pathArtUrl, type CatalogRow } from "@/lib/catalog";
 import { buildPathView, pathBegun, type PathView } from "@/lib/learning";
 import { isShown, pathSkills } from "@/lib/certificate";
 import type { Learner } from "@/lib/server/learner";
@@ -20,7 +21,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
     return (
       <div className="path-card is-soon" aria-disabled="true" aria-label={t("soonAria", { name: p.name })} style={{ padding: "10px 12px" }}>
         <span className="pc-ill" style={{ inlineSize: 44, blockSize: 44, borderRadius: 12 }}><img src={pathArtUrl(p.id)} alt="" style={{ inlineSize: 48, blockSize: 48 }} /></span>
-        <span className="pc-text"><span className="pc-name" style={{ fontSize: 15 }}><bdi>{p.name}</bdi></span><span className="pc-sub" style={{ WebkitLineClamp: 1 }}>{p.sub[locale]}</span></span>
+        <span className="pc-text"><span className="pc-name" style={{ fontSize: 15 }}><PathName name={p.name ?? ""} /></span><span className="pc-sub" style={{ WebkitLineClamp: 1 }}>{p.sub[locale]}</span></span>
         <span className="kind kind-soon">{t("soon")}</span>
       </div>
     );
@@ -32,7 +33,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
       <Link href={`/app/paths/${p.id}`} className="path-card is-done press" aria-label={t("doneAria", { name: p.name })}>
         <span className="pc-ill"><img src={pathArtUrl(p.id)} alt="" /><span className="pc-badge" aria-hidden="true"><span className="ph ph-check" /></span></span>
         <span className="pc-text">
-          <span className="pc-name"><bdi>{p.name}</bdi></span>
+          <span className="pc-name"><PathName name={p.name ?? ""} /></span>
           <span className="pc-meta">
             <span className="kind kind-done"><span className="ph ph-seal-check-fill" aria-hidden="true" />{t("completed")}</span>
             <span className={k.cls}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
@@ -47,7 +48,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
     <Link href={`/app/paths/${p.id}`} className={`path-card press${p.state === "current" ? " is-current" : ""}`} aria-label={p.state === "current" ? t("currentAria", { name: p.name }) : p.name}>
       <span className="pc-ill"><img src={pathArtUrl(p.id)} alt="" /></span>
       <span className="pc-text">
-        <span className="pc-name"><bdi>{p.name}</bdi></span>
+        <span className="pc-name"><PathName name={p.name ?? ""} /></span>
         {!joined ? <span className="pc-sub">{p.sub[locale]}</span> : null}
         <span className="pc-meta">
           {p.state === "current" ? <span className="kind kind-current">{t("current")}</span> : null}
@@ -66,7 +67,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
 export async function PathsMain({ me }: { me: Learner }) {
   const t = await getTranslations("paths");
   const locale = (await getLocale()) as Locale;
-  const rows = catalogFor(new Set(me.joined.map((j) => j.pathId)), me.activePathId);
+  const rows = catalogFor(new Set(me.joined.map((j) => j.pathId)), me.activePathId, undefined, locale);
   const group = (s: CatalogRow["state"][]) => rows.filter((r) => s.includes(r.state));
   // A path is completed when its certificate exists (every skill Shown), not by lesson %.
   const certified = new Set((me.profileExtra?.certificates ?? []).map((c) => c.pathId));
@@ -131,7 +132,7 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
         
         <img src={pathArtUrl(pathId)} alt="" style={{ inlineSize: 96, blockSize: 96, flex: "none" }} />
         <div style={{ flex: 1, minInlineSize: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-          <h1 className="t-h2" style={{ color: "var(--panel-ink)" }}><bdi>{entry.name}</bdi></h1>
+          <h1 className="t-h2" style={{ color: "var(--panel-ink)" }}><PathName name={localPathName(entry.id, locale) ?? ""} /></h1>
           <p className="t-small" style={{ color: "var(--ink-2)" }}>{entry.sub[locale]}</p>
           <div className="pc-meta">
             {isCurrent ? <span className="kind kind-current">{t("current")}</span> : null}
@@ -161,7 +162,7 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
       ) : (
         <>
           <ChoosePath pathId={pathId} label={mainLabel} to={goHref} />
-          <p className="t-small ink-2">{other && joined ? t("keepNamed", { name: other.name }) : t("keep")}</p>
+          <p className="t-small ink-2">{other && joined ? t("keepNamed", { name: localPathName(other.id, locale) }) : t("keep")}</p>
         </>
       )}
       <p className="t-over">{t("unitsTitle")}</p>
@@ -184,6 +185,7 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
 /** Confirmation after starting or switching: the new current path, and the others listed as Saved with their progress. */
 export async function PathStartedMain({ me, pathId }: { me: Learner; pathId: string }) {
   const t = await getTranslations("paths");
+  const locale = (await getLocale()) as Locale;
   const entry = catalogEntry(pathId)!;
   const view = buildPathView(pathId, me.progress, me.practicedSkills);
   const others = me.joined.filter((j) => j.pathId !== pathId);
@@ -192,7 +194,7 @@ export async function PathStartedMain({ me, pathId }: { me: Learner; pathId: str
       <section className="card-panel" style={{ display: "flex", flexDirection: "column", gap: 10, padding: 20, borderRadius: 24, alignItems: "center", textAlign: "center" }}>
         
         <img src={pathArtUrl(pathId)} alt="" style={{ inlineSize: 120, blockSize: 120 }} />
-        <h1 className="t-h2" style={{ color: "var(--panel-ink)" }}>{t("startedTitle", { name: entry.name })}</h1>
+        <h1 className="t-h2" style={{ color: "var(--panel-ink)" }}>{t("startedTitle", { name: localPathName(entry.id, locale) })}</h1>
         <p className="t-body" style={{ color: "var(--ink-2)" }}>{t("startedBody")}</p>
       </section>
       {view?.next ? <Link href={`/app/lesson/${view.next.lesson.lessonId}`} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{t("startFirst")}</Link> : null}
@@ -202,7 +204,7 @@ export async function PathStartedMain({ me, pathId }: { me: Learner; pathId: str
           {others.map((o) => {
             const e = catalogEntry(o.pathId);
             const v = buildPathView(o.pathId, me.progress, me.practicedSkills);
-            return e ? <div key={o.pathId} className="path-card"><span className="pc-ill"><img src={pathArtUrl(o.pathId)} alt="" /></span><span className="pc-text"><span className="pc-name"><bdi>{e.name}</bdi></span><span className="pc-meta"><span className="kind">{t("saved")}</span><span className="t-small num">{pctOf(v)}%</span></span></span></div> : null;
+            return e ? <div key={o.pathId} className="path-card"><span className="pc-ill"><img src={pathArtUrl(o.pathId)} alt="" /></span><span className="pc-text"><span className="pc-name"><PathName name={localPathName(e.id, locale) ?? ""} /></span><span className="pc-meta"><span className="kind">{t("saved")}</span><span className="t-small num">{pctOf(v)}%</span></span></span></div> : null;
           })}
         </div>
       ) : null}

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { PDFDocument } from "pdf-lib";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { certStats } from "@/lib/certificate-stats";
 import { requireLearner } from "@/lib/server/learner";
 import { ensureCertificates } from "@/lib/server/certificates";
@@ -18,7 +18,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ locale: 
   const cert = (await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates)).find((c) => c.pathId === pathId);
   if (!cert) notFound();
   const name = me.progress.displayName ?? "";
-  const pathName = catalogEntry(pathId)?.name ?? pathId;
+  const pathName = localPathName(pathId, locale);
   const s = certStats(pathId);
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(cert.issuedAt));
   const png = await (await renderCertPng({ name, pathName, shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: cert.code, pathId, locale }, new URL(req.url).origin, 2)).arrayBuffer();
