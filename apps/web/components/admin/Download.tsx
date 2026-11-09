@@ -8,8 +8,8 @@ export function ExportButton({ action, label, title, hidden = [], fresh, note }:
   const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
   useEffect(() => {
     if (state?.ok && state.data && typeof state.data === "object" && "csv" in state.data) {
-      const d = state.data as { csv: string; name: string };
-      const url = URL.createObjectURL(new Blob([d.csv], { type: "text/csv;charset=utf-8" }));
+      const d = state.data as { csv: string; name: string; mime?: string };
+      const url = URL.createObjectURL(new Blob([d.csv], { type: `${d.mime ?? "text/csv"};charset=utf-8` }));
       const a = document.createElement("a");
       a.href = url; a.download = d.name; a.click();
       URL.revokeObjectURL(url);

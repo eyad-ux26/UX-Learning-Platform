@@ -37,11 +37,13 @@ type Field = { name: string; value: string };
  */
 export function Confirm({
   action, label, title, sub, effects = [], hidden = [], reason = true, reasonLabel = "Reason (saved in the audit log)", typed, fresh = true,
-  danger = false, small = false, ghost = false, icon, confirmLabel, children, disabled, refresh = true,
+  danger = false, small = false, ghost = false, icon, confirmLabel, children, disabled, refresh = true, go,
 }: {
   action: Action; label: string; title: string; sub?: string; effects?: { icon: string; text: ReactNode }[]; hidden?: Field[]; reason?: boolean;
   reasonLabel?: string; typed?: string; fresh?: boolean; danger?: boolean; small?: boolean; ghost?: boolean; icon?: string; confirmLabel?: string;
   children?: ReactNode; disabled?: boolean | string; refresh?: boolean;
+  /** Where to go after it worked (instead of staying on the page). */
+  go?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const uid = useId();
@@ -52,9 +54,10 @@ export function Confirm({
   useEffect(() => {
     if (state?.ok) {
       ref.current?.close();
-      if (refresh) router.refresh();
+      if (go) router.push(go);
+      else if (refresh) router.refresh();
     }
-  }, [state, refresh, router]);
+  }, [state, refresh, router, go]);
   const cls = `a-btn${small ? " sm" : ""}${danger ? " danger" : ""}${ghost ? " ghost" : ""}`;
   return (
     <>
