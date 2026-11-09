@@ -129,15 +129,19 @@ export type WelcomeInput = {
   settingsHref: string;
 };
 
+/** Non-breaking spaces inside a bracketed term, so «(Form Design)» never splits across two lines. */
+const keepTerm = (s: string) => s.replace(/\([^()]*\)/g, (m) => m.replace(/ /g, "\u00a0"));
+
 export function welcomeEmail(i: WelcomeInput): EmailOut {
+  const pathTitle = keepTerm(i.pathTitle);
   const w = msgs(i.locale).welcome;
   const name = clean(i.name);
   const out = emailLayout({
     locale: i.locale,
-    preheader: fill(w.preheader, { path: i.pathTitle }),
+    preheader: fill(w.preheader, { path: pathTitle }),
     heading: name ? fill(w.heading, { name }) : w.headingNoName,
     paragraphs: [w.body],
-    box: { title: fill(w.boxTitle, { path: i.pathTitle }), body: fill(w.boxBody, { unit: i.unitTitle }), img: i.pathImg || "path-forms" },
+    box: { title: fill(w.boxTitle, { path: pathTitle }), body: fill(w.boxBody, { unit: i.unitTitle }), img: i.pathImg || "path-forms" },
     button: { label: w.button, href: i.startHref },
     notes: i.time ? [fill(w.note, { time: i.time })] : [],
     ill: "gate",

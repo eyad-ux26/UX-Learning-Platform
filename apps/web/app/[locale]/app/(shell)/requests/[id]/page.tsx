@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
@@ -43,7 +44,7 @@ export default async function RequestPage({ params }: { params: Promise<{ locale
       <div className="s4-cols">
         <div className="pg-stack" style={{ gap: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            <span className="path-lbl"><img src={pathArt(v.pathId)} alt="" /><span><span className="ltr">{v.pathTitle}</span> · {t("whereLong", { unit: v.unitNo, lesson: v.lessonNo, step: v.stepNo })}</span></span>
+            <span className="path-lbl"><img src={pathArt(v.pathId)} alt="" /><span><PathName name={v.pathTitle} /> · {t("whereLong", { unit: v.unitNo, lesson: v.lessonNo, step: v.stepNo })}</span></span>
             <span className={ST[v.status][0]}><span className={`ph ${ST[v.status][1]}`} aria-hidden="true" />{t(`st_${v.status}`)}</span>
           </div>
           <section className="snap" aria-labelledby="rq-step">
