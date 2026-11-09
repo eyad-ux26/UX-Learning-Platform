@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>System health · Scheduled jobs</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="health" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">System health</h1>
+          <p class="t-sm ink-2">Jobs that run on a timer in Cloudflare. Times are Cairo; the timers themselves run in UTC.</p>
+        </div>
+        <div class="acts"></div>
+      </div>
+      <nav class="a-tabs" aria-label="System health"><a href="SystemHealth.dc.html" aria-selected="false">Status</a><a href="ScheduledJobs.dc.html" aria-selected="true">Scheduled jobs</a></nav>
+      <div class="a-split">
+        <div class="a-main-col">
+          <section class="a-card" aria-label="Scheduled jobs">
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Job</th><th scope="col">When</th><th scope="col">Last run</th><th scope="col">Emails learners</th><th scope="col"><span class="sr">Run</span></th></tr></thead>
+              <tbody><sc-for list="{{jobs}}" as="j" hint-placeholder-count="7"><tr class="{{j.cls}}"><td style="white-space: normal; min-width: 240px;"><span class="w6">{{j.n}}</span><br><span class="t-xs ink-2">{{j.d}}</span></td><td class="t-sm">{{j.w}}</td><td style="white-space: nowrap;"><span class="{{j.dot}}"></span> {{j.l}}</td><td>{{j.e}}</td><td class="r"><sc-if value="{{j.can}}" hint-placeholder-val="{{false}}"><button class="a-btn" type="button" style="height: 28px;"><span class="i i-play" aria-hidden="true"></span>Run now</button></sc-if><sc-if value="{{j.cannot}}" hint-placeholder-val="{{true}}"><span class="a-row t-xs ink-3" style="gap: 4px; flex-wrap: nowrap; justify-content: flex-end;"><span class="i i-lock-simple s12" aria-hidden="true"></span>Timer only</span></sc-if></td></tr></sc-for></tbody>
+            </table></div>
+          </section>
+          <div class="a-note"><span class="i i-shield-check" aria-hidden="true"></span><span>Jobs that email learners can’t be started by hand, so nobody can send the same reminder twice by mistake. A failed run tries again on its next timer.</span></div>
+        </div>
+        <aside class="a-rail" aria-labelledby="dj-h">
+          <div class="a-rail-s"><span class="t-over">Last run · 04:00 Cairo</span><h2 class="t-h3" id="dj-h">Daily: streaks and waitlist</h2></div>
+          <div class="a-rail-s"><span class="a-lbl">Result</span><div class="a-kv"><span class="k">Learners settled</span><span class="v num">2,612 in 27 calls of 100</span><span class="k">Failed</span><span class="v num">0</span><span class="k">Waitlist removed</span><span class="v num">14 never confirmed</span><span class="k">Confirm emails sent</span><span class="v num">22</span><span class="k">Took</span><span class="v num">48 s</span></div></div>
+          <div class="a-rail-s"><span class="a-lbl">Last 7 runs</span><div class="a-spark" style="height: 32px;" role="img" aria-label="All 7 runs passed"><span style="height: 70%;" title="3 Nov passed"></span><span style="height: 74%;" title="4 Nov passed"></span><span style="height: 80%;" title="5 Nov passed"></span><span style="height: 85%;" title="6 Nov passed"></span><span style="height: 88%;" title="7 Nov passed"></span><span style="height: 93%;" title="8 Nov passed"></span><span style="height: 100%;" title="9 Nov passed"></span></div><span class="t-xs ink-2">Learners settled each night. All passed.</span></div>
+          <div class="a-rail-s"><span class="t-xs ink-2">If a run stops early, the rest of the learners are settled on the next run or on their next visit.</span></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const J = [['Daily: streaks and waitlist', 'Settles streaks and freezes, removes unconfirmed waitlist emails, sends waitlist confirmations', 'Daily 04:00', 'good', 'Today 04:00 · passed', 'Tomorrow 04:00', 'Yes', false], ['Daily: skills to review', 'Tells learners whose skills are due. Runs right after the job above', 'Daily, after streaks', 'good', 'Today 04:01 · passed', 'Tomorrow 04:01', 'Yes', false], ['Daily: billing', 'Renewals, grace periods, payment retries and billing reminders', 'Daily 04:00', 'good', 'Today 04:00 · passed', 'Tomorrow 04:00', 'Yes', false], ['Every 15 minutes: reminders', 'Daily reminders in each learner’s own quarter hour, and removal of deleted accounts', 'Every 15 min', 'good', '06:30 · passed', '06:45', 'Yes', false], ['Weekly summary report', 'Emails the weekly summary to super admins. New in Phase 2', 'Sundays 09:00', 'good', '8 Nov · sent', '15 Nov', 'No, team only', true], ['Delete old CSV exports', 'Removes export files older than 7 days. New in Phase 2', 'Daily 05:00', 'good', 'Today 05:00 · 3 files', 'Tomorrow 05:00', 'No', true], ['Health check', 'Checks each service for System health', 'Every minute', 'good', '06:31 · passed', '06:32', 'No', true]];
+    return { jobs: J.map(([n, d, w, dot, l, x, e, can], i) => ({ n, d, w, dot: 'a-dot ' + dot, l, x, e, can, cannot: !can, cls: i === 0 ? 'open' : '' })) };
+  }
+}
+</script>
+</body>
+</html>

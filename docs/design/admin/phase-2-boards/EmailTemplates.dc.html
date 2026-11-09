@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Communications · Email templates</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="marketing" cur="comms" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="marketing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Email templates</h1>
+          <p class="t-sm ink-2">Every email the app sends, in English and Arabic. Learners get the language they picked.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-paper-plane-tilt" aria-hidden="true"></span>Send a test to me</button><button class="a-btn pri" type="button"><span class="i i-check" aria-hidden="true"></span>Save and send for approval</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Communications"><a href="Campaigns.dc.html" aria-selected="false">Campaigns</a><a href="Announcements.dc.html" aria-selected="false">In-app announcements</a><a href="EmailTemplates.dc.html" aria-selected="true">Email templates</a><a href="Waitlist.dc.html" aria-selected="false">Waitlist</a><a href="EmailLog.dc.html" aria-selected="false">Email log</a></nav>
+      <div style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 330px; gap: 16px; align-items: start;">
+        <section class="a-card" aria-label="Templates">
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="4"><div class="a-rail-s"><span class="t-over">{{g.l}}</span><sc-for list="{{g.items}}" as="t" hint-placeholder-count="3"><a href="#" class="{{t.cls}}" aria-current="{{t.cur}}"><span class="t-sm w6">{{t.n}}</span><span class="t-xs ink-3">{{t.s}}</span></a></sc-for></div></sc-for>
+        </section>
+        <section class="a-card" aria-labelledby="ed-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="ed-h">Daily reminder</h2><span class="a-tagx">Learning</span><span class="t-xs ink-2">Edited 2 Nov by Rana Khalil</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 12px;">
+            <p class="t-sm ink-2">Sent at the time each learner picked (default 20:00), only to learners who turned the reminder on.</p>
+            <sc-for list="{{fields}}" as="f" hint-placeholder-count="6"><div class="a-field"><span class="a-lbl">{{f.l}}</span><div class="{{f.cls}}"><div><span class="lg">English <span class="cnt">{{f.ec}}</span></span><span class="tx">{{f.en}}</span></div><div><span class="lg">العربية · Arabic <span class="cnt">{{f.ac}}</span></span><span class="tx a-ar" lang="ar" dir="rtl">{{f.ar}}</span></div></div></div></sc-for>
+            <div class="a-field"><span class="a-lbl">Fill-ins you can use</span><div class="a-row" style="gap: 6px; flex-wrap: wrap;"><span class="a-ph-var">{name}</span><span class="a-ph-var">{lesson}</span><span class="a-ph-var">{minutes}</span><span class="a-ph-var">{time}</span></div><span class="help">If a learner has no name, the heading without a name is used.</span></div>
+            <div class="a-note info"><span class="i i-info" aria-hidden="true"></span><span>The footer with “Change the time” and “Turn off the daily reminder email” is added by the app and can’t be removed. Billing emails always arrive; learners can’t turn them off.</span></div>
+          </div>
+        </section>
+        <section class="a-card" aria-labelledby="pv-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="pv-h">Preview</h2><div class="a-seg" role="group" aria-label="Preview language"><button type="button" aria-pressed="{{enP}}" onClick="{{toEn}}">EN</button><button type="button" aria-pressed="{{arP}}" onClick="{{toAr}}">AR</button></div></div>
+          <div class="a-card-b">
+            <div class="a-mail" dir="{{dir}}" lang="{{lang}}" style="{{mailStyle}}">
+              <div class="hd"><span><b>{{fromL}}</b> <bdi dir="ltr">UXGate &lt;hello@uxgate.org&gt;</bdi></span><span><b>{{subjL}}</b> {{subj}}</span><span style="color: #4F7287;">{{pre}}</span></div>
+              <div class="bd"><img src="/_blob/52911c89aaf083ecd8d76302a1a62f4f" alt="UXGate" style="height: 22px; align-self: flex-start;"><b style="font-size: 18px; line-height: 26px;">{{hd}}</b><span>{{body}}</span><span class="cta">{{btn}}</span><span style="font-size: 12.5px; color: #3D5D73;">{{note}}</span></div>
+              <div class="ft">{{why}}<br><u>{{chg}}</u> · <u>{{off}}</u></div>
+            </div>
+            <p class="t-xs ink-3" style="margin-top: 8px;">Sample learner: Nour, lesson “Labels that stay visible”, 6 minutes, 20:00.</p>
+          </div>
+        </section>
+      </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { lang: 'en' }; }
+  renderVals() {
+    const G = [['Account (set in Supabase Auth)', [['Confirm your email', 'Supabase · read-only here'], ['Sign in to UXGate', 'email link · read-only here'], ['Set a new password', 'Supabase · read-only here']]], ['Learning', [['Daily reminder', 'Your next lesson is ready'], ['Goal nudge', 'One short lesson finishes today’s goal'], ['Welcome', 'Welcome to UXGate, {name}'], ['Badge turned gold', 'Your badge turned gold'], ['Account deletion', 'Your UXGate account is set to be deleted']]], ['Billing (always sent)', [['Receipt', 'Your UXGate receipt · {amount}'], ['Annual renewal', 'Your annual plan renews on {day}'], ['Payment failed', 'We couldn’t take your UXGate payment'], ['Plan cancelled', 'Your UXGate Pro plan is cancelled'], ['Refund approved', 'Your refund is approved'], ['Student price', 'Confirm your student price']]], ['Launch', [['Waitlist confirm', 'Confirm your email for the UXGate launch']]]];
+    const groups = G.map(([l, items]) => ({ l, items: items.map(([n, s]) => ({ n, s, cur: n === 'Daily reminder' ? 'true' : 'false', cls: 'a-pick' })) }));
+    const F = [['Subject', 'Your next lesson is ready', 'درسك التالي جاهز'], ['Preview line', '{lesson} · {minutes}', '{lesson} · {minutes}'], ['Heading', 'Ready for today’s lesson, {name}?', 'هل أنت جاهز لدرس اليوم يا {name}؟'], ['Text', 'Your next lesson takes {minutes}.', 'درسك التالي يستغرق {minutes}.'], ['Button', 'Start the lesson', 'ابدأ الدرس'], ['Why they get it', 'You get this because you turned on the daily reminder.', 'تصلك هذه الرسالة لأنك فعّلت التذكير اليومي.']];
+    const iso = (t) => t.replace(/\{\w+\}/g, (m) => '\u2068' + m + '\u2069');
+    const fields = F.map(([l, en, ar], i) => ({ l, en, ar: iso(ar), ec: en.length + ' chars', ac: ar.length + ' chars', cls: i === 0 ? 'a-bi focus' : 'a-bi' }));
+    const ar = this.state.lang === 'ar';
+    const T = ar ? { subj: 'درسك التالي جاهز', pre: 'ملصقات تبقى ظاهرة · حوالي 6 دقائق', hd: 'هل أنت جاهز لدرس اليوم يا نور؟', body: 'درسك التالي يستغرق حوالي 6 دقائق.', btn: 'ابدأ الدرس', note: 'ضبطت هذا التذكير على الساعة 20:00.', why: 'تصلك هذه الرسالة لأنك فعّلت التذكير اليومي.', chg: 'غيّر الوقت', off: 'أوقف بريد التذكير اليومي', fromL: 'من:', subjL: 'الموضوع:' } : { subj: 'Your next lesson is ready', pre: 'Labels that stay visible · about 6 minutes', hd: 'Ready for today’s lesson, Nour?', body: 'Your next lesson takes about 6 minutes.', btn: 'Start the lesson', note: 'You set this reminder for 20:00.', why: 'You get this because you turned on the daily reminder.', chg: 'Change the time', off: 'Turn off the daily reminder email', fromL: 'From:', subjL: 'Subject:' };
+    return { groups, fields, ...T, dir: ar ? 'rtl' : 'ltr', lang: ar ? 'ar' : 'en', mailStyle: ar ? 'font-family: Cairo, sans-serif;' : '', enP: String(!ar), arP: String(ar), toEn: () => this.setState({ lang: 'en' }), toAr: () => this.setState({ lang: 'ar' }) };
+  }
+}
+</script>
+</body>
+</html>

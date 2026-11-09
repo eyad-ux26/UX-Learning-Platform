@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings · Feature flags</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="settings" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Platform settings</h1>
+          <p class="t-sm ink-2">Switches that change what learners see. Every change asks you to confirm, says who it affects and is written to the audit log.</p>
+        </div>
+        <div class="acts"></div>
+      </div>
+      <nav class="a-tabs" aria-label="Platform settings"><a href="FeatureFlags.dc.html" aria-selected="true">Feature flags</a><a href="LearningRules.dc.html" aria-selected="false">Learning rules</a><a href="AccessSettings.dc.html" aria-selected="false">Access and maintenance</a><a href="LegalPages.dc.html" aria-selected="false">Legal pages</a></nav>
+      <div class="a-split">
+        <div class="a-main-col">
+          <section class="a-card" aria-labelledby="ff-h">
+            <div class="a-card-h"><h2 class="t-h3 a-grow" id="ff-h">Feature flags</h2><span class="t-xs ink-2">Stored in app_flags · changes reach learners within a minute</span></div>
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Flag</th><th scope="col">What it does</th><th scope="col">Changed last</th><th scope="col">State</th></tr></thead>
+              <tbody><sc-for list="{{flags}}" as="f" hint-placeholder-count="3"><tr class="{{f.cls}}"><td><span class="w6">{{f.n}}</span><br><span class="a-id">{{f.k}}</span></td><td class="t-sm" style="white-space: normal; max-width: 380px;">{{f.d}}</td><td class="t-sm">{{f.w}}</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="{{f.sw}}" aria-hidden="true"></span><span class="w6">{{f.s}}</span></span></td></tr></sc-for></tbody>
+            </table></div>
+          </section>
+          <section class="a-card" aria-labelledby="env-h">
+            <div class="a-card-h"><h2 class="t-h3 a-grow" id="env-h">Set in Cloudflare</h2><span class="a-tagx">Read-only here</span></div>
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Setting</th><th scope="col">What it does</th><th scope="col">State</th></tr></thead>
+              <tbody>
+                <tr><td><span class="w6">Egypt price needs an Egyptian card</span><br><span class="a-id">PAYMOB_EG_CARDS_ONLY</span></td><td class="t-sm" style="white-space: normal;">A card issued outside Egypt on the Egypt price is refunded and the learner is sent to the international checkout.</td><td style="white-space: nowrap;"><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr>
+              </tbody>
+            </table></div>
+            <div class="a-card-b"><p class="t-xs ink-2">Changing these needs a new deploy, so the panel only shows them. Keys and secrets are never shown here.</p></div>
+          </section>
+        </div>
+        <aside class="a-rail" aria-labelledby="lb-h">
+          <div class="a-rail-s"><span class="t-over">Flag</span><h2 class="t-h3" id="lb-h">Leaderboards</h2><span class="a-id">leaderboard</span></div>
+          <div class="a-rail-s"><span class="a-lbl">If you turn it on</span><ul class="t-sm" style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px;"><li>The Leaderboard tab appears for every learner.</li><li>Only learners who opt in are listed; nobody is added for them.</li><li>Each learner’s board counts from the week start day they picked.</li></ul></div>
+          <div class="a-rail-s"><span class="a-lbl">History</span><div class="a-kv"><span class="k">5 Nov</span><span class="v">Created, off · migration</span></div><a class="t-xs w6" href="AuditLog.dc.html">See in the audit log</a></div>
+          <div class="a-rail-s"><a class="a-btn pri" href="FlowFeatureFlag.dc.html" style="align-self: flex-start;"><span class="i i-toggle-right" aria-hidden="true"></span>Turn on…</a></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const F = [['Leaderboards', 'leaderboard', 'Shows the weekly leaderboard. Learners still choose to join it.', '5 Nov · set up, off', false], ['In-app announcements', 'announcements', 'Lets banners from Communications show on Home. New with Phase 2.', 'Phase 2 build · on', true], ['Free trial', 'trials', 'Offers a free trial before the first payment. Needs the learner app to support trials first.', 'Phase 2 build · off', false]];
+    return { flags: F.map(([n, k, d, w, on], i) => ({ n, k, d, w, s: on ? 'On' : 'Off', sw: on ? 'a-switch on' : 'a-switch', cls: i === 0 ? 'open' : '' })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports · Learning</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="analyst" cur="reports" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="analyst" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Learning</h1>
+          <p class="t-sm ink-2">How learners move through the paths. Team and test accounts are left out. Updated 04:00 Cairo time.</p>
+        </div>
+        <div class="acts"><button class="a-chip" type="button"><span class="k">Dates</span> Last 30 days<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Path</span> All 8<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Language</span> Both<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Plan</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-btn" type="button"><span class="i i-bookmark-simple" aria-hidden="true"></span>Save view</button><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Reports"><a href="Reports.dc.html" aria-selected="false">Overview and saved</a><a href="ReportLearning.dc.html" aria-selected="true">Learning</a><a href="ReportGrowth.dc.html" aria-selected="false">Growth</a><a href="ReportMoney.dc.html" aria-selected="false">Money</a><a href="ReportCerts.dc.html" aria-selected="false">Certificates and sharing</a></nav>
+      <section class="a-kpis" style="grid-template-columns: repeat(6, minmax(0, 1fr));" aria-label="Learning summary">
+        <div class="a-kpi"><span class="k">Active learners</span><span class="t-big num">9,870</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>this week, +6%</span></div>
+        <div class="a-kpi"><span class="k">Lessons finished</span><span class="t-big num">41,280</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>+9% on last 30 days</span></div>
+        <div class="a-kpi"><span class="k">Units finished</span><span class="t-big num">6,940</span><span class="d flat">1,460 were a first unit</span></div>
+        <div class="a-kpi"><span class="k">Paths finished</span><span class="t-big num">96</span><span class="d flat">certificates issued 96</span></div>
+        <div class="a-kpi"><span class="k">Skills shown / mastered</span><span class="t-big num">18,420</span><span class="d flat">7,310 mastered (40%)</span></div>
+        <div class="a-kpi"><span class="k">Reviews due now</span><span class="t-big num">3,140</span><span class="d flat">due after 3 days</span></div>
+      </section>
+      <div style="display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="wa-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="wa-h">Weekly active learners</h2><span class="t-xs ink-2">Last 12 weeks</span><a class="t-xs w6" href="#lp">Show as a table</a></div>
+          <div class="a-card-b">
+            <div style="display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 8px;">
+              <div class="t-xs ink-3 num" style="display: flex; flex-direction: column; justify-content: space-between; height: 180px; text-align: right;"><span>10k</span><span>5k</span><span>0</span></div>
+              <div style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; align-items: end; height: 180px; border-bottom: 1px solid var(--line-strong); background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 90px;" role="img" aria-label="Weekly active learners rose from 4,120 twelve weeks ago to 9,870 this week">
+                <sc-for list="{{wk}}" as="w" hint-placeholder-count="12"><span title="{{w.t}}" style="display: block; height: {{w.h}}; background: var(--s1); border-radius: 4px 4px 0 0; opacity: {{w.op}};"></span></sc-for>
+              </div>
+              <span></span>
+              <div class="t-xs ink-3" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 10px; text-align: center;"><sc-for list="{{wk}}" as="w" hint-placeholder-count="12"><span>{{w.l}}</span></sc-for></div>
+            </div>
+            <p class="t-xs ink-2" style="margin-top: 10px;">This week <b class="num">9,870</b>. Week of 2 Nov is the first week with all 8 paths live.</p>
+          </div>
+        </section>
+        <section class="a-card" aria-labelledby="st-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="st-h">Streak lengths today</h2><span class="t-xs ink-2">Learners active in 30 days</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="a-hb"><sc-for list="{{streak}}" as="s" hint-placeholder-count="6"><span>{{s.l}}</span><span class="bar" title="{{s.t}}"><span style="width: {{s.w}};"></span></span><span class="v">{{s.v}}</span></sc-for></div>
+            <p class="t-xs ink-2">1,204 learners hold at least one freeze. Rule: 5 goal days earn a freeze, at most 2.</p>
+          </div>
+        </section>
+      </div>
+      <section class="a-card" id="lp" aria-labelledby="lp-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="lp-h">By path</h2><span class="t-xs ink-2">Sorted by active learners this week</span></div>
+        <div class="a-tbl-wrap"><table class="a-tbl">
+          <thead><tr><th scope="col">Path</th><th scope="col" class="r">Active this week</th><th scope="col" class="r">Lessons finished</th><th scope="col" class="r">Finished unit 1</th><th scope="col" class="r">Finished the path</th><th scope="col" class="r">Skills mastered</th><th scope="col" class="r">Learning in Arabic</th></tr></thead>
+          <tbody><sc-for list="{{paths}}" as="p" hint-placeholder-count="8"><tr><td><span class="a-id">{{p.id}}</span> <span class="w6">{{p.n}}</span></td><td class="r num">{{p.a}}</td><td class="r num">{{p.l}}</td><td class="r num">{{p.u}}</td><td class="r num">{{p.f}}</td><td class="r num">{{p.m}}</td><td class="r num">{{p.ar}}</td></tr></sc-for></tbody>
+        </table></div>
+      </section>
+      <section class="a-card" aria-labelledby="hs-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="hs-h">Skills learners find hardest</h2><span class="t-xs ink-2">Lowest share shown on the first skill check</span><a class="t-xs w6" href="QualityFlags.dc.html">Open content quality</a></div>
+        <div class="a-tbl-wrap"><table class="a-tbl">
+          <thead><tr><th scope="col">Skill</th><th scope="col">Path · unit</th><th scope="col" class="r">Shown first time</th><th scope="col" class="r">Retests after unit</th></tr></thead>
+          <tbody><sc-for list="{{hard}}" as="h" hint-placeholder-count="5"><tr><td><span class="a-id">{{h.sk}}</span> <span class="w6">{{h.mn}}</span></td><td>{{h.pl}}</td><td class="r num ink-bad w7">{{h.s}}</td><td class="r num">{{h.r}}</td></tr></sc-for></tbody>
+        </table></div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const W = [4120, 4380, 4710, 5050, 5390, 5820, 6240, 6610, 7380, 8240, 9310, 9870];
+    const L = ['24 Aug', '31', '7 Sep', '14', '21', '28', '5 Oct', '12', '19', '26', '2 Nov', '9'];
+    const ST = [['No streak', 3410], ['1–2 days', 2530], ['3–6 days', 1880], ['7–13 days', 1210], ['14–29 days', 620], ['30 days or more', 220]];
+    const P = [['P01', 'Forms That Flow', '3,412', '12,940', '61%', '38', '44%', '58%'], ['P02', 'Find and Fix Usability', '2,980', '10,210', '57%', '21', '39%', '64%'], ['P10', 'Visual Hierarchy in Action', '1,705', '5,880', '54%', '17', '41%', '55%'], ['P15', 'Write Words That Work', '1,122', '4,390', '52%', '9', '37%', '61%'], ['P14', 'Patterns That Fit', '904', '3,610', '49%', '6', '36%', '59%'], ['P05', 'Make UX Accessible', '688', '2,150', '46%', '3', '34%', '52%'], ['P13', 'AI Tools for Better UX', '612', '1,370', '44%', '2', '33%', '57%'], ['P12', 'Design Better AI Experiences', '447', '730', '41%', '0', '31%', '54%']];
+    return {
+      wk: W.map((v, i) => ({ h: (v / 10000 * 180) + 'px', l: L[i], t: 'Week of ' + L[i] + ': ' + v.toLocaleString('en') + ' active learners', op: i === 11 ? '1' : '0.75' })),
+      streak: ST.map(([l, v]) => ({ l, v: v.toLocaleString('en'), w: (v / 3410 * 100) + '%', t: l + ': ' + v.toLocaleString('en') + ' learners' })),
+      paths: P.map(([id, n, a, l, u, f, m, ar]) => ({ id, n, a, l, u, f, m, ar })),
+      hard: [['SK-P02-U03-04', 'P02 · U03', '29%', '412', '', 'Let people pick instead of recall'], ['SK-P05-U02-02', 'P05 · U02', '34%', '188', '', 'Make things quieter without fading them'], ['SK-P10-U04-01', 'P10 · U04', '37%', '205', '', 'Rearrange the layout at every width'], ['SK-P15-U03-03', 'P15 · U03', '39%', '141', '', 'Be serious without being cold'], ['SK-P01-U05-02', 'P01 · U05', '42%', '233', '', 'Make Tab follow the layout']].map(([sk, pl, s, r, mc, mn]) => ({ sk, pl, s, r, mc, mn }))
+    };
+  }
+}
+</script>
+</body>
+</html>

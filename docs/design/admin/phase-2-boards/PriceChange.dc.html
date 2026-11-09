@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Money · Change a price</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="billing" cur="prices" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="billing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="Prices.dc.html">Prices and plans</a><span aria-hidden="true">/</span><span>Change a price</span></nav>
+          <h1 class="t-h1">Change a price</h1>
+          <p class="t-sm ink-2">A change never edits a live price. It adds a new one from a start date, and a second admin approves it first.</p>
+        </div>
+        <div class="acts"><span class="a-tagx">Example: Egypt quarterly review</span></div>
+      </div>
+      <div class="a-split">
+        <div class="a-main-col">
+          <section class="a-card" aria-labelledby="ch-h">
+            <div class="a-card-h"><h2 class="t-h3 a-grow" id="ch-h">The change</h2></div>
+            <div class="a-card-b" style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+                <div class="a-field"><span class="a-lbl">Region</span><div class="a-in">Egypt<span class="a-grow"></span><span class="i i-caret-down s12" aria-hidden="true"></span></div></div>
+                <div class="a-field"><span class="a-lbl">Plan</span><div class="a-seg" role="group" aria-label="Plan"><button type="button" aria-pressed="true">Monthly</button><button type="button">Annual</button></div></div>
+                <div class="a-field"><span class="a-lbl">Starts</span><div class="a-in num">1 Dec 2026, 00:00 Cairo</div></div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+                <div class="a-field"><span class="a-lbl">Price now</span><div class="a-in num" style="background: var(--surface-2);">249 EGP · about $4.43 today</div></div>
+                <div class="a-field"><span class="a-lbl">New price</span><div class="a-in num" style="border-color: var(--sel-line); box-shadow: 0 0 0 1px var(--sel-line);">279 EGP</div><span class="help">About $4.96 at today’s 56.2 EGP to the dollar. The floor is about $1.50 net.</span></div>
+              </div>
+              <div class="a-field"><span class="a-lbl">Who pays the new price</span>
+                <div class="a-col" style="gap: 6px;">
+                  <span class="a-row t-sm" style="gap: 8px; flex-wrap: nowrap;"><span class="a-radio on" aria-hidden="true"></span>New subscribers from the start date. Current subscribers keep 249 EGP for 3 months or until their next renewal, whichever is later.</span>
+                  <span class="a-row t-sm" style="gap: 8px; flex-wrap: nowrap;"><span class="a-radio" aria-hidden="true"></span>New subscribers only. Current subscribers keep 249 EGP while they stay subscribed.</span>
+                </div>
+              </div>
+              <div class="a-field"><span class="a-lbl">Reason <span class="req">*</span></span><div class="a-in" style="height: auto; padding: 8px 10px;">Quarterly review: the dollar moved from 50.9 to 56.2 EGP (+10.4%) since the last review on 2 Aug. Our rule is to review when it moves more than 10%.</div></div>
+            </div>
+          </section>
+          <section class="a-card" aria-labelledby="rr-h">
+            <div class="a-card-h"><h2 class="t-h3 a-grow" id="rr-h">Which countries get which price</h2><span class="a-tagx">Read-only</span><button class="a-btn" type="button" style="height: 30px;"><span class="i i-globe" aria-hidden="true"></span>Ask to move a country…</button></div>
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Region</th><th scope="col">Countries</th><th scope="col">Provider</th></tr></thead>
+              <tbody>
+                <tr><td class="w6">Egypt</td><td style="white-space: normal;">Egypt, paid with a card issued in Egypt</td><td>Paymob</td></tr>
+                <tr><td class="w6">Gulf</td><td style="white-space: normal;">UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Iraq</td><td>Paddle</td></tr>
+                <tr><td class="w6">Other Arab countries</td><td style="white-space: normal;">Algeria, Comoros, Djibouti, Jordan, Lebanon, Libya, Mauritania, Morocco, Palestine, Somalia, Sudan, Syria, Tunisia, Yemen</td><td>Paddle</td></tr>
+                <tr><td class="w6">Rest of the world</td><td style="white-space: normal;">Every other country, and any country we can’t tell. Pays the Gulf price until it gets its own.</td><td>Paddle</td></tr>
+              </tbody>
+            </table></div>
+            <div class="a-card-b"><p class="t-xs ink-2">Moving a country changes what new subscribers there pay, so it goes through the same approval. Current subscribers keep their price.</p></div>
+          </section>
+        </div>
+        <aside class="a-rail" aria-labelledby="ef-h">
+          <div class="a-rail-s"><h2 class="t-h3" id="ef-h">What will happen</h2>
+            <ul class="t-sm" style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px;">
+              <li>Our server adds the 279 EGP amount from 1 Dec. Paymob has no price object, so nothing changes at Paymob.</li>
+              <li>The pricing page, the paywall and the checkout show 279 EGP from 1 Dec.</li>
+              <li>Current Egypt subscribers keep 249 EGP for now. Each gets an email in their language before their price changes.</li>
+              <li>The annual plan stays 2,249 EGP unless you change it too.</li>
+            </ul>
+          </div>
+          <div class="a-rail-s"><span class="a-lbl">Learners will see</span>
+            <div class="a-bi"><div><span class="lg">English</span><span class="tx"><b>279 EGP</b> a month</span></div><div><span class="lg">العربية</span><span class="tx a-ar" lang="ar" dir="rtl"><b>279 ج.م</b> شهريًا</span></div></div>
+          </div>
+          <div class="a-rail-s"><span class="a-lbl">Approval</span><span class="t-sm">A super admin or admin other than you approves it. You’ll sign in again to send it.</span><button class="a-btn pri" type="button" style="align-self: flex-start;"><span class="i i-paper-plane-tilt" aria-hidden="true"></span>Send for approval</button></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

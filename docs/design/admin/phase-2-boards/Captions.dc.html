@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Captions editor</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="publisher" cur="media" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="publisher" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="Media.dc.html">Media library</a><span aria-hidden="true">/</span><span>Visibility of system status</span><span aria-hidden="true">/</span><span>Captions</span></nav>
+          <h1 class="t-h1">Captions and transcript</h1>
+          <p class="t-sm ink-2">Used as on-screen captions and as the transcript under the video. Arabic is written as spoken; English is a plain translation.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-upload-simple" aria-hidden="true"></span>Upload VTT</button><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Download VTT</button><a class="a-btn pri" href="Releases.dc.html"><span class="i i-paper-plane-tilt" aria-hidden="true"></span>Send for review</a></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-label="Player">
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="a-thumb lg" style="align-items: flex-end; padding: 0 16px 14px;" aria-hidden="true">
+              <span class="i i-play s32" style="position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);"></span>
+              <span style="background: rgba(0,0,0,.66); color: #fff; border-radius: 6px; padding: 4px 10px; font-family: 'Cairo', sans-serif; font-size: 14px; line-height: 24px; text-align: center; direction: rtl;">وزي ما إنتوا شايفين، أنا بدخّل الـ 2 Passwords وبدوس Submit new password</span>
+            </div>
+            <div class="a-row t-sm" style="gap: 8px;"><button class="a-btn sm icon" type="button" aria-label="Play"><span class="i i-play s14" aria-hidden="true"></span></button><span class="a-tc">00:27.4 / 01:40.0</span><span class="a-grow"></span><div class="a-seg" role="group" aria-label="Caption language"><button type="button" aria-pressed="false">EN</button><button type="button" aria-pressed="true">AR</button></div></div>
+            <div class="a-scrub" aria-label="Caption timeline">
+              <sc-for list="{{cues}}" as="c" hint-placeholder-count="10"><span class="{{c.cls}}" style="left: {{c.l}}; width: {{c.w}};"></span></sc-for>
+              <span class="ph" style="left: 27.4%;"></span>
+            </div>
+            <div class="a-row t-xs ink-3" style="justify-content: space-between;"><span>0:00</span><span>0:25</span><span>0:50</span><span>1:15</span><span>1:40</span></div>
+            <div class="a-note"><span class="i i-info" aria-hidden="true"></span><div class="t-xs">Keys: Space plays or pauses, [ and ] move the selected line by 0.1 s, Enter splits a line at the playhead.</div></div>
+          </div>
+          <div class="a-card-b" style="border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 2px;">
+            <p class="t-over" style="margin-bottom: 4px;">Checks</p>
+            <div class="a-chk good"><span class="i i-check-circle-fill" aria-hidden="true"></span><span>Every line has English and Arabic</span></div>
+            <div class="a-chk good"><span class="i i-check-circle-fill" aria-hidden="true"></span><span>No gaps or overlaps between lines</span></div>
+            <div class="a-chk wait"><span class="i i-warning-fill" aria-hidden="true"></span><span>Line 3 is long for a phone: 3 rows of captions. Split it?</span></div>
+          </div>
+        </section>
+
+        <section class="a-card" aria-label="Caption lines">
+          <div class="a-tbl-wrap">
+            <table class="a-tbl">
+              <thead><tr><th scope="col">#</th><th scope="col">Start · end</th><th scope="col">English</th><th scope="col" style="text-align: right;">Arabic, as spoken</th></tr></thead>
+              <tbody>
+                <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+                  <tr class="{{r.cls}}"><td class="num ink-3" style="vertical-align: top; padding-top: 10px;">{{r.n}}</td><td style="vertical-align: top; padding-top: 10px;"><span class="a-tc">{{r.s}}</span><br><span class="a-tc ink-3">{{r.e}}</span></td><td class="t-sm" style="white-space: normal; vertical-align: top; padding: 9px 12px; min-width: 260px;">{{r.en}}</td><td class="a-ar" lang="ar" dir="rtl" style="white-space: normal; vertical-align: top; padding: 9px 12px; min-width: 300px; font-size: 13.5px;">{{r.ar}}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div class="a-pager"><span>10 lines · last saved 1 min ago by Ahmed Wagdy</span><span class="a-grow"></span><button class="a-btn sm" type="button"><span class="i i-arrows-split s14" aria-hidden="true"></span>Split line 3</button><button class="a-btn sm" type="button">−0.1 s</button><button class="a-btn sm" type="button">+0.1 s</button></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = [2.5, 15.66, 25.5, 35.68, 44.86, 51.94, 61.22, 70.3, 79.54, 85.04, 100];
+    const en = ['Let’s look together at a very good example of feedback done badly: Paymob, the payment gateway.', 'Let’s look at it. Here I was trying to enter a new password, because I’d forgotten my old one.', 'As you can see, I enter the two passwords and press Submit new password, and nothing happens. A loader appears, and then nothing at all.', 'It doesn’t tell me: do the two passwords not match? Did I do something else wrong? Was the account stopped? What exactly?', 'The first thing I did when this happened was start looking for another payment gateway to work with.', 'Simply, I don’t know why I can’t get into my account. Why? Because there was no feedback about something that really mattered to me here.', 'The system needs to answer me. It knows this information, the system knows it, but the designer didn’t think of this case,', 'and didn’t consider that there could be reasons that stop the user from continuing, like the account being deactivated, or…', 'Even now I don’t know the main reason. Maybe I entered the password wrongly; there could be many reasons,', 'but it’s only natural that I should know what’s stopping me from getting in, and from getting past creating the password.'];
+    const ar = ['تعالى نشوف مع بعض مثال كويس جدًا عن التطبيق السيئ للـ Feedback: Paymob، الـ Payment gateway اللي اسمها Paymob.', 'تعالى نبص عليه مع بعض. هنا أنا كنت بحاول أدخل Password جديد، عشان كنت ناسي الـ Password القديم بتاعي.', 'وزي ما إنتوا شايفين، أنا بدخّل الـ 2 Passwords وبدوس Submit new password، وما فيش أي حاجة بتتعمل. مجرد ما بيطلع لي Loader، وبعدين ما فيش أي حاجة بتحصل.', 'ما بيقولّيش: هل الـ 2 Passwords مش Matching؟ ولا أنا عامل حاجة غلط تانية؟ ولا الأكاونت اتوقف؟ ولا إيه بالظبط؟', 'أول خطوة خدتها أول ما الموقف ده حصل معايا: بدأت أدوّر على Payment gateway تانية أحاول أتعامل معاها.', 'ببساطة أنا مش عارف ليه، مش عارف إيه سبب إني مش عارف أدخل على الأكاونت بتاعي. ده بسبب إيه؟ بسبب إنه ما كانش فيه Feedback لحاجة فعلًا تهمّني في السياق ده.', 'فمحتاج إن السيستم يرد عليّ. هو عارف المعلومة دي، السيستم هنا عارف المعلومة دي، لكن الديزاينر ما خدش باله من الـ Case دي،', 'وما راعاش إن في الحالة دي ممكن جدًا يكون فيه أسباب ما تخلّيش المستخدم يعرف يكمّل، زي إن الأكاونت يبقى Deactivated، أو...', 'أنا حتى الآن مش عارف إيه السبب الرئيسي. ممكن أكون دخّلت الـ Password بشكل خاطئ، ممكن يكون أسباب كتير،', 'لكن طبيعي إني أعرف إيه السبب اللي مخلّيني مش عارف أدخل، ومش مخلّيني أعرف أتجاوز مرحلة إني أعمل Create للـ Password.'];
+    const tc = (x) => { const m = Math.floor(x / 60); const s = (x - m * 60).toFixed(1).padStart(4, '0'); return m + ':' + s; };
+    const rows = en.map((e, i) => ({ n: String(i + 1), s: tc(T[i]), e: tc(T[i + 1] - 0.1), en: e, ar: ar[i], cls: i === 2 ? 'open' : '' }));
+    const cues = T.slice(0, 10).map((t, i) => ({ l: t + '%', w: (T[i + 1] - t - 0.4) + '%', cls: i === 2 ? 'cue on' : 'cue' }));
+    return { rows, cues };
+  }
+}
+</script>
+</body>
+</html>

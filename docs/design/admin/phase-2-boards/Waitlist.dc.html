@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Communications · Waitlist</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="marketing" cur="comms" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="marketing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Communications</h1>
+          <p class="t-sm ink-2">People who left their email on the Coming Soon page. Only confirmed emails can be invited.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Communications"><a href="Campaigns.dc.html" aria-selected="false">Campaigns</a><a href="Announcements.dc.html" aria-selected="false">In-app announcements</a><a href="EmailTemplates.dc.html" aria-selected="false">Email templates</a><a href="Waitlist.dc.html" aria-selected="true">Waitlist</a><a href="EmailLog.dc.html" aria-selected="false">Email log</a></nav>
+      <section class="a-kpis" style="grid-template-columns: repeat(5, minmax(0, 1fr));" aria-label="Waitlist summary">
+        <div class="a-kpi"><span class="k">Confirmed emails</span><span class="t-big num">3,068</span><span class="d flat">62% chose Arabic</span></div>
+        <div class="a-kpi"><span class="k">Invited</span><span class="t-big num">1,840</span><span class="d flat">in 2 batches</span></div>
+        <div class="a-kpi"><span class="k">Joined UXGate</span><span class="t-big num">612</span><span class="d flat">33% of invited</span></div>
+        <div class="a-kpi"><span class="k">Not invited yet</span><span class="t-big num">1,228</span><span class="d flat">oldest first</span></div>
+        <div class="a-kpi"><span class="k">Not confirmed</span><span class="t-big num">410</span><span class="d flat">removed 30 days after the last confirm email</span></div>
+      </section>
+      <div class="a-split">
+        <div class="a-main-col">
+          <div class="a-toolbar"><div class="a-search" style="max-width: 300px;"><span class="i i-magnifying-glass" aria-hidden="true"></span><span class="ph-txt">Search by email</span></div><button class="a-chip" type="button"><span class="k">Status</span> Confirmed<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Language</span> Both<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Source</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button></div>
+          <section class="a-card" aria-label="Waitlist">
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Email</th><th scope="col">Language</th><th scope="col">Came from</th><th scope="col">Confirmed</th><th scope="col">Invited</th><th scope="col">Joined</th></tr></thead>
+              <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="7"><tr><td><span class="a-mask"><span class="v">{{r.e}}</span></span></td><td>{{r.l}}</td><td>{{r.s}}</td><td class="num">{{r.c}}</td><td class="num">{{r.i}}</td><td>{{r.j}}</td></tr></sc-for></tbody>
+            </table></div>
+            <div class="a-pager"><span class="t-xs ink-2">1–7 of 3,068 · emails are masked; reveal asks for a reason</span></div>
+          </section>
+        </div>
+        <aside class="a-rail" aria-labelledby="ib-h">
+          <div class="a-rail-s"><h2 class="t-h3" id="ib-h">Invite the next batch</h2><span class="t-sm ink-2">Sends the “UXGate is open” email in each person’s language with a sign-up link.</span></div>
+          <div class="a-rail-s">
+            <div class="a-field"><span class="a-lbl">How many</span><div class="a-seg" role="group" aria-label="Batch size"><button type="button">250</button><button type="button" aria-pressed="true">500</button><button type="button">1,228 (all)</button></div><span class="help">500 or fewer go out now. More than 500 needs a second admin to approve.</span></div>
+            <div class="a-field"><span class="a-lbl">Who first</span><div class="a-in">Oldest confirmed first<span class="a-grow"></span><span class="i i-caret-down s12" aria-hidden="true"></span></div></div>
+            <button class="a-btn pri" type="button" style="align-self: flex-start;"><span class="i i-paper-plane-tilt" aria-hidden="true"></span>Invite 500</button>
+          </div>
+          <div class="a-rail-s"><span class="a-lbl">Batches so far</span>
+            <div class="a-kv"><span class="k">1 Nov</span><span class="v">1,000 invited · 402 joined (40%)</span><span class="k">6 Nov</span><span class="v">840 invited · 210 joined (25%)</span></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['n•••••@gmail.com', 'Arabic', 'LinkedIn', '28 Oct', '1 Nov', 'Yes, 1 Nov'], ['a•••@outlook.com', 'English', 'Search', '29 Oct', '1 Nov', 'Yes, 3 Nov'], ['m••••••@yahoo.com', 'Arabic', 'Instagram', '30 Oct', '1 Nov', 'Not yet'], ['k•••@gmail.com', 'Arabic', 'Direct', '2 Nov', '6 Nov', 'Yes, 6 Nov'], ['s•••••@hotmail.com', 'English', 'LinkedIn', '3 Nov', '6 Nov', 'Not yet'], ['r••••@gmail.com', 'Arabic', 'Search', '7 Nov', '–', '–'], ['h•••••@icloud.com', 'Arabic', 'Instagram', '8 Nov', '–', '–']];
+    return { rows: R.map(([e, l, s, c, i, j]) => ({ e, l, s, c, i, j })) };
+  }
+}
+</script>
+</body>
+</html>

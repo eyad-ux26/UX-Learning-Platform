@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports · Certificates and sharing</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="analyst" cur="reports" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="analyst" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Certificates and sharing</h1>
+          <p class="t-sm ink-2">Certificates issued, public achievement pages and what sharing brings back. Learner names are hidden in reports.</p>
+        </div>
+        <div class="acts"><button class="a-chip" type="button"><span class="k">Dates</span> Last 30 days<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Path</span> All 8<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-btn" type="button"><span class="i i-bookmark-simple" aria-hidden="true"></span>Save view</button><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Reports"><a href="Reports.dc.html" aria-selected="false">Overview and saved</a><a href="ReportLearning.dc.html" aria-selected="false">Learning</a><a href="ReportGrowth.dc.html" aria-selected="false">Growth</a><a href="ReportMoney.dc.html" aria-selected="false">Money</a><a href="ReportCerts.dc.html" aria-selected="true">Certificates and sharing</a></nav>
+      <section class="a-kpis" style="grid-template-columns: repeat(5, minmax(0, 1fr));" aria-label="Certificates summary">
+        <div class="a-kpi"><span class="k">Certificates issued</span><span class="t-big num">96</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>27 today</span></div>
+        <div class="a-kpi"><span class="k">Public page turned on</span><span class="t-big num">71</span><span class="d flat">74% of issued (pages are opt-in)</span></div>
+        <div class="a-kpi"><span class="k">Page visits</span><span class="t-big num">2,140</span><span class="d flat">30 per public page</span></div>
+        <div class="a-kpi"><span class="k">Shared to LinkedIn</span><span class="t-big num">58</span><span class="d flat">40 as a post, 18 to the profile</span></div>
+        <div class="a-kpi"><span class="k">Sign-ups from pages</span><span class="t-big num">290</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>13.6% of visits</span></div>
+      </section>
+      <div style="display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="cp-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="cp-h">By path</h2></div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">Path</th><th scope="col" class="r">Issued</th><th scope="col" class="r">Public</th><th scope="col" class="r">Visits</th><th scope="col" class="r">LinkedIn</th><th scope="col" class="r">Sign-ups</th></tr></thead>
+            <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="7"><tr class="{{r.cls}}"><td><span class="a-id">{{r.id}}</span> <span class="w6">{{r.n}}</span></td><td class="r num">{{r.i}}</td><td class="r num">{{r.p}}</td><td class="r num">{{r.v}}</td><td class="r num">{{r.l}}</td><td class="r num">{{r.s}}</td></tr></sc-for></tbody>
+          </table></div>
+        </section>
+        <section class="a-card" aria-labelledby="vs-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="vs-h">Where page visits come from</h2></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="a-hb" style="grid-template-columns: 130px minmax(0, 1fr) 54px;"><sc-for list="{{from}}" as="s" hint-placeholder-count="5"><span>{{s.l}}</span><span class="bar"><span style="width: {{s.w}};"></span></span><span class="v">{{s.v}}</span></sc-for></div>
+            <p class="t-xs ink-2">Pages are in the language the learner picked: 56% Arabic, 44% English.</p>
+          </div>
+        </section>
+      </div>
+      <section class="a-card" aria-labelledby="tp-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="tp-h">Most visited public pages</h2><span class="t-xs ink-2">Last 30 days</span><a class="t-xs w6" href="Certificates.dc.html">Look up a certificate</a></div>
+        <div class="a-tbl-wrap"><table class="a-tbl">
+          <thead><tr><th scope="col">Certificate</th><th scope="col">Learner</th><th scope="col">Path</th><th scope="col">Issued</th><th scope="col" class="r">Visits</th><th scope="col" class="r">Sign-ups from it</th></tr></thead>
+          <tbody><sc-for list="{{top}}" as="t" hint-placeholder-count="5"><tr><td><span class="a-id">{{t.id}}</span></td><td><span class="a-mask"><span class="i i-eye-slash s14 ink-3" aria-hidden="true"></span><span class="v">{{t.who}}</span></span></td><td>{{t.p}}</td><td class="num">{{t.d}}</td><td class="r num w7">{{t.v}}</td><td class="r num">{{t.s}}</td></tr></sc-for></tbody>
+        </table></div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['P01', 'Forms That Flow', 38, 29, 940, 24, 131], ['P02', 'Find and Fix Usability', 21, 16, 510, 14, 66], ['P10', 'Visual Hierarchy in Action', 17, 12, 330, 9, 43], ['P15', 'Write Words That Work', 9, 7, 190, 6, 25], ['P14', 'Patterns That Fit', 6, 4, 110, 3, 15], ['P05', 'Make UX Accessible', 3, 2, 40, 1, 7], ['P13', 'AI Tools for Better UX', 2, 1, 20, 1, 3]];
+    const n = (x) => x.toLocaleString('en');
+    const rows = R.map(([id, nm, i, p, v, l, s]) => ({ id, n: nm, i: n(i), p: n(p), v: n(v), l: n(l), s: n(s), cls: '' }));
+    rows.push({ id: '', n: 'All paths (P12 has none yet)', i: '96', p: '71', v: '2,140', l: '58', s: '290', cls: 'sum' });
+    return {
+      rows,
+      from: [['LinkedIn', 1310], ['Direct link', 420], ['WhatsApp', 230], ['Search', 110], ['Other', 70]].map(([l, v]) => ({ l, v: n(v), w: (v / 1310 * 100) + '%' })),
+      top: [['UXG-P01-7K2M4Q', 'S. A.', 'P01 Forms That Flow', '28 Oct', 212, 31], ['UXG-P02-H8R3WD', 'M. K.', 'P02 Find and Fix Usability', '1 Nov', 164, 22], ['UXG-P01-C4V8PX', 'N. H.', 'P01 Forms That Flow', '30 Oct', 141, 18], ['UXG-P10-B6T9QS', 'Y. F.', 'P10 Visual Hierarchy in Action', '3 Nov', 97, 11], ['UXG-P15-M2W7KD', 'R. E.', 'P15 Write Words That Work', '6 Nov', 63, 7]].map(([id, who, p, d, v, s]) => ({ id, who, p, d, v: String(v), s: String(s) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

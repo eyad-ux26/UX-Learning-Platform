@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports · Overview and saved</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="analyst" cur="reports" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="analyst" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Reports</h1>
+          <p class="t-sm ink-2">Saved views, email reports on a schedule and CSV exports. Every report leaves out team and test accounts.</p>
+        </div>
+        <div class="acts"><button class="a-chip" type="button"><span class="k">Dates</span> Last 30 days<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-btn pri" type="button"><span class="i i-calendar-check" aria-hidden="true"></span>Schedule an email report</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Reports"><a href="Reports.dc.html" aria-selected="true">Overview and saved</a><a href="ReportLearning.dc.html" aria-selected="false">Learning</a><a href="ReportGrowth.dc.html" aria-selected="false">Growth</a><a href="ReportMoney.dc.html" aria-selected="false">Money</a><a href="ReportCerts.dc.html" aria-selected="false">Certificates and sharing</a></nav>
+      <section class="a-kpis" style="grid-template-columns: repeat(4, minmax(0, 1fr));" aria-label="Report shortcuts">
+        <a class="a-kpi" href="ReportLearning.dc.html"><span class="k">Learning · weekly active</span><span class="t-big num">9,870</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>+6% on last week</span></a>
+        <a class="a-kpi" href="ReportGrowth.dc.html"><span class="k">Growth · sign-ups, 30 days</span><span class="t-big num">3,910</span><span class="d flat">77% finished a first lesson</span></a>
+        <a class="a-kpi" href="ReportMoney.dc.html"><span class="k">Money · MRR</span><span class="t-big num">$15,930</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>6.1% vs October</span></a>
+        <a class="a-kpi" href="ReportCerts.dc.html"><span class="k">Certificates · issued, 30 days</span><span class="t-big num">96</span><span class="d flat">58 shared to LinkedIn</span></a>
+      </section>
+      <section class="a-card" aria-labelledby="sv-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="sv-h">Saved views</h2><span class="t-xs ink-2">A saved view keeps the report, its filters and the date range</span></div>
+        <div class="a-tbl-wrap"><table class="a-tbl">
+          <thead><tr><th scope="col">Name</th><th scope="col">Report</th><th scope="col">Filters</th><th scope="col">Owner</th><th scope="col">Shared with</th><th scope="col"><span class="sr">Actions</span></th></tr></thead>
+          <tbody><sc-for list="{{saved}}" as="s" hint-placeholder-count="5"><tr><td class="w6">{{s.n}}</td><td>{{s.r}}</td><td class="t-sm ink-2">{{s.f}}</td><td>{{s.o}}</td><td>{{s.w}}</td><td class="r"><button class="a-ibtn" type="button" aria-label="More for {{s.n}}"><span class="i i-dots-three" aria-hidden="true"></span></button></td></tr></sc-for></tbody>
+        </table></div>
+      </section>
+      <div style="display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="sc-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="sc-h">Email reports on a schedule</h2></div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">Report</th><th scope="col">To</th><th scope="col">When (Cairo)</th><th scope="col">Last sent</th></tr></thead>
+            <tbody>
+              <tr><td><span class="w6">Weekly summary</span><br><span class="t-xs ink-2">learning, growth and money</span></td><td>Super admins (2)</td><td>Sun 09:00</td><td><span class="a-dot good"></span> 8 Nov</td></tr>
+              <tr><td><span class="w6">Content quality</span><br><span class="t-xs ink-2">new flags and hardest skills</span></td><td>Publishers (1)</td><td>Mon 09:00</td><td><span class="a-dot good"></span> 2 Nov</td></tr>
+              <tr><td><span class="w6">Refunds and churn</span></td><td>Billing managers (1)</td><td>1st, 09:00</td><td><span class="a-dot wait"></span> next 1 Dec</td></tr>
+            </tbody>
+          </table></div>
+          <div class="a-card-b"><p class="t-xs ink-2">Email reports go to team members only, from hello@uxgate.org, and carry counts, never learner names or emails.</p></div>
+        </section>
+        <section class="a-card" aria-labelledby="ex-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="ex-h">Your CSV exports</h2><span class="t-xs ink-2">Files are deleted after 7 days</span></div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">File</th><th scope="col" class="r">Rows</th><th scope="col">Personal data</th><th scope="col"><span class="sr">Download</span></th></tr></thead>
+            <tbody>
+              <tr><td><span class="w6">learning-by-path.csv</span><br><span class="t-xs ink-2">today 03:52</span></td><td class="r num">8</td><td>None</td><td class="r"><button class="a-ibtn" type="button" aria-label="Download learning-by-path"><span class="i i-download-simple" aria-hidden="true"></span></button></td></tr>
+              <tr><td><span class="w6">signups-by-country.csv</span><br><span class="t-xs ink-2">yesterday 18:10</span></td><td class="r num">23</td><td>None</td><td class="r"><button class="a-ibtn" type="button" aria-label="Download signups-by-country"><span class="i i-download-simple" aria-hidden="true"></span></button></td></tr>
+              <tr><td><span class="w6">certificate-pages.csv</span><br><span class="t-xs ink-2">6 Nov 11:24</span></td><td class="r num">71</td><td>Masked names</td><td class="r"><button class="a-ibtn" type="button" aria-label="Download certificate-pages"><span class="i i-download-simple" aria-hidden="true"></span></button></td></tr>
+            </tbody>
+          </table></div>
+          <div class="a-card-b"><div class="a-note info"><span class="i i-shield-check" aria-hidden="true"></span><span>Analysts export counts and masked names only. Exports with emails need an admin, a reason and signing in again, and are written to the audit log.</span></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1150}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      saved: [['Arabic learners this month', 'Learning', 'Language Arabic · this month', 'Mai Ibrahim', 'Everyone with reports'], ['Gulf money', 'Money', 'Region Gulf (GCC and Iraq) · last 90 days', 'Laila Mostafa', 'Billing'], ['LinkedIn sign-ups', 'Growth', 'Source LinkedIn posts · last 30 days', 'Sherif Gamal', 'Marketing'], ['P15 launch', 'Learning', 'Path P15 · since 2 Nov', 'Dina Fathy', 'Content'], ['Trials by region', 'Growth', 'Trials · all regions · last 30 days', 'Mai Ibrahim', 'Only me']].map(([n, r, f, o, w]) => ({ n, r, f, o, w }))
+    };
+  }
+}
+</script>
+</body>
+</html>

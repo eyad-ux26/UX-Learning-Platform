@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson editor</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="{{role}}" cur="lessons" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="{{role}}" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="ContentPaths.dc.html">P15 · Write Words That Work</a><span aria-hidden="true">/</span><span>U01</span><span aria-hidden="true">/</span><span>L01</span></nav>
+          <div class="a-row" style="gap: 10px;"><h1 class="t-h1">Put the words that matter first</h1><span class="a-st wait"><span class="i i-pencil-simple" aria-hidden="true"></span>Draft · 2 changes</span></div>
+          <p class="t-sm ink-2"><span class="a-id">P15-U01-L01</span> · lesson · 7 minutes · speaker Youssef (shop owner) · 9 steps</p>
+        </div>
+        <div class="acts"><a class="a-btn" href="Releases.dc.html"><span class="i i-git-diff" aria-hidden="true"></span>Compare with live</a><button class="a-btn" type="button"><span class="i i-clock-counter-clockwise" aria-hidden="true"></span>History</button><sc-if value="{{locked}}" hint-placeholder-val="{{true}}"><span class="a-btn" aria-disabled="true" title="Content editors can't publish"><span class="i i-lock-simple" aria-hidden="true"></span>Publish</span><a class="a-btn pri" href="FlowLessonPublish.dc.html"><span class="i i-paper-plane-tilt" aria-hidden="true"></span>Send for review</a></sc-if><sc-if value="{{canPub}}" hint-placeholder-val="{{false}}"><a class="a-btn pri" href="Releases.dc.html"><span class="i i-rocket-launch" aria-hidden="true"></span>Review and publish</a></sc-if></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 236px minmax(0, 1fr) 320px; gap: 16px; align-items: start;">
+        <section class="a-card" aria-label="Steps">
+          <div class="a-card-h" style="min-height: 42px;"><h2 class="t-h3">Steps</h2><span class="t-xs ink-3">drag to reorder</span></div>
+          <div class="a-tree" style="padding: 6px;">
+            <sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
+              <a class="r" href="#s" aria-current="{{s.cur}}" style="min-height: 44px; align-items: flex-start; padding-top: 6px; padding-bottom: 6px;"><span class="i i-dots-six-vertical s14" aria-hidden="true" style="margin-top: 2px;"></span><span class="nm" style="white-space: normal;"><span class="a-id">{{s.id}}</span> · {{s.type}}<span class="t-xs ink-3" style="display: block; font-weight: 400;">{{s.part}}</span></span><span class="{{s.dot}}" style="margin-top: 6px;"></span></a>
+            </sc-for>
+          </div>
+          <div class="a-pager"><button class="a-btn sm" type="button"><span class="i i-plus s14" aria-hidden="true"></span>Add step</button><span class="a-grow"></span><span class="t-xs">8 to 12 steps</span></div>
+        </section>
+
+        <section class="a-card" aria-labelledby="st-h">
+          <div class="a-card-h" style="flex-wrap: wrap;"><h2 class="t-h3" id="st-h">S02 · Choose · Try first</h2><span class="a-chip on"><span class="i i-star s12" aria-hidden="true"></span>SK-P15-U01-01 · first two words</span><span class="a-chip">Rule R12</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="a-field"><label>Question</label>
+              <div class="a-bi"><div><span class="lg">English</span><span class="tx">Customers read only the first two words of each message. Which rewrite of the refund message tells them the news fastest?</span></div><div><span class="lg">العربية · Arabic</span><span class="tx a-ar" lang="ar" dir="rtl">العملاء يقرؤون أول كلمتين فقط من كل رسالة. أي صياغة لرسالة الاسترداد تخبرهم بالخبر أسرع؟</span></div></div></div>
+
+            <div class="a-field"><label>Options · tick the right answer</label>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="a-row" style="gap: 10px; align-items: stretch;"><span class="a-radio" aria-label="Not the answer" style="margin-top: 12px;"></span><div class="a-bi" style="flex: 1;"><div><span class="lg"><span class="a-id">important</span><span class="cnt">MC-P15-001</span></span><span class="tx">“Important: information about your refund request”</span></div><div><span class="lg">Arabic</span><span class="tx a-ar" lang="ar" dir="rtl">«مهم: معلومات عن طلب استرداد المبلغ»</span></div></div></div>
+                <div class="a-row" style="gap: 10px; align-items: stretch;"><span class="a-radio on" aria-label="Right answer" style="margin-top: 12px;"></span><div class="a-bi focus" style="flex: 1;"><div><span class="lg"><span class="a-id">approved</span><span class="a-st good" style="height: 18px; margin-left: 4px;"><span class="i i-check" aria-hidden="true"></span>Answer</span><span class="cnt">edited</span></span><span class="tx">“Refund approved: the money reaches your card <span class="a-del">in 3 days</span> <span class="a-ins">within 3 working days</span>”</span></div><div><span class="lg">Arabic</span><span class="tx a-ar" lang="ar" dir="rtl">«الاسترداد مقبول: يصل المبلغ إلى بطاقتك خلال 3 أيام»</span></div></div></div>
+                <div class="a-note warn" style="margin-left: 26px;"><span class="i i-warning-fill" aria-hidden="true"></span><div class="t-sm" style="flex: 1;"><b>English changed, Arabic didn’t.</b> Check the Arabic still says the same thing. Publishing waits until both sides are marked as matching.</div><button class="a-btn sm" type="button">Arabic still matches</button></div>
+                <div class="a-row" style="gap: 10px; align-items: stretch;"><span class="a-radio" aria-label="Not the answer" style="margin-top: 12px;"></span><div class="a-bi" style="flex: 1;"><div><span class="lg"><span class="a-id">please</span><span class="cnt">MC-P15-001</span></span><span class="tx">“Please read this update about your refund”</span></div><div><span class="lg">Arabic</span><span class="tx a-ar" lang="ar" dir="rtl">«يرجى قراءة هذا التحديث عن الاسترداد»</span></div></div></div>
+              </div></div>
+
+            <div class="a-field"><label>Feedback for <span class="a-id">MC-P15-001</span> · Filler words push the meaning out of sight</label>
+              <div class="a-bi"><div><span class="lg">English · when important or please</span><span class="tx">The first two words here are “Important: information” or “Please read”. They say nothing about the refund, so the customer still has to open it.</span></div><div><span class="lg">Arabic</span><span class="tx a-ar" lang="ar" dir="rtl">أول كلمتين هنا «مهم: معلومات» أو «يرجى قراءة». ولا تقولان شيئًا عن الاسترداد، فيضطر العميل أن يفتح الرسالة.</span></div></div></div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="a-field"><label>When right</label><div class="a-bi" style="grid-template-columns: 1fr;"><div><span class="tx">Right. “Refund approved” is the news, and it comes first.</span></div><div style="border-left: 0; border-top: 1px solid var(--line);"><span class="tx a-ar" lang="ar" dir="rtl">صحيح. «الاسترداد مقبول» هو الخبر، وجاء أولًا.</span></div></div></div>
+              <div class="a-field"><label>Hints · 2</label><div class="a-bi" style="grid-template-columns: 1fr;"><div><span class="tx">1 · Read only the first two words of each option.</span></div><div style="border-left: 0; border-top: 1px solid var(--line);"><span class="tx a-ar" lang="ar" dir="rtl">١ · اقرأ أول كلمتين فقط من كل خيار.</span></div></div></div>
+            </div>
+
+            <div class="a-field"><label>Source</label><div class="a-in"><span class="i i-link ink-3" aria-hidden="true"></span><span class="a-grow">First 2 Words: A Signal for the Scanning Eye (NN/g)</span><span class="t-xs ink-3">quote checked</span></div><span class="help">Sources are limited to NN/g, IxDF and Google PAIR.</span></div>
+          </div>
+          <div class="a-dlg-f"><span class="lft">Autosaved 12 s ago · Rana Khalil</span><button class="a-btn" type="button"><span class="i i-arrow-counter-clockwise" aria-hidden="true"></span>Undo</button><button class="a-btn" type="button">Next step<span class="i i-caret-right s14" aria-hidden="true"></span></button></div>
+        </section>
+
+        <aside style="display: flex; flex-direction: column; gap: 12px;" aria-label="Live preview">
+          <div class="a-row" style="gap: 8px;"><p class="t-over a-grow">Live preview · real player</p><div class="a-seg" role="group" aria-label="Preview language"><button type="button" aria-pressed="{{isEn}}" onClick="{{toEn}}">EN</button><button type="button" aria-pressed="{{isAr}}" onClick="{{toAr}}">AR</button></div></div>
+          <div class="a-phone" lang="{{lang}}" dir="{{dir}}" style="font-family: {{font}};">
+            <div class="sb" dir="ltr"><span>9:41</span><span>●●● 5G</span></div>
+            <div class="bd">
+              <div style="display: flex; gap: 8px; align-items: center;"><span class="i i-x s18" aria-hidden="true" style="color: #4F7287;"></span><div class="lx-prog" style="flex: 1;"><span style="width: 22%;"></span></div></div>
+              <div style="display: flex; gap: 8px; align-items: center;"><img src="/_blob/ac0283edbd5eccc67bddd4f9c677147d" alt="" style="width: 28px; height: 28px; border-radius: 999px; background: #D8F4FB;"><span style="font-size: 12px; font-weight: 700; color: #4F7287;">{{tryFirst}}</span></div>
+              <p style="font-size: 15px; line-height: 23px; font-weight: 700;">{{q}}</p>
+              <sc-for list="{{opts}}" as="o" hint-placeholder-count="3"><div class="{{o.cls}}">{{o.t}}</div></sc-for>
+              <div class="lx-btn" style="margin-top: 4px;">{{check}}</div>
+            </div>
+          </div>
+          <div class="a-note"><span class="i i-device-mobile" aria-hidden="true"></span><div class="t-xs">Same player and mocks as the app. Arabic shows right to left in Cairo. Preview answers are never saved.</div></div>
+          <section class="a-card"><div class="a-card-b" style="display: flex; flex-direction: column; gap: 2px;">
+            <p class="t-over" style="margin-bottom: 4px;">Checks on this lesson</p>
+            <div class="a-chk good"><span class="i i-check-circle-fill" aria-hidden="true"></span><span>9 steps, try-first, contrast, independent step and recap present</span></div>
+            <div class="a-chk good"><span class="i i-check-circle-fill" aria-hidden="true"></span><span>Every graded step names a skill</span></div>
+            <div class="a-chk wait"><span class="i i-warning-fill" aria-hidden="true"></span><span>S02: English edited after Arabic</span></div>
+          </div></section>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { lang: 'ar' }; }
+  renderVals() {
+    const ar = this.state.lang === 'ar';
+    const St = (id, type, part, dot, cur) => ({ id, type, part, dot: 'a-dot ' + dot, cur: cur ? 'true' : 'false' });
+    const sel = 1;
+    const oEn = ['“Important: information about your refund request”', '“Refund approved: the money reaches your card within 3 working days”', '“Please read this update about your refund”'];
+    const oAr = ['«مهم: معلومات عن طلب استرداد المبلغ»', '«الاسترداد مقبول: يصل المبلغ إلى بطاقتك خلال 3 أيام»', '«يرجى قراءة هذا التحديث عن الاسترداد»'];
+    const role = this.props.role ?? 'content';
+    return {
+      role, locked: role === 'content', canPub: role !== 'content',
+      steps: [St('S01', 'Card', 'Hook', 'good'), St('S02', 'Choose', 'Try first', 'wait', true), St('S03', 'Card', 'Concept', 'good'), St('S04', 'Tune', 'Guided', 'good'), St('S05', 'Choose', 'Guided', 'good'), St('S06', 'Compare', 'Contrast', 'good'), St('S07', 'Tune', 'Guided', 'wait'), St('S08', 'Choose', 'Independent, new case', 'good'), St('S09', 'Card', 'Recap', 'good')],
+      isEn: ar ? 'false' : 'true', isAr: ar ? 'true' : 'false', toEn: () => this.setState({ lang: 'en' }), toAr: () => this.setState({ lang: 'ar' }),
+      lang: ar ? 'ar' : 'en', dir: ar ? 'rtl' : 'ltr', font: ar ? "'Cairo', sans-serif" : "'Titillium Web', sans-serif",
+      ini: ar ? 'ي' : 'Y', tryFirst: ar ? 'يوسف · جرّب أولًا' : 'Youssef · Try first',
+      q: ar ? 'العملاء يقرؤون أول كلمتين فقط من كل رسالة. أي صياغة لرسالة الاسترداد تخبرهم بالخبر أسرع؟' : 'Customers read only the first two words of each message. Which rewrite of the refund message tells them the news fastest?',
+      opts: (ar ? oAr : oEn).map((t, i) => ({ t, cls: i === sel ? 'lx-opt sel' : 'lx-opt' })),
+      check: ar ? 'تحقّق' : 'Check'
+    };
+  }
+}
+</script>
+</body>
+</html>

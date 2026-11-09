@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports · Money</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="analyst" cur="reports" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="analyst" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Money</h1>
+          <p class="t-sm ink-2">Subscriptions in US dollars. Egypt is converted at each day's rate (today 56.2 EGP to the dollar). No card or personal data here.</p>
+        </div>
+        <div class="acts"><button class="a-chip" type="button"><span class="k">Dates</span> Last 30 days<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Region</span> All 4<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Provider</span> Both<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-btn" type="button"><span class="i i-bookmark-simple" aria-hidden="true"></span>Save view</button><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Reports"><a href="Reports.dc.html" aria-selected="false">Overview and saved</a><a href="ReportLearning.dc.html" aria-selected="false">Learning</a><a href="ReportGrowth.dc.html" aria-selected="false">Growth</a><a href="ReportMoney.dc.html" aria-selected="true">Money</a><a href="ReportCerts.dc.html" aria-selected="false">Certificates and sharing</a></nav>
+      <section class="a-kpis" style="grid-template-columns: repeat(6, minmax(0, 1fr));" aria-label="Money summary">
+        <div class="a-kpi"><span class="k">MRR</span><span class="t-big num">$15,930</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>6.1% vs October</span></div>
+        <div class="a-kpi"><span class="k">Paying learners</span><span class="t-big num">2,824</span><span class="d flat">36% on annual</span></div>
+        <div class="a-kpi"><span class="k">Monthly churn</span><span class="t-big num">3.1%</span><span class="d up"><span class="i i-trend-down s12" aria-hidden="true"></span>down from 4.6% in June</span></div>
+        <div class="a-kpi"><span class="k">Lifetime value</span><span class="t-big num">$52</span><span class="d flat">net, after fees</span></div>
+        <div class="a-kpi"><span class="k">Refunds</span><span class="t-big num">1.5%</span><span class="d flat">24 refunds, $214</span></div>
+        <div class="a-kpi"><span class="k">Free to Pro</span><span class="t-big num">7.2%</span><span class="d flat">within 30 days of sign-up</span></div>
+      </section>
+      <section class="a-card" aria-labelledby="rg-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="rg-h">By price region</h2><a class="t-xs w6" href="Revenue.dc.html">Open revenue for invoices and payouts</a></div>
+        <div class="a-tbl-wrap"><table class="a-tbl">
+          <thead><tr><th scope="col">Region</th><th scope="col">Provider</th><th scope="col" class="r">Paying</th><th scope="col" class="r">On annual</th><th scope="col" class="r">MRR</th><th scope="col" class="r">Monthly churn</th><th scope="col" class="r">Lifetime value</th><th scope="col" class="r">Free to Pro</th></tr></thead>
+          <tbody><sc-for list="{{reg}}" as="r" hint-placeholder-count="5"><tr class="{{r.cls}}"><td class="w6">{{r.n}}</td><td>{{r.p}}</td><td class="r num">{{r.s}}</td><td class="r num">{{r.a}}</td><td class="r num w7">{{r.m}}</td><td class="r num">{{r.c}}</td><td class="r num">{{r.l}}</td><td class="r num">{{r.f}}</td></tr></sc-for></tbody>
+        </table></div>
+      </section>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="ch-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="ch-h">Monthly churn</h2><span class="t-xs ink-2">Share of paying learners who stopped</span></div>
+          <div class="a-card-b">
+            <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; align-items: end; height: 140px; border-bottom: 1px solid var(--line-strong);" role="img" aria-label="Monthly churn fell from 4.6% in June to 3.1% in November">
+              <sc-for list="{{churn}}" as="c" hint-placeholder-count="6"><div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 4px;"><span class="t-xs num w7" style="text-align: center;">{{c.v}}</span><span title="{{c.t}}" style="display: block; height: {{c.h}}; background: var(--s1); border-radius: 4px 4px 0 0;"></span></div></sc-for>
+            </div>
+            <div class="t-xs ink-3" style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; text-align: center; margin-top: 6px;"><sc-for list="{{churn}}" as="c" hint-placeholder-count="6"><span>{{c.m}}</span></sc-for></div>
+          </div>
+        </section>
+        <section class="a-card" aria-labelledby="wy-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="wy-h">Why they cancel</h2><span class="t-xs ink-2">212 answers</span></div>
+          <div class="a-card-b"><div class="a-hb" style="grid-template-columns: 150px minmax(0, 1fr) 40px;"><sc-for list="{{why}}" as="s" hint-placeholder-count="6"><span>{{s.l}}</span><span class="bar"><span style="width: {{s.w}};"></span></span><span class="v">{{s.v}}</span></sc-for></div></div>
+        </section>
+        <section class="a-card" aria-labelledby="dc-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="dc-h">Offers in use</h2><a class="t-xs w6" href="Discounts.dc.html">Discounts</a></div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">Offer</th><th scope="col" class="r">Paying</th><th scope="col" class="r">Still paying</th></tr></thead>
+            <tbody>
+              <tr><td><span class="w6">Student</span><br><span class="t-xs ink-2">40% · check valid 1 year</span></td><td class="r num">212</td><td class="r num">91%</td></tr>
+              <tr><td><span class="w6">Founding</span><br><span class="t-xs ink-2">code FOUNDING · 30% first annual year</span></td><td class="r num">164</td><td class="r num">100%</td></tr>
+              <tr><td><span class="w6">Welcome back</span><br><span class="t-xs ink-2">40% annual · 2 years</span></td><td class="r num">38</td><td class="r num">95%</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const C = [['Jun', 4.6], ['Jul', 4.2], ['Aug', 3.9], ['Sep', 3.5], ['Oct', 3.3], ['Nov', 3.1]];
+    const W = [['Too expensive', 31], ['No time right now', 27], ['Got what I needed', 18], ['Want other paths', 12], ['Payment trouble', 7], ['Something else', 5]];
+    const R = [['Egypt', 'Paymob', '1,915', '34%', '$9,880', '3.4%', '$41', '6.4%'], ['Gulf (GCC and Iraq)', 'Paddle', '480', '41%', '$3,700', '2.6%', '$89', '9.8%'], ['Other Arab countries', 'Paddle', '330', '29%', '$1,590', '3.2%', '$47', '7.9%'], ['Rest of the world', 'Paddle', '99', '22%', '$760', '3.9%', '$61', '6.1%'], ['All regions', 'Both', '2,824', '36%', '$15,930', '3.1%', '$52', '7.2%']];
+    return {
+      reg: R.map(([n, p, s, a, m, c, l, f], i) => ({ n, p, s, a, m, c, l, f, cls: i === 4 ? 'sum' : '' })),
+      churn: C.map(([m, v]) => ({ m, v: v + '%', h: (v / 5 * 110) + 'px', t: m + ': ' + v + '% churn' })),
+      why: W.map(([l, v]) => ({ l, v: v + '%', w: (v / 31 * 100) + '%' }))
+    };
+  }
+}
+</script>
+</body>
+</html>
