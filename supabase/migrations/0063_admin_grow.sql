@@ -225,6 +225,15 @@ create function public.admin_audience_count(p_audience text) returns bigint lang
   select count(*) from public.admin_audience(p_audience)
 $$;
 
+-- The next people a campaign goes to: its audience, less everyone it already went to. The sender marks each one in
+-- campaign_sends before sending, so a person never gets the same campaign twice.
+create function public.campaign_next(p_campaign uuid, p_limit integer default 100) returns table (user_id uuid, email text, locale text, display_name text)
+language sql stable security definer set search_path = public as $$
+  select a.* from public.campaigns c, public.admin_audience(c.audience) a
+  where c.id = p_campaign and not exists (select 1 from public.campaign_sends s where s.campaign_id = c.id and s.user_id = a.user_id)
+  order by a.user_id limit least(greatest(p_limit, 1), 500)
+$$;
+
 -- What a learner sees: live announcements for their plan (and only while the flag is on).
 create function public.my_announcements() returns table (id uuid, title jsonb, body jsonb, link text, ends_at timestamptz)
 language sql stable security definer set search_path = public as $$
@@ -302,12 +311,12 @@ create policy "published help" on public.help_articles for select to anon, authe
 revoke all on function public.admin_step_stats(text, text, timestamptz), public.admin_misconception_counts(text, timestamptz), public.admin_skill_stats(text),
   public.admin_step_reports(timestamptz), public.admin_set_flag_status(uuid, text, text, text, text, text, text, text, text, uuid),
   public.admin_report_learning(timestamptz, timestamptz), public.admin_report_growth(timestamptz, timestamptz), public.admin_report_money(),
-  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune()
+  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune(), public.campaign_next(uuid, integer)
   from public, anon, authenticated;
 grant execute on function public.admin_step_stats(text, text, timestamptz), public.admin_misconception_counts(text, timestamptz), public.admin_skill_stats(text),
   public.admin_step_reports(timestamptz), public.admin_set_flag_status(uuid, text, text, text, text, text, text, text, text, uuid),
   public.admin_report_learning(timestamptz, timestamptz), public.admin_report_growth(timestamptz, timestamptz), public.admin_report_money(),
-  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune()
+  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune(), public.campaign_next(uuid, integer)
   to service_role;
 revoke all on function public.my_announcements() from public, anon;
 grant execute on function public.my_announcements() to authenticated, service_role;

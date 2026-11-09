@@ -23,7 +23,7 @@ export async function sendTrialEmails(db: SupabaseClient, limit = 50): Promise<{
     const locale = row.locale === "ar" ? "ar" : "en";
     const mail = trialEmail({ locale, kind: row.kind, endsOn: longDate(row.ends_at, locale), plansHref: `${siteOrigin()}/${locale}/app/plans` });
     const r = await sendEmail({ to: row.email, ...mail, kind: "billing", userId: row.user_id, locale });
-    if (r.ok) sent++; else failed++;
+    if (r.ok) { sent++; await db.from("email_log").insert({ user_id: row.user_id, kind: "trial", day: new Date().toISOString().slice(0, 10), provider_id: r.id ?? null }); } else failed++;
   }
   return { sent, failed };
 }

@@ -68,7 +68,7 @@ export const JOBS: Omit<JobRow, "lastRun" | "lastOk" | "lastDetail">[] = [
   { name: "review-due", label: "Reviews due: the inbox and email for skills to review", schedule: "Every day 02:00 UTC", emailsLearners: true },
   { name: "billing", label: "Billing: renewals, grace ends, Paymob retries", schedule: "Every day 02:00 UTC", emailsLearners: true },
   { name: "reminders", label: "Daily reminders by email and push", schedule: "Every 15 minutes", emailsLearners: true },
-  { name: "support", label: "Support housekeeping: SLA, auto-close, survey emails", schedule: "Every 15 minutes", emailsLearners: true },
+  { name: "admin", label: "Panel housekeeping: approval reminders, support auto-close and surveys, campaign batches", schedule: "Every 15 minutes", emailsLearners: true },
 ];
 
 export async function jobRuns(): Promise<JobRow[]> {
