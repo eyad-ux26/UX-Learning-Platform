@@ -235,7 +235,7 @@ describe("leaderboard", () => {
     await expect(as("authenticated", B, `update profiles set leaderboard_joined_at = now() where user_id = $1`, [B])).rejects.toThrow(/permission denied/);
   });
   it("the flag is readable by learners but changed only by the server", async () => {
-    expect(await as("authenticated", A, `select * from app_flags`)).toHaveLength(1);
+    expect(await as("authenticated", A, `select key, enabled from app_flags where key = 'leaderboard'`)).toHaveLength(1); // 0061: only these two columns
     await expect(as("authenticated", A, `update app_flags set enabled = false`)).rejects.toThrow(/permission denied/);
     await expect(as("anon", null, `select * from app_flags`)).rejects.toThrow(/permission denied/);
   });
