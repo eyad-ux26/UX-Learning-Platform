@@ -249,3 +249,70 @@ describe("trials (0062)", () => {
     await expect(svc(`select public.start_trial($1)`, [T3])).rejects.toThrow(/off/);
   });
 });
+
+describe("quality, reports, communications and help (0063)", () => {
+  it("a step flag moves through its statuses; only a publisher closes it, and won't fix needs a reason", async () => {
+    await svc(`select public.admin_set_flag_status($1, 'P15-U01-L01', 'S01', 'numbers', 'fixing', null, null, null, null, null)`, [E]);
+    await expect(svc(`select public.admin_set_flag_status($1, 'P15-U01-L01', 'S01', null, 'fixed', null, null, null, null, null)`, [E])).rejects.toThrow(/quality.manage/);
+    await expect(svc(`select public.admin_set_flag_status($1, 'P15-U01-L01', 'S01', null, 'wont_fix', '', null, null, null, null)`, [P])).rejects.toThrow(/say why/);
+    await svc(`select public.admin_set_flag_status($1, 'P15-U01-L01', 'S01', null, 'fixed', 'Reworded option B', null, null, null, null)`, [P]);
+    const f = await one<{ status: string; source: string; check_after: string }>(`select status, source, check_after from content_flags where lesson_id = 'P15-U01-L01' and step_id = 'S01'`);
+    expect(f).toMatchObject({ status: "fixed", source: "numbers" });
+    expect(new Date(f.check_after).getTime()).toBeGreaterThan(Date.now() + 6 * 86_400_000);
+    expect(await one(`select count(*)::int n from admin_audit where action = 'content.quality_flag'`)).toEqual({ n: 2 });
+  });
+
+  it("the report functions run on an empty database", async () => {
+    const from = new Date(Date.now() - 7 * 86_400_000).toISOString();
+    const to = new Date().toISOString();
+    expect(await svc(`select * from public.admin_report_learning($1, $2)`, [from, to])).toEqual([expect.objectContaining({ path_id: "P15", lessons_finished: 0 })]);
+    expect(await svc(`select * from public.admin_report_growth($1, $2)`, [from, to])).toHaveLength(8);
+    expect(await svc(`select * from public.admin_report_money()`)).toEqual([]);
+    expect(await svc(`select * from public.admin_report_certs($1, $2)`, [from, to])).toEqual([]);
+    expect(await svc(`select * from public.admin_step_stats('P15-U01-L01')`)).toEqual([]);
+    expect(await svc(`select * from public.admin_skill_stats('P15')`)).toEqual([]);
+    expect(await svc(`select * from public.admin_step_reports()`)).toEqual([]);
+    expect(await svc(`select * from public.admin_misconception_counts('P15')`)).toEqual([]);
+  });
+
+  it("an audience leaves out people who turned off news email and accounts being deleted", async () => {
+    const all = Number((await svc<{ n: string }>(`select public.admin_audience_count('all') n`))[0].n);
+    const N = (await one<{ id: string }>(`insert into auth.users (email) values ('nonews@example.com') returning id`)).id;
+    const D = (await one<{ id: string }>(`insert into auth.users (email) values ('leaving@example.com') returning id`)).id;
+    expect(Number((await svc<{ n: string }>(`select public.admin_audience_count('all') n`))[0].n)).toBe(all + 2);
+    await db.query(`insert into notification_prefs (user_id, prefs) values ($1, '{"news":{"email":false}}')`, [N]);
+    await db.query(`update profiles set delete_after = now() + interval '30 days' where user_id = $1`, [D]);
+    const who = (await svc<{ user_id: string }>(`select user_id from public.admin_audience('all')`)).map((r) => r.user_id);
+    expect(who).not.toContain(N);
+    expect(who).not.toContain(D);
+    expect(who).toContain(X);
+    const pro = (await svc<{ user_id: string }>(`select user_id from public.admin_audience('pro')`)).map((r) => r.user_id);
+    expect(pro).not.toContain(X);
+    await expect(asUser("authenticated", X, `select * from public.admin_audience('all')`)).rejects.toThrow(/permission denied/);
+  });
+
+  it("learners see a running announcement for their plan only while the flag is on", async () => {
+    await db.query(`insert into announcements (title, body, audience, starts_at, ends_at, status) values
+      ('{"en":"New path","ar":"مسار جديد"}', '{"en":"Try UX writing","ar":"جرّب الكتابة"}', 'free', now() - interval '1 hour', now() + interval '1 day', 'scheduled'),
+      ('{"en":"For Pro","ar":"للمشتركين"}', '{"en":"Pro only news","ar":"خبر للمشتركين"}', 'pro', now() - interval '1 hour', now() + interval '1 day', 'scheduled')`);
+    expect(await asUser("authenticated", X, `select * from public.my_announcements()`)).toHaveLength(0);
+    await svc(`select public.admin_set_flag($1, 'announcements', true, 'Start banners', null, null, null)`, [F]);
+    expect(await asUser("authenticated", X, `select title->>'en' t from public.my_announcements()`)).toEqual([{ t: "New path" }]);
+    await expect(asUser("anon", null, `select * from public.my_announcements()`)).rejects.toThrow(/permission denied/);
+    await expect(db.query(`insert into announcements (title, body, link, starts_at, ends_at) values ('{"en":"abc","ar":"ابج"}', '{"en":"abc","ar":"ابج"}', 'https://evil.example', now(), now() + interval '1 day')`)).rejects.toThrow(/check/);
+  });
+
+  it("only published help articles are public; missed searches are counted", async () => {
+    await db.query(`insert into help_articles (slug, topic, title, body, status) values
+      ('reset-password', 'account', '{"en":"Reset your password","ar":"إعادة كلمة المرور"}', '{"en":"Open Settings, then Account.","ar":"افتح الإعدادات ثم الحساب."}', 'published'),
+      ('draft-one', 'billing', '{"en":"Not yet","ar":"ليس بعد"}', '{"en":"Draft article body","ar":"نص المسودة هنا"}', 'draft')`);
+    expect(await asUser("anon", null, `select slug from help_articles`)).toEqual([{ slug: "reset-password" }]);
+    await expect(asUser("anon", null, `insert into help_articles (slug, topic, title, body) values ('x', 'account', '{}', '{}')`)).rejects.toThrow(/permission denied/);
+    await svc(`select public.help_note_miss('  Refund  ')`);
+    await svc(`select public.help_note_miss('refund')`);
+    expect(await one(`select hits from help_misses where term = 'refund'`)).toEqual({ hits: 2 });
+    for (const t of ["content_flags", "admin_saved_reports", "announcements", "campaigns", "campaign_sends", "help_misses"]) {
+      await expect(asUser("authenticated", X, `select * from ${t}`)).rejects.toThrow(/permission denied/);
+    }
+  });
+});

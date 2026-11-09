@@ -47,7 +47,15 @@ const config: NextConfig = {
   poweredByHeader: false,
   transpilePackages: ["@uxgate/tokens", "@uxgate/player", "@uxgate/content"],
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    // The admin panel's lesson preview plays inside the panel's own pages (same origin only), and the panel may frame it.
+    const sameOriginFrame = (h: typeof securityHeaders, framing: "ancestors" | "src") => h.map((x) =>
+      x.key === "Content-Security-Policy" ? { ...x, value: framing === "ancestors" ? x.value.replace("frame-ancestors 'none'", "frame-ancestors 'self'") : x.value.replace("frame-src ", "frame-src 'self' ") }
+        : x.key === "X-Frame-Options" && framing === "ancestors" ? { ...x, value: "SAMEORIGIN" } : x);
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/:locale(en|ar)/preview/:path*", headers: sameOriginFrame(securityHeaders, "ancestors") },
+      { source: "/admin/:path*", headers: sameOriginFrame(securityHeaders, "src") },
+    ];
   },
   // hls.js only ever loads in the browser (VideoStepView imports it inside an effect). Leaving it out of the server
   // build keeps 590 kB out of the Worker's script, which every isolate parses.

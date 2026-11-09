@@ -21,7 +21,8 @@ export const COMING_SOON_PATH = "/coming-soon";
 
 // Open to everyone while the gate is on: the page and its email confirmation link, the team password page
 // (lib/team-access.ts), the public pricing page and the legal pages, which Paddle's website review and Google's brand verification read.
-const OPEN = /^\/(en|ar)\/(coming-soon(\/confirm)?|team|pricing|terms|privacy|refund|maintenance|offline|c\/[a-z0-9]{8,32})\/?$/;
+// The admin panel's lesson preview checks the panel's own access itself (requireAdmin), so the gate lets it through.
+const OPEN = /^\/(en|ar)\/(coming-soon(\/confirm)?|team|pricing|terms|privacy|refund|maintenance|offline|c\/[a-z0-9]{8,32}|preview\/lesson\/P\d{2}-U\d{2}-[LB]\d{2})\/?$/;
 // Sign-in, "forgot password" and reset: only with a team pass (the right team password) or an admin session.
 const TEAM = /^\/(en|ar)\/(signin|forgot|reset)\/?$/;
 // Pages search engines may index while the gate is on: the home address (it shows Coming Soon), the pricing page and the legal pages.
