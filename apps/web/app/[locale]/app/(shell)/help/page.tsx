@@ -21,6 +21,13 @@ export default async function HelpPage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations("help");
   const s = await getTranslations("settings");
   let fresh = 0;
+  // Articles the team published in the admin panel's Help centre (0063), in the learner's language, after the quick answers.
+  let articles: { q: string; a: string }[] = [];
+  if (me.db) {
+    const { data: arts } = await me.db.from("help_articles").select("title, body, topic").eq("status", "published").order("topic").order("published_at", { ascending: false }).limit(30);
+    const l = locale === "ar" ? "ar" : "en";
+    articles = ((arts ?? []) as { title: Record<string, string>; body: Record<string, string> }[]).map((x) => ({ q: x.title[l], a: x.body[l] }));
+  }
   if (me.db) {
     const since = new Date(Date.now() - 7 * 86_400_000).toISOString();
     const { count } = await me.db.from("review_requests").select("id", { count: "exact", head: true }).eq("user_id", me.userId).gte("replied_at", since);
@@ -47,7 +54,7 @@ export default async function HelpPage({ params }: { params: Promise<{ locale: s
         </div>
         <div className="pg-stack" style={{ gap: 10 }}>
           <h2 className="t-over set-sec">{t("quick")}</h2>
-          <Faq items={[1, 2, 3, 4, 5].map((n) => ({ q: t(`q${n}`), a: t(`a${n}`) }))} />
+          <Faq items={[...[1, 2, 3, 4, 5].map((n) => ({ q: t(`q${n}`), a: t(`a${n}`) })), ...articles]} />
           <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
             <Link href="/privacy" className="pg-link"><span className="ph ph-shield-check" aria-hidden="true" />{t("privacy")}</Link>
             <Link href="/terms" className="pg-link"><span className="ph ph-article" aria-hidden="true" />{t("terms")}</Link>
