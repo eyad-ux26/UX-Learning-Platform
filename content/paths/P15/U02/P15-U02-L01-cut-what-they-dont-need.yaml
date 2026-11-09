@@ -135,7 +135,7 @@ steps:
       ar: "الكلمات البسيطة أسرع في القراءة وتبدو أكثر ثقة. تحدّث عمّا يفعله الناس، لا عمّا «تمكّنهم» منه الميزة."
 
   - id: S05
-    type: fix
+    type: tune
     skill: SK-P15-U02-01
     part: guided
     rules: [R06]
@@ -166,13 +166,82 @@ steps:
           en: EGP 640
           ar: "640 جنيه"
         gap: m
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "Which change makes this message shorter without losing any fact?"
       ar: "أي تغيير يجعل الرسالة أقصر دون أن تضيع أي معلومة؟"
     options:
-      - { id: split, text: { en: "Split the text into two shorter paragraphs", ar: "قسّم النص إلى فقرتين أقصر" } }
-      - { id: once, text: { en: "Say each fact once: \"We emailed your receipt to you.\"", ar: "قل كل معلومة مرة واحدة: «أرسلنا الإيصال إلى بريدك الإلكتروني.»" } }
-      - { id: drop, text: { en: "Delete the text and keep only the title", ar: "احذف النص وأبقِ العنوان فقط" } }
+      - id: split
+        text: {en: Split the text into two shorter paragraphs, ar: قسّم النص إلى فقرتين أقصر}
+        mock:
+          app: dafaa
+          footer:
+          - kind: button
+            text: {en: Done, ar: تمّ}
+          blocks:
+          - {kind: icon, icon: check-circle-fill, size: xl, color: green}
+          - kind: heading
+            text: {en: Payment successful, ar: تمّ الدفع بنجاح}
+            gap: s
+          - kind: text
+            gap: s
+            text: {en: Your payment was successful and has gone through with no problems., ar: تمّت عملية الدفع بنجاح واكتملت دون أي مشاكل.}
+          - kind: text
+            gap: s
+            text: {en: A receipt for your payment will be sent to you by email to your email address., ar: وسيتم إرسال إيصال الدفع الخاص بك عبر البريد الإلكتروني إلى بريدك الإلكتروني.}
+          - kind: listitem
+            icon: lightning
+            text: {en: Electricity, ar: الكهرباء}
+            value:
+              en: EGP 640
+              ar: "640 جنيه"
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: once
+        text:
+          en: "Say each fact once: \"We emailed your receipt to you.\""
+          ar: "قل كل معلومة مرة واحدة: «أرسلنا الإيصال إلى بريدك الإلكتروني.»"
+        mock:
+          app: dafaa
+          footer:
+          - kind: button
+            text: {en: Done, ar: تمّ}
+          blocks:
+          - {kind: icon, icon: check-circle-fill, size: xl, color: green}
+          - kind: heading
+            text: {en: Payment successful, ar: تمّ الدفع بنجاح}
+            gap: s
+          - kind: text
+            text: {en: We emailed your receipt to you., ar: أرسلنا الإيصال إلى بريدك الإلكتروني.}
+            gap: s
+          - kind: listitem
+            icon: lightning
+            text: {en: Electricity, ar: الكهرباء}
+            value:
+              en: EGP 640
+              ar: "640 جنيه"
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: drop
+        text: {en: Delete the text and keep only the title, ar: احذف النص وأبقِ العنوان فقط}
+        mock:
+          app: dafaa
+          footer:
+          - kind: button
+            text: {en: Done, ar: تمّ}
+          blocks:
+          - {kind: icon, icon: check-circle-fill, size: xl, color: green}
+          - kind: heading
+            text: {en: Payment successful, ar: تمّ الدفع بنجاح}
+            gap: s
+          - kind: listitem
+            icon: lightning
+            text: {en: Electricity, ar: الكهرباء}
+            value:
+              en: EGP 640
+              ar: "640 جنيه"
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [once]
     misconceptions:
       - id: MC-P15-009

@@ -100,7 +100,7 @@ steps:
       ar: "- **قل من يتصرّف:** في نص الرسالة، اكتب «استلم نتائجك»، لا «يجب أن تُستلم النتائج». استخدم صيغة المبني للمعلوم (Active voice)، أي الجملة التي تذكر من يقوم بالفعل.\n- **قل ما يجب فعله:** اكتب «يمكنك تغيير الموعد حتى 24 ساعة قبله»، لا «لا يمكنك تغييره إلا إذا…». تجنّب النفي المزدوج.\n- **أرقام للحقائق:** اكتب «7 أيام»، لا «سبعة أيام». فالأرقام تلفت العين حين يتصفّح الناس بسرعة.\n- **اشرح الوحدات غير المألوفة:** إن كان الناس قد لا يعرفون وحدة، فقل ماذا تعني لهم.\n- **كلمات للأعداد التقريبية:** «آلاف المرضى» ليست حقيقة دقيقة، فتبقى بالحروف."
 
   - id: S04
-    type: fix
+    type: tune
     skill: SK-P15-U02-03
     part: guided
     rules: [R06]
@@ -136,13 +136,103 @@ steps:
         text: {en: Change appointment, ar: غيّر الموعد}
         style: outline
         gap: s
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "Which rewrite tells patients clearly when they can change their visit?"
       ar: "أي صياغة تخبر المرضى بوضوح متى يمكنهم تغيير زيارتهم؟"
     options:
-      - { id: not, text: { en: "\"Appointments can't be changed with fewer than 24 hours left.\"", ar: "«لا يمكن تغيير المواعيد إذا بقي أقل من 24 ساعة.»" } }
-      - { id: policy, text: { en: "\"Changes are subject to our 24-hour policy.\"", ar: "«التغييرات تخضع لسياسة الـ 24 ساعة.»" } }
-      - { id: until, text: { en: "\"You can change your visit up to 24 hours before it starts.\"", ar: "«يمكنك تغيير زيارتك حتى 24 ساعة قبل موعدها.»" } }
+      - id: not
+        text:
+          en: "\"Appointments can't be changed with fewer than 24 hours left.\""
+          ar: «لا يمكن تغيير المواعيد إذا بقي أقل من 24 ساعة.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Your appointment, ar: موعدك}
+            back: true
+          blocks:
+          - kind: listitem
+            avatar: {text: Dr Mona Adel, art: doctor}
+            text: {en: Dr Mona Adel, ar: د. منى عادل}
+            sub: {en: Family medicine, ar: طب الأسرة}
+          - kind: listitem
+            icon: calendar-blank
+            text:
+              en: "Sunday 9 March · 10:30 AM"
+              ar: "الأحد 9 مارس · 10:30 ص"
+            sub: {en: Room 12, ar: الغرفة 12}
+            gap: s
+          - kind: small
+            text:
+              en: "Appointments can't be changed with fewer than 24 hours left."
+              ar: لا يمكن تغيير المواعيد إذا بقي أقل من 24 ساعة.
+            color: muted
+            gap: m
+          - kind: button
+            text: {en: Change appointment, ar: غيّر الموعد}
+            style: outline
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: policy
+        text:
+          en: "\"Changes are subject to our 24-hour policy.\""
+          ar: «التغييرات تخضع لسياسة الـ 24 ساعة.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Your appointment, ar: موعدك}
+            back: true
+          blocks:
+          - kind: listitem
+            avatar: {text: Dr Mona Adel, art: doctor}
+            text: {en: Dr Mona Adel, ar: د. منى عادل}
+            sub: {en: Family medicine, ar: طب الأسرة}
+          - kind: listitem
+            icon: calendar-blank
+            text:
+              en: "Sunday 9 March · 10:30 AM"
+              ar: "الأحد 9 مارس · 10:30 ص"
+            sub: {en: Room 12, ar: الغرفة 12}
+            gap: s
+          - kind: small
+            text: {en: Changes are subject to our 24-hour policy., ar: التغييرات تخضع لسياسة الـ 24 ساعة.}
+            color: muted
+            gap: m
+          - kind: button
+            text: {en: Change appointment, ar: غيّر الموعد}
+            style: outline
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: until
+        text:
+          en: "\"You can change your visit up to 24 hours before it starts.\""
+          ar: «يمكنك تغيير زيارتك حتى 24 ساعة قبل موعدها.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Your appointment, ar: موعدك}
+            back: true
+          blocks:
+          - kind: listitem
+            avatar: {text: Dr Mona Adel, art: doctor}
+            text: {en: Dr Mona Adel, ar: د. منى عادل}
+            sub: {en: Family medicine, ar: طب الأسرة}
+          - kind: listitem
+            icon: calendar-blank
+            text:
+              en: "Sunday 9 March · 10:30 AM"
+              ar: "الأحد 9 مارس · 10:30 ص"
+            sub: {en: Room 12, ar: الغرفة 12}
+            gap: s
+          - kind: small
+            text: {en: You can change your visit up to 24 hours before it starts., ar: يمكنك تغيير زيارتك حتى 24 ساعة قبل موعدها.}
+            color: muted
+            gap: m
+          - kind: button
+            text: {en: Change appointment, ar: غيّر الموعد}
+            style: outline
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [until]
     misconceptions:
       - id: MC-P15-012

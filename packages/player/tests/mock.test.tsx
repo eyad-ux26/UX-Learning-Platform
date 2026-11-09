@@ -127,3 +127,15 @@ describe("MockView details", () => {
     expect(render(mock, "ar")).toContain("«زر، ادفع»");
   });
 });
+
+describe("line charts follow the reading direction", () => {
+  const T = (en: string, ar: string) => ({ en, ar });
+  const chart = { blocks: [{ kind: "chart", type: "line", values: [10, 20, 30], labels: [T("Jan", "يناير"), T("Feb", "فبراير"), T("Mar", "مارس")] }] } as never;
+  const points = (html: string) => (html.match(/points="([^"]+)"/)?.[1] ?? "").split(" ").map((p) => p.split(",").map(Number));
+  it("starts at the left in English and at the right in Arabic, so a rising trend rises toward the end of the labels", () => {
+    const en = points(render(chart, "en")), ar = points(render(chart, "ar"));
+    expect(en.map((p) => p[0])).toEqual([0, 50, 100]);
+    expect(ar.map((p) => p[0])).toEqual([100, 50, 0]);
+    expect(ar.map((p) => p[1])).toEqual(en.map((p) => p[1])); // same values, mirrored in x only
+  });
+});
