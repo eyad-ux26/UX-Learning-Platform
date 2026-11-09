@@ -47,7 +47,7 @@ export default async function FlagsPage() {
                       title={`${fl.enabled ? "Turn off" : "Turn on"} ${fl.label ?? fl.key}?`} sub="Every server uses the change within a minute."
                       effects={[{ icon: "users-three", text: (fl.enabled ? e?.off : e?.on) ?? "This changes the learner app for everyone." }]}
                       hidden={[{ name: "key", value: fl.key }, { name: "enabled", value: fl.enabled ? "0" : "1" }]}
-                      typed={fl.key === "content_db" || fl.key === "trials" ? fl.key : undefined} fresh={fresh} />
+                      typed={fl.key} fresh={fresh} />
                   ) : null}
                 </td>
               </tr>

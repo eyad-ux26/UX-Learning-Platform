@@ -9,7 +9,10 @@ export type AppConfig = { flags: Record<string, boolean>; settings: Record<strin
 const TTL_MS = 60_000;
 const EMPTY: AppConfig = { flags: {}, settings: {}, teamPasswordSet: false };
 let cached: { at: number; value: AppConfig } | null = null;
-let pending: Promise<AppConfig> | null = null;
+// While one request in this isolate refreshes, others keep the last answer for up to 2 seconds. No promise is shared
+// between requests: on Workers, I/O started by a request that has ended can be cancelled, and a shared promise that never
+// settles would hang every request that waits on it.
+let refreshingUntil = 0;
 
 async function fetchConfig(): Promise<AppConfig> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -29,28 +32,31 @@ async function fetchConfig(): Promise<AppConfig> {
 }
 
 /**
- * The current flags and settings. Fresh for a minute; after that the last answer is still used at once (for up to five
- * minutes) while a new one is fetched, so a page never waits on it except in a brand-new isolate.
+ * The current flags and settings. Fresh for a minute. After that, the request that finds it old fetches it again and
+ * waits for it (about 50 ms, at most 1.5 s, once a minute per isolate); requests at the same moment keep the last answer
+ * (for up to five minutes old).
  */
 export async function getAppConfig(now = Date.now()): Promise<AppConfig> {
   if (process.env.UG_DEV_FIXTURE === "1" || process.env.UG_ADMIN_FIXTURE === "1") return EMPTY;
   if (cached && now - cached.at < TTL_MS) return cached.value;
   const stale = cached && now - cached.at < 5 * TTL_MS ? cached.value : null;
-  if (!pending) {
-    pending = fetchConfig()
-      .then((value) => { cached = { at: Date.now(), value }; return value; })
-      .catch((e) => {
-        console.warn("app config: kept the last answer", (e as Error).message);
-        if (cached) cached = { at: Date.now() - TTL_MS / 2, value: cached.value }; // try again in 30 s
-        return cached?.value ?? EMPTY;
-      })
-      .finally(() => { pending = null; });
+  if (stale && now < refreshingUntil) return stale;
+  refreshingUntil = now + 2_000;
+  try {
+    const value = await fetchConfig();
+    cached = { at: Date.now(), value };
+    return value;
+  } catch (e) {
+    console.warn("app config: kept the last answer", (e as Error).message);
+    if (cached) cached = { at: Date.now() - TTL_MS / 2, value: cached.value }; // try again in 30 s
+    return cached?.value ?? EMPTY;
+  } finally {
+    refreshingUntil = 0;
   }
-  return stale ?? pending;
 }
 
 /** Forget the cached answer (the panel calls it after a change, so the admin sees it at once on this isolate). */
-export const resetAppConfig = () => { cached = null; };
+export const resetAppConfig = () => { cached = null; refreshingUntil = 0; };
 
 export const flagOn = async (key: string) => (await getAppConfig()).flags[key] === true;
 

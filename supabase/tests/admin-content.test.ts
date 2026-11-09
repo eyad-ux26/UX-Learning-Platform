@@ -52,8 +52,12 @@ const live = async (lesson: string) => (await one<{ hash: string; version_no: nu
 const save = (who: string, lesson: string, b: unknown) =>
   svc(`select public.admin_content_save_draft($1, $2, (select version_id from lesson_live where lesson_id = $2), $3::jsonb, '{}', null, null, null)`, [who, lesson, JSON.stringify(b)]);
 const OK = JSON.stringify({ ok: true, failed: [] });
+/** The draft times the checks ran on, as the panel sends them. */
+const stamps = async (lessons: string[]) =>
+  Object.fromEntries((await svc<{ lesson_id: string; at: string }>(`select lesson_id, updated_at::text at from public.lesson_drafts where lesson_id = any ($1)`, [lessons])).map((r) => [r.lesson_id, r.at]));
 const submit = async (who: string, lessons: string[], checks = OK) =>
-  (await svc<{ id: string }>(`select public.admin_content_submit($1, 'Fix wording', null, $2, $3::jsonb, null, null, null) id`, [who, lessons, checks]))[0].id;
+  (await svc<{ id: string }>(`select public.admin_content_submit($1, 'Fix wording', null, $2, $3::jsonb, null, null, null) id`,
+    [who, lessons, JSON.stringify({ ...JSON.parse(checks), drafts: await stamps(lessons) })]))[0].id;
 
 beforeAll(async () => {
   db = new PGlite();
@@ -121,6 +125,15 @@ describe("drafts, review and publish", () => {
   it("refuses to send a release whose checks failed", async () => {
     await expect(submit(E, ["P15-U01-L01"], JSON.stringify({ ok: false }))).rejects.toThrow(/failed checks/);
     await expect(submit(E, ["P15-U01-L02"])).rejects.toThrow(/needs a draft/);
+  });
+
+  it("refuses a release when a draft was saved again after the checks ran", async () => {
+    const checked = await stamps(["P15-U01-L01"]);
+    await save(E, "P15-U01-L01", body("P15-U01-L01", "Put the words that matter first"));
+    await expect(svc(`select public.admin_content_submit($1, 'Fix wording', null, $2, $3::jsonb, null, null, null)`, [E, ["P15-U01-L01"], JSON.stringify({ ok: true, drafts: checked })]))
+      .rejects.toThrow(/changed after the checks/);
+    await expect(svc(`select public.admin_content_submit($1, 'Fix wording', null, $2, $3::jsonb, null, null, null)`, [E, ["P15-U01-L01"], JSON.stringify({ ok: true })]))
+      .rejects.toThrow(/changed after the checks/);
   });
 
   it("freezes drafts in review, and authors never publish their own change", async () => {
@@ -244,6 +257,11 @@ describe("trials (0062)", () => {
     expect(due).toEqual([expect.objectContaining({ user_id: T2, kind: "ended" })]);
     await svc(`select public.trial_mark($1, 'ended')`, [T2]);
     expect(await svc(`select * from public.trials_due()`)).toHaveLength(0);
+    // free Pro from support during a trial ends the trial with no "trial ended" email
+    const T4 = (await one<{ id: string }>(`insert into auth.users (email) values ('trial4@example.com') returning id`)).id;
+    await svc(`select public.start_trial($1)`, [T4]);
+    await db.query(`update entitlements set source = 'manual', valid_until = now() + interval '30 days' where user_id = $1`, [T4]);
+    expect(await one(`select status, ended_sent_at is not null sent from trials where user_id = $1`, [T4])).toEqual({ status: "ended", sent: true });
     await svc(`select public.admin_set_flag($1, 'trials', false, 'Pause trials', null, null, null)`, [F]);
     const T3 = (await one<{ id: string }>(`insert into auth.users (email) values ('trial3@example.com') returning id`)).id;
     await expect(svc(`select public.start_trial($1)`, [T3])).rejects.toThrow(/off/);
@@ -275,30 +293,62 @@ describe("quality, reports, communications and help (0063)", () => {
     expect(await svc(`select * from public.admin_misconception_counts('P15')`)).toEqual([]);
   });
 
-  it("an audience leaves out people who turned off news email and accounts being deleted", async () => {
+  it("an audience leaves out opted-out, unconfirmed, suspended and leaving accounts", async () => {
+    await db.query(`update auth.users set email_confirmed_at = now() where email_confirmed_at is null`);
     const all = Number((await svc<{ n: string }>(`select public.admin_audience_count('all') n`))[0].n);
-    const N = (await one<{ id: string }>(`insert into auth.users (email) values ('nonews@example.com') returning id`)).id;
-    const D = (await one<{ id: string }>(`insert into auth.users (email) values ('leaving@example.com') returning id`)).id;
+    const N = (await one<{ id: string }>(`insert into auth.users (email, email_confirmed_at) values ('nonews@example.com', now()) returning id`)).id;
+    const D = (await one<{ id: string }>(`insert into auth.users (email, email_confirmed_at) values ('leaving@example.com', now()) returning id`)).id;
+    const U = (await one<{ id: string }>(`insert into auth.users (email) values ('someone-elses@example.com') returning id`)).id;
+    const B = (await one<{ id: string }>(`insert into auth.users (email, email_confirmed_at, banned_until) values ('suspended@example.com', now(), now() + interval '100 years') returning id`)).id;
     expect(Number((await svc<{ n: string }>(`select public.admin_audience_count('all') n`))[0].n)).toBe(all + 2);
     await db.query(`insert into notification_prefs (user_id, prefs) values ($1, '{"news":{"email":false}}')`, [N]);
     await db.query(`update profiles set delete_after = now() + interval '30 days' where user_id = $1`, [D]);
     const who = (await svc<{ user_id: string }>(`select user_id from public.admin_audience('all')`)).map((r) => r.user_id);
     expect(who).not.toContain(N);
     expect(who).not.toContain(D);
+    expect(who).not.toContain(U);
+    expect(who).not.toContain(B);
     expect(who).toContain(X);
     const pro = (await svc<{ user_id: string }>(`select user_id from public.admin_audience('pro')`)).map((r) => r.user_id);
     expect(pro).not.toContain(X);
     await expect(asUser("authenticated", X, `select * from public.admin_audience('all')`)).rejects.toThrow(/permission denied/);
   });
 
-  it("a campaign goes once to each person in its audience", async () => {
+  it("a campaign goes once to each person in its audience, and never to more people than were counted", async () => {
     const c = (await one<{ id: string }>(`insert into campaigns (name, subject, body, audience, send_at, status) values ('Launch', '{"en":"New path","ar":"مسار جديد"}', '{"en":"Body text here","ar":"نص الرسالة هنا"}', 'all', now(), 'scheduled') returning id`)).id;
+    expect(await svc(`select user_id from public.campaign_next($1, 2)`, [c])).toHaveLength(0); // not started yet
+    expect((await svc<{ s: string }>(`select public.campaign_start($1) s`, [c]))[0].s).toBe("sending");
+    const counted = (await one<{ n: number }>(`select audience_count n from campaigns where id = $1`, [c])).n;
+    expect(counted).toBeGreaterThan(2);
     const first = await svc<{ user_id: string }>(`select user_id from public.campaign_next($1, 2)`, [c]);
     expect(first).toHaveLength(2);
     await db.query(`insert into campaign_sends (campaign_id, user_id) select $1, unnest($2::uuid[])`, [c, first.map((r) => r.user_id)]);
     const rest = (await svc<{ user_id: string }>(`select user_id from public.campaign_next($1, 500)`, [c])).map((r) => r.user_id);
     expect(rest).not.toContain(first[0].user_id);
     await expect(db.query(`insert into campaign_sends (campaign_id, user_id) values ($1, $2)`, [c, first[0].user_id])).rejects.toThrow(/duplicate/);
+    // people who joined since it started do not raise the total
+    await db.query(`update campaigns set audience_count = 3 where id = $1`, [c]);
+    expect(await svc(`select user_id from public.campaign_next($1, 500)`, [c])).toHaveLength(1);
+  });
+
+  it("a campaign or announcement whose audience grew past 500 without approval goes back to draft", async () => {
+    expect((await svc<{ b: boolean }>(`select public.comms_needs_approval(501, 60, false) b`))[0].b).toBe(true);
+    expect((await svc<{ b: boolean }>(`select public.comms_needs_approval(650, 600, true) b`))[0].b).toBe(false);
+    expect((await svc<{ b: boolean }>(`select public.comms_needs_approval(700, 600, true) b`))[0].b).toBe(true);
+    expect((await svc<{ b: boolean }>(`select public.comms_needs_approval(500, 60, false) b`))[0].b).toBe(false);
+    await db.query(`insert into auth.users (email, email_confirmed_at) select 'many' || g || '@example.com', now() from generate_series(1, 501) g`);
+    const c = (await one<{ id: string }>(`insert into campaigns (name, subject, body, audience, send_at, status, audience_count) values ('Early', '{"en":"New path","ar":"مسار جديد"}', '{"en":"Body text here","ar":"نص الرسالة هنا"}', 'all', now(), 'scheduled', 60) returning id`)).id;
+    expect((await svc<{ s: string }>(`select public.campaign_start($1) s`, [c]))[0].s).toBe("draft");
+    const held = await one<{ status: string; held_note: string }>(`select status, held_note from campaigns where id = $1`, [c]);
+    expect(held.status).toBe("draft");
+    expect(held.held_note).toMatch(/more than the 500/);
+    expect(await svc(`select user_id from public.campaign_next($1, 500)`, [c])).toHaveLength(0);
+    const a = (await one<{ id: string }>(`insert into announcements (title, body, audience, starts_at, ends_at, status, audience_count) values
+      ('{"en":"Soon","ar":"قريبا"}', '{"en":"Something new","ar":"شيء جديد"}', 'all', now() + interval '10 minutes', now() + interval '1 day', 'scheduled', 60) returning id`)).id;
+    expect((await svc<{ n: number }>(`select public.announcements_recheck() n`))[0].n).toBe(1);
+    expect(await one(`select status from announcements where id = $1`, [a])).toEqual({ status: "draft" });
+    expect(await one(`select count(*)::int n from admin_audit where action in ('campaign.held', 'announcement.held')`)).toEqual({ n: 2 });
+    await db.query(`delete from auth.users where email like 'many%@example.com'`);
   });
 
   it("notes job runs and keeps 30 days of them", async () => {
@@ -313,6 +363,9 @@ describe("quality, reports, communications and help (0063)", () => {
       ('{"en":"For Pro","ar":"للمشتركين"}', '{"en":"Pro only news","ar":"خبر للمشتركين"}', 'pro', now() - interval '1 hour', now() + interval '1 day', 'scheduled')`);
     expect(await asUser("authenticated", X, `select * from public.my_announcements()`)).toHaveLength(0);
     await svc(`select public.admin_set_flag($1, 'announcements', true, 'Start banners', null, null, null)`, [F]);
+    // not shown until the 15-minute job has counted its audience close to the start
+    expect(await asUser("authenticated", X, `select * from public.my_announcements()`)).toHaveLength(0);
+    expect((await svc<{ n: number }>(`select public.announcements_recheck() n`))[0].n).toBe(0);
     expect(await asUser("authenticated", X, `select title->>'en' t from public.my_announcements()`)).toEqual([{ t: "New path" }]);
     await expect(asUser("anon", null, `select * from public.my_announcements()`)).rejects.toThrow(/permission denied/);
     await expect(db.query(`insert into announcements (title, body, link, starts_at, ends_at) values ('{"en":"abc","ar":"ابج"}', '{"en":"abc","ar":"ابج"}', 'https://evil.example', now(), now() + interval '1 day')`)).rejects.toThrow(/check/);
@@ -323,6 +376,8 @@ describe("quality, reports, communications and help (0063)", () => {
       ('reset-password', 'account', '{"en":"Reset your password","ar":"إعادة كلمة المرور"}', '{"en":"Open Settings, then Account.","ar":"افتح الإعدادات ثم الحساب."}', 'published'),
       ('draft-one', 'billing', '{"en":"Not yet","ar":"ليس بعد"}', '{"en":"Draft article body","ar":"نص المسودة هنا"}', 'draft')`);
     expect(await asUser("anon", null, `select slug from help_articles`)).toEqual([{ slug: "reset-password" }]);
+    expect(await asUser("authenticated", X, `select title->>'en' t from help_articles where status = 'published'`)).toEqual([{ t: "Reset your password" }]);
+    await expect(asUser("anon", null, `select updated_by from help_articles`)).rejects.toThrow(/permission denied/);
     await expect(asUser("anon", null, `insert into help_articles (slug, topic, title, body) values ('x', 'account', '{}', '{}')`)).rejects.toThrow(/permission denied/);
     await svc(`select public.help_note_miss('  Refund  ')`);
     await svc(`select public.help_note_miss('refund')`);

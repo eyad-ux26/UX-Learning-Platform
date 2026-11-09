@@ -49,7 +49,11 @@ All new flags start off.
 - **Communications**: announcements (in-app banner), email campaigns (sent about 100 every 15 minutes from the send
   time, each person once, in their language, with a one-click "turn off news emails" link), previews of every email
   the app sends, the launch list (masked) and the email log. Over 500 people, a second member with `comms.approve`
-  approves first (Team and roles, then Approvals).
+  approves first (Team and roles, then Approvals). The audience is counted again when a campaign starts sending and,
+  for an announcement, in the 30 minutes before it starts and while it runs. If it has grown past 500 without an
+  approval, or more than 10% past the approved count, it goes back to draft with a note, and scheduling it again asks
+  for approval. A campaign never goes to more people than were counted when it started. Only accounts with a
+  confirmed email that are not suspended get campaigns.
 - **Platform settings**: feature flags, learning rules, access and maintenance, team password, legal page status.
   Each change needs a reason and a fresh two-step code; risky ones also need a typed word. Servers pick changes up
   within a minute.
@@ -87,6 +91,20 @@ All new flags start off.
 13. Scheduled jobs that email learners have no "Run now" button; they run on their schedule only.
 14. Instructors: there are no instructor profiles in the learner app yet (the hybrid instructor cards are still in
     design), so the Instructors screen is not built; the permissions exist for when it is.
+15. Every feature flag change asks for the flag's name typed, a reason and a fresh two-step code. The maintenance
+    message needs a reason and a fresh code too.
+16. A weekly report only goes to members whose roles allow it (the Money report needs `revenue.view`), checked when it
+    is saved and again on every send. Only the person who saved a report, or an Admin, removes it.
+17. Free Pro given by support during a trial ends the trial with no "trial ended" email. Learner 360 still labels a
+    learner on a trial as Free (with the Pro end date); the label comes from Phase 1's learner list.
+
+## Questions for the Admins
+
+- **News emails need consent?** Campaigns go to every confirmed account that did not turn news off. Egypt's data
+  protection law and the GCC rules generally expect opt-in consent for marketing email. Decide whether news needs a tick
+  at sign-up, or a one-time "Get news from UXGate?" choice, before the first campaign.
+- **Trial extension vs free Pro:** Support can add up to 60 days to a trial (14 at a time) but give only 30 days of
+  free Pro. Keep both, or make them match?
 
 ## Not in this build
 

@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Email campaigns" };
 
 type C = { id: string; name: string; subject: { en: string; ar: string }; body: { en: string; ar: string }; button: { en: string; ar: string; href: string } | null; audience: string; send_at: string | null;
-  status: string; approval_id: string | null; audience_count: number | null; sent_count: number; failed_count: number };
+  status: string; approval_id: string | null; audience_count: number | null; held_note?: string | null; sent_count: number; failed_count: number };
 const AUD: Record<string, string> = { all: "Everyone", free: "Free learners", pro: "Pro learners", trial: "Learners in a trial" };
 
 function Fields({ c }: { c?: C }) {
@@ -63,7 +63,7 @@ export default async function CampaignsPage() {
                   <td style={{ maxWidth: 360 }}><b className="t-sm">{c.name}</b><span className="t-xs ink-2" style={{ display: "block" }}>{c.subject.en}</span><span className="t-xs ink-2" dir="rtl" lang="ar" style={{ display: "block" }}>{c.subject.ar}</span></td>
                   <td className="t-sm">{AUD[c.audience]}{c.audience_count != null ? <span className="t-xs ink-2" style={{ display: "block" }}>≈ {c.audience_count.toLocaleString("en")}</span> : null}</td>
                   <td className="t-sm">{c.send_at ? <When at={c.send_at} /> : "—"}</td>
-                  <td><St tone={tone} icon={icon}>{label}</St>{apState && apState !== "waiting" && c.status === "waiting_approval" ? <span className="t-xs ink-2" style={{ display: "block" }}>Approval {apState}</span> : null}</td>
+                  <td><St tone={tone} icon={icon}>{label}</St>{apState && apState !== "waiting" && c.status === "waiting_approval" ? <span className="t-xs ink-2" style={{ display: "block" }}>Approval {apState}</span> : null}{c.status === "draft" && c.held_note ? <span className="t-xs ink-warn" style={{ display: "block" }}>{c.held_note}</span> : null}</td>
                   <td className="num">{c.sent_count.toLocaleString("en")}{c.failed_count ? <span className="t-xs" style={{ display: "block", color: "var(--bad-ink)" }}>{c.failed_count} failed</span> : null}</td>
                   <td style={{ textAlign: "end" }}>
                     {can ? <div className="a-row" style={{ gap: 6, justifyContent: "end", flexWrap: "wrap" }}>

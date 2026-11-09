@@ -65,18 +65,21 @@ export async function sendForReview(_: R | null, f: FormData): Promise<R> {
     if (title.length < 3) throw new AdminError("invalid", "Write a title of at least 3 characters.");
     const note = textFrom(f, "note", 1000);
     const results: { lesson: string; ok: boolean; checks: ReturnType<typeof lessonChecks>["checks"] }[] = [];
+    // The draft each check ran on: the database refuses if any was saved again since (another editor in between).
+    const drafts: Record<string, string> = {};
     for (const l of lessons) {
       const ed = await lessonForEditor(l);
       if (!ed?.draft) throw new AdminError("invalid", `${l} has no draft.`);
       const r = lessonChecks(await baseBody(l, ed.draft.baseVersionId), ed.draft.body, ed.draft.acks);
       results.push({ lesson: l, ok: r.ok, checks: r.checks });
+      drafts[l] = ed.draft.updatedAt;
     }
     const failed = results.filter((r) => !r.ok);
     if (failed.length) {
       const first = failed[0].checks.filter((c) => !c.ok).map((c) => c.detail ?? c.label).join("; ");
       throw new AdminError("invalid", `${failed.map((r) => r.lesson).join(", ")} failed a check: ${first}. Fix it in the editor first.`);
     }
-    check(await createAdminClient().rpc("admin_content_submit", { ...who(ctx), p_title: title, p_note: note, p_lessons: lessons, p_checks: { ok: true, lessons: results } }));
+    check(await createAdminClient().rpc("admin_content_submit", { ...who(ctx), p_title: title, p_note: note, p_lessons: lessons, p_checks: { ok: true, lessons: results, drafts } }));
   }, "Sent for review. Another publisher will review it.");
 }
 

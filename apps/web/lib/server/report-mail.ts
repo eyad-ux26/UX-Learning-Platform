@@ -1,6 +1,6 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { report, REPORTS, type ReportId } from "@/lib/admin/data/reports";
+import { report, reportReaders, REPORTS, type ReportId } from "@/lib/admin/data/reports";
 import { emailLayout } from "./email/layout";
 import { sendEmail } from "./email/send";
 import { siteOrigin } from "@/lib/email-token";
@@ -16,8 +16,7 @@ export async function sendWeeklyReports(db: SupabaseClient, now = new Date()): P
   const cutoff = new Date(now.getTime() - 6 * 86_400_000).toISOString();
   const { data, error } = await db.from("admin_saved_reports").select("id, name, report, range_days, recipients, last_sent_at").eq("weekly", true).or(`last_sent_at.is.null,last_sent_at.lt.${cutoff}`).limit(20);
   if (error || !data) return { sent: 0, failed: 0 };
-  const { data: team } = await db.from("admin_members").select("email").eq("status", "active");
-  const active = new Set((team ?? []).map((m) => String(m.email).toLowerCase()));
+  const readers = new Map<ReportId, Set<string>>();
   let sent = 0;
   let failed = 0;
   for (const s of data as { id: string; name: string; report: ReportId; range_days: number; recipients: string[] }[]) {
@@ -31,7 +30,10 @@ export async function sendWeeklyReports(db: SupabaseClient, now = new Date()): P
       table: [...top, ...total], button: { label: "Open in the admin panel", href: `${siteOrigin()}/admin/reports?r=${s.report}&days=${s.range_days}` },
       footer: "transactional", why: "You get this because a team member added you to a weekly report in the UXGate admin panel.",
     });
-    for (const to of s.recipients.filter((r) => active.has(r.toLowerCase()))) {
+    // Checked again on every send: only active members whose roles still allow this report.
+    if (!readers.has(s.report)) readers.set(s.report, new Set((await reportReaders(s.report, db)).map((m) => m.email.toLowerCase())));
+    const allowedTo = readers.get(s.report)!;
+    for (const to of s.recipients.filter((r) => allowedTo.has(r.toLowerCase()))) {
       const r = await sendEmail({ to, subject: `Weekly report: ${s.name}`, ...mail, kind: "admin_report" });
       if (r.ok) sent++; else failed++;
     }

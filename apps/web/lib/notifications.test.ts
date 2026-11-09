@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_PREFS, allowed, countChanges, isLocked, readPrefs } from "./notifications";
+import { DEFAULT_PREFS, allowed, countChanges, isLocked, prefsToStore, readPrefs } from "./notifications";
 
 describe("notification choices", () => {
   it("fills missing kinds and channels with the defaults", () => {
@@ -27,5 +27,18 @@ describe("notification choices", () => {
     const b = readPrefs({ review: { email: true }, badge: { push: true } });
     expect(countChanges(DEFAULT_PREFS, DEFAULT_PREFS)).toBe(0);
     expect(countChanges(DEFAULT_PREFS, b)).toBe(2);
+  });
+});
+
+describe("saving the Notifications screen", () => {
+  it("keeps the news opt-out from a campaign email", () => {
+    const stored = { news: { email: false }, reminder: { email: true } };
+    const saved = prefsToStore(stored, { ...DEFAULT_PREFS, reminder: { in_app: true, email: false, push: true } });
+    expect(saved.news).toEqual({ email: false });
+    expect((saved.reminder as Record<string, boolean>).email).toBe(false);
+  });
+  it("stores every screen kind when nothing was stored", () => {
+    const saved = prefsToStore(null, DEFAULT_PREFS);
+    expect(Object.keys(saved).sort()).toEqual(["answer", "badge", "billing", "reminder", "review"]);
   });
 });

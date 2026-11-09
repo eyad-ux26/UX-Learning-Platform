@@ -14,7 +14,6 @@ import { hashTeamPassword, resetTeamPassword, teamPasswordProblem } from "@/lib/
 type R = ActionResult;
 const FLAG = /^[a-z_]{2,40}$/;
 /** Flags whose name must be typed, because they change what every learner gets. */
-const TYPED_FLAGS = new Set(["content_db", "trials"]);
 
 export async function setFlag(_: R | null, f: FormData): Promise<R> {
   return run(async () => {
@@ -22,7 +21,8 @@ export async function setFlag(_: R | null, f: FormData): Promise<R> {
     const key = String(f.get("key") ?? "");
     if (!FLAG.test(key)) throw new AdminError("invalid", "Something is missing. Reload the page and try again.");
     const on = f.get("enabled") === "1";
-    if (TYPED_FLAGS.has(key) && String(f.get("typed") ?? "").trim() !== key) throw new AdminError("invalid", `Type ${key} to confirm.`);
+    // Every flag change asks for its name typed (FlowFeatureFlag): a flag changes what every learner sees.
+    if (String(f.get("typed") ?? "").trim() !== key) throw new AdminError("invalid", `Type ${key} to confirm.`);
     await requireFresh(ctx, f.get("code") as string | null);
     check(await createAdminClient().rpc("admin_set_flag", { ...who(ctx), p_key: key, p_enabled: on, p_reason: reasonFrom(f) }));
     resetAppConfig();
@@ -69,7 +69,10 @@ export async function setMaintenanceMessage(_: R | null, f: FormData): Promise<R
     const ctx = await actionAdmin("settings.access");
     const en = textFrom(f, "message_en", 300, true, "the English message")!;
     const ar = textFrom(f, "message_ar", 300, true, "the Arabic message")!;
-    check(await createAdminClient().rpc("admin_set_setting", { ...who(ctx), p_key: "access.maintenance_message", p_value: { en, ar }, p_reason: "Maintenance message edited" }));
+    const reason = reasonFrom(f);
+    // Every visitor reads it while maintenance is on, so it needs a reason and a fresh code like the other access changes.
+    await requireFresh(ctx, f.get("code") as string | null);
+    check(await createAdminClient().rpc("admin_set_setting", { ...who(ctx), p_key: "access.maintenance_message", p_value: { en, ar }, p_reason: reason }));
     resetAppConfig();
   }, "Message saved.");
 }

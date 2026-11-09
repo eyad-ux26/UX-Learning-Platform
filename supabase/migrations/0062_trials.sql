@@ -37,11 +37,14 @@ $$;
 revoke all on function public.has_pro(uuid) from public, anon, authenticated;
 grant execute on function public.has_pro(uuid) to service_role;
 
--- Paying during a trial: the webhook writes a live entitlement and the trial is converted.
+-- Paying during a trial: the webhook writes a live entitlement and the trial is converted. Free Pro given by support
+-- during a trial (source manual) ends the trial quietly: no "your trial ended" email (ended_sent_at is set).
 create function public.trials_on_entitlement() returns trigger language plpgsql security definer set search_path = public as $$
 begin
   if new.source = 'live' and new.plan = 'pro' and (old.source is distinct from 'live') then
     update public.trials set status = 'converted', converted_at = now() where user_id = new.user_id and status = 'active';
+  elsif new.source = 'manual' and new.plan = 'pro' and old.source = 'trial' then
+    update public.trials set status = 'ended', ended_sent_at = coalesce(ended_sent_at, now()) where user_id = new.user_id and status = 'active';
   end if;
   return new;
 end $$;

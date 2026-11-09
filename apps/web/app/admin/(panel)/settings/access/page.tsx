@@ -2,7 +2,7 @@ import { requireAdmin, allowed } from "@/lib/admin/guard";
 import { isFresh } from "@/lib/admin/fresh";
 import { settingsData, workerAccess } from "@/lib/admin/data/settings";
 import { Card, KV, NoAccess, Note, PageHead, St, When } from "@/components/admin/ui";
-import { ActionForm, Confirm } from "@/components/admin/forms";
+import { Confirm } from "@/components/admin/forms";
 import { SettingsTabs } from "@/components/admin/SettingsTabs";
 import { setComingSoon, setMaintenance, setMaintenanceMessage, setTeamPassword } from "../actions";
 
@@ -57,17 +57,17 @@ export default async function AccessPage() {
         ]} />
         {can ? (
           <>
-            <ActionForm action={setMaintenanceMessage} reset={false} className="a-stack sm">
-              {(pending) => (
-                <>
-                  <div className="a-row" style={{ gap: 8, alignItems: "start", flexWrap: "wrap" }}>
-                    <div className="a-field a-grow"><label htmlFor="m-en">Message in English</label><textarea id="m-en" name="message_en" className="a-ta" rows={2} maxLength={300} defaultValue={msg.en} required lang="en" dir="ltr" /></div>
-                    <div className="a-field a-grow"><label htmlFor="m-ar">Message in Arabic</label><textarea id="m-ar" name="message_ar" className="a-ta a-ar" rows={2} maxLength={300} defaultValue={msg.ar} required lang="ar" dir="rtl" /></div>
-                  </div>
-                  <div><button type="submit" className="a-btn sm" disabled={pending} aria-busy={pending}>{pending ? "Saving…" : "Save message"}</button></div>
-                </>
-              )}
-            </ActionForm>
+            <div className="a-row" style={{ gap: 12, alignItems: "start", flexWrap: "wrap" }}>
+              <p className="t-sm a-grow" lang="en" dir="ltr" style={{ whiteSpace: "pre-line" }}>{msg.en || <span className="ink-3">No English message: learners see the default text.</span>}</p>
+              <p className="t-sm a-grow a-ar" lang="ar" dir="rtl" style={{ whiteSpace: "pre-line" }}>{msg.ar || <span className="ink-3">لا توجد رسالة بالعربية: تظهر الرسالة الافتراضية.</span>}</p>
+            </div>
+            <div>
+              <Confirm action={setMaintenanceMessage} small label="Edit the message" icon="pencil-simple" title="Change the maintenance message?" fresh={fresh}
+                effects={[{ icon: "users-three", text: "Every visitor sees it while maintenance is on." }]}>
+                <div className="a-field"><label htmlFor="m-en">Message in English</label><textarea id="m-en" name="message_en" className="a-ta" rows={3} maxLength={300} defaultValue={msg.en} required lang="en" dir="ltr" /></div>
+                <div className="a-field"><label htmlFor="m-ar">Message in Arabic</label><textarea id="m-ar" name="message_ar" className="a-ta a-ar" rows={3} maxLength={300} defaultValue={msg.ar} required lang="ar" dir="rtl" /></div>
+              </Confirm>
+            </div>
             <div className="a-row" style={{ gap: 8, marginTop: 8 }}>
               {maint ? (
                 <Confirm action={setMaintenance} label="End maintenance" icon="check" title="End maintenance?" hidden={[{ name: "on", value: "0" }]} fresh={fresh}

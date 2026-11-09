@@ -64,3 +64,17 @@ export async function savedReports(): Promise<{ rows: SavedReport[]; ready: bool
   const { data, error } = await createAdminClient().from("admin_saved_reports").select("*").order("created_at", { ascending: false }).limit(100);
   return { rows: (data ?? []) as SavedReport[], ready: !error };
 }
+
+/**
+ * Active team members whose roles allow this report (reports.view, or revenue.view for Money), for the "Send to" list,
+ * when saving and again on every send, so a member who loses the permission stops getting it.
+ */
+export async function reportReaders(id: ReportId, db: SupabaseClient = createAdminClient()): Promise<{ user_id: string; email: string; display_name: string | null }[]> {
+  const { data: team } = await db.from("admin_members").select("user_id, email, display_name").eq("status", "active").order("email");
+  const out: { user_id: string; email: string; display_name: string | null }[] = [];
+  for (const m of (team ?? []) as { user_id: string; email: string; display_name: string | null }[]) {
+    const { data: perms } = await db.rpc("admin_perms", { p_user: m.user_id });
+    if (((perms ?? []) as string[]).includes(REPORTS[id].needs)) out.push(m);
+  }
+  return out;
+}

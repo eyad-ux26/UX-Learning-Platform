@@ -19,7 +19,7 @@ describe("content seed SQL", () => {
   it("loads on the migrated schema and can be run again", async () => {
     const db = new PGlite();
     await db.exec(`create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls; create schema auth;
-      create table auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb not null default '{}');
+      create table auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb not null default '{}', email_confirmed_at timestamptz, banned_until timestamptz);
       create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;
       grant usage on schema auth to anon, authenticated; grant execute on function auth.uid() to anon, authenticated;`);
     for (const f of fs.readdirSync(path.join(here, "../migrations")).sort()) await db.exec(fs.readFileSync(path.join(here, "../migrations", f), "utf8"));

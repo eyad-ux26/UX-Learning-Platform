@@ -58,5 +58,7 @@ export async function GET(req: Request) {
   }
   // Communications (0063): the next batch of a campaign whose time has come. No-op before 0063 or without email.
   const campaign = await sendCampaignBatch(db).catch(() => null);
-  return jobJson("admin", { reminded, closed, campaign });
+  // Announcements starting soon or running: counted again, and put back to draft if the audience grew past what was allowed.
+  const { data: held } = await db.rpc("announcements_recheck");
+  return jobJson("admin", { reminded, closed, campaign, announcementsHeld: Number(held ?? 0) });
 }

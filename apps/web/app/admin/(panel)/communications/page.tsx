@@ -10,7 +10,7 @@ import { backToDraft, cancelAnnouncement, saveAnnouncement, scheduleAnnouncement
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Announcements" };
 
-type A = { id: string; title: { en: string; ar: string }; body: { en: string; ar: string }; link: string | null; audience: string; starts_at: string; ends_at: string; status: string; approval_id: string | null; audience_count: number | null };
+type A = { id: string; title: { en: string; ar: string }; body: { en: string; ar: string }; link: string | null; audience: string; starts_at: string; ends_at: string; status: string; approval_id: string | null; audience_count: number | null; held_note?: string | null };
 const AUD: Record<string, string> = { all: "Everyone", free: "Free learners", pro: "Pro learners" };
 
 function Fields({ a }: { a?: A }) {
@@ -61,7 +61,7 @@ export default async function AnnouncementsPage() {
                   <td style={{ maxWidth: 380 }}><b className="t-sm">{a.title.en}</b><span className="t-xs ink-2" style={{ display: "block" }}>{a.body.en}</span><span className="t-xs ink-2 a-ar" dir="rtl" lang="ar" style={{ display: "block" }}>{a.title.ar} · {a.body.ar}</span></td>
                   <td className="t-sm">{AUD[a.audience]}{a.audience_count != null ? <span className="t-xs ink-2" style={{ display: "block" }}>≈ {a.audience_count.toLocaleString("en")}</span> : null}</td>
                   <td className="t-sm"><When at={a.starts_at} /><span className="t-xs ink-2" style={{ display: "block" }}>to <When at={a.ends_at} /></span></td>
-                  <td><St tone={tone} icon={icon}>{label}</St>{apState && apState !== "waiting" && a.status === "waiting_approval" ? <span className="t-xs ink-2" style={{ display: "block" }}>Approval {apState}</span> : null}</td>
+                  <td><St tone={tone} icon={icon}>{label}</St>{apState && apState !== "waiting" && a.status === "waiting_approval" ? <span className="t-xs ink-2" style={{ display: "block" }}>Approval {apState}</span> : null}{a.status === "draft" && a.held_note ? <span className="t-xs ink-warn" style={{ display: "block" }}>{a.held_note}</span> : null}</td>
                   <td style={{ textAlign: "end" }}>
                     {can ? <div className="a-row" style={{ gap: 6, justifyContent: "end" }}>
                       {a.status === "draft" ? <>

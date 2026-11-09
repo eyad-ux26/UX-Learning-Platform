@@ -16,7 +16,11 @@ export async function sendCampaignBatch(db: SupabaseClient, limit = 100, now = n
   const { data: c, error } = await db.from("campaigns").select("id, subject, body, button, sent_count, failed_count, status")
     .in("status", ["scheduled", "sending"]).lte("send_at", now.toISOString()).order("send_at").limit(1).maybeSingle();
   if (error || !c) return none;
-  if (c.status === "scheduled") await db.from("campaigns").update({ status: "sending" }).eq("id", c.id).eq("status", "scheduled");
+  if (c.status === "scheduled") {
+    // Counted again at send time: if the audience grew past what was allowed or approved, it goes back to draft.
+    const { data: st, error: se } = await db.rpc("campaign_start", { p_campaign: c.id });
+    if (se || st !== "sending") return { ...none, campaign: c.id as string };
+  }
   const { data: next, error: ne } = await db.rpc("campaign_next", { p_campaign: c.id, p_limit: limit });
   if (ne) return none;
   const people = (next ?? []) as { user_id: string; email: string; locale: string }[];

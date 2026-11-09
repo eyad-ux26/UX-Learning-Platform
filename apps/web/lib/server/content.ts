@@ -31,45 +31,45 @@ const compiled = createLessonLoader(read);
 
 const LIVE_TTL_MS = 60_000;
 let live: { at: number; map: Map<string, string> } | null = null;
-let liveLoading: Promise<Map<string, string> | null> | null = null;
-const bodies = new Map<string, Promise<Lesson | null>>();
+let liveRefreshingUntil = 0;
+// Version bodies never change, so each one is kept for the isolate once loaded. Only settled values are shared between
+// requests, never a promise: on Workers, I/O started by a request that has ended can be cancelled, and a shared promise
+// that never settles would hang every later request waiting on it.
+const bodies = new Map<string, Lesson | null>();
 
 /** lesson id -> live hash, at most a minute old; null when the flag is off or the database cannot say. */
 async function liveHashes(): Promise<Map<string, string> | null> {
   if (!hasServiceKey() || !(await flagOn("content_db"))) return null;
-  if (live && Date.now() - live.at < LIVE_TTL_MS) return live.map;
-  liveLoading ??= (async () => {
-    try {
-      const { data, error } = await createAdminClient().rpc("content_live_hashes");
-      if (error) throw new Error(error.message);
-      const map = new Map(((data ?? []) as { lesson_id: string; hash: string }[]).map((r) => [r.lesson_id, r.hash]));
-      live = { at: Date.now(), map };
-      return map;
-    } catch (e) {
-      console.warn("content: live versions unavailable, serving the compiled ones", (e as Error).message);
-      return live?.map ?? null;
-    } finally {
-      liveLoading = null;
-    }
-  })();
-  return liveLoading;
+  const now = Date.now();
+  if (live && now - live.at < LIVE_TTL_MS) return live.map;
+  // Another request in this isolate is refreshing: keep the last answer meanwhile (up to five minutes old).
+  if (live && now - live.at < 5 * LIVE_TTL_MS && now < liveRefreshingUntil) return live.map;
+  liveRefreshingUntil = now + 2_000;
+  try {
+    const { data, error } = await createAdminClient().rpc("content_live_hashes");
+    if (error) throw new Error(error.message);
+    const map = new Map(((data ?? []) as { lesson_id: string; hash: string }[]).map((r) => [r.lesson_id, r.hash]));
+    live = { at: Date.now(), map };
+    return map;
+  } catch (e) {
+    console.warn("content: live versions unavailable, serving the compiled ones", (e as Error).message);
+    return live?.map ?? null;
+  } finally {
+    liveRefreshingUntil = 0;
+  }
 }
 
-/** A stored version's body. Versions never change, so it is kept for the isolate. */
-function storedBody(lessonId: string, hash: string): Promise<Lesson | null> {
+/** A stored version's body, loaded once per isolate. */
+async function storedBody(lessonId: string, hash: string): Promise<Lesson | null> {
   const k = `${lessonId}:${hash}`;
-  let p = bodies.get(k);
-  if (!p) {
-    p = (async () => {
-      const { data, error } = await createAdminClient().from("content_versions").select("body").eq("lesson_id", lessonId).eq("hash", hash).maybeSingle();
-      if (error) throw new Error(error.message);
-      const b = data?.body as Lesson | undefined;
-      return b && Array.isArray(b.steps) ? b : null;
-    })();
-    p.catch(() => bodies.delete(k));
-    bodies.set(k, p);
-  }
-  return p;
+  if (bodies.has(k)) return bodies.get(k)!;
+  const { data, error } = await createAdminClient().from("content_versions").select("body").eq("lesson_id", lessonId).eq("hash", hash).maybeSingle();
+  if (error) throw new Error(error.message);
+  const b = data?.body as Lesson | undefined;
+  const body = b && Array.isArray(b.steps) ? b : null;
+  if (bodies.size > 500) bodies.clear();
+  bodies.set(k, body);
+  return body;
 }
 
 async function liveVersion(base: LessonVersion | undefined): Promise<LessonVersion | undefined> {

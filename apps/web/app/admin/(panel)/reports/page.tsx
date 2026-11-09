@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { allowed, requireAdmin } from "@/lib/admin/guard";
 import { isFresh } from "@/lib/admin/fresh";
-import { RANGES, REPORTS, report, savedReports, type ReportId } from "@/lib/admin/data/reports";
+import { RANGES, REPORTS, report, reportReaders, savedReports, type ReportId } from "@/lib/admin/data/reports";
 import { names } from "@/lib/admin/data/content";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { Card, Empty, NoAccess, Note, PageHead, St, Tabs, When } from "@/components/admin/ui";
 import { Confirm, Drawer } from "@/components/admin/forms";
 import { ExportButton } from "@/components/admin/Download";
@@ -22,7 +21,8 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const days = (RANGES as readonly number[]).includes(Number(sp.days)) ? Number(sp.days) : 30;
   const [t, saved] = await Promise.all([report(id, days), savedReports()]);
   const canSave = allowed(ctx, "reports.schedule");
-  const team = canSave ? ((await createAdminClient().from("admin_members").select("email, display_name").eq("status", "active").order("email")).data ?? []) : [];
+  // Only members whose roles allow this report can be picked (the Money report needs revenue.view).
+  const team = canSave ? await reportReaders(id) : [];
   const who = await names(saved.rows.map((s) => s.created_by).filter(Boolean) as string[]);
   const fresh = isFresh(ctx);
   const href = (r: string, d: number) => `/admin/reports?r=${r}&days=${d}`;

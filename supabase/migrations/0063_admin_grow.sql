@@ -172,6 +172,8 @@ create table public.announcements (
   status text not null default 'draft' check (status in ('draft', 'waiting_approval', 'scheduled', 'cancelled')),
   approval_id uuid,
   audience_count integer,
+  checked_at timestamptz,            -- the audience was counted again close to the start (announcements_recheck)
+  held_note text,                    -- why the 15-minute job put it back to draft
   created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now(),
   check (ends_at > starts_at)
@@ -192,6 +194,7 @@ create table public.campaigns (
   audience_count integer,
   sent_count integer not null default 0,
   failed_count integer not null default 0,
+  held_note text,                    -- why the send job put it back to draft
   created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -203,13 +206,16 @@ create table public.campaign_sends (
   primary key (campaign_id, user_id)
 );
 
--- Who an audience is: accounts that did not turn off news emails and are not being deleted.
+-- Who an audience is: accounts with a confirmed email that are not suspended, not being deleted, and did not turn off
+-- news emails.
 create function public.admin_audience(p_audience text) returns table (user_id uuid, email text, locale text, display_name text)
 language sql stable security definer set search_path = public as $$
   select u.id, u.email::text, coalesce(p.locale, 'en'), p.display_name
   from auth.users u join public.profiles p on p.user_id = u.id
   left join public.entitlements e on e.user_id = u.id
   where u.email is not null
+    and u.email_confirmed_at is not null
+    and (u.banned_until is null or u.banned_until < now())
     and p.delete_after is null
     -- News email is a choice of its own ('news' in notification_prefs, on unless turned off; every campaign email links to turning it off).
     and not exists (select 1 from public.notification_prefs n where n.user_id = u.id and n.prefs -> 'news' ->> 'email' = 'false')
@@ -225,14 +231,81 @@ create function public.admin_audience_count(p_audience text) returns bigint lang
   select count(*) from public.admin_audience(p_audience)
 $$;
 
--- The next people a campaign goes to: its audience, less everyone it already went to. The sender marks each one in
--- campaign_sends before sending, so a person never gets the same campaign twice.
+-- More than this many people needs a second team member's approval (communications/actions.ts says the same).
+create function public.comms_approval_over() returns integer language sql immutable as $$ select 500 $$;
+
+-- Is this audience still covered? Counted when scheduled; counted again at send (campaigns) or near the start
+-- (announcements). Over the limit it needs an approval, and an approval covers its count plus 10%.
+create function public.comms_needs_approval(p_now integer, p_counted integer, p_approved boolean) returns boolean
+language sql immutable as $$
+  select p_now > public.comms_approval_over() and (not p_approved or p_now > ceil(coalesce(p_counted, 0) * 1.1))
+$$;
+
+-- Starts a scheduled campaign: counts its audience again. If it has grown past what was allowed (more than 500 without
+-- an approval, or more than 10% over the approved count), it goes back to draft with a note, and scheduling it again
+-- asks for approval. Otherwise it is 'sending' and capped at today's count. Answers the campaign's status after.
+create function public.campaign_start(p_campaign uuid) returns text
+language plpgsql security definer set search_path = public as $$
+declare
+  c public.campaigns;
+  n integer;
+begin
+  select * into c from public.campaigns where id = p_campaign for update;
+  if not found then return 'missing'; end if;
+  if c.status <> 'scheduled' then return c.status; end if;
+  n := public.admin_audience_count(c.audience);
+  if public.comms_needs_approval(n, c.audience_count, c.approval_id is not null) then
+    update public.campaigns set status = 'draft', approval_id = null, audience_count = n,
+      held_note = format('Not sent: at the send time it reached %s people, more than the %s it was %s for. Schedule it again to ask for approval.',
+        n, case when c.approval_id is null then public.comms_approval_over() else c.audience_count end, case when c.approval_id is null then 'allowed' else 'approved' end)
+      where id = p_campaign;
+    perform public.admin_log(null, 'campaign.held', 'grow', 'campaign', c.id::text, c.name,
+      jsonb_build_object('status', 'scheduled', 'people', c.audience_count), jsonb_build_object('status', 'draft', 'people', n), 'The audience grew past what was approved', null, null, null);
+    return 'draft';
+  end if;
+  update public.campaigns set status = 'sending', audience_count = n, held_note = null where id = p_campaign;
+  return 'sending';
+end $$;
+
+-- The next people a campaign goes to: its audience, less everyone it already went to, and never more people in all
+-- than were counted when it started. The sender marks each one in campaign_sends before sending, so a person never
+-- gets the same campaign twice.
 create function public.campaign_next(p_campaign uuid, p_limit integer default 100) returns table (user_id uuid, email text, locale text, display_name text)
 language sql stable security definer set search_path = public as $$
   select a.* from public.campaigns c, public.admin_audience(c.audience) a
-  where c.id = p_campaign and not exists (select 1 from public.campaign_sends s where s.campaign_id = c.id and s.user_id = a.user_id)
-  order by a.user_id limit least(greatest(p_limit, 1), 500)
+  where c.id = p_campaign and c.status = 'sending'
+    and not exists (select 1 from public.campaign_sends s where s.campaign_id = c.id and s.user_id = a.user_id)
+  order by a.user_id
+  limit least(greatest(p_limit, 1), 500, (select greatest(coalesce(c2.audience_count, 0) - (select count(*) from public.campaign_sends s2 where s2.campaign_id = c2.id), 0)
+                                           from public.campaigns c2 where c2.id = p_campaign))
 $$;
+
+-- The 15-minute job: counts the audience of every announcement that starts within 30 minutes or is running. One that
+-- grew past what was allowed goes back to draft with a note; the rest are marked checked. Learners see an announcement
+-- only once it was checked close to its start (my_announcements). Answers how many went back to draft.
+create function public.announcements_recheck() returns integer
+language plpgsql security definer set search_path = public as $$
+declare
+  a record;
+  n integer;
+  held integer := 0;
+begin
+  for a in select * from public.announcements where status = 'scheduled' and starts_at <= now() + interval '30 minutes' and ends_at > now() for update loop
+    n := public.admin_audience_count(a.audience);
+    if public.comms_needs_approval(n, a.audience_count, a.approval_id is not null) then
+      update public.announcements set status = 'draft', approval_id = null, audience_count = n, checked_at = now(),
+        held_note = format('Stopped: it now reaches %s people, more than the %s it was %s for. Schedule it again to ask for approval.',
+          n, case when a.approval_id is null then public.comms_approval_over() else a.audience_count end, case when a.approval_id is null then 'allowed' else 'approved' end)
+        where id = a.id;
+      perform public.admin_log(null, 'announcement.held', 'grow', 'announcement', a.id::text, a.title ->> 'en',
+        jsonb_build_object('status', 'scheduled', 'people', a.audience_count), jsonb_build_object('status', 'draft', 'people', n), 'The audience grew past what was approved', null, null, null);
+      held := held + 1;
+    else
+      update public.announcements set checked_at = now(), held_note = null where id = a.id;
+    end if;
+  end loop;
+  return held;
+end $$;
 
 -- What a learner sees: live announcements for their plan (and only while the flag is on).
 create function public.my_announcements() returns table (id uuid, title jsonb, body jsonb, link text, ends_at timestamptz)
@@ -240,6 +313,7 @@ language sql stable security definer set search_path = public as $$
   select a.id, a.title, a.body, a.link, a.ends_at from public.announcements a
   left join public.entitlements e on e.user_id = auth.uid()
   where auth.uid() is not null and a.status = 'scheduled' and now() >= a.starts_at and now() < a.ends_at
+    and a.checked_at >= a.starts_at - interval '30 minutes'
     and exists (select 1 from public.app_flags where key = 'announcements' and enabled)
     and case a.audience when 'all' then true
       when 'pro' then coalesce(e.plan = 'pro' and e.valid_until > now() and e.source in ('live', 'manual', 'trial'), false)
@@ -304,19 +378,21 @@ revoke all on public.content_flags, public.admin_saved_reports, public.announcem
   public.help_articles, public.help_misses, public.job_runs from public, anon, authenticated;
 grant select, insert, update, delete on public.content_flags, public.admin_saved_reports, public.announcements, public.campaigns,
   public.campaign_sends, public.help_articles, public.help_misses, public.job_runs to service_role;
--- Published help articles are public (the help pages and the app read them).
-grant select on public.help_articles to anon, authenticated;
+-- Published help articles are public (the help pages and the app read them), without who wrote them.
+grant select (id, slug, topic, title, body, status, published_at) on public.help_articles to anon, authenticated;
 create policy "published help" on public.help_articles for select to anon, authenticated using (status = 'published');
 
 revoke all on function public.admin_step_stats(text, text, timestamptz), public.admin_misconception_counts(text, timestamptz), public.admin_skill_stats(text),
   public.admin_step_reports(timestamptz), public.admin_set_flag_status(uuid, text, text, text, text, text, text, text, text, uuid),
   public.admin_report_learning(timestamptz, timestamptz), public.admin_report_growth(timestamptz, timestamptz), public.admin_report_money(),
-  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune(), public.campaign_next(uuid, integer)
+  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune(), public.campaign_next(uuid, integer),
+  public.campaign_start(uuid), public.announcements_recheck()
   from public, anon, authenticated;
 grant execute on function public.admin_step_stats(text, text, timestamptz), public.admin_misconception_counts(text, timestamptz), public.admin_skill_stats(text),
   public.admin_step_reports(timestamptz), public.admin_set_flag_status(uuid, text, text, text, text, text, text, text, text, uuid),
   public.admin_report_learning(timestamptz, timestamptz), public.admin_report_growth(timestamptz, timestamptz), public.admin_report_money(),
-  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune(), public.campaign_next(uuid, integer)
+  public.admin_report_certs(timestamptz, timestamptz), public.admin_audience(text), public.admin_audience_count(text), public.help_note_miss(text), public.job_runs_prune(), public.campaign_next(uuid, integer),
+  public.campaign_start(uuid), public.announcements_recheck()
   to service_role;
 revoke all on function public.my_announcements() from public, anon;
 grant execute on function public.my_announcements() to authenticated, service_role;

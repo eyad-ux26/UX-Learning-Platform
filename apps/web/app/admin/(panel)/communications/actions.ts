@@ -47,10 +47,10 @@ async function scheduleOrAsk(ctx: Awaited<ReturnType<typeof actionAdmin>>, type:
       ...who(ctx), p_kind: "email", p_permission: "comms.approve", p_title: `${type === "announcement" ? "Announcement" : "Campaign"}: ${title}`,
       p_detail: { type, id, audience, people: n }, p_target_type: type, p_target_id: id, p_reason: reason,
     })) as unknown as string;
-    check(await db.from(table).update({ status: "waiting_approval", approval_id: approval, audience_count: n }).eq("id", id).eq("status", "draft"));
+    check(await db.from(table).update({ status: "waiting_approval", approval_id: approval, audience_count: n, held_note: null }).eq("id", id).eq("status", "draft"));
     return `Sent for approval: it reaches about ${n.toLocaleString("en")} people, so a second team member approves it.`;
   }
-  check(await db.from(table).update({ status: "scheduled", audience_count: n }).eq("id", id).eq("status", "draft"));
+  check(await db.from(table).update({ status: "scheduled", audience_count: n, held_note: null, ...(type === "announcement" ? { checked_at: new Date().toISOString() } : {}) }).eq("id", id).eq("status", "draft"));
   await audit(ctx, `${type}.scheduled`, "grow", { type, id, label: title }, { after: { audience, people: n }, reason });
   return `Scheduled for about ${n.toLocaleString("en")} people.`;
 }
@@ -73,7 +73,8 @@ export async function saveAnnouncement(_: R | null, f: FormData): Promise<R> {
     const row = { title, body, link: link || null, audience, starts_at: starts.toISOString(), ends_at: ends.toISOString() };
     const db = createAdminClient();
     if (id) {
-      check(await db.from("announcements").update(row).eq("id", id).eq("status", "draft"));
+      const done = check(await db.from("announcements").update(row).eq("id", id).eq("status", "draft").select("id")) as unknown[];
+      if (!done.length) throw new AdminError("conflict", "Only a draft can be edited. Reload the page.");
       await audit(ctx, "announcement.edited", "grow", { type: "announcement", id, label: title.en }, { after: row });
     } else {
       const r = check(await db.from("announcements").insert({ ...row, created_by: ctx.userId }).select("id").single()) as { id: string };
@@ -148,7 +149,8 @@ export async function saveCampaign(_: R | null, f: FormData): Promise<R> {
     const row = campaignFields(f);
     const db = createAdminClient();
     if (id) {
-      check(await db.from("campaigns").update(row).eq("id", id).eq("status", "draft"));
+      const done = check(await db.from("campaigns").update(row).eq("id", id).eq("status", "draft").select("id")) as unknown[];
+      if (!done.length) throw new AdminError("conflict", "Only a draft can be edited. Reload the page.");
       await audit(ctx, "campaign.edited", "grow", { type: "campaign", id, label: row.name }, { after: { ...row, body: undefined } });
     } else {
       const r = check(await db.from("campaigns").insert({ ...row, created_by: ctx.userId }).select("id").single()) as { id: string };

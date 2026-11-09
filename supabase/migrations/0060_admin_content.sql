@@ -291,6 +291,11 @@ begin
   if (select count(*) from public.lesson_drafts where lesson_id = any (p_lessons) and status = 'draft') <> cardinality(p_lessons) then
     raise exception 'every lesson needs a draft that is not already in review' using errcode = '22023';
   end if;
+  -- The checks ran on a saved draft: refuse when one was saved again since, so only a checked body is frozen.
+  if exists (select 1 from public.lesson_drafts d where d.lesson_id = any (p_lessons)
+             and (p_checks -> 'drafts' ->> d.lesson_id)::timestamptz is distinct from d.updated_at) then
+    raise exception 'a draft changed after the checks ran: send it for review again' using errcode = '22023';
+  end if;
   insert into public.content_releases (title, note, requested_by, authors, checks)
   values (p_title, p_note, p_actor, coalesce(v_authors, '{}') || array[p_actor], coalesce(p_checks, '{}')) returning id into v_id;
   insert into public.content_release_items (release_id, lesson_id, body, hash, from_version_id)
@@ -310,7 +315,8 @@ declare
 begin
   select * into r from public.content_releases where id = p_release for update;
   if r.id is null or r.status <> 'in_review' then raise exception 'this release is not in review' using errcode = '22023'; end if;
-  if r.requested_by <> p_actor then perform public.admin_require(p_actor, 'content.publish'); end if;
+  if r.requested_by <> p_actor then perform public.admin_require(p_actor, 'content.publish');
+  else perform public.admin_require(p_actor, 'content.edit'); end if;
   update public.content_releases set status = 'withdrawn', decided_by = p_actor, decided_at = now() where id = p_release;
   update public.lesson_drafts set status = 'draft', release_id = null where release_id = p_release;
   perform public.admin_log(p_actor, 'content.release_withdrawn', 'content', 'release', p_release::text, r.title, null, null, null, p_ip, p_ua, p_session);
