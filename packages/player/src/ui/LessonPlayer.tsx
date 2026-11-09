@@ -191,7 +191,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
       {guest ? <p className="lp-banner" role="note"><span className="ph ph-user-plus" aria-hidden="true" />{t("guestBanner")}</p> : null}
       {showBack && !guest ? <ResumeNote text={t("welcomeBack")} close={t("close")} onClose={closeBack} /> : null}
       <main className={`player-main${(summary && !replay) || idea ? " is-sum" : ""}`}>
-        <p className="t-over player-over"><span className="ltr">{pathLabel}</span> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
+        <p className="t-over player-over"><PathLabel name={pathLabel} /> · {variant !== "lesson" ? t(variant === "review" ? "reviewQ" : "masteryQ", { n: state.i + 1, total }) : part}</p>
 
         {step.type === "video" ? (
           <VideoStepView step={step} locale={locale} t={t as never} getSource={videoSource} headingRef={headingRef} />
@@ -721,3 +721,10 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
 
 export type { Step };
 export type { VideoSource };
+
+/** The path name in the over-label. A bracketed English term, as in «… (Usability Heuristics)», stays on one line and is not reordered. */
+function PathLabel({ name }: { name: string }) {
+  const m = /^(.*?)(\([A-Za-z][^()]*\))(.*)$/s.exec(name);
+  if (!m) return <bdi>{name}</bdi>;
+  return <bdi>{m[1]}<bdi style={{ whiteSpace: "nowrap" }}>{m[2]}</bdi>{m[3]}</bdi>;
+}
