@@ -10,7 +10,7 @@ export const metadata = { title: "Paths and lessons" };
 function LessonState({ l }: { l: LessonRow }) {
   if (l.draft?.status === "in_review") return <St tone="wait" icon="eye">In review</St>;
   if (l.draft) return <St tone="info" icon="pencil-simple">Draft</St>;
-  if (l.liveNo) return <St tone="good">Live v{l.liveNo}{l.liveHow === "rollback" ? " · rolled back" : ""}</St>;
+  if (l.liveNo) return <span><St tone="good">Live v{l.liveNo}{l.liveHow === "rollback" ? " · rolled back" : ""}</St>{l.panelOwned ? <span className="t-xs ink-2" style={{ display: "block" }}>Panel-owned: content PRs skip it</span> : null}</span>;
   return <St tone="off" icon="minus-circle">Not imported</St>;
 }
 

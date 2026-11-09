@@ -11,6 +11,8 @@ import { CATALOG } from "@/lib/catalog-list";
 export type LessonRow = {
   id: string; title: { en: string; ar: string }; mode: string; order: number; minutes: number;
   liveNo: number | null; liveHow: string | null; liveSince: string | null; liveHash: string | null; compiledHash: string;
+  /** The panel owns the live version: content PRs skip it (published from the panel, or rolled back to a panel version). */
+  panelOwned: boolean;
   draft: null | { status: "draft" | "in_review"; updatedAt: string; editors: string[]; releaseId: string | null };
 };
 export type UnitRow = { id: string; title: { en: string; ar: string }; free: boolean; skills: number; lessons: LessonRow[] };
@@ -28,11 +30,15 @@ async function liveAndDrafts() {
   const db = createAdminClient();
   const [live, info, drafts] = await Promise.all([
     db.from("lesson_live").select("lesson_id, version_id, since, how, content_versions(hash)"),
-    db.from("content_version_info").select("version_id, version_no"),
+    db.from("content_version_info").select("version_id, version_no, origin"),
     db.from("lesson_drafts").select("lesson_id, status, updated_at, editors, release_id"),
   ]);
   const no = new Map((info.data ?? []).map((r) => [r.version_id as string, r.version_no as number]));
-  const liveBy = new Map(((live.data ?? []) as unknown as LiveRow[]).map((r) => [r.lesson_id, { no: no.get(r.version_id) ?? null, how: r.how, since: r.since, hash: r.content_versions?.hash ?? null }]));
+  const origin = new Map((info.data ?? []).map((r) => [r.version_id as string, r.origin as string]));
+  const liveBy = new Map(((live.data ?? []) as unknown as LiveRow[]).map((r) => [r.lesson_id, {
+    no: no.get(r.version_id) ?? null, how: r.how, since: r.since, hash: r.content_versions?.hash ?? null,
+    panelOwned: r.how === "publish" || origin.get(r.version_id) === "editor",
+  }]));
   const draftBy = new Map((drafts.data ?? []).map((d) => [d.lesson_id as string, { status: d.status as "draft" | "in_review", updatedAt: d.updated_at as string, editors: d.editors as string[], releaseId: d.release_id as string | null }]));
   return { liveBy, draftBy, ready: !live.error };
 }
@@ -44,7 +50,7 @@ export async function contentTree(): Promise<{ paths: PathRow[]; ready: boolean 
     const lv = liveBy.get(l.lessonId);
     return {
       id: l.lessonId, title: l.body.title, mode: l.mode, order: l.order, minutes: l.minutes, compiledHash: l.hash,
-      liveNo: lv?.no ?? null, liveHow: lv?.how ?? null, liveSince: lv?.since ?? null, liveHash: lv?.hash ?? null, draft: draftBy.get(l.lessonId) ?? null,
+      liveNo: lv?.no ?? null, liveHow: lv?.how ?? null, liveSince: lv?.since ?? null, liveHash: lv?.hash ?? null, panelOwned: lv?.panelOwned ?? false, draft: draftBy.get(l.lessonId) ?? null,
     };
   };
   const paths = CATALOG.map((c) => {
@@ -63,6 +69,8 @@ export type EditorData = {
   ready: boolean;
   /** The live version (or the compiled one before 0060). */
   base: { versionId: string | null; no: number | null; hash: string; body: Lesson };
+  /** How the live version got there (import, yaml, publish, rollback), and whether content PRs skip this lesson. */
+  live: { how: string | null; panelOwned: boolean };
   draft: null | { body: Lesson; acks: string[]; status: "draft" | "in_review"; editors: string[]; updatedAt: string; releaseId: string | null; baseVersionId: string };
   history: { versionId: string; no: number; origin: string; createdAt: string; author: string | null; live: boolean }[];
 };
@@ -73,12 +81,13 @@ export async function lessonForEditor(lessonId: string): Promise<EditorData | nu
   if (!meta) return null;
   const db = createAdminClient();
   const [live, draft, info] = await Promise.all([
-    db.from("lesson_live").select("version_id, content_versions(hash, body)").eq("lesson_id", lessonId).maybeSingle(),
+    db.from("lesson_live").select("version_id, how, content_versions(hash, body)").eq("lesson_id", lessonId).maybeSingle(),
     db.from("lesson_drafts").select("body, acks, status, editors, updated_at, release_id, base_version_id").eq("lesson_id", lessonId).maybeSingle(),
     db.from("content_version_info").select("version_id, version_no, origin, created_at, author_id").eq("lesson_id", lessonId).order("version_no", { ascending: false }),
   ]);
   const ready = !live.error;
-  const lv = live.data as unknown as { version_id: string; content_versions: { hash: string; body: Lesson } | null } | null;
+  const lv = live.data as unknown as { version_id: string; how: string; content_versions: { hash: string; body: Lesson } | null } | null;
+  const liveOrigin = (info.data ?? []).find((r) => r.version_id === lv?.version_id)?.origin as string | undefined;
   let base: EditorData["base"];
   if (lv?.content_versions) {
     base = { versionId: lv.version_id, no: (info.data ?? []).find((r) => r.version_id === lv.version_id)?.version_no ?? null, hash: lv.content_versions.hash, body: lv.content_versions.body };
@@ -98,6 +107,7 @@ export async function lessonForEditor(lessonId: string): Promise<EditorData | nu
   const d = draft.data;
   return {
     meta, ready, base,
+    live: { how: lv?.how ?? null, panelOwned: !!lv && (lv.how === "publish" || liveOrigin === "editor") },
     draft: d ? { body: d.body as Lesson, acks: (d.acks as string[]) ?? [], status: d.status as "draft" | "in_review", editors: d.editors as string[], updatedAt: d.updated_at as string, releaseId: d.release_id as string | null, baseVersionId: d.base_version_id as string } : null,
     history: (info.data ?? []).map((r) => ({ versionId: r.version_id as string, no: r.version_no as number, origin: r.origin as string, createdAt: r.created_at as string, author: r.author_id ? authors.get(r.author_id as string) ?? null : null, live: r.version_id === lv?.version_id })),
   };
