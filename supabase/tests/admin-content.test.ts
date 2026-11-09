@@ -177,6 +177,32 @@ describe("drafts, review and publish", () => {
     await svc(`select public.admin_content_decline($1, $2, 'Arabic step 1 reads oddly', null, null, null)`, [P2, id]);
     expect((await one<{ status: string }>(`select status from lesson_drafts where lesson_id = 'P15-U01-L01'`)).status).toBe("draft");
   });
+
+  it("after a roll back to the import, the seed brings new text but never the rolled-back version (0064)", async () => {
+    const v2 = (await one<{ hash: string }>(`select v.hash from content_versions v join content_version_info i on i.version_id = v.id where i.lesson_id = 'P15-U01-L01' and i.version_no = 2`)).hash;
+    const sync = async (hash: string) => (await svc<{ result: string }>(`select * from public.content_sync_bundle($1::jsonb)`, [JSON.stringify([{ lesson_id: "P15-U01-L01", hash }])]))[0]?.result;
+    expect(await sync(v2)).toBe("kept_rollback");
+    expect(await live("P15-U01-L01")).toEqual({ hash: "h1", version_no: 1 });
+    await db.query(`insert into content_versions (lesson_id, hash, body) values ('P15-U01-L01', 'h1b', $1)`, [JSON.stringify(body("P15-U01-L01", "New text from the content files"))]);
+    expect(await sync("h1b")).toBe("yaml");
+    expect(await live("P15-U01-L01")).toEqual({ hash: "h1b", version_no: 3 });
+  });
+
+  it("a publisher hands a panel-owned lesson back to the content files, with a reason (0064)", async () => {
+    await expect(svc(`select public.admin_content_handback($1, 'P15-U01-L01', 'h1b', 'Back to YAML', null, null, null)`, [P])).rejects.toThrow(/already follows/);
+    await db.query(`update lesson_live set how = 'publish' where lesson_id = 'P15-U01-L01'`);
+    await db.query(`insert into content_versions (lesson_id, hash, body) values ('P15-U01-L01', 'h1c', $1)`, [JSON.stringify(body("P15-U01-L01", "Newer text from the content files"))]);
+    expect(await svc<{ result: string }>(`select * from public.content_sync_bundle('[{"lesson_id":"P15-U01-L01","hash":"h1c"}]')`)).toEqual([{ lesson_id: "P15-U01-L01", result: "kept_editor" }]);
+    await expect(svc(`select public.admin_content_handback($1, 'P15-U01-L01', 'h1c', 'Back to YAML', null, null, null)`, [E])).rejects.toThrow(/content.publish/);
+    await expect(svc(`select public.admin_content_handback($1, 'P15-U01-L01', 'h1c', '', null, null, null)`, [P])).rejects.toThrow(/say why/);
+    await expect(svc(`select public.admin_content_handback($1, 'P15-U01-L01', 'nope', 'Back to YAML', null, null, null)`, [P])).rejects.toThrow(/content seed/);
+    expect((await svc<{ n: number }>(`select public.admin_content_handback($1, 'P15-U01-L01', 'h1c', 'Back to YAML', null, null, null) n`, [P]))[0].n).toBe(4);
+    expect(await one(`select how from lesson_live where lesson_id = 'P15-U01-L01'`)).toEqual({ how: "yaml" });
+    expect(await one(`select count(*)::int n from admin_audit where action = 'content.handed_back'`)).toEqual({ n: 1 });
+    await db.query(`insert into content_versions (lesson_id, hash, body) values ('P15-U01-L01', 'h1d', $1)`, [JSON.stringify(body("P15-U01-L01", "Even newer text"))]);
+    expect(await svc<{ result: string }>(`select * from public.content_sync_bundle('[{"lesson_id":"P15-U01-L01","hash":"h1d"}]')`)).toEqual([{ lesson_id: "P15-U01-L01", result: "yaml" }]);
+    await expect(asUser("authenticated", X, `select public.admin_content_handback('${X}', 'P15-U01-L01', 'h1d', 'x', null, null, null)`)).rejects.toThrow(/permission denied/);
+  });
 });
 
 describe("row-level security", () => {

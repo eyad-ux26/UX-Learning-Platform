@@ -18,6 +18,8 @@ Run them in the Supabase SQL editor after Phase 1's migrations (0044 to 0048).
 4. `supabase/migrations/0062_trials.sql`: free trials (off until the `trials` flag is on).
 5. `supabase/migrations/0063_admin_grow.sql`: content quality, reports, saved reports, announcements, campaigns, help
    articles, job runs.
+6. `supabase/migrations/0064_content_handback.sql`: which lessons the content seed moves forward after a roll back,
+   and handing a lesson back to the content files.
 
 Before each one runs, the screens that need it say so and keep working with what they have.
 
@@ -68,7 +70,10 @@ All new flags start off.
 1. The panel edits lesson words only. New steps, answers, mocks and videos still go through the content files and a
    pull request, where the full validator runs.
 2. Lessons published from the panel stay live when the content seed runs again; the seed only updates lessons the
-   panel never published. Learners get panel versions only while `content_db` is on.
+   panel does not own. Learners get panel versions only while `content_db` is on. After a roll back to a v1 import or
+   content-files version, the seed brings in new text from the content files, but never the version that was rolled
+   back (0064). The lesson list marks panel-owned lessons ("content PRs skip it"), and a publisher can hand a lesson
+   back to the content files from its editor page (reason, the lesson id typed and a fresh code).
 3. Lesson titles in lists come from the compiled content files, so a title changed in the panel shows in the lists
    after the next content build.
 4. The week start is not a setting: it is fixed per learner at sign-up, and changing it would move weeks already counted.

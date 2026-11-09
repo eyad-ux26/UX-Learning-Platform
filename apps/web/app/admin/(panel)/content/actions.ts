@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import type { Lesson } from "@uxgate/content";
+import { getLessonMeta, type Lesson } from "@uxgate/content";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { actionAdmin, AdminError, check, requireFresh, run, who, type ActionResult } from "@/lib/admin/guard";
 import { reasonFrom, textFrom, uuidFrom } from "@/lib/admin/form";
@@ -133,4 +133,20 @@ export async function setQualityStatus(_: R | null, f: FormData): Promise<R> {
     if (status === "wont_fix" && (!note || note.length < 3)) throw new AdminError("invalid", "Say why it will not be fixed.");
     check(await createAdminClient().rpc("admin_set_flag_status", { ...who(ctx), p_lesson: lesson, p_step: step, p_source: source, p_status: status, p_note: note, p_misconception: textFrom(f, "misconception", 60) }));
   }, "Saved.");
+}
+
+/**
+ * Hands a panel-owned lesson back to the content files (0064): the version this app was built with goes live, and later
+ * content PRs update the lesson again. Needs content.publish, a reason, the lesson id typed and a fresh code.
+ */
+export async function handBackLesson(_: R | null, f: FormData): Promise<R> {
+  return run(async () => {
+    const ctx = await actionAdmin("content.publish");
+    const lesson = lessonIdFrom(f);
+    if (String(f.get("typed") ?? "").trim() !== lesson) throw new AdminError("invalid", `Type ${lesson} to confirm.`);
+    const meta = getLessonMeta(lesson);
+    if (!meta) throw new AdminError("invalid", "That lesson is not in the content files.");
+    await requireFresh(ctx, f.get("code") as string | null);
+    check(await createAdminClient().rpc("admin_content_handback", { ...who(ctx), p_lesson: lesson, p_hash: meta.hash, p_reason: reasonFrom(f) }));
+  }, "Handed back. Learners get the content files' version, and content PRs update this lesson again.");
 }
