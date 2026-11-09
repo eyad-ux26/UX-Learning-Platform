@@ -95,7 +95,7 @@ export default async function TeamPage() {
             <tbody>{invites.map((i) => {
               const expired = new Date(i.expiresAt) <= new Date();
               return (
-                <tr key={i.id}>
+                <tr key={i.email}>
                   <td>{i.email}</td>
                   <td><span className="a-row" style={{ gap: 4 }}>{i.roles.map((r) => <RoleChip key={r} id={r} name={roleName(r, custom)} />)}</span></td>
                   <td className="t-sm"><When at={i.createdAt} rel /></td>
