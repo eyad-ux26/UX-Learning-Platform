@@ -40,7 +40,7 @@ as before (`docs/coming-soon.md`).
 | --- | --- | --- |
 | `CRON_SECRET` | Secret | Already set. Also closes `/api/support/inbound` and `/api/cron/admin`. |
 | `RESEND_API_KEY` | Secret | Already set. Support replies go out from `UXGate Support <support@uxgate.org>`. |
-| `SUPPORT_FORWARD_TO` | Variable | Optional. A copy of every email to support@ also goes to this inbox (for attachments, and as a backup). Suggested: `uxgate8@gmail.com`. It must be a verified destination address in Email Routing. |
+| `SUPPORT_FORWARD_TO` | Variable (in `wrangler.jsonc`) | Set to `uxgate8@gmail.com` in `apps/web/wrangler.jsonc`, not in the dashboard (a deploy replaces dashboard variables). A copy of every email to support@ also goes to this inbox (for attachments, and as a backup). Suggested: `uxgate8@gmail.com`. It must be a verified destination address in Email Routing. |
 | `UG_ENV` | Variable | `staging` on a staging Worker; the panel shows a Production badge otherwise. |
 
 The 15-minute Cron Trigger (already in `wrangler.jsonc`) now also calls `/api/cron/admin`: approval reminders after 4 hours,
@@ -52,7 +52,7 @@ Today Email Routing forwards support@ to the business Gmail. To bring it into th
 
 1. Cloudflare dashboard > uxgate.org > Email > Email Routing > Routing rules.
 2. Edit the `support@uxgate.org` rule. Action: **Send to a Worker**. Worker: `uxgate-web`. Save.
-3. Set `SUPPORT_FORWARD_TO` (above) if the Gmail copy should keep arriving.
+3. `SUPPORT_FORWARD_TO` (above) keeps a Gmail copy of every support email arriving.
 
 The Worker's `email()` handler (`apps/web/cf-worker.ts`) reads the message and posts it to `/api/support/inbound`. A reply
 with `[#1234]` in the subject from the ticket's own email joins that ticket; anything else opens a new one. Out-of-office,
