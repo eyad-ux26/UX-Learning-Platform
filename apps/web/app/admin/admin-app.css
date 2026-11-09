@@ -75,3 +75,10 @@ dialog.a-drawer.a-mnav { inset-block: 0; inset-inline: 0 auto; width: 280px; max
 /* Tables: the visually hidden .sr text is position: absolute. Without a positioned wrapper it escaped the table's
    sideways scroll and widened the whole page (Roles matrix: 193 px at 1280, 839 px at 390). */
 .a-tbl-wrap { position: relative; }
+
+/* Dialogs and drawers often sit inside a table cell (row actions), and .a-tbl td is white-space: nowrap. A modal dialog
+   still inherits from its cell, so its text did not wrap and the dialog scrolled sideways on a phone. Text wraps
+   again inside them, long words break, and flex children may shrink. */
+dialog.a-dialog, dialog.a-drawer { white-space: normal; overflow-wrap: anywhere; }
+.a-dlg-h > div, .a-dlg-b > *, .a-dlg-b label, .a-dlg-b label > span, .a-drw-b > *, .a-drw-b label > span { min-width: 0; }
+.a-dlg-b fieldset, .a-drw-b fieldset { min-inline-size: 0; }
