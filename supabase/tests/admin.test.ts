@@ -298,12 +298,17 @@ describe("certificates (0045)", () => {
 
 describe("support (0046)", () => {
   it("counts first-reply time in business hours of the ticket's language", async () => {
-    // Thursday 16:00 Cairo (UTC+2 in November): English hours are Mon to Fri 9 to 17, Arabic Sat to Thu 9 to 17.
+    // Thursday 16:00 Cairo (UTC+2 in November): English hours are Mon to Fri 9 to 18, Arabic Sat to Thu 9 to 18.
     const due = async (lang: string, hours: number) =>
       (await one<{ d: string }>(`select to_char(public.support_due('2026-11-12 14:00+00', $1, $2) at time zone 'Africa/Cairo', 'Dy HH24:MI') d`, [hours, lang])).d;
-    expect(await due("en", 2)).toBe("Fri 10:00");
-    expect(await due("en", 10)).toBe("Mon 10:00");
-    expect(await due("ar", 2)).toBe("Sat 10:00");
+    expect(await due("en", 2)).toBe("Thu 18:00");
+    expect(await due("en", 3)).toBe("Fri 10:00");
+    expect(await due("en", 12)).toBe("Mon 10:00");
+    expect(await due("ar", 3)).toBe("Sat 10:00");
+    // A day off is skipped like a weekend.
+    await db.exec(`update support_settings set days_off = '{2026-11-13}' where id = 1`);
+    expect(await due("en", 3)).toBe("Mon 10:00");
+    await db.exec(`update support_settings set days_off = '{}' where id = 1`);
   });
 
   it("turns refund requests and broken-question reports into tickets, not appeals", async () => {
