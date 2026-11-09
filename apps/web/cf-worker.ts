@@ -4,8 +4,10 @@ import handler from "./.open-next/worker.js";
 
 import { isPrivateContent, notFound } from "./lib/private-content";
 import { serverTiming, traceLine, withTrace } from "./lib/server/db-trace";
+import PostalMime from "postal-mime";
 
-type Env = { CRON_SECRET?: string };
+type Env = { CRON_SECRET?: string; SUPPORT_FORWARD_TO?: string };
+type EmailMessage = { from: string; to: string; raw: ReadableStream; headers: Headers; forward(to: string): Promise<void>; setReject(reason: string): void };
 
 export default {
   // Lesson files are read by the server through ASSETS only: a request from outside gets 404.
@@ -30,9 +32,30 @@ export default {
       return out;
     }
   },
+  // Email Routing sends mail for support@uxgate.org here (docs/admin/README.md). It becomes a ticket in the admin
+  // panel; with SUPPORT_FORWARD_TO set, a copy also goes to that inbox (attachments are only in that copy).
+  async email(message: EmailMessage, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
+    const raw = await new Response(message.raw).arrayBuffer();
+    const mail = await PostalMime.parse(raw);
+    const payload = {
+      from: (mail.from?.address ?? message.from).toLowerCase(), name: mail.from?.name || null, subject: mail.subject ?? "",
+      text: mail.text ?? (mail.html ?? "").replace(/<[^>]+>/g, " "), messageId: mail.messageId ?? message.headers.get("message-id"),
+      inReplyTo: mail.inReplyTo ?? null, autoSubmitted: message.headers.get("auto-submitted"), attachments: mail.attachments?.length ?? 0,
+    };
+    const res: Response = await handler.fetch(new Request("https://internal/api/support/inbound", {
+      method: "POST", headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}`, "content-type": "application/json" }, body: JSON.stringify(payload),
+    }), env, ctx);
+    console.log(`support inbound: ${res.status} ${await res.text()}`);
+    if (env.SUPPORT_FORWARD_TO) await message.forward(env.SUPPORT_FORWARD_TO).catch((e: unknown) => console.warn("support forward failed", String(e)));
+    // A failure to save asks the sender's server to try again later rather than losing the email.
+    if (res.status >= 500 && !env.SUPPORT_FORWARD_TO) message.setReject("Temporary problem, please try again later");
+  },
   async scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
     // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts (slice 4). Up to 4 calls of 25.
     if (event?.cron === "*/15 * * * *") {
+      // Admin panel: approval reminders after 4 hours, and tickets waiting on the learner closing by themselves.
+      ctx.waitUntil(handler.fetch(new Request("https://internal/api/cron/admin", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx)
+        .then(async (res: Response) => console.log(`cron admin: ${res.status} ${await res.text()}`)));
       ctx.waitUntil((async () => {
         for (let i = 0; i < 4; i++) {
           const res: Response = await handler.fetch(new Request("https://internal/api/cron/reminders", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
