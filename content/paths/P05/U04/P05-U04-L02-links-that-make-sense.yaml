@@ -132,7 +132,7 @@ steps:
       ar: "- **تُسمع وحدها:** مستخدمو قارئ الشاشة كثيرًا ما ينتقلون مباشرة من رابط إلى رابط، أو من عنوان إلى عنوان. ويسمعون كل واحد دون النص الذي حوله.\n- **قل إلى أين يذهب:** «طريقة إرجاع منتج»، لا «اعرف المزيد» أو «اضغط هنا». وأعطِ كل رابط في الصفحة كلمات مختلفة.\n- **الكلمة المهمة أولًا:** كثيرون ينتقلون بعد أول كلمات قليلة. فابدأ بالكلمة التي يبحثون عنها: «ابحث في المتجر»، لا «هواتف وجرابات والمزيد. بحث».\n- **انقل التركيز إلى ما فُتح:** حين تُفتح قائمة أو لوحة، انقل تركيز قارئ الشاشة إليها. وإلا لن يسمع الناس شيئًا جديدًا، وسيظنون أن الزر لم يعمل."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U04-04
     part: guided
     rules: [R06]
@@ -147,15 +147,84 @@ steps:
       en: "Which label should the search box have?"
       ar: "أي تسمية (Label) يجب أن تكون لمربع البحث؟"
     mock:
-      reader: { en: "Phones, cases, chargers and more. Search field.", ar: "هواتف وجرابات وشواحن والمزيد. حقل بحث." }
+      reader:
+        en: "Phones, cases, chargers and more. Search field."
+        ar: هواتف وجرابات وشواحن والمزيد. حقل بحث.
       app: dar
-      appbar: { logo: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+      appbar:
+        logo: true
+        actions:
+        - icon: shopping-cart
+          aria: {en: Cart, ar: السلة}
       blocks:
-        - { kind: field, icon: magnifying-glass, text: { en: "Phones, cases, chargers and more", ar: "هواتف وجرابات وشواحن والمزيد" } }
+      - kind: field
+        icon: magnifying-glass
+        text:
+          en: "Phones, cases, chargers and more"
+          ar: هواتف وجرابات وشواحن والمزيد
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: search, text: { en: "\"Search the shop\"", ar: "«ابحث في المتجر»" } }
-      - { id: long, text: { en: "\"Find phones, cases, chargers and more in our shop\"", ar: "«اعثر على الهواتف والجرابات والشواحن والمزيد في متجرنا»" } }
-      - { id: keep, text: { en: "Keep it; it shows what we sell", ar: "يبقى كما هو؛ فهو يوضّح ما نبيعه" } }
+      - id: search
+        text:
+          en: "\"Search the shop\""
+          ar: «ابحث في المتجر»
+        mock:
+          reader:
+            en: "Search the shop, search field."
+            ar: ابحث في المتجر، حقل بحث.
+          app: dar
+          appbar:
+            logo: true
+            actions:
+            - icon: shopping-cart
+              aria: {en: Cart, ar: السلة}
+          blocks:
+          - kind: field
+            icon: magnifying-glass
+            text:
+              en: "Phones, cases, chargers and more"
+              ar: هواتف وجرابات وشواحن والمزيد
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: long
+        text:
+          en: "\"Find phones, cases, chargers and more in our shop\""
+          ar: «اعثر على الهواتف والجرابات والشواحن والمزيد في متجرنا»
+        mock:
+          reader:
+            en: "Find phones, cases, chargers and more in our shop, search field."
+            ar: اعثر على الهواتف والجرابات والشواحن والمزيد في متجرنا، حقل بحث.
+          app: dar
+          appbar:
+            logo: true
+            actions:
+            - icon: shopping-cart
+              aria: {en: Cart, ar: السلة}
+          blocks:
+          - kind: field
+            icon: magnifying-glass
+            text:
+              en: "Phones, cases, chargers and more"
+              ar: هواتف وجرابات وشواحن والمزيد
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: keep
+        text: {en: Keep it; it shows what we sell, ar: يبقى كما هو؛ فهو يوضّح ما نبيعه}
+        mock:
+          reader:
+            en: "Phones, cases, chargers and more. Search field."
+            ar: هواتف وجرابات وشواحن والمزيد. حقل بحث.
+          app: dar
+          appbar:
+            logo: true
+            actions:
+            - icon: shopping-cart
+              aria: {en: Cart, ar: السلة}
+          blocks:
+          - kind: field
+            icon: magnifying-glass
+            text:
+              en: "Phones, cases, chargers and more"
+              ar: هواتف وجرابات وشواحن والمزيد
+          caption: {en: Unchanged, ar: بدون تغيير}
     answer: [search]
     misconceptions:
       - id: MC-P05-042
@@ -333,7 +402,7 @@ steps:
       ar: "اختبر روابطك بقراءتها كقائمة. وإذا كان الرابط مفهومًا فقط مع النص حوله، فأعد كتابته."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P05-U04-05
     part: independent
     speaker: karim
@@ -349,22 +418,147 @@ steps:
       en: "What should happen when the menu opens?"
       ar: "ماذا يجب أن يحدث حين تُفتح القائمة، حتى يعرف مستخدم قارئ الشاشة أنها فُتحت؟"
     mock:
-      reader: { en: "Add, button.", ar: "إضافة، زر." }
+      reader:
+        en: "Add, button."
+        ar: إضافة، زر.
       app: mudawwana
-      appbar: { title: { en: "Notes", ar: "الملاحظات" }, actions: [ { icon: plus, aria: { en: "Add", ar: "إضافة" } } ] }
+      appbar:
+        title: {en: Notes, ar: الملاحظات}
+        actions:
+        - icon: plus
+          aria: {en: Add, ar: إضافة}
       blocks:
-        - { kind: listitem, icon: note, text: { en: "Shopping", ar: "المشتريات" }, sub: { en: "Yesterday", ar: "أمس" } }
-        - { kind: listitem, icon: note, text: { en: "Meeting notes", ar: "ملاحظات الاجتماع" }, sub: { en: "Monday", ar: "الاثنين" } }
+      - kind: listitem
+        icon: note
+        text: {en: Shopping, ar: المشتريات}
+        sub: {en: Yesterday, ar: أمس}
+      - kind: listitem
+        icon: note
+        text: {en: Meeting notes, ar: ملاحظات الاجتماع}
+        sub: {en: Monday, ar: الاثنين}
       overlay:
         type: menu
         blocks:
-          - { kind: listitem, icon: note-pencil, text: { en: "New note", ar: "ملاحظة جديدة" } }
-          - { kind: listitem, icon: list-checks, text: { en: "New list", ar: "قائمة جديدة" } }
-          - { kind: listitem, icon: camera, text: { en: "New photo", ar: "صورة جديدة" } }
+        - kind: listitem
+          icon: note-pencil
+          text: {en: New note, ar: ملاحظة جديدة}
+        - kind: listitem
+          icon: list-checks
+          text: {en: New list, ar: قائمة جديدة}
+        - kind: listitem
+          icon: camera
+          text: {en: New photo, ar: صورة جديدة}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: bigger, text: { en: "Make the + button bigger, so it's easier to find", ar: "كبّر زر +، ليسهل إيجاده" } }
-      - { id: move, text: { en: "Move focus to \"New note\", the first item in the menu", ar: "انقل التركيز إلى «ملاحظة جديدة»، أول عنصر في القائمة" } }
-      - { id: rename, text: { en: "Rename the button to \"Add, opens a menu below\"", ar: "غيّر اسم الزر إلى «إضافة، يفتح قائمة بالأسفل»" } }
+      - id: bigger
+        text:
+          en: "Make the + button bigger, so it's easier to find"
+          ar: كبّر زر +، ليسهل إيجاده
+        mock:
+          reader:
+            en: "Add, button."
+            ar: إضافة، زر.
+          app: mudawwana
+          appbar:
+            title: {en: Notes, ar: الملاحظات}
+            actions:
+            - icon: plus
+              aria: {en: Add, ar: إضافة}
+          blocks:
+          - kind: listitem
+            icon: note
+            text: {en: Shopping, ar: المشتريات}
+            sub: {en: Yesterday, ar: أمس}
+          - kind: listitem
+            icon: note
+            text: {en: Meeting notes, ar: ملاحظات الاجتماع}
+            sub: {en: Monday, ar: الاثنين}
+          overlay:
+            type: menu
+            blocks:
+            - kind: listitem
+              icon: note-pencil
+              text: {en: New note, ar: ملاحظة جديدة}
+            - kind: listitem
+              icon: list-checks
+              text: {en: New list, ar: قائمة جديدة}
+            - kind: listitem
+              icon: camera
+              text: {en: New photo, ar: صورة جديدة}
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: move
+        text:
+          en: "Move focus to \"New note\", the first item in the menu"
+          ar: انقل التركيز إلى «ملاحظة جديدة»، أول عنصر في القائمة
+        mock:
+          reader:
+            en: "New note, menu item, 1 of 3."
+            ar: ملاحظة جديدة، عنصر قائمة، 1 من 3.
+          app: mudawwana
+          appbar:
+            title: {en: Notes, ar: الملاحظات}
+            actions:
+            - icon: plus
+              aria: {en: Add, ar: إضافة}
+          blocks:
+          - kind: listitem
+            icon: note
+            text: {en: Shopping, ar: المشتريات}
+            sub: {en: Yesterday, ar: أمس}
+          - kind: listitem
+            icon: note
+            text: {en: Meeting notes, ar: ملاحظات الاجتماع}
+            sub: {en: Monday, ar: الاثنين}
+          overlay:
+            type: menu
+            blocks:
+            - kind: listitem
+              icon: note-pencil
+              text: {en: New note, ar: ملاحظة جديدة}
+              ring: brand
+            - kind: listitem
+              icon: list-checks
+              text: {en: New list, ar: قائمة جديدة}
+            - kind: listitem
+              icon: camera
+              text: {en: New photo, ar: صورة جديدة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: rename
+        text:
+          en: "Rename the button to \"Add, opens a menu below\""
+          ar: غيّر اسم الزر إلى «إضافة، يفتح قائمة بالأسفل»
+        mock:
+          reader:
+            en: "Add, opens a menu below, button."
+            ar: إضافة، يفتح قائمة بالأسفل، زر.
+          app: mudawwana
+          appbar:
+            title: {en: Notes, ar: الملاحظات}
+            actions:
+            - icon: plus
+              aria: {en: Add, ar: إضافة}
+          blocks:
+          - kind: listitem
+            icon: note
+            text: {en: Shopping, ar: المشتريات}
+            sub: {en: Yesterday, ar: أمس}
+          - kind: listitem
+            icon: note
+            text: {en: Meeting notes, ar: ملاحظات الاجتماع}
+            sub: {en: Monday, ar: الاثنين}
+          overlay:
+            type: menu
+            blocks:
+            - kind: listitem
+              icon: note-pencil
+              text: {en: New note, ar: ملاحظة جديدة}
+            - kind: listitem
+              icon: list-checks
+              text: {en: New list, ar: قائمة جديدة}
+            - kind: listitem
+              icon: camera
+              text: {en: New photo, ar: صورة جديدة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [move]
     misconceptions:
       - id: MC-P05-043

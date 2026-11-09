@@ -119,7 +119,7 @@ steps:
       ar: "السحب (Swipe) أو الجرّ (Drag) أو الضغطة الطويلة (Long press) لا تترك شيئًا ظاهرًا على الشاشة.\n\n- **مخفية:** بعض الناس لا يجدون الإيماءة أبدًا، وبعضهم ينساها.\n- **صعبة:** اليد التي تهتزّ، أو استخدام يد واحدة، أو قارئ الشاشة، قد يجعل الإيماءات صعبة أو مستحيلة.\n- **خيار ظاهر:** أضف زرًا أو قائمة تفعل نفس الشيء. وأبقِ الإيماءة كطريق مختصر.\n- **الأخطاء:** السحب قد يحدث بالخطأ بسهولة. اسأل أولًا أو أظهر زر «تراجع» واضحًا، وأبقِ العنصر ظاهرًا."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P05-U05-01
     part: guided
     rules: [R06]
@@ -135,15 +135,135 @@ steps:
       ar: "ماذا نضيف حتى تستطيع السيدة سامية ترتيب القائمة دون أن يقع العنصر في المكان الخطأ؟"
     mock:
       app: qaima
-      appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
-      fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
+      appbar:
+        title: {en: My list, ar: قائمتي}
+        actions:
+        - icon: share-network
+          aria: {en: Share, ar: مشاركة}
+      fab:
+        icon: plus
+        text: {en: Add item, ar: أضف عنصرًا}
       blocks:
-        - { kind: listitem, icon: dots-six-vertical, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" }, value: "⋯" }
-        - { kind: listitem, icon: dots-six-vertical, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" }, value: "⋯" }
+      - kind: listitem
+        icon: dots-six-vertical
+        text: {en: Milk, ar: حليب}
+        sub:
+          en: "1 litre"
+          ar: "1 لتر"
+        value: ⋯
+      - kind: listitem
+        icon: dots-six-vertical
+        text: {en: Bread, ar: خبز}
+        sub:
+          en: "5 loaves"
+          ar: "5 أرغفة"
+        value: ⋯
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: menu, text: { en: "\"Move up\" and \"Move down\" in each item's ⋯ menu", ar: "«انقل لأعلى» و«انقل لأسفل» في قائمة ⋯ لكل عنصر" } }
-      - { id: big, text: { en: "A bigger ≡ handle that's easier to grab", ar: "مقبض ≡ أكبر يسهل الإمساك به" } }
-      - { id: slow, text: { en: "Slower dragging, so the item moves less", ar: "جرّ أبطأ، ليتحرّك العنصر مسافة أقل" } }
+      - id: menu
+        text:
+          en: "\"Move up\" and \"Move down\" in each item's ⋯ menu"
+          ar: «انقل لأعلى» و«انقل لأسفل» في قائمة ⋯ لكل عنصر
+        mock:
+          app: qaima
+          appbar:
+            title: {en: My list, ar: قائمتي}
+            actions:
+            - icon: share-network
+              aria: {en: Share, ar: مشاركة}
+          fab:
+            icon: plus
+            text: {en: Add item, ar: أضف عنصرًا}
+          blocks:
+          - kind: listitem
+            icon: dots-six-vertical
+            text: {en: Milk, ar: حليب}
+            sub:
+              en: "1 litre"
+              ar: "1 لتر"
+            value: ⋯
+          - kind: listitem
+            icon: dots-six-vertical
+            text: {en: Bread, ar: خبز}
+            sub:
+              en: "5 loaves"
+              ar: "5 أرغفة"
+            value: ⋯
+          overlay:
+            type: menu
+            blocks:
+            - kind: listitem
+              text: {en: Move up, ar: انقل لأعلى}
+              icon: arrow-up
+            - kind: listitem
+              text: {en: Move down, ar: انقل لأسفل}
+              icon: arrow-down
+            - kind: listitem
+              text: {en: Delete, ar: احذف}
+              icon: trash
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: big
+        text:
+          en: "A bigger ≡ handle that's easier to grab"
+          ar: مقبض ≡ أكبر يسهل الإمساك به
+        mock:
+          app: qaima
+          appbar:
+            title: {en: My list, ar: قائمتي}
+            actions:
+            - icon: share-network
+              aria: {en: Share, ar: مشاركة}
+          fab:
+            icon: plus
+            text: {en: Add item, ar: أضف عنصرًا}
+          blocks:
+          - kind: listitem
+            icon: list
+            text: {en: Milk, ar: حليب}
+            sub:
+              en: "1 litre"
+              ar: "1 لتر"
+            value: ⋯
+            note: {en: Bigger ≡ handle, ar: مقبض ≡ أكبر}
+          - kind: listitem
+            icon: list
+            text: {en: Bread, ar: خبز}
+            sub:
+              en: "5 loaves"
+              ar: "5 أرغفة"
+            value: ⋯
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: slow
+        text:
+          en: "Slower dragging, so the item moves less"
+          ar: جرّ أبطأ، ليتحرّك العنصر مسافة أقل
+        mock:
+          app: qaima
+          appbar:
+            title: {en: My list, ar: قائمتي}
+            actions:
+            - icon: share-network
+              aria: {en: Share, ar: مشاركة}
+          fab:
+            icon: plus
+            text: {en: Add item, ar: أضف عنصرًا}
+          blocks:
+          - kind: listitem
+            icon: dots-six-vertical
+            text: {en: Milk, ar: حليب}
+            sub:
+              en: "1 litre"
+              ar: "1 لتر"
+            value: ⋯
+            note: {en: Drags more slowly, ar: يُجرّ ببطء أكثر}
+          - kind: listitem
+            icon: dots-six-vertical
+            text: {en: Bread, ar: خبز}
+            sub:
+              en: "5 loaves"
+              ar: "5 أرغفة"
+            value: ⋯
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [menu]
     misconceptions:
       - id: MC-P05-045
@@ -162,7 +282,7 @@ steps:
       ar: "أبقِ الجرّ لمن يحبّه، وأعطِ الباقين طريقة تعمل بالضغط."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P05-U05-02
     part: guided
     rules: [R06]
@@ -178,16 +298,136 @@ steps:
       ar: "ماذا يجب أن يحدث بعد أن يحذف السحب عنصرًا؟"
     mock:
       app: qaima
-      appbar: { title: { en: "My list", ar: "قائمتي" }, actions: [ { icon: share-network, aria: { en: "Share", ar: "مشاركة" } } ] }
-      fab: { icon: plus, text: { en: "Add item", ar: "أضف عنصرًا" } }
+      appbar:
+        title: {en: My list, ar: قائمتي}
+        actions:
+        - icon: share-network
+          aria: {en: Share, ar: مشاركة}
+      fab:
+        icon: plus
+        text: {en: Add item, ar: أضف عنصرًا}
       blocks:
-        - { kind: listitem, icon: square, text: { en: "Milk", ar: "حليب" }, sub: { en: "1 litre", ar: "1 لتر" } }
-        - { kind: listitem, icon: square, text: { en: "Bread", ar: "خبز" }, sub: { en: "5 loaves", ar: "5 أرغفة" } }
-        - { kind: listitem, icon: square, text: { en: "Eggs", ar: "بيض" }, sub: { en: "12", ar: "12" }, swipe: { text: { en: "Delete", ar: "حذف" }, tone: bad } }
+      - kind: listitem
+        icon: square
+        text: {en: Milk, ar: حليب}
+        sub:
+          en: "1 litre"
+          ar: "1 لتر"
+      - kind: listitem
+        icon: square
+        text: {en: Bread, ar: خبز}
+        sub:
+          en: "5 loaves"
+          ar: "5 أرغفة"
+      - kind: listitem
+        icon: square
+        text: {en: Eggs, ar: بيض}
+        sub:
+          en: "12"
+          ar: "12"
+        swipe:
+          text: {en: Delete, ar: حذف}
+          tone: bad
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: sound, text: { en: "Play a short sound", ar: "شغّل صوتًا قصيرًا" } }
-      - { id: trash, text: { en: "Move it to a \"Deleted items\" page in Settings", ar: "انقله إلى صفحة «العناصر المحذوفة» في الإعدادات" } }
-      - { id: undo, text: { en: "Show \"Eggs removed · Undo\" in a clear bar at the bottom", ar: "اعرض «تم حذف بيض · تراجع» في شريط واضح في الأسفل" } }
+      - id: sound
+        text: {en: Play a short sound, ar: شغّل صوتًا قصيرًا}
+        mock:
+          app: qaima
+          appbar:
+            title: {en: My list, ar: قائمتي}
+            actions:
+            - icon: share-network
+              aria: {en: Share, ar: مشاركة}
+          fab:
+            icon: plus
+            text: {en: Add item, ar: أضف عنصرًا}
+          blocks:
+          - kind: listitem
+            icon: square
+            text: {en: Milk, ar: حليب}
+            sub:
+              en: "1 litre"
+              ar: "1 لتر"
+          - kind: listitem
+            icon: square
+            text: {en: Bread, ar: خبز}
+            sub:
+              en: "5 loaves"
+              ar: "5 أرغفة"
+          overlay:
+            type: toast
+            blocks:
+            - {kind: icon, icon: speaker-high, size: s}
+            - kind: text
+              text: {en: (a sound plays), ar: (يُسمع صوت)}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: trash
+        text:
+          en: "Move it to a \"Deleted items\" page in Settings"
+          ar: انقله إلى صفحة «العناصر المحذوفة» في الإعدادات
+        mock:
+          app: qaima
+          appbar:
+            title: {en: My list, ar: قائمتي}
+            actions:
+            - icon: share-network
+              aria: {en: Share, ar: مشاركة}
+          fab:
+            icon: plus
+            text: {en: Add item, ar: أضف عنصرًا}
+          blocks:
+          - kind: listitem
+            icon: square
+            text: {en: Milk, ar: حليب}
+            sub:
+              en: "1 litre"
+              ar: "1 لتر"
+          - kind: listitem
+            icon: square
+            text: {en: Bread, ar: خبز}
+            sub:
+              en: "5 loaves"
+              ar: "5 أرغفة"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: undo
+        text:
+          en: "Show \"Eggs removed · Undo\" in a clear bar at the bottom"
+          ar: اعرض «تم حذف بيض · تراجع» في شريط واضح في الأسفل
+        mock:
+          app: qaima
+          appbar:
+            title: {en: My list, ar: قائمتي}
+            actions:
+            - icon: share-network
+              aria: {en: Share, ar: مشاركة}
+          fab:
+            icon: plus
+            text: {en: Add item, ar: أضف عنصرًا}
+          blocks:
+          - kind: listitem
+            icon: square
+            text: {en: Milk, ar: حليب}
+            sub:
+              en: "1 litre"
+              ar: "1 لتر"
+          - kind: listitem
+            icon: square
+            text: {en: Bread, ar: خبز}
+            sub:
+              en: "5 loaves"
+              ar: "5 أرغفة"
+          overlay:
+            type: toast
+            blocks:
+            - kind: row
+              blocks:
+              - kind: text
+                text: {en: Eggs removed, ar: تم حذف بيض}
+              - kind: button
+                text: {en: Undo, ar: تراجع}
+                style: plain
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [undo]
     misconceptions:
       - id: MC-P05-046
@@ -283,7 +523,7 @@ steps:
       ar: "أبقِ العنصر ظاهرًا أثناء التعامل معه. فتقلّ الأخطاء، وما يحدث منها يُلاحَظ."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P05-U05-01
     part: independent
     speaker: youssef
@@ -300,15 +540,93 @@ steps:
       ar: "ماذا يجب أن أغيّر؟"
     mock:
       app: dar
-      appbar: { title: { en: "Dar · Phones", ar: "دار · هواتف" }, back: true, actions: [ { icon: shopping-cart, aria: { en: "Cart", ar: "السلة" } } ] }
+      appbar:
+        title: {en: Dar · Phones, ar: دار · هواتف}
+        back: true
+        actions:
+        - icon: shopping-cart
+          aria: {en: Cart, ar: السلة}
       blocks:
-        - { kind: image, art: earbuds }
-        - { kind: heading, text: { en: "Wireless earbuds", ar: "سماعات لاسلكية" }, gap: s }
-        - { kind: price, text: { en: "1,450 EGP", ar: "1,450 جنيه" }, gap: xs }
+      - {kind: image, art: earbuds}
+      - kind: heading
+        text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+        gap: s
+      - kind: price
+        text:
+          en: "1,450 EGP"
+          ar: "1,450 جنيه"
+        gap: xs
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Nothing. Long press is common; people will learn it", ar: "لا شيء. الضغط المطوّل شائع؛ وسيتعلّمه الناس" } }
-      - { id: heart, text: { en: "Add a visible ♡ button on each product", ar: "أضف زر ♡ ظاهرًا على كل منتج" } }
-      - { id: help, text: { en: "Explain the long press on the Help page", ar: "اشرح الضغط المطوّل في صفحة المساعدة" } }
+      - id: keep
+        text: {en: Nothing. Long press is common; people will learn it, ar: لا شيء. الضغط المطوّل شائع؛ وسيتعلّمه الناس}
+        mock:
+          app: dar
+          appbar:
+            title: {en: Dar · Phones, ar: دار · هواتف}
+            back: true
+            actions:
+            - icon: shopping-cart
+              aria: {en: Cart, ar: السلة}
+          blocks:
+          - {kind: image, art: earbuds}
+          - kind: heading
+            text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+            gap: s
+          - kind: price
+            text:
+              en: "1,450 EGP"
+              ar: "1,450 جنيه"
+            gap: xs
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: heart
+        text: {en: Add a visible ♡ button on each product, ar: أضف زر ♡ ظاهرًا على كل منتج}
+        mock:
+          app: dar
+          appbar:
+            title: {en: Dar · Phones, ar: دار · هواتف}
+            back: true
+            actions:
+            - icon: shopping-cart
+              aria: {en: Cart, ar: السلة}
+          blocks:
+          - {kind: image, art: earbuds}
+          - kind: row
+            gap: s
+            blocks:
+            - kind: heading
+              text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+              gap: xs
+            - kind: iconbtn
+              text: ♡
+              aria: {en: Save, ar: حفظ}
+          - kind: price
+            text:
+              en: "1,450 EGP"
+              ar: "1,450 جنيه"
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: help
+        text: {en: Explain the long press on the Help page, ar: اشرح الضغط المطوّل في صفحة المساعدة}
+        mock:
+          app: dar
+          appbar:
+            title: {en: Dar · Phones, ar: دار · هواتف}
+            back: true
+            actions:
+            - icon: shopping-cart
+              aria: {en: Cart, ar: السلة}
+          blocks:
+          - {kind: image, art: earbuds}
+          - kind: heading
+            text: {en: Wireless earbuds, ar: سماعات لاسلكية}
+            gap: s
+          - kind: price
+            text:
+              en: "1,450 EGP"
+              ar: "1,450 جنيه"
+            gap: xs
+          caption: {en: Unchanged, ar: بدون تغيير}
     answer: [heart]
     misconceptions:
       - id: MC-P05-044

@@ -352,7 +352,9 @@ const NEW_KINDS: Record<string, (k: Kid) => ReactNode> = {
     const max = Math.max(1, ...vals);
     const hi = num(b.highlight);
     if (b.type === "line") {
-      const pts = vals.map((v, i) => `${(i / Math.max(1, vals.length - 1)) * 100},${40 - (v / max) * 36}`).join(" ");
+      // In Arabic the first label sits at the right, so the first point does too: time runs right to left and the line agrees with its labels.
+      const rtl = locale === "ar";
+      const pts = vals.map((v, i) => { const x = (i / Math.max(1, vals.length - 1)) * 100; return `${rtl ? 100 - x : x},${40 - (v / max) * 36}`; }).join(" ");
       return <div className={cls} style={style}><svg viewBox="0 0 100 42" preserveAspectRatio="none" aria-hidden="true"><polyline points={pts} fill="none" stroke="var(--mock-brand)" strokeWidth="2" vectorEffect="non-scaling-stroke" /></svg>{labels.length ? <div className="ct-l">{labels.map((l, i) => <span key={i}>{mt(l, locale)}</span>)}</div> : null}</div>;
     }
     return <div className={cls} style={style}><div className="ct-bars">{vals.map((v, i) => <span key={i} className={i === hi ? "on" : undefined} style={{ height: `${(v / max) * 100}%` }} />)}</div>{labels.length ? <div className="ct-l">{labels.map((l, i) => <span key={i}>{mt(l, locale)}</span>)}</div> : null}</div>;
