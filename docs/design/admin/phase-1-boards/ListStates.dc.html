@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>List states</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+<div style="flex: 1; min-width: 0; background: var(--ground); padding: 28px 40px 40px; display: flex; flex-direction: column; gap: 18px;">
+  <div><h1 class="t-h1">Every list, five states</h1><p class="t-sm ink-2" style="max-width: 980px;">Each list keeps its toolbar and filters in every state, so people never lose their place. Error states keep filters and offer Try again. “No access” names the role that can open it. Masked shows what the analyst role sees.</p></div>
+  <div class="ls-grid" role="table" aria-label="List states">
+    <div class="ls-h" role="columnheader">List</div><div class="ls-h" role="columnheader">Empty</div><div class="ls-h" role="columnheader">Loading</div><div class="ls-h" role="columnheader">Error</div><div class="ls-h" role="columnheader">No access</div><div class="ls-h" role="columnheader">Masked</div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+      <div class="ls-name" role="rowheader"><span class="{{r.icon}}" aria-hidden="true"></span><span><b>{{r.name}}</b><span class="t-xs ink-3" style="display: block;">{{r.ids}}</span></span></div>
+      <div class="ls-c"><span class="art"><span class="{{r.icon}}" aria-hidden="true"></span></span><b>{{r.eT}}</b><span class="t-xs ink-2">{{r.eB}}</span><sc-if value="{{r.hasEA}}" hint-placeholder-val="{{true}}"><span class="a-btn sm">{{r.eA}}</span></sc-if></div>
+      <div class="ls-c ld" aria-busy="true"><span class="a-skel" style="width: 70%;"></span><span class="a-skel"></span><span class="a-skel" style="width: 85%;"></span><span class="a-skel" style="width: 55%;"></span></div>
+      <div class="ls-c"><span class="art bad"><span class="i i-warning" aria-hidden="true"></span></span><b>{{r.xT}}</b><span class="t-xs ink-2">{{r.xB}}</span><span class="a-btn sm"><span class="i i-arrow-clockwise s14" aria-hidden="true"></span>Try again</span></div>
+      <div class="ls-c"><span class="art"><span class="i i-lock-simple" aria-hidden="true"></span></span><b>No access</b><span class="t-xs ink-2">{{r.nB}}</span></div>
+      <div class="ls-c ms"><span class="t-xs ink-3">{{r.mWho}}</span><sc-for list="{{r.m}}" as="x" hint-placeholder-count="2"><span class="a-row t-sm" style="gap: 8px; flex-wrap: nowrap;"><span class="ink-2" style="min-width: 54px;">{{x.k}}</span><span class="a-mask"><span class="v">{{x.v}}</span></span></span></sc-for></div>
+    </sc-for>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = (name, ids, icon, eT, eB, eA, xT, xB, nB, mWho, m) => ({ name, ids, icon: 'i i-' + icon, eT, eB, eA: eA || '', hasEA: !!eA, xT, xB, nB, mWho, m: m.map(([k, v]) => ({ k, v })) });
+    return {
+      rows: [
+        R('Learners', 'LRN-1', 'users-three', 'No learners match', 'Try fewer filters, or search by email or payment id.', 'Clear filters', 'Couldn’t load learners', 'Your filters are kept.', 'Content editors and instructors can’t see learners.', 'Analyst sees', [['Email', 'ma•••••@gmail.com'], ['Phone', '+20 ••• ••• ••12']]),
+        R('Support inbox', 'SUP-1', 'tray', 'Inbox zero', 'No open tickets in this queue. New ones arrive here.', '', 'Couldn’t load tickets', 'Replies you were typing are saved.', 'Support roles, admin, super admin; analysts view only.', 'Analyst sees', [['From', 'Mariam A. · ma•••••@gmail.com'], ['Body', 'shown; card numbers removed']]),
+        R('Appeals', 'SUP-10', 'scales', 'No appeals waiting', 'Accepted and rejected appeals stay in their tabs.', '', 'Couldn’t load appeals', 'Try again in a moment.', 'Needs a support role, admin or super admin.', 'Analyst sees', [['Learner', 'Jana H.'], ['Reply', 'read only']]),
+        R('Subscriptions', 'BIL-1', 'arrows-split', 'No subscriptions yet', 'They appear after the first verified webhook.', '', 'Couldn’t load subscriptions', 'Paddle or Paymob may be slow. Data is from our copy.', 'Billing, support lead, admin, super admin, analyst.', 'Analyst sees', [['Learner', 'Khaled N.'], ['Card', '•••• ••••']]),
+        R('Payments', 'BIL-2', 'credit-card', 'No payments in these 7 days', 'Pick a longer date range.', 'Last 30 days', 'Couldn’t load payments', 'Paddle didn’t answer. Your filters are kept.', 'Billing, support, admin, super admin, analyst.', 'Analyst sees', [['Learner', 'Khaled N.'], ['Card', '•••• •••• · Kuwait']]),
+        R('Refunds', 'BIL-3', 'arrow-u-up-left', 'Nothing to decide', 'Requests from learners and agents show here.', '', 'Couldn’t load refunds', 'No refund was changed.', 'Support roles, billing, admin, super admin; analysts view only.', 'Analyst sees', [['Learner', 'Ziad E.'], ['Reason', 'shown']]),
+        R('Billing problems', 'BIL-8', 'warning', 'No problems', 'Failed payments and webhooks show here.', '', 'Couldn’t load', 'Webhook checks still run in the background.', 'Billing, admin, super admin.', 'Analyst sees', [['Learner', 'Fatma H.'], ['Card', '•••• ••••']]),
+        R('Certificates', 'CRT-1', 'certificate', 'No certificate with that id', 'Ids look like UXG-P01-7K2M4Q.', '', 'Couldn’t load certificates', 'Public pages still work.', 'Support, admin, super admin, analyst.', 'Analyst sees', [['Learner', 'Nada S.'], ['Id', 'UXG-P01-7K2M4Q']]),
+        R('Team', 'TEAM-1', 'user-gear', 'Just you so far', 'Invite people and give them a role.', 'Invite a team member', 'Couldn’t load the team', 'No roles were changed.', 'Super admin and admin only.', 'Admin sees', [['Super admins', 'listed, not editable'], ['Sessions', 'own only']]),
+        R('Audit log', 'AUD-1', 'clock-counter-clockwise', 'No entries for these filters', 'Every write action is logged.', 'Clear filters', 'Couldn’t load the log', 'Entries are safe; nothing can delete them.', 'Super admin, admin, analyst; others see their own area.', 'Analyst sees', [['IP', '•••.•••.•••.•••'], ['Target', 'Mariam A.']])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Revenue</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="billing" cur="revenue" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="billing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#money">Money</a><span aria-hidden="true">/</span><span>Revenue</span></nav>
+          <h1 class="t-h1">Revenue</h1>
+          <p class="t-sm ink-2">From verified provider events only. Comp access is never counted. USD at each day’s rate.</p>
+        </div>
+        <div class="acts">
+          <div class="a-seg" role="group" aria-label="Currency"><button type="button" aria-pressed="true">USD</button><button type="button" aria-pressed="false">EGP</button></div>
+          <button class="a-chip" type="button"><span class="k">Month</span> November 2026 (to date)<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+        </div>
+      </div>
+
+      <section class="a-kpis" aria-label="This month" style="grid-template-columns: repeat(6, minmax(0, 1fr));">
+        <sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+          <div class="a-kpi"><span class="k">{{k.label}}</span><span class="t-big num">{{k.value}}</span><span class="{{k.dcls}}"><span class="{{k.dicon}}" aria-hidden="true"></span>{{k.delta}}</span></div>
+        </sc-for>
+      </section>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="mrr-h">
+          <div class="a-card-h" style="flex-wrap: wrap;">
+            <h2 class="t-h3" id="mrr-h">MRR by provider</h2>
+            <span class="a-grow"></span>
+            <sc-for list="{{legend}}" as="l" hint-placeholder-count="2"><span class="a-row t-xs" style="gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: {{l.color}};" aria-hidden="true"></span><span class="ink-2">{{l.label}}</span><b class="num">{{l.value}}</b></span></sc-for>
+          </div>
+          <div class="a-card-b">
+            <div style="display: flex; gap: 8px;">
+              <div class="t-xs ink-3 num" style="display: flex; flex-direction: column; justify-content: space-between; text-align: right; width: 44px; height: 236px; margin-top: -8px;" aria-hidden="true">
+                <sc-for list="{{yTicks}}" as="t" hint-placeholder-count="5"><span>{{t}}</span></sc-for>
+              </div>
+              <div style="position: relative; flex: 1; min-width: 0;" role="img" aria-label="{{aria}}">
+                <div style="position: absolute; inset: 0 0 auto 0; height: 220px; display: flex; flex-direction: column; justify-content: space-between;" aria-hidden="true">
+                  <span style="border-top: 1px solid var(--line);"></span><span style="border-top: 1px solid var(--line);"></span><span style="border-top: 1px solid var(--line);"></span><span style="border-top: 1px solid var(--line);"></span><span style="border-top: 1px solid var(--line-strong);"></span>
+                </div>
+                <div style="position: relative; height: 220px; display: flex; align-items: flex-end; gap: 28px; padding: 0 18px;" onMouseLeave="{{clear}}">
+                  <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+                    <div style="flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; position: relative; cursor: default;" onMouseEnter="{{b.on}}">
+                      <span class="t-xs num w7" style="text-align: center; padding-bottom: 2px; {{b.lblStyle}}">{{b.total}}</span>
+                      <span style="display: block; height: {{b.h1}}; background: var(--s1); border-radius: 4px 4px 0 0; opacity: {{b.op}};"></span>
+                      <span style="display: block; height: {{b.h2}}; background: var(--s2); opacity: {{b.op}};"></span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div class="t-xs ink-3" style="display: flex; gap: 28px; padding: 6px 18px 0;" aria-hidden="true">
+                  <sc-for list="{{bars}}" as="b" hint-placeholder-count="6"><span style="flex: 1; text-align: center;">{{b.m}}</span></sc-for>
+                </div>
+                <div class="a-pop" style="left: {{tipX}}; top: 10px; padding: 8px 10px; min-width: 168px; pointer-events: none; opacity: {{tipOn}};" aria-hidden="true">
+                  <p class="t-xs w7">{{tipT}}</p>
+                  <sc-for list="{{tipRows}}" as="r" hint-placeholder-count="3"><p class="a-row t-xs" style="gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 2px; background: {{r.color}};"></span><span class="a-grow">{{r.label}}</span><b class="num">{{r.value}}</b></p></sc-for>
+                </div>
+              </div>
+            </div>
+            <p class="t-xs ink-3" style="margin-top: 10px;">Annual plans count as one twelfth a month. Paymob carries Egypt prices; Paddle carries Gulf and other Arab countries. <a href="#table">Show as a table</a></p>
+          </div>
+        </section>
+
+        <section class="a-card" aria-labelledby="mv-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="mv-h">How MRR moved in November</h2></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 0;">
+            <sc-for list="{{moves}}" as="m" hint-placeholder-count="6">
+              <div class="a-row" style="{{m.style}}"><span class="t-sm a-grow">{{m.label}}</span><span class="t-xs ink-3">{{m.note}}</span><b class="num" style="min-width: 76px; text-align: right;">{{m.value}}</b></div>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+
+      <section class="a-card" aria-labelledby="rg-h" id="table">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="rg-h">By region and provider, November to date</h2><span class="t-xs ink-3">Net = paid − refunds − chargebacks − provider fees</span></div>
+        <div class="a-tbl-wrap">
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Region · price</th><th scope="col">Provider</th><th scope="col" class="r">Paying</th><th scope="col" class="r">MRR</th><th scope="col" class="r">New MRR</th><th scope="col" class="r">Churned MRR</th><th scope="col" class="r">Paid</th><th scope="col" class="r">Refunds</th><th scope="col" class="r">Fees</th><th scope="col" class="r">Net</th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+                <tr class="{{r.cls}}"><td class="w6">{{r.region}}</td><td>{{r.prov}}</td><td class="r num">{{r.subs}}</td><td class="r num w7">{{r.mrr}}</td><td class="r num">{{r.nw}}</td><td class="r num">{{r.ch}}</td><td class="r num">{{r.paid}}</td><td class="r num">{{r.ref}}</td><td class="r num">{{r.fee}}</td><td class="r num w7">{{r.net}}</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="a-card" aria-labelledby="ex-h">
+        <div class="a-card-b a-row" style="gap: 16px; flex-wrap: wrap;">
+          <span class="i i-receipt s20" aria-hidden="true" style="color: var(--brand);"></span>
+          <div class="a-grow" style="min-width: 280px;"><h2 class="t-h3" id="ex-h">Monthly export for the accountant</h2><p class="t-sm ink-2">October 2026 is closed. One row per payment, refund, chargeback and fee, in the original currency and in USD, with the day’s rate.</p></div>
+          <span class="t-xs ink-3 a-row" style="gap: 5px;"><span class="i i-lock-simple s12" aria-hidden="true"></span>Logged and marked with your email</span>
+          <button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Download October 2026 (CSV)</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { h: -1 }; }
+  renderVals() {
+    const M = ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
+    const pd = [2900, 3400, 4000, 4700, 5600, 6050];
+    const pm = [5200, 6100, 7000, 7900, 9420, 9880];
+    const max = 20000;
+    const usd = (n) => '$' + n.toLocaleString('en-US');
+    const k = (n) => '$' + (n / 1000).toFixed(1) + 'k';
+    const h = this.state.h;
+    const bars = M.map((m, i) => ({
+      m: m + (i === 5 ? ' (to date)' : ''), total: k(pd[i] + pm[i]),
+      h1: (pd[i] / max * 196).toFixed(1) + 'px', h2: (pm[i] / max * 196).toFixed(1) + 'px',
+      op: h < 0 || h === i ? '1' : '0.45', lblStyle: i === 5 || h === i ? '' : 'color: var(--ink-3); font-weight: 600;',
+      on: () => this.setState({ h: i })
+    }));
+    const D = (label, value, delta, dir) => ({ label, value, delta, dcls: 'd ' + dir, dicon: dir === 'up' ? 'i i-trend-up s12' : dir === 'down' ? 'i i-trend-down s12' : 'i i-arrow-right s12' });
+    return {
+      kpis: [
+        D('MRR', '$15,930', '6.1% vs October', 'up'),
+        D('New MRR', '$1,412', '41 new this week', 'up'),
+        D('Churned MRR', '$486', '0.5 points higher', 'down'),
+        D('Refunds', '$214', '24 refunds', 'flat'),
+        D('Provider fees', '$1,061', '6.8% of paid', 'flat'),
+        D('Net revenue', '$14,413', 'to date, after all costs', 'up')
+      ],
+      legend: [{ color: 'var(--s1)', label: 'Paddle', value: usd(pd[5]) }, { color: 'var(--s2)', label: 'Paymob', value: usd(pm[5]) }],
+      yTicks: ['$20k', '$15k', '$10k', '$5k', '$0'],
+      bars,
+      aria: 'MRR by provider, June to November 2026. Total grows from $8.1k to $15.9k. November: Paddle $6,050, Paymob $9,880.',
+      clear: () => this.setState({ h: -1 }),
+      tipOn: h < 0 ? '0' : '1',
+      tipX: 'calc(' + Math.min(((h < 0 ? 0 : h) + 0.5) / 6 * 100, 70) + '% + 12px)',
+      tipT: h < 0 ? '' : M[h] + ' 2026 · ' + usd(pd[h] + pm[h]),
+      tipRows: h < 0 ? [] : [{ color: 'var(--s1)', label: 'Paddle', value: usd(pd[h]) }, { color: 'var(--s2)', label: 'Paymob', value: usd(pm[h]) }],
+      moves: [
+        ['Start of November', '', '$15,020', false],
+        ['New subscribers', '214 people', '+ $1,412', false],
+        ['Monthly to annual', '18 people', '− $16', false],
+        ['Cancelled at period end', '83 people', '− $412', false],
+        ['Refunded', '24 people', '− $74', false],
+        ['Now', '2,824 paying', '$15,930', true]
+      ].map(([label, note, value, end]) => ({ label, note, value, style: 'gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line);' + (end ? ' border-bottom: 0; border-top: 1px solid var(--line-strong); font-weight: 700;' : '') })),
+      rows: [
+        { region: 'Egypt · 249 EGP / 2,249 EGP', prov: 'Paymob', subs: '1,915', mrr: '$9,880', nw: '$842', ch: '$301', paid: '$8,920', ref: '$118', fee: '$402', net: '$8,400', cls: '' },
+        { region: 'Gulf · $8 / $72', prov: 'Paddle', subs: '579', mrr: '$4,460', nw: '$398', ch: '$129', paid: '$5,140', ref: '$80', fee: '$472', net: '$4,588', cls: '' },
+        { region: 'Other Arab countries · $5 / $45', prov: 'Paddle', subs: '330', mrr: '$1,590', nw: '$172', ch: '$56', paid: '$1,628', ref: '$16', fee: '$187', net: '$1,425', cls: '' },
+        { region: 'All regions', prov: '', subs: '2,824', mrr: '$15,930', nw: '$1,412', ch: '$486', paid: '$15,688', ref: '$214', fee: '$1,061', net: '$14,413', cls: 'sum' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

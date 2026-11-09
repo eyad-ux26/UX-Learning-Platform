@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Support inbox</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="support" cur="inbox" compact="{{yes}}" hint-size="64px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="support" bell="3" hint-size="100%,56px"></dc-import>
+    <main style="flex: 1; display: flex; min-height: 0; min-width: 0;">
+
+      <nav class="hide-tab" aria-label="Queues" style="flex: 0 0 210px; background: var(--surface); border-right: 1px solid var(--line); padding: 14px 8px; display: flex; flex-direction: column; gap: 2px;">
+        <p class="t-h3" style="padding: 0 10px 8px;">Support</p>
+        <sc-for list="{{queues}}" as="q" hint-placeholder-count="12">
+          <sc-if value="{{q.isHead}}" hint-placeholder-val="{{false}}"><p class="a-nav-h">{{q.label}}</p></sc-if>
+          <sc-if value="{{q.isItem}}" hint-placeholder-val="{{true}}"><a class="a-nav-i" href="#q" aria-current="{{q.cur}}"><span class="{{q.icon}}" aria-hidden="true"></span><span class="lbl">{{q.label}}</span><span class="{{q.cc}}">{{q.count}}</span></a></sc-if>
+        </sc-for>
+        <div class="a-nav-foot">
+          <a class="a-nav-i" href="Macros.dc.html"><span class="i i-lightning" aria-hidden="true"></span><span class="lbl">Macros</span></a>
+          <a class="a-nav-i" href="SupportSettings.dc.html"><span class="i i-sliders-horizontal" aria-hidden="true"></span><span class="lbl">SLA and assignment</span></a>
+        </div>
+      </nav>
+
+      <section aria-label="Tickets" style="flex: 0 0 340px; min-width: 0; border-right: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column;">
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--line);">
+          <div class="a-row"><h1 class="t-h3 a-grow">My tickets <span class="ink-3 w6">· 5 open</span></h1><button class="a-btn sm ghost" type="button"><span class="i i-sort-ascending s14" aria-hidden="true"></span>SLA first</button></div>
+          <label class="a-in"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="sr">Search tickets</span><span class="ph-txt">Search tickets</span></label>
+        </div>
+        <ul style="list-style: none; margin: 0; padding: 0; overflow: auto;">
+          <sc-for list="{{tickets}}" as="t" hint-placeholder-count="8">
+            <li>
+              <a href="#t" aria-current="{{t.cur}}" style="{{t.style}}">
+                <span class="a-row" style="gap: 6px;"><span class="a-id">#{{t.id}}</span><span class="{{t.chIcon}}" aria-hidden="true" title="{{t.ch}}"></span><span class="t-xs ink-3">{{t.ch}}</span><span class="a-grow"></span><span class="{{t.slaCls}}"><span class="i i-timer s12" aria-hidden="true"></span>{{t.sla}}</span></span>
+                <span class="{{t.subjCls}}" dir="{{t.dir}}" lang="{{t.lang}}">{{t.subject}}</span>
+                <span class="a-row" style="gap: 6px;"><span class="t-xs ink-2 a-grow">{{t.meta}}</span><span class="{{t.st}}"><span class="{{t.sti}}" aria-hidden="true"></span>{{t.stl}}</span></span>
+              </a>
+            </li>
+          </sc-for>
+        </ul>
+      </section>
+
+      <section aria-label="Ticket 1042" style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column;">
+        <div style="padding: 14px 18px; background: var(--surface); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px;">
+          <div class="a-row" style="gap: 10px; align-items: flex-start;">
+            <div class="a-grow" style="display: flex; flex-direction: column; gap: 4px;">
+              <span class="a-row t-xs ink-3" style="gap: 6px;"><span class="a-id">#1042</span>·<span>Email to support@uxgate.org</span>·<span>today 09:44</span></span>
+              <h2 class="a-ar" lang="ar" dir="rtl" style="font-size: 19px; line-height: 30px; font-weight: 700; text-align: left;"><span dir="rtl">لا يصلني رابط تسجيل الدخول</span></h2>
+            </div>
+            <span class="a-sla soon"><span class="i i-timer s14" aria-hidden="true"></span>First reply due in 1 h 16 m</span>
+          </div>
+          <div class="a-row" style="gap: 8px;">
+            <button class="a-btn sm" type="button"><span class="a-st info" style="height: 18px;"><span class="i i-circle-fill" aria-hidden="true"></span>Open</span><span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-btn sm" type="button"><span class="a-pri p2"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>Normal</span><span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-btn sm" type="button"><span class="a-av sm v2" aria-hidden="true">OH</span>Omar Hamdy (you)<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-btn sm" type="button">Account and sign-in<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <span class="a-tagx">Arabic</span><span class="a-tagx">streak</span>
+            <span class="a-grow"></span>
+            <button class="a-btn sm ghost icon" type="button" aria-label="More ticket actions"><span class="i i-dots-three" aria-hidden="true"></span></button>
+          </div>
+        </div>
+
+        <div style="flex: 1; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; overflow: auto;">
+          <div class="a-msg">
+            <span class="a-av v2" aria-hidden="true">MA</span>
+            <div class="a-bub">
+              <div class="a-bub-h"><span class="n">Mariam Adel</span><span class="m">mariam.adel@gmail.com · 09:44</span></div>
+              <p class="a-ar" lang="ar" dir="rtl">مرحبًا، أحاول تسجيل الدخول منذ الصباح، لكن رابط تسجيل الدخول لا يصل إلى بريدي. بحثت في مجلد الرسائل غير المرغوب فيها أيضًا. سلسلة أيامي 23 يومًا ولا أريد أن أخسرها. شكرًا.</p>
+            </div>
+          </div>
+          <div class="a-row t-xs ink-2" style="gap: 8px; padding-left: 40px;"><span class="i i-envelope-simple s14" aria-hidden="true"></span><span>System: sign-in link email sent at 09:40 · email provider says “deferred by the receiving server”</span><a href="#emaillog">Email log</a></div>
+          <div class="a-msg">
+            <span class="a-av v2" aria-hidden="true">OH</span>
+            <div class="a-bub note">
+              <div class="a-bub-h"><span class="i i-lock-simple s12" aria-hidden="true"></span><span class="n">Internal note · Omar Hamdy</span><span class="m">09:51</span></div>
+              <p class="t-sm">Her streak is safe today: she holds 1 freeze. I’ll resend the link and ask her to wait 5 minutes.</p>
+            </div>
+          </div>
+
+          <div class="a-composer" style="margin-top: auto;">
+            <div class="bar">
+              <div class="a-seg" role="tablist" aria-label="Reply type" style="height: 28px;"><button type="button" role="tab" aria-selected="true" aria-pressed="true">Reply to learner</button><button type="button" role="tab" aria-selected="false" aria-pressed="false"><span class="i i-lock-simple s12" aria-hidden="true"></span>Internal note</button></div>
+              <span class="a-grow"></span>
+              <span class="t-xs ink-3">Reply language</span>
+              <div class="a-seg" role="group" aria-label="Reply language" style="height: 28px;"><button type="button" aria-pressed="false">English</button><button type="button" aria-pressed="true">العربية</button></div>
+            </div>
+            <div class="ed a-ar" lang="ar" dir="rtl" style="color: var(--ink-3);">اكتب ردك هنا، أو اكتب / لاختيار ردّ جاهز</div>
+            <div class="ft">
+              <a class="a-btn sm" href="FlowTicket.dc.html"><span class="i i-lightning s14" aria-hidden="true"></span>Macros</a>
+              <button class="a-btn sm ghost" type="button"><span class="i i-paperclip s14" aria-hidden="true"></span>Attach</button>
+              <span class="a-grow"></span>
+              <span class="t-xs ink-3">From support@uxgate.org · UXGate Arabic template</span>
+              <button class="a-btn pri sm" type="button" aria-disabled="true">Send<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="hide-tab" aria-label="Learner summary" style="flex: 0 0 300px; background: var(--surface); border-left: 1px solid var(--line); display: flex; flex-direction: column;">
+        <div class="a-rail-s">
+          <div class="a-row" style="gap: 10px;"><span class="a-av v2" aria-hidden="true">MA</span><div class="a-grow"><a href="Learner360.dc.html" class="w7" style="color: var(--ink);">Mariam Adel</a><p class="t-xs ink-3">Learner since 3 Oct 2026</p></div><a class="a-btn sm icon ghost" href="Learner360.dc.html" aria-label="Open Learner 360"><span class="i i-arrow-square-out" aria-hidden="true"></span></a></div>
+          <div class="a-row" style="gap: 6px;"><span class="a-st good"><span class="i i-check-circle-fill" aria-hidden="true"></span>Pro monthly</span><span class="a-tagx">Egypt</span><span class="a-tagx">Arabic</span></div>
+          <dl class="a-kv" style="grid-template-columns: 92px minmax(0, 1fr);">
+            <dt>Sign-in</dt><dd>Google + email link</dd>
+            <dt>Streak</dt><dd>23 days · 1 freeze</dd>
+            <dt>Last active</dt><dd>Yesterday 21:12</dd>
+            <dt>Paths</dt><dd>P01 Unit 3 · P15 Unit 1</dd>
+            <dt>Renews</dt><dd>3 Dec · 249 EGP</dd>
+          </dl>
+        </div>
+        <div class="a-rail-s">
+          <p class="t-over">Quick actions</p>
+          <button class="a-qa" type="button"><span class="i i-paper-plane-tilt" aria-hidden="true"></span>Resend sign-in link</button>
+          <button class="a-qa" type="button"><span class="i i-snowflake" aria-hidden="true"></span>Restore streak or add a freeze</button>
+          <button class="a-qa" type="button"><span class="i i-handshake" aria-hidden="true"></span>Grant Pro (comp)<span class="lk">up to 30 days</span></button>
+          <a class="a-qa" href="ViewAsLearner.dc.html"><span class="i i-eye" aria-hidden="true"></span>View as learner</a>
+        </div>
+        <div class="a-rail-s">
+          <p class="t-over">Linked records</p>
+          <a class="a-qa" href="#email"><span class="i i-envelope-simple" aria-hidden="true"></span><span class="a-grow">Sign-in link email, 09:40</span><span class="a-st wait"><span class="i i-hourglass-medium" aria-hidden="true"></span>Delayed</span></a>
+          <a class="a-qa" href="Payments.dc.html"><span class="i i-credit-card" aria-hidden="true"></span><span class="a-grow">Renewal 3 Nov · 249 EGP</span></a>
+        </div>
+        <div class="a-rail-s">
+          <p class="t-over">Other tickets</p>
+          <a class="a-qa" href="#t998"><span class="a-st good"><span class="i i-check-circle-fill" aria-hidden="true"></span>Resolved</span><span class="a-grow">#998 Student discount</span></a>
+        </div>
+      </aside>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const Q = (label, icon, count, opts) => ({ isItem: true, isHead: false, label, icon: 'i i-' + icon, count, cur: opts && opts.cur ? 'page' : 'false', cc: opts && opts.hot ? 'a-count hot' : 'a-count' });
+    const H = (label) => ({ isItem: false, isHead: true, label, icon: '', count: '', cur: 'false', cc: '' });
+    const ST = { new: ['a-st info', 'i i-circle-fill', 'New'], open: ['a-st info', 'i i-circle-fill', 'Open'], wl: ['a-st wait', 'i i-hourglass-medium', 'Waiting on learner'], wt: ['a-st wait', 'i i-hourglass-medium', 'Waiting on team'], res: ['a-st good', 'i i-check-circle-fill', 'Resolved'] };
+    const CH = { email: ['Email', 'envelope-simple'], form: ['Contact form', 'chat-circle-text'], report: ['Lesson report', 'flag'], refund: ['Refund request', 'arrow-u-up-left'], appeal: ['Appeal', 'scales'] };
+    const T = (id, subject, ar, who, cat, ch, sla, slaK, s, cur) => ({
+      id, subject, meta: who + " · " + cat, ch: CH[ch][0], chIcon: 'i i-' + CH[ch][1] + ' s12 ink-3', sla, slaCls: 'a-sla ' + slaK, st: ST[s][0], sti: ST[s][1], stl: ST[s][2],
+      dir: ar ? 'rtl' : 'ltr', lang: ar ? 'ar' : 'en', subjCls: ar ? 'a-ar' : 'w7', cur: cur ? 'page' : 'false',
+      style: 'display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink);' + (cur ? ' background: var(--sel-bg); box-shadow: inset 3px 0 0 var(--sel-line);' : '') + (ar ? '' : '')
+    });
+    return {
+      yes: true,
+      queues: [
+        H('Views'), Q('My tickets', 'user-circle', '5', { cur: true }), Q('Unassigned', 'tray', '9'), Q('All open', 'list', '37'), Q('Past SLA', 'timer', '4', { hot: true }), Q('Waiting on learner', 'hourglass-medium', '8'),
+        H('Queues'), Q('Account and sign-in', 'key', '12'), Q('Billing', 'credit-card', '9'), Q('Content mistake', 'flag', '7'), Q('Technical', 'gear-six', '5'), Q('Certificates', 'certificate', '4')
+      ],
+      tickets: [
+        T('1042', 'لا يصلني رابط تسجيل الدخول', true, 'Mariam Adel', 'Account', 'email', '1 h 16 m', 'soon', 'open', true),
+        T('1031', 'لم أستطع الدفع بالمحفظة الإلكترونية', true, 'Fatma Hegazy', 'Billing', 'form', '7 h late', 'late', 'open'),
+        T('1040', 'الإجابة الصحيحة في السؤال الخامس غير واضحة', true, 'Yousra Galal', 'Content', 'report', '5 h', '', 'new'),
+        T('1039', 'أريد استرداد مبلغ الاشتراك السنوي', true, 'Khaled Nabil', 'Billing', 'refund', '6 h', '', 'wt'),
+        T('1037', 'My certificate shows my old name', false, 'Ziad Ezz', 'Certificate', 'email', '—', '', 'wl'),
+        T('1033', 'Push reminders stopped on my iPhone', false, 'Jana Haddad', 'Technical', 'form', '—', '', 'res')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

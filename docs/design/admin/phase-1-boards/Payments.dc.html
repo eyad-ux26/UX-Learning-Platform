@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Payments</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="billing" cur="payments" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="billing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#money">Money</a><span aria-hidden="true">/</span><span>Payments</span></nav>
+          <h1 class="t-h1">Payments</h1>
+          <p class="t-sm ink-2">Every charge, refund and chargeback from Paddle and Paymob, as their verified webhooks report them.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <div class="a-split">
+        <section class="a-card a-main-col" style="gap: 0;" aria-label="Payments table">
+          <div class="a-toolbar">
+            <label class="a-in" style="flex: 0 1 300px;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="ph-txt">Payment id, learner or email</span></label>
+            <button class="a-chip" type="button"><span class="k">Type</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Provider</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Status</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Date</span> Last 7 days<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          </div>
+          <div class="a-tbl-wrap">
+            <table class="a-tbl">
+              <thead><tr><th scope="col">When</th><th scope="col">Learner</th><th scope="col">Type</th><th scope="col" class="r">Amount</th><th scope="col" class="r">USD</th><th scope="col">Country · card</th><th scope="col">Status</th></tr></thead>
+              <tbody>
+                <sc-for list="{{rows}}" as="r" hint-placeholder-count="11">
+                  <tr class="{{r.cls}}"><td class="ink-2">{{r.when}}</td><td><a class="rowlink" href="#p">{{r.who}}</a><div class="a-id">{{r.pid}}</div></td><td>{{r.type}}</td><td class="r num w6">{{r.amt}}</td><td class="r num ink-2">{{r.usd}}</td><td>{{r.cc}}</td><td><span class="{{r.st}}"><span class="{{r.sti}}" aria-hidden="true"></span>{{r.stl}}</span></td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div class="a-pager"><span>1–11 of 1,906 this week</span><span class="a-grow"></span><span class="t-xs ink-3">USD at each day’s rate · 9 Nov: 1 USD = 48.6 EGP</span></div>
+        </section>
+
+        <aside class="a-rail" aria-label="Payment detail">
+          <div class="a-rail-s">
+            <div class="a-row"><span class="t-over a-grow">Payment</span><button class="a-btn sm icon ghost" type="button" aria-label="Close panel"><span class="i i-x" aria-hidden="true"></span></button></div>
+            <p class="t-big">$72.00</p>
+            <div class="a-row" style="gap: 6px;"><span class="a-st good"><span class="i i-check-circle-fill" aria-hidden="true"></span>Paid</span><span class="a-st wait"><span class="i i-hourglass-medium" aria-hidden="true"></span>Refund requested</span></div>
+            <dl class="a-kv" style="grid-template-columns: 100px minmax(0, 1fr);">
+              <dt>Learner</dt><dd><a href="Learner360.dc.html">Khaled Nabil</a></dd>
+              <dt>Plan</dt><dd>Pro annual · Gulf price</dd>
+              <dt>Provider</dt><dd>Paddle</dd>
+              <dt>Provider id</dt><dd><span class="a-id">txn_01jcq8x7m2…4d2</span></dd>
+              <dt>Card</dt><dd>Visa •••• 7731 · Kuwait</dd>
+              <dt>IP country</dt><dd>Kuwait</dd>
+              <dt>Paid</dt><dd title="06 Nov 2026 17:02 UTC">6 Nov 2026, 19:02 Cairo</dd>
+              <dt>Fees</dt><dd>$4.10 provider fee · net $67.90</dd>
+            </dl>
+            <a class="a-qa" href="#paddle" style="color: var(--link);"><span class="i i-arrow-square-out" aria-hidden="true"></span>Open in Paddle<span class="lk">owners only</span></a>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Linked</p>
+            <a class="a-qa" href="Subscriptions.dc.html"><span class="i i-arrows-split" aria-hidden="true"></span>Subscription · renews 6 Nov 2027</a>
+            <a class="a-qa" href="Refunds.dc.html"><span class="i i-arrow-u-up-left" aria-hidden="true"></span>Refund request · over agent limit</a>
+            <a class="a-qa" href="SupportInbox.dc.html"><span class="i i-tray" aria-hidden="true"></span>Ticket #1039</a>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Webhook events</p>
+            <div class="a-tl">
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-check s14" aria-hidden="true"></span></span><div><p class="a-tl-t">transaction.completed</p><p class="a-tl-m">6 Nov 19:02 · verified</p></div></div>
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-check s14" aria-hidden="true"></span></span><div><p class="a-tl-t">subscription.created</p><p class="a-tl-m">6 Nov 19:02 · verified</p></div></div>
+            </div>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Actions</p>
+            <a class="a-qa" href="FlowRefund.dc.html"><span class="i i-arrow-u-up-left" aria-hidden="true"></span>Refund</a>
+            <button class="a-qa" type="button"><span class="i i-receipt" aria-hidden="true"></span>Resend receipt</button>
+            <p class="t-xs ink-3" style="padding: 0 8px;">Payment state only changes from verified provider webhooks or the provider API. There is no “mark as paid”.</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = { paid: ['a-st good', 'i i-check-circle-fill', 'Paid'], refunded: ['a-st off', 'i i-arrow-u-up-left', 'Refunded'], failed: ['a-st bad', 'i i-warning-fill', 'Failed'], pending: ['a-st wait', 'i i-hourglass-medium', 'Pending'], cb: ['a-st bad', 'i i-seal-warning', 'Chargeback'] };
+    const R = (when, who, pid, type, amt, usd, cc, s, open) => ({ when, who, pid, type, amt, usd, cc, st: S[s][0], sti: S[s][1], stl: S[s][2], cls: open ? 'open' : '' });
+    return {
+      rows: [
+        R('Today 10:12', 'Ziad Ezz', 'Paddle txn_01jcw…a91', 'Renewal', '$8.00', '$8.00', 'UAE · UAE', 'paid'),
+        R('Today 09:58', 'Fatma Hegazy', 'Paymob 236118904', 'Renewal', '249 EGP', '$5.12', 'Egypt · Egypt', 'failed'),
+        R('Today 09:31', 'Aya Nasser', 'Paymob 236118877', 'First payment', '249 EGP', '$5.12', 'Egypt · wallet', 'pending'),
+        R('Today 08:44', 'Abdullah Al-Harbi', 'Paddle txn_01jcv…3c0', 'Refund', '−$8.00', '−$8.00', 'Saudi Arabia · Saudi Arabia', 'refunded'),
+        R('Yesterday', 'Omar Saeed', 'Paymob 236101552', 'Chargeback', '−249 EGP', '−$5.12', 'Egypt · Egypt', 'cb'),
+        R('7 Nov', 'Yousra Galal', 'Paddle txn_01jcm…77e', 'First payment', '$5.00', '$5.00', 'Morocco · Morocco', 'paid'),
+        R('6 Nov', 'Khaled Nabil', 'Paddle txn_01jcq…4d2', 'First payment', '$72.00', '$72.00', 'Kuwait · Kuwait', 'paid', true),
+        R('6 Nov', 'Salah Darwish', 'Paymob 236080114', 'First payment', '2,249 EGP', '$46.28', 'Egypt · UK card', 'paid'),
+        R('5 Nov', 'Hagar Mounir', 'Paymob 236071203', 'Renewal', '249 EGP', '$5.12', 'Egypt · Egypt', 'paid'),
+        R('5 Nov', 'Dalia Rashed', 'Paddle txn_01jck…0b5', 'First payment', '$45.00', '$45.00', 'Jordan · Jordan', 'paid'),
+        R('4 Nov', 'Hany Zaki', 'Paymob 236066871', 'Renewal', '249 EGP', '$5.12', 'Egypt · Egypt', 'paid')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

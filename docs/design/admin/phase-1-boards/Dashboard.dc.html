@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin dashboard</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="{{theme}}">
+  <dc-import name="Nav" role="{{role}}" cur="dashboard" hint-size="232px,1300px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="{{role}}" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Dashboard</h1>
+          <p class="t-sm ink-2">Monday 9 November 2026 · Cairo time · updated 2 minutes ago <a href="#refresh" style="margin-left: 6px;">Refresh</a></p>
+        </div>
+        <div class="acts">
+          <div class="a-seg" role="group" aria-label="Date range">
+            <button type="button" aria-pressed="true">Today</button><button type="button" aria-pressed="false">7 days</button><button type="button" aria-pressed="false">30 days</button><button type="button" aria-pressed="false">90 days</button><button type="button" aria-pressed="false"><span class="i i-calendar-blank s14" aria-hidden="true"></span>Custom</button>
+          </div>
+        </div>
+      </div>
+      <div class="a-row" aria-label="Filters">
+        <span class="t-xs ink-3 w7" style="margin-right: 2px;">Filters</span>
+        <button class="a-chip" type="button"><span class="k">Language</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+        <button class="a-chip" type="button"><span class="k">Country</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+        <button class="a-chip" type="button"><span class="k">Plan</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+        <button class="a-chip" type="button"><span class="k">Path</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+        <span class="a-grow"></span>
+        <span class="t-xs ink-3">Changes compare with the same day last week. Money in USD at 9 Nov rates.</span>
+      </div>
+
+      <sc-if value="{{isSupport}}" hint-placeholder-val="{{false}}">
+        <div class="a-note info"><span class="i i-info" aria-hidden="true"></span><div>Showing the <b>support</b> view of the dashboard for your role. Money totals are hidden for this role.</div></div>
+      </sc-if>
+
+      <section aria-label="Key numbers" class="a-kpis">
+        <sc-for list="{{kpis}}" as="k" hint-placeholder-count="9">
+          <a class="{{k.cls}}" href="{{k.href}}">
+            <span class="k"><span class="{{k.icon}}" aria-hidden="true"></span>{{k.label}}</span>
+            <span class="t-big">{{k.value}}</span>
+            <span class="{{k.dcls}}"><span class="{{k.dicon}}" aria-hidden="true"></span>{{k.delta}}</span>
+          </a>
+        </sc-for>
+      </section>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="na-h">
+          <div class="a-card-h"><span class="i i-warning-circle" aria-hidden="true" style="color: var(--bad-ink);"></span><h2 class="t-h3" id="na-h">Needs attention</h2><span class="a-count hot">{{attnCount}}</span></div>
+          <ul style="list-style: none; margin: 0; padding: 6px;">
+            <sc-for list="{{attention}}" as="a" hint-placeholder-count="6">
+              <li>
+                <a href="{{a.href}}" class="a-qa" style="align-items: flex-start; padding: 10px; gap: 12px;">
+                  <span class="{{a.st}}" style="margin-top: 1px;"><span class="{{a.sti}}" aria-hidden="true"></span>{{a.stl}}</span>
+                  <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0;"><span>{{a.title}}</span><span class="t-xs ink-3" style="font-weight: 400;">{{a.meta}}</span></span>
+                  <span class="i i-caret-right s14 ink-3" aria-hidden="true" style="margin-top: 3px;"></span>
+                </a>
+              </li>
+            </sc-for>
+          </ul>
+        </section>
+
+        <section class="a-card" aria-labelledby="tr-h">
+          <div class="a-card-h" style="flex-wrap: wrap;">
+            <h2 class="t-h3" id="tr-h">{{chartTitle}}</h2>
+            <div class="a-seg" role="group" aria-label="Metric">
+              <sc-for list="{{metrics}}" as="m" hint-placeholder-count="4"><button type="button" aria-pressed="{{m.on}}">{{m.label}}</button></sc-for>
+            </div>
+          </div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="a-row" style="gap: 16px;">
+              <sc-for list="{{legend}}" as="l" hint-placeholder-count="2">
+                <span class="a-row t-sm" style="gap: 6px;"><span style="width: 14px; height: 3px; border-radius: 2px; background: {{l.color}};" aria-hidden="true"></span><span class="w6">{{l.label}}</span><span class="ink-2 num">{{l.value}}</span></span>
+              </sc-for>
+              <span class="a-grow"></span><span class="t-xs ink-3">Last 30 days · daily</span>
+            </div>
+            <div style="display: flex; gap: 8px; height: 250px;">
+              <div class="t-xs ink-3 num" style="display: flex; flex-direction: column; justify-content: space-between; text-align: right; width: 40px; height: 216px; margin-top: -8px;" aria-hidden="true">
+                <sc-for list="{{yTicks}}" as="t" hint-placeholder-count="4"><span>{{t}}</span></sc-for>
+              </div>
+              <div style="position: relative; flex: 1; min-width: 0;">
+                <svg viewBox="0 0 700 228" preserveAspectRatio="none" style="position: absolute; left: 0; top: 0; width: 100%; height: 228px; overflow: visible;" role="img" aria-label="{{chartAria}}">
+                  <path d="{{grid}}" stroke="var(--line)" stroke-width="1" fill="none" vector-effect="non-scaling-stroke"></path>
+                  <path d="{{area1}}" fill="var(--s1)" opacity="0.08"></path>
+                  <path d="{{line1}}" stroke="var(--s1)" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+                  <path d="{{line2}}" stroke="var(--s2)" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+                </svg>
+                <div style="position: absolute; left: {{hx}}; top: 0; height: 228px; width: 1px; background: var(--ink-3); opacity: {{hOn}};" aria-hidden="true"></div>
+                <div class="a-pop" style="left: {{tipX}}; top: 8px; padding: 8px 10px; min-width: 150px; pointer-events: none; opacity: {{hOn}};" aria-hidden="true">
+                  <p class="t-xs w7">{{tipDate}}</p>
+                  <sc-for list="{{tipRows}}" as="r" hint-placeholder-count="2"><p class="a-row t-xs" style="gap: 6px;"><span style="width: 8px; height: 8px; border-radius: 99px; background: {{r.color}};"></span><span class="a-grow">{{r.label}}</span><b class="num">{{r.value}}</b></p></sc-for>
+                </div>
+                <div style="position: absolute; left: 0; right: 0; top: 0; height: 228px; display: flex;" onMouseLeave="{{clearHover}}">
+                  <sc-for list="{{hits}}" as="h" hint-placeholder-count="30"><span style="flex: 1; height: 100%;" onMouseEnter="{{h.on}}"></span></sc-for>
+                </div>
+                <div class="t-xs ink-3" style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between;" aria-hidden="true">
+                  <sc-for list="{{xTicks}}" as="t" hint-placeholder-count="5"><span>{{t}}</span></sc-for>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{showRegions}}" hint-placeholder-val="{{true}}">
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-top: 6px; border-top: 1px solid var(--line);">
+                <sc-for list="{{regions}}" as="g" hint-placeholder-count="3">
+                  <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 8px;">
+                    <span class="t-xs ink-2 w6">{{g.label}}</span>
+                    <span class="a-row" style="gap: 8px;"><b class="num">{{g.value}}</b><span class="t-xs ink-3">{{g.subs}}</span></span>
+                    <span class="a-meter"><span style="width: {{g.pct}};"></span></span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <a href="#table" class="t-xs w6">Show as a table</a>
+          </div>
+        </section>
+      </div>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="fn-h">
+          <div class="a-card-h"><h2 class="t-h3" id="fn-h">{{funnelTitle}}</h2><span class="t-xs ink-3">{{funnelSub}}</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <sc-for list="{{funnel}}" as="f" hint-placeholder-count="7">
+              <div style="display: grid; grid-template-columns: 170px minmax(0, 1fr) 110px; gap: 12px; align-items: center;">
+                <span class="t-sm w6">{{f.label}}</span>
+                <span style="height: 20px; display: flex; align-items: center;"><span style="display: block; height: 20px; width: {{f.w}}; min-width: 4px; background: var(--s1); border-radius: 0 4px 4px 0;"></span></span>
+                <span class="t-sm num" style="text-align: right;"><b>{{f.value}}</b> <span class="ink-3">{{f.rate}}</span></span>
+              </div>
+            </sc-for>
+            <sc-if value="{{showFunnelNote}}" hint-placeholder-val="{{true}}"><p class="t-xs ink-3">Bars are the share of sign-ups; the percent is the share of the step before. Visits come from Cloudflare Web Analytics.</p></sc-if>
+          </div>
+        </section>
+        <section class="a-card" aria-labelledby="side-h">
+          <div class="a-card-h"><h2 class="t-h3" id="side-h">{{sideTitle}}</h2><a href="{{sideHref}}" class="t-xs w6">Open</a></div>
+          <table class="a-tbl">
+            <thead><tr><th scope="col">{{sideCol1}}</th><th scope="col" class="r">{{sideCol2}}</th><th scope="col" class="r">Change</th></tr></thead>
+            <tbody>
+              <sc-for list="{{side}}" as="s" hint-placeholder-count="5">
+                <tr><td>{{s.a}}</td><td class="r num">{{s.b}}</td><td class="r"><span class="{{s.cc}}">{{s.c}}</span></td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["super","support"],"default":"super"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":1440,"height":1640}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { h: -1 }; }
+  renderVals() {
+    const role = this.props.role ?? 'super';
+    const sup = role === 'support';
+    const K = (label, value, delta, dir, icon, href, alert) => ({ label, value, delta, icon: 'i i-' + icon + ' s14', href, cls: alert ? 'a-kpi alert' : 'a-kpi', dcls: 'd ' + dir, dicon: dir === 'up' ? 'i i-trend-up s12' : dir === 'down' ? 'i i-trend-down s12' : 'i i-arrow-right s12' });
+    const kpis = sup ? [
+      K('My open tickets', '5', '2 fewer than last Monday', 'up', 'tray', 'MyWork.dc.html'),
+      K('Unassigned tickets', '9', '3 more than last Monday', 'down', 'users-three', 'SupportInbox.dc.html'),
+      K('Past SLA', '4', '2 more than last Monday', 'down', 'timer', 'SupportInbox.dc.html', true),
+      K('First reply, median', '3 h 10 m', '40 m faster', 'up', 'clock', 'SupportSettings.dc.html'),
+      K('Resolution, median', '1 d 4 h', 'same as last week', 'flat', 'check-circle', 'SupportSettings.dc.html'),
+      K('Refund requests', '2', 'both within your limit', 'flat', 'arrow-u-up-left', 'Refunds.dc.html'),
+      K('Appeals waiting', '3', '1 more than last Monday', 'down', 'scales', 'Appeals.dc.html'),
+      K('Satisfaction, 7 days', '92% good', '4 points higher', 'up', 'star', 'SupportSettings.dc.html')
+    ] : [
+      K('New sign-ups', '184', '12% vs last Monday', 'up', 'user-plus', 'Learners.dc.html'),
+      K('Active learners', '2,316', 'weekly 9,870 · 6% up', 'up', 'users-three', 'Learners.dc.html'),
+      K('New subscribers', '41', '8% vs last Monday', 'up', 'arrows-split', 'Subscriptions.dc.html'),
+      K('Cancellations', '9', '3 more than last Monday', 'down', 'x-circle', 'Subscriptions.dc.html'),
+      K('Revenue today', '$1,284', '9% vs last Monday', 'up', 'chart-line-up', 'Revenue.dc.html'),
+      K('Refunds today', '3 · $46', '1 fewer', 'up', 'arrow-u-up-left', 'Refunds.dc.html'),
+      K('Open tickets', '37', '5 more than last Monday', 'down', 'tray', 'SupportInbox.dc.html'),
+      K('Tickets past SLA', '4', '2 more than last Monday', 'down', 'timer', 'SupportInbox.dc.html', true),
+      K('Certificates issued', '27', '17% vs last Monday', 'up', 'certificate', 'Certificates.dc.html')
+    ];
+    const A = (kind, stl, title, meta, href) => {
+      const m = { bad: ['a-st bad', 'i i-warning-fill'], wait: ['a-st wait', 'i i-hourglass-medium'], info: ['a-st info', 'i i-circle-fill'] }[kind];
+      return { st: m[0], sti: m[1], stl, title, meta, href };
+    };
+    const attention = sup ? [
+      A('bad', 'Past SLA', '4 tickets are past the first-reply target', 'Oldest: #1031 billing, 31 hours, unassigned', 'SupportInbox.dc.html'),
+      A('wait', 'Due soon', '6 tickets reach their target in under 2 hours', '3 of them are assigned to you', 'MyWork.dc.html'),
+      A('wait', 'Waiting', '3 appeals and review requests to decide', 'Oldest from Saturday, P02 Find and Fix Usability', 'Appeals.dc.html'),
+      A('wait', 'Waiting', '2 refund requests within your limit', 'Both inside the 7-day window', 'Refunds.dc.html'),
+      A('info', 'Content', '5 new lesson reports since yesterday', 'Sent to the content quality queue', '#phase-2')
+    ] : [
+      A('bad', 'Failed', '6 payments failed today', '4 Paymob card declines, 2 Paddle expired cards', 'BillingProblems.dc.html'),
+      A('bad', 'Alert', 'Paymob webhook failed 3 times since 09:12', 'Events are queued; retry from Billing problems', 'BillingProblems.dc.html'),
+      A('bad', 'Past SLA', '4 tickets are past the first-reply target', 'Oldest: #1031 billing, 31 hours, unassigned', 'SupportInbox.dc.html'),
+      A('wait', 'Approval', '2 refunds need a second person', '$72 over the agent limit · 249 EGP outside the 7-day window', 'Approvals.dc.html'),
+      A('wait', 'Waiting', '3 appeals and review requests to decide', 'Oldest from Saturday', 'Appeals.dc.html'),
+      A('info', 'Content', 'P02 · Unit 3 · Lesson 2 · step 5: 71% pick a wrong answer', 'Also 4 learner reports this week', '#phase-2'),
+      A('info', 'Access', 'A super admin grant takes effect in 23 hours', 'Hossam Adel, granted by the founding admin. Any super admin can cancel.', 'SuperAdmins.dc.html')
+    ];
+
+    // chart data (sample): 30 days
+    const N = 30;
+    const s1 = [], s2 = [];
+    for (let i = 0; i < N; i++) {
+      s1.push(Math.round(430 + i * 5.2 + 55 * Math.sin(i / 2.1) + (i % 7 === 5 ? 70 : 0)));
+      s2.push(Math.round(250 + i * 3.1 + 38 * Math.cos(i / 2.7) + (i % 7 === 4 ? 40 : 0)));
+    }
+    const vol = []; for (let i = 0; i < N; i++) vol.push(Math.round(24 + i * .35 + 9 * Math.sin(i / 1.7) + (i % 7 === 6 ? -10 : 0)));
+    const W = 700, H = 200, max = sup ? 60 : 800;
+    const x = (i) => (i / (N - 1)) * W;
+    const y = (v) => H - (v / max) * H;
+    const pth = (arr) => arr.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join(' ');
+    const a = sup ? vol : s1;
+    const line1 = pth(a);
+    const area1 = line1 + ' L' + W + ' ' + H + ' L0 ' + H + ' Z';
+    const line2 = sup ? '' : pth(s2);
+    let grid = ''; for (let k = 0; k <= 4; k++) grid += 'M0 ' + (H - k * H / 4) + ' L' + W + ' ' + (H - k * H / 4) + ' ';
+    const day = (i) => { const d = new Date(Date.UTC(2026, 9, 11 + i)); return d.getUTCDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getUTCMonth()]; };
+    const h = this.state.h;
+    const hits = a.map((_, i) => ({ on: () => this.setState({ h: i }) }));
+    const tipRows = h < 0 ? [] : sup ? [{ color: 'var(--s1)', label: 'New tickets', value: String(vol[h]) }] : [{ color: 'var(--s1)', label: 'Paddle', value: '$' + s1[h] }, { color: 'var(--s2)', label: 'Paymob', value: '$' + s2[h] }];
+    const pct = h < 0 ? 0 : (h / (N - 1)) * 100;
+    const fmt = (n) => n.toLocaleString('en-US');
+    const funnel = [['Sign up', 3910], ['Finish first lesson', 3020], ['Finish first unit', 1460], ['Subscribe', 412], ['Finish a path', 96], ['Share certificate', 38]];
+    const fw = (v) => (v / 3910 * 100).toFixed(1) + '%';
+
+    return {
+      theme: this.props.theme ?? 'light', role, isSupport: sup,
+      kpis, attention, attnCount: attention.length,
+      chartTitle: sup ? 'New tickets per day' : 'Revenue by provider (USD)',
+      metrics: (sup ? ['Tickets', 'First reply', 'Satisfaction'] : ['Sign-ups', 'Active learners', 'Paid subscribers', 'Revenue']).map((l, i) => ({ label: l, on: String(i === (sup ? 0 : 3)) })),
+      legend: sup ? [{ color: 'var(--s1)', label: 'New tickets', value: 'today ' + vol[N - 1] }] : [{ color: 'var(--s1)', label: 'Paddle', value: 'today $' + s1[N - 1] }, { color: 'var(--s2)', label: 'Paymob', value: 'today $' + s2[N - 1] }],
+      yTicks: sup ? ['60', '45', '30', '15', '0'] : ['$800', '$600', '$400', '$200', '$0'],
+      xTicks: [day(0), day(7), day(14), day(21), day(29)],
+      grid, line1, area1, line2,
+      chartAria: sup ? 'New tickets per day over the last 30 days, from 24 to ' + vol[N - 1] : 'Revenue per day by provider over the last 30 days. Paddle ends at $' + s1[N - 1] + ', Paymob at $' + s2[N - 1],
+      hits, clearHover: () => this.setState({ h: -1 }),
+      hOn: h < 0 ? '0' : '1', hx: pct + '%', tipX: 'calc(' + Math.min(pct, 72) + '% + 10px)', tipDate: h < 0 ? '' : day(h) + ' 2026', tipRows,
+      showRegions: !sup, showFunnelNote: !sup,
+      regions: [{ label: 'Egypt · 249 EGP a month', value: '$9,880', subs: '1,915 paying', pct: '62%' }, { label: 'Gulf · $8 a month', value: '$4,460', subs: '579 paying', pct: '28%' }, { label: 'Other Arab countries · $5', value: '$1,590', subs: '330 paying', pct: '10%' }],
+      funnelTitle: sup ? 'Top issues this week' : 'Funnel, last 30 days',
+      funnelSub: sup ? 'tickets by category' : '48,200 visits · 8.1% signed up',
+      funnel: sup ? [['Account and sign-in', 61], ['Billing', 44], ['Content mistake', 29], ['Technical', 18], ['Certificate', 11], ['Feature idea', 7], ['Other', 5]].map(([l, v]) => ({ label: l, value: String(v), rate: '', w: (v / 61 * 100).toFixed(1) + '%' })) : funnel.map(([l, v], i) => ({ label: l, value: fmt(v), rate: i ? Math.round(v / funnel[i - 1][1] * 1000) / 10 + '%' : '', w: fw(v) })),
+      sideTitle: sup ? 'Queues right now' : 'Paths this week',
+      sideHref: sup ? 'SupportInbox.dc.html' : '#phase-2',
+      sideCol1: sup ? 'Queue' : 'Path', sideCol2: sup ? 'Open' : 'Active learners',
+      side: sup ? [['Account and sign-in', '12', '+3', 'ink-bad'], ['Billing', '9', '+1', 'ink-bad'], ['Content mistake', '7', '−2', 'ink-good'], ['Technical', '5', '0', 'ink-3'], ['Certificates', '4', '−1', 'ink-good']].map(([a, b, c, cc]) => ({ a, b, c, cc: 't-xs w7 ' + cc })) : [['Forms That Flow', '3,412', '+8%', 'ink-good'], ['Find and Fix Usability', '2,980', '+14%', 'ink-good'], ['Visual Hierarchy in Action', '1,705', '+3%', 'ink-good'], ['Write Words That Work', '1,122', '−2%', 'ink-bad'], ['Patterns That Fit', '904', '+21%', 'ink-good']].map(([a, b, c, cc]) => ({ a, b, c, cc: 't-xs w7 ' + cc }))
+    };
+  }
+}
+</script>
+</body>
+</html>

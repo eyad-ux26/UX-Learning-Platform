@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Team</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="team" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#admin">Admin</a><span aria-hidden="true">/</span><span>Team and roles</span></nav>
+          <h1 class="t-h1">Team and roles</h1>
+          <p class="t-sm ink-2">Who can use the admin panel and what each person can do. A new person sees nothing until they have a role.</p>
+        </div>
+        <div class="acts"><a class="a-btn pri" href="FlowInvite.dc.html"><span class="i i-user-plus" aria-hidden="true"></span>Invite a team member</a></div>
+      </div>
+      <div class="a-tabs" role="tablist" aria-label="Team and roles"><a href="Team.dc.html" role="tab" aria-selected="true">Members <span class="a-count">9</span></a><a href="Roles.dc.html" role="tab" aria-selected="false">Roles <span class="a-count">12</span></a><a href="SuperAdmins.dc.html" role="tab" aria-selected="false">Super admins <span class="a-count">1 + 1 pending</span></a><a href="Approvals.dc.html" role="tab" aria-selected="false">Approvals <span class="a-count hot">3</span></a></div>
+      <section class="a-card" aria-label="Team members">
+        <div class="a-toolbar">
+          <label class="a-in" style="flex: 0 1 280px;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="ph-txt">Name or email</span></label>
+          <button class="a-chip" type="button"><span class="k">Role</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          <button class="a-chip" type="button"><span class="k">Status</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          <span class="a-grow"></span><span class="t-xs ink-3">Sessions end after 30 minutes idle or 12 hours in total</span>
+        </div>
+        <div class="a-tbl-wrap">
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Person</th><th scope="col">Roles</th><th scope="col">Status</th><th scope="col">Two-step sign-in</th><th scope="col">Last sign-in</th><th scope="col"></th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+                <tr><td><span class="a-row" style="gap: 10px; flex-wrap: nowrap;"><span class="{{r.av}}" aria-hidden="true">{{r.ini}}</span><span><span class="w7">{{r.name}}</span><span class="t-xs ink-2" style="display: block;">{{r.email}}</span></span></span></td><td><span class="a-row" style="gap: 4px;"><sc-for list="{{r.roles}}" as="x" hint-placeholder-count="1"><span class="{{x.cls}}"><span class="{{x.icon}}" aria-hidden="true"></span>{{x.label}}</span></sc-for></span></td><td><span class="{{r.st}}"><span class="{{r.sti}}" aria-hidden="true"></span>{{r.stl}}</span></td><td><span class="{{r.tf}}"><span class="{{r.tfi}}" aria-hidden="true"></span>{{r.tfl}}</span></td><td class="ink-2">{{r.last}}</td><td class="r"><span class="a-row" style="justify-content: flex-end; gap: 6px; flex-wrap: nowrap;"><sc-if value="{{r.hasAct}}" hint-placeholder-val="{{true}}"><button class="a-btn sm" type="button">{{r.act}}</button></sc-if><button class="a-btn sm icon ghost" type="button" aria-label="{{r.more}}"><span class="i i-dots-three" aria-hidden="true"></span></button></span></td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="a-note"><span class="i i-shield-check" aria-hidden="true"></span><div class="t-sm">Suspending someone ends all their sessions at once. Their past actions stay in the audit log under their name.</div></div>
+        <div class="a-note"><span class="i i-list-checks" aria-hidden="true"></span><div class="t-sm"><b>Team testing tools</b> (replay the tour, open any path, mark lessons done) now come with the <b>Viewer / QA tester</b> role, on the tester’s own account only.</div></div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const RL = { super: ['a-role super', 'i i-crown-simple-fill s12', 'Super admin'], founding: ['a-role super', 'i i-crown-simple-fill s12', 'Super admin · founding'], admin: ['a-role', 'i i-user-gear s12', 'Admin'], lead: ['a-role', 'i i-tray s12', 'Support lead'], agent: ['a-role', 'i i-tray s12', 'Support agent'], billing: ['a-role', 'i i-wallet s12', 'Billing manager'], editor: ['a-role', 'i i-pencil-simple s12', 'Content editor'], publisher: ['a-role', 'i i-paper-plane-tilt s12', 'Content publisher'], analyst: ['a-role', 'i i-chart-bar s12', 'Analyst'], qa: ['a-role', 'i i-list-checks s12', 'Viewer / QA tester'], custom: ['a-role', 'i i-sliders-horizontal s12', 'Community moderator'], pending: ['a-st wait', 'i i-hourglass-medium s12', 'Super admin in 23 h'] };
+    const ST = { active: ['a-st good', 'i i-check-circle-fill', 'Active'], invited: ['a-st info', 'i i-envelope-simple', 'Invited 2 days ago'], suspended: ['a-st off', 'i i-pause-circle', 'Suspended'] };
+    const TF = { pass: ['a-st good', 'i i-fingerprint', 'Passkey'], app: ['a-st good', 'i i-shield-check', 'Authenticator app'], none: ['a-st wait', 'i i-warning', 'Not set up yet'] };
+    const P = (ini, v, name, email, roles, s, tf, last, act) => ({ ini, av: 'a-av ' + v, name, email, roles: roles.map((r) => ({ cls: RL[r][0], icon: RL[r][1], label: RL[r][2] })), st: ST[s][0], sti: ST[s][1], stl: ST[s][2], tf: TF[tf][0], tfi: TF[tf][1], tfl: TF[tf][2], last, hasAct: !!act, act: act || '', more: 'More actions for ' + name });
+    return {
+      rows: [
+        P('UX', 'v1', 'Founding admin', 'uxgate8@gmail.com', ['founding'], 'active', 'pass', 'Now · Cairo · Chrome on Windows', ''),
+        P('HA', 'v3', 'Hossam Adel', 'hossam@uxgate.org', ['admin', 'pending'], 'active', 'pass', 'Today 09:12 · Cairo', 'Change roles'),
+        P('NS', 'v4', 'Nadia Samir', 'nadia@uxgate.org', ['lead'], 'active', 'app', 'Today 08:40 · Alexandria', 'Change roles'),
+        P('OH', 'v2', 'Omar Hamdy', 'omar@uxgate.org', ['agent', 'custom'], 'active', 'pass', 'Today 10:02 · Cairo', 'Change roles'),
+        P('LM', 'v5', 'Laila Mostafa', 'laila@uxgate.org', ['billing'], 'active', 'app', 'Yesterday 17:30 · Giza', 'Change roles'),
+        P('RK', 'v3', 'Rana Khalil', 'rana@uxgate.org', ['editor'], 'active', 'pass', 'Yesterday 14:05 · Amman', 'Change roles'),
+        P('MI', 'v4', 'Mai Ibrahim', 'mai@uxgate.org', ['analyst'], 'active', 'app', '7 Nov · Cairo', 'Change roles'),
+        P('DF', 'v2', 'Dina Fathy', 'dina.fathy@gmail.com', ['publisher'], 'invited', 'none', 'Never', 'Resend invite'),
+        P('AH', 'v5', 'Ali Hassan', 'ali@uxgate.org', ['agent'], 'suspended', 'app', '28 Oct · sessions ended 1 Nov', 'Unsuspend')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

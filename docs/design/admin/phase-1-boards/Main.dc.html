@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin Phase 1 map</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm" style="width: 1440px; min-height: 1040px; padding: 56px 64px; display: flex; flex-direction: column; gap: 28px;">
+  <header style="display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+    <div style="display: flex; flex-direction: column; gap: 10px; flex: 1 1 700px;">
+      <div class="a-row" style="gap: 12px;">
+        <img src="/_blob/52911c89aaf083ecd8d76302a1a62f4f" alt="UXGate" style="height: 34px; width: auto;">
+        <span class="a-role">Admin panel</span>
+        <span class="a-st wait"><span class="i i-hourglass-medium" aria-hidden="true"></span>Phase 1 · waiting for approval</span>
+      </div>
+      <h1 style="font-size: 40px; line-height: 46px; font-weight: 700; letter-spacing: -.01em;">Phase 1: Run the business</h1>
+      <p class="ink-2" style="font-size: 17px; line-height: 26px; max-width: 860px;">Everything the team needs on launch day at uxgate.org/admin: who can get in, who the learners are, how they get help, and where the money is. Each board names the requirement ids it covers from “UXGate Admin Panel: Requirements”.</p>
+    </div>
+    <div class="a-card" style="flex: 0 1 420px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;">
+      <p class="t-over">The idea</p>
+      <p class="t-sm">UXGate is a design-tool world, so the admin reads like one, in a calm work density: the menu is a layers panel, the open item wears the selection frame, and every detail page has an inspector on the right with the facts and the actions. No rewards, colours or motion from the learner app.</p>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+    <sc-for list="{{sections}}" as="s" hint-placeholder-count="6">
+      <section class="a-card" style="display: flex; flex-direction: column;">
+        <div class="a-card-h"><span class="{{s.icon}}" aria-hidden="true" style="color: var(--brand);"></span><h2 class="t-h3">{{s.title}}</h2><span class="a-tagx">{{s.page}}</span></div>
+        <ul style="list-style: none; margin: 0; padding: 6px 8px 10px; display: flex; flex-direction: column;">
+          <sc-for list="{{s.items}}" as="b" hint-placeholder-count="4">
+            <li><a class="a-qa" href="{{b.href}}" style="font-weight: 600;"><span class="i i-arrow-right s14" aria-hidden="true"></span><span style="flex: 1;">{{b.label}}</span><span class="a-id">{{b.ids}}</span></a></li>
+          </sc-for>
+        </ul>
+      </section>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+    <div class="a-note info"><span class="i i-shield-check" aria-hidden="true"></span><div><b>Roles shown.</b> Super admin (the founding account uxgate8@gmail.com plus anyone it grants), Admin, Support lead, Support agent, Billing manager, Content editor, Analyst. Menus, columns and buttons follow the permission matrix.</div></div>
+    <div class="a-note"><span class="i i-translate" aria-hidden="true"></span><div><b>Language.</b> The panel is in English. Learner-facing text (tickets, replies, macros, emails) is shown and written in English and Arabic side by side, Arabic right to left in Cairo.</div></div>
+    <div class="a-note"><span class="i i-hourglass-medium" aria-hidden="true"></span><div><b>Phase 2, after approval.</b> Content, Media and instructors, Content quality, Reports, Communications, Platform settings, System health. Their menu items already sit in the shell so the structure is final.</div></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const b = (label, href, ids) => ({ label, href, ids });
+    return {
+      sections: [
+        { title: 'System and shell', page: 'Page 1', icon: 'i i-squares-four', items: [b('Admin design system', 'DesignSystem.dc.html', 'Standards'), b('Menus for three roles', 'ShellRoles.dc.html', 'Nav, TEAM-3'), b('Sign in with two-step', 'AdminSignIn.dc.html', 'Safeguards'), b('My admin account and sessions', 'AdminAccount.dc.html', 'Safeguards')] },
+        { title: 'Overview', page: 'Page 2', icon: 'i i-chart-line-up', items: [b('Dashboard, super admin', 'Dashboard.dc.html', 'DSH-1…6'), b('Dashboard, support agent', 'DashboardSupport.dc.html', 'DSH-5'), b('My work', 'MyWork.dc.html', 'SUP-6, TEAM-5'), b('Global search', 'Search.dc.html', 'SRC-1')] },
+        { title: 'Learners and support', page: 'Page 2', icon: 'i i-users-three', items: [b('Learners list', 'Learners.dc.html', 'LRN-1'), b('Learner 360', 'Learner360.dc.html', 'LRN-2, 3, 5'), b('View as learner', 'ViewAsLearner.dc.html', 'LRN-4'), b('Support inbox', 'SupportInbox.dc.html', 'SUP-1…4, 9'), b('Macros', 'Macros.dc.html', 'SUP-5'), b('SLA, assignment, survey', 'SupportSettings.dc.html', 'SUP-6…8, 12'), b('Appeals and reviews', 'Appeals.dc.html', 'SUP-10')] },
+        { title: 'Money', page: 'Page 2', icon: 'i i-credit-card', items: [b('Subscriptions and comp', 'Subscriptions.dc.html', 'BIL-1, 4'), b('Payments', 'Payments.dc.html', 'BIL-2, 10'), b('Refunds', 'Refunds.dc.html', 'BIL-3'), b('Billing problems', 'BillingProblems.dc.html', 'BIL-8'), b('Revenue', 'Revenue.dc.html', 'BIL-9'), b('Discount codes', 'Discounts.dc.html', 'BIL-5'), b('Student checks', 'StudentChecks.dc.html', 'BIL-6'), b('Prices and plans', 'Prices.dc.html', 'BIL-7')] },
+        { title: 'Certificates, team and audit', page: 'Page 2', icon: 'i i-user-gear', items: [b('Certificates lookup', 'Certificates.dc.html', 'CRT-1, 2'), b('Team', 'Team.dc.html', 'TEAM-1, 2, 6'), b('Roles and permissions', 'Roles.dc.html', 'TEAM-3'), b('Super admins', 'SuperAdmins.dc.html', 'TEAM-4'), b('Approvals inbox', 'Approvals.dc.html', 'TEAM-5'), b('Audit log', 'AuditLog.dc.html', 'AUD-1…3')] },
+        { title: 'Flows, states and devices', page: 'Pages 3 to 5', icon: 'i i-flow-arrow', items: [b('Invite an admin', 'FlowInvite.dc.html', 'Flow 1'), b('Grant super admin', 'FlowSuperAdmin.dc.html', 'Flow 2'), b('Answer in Arabic with a macro', 'FlowTicket.dc.html', 'Flow 3'), b('Refund within and over limit', 'FlowRefund.dc.html', 'Flow 4'), b('Payment id to View as learner', 'FlowFindLearner.dc.html', 'Flow 5'), b('Review an appeal', 'FlowAppeal.dc.html', 'Flow 6'), b('Revoke a certificate', 'FlowRevoke.dc.html', 'Flow 7'), b('Audit trail of a change', 'FlowAudit.dc.html', 'Flow 8'), b('List states', 'ListStates.dc.html', 'States'), b('Same page, two roles', 'RoleCompare.dc.html', 'Matrix'), b('Tablet and phone', 'InboxPhone.dc.html', 'Layout')] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

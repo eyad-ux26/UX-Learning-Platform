@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin top bar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<header class="a-top">
+  <a class="a-search" href="Search.dc.html" aria-label="Search everything, Control K or Command K">
+    <span class="i i-magnifying-glass" aria-hidden="true"></span>
+    <span class="ph-txt">Search learners, emails, payments, tickets, certificates…</span>
+    <span class="a-kbd" aria-hidden="true">Ctrl</span><span class="a-kbd" aria-hidden="true">K</span>
+  </a>
+  <div class="a-top-sp"></div>
+  <sc-if value="{{isProd}}" hint-placeholder-val="{{true}}">
+    <span class="a-env" title="You are changing the live platform"><span class="dot" aria-hidden="true"></span>Production</span>
+  </sc-if>
+  <sc-if value="{{isStaging}}" hint-placeholder-val="{{false}}">
+    <span class="a-env staging" title="Test data only"><span class="dot" aria-hidden="true"></span>Staging</span>
+  </sc-if>
+  <a class="a-ibtn" href="#notifications" aria-label="Notifications, {{bell}} new">
+    <span class="i i-bell s18" aria-hidden="true"></span>
+    <sc-if value="{{hasBell}}" hint-placeholder-val="{{true}}"><span class="pip" aria-hidden="true">{{bell}}</span></sc-if>
+  </a>
+  <a class="a-ibtn hide-phone" href="#help" aria-label="Help"><span class="i i-question s18" aria-hidden="true"></span></a>
+  <button class="a-me" type="button" aria-haspopup="menu" aria-label="Admin menu: {{who}}, {{roleLabel}}">
+    <span class="{{avCls}}" aria-hidden="true">{{initials}}</span>
+    <span class="tx" style="display: flex; flex-direction: column;"><span class="nm">{{who}}</span><span class="rl">{{roleLabel}}</span></span>
+    <span class="i i-caret-down s14 ink-3" aria-hidden="true"></span>
+  </button>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["super","admin","support","lead","billing","content","analyst"],"default":"super"},"env":{"editor":"enum","options":["production","staging"],"default":"production"},"bell":{"editor":"int","default":4},"$preview":{"width":1208,"height":56}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const role = this.props.role ?? 'super';
+    const people = {
+      super: ['Founding admin', 'Super admin', 'FA', 'a-av'],
+      admin: ['Hossam Adel', 'Admin', 'HA', 'a-av v3'],
+      support: ['Omar Hamdy', 'Support agent', 'OH', 'a-av v2'],
+      lead: ['Nadia Samir', 'Support lead', 'NS', 'a-av v4'],
+      billing: ['Laila Mostafa', 'Billing manager', 'LM', 'a-av v5'],
+      content: ['Rana Khalil', 'Content editor', 'RK', 'a-av v3'],
+      analyst: ['Mai Ibrahim', 'Analyst', 'MI', 'a-av v4']
+    };
+    const p = people[role] || people.super;
+    const env = this.props.env ?? 'production';
+    const bell = this.props.bell ?? 4;
+    return { who: p[0], roleLabel: p[1], initials: p[2], avCls: p[3], isProd: env === 'production', isStaging: env === 'staging', bell, hasBell: bell > 0 };
+  }
+}
+</script>
+</body>
+</html>

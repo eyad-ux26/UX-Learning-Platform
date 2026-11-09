@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin navigation</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<nav class="{{navCls}}" aria-label="Admin" style="height: 100%; min-height: {{minH}};">
+  <a class="a-nav-logo" href="Dashboard.dc.html" aria-label="UXGate admin, go to dashboard">
+    <img class="full" src="/_blob/52911c89aaf083ecd8d76302a1a62f4f" alt="UXGate">
+    <img class="mark" src="/_blob/c7f593dfee2e5875d9c7a4669eaccf27" alt="UXGate">
+    <span class="a-tag-admin">Admin</span>
+  </a>
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+    <p class="a-nav-h">{{g.label}}</p>
+    <sc-for list="{{g.items}}" as="n" hint-placeholder-count="3">
+      <a class="a-nav-i" href="{{n.href}}" aria-current="{{n.cur}}" title="{{n.label}}">
+        <span class="{{n.icon}}" aria-hidden="true"></span>
+        <span class="lbl">{{n.label}}</span>
+        <sc-if value="{{n.hasCount}}" hint-placeholder-val="{{false}}"><span class="{{n.countCls}}">{{n.count}}<span class="sr"> waiting</span></span><span class="dotc" aria-hidden="true"></span></sc-if>
+      </a>
+    </sc-for>
+  </sc-for>
+  <div class="a-nav-foot">
+    <a class="a-nav-i" href="#help" title="Help and shortcuts"><span class="i i-question" aria-hidden="true"></span><span class="lbl">Help and shortcuts</span></a>
+    <a class="a-nav-i" href="#collapse" title="Collapse menu"><span class="i i-caret-left" aria-hidden="true"></span><span class="lbl">Collapse menu</span></a>
+  </div>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"role":{"editor":"enum","options":["super","admin","support","lead","billing","content","analyst"],"default":"super"},"cur":{"editor":"text","default":"dashboard"},"minH":{"editor":null,"default":"0px"},"compact":{"editor":"boolean","default":false},"$preview":{"width":232,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const role = this.props.role ?? 'super';
+    const cur = this.props.cur ?? 'dashboard';
+    const I = {
+      dashboard: ['Dashboard', 'squares-four', 'Dashboard.dc.html'],
+      mywork: ['My work', 'list-checks', 'MyWork.dc.html'],
+      learners: ['Learners', 'users-three', 'Learners.dc.html'],
+      inbox: ['Support inbox', 'tray', 'SupportInbox.dc.html'],
+      appeals: ['Appeals and reviews', 'scales', 'Appeals.dc.html'],
+      subs: ['Subscriptions', 'arrows-split', 'Subscriptions.dc.html'],
+      payments: ['Payments', 'credit-card', 'Payments.dc.html'],
+      refunds: ['Refunds', 'arrow-u-up-left', 'Refunds.dc.html'],
+      problems: ['Billing problems', 'warning', 'BillingProblems.dc.html'],
+      discounts: ['Discounts', 'tag', 'Discounts.dc.html'],
+      prices: ['Prices and plans', 'receipt', 'Prices.dc.html'],
+      revenue: ['Revenue', 'chart-line-up', 'Revenue.dc.html'],
+      paths: ['Paths', 'book-open', '#phase-2'],
+      lessons: ['Units and lessons', 'list', '#phase-2'],
+      skills: ['Skills and misconceptions', 'star', '#phase-2'],
+      media: ['Media library', 'monitor', '#phase-2'],
+      instructors: ['Instructors', 'identification-card', '#phase-2'],
+      quality: ['Content quality', 'flag', '#phase-2'],
+      releases: ['Releases', 'paper-plane-tilt', '#phase-2'],
+      reports: ['Reports', 'chart-bar', '#phase-2'],
+      comms: ['Communications', 'envelope-simple', '#phase-2'],
+      certs: ['Certificates', 'certificate', 'Certificates.dc.html'],
+      team: ['Team and roles', 'user-gear', 'Team.dc.html'],
+      audit: ['Audit log', 'clock-counter-clockwise', 'AuditLog.dc.html'],
+      settings: ['Platform settings', 'gear-six', '#phase-2'],
+      health: ['System health', 'shield-check', '#phase-2']
+    };
+    const counts = {
+      super: { mywork: [3, false], inbox: [12, false], appeals: [3, false], refunds: [4, false], problems: [6, true] },
+      admin: { mywork: [2, false], inbox: [12, false], appeals: [3, false], refunds: [4, false], problems: [6, true] },
+      support: { mywork: [5, false], inbox: [12, true], appeals: [3, false], refunds: [2, false] },
+      lead: { mywork: [4, false], inbox: [12, true], appeals: [3, false], refunds: [4, false] },
+      billing: { mywork: [2, false], refunds: [4, false], problems: [6, true] },
+      content: { mywork: [2, false], quality: [9, false] },
+      analyst: {}
+    }[role] || {};
+    const menus = {
+      super: [['Overview', ['dashboard', 'mywork']], ['People', ['learners', 'inbox', 'appeals']], ['Money', ['subs', 'payments', 'refunds', 'problems', 'discounts', 'prices', 'revenue']], ['Content', ['paths', 'lessons', 'skills', 'media', 'instructors', 'quality', 'releases']], ['Grow', ['reports', 'comms', 'certs']], ['Admin', ['team', 'audit', 'settings', 'health']]],
+      admin: [['Overview', ['dashboard', 'mywork']], ['People', ['learners', 'inbox', 'appeals']], ['Money', ['subs', 'payments', 'refunds', 'problems', 'discounts', 'prices', 'revenue']], ['Content', ['paths', 'lessons', 'skills', 'media', 'instructors', 'quality', 'releases']], ['Grow', ['reports', 'comms', 'certs']], ['Admin', ['team', 'audit', 'settings', 'health']]],
+      support: [['Overview', ['dashboard', 'mywork']], ['People', ['learners', 'inbox', 'appeals']], ['Money', ['payments', 'refunds']], ['Content', ['quality']], ['Grow', ['certs']]],
+      lead: [['Overview', ['dashboard', 'mywork']], ['People', ['learners', 'inbox', 'appeals']], ['Money', ['subs', 'payments', 'refunds']], ['Content', ['quality']], ['Grow', ['reports', 'certs']], ['Admin', ['audit']]],
+      billing: [['Overview', ['dashboard', 'mywork']], ['People', ['learners', 'inbox']], ['Money', ['subs', 'payments', 'refunds', 'problems', 'discounts', 'prices', 'revenue']], ['Grow', ['reports']], ['Admin', ['audit']]],
+      content: [['Overview', ['dashboard', 'mywork']], ['Content', ['paths', 'lessons', 'skills', 'media', 'quality']], ['Grow', ['reports']]],
+      analyst: [['Overview', ['dashboard']], ['People', ['learners', 'inbox']], ['Money', ['subs', 'payments', 'refunds', 'revenue']], ['Grow', ['reports', 'certs']], ['Admin', ['audit', 'health']]]
+    };
+    const groups = (menus[role] || menus.super).map(([label, ids]) => ({
+      label,
+      items: ids.map((id) => {
+        const [l, ic, href] = I[id];
+        const c = counts[id];
+        return { label: l, icon: 'i i-' + ic, href, cur: id === cur ? 'page' : 'false', hasCount: !!c, count: c ? c[0] : '', countCls: c && c[1] ? 'a-count hot' : 'a-count' };
+      })
+    }));
+    return { groups, navCls: (this.props.compact === true || this.props.compact === 'true') ? 'a-nav compact' : 'a-nav', minH: this.props.minH ?? '0px' };
+  }
+}
+</script>
+</body>
+</html>

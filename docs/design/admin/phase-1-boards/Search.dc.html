@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Global search</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell a-overlay" data-theme="light">
+  <dc-import name="Nav" role="analyst" cur="dashboard" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="analyst" hint-size="100%,56px"></dc-import>
+    <main class="a-page" aria-hidden="true">
+      <div class="a-ph"><div class="tt"><h1 class="t-h1">Dashboard</h1><p class="t-sm ink-2">Monday 9 November · numbers update every 5 minutes</p></div></div>
+      <div class="a-kpis" style="grid-template-columns: repeat(5, minmax(0, 1fr));">
+        <div class="a-kpi"><span class="k">New sign-ups</span><span class="t-big num">184</span></div><div class="a-kpi"><span class="k">Active learners</span><span class="t-big num">2,316</span></div><div class="a-kpi"><span class="k">New subscribers</span><span class="t-big num">41</span></div><div class="a-kpi"><span class="k">Revenue today</span><span class="t-big num">$1,284</span></div><div class="a-kpi"><span class="k">Open tickets</span><span class="t-big num">37</span></div>
+      </div>
+      <div class="a-card" style="height: 360px;"></div>
+    </main>
+
+  <div class="a-scrim" aria-hidden="true"></div>
+  <div class="a-dialog" role="dialog" aria-modal="true" aria-label="Search" style="width: 680px; top: 72px; padding: 0; gap: 0;">
+    <div class="a-row" style="gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line);">
+      <span class="i i-magnifying-glass s20 ink-3" aria-hidden="true"></span>
+      <span class="t-body a-grow" style="font-size: 16px;">nabil<span style="display: inline-block; width: 1px; height: 18px; background: var(--ink); vertical-align: middle; margin-left: 1px;" aria-hidden="true"></span></span>
+      <span class="a-kbd">Esc</span>
+    </div>
+    <div class="a-row" style="gap: 6px; padding: 10px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap;" role="tablist" aria-label="Type">
+      <sc-for list="{{types}}" as="t" hint-placeholder-count="8"><button class="{{t.cls}}" type="button" role="tab" aria-selected="{{t.sel}}">{{t.label}}</button></sc-for>
+    </div>
+    <div style="max-height: 520px; overflow: auto; padding: 6px 0;">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+        <div style="padding: 6px 0;">
+          <p class="t-over" style="padding: 4px 16px;">{{g.label}}</p>
+          <sc-for list="{{g.items}}" as="it" hint-placeholder-count="2">
+            <a href="{{it.href}}" style="{{it.style}}">
+              <span class="{{it.icon}}" aria-hidden="true" style="color: var(--ink-3);"></span>
+              <span style="display: flex; flex-direction: column; min-width: 0; flex: 1;"><span class="w7">{{it.title}}</span><span class="t-xs ink-2">{{it.sub}}</span></span>
+              <span class="{{it.tagCls}}">{{it.tag}}</span>
+            </a>
+          </sc-for>
+        </div>
+      </sc-for>
+      <div class="a-row t-xs ink-3" style="gap: 8px; padding: 8px 16px; border-top: 1px dashed var(--line); margin-top: 4px;"><span class="i i-lock-simple s12" aria-hidden="true"></span>Admins are not searched for your role. Emails and phone numbers are masked for analysts.</div>
+    </div>
+    <div class="a-row t-xs ink-2" style="gap: 14px; padding: 10px 16px; border-top: 1px solid var(--line); background: var(--surface-2); border-radius: 0 0 12px 12px;">
+      <span class="a-row" style="gap: 4px;"><span class="a-kbd">↑</span><span class="a-kbd">↓</span>move</span>
+      <span class="a-row" style="gap: 4px;"><span class="a-kbd">Enter</span>open</span>
+      <span class="a-row" style="gap: 4px;"><span class="a-kbd">Tab</span>next type</span>
+      <span class="a-grow"></span>
+      <span>Tip: paste a payment, ticket or certificate id to jump straight to it</span>
+    </div>
+  </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const types = ['All 5', 'Learners 1', 'Tickets 2', 'Payments 2', 'Certificates 0', 'Paths 0', 'Lessons 0'].map((l, i) => ({ label: l, sel: String(i === 0), cls: i === 0 ? 'a-chip on' : 'a-chip' }));
+    const base = 'display: flex; align-items: center; gap: 12px; padding: 8px 16px; color: var(--ink); text-decoration: none; font-size: 13.5px;';
+    const I = (icon, title, sub, href, tag, sel) => ({ icon: 'i i-' + icon, title, sub, href, tag: tag || '', tagCls: tag ? 'a-kbd' : '', style: base + (sel ? ' background: var(--sel-bg); box-shadow: inset 3px 0 0 var(--sel-line);' : '') });
+    return {
+      types,
+      groups: [
+        { label: 'Learners', items: [I('user-circle', 'Khaled Nabil', 'k•••••@outlook.com · Kuwait · Pro annual since 6 Nov', 'Learner360.dc.html', 'Enter', true)] },
+        { label: 'Tickets', items: [I('tray', '#1039 · اخترت الاشتراك السنوي بالخطأ', 'Khaled Nabil · Billing · waiting on support', 'SupportInbox.dc.html'), I('tray', '#0988 · Can I change my plan to monthly?', 'Khaled Nabil · Billing · solved 6 Nov', 'SupportInbox.dc.html')] },
+        { label: 'Payments', items: [I('credit-card', 'Paddle txn_01jcq8x7m2…4d2 · $72.00', 'Khaled Nabil · first payment · paid · refund requested', 'Payments.dc.html'), I('credit-card', 'Paymob 235977120 · 249 EGP', 'Nabila Fares · renewal · paid', 'Payments.dc.html')] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
