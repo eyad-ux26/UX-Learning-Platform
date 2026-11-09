@@ -12,6 +12,8 @@ describe("gateStep", () => {
   it("keeps a public certificate page open (so LinkedIn can read it) but not the /c list or a malformed code", () => {
     expect(gateStep("/en/c/k3j9x0a2b7qz")).toEqual({ kind: "open", index: false });
     expect(gateStep("/ar/c/k3j9x0a2b7qz/")).toEqual({ kind: "open", index: false });
+    expect(gateStep("/ar/rate/AbC_dEf-0123456789abcdefghijklmnopqrstuvw")).toEqual({ kind: "open", index: false });
+    for (const p of ["/en/rate", "/en/rate/short", "/en/rate/AbC_dEf-0123456789abcdefghijklmnopqrstuvw/x"]) expect(gateStep(p).kind, p).toBe("admin");
     for (const p of ["/en/c", "/en/c/", "/en/c/short", "/en/c/K3J9X0A2B7QZ", "/en/c/k3j9x0a2b7qz/extra"]) expect(gateStep(p).kind, p).toBe("admin");
   });
   it("puts the sign-in pages behind the team pass", () => {
