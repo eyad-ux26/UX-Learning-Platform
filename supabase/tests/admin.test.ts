@@ -14,7 +14,9 @@ const migrations = fs.readdirSync(path.join(here, "../migrations")).filter((f) =
 const BOOT = `
 create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
 create schema auth;
-create table auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb not null default '{}');
+create table auth.users (id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb not null default '{}',
+  created_at timestamptz not null default now(), email_confirmed_at timestamptz, last_sign_in_at timestamptz, banned_until timestamptz);
+create table auth.identities (id uuid primary key default gen_random_uuid(), user_id uuid not null references auth.users (id) on delete cascade, provider text not null);
 create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
 grant usage on schema auth to anon, authenticated, service_role;
 grant execute on function auth.uid() to anon, authenticated, service_role;
@@ -232,5 +234,104 @@ describe("approvals", () => {
     const a = (await svc<{ status: string }>(`select (public.admin_decide_approval($1, $2, 'approved', 'Fine', null, null, null)).status`, [L, id]))[0];
     expect(a.status).toBe("approved");
     await expect(svc(`select public.admin_decide_approval($1, $2, 'declined', 'no', null, null, null)`, [F, id])).rejects.toThrow(/not waiting/);
+  });
+});
+
+describe("learners and comp access (0045)", () => {
+  it("finds learners by email, name, receipt and certificate id", async () => {
+    await db.exec(`insert into paths (id, title, status) values ('P01', '{"en":"Forms","ar":"x"}', 'published') on conflict do nothing`);
+    await db.query(`update profiles set display_name = 'Mona Learner' where user_id = $1`, [X]);
+    await db.query(`insert into auth.identities (user_id, provider) values ($1, 'google')`, [X]);
+    await db.query(`insert into payments (user_id, provider, provider_payment_id, kind, period, amount_minor, currency, status, receipt_no, paid_at)
+      values ($1, 'paddle', 'txn_abc123', 'first', 'year', 7200, 'USD', 'paid', 'UXG-2026-000777', now())`, [X]);
+    await db.query(`insert into certificates (user_id, path_id, code) values ($1, 'P01', 'abcdef123456')`, [X]);
+    const find = async (q: string) => (await svc<{ user_id: string; method: string; total: string }>(`select * from public.admin_learners(p_q => $1)`, [q]));
+    for (const q of ["learner@example", "mona", "uxg-2026-000777", "txn_abc123", "UXG-P01-ABCDEF12", X]) {
+      const r = await find(q);
+      expect(r.map((x) => x.user_id), q).toContain(X);
+    }
+    expect((await find("learner@example"))[0].method).toBe("google");
+    expect(await find("abc")).toHaveLength(0);
+    await expect(asUser("authenticated", X, `select * from public.admin_learners()`)).rejects.toThrow(/permission denied/);
+  });
+
+  it("support gives free Pro for up to 30 days, never to itself; billing has no limit", async () => {
+    await expect(svc(`select public.admin_grant_comp($1, $2, now() + interval '40 days', 'Goodwill', null, null, null)`, [S, X])).rejects.toThrow(/30 days/);
+    await expect(svc(`select public.admin_grant_comp($1, $1, now() + interval '5 days', 'Mine', null, null, null)`, [S])).rejects.toThrow(/own account/);
+    await expect(svc(`select public.admin_grant_comp($1, $2, now() + interval '5 days', 'Nope', null, null, null)`, [N, X])).rejects.toThrow(/comp.grant/);
+    await svc(`select public.admin_grant_comp($1, $2, now() + interval '7 days', 'Bug cost them a week', null, null, null)`, [S, X]);
+    const e = await one<{ plan: string; source: string }>(`select plan, source from entitlements where user_id = $1`, [X]);
+    expect(e).toMatchObject({ plan: "pro", source: "manual" });
+    expect((await svc<{ plan: string }>(`select plan from public.admin_learners(p_q => 'mona')`))[0].plan).toBe("comp");
+    await svc(`select public.admin_grant_comp($1, $2, now() + interval '200 days', 'Partner', null, null, null)`, [F, X]);
+    await svc(`select public.admin_end_comp($1, $2, 'Partner ended', null, null, null)`, [L, X]);
+    expect((await one<{ on: boolean }>(`select valid_until <= now() as on from entitlements where user_id = $1`, [X])).on).toBe(true);
+    const log = (await db.query<{ action: string }>(`select action from admin_audit where target_id = $1 order by id`, [X])).rows.map((r) => r.action);
+    expect(log).toEqual(expect.arrayContaining(["learners.comp_granted", "learners.comp_ended"]));
+  });
+
+  it("ending free Pro hands back to a paid plan that is still running", async () => {
+    await db.query(`insert into subscriptions (user_id, provider, region, country, period, currency, renew_amount_minor, status, current_period_start, current_period_end)
+      values ($1, 'paddle', 'world', 'DE', 'year', 'USD', 7200, 'active', now(), now() + interval '300 days')`, [X]);
+    await svc(`select public.admin_grant_comp($1, $2, now() + interval '400 days', 'Extra', null, null, null)`, [F, X]);
+    await svc(`select public.admin_end_comp($1, $2, 'Undo', null, null, null)`, [F, X]);
+    const e = await one<{ source: string; left: number }>(`select source, extract(day from valid_until - now())::int as left from entitlements where user_id = $1`, [X]);
+    expect(e.source).toBe("live");
+    expect(e.left).toBeGreaterThan(290);
+  });
+});
+
+describe("certificates (0045)", () => {
+  it("revoke needs certs.manage, is final, and is logged", async () => {
+    await expect(svc(`select public.admin_revoke_certificate($1, 'abcdef123456', '{"en":"x","ar":"x"}', 'Shared account', null, null, null)`, [S])).rejects.toThrow(/certs.manage/);
+    await expect(svc(`select public.admin_reissue_certificate($1, 'abcdef123456', 'Mona A.', 'Name fix', null, null, null)`, [N])).rejects.toThrow(/certs.manage/);
+    await svc(`select public.admin_reissue_certificate($1, 'abcdef123456', 'Mona Ahmed', 'Name fix', null, null, null)`, [F]);
+    expect((await one<{ display_name: string }>(`select display_name from profiles where user_id = $1`, [X])).display_name).toBe("Mona Ahmed");
+    await svc(`select public.admin_revoke_certificate($1, 'abcdef123456', '{"en":"Earned by someone else","ar":"x"}', 'Shared account', null, null, null)`, [F]);
+    const c = await one<{ revoked_at: string | null; reason: string }>(`select revoked_at, revoked_reason ->> 'en' reason from certificates where code = 'abcdef123456'`);
+    expect(c.revoked_at).not.toBeNull();
+    expect(c.reason).toBe("Earned by someone else");
+    await expect(svc(`select public.admin_revoke_certificate($1, 'abcdef123456', '{}', 'again', null, null, null)`, [F])).rejects.toThrow(/already revoked/);
+    await expect(svc(`select public.admin_reissue_certificate($1, 'abcdef123456', null, 'again', null, null, null)`, [F])).rejects.toThrow(/revoked/);
+  });
+});
+
+describe("support (0046)", () => {
+  it("counts first-reply time in business hours of the ticket's language", async () => {
+    // Thursday 16:00 Cairo (UTC+2 in November): English hours are Mon to Fri 9 to 17, Arabic Sat to Thu 9 to 17.
+    const due = async (lang: string, hours: number) =>
+      (await one<{ d: string }>(`select to_char(public.support_due('2026-11-12 14:00+00', $1, $2) at time zone 'Africa/Cairo', 'Dy HH24:MI') d`, [hours, lang])).d;
+    expect(await due("en", 2)).toBe("Fri 10:00");
+    expect(await due("en", 10)).toBe("Mon 10:00");
+    expect(await due("ar", 2)).toBe("Sat 10:00");
+  });
+
+  it("turns refund requests and broken-question reports into tickets, not appeals", async () => {
+    const pay = (await one<{ id: string }>(`select id from payments where provider_payment_id = 'txn_abc123'`)).id;
+    await db.query(`insert into refund_requests (user_id, payment_id, amount_minor, currency, reason) values ($1, $2, 7200, 'USD', 'Bought by mistake')`, [X, pay]);
+    const t = await one<{ channel: string; status: string; user_id: string; first_reply_due: string | null }>(`select * from support_tickets where link_type = 'refund_request'`);
+    expect(t).toMatchObject({ channel: "refund", status: "waiting_team", user_id: X });
+    expect(t.first_reply_due).not.toBeNull();
+    await db.exec(`insert into units (id, path_id, title) values ('U1', 'P01', '{}') on conflict do nothing; insert into lessons (id, unit_id) values ('L1', 'U1') on conflict do nothing`);
+    await db.query(`insert into review_requests (user_id, lesson_id, step_id, answer, reason) values ($1, 'L1', 's1', '{}', 'answer_works')`, [X]);
+    await db.query(`insert into review_requests (user_id, lesson_id, step_id, answer, reason, note) values ($1, 'L1', 's2', '{}', 'broken', 'Image missing')`, [X]);
+    const reports = (await db.query<{ subject: string }>(`select subject from support_tickets where channel = 'lesson_report'`)).rows;
+    expect(reports).toHaveLength(1);
+    expect(reports[0].subject).toContain("s2");
+  });
+
+  it("assigns round robin among members who can reply", async () => {
+    await db.exec(`update support_settings set assignment = 'round_robin'`);
+    const ids: string[] = [];
+    for (let i = 0; i < 4; i++) ids.push((await one<{ a: string }>(`insert into support_tickets (email, subject, channel) values ('q@x.com', 'Hi', 'email') returning assignee_id a`)).a);
+    const repliers = new Set([F, S, L]);
+    for (const a of ids) expect(repliers.has(a)).toBe(true);
+    expect(new Set(ids.slice(0, 3)).size).toBe(3);
+    await db.exec(`update support_settings set assignment = 'manual'`);
+  });
+
+  it("keeps tickets away from learners", async () => {
+    await expect(asUser("authenticated", X, `select * from support_tickets`)).rejects.toThrow(/permission denied/);
+    await expect(asUser("anon", null, `select * from support_messages`)).rejects.toThrow(/permission denied/);
   });
 });

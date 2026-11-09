@@ -8,7 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { catalogEntry } from "@/lib/catalog";
 import { certStats } from "@/lib/certificate-stats";
 import { certId, ogUrl, publicUrl } from "@/lib/certificate-share";
-import { publicCertificate } from "@/lib/server/certificates";
+import { publicCertificate, revokedCertificate } from "@/lib/server/certificates";
 
 // Read on every request: turning the certificate page off must take it down at once, so nothing here may be cached.
 export const dynamic = "force-dynamic";
@@ -22,6 +22,10 @@ const originOf = async () => {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; code: string }> }): Promise<Metadata> {
   const { locale, code } = await params;
   const c = await publicCertificate(code);
+  if (!c && (locale === "en" || locale === "ar") && (await revokedCertificate(code))) {
+    const t = await getTranslations({ locale, namespace: "cert" });
+    return { title: t("revokedMeta"), robots: { index: false, follow: false } };
+  }
   if (!c || (locale !== "en" && locale !== "ar")) return { title: "UXGate", robots: { index: false, follow: false } };
   const t = await getTranslations({ locale, namespace: "cert" });
   const origin = await originOf();
@@ -40,6 +44,10 @@ export default async function PublicCertificate({ params }: { params: Promise<{ 
   const { locale, code } = await params;
   setRequestLocale(locale);
   const c = await publicCertificate(code);
+  if (!c && (locale === "en" || locale === "ar")) {
+    const r = await revokedCertificate(code);
+    if (r) return <Revoked r={r} locale={locale} />;
+  }
   if (!c || (locale !== "en" && locale !== "ar")) notFound();
   const t = await getTranslations("cert");
   const pathName = catalogEntry(c.pathId)?.name ?? c.pathId;
@@ -66,6 +74,27 @@ export default async function PublicCertificate({ params }: { params: Promise<{ 
               <p className="t-small">{t("ctaSub")}</p>
             </section>
           </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+/** CRT-2: a revoked certificate says so, with the team's reason in the page's language, and shows nothing else. */
+async function Revoked({ r, locale }: { r: Awaited<ReturnType<typeof revokedCertificate>> & object; locale: "en" | "ar" }) {
+  const t = await getTranslations("cert");
+  const date = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(r.revokedAt));
+  const reason = r.reason?.[locale] || r.reason?.en || r.reason?.ar || "";
+  return (
+    <div className="cxv-page">
+      <header className="cxv-topbar"><Logo height={30} /><Link href={`/c/${r.code}`} locale={locale === "ar" ? "en" : "ar"} className="btn btn-ghost btn-sm">{t("other")}</Link></header>
+      <main className="cxv-main">
+        <div className="cxv-wrap">
+          <p className="cxv-ok" style={{ color: "var(--bad-ink, #B4233A)" }}><span className="ph ph-warning-circle" aria-hidden="true" />{t("revokedTitle")}</p>
+          <h1 className="t-h1 cxv-h1">{t("revokedTitle")}</h1>
+          <p><bdi>{t("revokedBody", { id: certId(r.pathId, r.code), date })}</bdi></p>
+          {reason ? <p><bdi>{t("revokedReason", { reason })}</bdi></p> : null}
+          <p className="t-small">{t("revokedHelp")}</p>
         </div>
       </main>
     </div>
