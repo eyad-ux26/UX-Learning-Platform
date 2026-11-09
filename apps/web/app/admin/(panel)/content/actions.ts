@@ -137,7 +137,7 @@ export async function setQualityStatus(_: R | null, f: FormData): Promise<R> {
 
 /**
  * Hands a panel-owned lesson back to the content files (0064): the version this app was built with goes live, and later
- * content PRs update the lesson again. Needs content.publish, a reason, ROLL BACK typed and a fresh code.
+ * content PRs update the lesson again. Needs content.publish, a reason, the lesson id typed and a fresh code.
  */
 export async function handBackLesson(_: R | null, f: FormData): Promise<R> {
   return run(async () => {
