@@ -14,10 +14,10 @@ export const PRICES: Record<Region, { currency: "EGP" | "USD"; month: number; ye
   world: { currency: "USD", month: 800, year: 7200 },
 };
 
-/** Gulf Cooperation Council countries. */
-export const GULF = ["SA", "AE", "KW", "QA", "BH", "OM"];
+/** Gulf Cooperation Council countries, plus Iraq (priced with the Gulf from 9 November 2026). */
+export const GULF = ["SA", "AE", "KW", "QA", "BH", "OM", "IQ"];
 /** Other Arab League countries (Egypt has its own region). */
-export const ARAB = ["JO", "LB", "IQ", "SY", "PS", "YE", "SD", "LY", "TN", "DZ", "MA", "MR", "SO", "DJ", "KM"];
+export const ARAB = ["JO", "LB", "SY", "PS", "YE", "SD", "LY", "TN", "DZ", "MA", "MR", "SO", "DJ", "KM"];
 /** Countries offered in the billing country list, in this order. */
 export const COUNTRIES = ["EG", ...GULF, ...ARAB];
 
