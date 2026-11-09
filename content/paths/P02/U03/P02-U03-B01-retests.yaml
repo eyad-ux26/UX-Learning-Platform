@@ -20,7 +20,7 @@ sources:
 steps:
   # SK-P02-U03-01: design out easy slips
   - id: S01
-    type: choose
+    type: tune
     speaker: hana
     part: retest
     skill: SK-P02-U03-01
@@ -44,9 +44,38 @@ steps:
       footer:
         - { kind: button, text: { en: "Book", ar: "احجز" } }
     options:
-      - { id: stepper, text: { en: "A − / + control from 0 to 2, showing \"2 guests left this month\"", ar: "عنصر Stepper (− / +) من 0 إلى 2، مع «بقي لك ضيفان هذا الشهر»" } }
-      - { id: rule, text: { en: "Keep the text box, and print the rule under it", ar: "يبقى مربع النص، مع كتابة القاعدة تحته" } }
-      - { id: door, text: { en: "Keep it; staff will explain at the door", ar: "يبقى كما هو؛ وسيشرح الموظفون عند الباب" } }
+      - id: stepper
+        text: {"en": "A − / + control from 0 to 2, showing \"2 guests left this month\"", "ar": "عنصر Stepper (− / +) من 0 إلى 2، مع «بقي لك ضيفان هذا الشهر»"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Bring a guest", "ar": "أحضِر ضيفًا"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Spinning · Thu 7 pm", "ar": "Spinning · الخميس 7 م"}}
+            - {"kind": "stepper", "label": {"en": "Number of guests", "ar": "عدد الضيوف"}, "text": "2", "min": 0, "max": 2, "hint": {"en": "2 guests left this month", "ar": "بقي لك ضيفان هذا الشهر"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Book", "ar": "احجز"}}
+      - id: rule
+        text: {"en": "Keep the text box, and print the rule under it", "ar": "يبقى مربع النص، مع كتابة القاعدة تحته"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Bring a guest", "ar": "أحضِر ضيفًا"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Spinning · Thu 7 pm", "ar": "Spinning · الخميس 7 م"}}
+            - {"kind": "field", "label": {"en": "Number of guests", "ar": "عدد الضيوف"}, "text": "20", "filled": true, "focus": true, "gap": "m", "note": {"en": "Allowed: 2 a month", "ar": "المسموح: ضيفان شهريًا"}, "hint": {"en": "Up to 2 guests a month", "ar": "حتى ضيفين في الشهر"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Book", "ar": "احجز"}}
+      - id: door
+        text: {"en": "Keep it; staff will explain at the door", "ar": "يبقى كما هو؛ وسيشرح الموظفون عند الباب"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Bring a guest", "ar": "أحضِر ضيفًا"}, "back": true}
+          keyboard: "number"
+          blocks:
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Spinning · Thu 7 pm", "ar": "Spinning · الخميس 7 م"}}
+            - {"kind": "field", "label": {"en": "Number of guests", "ar": "عدد الضيوف"}, "text": "20", "filled": true, "focus": true, "gap": "m", "note": {"en": "Allowed: 2 a month", "ar": "المسموح: ضيفان شهريًا"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Book", "ar": "احجز"}}
     answer: [stepper]
     misconceptions:
       - id: MC-P02-020
@@ -116,7 +145,7 @@ steps:
 
   # SK-P02-U03-02: confirm only what's serious, and say exactly what will happen
   - id: S03
-    type: choose
+    type: tune
     speaker: youssef
     part: retest
     skill: SK-P02-U03-02
@@ -147,9 +176,36 @@ steps:
               - { kind: button, text: { en: "OK", ar: "موافق" } }
               - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: outline }
     options:
-      - { id: names, text: { en: "The product names and photos, and buttons \"Delete 2 products\" / \"Keep them\"", ar: "أسماء المنتجات وصورها، وأزرار «احذف المنتجين» / «أبقِهما»" } }
-      - { id: red, text: { en: "The same text in red", ar: "النص نفسه باللون الأحمر" } }
-      - { id: type, text: { en: "Ask me to type DELETE to confirm", ar: "أن تطلب مني كتابة «احذف» للتأكيد" } }
+      - id: names
+        text: {"en": "The product names and photos, and buttons \"Delete 2 products\" / \"Keep them\"", "ar": "أسماء المنتجات وصورها، وأزرار «احذف المنتجين» / «أبقِهما»"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          blocks:
+            - {"kind": "listitem", "icon": "check-square", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "value": {"en": "320 sold", "ar": "بيع 320"}}
+            - {"kind": "listitem", "icon": "check-square", "text": {"en": "Old paint roller", "ar": "رولة دهان قديمة"}, "value": {"en": "2 sold", "ar": "بيع 2"}, "gap": "s"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Delete 2 products?", "ar": "حذف منتجين؟"}}, {"kind": "listitem", "art": "box", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "sub": {"en": "320 sold", "ar": "بيع 320"}, "gap": "s"}, {"kind": "listitem", "art": "box", "text": {"en": "Old paint roller", "ar": "رولة دهان قديمة"}, "sub": {"en": "2 sold", "ar": "بيع 2"}}, {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "style": "danger", "text": {"en": "Delete 2 products", "ar": "احذف المنتجين"}}, {"kind": "button", "style": "outline", "text": {"en": "Keep them", "ar": "أبقِهما"}}]}]}
+      - id: red
+        text: {"en": "The same text in red", "ar": "النص نفسه باللون الأحمر"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          blocks:
+            - {"kind": "listitem", "icon": "check-square", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "value": {"en": "320 sold", "ar": "بيع 320"}}
+            - {"kind": "listitem", "icon": "check-square", "text": {"en": "Old paint roller", "ar": "رولة دهان قديمة"}, "value": {"en": "2 sold", "ar": "بيع 2"}, "gap": "s"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "color": "red", "text": {"en": "Delete 2 items?", "ar": "حذف عنصرين؟"}}, {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "OK", "ar": "موافق"}}, {"kind": "button", "text": {"en": "Cancel", "ar": "إلغاء"}, "style": "outline"}]}]}
+      - id: type
+        text: {"en": "Ask me to type DELETE to confirm", "ar": "أن تطلب مني كتابة «احذف» للتأكيد"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          blocks:
+            - {"kind": "listitem", "icon": "check-square", "text": {"en": "Electric drill 650 W", "ar": "مثقاب كهربائي 650 وات"}, "value": {"en": "320 sold", "ar": "بيع 320"}}
+            - {"kind": "listitem", "icon": "check-square", "text": {"en": "Old paint roller", "ar": "رولة دهان قديمة"}, "value": {"en": "2 sold", "ar": "بيع 2"}, "gap": "s"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Delete 2 items?", "ar": "حذف عنصرين؟"}}, {"kind": "field", "label": {"en": "Type DELETE to confirm", "ar": "اكتب «احذف» للتأكيد"}, "text": "", "gap": "s"}, {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "OK", "ar": "موافق"}}, {"kind": "button", "text": {"en": "Cancel", "ar": "إلغاء"}, "style": "outline"}]}]}
     answer: [names]
     misconceptions:
       - id: MC-P02-022
@@ -165,7 +221,7 @@ steps:
       ar: "رؤية اسم المثقاب وصورته هي ما يجعلني ألاحظ أنه في المكان الخطأ. والأزرار التي تكرّر الإجراء تجعل الاختيار واضحًا."
 
   - id: S04
-    type: choose
+    type: tune
     speaker: tarek
     part: retest
     skill: SK-P02-U03-02
@@ -190,9 +246,30 @@ steps:
           - { kind: listitem, icon: pencil-simple, text: { en: "Rename account", ar: "غيّر اسم الحساب" } }
           - { kind: listitem, icon: prohibit, text: { en: "Close account", ar: "أغلق الحساب" }, note: { en: "Closes at once, can't be reopened", ar: "يُغلق فورًا، ولا يُعاد فتحه" } }
     options:
-      - { id: both, text: { en: "Both, to be safe", ar: "كلاهما، للاحتياط" } }
-      - { id: close, text: { en: "Only Close account, with a dialog that names the account and what happens to its balance", ar: "«أغلق الحساب» فقط، بنافذة تذكر الحساب وما سيحدث لرصيده" } }
-      - { id: none, text: { en: "Neither; customers can call the bank if they make a mistake", ar: "لا هذا ولا ذاك؛ ويستطيع العملاء الاتصال بالبنك إن أخطؤوا" } }
+      - id: both
+        text: {"en": "Both, to be safe", "ar": "كلاهما، للاحتياط"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Savings account", "ar": "حساب التوفير"}, "back": true, "actions": [{"icon": "dots-three-vertical"}]}
+          blocks:
+            - {"kind": "price", "text": {"en": "EGP 48,200", "ar": "48,200 جنيه"}, "size": "l"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Rename this account?", "ar": "هل تغيّر اسم هذا الحساب؟"}, "note": {"en": "Asked for Rename too", "ar": "يُسأل عند تغيير الاسم أيضًا"}}, {"kind": "button", "text": {"en": "Rename", "ar": "غيّر الاسم"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "Cancel", "ar": "إلغاء"}, "gap": "s"}]}
+      - id: close
+        text: {"en": "Only Close account, with a dialog that names the account and what happens to its balance", "ar": "«أغلق الحساب» فقط، بنافذة تذكر الحساب وما سيحدث لرصيده"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Savings account", "ar": "حساب التوفير"}, "back": true, "actions": [{"icon": "dots-three-vertical"}]}
+          blocks:
+            - {"kind": "price", "text": {"en": "EGP 48,200", "ar": "48,200 جنيه"}, "size": "l"}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Close Savings account?", "ar": "إغلاق حساب التوفير؟"}}, {"kind": "small", "gap": "s", "text": {"en": "Your EGP 48,200 moves to Current account ending 2210. A closed account can't be reopened.", "ar": "سينتقل رصيدك (48,200 جنيه) إلى الحساب الجاري المنتهي بـ 2210. ولا يمكن إعادة فتح الحساب بعد إغلاقه."}}, {"kind": "button", "style": "danger", "text": {"en": "Close account", "ar": "أغلق الحساب"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "Keep account", "ar": "أبقِ الحساب"}, "gap": "s"}]}
+      - id: none
+        text: {"en": "Neither; customers can call the bank if they make a mistake", "ar": "لا هذا ولا ذاك؛ ويستطيع العملاء الاتصال بالبنك إن أخطؤوا"}
+        mock:
+          app: "rasid"
+          appbar: {"title": {"en": "Savings account", "ar": "حساب التوفير"}, "back": true, "actions": [{"icon": "dots-three-vertical"}]}
+          blocks:
+            - {"kind": "price", "text": {"en": "EGP 48,200", "ar": "48,200 جنيه"}, "size": "l"}
+          overlay: {"type": "menu", "blocks": [{"kind": "listitem", "icon": "pencil-simple", "text": {"en": "Rename account", "ar": "غيّر اسم الحساب"}}, {"kind": "listitem", "icon": "prohibit", "text": {"en": "Close account", "ar": "أغلق الحساب"}, "note": {"en": "Closes at once, can't be reopened", "ar": "يُغلق فورًا، ولا يُعاد فتحه"}}]}
     answer: [close]
     misconceptions:
       - id: MC-P02-023
@@ -214,7 +291,7 @@ steps:
 
   # SK-P02-U03-03: keep what people need in view
   - id: S05
-    type: choose
+    type: tune
     speaker: nour
     part: retest
     skill: SK-P02-U03-03
@@ -238,9 +315,39 @@ steps:
         - { kind: field, label: { en: "Patient file number", ar: "رقم ملف المريض" }, text: "", focus: true, gap: m, note: { en: "Typed from memory after switching screens", ar: "يُكتب من الذاكرة بعد الانتقال بين الشاشات" } }
         - { kind: field, label: { en: "Doctor", ar: "الطبيب" }, text: { en: "Dr. Samir Fahmy", ar: "د. سمير فهمي" }, filled: true, gap: m }
     options:
-      - { id: button, text: { en: "Add a \"Book follow-up\" button inside the patient's file that fills in the patient", ar: "إضافة زر «احجز متابعة» داخل ملف المريض يملأ بيانات المريض تلقائيًا" } }
-      - { id: check, text: { en: "Ask receptionists to read the number twice", ar: "أن يُطلب من الموظفين قراءة الرقم مرتين" } }
-      - { id: shorter, text: { en: "Make file numbers shorter", ar: "تقصير أرقام الملفات" } }
+      - id: button
+        text: {"en": "Add a \"Book follow-up\" button inside the patient's file that fills in the patient", "ar": "إضافة زر «احجز متابعة» داخل ملف المريض يملأ بيانات المريض تلقائيًا"}
+        mock:
+          app: "raha"
+          frame: "wide"
+          url: "raha.example/staff/bookings/new"
+          navbar: {"links": [{"en": "Today", "ar": "اليوم"}, {"en": "Patients", "ar": "المرضى"}, {"en": "Bookings", "ar": "الحجوزات"}], "active": 2}
+          blocks:
+            - {"kind": "title", "text": {"en": "New follow-up visit", "ar": "زيارة متابعة جديدة"}}
+            - {"kind": "field", "label": {"en": "Patient file number", "ar": "رقم ملف المريض"}, "text": {"en": "40217733 · Ahmed Samy", "ar": "40217733 · أحمد سامي"}, "gap": "m", "note": {"en": "Filled in by \"Book follow-up\" in the patient's file", "ar": "ملأه زر «احجز متابعة» في ملف المريض"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Doctor", "ar": "الطبيب"}, "text": {"en": "Dr. Samir Fahmy", "ar": "د. سمير فهمي"}, "filled": true, "gap": "m"}
+      - id: check
+        text: {"en": "Ask receptionists to read the number twice", "ar": "أن يُطلب من الموظفين قراءة الرقم مرتين"}
+        mock:
+          app: "raha"
+          frame: "wide"
+          url: "raha.example/staff/bookings/new"
+          navbar: {"links": [{"en": "Today", "ar": "اليوم"}, {"en": "Patients", "ar": "المرضى"}, {"en": "Bookings", "ar": "الحجوزات"}], "active": 2}
+          blocks:
+            - {"kind": "title", "text": {"en": "New follow-up visit", "ar": "زيارة متابعة جديدة"}}
+            - {"kind": "field", "label": {"en": "Patient file number", "ar": "رقم ملف المريض"}, "text": "", "focus": true, "gap": "m", "note": {"en": "Still typed from memory, then read twice", "ar": "ما زال يُكتب من الذاكرة، ثم يُقرأ مرتين"}}
+            - {"kind": "field", "label": {"en": "Doctor", "ar": "الطبيب"}, "text": {"en": "Dr. Samir Fahmy", "ar": "د. سمير فهمي"}, "filled": true, "gap": "m"}
+      - id: shorter
+        text: {"en": "Make file numbers shorter", "ar": "تقصير أرقام الملفات"}
+        mock:
+          app: "raha"
+          frame: "wide"
+          url: "raha.example/staff/bookings/new"
+          navbar: {"links": [{"en": "Today", "ar": "اليوم"}, {"en": "Patients", "ar": "المرضى"}, {"en": "Bookings", "ar": "الحجوزات"}], "active": 2}
+          blocks:
+            - {"kind": "title", "text": {"en": "New follow-up visit", "ar": "زيارة متابعة جديدة"}}
+            - {"kind": "field", "label": {"en": "Patient file number", "ar": "رقم ملف المريض"}, "text": "4021", "focus": true, "gap": "m", "note": {"en": "Shorter, but still typed from memory", "ar": "أقصر، لكنه ما زال يُكتب من الذاكرة"}, "filled": true}
+            - {"kind": "field", "label": {"en": "Doctor", "ar": "الطبيب"}, "text": {"en": "Dr. Samir Fahmy", "ar": "د. سمير فهمي"}, "filled": true, "gap": "m"}
     answer: [button]
     misconceptions:
       - id: MC-P02-025
@@ -256,7 +363,7 @@ steps:
       ar: "الحجز من داخل الملف يأخذ بيانات المريض معه، فلا يبقى شيء لتذكّره أو إعادة كتابته."
 
   - id: S06
-    type: choose
+    type: tune
     speaker: sara
     part: retest
     skill: SK-P02-U03-03
@@ -278,9 +385,34 @@ steps:
         - { kind: listitem, art: food-grill, text: { en: "Chicken and rice, stovetop", ar: "دجاج بالأرز على البوتاجاز" }, sub: { en: "40 min", ar: "40 دقيقة" }, gap: m }
         - { kind: listitem, art: food-salad, text: { en: "Rice salad, no cooking", ar: "سلطة أرز بدون طهي" }, sub: { en: "15 min", ar: "15 دقيقة" }, gap: s }
     options:
-      - { id: keep, text: { en: "Keep the words in the box, ready to edit", ar: "يُبقي الكلمات في المربع، جاهزة للتعديل" } }
-      - { id: empty, text: { en: "Empty itself, ready for a new search", ar: "يُفرغ نفسه، جاهزًا لبحث جديد" } }
-      - { id: title, text: { en: "Empty itself, with the words in small grey text under the results", ar: "يُفرغ نفسه، مع الكلمات بخط رمادي صغير تحت النتائج" } }
+      - id: keep
+        text: {"en": "Keep the words in the box, ready to edit", "ar": "يُبقي الكلمات في المربع، جاهزة للتعديل"}
+        mock:
+          app: "tabkha"
+          appbar: {"title": {"en": "Search", "ar": "بحث"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "chicken rice", "ar": "أرز بالدجاج"}, "filled": true, "note": {"en": "Kept, ready to edit", "ar": "باقية، وجاهزة للتعديل"}}
+            - {"kind": "listitem", "art": "food-grill", "text": {"en": "Chicken and rice, stovetop", "ar": "دجاج بالأرز على البوتاجاز"}, "sub": {"en": "40 min", "ar": "40 دقيقة"}, "gap": "m"}
+            - {"kind": "listitem", "art": "food-salad", "text": {"en": "Rice salad, no cooking", "ar": "سلطة أرز بدون طهي"}, "sub": {"en": "15 min", "ar": "15 دقيقة"}, "gap": "s"}
+      - id: empty
+        text: {"en": "Empty itself, ready for a new search", "ar": "يُفرغ نفسه، جاهزًا لبحث جديد"}
+        mock:
+          app: "tabkha"
+          appbar: {"title": {"en": "Search", "ar": "بحث"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search recipes", "ar": "ابحث عن وصفة"}, "note": {"en": "Emptied after the search", "ar": "فرغ بعد البحث"}}
+            - {"kind": "listitem", "art": "food-grill", "text": {"en": "Chicken and rice, stovetop", "ar": "دجاج بالأرز على البوتاجاز"}, "sub": {"en": "40 min", "ar": "40 دقيقة"}, "gap": "m"}
+            - {"kind": "listitem", "art": "food-salad", "text": {"en": "Rice salad, no cooking", "ar": "سلطة أرز بدون طهي"}, "sub": {"en": "15 min", "ar": "15 دقيقة"}, "gap": "s"}
+      - id: title
+        text: {"en": "Empty itself, with the words in small grey text under the results", "ar": "يُفرغ نفسه، مع الكلمات بخط رمادي صغير تحت النتائج"}
+        mock:
+          app: "tabkha"
+          appbar: {"title": {"en": "Search", "ar": "بحث"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search recipes", "ar": "ابحث عن وصفة"}, "note": {"en": "Emptied after the search", "ar": "فرغ بعد البحث"}}
+            - {"kind": "listitem", "art": "food-grill", "text": {"en": "Chicken and rice, stovetop", "ar": "دجاج بالأرز على البوتاجاز"}, "sub": {"en": "40 min", "ar": "40 دقيقة"}, "gap": "m"}
+            - {"kind": "listitem", "art": "food-salad", "text": {"en": "Rice salad, no cooking", "ar": "سلطة أرز بدون طهي"}, "sub": {"en": "15 min", "ar": "15 دقيقة"}, "gap": "s"}
+            - {"kind": "small", "color": "muted", "gap": "m", "text": {"en": "You searched: chicken rice", "ar": "بحثت عن: أرز بالدجاج"}}
     answer: [keep]
     misconceptions:
       - id: MC-P02-024
@@ -297,7 +429,7 @@ steps:
 
   # SK-P02-U03-04: let people pick instead of recall
   - id: S07
-    type: choose
+    type: tune
     speaker: mona
     part: retest
     skill: SK-P02-U03-04
@@ -318,9 +450,31 @@ steps:
       blocks:
         - { kind: text, text: { en: "Launch plan\n/strike", ar: "خطة الإطلاق\n/strike" }, note: { en: "Only works if you remember the command", ar: "يعمل فقط إن تذكّرت الأمر" } }
     options:
-      - { id: menu, text: { en: "Typing / opens a list of all commands with names and previews; people pick one", ar: "كتابة / تفتح قائمة بكل الأوامر بأسمائها ومعاينتها؛ ويختار الناس منها" } }
-      - { id: cheat, text: { en: "A printable cheat sheet of commands", ar: "ورقة ملخّص للأوامر (Cheat sheet) قابلة للطباعة" } }
-      - { id: fewer, text: { en: "Remove the rarely used commands", ar: "حذف الأوامر قليلة الاستخدام" } }
+      - id: menu
+        text: {"en": "Typing / opens a list of all commands with names and previews; people pick one", "ar": "كتابة / تفتح قائمة بكل الأوامر بأسمائها ومعاينتها؛ ويختار الناس منها"}
+        mock:
+          app: "satr"
+          appbar: {"title": {"en": "Meeting notes", "ar": "ملاحظات الاجتماع"}, "back": true}
+          keyboard: "text"
+          blocks:
+            - {"kind": "text", "text": {"en": "Launch plan\n/", "ar": "خطة الإطلاق\n/"}}
+            - {"kind": "card", "gap": "s", "blocks": [{"kind": "listitem", "icon": "text-h-two", "text": {"en": "Heading", "ar": "عنوان"}, "value": "/h2"}, {"kind": "listitem", "icon": "text-strikethrough", "text": {"en": "Strikethrough", "ar": "خط في المنتصف"}, "value": "/strike"}, {"kind": "listitem", "icon": "list-checks", "text": {"en": "Checklist", "ar": "قائمة مهام"}, "value": "/todo"}]}
+      - id: cheat
+        text: {"en": "A printable cheat sheet of commands", "ar": "ورقة ملخّص للأوامر (Cheat sheet) قابلة للطباعة"}
+        mock:
+          app: "satr"
+          appbar: {"title": {"en": "Meeting notes", "ar": "ملاحظات الاجتماع"}, "back": true}
+          keyboard: "text"
+          blocks:
+            - {"kind": "text", "text": {"en": "Launch plan\n/strike", "ar": "خطة الإطلاق\n/strike"}, "note": {"en": "The commands are on a printed sheet, not on screen", "ar": "الأوامر في ورقة مطبوعة، لا على الشاشة"}}
+      - id: fewer
+        text: {"en": "Remove the rarely used commands", "ar": "حذف الأوامر قليلة الاستخدام"}
+        mock:
+          app: "satr"
+          appbar: {"title": {"en": "Meeting notes", "ar": "ملاحظات الاجتماع"}, "back": true}
+          keyboard: "text"
+          blocks:
+            - {"kind": "text", "text": {"en": "Launch plan\n/", "ar": "خطة الإطلاق\n/"}, "note": {"en": "/strike was removed; 5 common commands are left to remember", "ar": "حُذف /strike؛ وبقيت 5 أوامر شائعة عليك أن تتذكّرها"}}
     answer: [menu]
     misconceptions:
       - id: MC-P02-026
@@ -341,7 +495,7 @@ steps:
       ar: "القائمة تُظهر ما هو ممكن لحظة الحاجة إليه. فيكتشف المبتدئون الأوامر، ويجد المعتادون النادرة منها دون تذكّر الأسماء الدقيقة."
 
   - id: S08
-    type: choose
+    type: tune
     speaker: rami
     part: retest
     skill: SK-P02-U03-04
@@ -364,9 +518,36 @@ steps:
       footer:
         - { kind: button, text: { en: "Next", ar: "التالي" } }
     options:
-      - { id: longer, text: { en: "Add two more tour screens about splitting bills", ar: "أضيف شاشتين أخريين للجولة عن تقسيم الفواتير" } }
-      - { id: context, text: { en: "Show a short tip next to a new expense: \"Shared this? Split it\", the first few times", ar: "أعرض نصيحة قصيرة بجانب المصروف الجديد: «شاركت فيه؟ قسّمه»، في المرات الأولى" } }
-      - { id: video, text: { en: "Link a 5-minute video in Settings", ar: "أضع رابط فيديو مدته 5 دقائق في الإعدادات" } }
+      - id: longer
+        text: {"en": "Add two more tour screens about splitting bills", "ar": "أضيف شاشتين أخريين للجولة عن تقسيم الفواتير"}
+        mock:
+          app: "masroof"
+          blocks:
+            - {"kind": "image", "art": "chart", "size": "l"}
+            - {"kind": "heading", "text": {"en": "Set monthly budgets", "ar": "حدّد ميزانيات شهرية"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Tip 4 of 10", "ar": "النصيحة 4 من 10"}, "gap": "s"}
+          footer:
+            - {"kind": "button", "text": {"en": "Next", "ar": "التالي"}}
+      - id: context
+        text: {"en": "Show a short tip next to a new expense: \"Shared this? Split it\", the first few times", "ar": "أعرض نصيحة قصيرة بجانب المصروف الجديد: «شاركت فيه؟ قسّمه»، في المرات الأولى"}
+        mock:
+          app: "masroof"
+          appbar: {"title": {"en": "New expense", "ar": "مصروف جديد"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 640", "ar": "640 جنيه"}, "filled": true}
+            - {"kind": "field", "label": {"en": "What for", "ar": "مقابل ماذا"}, "text": {"en": "Dinner with friends", "ar": "عشاء مع الأصدقاء"}, "filled": true, "gap": "m"}
+            - {"kind": "tip", "text": {"en": "Shared this? Split it with your friends.", "ar": "شاركت فيه؟ قسّمه مع أصدقائك."}, "gap": "m", "note": {"en": "Shown the first few times", "ar": "يظهر في المرات الأولى"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Save", "ar": "احفظ"}}
+      - id: video
+        text: {"en": "Link a 5-minute video in Settings", "ar": "أضع رابط فيديو مدته 5 دقائق في الإعدادات"}
+        mock:
+          app: "masroof"
+          appbar: {"title": {"en": "Settings", "ar": "الإعدادات"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "icon": "bell", "text": {"en": "Notifications", "ar": "الإشعارات"}, "chevron": true}
+            - {"kind": "listitem", "icon": "currency-circle-dollar", "text": {"en": "Currency", "ar": "العملة"}, "value": {"en": "EGP", "ar": "جنيه"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "icon": "play-circle", "text": {"en": "How to use Masroof", "ar": "كيف تستخدم مصروف"}, "sub": {"en": "Video · 5 min", "ar": "فيديو · 5 دقائق"}, "chevron": true, "gap": "s"}
     answer: [context]
     misconceptions:
       - id: MC-P02-024

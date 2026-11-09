@@ -38,7 +38,7 @@ steps:
       en: "I build the web app a company's staff use to request time off and claim expenses. Each form was built by a different developer.\n\nIn the leave form, **Submit** is green on the right. In the expense form, **Send** is blue on the left, where Cancel sits in the leave form. Staff keep cancelling claims they meant to send."
       ar: "أبني تطبيق الويب الذي يستخدمه موظفو شركة لطلب الإجازات واسترداد المصروفات. وكل نموذج بناه مطوّر مختلف.\n\nفي نموذج الإجازة، زر **إرسال** أخضر على اليمين. وفي نموذج المصروفات، زر **أرسِل** أزرق على اليسار، في مكان «إلغاء» في نموذج الإجازة. والموظفون يلغون باستمرار طلبات كانوا يريدون إرسالها."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U02-03
     rules: [R12]
@@ -64,9 +64,40 @@ steps:
             - { kind: button, text: { en: "Cancel", ar: "إلغاء" }, style: text }
             - { kind: button, text: { en: "Submit", ar: "إرسال" } }
     options:
-      - { id: same, text: { en: "Use one button style for every form: same word, same colour, same place", ar: "أستخدم شكل زر واحدًا لكل النماذج: الكلمة نفسها، واللون نفسه، والمكان نفسه" } }
-      - { id: confirm, text: { en: "Ask \"Are you sure you want to cancel?\" in the expense form", ar: "أسأل «هل أنت متأكد أنك تريد الإلغاء؟» في نموذج المصروفات" } }
-      - { id: bold, text: { en: "Make Send bigger and bolder in the expense form", ar: "أكبّر زر «أرسِل» وأجعل خطّه أعرض في نموذج المصروفات" } }
+      - id: same
+        text: {"en": "Use one button style for every form: same word, same colour, same place", "ar": "أستخدم شكل زر واحدًا لكل النماذج: الكلمة نفسها، واللون نفسه، والمكان نفسه"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/expenses/new"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}, {"en": "My requests", "ar": "طلباتي"}], "active": 1, "actions": [{"icon": "bell"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Expense claim", "ar": "طلب مصروفات"}}
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 180", "ar": "180 جنيه"}, "filled": true, "gap": "m"}
+            - {"kind": "row", "gap": "l", "blocks": [{"kind": "button", "text": {"en": "Cancel", "ar": "إلغاء"}, "style": "text"}, {"kind": "button", "text": {"en": "Submit", "ar": "إرسال"}}], "note": {"en": "Same word, colour and place as the leave form", "ar": "الكلمة واللون والمكان نفسها كما في نموذج الإجازة"}}
+      - id: confirm
+        text: {"en": "Ask \"Are you sure you want to cancel?\" in the expense form", "ar": "أسأل «هل أنت متأكد أنك تريد الإلغاء؟» في نموذج المصروفات"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/expenses/new"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}, {"en": "My requests", "ar": "طلباتي"}], "active": 1, "actions": [{"icon": "bell"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Expense claim", "ar": "طلب مصروفات"}}
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 180", "ar": "180 جنيه"}, "filled": true, "gap": "m"}
+            - {"kind": "row", "gap": "l", "blocks": [{"kind": "button", "text": {"en": "Send", "ar": "أرسِل"}}, {"kind": "button", "text": {"en": "Cancel", "ar": "إلغاء"}, "style": "text"}]}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Are you sure you want to cancel?", "ar": "هل أنت متأكد أنك تريد الإلغاء؟"}}, {"kind": "button", "text": {"en": "Yes, cancel", "ar": "نعم، ألغِ"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "No", "ar": "لا"}, "gap": "s"}]}
+      - id: bold
+        text: {"en": "Make Send bigger and bolder in the expense form", "ar": "أكبّر زر «أرسِل» وأجعل خطّه أعرض في نموذج المصروفات"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/expenses/new"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}, {"en": "My requests", "ar": "طلباتي"}], "active": 1, "actions": [{"icon": "bell"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Expense claim", "ar": "طلب مصروفات"}}
+            - {"kind": "field", "label": {"en": "Amount", "ar": "المبلغ"}, "text": {"en": "EGP 180", "ar": "180 جنيه"}, "filled": true, "gap": "m"}
+            - {"kind": "row", "gap": "l", "blocks": [{"kind": "button", "text": {"en": "Send", "ar": "أرسِل"}, "size": "l", "weight": "bold"}, {"kind": "button", "text": {"en": "Cancel", "ar": "إلغاء"}, "style": "text"}], "note": {"en": "Send is still where Cancel sits in the leave form", "ar": "ما زال «أرسِل» في مكان «إلغاء» في نموذج الإجازة"}}
     answer: [same]
     misconceptions:
       - id: MC-P02-016
@@ -112,7 +143,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) الرابع هو الاتساق والمعايير (Consistency and standards): يجب ألّا يضطر الناس إلى التساؤل إن كانت الكلمات أو المواقف أو الإجراءات المختلفة تعني الشيء نفسه.\n\n- **الاتساق الداخلي (Internal consistency):** داخل منتجك، يستخدم الإجراء نفسه الكلمة والشكل والمكان نفسها في كل شاشة.\n- **الاتساق الخارجي (External consistency):** يقضي الناس أغلب وقتهم في منتجات أخرى، فاتبع العادات المألوفة (Conventions) التي يأتون بها من هناك.\n- **لا تخالف المألوف** إلا إذا كان ذلك يساعد المهمة بوضوح، لأن النمط الجديد يكلّف الناس جهدًا ليتعلّموه."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U02-03
     rules: [R06]
@@ -137,9 +168,42 @@ steps:
         - { kind: listitem, icon: receipt, text: { en: "Taxi · EGP 180", ar: "تاكسي · 180 جنيه" }, value: { en: "Delete", ar: "احذف" }, gap: s }
         - { kind: listitem, icon: laptop, text: { en: "Laptop bag · EGP 650", ar: "حقيبة لابتوب · 650 جنيه" }, value: { en: "Discard", ar: "تجاهَل" }, gap: s }
     options:
-      - { id: one, text: { en: "Pick one word, \"Delete draft\", and use it on every screen", ar: "أختار كلمة واحدة، «احذف المسودّة»، وأستخدمها في كل شاشة" } }
-      - { id: keep, text: { en: "Keep them; each one fits its screen's tone", ar: "أبقيها؛ فكل كلمة تناسب أسلوب شاشتها" } }
-      - { id: icon, text: { en: "Replace all three with a bin icon and no word", ar: "أضع مكانها كلها أيقونة سلة مهملات دون كلمة" } }
+      - id: one
+        text: {"en": "Pick one word, \"Delete draft\", and use it on every screen", "ar": "أختار كلمة واحدة، «احذف المسودّة»، وأستخدمها في كل شاشة"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/requests/drafts"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}, {"en": "My requests", "ar": "طلباتي"}], "active": 2}
+          blocks:
+            - {"kind": "title", "text": {"en": "Drafts", "ar": "المسودّات"}}
+            - {"kind": "listitem", "icon": "airplane-tilt", "text": {"en": "Leave · 9–12 Nov", "ar": "إجازة · من 9 إلى 12 نوفمبر"}, "value": {"en": "Delete draft", "ar": "احذف المسودّة"}, "gap": "m"}
+            - {"kind": "listitem", "icon": "receipt", "text": {"en": "Taxi · EGP 180", "ar": "تاكسي · 180 جنيه"}, "value": {"en": "Delete draft", "ar": "احذف المسودّة"}, "gap": "s"}
+            - {"kind": "listitem", "icon": "laptop", "text": {"en": "Laptop bag · EGP 650", "ar": "حقيبة لابتوب · 650 جنيه"}, "value": {"en": "Delete draft", "ar": "احذف المسودّة"}, "gap": "s"}
+      - id: keep
+        text: {"en": "Keep them; each one fits its screen's tone", "ar": "أبقيها؛ فكل كلمة تناسب أسلوب شاشتها"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/requests/drafts"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}, {"en": "My requests", "ar": "طلباتي"}], "active": 2}
+          blocks:
+            - {"kind": "title", "text": {"en": "Drafts", "ar": "المسودّات"}}
+            - {"kind": "listitem", "icon": "airplane-tilt", "text": {"en": "Leave · 9–12 Nov", "ar": "إجازة · من 9 إلى 12 نوفمبر"}, "value": {"en": "Remove", "ar": "أزِل"}, "gap": "m"}
+            - {"kind": "listitem", "icon": "receipt", "text": {"en": "Taxi · EGP 180", "ar": "تاكسي · 180 جنيه"}, "value": {"en": "Delete", "ar": "احذف"}, "gap": "s"}
+            - {"kind": "listitem", "icon": "laptop", "text": {"en": "Laptop bag · EGP 650", "ar": "حقيبة لابتوب · 650 جنيه"}, "value": {"en": "Discard", "ar": "تجاهَل"}, "gap": "s"}
+      - id: icon
+        text: {"en": "Replace all three with a bin icon and no word", "ar": "أضع مكانها كلها أيقونة سلة مهملات دون كلمة"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/requests/drafts"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}, {"en": "My requests", "ar": "طلباتي"}], "active": 2}
+          blocks:
+            - {"kind": "title", "text": {"en": "Drafts", "ar": "المسودّات"}}
+            - {"kind": "listitem", "icon": "airplane-tilt", "text": {"en": "Leave · 9–12 Nov", "ar": "إجازة · من 9 إلى 12 نوفمبر"}, "value": "🗑", "gap": "m"}
+            - {"kind": "listitem", "icon": "receipt", "text": {"en": "Taxi · EGP 180", "ar": "تاكسي · 180 جنيه"}, "value": "🗑", "gap": "s"}
+            - {"kind": "listitem", "icon": "laptop", "text": {"en": "Laptop bag · EGP 650", "ar": "حقيبة لابتوب · 650 جنيه"}, "value": "🗑", "gap": "s"}
     answer: [one]
     misconceptions:
       - id: MC-P02-017
@@ -163,7 +227,7 @@ steps:
       ar: "حين يحمل الإجراء نفسه الاسم نفسه دائمًا، يتعلّمه الموظفون مرة ويثقون به في كل مكان. واحتفظ بالكلمات المختلفة للإجراءات التي تفعل فعلًا أشياء مختلفة."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U02-04
     rules: [R06]
@@ -187,9 +251,40 @@ steps:
         - { kind: field, label: { en: "First day off", ar: "أول يوم إجازة" }, text: "3/11", filled: true, focus: true, gap: m, note: { en: "Others typed \"Nov 3\" and \"3-11-2026\"", ar: "كتب آخرون «3 نوفمبر» و«3-11-2026»" } }
         - { kind: field, label: { en: "Days", ar: "عدد الأيام" }, text: "4", filled: true, gap: m }
     options:
-      - { id: hint, text: { en: "Keep the field and add \"Use YYYY-MM-DD\" under it", ar: "يبقى الحقل مع إضافة «استخدم الصيغة YYYY-MM-DD» تحته" } }
-      - { id: picker, text: { en: "A date field that opens a calendar, like other booking forms", ar: "حقل تاريخ يفتح تقويمًا، مثل نماذج الحجز الأخرى" } }
-      - { id: three, text: { en: "Three dropdowns: year, then month, then day", ar: "ثلاث قوائم منسدلة (Dropdowns): السنة، ثم الشهر، ثم اليوم" } }
+      - id: hint
+        text: {"en": "Keep the field and add \"Use YYYY-MM-DD\" under it", "ar": "يبقى الحقل مع إضافة «استخدم الصيغة YYYY-MM-DD» تحته"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/leave/new"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}], "active": 0}
+          blocks:
+            - {"kind": "title", "text": {"en": "Leave request", "ar": "طلب إجازة"}}
+            - {"kind": "field", "label": {"en": "First day off", "ar": "أول يوم إجازة"}, "text": "3/11", "filled": true, "focus": true, "gap": "m", "note": {"en": "Others typed \"Nov 3\" and \"3-11-2026\"", "ar": "كتب آخرون «3 نوفمبر» و«3-11-2026»"}, "hint": {"en": "Use YYYY-MM-DD", "ar": "استخدم الصيغة YYYY-MM-DD"}}
+            - {"kind": "field", "label": {"en": "Days", "ar": "عدد الأيام"}, "text": "4", "filled": true, "gap": "m"}
+      - id: picker
+        text: {"en": "A date field that opens a calendar, like other booking forms", "ar": "حقل تاريخ يفتح تقويمًا، مثل نماذج الحجز الأخرى"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/leave/new"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}], "active": 0}
+          blocks:
+            - {"kind": "title", "text": {"en": "Leave request", "ar": "طلب إجازة"}}
+            - {"kind": "field", "label": {"en": "First day off", "ar": "أول يوم إجازة"}, "text": {"en": "Tue 3 Nov 2026", "ar": "الثلاثاء 3 نوفمبر 2026"}, "filled": true, "focus": true, "icon": "calendar-blank", "gap": "m"}
+            - {"kind": "calendar", "months": [{"title": {"en": "November 2026", "ar": "نوفمبر 2026"}, "start": 0, "days": 30}], "pick": [0, 3], "gap": "s"}
+            - {"kind": "field", "label": {"en": "Days", "ar": "عدد الأيام"}, "text": "4", "filled": true, "gap": "m"}
+      - id: three
+        text: {"en": "Three dropdowns: year, then month, then day", "ar": "ثلاث قوائم منسدلة (Dropdowns): السنة، ثم الشهر، ثم اليوم"}
+        mock:
+          app: "nafaqat"
+          frame: "wide"
+          url: "nafaqat.example/leave/new"
+          navbar: {"links": [{"en": "Leave", "ar": "الإجازات"}, {"en": "Expenses", "ar": "المصروفات"}], "active": 0}
+          blocks:
+            - {"kind": "title", "text": {"en": "Leave request", "ar": "طلب إجازة"}}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "select", "label": {"en": "Year", "ar": "السنة"}, "text": "2026", "filled": true}, {"kind": "select", "label": {"en": "Month", "ar": "الشهر"}, "text": {"en": "November", "ar": "نوفمبر"}, "filled": true}, {"kind": "select", "label": {"en": "Day", "ar": "اليوم"}, "text": "3", "filled": true}]}
+            - {"kind": "field", "label": {"en": "Days", "ar": "عدد الأيام"}, "text": "4", "filled": true, "gap": "m"}
     answer: [picker]
     misconceptions:
       - id: MC-P02-018
@@ -256,7 +351,7 @@ steps:
       ar: "العدسة المكبّرة تعني البحث في كل التطبيقات التي يستخدمها الناس تقريبًا. ويمكن أن يظهر طابع الطبيعة في الألوان والصور، لا في الأيقونات التي يحتاج الناس إلى معرفتها."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: sara
     part: independent
     skill: SK-P02-U02-04
@@ -282,9 +377,34 @@ steps:
             - { kind: card, art: shirt, blocks: [ { kind: small, text: { en: "Linen dress", ar: "فستان كتان" } }, { kind: price, text: { en: "EGP 890", ar: "890 جنيه" } } ] }
             - { kind: card, art: shirt, blocks: [ { kind: small, text: { en: "Cotton abaya", ar: "عباية قطن" } }, { kind: price, text: { en: "EGP 1,150", ar: "1,150 جنيه" } } ] }
     options:
-      - { id: hanger, text: { en: "Use the hanger; it's memorable and fits the brand", ar: "نستخدم الشمّاعة؛ فهي مميزة وتناسب العلامة التجارية" } }
-      - { id: tour, text: { en: "Use the hanger, with a tour on the first visit that explains it", ar: "نستخدم الشمّاعة، مع جولة تعريفية في الزيارة الأولى تشرحها" } }
-      - { id: cart, text: { en: "Keep a standard bag or cart icon with the item count, and use the brand style elsewhere", ar: "نُبقي أيقونة حقيبة أو عربة معروفة مع عدد المنتجات، ونستخدم أسلوب العلامة التجارية في مكان آخر" } }
+      - id: hanger
+        text: {"en": "Use the hanger; it's memorable and fits the brand", "ar": "نستخدم الشمّاعة؛ فهي مميزة وتناسب العلامة التجارية"}
+        mock:
+          app: "lamha"
+          frame: "wide"
+          url: "lamha.example/women/dresses"
+          navbar: {"links": [{"en": "Women", "ar": "نساء"}, {"en": "Men", "ar": "رجال"}, {"en": "Kids", "ar": "أطفال"}], "active": 0, "actions": [{"icon": "coat-hanger", "count": 2, "aria": {"en": "Cart", "ar": "السلة"}}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "card", "art": "shirt", "blocks": [{"kind": "small", "text": {"en": "Linen dress", "ar": "فستان كتان"}}, {"kind": "price", "text": {"en": "EGP 890", "ar": "890 جنيه"}}]}, {"kind": "card", "art": "shirt", "blocks": [{"kind": "small", "text": {"en": "Cotton abaya", "ar": "عباية قطن"}}, {"kind": "price", "text": {"en": "EGP 1,150", "ar": "1,150 جنيه"}}]}]}
+      - id: tour
+        text: {"en": "Use the hanger, with a tour on the first visit that explains it", "ar": "نستخدم الشمّاعة، مع جولة تعريفية في الزيارة الأولى تشرحها"}
+        mock:
+          app: "lamha"
+          frame: "wide"
+          url: "lamha.example/women/dresses"
+          navbar: {"links": [{"en": "Women", "ar": "نساء"}, {"en": "Men", "ar": "رجال"}, {"en": "Kids", "ar": "أطفال"}], "active": 0, "actions": [{"icon": "coat-hanger", "count": 2, "aria": {"en": "Cart", "ar": "السلة"}}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "card", "art": "shirt", "blocks": [{"kind": "small", "text": {"en": "Linen dress", "ar": "فستان كتان"}}, {"kind": "price", "text": {"en": "EGP 890", "ar": "890 جنيه"}}]}, {"kind": "card", "art": "shirt", "blocks": [{"kind": "small", "text": {"en": "Cotton abaya", "ar": "عباية قطن"}}, {"kind": "price", "text": {"en": "EGP 1,150", "ar": "1,150 جنيه"}}]}]}
+          overlay: {"type": "banner", "blocks": [{"kind": "text", "text": {"en": "New here? The hanger at the top is your cart.", "ar": "جديد هنا؟ الشمّاعة في الأعلى هي سلّتك."}}, {"kind": "link", "text": {"en": "Got it", "ar": "فهمت"}, "gap": "xs"}]}
+      - id: cart
+        text: {"en": "Keep a standard bag or cart icon with the item count, and use the brand style elsewhere", "ar": "نُبقي أيقونة حقيبة أو عربة معروفة مع عدد المنتجات، ونستخدم أسلوب العلامة التجارية في مكان آخر"}
+        mock:
+          app: "lamha"
+          frame: "wide"
+          url: "lamha.example/women/dresses"
+          navbar: {"links": [{"en": "Women", "ar": "نساء"}, {"en": "Men", "ar": "رجال"}, {"en": "Kids", "ar": "أطفال"}], "active": 0, "actions": [{"icon": "shopping-bag", "count": 2, "aria": {"en": "Cart", "ar": "السلة"}}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "card", "art": "shirt", "blocks": [{"kind": "small", "text": {"en": "Linen dress", "ar": "فستان كتان"}}, {"kind": "price", "text": {"en": "EGP 890", "ar": "890 جنيه"}}]}, {"kind": "card", "art": "shirt", "blocks": [{"kind": "small", "text": {"en": "Cotton abaya", "ar": "عباية قطن"}}, {"kind": "price", "text": {"en": "EGP 1,150", "ar": "1,150 جنيه"}}]}]}
     answer: [cart]
     misconceptions:
       - id: MC-P02-019

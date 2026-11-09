@@ -37,7 +37,7 @@ steps:
       en: "I'm redesigning the checkout of an online electronics shop. Hany tried to pay for a laptop and saw this message.\n\nHe didn't know if his card was blocked, if he'd typed something wrong, or if the shop was broken. He bought the laptop somewhere else."
       ar: "أعيد تصميم صفحة الدفع في متجر إلكترونيات على الإنترنت. حاول هاني أن يدفع ثمن لابتوب فرأى هذه الرسالة.\n\nلم يعرف إن كانت بطاقته موقوفة، أم أنه كتب شيئًا خطأ، أم أن المتجر به عطل. فاشترى اللابتوب من مكان آخر."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U05-01
     rules: [R12]
@@ -58,9 +58,36 @@ steps:
         - { kind: field, label: { en: "Card number", ar: "رقم البطاقة" }, text: "4921 •••• •••• 7710", filled: true, icon: credit-card, gap: m }
         - { kind: button, text: { en: "Pay EGP 24,500", ar: "ادفع 24,500 جنيه" }, gap: m }
     options:
-      - { id: generic, text: { en: "\"Something went wrong. Please try again.\"", ar: "«حدث خطأ ما. حاول مرة أخرى.»" } }
-      - { id: plain, text: { en: "\"Your bank declined this payment. You haven't been charged. Try another card, or call your bank to allow it.\"", ar: "«رفض البنك هذه العملية. لم يُخصم منك شيء. جرّب بطاقة أخرى، أو اتصل بالبنك ليسمح بها.»" } }
-      - { id: code, text: { en: "\"Error 05 (DO_NOT_HONOR). Contact support with this code.\"", ar: "«Error 05 (DO_NOT_HONOR). تواصل مع الدعم بهذا الرمز.»" } }
+      - id: generic
+        text: {"en": "\"Something went wrong. Please try again.\"", "ar": "«حدث خطأ ما. حاول مرة أخرى.»"}
+        mock:
+          app: "volta"
+          frame: "wide"
+          url: "volta.example/checkout/payment"
+          blocks:
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "Something went wrong. Please try again.", "ar": "حدث خطأ ما. حاول مرة أخرى."}}
+            - {"kind": "field", "label": {"en": "Card number", "ar": "رقم البطاقة"}, "text": "4921 •••• •••• 7710", "filled": true, "icon": "credit-card", "gap": "m"}
+            - {"kind": "button", "text": {"en": "Pay EGP 24,500", "ar": "ادفع 24,500 جنيه"}, "gap": "m"}
+      - id: plain
+        text: {"en": "\"Your bank declined this payment. You haven't been charged. Try another card, or call your bank to allow it.\"", "ar": "«رفض البنك هذه العملية. لم يُخصم منك شيء. جرّب بطاقة أخرى، أو اتصل بالبنك ليسمح بها.»"}
+        mock:
+          app: "volta"
+          frame: "wide"
+          url: "volta.example/checkout/payment"
+          blocks:
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "Your bank declined this payment. You haven't been charged. Try another card, or call your bank to allow it.", "ar": "رفض البنك هذه العملية. لم يُخصم منك شيء. جرّب بطاقة أخرى، أو اتصل بالبنك ليسمح بها."}}
+            - {"kind": "field", "label": {"en": "Card number", "ar": "رقم البطاقة"}, "text": "4921 •••• •••• 7710", "filled": true, "icon": "credit-card", "gap": "m"}
+            - {"kind": "button", "text": {"en": "Pay EGP 24,500", "ar": "ادفع 24,500 جنيه"}, "gap": "m"}
+      - id: code
+        text: {"en": "\"Error 05 (DO_NOT_HONOR). Contact support with this code.\"", "ar": "«Error 05 (DO_NOT_HONOR). تواصل مع الدعم بهذا الرمز.»"}
+        mock:
+          app: "volta"
+          frame: "wide"
+          url: "volta.example/checkout/payment"
+          blocks:
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "Error 05 (DO_NOT_HONOR). Contact support with this code.", "ar": "Error 05 (DO_NOT_HONOR). تواصل مع الدعم بهذا الرمز."}}
+            - {"kind": "field", "label": {"en": "Card number", "ar": "رقم البطاقة"}, "text": "4921 •••• •••• 7710", "filled": true, "icon": "credit-card", "gap": "m"}
+            - {"kind": "button", "text": {"en": "Pay EGP 24,500", "ar": "ادفع 24,500 جنيه"}, "gap": "m"}
     answer: [plain]
     misconceptions:
       - id: MC-P02-037
@@ -114,7 +141,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) التاسع هو مساعدة الناس على ملاحظة الأخطاء وفهمها وإصلاحها (Help users recognize, diagnose, and recover from errors): حين يحدث خطأ، ساعد الناس على **ملاحظته وفهمه وإصلاحه**.\n\n- **اجعله ملحوظًا،** بجانب ما سبّبه مباشرة.\n- **قله بكلمات بسيطة،** وبدقة، دون رموز أو لوم.\n- **اعرض طريق الخروج:** إصلاحًا أو اقتراحًا، واحتفظ بكل ما أدخله الناس."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U05-02
     rules: [R06]
@@ -140,9 +167,44 @@ steps:
       footer:
         - { kind: button, text: { en: "Continue", ar: "متابعة" } }
     options:
-      - { id: field, text: { en: "Under each field that needs fixing, with the field outlined, and the page scrolls to the first one", ar: "تحت كل حقل يحتاج إلى إصلاح، مع إطار حول الحقل، وتنتقل الصفحة إلى أول حقل منها" } }
-      - { id: list, text: { en: "A list of all errors at the top", ar: "قائمة بكل الأخطاء في الأعلى" } }
-      - { id: popup, text: { en: "A pop-up listing the errors, closed with OK", ar: "نافذة منبثقة تعرض الأخطاء، تُغلق بزر «حسنًا»" } }
+      - id: field
+        text: {"en": "Under each field that needs fixing, with the field outlined, and the page scrolls to the first one", "ar": "تحت كل حقل يحتاج إلى إصلاح، مع إطار حول الحقل، وتنتقل الصفحة إلى أول حقل منها"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Delivery details", "ar": "بيانات التوصيل"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Hany Fouad", "ar": "هاني فؤاد"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "City", "ar": "المدينة"}, "text": {"en": "Giza", "ar": "الجيزة"}, "filled": true, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Street", "ar": "الشارع"}, "text": {"en": "Haram St", "ar": "شارع الهرم"}, "filled": true, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Building", "ar": "العمارة"}, "text": "", "gap": "s", "note": {"en": "The page scrolls here, to the first field to fix", "ar": "تنتقل الصفحة إلى هنا، أول حقل يحتاج إلى إصلاح"}, "tone": "bad", "focus": true, "error": {"en": "Add your building number", "ar": "أضِف رقم العمارة"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: list
+        text: {"en": "A list of all errors at the top", "ar": "قائمة بكل الأخطاء في الأعلى"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Delivery details", "ar": "بيانات التوصيل"}, "back": true}
+          blocks:
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "Fix 2 fields: Building is empty · Phone number is too short", "ar": "أصلِح حقلين: العمارة فارغة · رقم الهاتف قصير"}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Hany Fouad", "ar": "هاني فؤاد"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "City", "ar": "المدينة"}, "text": {"en": "Giza", "ar": "الجيزة"}, "filled": true, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Street", "ar": "الشارع"}, "text": {"en": "Haram St", "ar": "شارع الهرم"}, "filled": true, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Building", "ar": "العمارة"}, "text": "", "gap": "s", "note": {"en": "Fields 5 to 9 are below the fold", "ar": "الحقول من 5 إلى 9 خارج الشاشة، في الأسفل"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+      - id: popup
+        text: {"en": "A pop-up listing the errors, closed with OK", "ar": "نافذة منبثقة تعرض الأخطاء، تُغلق بزر «حسنًا»"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Delivery details", "ar": "بيانات التوصيل"}, "back": true}
+          blocks:
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Hany Fouad", "ar": "هاني فؤاد"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "City", "ar": "المدينة"}, "text": {"en": "Giza", "ar": "الجيزة"}, "filled": true, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Street", "ar": "الشارع"}, "text": {"en": "Haram St", "ar": "شارع الهرم"}, "filled": true, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Building", "ar": "العمارة"}, "text": "", "gap": "s", "note": {"en": "Fields 5 to 9 are below the fold", "ar": "الحقول من 5 إلى 9 خارج الشاشة، في الأسفل"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Please fix these errors", "ar": "يرجى إصلاح هذه الأخطاء"}}, {"kind": "list", "style": "bullet", "gap": "s", "items": [{"en": "Building is empty", "ar": "العمارة فارغة"}, {"en": "Phone number is too short", "ar": "رقم الهاتف قصير"}]}, {"kind": "button", "text": {"en": "OK", "ar": "حسنًا"}, "gap": "m"}]}
     answer: [field]
     misconceptions:
       - id: MC-P02-038
@@ -161,7 +223,7 @@ steps:
       ar: "الرسالة في مكان الإصلاح، فيقرؤها الناس ويصحّحون الحقل في المكان نفسه. والانتقال إلى أول خطأ يوفّر عناء البحث."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U05-02
     rules: [R06]
@@ -182,9 +244,30 @@ steps:
       blocks:
         - { kind: field, label: { en: "Email", ar: "البريد الإلكتروني" }, text: "m", filled: true, focus: true, error: { en: "Invalid email", ar: "بريد غير صالح" }, note: { en: "Red after the first letter", ar: "أحمر بعد أول حرف" } }
     options:
-      - { id: blur, text: { en: "When people leave the field or press Continue", ar: "حين يغادر الناس الحقل أو يضغطون «متابعة»" } }
-      - { id: keys, text: { en: "On every key, as now, but in orange instead of red", ar: "مع كل حرف، كما الآن، لكن بالبرتقالي بدل الأحمر" } }
-      - { id: end, text: { en: "Only after payment, when the receipt can't be sent", ar: "فقط بعد الدفع، حين يتعذّر إرسال الإيصال" } }
+      - id: blur
+        text: {"en": "When people leave the field or press Continue", "ar": "حين يغادر الناس الحقل أو يضغطون «متابعة»"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Create account", "ar": "أنشئ حسابًا"}, "back": true}
+          keyboard: "text"
+          blocks:
+            - {"kind": "field", "label": {"en": "Email", "ar": "البريد الإلكتروني"}, "text": "mona@ma", "filled": true, "focus": true, "note": {"en": "Checked when people leave the field or press Continue", "ar": "يُفحص حين يغادر الناس الحقل أو يضغطون «متابعة»"}}
+      - id: keys
+        text: {"en": "On every key, as now, but in orange instead of red", "ar": "مع كل حرف، كما الآن، لكن بالبرتقالي بدل الأحمر"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Create account", "ar": "أنشئ حسابًا"}, "back": true}
+          keyboard: "text"
+          blocks:
+            - {"kind": "field", "label": {"en": "Email", "ar": "البريد الإلكتروني"}, "text": "m", "filled": true, "focus": true, "error": {"en": "Invalid email", "ar": "بريد غير صالح"}, "note": {"en": "Orange instead of red, still after the first letter", "ar": "برتقالي بدل الأحمر، وما زال بعد أول حرف"}, "tone": "warn"}
+      - id: end
+        text: {"en": "Only after payment, when the receipt can't be sent", "ar": "فقط بعد الدفع، حين يتعذّر إرسال الإيصال"}
+        mock:
+          app: "volta"
+          appbar: {"title": {"en": "Create account", "ar": "أنشئ حسابًا"}, "back": true}
+          keyboard: "text"
+          blocks:
+            - {"kind": "field", "label": {"en": "Email", "ar": "البريد الإلكتروني"}, "text": "mona@mail.exmaple", "filled": true, "focus": true, "note": {"en": "Not checked here; a typo shows up only after payment", "ar": "لا يُفحص هنا؛ ولا يظهر الخطأ إلا بعد الدفع"}}
     answer: [blur]
     misconceptions:
       - id: MC-P02-039
@@ -256,7 +339,7 @@ steps:
       ar: "تستخدم B تاريخ الشخص نفسه لتوضّح الصيغة، فيستغرق الإصلاح ثانية. لا لوم، بل الخطوة التالية فقط."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: hana
     part: independent
     skill: SK-P02-U05-02
@@ -283,9 +366,41 @@ steps:
         - { kind: field, label: { en: "Phone", ar: "الهاتف" }, text: "", gap: s }
         - { kind: field, label: { en: "Date of birth", ar: "تاريخ الميلاد" }, text: "", gap: s, note: { en: "All 12 answers cleared after one typo", ar: "مُسحت الإجابات الـ 12 بسبب خطأ واحد" } }
     options:
-      - { id: keep, text: { en: "Keep all 12 answers, mark the phone field, and say what to fix there", ar: "إبقاء الإجابات الاثنتي عشرة، وتمييز حقل الهاتف، وقول ما يجب إصلاحه فيه" } }
-      - { id: clear, text: { en: "Clear only the phone field", ar: "مسح حقل الهاتف فقط" } }
-      - { id: save, text: { en: "Keep the empty form, but add \"Fill in again carefully\"", ar: "إبقاء النموذج فارغًا، مع إضافة «املأ مرة أخرى بعناية»" } }
+      - id: keep
+        text: {"en": "Keep all 12 answers, mark the phone field, and say what to fix there", "ar": "إبقاء الإجابات الاثنتي عشرة، وتمييز حقل الهاتف، وقول ما يجب إصلاحه فيه"}
+        mock:
+          app: "nashat"
+          frame: "wide"
+          url: "nashat.example/join"
+          navbar: {"links": [{"en": "Timetable", "ar": "الجدول"}, {"en": "Prices", "ar": "الأسعار"}, {"en": "Join", "ar": "اشترك"}], "active": 2}
+          blocks:
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Mona Adel", "ar": "منى عادل"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Phone", "ar": "الهاتف"}, "text": "0100 555 281", "filled": true, "tone": "bad", "error": {"en": "Mobile numbers have 11 digits; this one has 10.", "ar": "رقم الموبايل 11 رقمًا؛ وهذا فيه 10."}, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Date of birth", "ar": "تاريخ الميلاد"}, "text": "12/03/1995", "filled": true, "gap": "s", "note": {"en": "The other 11 answers are kept", "ar": "الإجابات الـ 11 الأخرى باقية"}}
+      - id: clear
+        text: {"en": "Clear only the phone field", "ar": "مسح حقل الهاتف فقط"}
+        mock:
+          app: "nashat"
+          frame: "wide"
+          url: "nashat.example/join"
+          navbar: {"links": [{"en": "Timetable", "ar": "الجدول"}, {"en": "Prices", "ar": "الأسعار"}, {"en": "Join", "ar": "اشترك"}], "active": 2}
+          blocks:
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "There was a problem with your form.", "ar": "حدثت مشكلة في النموذج."}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Mona Adel", "ar": "منى عادل"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Phone", "ar": "الهاتف"}, "text": "", "gap": "s", "note": {"en": "Only the phone is cleared, with no reason given", "ar": "مُسح الهاتف فقط، دون ذكر السبب"}}
+            - {"kind": "field", "label": {"en": "Date of birth", "ar": "تاريخ الميلاد"}, "text": "12/03/1995", "filled": true, "gap": "s"}
+      - id: save
+        text: {"en": "Keep the empty form, but add \"Fill in again carefully\"", "ar": "إبقاء النموذج فارغًا، مع إضافة «املأ مرة أخرى بعناية»"}
+        mock:
+          app: "nashat"
+          frame: "wide"
+          url: "nashat.example/join"
+          navbar: {"links": [{"en": "Timetable", "ar": "الجدول"}, {"en": "Prices", "ar": "الأسعار"}, {"en": "Join", "ar": "اشترك"}], "active": 2}
+          blocks:
+            - {"kind": "banner", "icon": "warning-circle", "tone": "bad", "text": {"en": "There was a problem with your form. Fill in again carefully.", "ar": "حدثت مشكلة في النموذج. املأ مرة أخرى بعناية."}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": "", "gap": "m"}
+            - {"kind": "field", "label": {"en": "Phone", "ar": "الهاتف"}, "text": "", "gap": "s"}
+            - {"kind": "field", "label": {"en": "Date of birth", "ar": "تاريخ الميلاد"}, "text": "", "gap": "s", "note": {"en": "All 12 answers cleared after one typo", "ar": "مُسحت الإجابات الـ 12 بسبب خطأ واحد"}}
     answer: [keep]
     misconceptions:
       - id: MC-P02-041

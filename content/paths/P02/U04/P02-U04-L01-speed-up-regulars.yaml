@@ -34,7 +34,7 @@ steps:
       en: "Every month my supplier raises prices, and I update my shop. In my dashboard, that means opening each product, editing the price and saving it.\n\nLast month it was 50 products. It took me a whole evening, and I made two typos."
       ar: "كل شهر يرفع المورّد الأسعار، فأحدّث متجري. وفي لوحة التحكم، يعني هذا فتح كل منتج، وتعديل سعره، وحفظه.\n\nفي الشهر الماضي كانت المنتجات 50. أخذ ذلك مني مساءً كاملًا، وأخطأت في الكتابة مرتين."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U04-02
     rules: [R12]
@@ -57,9 +57,42 @@ steps:
         - { kind: listitem, art: box, text: { en: "Pipe wrench", ar: "مفتاح مواسير" }, value: { en: "EGP 210", ar: "210 جنيه" }, chevron: true, gap: s }
         - { kind: listitem, art: box, text: { en: "Garden hose 20 m", ar: "خرطوم حديقة 20 م" }, value: { en: "EGP 340", ar: "340 جنيه" }, chevron: true, gap: s, note: { en: "Each price is edited one by one", ar: "كل سعر يُعدّل وحده" } }
     options:
-      - { id: bulk, text: { en: "Select many products and raise all their prices at once, by an amount or a %", ar: "أختار منتجات كثيرة وأرفع أسعارها كلها مرة واحدة، بمبلغ أو بنسبة" } }
-      - { id: faster, text: { en: "Make the product edit page load faster", ar: "أن تُفتح صفحة تعديل المنتج أسرع" } }
-      - { id: next, text: { en: "Add a \"Save and open next product\" button", ar: "إضافة زر «احفظ وافتح المنتج التالي»" } }
+      - id: bulk
+        text: {"en": "Select many products and raise all their prices at once, by an amount or a %", "ar": "أختار منتجات كثيرة وأرفع أسعارها كلها مرة واحدة، بمبلغ أو بنسبة"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          navbar: {"links": [{"en": "Products", "ar": "المنتجات"}, {"en": "Orders", "ar": "الطلبات"}, {"en": "Reports", "ar": "التقارير"}], "active": 0}
+          blocks:
+            - {"kind": "title", "text": {"en": "Products (50)", "ar": "المنتجات (50)"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Paint roller, 23 cm", "ar": "رولة دهان، 23 سم"}, "value": {"en": "EGP 120", "ar": "120 جنيه"}, "gap": "m", "check": true}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Pipe wrench", "ar": "مفتاح مواسير"}, "value": {"en": "EGP 210", "ar": "210 جنيه"}, "gap": "s", "check": true}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Garden hose 20 m", "ar": "خرطوم حديقة 20 م"}, "value": {"en": "EGP 340", "ar": "340 جنيه"}, "gap": "s", "check": true}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Raise prices of 3 products", "ar": "ارفع أسعار 3 منتجات"}}, {"kind": "segmented", "options": [{"en": "By amount", "ar": "بمبلغ"}, {"en": "By %", "ar": "بنسبة"}], "value": 1, "gap": "s"}, {"kind": "field", "label": {"en": "Raise by", "ar": "ارفع بمقدار"}, "text": "10%", "filled": true, "gap": "s"}, {"kind": "button", "text": {"en": "Apply to 3 products", "ar": "طبّق على 3 منتجات"}, "gap": "m"}]}
+      - id: faster
+        text: {"en": "Make the product edit page load faster", "ar": "أن تُفتح صفحة تعديل المنتج أسرع"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          navbar: {"links": [{"en": "Products", "ar": "المنتجات"}, {"en": "Orders", "ar": "الطلبات"}, {"en": "Reports", "ar": "التقارير"}], "active": 0}
+          blocks:
+            - {"kind": "title", "text": {"en": "Products (50)", "ar": "المنتجات (50)"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Paint roller, 23 cm", "ar": "رولة دهان، 23 سم"}, "value": {"en": "EGP 120", "ar": "120 جنيه"}, "chevron": true, "gap": "m"}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Pipe wrench", "ar": "مفتاح مواسير"}, "value": {"en": "EGP 210", "ar": "210 جنيه"}, "chevron": true, "gap": "s"}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Garden hose 20 m", "ar": "خرطوم حديقة 20 م"}, "value": {"en": "EGP 340", "ar": "340 جنيه"}, "chevron": true, "gap": "s", "note": {"en": "Still edited one by one; the page just opens faster", "ar": "ما زال كل سعر يُعدّل وحده؛ الصفحة تُفتح أسرع فقط"}}
+      - id: next
+        text: {"en": "Add a \"Save and open next product\" button", "ar": "إضافة زر «احفظ وافتح المنتج التالي»"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products/112/edit"
+          navbar: {"links": [{"en": "Products", "ar": "المنتجات"}, {"en": "Orders", "ar": "الطلبات"}, {"en": "Reports", "ar": "التقارير"}], "active": 0}
+          blocks:
+            - {"kind": "title", "text": {"en": "Paint roller, 23 cm", "ar": "رولة دهان، 23 سم"}}
+            - {"kind": "field", "label": {"en": "Price", "ar": "السعر"}, "text": {"en": "EGP 130", "ar": "130 جنيه"}, "filled": true, "gap": "m"}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "Save and open next product", "ar": "احفظ وافتح المنتج التالي"}}, {"kind": "button", "style": "outline", "text": {"en": "Save", "ar": "احفظ"}}], "note": {"en": "Still one product at a time: 1 of 50", "ar": "ما زال منتجًا واحدًا كل مرة: 1 من 50"}}
     answer: [bulk]
     misconceptions:
       - id: MC-P02-028
@@ -107,7 +140,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) السابع هو المرونة وكفاءة الاستخدام (Flexibility and efficiency of use): يجب أن يناسب المنتج نفسه **المبتدئين والخبراء معًا**. والاختصارات التي لا يلاحظها المبتدئون تستطيع أن تسرّع الخبراء.\n\n- **المسرّعات (Accelerators)** مثل اختصارات لوحة المفاتيح: اعرضها بجانب الأمر، ليتعلّمها الناس مع الوقت.\n- **العمل المتكرر دفعة واحدة:** الإجراءات الجماعية (Bulk actions)، وجعل الخطوات المتوقعة تلقائية.\n- **التخصيص (Personalization):** استخدم ما فعله الناس من قبل لتختصر ما سيفعلونه بعد ذلك."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U04-01
     rules: [R06]
@@ -134,9 +167,36 @@ steps:
             - { kind: button, icon: pencil-simple, text: { en: "Edit", ar: "تعديل" }, style: outline }
         - { kind: small, text: { en: "Shortcuts N, / and E are listed only under Help", ar: "الاختصارات N و/ وE مكتوبة فقط في المساعدة" }, tone: faint, gap: m }
     options:
-      - { id: inline, text: { en: "Show each shortcut next to its button or menu item, and in its tooltip", ar: "عرض كل اختصار بجانب زرّه أو عنصره في القائمة، وفي الـ Tooltip الخاص به" } }
-      - { id: popup, text: { en: "A pop-up on every login listing all shortcuts", ar: "نافذة منبثقة عند كل تسجيل دخول تعرض كل الاختصارات" } }
-      - { id: help, text: { en: "Keep them on the help page; experts will find them", ar: "إبقاؤها في صفحة المساعدة؛ وسيجدها الخبراء" } }
+      - id: inline
+        text: {"en": "Show each shortcut next to its button or menu item, and in its tooltip", "ar": "عرض كل اختصار بجانب زرّه أو عنصره في القائمة، وفي الـ Tooltip الخاص به"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          navbar: {"links": [{"en": "Products", "ar": "المنتجات"}, {"en": "Orders", "ar": "الطلبات"}, {"en": "Help", "ar": "المساعدة"}], "active": 0}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "button", "icon": "plus", "text": {"en": "New product  N", "ar": "منتج جديد  N"}}, {"kind": "searchbar", "text": {"en": "Search products  /", "ar": "ابحث في المنتجات  /"}}, {"kind": "button", "icon": "pencil-simple", "text": {"en": "Edit  E", "ar": "تعديل  E"}, "style": "outline"}], "note": {"en": "Each key shows on its button and tooltip", "ar": "يظهر كل مفتاح على زرّه وفي الـ Tooltip"}}
+      - id: popup
+        text: {"en": "A pop-up on every login listing all shortcuts", "ar": "نافذة منبثقة عند كل تسجيل دخول تعرض كل الاختصارات"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          navbar: {"links": [{"en": "Products", "ar": "المنتجات"}, {"en": "Orders", "ar": "الطلبات"}, {"en": "Help", "ar": "المساعدة"}], "active": 0}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "button", "icon": "plus", "text": {"en": "New product", "ar": "منتج جديد"}}, {"kind": "searchbar", "text": {"en": "Search products", "ar": "ابحث في المنتجات"}}, {"kind": "button", "icon": "pencil-simple", "text": {"en": "Edit", "ar": "تعديل"}, "style": "outline"}]}
+            - {"kind": "small", "text": {"en": "Shortcuts N, / and E are listed only under Help", "ar": "الاختصارات N و/ وE مكتوبة فقط في المساعدة"}, "tone": "faint", "gap": "m"}
+          overlay: {"type": "dialog", "close": true, "blocks": [{"kind": "heading", "text": {"en": "Keyboard shortcuts", "ar": "اختصارات لوحة المفاتيح"}, "note": {"en": "On every login", "ar": "عند كل تسجيل دخول"}}, {"kind": "list", "style": "bullet", "gap": "s", "items": [{"en": "N: new product", "ar": "N: منتج جديد"}, {"en": "/: search", "ar": "/: بحث"}, {"en": "E: edit", "ar": "E: تعديل"}]}, {"kind": "button", "text": {"en": "OK", "ar": "حسنًا"}, "gap": "m"}]}
+      - id: help
+        text: {"en": "Keep them on the help page; experts will find them", "ar": "إبقاؤها في صفحة المساعدة؛ وسيجدها الخبراء"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products"
+          navbar: {"links": [{"en": "Products", "ar": "المنتجات"}, {"en": "Orders", "ar": "الطلبات"}, {"en": "Help", "ar": "المساعدة"}], "active": 0}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "button", "icon": "plus", "text": {"en": "New product", "ar": "منتج جديد"}}, {"kind": "searchbar", "text": {"en": "Search products", "ar": "ابحث في المنتجات"}}, {"kind": "button", "icon": "pencil-simple", "text": {"en": "Edit", "ar": "تعديل"}, "style": "outline"}]}
+            - {"kind": "small", "text": {"en": "Shortcuts N, / and E are listed only under Help", "ar": "الاختصارات N و/ وE مكتوبة فقط في المساعدة"}, "tone": "faint", "gap": "m"}
     answer: [inline]
     misconceptions:
       - id: MC-P02-029
@@ -160,7 +220,7 @@ steps:
       ar: "يستطيع المبتدئون تجاهل «N» الصغيرة بجانب «منتج جديد»، أما من يراها كل يوم فيبدأ في استخدامها. فيتعلّم الناس الاختصار وحدهم، دون أن يزعج أحدًا."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U04-01
     rules: [R06]
@@ -184,9 +244,36 @@ steps:
         - { kind: banner, icon: lightbulb, tone: info, text: { en: "Tip: use the name customers search for.", ar: "نصيحة: استخدم الاسم الذي يبحث عنه العملاء." }, gap: m }
         - { kind: button, text: { en: "Next", ar: "التالي" }, gap: m }
     options:
-      - { id: remove, text: { en: "Remove the step-by-step screens for everyone", ar: "حذف الشاشات المتتالية للجميع" } }
-      - { id: oneform, text: { en: "Keep the guided steps for new sellers, and offer a \"Quick add\" form on one page for those who know it", ar: "إبقاء الخطوات الموجّهة للبائعين الجدد، وعرض نموذج «إضافة سريعة» في صفحة واحدة لمن يعرف الطريقة" } }
-      - { id: tips, text: { en: "Keep the 6 screens, but hide the tips", ar: "إبقاء الشاشات الست، مع إخفاء النصائح" } }
+      - id: remove
+        text: {"en": "Remove the step-by-step screens for everyone", "ar": "حذف الشاشات المتتالية للجميع"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products/new"
+          blocks:
+            - {"kind": "title", "text": {"en": "New product", "ar": "منتج جديد"}, "note": {"en": "One page for everyone, new sellers too", "ar": "صفحة واحدة للجميع، والبائعون الجدد أيضًا"}}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "field", "label": {"en": "Product name", "ar": "اسم المنتج"}, "text": ""}, {"kind": "field", "label": {"en": "Price", "ar": "السعر"}, "text": ""}, {"kind": "field", "label": {"en": "Stock", "ar": "المخزون"}, "text": ""}]}
+            - {"kind": "button", "text": {"en": "Add product", "ar": "أضف المنتج"}, "gap": "m"}
+      - id: oneform
+        text: {"en": "Keep the guided steps for new sellers, and offer a \"Quick add\" form on one page for those who know it", "ar": "إبقاء الخطوات الموجّهة للبائعين الجدد، وعرض نموذج «إضافة سريعة» في صفحة واحدة لمن يعرف الطريقة"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products/quick-add"
+          blocks:
+            - {"kind": "title", "text": {"en": "Quick add", "ar": "إضافة سريعة"}}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "field", "label": {"en": "Product name", "ar": "اسم المنتج"}, "text": {"en": "Electric kettle", "ar": "غلاية كهربائية"}, "filled": true}, {"kind": "field", "label": {"en": "Price", "ar": "السعر"}, "text": {"en": "EGP 1,100", "ar": "1,100 جنيه"}, "filled": true}, {"kind": "field", "label": {"en": "Stock", "ar": "المخزون"}, "text": "12", "filled": true}]}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "button", "text": {"en": "Add product", "ar": "أضف المنتج"}}, {"kind": "button", "style": "text", "text": {"en": "Use the guided steps", "ar": "استخدم الخطوات الموجّهة"}}], "note": {"en": "New sellers still get the 6 steps", "ar": "البائعون الجدد ما زالت لهم الخطوات الست"}}
+      - id: tips
+        text: {"en": "Keep the 6 screens, but hide the tips", "ar": "إبقاء الشاشات الست، مع إخفاء النصائح"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/seller/products/new/step-1"
+          blocks:
+            - {"kind": "progress", "value": 16, "label": {"en": "Step 1 of 6: Name", "ar": "الخطوة 1 من 6: الاسم"}}
+            - {"kind": "field", "label": {"en": "Product name", "ar": "اسم المنتج"}, "text": {"en": "e.g. Electric kettle", "ar": "مثال: غلاية كهربائية"}, "gap": "m"}
+            - {"kind": "button", "text": {"en": "Next", "ar": "التالي"}, "gap": "m"}
     answer: [oneform]
     misconceptions:
       - id: MC-P02-030
@@ -264,7 +351,7 @@ steps:
       ar: "«اطلب مرة أخرى» تحوّل خمس خطوات إلى ضغطة واحدة لمن يكرّرون طلباتهم، بينما يظل الجدد يرون البحث والأماكن الشهيرة."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: nour
     part: independent
     skill: SK-P02-U04-02
@@ -288,9 +375,38 @@ steps:
       footer:
         - { kind: button, text: { en: "Add to cart", ar: "أضف إلى السلة" } }
     options:
-      - { id: auto, text: { en: "\"Refill every month\": the same order goes out on a set day, with a reminder two days before to change or skip it", ar: "«أعِد الصرف كل شهر»: يُرسل الطلب نفسه في يوم محدد، مع تذكير قبله بيومين لتعديله أو تخطّيه" } }
-      - { id: banner, text: { en: "A banner on the home page: \"Don't forget your medicine!\"", ar: "Banner في الصفحة الرئيسية: «لا تنسَ دواءك!»" } }
-      - { id: search, text: { en: "Better search, so the medicine is found faster", ar: "بحث أفضل، ليجد المرضى الدواء أسرع" } }
+      - id: auto
+        text: {"en": "\"Refill every month\": the same order goes out on a set day, with a reminder two days before to change or skip it", "ar": "«أعِد الصرف كل شهر»: يُرسل الطلب نفسه في يوم محدد، مع تذكير قبله بيومين لتعديله أو تخطّيه"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Pharmacy", "ar": "الصيدلية"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "art": "medicine", "text": {"en": "Metformin 500 mg · 30 tabs", "ar": "ميتفورمين 500 مجم · 30 قرصًا"}, "value": {"en": "EGP 48", "ar": "48 جنيه"}}
+            - {"kind": "listitem", "icon": "arrows-clockwise", "text": {"en": "Refill every month", "ar": "أعِد الصرف كل شهر"}, "toggle": true, "gap": "m"}
+            - {"kind": "small", "gap": "s", "text": {"en": "Next order: 1 Dec. We'll remind you on 29 Nov to change or skip it.", "ar": "الطلب القادم: 1 ديسمبر. وسنذكّرك يوم 29 نوفمبر لتعدّله أو تتخطّاه."}}
+          footer:
+            - {"kind": "button", "text": {"en": "Save", "ar": "احفظ"}}
+      - id: banner
+        text: {"en": "A banner on the home page: \"Don't forget your medicine!\"", "ar": "Banner في الصفحة الرئيسية: «لا تنسَ دواءك!»"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Pharmacy", "ar": "الصيدلية"}, "back": true}
+          blocks:
+            - {"kind": "banner", "tone": "info", "icon": "pill", "text": {"en": "Don't forget your medicine!", "ar": "لا تنسَ دواءك!"}, "note": {"en": "On the home page", "ar": "في الصفحة الرئيسية"}}
+            - {"kind": "searchbar", "text": {"en": "metf", "ar": "ميتف"}, "filled": true, "suggest": [{"icon": "pill", "text": {"en": "metf**ormin 500 mg**", "ar": "ميتف**ورمين 500 مجم**"}}]}
+            - {"kind": "listitem", "art": "medicine", "text": {"en": "Metformin 500 mg · 30 tabs", "ar": "ميتفورمين 500 مجم · 30 قرصًا"}, "value": {"en": "EGP 48", "ar": "48 جنيه"}, "gap": "m", "note": {"en": "The same order, typed in again every month", "ar": "الطلب نفسه، يُكتب من جديد كل شهر"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Add to cart", "ar": "أضف إلى السلة"}}
+      - id: search
+        text: {"en": "Better search, so the medicine is found faster", "ar": "بحث أفضل، ليجد المرضى الدواء أسرع"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "Pharmacy", "ar": "الصيدلية"}, "back": true}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "metf", "ar": "ميتف"}, "filled": true, "suggest": [{"icon": "pill", "text": {"en": "metf**ormin 500 mg**", "ar": "ميتف**ورمين 500 مجم**"}}]}
+            - {"kind": "listitem", "art": "medicine", "text": {"en": "Metformin 500 mg · 30 tabs", "ar": "ميتفورمين 500 مجم · 30 قرصًا"}, "value": {"en": "EGP 48", "ar": "48 جنيه"}, "gap": "m", "note": {"en": "Found faster, but still ordered by hand every month", "ar": "يُوجد أسرع، لكنه ما زال يُطلب يدويًا كل شهر"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Add to cart", "ar": "أضف إلى السلة"}}
     answer: [auto]
     misconceptions:
       - id: MC-P02-028

@@ -16,7 +16,7 @@ sources:
 steps:
   # SK-P02-U01-01: show the result of every action, right away
   - id: S01
-    type: choose
+    type: tune
     speaker: karim
     part: retest
     skill: SK-P02-U01-01
@@ -38,9 +38,33 @@ steps:
         - { kind: text, text: { en: "Milk, eggs, bread\nRice 2 kg\nTomatoes", ar: "حليب، بيض، عيش\nأرز 2 كجم\nطماطم" } }
         - { kind: small, text: { en: "Save tapped 3 times, no change on screen", ar: "ضغطوا «احفظ» 3 مرات، ولم يتغيّر شيء على الشاشة" }, tone: faint, gap: m }
     options:
-      - { id: dialog, text: { en: "A dialog: \"Your note was saved\", with OK", ar: "نافذة منبثقة (Dialog): «حُفظت ملاحظتك»، مع زر «حسنًا»" } }
-      - { id: inline, text: { en: "The button turns into \"✓ Saved\", and \"Saved just now\" appears under the title", ar: "يتحوّل الزر إلى «✓ حُفظت»، ويظهر «حُفظت الآن» تحت العنوان" } }
-      - { id: none, text: { en: "Nothing; saving is so fast that people don't need to know", ar: "لا شيء؛ فالحفظ سريع جدًا ولا يحتاج الناس إلى معرفته" } }
+      - id: dialog
+        text: {"en": "A dialog: \"Your note was saved\", with OK", "ar": "نافذة منبثقة (Dialog): «حُفظت ملاحظتك»، مع زر «حسنًا»"}
+        mock:
+          app: "satr"
+          appbar: {"title": {"en": "Shopping list", "ar": "قائمة المشتريات"}, "back": true, "actions": [{"icon": "floppy-disk", "aria": {"en": "Save", "ar": "احفظ"}}]}
+          keyboard: "text"
+          blocks:
+            - {"kind": "text", "text": {"en": "Milk, eggs, bread\nRice 2 kg\nTomatoes", "ar": "حليب، بيض، عيش\nأرز 2 كجم\nطماطم"}}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Your note was saved", "ar": "حُفظت ملاحظتك"}}, {"kind": "button", "text": {"en": "OK", "ar": "حسنًا"}, "gap": "m"}]}
+      - id: inline
+        text: {"en": "The button turns into \"✓ Saved\", and \"Saved just now\" appears under the title", "ar": "يتحوّل الزر إلى «✓ حُفظت»، ويظهر «حُفظت الآن» تحت العنوان"}
+        mock:
+          app: "satr"
+          appbar: {"title": {"en": "Shopping list", "ar": "قائمة المشتريات"}, "back": true, "actions": [{"icon": "check-circle", "aria": {"en": "Saved", "ar": "حُفظت"}}]}
+          keyboard: "text"
+          blocks:
+            - {"kind": "small", "icon": "check", "text": {"en": "✓ Saved just now", "ar": "✓ حُفظت الآن"}, "color": "green"}
+            - {"kind": "text", "text": {"en": "Milk, eggs, bread\nRice 2 kg\nTomatoes", "ar": "حليب، بيض، عيش\nأرز 2 كجم\nطماطم"}}
+      - id: none
+        text: {"en": "Nothing; saving is so fast that people don't need to know", "ar": "لا شيء؛ فالحفظ سريع جدًا ولا يحتاج الناس إلى معرفته"}
+        mock:
+          app: "satr"
+          appbar: {"title": {"en": "Shopping list", "ar": "قائمة المشتريات"}, "back": true, "actions": [{"icon": "floppy-disk", "aria": {"en": "Save", "ar": "احفظ"}}]}
+          keyboard: "text"
+          blocks:
+            - {"kind": "text", "text": {"en": "Milk, eggs, bread\nRice 2 kg\nTomatoes", "ar": "حليب، بيض، عيش\nأرز 2 كجم\nطماطم"}}
+            - {"kind": "small", "text": {"en": "Save tapped 3 times, no change on screen", "ar": "ضغطوا «احفظ» 3 مرات، ولم يتغيّر شيء على الشاشة"}, "tone": "faint", "gap": "m"}
     answer: [inline]
     misconceptions:
       - id: MC-P02-006
@@ -61,7 +85,7 @@ steps:
       ar: "«✓ حُفظت» تردّ على الضغطة فورًا، و«حُفظت الآن» تبقى تذكيرًا، فلا يحتاج أحد إلى الضغط مرة أخرى."
 
   - id: S02
-    type: choose
+    type: tune
     speaker: mona
     part: retest
     skill: SK-P02-U01-01
@@ -84,9 +108,38 @@ steps:
         - { kind: title, text: { en: "Exporting \"Wedding film\"", ar: "جارٍ تصدير «فيلم الزفاف»" }, gap: m }
         - { kind: icon, icon: spinner-gap, size: l, color: brand, gap: m, note: { en: "Spinning for 1 minute", ar: "يدور منذ دقيقة" } }
     options:
-      - { id: bigger, text: { en: "A bigger spinner with \"Almost there…\"", ar: "دائرة أكبر مع «اقتربنا…»" } }
-      - { id: percent, text: { en: "A bar with \"Exporting: 45% · about 2 minutes left\"", ar: "شريط مع «جارٍ التصدير: 45% · بقي نحو دقيقتين»" } }
-      - { id: tips, text: { en: "Video editing tips that change every few seconds", ar: "نصائح في تحرير الفيديو تتغيّر كل بضع ثوانٍ" } }
+      - id: bigger
+        text: {"en": "A bigger spinner with \"Almost there…\"", "ar": "دائرة أكبر مع «اقتربنا…»"}
+        mock:
+          app: {"name": {"en": "Montaj", "ar": "مونتاج"}, "color": "#9333EA", "icon": "film-strip", "domain": "montaj.example"}
+          frame: "wide"
+          url: "montaj.example/projects/wedding-film/export"
+          blocks:
+            - {"kind": "image", "art": "photo", "size": "l"}
+            - {"kind": "title", "text": {"en": "Exporting \"Wedding film\"", "ar": "جارٍ تصدير «فيلم الزفاف»"}, "gap": "m"}
+            - {"kind": "icon", "icon": "spinner-gap", "size": "xl", "color": "brand", "gap": "m", "note": {"en": "Spinning for 1 minute", "ar": "يدور منذ دقيقة"}}
+            - {"kind": "small", "text": {"en": "Almost there…", "ar": "اقتربنا…"}, "gap": "s"}
+      - id: percent
+        text: {"en": "A bar with \"Exporting: 45% · about 2 minutes left\"", "ar": "شريط مع «جارٍ التصدير: 45% · بقي نحو دقيقتين»"}
+        mock:
+          app: {"name": {"en": "Montaj", "ar": "مونتاج"}, "color": "#9333EA", "icon": "film-strip", "domain": "montaj.example"}
+          frame: "wide"
+          url: "montaj.example/projects/wedding-film/export"
+          blocks:
+            - {"kind": "image", "art": "photo", "size": "l"}
+            - {"kind": "title", "text": {"en": "Exporting \"Wedding film\"", "ar": "جارٍ تصدير «فيلم الزفاف»"}, "gap": "m"}
+            - {"kind": "progress", "value": 45, "label": {"en": "Exporting: 45% · about 2 minutes left", "ar": "جارٍ التصدير: 45% · بقي نحو دقيقتين"}, "gap": "m"}
+      - id: tips
+        text: {"en": "Video editing tips that change every few seconds", "ar": "نصائح في تحرير الفيديو تتغيّر كل بضع ثوانٍ"}
+        mock:
+          app: {"name": {"en": "Montaj", "ar": "مونتاج"}, "color": "#9333EA", "icon": "film-strip", "domain": "montaj.example"}
+          frame: "wide"
+          url: "montaj.example/projects/wedding-film/export"
+          blocks:
+            - {"kind": "image", "art": "photo", "size": "l"}
+            - {"kind": "title", "text": {"en": "Exporting \"Wedding film\"", "ar": "جارٍ تصدير «فيلم الزفاف»"}, "gap": "m"}
+            - {"kind": "icon", "icon": "spinner-gap", "size": "l", "color": "brand", "gap": "m"}
+            - {"kind": "tip", "text": {"en": "Tip: press J, K and L to move through your clips faster.", "ar": "نصيحة: اضغط J وK وL لتتنقّل بين المقاطع أسرع."}, "gap": "m", "note": {"en": "A new tip every 5 s", "ar": "نصيحة جديدة كل 5 ثوانٍ"}}
     answer: [percent]
     misconceptions:
       - id: MC-P02-003
@@ -103,7 +156,7 @@ steps:
 
   # SK-P02-U01-02: tell people about changes that affect them
   - id: S03
-    type: choose
+    type: tune
     speaker: sara
     part: retest
     skill: SK-P02-U01-02
@@ -125,9 +178,33 @@ steps:
         - { kind: listitem, avatar: { text: "Mahmoud", art: man-2 }, text: { en: "Mahmoud · ★ 4.9", ar: "محمود · ★ 4.9" }, sub: { en: "White Toyota Corolla · ق ص 4721", ar: "تويوتا كورولا بيضاء · ق ص 4721" }, value: { en: "3 min", ar: "3 د" }, gap: m }
         - { kind: small, text: { en: "Mahmoud cancelled; Karim's grey Hyundai is coming.", ar: "ألغى محمود الرحلة، وكريم في الطريق بسيارة هيونداي رمادية." }, tone: faint, gap: s, note: { en: "Known to the app, not shown", ar: "يعرفه التطبيق، ولا يظهر" } }
     options:
-      - { id: same, text: { en: "Nothing new; a car is still coming", ar: "لا شيء جديد؛ فما زالت هناك سيارة قادمة" } }
-      - { id: update, text: { en: "\"Your driver changed\", with the new driver's name, car, plate and arrival time", ar: "«تغيّر سائقك»، مع اسم السائق الجديد وسيارته ورقم اللوحة وموعد الوصول" } }
-      - { id: later, text: { en: "Tell them in the trip receipt afterwards", ar: "نخبره في إيصال الرحلة بعد انتهائها" } }
+      - id: same
+        text: {"en": "Nothing new; a car is still coming", "ar": "لا شيء جديد؛ فما زالت هناك سيارة قادمة"}
+        mock:
+          app: "mishwar"
+          appbar: {"title": {"en": "Your ride", "ar": "مشوارك"}}
+          blocks:
+            - {"kind": "image", "art": "map-route", "size": "l"}
+            - {"kind": "listitem", "avatar": {"text": "Mahmoud", "art": "man-2"}, "text": {"en": "Mahmoud · ★ 4.9", "ar": "محمود · ★ 4.9"}, "sub": {"en": "White Toyota Corolla · ق ص 4721", "ar": "تويوتا كورولا بيضاء · ق ص 4721"}, "value": {"en": "3 min", "ar": "3 د"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Mahmoud cancelled; Karim's grey Hyundai is coming.", "ar": "ألغى محمود الرحلة، وكريم في الطريق بسيارة هيونداي رمادية."}, "tone": "faint", "gap": "s", "note": {"en": "Known to the app, not shown", "ar": "يعرفه التطبيق، ولا يظهر"}}
+      - id: update
+        text: {"en": "\"Your driver changed\", with the new driver's name, car, plate and arrival time", "ar": "«تغيّر سائقك»، مع اسم السائق الجديد وسيارته ورقم اللوحة وموعد الوصول"}
+        mock:
+          app: "mishwar"
+          appbar: {"title": {"en": "Your ride", "ar": "مشوارك"}}
+          blocks:
+            - {"kind": "image", "art": "map-route", "size": "l"}
+            - {"kind": "banner", "tone": "info", "icon": "arrows-clockwise", "text": {"en": "Your driver changed: Karim is on the way", "ar": "تغيّر سائقك: كريم في الطريق إليك"}, "gap": "m"}
+            - {"kind": "listitem", "avatar": {"text": "Karim", "art": "man-1"}, "text": {"en": "Karim · ★ 4.8", "ar": "كريم · ★ 4.8"}, "sub": {"en": "Grey Hyundai Elantra · ن ر 2954", "ar": "هيونداي إلنترا رمادية · ن ر 2954"}, "value": {"en": "5 min", "ar": "5 د"}, "gap": "s"}
+      - id: later
+        text: {"en": "Tell them in the trip receipt afterwards", "ar": "نخبره في إيصال الرحلة بعد انتهائها"}
+        mock:
+          app: "mishwar"
+          appbar: {"title": {"en": "Your ride", "ar": "مشوارك"}}
+          blocks:
+            - {"kind": "image", "art": "map-route", "size": "l"}
+            - {"kind": "listitem", "avatar": {"text": "Mahmoud", "art": "man-2"}, "text": {"en": "Mahmoud · ★ 4.9", "ar": "محمود · ★ 4.9"}, "sub": {"en": "White Toyota Corolla · ق ص 4721", "ar": "تويوتا كورولا بيضاء · ق ص 4721"}, "value": {"en": "3 min", "ar": "3 د"}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Mahmoud cancelled; Karim's grey Hyundai is coming.", "ar": "ألغى محمود الرحلة، وكريم في الطريق بسيارة هيونداي رمادية."}, "tone": "faint", "gap": "s", "note": {"en": "Told only in the receipt, after the trip", "ar": "يُذكر في الإيصال فقط، بعد الرحلة"}}
     answer: [update]
     misconceptions:
       - id: MC-P02-004
@@ -143,7 +220,7 @@ steps:
       ar: "التغيير يؤثر في ما يفعله الراكب الآن، فمكانه شاشة الرحلة، مع التفاصيل التي تساعده على التعرّف على السيارة الجديدة."
 
   - id: S04
-    type: choose
+    type: tune
     speaker: nour
     part: retest
     skill: SK-P02-U01-02
@@ -169,9 +246,34 @@ steps:
             - { kind: small, text: { en: "Raha Clinic, Dokki", ar: "عيادة راحة، الدقي" } }
         - { kind: small, text: { en: "Dr. Samir is running 40 minutes late.", ar: "د. سمير متأخر 40 دقيقة." }, tone: faint, gap: m, note: { en: "Known to the clinic, not shown", ar: "تعرفه العيادة، ولا يظهر" } }
     options:
-      - { id: notify, text: { en: "Show \"Dr. Samir is running about 40 minutes late: expected 5:40 pm\" on the booking, and send a notification", ar: "يعرض «د. سمير متأخر نحو 40 دقيقة: الموعد المتوقع 5:40 مساءً» على الحجز، ويرسل إشعارًا" } }
-      - { id: desk, text: { en: "Nothing; the front desk will explain when they arrive", ar: "لا شيء؛ سيشرح الاستقبال حين يصلون" } }
-      - { id: hours, text: { en: "Add \"Waiting times may vary\" to the clinic's page", ar: "يضيف «قد تختلف أوقات الانتظار» إلى صفحة العيادة" } }
+      - id: notify
+        text: {"en": "Show \"Dr. Samir is running about 40 minutes late: expected 5:40 pm\" on the booking, and send a notification", "ar": "يعرض «د. سمير متأخر نحو 40 دقيقة: الموعد المتوقع 5:40 مساءً» على الحجز، ويرسل إشعارًا"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "My visits", "ar": "زياراتي"}}
+          tabbar: {"active": 1, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "calendar-check", "text": {"en": "Visits", "ar": "زياراتي"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "banner", "tone": "warn", "icon": "clock", "text": {"en": "Dr. Samir is running about 40 minutes late: expected 5:40 pm", "ar": "د. سمير متأخر نحو 40 دقيقة: الموعد المتوقع 5:40 مساءً"}, "note": {"en": "Also sent as a notification", "ar": "ويصل أيضًا كإشعار"}}
+            - {"kind": "card", "blocks": [{"kind": "listitem", "avatar": {"text": "Dr. Samir", "art": "doctor"}, "text": {"en": "Dr. Samir Fahmy", "ar": "د. سمير فهمي"}, "sub": {"en": "Internal medicine", "ar": "باطنة"}}, {"kind": "heading", "text": {"en": "Today · 5:00 pm", "ar": "اليوم · 5:00 مساءً"}, "gap": "s"}, {"kind": "small", "text": {"en": "Raha Clinic, Dokki", "ar": "عيادة راحة، الدقي"}}]}
+      - id: desk
+        text: {"en": "Nothing; the front desk will explain when they arrive", "ar": "لا شيء؛ سيشرح الاستقبال حين يصلون"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "My visits", "ar": "زياراتي"}}
+          tabbar: {"active": 1, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "calendar-check", "text": {"en": "Visits", "ar": "زياراتي"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "listitem", "avatar": {"text": "Dr. Samir", "art": "doctor"}, "text": {"en": "Dr. Samir Fahmy", "ar": "د. سمير فهمي"}, "sub": {"en": "Internal medicine", "ar": "باطنة"}}, {"kind": "heading", "text": {"en": "Today · 5:00 pm", "ar": "اليوم · 5:00 مساءً"}, "gap": "s"}, {"kind": "small", "text": {"en": "Raha Clinic, Dokki", "ar": "عيادة راحة، الدقي"}}]}
+            - {"kind": "small", "text": {"en": "Dr. Samir is running 40 minutes late.", "ar": "د. سمير متأخر 40 دقيقة."}, "tone": "faint", "gap": "m", "note": {"en": "Not shown; the front desk explains on arrival", "ar": "لا يظهر؛ يشرح الاستقبال عند الوصول"}}
+      - id: hours
+        text: {"en": "Add \"Waiting times may vary\" to the clinic's page", "ar": "يضيف «قد تختلف أوقات الانتظار» إلى صفحة العيادة"}
+        mock:
+          app: "raha"
+          appbar: {"title": {"en": "My visits", "ar": "زياراتي"}}
+          tabbar: {"active": 1, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "calendar-check", "text": {"en": "Visits", "ar": "زياراتي"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "listitem", "avatar": {"text": "Dr. Samir", "art": "doctor"}, "text": {"en": "Dr. Samir Fahmy", "ar": "د. سمير فهمي"}, "sub": {"en": "Internal medicine", "ar": "باطنة"}}, {"kind": "heading", "text": {"en": "Today · 5:00 pm", "ar": "اليوم · 5:00 مساءً"}, "gap": "s"}, {"kind": "small", "text": {"en": "Raha Clinic, Dokki", "ar": "عيادة راحة، الدقي"}}]}
+            - {"kind": "small", "icon": "info", "text": {"en": "Raha Clinic: waiting times may vary.", "ar": "عيادة راحة: قد تختلف أوقات الانتظار."}, "gap": "m"}
+            - {"kind": "small", "text": {"en": "Dr. Samir is running 40 minutes late.", "ar": "د. سمير متأخر 40 دقيقة."}, "tone": "faint", "gap": "m", "note": {"en": "Known to the clinic, not shown", "ar": "تعرفه العيادة، ولا يظهر"}}
     answer: [notify]
     misconceptions:
       - id: MC-P02-004
@@ -193,7 +295,7 @@ steps:
 
   # SK-P02-U01-03: use the words your users use
   - id: S05
-    type: choose
+    type: tune
     speaker: hana
     part: retest
     skill: SK-P02-U01-03
@@ -219,9 +321,34 @@ steps:
         - { kind: listitem, icon: pause-circle, text: { en: "Suspend billing cycle", ar: "تعليق دورة الفوترة" }, chevron: true, gap: m, ring: true }
         - { kind: listitem, icon: credit-card, text: { en: "Payment method", ar: "طريقة الدفع" }, chevron: true, gap: s }
     options:
-      - { id: freeze, text: { en: "\"Freeze my membership\"", ar: "«جمّد اشتراكي»" } }
-      - { id: keep, text: { en: "\"Suspend billing cycle\", with a help page", ar: "«تعليق دورة الفوترة»، مع صفحة مساعدة" } }
-      - { id: hold, text: { en: "\"Account hold (billing)\"", ar: "«إيقاف الحساب (الفوترة)»" } }
+      - id: freeze
+        text: {"en": "\"Freeze my membership\"", "ar": "«جمّد اشتراكي»"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Membership", "ar": "الاشتراك"}, "back": true}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "heading", "text": {"en": "Gold · monthly", "ar": "Gold · شهري"}}, {"kind": "price", "text": {"en": "EGP 900", "ar": "900 جنيه"}, "per": {"en": "/ month", "ar": "/ شهريًا"}}, {"kind": "small", "text": {"en": "Renews 1 Dec", "ar": "يتجدّد 1 ديسمبر"}}]}
+            - {"kind": "listitem", "icon": "snowflake", "text": {"en": "Freeze my membership", "ar": "جمّد اشتراكي"}, "chevron": true, "gap": "m", "ring": true}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payment method", "ar": "طريقة الدفع"}, "chevron": true, "gap": "s"}
+      - id: keep
+        text: {"en": "\"Suspend billing cycle\", with a help page", "ar": "«تعليق دورة الفوترة»، مع صفحة مساعدة"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Membership", "ar": "الاشتراك"}, "back": true}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "heading", "text": {"en": "Gold · monthly", "ar": "Gold · شهري"}}, {"kind": "price", "text": {"en": "EGP 900", "ar": "900 جنيه"}, "per": {"en": "/ month", "ar": "/ شهريًا"}}, {"kind": "small", "text": {"en": "Renews 1 Dec", "ar": "يتجدّد 1 ديسمبر"}}]}
+            - {"kind": "listitem", "icon": "pause-circle", "text": {"en": "Suspend billing cycle", "ar": "تعليق دورة الفوترة"}, "chevron": true, "gap": "m", "ring": true}
+            - {"kind": "link", "icon": "question", "text": {"en": "Help: what is a billing cycle suspension?", "ar": "مساعدة: ما معنى تعليق دورة الفوترة؟"}, "gap": "s"}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payment method", "ar": "طريقة الدفع"}, "chevron": true, "gap": "s"}
+      - id: hold
+        text: {"en": "\"Account hold (billing)\"", "ar": "«إيقاف الحساب (الفوترة)»"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "Membership", "ar": "الاشتراك"}, "back": true}
+          blocks:
+            - {"kind": "card", "blocks": [{"kind": "heading", "text": {"en": "Gold · monthly", "ar": "Gold · شهري"}}, {"kind": "price", "text": {"en": "EGP 900", "ar": "900 جنيه"}, "per": {"en": "/ month", "ar": "/ شهريًا"}}, {"kind": "small", "text": {"en": "Renews 1 Dec", "ar": "يتجدّد 1 ديسمبر"}}]}
+            - {"kind": "listitem", "icon": "pause-circle", "text": {"en": "Account hold (billing)", "ar": "إيقاف الحساب (الفوترة)"}, "chevron": true, "gap": "m", "ring": true}
+            - {"kind": "listitem", "icon": "credit-card", "text": {"en": "Payment method", "ar": "طريقة الدفع"}, "chevron": true, "gap": "s"}
     answer: [freeze]
     misconceptions:
       - id: MC-P02-008
@@ -242,7 +369,7 @@ steps:
       ar: "الأعضاء يسألون أصلًا عن «التجميد»، فهذه الكلمة ستلفت نظرهم في القائمة. ويستطيع نظام الفوترة أن يحتفظ بمصطلحه خلف الكواليس."
 
   - id: S06
-    type: choose
+    type: tune
     speaker: youssef
     part: retest
     skill: SK-P02-U01-03
@@ -266,9 +393,39 @@ steps:
         - { kind: field, label: "MSISDN", text: "", gap: m, focus: true }
         - { kind: button, text: { en: "Continue to payment", ar: "تابع إلى الدفع" }, gap: m }
     options:
-      - { id: msisdn, text: { en: "\"MSISDN (subscriber number)\"", ar: "«MSISDN (رقم المشترك)»" } }
-      - { id: mobile, text: { en: "\"Mobile number, so the courier can call you\"", ar: "«رقم الموبايل، ليتصل بك المندوب»" } }
-      - { id: contact, text: { en: "\"Contact ID\"", ar: "«معرّف التواصل»" } }
+      - id: msisdn
+        text: {"en": "\"MSISDN (subscriber number)\"", "ar": "«MSISDN (رقم المشترك)»"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/checkout/delivery"
+          blocks:
+            - {"kind": "title", "text": {"en": "Delivery details", "ar": "بيانات التوصيل"}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Mohamed Adel", "ar": "محمد عادل"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "MSISDN (subscriber number)", "ar": "MSISDN (رقم المشترك)"}, "text": "", "gap": "m", "focus": true}
+            - {"kind": "button", "text": {"en": "Continue to payment", "ar": "تابع إلى الدفع"}, "gap": "m"}
+      - id: mobile
+        text: {"en": "\"Mobile number, so the courier can call you\"", "ar": "«رقم الموبايل، ليتصل بك المندوب»"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/checkout/delivery"
+          blocks:
+            - {"kind": "title", "text": {"en": "Delivery details", "ar": "بيانات التوصيل"}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Mohamed Adel", "ar": "محمد عادل"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Mobile number, so the courier can call you", "ar": "رقم الموبايل، ليتصل بك المندوب"}, "text": "", "gap": "m", "focus": true}
+            - {"kind": "button", "text": {"en": "Continue to payment", "ar": "تابع إلى الدفع"}, "gap": "m"}
+      - id: contact
+        text: {"en": "\"Contact ID\"", "ar": "«معرّف التواصل»"}
+        mock:
+          app: "dar"
+          frame: "wide"
+          url: "dar.example/checkout/delivery"
+          blocks:
+            - {"kind": "title", "text": {"en": "Delivery details", "ar": "بيانات التوصيل"}}
+            - {"kind": "field", "label": {"en": "Full name", "ar": "الاسم بالكامل"}, "text": {"en": "Mohamed Adel", "ar": "محمد عادل"}, "filled": true, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Contact ID", "ar": "معرّف التواصل"}, "text": "", "gap": "m", "focus": true}
+            - {"kind": "button", "text": {"en": "Continue to payment", "ar": "تابع إلى الدفع"}, "gap": "m"}
     answer: [mobile]
     misconceptions:
       - id: MC-P02-009
@@ -343,7 +500,7 @@ steps:
       ar: "B تتبع عادة موجودة أصلًا لدى الناس من أزرار الصوت والمصاعد والصنابير: الأكثر في الأعلى، والأقل في الأسفل."
 
   - id: S08
-    type: choose
+    type: tune
     speaker: rami
     part: retest
     skill: SK-P02-U01-04
@@ -365,9 +522,33 @@ steps:
         - { kind: heading, text: { en: "Ingredients", ar: "المكوّنات" }, gap: m }
         - { kind: list, style: bullet, items: [ { en: "Black pepper", ar: "أرز بسمتي" }, { en: "Cardamom", ar: "بصل" }, { en: "Chicken, 1 kg", ar: "بهارات الكبسة" }, { en: "Onion", ar: "دجاج، 1 كجم" }, { en: "Rice, 3 cups", ar: "طماطم" }, { en: "Tomatoes", ar: "هيل" } ], note: { en: "Sorted A to Z", ar: "مرتّبة أبجديًا" } }
     options:
-      - { id: abc, text: { en: "Keep A to Z; it's easy to scan", ar: "يبقى الترتيب الأبجدي؛ فهو سهل التصفّح" } }
-      - { id: use, text: { en: "In the order the cook uses them in the steps", ar: "بالترتيب الذي يستخدمها به الطاهي في الخطوات" } }
-      - { id: amount, text: { en: "From the largest amount to the smallest", ar: "من الكمية الأكبر إلى الأصغر" } }
+      - id: abc
+        text: {"en": "Keep A to Z; it's easy to scan", "ar": "يبقى الترتيب الأبجدي؛ فهو سهل التصفّح"}
+        mock:
+          app: "tabkha"
+          appbar: {"title": {"en": "Chicken kabsa", "ar": "كبسة دجاج"}, "back": true, "actions": [{"icon": "heart"}]}
+          blocks:
+            - {"kind": "image", "art": "food-grill", "size": "m"}
+            - {"kind": "heading", "text": {"en": "Ingredients", "ar": "المكوّنات"}, "gap": "m"}
+            - {"kind": "list", "style": "bullet", "items": [{"en": "Black pepper", "ar": "أرز بسمتي"}, {"en": "Cardamom", "ar": "بصل"}, {"en": "Chicken, 1 kg", "ar": "بهارات الكبسة"}, {"en": "Onion", "ar": "دجاج، 1 كجم"}, {"en": "Rice, 3 cups", "ar": "طماطم"}, {"en": "Tomatoes", "ar": "هيل"}], "note": {"en": "Sorted A to Z", "ar": "مرتّبة أبجديًا"}}
+      - id: use
+        text: {"en": "In the order the cook uses them in the steps", "ar": "بالترتيب الذي يستخدمها به الطاهي في الخطوات"}
+        mock:
+          app: "tabkha"
+          appbar: {"title": {"en": "Chicken kabsa", "ar": "كبسة دجاج"}, "back": true, "actions": [{"icon": "heart"}]}
+          blocks:
+            - {"kind": "image", "art": "food-grill", "size": "m"}
+            - {"kind": "heading", "text": {"en": "Ingredients", "ar": "المكوّنات"}, "gap": "m"}
+            - {"kind": "list", "style": "bullet", "items": [{"en": "Onion", "ar": "بصل"}, {"en": "Chicken, 1 kg", "ar": "دجاج، 1 كجم"}, {"en": "Tomatoes", "ar": "طماطم"}, {"en": "Cardamom", "ar": "بهارات الكبسة"}, {"en": "Black pepper", "ar": "هيل"}, {"en": "Rice, 3 cups", "ar": "أرز بسمتي"}], "note": {"en": "In the order of the steps", "ar": "بترتيب خطوات الطبخ"}}
+      - id: amount
+        text: {"en": "From the largest amount to the smallest", "ar": "من الكمية الأكبر إلى الأصغر"}
+        mock:
+          app: "tabkha"
+          appbar: {"title": {"en": "Chicken kabsa", "ar": "كبسة دجاج"}, "back": true, "actions": [{"icon": "heart"}]}
+          blocks:
+            - {"kind": "image", "art": "food-grill", "size": "m"}
+            - {"kind": "heading", "text": {"en": "Ingredients", "ar": "المكوّنات"}, "gap": "m"}
+            - {"kind": "list", "style": "bullet", "items": [{"en": "Chicken, 1 kg", "ar": "دجاج، 1 كجم"}, {"en": "Rice, 3 cups", "ar": "أرز بسمتي"}, {"en": "Onion", "ar": "بصل"}, {"en": "Tomatoes", "ar": "طماطم"}, {"en": "Cardamom", "ar": "بهارات الكبسة"}, {"en": "Black pepper", "ar": "هيل"}], "note": {"en": "Largest amount first", "ar": "الكمية الأكبر أولًا"}}
     answer: [use]
     misconceptions:
       - id: MC-P02-010

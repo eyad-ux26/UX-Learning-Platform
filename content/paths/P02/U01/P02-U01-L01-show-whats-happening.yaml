@@ -42,7 +42,7 @@ steps:
       en: "I'm designing an app for a parcel delivery company. Laila wants a courier to pick up a parcel from her home.\n\nShe taps **Book pickup**. For four seconds nothing on the screen changes, so she taps again. Two couriers come to her door the next morning."
       ar: "أصمّم تطبيقًا لشركة توصيل طرود. تريد ليلى أن يأتي مندوب ليستلم طردًا من بيتها.\n\nضغطت **احجز الاستلام**. ولمدة أربع ثوانٍ لم يتغيّر شيء على الشاشة، فضغطت مرة أخرى. وفي الصباح التالي جاء إلى بابها مندوبان."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U01-01
     rules: [R12]
@@ -64,9 +64,40 @@ steps:
       footer:
         - { kind: button, text: { en: "Book pickup", ar: "احجز الاستلام" }, note: { en: "4 seconds after the tap", ar: "بعد الضغط بـ 4 ثوانٍ" } }
     options:
-      - { id: faq, text: { en: "Add a line under the button: \"Booking can take a few seconds\"", ar: "أضيف سطرًا تحت الزر: «قد يستغرق الحجز بضع ثوانٍ»" } }
-      - { id: silent, text: { en: "Quietly ignore a second tap within ten seconds", ar: "أتجاهل أي ضغطة ثانية خلال عشر ثوانٍ دون أن أُظهر شيئًا" } }
-      - { id: feedback, text: { en: "Change the button to \"Booking…\" with a spinner, then show \"Pickup booked\" with the time", ar: "أحوّل الزر إلى «جارٍ الحجز…» مع مؤشر دوّار (Spinner)، ثم أعرض «حُجز الاستلام» مع الموعد" } }
+      - id: faq
+        text: {"en": "Add a line under the button: \"Booking can take a few seconds\"", "ar": "أضيف سطرًا تحت الزر: «قد يستغرق الحجز بضع ثوانٍ»"}
+        mock:
+          app: "tard"
+          appbar: {"title": {"en": "Book a pickup", "ar": "احجز موعد استلام"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "icon": "map-pin", "text": {"en": "14 Tahrir St, flat 6", "ar": "14 شارع التحرير، شقة 6"}, "sub": {"en": "Home · Cairo", "ar": "البيت · القاهرة"}, "chevron": true}
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "Tomorrow, 10 am–1 pm", "ar": "غدًا، من 10 ص إلى 1 م"}, "chevron": true, "gap": "s"}
+            - {"kind": "price", "text": {"en": "EGP 45", "ar": "45 جنيه"}, "gap": "l"}
+          footer:
+            - {"kind": "button", "text": {"en": "Book pickup", "ar": "احجز الاستلام"}, "note": {"en": "4 seconds after the tap", "ar": "بعد الضغط بـ 4 ثوانٍ"}}
+            - {"kind": "small", "text": {"en": "Booking can take a few seconds", "ar": "قد يستغرق الحجز بضع ثوانٍ"}, "color": "muted", "gap": "s"}
+      - id: silent
+        text: {"en": "Quietly ignore a second tap within ten seconds", "ar": "أتجاهل أي ضغطة ثانية خلال عشر ثوانٍ دون أن أُظهر شيئًا"}
+        mock:
+          app: "tard"
+          appbar: {"title": {"en": "Book a pickup", "ar": "احجز موعد استلام"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "icon": "map-pin", "text": {"en": "14 Tahrir St, flat 6", "ar": "14 شارع التحرير، شقة 6"}, "sub": {"en": "Home · Cairo", "ar": "البيت · القاهرة"}, "chevron": true}
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "Tomorrow, 10 am–1 pm", "ar": "غدًا، من 10 ص إلى 1 م"}, "chevron": true, "gap": "s"}
+            - {"kind": "price", "text": {"en": "EGP 45", "ar": "45 جنيه"}, "gap": "l"}
+          footer:
+            - {"kind": "button", "text": {"en": "Book pickup", "ar": "احجز الاستلام"}, "note": {"en": "Second tap ignored; nothing changes on screen", "ar": "تُتجاهل الضغطة الثانية، ولا يتغيّر شيء على الشاشة"}}
+      - id: feedback
+        text: {"en": "Change the button to \"Booking…\" with a spinner, then show \"Pickup booked\" with the time", "ar": "أحوّل الزر إلى «جارٍ الحجز…» مع مؤشر دوّار (Spinner)، ثم أعرض «حُجز الاستلام» مع الموعد"}
+        mock:
+          app: "tard"
+          appbar: {"title": {"en": "Book a pickup", "ar": "احجز موعد استلام"}, "back": true}
+          blocks:
+            - {"kind": "listitem", "icon": "map-pin", "text": {"en": "14 Tahrir St, flat 6", "ar": "14 شارع التحرير، شقة 6"}, "sub": {"en": "Home · Cairo", "ar": "البيت · القاهرة"}, "chevron": true}
+            - {"kind": "listitem", "icon": "clock", "text": {"en": "Tomorrow, 10 am–1 pm", "ar": "غدًا، من 10 ص إلى 1 م"}, "chevron": true, "gap": "s"}
+            - {"kind": "price", "text": {"en": "EGP 45", "ar": "45 جنيه"}, "gap": "l"}
+          footer:
+            - {"kind": "button", "icon": "spinner-gap", "tone": "off", "text": {"en": "Booking…", "ar": "جارٍ الحجز…"}, "note": {"en": "Then: ✓ Pickup booked, tomorrow 10 am–1 pm", "ar": "ثم: ✓ حُجز الاستلام، غدًا من 10 ص إلى 1 م"}}
     answer: [feedback]
     misconceptions:
       - id: MC-P02-001
@@ -117,7 +148,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) الأول هو وضوح حالة النظام (Visibility of system status): **أخبِر الناس دائمًا بما يحدث**، بالـ Feedback (الردّ) المناسب، وفي وقت معقول.\n\n- **ردّ على كل إجراء** فورًا: حالة ضغط، أو مؤشر دوّار (Spinner)، أو تأكيد.\n- **أظهِر للناس أين وصلوا** وما خطوتهم التالية.\n- **أخبِرهم حين يتغيّر شيء** يؤثر فيهم، بدل أن تغيّره بصمت."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U01-01
     rules: [R06]
@@ -142,9 +173,39 @@ steps:
         - { kind: icon, icon: spinner-gap, size: l, color: brand, gap: l, note: { en: "Spinning for 40 seconds", ar: "يدور منذ 40 ثانية" } }
         - { kind: small, text: { en: "Please wait…", ar: "انتظر من فضلك…" }, gap: s }
     options:
-      - { id: spinner, text: { en: "A spinner with \"Please wait…\"", ar: "مؤشر دوّار مع «انتظر من فضلك…»" } }
-      - { id: count, text: { en: "A bar that fills up, with \"Creating shipment 84 of 200\"", ar: "شريط يمتلئ، مع «جارٍ إنشاء الشحنة 84 من 200»" } }
-      - { id: email, text: { en: "Nothing; send an email when all shipments are ready", ar: "لا أعرض شيئًا، وأرسل بريدًا حين تجهز كل الشحنات" } }
+      - id: spinner
+        text: {"en": "A spinner with \"Please wait…\"", "ar": "مؤشر دوّار مع «انتظر من فضلك…»"}
+        mock:
+          app: "tard"
+          frame: "wide"
+          url: "tard.example/business/shipments/upload"
+          navbar: {"links": [{"en": "Shipments", "ar": "الشحنات"}, {"en": "Pickups", "ar": "الاستلام"}, {"en": "Billing", "ar": "الفواتير"}], "active": 0, "actions": [{"icon": "bell"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Upload shipments", "ar": "رفع الشحنات"}}
+            - {"kind": "listitem", "icon": "file-xls", "text": {"en": "orders-november.xlsx", "ar": "orders-november.xlsx"}, "sub": {"en": "200 parcels", "ar": "200 طرد"}, "gap": "m"}
+            - {"kind": "icon", "icon": "spinner-gap", "size": "l", "color": "brand", "gap": "l", "note": {"en": "Spinning for 40 seconds", "ar": "يدور منذ 40 ثانية"}}
+            - {"kind": "small", "text": {"en": "Please wait…", "ar": "انتظر من فضلك…"}, "gap": "s"}
+      - id: count
+        text: {"en": "A bar that fills up, with \"Creating shipment 84 of 200\"", "ar": "شريط يمتلئ، مع «جارٍ إنشاء الشحنة 84 من 200»"}
+        mock:
+          app: "tard"
+          frame: "wide"
+          url: "tard.example/business/shipments/upload"
+          navbar: {"links": [{"en": "Shipments", "ar": "الشحنات"}, {"en": "Pickups", "ar": "الاستلام"}, {"en": "Billing", "ar": "الفواتير"}], "active": 0, "actions": [{"icon": "bell"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Upload shipments", "ar": "رفع الشحنات"}}
+            - {"kind": "listitem", "icon": "file-xls", "text": {"en": "orders-november.xlsx", "ar": "orders-november.xlsx"}, "sub": {"en": "200 parcels", "ar": "200 طرد"}, "gap": "m"}
+            - {"kind": "progress", "value": 42, "label": {"en": "Creating shipment 84 of 200", "ar": "جارٍ إنشاء الشحنة 84 من 200"}, "gap": "l"}
+      - id: email
+        text: {"en": "Nothing; send an email when all shipments are ready", "ar": "لا أعرض شيئًا، وأرسل بريدًا حين تجهز كل الشحنات"}
+        mock:
+          app: "tard"
+          frame: "wide"
+          url: "tard.example/business/shipments/upload"
+          navbar: {"links": [{"en": "Shipments", "ar": "الشحنات"}, {"en": "Pickups", "ar": "الاستلام"}, {"en": "Billing", "ar": "الفواتير"}], "active": 0, "actions": [{"icon": "bell"}, {"icon": "user"}]}
+          blocks:
+            - {"kind": "title", "text": {"en": "Upload shipments", "ar": "رفع الشحنات"}}
+            - {"kind": "listitem", "icon": "file-xls", "text": {"en": "orders-november.xlsx", "ar": "orders-november.xlsx"}, "sub": {"en": "200 parcels", "ar": "200 طرد"}, "gap": "m", "note": {"en": "Nothing else on screen; an email comes later", "ar": "لا شيء آخر على الشاشة؛ ويصل بريد لاحقًا"}}
     answer: [count]
     misconceptions:
       - id: MC-P02-003
@@ -168,7 +229,7 @@ steps:
       ar: "«84 من 200» تُظهر أن العمل يتقدّم وكم بقي تقريبًا، فيستطيع صاحب المتجر أن ينتظر بهدوء أو يعود لاحقًا."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U01-02
     rules: [R06]
@@ -194,9 +255,41 @@ steps:
       footer:
         - { kind: button, text: { en: "Order again", ar: "اطلب مرة أخرى" } }
     options:
-      - { id: remove, text: { en: "The list without the two boxes", ar: "القائمة دون الصندوقين" } }
-      - { id: banner, text: { en: "The list without them, and a banner: \"Some items have changed\"", ar: "القائمة دونهما، وفوقها شريط تنبيه (Banner): «تغيّرت بعض العناصر»" } }
-      - { id: mark, text: { en: "Both boxes still listed, marked \"No longer sold\", with Remove and a similar box", ar: "الصندوقان ما زالا في القائمة، وعليهما «لم يعد يُباع»، مع «احذف» وصندوق مشابه" } }
+      - id: remove
+        text: {"en": "The list without the two boxes", "ar": "القائمة دون الصندوقين"}
+        mock:
+          app: "tard"
+          appbar: {"title": {"en": "My boxes", "ar": "صناديقي"}, "back": true}
+          tabbar: {"active": 1, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "package", "text": {"en": "Boxes", "ar": "الصناديق"}}, {"icon": "user", "text": {"en": "Account", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "listitem", "art": "box", "text": {"en": "Small box", "ar": "صندوق صغير"}, "sub": {"en": "20 × 15 cm · EGP 12", "ar": "20 × 15 سم · 12 جنيه"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Order again", "ar": "اطلب مرة أخرى"}}
+      - id: banner
+        text: {"en": "The list without them, and a banner: \"Some items have changed\"", "ar": "القائمة دونهما، وفوقها شريط تنبيه (Banner): «تغيّرت بعض العناصر»"}
+        mock:
+          app: "tard"
+          appbar: {"title": {"en": "My boxes", "ar": "صناديقي"}, "back": true}
+          tabbar: {"active": 1, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "package", "text": {"en": "Boxes", "ar": "الصناديق"}}, {"icon": "user", "text": {"en": "Account", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "banner", "tone": "info", "icon": "info", "text": {"en": "Some items have changed", "ar": "تغيّرت بعض العناصر"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Small box", "ar": "صندوق صغير"}, "sub": {"en": "20 × 15 cm · EGP 12", "ar": "20 × 15 سم · 12 جنيه"}}
+          footer:
+            - {"kind": "button", "text": {"en": "Order again", "ar": "اطلب مرة أخرى"}}
+      - id: mark
+        text: {"en": "Both boxes still listed, marked \"No longer sold\", with Remove and a similar box", "ar": "الصندوقان ما زالا في القائمة، وعليهما «لم يعد يُباع»، مع «احذف» وصندوق مشابه"}
+        mock:
+          app: "tard"
+          appbar: {"title": {"en": "My boxes", "ar": "صناديقي"}, "back": true}
+          tabbar: {"active": 1, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "package", "text": {"en": "Boxes", "ar": "الصناديق"}}, {"icon": "user", "text": {"en": "Account", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "listitem", "art": "box", "text": {"en": "Small box", "ar": "صندوق صغير"}, "sub": {"en": "20 × 15 cm · EGP 12", "ar": "20 × 15 سم · 12 جنيه"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Flat box", "ar": "صندوق مسطّح"}, "sub": {"en": "35 × 25 cm", "ar": "35 × 25 سم"}, "gap": "s", "badge": {"text": {"en": "No longer sold", "ar": "لم يعد يُباع"}, "tone": "bad"}}
+            - {"kind": "row", "blocks": [{"kind": "link", "text": {"en": "Remove", "ar": "احذف"}}, {"kind": "link", "text": {"en": "Similar: Medium flat box", "ar": "مشابه: صندوق مسطّح متوسط"}}]}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Large box", "ar": "صندوق كبير"}, "sub": {"en": "50 × 40 cm", "ar": "50 × 40 سم"}, "gap": "s", "badge": {"text": {"en": "No longer sold", "ar": "لم يعد يُباع"}, "tone": "bad"}}
+            - {"kind": "row", "blocks": [{"kind": "link", "text": {"en": "Remove", "ar": "احذف"}}, {"kind": "link", "text": {"en": "Similar: Big box", "ar": "مشابه: صندوق ضخم"}}]}
+          footer:
+            - {"kind": "button", "text": {"en": "Order again", "ar": "اطلب مرة أخرى"}}
     answer: [mark]
     misconceptions:
       - id: MC-P02-004
@@ -277,7 +370,7 @@ steps:
       ar: "الزر يُظهر النتيجة حيث تنظر العين أصلًا، وعدد السلة يؤكدها. وحركة التحميل للانتظار الذي يطول بضع ثوانٍ، لا للإجراءات الفورية."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: hana
     part: independent
     skill: SK-P02-U01-02
@@ -303,9 +396,40 @@ steps:
         - { kind: listitem, art: gym, text: { en: "HIIT · Sat 8 am", ar: "HIIT · السبت 8 ص" }, sub: { en: "Coach Omar · Hall A", ar: "المدرّب عمر · القاعة A" }, gap: s }
         - { kind: small, text: { en: "Thursday's 7 pm spinning class used to be here.", ar: "كانت حصة الـ Spinning يوم الخميس 7 م هنا." }, tone: faint, gap: m, note: { en: "Gone, with no message", ar: "اختفت دون رسالة" } }
     options:
-      - { id: vanish, text: { en: "Keep it as it is; the class is cancelled anyway", ar: "يبقى الوضع كما هو؛ فالحصة أُلغيت على أي حال" } }
-      - { id: card, text: { en: "The class stays in My bookings, marked \"Cancelled by the gym: trainer ill\", with \"Book another class\"", ar: "تبقى الحصة في «حجوزاتي» وعليها «ألغاها النادي: المدرّب مريض»، مع «احجز حصة أخرى»" } }
-      - { id: general, text: { en: "A message on the home screen: \"Some classes have changed this week\"", ar: "رسالة في الشاشة الرئيسية: «تغيّرت بعض الحصص هذا الأسبوع»" } }
+      - id: vanish
+        text: {"en": "Keep it as it is; the class is cancelled anyway", "ar": "يبقى الوضع كما هو؛ فالحصة أُلغيت على أي حال"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "My bookings", "ar": "حجوزاتي"}}
+          tabbar: {"active": 1, "items": [{"icon": "calendar-blank", "text": {"en": "Classes", "ar": "الحصص"}}, {"icon": "ticket", "text": {"en": "Bookings", "ar": "حجوزاتي"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "tabs", "options": [{"en": "Upcoming", "ar": "القادمة"}, {"en": "Past", "ar": "السابقة"}], "value": 0}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Yoga · Tue 6 pm", "ar": "يوغا · الثلاثاء 6 م"}, "sub": {"en": "Coach Mai · Studio 2", "ar": "المدرّبة مي · الاستوديو 2"}, "gap": "m"}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "HIIT · Sat 8 am", "ar": "HIIT · السبت 8 ص"}, "sub": {"en": "Coach Omar · Hall A", "ar": "المدرّب عمر · القاعة A"}, "gap": "s"}
+            - {"kind": "small", "text": {"en": "Thursday's 7 pm spinning class used to be here.", "ar": "كانت حصة الـ Spinning يوم الخميس 7 م هنا."}, "tone": "faint", "gap": "m", "note": {"en": "Gone, with no message", "ar": "اختفت دون رسالة"}}
+      - id: card
+        text: {"en": "The class stays in My bookings, marked \"Cancelled by the gym: trainer ill\", with \"Book another class\"", "ar": "تبقى الحصة في «حجوزاتي» وعليها «ألغاها النادي: المدرّب مريض»، مع «احجز حصة أخرى»"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "My bookings", "ar": "حجوزاتي"}}
+          tabbar: {"active": 1, "items": [{"icon": "calendar-blank", "text": {"en": "Classes", "ar": "الحصص"}}, {"icon": "ticket", "text": {"en": "Bookings", "ar": "حجوزاتي"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "tabs", "options": [{"en": "Upcoming", "ar": "القادمة"}, {"en": "Past", "ar": "السابقة"}], "value": 0}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Yoga · Tue 6 pm", "ar": "يوغا · الثلاثاء 6 م"}, "sub": {"en": "Coach Mai · Studio 2", "ar": "المدرّبة مي · الاستوديو 2"}, "gap": "m"}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Spinning · Thu 7 pm", "ar": "Spinning · الخميس 7 م"}, "sub": {"en": "Cancelled by the gym: trainer ill", "ar": "ألغاها النادي: المدرّب مريض"}, "badge": {"text": {"en": "Cancelled", "ar": "أُلغيت"}, "tone": "bad"}, "gap": "s"}
+            - {"kind": "link", "icon": "plus", "text": {"en": "Book another class", "ar": "احجز حصة أخرى"}, "gap": "xs"}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "HIIT · Sat 8 am", "ar": "HIIT · السبت 8 ص"}, "sub": {"en": "Coach Omar · Hall A", "ar": "المدرّب عمر · القاعة A"}, "gap": "s"}
+      - id: general
+        text: {"en": "A message on the home screen: \"Some classes have changed this week\"", "ar": "رسالة في الشاشة الرئيسية: «تغيّرت بعض الحصص هذا الأسبوع»"}
+        mock:
+          app: "nashat"
+          appbar: {"title": {"en": "My bookings", "ar": "حجوزاتي"}}
+          tabbar: {"active": 1, "items": [{"icon": "calendar-blank", "text": {"en": "Classes", "ar": "الحصص"}}, {"icon": "ticket", "text": {"en": "Bookings", "ar": "حجوزاتي"}}, {"icon": "user", "text": {"en": "Me", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "tabs", "options": [{"en": "Upcoming", "ar": "القادمة"}, {"en": "Past", "ar": "السابقة"}], "value": 0}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "Yoga · Tue 6 pm", "ar": "يوغا · الثلاثاء 6 م"}, "sub": {"en": "Coach Mai · Studio 2", "ar": "المدرّبة مي · الاستوديو 2"}, "gap": "m"}
+            - {"kind": "listitem", "art": "gym", "text": {"en": "HIIT · Sat 8 am", "ar": "HIIT · السبت 8 ص"}, "sub": {"en": "Coach Omar · Hall A", "ar": "المدرّب عمر · القاعة A"}, "gap": "s"}
+            - {"kind": "small", "text": {"en": "Thursday's 7 pm spinning class used to be here.", "ar": "كانت حصة الـ Spinning يوم الخميس 7 م هنا."}, "tone": "faint", "gap": "m", "note": {"en": "Home only says: \"Some classes have changed this week\"", "ar": "الرئيسية تقول فقط: «تغيّرت بعض الحصص هذا الأسبوع»"}}
     answer: [card]
     misconceptions:
       - id: MC-P02-004

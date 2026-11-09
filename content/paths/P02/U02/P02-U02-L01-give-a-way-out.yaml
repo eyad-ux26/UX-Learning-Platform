@@ -47,7 +47,7 @@ steps:
       en: "My team makes a photo printing app. Salma picked 30 photos to print, then opened one to look at it full screen.\n\nTo leave the photo, she pressed her phone's Back button. The app took her all the way to the home screen, and her 30 picks were gone."
       ar: "يصنع فريقي تطبيقًا لطباعة الصور. اختارت سلمى 30 صورة لتطبعها، ثم فتحت واحدة لتراها بملء الشاشة.\n\nولكي تخرج من الصورة، ضغطت زر الرجوع في هاتفها. فأخذها التطبيق إلى الشاشة الرئيسية مباشرة، وضاعت اختياراتها الثلاثون."
   - id: S02
-    type: choose
+    type: tune
     part: try
     skill: SK-P02-U02-02
     rules: [R12]
@@ -67,9 +67,35 @@ steps:
         - { kind: image, art: beach, size: xl }
         - { kind: row, gap: m, blocks: [ { kind: iconbtn, icon: x, aria: { en: "Close", ar: "إغلاق" } }, { kind: small, text: { en: "Phone Back pressed", ar: "ضغطت زر الرجوع في الهاتف" } } ] }
     options:
-      - { id: warn, text: { en: "Keep going home, but first ask \"Leave and lose your selection?\"", ar: "يذهب إلى الرئيسية كما هو، لكن بعد سؤال: «هل تغادر وتفقد اختياراتك؟»" } }
-      - { id: close, text: { en: "Close the photo and return to her 30 picks, as the ✕ does", ar: "يغلق الصورة ويعيدها إلى اختياراتها الثلاثين، كما يفعل ✕" } }
-      - { id: bigger, text: { en: "Make the ✕ bigger so she uses it instead", ar: "يكبّر زر ✕ لتستخدمه بدلًا من «رجوع»" } }
+      - id: warn
+        text: {"en": "Keep going home, but first ask \"Leave and lose your selection?\"", "ar": "يذهب إلى الرئيسية كما هو، لكن بعد سؤال: «هل تغادر وتفقد اختياراتك؟»"}
+        mock:
+          app: "taba"
+          theme: "dark"
+          appbar: {"title": {"en": "Photo 7 of 30", "ar": "الصورة 7 من 30"}}
+          blocks:
+            - {"kind": "image", "art": "beach", "size": "xl"}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "iconbtn", "icon": "x", "aria": {"en": "Close", "ar": "إغلاق"}}, {"kind": "small", "text": {"en": "Phone Back pressed", "ar": "ضغطت زر الرجوع في الهاتف"}}]}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Leave and lose your selection?", "ar": "هل تغادر وتفقد اختياراتك؟"}}, {"kind": "small", "text": {"en": "Your 30 picks will be lost.", "ar": "ستضيع الصور الثلاثون التي اخترتها."}, "gap": "s"}, {"kind": "button", "style": "danger", "text": {"en": "Leave", "ar": "غادر"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "Stay", "ar": "ابقَ"}, "gap": "s"}]}
+      - id: close
+        text: {"en": "Close the photo and return to her 30 picks, as the ✕ does", "ar": "يغلق الصورة ويعيدها إلى اختياراتها الثلاثين، كما يفعل ✕"}
+        mock:
+          app: "taba"
+          appbar: {"title": {"en": "Your picks · 30", "ar": "اختياراتك · 30"}, "back": true}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "image", "art": "beach", "size": "s"}, {"kind": "image", "art": "photo", "size": "s"}, {"kind": "image", "art": "cafe", "size": "s"}], "note": {"en": "Phone Back closed the photo", "ar": "زر الرجوع أغلق الصورة"}}
+            - {"kind": "row", "gap": "s", "blocks": [{"kind": "image", "art": "family", "size": "s"}, {"kind": "image", "art": "desert", "size": "s"}, {"kind": "image", "art": "city-night", "size": "s"}]}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue with 30 photos", "ar": "تابع بـ 30 صورة"}}
+      - id: bigger
+        text: {"en": "Make the ✕ bigger so she uses it instead", "ar": "يكبّر زر ✕ لتستخدمه بدلًا من «رجوع»"}
+        mock:
+          app: "taba"
+          theme: "dark"
+          appbar: {"title": {"en": "Photo 7 of 30", "ar": "الصورة 7 من 30"}}
+          blocks:
+            - {"kind": "image", "art": "beach", "size": "xl"}
+            - {"kind": "row", "gap": "m", "blocks": [{"kind": "icon", "icon": "x-circle", "size": "xl", "color": "ink"}, {"kind": "small", "text": {"en": "Phone Back still goes home", "ar": "زر الرجوع ما زال يذهب إلى الرئيسية"}}]}
     answer: [close]
     misconceptions:
       - id: MC-P02-012
@@ -118,7 +144,7 @@ steps:
       ar: "مبدأ الاستخدام (Usability heuristic) الثالث هو تحكّم المستخدم وحريته (User control and freedom): كثيرًا ما يفعل الناس أشياء بالخطأ أو يغيّرون رأيهم، فيحتاجون إلى **مخرج طوارئ واضح**، مثل علامة الخروج في أي مبنى.\n\n- **أعطِ دائمًا طريقًا للخروج:** «إلغاء» أو «إغلاق» أو «رجوع»، سهل الرؤية وواضح الاسم.\n- **«رجوع» يعيد خطوة واحدة،** إلى المكان الذي جاء منه الناس بالضبط، لا إلى البداية.\n- **ادعم التراجع (Undo)**، وقبل الإجراء الخطِر، اشرح ما سيحدث واعرض «إلغاء»."
 
   - id: S04
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U02-01
     rules: [R06]
@@ -143,9 +169,43 @@ steps:
       footer:
         - { kind: button, text: { en: "Continue", ar: "متابعة" }, note: { en: "The only button on every step", ar: "الزر الوحيد في كل خطوة" } }
     options:
-      - { id: back, text: { en: "Nothing new: the phone's Back button can undo the steps one by one", ar: "لا شيء جديد: زر الرجوع في الهاتف يستطيع التراجع عن الخطوات واحدة واحدة" } }
-      - { id: cancel, text: { en: "A \"Cancel\" link next to Continue, and a \"Back\" at the top", ar: "رابط «إلغاء» بجانب «متابعة»، و«رجوع» في الأعلى" } }
-      - { id: x, text: { en: "A small ✕ in the corner of the last step only", ar: "علامة ✕ صغيرة في زاوية الخطوة الأخيرة فقط" } }
+      - id: back
+        text: {"en": "Nothing new: the phone's Back button can undo the steps one by one", "ar": "لا شيء جديد: زر الرجوع في الهاتف يستطيع التراجع عن الخطوات واحدة واحدة"}
+        mock:
+          app: "taba"
+          appbar: {"title": {"en": "Send a photo book", "ar": "أرسل ألبوم صور"}}
+          blocks:
+            - {"kind": "progress", "value": 50, "label": {"en": "Step 2 of 4", "ar": "الخطوة 2 من 4"}}
+            - {"kind": "heading", "text": {"en": "Who is it for?", "ar": "لمن الهدية؟"}, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Name", "ar": "الاسم"}, "text": {"en": "e.g. Nada", "ar": "مثال: ندى"}, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Address", "ar": "العنوان"}, "text": {"en": "Street, building, flat", "ar": "الشارع، العمارة، الشقة"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}, "note": {"en": "The only button on every step", "ar": "الزر الوحيد في كل خطوة"}}
+      - id: cancel
+        text: {"en": "A \"Cancel\" link next to Continue, and a \"Back\" at the top", "ar": "رابط «إلغاء» بجانب «متابعة»، و«رجوع» في الأعلى"}
+        mock:
+          app: "taba"
+          appbar: {"title": {"en": "Send a photo book", "ar": "أرسل ألبوم صور"}, "back": true}
+          blocks:
+            - {"kind": "progress", "value": 50, "label": {"en": "Step 2 of 4", "ar": "الخطوة 2 من 4"}}
+            - {"kind": "heading", "text": {"en": "Who is it for?", "ar": "لمن الهدية؟"}, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Name", "ar": "الاسم"}, "text": {"en": "e.g. Nada", "ar": "مثال: ندى"}, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Address", "ar": "العنوان"}, "text": {"en": "Street, building, flat", "ar": "الشارع، العمارة، الشقة"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}}
+            - {"kind": "button", "style": "text", "text": {"en": "Cancel", "ar": "إلغاء"}, "gap": "s"}
+      - id: x
+        text: {"en": "A small ✕ in the corner of the last step only", "ar": "علامة ✕ صغيرة في زاوية الخطوة الأخيرة فقط"}
+        mock:
+          app: "taba"
+          appbar: {"title": {"en": "Send a photo book", "ar": "أرسل ألبوم صور"}}
+          blocks:
+            - {"kind": "progress", "value": 50, "label": {"en": "Step 2 of 4", "ar": "الخطوة 2 من 4"}}
+            - {"kind": "heading", "text": {"en": "Who is it for?", "ar": "لمن الهدية؟"}, "gap": "m"}
+            - {"kind": "field", "label": {"en": "Name", "ar": "الاسم"}, "text": {"en": "e.g. Nada", "ar": "مثال: ندى"}, "gap": "s"}
+            - {"kind": "field", "label": {"en": "Address", "ar": "العنوان"}, "text": {"en": "Street, building, flat", "ar": "الشارع، العمارة، الشقة"}, "gap": "m"}
+          footer:
+            - {"kind": "button", "text": {"en": "Continue", "ar": "متابعة"}, "note": {"en": "Still no way out here; a ✕ appears only on step 4", "ar": "ما زال لا مخرج هنا؛ وتظهر ✕ في الخطوة 4 فقط"}}
     answer: [cancel]
     misconceptions:
       - id: MC-P02-013
@@ -164,7 +224,7 @@ steps:
       ar: "«إلغاء» يتيح للناس الخروج بضغطة واحدة من أي خطوة، و«رجوع» يتيح لهم تعديل الخطوة السابقة. ومعرفة أنهم يستطيعون الخروج تجعل الناس أكثر استعدادًا للبدء."
 
   - id: S05
-    type: choose
+    type: tune
     part: guided
     skill: SK-P02-U02-02
     rules: [R06]
@@ -192,9 +252,31 @@ steps:
         blocks:
           - { kind: row, blocks: [ { kind: text, text: { en: "3 photos deleted", ar: "حُذفت 3 صور" } }, { kind: link, text: { en: "Undo", ar: "تراجع" } } ], note: { en: "Disappears after 3 s", ar: "يختفي بعد 3 ثوانٍ" } }
     options:
-      - { id: dialog, text: { en: "Ask \"Delete these photos?\" before every delete", ar: "نسأل «هل تحذف هذه الصور؟» قبل كل حذف" } }
-      - { id: longer, text: { en: "Keep Undo on screen for about ten seconds, and keep deleted photos in \"Recently deleted\" for 30 days", ar: "نُبقي «تراجع» على الشاشة نحو عشر ثوانٍ، ونحتفظ بالصور المحذوفة في «المحذوفة مؤخرًا» 30 يومًا" } }
-      - { id: shake, text: { en: "Let people shake the phone to undo", ar: "نتيح للناس هزّ الهاتف للتراجع" } }
+      - id: dialog
+        text: {"en": "Ask \"Delete these photos?\" before every delete", "ar": "نسأل «هل تحذف هذه الصور؟» قبل كل حذف"}
+        mock:
+          app: "suwar"
+          appbar: {"title": {"en": "Summer 2026", "ar": "صيف 2026"}, "back": true, "actions": [{"icon": "dots-three-vertical"}]}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "image", "art": "beach", "size": "s"}, {"kind": "image", "art": "photo", "size": "s"}, {"kind": "image", "art": "cafe", "size": "s"}]}
+          overlay: {"type": "dialog", "blocks": [{"kind": "heading", "text": {"en": "Delete these photos?", "ar": "هل تحذف هذه الصور؟"}}, {"kind": "small", "text": {"en": "3 photos", "ar": "3 صور"}, "gap": "s"}, {"kind": "button", "style": "danger", "text": {"en": "Delete", "ar": "احذف"}, "gap": "m"}, {"kind": "button", "style": "text", "text": {"en": "Cancel", "ar": "إلغاء"}, "gap": "s"}]}
+      - id: longer
+        text: {"en": "Keep Undo on screen for about ten seconds, and keep deleted photos in \"Recently deleted\" for 30 days", "ar": "نُبقي «تراجع» على الشاشة نحو عشر ثوانٍ، ونحتفظ بالصور المحذوفة في «المحذوفة مؤخرًا» 30 يومًا"}
+        mock:
+          app: "suwar"
+          appbar: {"title": {"en": "Summer 2026", "ar": "صيف 2026"}, "back": true, "actions": [{"icon": "dots-three-vertical"}]}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "image", "art": "beach", "size": "s"}, {"kind": "image", "art": "photo", "size": "s"}, {"kind": "image", "art": "cafe", "size": "s"}]}
+            - {"kind": "listitem", "icon": "trash", "text": {"en": "Recently deleted · 3", "ar": "المحذوفة مؤخرًا · 3"}, "sub": {"en": "Kept for 30 days", "ar": "تبقى 30 يومًا"}, "chevron": true, "gap": "l"}
+          overlay: {"type": "toast", "blocks": [{"kind": "row", "blocks": [{"kind": "text", "text": {"en": "3 photos deleted", "ar": "حُذفت 3 صور"}}, {"kind": "link", "text": {"en": "Undo", "ar": "تراجع"}}], "note": {"en": "Stays about 10 s", "ar": "يبقى نحو 10 ثوانٍ"}}]}
+      - id: shake
+        text: {"en": "Let people shake the phone to undo", "ar": "نتيح للناس هزّ الهاتف للتراجع"}
+        mock:
+          app: "suwar"
+          appbar: {"title": {"en": "Summer 2026", "ar": "صيف 2026"}, "back": true, "actions": [{"icon": "dots-three-vertical"}]}
+          blocks:
+            - {"kind": "row", "blocks": [{"kind": "image", "art": "beach", "size": "s"}, {"kind": "image", "art": "photo", "size": "s"}, {"kind": "image", "art": "cafe", "size": "s"}]}
+          overlay: {"type": "toast", "blocks": [{"kind": "text", "text": {"en": "3 photos deleted", "ar": "حُذفت 3 صور"}, "note": {"en": "Shake the phone to undo", "ar": "هزّ الهاتف للتراجع"}}]}
     answer: [longer]
     misconceptions:
       - id: MC-P02-015
@@ -268,7 +350,7 @@ steps:
       ar: "«‹ رجوع» سهلة الرؤية ولا تترك أي شك. فالمخرج لا ينفع إلا إذا لاحظه الناس ووثقوا بما سيفعله."
 
   - id: S07
-    type: choose
+    type: tune
     speaker: youssef
     part: independent
     skill: SK-P02-U02-02
@@ -298,9 +380,36 @@ steps:
             - { text: { en: "Kitchen", ar: "المطبخ" } }
             - { text: { en: "Shoes", ar: "أحذية" } }
     options:
-      - { id: home, text: { en: "The home page, so she can start a fresh search", ar: "الصفحة الرئيسية، لتبدأ بحثًا جديدًا" } }
-      - { id: results, text: { en: "The drill results, with her price and brand filters still set", ar: "نتائج المثاقب، مع بقاء فلاتر السعر والماركة" } }
-      - { id: category, text: { en: "The Tools category page, without filters", ar: "صفحة قسم الأدوات، دون فلاتر" } }
+      - id: home
+        text: {"en": "The home page, so she can start a fresh search", "ar": "الصفحة الرئيسية، لتبدأ بحثًا جديدًا"}
+        mock:
+          app: "dar"
+          appbar: {"logo": true, "actions": [{"icon": "magnifying-glass"}, {"icon": "shopping-cart"}]}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "squares-four", "text": {"en": "Departments", "ar": "الأقسام"}}, {"icon": "user", "text": {"en": "Account", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "searchbar", "text": {"en": "Search Dar", "ar": "ابحث في دار"}, "note": {"en": "After Back from the drill", "ar": "بعد «رجوع» من صفحة المثقاب"}}
+            - {"kind": "card", "art": "washing-machine", "blocks": [{"kind": "heading", "text": {"en": "Washers week", "ar": "أسبوع الغسالات"}}, {"kind": "small", "text": {"en": "Up to 20% off", "ar": "خصم حتى 20%"}}], "gap": "m"}
+            - {"kind": "chips", "gap": "m", "items": [{"text": {"en": "Tools", "ar": "أدوات"}}, {"text": {"en": "Kitchen", "ar": "المطبخ"}}, {"text": {"en": "Shoes", "ar": "أحذية"}}]}
+      - id: results
+        text: {"en": "The drill results, with her price and brand filters still set", "ar": "نتائج المثاقب، مع بقاء فلاتر السعر والماركة"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Drills", "ar": "مثاقب"}, "back": true, "actions": [{"icon": "funnel", "count": 2, "aria": {"en": "Filters", "ar": "الفلاتر"}}]}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "squares-four", "text": {"en": "Departments", "ar": "الأقسام"}}, {"icon": "user", "text": {"en": "Account", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "chips", "items": [{"text": {"en": "Under EGP 2,000", "ar": "أقل من 2,000 جنيه"}, "on": true}, {"text": {"en": "Brand: Qowa", "ar": "الماركة: قوة"}, "on": true}], "note": {"en": "Her filters are still set", "ar": "ما زالت فلاترها كما هي"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Qowa drill 650 W", "ar": "مثقاب قوة 650 وات"}, "sub": {"en": "EGP 1,250", "ar": "1,250 جنيه"}, "gap": "m"}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Qowa drill 500 W", "ar": "مثقاب قوة 500 وات"}, "sub": {"en": "EGP 980", "ar": "980 جنيه"}, "gap": "s"}
+      - id: category
+        text: {"en": "The Tools category page, without filters", "ar": "صفحة قسم الأدوات، دون فلاتر"}
+        mock:
+          app: "dar"
+          appbar: {"title": {"en": "Tools", "ar": "أدوات"}, "back": true}
+          tabbar: {"active": 0, "items": [{"icon": "house", "text": {"en": "Home", "ar": "الرئيسية"}}, {"icon": "squares-four", "text": {"en": "Departments", "ar": "الأقسام"}}, {"icon": "user", "text": {"en": "Account", "ar": "حسابي"}}]}
+          blocks:
+            - {"kind": "chips", "items": [{"text": {"en": "Drills", "ar": "مثاقب"}}, {"text": {"en": "Saws", "ar": "مناشير"}}, {"text": {"en": "Hand tools", "ar": "عدد يدوية"}}], "note": {"en": "No filters", "ar": "دون فلاتر"}}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Paint roller", "ar": "رولة دهان"}, "sub": {"en": "EGP 120", "ar": "120 جنيه"}, "gap": "m"}
+            - {"kind": "listitem", "art": "box", "text": {"en": "Pipe wrench", "ar": "مفتاح مواسير"}, "sub": {"en": "EGP 210", "ar": "210 جنيه"}, "gap": "s"}
     answer: [results]
     misconceptions:
       - id: MC-P02-012
