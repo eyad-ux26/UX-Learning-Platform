@@ -126,6 +126,7 @@ export function Drawer({ label, title, icon, primary = false, children, action, 
   label: string; title: string; icon?: string; primary?: boolean; children: ReactNode; action: Action; submit: string; fresh?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const uid = useId();
   const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
   const router = useRouter();
   useEffect(() => {
@@ -135,9 +136,9 @@ export function Drawer({ label, title, icon, primary = false, children, action, 
     <>
       <button type="button" className={`a-btn${primary ? " pri" : ""}`} onClick={() => ref.current?.showModal()}>{icon ? <Icon n={icon} /> : null}{label}</button>
       {state?.ok && state.message ? <span className="a-ok t-xs" role="status"><Icon n="check-circle-fill" />{state.message}</span> : null}
-      <dialog ref={ref} className="a-drawer" aria-labelledby={`drw-${label}`}>
+      <dialog ref={ref} className="a-drawer" aria-labelledby={`drw-${uid}`}>
         <form action={formAction} style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          <div className="a-drw-h"><h2 className="t-h2 a-grow" id={`drw-${label}`}>{title}</h2><button type="button" className="a-btn sm icon ghost" aria-label="Close" onClick={() => ref.current?.close()}><Icon n="x" /></button></div>
+          <div className="a-drw-h"><h2 className="t-h2 a-grow" id={`drw-${uid}`}>{title}</h2><button type="button" className="a-btn sm icon ghost" aria-label="Close" onClick={() => ref.current?.close()}><Icon n="x" /></button></div>
           <div className="a-drw-b a-stack">
             {children}
             <CodeField show={!fresh || !!(state && !state.ok && state.reauth)} />
