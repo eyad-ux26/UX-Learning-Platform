@@ -32,11 +32,10 @@ Video courses are the `hybrid` paths: P02 and P14 today.
     - **The path name** at 18px, 700 weight (22px on desktop).
     - **The subtitle** at 14px, regular weight, at most 2 lines.
     - **A footer row** with "With **{instructor}**" and the chips for the unit count and "Unit 1 free".
-  - The photo appears only once. There's no separate avatar.
   - Phones show the cards in one column. Desktop shows 2 columns.
   - "Interactive paths" / «مسارات تفاعلية» follows in the normal card grid.
 - **B · Instructor spotlight.**
-  - A swipeable row of big instructor cards, with dots and a "Start free" button.
+  - A swipeable row of video course cards, with dots. Each card (Eyad, 9 Nov, v102) has the path art beside the name and description, like the list cards, then the small round instructor photo with "With {name}", then the same tags as other cards (Video, units, Unit 1 free). No Start button. Light blue gradient and border.
   - Then one list, video courses first.
 - **C · One list, video first.**
   - The smallest change.
@@ -44,6 +43,8 @@ Video courses are the `hybrid` paths: P02 and P14 today.
     - a light blue gradient and border
     - a picture tile showing only the instructor's photo, centred on the face, with a thin highlight ring and no extra badges (Eyad, 8 Nov, rev 2)
     - the line "Videos with {name}"
+
+Every path card in every option shows the path's description from the catalog (`sub` in `catalog-list.ts`), at most 2 lines (Eyad, 9 Nov).
 
 In every option, "Your paths" and "Completed" (S3-17) stay above these sections once the learner has joined a path.
 
