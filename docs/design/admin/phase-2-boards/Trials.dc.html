@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Money · Subscriptions · trials</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell a-overlay" data-theme="light">
+  <dc-import name="Nav" role="lead" cur="subs" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="lead" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#money">Money</a><span aria-hidden="true">/</span><span>Subscriptions</span></nav>
+          <h1 class="t-h1">Subscriptions</h1>
+          <p class="t-sm ink-2"><span class="num">2,865</span> active Pro · <span class="num">136</span> in a free trial, not counted as paid</p>
+        </div>
+        <div class="acts"><span class="a-tagx">Trials need app work first</span></div>
+      </div>
+      <div class="a-tabs" role="tablist">
+        <a href="Subscriptions.dc.html" role="tab" aria-selected="false">All <span class="a-count">3,548</span></a>
+        <a href="#paid" role="tab" aria-selected="false">Paid <span class="a-count">2,824</span></a>
+        <a href="#trial" role="tab" aria-selected="true">In a trial <span class="a-count">136</span></a>
+        <a href="#comp" role="tab" aria-selected="false">Comp <span class="a-count">41</span></a>
+        <a href="#pd" role="tab" aria-selected="false">Past due <span class="a-count hot">23</span></a>
+        <a href="#c" role="tab" aria-selected="false">Cancelled <span class="a-count">412</span></a>
+        <a href="#r" role="tab" aria-selected="false">Refunded <span class="a-count">112</span></a>
+      </div>
+      <section class="a-card" aria-label="Trials table">
+        <div class="a-toolbar">
+          <label class="a-in" style="flex: 0 1 320px;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="ph-txt">Learner, email or subscription id</span></label>
+          <button class="a-chip" type="button"><span class="k">Ends</span> Any time<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          <button class="a-chip" type="button"><span class="k">Region</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+        </div>
+        <div class="a-tbl-wrap">
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Learner</th><th scope="col">Plan after the trial</th><th scope="col">Region</th><th scope="col">Status</th><th scope="col">Trial started</th><th scope="col">Trial ends</th><th scope="col">Lessons in trial</th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+                <tr class="{{r.cls}}"><td><a class="rowlink" href="Learner360.dc.html">{{r.who}}</a></td><td>{{r.plan}}</td><td>{{r.region}}</td><td><span class="{{r.st}}"><span class="{{r.sti}}" aria-hidden="true"></span>{{r.stl}}</span></td><td class="ink-2">{{r.start}}</td><td>{{r.ends}}</td><td class="num">{{r.les}}</td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div class="a-pager"><span>1–7 of 136</span></div>
+      </section>
+    </main>
+  </div>
+  <div class="a-scrim" aria-hidden="true"></div>
+  <aside class="a-drawer" role="dialog" aria-labelledby="xt-h">
+    <div class="a-drw-h"><div style="display: flex; flex-direction: column; gap: 2px;" class="a-grow"><span class="t-over">Extend trial</span><h2 class="t-h3" id="xt-h">Ahmed Tarek</h2><span class="t-xs ink-2">Pro monthly after the trial · Egypt · 249 EGP</span></div><button class="a-ibtn" type="button" aria-label="Close"><span class="i i-x" aria-hidden="true"></span></button></div>
+    <div class="a-drw-b" style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="a-kv"><span class="k">Trial</span><span class="v">7 days · 5 Nov to 12 Nov</span><span class="k">Extended before</span><span class="v">No</span><span class="k">Lessons in the trial</span><span class="v">3 · last active yesterday</span></div>
+      <div class="a-field"><span class="a-lbl">Extend by</span><div class="a-seg" role="group" aria-label="Days"><button type="button">1 day</button><button type="button" aria-pressed="true">3 days</button><button type="button">7 days</button></div><span class="help">Up to 7 days, once per learner.</span></div>
+      <div class="a-field"><label>Reason <span class="req">*</span></label><div class="a-in" style="height: auto; padding: 8px 10px;">Learner was in hospital for 3 days and asked for more time (ticket #4821).</div></div>
+      <div style="display: flex; flex-direction: column; gap: 6px;"><span class="a-lbl">What will happen</span><ul class="a-effects"><li><span class="i i-calendar-check s14" aria-hidden="true"></span>The trial ends on 15 Nov instead of 12 Nov.</li><li><span class="i i-credit-card s14" aria-hidden="true"></span>The first charge of 249 EGP moves to 15 Nov.</li><li><span class="i i-envelope-simple s14" aria-hidden="true"></span>Ahmed gets an email in Arabic with the new date.</li><li><span class="i i-clock-counter-clockwise s14" aria-hidden="true"></span>The change is written to the audit log with your reason.</li></ul></div>
+    </div>
+    <div class="a-drw-f"><button class="a-btn" type="button">Cancel</button><button class="a-btn pri" type="button"><span class="i i-hourglass-medium" aria-hidden="true"></span>Extend to 15 Nov</button></div>
+  </aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = { trial: ['a-st info', 'i i-hourglass-medium', 'In a trial'], ext: ['a-st info', 'i i-hourglass-medium', 'Extended'], soon: ['a-st wait', 'i i-clock', 'Ends in 3 days'] };
+    const R = (who, plan, region, s, start, ends, les, open) => ({ who, plan, region, st: S[s][0], sti: S[s][1], stl: S[s][2], start, ends, les, cls: open ? 'open' : '' });
+    return {
+      rows: [
+        R('Ahmed Tarek', 'Pro monthly', 'Egypt', 'soon', '5 Nov 2026', '12 Nov', '3', true),
+        R('Salma Youssef', 'Pro annual', 'Egypt', 'trial', '7 Nov 2026', '14 Nov', '6'),
+        R('Faisal Al-Otaibi', 'Pro monthly', 'Gulf', 'trial', '8 Nov 2026', '15 Nov', '2'),
+        R('Hiba Mansour', 'Pro monthly', 'Other Arab', 'ext', '1 Nov 2026', '11 Nov · +3 days', '9'),
+        R('Mostafa Ragab', 'Pro annual', 'Egypt', 'soon', '5 Nov 2026', '12 Nov', '0'),
+        R('Nada Kamal', 'Pro monthly', 'Rest of the world', 'trial', '9 Nov 2026', '16 Nov', '1'),
+        R('Ali Hussein', 'Pro monthly', 'Gulf', 'trial', '6 Nov 2026', '13 Nov', '4')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Support macros</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="lead" cur="inbox" hint-size="232px,1060px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="lead" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="SupportInbox.dc.html">Support inbox</a><span aria-hidden="true">/</span><span>Macros</span></nav>
+          <h1 class="t-h1">Macros</h1>
+          <p class="t-sm ink-2">Saved replies in English and Arabic. A macro can also run actions on the learner’s account.</p>
+        </div>
+        <div class="acts"><button class="a-btn pri" type="button"><span class="i i-plus" aria-hidden="true"></span>New macro</button></div>
+      </div>
+
+      <div class="a-split" style="align-items: stretch;">
+        <section class="a-card" style="flex: 0 1 430px; min-width: 0;" aria-label="All macros">
+          <div class="a-toolbar"><label class="a-in" style="flex: 1;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="ph-txt">Search macros</span></label><button class="a-chip" type="button"><span class="k">Category</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button></div>
+          <ul style="list-style: none; margin: 0; padding: 0;">
+            <sc-for list="{{macros}}" as="m" hint-placeholder-count="8">
+              <li><a href="#m" style="{{m.style}}" aria-current="{{m.cur}}">
+                <span class="a-row" style="gap: 8px;"><span class="w7 a-grow">{{m.name}}</span><span class="{{m.st}}"><span class="{{m.sti}}" aria-hidden="true"></span>{{m.stl}}</span></span>
+                <span class="a-row t-xs ink-2" style="gap: 6px;"><span>{{m.cat}}</span><span aria-hidden="true">·</span><span class="a-tagx">EN</span><span class="{{m.arCls}}">AR</span><sc-if value="{{m.hasAct}}" hint-placeholder-val="{{false}}"><span class="a-row" style="gap: 3px;"><span class="i i-lightning s12" aria-hidden="true"></span>{{m.act}}</span></sc-if><span class="a-grow"></span><span class="num">{{m.used}}</span></span>
+              </a></li>
+            </sc-for>
+          </ul>
+        </section>
+
+        <section class="a-card" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column;" aria-label="Edit macro">
+          <div class="a-card-h"><h2 class="t-h3">Resend sign-in link</h2><span class="a-st good"><span class="i i-check-circle-fill" aria-hidden="true"></span>Live</span><span class="t-xs ink-3">Edited by Nadia Samir · 4 Nov</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+              <div class="a-field"><label>Name<span class="req" aria-hidden="true">*</span></label><div class="a-in">Resend sign-in link</div></div>
+              <div class="a-field"><label>Category</label><div class="a-in a-sel">Account and sign-in<span class="i i-caret-down s14" aria-hidden="true"></span></div></div>
+              <div class="a-field"><label>Who can use it</label><div class="a-in a-sel">All support roles<span class="i i-caret-down s14" aria-hidden="true"></span></div></div>
+            </div>
+
+            <div class="a-field">
+              <span class="a-lbl">Actions that run when the reply is sent</span>
+              <div class="a-row" style="gap: 8px; padding: 10px; border: 1px dashed var(--line-strong); border-radius: 8px;">
+                <span class="a-act-chip"><span class="i i-paper-plane-tilt s14" aria-hidden="true"></span>Resend sign-in link</span>
+                <span class="a-act-chip"><span class="i i-hourglass-medium s14" aria-hidden="true"></span>Set status: Waiting on learner</span>
+                <button class="a-chip add" type="button"><span class="i i-plus s12" aria-hidden="true"></span>Add action</button>
+              </div>
+              <span class="help">Actions use the agent’s own permissions. If the agent can’t run one, the macro tells them before sending.</span>
+            </div>
+
+            <div class="a-row" style="gap: 8px;"><span class="a-lbl a-grow">Reply text</span><span class="t-xs ink-3">Insert:</span><span class="a-ph-tok">{first_name}</span><span class="a-ph-tok">{plan}</span><span class="a-ph-tok">{renewal_date}</span><span class="a-ph-tok">{agent_name}</span></div>
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px;">
+              <div class="a-field">
+                <label>English</label>
+                <div class="a-ta" style="min-height: 190px; line-height: 22px;">Hi <span class="a-ph-tok">{first_name}</span>,<br><br>I’ve just sent you a new sign-in link. It can take up to 5 minutes to arrive. If you don’t see it, please check your spam folder, then reply to this email and we’ll help.<br><br>Your progress is saved.<br><br><span class="a-ph-tok">{agent_name}</span>, UXGate support</div>
+                <span class="help">412 characters</span>
+              </div>
+              <div class="a-field">
+                <label>Arabic · العربية</label>
+                <div class="a-ta a-ar" lang="ar" dir="rtl" style="min-height: 190px;">مرحبًا <span class="a-ph-tok">{first_name}</span>،<br><br>أرسلت لك الآن رابط تسجيل دخول جديدًا. قد يستغرق وصوله حتى 5 دقائق. إذا لم تجده، ابحث في مجلد الرسائل غير المرغوب فيها، ثم ردّ على هذه الرسالة وسنساعدك.<br><br>تقدّمك محفوظ.<br><br><span class="a-ph-tok">{agent_name}</span>، دعم UXGate</div>
+                <span class="help">Written and previewed right to left. Placeholders stay left to right.</span>
+              </div>
+            </div>
+
+            <div class="a-note"><span class="i i-eye" aria-hidden="true"></span><div class="t-sm">Preview with a real learner: <b>Mariam Adel</b> → “مرحبًا مريم،” · <a href="#preview">Open email preview</a></div></div>
+          </div>
+          <div class="a-dlg-f" style="margin-top: auto; border-radius: 0 0 10px 10px;">
+            <span class="lft"><span class="i i-info s14" aria-hidden="true"></span>Changes to a live macro go live when you publish.</span>
+            <button class="a-btn" type="button">Save draft</button>
+            <button class="a-btn pri" type="button">Publish changes</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const M = (name, cat, act, used, live, ar, cur) => ({
+      name, cat, act: act ? act + (act === 1 ? ' action' : ' actions') : '', hasAct: !!act, used: used + ' uses · 30 days',
+      st: live ? 'a-st good' : 'a-st off', sti: live ? 'i i-check-circle-fill' : 'i i-pencil-simple', stl: live ? 'Live' : 'Draft',
+      arCls: ar ? 'a-tagx' : 'a-tagx ink-bad', cur: cur ? 'page' : 'false',
+      style: 'display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--line); color: var(--ink); text-decoration: none;' + (cur ? ' background: var(--sel-bg); box-shadow: inset 3px 0 0 var(--sel-line);' : '')
+    });
+    return {
+      macros: [
+        M('Resend sign-in link', 'Account and sign-in', 2, 64, true, true, true),
+        M('Refund approved', 'Billing', 1, 21, true, true),
+        M('Refund outside 7 days', 'Billing', 0, 9, true, true),
+        M('Paid with a non-Egyptian card', 'Billing', 0, 6, true, true),
+        M('Thanks for the lesson report', 'Content mistake', 1, 33, true, true),
+        M('Certificate name change', 'Certificate', 1, 7, true, true),
+        M('Wallet payment pending', 'Billing', 0, 12, true, true),
+        M('Student discount: send proof', 'Billing', 0, 0, false, false)
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shell for three roles</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+<div style="flex: 1; min-width: 0; background: var(--ground); padding: 28px 40px; display: flex; flex-direction: column; gap: 20px;">
+  <div><h1 class="t-h1">One shell, a menu per role</h1><p class="t-sm ink-2" style="max-width: 900px;">The menu is built from the person’s permissions, so a support agent sees a short list and a super admin sees all of it. Hidden items are also blocked on the server.</p></div>
+  <div style="display: grid; grid-template-columns: 232px 232px 232px minmax(0, 1fr); gap: 32px; align-items: start;">
+    <div style="display: flex; flex-direction: column; gap: 10px;"><p class="t-over">Super admin · 27 items</p><div style="border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex;"><dc-import name="Nav" role="super" cur="dashboard" hint-size="232px,1240px" style="display: flex; flex: 1;"></dc-import></div></div>
+    <div style="display: flex; flex-direction: column; gap: 10px;"><p class="t-over">Support agent · 9 items</p><div style="border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex;"><dc-import name="Nav" role="support" cur="inbox" minH="740px" hint-size="232px,740px" style="display: flex; flex: 1;"></dc-import></div></div>
+    <div style="display: flex; flex-direction: column; gap: 10px;"><p class="t-over">Content editor · 10 items</p><div style="border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex;"><dc-import name="Nav" role="content" cur="mywork" minH="740px" hint-size="232px,740px" style="display: flex; flex: 1;"></dc-import></div></div>
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="a-card"><div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+        <p class="t-over">How the menu works</p>
+        <ul class="a-effects" style="gap: 10px;">
+          <li><span class="i i-squares-four" aria-hidden="true"></span><span>Five groups in a fixed order: Overview, People, Money, Content, Grow, plus Admin for people who manage the team. A group with no allowed items is not shown.</span></li>
+          <li><span class="i i-square-fill" aria-hidden="true"></span><span>The current page wears the UXGate selection frame with four corner handles, like a selected layer.</span></li>
+          <li><span class="i i-bell" aria-hidden="true"></span><span>Counts are work waiting for this person; red means past a deadline.</span></li>
+          <li><span class="i i-list" aria-hidden="true"></span><span>Collapses to an icon rail on work pages with their own panes (support inbox) and below 1180 px; labels become tooltips.</span></li>
+          <li><span class="i i-users-three" aria-hidden="true"></span><span>People with several roles get the union of their menus.</span></li>
+        </ul>
+      </div></div>
+      <div class="a-card"><div class="a-card-b" style="display: flex; flex-direction: column; gap: 8px;"><p class="t-over">Top bar, every role</p><p class="t-sm">Search with Ctrl K, the environment badge, the bell, help, and the person’s name and role. The same for every role; see it on any screen.</p><p class="t-xs ink-3">Search (Ctrl K) only returns what the role can open. The bell holds approvals, SLA alerts and system alerts. The environment badge is always visible.</p></div></div>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1340}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

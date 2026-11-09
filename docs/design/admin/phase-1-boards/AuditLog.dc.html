@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Audit log</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="audit" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#admin">Admin</a><span aria-hidden="true">/</span><span>Audit log</span></nav>
+          <h1 class="t-h1">Audit log</h1>
+          <p class="t-sm ink-2">Every change, sign-in, reveal, export and View as learner. Nobody can edit or delete an entry. Kept for at least 2 years.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <div class="a-split">
+        <section class="a-card a-main-col" style="gap: 0;" aria-label="Audit entries">
+          <div class="a-toolbar">
+            <label class="a-in" style="flex: 0 1 240px;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="ph-txt">Target: learner, id, email</span></label>
+            <button class="a-chip" type="button"><span class="k">Admin</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip on" type="button"><span class="k">Action</span> 11 types<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Date</span> Today<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          </div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Action</th><th scope="col">Target</th><th scope="col">From</th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="11">
+                <tr class="{{r.cls}}"><td class="ink-2 num">{{r.when}}</td><td><span class="w7">{{r.who}}</span><span class="t-xs ink-3" style="display: block;">{{r.role}}</span></td><td><span class="a-row" style="gap: 6px; flex-wrap: nowrap;"><span class="{{r.icon}}" aria-hidden="true" style="color: {{r.ic}};"></span>{{r.act}}</span></td><td><a href="{{r.href}}">{{r.target}}</a></td><td class="t-xs ink-2">{{r.from}}</td></tr>
+              </sc-for>
+            </tbody>
+          </table></div>
+          <div class="a-pager"><span>1–11 of 214 today</span><span class="a-grow"></span><button class="a-btn sm icon" type="button" aria-label="Previous page" aria-disabled="true"><span class="i i-caret-left" aria-hidden="true"></span></button><button class="a-btn sm icon" type="button" aria-label="Next page"><span class="i i-caret-right" aria-hidden="true"></span></button></div>
+        </section>
+
+        <aside class="a-rail" aria-label="Entry detail">
+          <div class="a-rail-s">
+            <div class="a-row"><span class="t-over a-grow">Entry</span><button class="a-btn sm icon ghost" type="button" aria-label="Copy link to entry"><span class="i i-link" aria-hidden="true"></span></button><button class="a-btn sm icon ghost" type="button" aria-label="Close panel"><span class="i i-x" aria-hidden="true"></span></button></div>
+            <h2 class="t-h3">Changed roles · Omar Hamdy</h2>
+            <div class="a-diff"><div class="bf"><p class="lb">Before</p>Support agent</div><div class="af"><p class="lb">After</p>Support agent, Community moderator</div></div>
+            <dl class="a-kv" style="grid-template-columns: 82px minmax(0, 1fr);">
+              <dt>When</dt><dd title="09 Nov 2026 07:05:14 UTC">Today 09:05:14 Cairo</dd>
+              <dt>Who</dt><dd>Founding admin · super admin</dd>
+              <dt>Target</dt><dd><a href="Team.dc.html">Omar Hamdy (team)</a></dd>
+              <dt>Reason</dt><dd>“Omar helps with appeals and community reports from this week.”</dd>
+              <dt>Checks</dt><dd>Passkey asked again 09:05 · within 10 minutes</dd>
+              <dt>IP</dt><dd><span class="a-id">156.204.31.18</span> · Cairo, Egypt</dd>
+              <dt>Device</dt><dd>Chrome 131 on Windows</dd>
+              <dt>Ids</dt><dd><span class="a-id">aud_01jcz3…7f2 · req 9c1e…</span></dd>
+            </dl>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Same target, earlier</p>
+            <div class="a-tl">
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-user-gear s14" aria-hidden="true"></span></span><div><p class="a-tl-t">Role given: Support agent</p><p class="a-tl-m">21 Oct · Founding admin</p></div></div>
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-fingerprint s14" aria-hidden="true"></span></span><div><p class="a-tl-t">Passkey added</p><p class="a-tl-m">21 Oct · Omar Hamdy</p></div></div>
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-envelope-simple s14" aria-hidden="true"></span></span><div><p class="a-tl-t">Invited</p><p class="a-tl-m">20 Oct · Founding admin</p></div></div>
+            </div>
+          </div>
+          <div class="a-rail-s"><p class="t-xs ink-3 a-row" style="gap: 6px; flex-wrap: nowrap; align-items: flex-start;"><span class="i i-lock-simple s12" aria-hidden="true" style="margin-top: 2px;"></span>Append only. There is no edit or delete, for anyone. Exports are for super admins and are logged too.</p></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const IC = { role: ['user-gear', 'var(--ink-3)'], super: ['crown-simple', '#B07800'], reveal: ['eye', 'var(--warn-ink)'], view: ['monitor', 'var(--ink-3)'], sign: ['sign-out', 'var(--ink-3)'], fail: ['warning', 'var(--bad-ink)'], exp: ['download-simple', 'var(--warn-ink)'], refund: ['arrow-u-up-left', 'var(--ink-3)'], comp: ['handshake', 'var(--ink-3)'], code: ['tag', 'var(--ink-3)'], hook: ['arrow-clockwise', 'var(--ink-3)'] };
+    const R = (when, who, role, k, act, target, href, from, open) => ({ when, who, role, act, target, href, from, icon: 'i i-' + IC[k][0] + ' s14', ic: IC[k][1], cls: open ? 'open' : '' });
+    return {
+      rows: [
+        R('10:31', 'Omar Hamdy', 'Support agent', 'reveal', 'Revealed phone number', 'Mariam Adel', 'Learner360.dc.html', 'Cairo · Edge'),
+        R('10:24', 'Omar Hamdy', 'Support agent', 'view', 'View as learner, 6 min', 'Mariam Adel', 'ViewAsLearner.dc.html', 'Cairo · Edge'),
+        R('10:02', 'Omar Hamdy', 'Support agent', 'sign', 'Signed in with passkey', 'Admin panel', '#', 'Cairo · Edge'),
+        R('09:58', 'Laila Mostafa', 'Billing manager', 'hook', 'Retried webhook', 'Paymob 236118877', 'BillingProblems.dc.html', 'Giza · Safari'),
+        R('09:41', 'Laila Mostafa', 'Billing manager', 'exp', 'Exported revenue CSV', 'October 2026', 'Revenue.dc.html', 'Giza · Safari'),
+        R('09:20', 'Founding admin', 'Super admin', 'super', 'Asked to grant super admin', 'Hossam Adel', 'SuperAdmins.dc.html', 'Cairo · Chrome'),
+        R('09:05', 'Founding admin', 'Super admin', 'role', 'Changed roles', 'Omar Hamdy', 'Team.dc.html', 'Cairo · Chrome', true),
+        R('08:52', 'Unknown', 'Not signed in', 'fail', '5 failed sign-ins, paused 15 min', 'admin@uxgate.org', '#', 'Frankfurt · script'),
+        R('08:40', 'Nadia Samir', 'Support lead', 'comp', 'Asked to extend comp access', 'Lina Saber', 'Approvals.dc.html', 'Alexandria · Chrome'),
+        R('08:31', 'Nadia Samir', 'Support lead', 'refund', 'Approved refund · 249 EGP', 'Hany Zaki', 'Refunds.dc.html', 'Alexandria · Chrome'),
+        R('08:02', 'Laila Mostafa', 'Billing manager', 'code', 'Paused code PARTNER10', 'Discount codes', 'Discounts.dc.html', 'Giza · Safari')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

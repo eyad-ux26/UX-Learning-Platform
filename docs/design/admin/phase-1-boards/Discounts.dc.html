@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Discount codes</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell a-overlay" data-theme="light">
+  <dc-import name="Nav" role="billing" cur="discounts" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="billing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#money">Money</a><span aria-hidden="true">/</span><span>Discounts</span></nav>
+          <h1 class="t-h1">Discount codes</h1>
+          <p class="t-sm ink-2">Codes learners type at checkout. Each code is checked on the server before the provider charges.</p>
+        </div>
+        <div class="acts"><button class="a-btn pri" type="button" aria-expanded="true"><span class="i i-plus" aria-hidden="true"></span>Create code</button></div>
+      </div>
+      <div class="a-tabs" role="tablist"><a href="#a" role="tab" aria-selected="true">Active <span class="a-count">3</span></a><a href="#s" role="tab" aria-selected="false">Scheduled <span class="a-count">1</span></a><a href="#p" role="tab" aria-selected="false">Paused <span class="a-count">1</span></a><a href="#e" role="tab" aria-selected="false">Ended <span class="a-count">7</span></a></div>
+      <section class="a-card" aria-label="Built-in offers">
+        <div class="a-card-h"><h2 class="t-h3 a-grow">Built-in offers</h2><span class="t-xs ink-3">One discount per payment. When several fit, the biggest wins.</span></div>
+        <div class="a-card-b" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+          <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;"><p class="a-row" style="gap: 8px;"><span class="i i-graduation-cap" aria-hidden="true"></span><b class="a-grow">Student</b><span class="w7">40% off</span></p><p class="t-xs ink-2">Monthly or annual, while the student check is valid (a year). University email, or a <a href="StudentChecks.dc.html">checked student card</a>.</p></div>
+          <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;"><p class="a-row" style="gap: 8px;"><span class="i i-arrow-u-up-left" aria-hidden="true"></span><b class="a-grow">Welcome back</b><span class="w7">40% off</span></p><p class="t-xs ink-2">Annual only, for 2 years, when Pro ended 60 days ago or more.</p></div>
+          <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;"><p class="a-row" style="gap: 8px;"><span class="i i-tag" aria-hidden="true"></span><b class="a-grow">FOUNDING code</b><span class="w7">30% off</span></p><p class="t-xs ink-2">Annual only, the first year. Then the normal price.</p></div>
+        </div>
+      </section>
+      <section class="a-card" aria-label="Discount codes">
+        <div class="a-tbl-wrap">
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Code</th><th scope="col">Discount</th><th scope="col">Regions</th><th scope="col">Applies to</th><th scope="col">Uses</th><th scope="col">Ends</th><th scope="col" class="r">Revenue with code</th><th scope="col">Status</th><th scope="col"></th></tr></thead>
+            <tbody>
+              <sc-for list="{{codes}}" as="c" hint-placeholder-count="6">
+                <tr><td><span class="a-id w7" style="color: var(--ink);">{{c.code}}</span><div class="t-xs ink-3">{{c.by}}</div></td><td class="w6">{{c.off}}</td><td>{{c.reg}}</td><td class="ink-2">{{c.app}}</td><td style="min-width: 120px;"><span class="t-xs num">{{c.uses}}</span><span class="a-meter" style="margin-top: 4px;"><span style="width: {{c.pct}};"></span></span></td><td class="ink-2">{{c.ends}}</td><td class="r num">{{c.rev}}</td><td><span class="{{c.st}}"><span class="{{c.sti}}" aria-hidden="true"></span>{{c.stl}}</span></td><td class="r"><button class="a-btn sm icon ghost" type="button" aria-label="More actions"><span class="i i-dots-three" aria-hidden="true"></span></button></td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div class="a-note"><span class="i i-info" aria-hidden="true"></span><div class="t-sm">Marketing can create codes; billing managers, admins and super admins can also pause and end them. A code never changes a live price.</div></div>
+    </main>
+
+  <div class="a-scrim" aria-hidden="true"></div>
+  <aside class="a-drawer" role="dialog" aria-modal="true" aria-labelledby="dc-h" style="width: 500px;">
+    <div class="a-drw-h"><span class="i i-tag s20" aria-hidden="true" style="color: var(--brand);"></span><h2 class="t-h2 a-grow" id="dc-h">Create a discount code</h2><button class="a-btn sm icon ghost" type="button" aria-label="Close"><span class="i i-x" aria-hidden="true"></span></button></div>
+    <div class="a-drw-b">
+      <div class="a-field"><label>Code<span class="req" aria-hidden="true">*</span></label><div class="a-in"><span class="a-id w7" style="color: var(--ink);">CAIROUX25</span><span class="a-grow"></span><span class="t-xs ink-good w6">Free to use</span></div><span class="help">Letters and numbers only. Learners can type it in any case.</span></div>
+      <div class="a-field"><label>Discount<span class="req" aria-hidden="true">*</span></label>
+        <div class="a-row" style="gap: 8px;"><div class="a-seg" role="group" aria-label="Type"><button type="button" aria-pressed="true">Percent</button><button type="button" aria-pressed="false">Fixed amount</button></div><div class="a-in" style="width: 110px;">25<span class="a-grow"></span><span class="ink-3">%</span></div></div>
+      </div>
+      <div class="a-field"><label>Regions<span class="req" aria-hidden="true">*</span></label><div class="a-row" style="gap: 6px;"><span class="a-chip on">Egypt</span><span class="a-chip">Gulf</span><span class="a-chip">Other Arab countries</span><span class="a-chip">Rest of the world</span></div></div>
+      <div class="a-field"><label>Applies to</label>
+        <label class="a-row t-sm" style="gap: 8px;"><span class="a-radio on" aria-hidden="true"></span>First payment only</label>
+        <label class="a-row t-sm" style="gap: 8px;"><span class="a-radio" aria-hidden="true"></span>Every payment while subscribed</label>
+        <div class="a-row" style="gap: 6px; margin-top: 4px;"><span class="a-chip on">Pro monthly</span><span class="a-chip on">Pro annual</span></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="a-field"><label>Max uses</label><div class="a-in num">60</div></div>
+        <div class="a-field"><label>Ends on</label><div class="a-in"><span class="i i-calendar-blank ink-3" aria-hidden="true"></span>30 Nov 2026</div></div>
+      </div>
+      <div class="a-field"><label>Note for the team</label><div class="a-ta" style="min-height: 52px;">Cairo UX meetup, 22 Nov. Shared on the slide only.</div></div>
+      <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;">
+        <p class="t-over">What learners pay</p>
+        <p class="t-sm a-row" style="gap: 8px;"><span class="a-grow">Pro monthly · Egypt</span><s class="ink-3 num">249 EGP</s><b class="num">187 EGP</b></p>
+        <p class="t-sm a-row" style="gap: 8px;"><span class="a-grow">Pro annual · Egypt</span><s class="ink-3 num">2,249 EGP</s><b class="num">1,687 EGP</b></p>
+        <p class="t-xs ink-3">Then the normal price from the second payment.</p>
+      </div>
+    </div>
+    <div class="a-drw-f"><button class="a-btn" type="button">Cancel</button><button class="a-btn pri" type="button">Create CAIROUX25</button></div>
+  </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = { active: ['a-st good', 'i i-check-circle-fill', 'Active'], sched: ['a-st info', 'i i-calendar-blank', 'Starts 1 Mar'], paused: ['a-st off', 'i i-pause-circle', 'Paused'] };
+    const C = (code, by, off, reg, app, used, max, ends, rev, s) => ({ code, by, off, reg, app, uses: max ? used + ' of ' + max : used + ' · no limit', pct: max ? Math.round(used / max * 100) + '%' : '0%', ends, rev, st: S[s][0], sti: S[s][1], stl: S[s][2] });
+    return {
+      codes: [
+        C('FOUNDING', 'Built in · launch offer', '30% off', 'All regions', 'First year, annual only', 212, 0, 'No end date set', '$9,180', 'active'),
+        C('GULFANNUAL', 'Hossam Adel · Admin', '$12 off', 'Gulf', 'First payment, annual', 31, 100, '15 Dec 2026', '$1,860', 'active'),
+        C('ALEXUX20', 'Marketing · Sherif Gamal', '20% off', 'Egypt', 'First payment', 18, 80, '15 Nov 2026', '$71', 'active'),
+        C('RAMADAN27', 'Hossam Adel · Admin', '35% off', 'All regions', 'First payment', 0, 1000, '30 Mar 2027', '—', 'sched'),
+        C('PARTNER10', 'Billing · Laila Mostafa', '10% off', 'Other Arab countries', 'Every payment', 7, 50, '31 Jan 2027', '$29', 'paused')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

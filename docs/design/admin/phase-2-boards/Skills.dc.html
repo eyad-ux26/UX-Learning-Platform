@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Skills and misconceptions</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="publisher" cur="skills" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="publisher" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#content">Content</a><span aria-hidden="true">/</span><span>Skills and misconceptions</span></nav>
+          <h1 class="t-h1">Skills and misconceptions</h1>
+          <p class="t-sm ink-2">Ids never change once a lesson uses them. A repeated mistake reuses its misconception id.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <div class="a-tabs" role="tablist"><a href="#sk" role="tab" aria-selected="true">Skills <span class="a-count">215</span></a><a href="#mc" role="tab" aria-selected="false">Misconceptions <span class="a-count">406</span></a></div>
+      <div class="a-split">
+        <section class="a-card a-main-col" style="gap: 0;" aria-label="Skills table">
+          <div class="a-toolbar">
+            <button class="a-chip on" type="button"><span class="k">Path</span> P15 · Write Words That Work<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Unit</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Rule</span> Any<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <span class="a-grow"></span><span class="t-xs ink-3">Learner numbers: last 30 days</span>
+          </div>
+          <div class="a-tbl-wrap">
+            <table class="a-tbl">
+              <thead><tr><th scope="col">Skill</th><th scope="col" class="r">Versions</th><th scope="col">4 scenarios</th><th scope="col">2 re-tests</th><th scope="col" class="r">Right first try</th><th scope="col" class="r">Kept</th></tr></thead>
+              <tbody>
+                <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+                  <tr class="{{r.cls}}"><td><span class="a-id">{{r.id}}</span><div class="w6">{{r.t}}</div></td><td class="r num">{{r.v}}</td><td><span class="{{r.sc}}"><span class="{{r.sci}}" aria-hidden="true"></span>{{r.scl}}</span></td><td><span class="a-st good"><span class="i i-check" aria-hidden="true"></span>{{r.rt}}</span></td><td class="{{r.okc}}">{{r.ok}}</td><td class="r num">{{r.kept}}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div class="a-pager"><span>20 skills in P15</span><span class="a-grow"></span><span class="t-xs ink-3">“Kept”: got right again in review, on a new case</span></div>
+        </section>
+
+        <aside class="a-rail" aria-label="Skill detail">
+          <div class="a-rail-s">
+            <div class="a-row"><span class="a-id a-grow">SK-P15-U03-03</span><button class="a-btn sm icon ghost" type="button" aria-label="Close panel"><span class="i i-x" aria-hidden="true"></span></button></div>
+            <div class="a-bi" style="grid-template-columns: 1fr;"><div><span class="tx w7">Be serious without being cold</span></div><div style="border-left: 0; border-top: 1px solid var(--line);"><span class="tx a-ar w7" lang="ar" dir="rtl">كن جادًا دون أن تكون باردًا</span></div></div>
+            <div class="a-note warn"><span class="i i-warning-fill" aria-hidden="true"></span><div class="t-sm">Live: 5 versions in 5 scenarios. Draft v2 removes 2, which would leave 3. Publishing is blocked until a version on a new case is added.</div></div>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Where it is used</p>
+            <sc-for list="{{uses}}" as="u" hint-placeholder-count="5">
+              <a class="a-qa" href="LessonEditor.dc.html" style="align-items: flex-start;"><span class="{{u.icon}}" aria-hidden="true" style="margin-top: 2px;"></span><span class="a-grow" style="display: flex; flex-direction: column;"><span>{{u.where}}</span><span class="t-xs ink-3" style="font-weight: 400;">{{u.note}}</span></span></a>
+            </sc-for>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Common wrong answers</p>
+            <div class="a-hb" style="grid-template-columns: minmax(0, 1fr) 90px 40px;">
+              <sc-for list="{{mcs}}" as="m" hint-placeholder-count="3">
+                <span class="t-xs"><span class="a-id">{{m.id}}</span><span style="display: block;">{{m.t}}</span></span><span class="bar"><span style="width: {{m.w}};"></span></span><span class="v">{{m.p}}</span>
+              </sc-for>
+            </div>
+            <p class="t-xs ink-3">Share of wrong first tries on this skill.</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = (id, t, v, sc, ok, kept, sel) => ({ id, t, v: String(v), sc: sc >= 4 ? 'a-st good' : 'a-st bad', sci: sc >= 4 ? 'i i-check' : 'i i-x-circle', scl: sc >= 4 ? sc + ' scenarios' : sc + ' in draft', rt: '2', ok: ok + '%', okc: ok < 50 ? 'r num ink-bad w7' : 'r num', kept: kept + '%', cls: sel ? 'open' : '' });
+    return {
+      rows: [
+        R('SK-P15-U01-01', 'Put the meaning in the first two words', 6, 6, 71, 58), R('SK-P15-U01-02', 'Lead with the main point', 6, 6, 66, 52),
+        R('SK-P15-U01-03', 'Write headings that say what’s below', 6, 6, 74, 61), R('SK-P15-U01-04', 'Use lists the right way', 6, 6, 62, 49),
+        R('SK-P15-U02-01', 'Cut filler, repeats and fancy words', 7, 7, 69, 55), R('SK-P15-U02-02', 'Keep the words that make it clear', 5, 5, 48, 37),
+        R('SK-P15-U02-03', 'Say who does what', 6, 6, 64, 50), R('SK-P15-U02-04', 'Write facts as numbers', 6, 6, 77, 63),
+        R('SK-P15-U03-01', 'Hear the tone', 6, 6, 72, 57), R('SK-P15-U03-02', 'Fit the tone to the moment', 7, 7, 59, 44),
+        R('SK-P15-U03-03', 'Be serious without being cold', 5, 3, 53, 41, true), R('SK-P15-U03-04', 'One voice, many tones', 6, 6, 61, 46)
+      ],
+      uses: [
+        { icon: 'i i-file-text s14', where: 'U03 · L01 · Hear the tone · S07', note: 'guided · kept in draft' },
+        { icon: 'i i-file-text s14', where: 'U03 · L02 · Fit the tone to the moment · S05, S08', note: 'removed in draft v2' },
+        { icon: 'i i-seal-check s14', where: 'U03 · L03 · Skill check · S03', note: 'check' },
+        { icon: 'i i-arrows-split s14', where: 'U03 · B01 · Re-test bank · R05', note: 're-test, new case' }
+      ],
+      mcs: [['MC-P15-017', 'Serious doesn’t have to be cold and formal', 46], ['MC-P15-018', 'A playful tone can cost trust on serious topics', 31], ['MC-P15-020', 'Jokes irritate people who are worried or frustrated', 23]].map(([id, t, p]) => ({ id, t, p: p + '%', w: (p / 46 * 100) + '%' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

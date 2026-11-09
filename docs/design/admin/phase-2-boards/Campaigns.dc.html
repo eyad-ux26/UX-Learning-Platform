@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Communications · Campaigns</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="marketing" cur="comms" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="marketing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Communications</h1>
+          <p class="t-sm ink-2">Emails and in-app messages to groups of learners. Anything going to more than 500 people needs a second admin to approve it.</p>
+        </div>
+        <div class="acts"><a class="a-btn pri" href="FlowAnnouncement.dc.html"><span class="i i-plus" aria-hidden="true"></span>New campaign</a></div>
+      </div>
+      <nav class="a-tabs" aria-label="Communications"><a href="Campaigns.dc.html" aria-selected="true">Campaigns</a><a href="Announcements.dc.html" aria-selected="false">In-app announcements</a><a href="EmailTemplates.dc.html" aria-selected="false">Email templates</a><a href="Waitlist.dc.html" aria-selected="false">Waitlist</a><a href="EmailLog.dc.html" aria-selected="false">Email log</a></nav>
+      <div class="a-toolbar"><div class="a-search" style="max-width: 320px;"><span class="i i-magnifying-glass" aria-hidden="true"></span><span class="ph-txt">Search campaigns</span></div><button class="a-chip" type="button"><span class="k">Status</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Channel</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button></div>
+      <div class="a-split">
+        <div class="a-main-col">
+          <section class="a-card" aria-label="Campaigns">
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Campaign</th><th scope="col">Audience</th><th scope="col" class="r">People</th><th scope="col">Status</th><th scope="col" class="r">Opened</th><th scope="col" class="r">Clicked</th></tr></thead>
+              <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="5"><tr class="{{r.cls}}"><td><span class="w6">{{r.n}}</span><br><span class="t-xs ink-2">{{r.ch}}</span></td><td class="t-sm">{{r.a}}</td><td class="r num">{{r.p}}</td><td style="white-space: nowrap;"><span class="a-row" style="gap: 6px; flex-wrap: nowrap;"><span class="{{r.dot}}"></span>{{r.st}}</span></td><td class="r num">{{r.o}}</td><td class="r num">{{r.c}}</td></tr></sc-for></tbody>
+            </table></div>
+          </section>
+          <div class="a-note"><span class="i i-shield-check" aria-hidden="true"></span><span>Learners who unsubscribed or turned off news emails are never in an audience. Billing and sign-in emails are not campaigns and can’t be sent from here.</span></div>
+        </div>
+        <aside class="a-rail" aria-labelledby="rs-h">
+          <div class="a-rail-s"><span class="t-over">Sent 6 Nov, 10:00 Cairo</span><h2 class="t-h3" id="rs-h">All 8 paths are live</h2><span class="t-xs ink-2">Approved by Hossam Adel · built by Sherif Gamal</span></div>
+          <div class="a-rail-s"><span class="a-lbl">Results</span>
+            <div class="a-hb" style="grid-template-columns: 90px minmax(0, 1fr) 54px;"><span>Sent</span><span class="bar"><span style="width: 100%;"></span></span><span class="v">4,812</span><span>Delivered</span><span class="bar"><span style="width: 98.6%;"></span></span><span class="v">4,745</span><span>Opened</span><span class="bar"><span style="width: 47%;"></span></span><span class="v">2,230</span><span>Clicked</span><span class="bar"><span style="width: 13%;"></span></span><span class="v">617</span></div>
+            <span class="t-xs ink-2">67 bounced · 19 unsubscribed (0.4%) · 2 marked as spam</span>
+          </div>
+          <div class="a-rail-s"><span class="a-lbl">By language</span><div class="a-kv"><span class="k">Arabic</span><span class="v">2,941 · opened 49%</span><span class="k">English</span><span class="v">1,871 · opened 44%</span></div></div>
+          <div class="a-rail-s"><span class="a-lbl">What it led to</span><div class="a-kv"><span class="k">Lessons started</span><span class="v num">1,108 in 3 days</span><span class="k">New Pro plans</span><span class="v num">36</span></div></div>
+          <div class="a-rail-s"><div class="a-row" style="gap: 8px;"><button class="a-btn" type="button"><span class="i i-copy" aria-hidden="true"></span>Copy as new</button><a class="a-btn" href="EmailLog.dc.html"><span class="i i-list" aria-hidden="true"></span>Email log</a></div></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['All 8 paths are live', 'Email · EN and AR', 'Everyone who allows news emails', '4,812', 'good', 'Sent 6 Nov', '47%', '13%'], ['Review week: 5 minutes a day', 'Email and in-app banner', 'Reviews due · learning in Arabic · active in 30 days', '1,040', 'wait', 'Waiting for approval', '–', '–'], ['Student price for Egypt', 'Email · AR first', 'Free plan · Egypt · finished a first unit', '380', 'info', 'Scheduled 12 Nov', '–', '–'], ['Write Words That Work is out', 'Email · EN and AR', 'Finished Forms That Flow', '640', 'good', 'Sent 3 Nov', '52%', '19%'], ['Launch day', 'Email · EN and AR', 'Waitlist · confirmed, not invited yet', '1,228', 'off', 'Draft', '–', '–']];
+    return { rows: R.map(([n, ch, a, p, d, st, o, c], i) => ({ n, ch, a, p, dot: 'a-dot ' + d, st, o, c, cls: i === 0 ? 'open' : '' })) };
+  }
+}
+</script>
+</body>
+</html>

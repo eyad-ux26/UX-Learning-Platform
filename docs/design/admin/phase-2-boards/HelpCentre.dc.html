@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>People · Help centre</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="lead" cur="help" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="lead" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Help centre</h1>
+          <p class="t-sm ink-2">Answers learners read in the app and at uxgate.org/help, in English and Arabic. Macros link to them so replies stay short.</p>
+        </div>
+        <div class="acts"><button class="a-btn pri" type="button"><span class="i i-plus" aria-hidden="true"></span>New article</button></div>
+      </div>
+      <div style="display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-label="Articles">
+          <div class="a-card-b" style="padding-bottom: 0;"><div class="a-search"><span class="i i-magnifying-glass" aria-hidden="true"></span><span class="ph-txt">Search articles in both languages</span></div></div>
+          <sc-for list="{{cats}}" as="c" hint-placeholder-count="4"><div class="a-rail-s"><span class="t-over">{{c.l}}</span><sc-for list="{{c.items}}" as="a" hint-placeholder-count="3"><a href="#" class="a-pick" aria-current="{{a.cur}}"><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="t-sm w6 a-grow">{{a.en}}</span><span class="t-xs ink-3 num">{{a.v}}</span></span><span class="t-xs ink-2 a-ar" lang="ar" dir="rtl" style="text-align: right;">{{a.ar}}</span></a></sc-for></div></sc-for>
+        </section>
+        <section class="a-card" aria-labelledby="ar-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="ar-h">How do I get a refund?</h2><span class="a-row t-xs" style="gap: 6px;"><span class="a-dot good"></span>Live v3 · 2 Nov</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="a-bi"><div><span class="lg">English</span><span class="tx"><b>How do I get a refund?</b></span></div><div><span class="lg">العربية · Arabic</span><span class="tx a-ar" lang="ar" dir="rtl"><b>كيف أستردّ المبلغ؟</b></span></div></div>
+            <div class="a-bi"><div><span class="lg">English</span><span class="tx">You can ask for a refund within 7 days of any charge, on a monthly or an annual plan.<br><br>1. Go to Settings, then Plan and billing.<br>2. Tap “Ask for a refund” under the charge.<br>3. Tell us why in a sentence. It helps us improve.<br><br>Most refunds are answered within 2 working days. The money goes back to the card or wallet you paid with.</span></div><div><span class="lg">العربية · Arabic</span><span class="tx a-ar" lang="ar" dir="rtl">يمكنك طلب استرداد المبلغ خلال 7 أيام من أي دفعة، في الخطة الشهرية أو السنوية.<br><br>1. افتح الإعدادات، ثم «الخطة والدفع».<br>2. اضغط «اطلب استرداد المبلغ» تحت الدفعة.<br>3. اكتب السبب في جملة واحدة، فهذا يساعدنا على التحسين.<br><br>نردّ على معظم الطلبات خلال يومَي عمل. يعود المبلغ إلى البطاقة أو المحفظة التي دفعت بها.</span></div></div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+              <div class="a-field"><span class="a-lbl">Shown in the app</span><span class="t-sm">Settings › Plan and billing, and the refund page</span></div>
+              <div class="a-field"><span class="a-lbl">Used by macros</span><span class="t-sm"><a href="Macros.dc.html">Refund: how to ask</a>, <a href="Macros.dc.html">Refund: past 7 days</a></span></div>
+              <div class="a-field"><span class="a-lbl">Last 30 days</span><span class="t-sm">1,284 views · 81% found it helpful</span></div>
+            </div>
+            <div class="a-note"><span class="i i-info" aria-hidden="true"></span><span>Billing answers must match the refund policy. While the policy is still sample text, this article says so at the top for learners.</span></div>
+            <div class="a-row" style="gap: 8px; justify-content: flex-end;"><button class="a-btn" type="button"><span class="i i-eye" aria-hidden="true"></span>Preview</button><button class="a-btn pri" type="button"><span class="i i-check" aria-hidden="true"></span>Publish changes</button></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const C = [['Account and sign-in', [['I didn’t get the sign-in email', 'لم يصلني بريد تسجيل الدخول', '2,140'], ['Change my email or password', 'تغيير البريد أو كلمة المرور', '612'], ['Delete my account and data', 'حذف حسابي وبياناتي', '188']]], ['Plans and payments', [['How do I get a refund?', 'كيف أستردّ المبلغ؟', '1,284'], ['Why is my price different?', 'لماذا يختلف السعر عندي؟', '904'], ['Student price', 'سعر الطلاب', '736']]], ['Learning', [['How streaks and freezes work', 'كيف تعمل الـ Streak والـ Freeze', '1,902'], ['When skills come back for review', 'متى تعود المهارات للمراجعة', '655']]], ['Certificates', [['Share my certificate on LinkedIn', 'شارك شهادتك على LinkedIn', '842'], ['Check a certificate is real', 'تحقّق من صحة شهادة', '97']]]];
+    return { cats: C.map(([l, items]) => ({ l, items: items.map(([en, ar, v]) => ({ en, ar, v, cur: en === 'How do I get a refund?' ? 'true' : 'false' })) })) };
+  }
+}
+</script>
+</body>
+</html>

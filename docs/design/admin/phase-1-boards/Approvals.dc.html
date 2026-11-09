@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Approvals</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="team" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#admin">Admin</a><span aria-hidden="true">/</span><a href="Team.dc.html">Team and roles</a><span aria-hidden="true">/</span><span>Approvals</span></nav>
+          <h1 class="t-h1">Approvals</h1>
+          <p class="t-sm ink-2">Requests that need a second person: big refunds, refunds outside the rule, long comp access, prices, big emails, path publishing and super admin grants.</p>
+        </div>
+      </div>
+      <div class="a-tabs" role="tablist" aria-label="Team and roles"><a href="Team.dc.html" role="tab" aria-selected="false">Members <span class="a-count">9</span></a><a href="Roles.dc.html" role="tab" aria-selected="false">Roles <span class="a-count">12</span></a><a href="SuperAdmins.dc.html" role="tab" aria-selected="false">Super admins <span class="a-count">1 + 1 pending</span></a><a href="Approvals.dc.html" role="tab" aria-selected="true">Approvals <span class="a-count hot">3</span></a></div>
+      <div class="a-split" style="align-items: start;">
+        <section class="a-card a-main-col" style="gap: 0;" aria-label="Requests">
+          <div class="a-toolbar"><div class="a-seg" role="group" aria-label="Show"><button type="button" aria-pressed="true">Waiting for me 3</button><button type="button" aria-pressed="false">Asked by me 0</button><button type="button" aria-pressed="false">Decided</button></div><span class="a-grow"></span><button class="a-chip" type="button"><span class="k">Type</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button></div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">Request</th><th scope="col">For</th><th scope="col">Asked by</th><th scope="col">Waiting</th><th scope="col">Who can approve</th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+                <tr class="{{r.cls}}"><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="{{r.icon}}" aria-hidden="true" style="color: var(--ink-3);"></span><span class="w7">{{r.what}}</span></span></td><td>{{r.for}}</td><td>{{r.by}}</td><td><span class="{{r.st}}"><span class="{{r.sti}}" aria-hidden="true"></span>{{r.stl}}</span></td><td class="t-xs ink-2">{{r.who}}</td></tr>
+              </sc-for>
+            </tbody>
+          </table></div>
+          <div class="a-pager"><span class="a-row" style="gap: 6px;"><span class="i i-info s12" aria-hidden="true"></span>No one can approve their own request. Unanswered requests remind the approvers after 4 hours.</span></div>
+        </section>
+
+        <aside class="a-rail" aria-label="Request detail" style="width: 400px;">
+          <div class="a-rail-s">
+            <div class="a-row"><span class="a-st wait"><span class="i i-hourglass-medium" aria-hidden="true"></span>Needs a second person</span><span class="a-grow"></span><button class="a-btn sm icon ghost" type="button" aria-label="Close panel"><span class="i i-x" aria-hidden="true"></span></button></div>
+            <h2 class="t-h3">Comp access past 30 days</h2>
+            <p class="t-sm"><b>Nadia Samir</b> (support lead, limit 30 days) asks to extend free Pro for <a href="Learner360.dc.html">Lina Saber</a>.</p>
+            <div class="a-diff"><div class="bf"><p class="lb">Now</p>Comp Pro ends 9 Dec 2026</div><div class="af"><p class="lb">After</p>Comp Pro ends 9 Feb 2027</div></div>
+            <dl class="a-kv" style="grid-template-columns: 90px minmax(0, 1fr);"><dt>Reason</dt><dd>Partner · speaker at the Cairo UX meetup; she also reviews Arabic lesson text.</dd><dt>Effect</dt><dd>No charge. Counted apart from paid revenue. Lina gets an email in Arabic.</dd><dt>Asked</dt><dd>Today 08:15</dd></dl>
+            <div class="a-field"><label>Note to Nadia (optional)</label><div class="a-in"><span class="ph-txt">Add a note</span></div></div>
+          </div>
+          <div class="a-rail-s" style="flex-direction: row; gap: 8px; align-items: center;">
+            <span class="t-xs ink-3 a-grow a-row" style="gap: 5px; flex-wrap: nowrap;"><span class="i i-lock-simple s12" aria-hidden="true"></span>Passkey</span>
+            <button class="a-btn" type="button">Decline</button>
+            <button class="a-btn pri" type="button"><span class="i i-check" aria-hidden="true"></span>Approve</button>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = { wait: ['a-st wait', 'i i-hourglass-medium'], late: ['a-st bad', 'i i-timer'], ok: ['a-st good', 'i i-check-circle-fill'], no: ['a-st off', 'i i-x-circle'] };
+    const R = (icon, what, f, by, s, stl, who, open) => ({ icon: 'i i-' + icon, what, for: f, by, st: S[s][0], sti: S[s][1], stl, who, cls: open ? 'open' : '' });
+    return {
+      rows: [
+        R('handshake', 'Comp access past 30 days', 'Lina Saber · to 9 Feb 2027', 'Nadia Samir', 'wait', '2 h', 'Billing, admin, super', true),
+        R('arrow-u-up-left', 'Refund over the agent limit', 'Khaled Nabil · $72.00', 'Omar Hamdy', 'wait', '25 min', 'Lead, billing, admin, super'),
+        R('arrow-u-up-left', 'Refund outside the 7-day window', 'Basel Omran · 249 EGP', 'Omar Hamdy', 'wait', '1 h', 'Lead, billing, admin, super')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

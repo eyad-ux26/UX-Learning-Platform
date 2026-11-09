@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin Phase 1 map</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm" style="width: 1440px; min-height: 1040px; padding: 56px 64px; display: flex; flex-direction: column; gap: 28px;">
+  <header style="display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap;">
+    <div style="display: flex; flex-direction: column; gap: 10px; flex: 1 1 700px;">
+      <div class="a-row" style="gap: 12px;">
+        <img src="/_blob/52911c89aaf083ecd8d76302a1a62f4f" alt="UXGate" style="height: 34px; width: auto;">
+        <span class="a-role">Admin panel</span>
+        <span class="a-st good"><span class="i i-check-circle-fill" aria-hidden="true"></span>Phase 1 · approved</span><span class="a-st wait"><span class="i i-hourglass-medium" aria-hidden="true"></span>Phase 2 · ready for review</span>
+      </div>
+      <h1 style="font-size: 40px; line-height: 46px; font-weight: 700; letter-spacing: -.01em;">Run the business, then grow it</h1>
+      <p class="ink-2" style="font-size: 17px; line-height: 26px; max-width: 860px;">Everything the team needs on launch day at uxgate.org/admin: who can get in, who the learners are, how they get help, and where the money is. Phase 2 adds the tools to grow: content, media, quality, reports, communications, settings and system health. Each board names the requirement ids it covers from “UXGate Admin Panel: Requirements”.</p>
+    </div>
+    <div class="a-card" style="flex: 0 1 420px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px;">
+      <p class="t-over">The idea</p>
+      <p class="t-sm">UXGate is a design-tool world, so the admin reads like one, in a calm work density: the menu is a layers panel, the open item wears the selection frame, and every detail page has an inspector on the right with the facts and the actions. No rewards, colours or motion from the learner app.</p>
+    </div>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+    <sc-for list="{{sections}}" as="s" hint-placeholder-count="12">
+      <section class="a-card" style="display: flex; flex-direction: column;">
+        <div class="a-card-h"><span class="{{s.icon}}" aria-hidden="true" style="color: var(--brand);"></span><h2 class="t-h3">{{s.title}}</h2><span class="a-tagx">{{s.page}}</span></div>
+        <ul style="list-style: none; margin: 0; padding: 6px 8px 10px; display: flex; flex-direction: column;">
+          <sc-for list="{{s.items}}" as="b" hint-placeholder-count="4">
+            <li><a class="a-qa" href="{{b.href}}" style="font-weight: 600;"><span class="i i-arrow-right s14" aria-hidden="true"></span><span style="flex: 1;">{{b.label}}</span><span class="a-id">{{b.ids}}</span></a></li>
+          </sc-for>
+        </ul>
+      </section>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+    <div class="a-note info"><span class="i i-shield-check" aria-hidden="true"></span><div><b>Roles shown.</b> Super admin (the founding account uxgate8@gmail.com plus anyone it grants), Admin, Support lead, Support agent, Billing manager, Content editor, Content publisher, Marketing, Instructor, Analyst. Menus, columns and buttons follow the permission matrix.</div></div>
+    <div class="a-note"><span class="i i-translate" aria-hidden="true"></span><div><b>Language.</b> The panel is in English. Learner-facing text (tickets, replies, macros, emails) is shown and written in English and Arabic side by side, Arabic right to left in Cairo.</div></div>
+    <div class="a-note warn"><span class="i i-warning" aria-hidden="true"></span><div><b>Phase 2 needs app work too.</b> Content moves from YAML pull requests to versions in the database (today’s content imported as version 1). Learning rules, the gate and maintenance move from code and Cloudflare variables to settings. Trials and Iraq on the Gulf price need learner app changes.</div></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const b = (label, href, ids) => ({ label, href, ids });
+    return {
+      sections: [
+        { title: 'System and shell', page: 'Page 1', icon: 'i i-squares-four', items: [b('Admin design system', 'DesignSystem.dc.html', 'Standards'), b('Menus for three roles', 'ShellRoles.dc.html', 'Nav, TEAM-3'), b('Sign in with two-step', 'AdminSignIn.dc.html', 'Safeguards'), b('My admin account and sessions', 'AdminAccount.dc.html', 'Safeguards')] },
+        { title: 'Overview', page: 'Page 2', icon: 'i i-chart-line-up', items: [b('Dashboard, super admin', 'Dashboard.dc.html', 'DSH-1…6'), b('Dashboard, support agent', 'DashboardSupport.dc.html', 'DSH-5'), b('My work', 'MyWork.dc.html', 'SUP-6, TEAM-5'), b('Global search', 'Search.dc.html', 'SRC-1')] },
+        { title: 'Learners and support', page: 'Page 2', icon: 'i i-users-three', items: [b('Learners list', 'Learners.dc.html', 'LRN-1'), b('Learner 360', 'Learner360.dc.html', 'LRN-2, 3, 5'), b('View as learner', 'ViewAsLearner.dc.html', 'LRN-4'), b('Support inbox', 'SupportInbox.dc.html', 'SUP-1…4, 9'), b('Macros', 'Macros.dc.html', 'SUP-5'), b('SLA, assignment, survey', 'SupportSettings.dc.html', 'SUP-6…8, 12'), b('Appeals and reviews', 'Appeals.dc.html', 'SUP-10')] },
+        { title: 'Money', page: 'Page 2', icon: 'i i-credit-card', items: [b('Subscriptions and comp', 'Subscriptions.dc.html', 'BIL-1, 4'), b('Payments', 'Payments.dc.html', 'BIL-2, 10'), b('Refunds', 'Refunds.dc.html', 'BIL-3'), b('Billing problems', 'BillingProblems.dc.html', 'BIL-8'), b('Revenue', 'Revenue.dc.html', 'BIL-9'), b('Discount codes', 'Discounts.dc.html', 'BIL-5'), b('Student checks', 'StudentChecks.dc.html', 'BIL-6'), b('Prices and plans', 'Prices.dc.html', 'BIL-7')] },
+        { title: 'Certificates, team and audit', page: 'Page 2', icon: 'i i-user-gear', items: [b('Certificates lookup', 'Certificates.dc.html', 'CRT-1, 2'), b('Team', 'Team.dc.html', 'TEAM-1, 2, 6'), b('Roles and permissions', 'Roles.dc.html', 'TEAM-3'), b('Super admins', 'SuperAdmins.dc.html', 'TEAM-4'), b('Approvals inbox', 'Approvals.dc.html', 'TEAM-5'), b('Audit log', 'AuditLog.dc.html', 'AUD-1…3')] },
+        { title: 'Flows, states and devices', page: 'Pages 3 to 5', icon: 'i i-flow-arrow', items: [b('Invite an admin', 'FlowInvite.dc.html', 'Flow 1'), b('Grant super admin', 'FlowSuperAdmin.dc.html', 'Flow 2'), b('Answer in Arabic with a macro', 'FlowTicket.dc.html', 'Flow 3'), b('Refund within and over limit', 'FlowRefund.dc.html', 'Flow 4'), b('Payment id to View as learner', 'FlowFindLearner.dc.html', 'Flow 5'), b('Review an appeal', 'FlowAppeal.dc.html', 'Flow 6'), b('Revoke a certificate', 'FlowRevoke.dc.html', 'Flow 7'), b('Audit trail of a change', 'FlowAudit.dc.html', 'Flow 8'), b('List states', 'ListStates.dc.html', 'States'), b('Same page, two roles', 'RoleCompare.dc.html', 'Matrix'), b('Tablet and phone', 'InboxPhone.dc.html', 'Layout')] },
+        { title: 'Content', page: 'Page 6', icon: 'i i-book-open', items: [b('Paths', 'ContentPaths.dc.html', 'CNT-1, 3'), b('Lesson editor, EN and AR', 'LessonEditor.dc.html', 'CNT-1, 2'), b('Skills and misconceptions', 'Skills.dc.html', 'CNT-4'), b('Releases and versions', 'Releases.dc.html', 'CNT-5, 6')] },
+        { title: 'Media and quality', page: 'Page 6', icon: 'i i-film-strip', items: [b('Media library', 'Media.dc.html', 'MED-1'), b('Captions', 'Captions.dc.html', 'MED-2'), b('Images and characters', 'Images.dc.html', 'MED-3'), b('Instructors', 'Instructors.dc.html', 'MED-4'), b('Quality flags', 'QualityFlags.dc.html', 'QLT-2, 3'), b('Lesson quality', 'QualityLesson.dc.html', 'QLT-1')] },
+        { title: 'Reports', page: 'Page 6', icon: 'i i-chart-bar', items: [b('Overview, saved and scheduled', 'Reports.dc.html', 'RPT-5'), b('Learning', 'ReportLearning.dc.html', 'RPT-1'), b('Growth and trials', 'ReportGrowth.dc.html', 'RPT-2'), b('Money', 'ReportMoney.dc.html', 'RPT-3'), b('Certificates and sharing', 'ReportCerts.dc.html', 'RPT-4')] },
+        { title: 'Communications', page: 'Page 6', icon: 'i i-megaphone', items: [b('Campaigns', 'Campaigns.dc.html', 'COM-2'), b('In-app announcements', 'Announcements.dc.html', 'COM-3'), b('Email templates', 'EmailTemplates.dc.html', 'COM-1'), b('Waitlist', 'Waitlist.dc.html', 'COM-4'), b('Email log', 'EmailLog.dc.html', 'COM-5')] },
+        { title: 'Settings, health and more', page: 'Page 6', icon: 'i i-gear-six', items: [b('Feature flags', 'FeatureFlags.dc.html', 'SET-1'), b('Learning rules and trial', 'LearningRules.dc.html', 'SET-2'), b('Access and maintenance', 'AccessSettings.dc.html', 'SET-3'), b('Legal pages', 'LegalPages.dc.html', 'SET-4'), b('Change a price', 'PriceChange.dc.html', 'SET-5, BIL-7'), b('System health', 'SystemHealth.dc.html', 'SYS-1, 2'), b('Scheduled jobs', 'ScheduledJobs.dc.html', 'SYS-3'), b('Help centre', 'HelpCentre.dc.html', 'SUP-11'), b('Merge accounts', 'MergeAccounts.dc.html', 'LRN-6'), b('Trials', 'Trials.dc.html', 'BIL-1, LRN-3')] },
+        { title: 'Phase 2 flows and states', page: 'Page 7', icon: 'i i-flow-arrow', items: [b('Edit and publish a lesson', 'FlowLessonPublish.dc.html', 'Flow 9'), b('Upload a video', 'FlowVideoUpload.dc.html', 'Flow 10'), b('Act on a quality flag', 'FlowQualityFlag.dc.html', 'Flow 11'), b('Announce to 1,040 learners', 'FlowAnnouncement.dc.html', 'Flow 12'), b('Change a feature flag', 'FlowFeatureFlag.dc.html', 'Flow 13'), b('Phase 2 list states', 'ListStates2.dc.html', 'States'), b('Lesson editor, two roles', 'RoleCompare2.dc.html', 'Matrix')] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

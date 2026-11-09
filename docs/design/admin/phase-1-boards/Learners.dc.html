@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Learners list</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="learners" hint-size="232px,1200px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#people">People</a><span aria-hidden="true">/</span><span>Learners</span></nav>
+          <h1 class="t-h1">Learners</h1>
+          <p class="t-sm ink-2"><span class="num">12,480</span> learners · <span class="num">2,865</span> on Pro</p>
+        </div>
+        <div class="acts">
+          <button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button>
+        </div>
+      </div>
+
+      <div class="a-tabs" role="tablist" aria-label="Saved views">
+        <a href="#all" role="tab" aria-selected="false">All learners <span class="a-count">12,480</span></a>
+        <a href="#arpro" role="tab" aria-selected="true"><span class="i i-bookmark-simple s14" aria-hidden="true"></span>Arabic Pro, active this week <span class="a-count">1,204</span></a>
+        <a href="#trial" role="tab" aria-selected="false">Trial and comp <span class="a-count">186</span></a>
+        <a href="#pastdue" role="tab" aria-selected="false">Past due <span class="a-count">23</span></a>
+        <a href="#suspended" role="tab" aria-selected="false">Suspended <span class="a-count">4</span></a>
+        <a href="#newview" role="tab" aria-selected="false" style="color: var(--link);"><span class="i i-plus s14" aria-hidden="true"></span>Save view</a>
+      </div>
+
+      <section class="a-card" style="position: relative;" aria-label="Learners table">
+        <div class="a-toolbar">
+          <label class="a-in" style="flex: 0 1 380px;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="sr">Search learners</span><span class="ph-txt">Name, email, user id, payment id or certificate id</span></label>
+          <span class="a-chip on"><span class="k">Plan</span> Pro<button class="x" type="button" aria-label="Remove plan filter"><span class="i i-x s12" aria-hidden="true"></span></button></span>
+          <span class="a-chip on"><span class="k">Language</span> Arabic<button class="x" type="button" aria-label="Remove language filter"><span class="i i-x s12" aria-hidden="true"></span></button></span>
+          <span class="a-chip on"><span class="k">Last active</span> 7 days<button class="x" type="button" aria-label="Remove last active filter"><span class="i i-x s12" aria-hidden="true"></span></button></span>
+          <button class="a-chip add" type="button" aria-expanded="true"><span class="i i-plus s12" aria-hidden="true"></span>Add filter</button>
+          <span class="a-grow"></span>
+          <button class="a-btn sm ghost" type="button"><span class="i i-columns" aria-hidden="true"></span>Columns</button>
+          <button class="a-btn sm ghost" type="button">Clear all</button>
+        </div>
+        <div style="padding: 8px 12px 0;">
+          <div class="a-bulk" role="region" aria-label="Bulk actions">
+            <span class="a-cb mix" aria-hidden="true"></span><span>2 selected</span>
+            <span class="a-grow"></span>
+            <button class="a-btn" type="button"><span class="i i-handshake s14" aria-hidden="true"></span>Grant Pro (comp)</button>
+            <button class="a-btn" type="button"><span class="i i-note-pencil s14" aria-hidden="true"></span>Add note</button>
+            <button class="a-btn" type="button"><span class="i i-download-simple s14" aria-hidden="true"></span>Export selected</button>
+            <button class="a-btn" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="a-tbl-wrap" style="margin-top: 8px;">
+          <table class="a-tbl">
+            <thead>
+              <tr>
+                <th class="cbx" scope="col"><span class="a-cb mix" role="checkbox" aria-checked="mixed" aria-label="Select all on this page"></span></th>
+                <th scope="col" aria-sort="none">Learner</th>
+                <th scope="col">Plan</th>
+                <th scope="col">Status</th>
+                <th scope="col">Language</th>
+                <th scope="col">Country</th>
+                <th scope="col">Paths</th>
+                <th scope="col" aria-sort="descending"><span class="srt">Last active <span class="i i-caret-down s12" aria-hidden="true"></span></span></th>
+                <th scope="col">Signed up</th>
+                <th scope="col">Sign-in</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+                <tr class="{{r.cls}}">
+                  <td class="cbx"><span class="{{r.cb}}" role="checkbox" aria-checked="{{r.checked}}" aria-label="Select {{r.name}}"></span></td>
+                  <td><div class="a-who"><span class="{{r.av}}" aria-hidden="true">{{r.ini}}</span><div><a class="rowlink" href="Learner360.dc.html">{{r.name}}</a><div class="e">{{r.email}}</div></div></div></td>
+                  <td>{{r.plan}}</td>
+                  <td><span class="{{r.st}}"><span class="{{r.sti}}" aria-hidden="true"></span>{{r.stl}}</span></td>
+                  <td>{{r.lang}}</td>
+                  <td>{{r.country}}</td>
+                  <td class="num">{{r.paths}}</td>
+                  <td>{{r.active}}</td>
+                  <td class="ink-2">{{r.joined}}</td>
+                  <td class="ink-2">{{r.method}}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div class="a-pager">
+          <span><span class="num">1–12</span> of <span class="num">1,204</span></span>
+          <span class="a-grow"></span>
+          <span>Rows per page</span><button class="a-btn sm" type="button">50<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          <button class="a-btn sm icon" type="button" aria-label="Previous page" aria-disabled="true"><span class="i i-caret-left" aria-hidden="true"></span></button>
+          <button class="a-btn sm icon" type="button" aria-label="Next page"><span class="i i-caret-right" aria-hidden="true"></span></button>
+        </div>
+
+        <div class="a-pop" role="dialog" aria-label="Add filter" style="left: 792px; top: 52px; width: 300px; padding: 6px;">
+          <label class="a-in" style="margin: 4px 4px 6px; width: auto;"><span class="i i-magnifying-glass ink-3" aria-hidden="true"></span><span class="ph-txt">Filter by…</span></label>
+          <sc-for list="{{filters}}" as="f" hint-placeholder-count="9">
+            <button class="a-qa" type="button" style="font-weight: 600;"><span class="{{f.icon}}" aria-hidden="true"></span><span style="flex: 1;">{{f.label}}</span><span class="t-xs ink-3" style="font-weight: 400;">{{f.hint}}</span></button>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      active: ['a-st good', 'i i-check-circle-fill', 'Active'],
+      pastdue: ['a-st bad', 'i i-warning-fill', 'Past due'],
+      trial: ['a-st info', 'i i-circle-fill', 'Trial'],
+      comp: ['a-st info', 'i i-handshake', 'Comp'],
+      cancelled: ['a-st off', 'i i-x-circle', 'Cancelled'],
+      suspended: ['a-st off', 'i i-prohibit', 'Suspended']
+    };
+    const R = (name, email, plan, s, lang, country, paths, active, joined, method, av, sel) => ({ name, email, plan, st: S[s][0], sti: S[s][1], stl: S[s][2], lang, country, paths, active, joined, method, av: 'a-av ' + (av || ''), ini: name.split(' ').map((w) => w[0]).join('').slice(0, 2), cls: sel ? 'sel' : '', cb: sel ? 'a-cb on' : 'a-cb', checked: sel ? 'true' : 'false' });
+    return {
+      rows: [
+        R('Mariam Adel', 'mariam.adel@gmail.com', 'Pro monthly', 'active', 'Arabic', 'Egypt', '2', '12 min ago', '3 Oct 2026', 'Google', 'v2', true),
+        R('Abdullah Al-Harbi', 'a.alharbi@outlook.sa', 'Pro annual', 'active', 'Arabic', 'Saudi Arabia', '3', '40 min ago', '19 Sep 2026', 'Email link', 'v3', true),
+        R('Fatma Hegazy', 'fatma.hegazy@yahoo.com', 'Pro monthly', 'pastdue', 'Arabic', 'Egypt', '1', '1 h ago', '27 Sep 2026', 'Google', 'v4'),
+        R('Jana Haddad', 'jana.haddad@gmail.com', 'Pro annual', 'active', 'Arabic', 'Jordan', '2', '2 h ago', '5 Oct 2026', 'Apple', 'v5'),
+        R('Khaled Nabil', 'khaled.n@hotmail.com', 'Pro annual', 'active', 'Arabic', 'Kuwait', '1', '3 h ago', '6 Nov 2026', 'Google', ''),
+        R('Aisha Al-Qahtani', 'aisha.q@gmail.com', 'Pro monthly', 'trial', 'Arabic', 'Qatar', '1', '5 h ago', '8 Nov 2026', 'Email link', 'v2'),
+        R('Mohamed Fathy', 'm.fathy@gmail.com', 'Pro monthly', 'active', 'Arabic', 'Egypt', '4', 'Yesterday', '30 Sep 2026', 'Google', 'v3'),
+        R('Lina Saber', 'lina.saber@icloud.com', 'Pro (comp)', 'comp', 'Arabic', 'Egypt', '2', 'Yesterday', '2 Oct 2026', 'Apple', 'v4'),
+        R('Ziad Ezz', 'ziad.ezz@gmail.com', 'Pro monthly', 'active', 'Arabic', 'UAE', '1', '2 days ago', '21 Oct 2026', 'Google', 'v5'),
+        R('Hagar Mounir', 'hagar.mounir@gmail.com', 'Pro annual', 'cancelled', 'Arabic', 'Egypt', '3', '3 days ago', '12 Sep 2026', 'Email link', ''),
+        R('Yousra Galal', 'yousra.g@gmail.com', 'Pro monthly', 'active', 'Arabic', 'Morocco', '1', '4 days ago', '1 Nov 2026', 'Google', 'v2'),
+        R('Basel Omran', 'basel.omran@proton.me', 'Pro monthly', 'suspended', 'Arabic', 'Egypt', '1', '6 days ago', '15 Oct 2026', 'Email link', 'v3')
+      ],
+      filters: [
+        ['Plan', 'Free, Pro, trial, comp', 'arrows-split'], ['Status', 'active, past due, cancelled…', 'circle-fill'], ['Language', 'English, Arabic', 'translate'], ['Country', '', 'globe'], ['Signed up', 'date range', 'calendar-blank'], ['Last active', 'date range', 'clock'], ['Path enrolled', '13 paths', 'book-open'], ['Sign-in method', 'Google, Apple, email link', 'key']
+      ].map(([label, hint, ic]) => ({ label, hint, icon: 'i i-' + ic }))
+    };
+  }
+}
+</script>
+</body>
+</html>

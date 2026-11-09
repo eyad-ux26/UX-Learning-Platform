@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase 2 list states</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+<div style="flex: 1; min-width: 0; background: var(--ground); padding: 28px 40px 40px; display: flex; flex-direction: column; gap: 18px;">
+  <div><h1 class="t-h1">Phase 2 lists, five states</h1><p class="t-sm ink-2" style="max-width: 980px;">Each list keeps its toolbar and filters in every state, so people never lose their place. Error states keep filters and offer Try again. “No access” names the role that can open it. Masked shows what a more limited role sees.</p></div>
+  <div class="ls-grid" role="table" aria-label="List states">
+    <div class="ls-h" role="columnheader">List</div><div class="ls-h" role="columnheader">Empty</div><div class="ls-h" role="columnheader">Loading</div><div class="ls-h" role="columnheader">Error</div><div class="ls-h" role="columnheader">No access</div><div class="ls-h" role="columnheader">Masked</div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="11">
+      <div class="ls-name" role="rowheader"><span class="{{r.icon}}" aria-hidden="true"></span><span><b>{{r.name}}</b><span class="t-xs ink-3" style="display: block;">{{r.ids}}</span></span></div>
+      <div class="ls-c"><span class="art"><span class="{{r.icon}}" aria-hidden="true"></span></span><b>{{r.eT}}</b><span class="t-xs ink-2">{{r.eB}}</span><sc-if value="{{r.hasEA}}" hint-placeholder-val="{{true}}"><span class="a-btn sm">{{r.eA}}</span></sc-if></div>
+      <div class="ls-c ld" aria-busy="true"><span class="a-skel" style="width: 70%;"></span><span class="a-skel"></span><span class="a-skel" style="width: 85%;"></span><span class="a-skel" style="width: 55%;"></span></div>
+      <div class="ls-c"><span class="art bad"><span class="i i-warning" aria-hidden="true"></span></span><b>{{r.xT}}</b><span class="t-xs ink-2">{{r.xB}}</span><span class="a-btn sm"><span class="i i-arrow-clockwise s14" aria-hidden="true"></span>Try again</span></div>
+      <div class="ls-c"><span class="art"><span class="i i-lock-simple" aria-hidden="true"></span></span><b>No access</b><span class="t-xs ink-2">{{r.nB}}</span></div>
+      <div class="ls-c ms"><span class="t-xs ink-3">{{r.mWho}}</span><sc-for list="{{r.m}}" as="x" hint-placeholder-count="2"><span class="a-row t-sm" style="gap: 8px; flex-wrap: nowrap;"><span class="ink-2" style="min-width: 54px;">{{x.k}}</span><span class="a-mask"><span class="v">{{x.v}}</span></span></span></sc-for></div>
+    </sc-for>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = (name, ids, icon, eT, eB, eA, xT, xB, nB, mWho, m) => ({ name, ids, icon: 'i i-' + icon, eT, eB, eA: eA || '', hasEA: !!eA, xT, xB, nB, mWho, m: m.map(([k, v]) => ({ k, v })) });
+    return {
+      rows: [
+        R('Paths', 'CNT-1', 'book-open', 'No paths yet', 'Start a path, then add units and lessons.', 'New path', 'Couldn’t load paths', 'Learners still see the live versions.', 'Content roles, admin, super admin.', 'Instructor sees', [['Paths', 'only the ones with their videos'], ['Edit', 'none']]),
+        R('Releases', 'CNT-5', 'rocket-launch', 'Nothing to review', 'Changes sent for review appear here.', '', 'Couldn’t load releases', 'Nothing was published. Drafts are safe.', 'Content editor, publisher, admin, super admin.', 'Editor sees', [['Publish', 'locked'], ['Own changes', 'review by someone else']]),
+        R('Media library', 'MED-1', 'film-strip', 'No videos match', 'Try another path, or upload one.', 'Upload video', 'Couldn’t reach Bunny Stream', 'Videos keep playing for learners.', 'Content roles, instructors (own videos), admin.', 'Instructor sees', [['Videos', 'own only'], ['Stats', 'views on own videos']]),
+        R('Content quality', 'QLT-1', 'flag', 'No open flags', 'Flags appear when a step looks hard or gets reports.', '', 'Couldn’t load flags', 'Nightly checks still run.', 'Content roles, support (read), admin.', 'Support sees', [['Reports', 'text shown, names hidden'], ['Fix', 'not available']]),
+        R('Reports', 'RPT-1..5', 'chart-bar', 'Not enough data yet', 'Reports fill in after the first full day.', '', 'Couldn’t build this report', 'Try a shorter date range.', 'Analyst, admin, super admin; others see their area.', 'Analyst sees', [['Names', 'initials only'], ['Export', 'counts and masked names']]),
+        R('Campaigns', 'COM-2', 'megaphone', 'No campaigns yet', 'Build an audience and write the message.', 'New campaign', 'Couldn’t load campaigns', 'Scheduled sends still go out.', 'Marketing, admin, super admin.', 'Analyst sees', [['Results', 'shown'], ['Audience', 'counts only']]),
+        R('Waitlist', 'COM-4', 'users', 'No one on the waitlist', 'People join from the Coming Soon page.', '', 'Couldn’t load the waitlist', 'No invites were sent.', 'Marketing, admin, super admin.', 'Marketing sees', [['Email', 'n•••••@gmail.com'], ['Reveal', 'with a reason']]),
+        R('Email log', 'COM-5', 'envelope-open', 'No emails for this learner', 'Emails are kept for 90 days.', '', 'Couldn’t load the log', 'Resend may be slow. Emails still go out.', 'Support, marketing, admin, super admin.', 'Marketing sees', [['To', 'y••••@gmail.com'], ['Sign-in links', 'never stored']]),
+        R('Feature flags', 'SET-1', 'toggle-right', 'No flags', 'Flags come from the app’s code.', '', 'Couldn’t load flags', 'Learners keep the current settings.', 'Super admin, admin.', 'Admin sees', [['Change', 'with reason and fresh sign-in'], ['Cloudflare values', 'read only']]),
+        R('Scheduled jobs', 'SYS-3', 'clock', 'No runs yet', 'The first run appears after its timer.', '', 'Couldn’t read job runs', 'Jobs still run on their timers.', 'Super admin, admin, analyst.', 'Analyst sees', [['Results', 'counts'], ['Run now', 'not available']]),
+        R('Help centre', 'SUP-11', 'books', 'No articles yet', 'Write the first answer in both languages.', 'New article', 'Couldn’t load articles', 'Learners still see the published ones.', 'Support lead, admin, super admin.', 'Support agent sees', [['Articles', 'read and link'], ['Edit', 'not available']])
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

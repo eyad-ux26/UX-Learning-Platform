@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Refunds</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="support" cur="refunds" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="support" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#money">Money</a><span aria-hidden="true">/</span><span>Refunds</span></nav>
+          <h1 class="t-h1">Refunds</h1>
+          <p class="t-sm ink-2">Requests from learners and agents. The 7-day rule is checked for you; the refund itself happens at Paddle or Paymob.</p>
+        </div>
+      </div>
+      <div class="a-note info"><span class="i i-info" aria-hidden="true"></span><div class="t-sm">Your role, <b>Support agent</b>, can approve refunds up to <b>$50</b> (about 2,430 EGP) inside the 7-day window. Bigger refunds and exceptions go to a support lead, billing manager or admin for approval.</div></div>
+      <div class="a-tabs" role="tablist"><a href="#n" role="tab" aria-selected="true">To decide <span class="a-count">4</span></a><a href="#w" role="tab" aria-selected="false">Waiting for approval <span class="a-count">2</span></a><a href="#p" role="tab" aria-selected="false">Processing</a><a href="#d" role="tab" aria-selected="false">Done</a></div>
+      <section class="a-card" aria-label="Refund requests">
+        <div class="a-tbl-wrap">
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Learner</th><th scope="col" class="r">Amount</th><th scope="col">Charged</th><th scope="col">7-day rule</th><th scope="col">Reason</th><th scope="col">From</th><th scope="col"></th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+                <tr>
+                  <td><a class="rowlink" href="Learner360.dc.html">{{r.who}}</a><div class="a-id">{{r.pid}}</div></td>
+                  <td class="r num w7">{{r.amt}}<div class="t-xs ink-3" style="font-weight: 400;">{{r.usd}}</div></td>
+                  <td class="ink-2">{{r.when}}</td>
+                  <td><span class="{{r.rule}}"><span class="{{r.rulei}}" aria-hidden="true"></span>{{r.rulel}}</span><div class="t-xs ink-3">{{r.why}}</div></td>
+                  <td class="w" style="max-width: 280px;"><span class="{{r.rcls}}" lang="{{r.lang}}" dir="{{r.dir}}">{{r.reason}}</span></td>
+                  <td class="ink-2">{{r.from}}</td>
+                  <td class="r"><span class="a-row" style="justify-content: flex-end; gap: 6px; flex-wrap: nowrap;"><button class="a-btn sm" type="button">Reject</button><a class="{{r.btn}}" href="FlowRefund.dc.html">{{r.act}}</a></span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div class="a-note"><span class="i i-arrow-u-up-left" aria-hidden="true"></span><div class="t-sm">After approval the status follows the provider: <b>Processing</b> until Paddle or Paymob confirms, then <b>Refunded</b>. The learner gets the refund email in their language and their Pro access ends; progress and certificates stay.</div></div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = (who, pid, amt, usd, when, ok, why, reason, ar, from, over) => ({
+      who, pid, amt, usd, when, why, reason, from,
+      rule: ok ? 'a-st good' : 'a-st bad', rulei: ok ? 'i i-check-circle-fill' : 'i i-x-circle', rulel: ok ? 'Eligible' : 'Not eligible',
+      rcls: ar ? 'a-ar' : '', lang: ar ? 'ar' : 'en', dir: ar ? 'rtl' : 'ltr',
+      btn: over || !ok ? 'a-btn sm' : 'a-btn sm pri', act: !ok ? 'Ask for an exception' : over ? 'Send for approval' : 'Approve refund'
+    });
+    return {
+      rows: [
+        R('Ziad Ezz', 'Paddle txn_01jcw…a91', '$8.00', 'Pro monthly · Gulf', 'Today 10:12', true, 'charged today', 'I meant to cancel before renewal.', false, 'Learner, in app'),
+        R('Khaled Nabil', 'Paddle txn_01jcq…4d2', '$72.00', 'Pro annual · Gulf', '6 Nov', true, 'charged 3 days ago', 'اخترت الاشتراك السنوي بالخطأ، كنت أريد الشهري.', true, 'Ticket #1039', true),
+        R('Aya Nasser', 'Paymob 236080190', '249 EGP', '≈ $5.12 · Egypt', '5 Nov', true, 'charged 4 days ago', 'المحتوى لم يناسبني.', true, 'Learner, in app'),
+        R('Basel Omran', 'Paymob 236017744', '249 EGP', '≈ $5.12 · Egypt', '20 Oct', false, 'charged 20 days ago', 'Renewed after I asked to cancel.', false, 'Ticket #1044')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

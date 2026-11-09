@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Flow 13 · Change a feature flag</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell a-overlay flowb" data-theme="light">
+  <dc-import name="Nav" role="super" cur="{{navCur}}" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <div class="a-flow" role="navigation" aria-label="Flow steps">
+      <span class="tt">Flow 13 · Change a feature flag</span>
+      <div class="steps"><sc-for list="{{steps}}" as="st" hint-placeholder-count="5"><button class="st" type="button" aria-current="{{st.cur}}" onClick="{{st.go}}">{{st.label}}</button></sc-for></div>
+      <span class="sp"></span>
+      <span class="hint">{{hint}}</span>
+      <button class="nb" type="button" onClick="{{back}}"><span class="i i-arrow-left s14" aria-hidden="true"></span>Back</button>
+      <button class="nb" type="button" onClick="{{next}}">{{nextLabel}}<span class="i i-arrow-right s14" aria-hidden="true"></span></button>
+    </div>
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+      <sc-if value="{{s0}}" hint-placeholder-val="{{true}}">
+<main class="a-page"><div class="a-ph"><div class="tt"><h1 class="t-h1">Platform settings</h1><p class="t-sm ink-2">Feature flags</p></div><div class="acts"><button class="a-btn pri" type="button" onClick="{{next}}"><span class="i i-toggle-right" aria-hidden="true"></span>Turn on Leaderboards…</button></div></div><section class="a-card"><div class="a-tbl-wrap"><table class="a-tbl"><thead><tr><th scope="col">Flag</th><th scope="col">What it does</th><th scope="col">Changed last</th><th scope="col">State</th></tr></thead><tbody><tr class="open"><td><span class="w6">Leaderboards</span><br><span class="a-id">leaderboard</span></td><td class="t-sm">Shows the weekly leaderboard. Learners still choose to join it.</td><td class="t-sm">5 Nov · set up, off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr><tr><td><span class="w6">In-app announcements</span><br><span class="a-id">announcements</span></td><td class="t-sm">Lets banners from Communications show on Home.</td><td class="t-sm">Phase 2 build · on</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch on" aria-hidden="true"></span><span class="w6">On</span></span></td></tr><tr><td><span class="w6">Free trial</span><br><span class="a-id">trials</span></td><td class="t-sm">Offers a free trial before the first payment.</td><td class="t-sm">Phase 2 build · off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr></tbody></table></div></section></main>
+      </sc-if>
+      <sc-if value="{{s1}}" hint-placeholder-val="{{false}}">
+<main class="a-page"><div class="a-ph"><div class="tt"><h1 class="t-h1">Platform settings</h1><p class="t-sm ink-2">Feature flags</p></div><div class="acts"><button class="a-btn pri" type="button" onClick="{{next}}"><span class="i i-toggle-right" aria-hidden="true"></span>Turn on Leaderboards…</button></div></div><section class="a-card"><div class="a-tbl-wrap"><table class="a-tbl"><thead><tr><th scope="col">Flag</th><th scope="col">What it does</th><th scope="col">Changed last</th><th scope="col">State</th></tr></thead><tbody><tr class="open"><td><span class="w6">Leaderboards</span><br><span class="a-id">leaderboard</span></td><td class="t-sm">Shows the weekly leaderboard. Learners still choose to join it.</td><td class="t-sm">5 Nov · set up, off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr><tr><td><span class="w6">In-app announcements</span><br><span class="a-id">announcements</span></td><td class="t-sm">Lets banners from Communications show on Home.</td><td class="t-sm">Phase 2 build · on</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch on" aria-hidden="true"></span><span class="w6">On</span></span></td></tr><tr><td><span class="w6">Free trial</span><br><span class="a-id">trials</span></td><td class="t-sm">Offers a free trial before the first payment.</td><td class="t-sm">Phase 2 build · off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr></tbody></table></div></section></main><div class="a-scrim" aria-hidden="true"></div>
+<div class="a-dialog" role="dialog" aria-modal="true" aria-labelledby="fl-h" style="width: 560px; top: 100px;"><div class="a-dlg-h"><h2 class="t-h3 a-grow" id="fl-h">Turn on Leaderboards?</h2><button class="a-ibtn" type="button" aria-label="Close" onClick="{{back}}"><span class="i i-x" aria-hidden="true"></span></button></div><div class="a-dlg-b" style="display: flex; flex-direction: column; gap: 12px;"><ul class="a-effects"><li><span class="i i-users s14" aria-hidden="true"></span>Every learner sees the Leaderboard tab within a minute.</li><li><span class="i i-eye-slash s14" aria-hidden="true"></span>Nobody is listed until they choose to join. Today 0 learners have joined.</li><li><span class="i i-arrow-counter-clockwise s14" aria-hidden="true"></span>You can turn it off again; rankings are kept.</li></ul><div class="a-field"><span class="a-lbl">Reason <span class="req">*</span></span><div class="a-in" style="height: auto; padding: 8px 10px;">Launch leaderboards for the review week (15 Nov).</div></div><div class="a-field"><span class="a-lbl">Type the flag name to confirm</span><div class="a-in a-id">leaderboard</div></div></div><div class="a-dlg-f"><span class="a-grow"></span><button class="a-btn" type="button" onClick="{{back}}">Cancel</button><button class="a-btn pri" type="button" onClick="{{next}}"><span class="i i-arrow-right" aria-hidden="true"></span>Continue</button></div></div>
+      </sc-if>
+      <sc-if value="{{s2}}" hint-placeholder-val="{{false}}">
+<main class="a-page"><div class="a-ph"><div class="tt"><h1 class="t-h1">Platform settings</h1><p class="t-sm ink-2">Feature flags</p></div><div class="acts"><button class="a-btn pri" type="button" onClick="{{next}}"><span class="i i-toggle-right" aria-hidden="true"></span>Turn on Leaderboards…</button></div></div><section class="a-card"><div class="a-tbl-wrap"><table class="a-tbl"><thead><tr><th scope="col">Flag</th><th scope="col">What it does</th><th scope="col">Changed last</th><th scope="col">State</th></tr></thead><tbody><tr class="open"><td><span class="w6">Leaderboards</span><br><span class="a-id">leaderboard</span></td><td class="t-sm">Shows the weekly leaderboard. Learners still choose to join it.</td><td class="t-sm">5 Nov · set up, off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr><tr><td><span class="w6">In-app announcements</span><br><span class="a-id">announcements</span></td><td class="t-sm">Lets banners from Communications show on Home.</td><td class="t-sm">Phase 2 build · on</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch on" aria-hidden="true"></span><span class="w6">On</span></span></td></tr><tr><td><span class="w6">Free trial</span><br><span class="a-id">trials</span></td><td class="t-sm">Offers a free trial before the first payment.</td><td class="t-sm">Phase 2 build · off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr></tbody></table></div></section></main><div class="a-scrim" aria-hidden="true"></div>
+<div class="a-dialog" role="dialog" aria-modal="true" aria-labelledby="ra-h" style="width: 440px; top: 100px;"><div class="a-dlg-h"><h2 class="t-h3 a-grow" id="ra-h">Sign in again to confirm</h2><button class="a-ibtn" type="button" aria-label="Close" onClick="{{back}}"><span class="i i-x" aria-hidden="true"></span></button></div><div class="a-dlg-b" style="display: flex; flex-direction: column; gap: 12px;"><span class="t-sm ink-2">Changing what every learner sees needs a fresh sign-in.</span><div class="a-field"><span class="a-lbl">Code from your authenticator app</span><div class="a-row" style="gap: 6px;"><span class="a-in num" style="width: 44px; justify-content: center;">4</span><span class="a-in num" style="width: 44px; justify-content: center;">8</span><span class="a-in num" style="width: 44px; justify-content: center;">2</span><span class="a-in num" style="width: 44px; justify-content: center;">9</span><span class="a-in num" style="width: 44px; justify-content: center;">1</span><span class="a-in" style="width: 44px;"></span></div></div></div><div class="a-dlg-f"><span class="a-grow"></span><button class="a-btn" type="button" onClick="{{back}}">Cancel</button><button class="a-btn pri" type="button" onClick="{{next}}"><span class="i i-toggle-right" aria-hidden="true"></span>Turn on</button></div></div>
+      </sc-if>
+      <sc-if value="{{s3}}" hint-placeholder-val="{{false}}">
+<main class="a-page"><div class="a-ph"><div class="tt"><h1 class="t-h1">Platform settings</h1><p class="t-sm ink-2">Feature flags</p></div><div class="acts"></div></div><section class="a-card"><div class="a-tbl-wrap"><table class="a-tbl"><thead><tr><th scope="col">Flag</th><th scope="col">What it does</th><th scope="col">Changed last</th><th scope="col">State</th></tr></thead><tbody><tr class="open"><td><span class="w6">Leaderboards</span><br><span class="a-id">leaderboard</span></td><td class="t-sm">Shows the weekly leaderboard. Learners still choose to join it.</td><td class="t-sm">Just now · Founding admin</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch on" aria-hidden="true"></span><span class="w6">On</span></span></td></tr><tr><td><span class="w6">In-app announcements</span><br><span class="a-id">announcements</span></td><td class="t-sm">Lets banners from Communications show on Home.</td><td class="t-sm">Phase 2 build · on</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch on" aria-hidden="true"></span><span class="w6">On</span></span></td></tr><tr><td><span class="w6">Free trial</span><br><span class="a-id">trials</span></td><td class="t-sm">Offers a free trial before the first payment.</td><td class="t-sm">Phase 2 build · off</td><td><span class="a-row" style="gap: 8px; flex-wrap: nowrap;"><span class="a-switch" aria-hidden="true"></span><span class="w6">Off</span></span></td></tr></tbody></table></div></section></main><div class="flow-toast"><div class="a-toast" role="status"><span class="i i-check-circle-fill ok" aria-hidden="true"></span>Leaderboards are on <button type="button" onClick="{{back}}">Undo</button></div></div>
+      </sc-if>
+      <sc-if value="{{s4}}" hint-placeholder-val="{{false}}">
+<main class="a-page"><div class="a-ph"><div class="tt"><h1 class="t-h1">Audit log</h1><p class="t-sm ink-2">Every change with who, when and why</p></div><div class="acts"></div></div><section class="a-card"><div class="a-card-h"><h2 class="t-h3 a-grow">Audit log</h2></div><div class="a-tbl-wrap"><table class="a-tbl"><thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">What</th><th scope="col">Reason</th></tr></thead><tbody><tr class="open"><td class="num">06:52</td><td>Founding admin</td><td>Flag <span class="a-id">leaderboard</span>: off → on</td><td>Launch leaderboards for the review week (15 Nov).</td></tr><tr><td class="num">06:45</td><td>Sherif Gamal</td><td>Campaign “Review week” sent for approval</td><td>–</td></tr></tbody></table></div></section></main>
+      </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { s: 0 }; }
+  renderVals() {
+    const L = ["Flags", "Confirm", "Sign in again", "Done", "Audit log"];
+    const H = ["A super admin opens Feature flags.", "Who it affects, a reason and the typed flag name.", "A fresh 2-step code for a change every learner sees.", "Live in a minute; Undo works because it really can.", "The change is in the audit log with the reason."];
+    const R = [];
+    const C = ["settings", "settings", "settings", "settings", "audit"];
+    const s = this.state.s;
+    const go = (i) => () => this.setState({ s: (i + L.length) % L.length });
+    const v = {
+      steps: L.map((l, i) => ({ label: (i + 1) + ' · ' + l, cur: i === s ? 'step' : 'false', go: go(i) })),
+      back: go(Math.max(0, s - 1)), next: go(s + 1), nextLabel: s === L.length - 1 ? 'Start again' : 'Next',
+      hint: H[s] || '', navRole: R[s] || 'super', navCur: C[s] || 'settings'
+    };
+    L.forEach((_, i) => { v['s' + i] = s === i; });
+    
+    return v;
+  }
+}
+</script>
+</body>
+</html>

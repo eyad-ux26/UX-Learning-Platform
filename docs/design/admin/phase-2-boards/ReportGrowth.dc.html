@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reports · Growth</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="analyst" cur="reports" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="analyst" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Growth</h1>
+          <p class="t-sm ink-2">Where new learners come from and whether they stay. Team and test accounts are left out.</p>
+        </div>
+        <div class="acts"><button class="a-chip" type="button"><span class="k">Dates</span> Last 30 days<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Country</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Language</span> Both<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-btn" type="button"><span class="i i-bookmark-simple" aria-hidden="true"></span>Save view</button><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export CSV</button></div>
+      </div>
+      <nav class="a-tabs" aria-label="Reports"><a href="Reports.dc.html" aria-selected="false">Overview and saved</a><a href="ReportLearning.dc.html" aria-selected="false">Learning</a><a href="ReportGrowth.dc.html" aria-selected="true">Growth</a><a href="ReportMoney.dc.html" aria-selected="false">Money</a><a href="ReportCerts.dc.html" aria-selected="false">Certificates and sharing</a></nav>
+      <section class="a-kpis" style="grid-template-columns: repeat(5, minmax(0, 1fr));" aria-label="Growth summary">
+        <div class="a-kpi"><span class="k">Sign-ups</span><span class="t-big num">3,910</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>8.1% of 48,200 visits</span></div>
+        <div class="a-kpi"><span class="k">Activated</span><span class="t-big num">77%</span><span class="d flat">finished a first lesson</span></div>
+        <div class="a-kpi"><span class="k">Back in week 4</span><span class="t-big num">31%</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>+3 points</span></div>
+        <div class="a-kpi"><span class="k">Waitlist joined</span><span class="t-big num">612</span><span class="d flat">of 1,840 invited (33%)</span></div>
+        <div class="a-kpi"><span class="k">Trial to paid</span><span class="t-big num">38%</span><span class="d flat">of 420 trials ended</span></div>
+      </section>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="src-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="src-h">Sign-ups by source</h2><span class="t-xs ink-2">From the first visit's link</span></div>
+          <div class="a-card-b"><div class="a-hb"><sc-for list="{{src}}" as="s" hint-placeholder-count="6"><span>{{s.l}}</span><span class="bar" title="{{s.t}}"><span style="width: {{s.w}};"></span></span><span class="v">{{s.v}}</span></sc-for></div></div>
+        </section>
+        <section class="a-card" aria-labelledby="cty-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="cty-h">Sign-ups by country</h2><span class="t-xs ink-2">Price region in brackets</span></div>
+          <div class="a-card-b"><div class="a-hb" style="grid-template-columns: 190px minmax(0, 1fr) 64px;"><sc-for list="{{cty}}" as="s" hint-placeholder-count="8"><span>{{s.l}}</span><span class="bar" title="{{s.t}}"><span style="width: {{s.w}};"></span></span><span class="v">{{s.v}}</span></sc-for></div>
+          <p class="t-xs ink-2" style="margin-top: 10px;">Language at sign-up: Arabic <b class="num">61%</b>, English <b class="num">39%</b>.</p></div>
+        </section>
+      </div>
+      <div style="display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="co-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="co-h">Who comes back</h2><span class="t-xs ink-2">Share of each sign-up week that finished a lesson in that week</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="a-hm" style="grid-template-columns: 150px 70px repeat(3, minmax(0, 1fr));">
+              <span class="h">Signed up</span><span class="h" style="justify-content: flex-end;">Learners</span><span class="h" style="justify-content: center;">Week 1</span><span class="h" style="justify-content: center;">Week 4</span><span class="h" style="justify-content: center;">Week 12</span>
+              <sc-for list="{{coh}}" as="c" hint-placeholder-count="6"><span class="h">{{c.l}}</span><span class="h num" style="justify-content: flex-end;">{{c.n}}</span><span class="{{c.c1}}">{{c.w1}}</span><span class="{{c.c4}}">{{c.w4}}</span><span class="{{c.c12}}">{{c.w12}}</span></sc-for>
+            </div>
+            <p class="t-xs ink-3">A dash means the week has not come yet. Darker means more learners came back.</p>
+          </div>
+        </section>
+        <section class="a-card" aria-labelledby="tr-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="tr-h">Trials</h2><span class="a-tagx">Needs app work</span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="a-kv"><span class="k">Started</span><span class="v num">420</span><span class="k">In a trial now</span><span class="v num">136</span><span class="k">Ended and paid</span><span class="v num">108 of 284 (38%)</span><span class="k">Extended by support</span><span class="v num">12</span><span class="k">Trial length</span><span class="v">7 days · <a href="LearningRules.dc.html">change in settings</a></span></div>
+            <div class="a-hb" style="grid-template-columns: 120px minmax(0, 1fr) 48px;"><span>Egypt</span><span class="bar"><span style="width: 41%;"></span></span><span class="v">41%</span><span>Gulf</span><span class="bar"><span style="width: 36%;"></span></span><span class="v">36%</span><span>Other Arab</span><span class="bar"><span style="width: 33%;"></span></span><span class="v">33%</span><span>Rest of the world</span><span class="bar"><span style="width: 29%;"></span></span><span class="v">29%</span></div>
+            <div class="a-note info"><span class="i i-info" aria-hidden="true"></span><span>Trials are not on sale yet. These numbers show the layout; the learner app needs a trial before they fill in.</span></div>
+          </div>
+        </section>
+      </div>
+      <section class="a-card" aria-labelledby="fn-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="fn-h">From visit to finished path</h2><span class="t-xs ink-2">Learners who signed up in the last 30 days</span></div>
+        <div class="a-card-b"><div class="a-hb" style="grid-template-columns: 190px minmax(0, 1fr) 140px;"><sc-for list="{{fun}}" as="s" hint-placeholder-count="5"><span>{{s.l}}</span><span class="bar"><span style="width: {{s.w}};"></span></span><span class="v">{{s.v}}</span></sc-for></div></div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const bars = (A, max) => A.map(([l, v]) => ({ l, v: v.toLocaleString('en'), w: (v / max * 100) + '%', t: l + ': ' + v.toLocaleString('en') }));
+    const q = (v) => v === null ? 'c q1' : 'c q' + (v >= 60 ? 5 : v >= 40 ? 4 : v >= 25 ? 3 : v >= 15 ? 2 : 1);
+    const f = (v) => v === null ? '–' : v + '%';
+    const C = [['14 Sep', 210, 58, 29, 21], ['21 Sep', 260, 61, 30, 22], ['28 Sep', 340, 60, 31, null], ['5 Oct', 520, 63, 33, null], ['19 Oct', 790, 64, null, null], ['2 Nov', 1180, 66, null, null]];
+    return {
+      src: bars([['Search', 1240], ['LinkedIn posts', 980], ['Direct', 720], ['Instagram ads', 510], ['Certificate pages', 290], ['Waitlist invite', 170]], 1240),
+      cty: bars([['Egypt (Egypt)', 2180], ['Saudi Arabia (Gulf)', 520], ['UAE (Gulf)', 260], ['Iraq (Gulf)', 190], ['Jordan (Other Arab)', 170], ['Morocco (Other Arab)', 150], ['Other Arab countries', 280], ['Rest of the world', 160]], 2180),
+      coh: C.map(([l, n, a, b, c]) => ({ l: 'Week of ' + l, n: n.toLocaleString('en'), w1: f(a), w4: f(b), w12: f(c), c1: q(a), c4: q(b), c12: q(c) })),
+      fun: [['Visited', 48200, '48,200'], ['Signed up', 3910, '3,910 · 8.1%'], ['Finished a first lesson', 3020, '3,020 · 77%'], ['Finished a first unit', 1460, '1,460 · 37%'], ['Finished a path', 96, '96 · 2.5%']].map(([l, n, v]) => ({ l, v, w: Math.max(0.6, n / 48200 * 100) + '%' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

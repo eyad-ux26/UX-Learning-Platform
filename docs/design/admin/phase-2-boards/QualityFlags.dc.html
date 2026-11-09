@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Content quality</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="publisher" cur="quality" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="publisher" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#content">Content</a><span aria-hidden="true">/</span><span>Content quality</span></nav>
+          <h1 class="t-h1">Content quality</h1>
+          <p class="t-sm ink-2">Flags raised from learner answers, reports and accepted appeals. Numbers are from the last 30 days and need at least 50 learners.</p>
+        </div>
+        <div class="acts"><button class="a-btn" type="button"><span class="i i-sliders-horizontal" aria-hidden="true"></span>Flag rules</button></div>
+      </div>
+      <div class="a-tabs" role="tablist"><a href="#t" role="tab" aria-selected="true">To check <span class="a-count">9</span></a><a href="#f" role="tab" aria-selected="false">Fixing <span class="a-count">3</span></a><a href="#d" role="tab" aria-selected="false">Fixed</a><a href="#w" role="tab" aria-selected="false">Won’t fix</a></div>
+      <div class="a-split">
+        <section class="a-card a-main-col" style="gap: 0;" aria-label="Flags">
+          <div class="a-toolbar">
+            <button class="a-chip" type="button"><span class="k">Path</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Flag</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+            <button class="a-chip" type="button"><span class="k">Owner</span> Anyone<span class="i i-caret-down s12" aria-hidden="true"></span></button>
+          </div>
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">Flag</th><th scope="col">Where</th><th scope="col">Evidence</th><th scope="col" class="r">Learners</th><th scope="col">Owner</th></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+                <tr class="{{r.cls}}"><td><span class="{{r.st}}"><span class="{{r.sti}}" aria-hidden="true"></span>{{r.f}}</span></td><td><a class="rowlink w6" href="QualityLesson.dc.html">{{r.where}}</a><div class="t-xs ink-3">{{r.t}}</div></td><td class="t-sm" style="white-space: normal; min-width: 240px;">{{r.ev}}</td><td class="r num">{{r.n}}</td><td class="ink-2">{{r.own}}</td></tr>
+              </sc-for>
+            </tbody>
+          </table></div>
+        </section>
+        <aside class="a-rail" aria-label="Flag detail">
+          <div class="a-rail-s">
+            <div class="a-row"><span class="a-st bad"><span class="i i-warning-fill" aria-hidden="true"></span>Many wrong answers</span><span class="a-grow"></span><button class="a-btn sm icon ghost" type="button" aria-label="Close panel"><span class="i i-x" aria-hidden="true"></span></button></div>
+            <p class="t-h3">P02 · U03 · L02 · S05</p>
+            <p class="t-sm ink-2">“Our shop’s app has five icons in the bottom bar, with no words… What should I change?”</p>
+            <p class="t-over" style="margin-top: 4px;">First answers · 412 learners</p>
+            <div class="a-hb" style="grid-template-columns: 112px minmax(0, 1fr) 40px;">
+              <span class="t-xs"><b>labels</b> · answer</span><span class="bar"><span style="width: 29%;"></span></span><span class="v">29%</span>
+              <span class="t-xs"><b>tour</b></span><span class="bar"><span style="width: 52%;"></span></span><span class="v">52%</span>
+              <span class="t-xs"><b>hold</b></span><span class="bar"><span style="width: 19%;"></span></span><span class="v">19%</span>
+            </div>
+            <p class="t-xs ink-3">The unit average for a first try is 64% right.</p>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">What learners said · 4 reports, 3 appeals accepted</p>
+            <div class="a-bub"><p class="t-xs ink-3">Report · Arabic · 6 Nov</p><p class="a-ar" lang="ar" dir="rtl" style="font-size: 13.5px;">الجولة التعريفية تشرح الأيقونات أيضًا، فلماذا تُعدّ إجابة خاطئة؟</p><p class="t-xs ink-2">“The tour explains the icons too, so why is it wrong?”</p></div>
+            <div class="a-bub"><p class="t-xs ink-3">Report · English · 7 Nov</p><p class="t-sm">“The feedback for the tour option doesn’t say why it’s worse.”</p></div>
+          </div>
+          <div class="a-rail-s">
+            <p class="t-over">Status</p>
+            <div class="a-seg" role="group" aria-label="Status" style="align-self: flex-start;"><button type="button" aria-pressed="true">To check</button><button type="button" aria-pressed="false">Fixing</button><button type="button" aria-pressed="false">Fixed</button><button type="button" aria-pressed="false">Won’t fix</button></div>
+            <a class="a-btn pri" href="FlowQualityFlag.dc.html"><span class="i i-pencil-simple" aria-hidden="true"></span>Fix in the lesson editor</a>
+            <a class="a-qa" href="QualityLesson.dc.html"><span class="i i-chart-bar" aria-hidden="true"></span>See the whole lesson’s numbers</a>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const F = { wrong: ['a-st bad', 'i i-warning-fill', 'Many wrong answers'], easy: ['a-st info', 'i i-trend-up', 'Almost all right'], unused: ['a-st off', 'i i-eye-slash', 'Option nobody picks'], drop: ['a-st wait', 'i i-trend-down', 'High drop-off'], rep: ['a-st wait', 'i i-flag', 'Many reports'] };
+    const R = (f, where, t, ev, n, own, sel) => ({ st: F[f][0], sti: F[f][1], f: F[f][2], where, t, ev, n, own, cls: sel ? 'open' : '' });
+    return {
+      rows: [
+        R('wrong', 'P02 · U03 · L02 · S05', 'Show it, don’t make them remember', '71% wrong on the first try; 52% pick “tour”. 4 reports, 3 appeals accepted.', '412', 'Unassigned', true),
+        R('drop', 'P14 · U02 · L04', 'Chips: a group of related choices', '23% leave during the 5:29 video, at about 3:40.', '518', 'Rana Khalil'),
+        R('unused', 'P10 · U02 · L03 · S06', 'option “shadow”', 'Picked by 1% of learners. It may be too easy to rule out.', '377', 'Unassigned'),
+        R('easy', 'P01 · U01 · L02 · S04', 'Ask only what you need', '98% right on the first try. Does it still teach anything?', '1,204', 'Unassigned'),
+        R('rep', 'P05 · U03 · L01 · S03', 'Contrast that everyone can read', '6 reports: the Arabic option text is cut off on small phones.', '689', 'Rana Khalil'),
+        R('wrong', 'P12 · U04 · L02 · S07', 'Show how sure the AI is', '66% wrong on the first try; answers spread evenly.', '233', 'Unassigned')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Roles and permissions</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="super" cur="team" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="super" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#admin">Admin</a><span aria-hidden="true">/</span><a href="Team.dc.html">Team and roles</a><span aria-hidden="true">/</span><span>Roles</span></nav>
+          <h1 class="t-h1">Roles and permissions</h1>
+          <p class="t-sm ink-2">11 built-in roles and 1 custom role. A person can have more than one role; they get everything each role allows.</p>
+        </div>
+        <div class="acts"><button class="a-btn pri" type="button"><span class="i i-plus" aria-hidden="true"></span>Create custom role</button></div>
+      </div>
+      <div class="a-tabs" role="tablist" aria-label="Team and roles"><a href="Team.dc.html" role="tab" aria-selected="false">Members <span class="a-count">9</span></a><a href="Roles.dc.html" role="tab" aria-selected="true">Roles <span class="a-count">12</span></a><a href="SuperAdmins.dc.html" role="tab" aria-selected="false">Super admins <span class="a-count">1 + 1 pending</span></a><a href="Approvals.dc.html" role="tab" aria-selected="false">Approvals <span class="a-count hot">3</span></a></div>
+      <section class="a-card" aria-labelledby="mx-h">
+        <div class="a-card-h" style="flex-wrap: wrap;"><h2 class="t-h3 a-grow" id="mx-h">What each role can do</h2>
+          <span class="a-row t-xs ink-2" style="gap: 10px;"><span class="a-row" style="gap: 4px;"><span class="pm v">V</span>view</span><span class="a-row" style="gap: 4px;"><span class="pm e">E</span>edit or act</span><span class="a-row" style="gap: 4px;"><span class="pm a">A</span>approve or publish</span><span class="a-row" style="gap: 4px;"><span class="pm n">—</span>no access</span></span>
+        </div>
+        <div class="a-tbl-wrap">
+          <table class="a-tbl pmx">
+            <thead><tr><th scope="col">Area</th><sc-for list="{{cols}}" as="c" hint-placeholder-count="11"><th scope="col" class="{{c.cls}}"><span class="pmh">{{c.label}}</span><span class="t-xs ink-3 num" style="display: block; font-weight: 600;">{{c.n}}</span></th></sc-for></tr></thead>
+            <tbody>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="15">
+                <tr><th scope="row" class="w6" style="background: transparent; position: static; text-align: left;">{{r.area}}</th><sc-for list="{{r.cells}}" as="x" hint-placeholder-count="11"><td class="{{x.td}}"><span class="{{x.cls}}" title="{{x.title}}">{{x.t}}</span><span class="t-xs ink-3" style="display: block; white-space: normal; line-height: 14px;">{{x.note}}</span></td></sc-for></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div class="a-pager"><span>Built-in roles are read only. Columns show how many people have each role.</span><span class="a-grow"></span><span class="a-row" style="gap: 6px;"><span class="i i-lock-simple s12" aria-hidden="true"></span>Every page and action is also checked on the server; hiding a button is never the only guard.</span></div>
+      </section>
+
+      <section class="a-card" aria-labelledby="cr-h">
+        <div class="a-card-h"><span class="i i-sliders-horizontal" aria-hidden="true" style="color: var(--brand);"></span><h2 class="t-h3 a-grow" id="cr-h">Custom role · Community moderator</h2><span class="t-xs ink-3">1 person · Omar Hamdy · created by Founding admin, 4 Nov</span><button class="a-btn sm" type="button">Duplicate</button><button class="a-btn sm danger" type="button">Delete role</button></div>
+        <div class="a-card-b" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px;">
+          <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <p class="t-over">{{g.label}}</p>
+              <sc-for list="{{g.items}}" as="it" hint-placeholder-count="4"><label class="a-row t-sm" style="gap: 8px; align-items: flex-start; flex-wrap: nowrap;"><span class="{{it.cb}}" aria-hidden="true" style="margin-top: 1px;"></span><span>{{it.label}}<span class="t-xs ink-3" style="display: block;">{{it.note}}</span></span></label></sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <div class="a-dlg-f"><span class="lft"><span class="i i-lock-simple s12" aria-hidden="true"></span>Saving asks for your passkey. A custom role can never include super admin rights.</span><button class="a-btn" type="button">Cancel</button><button class="a-btn pri" type="button">Save role</button></div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const roles = [['Super admin', '1'], ['Admin', '1'], ['Support lead', '1'], ['Support agent', '2'], ['Billing', '1'], ['Content publisher', '1'], ['Content editor', '1'], ['Instructor', '0'], ['Marketing', '0'], ['Analyst', '1'], ['Viewer / QA', '0']];
+    const M = [
+      ['Dashboard', 'V|V|V|V|V|V|V|V:own|V|V|V'],
+      ['Learners', 'E|E|E|E:limited|V|—|—|—|—|V:masked|—'],
+      ['Support inbox', 'E|E|E:+ assign|E|V|—|—|—|—|V|—'],
+      ['Billing and refunds', 'E|E|E|E:up to $50|E|—|—|—|—|V|—'],
+      ['Prices and plans', 'A|E|—|—|E:needs A|—|—|—|—|V|—'],
+      ['Discount codes', 'E|E|V|V|E|—|—|—|E:create|V|—'],
+      ['Content', 'A|A|V|V|—|A|E|E:own videos|—|V|V'],
+      ['Media', 'E|E|—|—|—|E|E|E:own|—|—|—'],
+      ['Content quality', 'E|E|V|V|—|E|E|—|—|V|—'],
+      ['Reports', 'V|V|V:support|V:support|V:revenue|V:content|V:content|V:own|V:marketing|V|—'],
+      ['Communications', 'A|A|E:macros|—|E:billing emails|—|—|—|E:needs A|—|—'],
+      ['Platform settings', 'E|E|—|—|—|—|—|—|—|—|—'],
+      ['Team and roles', 'E|E:no super|—|—|—|—|—|—|—|—|—'],
+      ['Audit log', 'V|V|V:own area|—|V:own area|V:own area|—|—|—|V|—'],
+      ['System health', 'V|V|—|—|—|—|—|—|—|V|—']
+    ];
+    const cls = { V: 'pm v', E: 'pm e', A: 'pm a', '—': 'pm n' };
+    const word = { V: 'View', E: 'Edit or act', A: 'Approve or publish', '—': 'No access' };
+    const cols = roles.map(([label, n], i) => ({ label, n: n + (n === '1' ? ' person' : ' people'), cls: 'c' }));
+    const rows = M.map(([area, s]) => ({ area, cells: s.split('|').map((v, i) => { const [k, note] = v.split(':'); return { t: k, note: note || '', cls: cls[k], title: word[k] + (note ? ', ' + note : ''), td: 'c' }; }) }));
+    const C = (label, on, note) => ({ label, note: note || '', cb: on ? 'a-cb on' : 'a-cb' });
+    return {
+      cols, rows,
+      groups: [
+        { label: 'Learners', items: [C('View Learner 360', true), C('Resend sign-in emails', true), C('Restore a streak or add a freeze', true), C('Suspend or unsuspend', true, 'Logged with a reason'), C('Export a learner’s data', false)] },
+        { label: 'Support', items: [C('Answer tickets', true), C('Review appeals', true), C('Edit macros', false), C('Assign tickets', false)] },
+        { label: 'Content', items: [C('View paths and lessons', true), C('Report a content problem', true), C('Edit lessons', false), C('Publish', false)] },
+        { label: 'Money', items: [C('View payments', false), C('Refunds', false), C('Grant comp access', false, 'Support agents have up to 30 days')] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

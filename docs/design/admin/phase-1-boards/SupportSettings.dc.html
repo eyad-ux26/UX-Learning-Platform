@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Support performance and settings</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="lead" cur="inbox" hint-size="232px,1160px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="lead" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="SupportInbox.dc.html">Support inbox</a><span aria-hidden="true">/</span><span>Performance and settings</span></nav>
+          <h1 class="t-h1">Support performance and settings</h1>
+        </div>
+        <div class="acts"><div class="a-seg" role="group" aria-label="Period"><button type="button" aria-pressed="false">7 days</button><button type="button" aria-pressed="true">30 days</button><button type="button" aria-pressed="false">90 days</button></div><button class="a-btn" type="button"><span class="i i-download-simple" aria-hidden="true"></span>Export</button></div>
+      </div>
+
+      <section class="a-kpis" aria-label="Support report" style="grid-template-columns: repeat(6, minmax(0, 1fr));">
+        <div class="a-kpi"><span class="k">Tickets</span><span class="t-big">1,186</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>62% Arabic</span></div>
+        <div class="a-kpi"><span class="k">First reply, median</span><span class="t-big">3 h 40 m</span><span class="d up"><span class="i i-trend-up s12" aria-hidden="true"></span>25 m faster</span></div>
+        <div class="a-kpi"><span class="k">Resolution, median</span><span class="t-big">1 d 6 h</span><span class="d flat"><span class="i i-arrow-right s12" aria-hidden="true"></span>same</span></div>
+        <div class="a-kpi"><span class="k">SLA met</span><span class="t-big">94%</span><span class="d down"><span class="i i-trend-down s12" aria-hidden="true"></span>2 points lower</span></div>
+        <div class="a-kpi"><span class="k">Satisfaction</span><span class="t-big">91% good</span><span class="t-xs ink-3">from 402 ratings</span></div>
+        <div class="a-kpi"><span class="k">Top issue</span><span class="t-big" style="font-size: 20px; line-height: 32px;">Sign-in links</span><span class="t-xs ink-3">22% of tickets</span></div>
+      </section>
+      <section class="a-card" aria-label="Volume by category and channel">
+        <div class="a-card-h"><h2 class="t-h3">Volume by category and channel</h2><a class="t-xs w6" href="#table">Show as a table</a></div>
+        <table class="a-tbl">
+          <thead><tr><th scope="col">Category</th><th scope="col" class="r">Email</th><th scope="col" class="r">Contact form</th><th scope="col" class="r">Lesson reports</th><th scope="col" class="r">Refund requests</th><th scope="col" class="r">Appeals</th><th scope="col" class="r">Total</th><th scope="col" class="r">SLA met</th></tr></thead>
+          <tbody>
+            <sc-for list="{{vol}}" as="v" hint-placeholder-count="5">
+              <tr><td class="w6">{{v.c}}</td><td class="r num">{{v.a}}</td><td class="r num">{{v.b}}</td><td class="r num">{{v.d}}</td><td class="r num">{{v.e}}</td><td class="r num">{{v.f}}</td><td class="r num w7">{{v.t}}</td><td class="r"><span class="{{v.sc}}">{{v.s}}</span></td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+
+      <h2 class="t-h2" style="margin-top: 6px;">Settings</h2>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="sla-h">
+          <div class="a-card-h"><span class="i i-timer ink-3" aria-hidden="true"></span><h3 class="t-h3" id="sla-h">SLA targets</h3></div>
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Priority</th><th scope="col">First reply</th><th scope="col">Resolution</th></tr></thead>
+            <tbody>
+              <tr><td><span class="a-pri p3"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>Urgent</span></td><td>4 business hours</td><td>1 business day</td></tr>
+              <tr><td><span class="a-pri p3" style="color: var(--ink-2);"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>High</span></td><td>8 business hours</td><td>2 business days</td></tr>
+              <tr><td><span class="a-pri p2"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>Normal (default)</span></td><td>24 hours</td><td>3 days</td></tr>
+              <tr><td><span class="a-pri p1"><span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>Low</span></td><td>48 hours</td><td>5 days</td></tr>
+            </tbody>
+          </table>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--line);">
+            <div class="a-row"><span class="a-grow t-sm">Warn the assignee before a breach</span><div class="a-in a-sel" style="width: 140px;">2 hours before<span class="i i-caret-down s14" aria-hidden="true"></span></div></div>
+            <div class="a-row"><span class="a-grow t-sm">Show the breach badge and alert the support lead</span><span class="a-switch on" role="switch" aria-checked="true" aria-label="Alert the lead on breach"></span></div>
+          </div>
+        </section>
+
+        <section class="a-card" aria-labelledby="bh-h">
+          <div class="a-card-h"><span class="i i-calendar-blank ink-3" aria-hidden="true"></span><h3 class="t-h3" id="bh-h">Business hours by region</h3></div>
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Queue</th><th scope="col">Days</th><th scope="col">Hours (Cairo)</th><th scope="col"></th></tr></thead>
+            <tbody>
+              <tr><td class="w6">Arabic tickets</td><td>Saturday to Thursday</td><td>09:00 to 18:00</td><td class="r"><button class="a-btn sm ghost" type="button">Edit</button></td></tr>
+              <tr><td class="w6">English tickets</td><td>Monday to Friday</td><td>09:00 to 18:00</td><td class="r"><button class="a-btn sm ghost" type="button">Edit</button></td></tr>
+            </tbody>
+          </table>
+          <div class="a-card-b" style="border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px;">
+            <span class="a-lbl">Days off</span>
+            <div class="a-row"><span class="a-chip">25 Dec 2026<button class="x" type="button" aria-label="Remove"><span class="i i-x s12" aria-hidden="true"></span></button></span><span class="a-chip">7 Jan 2027<button class="x" type="button" aria-label="Remove"><span class="i i-x s12" aria-hidden="true"></span></button></span><button class="a-chip add" type="button"><span class="i i-plus s12" aria-hidden="true"></span>Add day off</button></div>
+            <span class="help t-xs ink-3">SLA clocks pause outside business hours and on days off.</span>
+          </div>
+        </section>
+
+        <section class="a-card" aria-labelledby="as-h">
+          <div class="a-card-h"><span class="i i-arrows-split ink-3" aria-hidden="true"></span><h3 class="t-h3" id="as-h">Assignment</h3></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="a-row" style="gap: 18px;" role="radiogroup" aria-label="Assignment method">
+              <span class="a-row t-sm" style="gap: 6px;"><span class="a-radio" aria-hidden="true"></span>Manual</span>
+              <span class="a-row t-sm" style="gap: 6px;"><span class="a-radio" aria-hidden="true"></span>Round-robin</span>
+              <span class="a-row t-sm w7" style="gap: 6px;"><span class="a-radio on" aria-hidden="true"></span>By category</span>
+            </div>
+            <table class="a-tbl" style="border: 1px solid var(--line); border-radius: 8px;">
+              <thead><tr><th scope="col">Category</th><th scope="col">Goes to</th><th scope="col">Then</th></tr></thead>
+              <tbody>
+                <tr><td>Account and sign-in</td><td>Support agents</td><td>round-robin</td></tr>
+                <tr><td>Billing</td><td>Laila Mostafa</td><td>support lead if away</td></tr>
+                <tr><td>Content mistake</td><td>Content quality queue</td><td>and Omar Hamdy for the reply</td></tr>
+                <tr><td>Certificate, technical, other</td><td>Support agents</td><td>round-robin</td></tr>
+              </tbody>
+            </table>
+            <div class="a-row"><span class="a-grow t-sm">Skip people who are away or at their limit (12 open)</span><span class="a-switch on" role="switch" aria-checked="true" aria-label="Skip away people"></span></div>
+          </div>
+        </section>
+
+        <section class="a-card" aria-labelledby="cs-h">
+          <div class="a-card-h"><span class="i i-star ink-3" aria-hidden="true"></span><h3 class="t-h3" id="cs-h">Satisfaction survey</h3><span class="a-switch on" role="switch" aria-checked="true" aria-label="Send the survey"></span></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <p class="t-sm ink-2">Sent once, 1 hour after a ticket is resolved, in the ticket’s language.</p>
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px;">
+              <div class="a-card flat" style="padding: 12px; display: flex; flex-direction: column; gap: 8px;"><b>How was our help?</b><div class="a-row"><span class="a-btn sm">Good</span><span class="a-btn sm">Not good</span></div><span class="t-xs ink-3">Then an optional comment box</span></div>
+              <div class="a-card flat a-ar" lang="ar" dir="rtl" style="padding: 12px; display: flex; flex-direction: column; gap: 8px;"><b>كيف كانت مساعدتنا؟</b><div class="a-row"><span class="a-btn sm" style="font-family: Cairo;">جيدة</span><span class="a-btn sm" style="font-family: Cairo;">غير جيدة</span></div><span class="t-xs ink-3">ثم مربع اختياري للتعليق</span></div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="a-row" style="justify-content: flex-end; gap: 8px;"><span class="t-xs ink-3 a-grow">Changes here are written to the audit log.</span><button class="a-btn" type="button">Cancel</button><button class="a-btn pri" type="button">Save settings</button></div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1160}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const V = (c, a, b, d, e, f, s) => ({ c, a, b, d, e, f, t: String(a + b + d + e + f), s: s + '%', sc: s >= 95 ? 't-xs w7 ink-good' : s >= 90 ? 't-xs w7' : 't-xs w7 ink-bad' });
+    return { vol: [V('Account and sign-in', 168, 96, 0, 0, 0, 96), V('Billing', 71, 88, 0, 64, 0, 88), V('Content mistake', 12, 20, 241, 0, 58, 97), V('Technical', 44, 63, 0, 0, 0, 95), V('Certificate', 39, 22, 0, 0, 0, 98)] };
+  }
+}
+</script>
+</body>
+</html>

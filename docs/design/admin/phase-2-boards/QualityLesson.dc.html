@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lesson numbers</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="publisher" cur="quality" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="publisher" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="QualityFlags.dc.html">Content quality</a><span aria-hidden="true">/</span><span>P02 · U03 · L02</span></nav>
+          <h1 class="t-h1">Show it, don’t make them remember</h1>
+          <p class="t-sm ink-2"><span class="a-id">P02-U03-L02</span> · live v2 · speaker Rami · 9 steps · one video</p>
+        </div>
+        <div class="acts"><button class="a-chip" type="button"><span class="k">Dates</span> Last 30 days<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Language</span> Both<span class="i i-caret-down s12" aria-hidden="true"></span></button><a class="a-btn" href="LessonEditor.dc.html"><span class="i i-pencil-simple" aria-hidden="true"></span>Open in editor</a></div>
+      </div>
+      <section class="a-kpis" style="grid-template-columns: repeat(6, minmax(0, 1fr));" aria-label="Lesson summary">
+        <div class="a-kpi"><span class="k">Started</span><span class="t-big num">581</span><span class="d flat">62% in Arabic</span></div>
+        <div class="a-kpi"><span class="k">Finished</span><span class="t-big num">84%</span><span class="d flat">unit average 86%</span></div>
+        <div class="a-kpi"><span class="k">Time to finish</span><span class="t-big num">9 min</span><span class="d flat">planned 8</span></div>
+        <div class="a-kpi alert"><span class="k">Right first try</span><span class="t-big num">58%</span><span class="d down"><span class="i i-trend-down s12" aria-hidden="true"></span>unit average 64%</span></div>
+        <div class="a-kpi"><span class="k">Reports</span><span class="t-big num">5</span><span class="d flat">4 on step 5</span></div>
+        <div class="a-kpi"><span class="k">Appeals accepted</span><span class="t-big num">3</span><span class="d flat">of 4</span></div>
+      </section>
+      <section class="a-card" aria-labelledby="sf-h">
+        <div class="a-card-h"><h2 class="t-h3 a-grow" id="sf-h">Step by step</h2><span class="a-row t-xs" style="gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 3px; background: var(--s1);" aria-hidden="true"></span><span class="ink-2">Still in the lesson</span></span><a class="t-xs w6" href="#tbl">Show as a table</a></div>
+        <div class="a-card-b">
+          <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 10px; align-items: end; height: 150px;" role="img" aria-label="Learners still in the lesson at each step, from 100% at S01 to 84% at S08">
+            <sc-for list="{{steps}}" as="s" hint-placeholder-count="9"><div style="display: flex; flex-direction: column; justify-content: flex-end; height: 100%; gap: 4px; align-items: stretch;"><span class="t-xs num w7" style="text-align: center;">{{s.k}}</span><span style="display: block; width: 40px; align-self: center; height: {{s.h}}; background: var(--s1); border-radius: 4px 4px 0 0; opacity: {{s.op}};"></span></div></sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 10px; margin-top: 6px;" class="t-xs ink-3"><sc-for list="{{steps}}" as="s" hint-placeholder-count="9"><span style="text-align: center;">{{s.id}}<br>{{s.ty}}</span></sc-for></div>
+        </div>
+      </section>
+      <div style="display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; align-items: start;">
+        <section class="a-card" id="tbl" aria-label="Steps table">
+          <div class="a-tbl-wrap"><table class="a-tbl">
+            <thead><tr><th scope="col">Step</th><th scope="col">Skill</th><th scope="col" class="r">Right first try</th><th scope="col" class="r">Average tries</th><th scope="col" class="r">Time</th><th scope="col" class="r">Reports</th></tr></thead>
+            <tbody>
+              <sc-for list="{{graded}}" as="g" hint-placeholder-count="5"><tr class="{{g.cls}}"><td class="w6">{{g.id}} · {{g.ty}}</td><td><span class="a-id">{{g.sk}}</span></td><td class="{{g.okc}}">{{g.ok}}</td><td class="r num">{{g.tr}}</td><td class="r num">{{g.t}}</td><td class="r num">{{g.rp}}</td></tr></sc-for>
+            </tbody>
+          </table></div>
+        </section>
+        <section class="a-card" aria-labelledby="cf-h">
+          <div class="a-card-h"><h2 class="t-h3" id="cf-h">How sure vs right · S05</h2></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="a-hm" style="grid-template-columns: 88px repeat(3, minmax(0, 1fr));">
+              <span></span><span class="h" style="justify-content: center;">Guessing</span><span class="h" style="justify-content: center;">Fairly sure</span><span class="h" style="justify-content: center;">Sure</span>
+              <span class="h">Right</span><span class="c q2">6%</span><span class="c q3">11%</span><span class="c q3">12%</span>
+              <span class="h">Wrong</span><span class="c q2">9%</span><span class="c q4">24%</span><span class="c q5">38%</span>
+            </div>
+            <p class="t-sm"><b>38% were sure and wrong.</b> That usually means the wrong option looks right for a good reason; the feedback should say why it is still worse.</p>
+            <p class="t-xs ink-3">Share of 412 first answers. Darker means more learners.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [['S01', 'hook', 100], ['S02', 'try', 99], ['S09', 'video', 93], ['S03', 'concept', 92], ['S04', 'guided', 91], ['S05', 'guided', 87], ['S06', 'contrast', 86], ['S07', 'new case', 85], ['S08', 'recap', 84]];
+    return {
+      steps: S.map(([id, ty, k]) => ({ id, ty, k: k + '%', h: (k * 1.2) + 'px', op: id === 'S05' ? '1' : '0.55' })),
+      graded: [['S02', 'try', 'SK-P02-U03-03', 61, '1.6', '0:48', 0], ['S04', 'guided', 'SK-P02-U03-03', 72, '1.4', '0:41', 0], ['S05', 'guided', 'SK-P02-U03-04', 29, '2.3', '1:12', 4], ['S06', 'contrast', 'SK-P02-U03-03', 69, '1.4', '0:55', 1], ['S07', 'new case', 'SK-P02-U03-04', 58, '1.6', '0:58', 0]].map(([id, ty, sk, ok, tr, t, rp]) => ({ id, ty, sk, ok: ok + '%', okc: ok < 40 ? 'r num ink-bad w7' : 'r num', tr, t, rp: String(rp), cls: id === 'S05' ? 'open' : '' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

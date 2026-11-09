@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Billing problems</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="billing" cur="problems" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="billing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <nav class="a-crumb" aria-label="Breadcrumb"><a href="#money">Money</a><span aria-hidden="true">/</span><span>Billing problems</span></nav>
+          <h1 class="t-h1">Billing problems</h1>
+          <p class="t-sm ink-2">Things that need a person: failed charges, past due learners, Egypt prices paid with other cards, and webhook events we could not process.</p>
+        </div>
+      </div>
+      <div class="a-kpis" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+        <a class="a-kpi alert" href="#failed"><span class="k">Failed payments, 7 days</span><span class="t-big num">14</span><span class="t-xs ink-2">9 Paymob · 5 Paddle</span></a>
+        <a class="a-kpi" href="#pastdue"><span class="k">Past due now</span><span class="t-big num">23</span><span class="t-xs ink-2">≈ $131 MRR at risk</span></a>
+        <a class="a-kpi" href="#mismatch"><span class="k">Card-country mismatch</span><span class="t-big num">3</span><span class="t-xs ink-2">Egypt price, card from abroad</span></a>
+        <a class="a-kpi alert" href="#webhooks"><span class="k">Webhooks not processed</span><span class="t-big num">2</span><span class="t-xs ink-2">oldest 41 min ago</span></a>
+      </div>
+
+      <section class="a-card" aria-labelledby="wh-h">
+        <div class="a-card-h"><span class="i i-lightning" aria-hidden="true" style="color: var(--bad-ink);"></span><h2 class="t-h3 a-grow" id="wh-h">Webhook events we could not process</h2><span class="t-xs ink-3">Signature checked first. Retrying runs the same handler again; it never changes a payment by hand.</span></div>
+        <div class="a-tbl-wrap">
+          <table class="a-tbl">
+            <thead><tr><th scope="col">Received</th><th scope="col">Provider</th><th scope="col">Event</th><th scope="col">For</th><th scope="col">Why it failed</th><th scope="col" class="r">Tries</th><th scope="col"></th></tr></thead>
+            <tbody>
+              <sc-for list="{{hooks}}" as="h" hint-placeholder-count="2">
+                <tr><td class="ink-2">{{h.when}}</td><td>{{h.prov}}</td><td><span class="a-id">{{h.ev}}</span></td><td><a class="rowlink" href="Learner360.dc.html">{{h.who}}</a><div class="a-id">{{h.pid}}</div></td><td><span class="a-st bad"><span class="i i-warning-fill" aria-hidden="true"></span>{{h.err}}</span></td><td class="r num">{{h.tries}}</td><td class="r"><span class="a-row" style="justify-content: flex-end; gap: 6px; flex-wrap: nowrap;"><button class="a-btn sm ghost" type="button">Details</button><button class="a-btn sm" type="button"><span class="i i-arrow-clockwise" aria-hidden="true"></span>Retry</button></span></td></tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div style="display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; align-items: start;">
+        <section class="a-card" aria-labelledby="fp-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="fp-h">Failed payments and past due</h2><div class="a-seg" role="group" aria-label="Show"><button type="button" aria-pressed="true">All 37</button><button type="button" aria-pressed="false">Failed 14</button><button type="button" aria-pressed="false">Past due 23</button></div></div>
+          <div class="a-tbl-wrap">
+            <table class="a-tbl">
+              <thead><tr><th scope="col">Learner</th><th scope="col">Plan</th><th scope="col">What happened</th><th scope="col">Next</th><th scope="col"></th></tr></thead>
+              <tbody>
+                <sc-for list="{{fails}}" as="f" hint-placeholder-count="6">
+                  <tr><td><a class="rowlink" href="Learner360.dc.html">{{f.who}}</a><div class="a-id">{{f.pid}}</div></td><td class="ink-2">{{f.plan}}</td><td><span class="{{f.st}}"><span class="{{f.sti}}" aria-hidden="true"></span>{{f.stl}}</span><div class="t-xs ink-3">{{f.why}}</div></td><td class="t-sm">{{f.next}}</td><td class="r"><button class="a-btn sm" type="button">{{f.act}}</button></td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div class="a-pager"><span>1–6 of 37</span><span class="a-grow"></span><span class="t-xs ink-3">Providers retry on their own schedule. We email the learner in their language after each failure.</span></div>
+        </section>
+
+        <section class="a-card" aria-labelledby="mm-h">
+          <div class="a-card-h"><h2 class="t-h3 a-grow" id="mm-h">Egypt price, card from another country</h2></div>
+          <div class="a-card-b" style="display: flex; flex-direction: column; gap: 10px;">
+            <p class="t-sm ink-2">Agreed rule: refund the Egypt-price payment and send a Paddle checkout at the price for the learner’s region.</p>
+            <sc-for list="{{mism}}" as="m" hint-placeholder-count="3">
+              <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;">
+                <div class="a-row" style="gap: 8px;"><a class="w7 a-grow" href="Learner360.dc.html">{{m.who}}</a><span class="{{m.st}}"><span class="{{m.sti}}" aria-hidden="true"></span>{{m.stl}}</span></div>
+                <div class="t-xs ink-2">{{m.line}}</div>
+                <div class="a-row" style="gap: 6px;"><button class="a-btn sm" type="button">Not a problem</button><a class="{{m.btn}}" href="FlowRefund.dc.html">{{m.act}}</a></div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = { failed: ['a-st bad', 'i i-warning-fill', 'Payment failed'], pastdue: ['a-st wait', 'i i-hourglass-medium', 'Past due'], grace: ['a-st wait', 'i i-hourglass-medium', 'In grace'], open: ['a-st wait', 'i i-flag', 'To decide'], sent: ['a-st info', 'i i-paper-plane-tilt', 'Checkout sent'] };
+    const F = (who, pid, plan, s, why, next, act) => ({ who, pid, plan, st: S[s][0], sti: S[s][1], stl: S[s][2], why, next, act });
+    const M = (who, line, s, act, pri) => ({ who, line, st: S[s][0], sti: S[s][1], stl: S[s][2], act, btn: pri ? 'a-btn sm pri' : 'a-btn sm' });
+    return {
+      hooks: [
+        { when: 'Today 10:31', prov: 'Paymob', ev: 'TRANSACTION (success)', who: 'Aya Nasser', pid: 'Paymob 236118877', err: 'Order id not found', tries: '3' },
+        { when: 'Today 09:50', prov: 'Paddle', ev: 'subscription.updated', who: 'Jana Haddad', pid: 'sub_01jbz…e40', err: 'Timed out after 10 s', tries: '1' }
+      ],
+      fails: [
+        F('Fatma Hegazy', 'Paymob 236118904', 'Pro monthly · Egypt', 'pastdue', 'Card declined: not enough balance', 'Retry 10 Nov', 'Send card link'),
+        F('Hossam Ali', 'Paymob 236117310', 'Pro monthly · Egypt', 'failed', 'Wallet payment timed out', 'Learner can try again', 'Send card link'),
+        F('Nada Salem', 'Paddle txn_01jcw…1f8', 'Pro annual · Gulf', 'failed', 'Bank asked for 3-D Secure, not finished', 'Paddle retries 11 Nov', 'Send card link'),
+        F('Ahmed Farouk', 'Paymob 236110022', 'Pro monthly · Egypt', 'grace', 'Card expired 10/26', 'Pro stays on to 12 Nov', 'Send card link'),
+        F('Reem Al-Otaibi', 'Paddle txn_01jct…a03', 'Pro monthly · Gulf', 'pastdue', 'Card declined by bank', 'Paddle retries 10 Nov', 'Send card link'),
+        F('Mostafa Kamal', 'Paymob 236098771', 'Pro monthly · Egypt', 'pastdue', '3 retries failed', 'Pro ends 10 Nov', 'Open ticket')
+      ],
+      mism: [
+        M('Salah Darwish', '2,249 EGP Pro annual · Paymob 236080114 · card issued in the UK · IP Egypt', 'open', 'Refund and send checkout', true),
+        M('Huda Mansour', '249 EGP Pro monthly · card issued in Saudi Arabia · IP Saudi Arabia', 'open', 'Refund and send checkout', true),
+        M('Yasmin Fawzy', '249 EGP · card issued in the UAE · refunded 8 Nov · Gulf checkout sent', 'sent', 'Resend checkout', false)
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

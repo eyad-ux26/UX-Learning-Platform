@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Support inbox on a phone</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="adm" data-theme="light" style="min-height: 100vh; background: var(--ground); display: flex; flex-direction: column;">
+  <header class="a-row" style="gap: 10px; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 2;">
+    <sc-if value="{{inTicket}}" hint-placeholder-val="{{false}}"><button class="a-btn sm icon ghost" type="button" aria-label="Back to tickets" onClick="{{toList}}"><span class="i i-arrow-left" aria-hidden="true"></span></button></sc-if>
+    <sc-if value="{{inList}}" hint-placeholder-val="{{true}}"><img src="/_blob/c7f593dfee2e5875d9c7a4669eaccf27" alt="UXGate admin" style="height: 24px;"></sc-if>
+    <span class="t-h3 a-grow">{{title}}</span>
+    <span class="a-env" style="height: 20px; font-size: 10.5px;"><span class="dot" aria-hidden="true"></span>Prod</span>
+    <span class="a-av sm v2" aria-hidden="true">OH</span>
+  </header>
+  <div class="a-row t-xs" style="gap: 8px; padding: 8px 16px; background: var(--info-bg); color: var(--info-ink); flex-wrap: nowrap;"><span class="i i-device-mobile s14" aria-hidden="true"></span><span>View only on phones. Reply, refund or change roles on a tablet or computer.</span></div>
+
+  <sc-if value="{{inList}}" hint-placeholder-val="{{true}}">
+    <div style="padding: 12px 16px 6px; display: flex; gap: 6px; overflow-x: auto;"><span class="a-chip on">My tickets 5</span><span class="a-chip">Unassigned 9</span><span class="a-chip">Past SLA 4</span></div>
+    <ul style="list-style: none; margin: 0; padding: 0 0 16px;">
+      <sc-for list="{{tickets}}" as="t" hint-placeholder-count="5">
+        <li><button type="button" onClick="{{t.open}}" style="all: unset; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; gap: 4px; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--surface); cursor: pointer;">
+          <span class="a-row" style="gap: 6px;"><span class="a-id">{{t.id}}</span><span class="t-xs ink-3 a-grow">{{t.who}}</span><span class="{{t.slaCls}}"><span class="i i-timer s12" aria-hidden="true"></span>{{t.sla}}</span></span>
+          <span class="{{t.cls}}" lang="{{t.lang}}" dir="{{t.dir}}" style="font-size: 14px;">{{t.subject}}</span>
+        </button></li>
+      </sc-for>
+    </ul>
+  </sc-if>
+
+  <sc-if value="{{inTicket}}" hint-placeholder-val="{{false}}">
+    <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 12px;">
+      <div class="a-row" style="gap: 6px;"><span class="a-st info"><span class="i i-circle-fill" aria-hidden="true"></span>Open</span><span class="a-sla soon"><span class="i i-timer s12" aria-hidden="true"></span>Reply due in 1 h 16 m</span></div>
+      <div class="a-card"><div class="a-card-b" style="display: flex; flex-direction: column; gap: 6px;"><span class="a-row" style="gap: 8px;"><span class="a-av sm v2" aria-hidden="true">MA</span><b class="a-grow">Mariam Adel</b><span class="t-xs ink-3">09:44</span></span><p class="a-ar" lang="ar" dir="rtl">مرحبًا، أحاول تسجيل الدخول منذ الصباح، لكن رابط تسجيل الدخول لا يصل إلى بريدي. بحثت في مجلد الرسائل غير المرغوب فيها أيضًا. سلسلة أيامي 23 يومًا ولا أريد أن أخسرها. شكرًا.</p></div></div>
+      <div class="a-row t-xs ink-2" style="gap: 6px;"><span class="i i-envelope-simple s14" aria-hidden="true"></span>Sign-in link sent 09:40 · deferred by the receiving server</div>
+      <div class="a-card" style="background: var(--warn-bg); border-color: var(--warn-line);"><div class="a-card-b t-sm"><b>Internal note · Omar Hamdy</b><br>Her streak is safe today: she holds 1 freeze.</div></div>
+      <div class="a-card"><div class="a-card-b"><dl class="a-kv" style="grid-template-columns: 74px minmax(0, 1fr);"><dt>Plan</dt><dd>Pro monthly · Paymob</dd><dt>Streak</dt><dd>23 days · 1 freeze</dd><dt>Email</dt><dd>mariam.adel@gmail.com</dd></dl></div></div>
+      <div style="padding: 12px; border: 1.5px dashed var(--line-field); border-radius: 10px; display: flex; gap: 10px; align-items: center;" class="t-sm"><span class="i i-desktop" aria-hidden="true" style="color: var(--ink-3);"></span><span class="a-grow">Replying needs a tablet or computer.</span><button class="a-btn sm" type="button"><span class="i i-link s14" aria-hidden="true"></span>Copy link</button></div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { v: 'list' }; }
+  renderVals() {
+    const T = (id, subject, ar, who, sla, k) => ({ id: '#' + id, subject, who, sla, slaCls: 'a-sla ' + k, lang: ar ? 'ar' : 'en', dir: ar ? 'rtl' : 'ltr', cls: ar ? 'a-ar' : 'w7', open: () => this.setState({ v: 'ticket' }) });
+    const inTicket = this.state.v === 'ticket';
+    return {
+      inTicket, inList: !inTicket, title: inTicket ? '#1042 · Mariam Adel' : 'Support inbox',
+      toList: () => this.setState({ v: 'list' }),
+      tickets: [
+        T('1042', 'لا يصلني رابط تسجيل الدخول', true, 'Mariam Adel', '1 h 16 m', 'soon'),
+        T('1031', 'لم أستطع الدفع بالمحفظة الإلكترونية', true, 'Fatma Hegazy', '7 h late', 'late'),
+        T('1044', 'Refund for a payment I didn’t make', false, 'Basel Omran', '2 h 05 m', 'soon'),
+        T('1036', 'أريد تغيير الاسم على الشهادة', true, 'Ziad Ezz', '9 h', ''),
+        T('1028', 'Arabic text overlaps in lesson 3', false, 'Lina Saber', '1 d 2 h', '')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

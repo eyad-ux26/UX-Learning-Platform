@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Communications · Email log</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&amp;family=Titillium+Web:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#005F99}a:hover{color:#003F66}
+</style>
+</helmet>
+<div class="adm a-shell" data-theme="light">
+  <dc-import name="Nav" role="marketing" cur="comms" hint-size="232px,1000px" style="display: flex; flex: 0 0 auto;"></dc-import>
+  <div class="a-main">
+    <dc-import name="TopBar" role="marketing" hint-size="100%,56px"></dc-import>
+    <main class="a-page">
+      <div class="a-ph">
+        <div class="tt">
+          <h1 class="t-h1">Communications</h1>
+          <p class="t-sm ink-2">Every email sent to a learner, with what happened to it. Kept for 90 days. Content of sign-in links is never stored.</p>
+        </div>
+        <div class="acts"></div>
+      </div>
+      <nav class="a-tabs" aria-label="Communications"><a href="Campaigns.dc.html" aria-selected="false">Campaigns</a><a href="Announcements.dc.html" aria-selected="false">In-app announcements</a><a href="EmailTemplates.dc.html" aria-selected="false">Email templates</a><a href="Waitlist.dc.html" aria-selected="false">Waitlist</a><a href="EmailLog.dc.html" aria-selected="true">Email log</a></nav>
+      <div class="a-toolbar"><div class="a-search" style="max-width: 340px;"><span class="i i-magnifying-glass" aria-hidden="true"></span><span class="ph-txt">Search by learner email or id</span></div><button class="a-chip" type="button"><span class="k">Email</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Result</span> All<span class="i i-caret-down s12" aria-hidden="true"></span></button><button class="a-chip" type="button"><span class="k">Dates</span> Last 24 hours<span class="i i-caret-down s12" aria-hidden="true"></span></button><span class="a-grow"></span><span class="t-xs ink-2">Today: 6,214 sent · 98.9% delivered · 41 bounced · 3 failed</span></div>
+      <div class="a-split">
+        <div class="a-main-col">
+          <section class="a-card" aria-label="Emails sent">
+            <div class="a-tbl-wrap"><table class="a-tbl">
+              <thead><tr><th scope="col">Sent (Cairo)</th><th scope="col">To</th><th scope="col">Email</th><th scope="col">Language</th><th scope="col">Result</th></tr></thead>
+              <tbody><sc-for list="{{rows}}" as="r" hint-placeholder-count="9"><tr class="{{r.cls}}"><td class="num">{{r.t}}</td><td><span class="a-mask"><span class="v">{{r.to}}</span></span></td><td>{{r.e}}</td><td>{{r.l}}</td><td style="white-space: nowrap;"><span class="{{r.dot}}"></span> {{r.r}}</td></tr></sc-for></tbody>
+            </table></div>
+            <div class="a-pager"><span class="t-xs ink-2">1–9 of 6,214</span></div>
+          </section>
+        </div>
+        <aside class="a-rail" aria-labelledby="em-h">
+          <div class="a-rail-s"><span class="t-over">Bounced</span><h2 class="t-h3" id="em-h">Your UXGate receipt · 249 EGP</h2><span class="t-xs ink-2">Billing · Arabic · to y••••@gmail.com</span></div>
+          <div class="a-rail-s"><span class="a-lbl">What happened</span>
+            <div class="a-tl">
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-paper-plane-tilt" aria-hidden="true"></span></span><div><p class="a-tl-t">Sent to Resend</p><p class="a-tl-m">03:58:12</p></div></div>
+              <div class="a-tl-i"><span class="a-tl-dot"><span class="i i-warning" aria-hidden="true"></span></span><div><p class="a-tl-t">Bounced: mailbox full</p><p class="a-tl-m">03:58:40 · soft bounce, we try again in 6 hours</p></div></div>
+            </div>
+            </div>
+          </div>
+          <div class="a-rail-s"><div class="a-kv"><span class="k">Learner</span><span class="v"><a href="Learner360.dc.html">Open Learner 360</a></span><span class="k">Provider id</span><span class="v a-id">re_8f2c…41d</span><span class="k">Template</span><span class="v"><a href="EmailTemplates.dc.html">Receipt</a></span></div></div>
+          <div class="a-rail-s"><div class="a-note"><span class="i i-info" aria-hidden="true"></span><span>Support can resend a receipt or a certificate email from Learner 360. Sign-in and password emails are never resent from the panel; the learner asks for a new one.</span></div></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [['04:12', 'n•••@gmail.com', 'Daily reminder', 'Arabic', 'good', 'Opened'], ['04:10', 'k•••••@outlook.com', 'Confirm your email', 'English', 'good', 'Delivered'], ['04:06', 's••••@gmail.com', 'Badge turned gold', 'Arabic', 'good', 'Clicked'], ['03:58', 'y••••@gmail.com', 'Receipt · 249 EGP', 'Arabic', 'wait', 'Bounced, will retry'], ['03:51', 'm•••@yahoo.com', 'Sign in to UXGate', 'English', 'good', 'Delivered'], ['03:44', 'r•••••@hotmail.com', 'Payment failed', 'Arabic', 'bad', 'Failed: address does not exist'], ['03:30', 'h••••@icloud.com', 'Daily reminder', 'Arabic', 'off', 'Not sent: reminder turned off'], ['03:22', 'a•••@gmail.com', 'Goal nudge', 'English', 'off', 'Not sent: learning emails off'], ['03:15', 'd•••••@gmail.com', 'Goal nudge', 'Arabic', 'good', 'Delivered']];
+    return { rows: R.map(([t, to, e, l, d, r], i) => ({ t, to, e, l, dot: 'a-dot ' + d, r, cls: i === 3 ? 'open' : '' })) };
+  }
+}
+</script>
+</body>
+</html>
