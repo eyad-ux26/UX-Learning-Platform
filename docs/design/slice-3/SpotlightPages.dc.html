@@ -84,7 +84,39 @@
           <div class="pg-sec"><p class="t-over"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.secInter}}</p></div>
         </sc-if>
 
-        <!-- Options B and C: one list, video paths first with the instructor -->
+        <!-- Option B: every path card uses the featured card layout (Eyad, 9 Nov) -->
+        <sc-if value="{{is.optB}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over">{{c.secAll}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{hybrid}}" as="h" hint-placeholder-count="2">
+              <a href="#path" class="path-card press is-hybrid pc-stack" aria-label="{{h.aria}}">
+                <span class="hy-top">
+                  <span class="pc-ill"><img src="{{h.img}}" alt=""></span>
+                  <span class="pc-text">
+                    <span class="pc-name"><span class="ltr">{{h.name}}</span></span>
+                    <span class="pc-sub">{{h.sub}}</span>
+                  </span>
+                </span>
+                <span class="hy-who"><img class="hy-avatar" src="{{h.avatar}}" alt=""><span>{{c.withLabel}} <b>{{h.who}}</b></span></span>
+                <span class="pc-meta"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span><span class="kind">{{h.units}}</span><span class="kind kind-free">{{c.free1}}</span></span>
+              </a>
+            </sc-for>
+            <sc-for list="{{inter}}" as="p" hint-placeholder-count="6">
+              <a href="#path" class="path-card press pc-stack" aria-label="{{p.name}}">
+                <span class="hy-top">
+                  <span class="pc-ill"><img src="{{p.img}}" alt=""></span>
+                  <span class="pc-text">
+                    <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
+                    <span class="pc-sub">{{p.sub}}</span>
+                  </span>
+                </span>
+                <span class="pc-meta"><span class="kind"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span><span class="kind">{{p.units}}</span></span>
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- Option C: one list, video paths first with the instructor -->
         <sc-if value="{{is.oneList}}" hint-placeholder-val="{{false}}">
           <div class="pg-sec"><p class="t-over">{{c.secAll}}</p></div>
           <div class="pg-grid two">
@@ -103,6 +135,7 @@
           </div>
         </sc-if>
 
+        <sc-if value="{{is.interList}}" hint-placeholder-val="{{true}}">
         <div class="pg-grid {{interGrid}}">
           <sc-for list="{{inter}}" as="p" hint-placeholder-count="6">
             <a href="#path" class="path-card press" aria-label="{{p.name}}">
@@ -116,6 +149,7 @@
             </a>
           </sc-for>
         </div>
+        </sc-if>
       </main>
     </sc-if>
 
@@ -346,7 +380,7 @@ class Component extends DCLogic {
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       markWhite: '/_blob/5667904a660c43335758c7e0120ae2b8',
-      is: { paths: isPaths, optA: view === 'optA', optB: view === 'optB', oneList: view === 'optB' || view === 'optC', certs: view === 'certs', land: isLand, landDiff: view === 'landDiff', landCert: view === 'landCert' },
+      is: { paths: isPaths, optA: view === 'optA', optB: view === 'optB', oneList: view === 'optC', interList: view !== 'optB', certs: view === 'certs', land: isLand, landDiff: view === 'landDiff', landCert: view === 'landCert' },
       optLabel: c[view] || '',
       hybrid, spot: hybrid, inter, interGrid: view === 'optA' ? '' : 'two',
       pfTabs: ['overview', 'paths', 'certs', 'badges', 'board'].map((id, i) => { const on = id === 'certs';

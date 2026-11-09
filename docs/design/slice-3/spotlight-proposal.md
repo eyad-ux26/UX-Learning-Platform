@@ -37,7 +37,7 @@ Video courses are the `hybrid` paths: P02 and P14 today.
 - **B · Instructor spotlight.**
   - A swipeable row of video course cards, with dots. Each card (Eyad, 9 Nov, v102) has the path art beside the name and description, like the list cards, then the small round instructor photo with "With {name}", then the same tags as other cards (Video, units, Unit 1 free). No Start button. Light blue gradient and border.
   - The row has a title above it with a star icon: "Featured courses" / «كورسات مميّزة» (Eyad picked it, 9 Nov). "Most in demand" / "Most watched" can replace it once real data backs them.
-  - Then one list, video courses first.
+  - Then "All paths", video courses first. Every card in this list uses the featured card layout (Eyad, 9 Nov, v106): path icon beside the name and description, then for video courses the small round instructor photo with "With {name}", then the tags along the bottom. No caret.
 - **C · One list, video first.**
   - The smallest change.
   - Video course cards get:
