@@ -7,7 +7,7 @@ action that checks them again, and every change is written to the audit log.
 
 ## Migrations to run, in this order
 
-Run them in the Supabase SQL editor after Phase 1's migrations (0044 to 0046).
+Run them in the Supabase SQL editor after Phase 1's migrations (0044 to 0048).
 
 1. `supabase/migrations/0060_admin_content.sql`: versioned lessons, drafts, releases, the Phase 2 permissions.
 2. `supabase/seed/content-live.sql`: the v1 import. It makes the versions already in `content_versions` live as v1.
