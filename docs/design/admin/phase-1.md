@@ -91,18 +91,16 @@ The canvas has five pages:
 - Toasts offer Undo only when the action can really be taken back before it leaves us.
 - Sessions time out after 30 minutes idle or 12 hours in total.
 
-## Judgment calls for the Admins to confirm
+## Judgment calls, answered by the Admins (9 Nov 2026)
 
-1. **Region name.** The price table names a region "Other Arab countries", but it is charged to every country outside Egypt and the Gulf. The boards keep the name and say "All other countries" under it.
-2. **Trial.** The requirements mention "extend a trial" and a trial status, but no trial is on sale. The boards leave trials out.
-3. **Phase 2 menu items** are shown to the roles that will get them and open a placeholder. The other option is to hide them until they are built.
+1. **Region name.** The fourth region (countries outside the Arab world, charged the Gulf price until it gets its own) is named **"Rest of the world"**. "Other Arab countries" stays for the Arab League countries outside Egypt and the Gulf.
+2. **Trials.** Design trials now. Phase 2 adds a trial status and tab on Subscriptions, an "Extend trial" action for support on Learner 360, trial-to-paid numbers in Reports and the trial length in Settings. The learner app has no trial yet, so the app needs its own work before these screens do anything.
+3. **Phase 2 menu items** are shown to the roles that will get them and open a placeholder until they are built.
 4. **Invite emails** are in English, like the panel.
-5. **Gulf countries** on Prices are listed as UAE, Saudi Arabia, Kuwait, Qatar, Bahrain and Oman. Please confirm.
-6. **Paymob** has no provider price object, so Prices shows "Amount set on our server" for Egypt.
-7. **Time limits I picked:**
-   - View as learner ends after 30 minutes.
-   - Unanswered approvals remind the approvers after 4 hours.
-   - Student proof files are deleted 30 days after the decision.
-   - Too many failed sign-ins pause sign-in for 15 minutes.
-8. **Revoking a certificate** also asks you to type its id, on top of the required reason.
-9. **Sample discount codes and STUDENT40** are design examples, not decided offers.
+5. **Gulf price** covers the GCC countries plus Iraq (UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Iraq). Iraq was on the Other Arab price, so the app's region list changes too; existing Iraqi subscribers keep the price they signed up at.
+6. **Egypt price** shows "Amount set on our server", because Paymob has no provider price object.
+7. **Time limits** stay as designed: view as learner ends after 30 minutes, unanswered approvals remind after 4 hours, student proof files are deleted 30 days after the decision, too many failed sign-ins pause sign-in for 15 minutes.
+8. **Revoking a certificate** needs a reason and the typed certificate id.
+9. **Discount codes on the boards are examples only.** The real offers are the ones in `apps/web/lib/billing/pricing.ts`: student 40% (student check valid for one year), welcome back 40% on annual for two years, and the FOUNDING code at 30% for the first annual year.
+
+The boards in `phase-1-boards/` were updated to match these answers (Prices, Dashboard, Revenue, Discounts, Student checks, Appeals, Shell roles).

@@ -28,7 +28,15 @@ a{color:#005F99}a:hover{color:#003F66}
         </div>
         <div class="acts"><button class="a-btn pri" type="button" aria-expanded="true"><span class="i i-plus" aria-hidden="true"></span>Create code</button></div>
       </div>
-      <div class="a-tabs" role="tablist"><a href="#a" role="tab" aria-selected="true">Active <span class="a-count">4</span></a><a href="#s" role="tab" aria-selected="false">Scheduled <span class="a-count">1</span></a><a href="#p" role="tab" aria-selected="false">Paused <span class="a-count">1</span></a><a href="#e" role="tab" aria-selected="false">Ended <span class="a-count">7</span></a></div>
+      <div class="a-tabs" role="tablist"><a href="#a" role="tab" aria-selected="true">Active <span class="a-count">3</span></a><a href="#s" role="tab" aria-selected="false">Scheduled <span class="a-count">1</span></a><a href="#p" role="tab" aria-selected="false">Paused <span class="a-count">1</span></a><a href="#e" role="tab" aria-selected="false">Ended <span class="a-count">7</span></a></div>
+      <section class="a-card" aria-label="Built-in offers">
+        <div class="a-card-h"><h2 class="t-h3 a-grow">Built-in offers</h2><span class="t-xs ink-3">One discount per payment. When several fit, the biggest wins.</span></div>
+        <div class="a-card-b" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+          <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;"><p class="a-row" style="gap: 8px;"><span class="i i-graduation-cap" aria-hidden="true"></span><b class="a-grow">Student</b><span class="w7">40% off</span></p><p class="t-xs ink-2">Monthly or annual, while the student check is valid (a year). University email, or a <a href="StudentChecks.dc.html">checked student card</a>.</p></div>
+          <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;"><p class="a-row" style="gap: 8px;"><span class="i i-arrow-u-up-left" aria-hidden="true"></span><b class="a-grow">Welcome back</b><span class="w7">40% off</span></p><p class="t-xs ink-2">Annual only, for 2 years, when Pro ended 60 days ago or more.</p></div>
+          <div class="a-card flat" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;"><p class="a-row" style="gap: 8px;"><span class="i i-tag" aria-hidden="true"></span><b class="a-grow">FOUNDING code</b><span class="w7">30% off</span></p><p class="t-xs ink-2">Annual only, the first year. Then the normal price.</p></div>
+        </div>
+      </section>
       <section class="a-card" aria-label="Discount codes">
         <div class="a-tbl-wrap">
           <table class="a-tbl">
@@ -52,7 +60,7 @@ a{color:#005F99}a:hover{color:#003F66}
       <div class="a-field"><label>Discount<span class="req" aria-hidden="true">*</span></label>
         <div class="a-row" style="gap: 8px;"><div class="a-seg" role="group" aria-label="Type"><button type="button" aria-pressed="true">Percent</button><button type="button" aria-pressed="false">Fixed amount</button></div><div class="a-in" style="width: 110px;">25<span class="a-grow"></span><span class="ink-3">%</span></div></div>
       </div>
-      <div class="a-field"><label>Regions<span class="req" aria-hidden="true">*</span></label><div class="a-row" style="gap: 6px;"><span class="a-chip on">Egypt</span><span class="a-chip">Gulf</span><span class="a-chip">Other Arab countries</span></div></div>
+      <div class="a-field"><label>Regions<span class="req" aria-hidden="true">*</span></label><div class="a-row" style="gap: 6px;"><span class="a-chip on">Egypt</span><span class="a-chip">Gulf</span><span class="a-chip">Other Arab countries</span><span class="a-chip">Rest of the world</span></div></div>
       <div class="a-field"><label>Applies to</label>
         <label class="a-row t-sm" style="gap: 8px;"><span class="a-radio on" aria-hidden="true"></span>First payment only</label>
         <label class="a-row t-sm" style="gap: 8px;"><span class="a-radio" aria-hidden="true"></span>Every payment while subscribed</label>
@@ -82,10 +90,9 @@ class Component extends DCLogic {
     const C = (code, by, off, reg, app, used, max, ends, rev, s) => ({ code, by, off, reg, app, uses: max ? used + ' of ' + max : used + ' · no limit', pct: max ? Math.round(used / max * 100) + '%' : '0%', ends, rev, st: S[s][0], sti: S[s][1], stl: S[s][2] });
     return {
       codes: [
-        C('LAUNCH30', 'Hossam Adel · Admin', '30% off', 'All regions', 'First payment', 212, 500, '30 Nov 2026', '$1,318', 'active'),
-        C('STUDENT40', 'Billing · Laila Mostafa', '40% off', 'All regions', 'Every payment, 12 months', 96, 0, 'After a student check', '$412', 'active'),
+        C('FOUNDING', 'Built in · launch offer', '30% off', 'All regions', 'First year, annual only', 212, 0, 'No end date set', '$9,180', 'active'),
         C('GULFANNUAL', 'Hossam Adel · Admin', '$12 off', 'Gulf', 'First payment, annual', 31, 100, '15 Dec 2026', '$1,860', 'active'),
-        C('WINBACK20', 'Billing · Laila Mostafa', '20% off', 'Egypt', 'First payment after cancel', 18, 200, '31 Dec 2026', '$71', 'active'),
+        C('ALEXUX20', 'Marketing · Sherif Gamal', '20% off', 'Egypt', 'First payment', 18, 80, '15 Nov 2026', '$71', 'active'),
         C('RAMADAN27', 'Hossam Adel · Admin', '35% off', 'All regions', 'First payment', 0, 1000, '30 Mar 2027', '—', 'sched'),
         C('PARTNER10', 'Billing · Laila Mostafa', '10% off', 'Other Arab countries', 'Every payment', 7, 50, '31 Jan 2027', '$29', 'paused')
       ]

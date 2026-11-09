@@ -191,14 +191,14 @@ class Component extends DCLogic {
       A('wait', 'Due soon', '6 tickets reach their target in under 2 hours', '3 of them are assigned to you', 'MyWork.dc.html'),
       A('wait', 'Waiting', '3 appeals and review requests to decide', 'Oldest from Saturday, P02 Find and Fix Usability', 'Appeals.dc.html'),
       A('wait', 'Waiting', '2 refund requests within your limit', 'Both inside the 7-day window', 'Refunds.dc.html'),
-      A('info', 'Content', '5 new lesson reports since yesterday', 'Sent to the content quality queue', '#phase-2')
+      A('info', 'Content', '5 new lesson reports since yesterday', 'Sent to the content quality queue', 'QualityFlags.dc.html')
     ] : [
       A('bad', 'Failed', '6 payments failed today', '4 Paymob card declines, 2 Paddle expired cards', 'BillingProblems.dc.html'),
       A('bad', 'Alert', 'Paymob webhook failed 3 times since 09:12', 'Events are queued; retry from Billing problems', 'BillingProblems.dc.html'),
       A('bad', 'Past SLA', '4 tickets are past the first-reply target', 'Oldest: #1031 billing, 31 hours, unassigned', 'SupportInbox.dc.html'),
       A('wait', 'Approval', '2 refunds need a second person', '$72 over the agent limit · 249 EGP outside the 7-day window', 'Approvals.dc.html'),
       A('wait', 'Waiting', '3 appeals and review requests to decide', 'Oldest from Saturday', 'Appeals.dc.html'),
-      A('info', 'Content', 'P02 · Unit 3 · Lesson 2 · step 5: 71% pick a wrong answer', 'Also 4 learner reports this week', '#phase-2'),
+      A('info', 'Content', 'P02 · Unit 3 · Lesson 2 · step 5: 71% pick a wrong answer', 'Also 4 learner reports this week', 'QualityLesson.dc.html'),
       A('info', 'Access', 'A super admin grant takes effect in 23 hours', 'Hossam Adel, granted by the founding admin. Any super admin can cancel.', 'SuperAdmins.dc.html')
     ];
 
@@ -241,12 +241,12 @@ class Component extends DCLogic {
       hits, clearHover: () => this.setState({ h: -1 }),
       hOn: h < 0 ? '0' : '1', hx: pct + '%', tipX: 'calc(' + Math.min(pct, 72) + '% + 10px)', tipDate: h < 0 ? '' : day(h) + ' 2026', tipRows,
       showRegions: !sup, showFunnelNote: !sup,
-      regions: [{ label: 'Egypt · 249 EGP a month', value: '$9,880', subs: '1,915 paying', pct: '62%' }, { label: 'Gulf · $8 a month', value: '$4,460', subs: '579 paying', pct: '28%' }, { label: 'Other Arab countries · $5', value: '$1,590', subs: '330 paying', pct: '10%' }],
+      regions: [{ label: 'Egypt · 249 EGP a month', value: '$9,880', subs: '1,915 paying', pct: '62%' }, { label: 'Gulf · $8 a month', value: '$3,700', subs: '480 paying', pct: '23%' }, { label: 'Other Arab countries · $5', value: '$1,590', subs: '330 paying', pct: '10%' }, { label: 'Rest of the world · $8', value: '$760', subs: '99 paying', pct: '5%' }],
       funnelTitle: sup ? 'Top issues this week' : 'Funnel, last 30 days',
       funnelSub: sup ? 'tickets by category' : '48,200 visits · 8.1% signed up',
       funnel: sup ? [['Account and sign-in', 61], ['Billing', 44], ['Content mistake', 29], ['Technical', 18], ['Certificate', 11], ['Feature idea', 7], ['Other', 5]].map(([l, v]) => ({ label: l, value: String(v), rate: '', w: (v / 61 * 100).toFixed(1) + '%' })) : funnel.map(([l, v], i) => ({ label: l, value: fmt(v), rate: i ? Math.round(v / funnel[i - 1][1] * 1000) / 10 + '%' : '', w: fw(v) })),
       sideTitle: sup ? 'Queues right now' : 'Paths this week',
-      sideHref: sup ? 'SupportInbox.dc.html' : '#phase-2',
+      sideHref: sup ? 'SupportInbox.dc.html' : 'ReportLearning.dc.html',
       sideCol1: sup ? 'Queue' : 'Path', sideCol2: sup ? 'Open' : 'Active learners',
       side: sup ? [['Account and sign-in', '12', '+3', 'ink-bad'], ['Billing', '9', '+1', 'ink-bad'], ['Content mistake', '7', '−2', 'ink-good'], ['Technical', '5', '0', 'ink-3'], ['Certificates', '4', '−1', 'ink-good']].map(([a, b, c, cc]) => ({ a, b, c, cc: 't-xs w7 ' + cc })) : [['Forms That Flow', '3,412', '+8%', 'ink-good'], ['Find and Fix Usability', '2,980', '+14%', 'ink-good'], ['Visual Hierarchy in Action', '1,705', '+3%', 'ink-good'], ['Write Words That Work', '1,122', '−2%', 'ink-bad'], ['Patterns That Fit', '904', '+21%', 'ink-good']].map(([a, b, c, cc]) => ({ a, b, c, cc: 't-xs w7 ' + cc }))
     };
