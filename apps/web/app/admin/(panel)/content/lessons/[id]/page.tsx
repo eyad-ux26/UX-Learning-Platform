@@ -6,7 +6,8 @@ import { lessonForEditor, names } from "@/lib/admin/data/content";
 import { Card, I, Id, KV, NoAccess, Note, PageHead, St, When } from "@/components/admin/ui";
 import { Confirm } from "@/components/admin/forms";
 import { LessonEditor } from "@/components/admin/LessonEditor";
-import { discardDraft, saveDraft, sendForReview, withdrawRelease } from "../../actions";
+import { discardDraft, handBackLesson, saveDraft, sendForReview, withdrawRelease } from "../../actions";
+import { isFresh } from "@/lib/admin/fresh";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Lesson editor" };
@@ -32,6 +33,14 @@ export default async function LessonEditorPage({ params }: { params: Promise<{ i
         actions={<>
           {ed.draft && !inReview && canEdit ? <Confirm action={discardDraft} ghost danger label="Discard draft" title={`Discard the draft of ${id}?`} hidden={[{ name: "lesson", value: id }]} icon="trash"
             effects={[{ icon: "arrow-counter-clockwise", text: "Every unsaved and saved change in this draft goes. The live version stays as it is." }]} /> : null}
+          {ed.live.panelOwned && allowed(ctx, "content.publish") && ed.ready && !inReview ? (
+            <Confirm action={handBackLesson} label="Hand back to content files" icon="arrow-u-up-left" title={`Hand ${id} back to the content files?`} typed={id} fresh={isFresh(ctx)}
+              hidden={[{ name: "lesson", value: id }]}
+              effects={[
+                { icon: "users-three", text: "While panel lessons are on, learners get the content files' version of this lesson within a minute." },
+                { icon: "git-pull-request", text: "From then on, content PRs update this lesson again. The panel versions stay in the history." },
+              ]} />
+          ) : null}
           {inReview && ed.draft?.releaseId ? <Link className="a-btn" href={`/admin/content/releases/${ed.draft.releaseId}`}><I n="eye" />Open the release</Link> : null}
         </>} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
@@ -40,6 +49,8 @@ export default async function LessonEditorPage({ params }: { params: Promise<{ i
             ["Unit", unit ? `${unit.id} · ${unit.title.en}` : ed.meta.unitId],
             ["Kind", ed.meta.mode === "bank" ? "Re-test bank" : ed.meta.mode === "check" ? "Skill check" : `Lesson · ${ed.meta.minutes} min`],
             ["Live", ed.base.no ? <St tone="good">v{ed.base.no}</St> : <St tone="off">Compiled files (not imported)</St>],
+            ["Content PRs", !ed.live.how ? <span className="ink-3">—</span> : ed.live.panelOwned ? <St tone="wait" icon="lock-simple">Skipped: the panel owns this lesson</St>
+              : ed.live.how === "rollback" ? <St tone="info">Rolled back: only new text from the content files comes in</St> : <St tone="good">Update this lesson</St>],
             ["Draft", ed.draft ? <span>{inReview ? <St tone="wait" icon="eye">In review</St> : <St tone="info" icon="pencil-simple">Draft</St>} <span className="t-xs ink-2">by {[...editorNames.values()].join(", ") || "—"}, <When at={ed.draft.updatedAt} rel /></span></span> : <span className="ink-3">None</span>],
           ]} />
         </Card>
