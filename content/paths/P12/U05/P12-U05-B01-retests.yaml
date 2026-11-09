@@ -9,7 +9,7 @@ sources:
     url: "https://pair.withgoogle.com/chapter/errors-failing/"
 steps:
   - id: S01
-    type: choose
+    type: tune
     skill: SK-P12-U05-01
     part: retest
     speaker: rami
@@ -25,15 +25,95 @@ steps:
       ar: "ماذا يجب أن يقول؟"
     mock:
       app: nafaqat
-      appbar: { title: { en: "Add expense", ar: "أضف مصروفًا" }, back: true }
+      appbar:
+        title: {en: Add expense, ar: أضف مصروفًا}
+        back: true
       blocks:
-        - { kind: image, art: receipt }
-        - { kind: small, color: muted, text: { en: "Your photo: a handwritten taxi receipt", ar: "صورتك: إيصال تاكسي مكتوب بخط اليد" }, gap: xs }
-        - { kind: banner, tone: bad, icon: warning, text: { en: "Scan failed.", ar: "فشل المسح." }, gap: s }
+      - {kind: image, art: receipt}
+      - kind: small
+        color: muted
+        text:
+          en: "Your photo: a handwritten taxi receipt"
+          ar: "صورتك: إيصال تاكسي مكتوب بخط اليد"
+        gap: xs
+      - kind: banner
+        tone: bad
+        icon: warning
+        text: {en: Scan failed., ar: فشل المسح.}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: failed, text: { en: "Keep \"Scan failed.\"", ar: "يبقى «فشل المسح.»" } }
-      - { id: blurry, text: { en: "\"Photo too blurry. Try again.\"", ar: "«الصورة ضبابية جدًا. حاول مرة أخرى.»" } }
-      - { id: limit, text: { en: "\"We can read printed receipts only. For handwritten ones, type the amount.\"", ar: "«نستطيع قراءة الإيصالات المطبوعة فقط. للمكتوبة بخط اليد، اكتب المبلغ.»" } }
+      - id: failed
+        text:
+          en: "Keep \"Scan failed.\""
+          ar: يبقى «فشل المسح.»
+        mock:
+          app: nafaqat
+          appbar:
+            title: {en: Add expense, ar: أضف مصروفًا}
+            back: true
+          blocks:
+          - {kind: image, art: receipt}
+          - kind: small
+            color: muted
+            text:
+              en: "Your photo: a handwritten taxi receipt"
+              ar: "صورتك: إيصال تاكسي مكتوب بخط اليد"
+            gap: xs
+          - kind: banner
+            tone: bad
+            icon: warning
+            text: {en: Scan failed., ar: فشل المسح.}
+            gap: s
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: blurry
+        text:
+          en: "\"Photo too blurry. Try again.\""
+          ar: «الصورة ضبابية جدًا. حاول مرة أخرى.»
+        mock:
+          app: nafaqat
+          appbar:
+            title: {en: Add expense, ar: أضف مصروفًا}
+            back: true
+          blocks:
+          - {kind: image, art: receipt}
+          - kind: small
+            color: muted
+            text:
+              en: "Your photo: a handwritten taxi receipt"
+              ar: "صورتك: إيصال تاكسي مكتوب بخط اليد"
+            gap: xs
+          - kind: banner
+            tone: bad
+            icon: warning
+            text: {en: Photo too blurry. Try again., ar: الصورة ضبابية جدًا. حاول مرة أخرى.}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: limit
+        text:
+          en: "\"We can read printed receipts only. For handwritten ones, type the amount.\""
+          ar: «نستطيع قراءة الإيصالات المطبوعة فقط. للمكتوبة بخط اليد، اكتب المبلغ.»
+        mock:
+          app: nafaqat
+          appbar:
+            title: {en: Add expense, ar: أضف مصروفًا}
+            back: true
+          blocks:
+          - {kind: image, art: receipt}
+          - kind: small
+            color: muted
+            text:
+              en: "Your photo: a handwritten taxi receipt"
+              ar: "صورتك: إيصال تاكسي مكتوب بخط اليد"
+            gap: xs
+          - kind: banner
+            tone: bad
+            icon: warning
+            text:
+              en: "We can read printed receipts only. For handwritten ones, type the amount."
+              ar: نستطيع قراءة الإيصالات المطبوعة فقط. للمكتوبة بخط اليد، اكتب المبلغ.
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [limit]
     misconceptions:
       - id: MC-P12-038
@@ -49,7 +129,7 @@ steps:
       ar: "يتوقّف الناس عن إعادة المحاولة حين يعرفون لماذا فشل."
 
   - id: S02
-    type: choose
+    type: tune
     skill: SK-P12-U05-01
     part: retest
     speaker: hana
@@ -66,14 +146,74 @@ steps:
     mock:
       app: nashat
       theme: dark
-      appbar: { title: { en: "Form check · Squats", ar: "فحص الأداء · القرفصاء" }, back: true }
+      appbar:
+        title: {en: Form check · Squats, ar: فحص الأداء · القرفصاء}
+        back: true
       blocks:
-        - { kind: image, art: gym }
-        - { kind: banner, tone: bad, icon: warning, text: { en: "Unable to analyse.", ar: "تعذّر التحليل." }, gap: s }
+      - {kind: image, art: gym}
+      - kind: banner
+        tone: bad
+        icon: warning
+        text: {en: Unable to analyse., ar: تعذّر التحليل.}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: frame, text: { en: "\"Step back so your whole body, head to feet, is in the frame.\"", ar: "«ارجع للخلف ليظهر جسمك كله، من الرأس إلى القدمين، في الصورة.»" } }
-      - { id: keep, text: { en: "Keep \"Unable to analyse.\"", ar: "يبقى «تعذّر التحليل.»" } }
-      - { id: later, text: { en: "\"Try again later.\"", ar: "«حاول لاحقًا.»" } }
+      - id: frame
+        text:
+          en: "\"Step back so your whole body, head to feet, is in the frame.\""
+          ar: «ارجع للخلف ليظهر جسمك كله، من الرأس إلى القدمين، في الصورة.»
+        mock:
+          app: nashat
+          theme: dark
+          appbar:
+            title: {en: Form check · Squats, ar: فحص الأداء · القرفصاء}
+            back: true
+          blocks:
+          - {kind: image, art: gym}
+          - kind: banner
+            tone: bad
+            icon: warning
+            text:
+              en: "Step back so your whole body, head to feet, is in the frame."
+              ar: ارجع للخلف ليظهر جسمك كله، من الرأس إلى القدمين، في الصورة.
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: keep
+        text:
+          en: "Keep \"Unable to analyse.\""
+          ar: يبقى «تعذّر التحليل.»
+        mock:
+          app: nashat
+          theme: dark
+          appbar:
+            title: {en: Form check · Squats, ar: فحص الأداء · القرفصاء}
+            back: true
+          blocks:
+          - {kind: image, art: gym}
+          - kind: banner
+            tone: bad
+            icon: warning
+            text: {en: Unable to analyse., ar: تعذّر التحليل.}
+            gap: s
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: later
+        text:
+          en: "\"Try again later.\""
+          ar: «حاول لاحقًا.»
+        mock:
+          app: nashat
+          theme: dark
+          appbar:
+            title: {en: Form check · Squats, ar: فحص الأداء · القرفصاء}
+            back: true
+          blocks:
+          - {kind: image, art: gym}
+          - kind: banner
+            tone: bad
+            icon: warning
+            text: {en: Try again later., ar: حاول لاحقًا.}
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [frame]
     misconceptions:
       - id: MC-P12-038
@@ -89,7 +229,7 @@ steps:
       ar: "رسالة الخطأ تعلّم الناس كيف تعمل الميزة، فتنجح المحاولة التالية."
 
   - id: S03
-    type: choose
+    type: tune
     skill: SK-P12-U05-02
     part: retest
     speaker: karim
@@ -105,16 +245,143 @@ steps:
       ar: "ماذا يجب أن يفعل التطبيق؟"
     mock:
       app: bareed
-      appbar: { title: { en: "Calendar · this week", ar: "التقويم · هذا الأسبوع" } }
+      appbar:
+        title: {en: Calendar · this week, ar: التقويم · هذا الأسبوع}
       blocks:
-        - { kind: listitem, icon: tag, text: { en: "Sale ends Friday", ar: "التخفيضات تنتهي الجمعة" }, sub: { en: "Fri · all day · Lamha", ar: "الجمعة · طوال اليوم · لمحة" }, badge: { text: { en: "From email", ar: "من البريد" }, icon: envelope-simple } }
-        - { kind: listitem, icon: tag, text: { en: "50% off ends tonight", ar: "خصم 50% ينتهي الليلة" }, sub: { en: "Wed · 23:59 · Volta", ar: "الأربعاء · 23:59 · فولتا" }, badge: { text: { en: "From email", ar: "من البريد" }, icon: envelope-simple } }
-        - { kind: listitem, icon: cake, text: { en: "Mum's birthday", ar: "عيد ميلاد أمي" }, sub: { en: "Thu · 19:00", ar: "الخميس · 19:00" } }
-        - { kind: listitem, icon: tag, text: { en: "Last chance: free delivery", ar: "الفرصة الأخيرة: توصيل مجاني" }, sub: { en: "Sat · all day · Lokma", ar: "السبت · طوال اليوم · لقمة" }, badge: { text: { en: "From email", ar: "من البريد" }, icon: envelope-simple } }
+      - kind: listitem
+        icon: tag
+        text: {en: Sale ends Friday, ar: التخفيضات تنتهي الجمعة}
+        sub: {en: Fri · all day · Lamha, ar: الجمعة · طوال اليوم · لمحة}
+        badge:
+          text: {en: From email, ar: من البريد}
+          icon: envelope-simple
+      - kind: listitem
+        icon: tag
+        text:
+          en: "50% off ends tonight"
+          ar: "خصم 50% ينتهي الليلة"
+        sub:
+          en: "Wed · 23:59 · Volta"
+          ar: "الأربعاء · 23:59 · فولتا"
+        badge:
+          text: {en: From email, ar: من البريد}
+          icon: envelope-simple
+      - kind: listitem
+        icon: cake
+        text:
+          en: "Mum's birthday"
+          ar: عيد ميلاد أمي
+        sub:
+          en: "Thu · 19:00"
+          ar: "الخميس · 19:00"
+      - kind: listitem
+        icon: tag
+        text:
+          en: "Last chance: free delivery"
+          ar: "الفرصة الأخيرة: توصيل مجاني"
+        sub: {en: Sat · all day · Lokma, ar: السبت · طوال اليوم · لقمة}
+        badge:
+          text: {en: From email, ar: من البريد}
+          icon: envelope-simple
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: keep, text: { en: "Keep adding them; the dates are correct", ar: "يستمرّ في إضافتها؛ فالتواريخ صحيحة" } }
-      - { id: suggest, text: { en: "Show \"Add to calendar?\" on the email, and add only when people tap it", ar: "يعرض «إضافة إلى التقويم؟» على الرسالة، ويضيف فقط حين يضغط عليه الناس" } }
-      - { id: delete, text: { en: "Delete newsletter events every night", ar: "يحذف أحداث النشرات كل ليلة" } }
+      - id: keep
+        text: {en: Keep adding them; the dates are correct, ar: يستمرّ في إضافتها؛ فالتواريخ صحيحة}
+        mock:
+          app: bareed
+          appbar:
+            title: {en: Calendar · this week, ar: التقويم · هذا الأسبوع}
+          blocks:
+          - kind: listitem
+            icon: tag
+            text: {en: Sale ends Friday, ar: التخفيضات تنتهي الجمعة}
+            sub: {en: Fri · all day · Lamha, ar: الجمعة · طوال اليوم · لمحة}
+            badge:
+              text: {en: From email, ar: من البريد}
+              icon: envelope-simple
+          - kind: listitem
+            icon: tag
+            text:
+              en: "50% off ends tonight"
+              ar: "خصم 50% ينتهي الليلة"
+            sub:
+              en: "Wed · 23:59 · Volta"
+              ar: "الأربعاء · 23:59 · فولتا"
+            badge:
+              text: {en: From email, ar: من البريد}
+              icon: envelope-simple
+          - kind: listitem
+            icon: cake
+            text:
+              en: "Mum's birthday"
+              ar: عيد ميلاد أمي
+            sub:
+              en: "Thu · 19:00"
+              ar: "الخميس · 19:00"
+          - kind: listitem
+            icon: tag
+            text:
+              en: "Last chance: free delivery"
+              ar: "الفرصة الأخيرة: توصيل مجاني"
+            sub: {en: Sat · all day · Lokma, ar: السبت · طوال اليوم · لقمة}
+            badge:
+              text: {en: From email, ar: من البريد}
+              icon: envelope-simple
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: suggest
+        text:
+          en: "Show \"Add to calendar?\" on the email, and add only when people tap it"
+          ar: يعرض «إضافة إلى التقويم؟» على الرسالة، ويضيف فقط حين يضغط عليه الناس
+        mock:
+          app: bareed
+          appbar:
+            title: {en: Calendar · this week, ar: التقويم · هذا الأسبوع}
+          blocks:
+          - kind: listitem
+            icon: cake
+            text:
+              en: "Mum's birthday"
+              ar: عيد ميلاد أمي
+            sub:
+              en: "Thu · 19:00"
+              ar: "الخميس · 19:00"
+          - kind: card
+            gap: m
+            blocks:
+            - kind: small
+              text: {en: In your email · Lamha, ar: في بريدك · لمحة}
+              color: muted
+            - kind: text
+              text: {en: Sale ends Friday, ar: التخفيضات تنتهي الجمعة}
+              gap: xs
+            - kind: button
+              text:
+                en: "Add to calendar?"
+                ar: إضافة إلى التقويم؟
+              style: outline
+              icon: calendar-plus
+              gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: delete
+        text: {en: Delete newsletter events every night, ar: يحذف أحداث النشرات كل ليلة}
+        mock:
+          app: bareed
+          appbar:
+            title: {en: Calendar · this week, ar: التقويم · هذا الأسبوع}
+          blocks:
+          - kind: listitem
+            icon: cake
+            text:
+              en: "Mum's birthday"
+              ar: عيد ميلاد أمي
+            sub:
+              en: "Thu · 19:00"
+              ar: "الخميس · 19:00"
+          - kind: small
+            text: {en: Newsletter events were deleted last night., ar: حُذفت أحداث النشرات ليلة أمس.}
+            color: muted
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [suggest]
     misconceptions:
       - id: MC-P12-040
@@ -130,7 +397,7 @@ steps:
       ar: "«يعمل كما صُمّم» لا يكفي إذا كان يخمّن ما يريده الناس."
 
   - id: S04
-    type: choose
+    type: tune
     skill: SK-P12-U05-02
     part: retest
     speaker: sara
@@ -146,15 +413,133 @@ steps:
       ar: "ماذا يجب أن نفعل؟"
     mock:
       app: tabkha
-      appbar: { title: { en: "Lunch for you", ar: "غداء لك" } }
+      appbar:
+        title: {en: Lunch for you, ar: غداء لك}
       blocks:
-        - { kind: listitem, art: food-koshary, text: { en: "Koshary", ar: "كشري" }, sub: { en: "40 min", ar: "40 دقيقة" }, badge: { text: { en: "Skipped", ar: "تخطّاه الناس" }, tone: neutral } }
-        - { kind: listitem, art: food-grill, text: { en: "Grilled chicken with rice", ar: "دجاج مشوي بالأرز" }, sub: { en: "45 min", ar: "45 دقيقة" }, badge: { text: { en: "Skipped", ar: "تخطّاه الناس" }, tone: neutral } }
-        - { kind: small, color: muted, text: { en: "Lunch taps this month: down 70%", ar: "الضغطات على وصفات الغداء هذا الشهر: أقل بنسبة 70%" }, gap: s }
+      - kind: listitem
+        art: food-koshary
+        text: {en: Koshary, ar: كشري}
+        sub:
+          en: "40 min"
+          ar: "40 دقيقة"
+        badge:
+          text: {en: Skipped, ar: تخطّاه الناس}
+          tone: neutral
+      - kind: listitem
+        art: food-grill
+        text: {en: Grilled chicken with rice, ar: دجاج مشوي بالأرز}
+        sub:
+          en: "45 min"
+          ar: "45 دقيقة"
+        badge:
+          text: {en: Skipped, ar: تخطّاه الناس}
+          tone: neutral
+      - kind: small
+        color: muted
+        text:
+          en: "Lunch taps this month: down 70%"
+          ar: "الضغطات على وصفات الغداء هذا الشهر: أقل بنسبة 70%"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: new, text: { en: "Replace the lunch recipes with new ones", ar: "نستبدل وصفات الغداء بوصفات جديدة" } }
-      - { id: all, text: { en: "Switch everyone to iftar recipes during Ramadan", ar: "نحوّل الجميع إلى وصفات الإفطار في رمضان" } }
-      - { id: offer, text: { en: "Offer \"Fasting this month? Show iftar and suhoor recipes\"", ar: "نعرض «صائم هذا الشهر؟ اعرض وصفات الإفطار والسحور»" } }
+      - id: new
+        text: {en: Replace the lunch recipes with new ones, ar: نستبدل وصفات الغداء بوصفات جديدة}
+        mock:
+          app: tabkha
+          appbar:
+            title: {en: Lunch for you, ar: غداء لك}
+          blocks:
+          - kind: listitem
+            text: {en: Molokhia with rice, ar: ملوخية بالأرز}
+            art: food-salad
+            sub:
+              en: "50 min"
+              ar: "50 دقيقة"
+          - kind: listitem
+            text: {en: Pasta béchamel, ar: مكرونة بالبشاميل}
+            art: food-pizza
+            sub:
+              en: "60 min"
+              ar: "60 دقيقة"
+          - kind: small
+            color: muted
+            text:
+              en: "Lunch taps this month: down 70%"
+              ar: "الضغطات على وصفات الغداء هذا الشهر: أقل بنسبة 70%"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: all
+        text: {en: Switch everyone to iftar recipes during Ramadan, ar: نحوّل الجميع إلى وصفات الإفطار في رمضان}
+        mock:
+          app: tabkha
+          appbar:
+            title: {en: Iftar for you, ar: إفطار لك}
+          blocks:
+          - kind: listitem
+            text: {en: Lentil soup, ar: شوربة عدس}
+            art: food-salad
+            sub:
+              en: "30 min"
+              ar: "30 دقيقة"
+          - kind: listitem
+            text: {en: Stuffed vine leaves, ar: ورق عنب محشي}
+            art: food-grill
+            sub:
+              en: "90 min"
+              ar: "90 دقيقة"
+          - kind: small
+            text:
+              en: "For everyone, fasting or not"
+              ar: للجميع، صائمين أو لا
+            color: muted
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: offer
+        text:
+          en: "Offer \"Fasting this month? Show iftar and suhoor recipes\""
+          ar: نعرض «صائم هذا الشهر؟ اعرض وصفات الإفطار والسحور»
+        mock:
+          app: tabkha
+          appbar:
+            title: {en: Lunch for you, ar: غداء لك}
+          blocks:
+          - kind: card
+            blocks:
+            - kind: text
+              text:
+                en: "Fasting this month?"
+                ar: صائم هذا الشهر؟
+            - kind: button
+              text: {en: Show iftar and suhoor recipes, ar: اعرض وصفات الإفطار والسحور}
+              style: outline
+              icon: moon
+              gap: s
+          - kind: listitem
+            art: food-koshary
+            text: {en: Koshary, ar: كشري}
+            sub:
+              en: "40 min"
+              ar: "40 دقيقة"
+            badge:
+              text: {en: Skipped, ar: تخطّاه الناس}
+              tone: neutral
+            gap: m
+          - kind: listitem
+            art: food-grill
+            text: {en: Grilled chicken with rice, ar: دجاج مشوي بالأرز}
+            sub:
+              en: "45 min"
+              ar: "45 دقيقة"
+            badge:
+              text: {en: Skipped, ar: تخطّاه الناس}
+              tone: neutral
+          - kind: small
+            color: muted
+            text:
+              en: "Lunch taps this month: down 70%"
+              ar: "الضغطات على وصفات الغداء هذا الشهر: أقل بنسبة 70%"
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [offer]
     misconceptions:
       - id: MC-P12-040
@@ -170,7 +555,7 @@ steps:
       ar: "النمط كان له سبب لم يره الذكاء الاصطناعي. والعرض البسيط يناسب الصائمين، ويترك الآخرين كما هم."
 
   - id: S05
-    type: choose
+    type: tune
     skill: SK-P12-U05-03
     part: retest
     speaker: tarek
@@ -186,14 +571,118 @@ steps:
       ar: "ماذا يجب أن يعرض؟"
     mock:
       app: dawaa
-      appbar: { title: { en: "Search", ar: "بحث" }, back: true }
+      appbar:
+        title: {en: Search, ar: بحث}
+        back: true
       blocks:
-        - { kind: searchbar, text: { en: "concor 5", ar: "كونكور 5" } }
-        - { kind: listitem, icon: pill, text: { en: "Concor 5 mg · 30 tablets", ar: "كونكور 5 مجم · 30 قرصًا" }, sub: { en: "Nasr City branch", ar: "فرع مدينة نصر" }, badge: { text: { en: "Out of stock", ar: "نفد من المخزون" }, tone: bad }, gap: s }
+      - kind: searchbar
+        text: {en: concor 5, ar: كونكور 5}
+      - kind: listitem
+        icon: pill
+        text: {en: Concor 5 mg · 30 tablets, ar: كونكور 5 مجم · 30 قرصًا}
+        sub: {en: Nasr City branch, ar: فرع مدينة نصر}
+        badge:
+          text: {en: Out of stock, ar: نفد من المخزون}
+          tone: bad
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: out, text: { en: "Just \"Out of stock\"", ar: "فقط «نفد من المخزون»" } }
-      - { id: next, text: { en: "\"Out of stock here. Available at our Heliopolis branch (2 km), or get a message when it's back.\"", ar: "«نفد هنا. متوفّر في فرع مصر الجديدة (2 كم)، أو نرسل لك رسالة حين يتوفّر.»" } }
-      - { id: swap, text: { en: "Add a different brand to the basket automatically", ar: "يضيف ماركة أخرى إلى السلّة تلقائيًا" } }
+      - id: out
+        text:
+          en: "Just \"Out of stock\""
+          ar: فقط «نفد من المخزون»
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Search, ar: بحث}
+            back: true
+          blocks:
+          - kind: searchbar
+            text: {en: concor 5, ar: كونكور 5}
+          - kind: listitem
+            icon: pill
+            text: {en: Concor 5 mg · 30 tablets, ar: كونكور 5 مجم · 30 قرصًا}
+            sub: {en: Nasr City branch, ar: فرع مدينة نصر}
+            badge:
+              text: {en: Out of stock, ar: نفد من المخزون}
+              tone: bad
+            gap: s
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: next
+        text:
+          en: "\"Out of stock here. Available at our Heliopolis branch (2 km), or get a message when it's back.\""
+          ar: «نفد هنا. متوفّر في فرع مصر الجديدة (2 كم)، أو نرسل لك رسالة حين يتوفّر.»
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Search, ar: بحث}
+            back: true
+          blocks:
+          - kind: searchbar
+            text: {en: concor 5, ar: كونكور 5}
+          - kind: listitem
+            icon: pill
+            text: {en: Concor 5 mg · 30 tablets, ar: كونكور 5 مجم · 30 قرصًا}
+            sub: {en: Nasr City branch, ar: فرع مدينة نصر}
+            badge:
+              text: {en: Out of stock, ar: نفد من المخزون}
+              tone: bad
+            gap: s
+          - kind: text
+            text:
+              en: "Out of stock here. Available at our Heliopolis branch (2 km), or get a message when it's back."
+              ar: نفد هنا. متوفّر في فرع مصر الجديدة (2 كم)، أو نرسل لك رسالة حين يتوفّر.
+            gap: s
+          - kind: listitem
+            text: {en: Heliopolis branch, ar: فرع مصر الجديدة}
+            icon: map-pin
+            sub:
+              en: "2 km"
+              ar: "2 كم"
+            badge:
+              text: {en: In stock, ar: متوفّر}
+              tone: good
+            chevron: true
+            gap: xs
+          - kind: button
+            text:
+              en: "Message me when it's back"
+              ar: أرسلوا لي رسالة حين يتوفّر
+            style: outline
+            icon: bell
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: swap
+        text: {en: Add a different brand to the basket automatically, ar: يضيف ماركة أخرى إلى السلّة تلقائيًا}
+        mock:
+          app: dawaa
+          appbar:
+            title: {en: Search, ar: بحث}
+            back: true
+          blocks:
+          - kind: searchbar
+            text: {en: concor 5, ar: كونكور 5}
+          - kind: listitem
+            icon: pill
+            text: {en: Concor 5 mg · 30 tablets, ar: كونكور 5 مجم · 30 قرصًا}
+            sub: {en: Nasr City branch, ar: فرع مدينة نصر}
+            badge:
+              text: {en: Out of stock, ar: نفد من المخزون}
+              tone: bad
+            gap: s
+          - kind: banner
+            text: {en: We added another brand to your basket., ar: أضفنا ماركة أخرى إلى سلّتك.}
+            tone: neutral
+            icon: basket
+            gap: s
+          - kind: listitem
+            text: {en: Bisocard 5 mg · 30 tablets, ar: بيسوكارد 5 مجم · 30 قرصًا}
+            icon: pill
+            badge:
+              text: {en: In basket, ar: في السلّة}
+              tone: brand
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [next]
     misconceptions:
       - id: MC-P12-039
@@ -209,7 +698,7 @@ steps:
       ar: "فرع آخر أو رسالة عند التوفّر تساعد العميل على إكمال طلبه، وتترك القرار له."
 
   - id: S06
-    type: choose
+    type: tune
     skill: SK-P12-U05-03
     part: retest
     speaker: nour
@@ -225,16 +714,110 @@ steps:
       ar: "بماذا يردّ مساعد الحجز، ود. علي لا يعمل يوم الجمعة؟"
     mock:
       app: raha
-      appbar: { title: { en: "Booking assistant", ar: "مساعد الحجز" }, back: true }
+      appbar:
+        title: {en: Booking assistant, ar: مساعد الحجز}
+        back: true
       blocks:
-        - { kind: chat, from: me, text: { en: "Book Dr. Ali on Friday.", ar: "احجز مع د. علي يوم الجمعة." }, time: "21:14" }
-        - { kind: chat, from: ai, text: "…", time: "21:14" }
-        - { kind: small, color: muted, text: { en: "Dr. Ali works Saturday to Thursday.", ar: "د. علي يعمل من السبت إلى الخميس." }, gap: s }
-        - { kind: composer, text: { en: "Type a message", ar: "اكتب رسالة" } }
+      - kind: chat
+        from: me
+        text: {en: Book Dr. Ali on Friday., ar: احجز مع د. علي يوم الجمعة.}
+        time: "21:14"
+      - kind: chat
+        from: ai
+        text: …
+        time: "21:14"
+      - kind: small
+        color: muted
+        text: {en: Dr. Ali works Saturday to Thursday., ar: د. علي يعمل من السبت إلى الخميس.}
+        gap: s
+      - kind: composer
+        text: {en: Type a message, ar: اكتب رسالة}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: no, text: { en: "\"No appointments available.\"", ar: "«لا توجد مواعيد متاحة.»" } }
-      - { id: other, text: { en: "Book Friday with another doctor, without asking", ar: "يحجز يوم الجمعة مع طبيب آخر، دون سؤال" } }
-      - { id: closest, text: { en: "\"Dr. Ali isn't in on Fridays. Closest times: Thursday 6 p.m. or Saturday 10 a.m.\"", ar: "«د. علي لا يعمل أيام الجمعة. أقرب المواعيد: الخميس 6 مساءً أو السبت 10 صباحًا.»" } }
+      - id: no
+        text:
+          en: "\"No appointments available.\""
+          ar: «لا توجد مواعيد متاحة.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Booking assistant, ar: مساعد الحجز}
+            back: true
+          blocks:
+          - kind: chat
+            from: me
+            text: {en: Book Dr. Ali on Friday., ar: احجز مع د. علي يوم الجمعة.}
+            time: "21:14"
+          - kind: chat
+            from: ai
+            text: {en: No appointments available., ar: لا توجد مواعيد متاحة.}
+            time: "21:14"
+          - kind: small
+            color: muted
+            text: {en: Dr. Ali works Saturday to Thursday., ar: د. علي يعمل من السبت إلى الخميس.}
+            gap: s
+          - kind: composer
+            text: {en: Type a message, ar: اكتب رسالة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: other
+        text:
+          en: "Book Friday with another doctor, without asking"
+          ar: يحجز يوم الجمعة مع طبيب آخر، دون سؤال
+        mock:
+          app: raha
+          appbar:
+            title: {en: Booking assistant, ar: مساعد الحجز}
+            back: true
+          blocks:
+          - kind: chat
+            from: me
+            text: {en: Book Dr. Ali on Friday., ar: احجز مع د. علي يوم الجمعة.}
+            time: "21:14"
+          - kind: chat
+            from: ai
+            text:
+              en: "Done! Booked Friday 10 a.m. with Dr. Hany."
+              ar: "تمّ! حجزت الجمعة 10 صباحًا مع د. هاني."
+            time: "21:14"
+          - kind: small
+            color: muted
+            text: {en: Dr. Ali works Saturday to Thursday., ar: د. علي يعمل من السبت إلى الخميس.}
+            gap: s
+          - kind: composer
+            text: {en: Type a message, ar: اكتب رسالة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: closest
+        text:
+          en: "\"Dr. Ali isn't in on Fridays. Closest times: Thursday 6 p.m. or Saturday 10 a.m.\""
+          ar: "«د. علي لا يعمل أيام الجمعة. أقرب المواعيد: الخميس 6 مساءً أو السبت 10 صباحًا.»"
+        mock:
+          app: raha
+          appbar:
+            title: {en: Booking assistant, ar: مساعد الحجز}
+            back: true
+          blocks:
+          - kind: chat
+            from: me
+            text: {en: Book Dr. Ali on Friday., ar: احجز مع د. علي يوم الجمعة.}
+            time: "21:14"
+          - kind: chat
+            from: ai
+            text:
+              en: "Dr. Ali isn't in on Fridays. Closest times: Thursday 6 p.m. or Saturday 10 a.m."
+              ar: "د. علي لا يعمل أيام الجمعة. أقرب المواعيد: الخميس 6 مساءً أو السبت 10 صباحًا."
+            time: "21:14"
+          - kind: chips
+            gap: xs
+            items:
+            - text: {en: Thursday 6 p.m., ar: الخميس 6 مساءً}
+            - text: {en: Saturday 10 a.m., ar: السبت 10 صباحًا}
+          - kind: small
+            color: muted
+            text: {en: Dr. Ali works Saturday to Thursday., ar: د. علي يعمل من السبت إلى الخميس.}
+            gap: s
+          - kind: composer
+            text: {en: Type a message, ar: اكتب رسالة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [closest]
     misconceptions:
       - id: MC-P12-039
@@ -250,7 +833,7 @@ steps:
       ar: "يحصل المريض على ما أراده، د. علي، لكن في يوم آخر."
 
   - id: S07
-    type: choose
+    type: tune
     skill: SK-P12-U05-04
     part: retest
     speaker: youssef
@@ -266,16 +849,137 @@ steps:
       ar: "ماذا يصلني حين يحوّل الروبوت خلافًا إليّ، لأتصرّف فورًا؟"
     mock:
       app: dar
-      appbar: { title: { en: "Dar · Chat", ar: "دار · المحادثة" }, back: true }
+      appbar:
+        title: {en: Dar · Chat, ar: دار · المحادثة}
+        back: true
       blocks:
-        - { kind: chat, from: me, text: { en: "My dress arrived torn. I want my money back, not an exchange.", ar: "وصل فستاني ممزّقًا. أريد استرداد المبلغ، لا الاستبدال." }, time: "16:20" }
-        - { kind: image, art: shirt, gap: xs }
-        - { kind: chat, from: ai, text: { en: "I'm passing you to Youssef from our team.", ar: "سأحوّلك إلى يوسف من فريقنا." }, time: "16:21" }
-        - { kind: small, color: muted, text: { en: "Youssef joins the chat", ar: "انضمّ يوسف إلى المحادثة" }, gap: s }
+      - kind: chat
+        from: me
+        text:
+          en: "My dress arrived torn. I want my money back, not an exchange."
+          ar: وصل فستاني ممزّقًا. أريد استرداد المبلغ، لا الاستبدال.
+        time: "16:20"
+      - {kind: image, art: shirt, gap: xs}
+      - kind: chat
+        from: ai
+        text:
+          en: "I'm passing you to Youssef from our team."
+          ar: سأحوّلك إلى يوسف من فريقنا.
+        time: "16:21"
+      - kind: small
+        color: muted
+        text: {en: Youssef joins the chat, ar: انضمّ يوسف إلى المحادثة}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: ping, text: { en: "A notification: \"New chat waiting\"", ar: "إشعار: «محادثة جديدة تنتظر»" } }
-      - { id: summary, text: { en: "\"Order 4821 · dress arrived torn · wants a refund, not an exchange · photo attached\"", ar: "«الطلب 4821 · الفستان وصل ممزّقًا · تريد استرداد المبلغ، لا الاستبدال · الصورة مرفقة»" } }
-      - { id: full, text: { en: "The full chat log, 40 messages", ar: "سجلّ المحادثة كاملًا، 40 رسالة" } }
+      - id: ping
+        text:
+          en: "A notification: \"New chat waiting\""
+          ar: "إشعار: «محادثة جديدة تنتظر»"
+        mock:
+          app: dar
+          screen: lock
+          blocks:
+          - kind: notification
+            title: {en: Dar · Support, ar: دار · الدعم}
+            text: {en: New chat waiting, ar: محادثة جديدة تنتظر}
+            time: {en: now, ar: الآن}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: summary
+        text:
+          en: "\"Order 4821 · dress arrived torn · wants a refund, not an exchange · photo attached\""
+          ar: «الطلب 4821 · الفستان وصل ممزّقًا · تريد استرداد المبلغ، لا الاستبدال · الصورة مرفقة»
+        mock:
+          app: dar
+          appbar:
+            title: {en: Dar · Chat, ar: دار · المحادثة}
+            back: true
+          blocks:
+          - kind: chat
+            from: me
+            text:
+              en: "My dress arrived torn. I want my money back, not an exchange."
+              ar: وصل فستاني ممزّقًا. أريد استرداد المبلغ، لا الاستبدال.
+            time: "16:20"
+          - {kind: image, art: shirt, gap: xs}
+          - kind: chat
+            from: ai
+            text:
+              en: "I'm passing you to Youssef from our team."
+              ar: سأحوّلك إلى يوسف من فريقنا.
+            time: "16:21"
+          - kind: small
+            color: muted
+            text: {en: Youssef joins the chat, ar: انضمّ يوسف إلى المحادثة}
+            gap: s
+          - kind: card
+            gap: s
+            blocks:
+            - kind: badge
+              text: {en: Handover for Youssef, ar: تسليم إلى يوسف}
+              icon: user-switch
+            - kind: text
+              text:
+                en: "Order 4821 · dress arrived torn · wants a refund, not an exchange · photo attached"
+                ar: الطلب 4821 · الفستان وصل ممزّقًا · تريد استرداد المبلغ، لا الاستبدال · الصورة مرفقة
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: full
+        text:
+          en: "The full chat log, 40 messages"
+          ar: سجلّ المحادثة كاملًا، 40 رسالة
+        mock:
+          app: dar
+          appbar:
+            title: {en: Dar · Chat, ar: دار · المحادثة}
+            back: true
+          blocks:
+          - kind: chat
+            from: me
+            text:
+              en: "My dress arrived torn. I want my money back, not an exchange."
+              ar: وصل فستاني ممزّقًا. أريد استرداد المبلغ، لا الاستبدال.
+            time: "16:20"
+          - {kind: image, art: shirt, gap: xs}
+          - kind: chat
+            from: ai
+            text:
+              en: "I'm passing you to Youssef from our team."
+              ar: سأحوّلك إلى يوسف من فريقنا.
+            time: "16:21"
+          - kind: small
+            color: muted
+            text: {en: Youssef joins the chat, ar: انضمّ يوسف إلى المحادثة}
+            gap: s
+          - kind: card
+            gap: s
+            blocks:
+            - kind: badge
+              text: {en: Handover for Youssef, ar: تسليم إلى يوسف}
+              icon: user-switch
+            - kind: small
+              text: {en: Full chat log · 40 messages, ar: سجلّ المحادثة كاملًا · 40 رسالة}
+              color: muted
+              gap: xs
+            - kind: chat
+              text: {en: Hi, ar: مرحبًا}
+              from: them
+              gap: xs
+            - kind: chat
+              text:
+                en: "Hello! How can I help?"
+                ar: "أهلًا! كيف أساعدك؟"
+              from: ai
+            - kind: chat
+              text: {en: I ordered a dress last week, ar: طلبت فستانًا الأسبوع الماضي}
+              from: them
+            - kind: small
+              text:
+                en: "+ 37 more messages"
+                ar: "+ 37 رسالة أخرى"
+              color: muted
+              gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [summary]
     misconceptions:
       - id: MC-P12-042
@@ -291,7 +995,7 @@ steps:
       ar: "التسليم الجيد يعني أن العميلة لا تكرّر كلامها أبدًا."
 
   - id: S08
-    type: choose
+    type: tune
     skill: SK-P12-U05-04
     part: retest
     speaker: mona
@@ -307,14 +1011,135 @@ steps:
       ar: "ماذا يرى العميل ليعرف أن الادّخار توقّف وكيف يكمله؟"
     mock:
       app: rasid
-      appbar: { title: { en: "Smart save", ar: "الادّخار الذكي" }, back: true }
+      appbar:
+        title: {en: Smart save, ar: الادّخار الذكي}
+        back: true
       blocks:
-        - { kind: card, blocks: [ { kind: small, color: muted, text: { en: "Saved so far", ar: "ادّخرت حتى الآن" } }, { kind: price, text: { en: "1,850 EGP", ar: "1,850 جنيهًا" } }, { kind: small, color: muted, text: { en: "Last move: 24 April", ar: "آخر تحويل: 24 أبريل" } } ] }
-        - { kind: listitem, icon: credit-card, text: "Visa •••• 4417", sub: { en: "Expired 1 May", ar: "انتهت في 1 مايو" }, gap: s }
+      - kind: card
+        blocks:
+        - kind: small
+          color: muted
+          text: {en: Saved so far, ar: ادّخرت حتى الآن}
+        - kind: price
+          text:
+            en: "1,850 EGP"
+            ar: "1,850 جنيهًا"
+        - kind: small
+          color: muted
+          text:
+            en: "Last move: 24 April"
+            ar: "آخر تحويل: 24 أبريل"
+      - kind: listitem
+        icon: credit-card
+        text: Visa •••• 4417
+        sub: {en: Expired 1 May, ar: انتهت في 1 مايو}
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: silent, text: { en: "Nothing; it restarts when they add a new card", ar: "لا شيء؛ سيعود للعمل حين يضيف بطاقة جديدة" } }
-      - { id: paused, text: { en: "\"Smart save paused: your card expired on 1 May. Add your new card, or save by hand this week.\"", ar: "«الادّخار الذكي متوقّف: انتهت صلاحية بطاقتك في 1 مايو. أضِف بطاقتك الجديدة، أو ادّخر يدويًا هذا الأسبوع.»" } }
-      - { id: error, text: { en: "\"Smart save error (code 402).\"", ar: "«خطأ في الادّخار الذكي (رمز 402).»" } }
+      - id: silent
+        text: {en: Nothing; it restarts when they add a new card, ar: لا شيء؛ سيعود للعمل حين يضيف بطاقة جديدة}
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Smart save, ar: الادّخار الذكي}
+            back: true
+          blocks:
+          - kind: card
+            blocks:
+            - kind: small
+              color: muted
+              text: {en: Saved so far, ar: ادّخرت حتى الآن}
+            - kind: price
+              text:
+                en: "1,850 EGP"
+                ar: "1,850 جنيهًا"
+            - kind: small
+              color: muted
+              text:
+                en: "Last move: 24 April"
+                ar: "آخر تحويل: 24 أبريل"
+          - kind: listitem
+            icon: credit-card
+            text: Visa •••• 4417
+            sub: {en: Expired 1 May, ar: انتهت في 1 مايو}
+            gap: s
+          caption: {en: Unchanged, ar: بدون تغيير}
+      - id: paused
+        text:
+          en: "\"Smart save paused: your card expired on 1 May. Add your new card, or save by hand this week.\""
+          ar: "«الادّخار الذكي متوقّف: انتهت صلاحية بطاقتك في 1 مايو. أضِف بطاقتك الجديدة، أو ادّخر يدويًا هذا الأسبوع.»"
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Smart save, ar: الادّخار الذكي}
+            back: true
+          blocks:
+          - kind: card
+            blocks:
+            - kind: small
+              color: muted
+              text: {en: Saved so far, ar: ادّخرت حتى الآن}
+            - kind: price
+              text:
+                en: "1,850 EGP"
+                ar: "1,850 جنيهًا"
+            - kind: small
+              color: muted
+              text:
+                en: "Last move: 24 April"
+                ar: "آخر تحويل: 24 أبريل"
+          - kind: listitem
+            icon: credit-card
+            text: Visa •••• 4417
+            sub: {en: Expired 1 May, ar: انتهت في 1 مايو}
+            gap: s
+          - kind: banner
+            text:
+              en: "Smart save paused: your card expired on 1 May. Add your new card, or save by hand this week."
+              ar: "الادّخار الذكي متوقّف: انتهت صلاحية بطاقتك في 1 مايو. أضِف بطاقتك الجديدة، أو ادّخر يدويًا هذا الأسبوع."
+            tone: warn
+            icon: pause-circle
+            gap: s
+          - kind: button
+            text: {en: Add new card, ar: أضِف بطاقة جديدة}
+            icon: plus
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: error
+        text:
+          en: "\"Smart save error (code 402).\""
+          ar: «خطأ في الادّخار الذكي (رمز 402).»
+        mock:
+          app: rasid
+          appbar:
+            title: {en: Smart save, ar: الادّخار الذكي}
+            back: true
+          blocks:
+          - kind: card
+            blocks:
+            - kind: small
+              color: muted
+              text: {en: Saved so far, ar: ادّخرت حتى الآن}
+            - kind: price
+              text:
+                en: "1,850 EGP"
+                ar: "1,850 جنيهًا"
+            - kind: small
+              color: muted
+              text:
+                en: "Last move: 24 April"
+                ar: "آخر تحويل: 24 أبريل"
+          - kind: listitem
+            icon: credit-card
+            text: Visa •••• 4417
+            sub: {en: Expired 1 May, ar: انتهت في 1 مايو}
+            gap: s
+          - kind: banner
+            text: {en: Smart save error (code 402)., ar: خطأ في الادّخار الذكي (رمز 402).}
+            tone: bad
+            icon: warning
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [paused]
     misconceptions:
       - id: MC-P12-042
@@ -330,7 +1155,7 @@ steps:
       ar: "طريقان واضحان، إصلاح البطاقة أو الادّخار يدويًا، يحافظان على هدف العميل في الادّخار."
 
   - id: S09
-    type: choose
+    type: tune
     skill: SK-P12-U05-05
     part: retest
     speaker: hana
@@ -346,17 +1171,148 @@ steps:
       ar: "ماذا يجب أن نفعل؟"
     mock:
       app: nashat
-      appbar: { title: { en: "Spinning · 7:00", ar: "دراجات · 7:00" }, back: true }
+      appbar:
+        title:
+          en: "Spinning · 7:00"
+          ar: "دراجات · 7:00"
+        back: true
       blocks:
-        - { kind: image, art: gym }
-        - { kind: listitem, icon: user, text: { en: "Coach Omar", ar: "المدرّب عمر" }, sub: { en: "Studio 2", ar: "الاستوديو 2" }, gap: s }
-        - { kind: small, color: muted, text: { en: "✨ New AI layout", ar: "✨ تصميم جديد بالذكاء الاصطناعي" }, gap: s }
+      - {kind: image, art: gym}
+      - kind: listitem
+        icon: user
+        text: {en: Coach Omar, ar: المدرّب عمر}
+        sub: {en: Studio 2, ar: الاستوديو 2}
+        gap: s
+      - kind: small
+        color: muted
+        text: {en: ✨ New AI layout, ar: ✨ تصميم جديد بالذكاء الاصطناعي}
+        gap: s
       footer:
-        - { kind: row, blocks: [ { kind: button, style: outline, text: { en: "Check in", ar: "تسجيل الحضور" } }, { kind: button, style: danger, text: { en: "Cancel class", ar: "إلغاء الحصة" } } ] }
+      - kind: row
+        blocks:
+        - kind: button
+          style: outline
+          text: {en: Check in, ar: تسجيل الحضور}
+        - kind: button
+          style: danger
+          text: {en: Cancel class, ar: إلغاء الحصة}
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: back, text: { en: "Put \"Check in\" back in its old spot, and keep it fixed", ar: "نُعيد «تسجيل الحضور» إلى مكانه القديم، ونُبقيه ثابتًا" } }
-      - { id: confirm, text: { en: "Add \"Are you sure?\" to \"Cancel class\"", ar: "نضيف «هل أنت متأكّد؟» إلى «إلغاء الحصة»" } }
-      - { id: tip, text: { en: "Show a tip: \"Check in has moved!\"", ar: "نعرض تلميحًا: «تسجيل الحضور انتقل!»" } }
+      - id: back
+        text:
+          en: "Put \"Check in\" back in its old spot, and keep it fixed"
+          ar: نُعيد «تسجيل الحضور» إلى مكانه القديم، ونُبقيه ثابتًا
+        mock:
+          app: nashat
+          appbar:
+            title:
+              en: "Spinning · 7:00"
+              ar: "دراجات · 7:00"
+            back: true
+          blocks:
+          - {kind: image, art: gym}
+          - kind: listitem
+            icon: user
+            text: {en: Coach Omar, ar: المدرّب عمر}
+            sub: {en: Studio 2, ar: الاستوديو 2}
+            gap: s
+          footer:
+          - kind: button
+            text: {en: Check in, ar: تسجيل الحضور}
+            icon: check
+          - kind: button
+            text: {en: Cancel class, ar: إلغاء الحصة}
+            style: text
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: confirm
+        text:
+          en: "Add \"Are you sure?\" to \"Cancel class\""
+          ar: نضيف «هل أنت متأكّد؟» إلى «إلغاء الحصة»
+        mock:
+          app: nashat
+          appbar:
+            title:
+              en: "Spinning · 7:00"
+              ar: "دراجات · 7:00"
+            back: true
+          blocks:
+          - {kind: image, art: gym}
+          - kind: listitem
+            icon: user
+            text: {en: Coach Omar, ar: المدرّب عمر}
+            sub: {en: Studio 2, ar: الاستوديو 2}
+            gap: s
+          - kind: small
+            color: muted
+            text: {en: ✨ New AI layout, ar: ✨ تصميم جديد بالذكاء الاصطناعي}
+            gap: s
+          footer:
+          - kind: row
+            blocks:
+            - kind: button
+              style: outline
+              text: {en: Check in, ar: تسجيل الحضور}
+            - kind: button
+              style: danger
+              text: {en: Cancel class, ar: إلغاء الحصة}
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Are you sure?"
+                ar: هل أنت متأكّد؟
+            - kind: text
+              text:
+                en: "Cancel Spinning at 7:00?"
+                ar: "إلغاء حصة الدراجات 7:00؟"
+              gap: xs
+            - kind: row
+              gap: m
+              blocks:
+              - kind: button
+                text: {en: Back, ar: رجوع}
+                style: text
+              - kind: button
+                text: {en: Cancel class, ar: إلغاء الحصة}
+                style: danger
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: tip
+        text:
+          en: "Show a tip: \"Check in has moved!\""
+          ar: "نعرض تلميحًا: «تسجيل الحضور انتقل!»"
+        mock:
+          app: nashat
+          appbar:
+            title:
+              en: "Spinning · 7:00"
+              ar: "دراجات · 7:00"
+            back: true
+          blocks:
+          - {kind: image, art: gym}
+          - kind: listitem
+            icon: user
+            text: {en: Coach Omar, ar: المدرّب عمر}
+            sub: {en: Studio 2, ar: الاستوديو 2}
+            gap: s
+          - kind: banner
+            text:
+              en: "Check in has moved!"
+              ar: "تسجيل الحضور انتقل!"
+            tone: brand
+            icon: info
+            gap: s
+          footer:
+          - kind: row
+            blocks:
+            - kind: button
+              style: outline
+              text: {en: Check in, ar: تسجيل الحضور}
+            - kind: button
+              style: danger
+              text: {en: Cancel class, ar: إلغاء الحصة}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [back]
     misconceptions:
       - id: MC-P12-041
@@ -372,7 +1328,7 @@ steps:
       ar: "الزر الذي يُستخدم كل يوم، عند الباب، يجب ألّا يتحرّك أبدًا."
 
   - id: S10
-    type: choose
+    type: tune
     skill: SK-P12-U05-05
     part: retest
     speaker: rami
@@ -387,19 +1343,125 @@ steps:
       en: "What should we do?"
       ar: "ماذا يجب أن نفعل؟"
     mock:
-      app: { name: { en: "Malaffat", ar: "ملفّات" }, color: "#475569", icon: folder, domain: malaffat.example }
-      appbar: { title: { en: "All files", ar: "كل الملفّات" } }
+      app:
+        name: {en: Malaffat, ar: ملفّات}
+        color: "#475569"
+        icon: folder
+        domain: malaffat.example
+      appbar:
+        title: {en: All files, ar: كل الملفّات}
       blocks:
-        - { kind: badge, icon: sparkle, text: { en: "Planned: sorted by AI", ar: "المخطّط: ترتيب بالذكاء الاصطناعي" } }
-        - { kind: listitem, icon: file-xls, text: "Budget-2026.xlsx", gap: s }
-        - { kind: listitem, icon: file-pdf, text: "Invoice-May.pdf" }
-        - { kind: listitem, icon: file-doc, text: "Contract.docx" }
-        - { kind: listitem, icon: file-pdf, text: "Brochure.pdf" }
-        - { kind: small, color: muted, text: { en: "Today: A to Z", ar: "اليوم: أبجديًا" }, gap: s }
+      - kind: badge
+        icon: sparkle
+        text:
+          en: "Planned: sorted by AI"
+          ar: "المخطّط: ترتيب بالذكاء الاصطناعي"
+      - {kind: listitem, icon: file-xls, text: Budget-2026.xlsx, gap: s}
+      - {kind: listitem, icon: file-pdf, text: Invoice-May.pdf}
+      - {kind: listitem, icon: file-doc, text: Contract.docx}
+      - {kind: listitem, icon: file-pdf, text: Brochure.pdf}
+      - kind: small
+        color: muted
+        text:
+          en: "Today: A to Z"
+          ar: "اليوم: أبجديًا"
+        gap: s
+      caption: {en: Now, ar: الآن}
     options:
-      - { id: ai, text: { en: "Sort \"All files\" by AI, as planned", ar: "نرتّب «كل الملفّات» بالذكاء الاصطناعي، كما خُطّط" } }
-      - { id: both, text: { en: "Keep \"All files\" A to Z, and add a separate \"Suggested\" row above it", ar: "نُبقي «كل الملفّات» أبجديًا، ونضيف صفّ «مقترحة» منفصلًا فوقه" } }
-      - { id: random, text: { en: "Mix the two lists into one", ar: "ندمج القائمتين في قائمة واحدة" } }
+      - id: ai
+        text:
+          en: "Sort \"All files\" by AI, as planned"
+          ar: نرتّب «كل الملفّات» بالذكاء الاصطناعي، كما خُطّط
+        mock:
+          app:
+            name: {en: Malaffat, ar: ملفّات}
+            color: "#475569"
+            icon: folder
+            domain: malaffat.example
+          appbar:
+            title: {en: All files, ar: كل الملفّات}
+          blocks:
+          - kind: badge
+            icon: sparkle
+            text:
+              en: "Planned: sorted by AI"
+              ar: "المخطّط: ترتيب بالذكاء الاصطناعي"
+          - {kind: listitem, icon: file-pdf, text: Invoice-May.pdf, gap: s}
+          - {kind: listitem, icon: file-doc, text: Contract.docx}
+          - {kind: listitem, icon: file-xls, text: Budget-2026.xlsx}
+          - {kind: listitem, icon: file-pdf, text: Brochure.pdf}
+          - kind: small
+            text:
+              en: "Sorted by AI: the order changes each day"
+              ar: "ترتيب بالذكاء الاصطناعي: يتغيّر الترتيب كل يوم"
+            color: muted
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: both
+        text:
+          en: "Keep \"All files\" A to Z, and add a separate \"Suggested\" row above it"
+          ar: نُبقي «كل الملفّات» أبجديًا، ونضيف صفّ «مقترحة» منفصلًا فوقه
+        mock:
+          app:
+            name: {en: Malaffat, ar: ملفّات}
+            color: "#475569"
+            icon: folder
+            domain: malaffat.example
+          appbar:
+            title: {en: All files, ar: كل الملفّات}
+          blocks:
+          - kind: heading
+            text: {en: Suggested, ar: مقترحة}
+          - kind: listitem
+            icon: file-pdf
+            text: Invoice-May.pdf
+            badge:
+              text: {en: Suggested, ar: مقترح}
+              icon: sparkle
+          - kind: listitem
+            icon: file-doc
+            text: Contract.docx
+            badge:
+              text: {en: Suggested, ar: مقترح}
+              icon: sparkle
+          - kind: heading
+            text: {en: All files · A to Z, ar: كل الملفّات · أبجديًا}
+            gap: m
+          - {kind: listitem, icon: file-pdf, text: Brochure.pdf}
+          - {kind: listitem, icon: file-xls, text: Budget-2026.xlsx}
+          - {kind: listitem, icon: file-doc, text: Contract.docx}
+          - {kind: listitem, icon: file-pdf, text: Invoice-May.pdf}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: random
+        text: {en: Mix the two lists into one, ar: ندمج القائمتين في قائمة واحدة}
+        mock:
+          app:
+            name: {en: Malaffat, ar: ملفّات}
+            color: "#475569"
+            icon: folder
+            domain: malaffat.example
+          appbar:
+            title: {en: All files, ar: كل الملفّات}
+          blocks:
+          - kind: listitem
+            icon: file-doc
+            text: Contract.docx
+            badge:
+              text: {en: Suggested, ar: مقترح}
+              icon: sparkle
+          - {kind: listitem, icon: file-pdf, text: Brochure.pdf}
+          - kind: listitem
+            icon: file-pdf
+            text: Invoice-May.pdf
+            badge:
+              text: {en: Suggested, ar: مقترح}
+              icon: sparkle
+          - {kind: listitem, icon: file-xls, text: Budget-2026.xlsx}
+          - kind: small
+            text: {en: Suggested and all files in one list, ar: المقترحة وكل الملفّات في قائمة واحدة}
+            color: muted
+            gap: s
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [both]
     misconceptions:
       - id: MC-P12-041
