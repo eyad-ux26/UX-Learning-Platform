@@ -156,7 +156,7 @@ steps:
       ar: "سمِّ التنبيهات ولماذا تفيد. فالفائدة الواضحة تجعل «اسمح» خيارًا سهلًا."
 
   - id: S05
-    type: fix
+    type: tune
     skill: SK-P15-U05-04
     part: guided
     rules: [R06]
@@ -193,13 +193,70 @@ steps:
           ar: "+ 2 أخرى"
         color: muted
         gap: xs
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "What should the app send instead?"
       ar: "ماذا يجب أن يرسل التطبيق بدلًا من ذلك؟"
     options:
-      - { id: one, text: { en: "One notification: \"Prices dropped on 6 trips you saved. Cairo → Luxor is now EGP 380.\"", ar: "إشعارًا واحدًا: «انخفضت أسعار 6 رحلات حفظتها. القاهرة ← الأقصر الآن بـ 380 جنيهًا.»" } }
-      - { id: spread, text: { en: "The same 6 notifications, one every hour", ar: "نفس الإشعارات الستة، واحدًا كل ساعة" } }
-      - { id: vague, text: { en: "One notification: \"Something changed! Open the app 👀\"", ar: "إشعارًا واحدًا: «شيء ما تغيّر! افتح التطبيق 👀»" } }
+      - id: one
+        text:
+          en: "One notification: \"Prices dropped on 6 trips you saved. Cairo → Luxor is now EGP 380.\""
+          ar: "إشعارًا واحدًا: «انخفضت أسعار 6 رحلات حفظتها. القاهرة ← الأقصر الآن بـ 380 جنيهًا.»"
+        mock:
+          app: rehla
+          screen: lock
+          blocks:
+          - kind: notification
+            title: {en: Price drop, ar: انخفاض سعر}
+            text: {en: Prices dropped on 6 trips you saved. Cairo → Luxor is now EGP 380., ar: انخفضت أسعار 6 رحلات حفظتها. القاهرة ← الأقصر الآن بـ 380 جنيهًا.}
+            time: {en: now, ar: الآن}
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: spread
+        text:
+          en: "The same 6 notifications, one every hour"
+          ar: نفس الإشعارات الستة، واحدًا كل ساعة
+        mock:
+          app: rehla
+          screen: lock
+          blocks:
+          - kind: notification
+            title: {en: Price drop, ar: انخفاض سعر}
+            text: {en: Cairo → Alexandria, ar: القاهرة ← الإسكندرية}
+            time: {en: now, ar: الآن}
+          - kind: notification
+            title: {en: Price drop, ar: انخفاض سعر}
+            text: {en: Cairo → Luxor, ar: القاهرة ← الأقصر}
+            time:
+              en: "1h ago"
+              ar: منذ ساعة
+          - kind: notification
+            title: {en: Price drop, ar: انخفاض سعر}
+            text: {en: Cairo → Aswan, ar: القاهرة ← أسوان}
+            time:
+              en: "2h ago"
+              ar: منذ ساعتين
+          - kind: small
+            text:
+              en: "One more every hour, 3 to go"
+              ar: واحد آخر كل ساعة، بقي 3
+            color: muted
+            gap: xs
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: vague
+        text:
+          en: "One notification: \"Something changed! Open the app \U0001F440\""
+          ar: "إشعارًا واحدًا: «شيء ما تغيّر! افتح التطبيق \U0001F440»"
+        mock:
+          app: rehla
+          screen: lock
+          blocks:
+          - kind: notification
+            title: {en: Rehla, ar: رحلة}
+            text:
+              en: "Something changed! Open the app \U0001F440"
+              ar: "شيء ما تغيّر! افتح التطبيق \U0001F440"
+            time: {en: now, ar: الآن}
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [one]
     misconceptions:
       - id: MC-P15-035
