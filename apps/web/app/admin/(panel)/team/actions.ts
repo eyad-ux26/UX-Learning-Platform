@@ -33,8 +33,19 @@ async function sendInvite(email: string, roles: string[], token: string, from: s
     button: { label: "Accept the invite", href, showLink: true },
     notes: [`The link works once and expires in ${INVITE_HOURS} hours.`], safety: "Not expecting this? You can ignore this email.", footer: "transactional",
   });
-  return sendEmail({ to: email, subject: "You are invited to the UXGate admin panel", html: l.html, text: l.text, kind: "admin_invite" });
+  const sent = await sendEmail({ to: email, subject: "You are invited to the UXGate admin panel", html: l.html, text: l.text, kind: "admin_invite" });
+  return { sent, href };
 }
+
+/**
+ * "Sent" only means the email service took the email: it can still bounce or be suppressed (an address that bounced
+ * before is never mailed again). So the admin is told it was queued and gets the link to pass on themselves. The link
+ * is safe to show: it only works for an account with the invited email, with two-step sign-in, once, for 72 hours.
+ */
+const queued = (email: string, href: string) => ({
+  message: `Invite email queued for ${email}. If it does not arrive in a few minutes (check spam too), copy the invite link and send it to them yourself.`,
+  copy: { label: `Invite link for ${email} (works once, for that email only, for ${INVITE_HOURS} hours)`, value: href },
+});
 
 export async function inviteMember(_: R | null, f: FormData): Promise<R> {
   return run(async () => {
@@ -46,9 +57,10 @@ export async function inviteMember(_: R | null, f: FormData): Promise<R> {
     await requireFresh(ctx, f.get("code") as string | null);
     const token = newToken();
     check(await createAdminClient().rpc("admin_invite", { ...who(ctx), p_email: email.data, p_roles: roles, p_token_hash: await sha256Hex(token) }));
-    const sent = await sendInvite(email.data, roles, token, ctx.name);
+    const { sent, href } = await sendInvite(email.data, roles, token, ctx.name);
     if (!sent.ok) throw new AdminError("failed", "The invite is saved but the email did not go out. Use Resend invite.");
-  }, "Invite sent.");
+    return queued(email.data, href);
+  });
 }
 
 export async function resendInvite(_: R | null, f: FormData): Promise<R> {
@@ -62,9 +74,10 @@ export async function resendInvite(_: R | null, f: FormData): Promise<R> {
     const token = newToken();
     // A fresh invite (new link, new 72 hours) replaces the old one.
     check(await db.rpc("admin_invite", { ...who(ctx), p_email: inv.email, p_roles: inv.roles, p_token_hash: await sha256Hex(token) }));
-    const sent = await sendInvite(inv.email, inv.roles, token, ctx.name);
+    const { sent, href } = await sendInvite(inv.email, inv.roles, token, ctx.name);
     if (!sent.ok) throw new AdminError("failed", "The email did not go out. Try again in a minute.");
-  }, "A new invite link was sent.");
+    return queued(inv.email, href);
+  });
 }
 
 export async function cancelInvite(_: R | null, f: FormData): Promise<R> {

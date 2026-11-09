@@ -65,7 +65,7 @@ export function Confirm({
       <button type="button" className={cls} onClick={() => ref.current?.showModal()} disabled={!!disabled} title={typeof disabled === "string" ? disabled : undefined}>
         {icon ? <Icon n={icon} /> : null}{label}
       </button>
-      {state?.ok && state.message ? <span className="a-ok t-xs" role="status"><Icon n="check-circle-fill" />{state.message}</span> : null}
+      {state?.ok ? <Done state={state} /> : null}
       <dialog ref={ref} className="a-dialog" aria-labelledby={`dlg-${uid}`}>
         <form action={formAction}>
           <div className="a-dlg-h">
@@ -133,6 +133,24 @@ export function Submit({ className = "a-btn sm", busy, children, style }: { clas
   return <button type="submit" className={className} disabled={pending} aria-busy={pending} style={style}>{pending && busy ? busy : children}</button>;
 }
 
+/** What a dialog's action reports after it worked: its message, and a value to copy when it returned one. */
+function Done({ state }: { state: Extract<Result, { ok: true }> }) {
+  const copy = (state.data as { copy?: { label: string; value: string } } | undefined)?.copy;
+  const [copied, setCopied] = useState(false);
+  if (!state.message && !copy) return null;
+  return (
+    <span className="a-col" style={{ gap: 4 }}>
+      {state.message ? <span className="a-ok t-xs" role="status"><Icon n="check-circle-fill" />{state.message}</span> : null}
+      {copy ? (
+        <span className="a-row" style={{ gap: 6 }}>
+          <input className="a-in" readOnly value={copy.value} aria-label={copy.label} title={copy.label} onFocus={(e) => e.currentTarget.select()} style={{ minWidth: 0, flex: 1 }} />
+          <button type="button" className="a-btn sm" onClick={() => { void navigator.clipboard?.writeText(copy.value).then(() => setCopied(true)); }}>{copied ? "Copied" : "Copy link"}</button>
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
 /** A drawer (right side panel) with a form inside, for longer forms such as inviting a team member. */
 export function Drawer({ label, title, icon, primary = false, children, action, submit, fresh = true }: {
   label: string; title: string; icon?: string; primary?: boolean; children: ReactNode; action: Action; submit: string; fresh?: boolean;
@@ -147,7 +165,7 @@ export function Drawer({ label, title, icon, primary = false, children, action, 
   return (
     <>
       <button type="button" className={`a-btn${primary ? " pri" : ""}`} onClick={() => ref.current?.showModal()}>{icon ? <Icon n={icon} /> : null}{label}</button>
-      {state?.ok && state.message ? <span className="a-ok t-xs" role="status"><Icon n="check-circle-fill" />{state.message}</span> : null}
+      {state?.ok ? <Done state={state} /> : null}
       <dialog ref={ref} className="a-drawer" aria-labelledby={`drw-${uid}`}>
         <form action={formAction} style={{ display: "flex", flexDirection: "column", height: "100%" }}>
           <div className="a-drw-h"><h2 className="t-h2 a-grow" id={`drw-${uid}`}>{title}</h2><button type="button" className="a-btn sm icon ghost" aria-label="Close" onClick={() => ref.current?.close()}><Icon n="x" /></button></div>
