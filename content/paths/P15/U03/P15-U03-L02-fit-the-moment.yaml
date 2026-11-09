@@ -99,7 +99,7 @@ steps:
       ar: "قبل أن تختار النبرة، فكّر في مشاعر القارئ في تلك اللحظة.\n\n- **قلق أو منزعج** (عملية، دفع فشل، خطأ): كن هادئًا وواضحًا ولطيفًا. دون نكات.\n- **سعيد** (حجز تمّ، خبر جيد): لا بأس بحماس أكثر قليلًا.\n- **صوت واحد ونبرات كثيرة:** شخصية علامتك، أي **الصوت (Voice)**، تبقى كما هي. أما **النبرة (Tone)** فتتغيّر مع اللحظة، مثل صديق يتحدّث بطريقة في حفلة وبطريقة أخرى في مستشفى.\n- **تحقّق ولا تخمّن:** الناس يسمعون النبرة بطرق مختلفة. فاعرض نصك على مستخدمين حقيقيين."
 
   - id: S04
-    type: fix
+    type: tune
     skill: SK-P15-U03-02
     part: guided
     rules: [R06]
@@ -137,13 +137,108 @@ steps:
         sub:
           en: "Sunday · 10:30 AM"
           ar: "الأحد · 10:30 ص"
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "Which message fits patients who have just failed to book, again?"
       ar: "أيّ رسالة تناسب مرضى فشل حجزهم للتو، مرة أخرى؟"
     options:
-      - { id: joke, text: { en: "Keep the joke, but add \"Try again!\" at the end", ar: "أبقِ النكتة، لكن أضف «حاول مرة أخرى!» في النهاية" } }
-      - { id: legal, text: { en: "\"Error 503: The requested operation could not be completed.\"", ar: "«خطأ 503: تعذّر إكمال العملية المطلوبة.»" } }
-      - { id: calm, text: { en: "\"Sorry, we couldn't book your visit. Try again, or call the clinic and we'll book it for you.\"", ar: "«عذرًا، لم نتمكّن من حجز زيارتك. حاول مرة أخرى، أو اتصل بالعيادة وسنحجزها لك.»" } }
+      - id: joke
+        text:
+          en: "Keep the joke, but add \"Try again!\" at the end"
+          ar: "أبقِ النكتة، لكن أضف «حاول مرة أخرى!» في النهاية"
+        mock:
+          app: raha
+          appbar:
+            title: {en: Book a visit, ar: احجز زيارة}
+            back: true
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Oopsie! \U0001F92A"
+                ar: "أوبسي! \U0001F92A"
+            - kind: text
+              text:
+                en: "Our system tripped over its own feet. Hehe, happens to the best of us! Try again!"
+                ar: "نظامنا تعثّر بقدميه. هههه، يحدث هذا لأفضل الناس! حاول مرة أخرى!"
+              gap: s
+            - kind: button
+              text: {en: Try again, ar: حاول مرة أخرى}
+              gap: m
+          blocks:
+          - kind: listitem
+            avatar: {text: Dr Mona Adel, art: doctor}
+            text: {en: Dr Mona Adel, ar: د. منى عادل}
+            sub:
+              en: "Sunday · 10:30 AM"
+              ar: "الأحد · 10:30 ص"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: legal
+        text:
+          en: "\"Error 503: The requested operation could not be completed.\""
+          ar: "«خطأ 503: تعذّر إكمال العملية المطلوبة.»"
+        mock:
+          app: raha
+          appbar:
+            title: {en: Book a visit, ar: احجز زيارة}
+            back: true
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text: {en: Error 503, ar: خطأ 503}
+            - kind: text
+              text: {en: The requested operation could not be completed., ar: تعذّر إكمال العملية المطلوبة.}
+              gap: s
+            - kind: button
+              text: {en: Try again, ar: حاول مرة أخرى}
+              gap: m
+          blocks:
+          - kind: listitem
+            avatar: {text: Dr Mona Adel, art: doctor}
+            text: {en: Dr Mona Adel, ar: د. منى عادل}
+            sub:
+              en: "Sunday · 10:30 AM"
+              ar: "الأحد · 10:30 ص"
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: calm
+        text:
+          en: "\"Sorry, we couldn't book your visit. Try again, or call the clinic and we'll book it for you.\""
+          ar: «عذرًا، لم نتمكّن من حجز زيارتك. حاول مرة أخرى، أو اتصل بالعيادة وسنحجزها لك.»
+        mock:
+          app: raha
+          appbar:
+            title: {en: Book a visit, ar: احجز زيارة}
+            back: true
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Sorry, we couldn't book your visit"
+                ar: عذرًا، لم نتمكّن من حجز زيارتك
+            - kind: text
+              text:
+                en: "Try again, or call the clinic and we'll book it for you."
+                ar: حاول مرة أخرى، أو اتصل بالعيادة وسنحجزها لك.
+              gap: s
+            - kind: button
+              text: {en: Try again, ar: حاول مرة أخرى}
+              gap: m
+            - kind: button
+              text: {en: Call the clinic, ar: اتصل بالعيادة}
+              icon: phone
+              style: outline
+              gap: s
+          blocks:
+          - kind: listitem
+            avatar: {text: Dr Mona Adel, art: doctor}
+            text: {en: Dr Mona Adel, ar: د. منى عادل}
+            sub:
+              en: "Sunday · 10:30 AM"
+              ar: "الأحد · 10:30 ص"
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [calm]
     misconceptions:
       - id: MC-P15-020

@@ -114,7 +114,7 @@ steps:
       ar: "**رسائل التأكيد**\n- اذكر العنصر وما سيحدث: «حذف العناوين المحفوظة الأربعة كلها؟»\n- الأزرار تقول ما يفعله كل خيار: «احذف الكل» و«أبقِ العناوين»، لا «نعم» ولا «لا» ولا «موافق».\n\n**الروابط**\n- الرابط يجب أن يُفهم وحده. فكثيرون يقرؤون الرابط فقط، لا النص حوله.\n- قل إلى أين يأخذك: «شاهد عروض اليوم»، لا «اعرف المزيد».\n- أوفِ بالوعد: الصفحة التي تُفتح يجب أن تكون ما قاله الرابط."
 
   - id: S04
-    type: fix
+    type: tune
     skill: SK-P15-U04-03
     part: guided
     rules: [R06]
@@ -164,13 +164,147 @@ steps:
         value: 20
         label: {en: Waiting for the restaurant, ar: في انتظار المطعم}
         gap: m
+      caption: {en: Now, ar: الآن}
     prompt:
       en: "Which buttons stop people from tapping the wrong one?"
       ar: "أي أزرار تمنع الناس من الضغط على الزر الخطأ؟"
     options:
-      - { id: yesno, text: { en: "\"No\" and \"Yes\"", ar: "«لا» و«نعم»" } }
-      - { id: named, text: { en: "\"Keep order\" and \"Cancel order\"", ar: "«أبقِ الطلب» و«ألغِ الطلب»" } }
-      - { id: confirm, text: { en: "\"Back\" and \"Confirm\"", ar: "«رجوع» و«تأكيد»" } }
+      - id: yesno
+        text:
+          en: "\"No\" and \"Yes\""
+          ar: «لا» و«نعم»
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Your order, ar: طلبك}
+            back: true
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Cancel order #2041?"
+                ar: "إلغاء الطلب #2041؟"
+            - kind: text
+              text:
+                en: "The restaurant hasn't started cooking. You'll get a full refund."
+                ar: لم يبدأ المطعم في الطهي. وسيُردّ لك المبلغ كاملًا.
+              gap: s
+            - kind: row
+              gap: m
+              blocks:
+              - kind: button
+                text:
+                  en: "No"
+                  ar: لا
+                style: text
+              - kind: button
+                text:
+                  en: "Yes"
+                  ar: نعم
+          blocks:
+          - kind: listitem
+            art: food-koshary
+            text: {en: Koshary El Tahrir, ar: كشري التحرير}
+            sub:
+              en: "Order #2041 · 2 items"
+              ar: "الطلب #2041 · منتجان"
+            value:
+              en: EGP 185
+              ar: "185 جنيه"
+          - kind: progress
+            value: 20
+            label: {en: Waiting for the restaurant, ar: في انتظار المطعم}
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: named
+        text:
+          en: "\"Keep order\" and \"Cancel order\""
+          ar: «أبقِ الطلب» و«ألغِ الطلب»
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Your order, ar: طلبك}
+            back: true
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Cancel order #2041?"
+                ar: "إلغاء الطلب #2041؟"
+            - kind: text
+              text:
+                en: "The restaurant hasn't started cooking. You'll get a full refund."
+                ar: لم يبدأ المطعم في الطهي. وسيُردّ لك المبلغ كاملًا.
+              gap: s
+            - kind: row
+              gap: m
+              blocks:
+              - kind: button
+                text: {en: Keep order, ar: أبقِ الطلب}
+                style: text
+              - kind: button
+                text: {en: Cancel order, ar: ألغِ الطلب}
+          blocks:
+          - kind: listitem
+            art: food-koshary
+            text: {en: Koshary El Tahrir, ar: كشري التحرير}
+            sub:
+              en: "Order #2041 · 2 items"
+              ar: "الطلب #2041 · منتجان"
+            value:
+              en: EGP 185
+              ar: "185 جنيه"
+          - kind: progress
+            value: 20
+            label: {en: Waiting for the restaurant, ar: في انتظار المطعم}
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
+      - id: confirm
+        text:
+          en: "\"Back\" and \"Confirm\""
+          ar: «رجوع» و«تأكيد»
+        mock:
+          app: lamma
+          appbar:
+            title: {en: Your order, ar: طلبك}
+            back: true
+          overlay:
+            type: dialog
+            blocks:
+            - kind: heading
+              text:
+                en: "Cancel order #2041?"
+                ar: "إلغاء الطلب #2041؟"
+            - kind: text
+              text:
+                en: "The restaurant hasn't started cooking. You'll get a full refund."
+                ar: لم يبدأ المطعم في الطهي. وسيُردّ لك المبلغ كاملًا.
+              gap: s
+            - kind: row
+              gap: m
+              blocks:
+              - kind: button
+                text: {en: Back, ar: رجوع}
+                style: text
+              - kind: button
+                text: {en: Confirm, ar: تأكيد}
+          blocks:
+          - kind: listitem
+            art: food-koshary
+            text: {en: Koshary El Tahrir, ar: كشري التحرير}
+            sub:
+              en: "Order #2041 · 2 items"
+              ar: "الطلب #2041 · منتجان"
+            value:
+              en: EGP 185
+              ar: "185 جنيه"
+          - kind: progress
+            value: 20
+            label: {en: Waiting for the restaurant, ar: في انتظار المطعم}
+            gap: m
+          caption: {en: After this change, ar: بعد هذا التغيير}
     answer: [named]
     misconceptions:
       - id: MC-P15-027
