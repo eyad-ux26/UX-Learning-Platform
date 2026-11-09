@@ -39,7 +39,7 @@ export default async function ContentPage({ searchParams }: { searchParams: Prom
         <div className="a-kpi"><span className="t-xs ink-2">Drafts</span><b className="num">{drafts}</b></div>
         <div className="a-kpi"><span className="t-xs ink-2">In review</span><b className="num">{review}</b></div>
       </div>
-      <div className="a-split" style={{ display: "grid", gridTemplateColumns: "minmax(200px, 260px) 1fr", gap: 16, alignItems: "start" }}>
+      <div className="a-side">
         <Card label="Paths" pad={false}>
           <nav className="a-tree" aria-label="Paths">
             <ul style={{ listStyle: "none", margin: 0, padding: 8 }}>
