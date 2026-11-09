@@ -115,3 +115,19 @@ export async function rollbackRelease(_: R | null, f: FormData): Promise<R> {
     check(await createAdminClient().rpc("admin_content_rollback", { ...who(ctx), p_release: uuidFrom(f.get("release")), p_reason: reasonFrom(f) }));
   }, "Rolled back. The change is kept as a draft.");
 }
+
+/** QLT-2: the team's decision on a step (to check, fixing, fixed, won't fix). Closing one needs quality.manage. */
+export async function setQualityStatus(_: R | null, f: FormData): Promise<R> {
+  return run(async () => {
+    const status = String(f.get("status") ?? "");
+    if (!["to_check", "fixing", "fixed", "wont_fix"].includes(status)) throw new AdminError("invalid", "Pick a status.");
+    const ctx = await actionAdmin(status === "fixed" || status === "wont_fix" ? "quality.manage" : "content.edit");
+    const lesson = lessonIdFrom(f);
+    const step = String(f.get("step") ?? "");
+    if (!/^[A-Za-z0-9_-]{1,40}$/.test(step)) throw new AdminError("invalid", "Something is missing. Reload the page and try again.");
+    const source = ["learners", "numbers", "team"].includes(String(f.get("source"))) ? String(f.get("source")) : "team";
+    const note = textFrom(f, "note", 1000);
+    if (status === "wont_fix" && (!note || note.length < 3)) throw new AdminError("invalid", "Say why it will not be fixed.");
+    check(await createAdminClient().rpc("admin_set_flag_status", { ...who(ctx), p_lesson: lesson, p_step: step, p_source: source, p_status: status, p_note: note, p_misconception: textFrom(f, "misconception", 60) }));
+  }, "Saved.");
+}

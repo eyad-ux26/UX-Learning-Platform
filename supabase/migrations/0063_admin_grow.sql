@@ -47,16 +47,16 @@ returns table (misconception_id text, hits bigint) language sql stable security 
   group by s.misconception_id
 $$;
 
--- Per skill of a path: first tries and right, learners at Shown and Kept.
+-- Per skill of a path (skill ids look like SK-P01-U01-01): first tries and right, learners at Shown and Kept.
 create function public.admin_skill_stats(p_path text)
 returns table (skill_id text, first_tries bigint, first_right bigint, shown bigint, kept bigint) language sql stable security definer set search_path = public as $$
   with st as (
     select s.skill_id, count(*) filter (where s.kind = 'check') as ft, count(*) filter (where s.kind = 'check' and s.correct) as fr
     from public.step_results s join public.attempts a on a.id = s.attempt_id
-    where s.try_no = 1 and s.skill_id like p_path || '-%' group by s.skill_id
+    where s.try_no = 1 and s.skill_id like 'SK-' || p_path || '-%' group by s.skill_id
   ), ss as (
     select skill_id, count(*) filter (where state in ('shown', 'kept')) as shown, count(*) filter (where state = 'kept') as kept
-    from public.skill_states where skill_id like p_path || '-%' group by skill_id
+    from public.skill_states where skill_id like 'SK-' || p_path || '-%' group by skill_id
   )
   select coalesce(st.skill_id, ss.skill_id), coalesce(st.ft, 0), coalesce(st.fr, 0), coalesce(ss.shown, 0), coalesce(ss.kept, 0)
   from st full join ss on ss.skill_id = st.skill_id
@@ -98,7 +98,7 @@ language sql stable security definer set search_path = public as $$
     select split_part(a.lesson_id, '-', 1) as path_id, count(*) filter (where a.finished_at is not null) as fin, count(distinct a.user_id) as who
     from public.attempts a where a.started_at >= p_from and a.started_at < p_to group by 1
   ), s as (
-    select split_part(skill_id, '-', 1) as path_id, count(*) filter (where shown_at >= p_from and shown_at < p_to) as shown,
+    select split_part(regexp_replace(skill_id, '^SK-', ''), '-', 1) as path_id, count(*) filter (where shown_at >= p_from and shown_at < p_to) as shown,
            count(*) filter (where kept_at >= p_from and kept_at < p_to) as kept
     from public.skill_states group by 1
   ), c as (
