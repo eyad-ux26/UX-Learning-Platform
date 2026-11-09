@@ -173,7 +173,9 @@ export type ActionResult = { ok: true; data?: unknown; message?: string } | { ok
 export async function run(fn: () => Promise<unknown>, done?: string): Promise<ActionResult> {
   try {
     const data = await fn();
-    return { ok: true, data: data ?? undefined, message: done };
+    // A body can pick its own success message: return { message: "..." }.
+    const own = data && typeof data === "object" && "message" in data ? String((data as { message: unknown }).message) : null;
+    return { ok: true, data: data ?? undefined, message: own ?? done };
   } catch (e) {
     if (e instanceof AdminError) return { ok: false, error: e.message, reauth: e.code === "reauth" };
     const err = e as { code?: string; message?: string };

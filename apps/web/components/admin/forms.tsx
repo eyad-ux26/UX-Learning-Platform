@@ -2,7 +2,7 @@
 // Admin forms: every change goes through a server action that checks the admin's permission again. Risky actions open
 // a confirm dialog that names the effects, asks for a reason and, when the last authenticator check is older than 10
 // minutes, for a fresh 6-digit code (requirements: "Safeguards").
-import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
+import { useActionState, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 export type Result = { ok: true; data?: unknown; message?: string } | { ok: false; error: string; reauth?: boolean };
@@ -18,11 +18,12 @@ export function Feedback({ state }: { state: Result | null }) {
 
 /** The 6-digit code field used for re-authentication. */
 export function CodeField({ show }: { show: boolean }) {
+  const id = useId();
   if (!show) return null;
   return (
     <div className="a-field">
-      <label htmlFor="adm-code">Code from your authenticator app<span className="req" aria-hidden="true">*</span></label>
-      <input id="adm-code" name="code" className="a-in" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" maxLength={7} required placeholder="123 456" />
+      <label htmlFor={id}>Code from your authenticator app<span className="req" aria-hidden="true">*</span></label>
+      <input id={id} name="code" className="a-in" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,7}" maxLength={7} required placeholder="123 456" />
       <span className="help">Needed because this is a risky action and your last check was more than 10 minutes ago.</span>
     </div>
   );
@@ -43,6 +44,7 @@ export function Confirm({
   children?: ReactNode; disabled?: boolean | string; refresh?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const uid = useId();
   const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
   const [typedOk, setTypedOk] = useState(!typed);
   const router = useRouter();
@@ -60,11 +62,11 @@ export function Confirm({
         {icon ? <Icon n={icon} /> : null}{label}
       </button>
       {state?.ok && state.message ? <span className="a-ok t-xs" role="status"><Icon n="check-circle-fill" />{state.message}</span> : null}
-      <dialog ref={ref} className="a-dialog" aria-labelledby={`dlg-${label}`}>
+      <dialog ref={ref} className="a-dialog" aria-labelledby={`dlg-${uid}`}>
         <form action={formAction}>
           <div className="a-dlg-h">
             <span className={`ic${danger ? " bad" : ""}`}><Icon n={icon ?? (danger ? "warning" : "check")} /></span>
-            <div><h3 className="t-h2" id={`dlg-${label}`}>{title}</h3>{sub ? <p className="t-sm ink-2">{sub}</p> : null}</div>
+            <div><h3 className="t-h2" id={`dlg-${uid}`}>{title}</h3>{sub ? <p className="t-sm ink-2">{sub}</p> : null}</div>
           </div>
           <div className="a-dlg-b a-stack">
             {effects.length ? <ul className="a-effects">{effects.map((e, i) => <li key={i}><Icon n={e.icon} />{e.text}</li>)}</ul> : null}
@@ -72,14 +74,14 @@ export function Confirm({
             {hidden.map((h) => <input key={h.name} type="hidden" name={h.name} value={h.value} />)}
             {reason ? (
               <div className="a-field">
-                <label htmlFor={`rsn-${label}`}>{reasonLabel}<span className="req" aria-hidden="true">*</span></label>
-                <textarea id={`rsn-${label}`} name="reason" className="a-ta" required minLength={3} maxLength={500} rows={2} />
+                <label htmlFor={`rsn-${uid}`}>{reasonLabel}<span className="req" aria-hidden="true">*</span></label>
+                <textarea id={`rsn-${uid}`} name="reason" className="a-ta" required minLength={3} maxLength={500} rows={2} />
               </div>
             ) : null}
             {typed ? (
               <div className="a-field">
-                <label htmlFor={`typed-${label}`}>Type <b className="a-code">{typed}</b> to confirm</label>
-                <input id={`typed-${label}`} name="typed" className="a-in" autoComplete="off" onChange={(e) => setTypedOk(e.target.value.trim() === typed)} />
+                <label htmlFor={`typed-${uid}`}>Type <b className="a-code">{typed}</b> to confirm</label>
+                <input id={`typed-${uid}`} name="typed" className="a-in" autoComplete="off" onChange={(e) => setTypedOk(e.target.value.trim() === typed)} />
               </div>
             ) : null}
             <CodeField show={!!needCode} />

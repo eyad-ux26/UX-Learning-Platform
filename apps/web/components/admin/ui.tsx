@@ -2,6 +2,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { fmtMoney, fmtTime, fmtUtc, toUsd } from "@/lib/admin/format";
+import { maskEmail, maskName } from "@/lib/admin/mask";
 
 export const I = ({ n, s, className = "" }: { n: string; s?: 12 | 14 | 18 | 20 | 24 | 32; className?: string }) => (
   <span className={`i i-${n}${s ? ` s${s}` : ""}${className ? ` ${className}` : ""}`} aria-hidden="true" />
@@ -140,3 +141,65 @@ export const Ar = ({ children, className = "" }: { children: ReactNode; classNam
 );
 
 export const Id = ({ children }: { children: ReactNode }) => <span className="a-id">{children}</span>;
+
+const initialsOf = (s: string) => s.split(/[\s.@_-]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?";
+const avTone = (s: string) => ["", " v2", " v3", " v4", " v5"][[...s].reduce((t, c) => t + c.charCodeAt(0), 0) % 5];
+
+/** A learner in a list: initials, masked name and email, linked to Learner 360. Full details are revealed there (logged). */
+export function Who({ id, name, email, sub, link = true }: { id?: string | null; name?: string | null; email?: string | null; sub?: ReactNode; link?: boolean }) {
+  const label = name ? maskName(name) : maskEmail(email) || "Unknown";
+  const inner = (
+    <span className="a-who">
+      <span className={`a-av sm${avTone(label)}`} aria-hidden="true">{initialsOf(name || email || "?")}</span>
+      <span style={{ minWidth: 0 }}><span className="n" style={{ display: "block" }}>{label}</span><span className="e" style={{ display: "block" }}>{sub ?? maskEmail(email)}</span></span>
+    </span>
+  );
+  return link && id ? <Link href={`/admin/learners/${id}`} style={{ textDecoration: "none", color: "inherit" }}>{inner}</Link> : inner;
+}
+
+export function Kpi({ label, value, note, icon, href, alert, tone }: { label: string; value: ReactNode; note?: ReactNode; icon?: string; href?: string; alert?: boolean; tone?: "up" | "down" | "flat" }) {
+  const body = (
+    <>
+      <span className="k">{icon ? <I n={icon} /> : null}{label}</span>
+      <span className="t-big num">{value}</span>
+      {note ? <span className={`d ${tone ?? "flat"}`}>{note}</span> : null}
+    </>
+  );
+  return href ? <Link className={`a-kpi${alert ? " alert" : ""}`} href={href}>{body}</Link> : <div className={`a-kpi${alert ? " alert" : ""}`}>{body}</div>;
+}
+
+/** A search and filter bar that submits as a plain GET form, so every filtered list has its own link. */
+export function Filters({ action, q, placeholder, selects = [], hidden = {} }: {
+  action: string; q?: string; placeholder?: string; hidden?: Record<string, string>;
+  selects?: { name: string; label: string; value?: string; options: [string, string][] }[];
+}) {
+  return (
+    <form method="get" action={action} className="a-toolbar" role="search">
+      {Object.entries(hidden).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
+      {placeholder ? (
+        <label className="a-row" style={{ flex: "1 1 260px", gap: 6 }}>
+          <span className="sr">Search</span>
+          <input className="a-in" name="q" defaultValue={q} placeholder={placeholder} style={{ flex: 1 }} />
+        </label>
+      ) : null}
+      {selects.map((s) => (
+        <label key={s.name} className="a-row t-sm" style={{ gap: 6 }}>
+          <span className="ink-2">{s.label}</span>
+          <select className="a-in" name={s.name} defaultValue={s.value ?? ""} style={{ height: 32, width: "auto" }}>
+            <option value="">All</option>
+            {s.options.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+        </label>
+      ))}
+      <button type="submit" className="a-btn sm"><I n="magnifying-glass" />Apply</button>
+    </form>
+  );
+}
+
+/** Builds a link to the same list with some query values changed. */
+export const withQuery = (path: string, base: Record<string, string | undefined>, change: Record<string, string | number | undefined>) => {
+  const p = new URLSearchParams();
+  for (const [k, v] of Object.entries({ ...base, ...change })) if (v !== undefined && v !== "" && v !== null) p.set(k, String(v));
+  const s = p.toString();
+  return s ? `${path}?${s}` : path;
+};
