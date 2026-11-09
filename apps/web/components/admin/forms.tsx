@@ -2,7 +2,8 @@
 // Admin forms: every change goes through a server action that checks the admin's permission again. Risky actions open
 // a confirm dialog that names the effects, asks for a reason and, when the last authenticator check is older than 10
 // minutes, for a fresh 6-digit code (requirements: "Safeguards").
-import { useActionState, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useActionState, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 
 export type Result = { ok: true; data?: unknown; message?: string } | { ok: false; error: string; reauth?: boolean };
@@ -102,9 +103,13 @@ export function Confirm({
   );
 }
 
-/** An inline form (no dialog) bound to a server action, for low-risk edits such as a note or a ticket reply. */
-export function ActionForm({ action, children, className, reset = true, refresh = true }: { action: Action; children: (pending: boolean) => ReactNode; className?: string; reset?: boolean; refresh?: boolean }) {
-  const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
+/**
+ * An inline form (no dialog) bound to a server action, for low-risk edits such as a note or a ticket reply. Server pages
+ * use it, so its children are plain elements (a function child cannot cross from a server page to a client component);
+ * use <Submit> inside it for a button that shows the pending state.
+ */
+export function ActionForm({ action, children, className, reset = true, refresh = true }: { action: Action; children: ReactNode; className?: string; reset?: boolean; refresh?: boolean }) {
+  const [state, formAction] = useActionState<Result | null, FormData>(action, null);
   const ref = useRef<HTMLFormElement>(null);
   const router = useRouter();
   useEffect(() => {
@@ -115,11 +120,17 @@ export function ActionForm({ action, children, className, reset = true, refresh 
   }, [state, reset, refresh, router]);
   return (
     <form ref={ref} action={formAction} className={className}>
-      {children(pending)}
+      {children}
       <CodeField show={!!(state && !state.ok && state.reauth)} />
       <Feedback state={state} />
     </form>
   );
+}
+
+/** The submit button of the form it sits in: disabled and busy while the form's action runs. */
+export function Submit({ className = "a-btn sm", busy, children, style }: { className?: string; busy?: string; children: ReactNode; style?: CSSProperties }) {
+  const { pending } = useFormStatus();
+  return <button type="submit" className={className} disabled={pending} aria-busy={pending} style={style}>{pending && busy ? busy : children}</button>;
 }
 
 /** A drawer (right side panel) with a form inside, for longer forms such as inviting a team member. */
