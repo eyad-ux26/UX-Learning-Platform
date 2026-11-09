@@ -1,5 +1,6 @@
 "use server";
 
+import { syncTeamTools } from "@/lib/admin/team-tools-sync";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -122,6 +123,7 @@ export async function acceptInvite(_: GateResult, form: FormData): Promise<GateR
     if (m.includes("already")) return { ok: false, error: "You are already on the team." };
     return { ok: false, error: "This invite is no longer valid. Ask for a new one." };
   }
+  await syncTeamTools([user.id]);
   redirect("/admin/two-step");
 }
 

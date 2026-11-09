@@ -9,6 +9,7 @@ import { PERMISSION_KEYS, roleName } from "@/lib/admin/permissions";
 import { hasTwoStep, listMembers } from "@/lib/admin/data/team";
 import { sendEmail } from "@/lib/server/email/send";
 import { emailLayout, siteOrigin } from "@/lib/server/email/layout";
+import { membersOfRole, syncTeamTools } from "@/lib/admin/team-tools-sync";
 
 type R = ActionResult;
 const reason = (f: FormData) => {
@@ -79,6 +80,7 @@ export async function changeRoles(_: R | null, f: FormData): Promise<R> {
     const r = reason(f);
     await requireFresh(ctx, f.get("code") as string | null);
     check(await createAdminClient().rpc("admin_set_roles", { ...who(ctx), p_target: target, p_roles: rolesOf(f), p_reason: r }));
+    await syncTeamTools([target]);
   }, "Roles changed.");
 }
 
@@ -88,7 +90,9 @@ export async function setMemberStatus(_: R | null, f: FormData): Promise<R> {
     const status = f.get("status") === "suspended" ? "suspended" : "active";
     const r = reason(f);
     await requireFresh(ctx, f.get("code") as string | null);
-    check(await createAdminClient().rpc("admin_set_status", { ...who(ctx), p_target: uuid(f.get("user")), p_status: status, p_reason: r }));
+    const target = uuid(f.get("user"));
+    check(await createAdminClient().rpc("admin_set_status", { ...who(ctx), p_target: target, p_status: status, p_reason: r }));
+    await syncTeamTools([target]);
   }, "Done.");
 }
 
@@ -97,7 +101,9 @@ export async function removeMember(_: R | null, f: FormData): Promise<R> {
     const ctx = await actionAdmin("team.invite");
     const r = reason(f);
     await requireFresh(ctx, f.get("code") as string | null);
-    check(await createAdminClient().rpc("admin_remove_member", { ...who(ctx), p_target: uuid(f.get("user")), p_reason: r }));
+    const target = uuid(f.get("user"));
+    check(await createAdminClient().rpc("admin_remove_member", { ...who(ctx), p_target: target, p_reason: r }));
+    await syncTeamTools([target]);
   }, "Removed from the team.");
 }
 
@@ -160,6 +166,7 @@ export async function saveRole(_: R | null, f: FormData): Promise<R> {
       const { data: before } = await db.from("admin_roles").select("name, description, permissions, builtin").eq("id", existing).maybeSingle();
       if (!before || before.builtin) throw new AdminError("invalid", "Built-in roles cannot be changed.");
       check(await db.from("admin_roles").update({ name, description, permissions: perms }).eq("id", existing));
+      await syncTeamTools(await membersOfRole(existing));
       check(await db.rpc("admin_log", { ...who(ctx), p_action: "team.role_changed", p_area: "team", p_target_type: "role", p_target_id: existing, p_target_label: name, p_before: before, p_after: { name, description, permissions: perms }, p_reason: r }));
     } else {
       const id = `custom_${roleId(name)}`.slice(0, 41);
