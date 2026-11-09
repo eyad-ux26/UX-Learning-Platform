@@ -2,7 +2,7 @@ import { allowed, type AdminCtx } from "@/lib/admin/guard";
 import { isFresh } from "@/lib/admin/fresh";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { PRICES, type Region } from "@/lib/billing/pricing";
-import { fmtMoney, REGION_LABEL } from "@/lib/admin/format";
+import { REGION_LABEL } from "@/lib/admin/format";
 import { Card, Empty, St, When, type Tone } from "@/components/admin/ui";
 import { Drawer } from "@/components/admin/forms";
 import { requestPriceChange } from "./price-actions";

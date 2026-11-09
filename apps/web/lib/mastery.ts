@@ -6,7 +6,7 @@ import { isQuestion } from "@uxgate/player/engine";
 /** The first judged answer of one step in one attempt. */
 export type FirstTry = { lessonId: string; stepId: string; skillId: string; correct: boolean };
 
-import { DEFAULT_RULES, type LearningRules } from "./learning-rules";
+import { DEFAULT_RULES } from "./learning-rules";
 
 /** At most this many mastery misses before a skill is left Practiced (it goes to spaced review in slice 3). Default; see Learning rules. */
 export const MAX_MASTERY_MISSES = DEFAULT_RULES.maxMasteryMisses;

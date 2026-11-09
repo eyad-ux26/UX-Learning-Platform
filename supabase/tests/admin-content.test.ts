@@ -291,6 +291,22 @@ describe("quality, reports, communications and help (0063)", () => {
     await expect(asUser("authenticated", X, `select * from public.admin_audience('all')`)).rejects.toThrow(/permission denied/);
   });
 
+  it("a campaign goes once to each person in its audience", async () => {
+    const c = (await one<{ id: string }>(`insert into campaigns (name, subject, body, audience, send_at, status) values ('Launch', '{"en":"New path","ar":"مسار جديد"}', '{"en":"Body text here","ar":"نص الرسالة هنا"}', 'all', now(), 'scheduled') returning id`)).id;
+    const first = await svc<{ user_id: string }>(`select user_id from public.campaign_next($1, 2)`, [c]);
+    expect(first).toHaveLength(2);
+    await db.query(`insert into campaign_sends (campaign_id, user_id) select $1, unnest($2::uuid[])`, [c, first.map((r) => r.user_id)]);
+    const rest = (await svc<{ user_id: string }>(`select user_id from public.campaign_next($1, 500)`, [c])).map((r) => r.user_id);
+    expect(rest).not.toContain(first[0].user_id);
+    await expect(db.query(`insert into campaign_sends (campaign_id, user_id) values ($1, $2)`, [c, first[0].user_id])).rejects.toThrow(/duplicate/);
+  });
+
+  it("notes job runs and keeps 30 days of them", async () => {
+    await db.query(`insert into job_runs (name, ok, detail, finished_at) values ('daily', true, '{}', now() - interval '31 days'), ('daily', true, '{}', now())`);
+    expect((await svc<{ n: number }>(`select public.job_runs_prune() n`))[0].n).toBe(1);
+    await expect(asUser("authenticated", X, `select * from job_runs`)).rejects.toThrow(/permission denied/);
+  });
+
   it("learners see a running announcement for their plan only while the flag is on", async () => {
     await db.query(`insert into announcements (title, body, audience, starts_at, ends_at, status) values
       ('{"en":"New path","ar":"مسار جديد"}', '{"en":"Try UX writing","ar":"جرّب الكتابة"}', 'free', now() - interval '1 hour', now() + interval '1 day', 'scheduled'),

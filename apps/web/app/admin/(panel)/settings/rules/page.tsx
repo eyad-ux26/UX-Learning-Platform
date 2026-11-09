@@ -22,7 +22,7 @@ export default async function RulesPage() {
   const fresh = isFresh(ctx);
   return (
     <main className="a-page">
-      <PageHead crumbs={[{ label: "Admin" }, { label: "Platform settings" }]} title="Platform settings" sub="The numbers behind streak freezes, mastery rounds, reviews and trials." />
+      <PageHead crumbs={[{ label: "Platform settings" }]} title="Platform settings" sub="The numbers behind streak freezes, mastery rounds, reviews and trials." />
       <SettingsTabs current="rules" />
       {!ready ? <Note icon="warning">Migration 0061 is not in the database yet. The app uses the defaults below until it runs.</Note> : null}
       <Note>A change applies from each learner&apos;s next lesson, next settled day or next review. Days already counted, freezes already earned and reviews already planned stay as they are. Learner messages that name a number (for example &quot;5 goal days earn a freeze&quot;) still say the default, so change those words in the same week.</Note>

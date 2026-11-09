@@ -28,7 +28,7 @@ export default async function FlagsPage() {
   const fresh = isFresh(ctx);
   return (
     <main className="a-page">
-      <PageHead crumbs={[{ label: "Admin" }, { label: "Platform settings" }]} title="Platform settings" sub="Switch features on and off for every learner. Each change needs a reason and is kept in the audit log." />
+      <PageHead crumbs={[{ label: "Platform settings" }]} title="Platform settings" sub="Switch features on and off for every learner. Each change needs a reason and is kept in the audit log." />
       <SettingsTabs current="flags" />
       {!ready ? <Note icon="warning">Migration 0061 is not in the database yet. Until it runs, flags show without labels and cannot be changed here.</Note> : null}
       <Card label="Feature flags" pad={false}>

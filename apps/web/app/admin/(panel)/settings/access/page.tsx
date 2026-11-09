@@ -26,7 +26,7 @@ export default async function AccessPage() {
   const gateOn = w.comingSoon || cs === true;
   return (
     <main className="a-page">
-      <PageHead crumbs={[{ label: "Admin" }, { label: "Platform settings" }]} title="Platform settings" sub="Who can reach the site: the Coming Soon gate, maintenance and the team password." />
+      <PageHead crumbs={[{ label: "Platform settings" }]} title="Platform settings" sub="Who can reach the site: the Coming Soon gate, maintenance and the team password." />
       <SettingsTabs current="access" />
       {!ready ? <Note icon="warning">Migration 0061 is not in the database yet. Until it runs, these switches only follow the Cloudflare variables.</Note> : null}
 

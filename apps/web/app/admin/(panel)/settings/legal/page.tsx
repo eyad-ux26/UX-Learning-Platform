@@ -14,7 +14,7 @@ export default async function LegalPage() {
   const s = legalStatus();
   return (
     <main className="a-page">
-      <PageHead crumbs={[{ label: "Admin" }, { label: "Platform settings" }]} title="Platform settings" sub="The privacy policy, terms of use and refund policy that learners see." />
+      <PageHead crumbs={[{ label: "Platform settings" }]} title="Platform settings" sub="The privacy policy, terms of use and refund policy that learners see." />
       <SettingsTabs current="legal" />
       <Note icon="lock-simple">Legal text is not edited in the panel. It changes rarely, must match in English and Arabic, and needs sign-off, so the approved text goes into the code as one reviewed change. Free trials need a change to the terms first: they say &quot;No trial&quot;.</Note>
       <Card label="Status">

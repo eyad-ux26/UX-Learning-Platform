@@ -20,7 +20,7 @@ export default async function HealthPage() {
   const late = (j: (typeof jobs)[number]) => !j.lastRun || now - new Date(j.lastRun).getTime() > (j.schedule.startsWith("Every 15") ? 3_600_000 : 1.5 * DAY);
   return (
     <main className="a-page">
-      <PageHead crumbs={[{ label: "Admin" }, { label: "System health" }]} title="System health" sub="The services the app needs, and the scheduled jobs. Checked when this page opens." />
+      <PageHead crumbs={[{ label: "System health" }]} title="System health" sub="The services the app needs, and the scheduled jobs. Checked when this page opens." />
       <Card label="Services" pad={false}>
         <div className="a-tbl-wrap"><table className="a-tbl">
           <thead><tr><th scope="col">Service</th><th scope="col">State</th><th scope="col">Detail</th></tr></thead>
