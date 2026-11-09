@@ -4,8 +4,9 @@
 
 import { KINDS, prefKindOf, type InboxKind, type Kind } from "./notifications";
 
-export type UnsubKind = Exclude<Kind, "billing">;
-export const UNSUB_KINDS = KINDS.filter((k): k is UnsubKind => k !== "billing");
+// "news" is the admin panel's campaign email (0063): not a choice on the Notifications screen, only turned off from its link.
+export type UnsubKind = Exclude<Kind, "billing"> | "news";
+export const UNSUB_KINDS: UnsubKind[] = [...KINDS.filter((k): k is Exclude<Kind, "billing"> => k !== "billing"), "news"];
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const enc = new TextEncoder();

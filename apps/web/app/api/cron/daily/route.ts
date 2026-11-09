@@ -4,6 +4,7 @@ import { settleLearner } from "@/lib/server/settle";
 import { resolveWeekStart } from "@/lib/freeze";
 import { sendQueuedConfirmations } from "@/lib/server/waitlist-mail";
 import { sendTrialEmails } from "@/lib/server/trial-mail";
+import { sendWeeklyReports } from "@/lib/server/report-mail";
 import { jobJson } from "@/lib/server/job-run";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,8 @@ export async function GET(req: Request) {
   const confirmations = await sendQueuedConfirmations(db).catch(() => ({ sent: 0, failed: 0 }));
   // Free trials (0062): the "ends in 2 days" and "ended" emails. No-op before 0062 or without email.
   const trials = await sendTrialEmails(db).catch(() => ({ sent: 0, failed: 0 }));
+  // Admin panel: weekly saved reports to the team (Mondays), and campaign emails in batches (0063). No-ops before 0063.
+  const reports = await sendWeeklyReports(db).catch(() => ({ sent: 0, failed: 0 }));
   // Only learners whose settled day is before their own yesterday (in their time zone), oldest first: a learner west of
   // UTC who is already settled up to their local yesterday is not picked again, so every call makes progress (#139).
   const { data: rows, error } = await db.rpc("settle_candidates", { p_limit: BATCH });
@@ -52,5 +55,5 @@ export async function GET(req: Request) {
     }
     console.warn(`WARN daily job: could not settle ${id}: ${r.error}`);
   }
-  return jobJson("daily", { settled, failed, stoppedEarly, pruned: typeof pruned === "number" ? pruned : null, confirmations, trials, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
+  return jobJson("daily", { settled, failed, stoppedEarly, pruned: typeof pruned === "number" ? pruned : null, confirmations, trials, reports, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
 }
