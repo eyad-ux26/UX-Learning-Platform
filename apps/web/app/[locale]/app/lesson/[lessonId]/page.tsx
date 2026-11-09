@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
+import { localPathName } from "@/lib/catalog-list";
 import { setRequestLocale } from "next-intl/server";
-import { getPath, getUnit } from "@uxgate/content";
+import { getUnit } from "@uxgate/content";
 import { getLessonVersion } from "@/lib/server/content";
 import type { Locale } from "@uxgate/content/types";
 import { LessonRunner } from "@/components/LessonRunner";
@@ -34,7 +35,7 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   const after = ui >= 0 ? units[ui + 1] : undefined;
   const lastInUnit = ui >= 0 && units[ui].lessons[units[ui].lessons.length - 1]?.lesson.lessonId === lessonId;
   const proNext = !me.pro && lastInUnit && after && !after.unit.free ? { n: after.number, title: after.unit.title[locale as Locale] } : null;
-  const pathTitle = getPath(version.pathId)?.title.en ?? version.pathId;
+  const pathTitle = localPathName(version.pathId, locale);
   // Playing a finished lesson again is a replay: half XP the first time each day, nothing after that.
   let replay = null as ReturnType<typeof decideReplay>;
   if (me.progress.finishedLessons.includes(lessonId)) {

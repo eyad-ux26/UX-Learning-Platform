@@ -8,7 +8,7 @@ import { hasServiceKey } from "@/lib/supabase/env";
 import { clientIp } from "@/lib/server/ip-hash";
 import { type Permission, type Perms } from "./permissions";
 import { fixtureCtx } from "./fixture";
-import { ADMIN_IDLE_SECONDS, ADMIN_TOTAL_SECONDS, REAUTH_SECONDS, freshTotp, type Amr } from "./rules";
+import { ADMIN_IDLE_SECONDS, ADMIN_TOTAL_SECONDS, REAUTH_SECONDS, SIGNIN_PAUSE_SECONDS, SIGNIN_TRIES, freshTotp, type Amr } from "./rules";
 
 // The admin panel's access check (requirements: "Security"). Every admin page and server action calls it: the menu only
 // hides what a role cannot use, it never protects anything. Middleware is not used for access control.
@@ -141,12 +141,18 @@ export async function requireFresh(ctx: AdminCtx, code?: string | null): Promise
   if (freshTotp(ctx.totpAt, Date.now(), REAUTH_SECONDS)) return;
   const c = (code ?? "").replace(/\s/g, "");
   if (!/^\d{6}$/.test(c)) throw new AdminError("reauth", "Enter the 6-digit code from your authenticator app to confirm.");
+  // Wrong codes count like wrong two-step codes at sign-in: 5 in 15 minutes pause the check (and sign-in) for this member.
+  const svc = createAdminClient();
+  const buckets = [`fresh:${ctx.userId}`, `email:${ctx.email.toLowerCase()}`];
+  const { data: paused } = await svc.rpc("admin_signin_paused", { p_buckets: buckets, p_limit: SIGNIN_TRIES, p_window_seconds: SIGNIN_PAUSE_SECONDS });
+  if (paused) throw new AdminError("reauth", `Too many wrong codes. Try again in ${SIGNIN_PAUSE_SECONDS / 60} minutes.`);
   const db = await createClient();
   const { data: f } = await db.auth.mfa.listFactors();
   const factor = f?.totp?.find((x) => x.status === "verified");
   if (!factor) throw new AdminError("reauth", "Set up two-step sign-in first.");
   const { error } = await db.auth.mfa.challengeAndVerify({ factorId: factor.id, code: c });
   if (error) {
+    await svc.rpc("admin_signin_fail", { p_buckets: buckets, p_limit: SIGNIN_TRIES, p_window_seconds: SIGNIN_PAUSE_SECONDS });
     await audit(ctx, "auth.reauth_failed", "auth", { type: "admin", id: ctx.userId, label: ctx.email });
     throw new AdminError("reauth", "That code did not work. Try the newest code.");
   }

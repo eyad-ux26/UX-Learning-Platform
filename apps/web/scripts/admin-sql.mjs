@@ -1,5 +1,6 @@
-// Writes the permission keys and built-in roles from lib/admin/permissions.ts into the seed blocks between the
-// @@PERMISSIONS@@ markers: 0044 gets the Phase 1 keys (seedSql(1)), 0060 every key (seedSql(2)).
+// Writes the permission keys and built-in roles from lib/admin/permissions.ts into the seed block between the
+// @@PERMISSIONS@@ markers of 0060 (every key, seedSql(2)). 0044 already ran in production, so it stays as it was; 0060
+// updates its keys, labels and built-in roles.
 // Run: npm run admin:sql -w @uxgate/web   (add --check to only compare)
 import fs from "node:fs";
 import path from "node:path";
@@ -10,7 +11,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const start = "-- @@PERMISSIONS@@";
 const end = "-- @@END PERMISSIONS@@";
 let stale = false;
-for (const [name, phase] of [["0044_admin_access.sql", 1], ["0060_admin_content.sql", 2]]) {
+for (const [name, phase] of [["0060_admin_content.sql", 2]]) {
   const file = path.resolve(here, "../../../supabase/migrations", name);
   const src = fs.readFileSync(file, "utf8");
   const block = `${start}\n${seedSql(phase)}\n${end}`;

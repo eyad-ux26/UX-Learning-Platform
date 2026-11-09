@@ -183,7 +183,7 @@ export const canAny = (perms: Perms, ...ps: Permission[]) => ps.some((p) => perm
 export function auditAreas(perms: Perms): "all" | string[] {
   if (perms.has("audit.view")) return "all";
   const a: string[] = [];
-  if (perms.has("audit.area_support")) a.push("learners", "support", "appeals");
+  if (perms.has("audit.area_support")) a.push("learners", "support", "appeals", "certificates");
   if (perms.has("audit.area_billing")) a.push("billing", "refunds", "discounts");
   if (perms.has("audit.area_content")) a.push("content");
   return a;

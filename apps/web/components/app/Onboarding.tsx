@@ -1,9 +1,10 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import { PathName } from "@/components/PathName";
 import { useEffect, useState, useTransition } from "react";
 import { SAMPLE_KEPT } from "@/components/GuestHandoff";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
@@ -12,7 +13,7 @@ import { FOCUSES, GOALS, focusOpen, type OnboardingInput } from "@/lib/onboardin
 import { DEFAULT_REMINDER } from "@/lib/reminder";
 import { play } from "@/lib/sound";
 import { saveOnboarding } from "@/app/[locale]/onboarding/actions";
-import { CATALOG, pathArtUrl } from "@/lib/catalog-list";
+import { CATALOG, localPathName, pathArtUrl } from "@/lib/catalog-list";
 
 type Goal = (typeof GOALS)[number];
 type Focus = (typeof FOCUSES)[number];
@@ -24,6 +25,7 @@ const FOCUS_NAME: Record<Focus, string> = { forms: "Forms That Flow", hier: "Vis
 /** `playable`: ids of the paths that have lessons (the rest show as Coming soon), passed in so no content ships to the browser. */
 export function Onboarding({ playable }: { playable: string[] }) {
   const t = useTranslations("onboarding");
+  const locale = useLocale();
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [goal, setGoal] = useState<Goal | null>(null);
@@ -127,7 +129,7 @@ export function Onboarding({ playable }: { playable: string[] }) {
                     return (
                       <button key={p.id} type="button" role="radio" aria-checked={on} aria-disabled={!open} disabled={!open} className={`choice press sm${on ? " is-selected" : ""}`} onClick={() => { setPathChoice(p.id); play("select-snap"); }}>
                         <span className="ob-ico"><img src={pathArtUrl(p.id)} alt="" /></span>
-                        <span className="grow ob-opt-t"><bdi>{p.name}</bdi>{!open ? <small>{t("soon")}</small> : null}</span>
+                        <span className="grow ob-opt-t"><PathName name={localPathName(p.id, locale)} />{!open ? <small>{t("soon")}</small> : null}</span>
                         <span className={`radio${on ? " is-on" : ""}`} aria-hidden="true" style={{ minBlockSize: 0 }}><span className="dot" /></span>
                       </button>
                     );

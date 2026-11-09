@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { getLocale, getTranslations } from "next-intl/server";
 import { goalDaysOf } from "@/lib/progress";
 import { Link } from "@/i18n/navigation";
@@ -6,7 +7,7 @@ import { content, type Locale } from "@uxgate/content";
 import { weekGoalProgress } from "@/lib/freeze";
 import { learningRules } from "@/lib/app-config";
 import { badgeOf } from "@/lib/skill-state";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { startOfDay, weekdayName } from "@/lib/week";
 import type { Learner } from "@/lib/server/learner";
 import { Week } from "./Goal";
@@ -133,8 +134,8 @@ export async function SkillsMain({ me }: { me: Learner }) {
         const n = { kept: 0, shown: 0, practiced: 0, none: 0 };
         for (const s of units.flatMap((u) => u.skills)) n[stOf(s.id)]++;
         return (
-          <section key={pid} className="ph-page" aria-label={catalogEntry(pid)?.name}>
-            <div><p className="t-over"><bdi>{catalogEntry(pid)?.name ?? pid}</bdi></p></div>
+          <section key={pid} className="ph-page" aria-label={localPathName(pid, locale)}>
+            <div><p className="t-over"><PathName name={localPathName(pid, locale) ?? ""} /></p></div>
             <div className="sk-totals" role="group" aria-label={t("totalsAria", n)}>
               {(["kept", "shown", "practiced", "none"] as const).map((k) => n[k] ? <Chip key={k} st={k} text={`${n[k]} · ${t(k)}`} /> : null)}
             </div>
@@ -179,8 +180,8 @@ export async function BadgesMain({ me }: { me: Learner }) {
         const all = units.flatMap((u) => u.skills);
         const shown = all.filter((s) => { const st = me.skillStates.get(s.id)?.state; return st === "shown" || st === "kept"; }).length;
         return (
-          <section key={pid} className="ph-page" aria-label={catalogEntry(pid)?.name}>
-            <h2 className="t-h2"><bdi>{catalogEntry(pid)?.name ?? pid}</bdi></h2>
+          <section key={pid} className="ph-page" aria-label={localPathName(pid, locale)}>
+            <h2 className="t-h2"><PathName name={localPathName(pid, locale) ?? ""} /></h2>
             <p className="t-small ink-2">{t("count", { n: shown, total: all.length })}</p>
             {units.map((u, i) => (
               <div key={u.id} className="ph-page">

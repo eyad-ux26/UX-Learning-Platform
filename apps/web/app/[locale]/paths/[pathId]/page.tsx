@@ -1,3 +1,5 @@
+import { PathName } from "@/components/PathName";
+import { localPathName } from "@/lib/catalog-list";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -30,13 +32,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!p) return {};
   const t = await getTranslations({ locale, namespace: "pathpage" });
   const sub = p.sub[locale as Locale];
-  const description = isOpen(p) ? sub : t("metaSoon", { name: p.name, sub });
+  const nm = localPathName(p.id, locale);
+  const description = isOpen(p) ? sub : t("metaSoon", { name: nm, sub });
   return {
     metadataBase: new URL(SITE_URL),
-    title: t("metaTitle", { name: p.name }),
+    title: t("metaTitle", { name: nm }),
     description,
     alternates: pageAlternates(locale, `/paths/${p.slug}`),
-    openGraph: { title: p.name, description, images: [artUrl(p)], locale: locale === "ar" ? "ar_EG" : "en_US", type: "website" },
+    openGraph: { title: nm, description, images: [artUrl(p)], locale: locale === "ar" ? "ar_EG" : "en_US", type: "website" },
   };
 }
 
@@ -58,6 +61,7 @@ export default async function PathPage({ params }: Params) {
 async function OpenPath({ p, locale }: { p: PublicPath; locale: Locale }) {
   const t = await getTranslations("pathpage");
   const f = pathFacts(p, locale);
+  const nm = localPathName(p.id, locale);
   const hyb = p.kind === "hybrid";
   const how = hyb
     ? [["ph-video", t("hHyb1")], ["ph-cursor-click", t("hHyb2")], ["ph-seal", t("hHyb3")]]
@@ -68,7 +72,7 @@ async function OpenPath({ p, locale }: { p: PublicPath; locale: Locale }) {
     <main className="pub-main">
       <section className="pp-hero pub-hero">
         <div className="pub-hero-top">
-          <p className="crumb"><Link href="/paths">{t("paths")}</Link><span className="ph ph-caret flip" aria-hidden="true" /><span className="ltr">{p.name}</span></p>
+          <p className="crumb"><Link href="/paths">{t("paths")}</Link><span className="ph ph-caret flip" aria-hidden="true" /><PathName name={nm} /></p>
           <div className="pp-facts">
             <span className={`kind${hyb ? " kind-hybrid" : ""}`}><span className={`ph ${hyb ? "ph-video" : "ph-cursor-click"}`} aria-hidden="true" />{hyb ? t("hybrid") : t("interactive")}</span>
             <span className="kind">{t("unitsN", { n: f.units })}</span>
@@ -76,11 +80,11 @@ async function OpenPath({ p, locale }: { p: PublicPath; locale: Locale }) {
             <span className="kind">{t("skillsN", { n: f.skills })}</span>
             <span className="kind kind-free">{t("free1")}</span>
           </div>
-          <h1 className="ltr pub-start">{p.name}</h1>
+          <h1 className="pub-start"><PathName name={nm} /></h1>
           <p className="lead">{p.sub[locale]}</p>
         </div>
         <div className="pp-art pub-hero-art">
-          <span className="frame-label pub-art-label pub-only-desk" aria-hidden="true"><span className="ph ph-frame-corners" /><span className="ltr">{p.name}</span></span>
+          <span className="frame-label pub-art-label pub-only-desk" aria-hidden="true"><span className="ph ph-frame-corners" /><PathName name={nm} /></span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={artUrl(p)} alt="" width={300} height={300} fetchPriority="high" decoding="async" />
         </div>
@@ -168,14 +172,15 @@ async function OpenPath({ p, locale }: { p: PublicPath; locale: Locale }) {
 
 async function SoonPath({ p, locale }: { p: PublicPath; locale: Locale }) {
   const t = await getTranslations("pathpage");
+  const nm = localPathName(p.id, locale);
   const ready = publicPathsInOrder().filter((x) => isOpen(x));
   return (
     <main className="pub-main">
       <section className="pp-hero">
         <div className="pub-stack">
-          <p className="crumb"><Link href="/paths">{t("paths")}</Link><span className="ph ph-caret flip" aria-hidden="true" /><span className="ltr">{p.name}</span></p>
+          <p className="crumb"><Link href="/paths">{t("paths")}</Link><span className="ph ph-caret flip" aria-hidden="true" /><PathName name={nm} /></p>
           <div className="pp-facts"><span className="kind kind-soon"><span className="ph ph-hourglass" aria-hidden="true" />{t("soon")}</span></div>
-          <h1 className="ltr pub-start">{p.name}</h1>
+          <h1 className="pub-start"><PathName name={nm} /></h1>
           <p className="lead">{p.sub[locale]}</p>
           <p className="pg-note pub-soon-note"><span className="ph ph-info" aria-hidden="true" /><span>{t("soonBody")}</span></p>
         </div>

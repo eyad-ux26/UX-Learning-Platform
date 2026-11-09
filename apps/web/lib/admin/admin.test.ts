@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
-const { isAutomatic, languageOf, categoryOf, stripQuoted } = await import("./inbound");
+const { isAutomatic, languageOf, categoryOf, stripQuoted, senderVerified, trustedAuthResults } = await import("./inbound");
 const { refundRule, needsSecondPerson } = await import("./data/refunds");
 const { codeState } = await import("./data/billing");
 const { fillPlaceholders, ticketIdIn, subjectWithId } = await import("./data/support");
@@ -119,5 +119,44 @@ describe("menu and masking", () => {
   it("masks emails", () => {
     expect(maskEmail("sara.ahmed@gmail.com")).not.toContain("sara.ahmed");
     expect(maskEmail(null)).toBe("");
+  });
+});
+
+describe("audit masking", async () => {
+  const { maskEmailsIn, maskJson } = await import("./mask");
+  it("masks emails inside text and JSON, and IPs", () => {
+    expect(maskEmailsIn("Sign-in link to sara.ahmed@gmail.com")).not.toContain("sara.ahmed");
+    const j = maskJson({ email: "sara.ahmed@gmail.com", ip: "41.33.12.9", n: 3, list: ["x@y.com"] }) as Record<string, unknown>;
+    expect(String(j.email)).not.toContain("sara.ahmed");
+    expect(String(j.ip)).not.toBe("41.33.12.9");
+    expect(j.n).toBe(3);
+  });
+});
+
+describe("support sender verification", () => {
+  it("trusts DMARC, or DKIM or SPF for the From domain, and nothing else", () => {
+    expect(senderVerified("mx.cloudflare.net; dkim=pass header.d=gmail.com header.s=x; spf=pass smtp.mailfrom=sara@gmail.com; dmarc=pass header.from=gmail.com", "sara@gmail.com")).toBe(true);
+    expect(senderVerified("mx.cloudflare.net; dkim=pass header.d=mail.example.org; spf=none", "a@example.org")).toBe(false);
+    expect(senderVerified("mx.cloudflare.net; dkim=pass header.d=example.org", "a@mail.example.org")).toBe(true);
+    expect(senderVerified("mx.cloudflare.net; dkim=pass header.d=evil.com; spf=pass smtp.mailfrom=x@evil.com; dmarc=fail header.from=gmail.com", "sara@gmail.com")).toBe(false);
+    expect(senderVerified("mx.cloudflare.net; spf=softfail smtp.mailfrom=gmail.com", "sara@gmail.com")).toBe(false);
+    expect(senderVerified(null, "sara@gmail.com")).toBe(false);
+    expect(senderVerified("mx.cloudflare.net; dmarc=pass", "sara@gmail.com")).toBe(false);
+    expect(senderVerified("x; dmarc=pass header.from=gmail.com", "sara@gmail.com")).toBe(false);
+  });
+  it("reads only the results Cloudflare wrote, never ones the sender added", () => {
+    const forged = { key: "Authentication-Results", value: "x; dmarc=pass header.from=gmail.com" };
+    const cf = { key: "Authentication-Results", value: "mx.cloudflare.net;\r\n dkim=fail header.d=evil.com; dmarc=fail header.from=gmail.com" };
+    expect(trustedAuthResults([forged])).toBeNull();
+    expect(trustedAuthResults([{ key: "Authentication-Results", value: "mx.cloudflare.net.evil.com; dmarc=pass header.from=gmail.com" }])).toBeNull();
+    expect(trustedAuthResults([])).toBeNull();
+    expect(trustedAuthResults(undefined)).toBeNull();
+    // A forged header above or below Cloudflare's own does not win.
+    expect(trustedAuthResults([forged, cf])).toBe("mx.cloudflare.net; dkim=fail header.d=evil.com; dmarc=fail header.from=gmail.com");
+    expect(senderVerified(trustedAuthResults([forged, cf]), "sara@gmail.com")).toBe(false);
+    expect(trustedAuthResults([cf, forged])?.startsWith("mx.cloudflare.net;")).toBe(true);
+    const arc = { key: "ARC-Authentication-Results", value: "i=1; mx.cloudflare.net; dkim=pass header.d=gmail.com; dmarc=pass header.from=gmail.com" };
+    expect(senderVerified(trustedAuthResults([forged, arc]), "sara@gmail.com")).toBe(true);
+    expect(trustedAuthResults([{ key: "ARC-Authentication-Results", value: "i=1; x; dmarc=pass header.from=gmail.com" }])).toBeNull();
   });
 });

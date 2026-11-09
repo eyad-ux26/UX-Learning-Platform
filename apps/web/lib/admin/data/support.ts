@@ -13,13 +13,15 @@ export type Ticket = {
   status: TicketStatus; assignee_id: string | null; tags: string[]; language: "en" | "ar"; link_type: string | null; link_id: string | null;
   created_at: string; updated_at: string; last_message_at: string; first_reply_due: string | null; resolve_due: string | null;
   first_replied_at: string | null; resolved_at: string | null; satisfaction: string | null; satisfaction_comment: string | null;
+  /** Email whose sender domain did not verify it (DKIM, SPF, DMARC): not linked to a learner, never joined to a ticket. */
+  sender_unverified?: boolean;
 };
 export type Message = {
   id: string; ticket_id: number; kind: "inbound" | "reply" | "note" | "event"; author_id: string | null; from_email: string | null; body: string;
   language: string | null; mentions: string[]; delivery: string | null; attachments: number; created_at: string;
 };
 
-export const TICKET_COLS = "id, user_id, email, name, subject, channel, category, priority, status, assignee_id, tags, language, link_type, link_id, created_at, updated_at, last_message_at, first_reply_due, resolve_due, first_replied_at, resolved_at, satisfaction, satisfaction_comment";
+export const TICKET_COLS = "id, user_id, email, name, subject, channel, category, priority, status, assignee_id, tags, language, link_type, link_id, created_at, updated_at, last_message_at, first_reply_due, resolve_due, first_replied_at, resolved_at, satisfaction, satisfaction_comment, sender_unverified";
 
 export const STATUS_LABEL: Record<TicketStatus, string> = {
   new: "New", open: "Open", waiting_learner: "Waiting on learner", waiting_team: "Waiting on team", resolved: "Resolved", closed: "Closed",

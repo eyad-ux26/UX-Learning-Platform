@@ -5,7 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Logo } from "@/components/Logo";
 import { CertArt } from "@/components/app/CertArt";
 import { Link } from "@/i18n/navigation";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { certStats } from "@/lib/certificate-stats";
 import { certId, ogUrl, publicUrl } from "@/lib/certificate-share";
 import { publicCertificate, revokedCertificate } from "@/lib/server/certificates";
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!c || (locale !== "en" && locale !== "ar")) return { title: "UXGate", robots: { index: false, follow: false } };
   const t = await getTranslations({ locale, namespace: "cert" });
   const origin = await originOf();
-  const pathName = catalogEntry(c.pathId)?.name ?? c.pathId;
+  const pathName = localPathName(c.pathId, locale);
   const title = t("ogTitle", { name: c.name, path: pathName });
   const image = ogUrl(origin, locale, c.code, c.changedAt);
   return {
@@ -50,7 +50,7 @@ export default async function PublicCertificate({ params }: { params: Promise<{ 
   }
   if (!c || (locale !== "en" && locale !== "ar")) notFound();
   const t = await getTranslations("cert");
-  const pathName = catalogEntry(c.pathId)?.name ?? c.pathId;
+  const pathName = localPathName(c.pathId, locale);
   const s = certStats(c.pathId);
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(c.issuedAt));
   const art = { name: c.name, pathName, shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: c.code, pathId: c.pathId, locale } as const;

@@ -14,6 +14,7 @@ Run each file in the Supabase SQL editor, one at a time, and wait for "Success" 
 | `supabase/migrations/0045_admin_learners_billing.sql` | Learner search, Pro for free (comp) with limits, certificate revoke and re-issue, refund tracking on payments, discount code limits, billing event lookup. |
 | `supabase/migrations/0046_admin_support.sql` | Support inbox: settings (SLA per priority, business hours, days off), tickets, messages, macros, round-robin assignment, tickets from refund requests and lesson reports, who decided an appeal. |
 | `supabase/migrations/0047_admin_dashboard.sql` | Read-only dashboard numbers: key numbers, money by day, the funnel, active learners per path. |
+| `supabase/migrations/0048_admin_hardening.sql` | Security fixes from QA: custom roles are saved only through `admin_save_role` (a role can hold only permissions its editor holds, and nobody edits a role they hold); invites and role changes can only hand out what the inviter holds; a safe first panel session; sender verification fields on support email. Run it after 0047. |
 
 Numbers 0044 to 0059 are Phase 1; Phase 2 uses 0060 and up. Each file is safe to read before running; none deletes learner data.
 
@@ -58,6 +59,14 @@ with `[#1234]` in the subject from the ticket's own email joins that ticket; any
 bounces and our own mail are skipped. If the app is down and no forward is set, the sender gets a "try again later" bounce
 instead of the mail being lost.
 
+**Sender check.** The From line of an email can be forged. The handler passes on only the authentication results that
+Cloudflare's mail server wrote (an `Authentication-Results` or `ARC-Authentication-Results` header from `mx.cloudflare.net`;
+any other such header may come from the sender and is ignored). The email counts as verified only when DMARC passes for
+the From domain, or DKIM or SPF passes for it. With no Cloudflare results, every email is unverified. Each email logs
+which authentication headers arrived (Workers logs, `support inbound: auth headers`), to confirm what Cloudflare adds. An
+unverified email still opens a ticket, marked "Sender not verified", but it never joins an existing ticket and is not
+linked to a learner account. Check who sent it before acting on it.
+
 ## 4. Break-glass
 
 - **A member lost their authenticator app.** Supabase dashboard > Authentication > Users > the member > delete their MFA
@@ -67,7 +76,10 @@ instead of the mail being lost.
   MFA factor as above. The founding membership itself cannot be removed, so access returns as soon as sign-in works.
 - **Someone must be removed now.** Team and roles > the member > Suspend. Their admin sessions end on the next request.
   For a super admin other than the founding one, remove super admin from the Super admins page (a fresh code is asked).
-- **Sign-in is paused for an email** after repeated wrong codes: it unblocks by itself after 15 minutes.
+- **Sign-in is paused for an email** after repeated wrong codes: it unblocks by itself after 15 minutes. Wrong codes in the
+  "confirm with a fresh code" box (role changes, invites, exports, deletes, refund limit) count toward the same pause.
+- **A team member's email must change.** The panel refuses it for team accounts. An owner changes it in the Supabase
+  dashboard (Authentication > Users).
 
 ## 5. Routes the panel adds outside /admin
 

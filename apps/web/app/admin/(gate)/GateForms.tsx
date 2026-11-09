@@ -8,11 +8,13 @@ const Err = ({ s }: { s: GateResult }) => (s && !s.ok && s.error ? <p className=
 export function SignInForms({ next }: { next: string }) {
   const [pw, pwAction, pwPending] = useActionState(adminPasswordSignIn, null);
   const [g, gAction, gPending] = useActionState(adminGoogleSignIn, null);
+  // Kept in state so a wrong password does not clear the typed email (React resets uncontrolled fields after an action).
+  const [email, setEmail] = useState("");
   return (
     <div className="a-stack">
       <form action={pwAction} className="a-stack">
         <input type="hidden" name="next" value={next} />
-        <div className="a-field"><label htmlFor="em">Email</label><input id="em" name="email" type="email" className="a-in" autoComplete="username" required /></div>
+        <div className="a-field"><label htmlFor="em">Email</label><input id="em" name="email" type="email" className="a-in" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
         <div className="a-field"><label htmlFor="pw">Password</label><input id="pw" name="password" type="password" className="a-in" autoComplete="current-password" required /></div>
         <Err s={pw} />
         <button className="a-btn pri" type="submit" disabled={pwPending} aria-busy={pwPending}>{pwPending ? "Signing in…" : "Continue"}</button>

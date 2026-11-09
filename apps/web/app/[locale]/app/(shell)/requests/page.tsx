@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { AccountFrame } from "@/components/account/AccountFrame";
@@ -49,7 +50,7 @@ export default async function RequestsPage({ params }: { params: Promise<{ local
                 <li key={v.id}>
                   <Link href={`/app/requests/${v.id}`} className={`req${v.isNew ? " is-new" : ""}`}>
                     <span className="req-top"><span className="grow">
-                      <span className="path-lbl"><img src={pathArt(v.pathId)} alt="" /><span><span className="ltr">{v.pathTitle}</span> · {t("where", { unit: v.unitNo, step: v.stepNo })}</span></span>
+                      <span className="path-lbl"><img src={pathArt(v.pathId)} alt="" /><span><PathName name={v.pathTitle} /> · {t("where", { unit: v.unitNo, step: v.stepNo })}</span></span>
                       <b>{v.question || v.lessonId}</b>
                     </span></span>
                     <p className="req-why"><b>{t("yourReason")}</b> {t(`r_${v.reason}`)}</p>

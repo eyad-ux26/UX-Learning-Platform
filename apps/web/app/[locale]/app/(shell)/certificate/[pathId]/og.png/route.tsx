@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { certStats } from "@/lib/certificate-stats";
 import { requireLearner } from "@/lib/server/learner";
 import { ensureCertificates } from "@/lib/server/certificates";
@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ locale: 
   if (!cert) notFound();
   const s = certStats(pathId);
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(cert.issuedAt));
-  const res = await renderCertPng({ name: me.progress.displayName ?? "", pathName: catalogEntry(pathId)?.name ?? pathId, shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: cert.code, pathId, locale }, new URL(req.url).origin);
+  const res = await renderCertPng({ name: me.progress.displayName ?? "", pathName: localPathName(pathId, locale), shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: cert.code, pathId, locale }, new URL(req.url).origin);
   res.headers.set("Cache-Control", "private, no-store");
   res.headers.set("Content-Disposition", `attachment; filename="uxgate-certificate-${pathId}.png"`);
   return res;

@@ -86,7 +86,7 @@ export default async function InboxPage({ searchParams }: { searchParams: Promis
             <tbody>{rows.map((t) => (
               <tr key={t.id}>
                 <td style={{ maxWidth: 380 }}><Link href={`/admin/support/${t.id}`} className="w7" dir="auto" style={{ display: "block" }}>{t.subject}</Link>
-                  <span className="t-xs ink-3">#{t.id} · {CHANNEL_LABEL[t.channel]} · {t.language === "ar" ? "Arabic" : "English"}{t.priority !== "normal" ? ` · ${t.priority}` : ""} </span><Sla t={t} warnMinutes={settings?.warn_before_minutes ?? 120} /></td>
+                  {t.sender_unverified ? <St tone="bad">Sender not verified</St> : null} <span className="t-xs ink-3">#{t.id} · {CHANNEL_LABEL[t.channel]} · {t.language === "ar" ? "Arabic" : "English"}{t.priority !== "normal" ? ` · ${t.priority}` : ""} </span><Sla t={t} warnMinutes={settings?.warn_before_minutes ?? 120} /></td>
                 <td>{t.name ?? maskEmail(t.email)}<span className="t-xs ink-3" style={{ display: "block" }}>{maskEmail(t.email)}</span></td>
                 <td>{CATEGORY_LABEL[t.category]}</td>
                 <td><St tone={TONE[t.status] ?? "off"}>{STATUS_LABEL[t.status]}</St></td>

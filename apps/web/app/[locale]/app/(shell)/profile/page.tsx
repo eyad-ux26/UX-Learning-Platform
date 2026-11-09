@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { localPathName } from "@/lib/catalog";
 import { Shell } from "@/components/app/Shell";
 import { ProfileForm } from "@/components/app/ProfileForm";
 import { ProfileMain } from "@/components/app/ProfileMain";
@@ -36,7 +37,7 @@ export default async function ProfilePage({ params, searchParams }: { params: Pr
       <ProfileTabs board={boardOpen} />
       <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} since={since} />
       <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
-      <ProfilePlan pro={me.pro} pathTitle={path.title.en} pct={view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0} />
+      <ProfilePlan pro={me.pro} pathTitle={localPathName(path.id, locale)} pct={view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0} />
       {offer ? <PaywallSheet kind="cert" prices={{ month: formatMoney(offer.month.amount, offer.month.currency, locale as "en" | "ar"), year: formatMoney(offer.year.amount, offer.year.currency, locale as "en" | "ar") }} /> : null}
     </Shell>
   );

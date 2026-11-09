@@ -5,7 +5,7 @@ import ar from "../../messages/ar.json";
 import { headers } from "next/headers";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { certStats } from "@/lib/certificate-stats";
 import { certId, postText, publicUrl } from "@/lib/certificate-share";
 import type { Learner } from "@/lib/server/learner";
@@ -21,7 +21,7 @@ export async function CertificateMain({ me, cert, nameConfirmed }: { me: Learner
   const locale = (await getLocale()) as Locale;
   const h = await headers();
   const origin = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("x-forwarded-host") ?? h.get("host") ?? "uxgate.org"}`;
-  const pathName = catalogEntry(cert.pathId)?.name ?? cert.pathId;
+  const pathName = localPathName(cert.pathId, locale);
   const s = certStats(cert.pathId);
   const name = me.progress.displayName ?? "";
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(cert.issuedAt));
@@ -30,7 +30,7 @@ export async function CertificateMain({ me, cert, nameConfirmed }: { me: Learner
   const url = publicUrl(origin, locale, cert.code);
   const post = (loc: "en" | "ar") => {
     const tt = createTranslator({ locale: loc, messages: loc === "en" ? en : ar, namespace: "cert" } as never) as unknown as (k: string, v?: Record<string, unknown>) => string;
-    return [1, 2, 3].map((n) => postText({ intro: tt(n === 1 ? "postIntro" : `postIntro${n}`, { path: pathName, skills: s.skills, checks: s.checks }), seeIt: tt("postSee"), tags: tt("postTags") }, url));
+    return [1, 2, 3].map((n) => postText({ intro: tt(n === 1 ? "postIntro" : `postIntro${n}`, { path: localPathName(cert.pathId, loc), skills: s.skills, checks: s.checks }), seeIt: tt("postSee"), tags: tt("postTags") }, url));
   };
   const posts = { en: post("en"), ar: post("ar") };
   return (

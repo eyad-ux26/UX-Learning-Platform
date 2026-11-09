@@ -1,5 +1,6 @@
 // "My requests": a review request from a lesson, described for the learner. Pure, so it is tested against real content.
-import { getPath, getUnit, getCast } from "@uxgate/content";
+import { localPathName } from "./catalog-list";
+import { getUnit, getCast } from "@uxgate/content";
 import { getLessonVersion } from "./server/content";
 
 export type RequestRow = {
@@ -30,7 +31,6 @@ const KEYS = { en: ["A", "B", "C", "D", "E", "F"], ar: ["أ", "ب", "ج", "د", 
 export async function describeRequest(r: RequestRow, locale: L): Promise<RequestView> {
   const lesson = await getLessonVersion(r.lesson_id);
   const unit = lesson ? getUnit(lesson.unitId) : undefined;
-  const path = lesson ? getPath(lesson.pathId) : undefined;
   const steps = lesson?.body.steps ?? [];
   const idx = steps.findIndex((s) => s.id === r.step_id);
   const step = idx >= 0 ? (steps[idx] as unknown as Record<string, unknown>) : null;
@@ -43,7 +43,7 @@ export async function describeRequest(r: RequestRow, locale: L): Promise<Request
   const reply = typeof r.reply === "string" ? r.reply : r.reply ? r.reply[locale] ?? r.reply.en ?? "" : "";
   return {
     id: r.id, status: statusOf(r.status), lessonId: r.lesson_id,
-    pathId: lesson?.pathId ?? r.lesson_id.split("-")[0], pathTitle: txt(path?.title, "en") || (lesson?.pathId ?? ""),
+    pathId: lesson?.pathId ?? r.lesson_id.split("-")[0], pathTitle: localPathName(lesson?.pathId ?? r.lesson_id.split("-")[0], locale),
     unitNo: unitNo || (unit ? 1 : 0), lessonNo, stepNo: idx + 1,
     question: txt(step?.prompt, locale), scenario: txt(step?.scenario, locale),
     speaker: cast ? { id: cast.id, name: locale === "ar" ? cast.ar : cast.en, role: locale === "ar" ? cast.role_ar : cast.role_en } : null,

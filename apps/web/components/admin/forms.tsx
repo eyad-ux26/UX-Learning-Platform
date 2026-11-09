@@ -116,6 +116,7 @@ export function ActionForm({ action, children, className, reset = true, refresh 
   return (
     <form ref={ref} action={formAction} className={className}>
       {children(pending)}
+      <CodeField show={!!(state && !state.ok && state.reauth)} />
       <Feedback state={state} />
     </form>
   );

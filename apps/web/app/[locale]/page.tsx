@@ -1,3 +1,5 @@
+import { PathName } from "@/components/PathName";
+import { localPathName } from "@/lib/catalog-list";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthErrorRedirect } from "@/components/AuthErrorRedirect";
 import { LandingPreview } from "@/components/LandingPreview";
@@ -18,9 +20,9 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
     { icon: "ph-seal", t: t("how3t"), b: t("how3b") },
   ];
   const paths = [
-    { slug: "forms-that-flow", name: "Forms That Flow", sub: t("forms"), img: "path-forms", isNew: true },
-    { slug: "visual-hierarchy-in-action", name: "Visual Hierarchy in Action", sub: t("hier"), img: "path-hierarchy", isNew: false },
-    { slug: "find-and-fix-usability", name: "Find and Fix Usability", sub: t("usab"), img: "path-usability", isNew: false },
+    { slug: "forms-that-flow", id: "P01", sub: t("forms"), img: "path-forms", isNew: true },
+    { slug: "visual-hierarchy-in-action", id: "P10", sub: t("hier"), img: "path-hierarchy", isNew: false },
+    { slug: "find-and-fix-usability", id: "P02", sub: t("usab"), img: "path-usability", isNew: false },
   ];
 
   return (
@@ -88,13 +90,13 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
           <h2 className="t-h2">{t("pathsTitle")}</h2>
           <div className="paths-grid">
             {paths.map((p) => (
-              <Link key={p.name} href={`/paths/${p.slug}`} className="card press path-card">
+              <Link key={p.id} href={`/paths/${p.slug}`} className="card press path-card">
                 <span className="path-art">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/ill/uxgate-ill-${p.img}.png`} alt="" width={84} height={84} />
                 </span>
                 <span className="path-body">
-                  <span className="t-label ltr path-name">{p.name}</span>
+                  <span className="t-label path-name"><PathName name={localPathName(p.id, locale)} /></span>
                   <span className="t-small ink-2">{p.sub}</span>
                   <span className="path-tags"><span className="tag">{t("units")}</span><span className="tag tag-free">{t("unitFree")}</span></span>
                 </span>
