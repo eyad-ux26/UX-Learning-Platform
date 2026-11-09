@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { getTranslations } from "next-intl/server";
 import { certId } from "@/lib/certificate-share";
 
@@ -26,7 +27,7 @@ export async function CertArt({ d, size = "page" }: { d: CertArtData; size?: "pa
         <span className="cx-lead">{t("certifies")}</span>
         <span className="cx-namebox"><i /><i /><i /><i /><span className="cx-name"><bdi>{d.name}</bdi></span></span>
         <span className="cx-lead">{t("showed")}</span>
-        <span className="cx-path"><bdi>{d.pathName}</bdi></span>
+        <span className="cx-path"><PathName name={d.pathName} /></span>
         <span className="cx-how">{t("how", { count: d.checks })}</span>
         <div className="cx-foot">
           <span><small>{t("issued")}</small><b>{d.issued}</b></span>

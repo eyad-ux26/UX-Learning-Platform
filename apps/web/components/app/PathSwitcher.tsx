@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import { PathName } from "@/components/PathName";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
@@ -28,7 +29,7 @@ export function PathSwitcher({ chips, currentId, sub }: { chips: (Chip & { where
   }, [open]);
 
   if (chips.length < 2) {
-    return <div className="sw-name"><span className="t-label" style={{ fontSize: 18 }}><bdi>{here?.name}</bdi></span>{sub ? <span className="t-small ink-3 sub-clamp" style={{ fontSize: 13 }}>{sub}</span> : null}</div>;
+    return <div className="sw-name"><span className="t-label" style={{ fontSize: 18 }}><PathName name={here?.name ?? ""} /></span>{sub ? <span className="t-small ink-3 sub-clamp" style={{ fontSize: 13 }}>{sub}</span> : null}</div>;
   }
   const pick = (c: Chip) => {
     setOpen(false);
@@ -45,7 +46,7 @@ export function PathSwitcher({ chips, currentId, sub }: { chips: (Chip & { where
       <button type="button" className={`sw-btn press${open ? " is-open" : ""}`} aria-haspopup="true" aria-expanded={open} aria-label={t("switchLabel", { name: here?.name ?? "" })} onClick={() => setOpen(!open)} disabled={pending} aria-busy={pending || undefined}>
         
         {here ? <img src={here.art} alt="" /> : null}
-        <span className="sw-name"><span className="t-label" style={{ fontSize: 17 }}><bdi>{here?.name}</bdi></span>{sub ? <small>{sub}</small> : null}</span>
+        <span className="sw-name"><span className="t-label" style={{ fontSize: 17 }}><PathName name={here?.name ?? ""} /></span>{sub ? <small>{sub}</small> : null}</span>
         <span className="ph ph-caret caret" aria-hidden="true" />
       </button>
       {open ? (
@@ -56,7 +57,7 @@ export function PathSwitcher({ chips, currentId, sub }: { chips: (Chip & { where
             {chips.map((c) => (
               <button key={c.id} type="button" className={`sw-row${c.id === currentId ? " is-on" : ""}`} aria-current={c.id === currentId ? "true" : undefined} onClick={() => pick(c)}>
                 
-                <img src={c.art} alt="" /><span className="grow"><b><bdi>{c.name}</bdi></b><small className="t-small ink-3">{c.where}</small></span>
+                <img src={c.art} alt="" /><span className="grow"><b><PathName name={c.name ?? ""} /></b><small className="t-small ink-3">{c.where}</small></span>
                 {c.id === currentId ? <span className="ph ph-check-circle-fill" aria-hidden="true" /> : null}
               </button>
             ))}

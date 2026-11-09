@@ -1,4 +1,5 @@
 import "server-only";
+import { localPathName } from "@/lib/catalog-list";
 import { content, getPath } from "@uxgate/content";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasServiceKey } from "@/lib/supabase/env";
@@ -26,11 +27,11 @@ export async function sendWelcomeOnce(userId: string, email: string | null | und
     const path = pathId ? getPath(pathId) : undefined;
     const unit = content.units.find((u) => u.pathId === pathId);
     await notify(userId, "welcome", {}, "/app", { db, locale });
-    // Path names stay in English in both languages, as everywhere else in the app.
+    // The path name follows the email language (Arabic name on /ar, English otherwise).
     if (email && path && unit) {
       const base = `${siteOrigin()}/${locale}`;
       const mail = welcomeEmail({
-        locale, name: (prof.display_name as string | null) ?? null, pathTitle: path.title.en, unitTitle: unit.title[locale],
+        locale, name: (prof.display_name as string | null) ?? null, pathTitle: localPathName(path.id, locale), unitTitle: unit.title[locale],
         pathImg: pathArt(path.id), startHref: `${base}/app`, settingsHref: `${base}/app/settings/notifications`,
         time: prof.reminder_time ? reminderTimeLabel(prof.reminder_time as string, locale) : null,
       });

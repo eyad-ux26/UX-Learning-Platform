@@ -14,8 +14,8 @@ describe("regions and providers", () => {
     for (const c of ["SA", "AE", "JO", "MA", "US", "DE", "", null]) expect(providerFor(regionFor(c))).toBe("paddle");
   });
   it("Gulf, other Arab countries and the rest of the world", () => {
-    expect(["SA", "AE", "KW", "QA", "BH", "OM"].map(regionFor)).toEqual(Array(6).fill("gulf"));
-    expect(["JO", "LB", "MA", "TN", "IQ"].map(regionFor)).toEqual(Array(5).fill("arab"));
+    expect(["SA", "AE", "KW", "QA", "BH", "OM", "IQ"].map(regionFor)).toEqual(Array(7).fill("gulf")); // Iraq is priced with the Gulf
+    expect(["JO", "LB", "MA", "TN", "SY"].map(regionFor)).toEqual(Array(5).fill("arab"));
     expect(regionFor("fr")).toBe("world");
   });
 });

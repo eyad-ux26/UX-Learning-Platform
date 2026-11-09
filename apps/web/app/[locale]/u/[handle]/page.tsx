@@ -1,10 +1,11 @@
+import { PathName } from "@/components/PathName";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { content, type Locale } from "@uxgate/content";
 import { Logo } from "@/components/Logo";
 import { Link } from "@/i18n/navigation";
-import { catalogEntry } from "@/lib/catalog";
+import { localPathName } from "@/lib/catalog";
 import { HANDLE_RE, isShown } from "@/lib/certificate";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasSupabase } from "@/lib/supabase/env";
@@ -54,7 +55,7 @@ export default async function PublicPage({ params }: { params: Promise<{ locale:
       <p className="t-small ink-2">{t("by")}</p>
       {paths.length === 0 ? <p className="t-small ink-2">{t("empty")}</p> : paths.map((p) => (
         <section key={p.pid} className="card" style={{ padding: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-          <h2 className="t-h2"><bdi>{catalogEntry(p.pid)?.name ?? p.pid}</bdi></h2>
+          <h2 className="t-h2"><PathName name={localPathName(p.pid, locale) ?? ""} /></h2>
           <p className="t-over">{t("skillsShown")}</p>
           <ul style={{ paddingInlineStart: 18, display: "flex", flexDirection: "column", gap: 4 }}>{p.skills.map((s) => <li key={s.id} className="t-small">{s.title[loc]}</li>)}</ul>
           {p.last ? <p className="t-small ink-2">{t("on", { date: fmt.format(new Date(p.last)) })}</p> : null}

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import { PathName } from "@/components/PathName";
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -83,7 +84,7 @@ export function RailPaths({ paths }: { paths: RailPath[] }) {
           <div key={p.id} className="dk-path">
             <div className="dk-path-row">
               <Link href={`/app/path/${p.id}`} className={`dk-layer${p.current ? " is-on" : ""}`} aria-current={p.current ? "true" : undefined}>
-                <img src={p.art} alt="" style={{ inlineSize: 22, blockSize: 22, flex: "none" }} /><span className="ltr" style={{ flex: 1, minInlineSize: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
+                <img src={p.art} alt="" style={{ inlineSize: 22, blockSize: 22, flex: "none" }} /><span style={{ flex: 1, minInlineSize: 0, lineHeight: 1.35 }}><PathName name={p.name} /></span>
               </Link>
               <button type="button" className="dk-tog" aria-expanded={on} aria-controls={listId} aria-label={t("pathUnits", { name: p.name })} onClick={() => setOpen({ ...open, [p.id]: !on })}>
                 <span className="ph ph-caret-down" aria-hidden="true" />

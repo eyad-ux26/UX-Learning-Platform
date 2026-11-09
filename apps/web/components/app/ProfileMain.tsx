@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { PathName } from "@/components/PathName";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
-import { catalogEntry, pathArtUrl } from "@/lib/catalog";
+import { localPathName, pathArtUrl } from "@/lib/catalog";
 import { pathProgressCounts, pathSkills, isShown, totalsAcross } from "@/lib/certificate";
 import { buildPathView } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
@@ -29,7 +30,7 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
     const kept = skills.filter((k) => stateOf(k.id) === "kept").length;
     const shown = skills.filter((k) => isShown(stateOf(k.id))).length - kept;
     const practiced = skills.filter((k) => !isShown(stateOf(k.id)) && (stateOf(k.id) === "practiced" || me.practicedSkills.has(k.id))).length;
-    return { id, name: catalogEntry(id)?.name ?? id, pct, n: unit?.number ?? 1, total: v?.unitCount ?? 1, kept, shown, practiced, current: id === me.activePathId };
+    return { id, name: localPathName(id, locale), pct, n: unit?.number ?? 1, total: v?.unitCount ?? 1, kept, shown, practiced, current: id === me.activePathId };
   });
   return (
     <div className="ph-page">
@@ -49,7 +50,7 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
       <div className="pg-cards">
         {cards.map((c) => (
           <Link key={c.id} href={`/app/path/${c.id}`} className={`pp press${c.current ? " is-current" : ""}`} style={{ textDecoration: "none", color: "var(--ink)" }} aria-label={t("pathAria", { name: c.name, n: c.n, total: c.total, pct: c.pct, kept: c.kept, shown: c.shown, practiced: c.practiced })}>
-            <span className="pp-top"><img src={pathArtUrl(c.id)} alt="" /><span className="grow"><b><bdi>{c.name}</bdi></b><small>{t("where", { n: c.n, total: c.total, pct: c.pct })}</small></span>{c.current ? <span className="kind kind-current">{t("current")}</span> : null}</span>
+            <span className="pp-top"><img src={pathArtUrl(c.id)} alt="" /><span className="grow"><b><PathName name={c.name ?? ""} /></b><small>{t("where", { n: c.n, total: c.total, pct: c.pct })}</small></span>{c.current ? <span className="kind kind-current">{t("current")}</span> : null}</span>
             <span className="progress progress-sm" aria-hidden="true"><i style={{ inlineSize: `${c.pct}%` }} /></span>
             {c.kept + c.shown + c.practiced > 0 ? (
               <span className="pp-chips" aria-hidden="true">
@@ -70,7 +71,7 @@ export async function ProfileMain({ me, certificates, boardOpen, since = null }:
           <Link key={id} href={cert ? `/app/certificate/${id}` : `/app/skills`} className="card row-card press">
             
             <img src="/ill/uxgate-ill-certificate.png" alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none", opacity: cert ? 1 : 0.4 }} />
-            <span className="grow"><b><bdi>{catalogEntry(id)?.name ?? id}</bdi></b><span className="t-small ink-2">{cert ? `${t("certReady")} · ${fmt.format(new Date(cert.issuedAt))}` : t("certProgress", { shown: c.shown, total: c.total })}</span></span>
+            <span className="grow"><b><PathName name={localPathName(id, locale) ?? ""} /></b><span className="t-small ink-2">{cert ? `${t("certReady")} · ${fmt.format(new Date(cert.issuedAt))}` : t("certProgress", { shown: c.shown, total: c.total })}</span></span>
             <span className="ph ph-arrow flip" aria-hidden="true" />
           </Link>
         );

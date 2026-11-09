@@ -3,7 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { Logo } from "@/components/Logo";
 import type { Locale } from "@uxgate/content";
-import { catalogEntry, pathArtUrl } from "@/lib/catalog";
+import { localPathName, pathArtUrl } from "@/lib/catalog";
 import { buildPathView } from "@/lib/learning";
 import type { Learner } from "@/lib/server/learner";
 import { appItems } from "@/lib/nav";
@@ -21,7 +21,7 @@ export async function Shell({ me, panel, children }: { me: Learner; panel?: Reac
     const v = buildPathView(id, me.progress, me.practicedSkills);
     const cur = v?.units.find((u) => u.lessons.some((l) => l.state !== "done"));
     return {
-      id, name: catalogEntry(id)?.name ?? id, art: pathArtUrl(id), current: id === me.activePathId,
+      id, name: localPathName(id, locale), art: pathArtUrl(id), current: id === me.activePathId,
       units: (v?.units ?? []).map((u) => ({
         id: u.unit.id, title: u.unit.title[locale],
         state: u.lessons.length > 0 && u.lessons.every((l) => l.state === "done") ? "done" : u === cur ? "current" : !me.pro && !u.unit.free || (u.lessons.length > 0 && u.lessons.every((l) => l.state === "locked")) ? "locked" : "open",

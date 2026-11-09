@@ -75,7 +75,7 @@ export async function renderCertPng(c: OgCert, origin: string, scale = 1): Promi
             <Txt ar={ar} text={c.name} style={{ fontSize: 64, fontWeight: 800, lineHeight: 1.15, color: ink }} />
           </div>
           <Txt ar={ar} text={t("showed")} style={{ fontSize: 18, color: soft }} />
-          <Txt ar={ar} text={c.pathName} style={{ marginTop: 6, fontSize: 38, fontWeight: 800, lineHeight: 1.2, color: "#005F99" }} />
+          <Txt ar={ar} text={ar ? c.pathName.replace(/\s*\([A-Za-z][^()]*\)/g, "") : c.pathName} style={{ marginTop: 6, fontSize: 38, fontWeight: 800, lineHeight: 1.2, color: "#005F99" }} />
           <Txt ar={ar} text={t("how", { count: c.checks })} style={{ marginTop: 10, maxWidth: 620, fontSize: 18, lineHeight: 1.5, color: soft }} />
           <div style={{ display: "flex", flexDirection: ar ? "row-reverse" : "row", marginTop: "auto", paddingTop: 18, borderTop: "2px solid #E3EEF3", width: "100%", gap: 36 }}>
             {foot(t("issued"), c.issued)}{foot(t("idLabel"), certId(c.pathId, c.code))}{foot(t("verify"), `uxgate.org/c/${c.code}`)}

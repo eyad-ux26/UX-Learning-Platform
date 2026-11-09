@@ -1,3 +1,5 @@
+import { PathName } from "@/components/PathName";
+import { localPathName } from "@/lib/catalog-list";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -14,7 +16,7 @@ export function PathCard({ p, locale, open }: { p: PublicPath; locale: Locale; o
         <img src={artUrl(p)} alt="" width={62} height={62} loading="lazy" />
       </span>
       <span className="pc-text">
-        <span className="pc-name ltr">{p.name}</span>
+        <span className="pc-name"><PathName name={localPathName(p.id, locale)} /></span>
         <span className="pc-sub">{(p.short ?? p.sub)[locale]}</span>
         <span className="pc-meta">
           {open ? (

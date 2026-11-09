@@ -1,3 +1,4 @@
+import { PathName } from "@/components/PathName";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
@@ -21,7 +22,7 @@ export async function ProfilePlan({ pro, pathTitle, pct }: { pro: boolean; pathT
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/ill/uxgate-ill-certificate.png" alt="" />
             <span className="grow">
-              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><b className="ltr" style={{ textAlign: "start" }}>{pathTitle}</b><span className="pro-tag">PRO</span></span>
+              <span style={{ display: "flex", alignItems: "center", gap: 6 }}><b style={{ textAlign: "start" }}><PathName name={pathTitle} /></b><span className="pro-tag">PRO</span></span>
               <span>{t("certNote")}</span>
               <span className="progress progress-sm" aria-hidden="true" style={{ marginBlockStart: 4 }}><i style={{ inlineSize: `${pct}%` }} /></span>
             </span>
