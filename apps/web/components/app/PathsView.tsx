@@ -169,13 +169,9 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
       <p className="t-over">{t("unitsTitle")}</p>
       <ol className="pg-units">
         {view?.units.map((u) => (
-          <li key={u.unit.id} className="card pg-unit">
-            <span className="pg-unit-text">
-              <span className="t-label">{t("unitN", { n: u.number })} · {u.unit.title[locale]}</span>
-              <span className="t-small ink-2">{t("lessonsN", { count: u.lessons.length })}{u.unit.free ? <> · <span className="kind kind-free">{t("free1")}</span></> : null}</span>
-            </span>
-            {/* A unit whose first lesson is done can be gone through again, lesson by lesson (Eyad, 12 Nov). */}
-            {u.lessons[0]?.state === "done" ? <Link href={`/app/lesson/${u.lessons[0].lesson.lessonId}`} className="btn btn-secondary btn-sm press" aria-label={t("reviseAria", { n: u.number })}><span className="ph ph-replay" aria-hidden="true" />{t("revise")}</Link> : null}
+          <li key={u.unit.id} className="card">
+            <span className="t-label">{t("unitN", { n: u.number })} · {u.unit.title[locale]}</span>
+            <span className="t-small ink-2">{t("lessonsN", { count: u.lessons.length })}{u.unit.free ? <> · <span className="kind kind-free">{t("free1")}</span></> : null}</span>
           </li>
         ))}
       </ol>

@@ -1,8 +1,7 @@
 // What a lesson's end page points to next: the following lesson of the same path, or the end of the path.
 import type { PathView } from "./learning";
 
-/** `revise`: the next lesson is in the same unit, already finished, and not the skill check, so a replay (revising the unit) can go on to it. */
-export type UpNext = { lessonId: string; title: { en: string; ar: string }; unitNo: number; lessonNo: number; minutes: number; newUnit: boolean; revise: boolean };
+export type UpNext = { lessonId: string; title: { en: string; ar: string }; unitNo: number; lessonNo: number; minutes: number; newUnit: boolean };
 /** The last lesson of a path. `certReady`: every skill of the path outside this unit is Shown already, so passing this unit's check earns the certificate. */
 export type PathEnd = { pathId: string; pathTitle: string; skills: number; certReady: boolean };
 
@@ -13,5 +12,5 @@ export function upNextOf(view: PathView, lessonId: string): UpNext | null {
   const next = i >= 0 ? all[i + 1] : undefined;
   if (!next) return null;
   const t = next.lesson.body.title;
-  return { lessonId: next.lesson.lessonId, title: { en: t.en, ar: t.ar }, unitNo: next.unitNo, lessonNo: next.indexInUnit, minutes: next.lesson.minutes, newUnit: next.unitNo !== all[i].unitNo, revise: next.unitNo === all[i].unitNo && next.state === "done" && next.lesson.body.mode !== "check" };
+  return { lessonId: next.lesson.lessonId, title: { en: t.en, ar: t.ar }, unitNo: next.unitNo, lessonNo: next.indexInUnit, minutes: next.lesson.minutes, newUnit: next.unitNo !== all[i].unitNo };
 }

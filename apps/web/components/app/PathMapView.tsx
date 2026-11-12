@@ -149,10 +149,7 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
               {u.unit.free ? <span className="tag tag-free" style={{ blockSize: 22, fontSize: 12 }}>{t("free")}</span> : null}
               {u.practiced ? <span className="skill skill-practiced" style={{ blockSize: 22, fontSize: 12, padding: "0 9px" }}><span className="ph ph-check-circle" style={{ fontSize: 13 }} aria-hidden="true" />{t("practiced")}</span> : null}
             </div>
-            <div className="unit-h-row">
-              <h2 className="t-h2" style={{ fontSize: 22 }}>{u.unit.title[locale]}</h2>
-              {u.lessons[0]?.state === "done" ? <Link href={`/app/lesson/${u.lessons[0].lesson.lessonId}`} className="btn btn-secondary btn-sm press" aria-label={t("reviseAria", { n: u.number })}><span className="ph ph-replay" aria-hidden="true" />{t("revise")}</Link> : null}
-            </div>
+            <h2 className="t-h2" style={{ fontSize: 22 }}>{u.unit.title[locale]}</h2>
           </div>
           <ol className="lessons" style={{ ["--cols" as string]: u.lessons.length, ["--done" as string]: `${u.lessons.length > 1 ? (Math.min(u.lessons.filter((x) => x.state === "done").length, u.lessons.length - 1) / (u.lessons.length - 1)) * 100 : 0}%` }}>
             {u.lessons.map((l) => <Row key={l.lesson.lessonId} l={l} t={t} locale={locale} />)}
