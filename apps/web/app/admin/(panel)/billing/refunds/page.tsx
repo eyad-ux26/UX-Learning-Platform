@@ -26,7 +26,7 @@ export default async function RefundsPage({ searchParams }: { searchParams: Prom
   const limitText = `${fmtMoney(limit, "USD")} (about ${fmtMoney(Math.round(limit * USD_RATES.EGP.perUsd), "EGP")})`;
   return (
     <main className="a-page">
-      <PageHead crumbs={[{ label: "Money" }, { label: "Refunds" }]} title="Refunds" sub="Requests from learners. The 7-day rule is checked for you; the refund itself happens at Paddle or Paymob." />
+      <PageHead crumbs={[{ label: "Money" }, { label: "Refunds" }]} title="Refunds" sub="Requests from learners. The 7-day rule is checked for you; the refund itself happens at Paddle or Paymob. Done also lists refunds made at the provider directly." />
       {canDecide ? (
         <Note icon="shield-check">{any ? "Your roles can refund any amount. Refunds over " + limitText + " or outside the 7 days ask for a fresh authenticator code." : `Your roles can refund up to ${limitText} inside the 7-day window. Bigger refunds and exceptions go to a support lead, billing manager or admin for approval.`}</Note>
       ) : null}
@@ -46,9 +46,9 @@ export default async function RefundsPage({ searchParams }: { searchParams: Prom
                   <td className="num"><Money minor={r.amount_minor} currency={r.currency} /></td>
                   <td>{pay ? <When at={pay.paid_at} /> : "—"}</td>
                   <td>{rule ? <St tone={rule.inside ? "good" : "bad"}>{rule.text}</St> : null}{usd && usd.minor > limit ? <span className="t-xs ink-3" style={{ display: "block" }}>Over the agent limit</span> : null}</td>
-                  <td style={{ maxWidth: 320 }}><span className="t-sm" dir="auto">{r.reason}</span><span className="t-xs ink-3" style={{ display: "block" }}>Asked <When at={r.created_at} rel /></span></td>
+                  <td style={{ maxWidth: 320 }}><span className="t-sm" dir="auto">{r.reason}</span><span className="t-xs ink-3" style={{ display: "block" }}>{r.status === "provider" ? "Refunded" : "Asked"} <When at={r.created_at} rel /></span></td>
                   <td>{tab === "done" ? (
-                    <span className="a-col" style={{ gap: 2 }}>{r.status === "approved" ? <St tone="good">Approved</St> : <St tone="off">Declined</St>}{pay ? <PaymentStatus p={pay} /> : null}</span>
+                    <span className="a-col" style={{ gap: 2 }}>{r.status === "approved" ? <St tone="good">Approved</St> : r.status === "provider" ? <St tone="info">At {pay?.provider === "paymob" ? "Paymob" : pay?.provider === "paddle" ? "Paddle" : "the test provider"}</St> : <St tone="off">Declined</St>}{pay ? <PaymentStatus p={pay} /> : null}</span>
                   ) : tab === "approval" ? <Link href="/admin/team/approvals" className="t-sm">In Approvals</Link>
                     : tab === "processing" ? <St tone="wait">Waiting for {pay?.provider === "paymob" ? "Paymob" : "Paddle"}</St>
                     : pay ? <RefundButtons pay={pay} requestId={r.id} blocked={needsSecondPerson(ctx, pay, limit)} fresh={fresh} overLimit={!usd || usd.minor > limit} canDecide={canDecide} ar={p?.locale === "ar"} /> : null}

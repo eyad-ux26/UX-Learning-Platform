@@ -28,14 +28,25 @@ export const PAGE = 50;
 export type SubRow = {
   id: string; user_id: string; provider: string; provider_sub_id: string | null; region: string; country: string; period: string; currency: string;
   renew_amount_minor: number; discount: string | null; status: string; current_period_start: string; current_period_end: string; grace_until: string | null;
-  cancelled_at: string | null; ended_at: string | null; created_at: string;
+  cancelled_at: string | null; ended_at: string | null; created_at: string; test: boolean;
 };
-const SUB_COLS = "id, user_id, provider, provider_sub_id, region, country, period, currency, renew_amount_minor, discount, status, current_period_start, current_period_end, grace_until, cancelled_at, ended_at, created_at";
+const SUB_COLS = "id, user_id, provider, provider_sub_id, region, country, period, currency, renew_amount_minor, discount, status, current_period_start, current_period_end, grace_until, cancelled_at, ended_at, created_at, test";
+
+/**
+ * Test money (the test provider, Paddle's sandbox) is hidden from the lists unless asked for: "show" adds it, "only"
+ * shows nothing else. Revenue, the dashboard and the accountant export never count it.
+ */
+export type TestView = "hide" | "show" | "only";
+export const testView = (v: string | undefined): TestView => (v === "show" || v === "only" ? v : "hide");
+const withTest = <Q,>(q: Q, t: TestView): Q => {
+  const b = q as unknown as { eq(c: string, v: boolean): Q };
+  return t === "hide" ? b.eq("test", false) : t === "only" ? b.eq("test", true) : q;
+};
 
 export type SubTab = "all" | "paid" | "comp" | "past_due" | "cancelled" | "refunded";
 export type CompRow = { user_id: string; valid_until: string; pro_since: string | null; updated_at: string };
 
-export async function subscriptions(f: { tab: SubTab; q?: string; region?: string; provider?: string; page: number }) {
+export async function subscriptions(f: { tab: SubTab; q?: string; region?: string; provider?: string; page: number; test?: TestView }) {
   const db = createAdminClient();
   const ids = f.q && !/^sub_/.test(f.q) ? await learnerIds(f.q) : null;
   if (f.tab === "comp") {
@@ -52,15 +63,16 @@ export async function subscriptions(f: { tab: SubTab; q?: string; region?: strin
   if (f.region) q = q.eq("region", f.region);
   if (f.provider) q = q.eq("provider", f.provider);
   if (f.q && /^sub_/.test(f.q)) q = q.eq("provider_sub_id", f.q);
+  else q = withTest(q, f.test ?? "hide");
   if (ids) q = q.in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
   const { data, count } = await q.order("created_at", { ascending: false }).range((f.page - 1) * PAGE, f.page * PAGE - 1);
   return { subs: (data ?? []) as SubRow[], comp: [] as CompRow[], total: count ?? 0 };
 }
 
-export async function subCounts() {
+export async function subCounts(test: TestView = "hide") {
   const db = createAdminClient();
   const c = async (status: string[] | null) => {
-    let q = db.from("subscriptions").select("id", { count: "exact", head: true });
+    let q = withTest(db.from("subscriptions").select("id", { count: "exact", head: true }), test);
     if (status) q = q.in("status", status);
     return (await q).count ?? 0;
   };
@@ -73,7 +85,7 @@ export async function subCounts() {
 
 // ───────── payments ─────────
 
-export async function payments(f: { q?: string; provider?: string; status?: string; kind?: string; days?: number; page: number }) {
+export async function payments(f: { q?: string; provider?: string; status?: string; kind?: string; days?: number; page: number; test?: TestView }) {
   const db = createAdminClient();
   let q = db.from("payments").select(PAYMENT_COLS, { count: "exact" });
   if (f.q) {
@@ -81,9 +93,9 @@ export async function payments(f: { q?: string; provider?: string; status?: stri
     if (/^(txn_|UXG-)/i.test(v) || /^\d{5,}$/.test(v)) q = q.or(`provider_payment_id.eq.${v.replace(/[,()]/g, "")},receipt_no.eq.${v.toUpperCase().replace(/[,()]/g, "")}`);
     else {
       const ids = await learnerIds(v);
-      q = q.in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+      q = withTest(q.in("user_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]), f.test ?? "hide");
     }
-  }
+  } else q = withTest(q, f.test ?? "hide");
   if (f.provider) q = q.eq("provider", f.provider);
   if (f.status === "processing") q = q.eq("status", "paid").not("refund_sent_at", "is", null);
   else if (f.status) q = q.eq("status", f.status);
@@ -141,12 +153,29 @@ export async function refunds(tab: RefundTab) {
   const payBy = new Map(pays.map((p) => [p.id, p]));
   const appBy = new Map(apps.map((a) => [a.target_id as string, { id: a.id as string, status: a.status as string }]));
   const items: RefundItem[] = reqs.map((r) => ({ ...r, pay: payBy.get(r.payment_id) ?? null, approval: appBy.get(r.id) ?? null }));
-  if (tab === "done") return items;
+  if (tab === "done") return [...items, ...(await providerRefunds())].sort((a, b) => (b.answered_at ?? "").localeCompare(a.answered_at ?? "")).slice(0, 100);
   return items.filter((r) => {
     const processing = !!r.pay?.refund_sent_at;
     const waiting = r.approval?.status === "waiting";
     return tab === "processing" ? processing : tab === "approval" ? waiting && !processing : !processing && !waiting;
   });
+}
+
+/**
+ * Refunds made at Paddle or Paymob directly (their dashboard, or a chargeback) with no request in UXGate. The provider's
+ * webhook marked the payment refunded; they show in Done with status "provider" so every refund is in one list.
+ */
+async function providerRefunds(): Promise<RefundItem[]> {
+  const db = createAdminClient();
+  const { data } = await db.from("payments").select(PAYMENT_COLS).eq("status", "refunded").order("refunded_at", { ascending: false }).limit(100);
+  const pays = (data ?? []) as PaymentRow[];
+  if (!pays.length) return [];
+  const { data: asked } = await db.from("refund_requests").select("payment_id").in("payment_id", pays.map((p) => p.id));
+  const has = new Set((asked ?? []).map((r) => r.payment_id as string));
+  return pays.filter((p) => !has.has(p.id)).map((p) => ({
+    id: `provider:${p.id}`, user_id: p.user_id, payment_id: p.id, amount_minor: p.amount_minor, currency: p.currency,
+    reason: "No request in UXGate: refunded at the provider.", status: "provider", created_at: p.refunded_at ?? p.paid_at, answered_at: p.refunded_at, pay: p, approval: null,
+  }));
 }
 
 // ───────── problems ─────────
@@ -204,16 +233,17 @@ export const mrrUsd = (s: Pick<SubRow, "renew_amount_minor" | "currency" | "peri
   return s.period === "year" ? Math.round(u / 12) : u;
 };
 
-export async function revenue(monthStart: Date) {
+export async function revenue(monthStart: Date, test: TestView = "hide") {
   const db = createAdminClient();
   const start = monthStart.toISOString();
   const end = new Date(Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() + 1, 1)).toISOString();
+  const subs = () => withTest(db.from("subscriptions").select("region, provider, period, currency, renew_amount_minor"), test);
   const [live, started, churned, paid, refunded, comp] = await Promise.all([
-    db.from("subscriptions").select("region, provider, period, currency, renew_amount_minor").in("status", ["active", "grace"]).limit(20000),
-    db.from("subscriptions").select("region, provider, period, currency, renew_amount_minor").gte("created_at", start).lt("created_at", end).limit(20000),
-    db.from("subscriptions").select("region, provider, period, currency, renew_amount_minor").in("status", ["ended", "refunded", "cancelled"]).or(`and(ended_at.gte.${start},ended_at.lt.${end}),and(cancelled_at.gte.${start},cancelled_at.lt.${end})`).limit(20000),
-    db.from("payments").select("provider, currency, amount_minor, subscription_id, subscriptions(region)").gte("paid_at", start).lt("paid_at", end).limit(20000),
-    db.from("payments").select("provider, currency, amount_minor, subscriptions(region)").eq("status", "refunded").gte("refunded_at", start).lt("refunded_at", end).limit(20000),
+    subs().in("status", ["active", "grace"]).limit(20000),
+    subs().gte("created_at", start).lt("created_at", end).limit(20000),
+    subs().in("status", ["ended", "refunded", "cancelled"]).or(`and(ended_at.gte.${start},ended_at.lt.${end}),and(cancelled_at.gte.${start},cancelled_at.lt.${end})`).limit(20000),
+    withTest(db.from("payments").select("provider, currency, amount_minor, subscription_id, subscriptions(region)"), test).gte("paid_at", start).lt("paid_at", end).limit(20000),
+    withTest(db.from("payments").select("provider, currency, amount_minor, subscriptions(region)"), test).eq("status", "refunded").gte("refunded_at", start).lt("refunded_at", end).limit(20000),
     db.from("entitlements").select("user_id", { count: "exact", head: true }).eq("source", "manual").eq("plan", "pro").gt("valid_until", new Date().toISOString()),
   ]);
   const lines = new Map<string, RevenueLine>();
@@ -244,8 +274,9 @@ export async function accountantRows(monthStart: Date) {
   const start = monthStart.toISOString();
   const end = new Date(Date.UTC(monthStart.getUTCFullYear(), monthStart.getUTCMonth() + 1, 1)).toISOString();
   const [paid, refunded] = await Promise.all([
-    db.from("payments").select(PAYMENT_COLS).gte("paid_at", start).lt("paid_at", end).order("paid_at").limit(50000),
-    db.from("payments").select(PAYMENT_COLS).eq("status", "refunded").gte("refunded_at", start).lt("refunded_at", end).order("refunded_at").limit(50000),
+    // Real money only: test-provider and sandbox payments never go to the accountant.
+    db.from("payments").select(PAYMENT_COLS).eq("test", false).gte("paid_at", start).lt("paid_at", end).order("paid_at").limit(50000),
+    db.from("payments").select(PAYMENT_COLS).eq("test", false).eq("status", "refunded").gte("refunded_at", start).lt("refunded_at", end).order("refunded_at").limit(50000),
   ]);
   const row = (p: PaymentRow, type: "payment" | "refund") => {
     const u = toUsd(p.amount_minor, p.currency);

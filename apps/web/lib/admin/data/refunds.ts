@@ -18,9 +18,11 @@ export type PaymentRow = {
   id: string; user_id: string; subscription_id: string | null; provider: "paymob" | "paddle" | "mock"; provider_payment_id: string; receipt_no: string;
   kind: string; period: string; amount_minor: number; currency: string; status: "paid" | "refunded"; pay_method: string | null; card_brand: string | null;
   card_last4: string | null; paid_at: string; period_end: string | null; refunded_at: string | null; refund_sent_at: string | null; refund_sent_by: string | null;
+  /** Test provider or a sandbox: never counted as revenue (0065). */
+  test: boolean;
 };
 
-export const PAYMENT_COLS = "id, user_id, subscription_id, provider, provider_payment_id, receipt_no, kind, period, amount_minor, currency, status, pay_method, card_brand, card_last4, paid_at, period_end, refunded_at, refund_sent_at, refund_sent_by";
+export const PAYMENT_COLS = "id, user_id, subscription_id, provider, provider_payment_id, receipt_no, kind, period, amount_minor, currency, status, pay_method, card_brand, card_last4, paid_at, period_end, refunded_at, refund_sent_at, refund_sent_by, test";
 
 /** The 7-day rule for one charge, said plainly. */
 export function refundRule(paidAt: string, now = Date.now()): { inside: boolean; days: number; text: string } {

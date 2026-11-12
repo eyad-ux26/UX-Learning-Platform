@@ -99,7 +99,12 @@ export default async function TeamPage() {
                   <td>{i.email}</td>
                   <td><span className="a-row" style={{ gap: 4 }}>{i.roles.map((r) => <RoleChip key={r} id={r} name={roleName(r, custom)} />)}</span></td>
                   <td className="t-sm"><When at={i.createdAt} rel /></td>
-                  <td>{expired ? <St tone="off" icon="clock">Expired</St> : <St tone="info" icon="envelope-simple"><When at={i.expiresAt} /></St>}</td>
+                  <td>{i.bounce ? (
+                    <span className="a-col" style={{ gap: 2 }}>
+                      <St tone="bad" icon="warning">{i.bounce.kind === "bounced" ? "Email bounced" : i.bounce.kind === "complained" ? "Marked as spam" : "Not delivered (address blocked)"}</St>
+                      <span className="t-xs ink-3" title={i.bounce.detail ?? undefined}>Resend the invite, copy the link it shows, and send it another way.</span>
+                    </span>
+                  ) : expired ? <St tone="off" icon="clock">Expired</St> : <St tone="info" icon="envelope-simple"><When at={i.expiresAt} /></St>}</td>
                   <td>{canInvite ? <span className="a-row" style={{ gap: 6, justifyContent: "flex-end" }}>
                     <Confirm action={resendInvite} small label="Resend invite" title={`Send a new invite to ${i.email}?`} reason={false} hidden={[{ name: "invite", value: i.id }]} icon="paper-plane-tilt" effects={[{ icon: "link", text: "A new link for 72 hours. The old link stops working." }]} />
                     <Confirm action={cancelInvite} small ghost danger label="Cancel" title={`Cancel the invite to ${i.email}?`} reason={false} hidden={[{ name: "invite", value: i.id }]} icon="x" confirmLabel="Cancel invite" />

@@ -356,6 +356,51 @@ describe("dashboard (0047)", () => {
   });
 });
 
+describe("test money stays off the money screens (0065)", () => {
+  it("marks test-provider rows as test and leaves them out of the dashboard", async () => {
+    const before = (await db.query<{ provider: string; paid_minor: number }>(`select provider, paid_minor::int from public.admin_dash_money(now() - interval '400 days')`)).rows;
+    const mockBefore = before.filter((r) => r.provider === "mock").reduce((t, r) => t + r.paid_minor, 0);
+    await db.query(`insert into payments (user_id, provider, provider_payment_id, kind, period, amount_minor, currency, status, paid_at)
+      values ($1, 'mock', 'mock_t1', 'first', 'month', 800, 'USD', 'paid', now()), ($1, 'paymob', 'pm_real_1', 'first', 'month', 9900, 'EGP', 'paid', now())`, [X]);
+    const rows = (await db.query<{ provider_payment_id: string; test: boolean }>(`select provider_payment_id, test from payments where provider_payment_id in ('mock_t1', 'pm_real_1') order by 1`)).rows;
+    expect(rows).toEqual([{ provider_payment_id: "mock_t1", test: true }, { provider_payment_id: "pm_real_1", test: false }]);
+    const after = (await db.query<{ provider: string; paid_minor: number }>(`select provider, paid_minor::int from public.admin_dash_money(now() - interval '400 days')`)).rows;
+    expect(after.filter((r) => r.provider === "mock").reduce((t, r) => t + r.paid_minor, 0)).toBe(mockBefore);
+    expect(after.some((r) => r.provider === "paymob" && r.paid_minor >= 9900)).toBe(true);
+    // A row the app marks as test (Paddle sandbox) is left out too.
+    await db.query(`insert into payments (user_id, provider, provider_payment_id, kind, period, amount_minor, currency, status, paid_at, test)
+      values ($1, 'paddle', 'txn_sandbox_1', 'first', 'month', 1700, 'USD', 'paid', now(), true)`, [X]);
+    const shown = (await db.query<{ n: number }>(`select coalesce(sum(paid_minor), 0)::int n from public.admin_dash_money(now() - interval '400 days') where provider = 'paddle'`)).rows[0].n;
+    const real = (await db.query<{ n: number }>(`select coalesce(sum(amount_minor), 0)::int n from payments where provider = 'paddle' and not test`)).rows[0].n;
+    expect(shown).toBe(real);
+  });
+  it("leaves sandbox money out of the reports too (growth paid count, money by plan)", async () => {
+    const paid = async () => (await db.query<{ n: number }>(`select coalesce(sum(paid), 0)::int n from public.admin_report_growth(now() - interval '2 days', now() + interval '1 day')`)).rows[0].n;
+    const plans = async () => (await db.query<{ n: number }>(`select coalesce(sum(plans), 0)::int n from public.admin_report_money() where provider = 'paddle'`)).rows[0].n;
+    const [paid0, plans0] = [await paid(), await plans()];
+    const S = (await one<{ id: string }>(`insert into auth.users (email) values ('sandbox@example.com') returning id`)).id;
+    await db.query(`insert into payments (user_id, provider, provider_payment_id, kind, period, amount_minor, currency, status, paid_at, test)
+      values ($1, 'paddle', 'txn_sandbox_2', 'first', 'month', 1700, 'USD', 'paid', now(), true)`, [S]);
+    await db.query(`insert into subscriptions (user_id, provider, provider_sub_id, region, country, period, currency, renew_amount_minor, status, current_period_start, current_period_end, test)
+      values ($1, 'paddle', 'sub_sandbox_2', 'world', 'DE', 'month', 'USD', 1700, 'active', now(), now() + interval '30 days', true)`, [S]);
+    expect(await paid()).toBe(paid0);
+    expect(await plans()).toBe(plans0);
+  });
+});
+
+describe("emails that never arrived (0066)", () => {
+  it("keeps one row per webhook event and address, and only the service role can read them", async () => {
+    const ins = `insert into email_bounces (email, kind, detail, resend_id, event_id) values ('new@example.com', 'bounced', 'Mailbox does not exist', 're_1', 'msg_1') on conflict (event_id, email) do nothing`;
+    await db.query(ins);
+    await db.query(ins);
+    expect((await one<{ n: number }>(`select count(*)::int n from email_bounces where event_id = 'msg_1'`)).n).toBe(1);
+    await expect(db.query(`insert into email_bounces (email, kind, event_id) values ('Upper@Example.com', 'bounced', 'msg_2')`)).rejects.toThrow(/check/);
+    await expect(db.query(`insert into email_bounces (email, kind, event_id) values ('a@b.co', 'delivered', 'msg_3')`)).rejects.toThrow(/check/);
+    await expect(asUser("authenticated", X, `select * from public.email_bounces`)).rejects.toThrow(/permission denied/);
+    await expect(asUser("anon", null, `select * from public.email_bounces`)).rejects.toThrow(/permission denied/);
+  });
+});
+
 describe("custom roles stay within the editor's own permissions (0048)", () => {
   it("refuses roles with permissions the editor lacks, edits to a role the editor holds, and giving such roles", async () => {
     const A = (await one<{ id: string }>(`insert into auth.users (email) values ('ops@uxgate.org') returning id`)).id;

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { allowed, requireAdmin } from "@/lib/admin/guard";
-import { people, subCounts, subscriptions, PAGE, type SubTab } from "@/lib/admin/data/billing";
+import { people, subCounts, subscriptions, testView, PAGE, type SubTab } from "@/lib/admin/data/billing";
 import { REGION_LABEL } from "@/lib/admin/format";
 import { Card, Empty, Filters, Money, NoAccess, PageHead, Pager, St, Tabs, When, Who, withQuery, type Tone } from "@/components/admin/ui";
 import { Confirm } from "@/components/admin/forms";
 import { CompDrawer } from "../CompDrawer";
 import { endComp } from "../actions";
+import { TestChip } from "../PaymentStatus";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Subscriptions" };
@@ -21,20 +22,22 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
   const sp = await searchParams;
   const tab = (TABS.find(([t]) => t === sp.tab)?.[0] ?? "all") as SubTab;
   const page = Math.max(1, Number(sp.page) || 1);
-  const [list, counts] = await Promise.all([subscriptions({ tab, q: sp.q?.trim() || undefined, region: sp.region, provider: sp.provider, page }), subCounts()]);
+  const test = testView(sp.test);
+  const [list, counts] = await Promise.all([subscriptions({ tab, q: sp.q?.trim() || undefined, region: sp.region, provider: sp.provider, page, test }), subCounts(test)]);
   const who = await people([...list.subs.map((s) => s.user_id), ...list.comp.map((c) => c.user_id)]);
-  const base = { tab, q: sp.q, region: sp.region, provider: sp.provider };
+  const base = { tab, q: sp.q, region: sp.region, provider: sp.provider, test: sp.test };
   const canComp = allowed(ctx, "comp.grant", "learners.act");
   return (
     <main className="a-page">
       <PageHead crumbs={[{ label: "Money" }, { label: "Subscriptions" }]} title="Subscriptions" sub={`${counts.paid.toLocaleString("en")} active paid Pro · ${counts.comp} comp, counted apart from paid revenue`}
         actions={canComp ? <CompDrawer unlimited={allowed(ctx, "comp.grant")} primary /> : null} />
-      <Tabs label="Subscription status" items={TABS.map(([t, l]) => ({ href: withQuery("/admin/billing/subscriptions", {}, { tab: t === "all" ? undefined : t }), label: l, count: counts[t], current: t === tab }))} />
+      <Tabs label="Subscription status" items={TABS.map(([t, l]) => ({ href: withQuery("/admin/billing/subscriptions", {}, { tab: t === "all" ? undefined : t, test: sp.test }), label: l, count: counts[t], current: t === tab }))} />
       <Card label="Subscriptions" pad={false}>
         <Filters action="/admin/billing/subscriptions" q={sp.q} placeholder="Learner, email or subscription id" hidden={tab === "all" ? {} : { tab }}
           selects={tab === "comp" ? [] : [
             { name: "region", label: "Region", value: sp.region, options: Object.entries(REGION_LABEL) },
             { name: "provider", label: "Provider", value: sp.provider, options: [["paddle", "Paddle"], ["paymob", "Paymob"], ["mock", "Test provider"]] },
+            { name: "test", label: "Test plans", value: sp.test, options: [["show", "Show test plans"], ["only", "Only test plans"]], empty: "Real plans only" },
           ]} />
         {tab === "comp" ? (
           list.comp.length ? (
@@ -65,7 +68,7 @@ export default async function SubscriptionsPage({ searchParams }: { searchParams
                   <td>Pro {s.period === "year" ? "annual" : "monthly"}{s.discount ? <span className="t-xs ink-3" style={{ display: "block" }}>{s.discount.replace("_", " ")} discount</span> : null}</td>
                   <td>{REGION_LABEL[s.region] ?? s.region}<span className="t-xs ink-3" style={{ display: "block" }}>{s.country}</span></td>
                   <td>{s.provider === "mock" ? "Test" : s.provider === "paddle" ? "Paddle" : "Paymob"}{s.provider_sub_id ? <span className="a-id t-xs" style={{ display: "block" }}>{s.provider_sub_id}</span> : null}</td>
-                  <td><St tone={tone}>{label}</St>{s.status === "grace" && s.grace_until ? <span className="t-xs ink-3" style={{ display: "block" }}>Pro until <When at={s.grace_until} /></span> : null}</td>
+                  <td><span className="a-row" style={{ gap: 4 }}><St tone={tone}>{label}</St><TestChip test={s.test} /></span>{s.status === "grace" && s.grace_until ? <span className="t-xs ink-3" style={{ display: "block" }}>Pro until <When at={s.grace_until} /></span> : null}</td>
                   <td><When at={s.created_at} /></td>
                   <td><When at={s.ended_at ?? s.current_period_end} /></td>
                   <td className="num"><Money minor={s.renew_amount_minor} currency={s.currency} /></td>

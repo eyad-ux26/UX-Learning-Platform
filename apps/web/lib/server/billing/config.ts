@@ -34,6 +34,13 @@ export function paddleConfig() {
 }
 
 /**
+ * Test money: the test provider, Paddle's sandbox (PADDLE_ENV is not "production"), or Paymob test keys (PAYMOB_ENV=test).
+ * Rows written for it carry test = true and stay out of the dashboard, revenue and the accountant export.
+ */
+export const isTestMoney = (provider: string) =>
+  provider === "mock" || (provider === "paddle" && paddleConfig().env !== "production") || (provider === "paymob" && env("PAYMOB_ENV") === "test");
+
+/**
  * The host a route request came to. Only the URL (the Host the request was routed by) counts: x-forwarded-host is
  * set by whoever sends the request, so it can never turn test payments on.
  */
