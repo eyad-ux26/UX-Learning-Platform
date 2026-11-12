@@ -47,7 +47,8 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
             <div className="stat-tile pop"><span className="ph ph-target" aria-hidden="true" /><span className="num ltr big" data-testid="first-try">{sum.independent}/{sum.questions}</span><span className="lbl ink-2">{t("firstTry")}</span></div>
             <div className="stat-tile pop"><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num ltr big" data-testid="streak">{streak}</span><span className="lbl ink-2">{t("streakLabel")}</span></div>
           </div>
-          {skills.length ? (
+          {/* A replay never changes a skill, so its end page does not list skills as if it did (QA, 12 Nov). */}
+          {skills.length && !replay ? (
             <section className="card end-skills" aria-label={t("skills")}>
               <p className="t-over">{t("skills")}</p>
               {skills.map((k) => (

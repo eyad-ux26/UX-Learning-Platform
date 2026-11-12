@@ -14,7 +14,7 @@ import type { OtherLocale } from "@/lib/server/lesson-messages";
 import { LessonEnd, type ProNext } from "./LessonEnd";
 import { CheckPractice, CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
 import { REVISE_COOKIE, reviseHref } from "@/lib/revise";
-import type { ReplayKind } from "@/lib/replay";
+import { replayXp, type ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
 import { Loader } from "@/components/loading/Loader";
 import { markTourSeen, tourKind } from "@/lib/lesson-tour";
@@ -200,7 +200,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     // A finished skill check played again is practice: the results show, and no skill changes.
-    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onContinue={() => leave(pathHref)} />;
+    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onContinue={() => leave(pathHref)} xpOf={(n) => replayXp(n, replay)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
     return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
   }

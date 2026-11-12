@@ -135,7 +135,7 @@ function reviseText(u: UnitRow, t: T, locale: Locale, resumeAt: UnitRow["lessons
     button: t("revise"), aria: t("reviseAria", { n: u.number }),
     over: t("unitOver", { n: u.number, count: u.lessons.length }), title: t("rvTitle"), body: t("rvBody"),
     rows: [
-      { icon: "book", title: t("rvL1", { count: lessons }), sub: t("rvL1s") },
+      { icon: "book", title: hasCheck ? t("rvL1Check", { count: lessons }) : t("rvL1", { count: lessons }), sub: t("rvL1s") },
       { icon: "seal", title: t("rvL2"), sub: hasCheck ? t("rvL2sCheck") : t("rvL2s") },
       { icon: "bolt", title: t("rvL3"), sub: t("rvL3s") },
     ],
