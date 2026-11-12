@@ -142,9 +142,10 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
         <div className={cls} style={style}>
           <Label b={b} locale={locale} />
           {b.hintFirst ? hint : null}
-          <div className={`fi${b.filled ? " filled" : ""}${b.focus ? " focus" : ""}`} dir={looksLtr ? "ltr" : undefined}>
+          {/* With an icon, the box keeps the screen's direction (icons on the usual sides) and only the number reads left to right. */}
+          <div className={`fi${b.filled ? " filled" : ""}${b.focus ? " focus" : ""}`} dir={looksLtr && !b.icon && !b.trail ? "ltr" : undefined}>
             {b.icon ? <Icon name={String(b.icon)} /> : null}
-            {b.icon || b.trail ? <span className="fi-t">{text}</span> : text}
+            {b.icon || b.trail ? <span className="fi-t">{looksLtr ? <bdi dir="ltr">{text}</bdi> : text}</span> : text}
             {b.trail ? (/^[a-z0-9-]+$/.test(String(b.trail)) ? <Icon name={String(b.trail)} /> : <span>{mt(b.trail as MockText, locale)}</span>) : null}
             {b.kind === "select" ? <span className="chev" aria-hidden="true">▾</span> : null}
           </div>
@@ -534,7 +535,7 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
   const banner = mock.overlay?.type === "banner" ? mock.overlay : null;
   const body = (
     <Rtl.Provider value={dir === "rtl"}>
-    <figure className={`xm xm-${frame}${chrome ? " xm-dev" : ""}`} role="group" aria-label={label} style={mock.width ? { maxWidth: Number(mock.width) + (phoneLike && chrome ? 12 : 0) } : undefined}>
+    <figure className={`xm xm-${frame}${chrome ? " xm-dev" : ""}${wide && mock.fit ? " xm-fit" : ""}`} role="group" aria-label={label} style={mock.width ? { maxWidth: Number(mock.width) + (phoneLike && chrome ? 12 : 0) } : undefined}>
       <figcaption className="xm-label" aria-hidden="true">{app ? <span className="xm-label-ic" style={{ background: app.color, color: onColor(app.color) }}><Icon name={app.icon} /></span> : null}<span>{caption}</span></figcaption>
       <div className="xm-shell">
         <div className={cls} dir={dir} style={screen}>

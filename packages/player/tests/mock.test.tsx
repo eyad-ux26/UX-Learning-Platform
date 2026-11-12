@@ -202,12 +202,18 @@ describe("other paths follow-ups (12 Nov)", () => {
     const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
     expect(css).toMatch(/\.xm-pin\.has-mark>:is\([^)]*\.k-small[^)]*\)\{padding-inline-start:20px\}/);
   });
-  it("zooms a laptop page down on a phone instead of letting its rows clip", () => {
+  it("zooms only wide frames marked fit, to 80% at most, and lets their rows wrap", () => {
     const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
-    expect(css).toContain(".xm-wide{container-type:inline-size}");
-    const steps = [...css.matchAll(/@container[^{]*max-width:([\d.]+)px\)\{\.xm-wide>\.xm-shell\{inline-size:(\d+)px;zoom:([\d.]+)\}\}/g)];
-    expect(steps.length).toBeGreaterThan(5);
-    // At the narrowest width of each step, the zoomed page must still fit.
-    for (const [, max, w, z] of steps) expect(Number(w) * Number(z)).toBeLessThanOrEqual(Number(max) - 19.98 + 0.5);
+    expect(css).not.toMatch(/\.xm-wide\{container-type/);
+    expect(css).toMatch(/\.xm-fit>\.xm-shell\{zoom:\.8;inline-size:calc\(100cqi \/ \.8\)\}/);
+    expect(css).toMatch(/\.xm-fit \.row2\{flex-wrap:wrap\}/);
+    const fit = render({ frame: "wide", fit: true, blocks: [] } as never, "en"), plain = render({ frame: "wide", blocks: [] } as never, "en");
+    expect(fit).toContain("xm-fit");
+    expect(plain).not.toContain("xm-fit");
+  });
+  it("keeps a field's icon on the screen's side and isolates only the number", () => {
+    const f = (text: string) => render({ blocks: [{ kind: "field", label: "Code", text, trail: "caret-up-down" }] } as never, "ar");
+    for (const t of ["48213", "4.4e15"]) expect(f(t)).not.toMatch(/class="fi[^"]*" dir="ltr"/);
+    expect(f("48213")).toContain('<bdi dir="ltr">48213</bdi>');
   });
 });

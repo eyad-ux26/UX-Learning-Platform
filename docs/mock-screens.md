@@ -70,7 +70,7 @@ mock:
   blocks: [ ... ]
 ```
 
-On a screen narrower than 520 px, a wide frame is laid out at 520 px and zoomed down to fit, like a screenshot of a laptop page, so its rows never clip.
+Add `fit: true` to a wide frame whose rows would clip on a phone. Below 440 px it is zoomed to 80% and laid out 25% wider, and its rows wrap instead of clipping. Leave it off when the page already fits, so text stays full size.
 
 Other mock-level options:
 

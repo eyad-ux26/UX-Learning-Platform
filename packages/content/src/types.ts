@@ -38,7 +38,7 @@ export type MockAppbar = { title?: MockText; back?: boolean; actions?: MockActio
 export type MockTab = { icon: string; text?: MockText; aria?: MockText; count?: number; region?: string };
 export type MockNavbar = { links?: MockText[]; active?: number; search?: MockText; actions?: MockAction[] };
 export type Mock = {
-  width?: number; height?: number; caption?: MockText; frame?: "phone" | "small" | "tablet" | "wide"; dir?: "rtl" | "ltr"; gray?: boolean; blur?: number;
+  width?: number; height?: number; caption?: MockText; frame?: "phone" | "small" | "tablet" | "wide"; fit?: boolean; dir?: "rtl" | "ltr"; gray?: boolean; blur?: number;
   app?: MockApp | string; status?: boolean; appbar?: MockAppbar; tabbar?: { items: MockTab[]; active?: number }; footer?: MockBlock[];
   url?: string; navbar?: MockNavbar; theme?: "dark"; keyboard?: "text" | "number"; screen?: "lock"; reader?: MockText;
   overlay?: MockOverlay; fab?: MockFab | MockFab[]; blocks: MockBlock[];
