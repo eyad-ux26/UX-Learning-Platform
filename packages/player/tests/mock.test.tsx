@@ -180,7 +180,7 @@ describe("small pictures show the whole drawing", () => {
       const s = render({ blocks: [{ kind: "image", art, size: "s" }] } as never, "en");
       expect(s, art).toContain('preserveAspectRatio="xMidYMid meet"');
       expect(s, art).toMatch(/class="b k-image size-s has-art" style="background:#[0-9A-Fa-f]{6}"/);
-      expect(render({ blocks: [{ kind: "image", art, size: "l" }] } as never, "en"), art).toContain('preserveAspectRatio="xMidYMid slice"');
+      expect(render({ blocks: [{ kind: "image", art, size: "l" }] } as never, "en"), art).toContain(`preserveAspectRatio="xMidYMid ${art === "gym" ? "meet" : "slice"}"`);
     }
   });
   it("stretches the drawing's edge columns beside a small drawing, so its bands reach both edges", () => {

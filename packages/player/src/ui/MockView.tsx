@@ -211,7 +211,8 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
     case "image":
       if (b.art) {
         // A small image (72 px tall, full width) shows the whole drawing on its own background instead of an empty middle slice.
-        const fit = b.size === "s" ? "meet" : "slice";
+        // The gym drawing has an empty middle, so it is always shown whole.
+        const fit = b.size === "s" || b.art === "gym" ? "meet" : "slice";
         const bg = fit === "meet" ? artBg(String(b.art)) : undefined;
         // Beside it, the drawing's own edge columns (left and right, so the wrapper is always LTR), stretched, carry its bands (sand, road, floor) out to both edges.
         const edge = (side: "start" | "end") => { const svg = artEdge(String(b.art), side); return svg ? <span className={`xm-art-edge is-${side}`} dangerouslySetInnerHTML={{ __html: svg }} /> : null; };
