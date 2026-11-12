@@ -13,14 +13,15 @@ export const metadata = { title: "Revenue" };
 const monthLabel = (d: Date) => d.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
 const usd = (v: number) => fmtMoney(v, "USD");
 
-export default async function RevenuePage({ searchParams }: { searchParams: Promise<{ m?: string }> }) {
+export default async function RevenuePage({ searchParams }: { searchParams: Promise<{ m?: string; test?: string }> }) {
   const ctx = await requireAdmin();
   if (!allowed(ctx, "revenue.view")) return <NoAccess what="Revenue" roles="a billing or analyst role" />;
   const sp = await searchParams;
   const now = new Date();
   const current = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
   const start = sp.m && /^\d{4}-\d{2}$/.test(sp.m) ? new Date(`${sp.m}-01T00:00:00Z`) : current;
-  const d = await revenue(start);
+  const withTest = sp.test === "show";
+  const d = await revenue(start, withTest ? "show" : "hide");
   const months = Array.from({ length: 12 }, (_, i) => new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth() - i, 1)));
   const last = new Date(Date.UTC(current.getUTCFullYear(), current.getUTCMonth() - 1, 1));
   const key = (x: Date) => x.toISOString().slice(0, 7);
@@ -30,8 +31,10 @@ export default async function RevenuePage({ searchParams }: { searchParams: Prom
         actions={<form method="get" className="a-row" style={{ gap: 6 }}>
           <label className="t-sm ink-2" htmlFor="rev-m">Month</label>
           <select id="rev-m" name="m" className="a-in" defaultValue={key(start)} style={{ width: "auto", height: 32 }}>{months.map((m) => <option key={key(m)} value={key(m)}>{monthLabel(m)}{key(m) === key(current) ? " (to date)" : ""}</option>)}</select>
+          <label className="a-row t-sm ink-2" style={{ gap: 4 }}><input type="checkbox" name="test" value="show" defaultChecked={withTest} /> Include test payments</label>
           <button className="a-btn sm" type="submit">Show</button>
         </form>} />
+      {withTest ? <Note icon="warning">Test payments are included: the test provider and Paddle’s sandbox. These numbers are not real money. The accountant export never includes them.</Note> : null}
       <div className="a-kpis">
         <Kpi label="MRR now" value={usd(d.totals.mrr)} note={`${d.totals.paying} paying`} icon="chart-line-up" />
         <Kpi label="New MRR" value={usd(d.totals.newMrr)} note={monthLabel(start)} icon="plus" tone="up" />
@@ -52,10 +55,10 @@ export default async function RevenuePage({ searchParams }: { searchParams: Prom
           )) : <tr><td colSpan={9} className="ink-2">No paid plans or payments yet.</td></tr>}</tbody>
         </table></div>
       </Card>
-      <Note icon="info">Annual plans count as one twelfth a month. Paymob carries Egypt prices; Paddle carries the Gulf, other Arab countries and the rest of the world. Test-provider plans appear only on test hosts.</Note>
+      <Note icon="info">Annual plans count as one twelfth a month. Paymob carries Egypt prices; Paddle carries the Gulf, other Arab countries and the rest of the world. Test payments (the test provider and Paddle’s sandbox) are left out unless you include them above.</Note>
       {allowed(ctx, "billing.export") ? (
         <Card title="Monthly export for the accountant">
-          <p className="t-sm">One row per payment and refund, in the original currency and in USD, with the rate date. Logged and marked with your email.</p>
+          <p className="t-sm">One row per real payment and refund (never test payments), in the original currency and in USD, with the rate date. Logged and marked with your email.</p>
           <div className="a-row" style={{ gap: 8, marginTop: 8 }}>
             <ExportButton action={exportMonth} label={`Download ${monthLabel(last)} (CSV)`} title={`Export ${monthLabel(last)}`} hidden={[{ name: "month", value: key(last) }]} fresh={isFresh(ctx)} note="Payment data for the accountant. A fresh authenticator code is needed." />
             {key(start) !== key(last) ? <ExportButton action={exportMonth} label={`Download ${monthLabel(start)} (CSV)`} title={`Export ${monthLabel(start)}`} hidden={[{ name: "month", value: key(start) }]} fresh={isFresh(ctx)} /> : null}

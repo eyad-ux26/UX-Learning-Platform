@@ -112,7 +112,7 @@ export default async function Learner360Page({ params, searchParams }: { params:
                   ["Plan", `Pro ${sub.period === "year" ? "annual" : "monthly"} · ${REGION_LABEL[sub.region as string] ?? sub.region} price`],
                   ["Renews at", <Money key="m" minor={sub.renew_amount_minor as number} currency={sub.currency as string} />],
                   ["Provider", `${sub.provider === "paddle" ? "Paddle" : sub.provider === "paymob" ? "Paymob" : "Test"}${sub.card_last4 ? ` · ${sub.card_brand ?? "card"} •••• ${sub.card_last4}` : ""}`],
-                  ["Status", String(sub.status)], [sub.status === "cancelled" ? "Pro until" : "Renews", <When key="r" at={sub.current_period_end as string} />],
+                  ["Status", sub.test ? `${String(sub.status)} · test money (not counted as revenue)` : String(sub.status)], [sub.status === "cancelled" ? "Pro until" : "Renews", <When key="r" at={sub.current_period_end as string} />],
                 ]} /> : comp ? <p className="t-sm">Free Pro from the team until <When at={L?.entitlement?.validUntil} />.</p> : <p className="t-sm ink-2">Free plan.</p>}
                 {d.student?.valid_until && new Date(d.student.valid_until).getTime() > Date.now() ? <p className="t-sm" style={{ marginTop: 8 }}><St tone="good" icon="student">Student price until <When at={d.student.valid_until} /></St></p> : null}
               </Card>

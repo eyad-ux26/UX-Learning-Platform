@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { BillingStore, Payment, RefundRequest, Session } from "@/lib/billing/engine";
 import type { EmailKind } from "@/lib/billing/emails";
 import type { BillingProvider, Card, Entitlement, Sub } from "@/lib/billing/subscription";
+import { isTestMoney } from "./config";
 
 // The billing store on Supabase, used with the service-role client only (webhooks, the daily job, and server routes
 // after they have checked who is asking). Column names map one to one onto the engine's types.
@@ -120,7 +121,7 @@ export class SupabaseBillingStore implements BillingStore {
     const row = subToRow(sub);
     const r = sub.id
       ? must(await this.db.from("subscriptions").update(row).eq("id", sub.id).select("*").single())
-      : must(await this.db.from("subscriptions").insert(row).select("*").single());
+      : must(await this.db.from("subscriptions").insert({ ...row, test: isTestMoney(sub.provider) }).select("*").single());
     return subFromRow(r);
   }
   async paymentByProviderId(provider: BillingProvider, providerPaymentId: string) {
@@ -131,7 +132,7 @@ export class SupabaseBillingStore implements BillingStore {
     const { data, error } = await this.db.from("payments").upsert({
       user_id: p.userId, subscription_id: p.subscriptionId, provider: p.provider, provider_payment_id: p.providerPaymentId, kind: p.kind, period: p.period,
       amount_minor: p.amountMinor, currency: p.currency, status: "paid", pay_method: p.payMethod, card_brand: p.cardBrand, card_last4: p.cardLast4,
-      paid_at: p.paidAt, period_end: p.periodEnd,
+      paid_at: p.paidAt, period_end: p.periodEnd, test: isTestMoney(p.provider),
     }, { onConflict: "provider,provider_payment_id", ignoreDuplicates: true }).select("*");
     if (error) throw new Error(error.message);
     return data?.[0] ? paymentFromRow(data[0]) : null;

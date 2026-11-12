@@ -171,7 +171,7 @@ export function Kpi({ label, value, note, icon, href, alert, tone }: { label: st
 /** A search and filter bar that submits as a plain GET form, so every filtered list has its own link. */
 export function Filters({ action, q, placeholder, selects = [], hidden = {} }: {
   action: string; q?: string; placeholder?: string; hidden?: Record<string, string>;
-  selects?: { name: string; label: string; value?: string; options: [string, string][] }[];
+  selects?: { name: string; label: string; value?: string; options: [string, string][]; empty?: string }[];
 }) {
   return (
     <form method="get" action={action} className="a-toolbar" role="search">
@@ -186,7 +186,7 @@ export function Filters({ action, q, placeholder, selects = [], hidden = {} }: {
         <label key={s.name} className="a-row t-sm" style={{ gap: 6 }}>
           <span className="ink-2">{s.label}</span>
           <select className="a-in" name={s.name} defaultValue={s.value ?? ""} style={{ height: 32, width: "auto" }}>
-            <option value="">All</option>
+            <option value="">{s.empty ?? "All"}</option>
             {s.options.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
           </select>
         </label>

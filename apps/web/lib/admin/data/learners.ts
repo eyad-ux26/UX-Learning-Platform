@@ -45,7 +45,7 @@ export async function learner360(userId: string) {
     db.rpc("admin_auth_facts", { p_user: userId }).then((r) => ((r.data ?? []) as AuthFacts[])[0] ?? null),
     db.from("profiles").select("display_name, locale, week_start, time_zone, created_at, reminder_time, delete_after, current_path_id").eq("user_id", userId).maybeSingle().then((r) => r.data),
     db.from("billing_accounts").select("country").eq("user_id", userId).maybeSingle().then((r) => r.data),
-    db.from("subscriptions").select("id, provider, provider_sub_id, region, period, currency, renew_amount_minor, discount, status, current_period_end, grace_until, card_brand, card_last4, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(5).then((r) => r.data ?? []),
+    db.from("subscriptions").select("id, provider, provider_sub_id, region, period, currency, renew_amount_minor, discount, status, current_period_end, grace_until, card_brand, card_last4, created_at, test").eq("user_id", userId).order("created_at", { ascending: false }).limit(5).then((r) => r.data ?? []),
     db.from("payments").select(PAYMENT_COLS).eq("user_id", userId).order("paid_at", { ascending: false }).limit(10).then((r) => (r.data ?? []) as PaymentRow[]),
     db.from("support_tickets").select(TICKET_COLS).eq("user_id", userId).order("created_at", { ascending: false }).limit(10).then((r) => (r.data ?? []) as Ticket[]),
     db.from("learner_notes").select("id, author_id, body, mentions, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(50).then((r) => r.data ?? []),

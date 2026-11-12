@@ -79,7 +79,7 @@ export async function dashboard(ctx: AdminCtx, range: Range) {
     db.rpc("admin_funnel", { p_from: new Date(Date.now() - 30 * DAY).toISOString() }).then((r) => (r.data ?? []) as { step: string; n: number }[]),
     db.rpc("admin_path_activity", { p_from: new Date(Date.now() - 7 * DAY).toISOString(), p_to: now }).then((r) => (r.data ?? []) as { path_id: string; learners: number }[]),
     db.rpc("admin_path_activity", { p_from: new Date(Date.now() - 14 * DAY).toISOString(), p_to: new Date(Date.now() - 7 * DAY).toISOString() }).then((r) => (r.data ?? []) as { path_id: string; learners: number }[]),
-    money ? db.from("subscriptions").select("region, provider, period, currency, renew_amount_minor").in("status", ["active", "grace"]).limit(20000).then((r) => r.data ?? []) : Promise.resolve([]),
+    money ? db.from("subscriptions").select("region, provider, period, currency, renew_amount_minor").eq("test", false).in("status", ["active", "grace"]).limit(20000).then((r) => r.data ?? []) : Promise.resolve([]),
     count(db.from("support_tickets").select("id", { count: "exact", head: true }).in("status", OPEN)),
     db.from("support_tickets").select("id, subject, category, first_reply_due, assignee_id", { count: "exact" }).in("status", OPEN).is("first_replied_at", null).lt("first_reply_due", now).order("first_reply_due").limit(1),
     count(db.from("support_tickets").select("id", { count: "exact", head: true }).in("status", OPEN).is("assignee_id", null)),
@@ -89,7 +89,7 @@ export async function dashboard(ctx: AdminCtx, range: Range) {
     count(db.from("refund_requests").select("id", { count: "exact", head: true }).eq("status", "waiting")),
     count(db.from("admin_approvals").select("id", { count: "exact", head: true }).eq("status", "waiting").in("permission", [...ctx.perms]).neq("requested_by", ctx.userId)),
     count(db.from("billing_events").select("id", { count: "exact", head: true }).not("error", "is", null).is("processed_at", null)),
-    count(db.from("subscriptions").select("id", { count: "exact", head: true }).eq("status", "grace")),
+    count(db.from("subscriptions").select("id", { count: "exact", head: true }).eq("status", "grace").eq("test", false)),
     count(db.from("checkout_sessions").select("id", { count: "exact", head: true }).eq("status", "failed").gte("created_at", cairoMidnight(new Date()).toISOString())),
     db.from("super_admin_grants").select("target, effective_at").eq("status", "pending").order("effective_at").limit(5).then((r) => r.data ?? []),
   ]);
