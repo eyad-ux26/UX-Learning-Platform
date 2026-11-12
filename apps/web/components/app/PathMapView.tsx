@@ -6,6 +6,7 @@ import type { PathLesson, PathView } from "@/lib/learning";
 import type { Progress } from "@/lib/progress";
 import { pathArt } from "./HomeView";
 import { PathSwitcher } from "./PathSwitcher";
+import { XpChip } from "./XpChip";
 import { LockedUnitSheet, type LockedUnitText } from "./LockedUnitSheet";
 import { localPathName } from "@/lib/catalog";
 import { buildPathView, testOutCheck } from "@/lib/learning";
@@ -105,7 +106,7 @@ export async function PathMapMain({ view, me }: { view: PathView; me: Learner })
         <div style={{ flex: 1, minInlineSize: 0 }}>
           <PathSwitcher chips={chips} currentId={view.path.id} sub={sub} />
         </div>
-        <span className="stat"><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>
+        <XpChip xp={progress.xpTotal} />
       </header>
 
       <div className="only-desk" style={{ alignItems: "flex-end", gap: 16, flexWrap: "wrap" }}>

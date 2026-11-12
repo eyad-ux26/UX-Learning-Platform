@@ -20,6 +20,8 @@ export type StepState = {
   hints: number;
   first: Answer | null;
   mc: string | null;
+  /** Which entry of the list (the step's misconceptions, or the reason's) was matched. Several entries can share one id, so the id alone is not enough to find the matched text again. */
+  mcIdx?: number | null;
   alsoOk: Text | null;
   outcome: Outcome | null;
   xp: number;
@@ -70,7 +72,7 @@ export const pairOf = (v: string) => { const i = v.indexOf(":"); return [v.slice
 const sameList = (a: string[], b: string[]) => a.length === b.length && a.every((x, k) => x === b[k]);
 const sameSet = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
 
-const newStep = (): StepState => ({ sel: [], reason: [], conf: null, phase: "answering", tries: 0, hints: 0, first: null, mc: null, alsoOk: null, outcome: null, xp: 0 });
+const newStep = (): StepState => ({ sel: [], reason: [], conf: null, phase: "answering", tries: 0, hints: 0, first: null, mc: null, mcIdx: null, alsoOk: null, outcome: null, xp: 0 });
 
 /** An order step starts in its given order, so Check is available straight away. */
 const initialStep = (step: Step): StepState => ({ ...newStep(), sel: step.type === "order" ? step.items.map((it) => it.id) : [] });
@@ -125,6 +127,15 @@ export function evaluate(step: QuestionStep, answer: Answer): Evaluation {
     }
   }
   return { correct, mainCorrect, alsoOk, misconception: mc, partial };
+}
+
+/** Where the judged misconception sits in the list it came from (the reason list for a wrong reason, otherwise the step's). */
+export function misconceptionIndex(step: QuestionStep, judged: Evaluation): number | null {
+  if (!judged.misconception) return null;
+  const reason = step.type === "compare" ? (step as CompareStep).reason : undefined;
+  const list = judged.partial ? reason?.misconceptions : step.misconceptions;
+  const i = (list ?? []).indexOf(judged.misconception);
+  return i >= 0 ? i : null;
 }
 
 const hasReason = (step: Step): step is CompareStep => step.type === "compare" && !!step.reason;
@@ -196,14 +207,14 @@ export function check(lesson: Lesson, state: LessonState, now = Date.now()): Tra
   }
   if (lesson.mode === "bank") {
     if (judged.correct) return { state: withStep(state, state.i, { phase: "right", tries, first, outcome: "independent", xp: XP.independent, alsoOk: judged.alsoOk, mc: null }), event };
-    return { state: withStep(state, state.i, { phase: "missed", tries, first, outcome: "missed", xp: 0, mc: judged.misconception?.id ?? null, alsoOk: null }), event };
+    return { state: withStep(state, state.i, { phase: "missed", tries, first, outcome: "missed", xp: 0, mc: judged.misconception?.id ?? null, mcIdx: misconceptionIndex(step, judged), alsoOk: null }), event };
   }
   if (judged.correct) {
     const outcome: Outcome = tries === 1 && st.hints === 0 ? "independent" : "supported";
     return { state: withStep(state, state.i, { phase: "right", tries, first, outcome, xp: XP[outcome], alsoOk: judged.alsoOk, mc: null }), event };
   }
   // A wrong reason sends the learner back to the reason question; a wrong main answer back to the options.
-  return { state: withStep(state, state.i, { phase: "wrong", tries, first, mc: judged.misconception?.id ?? null, alsoOk: null }), event };
+  return { state: withStep(state, state.i, { phase: "wrong", tries, first, mc: judged.misconception?.id ?? null, mcIdx: misconceptionIndex(step, judged), alsoOk: null }), event };
 }
 
 export const hintsAvailable = (step: Step) => (isQuestion(step) ? Math.min(MAX_HINTS, step.hints?.length ?? 0) : 0);
@@ -278,4 +289,11 @@ export function scoreStep(step: QuestionStep, events: Pick<TryEvent, "kind" | "a
   if (win >= 0) outcome = win === 0 && hints === 0 ? "independent" : "supported";
   else if (events.some((e) => e.kind === "reveal") && checks.length >= REVEAL_AFTER_TRIES) outcome = "revealed";
   return { outcome, xp: outcome ? XP[outcome] : 0, tries: checks.length, correct };
+}
+
+/** The misconception to show for a missed or wrong step. Uses the stored index, because several entries can share one id (the same mistake behind different options); falls back to the id for state saved before the index existed. */
+export function matchedMisconception<M extends { id: string }>(list: readonly M[] | undefined, st: { mc: string | null; mcIdx?: number | null }): M | undefined {
+  if (!list || !st.mc) return undefined;
+  const at = st.mcIdx != null ? list[st.mcIdx] : undefined;
+  return at && at.id === st.mc ? at : list.find((m) => m.id === st.mc);
 }

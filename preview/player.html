@@ -773,6 +773,8 @@ document.addEventListener("pointerdown", e => { const sl = e.target.closest(".mo
 document.addEventListener("pointermove", e => { if (slideDrag) slideTo(slideDrag.sl, e); });
 document.addEventListener("pointerup", () => { slideDrag = null; });
 document.addEventListener("click", e => { const el = e.target.closest(".mock .act"); if (el) mockAct(el); });
+// Realistic mocks: accordions open and close on tap, as in the app (the picture only, never the answer).
+document.addEventListener("click", e => { const h = e.target.closest(".exmock button.ac-h"); if (!h) return; const a = h.parentElement, open = !a.classList.contains("is-open"); a.classList.toggle("is-open", open); h.setAttribute("aria-expanded", String(open)); const body = a.querySelector(":scope > .ac-b"); if (body) body.hidden = !open; });
 document.addEventListener("keydown", e => { const el = e.target.closest && e.target.closest(".mock .act"); if (el && (e.key === " " || e.key === "Enter")) { e.preventDefault(); mockAct(el); } });
 
 function wire(s, st, locked){

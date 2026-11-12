@@ -84,7 +84,7 @@ Other mock-level options:
 
 ```yaml
   overlay:
-    type: dialog            # dialog | sheet | full | toast | banner | menu | side
+    type: dialog            # dialog | sheet | full | toast | banner | menu | side   (a banner sits under the app bar and pushes the screen down)
     close: true             # ✕ in the corner
     scrim: true             # dims the screen. Default: on for dialog, sheet, side and menu; off for toast and banner
     tall: true              # sheet only: nearly full height
@@ -203,6 +203,13 @@ footer: [ { kind: composer, text: { en: "Ask Fikra anything", ar: "اسأل فك
 **`accordion`**: a section header with a chevron. When open, its `blocks` show under it.
 ```yaml
 - { kind: accordion, text: { en: "Delivery and returns", ar: "التوصيل والإرجاع" }, open: true, blocks: [ { kind: small, text: { en: "Free over EGP 500", ar: "مجاني فوق 500 جنيه" } } ] }
+```
+
+Learners can tap an accordion to open or close it. This changes only the picture, never their answer. `open` sets how it starts, so give a closed row its `blocks` too, because they show when it is opened. In `spot` steps, accordions stay as drawn.
+
+**`more`**: shows that the list goes on past what the screen shows, such as "+12 more questions". It fades the block above it. `fade: false` turns the fade off. Use it whenever an option claims more than the picture can fit (for example, "all 14 open").
+```yaml
+- { kind: more, text: { en: "+12 more questions, all open", ar: "+12 سؤالًا آخر، كلها مفتوحة" } }
 ```
 
 **`tabs`**: an in-page tab strip with an underline. This is different from `segmented`.
