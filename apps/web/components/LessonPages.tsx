@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import type { Lesson, Locale, Skill } from "@uxgate/content/types";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
+import { drain, queuedFor, setSyncUser, startSync } from "@/lib/sync";
 import type { PathEnd, UpNext } from "@/lib/up-next";
 import { play } from "@/lib/sound";
 import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
@@ -95,8 +96,9 @@ export function ReviewEnd({ lesson, state, locale, skills, offline, onHome, onBa
 }
 
 /** End of a skill check: each skill is Shown or "Try again later". The mastery round follows when something was missed. */
-export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMastery, onContinue, upNext = null, pathEnd = null, onGo }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: SyncShown; onMastery: () => void; onContinue: () => void; upNext?: UpNext | null; pathEnd?: PathEnd | null; onGo?: (to: string) => void }) {
+export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMastery, onContinue, upNext = null, pathEnd = null, onGo }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: SyncShown; onMastery: () => Promise<void> | void; onContinue: () => void; upNext?: UpNext | null; pathEnd?: PathEnd | null; onGo?: (to: string) => void }) {
   const t = useTranslations("pages");
+  const [going, setGoing] = useState(false);
   const rows = skillResults(lesson, state, unitSkills);
   const shown = rows.filter((r) => r.shown).length;
   const all = shown === rows.length;
@@ -113,7 +115,8 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
       sub={cert ? t("pathDoneSub") : all ? t("passedSub") : t("checkSome", { shown, total: rows.length })}
       foot={
         <>
-          {!all ? <button type="button" className="btn btn-primary btn-lg press" onClick={onMastery}>{t("masteryCta")}<span className="ph ph-arrow flip" aria-hidden="true" /></button> : null}
+          {/* Busy while the answers are being saved, and after a tap until the save is done (QA #264): the round needs the check on the server. */}
+          {!all ? <button type="button" className="btn btn-primary btn-lg press" aria-busy={going || offline === "saving" || undefined} disabled={going} onClick={async () => { setGoing(true); try { await onMastery(); } catch { setGoing(false); } }}>{t("masteryCta")}<span className="ph ph-arrow flip" aria-hidden="true" /></button> : null}
           {cert && onGo ? <button type="button" className="btn btn-primary btn-lg press" onClick={() => onGo(`/app/certificate/${cert.pathId}`)}>{t("certReady")}</button> : null}
           {nextUnit ? <button type="button" className="btn btn-primary btn-lg press" onClick={() => onGo!(`/app/lesson/${nextUnit.lessonId}`)}>{t("startUnit", { n: nextUnit.unitNo })}<span className="ph ph-arrow flip" aria-hidden="true" /></button> : null}
           {cert && onGo ? <button type="button" className="btn btn-ghost btn-lg" onClick={() => onGo("/app/paths")}>{t("allPaths")}</button>
@@ -217,10 +220,44 @@ export function MasteryNone({ backHref, usedUp = false }: { backHref: string; us
   );
 }
 
-/** The skill check is not finished yet, so the round is not open. */
-export function MasteryLocked({ backHref }: { backHref: string }) {
+/**
+ * The server has no finished skill check yet, so the round is not open. The check may still be waiting on this device
+ * (the learner tapped through while it was saving, or opened a link): send it first, then ask the server again (QA #264).
+ */
+export function MasteryLocked({ backHref, userId }: { backHref: string; userId?: string }) {
   const t = useTranslations("pages");
-  return <Page art="lock" title={t("lockedTitle")} sub={t("lockedBody")} foot={<Link href={backHref as never} className="btn btn-primary btn-lg press">{t("continue")}</Link>} />;
+  const router = useRouter();
+  const [, startTransition] = useTransition();
+  const [phase, setPhase] = useState<"check" | "saving" | "locked" | "offline">(userId ? "check" : "locked");
+  useEffect(() => {
+    if (!userId) return;
+    let live = true;
+    void (async () => {
+      setSyncUser(userId);
+      startSync();
+      if (!(await queuedFor(userId))) { if (live) setPhase("locked"); return; }
+      if (live) setPhase("saving");
+      const ok = await drain();
+      if (!live) return;
+      // The new page comes with the refresh; "locked" only shows if the server still says no.
+      if (ok) startTransition(() => { setPhase("locked"); router.refresh(); });
+      else setPhase("offline");
+    })();
+    return () => { live = false; };
+  }, [userId, router]);
+  if (phase === "check" || phase === "saving") {
+    return (
+      <Page art="target" title={t("masteryTitle")}
+        foot={<><button type="button" className="btn btn-primary btn-lg press" aria-busy="true" disabled>{t("masteryStart")}</button><Link href={backHref as never} className="btn btn-secondary btn-lg press">{t("notNow")}</Link></>}>
+        <SyncNote offline="saving" text={t("saving")} />
+      </Page>
+    );
+  }
+  return (
+    <Page art="lock" title={t("lockedTitle")} sub={t("lockedBody")} foot={<Link href={backHref as never} className="btn btn-primary btn-lg press">{t("continue")}</Link>}>
+      {phase === "offline" ? <SyncNote offline text={t("syncLater")} /> : null}
+    </Page>
+  );
 }
 
 /** End of the sample lesson: the result stays on this device until the learner signs up. */

@@ -144,6 +144,13 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     router.push(href as never, { locale: view });
     router.refresh();
   };
+  // The mastery round opens only once the server has the skill check, so wait for the save itself (QA #264), up to 15 s.
+  // Offline or failed, go anyway: the mastery page sends what is still queued before it decides.
+  const toMastery = async () => {
+    await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 15000))]);
+    router.push(`/app/mastery/${unitId}` as never, { locale: view });
+    router.refresh();
+  };
 
   // A signed address for a clip, asked for when the step opens.
   const videoSource = useCallback(async (id: string) => {
@@ -205,7 +212,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     // A finished skill check played again is practice: the results show, and no skill changes.
     if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onContinue={() => leave(pathHref)} xpOf={(n) => replayXp(n, replay)} />;
-    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
+    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onMastery={toMastery} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
     return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={syncShown} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
   }
 
