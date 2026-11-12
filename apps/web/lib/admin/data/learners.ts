@@ -59,7 +59,7 @@ export async function learner360(userId: string) {
     db.from("student_checks").select("verified_at, valid_until").eq("user_id", userId).maybeSingle().then((r) => r.data),
   ]);
   if (!facts) return null;
-  const learner = await readLearner(db, userId, { email: facts.email, host: null }).catch((e) => {
+  const learner = await readLearner(db, userId, { email: facts.email, host: null, adminView: true }).catch((e) => {
     console.error("admin learner 360: learner state", (e as Error).message);
     return null;
   });
