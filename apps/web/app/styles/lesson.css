@@ -315,3 +315,22 @@
 html.lp-full-open, html.lp-full-open body { overflow: hidden; }
 html.lp-full-open .player-head, html.lp-full-open .player-foot { display: none; }
 html.lp-full-open .player-main { isolation: auto; }
+
+/* D1 (Eyad, 12 Nov; board S3-19 frame 5): a skill check keeps answers as drafts. Numbered question buttons: answered solid,
+   current in the selection colour with a ledge, no answer yet dashed. 40 px buttons with a 44 px target. */
+.ug .lp-qnav { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
+.ug .lp-qbtn { all: unset; box-sizing: border-box; display: grid; place-items: center; inline-size: 44px; block-size: 44px; cursor: pointer; border-radius: 14px; }
+.ug .lp-qbtn .num { display: grid; place-items: center; inline-size: 40px; block-size: 40px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 700; font-size: 15px; box-sizing: border-box; }
+.ug .lp-qbtn.is-saved .num { border-color: var(--ink-3); }
+.ug .lp-qbtn.is-empty .num { border-style: dashed; color: var(--ink-2); background: transparent; }
+.ug .lp-qbtn.is-now .num { border-color: var(--sel-line); background: var(--sel-bg); color: var(--link); box-shadow: 0 3px 0 var(--sel-line); }
+.ug .lp-qbtn:focus-visible .num { outline: 3px solid var(--focus); outline-offset: 2px; }
+.ug .lp-missing { display: flex; align-items: flex-start; gap: 6px; margin: 0; color: var(--warn-ink); font-weight: 600; }
+.ug .lp-missing .ph { flex: none; margin-block-start: 2px; }
+.ug .lp-checksheet .sheet-actions { display: flex; gap: 8px; }
+.ug .lp-checksheet .sheet-actions .btn-primary { flex: 1; }
+.ug .player-foot .lp-qnav { margin-block-end: 8px; }
+.ug .lp-saving { display: flex; align-items: center; gap: 6px; margin: 0; }
+.ug .lp-saving .ph { animation: lp-spin 1.2s linear infinite; }
+@keyframes lp-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ug .lp-saving .ph { animation: none; } }

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { LessonPlayer } from "@uxgate/player";
-import { startLesson, type LessonState, type TryEvent } from "@uxgate/player/engine";
+import { resumeCheck, startLesson, type LessonState, type TryEvent } from "@uxgate/player/engine";
 import { kvDel, kvGet, kvSet } from "@/lib/idb";
 import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
@@ -12,7 +12,7 @@ import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { NextIntlClientProvider, useMessages, useTimeZone, useTranslations } from "next-intl";
 import type { OtherLocale } from "@/lib/server/lesson-messages";
 import { LessonEnd, type ProNext } from "./LessonEnd";
-import { CheckPractice, CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
+import { CheckPractice, CheckSummary, GuestEnd, MasteryEnd, ReviewEnd, type SyncShown } from "./LessonPages";
 import { REVISE_COOKIE, reviseHref } from "@/lib/revise";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
@@ -104,7 +104,8 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     (async () => {
       let saved: LessonState | undefined;
       try { saved = await kvGet<LessonState>(key); } catch { /* private mode: start fresh */ }
-      const fresh = saved && saved.hash === hash && !saved.done && saved.steps.length === lesson.steps.length ? saved : startLesson(lesson, hash);
+      // A skill check picks up at its first question without an answer; saved answers are kept (design S3-19 frame 5).
+      const fresh = saved && saved.hash === hash && !saved.done && saved.steps.length === lesson.steps.length ? resumeCheck(lesson, saved) : startLesson(lesson, hash);
       attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
       if (alive) {
         setState(fresh);
@@ -141,6 +142,13 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     const href = typeof to === "string" && to.startsWith("/") ? to : "/app";
     await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
     router.push(href as never, { locale: view });
+    router.refresh();
+  };
+  // The mastery round opens only once the server has the skill check, so wait for the save itself (QA #264), up to 15 s.
+  // Offline or failed, go anyway: the mastery page sends what is still queued before it decides.
+  const toMastery = async () => {
+    await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 15000))]);
+    router.push(`/app/mastery/${unitId}` as never, { locale: view });
     router.refresh();
   };
 
@@ -193,16 +201,19 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     } catch { /* the switch still works for this screen */ }
   }, [other, view, locale]);
 
+  // End pages: "Saving your results…" while the answers are on their way, the offline note only when sending failed (QA #264).
+  const syncShown: SyncShown = !sync.online || sync.failed ? true : sync.pending > 0 ? "saving" : false;
+
   function body() {
   if (!state) return <div className="player-loading" aria-busy="true"><Loader full /></div>;
   if (finished) {
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={view} />;
-    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
+    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={syncShown} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     // A finished skill check played again is practice: the results show, and no skill changes.
-    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onContinue={() => leave(pathHref)} xpOf={(n) => replayXp(n, replay)} />;
-    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
+    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onContinue={() => leave(pathHref)} xpOf={(n) => replayXp(n, replay)} />;
+    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onMastery={toMastery} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={syncShown} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
   }
 
   return (

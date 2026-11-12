@@ -7,11 +7,12 @@ import { isQuestion, summarize, type LessonState } from "@uxgate/player/engine";
 import { Link } from "@/i18n/navigation";
 import { PushAsk } from "@/components/account/PushAsk";
 import type { UpNext } from "@/lib/up-next";
+import { SyncNote, type SyncShown } from "./LessonPages";
 
 /** The next unit when it is part of Pro and the learner is on the free plan. */
 export type ProNext = { n: number; title: string };
 
-export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "", proNext = null, revising = false }: { revising?: boolean; pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void; proNext?: ProNext | null }) {
+export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "", proNext = null, revising = false }: { revising?: boolean; pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: SyncShown; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void; proNext?: ProNext | null }) {
   const t = useTranslations("end");
   const tb = useTranslations("billing");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
@@ -41,7 +42,7 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
             {revising ? <p className="t-small replay-note"><span className="ph ph-review" aria-hidden="true" />{upNext?.revise ? t("revisingOn") : upNext ? t("revisingNew") : t("revisingDone")}</p> : null}
             {replay ? <p className="t-small replay-note"><span className="ph ph-review" aria-hidden="true" />{replay === "paid" ? t("replayHalf") : t("replayNone")}</p> : null}
           </div>
-          {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{t("syncLater")}</p> : null}
+          <SyncNote offline={offline} text={offline === "saving" ? t("saving") : t("syncLater")} />
           <div className="end-stats">
             <div className="stat-tile stat-xp pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr big" data-testid="xp">+{sum.xp} XP</span><span className="lbl">{t("xpLabel")}</span></div>
             <div className="stat-tile pop"><span className="ph ph-target" aria-hidden="true" /><span className="num ltr big" data-testid="first-try">{sum.independent}/{sum.questions}</span><span className="lbl ink-2">{t("firstTry")}</span></div>

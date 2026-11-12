@@ -79,18 +79,47 @@ describe("structured steps", () => {
   });
 });
 
-describe("skill check", () => {
+describe("skill check (answers are drafts until submit, design S3-19 frame 5)", () => {
   const lesson = mk("check", [words, spot]);
-  it("takes the answer without a verdict, allows no hint or retry, and the first answer is final", () => {
+  it("saves the answer with no verdict and sends nothing; no hint or retry", () => {
     const r = run(lesson, 0, ["o2"]);
-    expect(r.state.steps[0]).toMatchObject({ phase: "saved", outcome: "missed", xp: 0 });
-    expect(r.event).toMatchObject({ kind: "check", correct: false, tryNo: 1 });
+    expect(r.state.steps[0]).toMatchObject({ phase: "saved", outcome: null, xp: 0 });
+    expect(r.event).toBeUndefined();
+    expect(r.events).toBeUndefined();
     expect(E.canHint(lesson.steps[0], r.state.steps[0], lesson)).toBe(false);
     expect(E.isFinished(lesson.steps[0], r.state.steps[0])).toBe(true);
     expect(E.retry(lesson, r.state)).toBe(r.state);
   });
-  it("a right answer is independent, 10 XP, still with no verdict phase", () => {
-    expect(run(lesson, 0, ["o1"]).state.steps[0]).toMatchObject({ phase: "saved", outcome: "independent", xp: 10 });
+  it("a saved answer can be changed: tapping another choice saves it again", () => {
+    const r = run(lesson, 0, ["o2"]);
+    const s = E.select(lesson, r.state, "o1");
+    expect(s.steps[0]).toMatchObject({ phase: "saved", sel: ["o1"] });
+  });
+  it("moves between questions and never finishes without a submit", () => {
+    let s = run(lesson, 0, ["o1"]).state;
+    s = E.advance(lesson, s);
+    expect(s.i).toBe(1);
+    expect(E.goTo(lesson, s, 0).i).toBe(0);
+    s = E.check(lesson, E.select(lesson, s, "btn")).state;
+    expect(E.advance(lesson, s).done).toBe(false);
+  });
+  it("comes back at the first question without an answer", () => {
+    const s = run(lesson, 0, ["o1"]).state;
+    expect(E.resumeCheck(lesson, { ...s, i: 0 }).i).toBe(1);
+    expect(E.unanswered(lesson, s)).toEqual([1]);
+  });
+  it("submit judges every answer at once, sends one event each, counts an empty answer as wrong, and is final", () => {
+    const s = run(lesson, 0, ["o1"]).state;
+    const r = E.submitCheck(lesson, s, 2_000);
+    expect(r.state.done).toBe(true);
+    expect(r.state.steps[0]).toMatchObject({ outcome: "independent", xp: 10 });
+    expect(r.state.steps[1]).toMatchObject({ outcome: "missed", xp: 0 });
+    expect(r.events).toHaveLength(2);
+    expect(r.events![0]).toMatchObject({ stepId: "S05", kind: "check", tryNo: 1, correct: true, answer: { sel: ["o1"] } });
+    expect(r.events![1]).toMatchObject({ stepId: "S04", kind: "check", tryNo: 1, correct: false, answer: { sel: [] } });
+    expect(E.select(lesson, r.state, "o2")).toBe(r.state);
+    expect(E.goTo(lesson, r.state, 0)).toBe(r.state);
+    expect(E.submitCheck(lesson, r.state).events).toBeUndefined();
   });
   it("scores on the server from the first answer only", () => {
     const events = [

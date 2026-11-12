@@ -46,12 +46,19 @@ export async function POST(req: Request) {
 
   const db = createAdminClient();
   const userId = auth.user.id;
-  // Units after Unit 1 need Pro, checked here and not only on the screen (slice 5). Read with the learner's own session.
-  if (!lessonOpen(body.lessonId, false) && !(await readPro(supabase, userId, hostOf(req)))) return NextResponse.json({ error: "pro_required" }, { status: 403 });
-  if (!(await withinDbLimit(db, userId, "attempts-minute", PER_MINUTE, 60))) return tooMany();
-
-  // Answers given on an older version of the lesson are scored against that version, which stays stored.
-  const { data: versionRow } = await db.from("content_versions").select("id, body").eq("lesson_id", body.lessonId).eq("hash", body.hash).maybeSingle();
+  // These reads do not depend on each other, so they go out together: a skill check sends all its answers in this one
+  // request at the end (D1), and every serial round trip to the database was time the learner waited on its end page.
+  const [pro, withinMinute, { data: versionRow }, { data: known }] = await Promise.all([
+    // Units after Unit 1 need Pro, checked here and not only on the screen (slice 5). Read with the learner's own session.
+    lessonOpen(body.lessonId, false) ? Promise.resolve(true) : readPro(supabase, userId, hostOf(req)),
+    withinDbLimit(db, userId, "attempts-minute", PER_MINUTE, 60),
+    // Answers given on an older version of the lesson are scored against that version, which stays stored.
+    db.from("content_versions").select("id, body").eq("lesson_id", body.lessonId).eq("hash", body.hash).maybeSingle(),
+    // A first send for a play: it must be a lesson the learner has unlocked, and a learner can only start so many plays a day.
+    db.from("attempts").select("id, plan, kind").eq("user_id", auth.user.id).eq("client_attempt_id", body.attemptId).maybeSingle(),
+  ]);
+  if (!pro) return NextResponse.json({ error: "pro_required" }, { status: 403 });
+  if (!withinMinute) return tooMany();
   if (!versionRow) {
     // The app knows this version but the database does not yet (a deploy that came before the content seed): the client must keep the answers and retry.
     if (current.hash === body.hash) return NextResponse.json({ error: "content_not_ready" }, { status: 503, headers: { "retry-after": "300" } });
@@ -61,8 +68,6 @@ export async function POST(req: Request) {
   if (!Array.isArray(lesson?.steps)) return NextResponse.json({ error: "content_not_published" }, { status: 409 });
 
   const bank = lesson.mode === "bank";
-  // A first send for a play: it must be a lesson the learner has unlocked, and a learner can only start so many plays a day.
-  const { data: known } = await db.from("attempts").select("id, plan, kind").eq("user_id", userId).eq("client_attempt_id", body.attemptId).maybeSingle();
   // A bank is played either as the unit's mastery round or as a review session; once stored, the play keeps its kind.
   const review = bank && (known ? known.kind === "review" : body.purpose === "review");
   const mastery = bank && !review;
@@ -104,13 +109,15 @@ export async function POST(req: Request) {
     const view = buildPathView(current.pathId, progress, new Set());
     // A skill check of the unit the learner is in may be taken early (test out); every other locked lesson is refused.
     if (view && !canPlay(view, body.lessonId)) return NextResponse.json({ error: "lesson_locked" }, { status: 403 });
-    if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
     // Playing a finished lesson again is a replay: half XP the first time each day, nothing after that.
-    if (progress.finishedLessons.includes(body.lessonId)) {
-      const { data: paid, error: perr } = await db.from("attempts").select("started_at").eq("user_id", userId).eq("lesson_id", body.lessonId).eq("replay_kind", "paid");
-      const { data: prof } = await db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle();
-      if (!perr) replay = decideReplay(true, (paid ?? []).map((p) => p.started_at as string), new Date(), prof?.time_zone);
-    }
+    const again = progress.finishedLessons.includes(body.lessonId);
+    const [withinDay, paidRes, profRes] = await Promise.all([
+      withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400),
+      again ? db.from("attempts").select("started_at").eq("user_id", userId).eq("lesson_id", body.lessonId).eq("replay_kind", "paid") : null,
+      again ? db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle() : null,
+    ]);
+    if (!withinDay) return tooMany();
+    if (paidRes && !paidRes.error) replay = decideReplay(true, (paidRes.data ?? []).map((p) => p.started_at as string), new Date(), profRes?.data?.time_zone);
   }
 
   // The attempt is created once per play; the client's attempt id makes repeated sends land on the same row.
@@ -119,28 +126,27 @@ export async function POST(req: Request) {
     { onConflict: "user_id,client_attempt_id" },
   ).select("id, finished_at").single();
   if (aerr || !attempt) return NextResponse.json({ error: "save_failed" }, { status: 500 });
-  if (!known && replay) await db.from("attempts").update({ replay_kind: replay }).eq("id", attempt.id);
-
-  const { data: stored } = await db.from("step_results").select("step_id, try_no, kind, answer, hints_used").eq("attempt_id", attempt.id).eq("user_id", userId);
+  const [, { data: stored }] = await Promise.all([
+    !known && replay ? db.from("attempts").update({ replay_kind: replay }).eq("id", attempt.id) : null,
+    db.from("step_results").select("step_id, try_no, kind, answer, hints_used").eq("attempt_id", attempt.id).eq("user_id", userId),
+  ]);
   const prior = (stored ?? []).map((r) => ({ stepId: r.step_id, tryNo: r.try_no, kind: r.kind as "check" | "main_ok" | "reveal", answer: r.answer as { sel: string[]; reason?: string[] }, hintsUsed: r.hints_used }));
 
   const out = processEvents(lesson, body, prior, plan);
 
-  if (out.results.length) {
-    const { error } = await db.from("step_results").upsert(
+  const xpRows = replay === "unpaid" ? [] : out.xp.map((x) => ({ ...x, amount: replayXp(x.amount, replay) }));
+  // Both writes are keyed, so a retry after a partial failure only adds what is missing.
+  const [resWrite, xpWrite] = await Promise.all([
+    out.results.length ? db.from("step_results").upsert(
       out.results.map((r) => ({ ...r, attempt_id: attempt.id, user_id: userId })),
       { onConflict: "user_id,idempotency_key", ignoreDuplicates: true },
-    );
-    if (error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
-  }
-  const xpRows = replay === "unpaid" ? [] : out.xp.map((x) => ({ ...x, amount: replayXp(x.amount, replay) }));
-  if (xpRows.length) {
-    const { error } = await db.from("xp_events").upsert(
+    ) : null,
+    xpRows.length ? db.from("xp_events").upsert(
       xpRows.map((x) => ({ user_id: userId, attempt_id: attempt.id, step_id: x.step_id, outcome: x.outcome, amount: x.amount })),
       { onConflict: "attempt_id,step_id", ignoreDuplicates: true },
-    );
-    if (error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
-  }
+    ) : null,
+  ]);
+  if (resWrite?.error || xpWrite?.error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
   if (out.finished && !attempt.finished_at) {
     const now = new Date();
     // Only the request that actually flips finished_at counts the lesson, so a double send cannot count it twice.
@@ -164,25 +170,36 @@ async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: st
     await markShown(db, userId, await firstTryRight(db, attemptId, userId, "any"), now);
     return;
   }
-  const { data: profile } = await db.from("profiles").select("time_zone, daily_goal").eq("user_id", userId).maybeSingle();
-  const day = localDay(now, profile?.time_zone);
-  const goal = profile?.daily_goal ?? 1;
   // A replay counts toward the day only when it is the paid one; it never changes skills.
   if (replay === "unpaid") return;
-  // One atomic statement, so two lessons finishing together are both counted.
-  const bump = await db.rpc("bump_lessons_done", { p_user: userId, p_day: day, p_goal: goal });
-  if (bump.error) {
+  // Independent writes go out together (one finished request now carries a whole skill check, D1).
+  const [{ data: profile }, right] = await Promise.all([
+    db.from("profiles").select("time_zone, daily_goal").eq("user_id", userId).maybeSingle(),
+    kind === "check" && !replay ? firstTryRight(db, attemptId, userId) : Promise.resolve([] as string[]),
+  ]);
+  const day = localDay(now, profile?.time_zone);
+  const goal = profile?.daily_goal ?? 1;
+  const countDay = async () => {
+    // One atomic statement, so two lessons finishing together are both counted.
+    const bump = await db.rpc("bump_lessons_done", { p_user: userId, p_day: day, p_goal: goal });
+    if (!bump.error) return;
     // Database not yet on migration 0003: fall back to read then write.
     const { data: today } = await db.from("daily_activity").select("lessons_done").eq("user_id", userId).eq("day", day).maybeSingle();
     const lessonsDone = (today?.lessons_done ?? 0) + 1;
     await db.from("daily_activity").upsert({ user_id: userId, day, lessons_done: lessonsDone, goal_met: lessonsDone >= goal }, { onConflict: "user_id,day" });
-  }
-  // Lesson ids start with their path id (P01-U01-L01); mark that path as active just now.
-  await db.from("enrollments").update({ last_active_at: now.toISOString() }).eq("user_id", userId).eq("path_id", lessonId.split("-")[0]);
-  if (replay) return;
-  await markPracticed(db, userId, skillIds);
-  // Skill check passed unaided (right on its one try): that skill is Shown, with its first review in 3 days.
-  if (kind === "check") await markShown(db, userId, await firstTryRight(db, attemptId, userId), now);
+  };
+  const skills = async () => {
+    if (replay) return;
+    await markPracticed(db, userId, skillIds);
+    // Skill check passed unaided (right on its one try): that skill is Shown, with its first review in 3 days.
+    if (kind === "check") await markShown(db, userId, right, now);
+  };
+  await Promise.all([
+    countDay(),
+    // Lesson ids start with their path id (P01-U01-L01); mark that path as active just now.
+    db.from("enrollments").update({ last_active_at: now.toISOString() }).eq("user_id", userId).eq("path_id", lessonId.split("-")[0]),
+    skills(),
+  ]);
 }
 
 /** Skills whose step in this attempt was right on the first judged try. A skill with several steps needs all of them right in a skill check ("all"); in the mastery round one right first try is enough ("any"). */

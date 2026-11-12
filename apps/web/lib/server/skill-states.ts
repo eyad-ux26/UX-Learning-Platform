@@ -22,9 +22,9 @@ export async function markPracticed(db: Db, userId: string, skillIds: string[]) 
 export async function markShown(db: Db, userId: string, skillIds: string[], now = new Date()) {
   const ids = [...new Set(skillIds)];
   if (!ids.length) return;
-  const { data: current } = await db.from("skill_states").select("skill_id, state").eq("user_id", userId).in("skill_id", ids);
+  const [{ data: current }, rules] = await Promise.all([db.from("skill_states").select("skill_id, state").eq("user_id", userId).in("skill_id", ids), learningRules()]);
   const done = new Set((current ?? []).filter((r) => r.state === "kept" || r.state === "shown").map((r) => r.skill_id as string));
-  const next = new Date(now.getTime() + (await learningRules()).reviewAfterDays * 86_400_000).toISOString();
+  const next = new Date(now.getTime() + rules.reviewAfterDays * 86_400_000).toISOString();
   const rows = ids.filter((id) => !done.has(id)).map((skill_id) => ({ user_id: userId, skill_id, state: "shown", shown_at: now.toISOString(), next_review_at: next }));
   if (rows.length) await db.from("skill_states").upsert(rows, { onConflict: "user_id,skill_id" });
 }

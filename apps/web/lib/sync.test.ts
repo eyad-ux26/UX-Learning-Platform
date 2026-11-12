@@ -53,4 +53,44 @@ describe("sync flush", () => {
     const sent = JSON.parse(bodies.at(-1)!);
     expect(sent).toMatchObject({ attemptId: "b@2", plan: ["s3"], purpose: "review" });
   });
+
+  it("marks a send that failed (5xx) as failed, and an answer still in flight only as pending (QA #264)", async () => {
+    const mod = await import("./sync");
+    const seen: { pending: number; failed: boolean }[] = [];
+    let release!: () => void;
+    let calls = 0;
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      calls++;
+      if (calls === 1) { await new Promise<void>((r) => { release = r; }); return { ok: false, status: 503 } as Response; }
+      return { ok: true, status: 200 } as Response;
+    }));
+    queue.set(item(7).key, item(7));
+    mod.kick();
+    await settle();
+    seen.push(mod.syncStatusNow());
+    release();
+    for (let i = 0; i < 10; i++) await settle();
+    seen.push(mod.syncStatusNow());
+    expect(seen[0]).toMatchObject({ pending: 1, failed: false });
+    expect(seen[1]).toMatchObject({ pending: 1, failed: true });
+  });
+
+  it("a retry clears the failed note at once, and a flush called mid-send waits for that send (QA #264)", async () => {
+    const mod = await import("./sync");
+    // The test before leaves a failed send behind: the note is up.
+    expect(mod.syncStatusNow().failed).toBe(true);
+    let release!: () => void;
+    vi.stubGlobal("fetch", vi.fn(async () => { await new Promise<void>((r) => { release = r; }); return { ok: true, status: 200 } as Response; }));
+    queue.set(item(8).key, item(8));
+    mod.kick(); // the retry starts
+    await settle();
+    expect(mod.syncStatusNow()).toMatchObject({ pending: 1, failed: false, online: true });
+    let done = false;
+    const drained = mod.drain().then((ok) => { done = true; return ok; });
+    for (let i = 0; i < 5; i++) await settle();
+    expect(done).toBe(false); // joined the running send instead of returning at once
+    release();
+    expect(await drained).toBe(true);
+    expect(queue.size).toBe(0);
+  });
 });

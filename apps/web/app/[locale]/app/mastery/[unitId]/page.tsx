@@ -24,7 +24,7 @@ export default async function MasteryPage({ params }: { params: Promise<{ locale
   // A Pro unit's re-test questions are Pro content too (issue #137): without Pro the path map opens with the paywall.
   if (!unitOpen(unit, me.pro)) return redirect({ href: `${back}?paywall=${unitId}`, locale }) as never;
   const round = await loadRound(me.db, me.userId, unitId);
-  if (!round || !round.skillCheckDone) return <MasteryLocked backHref={back} />;
+  if (!round || !round.skillCheckDone) return <MasteryLocked backHref={back} userId={me.userId} />;
   if (!round.steps.length) return <MasteryNone backHref={back} usedUp={round.unresolved.length > 0} />;
   const lesson: Lesson = { ...bank.body, id: bank.lessonId, mode: "bank", steps: round.steps };
   const skills = unit.skills.filter((k) => round.steps.some((s) => s.skill === k.id));
