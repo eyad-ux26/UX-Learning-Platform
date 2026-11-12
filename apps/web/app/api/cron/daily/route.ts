@@ -1,3 +1,4 @@
+import { sameSecret } from "@/lib/server/secret";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { settleLearner } from "@/lib/server/settle";
@@ -19,7 +20,7 @@ const BATCH = 100;
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   const db = createAdminClient();
   // Launch list (0038): unconfirmed addresses go after 30 days. Cheap and safe to repeat; an error (before 0038) is ignored.
