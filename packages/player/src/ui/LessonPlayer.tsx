@@ -111,6 +111,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, uni
     setState(tr.state);
     onState(tr.state);
     if (tr.event) onEvent(tr.event);
+    tr.events?.forEach((e) => onEvent(e));
   }, [onState, onEvent]);
 
   // New step: reset local view state and move focus to the heading so screen readers announce it.
@@ -145,7 +146,27 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, uni
   }, [layer]);
   const doRetry = () => commit({ state: E.retry(lesson, state) });
   const doReveal = () => { onSound("reveal-answer"); commit(E.reveal(lesson, state)); };
+  // Skill check (design S3-19 frame 5): answers stay drafts; the learner moves between questions and submits at the end.
+  const draft = E.isDraftMode(lesson) && !state.done;
+  const doSubmit = () => {
+    const tr = E.submitCheck(lesson, state);
+    if (tr.state === state) return;
+    onSound("check-press");
+    commit(tr);
+    onFinish(tr.state);
+  };
+  const doGo = (i: number) => { onSound("ui-tap"); commit({ state: E.goTo(lesson, state, i) }); };
+  const qIdx = lesson.steps.flatMap((s, k) => (E.isQuestion(s) ? [k] : []));
+  const checkNav = draft ? {
+    qs: qIdx.map((k, n) => ({ i: k, n: n + 1, saved: state.steps[k].phase === "saved" })),
+    at: state.i,
+    back: qIdx.filter((k) => k < state.i).at(-1) ?? null,
+    missing: E.unanswered(lesson, state).length,
+    onGo: doGo, onSubmit: doSubmit,
+  } : null;
   const doNext = () => {
+    // The last step of a skill check submits it (normally a question, whose sheet has Submit the check).
+    if (draft && state.i === total - 1) { doSubmit(); return; }
     const next = E.advance(lesson, state);
     commit({ state: next });
     if (next.done) onFinish(next);
@@ -160,6 +181,8 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, uni
   const summary = step.type === "card" && step.part === "concept" && prev?.type === "video" ? readSummary(step, locale) : null;
   // Design S2-15: any other text-only card (a body, no mock, no video summary) is drawn as an idea card.
   const idea = step.type === "card" && !summary && !step.points?.length ? readIdea(step, locale) : null;
+  // A saved skill-check answer stays editable: the question shows it as a selection, never as right or wrong.
+  const viewSt: E.StepState = draft && st.phase === "saved" ? { ...st, phase: step.type === "compare" && (step as CompareStep).reason ? "main_ok" : "answering" } : st;
   const showSheet = question && (st.phase === "wrong" || st.phase === "right" || st.phase === "revealed" || st.phase === "saved" || st.phase === "missed");
 
   // Enter checks the answer from the answers list (the desktop hint on the Check button).
@@ -221,7 +244,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, uni
           </section>
         ) : (
           <Question
-            step={step} st={st} locale={locale} t={t} mockLabel={mockLabel}
+            step={step} st={viewSt} locale={locale} t={t} mockLabel={mockLabel} blind={draft}
             headingRef={headingRef} laterInCase={laterInCase}
             onSelect={doSelect} onReason={doReason} onSelection={doSelection}
             onOpenExample={(mock, label) => { onSound("sheet-up"); setExample({ mock, label }); setLayer("example"); }}
@@ -234,11 +257,12 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, uni
           step={step as QuestionStep} st={st} locale={locale} t={t} whyOpen={whyOpen} setWhyOpen={setWhyOpen}
           btnRef={sheetBtnRef} onHint={doHint} onReveal={doReveal} onRetry={doRetry} onNext={doNext}
           last={state.i === total - 1} lesson={lesson} onFlag={onReview ? () => setLayer("review") : undefined}
-          dots={{ total, at: state.i }}
+          dots={{ total, at: state.i }} checkNav={checkNav}
         />
       ) : (
         <footer className="player-foot">
-          {question ? <CheckBar step={step} st={st} t={t} onCheck={doCheck} /> : (
+          {question && checkNav && checkNav.qs.some((q) => q.saved) ? <CheckNav nav={checkNav} t={t} /> : null}
+          {question ? <CheckBar step={step} st={st} t={t} onCheck={doCheck} draft={draft} /> : (
             replay ? (
             <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={() => { setReplay(false); requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true })); }}>{t("sumBack")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
           ) : (
@@ -343,8 +367,10 @@ function changedBoxes(before: Mock | undefined, now: Mock | undefined, root: HTM
 
 type TFn = ReturnType<typeof useTranslations<"player">>;
 
-function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onSelect, onReason, onSelection, onOpenExample }: {
+function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onSelect, onReason, onSelection, onOpenExample, blind = false }: {
   step: QuestionStep; st: E.StepState; locale: Locale; t: TFn; mockLabel: string;
+  /** Skill check: no verdict is ever shown, and the main answer stays changeable while its reason is asked. */
+  blind?: boolean;
   headingRef: React.RefObject<HTMLHeadingElement | null>; laterInCase: boolean;
   onSelect: (id: string) => void; onReason: (id: string) => void; onSelection: (sel: string[]) => void;
   onOpenExample: (mock: Mock, label: string) => void;
@@ -356,7 +382,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
   const prevSeen = useRef<{ step: string; id?: string; mock?: Mock }>({ step: step.id });
   const [flash, setFlash] = useState<{ n: number; boxes: Box[] } | null>(null);
   const [said, setSaid] = useState("");
-  const locked = st.phase !== "answering";
+  const locked = st.phase !== "answering" && !(blind && st.phase === "main_ok");
   const speaker = getCast(step.speaker);
   const face = sayFace(st);
   const options: { id: string; text: string; mock?: Mock }[] =
@@ -401,7 +427,7 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
     if (st.phase === "revealed") return answerIds.includes(id) ? "is-right" : "is-dim";
     if (st.phase === "right") return picked ? "is-right" : "is-dim";
     if (st.phase === "wrong" && picked && !(step.type === "compare" && (step as CompareStep).reason && st.reason.length)) return "is-wrong";
-    if (st.phase === "main_ok") return picked ? "is-right" : "is-dim";
+    if (st.phase === "main_ok") return picked ? (blind ? "is-selected" : "is-right") : (blind ? "" : "is-dim");
     return picked ? "is-selected" : "";
   };
   const verdictIcon = (id: string) => (cls(id) === "is-right" ? "ph-check-circle-fill" : cls(id) === "is-wrong" ? "ph-x-circle-fill" : null);
@@ -552,9 +578,28 @@ function Question({ step, st, locale, t, mockLabel, headingRef, laterInCase, onS
   );
 }
 
+type CheckNavData = { qs: { i: number; n: number; saved: boolean }[]; at: number; back: number | null; missing: number; onGo: (i: number) => void; onSubmit: () => void };
+
+/** Skill check: one numbered button per question (answered: solid, current: selected, no answer yet: dashed). */
+function CheckNav({ nav, t }: { nav: CheckNavData; t: TFn }) {
+  return (
+    <nav className="lp-qnav" aria-label={t("qNav")}>
+      {nav.qs.map((q) => {
+        const cur = q.i === nav.at;
+        return (
+          <button key={q.i} type="button" className={`lp-qbtn press${cur ? " is-now" : q.saved ? " is-saved" : " is-empty"}`} aria-current={cur ? "step" : undefined}
+            aria-label={t(q.saved ? "qAnswered" : "qEmpty", { n: q.n })} onClick={() => !cur && nav.onGo(q.i)}>
+            <span className="num" aria-hidden="true">{q.n}</span>
+          </button>
+        );
+      })}
+    </nav>
+  );
+}
+
 /** Design audit L2 + U4: the Check bar. Confidence steps get one split primary button (each part checks with that confidence);
  *  other steps keep Check, and a disabled Check says what is missing. */
-function CheckBar({ step, st, t, onCheck }: { step: QuestionStep; st: E.StepState; t: TFn; onCheck: (conf?: number) => void }) {
+function CheckBar({ step, st, t, onCheck, draft = false }: { step: QuestionStep; st: E.StepState; t: TFn; onCheck: (conf?: number) => void; draft?: boolean }) {
   const helpId = `lp-help-${step.id}`;
   if (step.confidence && st.phase === "answering") {
     const ready = E.canCheck(step, { ...st, conf: 0 });
@@ -581,12 +626,12 @@ function CheckBar({ step, st, t, onCheck }: { step: QuestionStep; st: E.StepStat
   const help = ready || st.phase !== "answering" ? null
     : step.type === "sort" ? t("placedOf", { n: st.sel.length, total: (step as SortStep).items.length })
     : step.type === "match" ? t("pairedOf", { n: st.sel.length, total: (step as MatchStep).left.length })
-    : t("pickFirst");
+    : draft ? t("pickFirstSave") : t("pickFirst");
   return (
     <>
       {st.phase === "main_ok" ? <p className="t-small ink-2 foot-note">{t("reasonNote")}</p> : null}
       {help ? <p className="lp-check-help" id={helpId}>{help}</p> : null}
-      <button type="button" className="btn btn-primary btn-lg btn-block press" disabled={!ready} aria-describedby={help ? helpId : undefined} onClick={() => onCheck()}>{t("check")}<kbd className="key-hint" aria-hidden="true">{t("enterKey")}</kbd></button>
+      <button type="button" className="btn btn-primary btn-lg btn-block press" disabled={!ready} aria-describedby={help ? helpId : undefined} onClick={() => onCheck()}>{draft ? t("saveAnswer") : t("check")}<kbd className="key-hint" aria-hidden="true">{t("enterKey")}</kbd></button>
     </>
   );
 }
@@ -636,15 +681,34 @@ function Hints({ step, count, locale, t }: { step: QuestionStep; count: number; 
   );
 }
 
-function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onReveal, onRetry, onNext, last, lesson, onFlag, dots }: {
+function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onReveal, onRetry, onNext, last, lesson, onFlag, dots, checkNav = null }: {
   step: QuestionStep; st: E.StepState; locale: Locale; t: TFn; whyOpen: boolean; setWhyOpen: (v: boolean) => void;
   btnRef: React.RefObject<HTMLButtonElement | null>; onHint: () => void; onReveal: () => void; onRetry: () => void; onNext: () => void; last: boolean;
-  lesson: Lesson; onFlag?: () => void; dots: { total: number; at: number };
+  lesson: Lesson; onFlag?: () => void; dots: { total: number; at: number }; checkNav?: CheckNavData | null;
 }) {
   const next = (
     <button type="button" ref={btnRef} className="btn btn-primary press" onClick={onNext}>{last ? t("finish") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
   );
   const flag = onFlag ? <button type="button" className="lp-flag" onClick={onFlag}><span className="ph ph-flag" aria-hidden="true" />{t("flag")}</button> : null;
+  // Skill check before submit (design S3-19 frame 5): the answer is saved and can still change; nothing is judged.
+  if (st.phase === "saved" && checkNav) {
+    return (
+      <section className="sheet sheet-in player-sheet lp-checksheet" role="status">
+        <div className="sheet-main">
+          <div className="sheet-row"><p className="verdict-row"><span className="ph ph-cloud-check" aria-hidden="true" />{t("savedTitle")}</p></div>
+          <p className="t-small ink-2">{t("noVerdict")}</p>
+          <CheckNav nav={checkNav} t={t} />
+          {last && checkNav.missing ? <p className="t-small lp-missing"><span className="ph ph-info" aria-hidden="true" />{t("missingN", { count: checkNav.missing })}</p> : null}
+        </div>
+        <div className="sheet-actions">
+          {checkNav.back !== null ? <button type="button" className="btn btn-secondary press" onClick={() => checkNav.onGo(checkNav.back!)}><span className="ph ph-arrow back" aria-hidden="true" />{t("qBack")}</button> : null}
+          {last
+            ? <button type="button" ref={btnRef} className="btn btn-primary press" onClick={checkNav.onSubmit}><span className="ph ph-paper-plane-tilt" aria-hidden="true" />{t("submitCheck")}</button>
+            : <button type="button" ref={btnRef} className="btn btn-primary press" onClick={onNext}>{t("saveNext")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>}
+        </div>
+      </section>
+    );
+  }
   // Skill check: the answer is taken, nothing is judged.
   if (st.phase === "saved") {
     return (

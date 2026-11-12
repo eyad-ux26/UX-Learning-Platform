@@ -152,25 +152,46 @@ const withStep = (state: LessonState, i: number, patch: Partial<StepState>): Les
   steps: state.steps.map((s, k) => (k === i ? { ...s, ...patch } : s)),
 });
 
+/**
+ * Skill check (design S3-19 frame 5, Eyad 12 Nov D1): answers are drafts until the learner submits. Nothing is judged or
+ * sent before that, a saved answer can be changed, and the learner can move between questions.
+ */
+export const isDraftMode = (lesson: Pick<Lesson, "mode">) => lesson.mode === "check";
+/** A skill-check answer that can still be changed: saved, or a compare step waiting for its reason. */
+const editable = (lesson: Lesson, state: LessonState, st: StepState) => isDraftMode(lesson) && !state.done && (st.phase === "saved" || st.phase === "main_ok");
+
+/**
+ * Changing a saved skill-check answer: the new answer is saved straight away, unless the step still needs something
+ * (its confidence again, a reason, or a complete sort or match), then it goes back to answering.
+ */
+function redraft(step: QuestionStep, st: StepState, sel: string[]): Partial<StepState> {
+  const keep = st.phase === "saved" && !step.confidence && !hasReason(step) && isComplete(step, sel);
+  return keep ? { sel } : { sel, phase: "answering", reason: [], conf: step.confidence ? null : st.conf };
+}
+
 export function select(lesson: Lesson, state: LessonState, optionId: string): LessonState {
   const step = lesson.steps[state.i]; const st = state.steps[state.i];
-  if (!isQuestion(step) || st.phase !== "answering") return state;
+  if (!isQuestion(step) || (st.phase !== "answering" && !editable(lesson, state, st))) return state;
   if ((st.tried ?? []).includes(optionId)) return state;
   if (isStructured(step)) return state;
   const multi = isMulti(step);
   const sel = multi ? (st.sel.includes(optionId) ? st.sel.filter((x) => x !== optionId) : [...st.sel, optionId]) : [optionId];
+  if (st.phase !== "answering") return withStep(state, state.i, redraft(step, st, sel));
   return withStep(state, state.i, { sel });
 }
 
 /** Sets the whole answer of a sort, order or match step (the screen builds the encoded list). Never judged here. */
 export function setSelection(lesson: Lesson, state: LessonState, sel: string[]): LessonState {
   const step = lesson.steps[state.i]; const st = state.steps[state.i];
-  if (!isQuestion(step) || !isStructured(step) || st.phase !== "answering") return state;
+  if (!isQuestion(step) || !isStructured(step) || (st.phase !== "answering" && !editable(lesson, state, st))) return state;
+  if (st.phase !== "answering") return withStep(state, state.i, redraft(step, st, sel));
   return withStep(state, state.i, { sel });
 }
 
 export function selectReason(lesson: Lesson, state: LessonState, optionId: string): LessonState {
   const st = state.steps[state.i];
+  // A saved skill-check answer keeps its new reason saved.
+  if (st.phase === "saved" && isDraftMode(lesson) && !state.done && hasReason(lesson.steps[state.i])) return withStep(state, state.i, { reason: [optionId] });
   if (st.phase !== "main_ok") return state;
   return withStep(state, state.i, { reason: [optionId] });
 }
@@ -181,7 +202,7 @@ export function setConfidence(state: LessonState, level: number): LessonState {
   return withStep(state, state.i, { conf: level });
 }
 
-export type Transition = { state: LessonState; event?: TryEvent };
+export type Transition = { state: LessonState; event?: TryEvent; /** Several answers at once: a skill check sends all of them when it is submitted. */ events?: TryEvent[] };
 
 export function check(lesson: Lesson, state: LessonState, now = Date.now()): Transition {
   const step = lesson.steps[state.i]; const st = state.steps[state.i];
@@ -189,6 +210,12 @@ export function check(lesson: Lesson, state: LessonState, now = Date.now()): Tra
   const answer: Answer = { sel: st.sel, ...(hasReason(step) && st.phase === "main_ok" ? { reason: st.reason } : {}) };
   const ev = evaluate(step, hasReason(step) && st.phase === "answering" ? { sel: st.sel, reason: step.reason!.answer } : answer);
   const first = st.first ?? { sel: st.sel };
+  // Skill check: the answer is saved as a draft. No verdict, nothing sent; a compare step always asks its reason next,
+  // so whether the reason question opens says nothing about the main answer. All answers are judged at submitCheck.
+  if (isDraftMode(lesson)) {
+    if (hasReason(step) && st.phase === "answering") return { state: withStep(state, state.i, { phase: "main_ok", reason: [] }) };
+    return { state: withStep(state, state.i, { phase: "saved", tries: 1, first, outcome: null, xp: 0, mc: null, mcIdx: null, alsoOk: null }) };
+  }
   const base = { lessonId: lesson.id, hash: state.hash, stepId: step.id, skill: step.skill, hintsUsed: st.hints, confidence: st.conf, clientTs: now };
 
   // A compare step with a reason: a right main answer opens the reason question and is not yet a judged try.
@@ -200,11 +227,7 @@ export function check(lesson: Lesson, state: LessonState, now = Date.now()): Tra
   const judged = evaluate(step, answer);
   const tries = st.tries + 1;
   const event: TryEvent = { ...base, tryNo: tries, kind: "check", answer, correct: judged.correct, misconceptionId: judged.misconception?.id ?? null };
-  // Skill check: the answer is taken without a verdict and cannot be changed. Mastery round: one try, with a verdict.
-  if (lesson.mode === "check") {
-    const outcome: Outcome = judged.correct ? "independent" : "missed";
-    return { state: withStep(state, state.i, { phase: "saved", tries, first, outcome, xp: XP[outcome], mc: null, alsoOk: null }), event };
-  }
+  // Mastery round: one try, with a verdict.
   if (lesson.mode === "bank") {
     if (judged.correct) return { state: withStep(state, state.i, { phase: "right", tries, first, outcome: "independent", xp: XP.independent, alsoOk: judged.alsoOk, mc: null }), event };
     return { state: withStep(state, state.i, { phase: "missed", tries, first, outcome: "missed", xp: 0, mc: judged.misconception?.id ?? null, mcIdx: misconceptionIndex(step, judged), alsoOk: null }), event };
@@ -252,8 +275,50 @@ export const isFinished = (step: Step, st: StepState) => !isQuestion(step) || st
 
 export function advance(lesson: Lesson, state: LessonState): LessonState {
   if (!isFinished(lesson.steps[state.i], state.steps[state.i])) return state;
-  if (state.i >= lesson.steps.length - 1) return { ...state, done: true };
+  // A skill check ends only when it is submitted (submitCheck).
+  if (state.i >= lesson.steps.length - 1) return isDraftMode(lesson) ? state : { ...state, done: true };
   return { ...state, i: state.i + 1 };
+}
+
+/** Skill check: go to another step (the numbered question buttons, Back). Only before the check is submitted. */
+export function goTo(lesson: Lesson, state: LessonState, i: number): LessonState {
+  if (!isDraftMode(lesson) || state.done || i < 0 || i >= lesson.steps.length || i === state.i) return state;
+  // A compare step left waiting for its reason goes back to answering, so its saved state stays consistent.
+  const st = state.steps[state.i];
+  const left = st.phase === "main_ok" ? withStep(state, state.i, { phase: "answering", reason: [] }) : state;
+  return { ...left, i };
+}
+
+/** Skill check: the question steps that have no saved answer yet (step indexes). */
+export const unanswered = (lesson: Lesson, state: LessonState): number[] =>
+  lesson.steps.flatMap((s, k) => (isQuestion(s) && state.steps[k].phase !== "saved" ? [k] : []));
+
+/** Skill check, coming back to it: the first question without an answer (saved answers are kept). */
+export function resumeCheck(lesson: Lesson, state: LessonState): LessonState {
+  if (!isDraftMode(lesson) || state.done) return state;
+  const open = unanswered(lesson, state);
+  return open.length && state.steps.some((x) => x.phase === "saved") ? { ...state, i: open[0] } : state;
+}
+
+/**
+ * Submits a skill check: every answer is judged now, at once, and sent (try 1 of each step). A question left without an
+ * answer counts as wrong. After this nothing can change.
+ */
+export function submitCheck(lesson: Lesson, state: LessonState, now = Date.now()): Transition {
+  if (!isDraftMode(lesson) || state.done) return { state };
+  const events: TryEvent[] = [];
+  const steps = state.steps.map((st, k): StepState => {
+    const step = lesson.steps[k];
+    if (!isQuestion(step)) return st;
+    const saved = st.phase === "saved";
+    const answer: Answer = saved ? { sel: st.sel, ...(hasReason(step) ? { reason: st.reason } : {}) } : { sel: [] };
+    const judged = evaluate(step, answer);
+    const correct = saved && judged.correct;
+    const outcome: Outcome = correct ? "independent" : "missed";
+    events.push({ lessonId: lesson.id, hash: state.hash, stepId: step.id, skill: step.skill, tryNo: 1, kind: "check", answer, correct, hintsUsed: 0, confidence: saved ? st.conf : null, misconceptionId: saved ? judged.misconception?.id ?? null : null, clientTs: now });
+    return { ...st, phase: "saved", tries: 1, first: st.first ?? answer, outcome, xp: XP[outcome], mc: null, mcIdx: null, alsoOk: null };
+  });
+  return { state: { ...state, steps, done: true }, events };
 }
 
 export type Summary = { xp: number; questions: number; independent: number; supported: number; revealed: number; missed: number };

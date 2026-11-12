@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import type { Lesson, Locale, Skill } from "@uxgate/content/types";
 import { LessonPlayer } from "@uxgate/player";
-import { startLesson, type LessonState, type TryEvent } from "@uxgate/player/engine";
+import { resumeCheck, startLesson, type LessonState, type TryEvent } from "@uxgate/player/engine";
 import { kvDel, kvGet, kvSet } from "@/lib/idb";
 import { attemptIdFor, enqueueAttempt } from "@/lib/attempts";
 import { initSound, play, readMuted, setMuted } from "@/lib/sound";
@@ -104,7 +104,8 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     (async () => {
       let saved: LessonState | undefined;
       try { saved = await kvGet<LessonState>(key); } catch { /* private mode: start fresh */ }
-      const fresh = saved && saved.hash === hash && !saved.done && saved.steps.length === lesson.steps.length ? saved : startLesson(lesson, hash);
+      // A skill check picks up at its first question without an answer; saved answers are kept (design S3-19 frame 5).
+      const fresh = saved && saved.hash === hash && !saved.done && saved.steps.length === lesson.steps.length ? resumeCheck(lesson, saved) : startLesson(lesson, hash);
       attemptId.current = attemptIdFor(lesson.id, fresh.startedAt);
       if (alive) {
         setState(fresh);
