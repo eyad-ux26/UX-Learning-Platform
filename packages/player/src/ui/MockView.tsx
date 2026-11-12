@@ -1,4 +1,4 @@
-import { createContext, Fragment, useContext, type ReactNode } from "react";
+import { createContext, Fragment, useContext, useState, type ReactNode } from "react";
 import type { Locale, Mock, MockAction, MockApp, MockAppbar, MockBlock, MockFab, MockNavbar, MockOverlay, MockText } from "@uxgate/content/types";
 import { artSvg } from "./art";
 
@@ -121,8 +121,18 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
       if (b.scroll && b.colw) style["--colw"] = `${Number(b.colw)}px`;
       return <div className={cls + scroll} style={style}>{b.blocks?.map((c, i) => <Block key={i} b={c} locale={locale} />)}</div>;
     }
-    case "row":
-      return <div className={`row2 ${b.gap ? `gap-${b.gap}` : ""}`}>{b.blocks?.map((c, i) => <Block key={i} b={c} locale={locale} />)}</div>;
+    case "row": {
+      // Next to a field, other blocks (an Apply button) line up with the field's box, under a blank label line.
+      const kids = b.blocks ?? [];
+      const field = kids.find((c) => c.kind === "field" || c.kind === "select");
+      return (
+        <div className={`row2${b.gap ? ` gap-${b.gap}` : ""}${field ? " has-field" : ""}`}>
+          {kids.map((c, i) => (field && c.kind !== "field" && c.kind !== "select"
+            ? <div key={i} className="row-side">{field.label ? <div className="fl" aria-hidden="true">&nbsp;</div> : null}<Block b={c} locale={locale} /></div>
+            : <Block key={i} b={c} locale={locale} />))}
+        </div>
+      );
+    }
     case "field":
     case "select": {
       const hint = b.hint ? <div className="fh">{mt(b.hint, locale)}</div> : null;
@@ -267,6 +277,20 @@ const T = (v: unknown, locale: Locale) => mt(v as MockText, locale);
 type Badge = { text?: MockText; tone?: string; icon?: string };
 const BadgeEl = ({ x, locale }: { x: Badge; locale: Locale }) => <span className={`xm-badge t-${x.tone ?? "brand"}`}>{x.icon ? <Icon name={x.icon} /> : null}{T(x.text, locale)}</span>;
 
+/** An accordion row. Learners can open and close it to look around; that only changes the picture, never their answer.
+ *  In spot steps (where the row may be a tap target) it stays as the content drew it. */
+function Accordion({ b, locale, cls, style, text }: Kid) {
+  const [open, setOpen] = useState(!!b.open);
+  const live = !useContext(Regions);
+  const head = <><span>{inline(text)}</span><Icon name="caret-down" cls="ac-chev" /></>;
+  return (
+    <div className={cls + (open ? " is-open" : "")} style={style}>
+      {live ? <button type="button" className="ac-h" aria-expanded={open} onClick={() => setOpen(!open)}>{head}</button> : <div className="ac-h">{head}</div>}
+      <div className="ac-b" hidden={!open}><Kids blocks={b.blocks} locale={locale} /></div>
+    </div>
+  );
+}
+
 const NEW_KINDS: Record<string, (k: Kid) => ReactNode> = {
   icon: ({ b, cls, style }) => <div className={cls} style={style}><Icon name={String(b.icon ?? "circle")} /></div>,
   avatar: ({ b, locale, cls, style }) => <div className={cls} style={style}><Avatar a={{ text: b.text, art: b.art as string, icon: b.icon as string }} locale={locale} size={b.size} /></div>,
@@ -344,7 +368,8 @@ const NEW_KINDS: Record<string, (k: Kid) => ReactNode> = {
     const rows = (Array.isArray(b.rows) ? b.rows : []) as MockText[][];
     return <div className={cls} style={style}><table><thead><tr>{head.map((h, i) => <th key={i}>{T(h, locale)}</th>)}</tr></thead><tbody>{rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j}>{inline(T(c, locale))}</td>)}</tr>)}</tbody></table></div>;
   },
-  accordion: ({ b, locale, cls, style, text }) => <div className={cls + (b.open ? " is-open" : "")} style={style}><div className="ac-h"><span>{inline(text)}</span><Icon name="caret-down" cls="ac-chev" /></div>{b.open ? <div className="ac-b"><Kids blocks={b.blocks} locale={locale} /></div> : null}</div>,
+  accordion: (k) => <Accordion {...k} />,
+  more: ({ b, cls, style, text }) => <div className={cls + (b.fade === false ? "" : " is-fade")} style={style}><span>{inline(text)}</span><Icon name="caret-down" /></div>,
   tabs: ({ b, locale, cls, style }) => <div className={cls} style={style}>{(b.options ?? []).map((o, k) => <span key={k} className={`tb${k === (b.value ?? 0) ? " on" : ""}`}>{mt(o, locale)}</span>)}</div>,
   chart: ({ b, locale, cls, style }) => {
     const vals = (Array.isArray(b.values) ? b.values : []).map(Number);
@@ -372,7 +397,7 @@ function Overlay({ o, locale }: { o: MockOverlay; locale: Locale }) {
   return (
     <>
       {scrim ? <div className="scrim" aria-hidden="true" /> : null}
-      <div className={`ov ov-${o.type}${o.tall ? " tall" : ""}`}>
+      <div className={`ov ov-${o.type}${o.tall ? " tall" : ""}${o.close ? " has-x" : ""}`}>
         {o.type === "sheet" && o.handle !== false ? <div className="grab" aria-hidden="true" /> : null}
         {o.close ? <span className="ovx" aria-hidden="true"><Icon name="x" /></span> : null}
         {o.title ? <div className="ov-title">{mt(o.title, locale)}</div> : null}
@@ -492,10 +517,12 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
   if (mock.height) screen.minHeight = Number(mock.height);
   if (app) { const brand = accessibleBrand(app.color, mock.theme === "dark"); screen["--mock-brand"] = brand; screen["--mock-focus"] = brand; screen["--mock-on-brand"] = bestOn(brand); }
   const chrome = !!(status || mock.appbar || mock.tabbar || mock.footer || mock.navbar || wide || mock.keyboard);
-  const cls = ["exmock", wide && "wide", mock.gray && "gray", mock.overlay && "has-ov", mock.fab && "has-fab", app && "has-app", chrome && "has-chrome", mock.theme === "dark" && "th-dark", mock.screen === "lock" && "is-lock"].filter(Boolean).join(" ");
+  const cls = ["exmock", wide && "wide", mock.gray && "gray", mock.overlay && mock.overlay.type !== "banner" && "has-ov", mock.fab && "has-fab", app && "has-app", chrome && "has-chrome", mock.theme === "dark" && "th-dark", mock.screen === "lock" && "is-lock"].filter(Boolean).join(" ");
   const caption = [app ? mt(app.name, locale) : null, tag, mock.caption ? mt(mock.caption, locale) : null].filter(Boolean).join(" · ");
   const url = mock.url ?? app?.domain ?? (wide && app ? `${String(app.id ?? "site")}.example` : undefined);
   const dir = mock.dir ?? (locale === "ar" ? "rtl" : "ltr");
+  // A top banner sits under the app bar and pushes the screen down, so it never covers the title.
+  const banner = mock.overlay?.type === "banner" ? mock.overlay : null;
   const body = (
     <Rtl.Provider value={dir === "rtl"}>
     <figure className={`xm xm-${frame}${chrome ? " xm-dev" : ""}`} role="group" aria-label={label} style={mock.width ? { maxWidth: Number(mock.width) + (phoneLike && chrome ? 12 : 0) } : undefined}>
@@ -506,13 +533,14 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
           {status ? <StatusBar /> : null}
           {mock.navbar ? <NavBar nav={mock.navbar} app={app} locale={locale} /> : null}
           {mock.appbar ? <AppBar bar={mock.appbar} app={app} locale={locale} /> : null}
+          {banner ? <Overlay o={banner} locale={locale} /> : null}
           {mock.screen === "lock" ? <div className="xm-lock" aria-hidden="true" dir="ltr"><b>9:41</b><span>{locale === "ar" ? "الخميس 5 نوفمبر" : "Thursday 5 November"}</span></div> : null}
           <div className="xm-body">{mock.blur ? <div style={{ filter: `blur(${mock.blur}px)` }} aria-hidden="true">{blocks}</div> : blocks}</div>
           {mock.footer ? <div className="xm-footer">{mock.footer.map((b, i) => <Block key={i} b={b} locale={locale} />)}</div> : null}
           {mock.tabbar ? <TabBar bar={mock.tabbar} locale={locale} /> : null}
           {mock.keyboard ? <Keyboard kind={mock.keyboard === "number" ? "number" : "text"} /> : null}
           {mock.fab ? <Fabs fab={mock.fab} locale={locale} /> : null}
-          {mock.overlay ? <Overlay o={mock.overlay} locale={locale} /> : null}
+          {mock.overlay && !banner ? <Overlay o={mock.overlay} locale={locale} /> : null}
         </div>
       </div>
       {mock.reader ? <div className="xm-reader"><Icon name="speaker-high" /><span>{locale === "ar" ? "«" : "“"}{mt(mock.reader, locale)}{locale === "ar" ? "»" : "”"}</span></div> : null}
