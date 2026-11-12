@@ -2,7 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { createTranslator } from "next-intl";
 import en from "../../messages/en.json";
 import ar from "../../messages/ar.json";
-import { headers } from "next/headers";
+import { requestOrigin } from "@/lib/server/origin";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
 import { localPathName } from "@/lib/catalog";
@@ -19,8 +19,7 @@ import { nameLooksLikeEmail } from "@/lib/cert-name";
 export async function CertificateMain({ me, cert, nameConfirmed, openShare }: { me: Learner; cert: CertificateFull; nameConfirmed: boolean; openShare?: boolean }) {
   const t = await getTranslations("cert");
   const locale = (await getLocale()) as Locale;
-  const h = await headers();
-  const origin = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("x-forwarded-host") ?? h.get("host") ?? "uxgate.org"}`;
+  const origin = await requestOrigin();
   const pathName = localPathName(cert.pathId, locale);
   const s = certStats(cert.pathId);
   const name = me.progress.displayName ?? "";
