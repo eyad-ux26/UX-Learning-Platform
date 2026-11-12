@@ -16,6 +16,16 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   step: VideoStep; locale: Locale; t: T; getSource?: (id: string) => Promise<VideoSource>; headingRef: React.RefObject<HTMLHeadingElement | null>;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const box = useRef<HTMLDivElement>(null);
+  /** Full screen is the player's own box, not the bare <video>, so our controls, captions and tap to pause stay in charge. */
+  const [full, setFull] = useState(false);
+  // While the page-filling fallback is open, hide the lesson header/footer and lock page scroll (a phone has no Esc key).
+  useEffect(() => {
+    if (!full) return;
+    const el = document.documentElement;
+    el.classList.add("lp-full-open");
+    return () => el.classList.remove("lp-full-open");
+  }, [full]);
   const [src, setSrc] = useState<VideoSource | "loading" | "error">("loading");
   const [playing, setPlaying] = useState(false);
   const [tapIcon, setTapIcon] = useState<{ n: number; play: boolean } | null>(null); // brief icon after a tap on the video
@@ -61,6 +71,26 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   const toggle = () => { const v = ref.current; if (!v) return; if (v.paused) { setEnded(false); void v.play().catch(() => setPlaying(false)); } else v.pause(); };
   const seek = (to: number) => { const v = ref.current; if (v) { v.currentTime = to; setTime(to); } };
   const setSpeed = (r: number) => { setRate(r); setSpeedOpen(false); if (ref.current) ref.current.playbackRate = r; };
+  type FsDoc = Document & { webkitFullscreenElement?: Element | null; webkitExitFullscreen?: () => Promise<void> };
+  type FsEl = HTMLDivElement & { webkitRequestFullscreen?: () => Promise<void> };
+  useEffect(() => {
+    const sync = () => { const d = document as FsDoc; setFull((d.fullscreenElement ?? d.webkitFullscreenElement) === box.current); };
+    document.addEventListener("fullscreenchange", sync); document.addEventListener("webkitfullscreenchange", sync);
+    return () => { document.removeEventListener("fullscreenchange", sync); document.removeEventListener("webkitfullscreenchange", sync); };
+  }, []);
+  // Escape leaves the page-filling fallback used where an element cannot go full screen (iPhone Safari only does this for a bare <video>).
+  useEffect(() => {
+    if (!full) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && !(document as FsDoc).fullscreenElement) setFull(false); };
+    window.addEventListener("keydown", onKey); return () => window.removeEventListener("keydown", onKey);
+  }, [full]);
+  const toggleFull = () => {
+    const el = box.current as FsEl | null; const d = document as FsDoc;
+    if (!el) return;
+    if (full) { if (d.fullscreenElement || d.webkitFullscreenElement) void (d.exitFullscreen?.() ?? d.webkitExitFullscreen?.())?.catch?.(() => {}); setFull(false); return; }
+    const req = el.requestFullscreen?.bind(el) ?? el.webkitRequestFullscreen?.bind(el);
+    if (req) void Promise.resolve(req()).catch(() => setFull(true)); else setFull(true);
+  };
   const replay = () => { seek(0); setEnded(false); void ref.current?.play(); };
 
   const lines = step.transcript;
@@ -72,7 +102,7 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
     <section className="player-col lp-videostep">
       {step.title ? <h1 ref={headingRef} tabIndex={-1} className="t-h2">{step.title[locale]}</h1> : <h1 ref={headingRef} tabIndex={-1} className="lp-sr">{t("videoLabel")}</h1>}
       <div className="lp-videowrap">
-        <div className="lp-video" role="group" aria-label={t("videoLabel")}>
+        <div ref={box} className={`lp-video${full ? " is-full" : ""}`} role="group" aria-label={t("videoLabel")}>
           <div className="stage" aria-hidden="true" />
           {/* eslint-disable-next-line jsx-a11y/media-has-caption -- captions are drawn from the transcript below, in both languages */}
           <video
@@ -112,13 +142,14 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
             </div>
             <button type="button" className={`lp-vbtn${cc ? " is-on" : ""}`} aria-pressed={cc} onClick={() => setCc(!cc)} aria-label={t("videoCaptions")}><span className="ph ph-closed-captioning" aria-hidden="true" /></button>
             <button type="button" className={`lp-vbtn${open ? " is-on" : ""}`} aria-pressed={open} onClick={() => setOpen(!open)} aria-label={t("videoTranscript")}><span className="ph ph-article" aria-hidden="true" /></button>
-            <button type="button" className="lp-vbtn" onClick={() => void ref.current?.requestFullscreen?.().catch(() => {})} aria-label={t("videoFullscreen")}><span className="ph ph-corners-out" aria-hidden="true" /></button>
+            <button type="button" className="lp-vbtn" onClick={toggleFull} aria-pressed={full} aria-label={t("videoFullscreen")}><span className={`ph ${full ? "ph-corners-in" : "ph-corners-out"}`} aria-hidden="true" /></button>
           </div>
         </div>
         <div className="lp-seg" role="group" aria-label={t("videoCaptionLang")}>
           {(["en", "ar"] as const).map((l) => <button key={l} type="button" aria-pressed={capLang === l} onClick={() => setCapLang(l)}>{l === "en" ? "English" : "العربية"}</button>)}
         </div>
       </div>
+      <p className="t-small ink-2 lp-skiphint"><span className="ph ph-article" aria-hidden="true" /> {t("videoSkipHint")}</p>
       {open ? (
         <ol className="lp-transcript" aria-label={t("videoTranscript")} style={{ listStyle: "none", margin: 0 }}>
           {lines.map((l, k) => (

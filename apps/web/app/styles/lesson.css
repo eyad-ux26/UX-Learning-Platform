@@ -291,3 +291,27 @@
 @keyframes lp-vtap { 0% { opacity: 0; transform: scale(0.8); } 20% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) { .ug .lp-video .lp-vtap { display: none; } }
 .ug .lp-mode.is-revise { background: var(--sel-bg); color: var(--link); border: 2px solid var(--sel-line); }
+
+/* Full screen is the player box itself (native <video> full screen has no captions, speed or tap to pause). Falls back to filling the page. */
+.ug .lp-video.is-full, .ug .lp-video:fullscreen { position: fixed; inset: 0; z-index: 60; inline-size: 100vw; block-size: 100dvh; max-inline-size: none; aspect-ratio: auto; border-radius: 0; box-shadow: none; margin: 0; }
+.ug .lp-video:fullscreen { position: relative; block-size: 100%; inline-size: 100%; }
+.ug .lp-video.is-full .cap, .ug .lp-video:fullscreen .cap { bottom: 72px; }
+.ug .lp-video.is-full .cap span, .ug .lp-video:fullscreen .cap span { font-size: 22px; }
+.ug .lp-skiphint { display: flex; align-items: flex-start; gap: 8px; margin: 0; }
+.ug .lp-skiphint .ph { margin-block-start: 2px; color: var(--brand); flex: none; }
+
+/* D7 (Eyad, 12 Nov): the toast after "Request a review" was the panel colour on the panel background. It is now a dark surface with an icon and a close button. */
+.ug .lp-toast { display: flex; align-items: center; gap: 10px; text-align: start; padding-block: 8px; padding-inline: 14px 8px; background: var(--navy); color: #FFFFFF; border: 2px solid rgba(255,255,255,.14); box-shadow: 0 10px 24px -8px rgba(1,46,75,.55), 0 4px 0 #021C26; }
+.ug[data-theme="dark"] .lp-toast, .ug [data-theme="dark"] .lp-toast { background: #EAF7FC; color: var(--navy); border-color: #9CC3D3; box-shadow: 0 10px 24px -8px rgba(0,0,0,.5), 0 4px 0 #9CC3D3; }
+.ug .lp-toast-ic { flex: none; font-size: 22px; color: #78E4FC; }
+.ug[data-theme="dark"] .lp-toast-ic, .ug [data-theme="dark"] .lp-toast-ic { color: var(--right-ink); }
+.ug .lp-toast-t { flex: 1; min-inline-size: 0; }
+.ug .lp-toast-x { all: unset; box-sizing: border-box; flex: none; display: grid; place-items: center; inline-size: 36px; block-size: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+.ug .lp-toast-x:hover { background: rgba(255,255,255,.14); }
+.ug[data-theme="dark"] .lp-toast-x:hover, .ug [data-theme="dark"] .lp-toast-x:hover { background: rgba(1,46,75,.1); }
+.ug .lp-toast-x:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+
+/* Page-filling video fallback (iPhone): hide the lesson header/footer, drop the stacking context, lock scroll. */
+html.lp-full-open, html.lp-full-open body { overflow: hidden; }
+html.lp-full-open .player-head, html.lp-full-open .player-foot { display: none; }
+html.lp-full-open .player-main { isolation: auto; }
