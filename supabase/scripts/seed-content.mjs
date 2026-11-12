@@ -58,7 +58,8 @@ export function buildSql(b) {
 }
 
 /** [{lesson_id, hash}] of every compiled lesson and bank, as a SQL literal. */
-const liveItems = (b) => `$uxg$${JSON.stringify([...b.lessons, ...(b.banks ?? [])].map((l) => ({ lesson_id: l.lessonId, hash: l.hash })))}$uxg$`;
+const liveItemsArray = (b) => [...b.lessons, ...(b.banks ?? [])].map((l) => ({ lesson_id: l.lessonId, hash: l.hash }));
+const liveItems = (b) => `$uxg$${JSON.stringify(liveItemsArray(b))}$uxg$`;
 
 /**
  * content-live.sql: only the step that makes the compiled versions live, with a count per result. The v1 import is
@@ -103,5 +104,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   await run("skills", rows.skills, "id");
   await run("lessons", rows.lessons, "id");
   await run("content_versions", rows.content_versions, "lesson_id,hash", true);
+  // 0060 and later: make the compiled versions live, exactly as content.sql does. Without this the admin Content pages
+  // keep showing the previous live version, and turning on content_db would serve old lessons.
+  const { data: synced, error: syncError } = await db.rpc("content_sync_bundle", { p_items: liveItemsArray(bundle) });
+  if (syncError && !/content_sync_bundle/.test(syncError.message)) { console.error(`content_sync_bundle: ${syncError.message}`); process.exit(1); }
+  if (syncError) console.warn("content_sync_bundle not found (run 0060 first): versions were added but not made live");
+  else counts.live = (synced ?? []).reduce((a, r) => ({ ...a, [r.result]: (a[r.result] ?? 0) + 1 }), {});
   console.log("seeded", counts);
 }
