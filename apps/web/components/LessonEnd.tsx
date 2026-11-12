@@ -11,7 +11,7 @@ import type { UpNext } from "@/lib/up-next";
 /** The next unit when it is part of Pro and the learner is on the free plan. */
 export type ProNext = { n: number; title: string };
 
-export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "", proNext = null }: { pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void; proNext?: ProNext | null }) {
+export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, offline = false, onContinue, upNext = null, onNext, pathLabel = "", proNext = null, revising = false }: { revising?: boolean; pathLabel?: string; lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; streak: number; replay: ReplayKind | null; offline?: boolean; onContinue: () => void; upNext?: UpNext | null; onNext?: () => void; proNext?: ProNext | null }) {
   const t = useTranslations("end");
   const tb = useTranslations("billing");
   const sum = summarize(lesson, state, (n) => replayXp(n, replay));
@@ -20,8 +20,9 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
   lesson.steps.forEach((s, k) => { if (isQuestion(s) && state.steps[k].outcome && state.steps[k].outcome !== "revealed") practised.add(s.skill); });
   const skills = unitSkills.filter((k) => practised.has(k.id));
   const minutes = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
-  // After a first play, the end page leads on to the next lesson of the path; a replay goes back home.
-  const go = !replay && upNext && onNext ? onNext : null;
+  // After a first play, the end page leads on to the next lesson of the path; a replay goes back home,
+  // except while revising a unit, which goes on through the unit (lib/revise.ts).
+  const go = (!replay || revising) && upNext && onNext ? onNext : null;
   const unitNo = Number(lesson.id.split("-U")[1]?.slice(0, 2)) || 1;
 
   return (
@@ -37,6 +38,7 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
           <div className="end-title">
             <h1 className="t-display">{t("title")}</h1>
             <p className="t-body ink-2">{t("sub", { count: sum.questions, minutes })}</p>
+            {revising ? <p className="t-small replay-note"><span className="ph ph-review" aria-hidden="true" />{upNext?.revise ? t("revisingOn") : upNext ? t("revisingNew") : t("revisingDone")}</p> : null}
             {replay ? <p className="t-small replay-note"><span className="ph ph-review" aria-hidden="true" />{replay === "paid" ? t("replayHalf") : t("replayNone")}</p> : null}
           </div>
           {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{t("syncLater")}</p> : null}
@@ -45,7 +47,8 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
             <div className="stat-tile pop"><span className="ph ph-target" aria-hidden="true" /><span className="num ltr big" data-testid="first-try">{sum.independent}/{sum.questions}</span><span className="lbl ink-2">{t("firstTry")}</span></div>
             <div className="stat-tile pop"><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num ltr big" data-testid="streak">{streak}</span><span className="lbl ink-2">{t("streakLabel")}</span></div>
           </div>
-          {skills.length ? (
+          {/* A replay never changes a skill, so its end page does not list skills as if it did (QA, 12 Nov). */}
+          {skills.length && !replay ? (
             <section className="card end-skills" aria-label={t("skills")}>
               <p className="t-over">{t("skills")}</p>
               {skills.map((k) => (
@@ -59,7 +62,7 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/ill/uxgate-ill-rocket.png" alt="" width={56} height={56} />
               <span className="grow">
-                <span className="t-over" style={{ color: "var(--link)" }}>{t("nextOver", { path: pathLabel })}</span>
+                <span className="t-over" style={{ color: "var(--link)" }}>{upNext.revise ? t("reviseNextOver") : t("nextOver", { path: pathLabel })}</span>
                 <b>{upNext.title[locale]}</b>
                 <span className="t-small ink-2">{t("nextMeta", { unit: upNext.unitNo, n: upNext.lessonNo, minutes: upNext.minutes })}</span>
               </span>
@@ -79,14 +82,14 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
             </section>
           ) : null}
           <div className="end-actions">
-            <button type="button" className="btn btn-primary btn-lg press" onClick={go ?? onContinue}>{go ? t("nextGo") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
-            {go ? <button type="button" className="btn btn-ghost btn-lg" onClick={onContinue}>{t("home")}</button> : null}
+            <button type="button" className="btn btn-primary btn-lg press" onClick={go ?? onContinue}>{go ? t("nextGo") : revising ? t("backToPath") : t("continue")}<span className="ph ph-arrow flip" aria-hidden="true" /></button>
+            {go ? <button type="button" className="btn btn-ghost btn-lg" onClick={onContinue}>{revising ? t("backToPath") : t("home")}</button> : null}
           </div>
         </div>
       </main>
       <footer className="end-foot">
-        <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={go ?? onContinue}>{go ? t("nextGo") : t("continue")}</button>
-        {go ? <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={onContinue}>{t("home")}</button> : null}
+        <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={go ?? onContinue}>{go ? t("nextGo") : revising ? t("backToPath") : t("continue")}</button>
+        {go ? <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={onContinue}>{revising ? t("backToPath") : t("home")}</button> : null}
       </footer>
       <PushAsk />
     </div>

@@ -51,6 +51,8 @@ export type PlayerProps = {
   /** Runs the first-lesson tour at the first question: "guest" for the sample lesson, "first" for the first lesson after sign-in. `onTourDone` runs when it ends or is skipped. */
   tour?: "guest" | "first";
   onTourDone?: () => void;
+  /** Revise a unit: a "Revising" tag in the header. */
+  revising?: boolean;
 };
 
 /** "Welcome back": a calm note that closes by itself after 5 seconds, or with its close button. The timer pauses on hover and focus. */
@@ -80,7 +82,7 @@ function ResumeNote({ text, close, onClose }: { text: string; close: string; onC
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, unitNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, videoSource, notice, onSwitchLocale, tour, onTourDone }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, unitNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, videoSource, notice, onSwitchLocale, tour, onTourDone, revising = false }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -177,6 +179,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, uni
           <i style={{ width: `${((state.i + (finished ? 1 : 0)) / total) * 100}%` }} />
         </div>
         {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" /><span className="lp-save-txt">{t(`save.${saveStatus}` as never)}</span></span> : null}
+        {revising ? <span className="lp-mode is-revise"><span className="ph ph-review" aria-hidden="true" />{t("modeRevise")}</span> : null}
         {lesson.mode === "check" || variant !== "lesson" ? <span className="lp-mode"><span className={`ph ${variant === "mastery" ? "ph-target" : variant === "review" ? "ph-review" : "ph-seal-check"}`} aria-hidden="true" />{t(variant === "mastery" ? "modeMastery" : variant === "review" ? "modeReview" : "modeCheck")}</span> : null}
         {lessonNo && variant === "lesson" ? <span className="t-small ink-3 player-label" title={t(unitNo ? "headLabelUnit" : "headLabel", { path: pathLabel, unit: unitNo ?? 0, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t(unitNo ? "headLabelUnit" : "headLabel", { path: pathLabel, unit: unitNo ?? 0, n: lessonNo, title: lesson.title[locale] })}</span> : null}
         <span className="t-label num ink-2 player-count">{state.i + 1}/{total}</span>
