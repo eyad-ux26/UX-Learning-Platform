@@ -20,8 +20,9 @@ export function LessonEnd({ lesson, state, locale, unitSkills, streak, replay, o
   lesson.steps.forEach((s, k) => { if (isQuestion(s) && state.steps[k].outcome && state.steps[k].outcome !== "revealed") practised.add(s.skill); });
   const skills = unitSkills.filter((k) => practised.has(k.id));
   const minutes = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
-  // After a first play, the end page leads on to the next lesson of the path; a replay goes back home.
-  const go = !replay && upNext && onNext ? onNext : null;
+  // After a first play, the end page leads on to the next lesson of the path. A replay goes on to the next finished lesson of
+  // the same unit, so a learner can revise a whole unit (Eyad, 12 Nov); at the end of the unit's lessons it goes back home.
+  const go = upNext && onNext && (!replay || upNext.revise) ? onNext : null;
   const unitNo = Number(lesson.id.split("-U")[1]?.slice(0, 2)) || 1;
 
   return (

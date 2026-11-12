@@ -24,4 +24,16 @@ describe("upNextOf", () => {
     expect(upNextOf(view, all.at(-1)!.lesson.lessonId)).toBeNull();
     expect(upNextOf(view, content.lessons.find((l) => l.pathId !== "P01")!.lessonId)).toBeNull();
   });
+  it("revise: a replay goes on to the next finished lesson of the same unit, never to the skill check", () => {
+    const u1 = view.units[0].lessons;
+    const ids = u1.map((l) => l.lesson.lessonId);
+    const doneView = buildPathView("P01", { finishedLessons: ids, startedLessons: ids, xpByLesson: {} }, new Set())!;
+    const d1 = doneView.units[0].lessons;
+    expect(upNextOf(doneView, d1[0].lesson.lessonId)!.revise).toBe(true);
+    const lastLesson = d1.filter((l) => l.lesson.body.mode !== "check").at(-1)!;
+    const after = upNextOf(doneView, lastLesson.lesson.lessonId)!;
+    expect(after.revise).toBe(false);
+    // Not finished yet: a first play leads on as before, and it is not a revise.
+    expect(upNextOf(view, all[0].lesson.lessonId)!.revise).toBe(false);
+  });
 });
