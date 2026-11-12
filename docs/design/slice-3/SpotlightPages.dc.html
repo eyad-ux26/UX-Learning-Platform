@@ -36,6 +36,23 @@
       </header>
       <main class="pg-body pg-scroll" style="gap: 12px;">
         <p class="t-small ink-2" style="margin-top: -6px;">{{c.pathsLead}}</p>
+        <!-- 12 Nov (Eyad, D4): Your paths uses the same card as All paths: name, meta, progress, small art at the end, no tile -->
+        <sc-if value="{{is.joined}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over">{{c.yourPathsN}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{joined}}" as="j" hint-placeholder-count="3">
+              <a href="#path" class="{{j.cls}}" aria-label="{{j.aria}}">
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{j.name}}</span></span>
+                </span>
+                <span class="pc-meta"><sc-if value="{{j.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.currentTag}}</span></sc-if><sc-if value="{{j.isHyb}}" hint-placeholder-val="{{false}}"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span></sc-if><sc-if value="{{j.isInter}}" hint-placeholder-val="{{true}}"><span class="kind"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span></sc-if></span>
+                <span class="pj-prog"><span class="progress progress-sm" aria-hidden="true"><i style="width: {{j.pct}};"></i></span><span class="num">{{j.pct}}</span></span>
+                <span class="pj-where">{{j.where}}</span>
+                <img class="pc-art" src="{{j.art}}" alt="" aria-hidden="true">
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
         <sc-if value="{{is.optB}}" hint-placeholder-val="{{false}}">
           <label class="input pth-search"><span class="ph ph-search" aria-hidden="true"></span><input type="search" placeholder="{{c.searchPh}}" value="{{queryVal}}" aria-label="{{c.searchPh}}"><sc-if value="{{is.searching}}" hint-placeholder-val="{{false}}"><button type="button" class="pth-clear" aria-label="{{c.clearLabel}}"><span class="ph ph-x" aria-hidden="true"></span></button></sc-if></label>
         </sc-if>
@@ -271,7 +288,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"ar"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["optA","optB","optC","certs","landDiff","landCert"],"default":"optA"},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"ar"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["optA","optB","optBSearch","optBJoined","optC","certs","landDiff","landCert"],"default":"optA"},"$preview":{"width":390,"height":844}}'>
 /* Proposal 8 Nov 2026 (S3-18), for Eyad to choose before building:
    video paths with their instructor (options A, B, C), earned certificates first on the profile,
    landing "What's different about UXGate" and "Every path ends with a certificate". */
@@ -301,8 +318,8 @@ const C = {
   en: {
     navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, otherLang: 'العربية',
     pathsTitle: 'Paths', pathsLead: 'Pick a path. Unit 1 of every path is free.',
-    optA: 'Option A · two groups', optB: 'Option B · instructor spotlight', optC: 'Option C · one list, video first',
-    spotLabel: 'Featured courses', searchPh: 'Search paths, e.g. forms, contrast, AI', query: 'contrast', resultsLine: (n, q) => n + (n === 1 ? ' path' : ' paths') + ' for “' + q + '”', clearLabel: 'Clear search', matchLabel: 'Matches', spotTitle: 'Featured courses', secVideo: 'Video courses with an instructor', secInter: 'Interactive paths', secAll: 'All paths',
+    optA: 'Option A · two groups', optB: 'Option B · instructor spotlight', optBJoined: 'Approved B · with your paths (12 Nov)', optC: 'Option C · one list, video first',
+    yourPathsN: 'Your paths · 3', currentTag: 'Current', whereCur: 'Unit 2 · 4 of 25 lessons', whereNew: 'Not started', spotLabel: 'Featured courses', searchPh: 'Search paths, e.g. forms, contrast, AI', query: 'contrast', resultsLine: (n, q) => n + (n === 1 ? ' path' : ' paths') + ' for “' + q + '”', clearLabel: 'Clear search', matchLabel: 'Matches', spotTitle: 'Featured courses', secVideo: 'Video courses with an instructor', secInter: 'Interactive paths', secAll: 'All paths',
     videoOver: 'Video + practice', instructor: 'Instructor', withLabel: 'With', startFree: 'Start free', free1: 'Unit 1 free', hybrid: 'Video', interactive: 'Interactive', units: (n) => n + ' units',
     withWho: (n) => 'Videos with ' + n, aria: (p, n) => p + '. Video course with ' + n,
     sub: { P01: 'Design forms people can finish, understand and recover from, in English and Arabic.', P10: 'Help people see what matters first, on any screen and in any language.', P14: 'Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.', P02: 'Spot where people get stuck, and fix that first.', P05: 'Design that works for every ability and device.', P12: 'AI features people understand and trust.', P13: 'Use AI tools to research and design faster.', P15: 'Write screen text people can scan, understand and act on, in a tone that fits the moment.' },
@@ -333,8 +350,8 @@ const C = {
   ar: {
     navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'الملف الشخصي' }, otherLang: 'English',
     pathsTitle: 'المسارات', pathsLead: 'اختر مسارًا. الوحدة الأولى من كل مسار مجانية.',
-    optA: 'الخيار A · مجموعتان', optB: 'الخيار B · المدرّب في الواجهة', optC: 'الخيار C · قائمة واحدة والفيديو أولًا',
-    spotLabel: 'كورسات مميّزة', searchPh: 'ابحث في المسارات، مثل: نماذج، التباين، AI', query: 'التباين', resultsLine: (n, q) => (n === 1 ? 'مسار واحد' : n + ' مسارات') + ' لـ «' + q + '»', clearLabel: 'امسح البحث', matchLabel: 'يطابق', spotTitle: 'كورسات مميّزة', secVideo: 'كورسات بالفيديو مع مدرّب', secInter: 'مسارات تفاعلية', secAll: 'كل المسارات',
+    optA: 'الخيار A · مجموعتان', optB: 'الخيار B · المدرّب في الواجهة', optBJoined: 'الخيار B · مع مساراتك (12 نوفمبر)', optC: 'الخيار C · قائمة واحدة والفيديو أولًا',
+    yourPathsN: 'مساراتك · 3', currentTag: 'الحالي', whereCur: 'الوحدة 2 · 4 من 25 درسًا', whereNew: 'لم تبدأ بعد', spotLabel: 'كورسات مميّزة', searchPh: 'ابحث في المسارات، مثل: نماذج، التباين، AI', query: 'التباين', resultsLine: (n, q) => (n === 1 ? 'مسار واحد' : n + ' مسارات') + ' لـ «' + q + '»', clearLabel: 'امسح البحث', matchLabel: 'يطابق', spotTitle: 'كورسات مميّزة', secVideo: 'كورسات بالفيديو مع مدرّب', secInter: 'مسارات تفاعلية', secAll: 'كل المسارات',
     videoOver: 'فيديو + تدريب', instructor: 'المدرّب', withLabel: 'مع', startFree: 'ابدأ مجانًا', free1: 'الوحدة 1 مجانية', hybrid: 'فيديو', interactive: 'تفاعلي', units: (n) => n + ' وحدات',
     withWho: (n) => 'فيديوهات مع ' + n, aria: (p, n) => p + '. كورس بالفيديو مع ' + n,
     sub: { P01: 'صمّم نماذج يستطيع الناس إكمالها وفهمها والتعافي من أخطائها، بالعربية والإنجليزية.', P10: 'ساعد الناس على رؤية الأهم أولًا، على أي شاشة وبأي لغة.', P14: 'اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر.', P02: 'اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.', P05: 'تصميم يناسب كل القدرات وكل الأجهزة.', P12: 'ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.', P13: 'استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.', P15: 'اكتب نصوص الشاشات بحيث يتصفّحها الناس بسرعة ويفهمونها ويتصرّفون بها، وبنبرة تناسب الموقف.' },
@@ -363,7 +380,7 @@ const C = {
     cPath: 'نماذج تسير بسلاسة', cOver: 'شهادة مهارة', cThis: 'نشهد بأن', cShowed: 'أثبتت كل مهارات المسار', ogTitle: 'ياسمين عادل · نماذج تسير بسلاسة · شهادة UXGate'
   }
 };
-const VIEWS = ['optA', 'optB', 'optBSearch', 'optC', 'certs', 'landDiff', 'landCert'];
+const VIEWS = ['optA', 'optB', 'optBSearch', 'optBJoined', 'optC', 'certs', 'landDiff', 'landCert'];
 class Component extends DCLogic {
   renderVals() {
     const lang = this.props.lang === 'en' ? 'en' : 'ar';
@@ -374,7 +391,8 @@ class Component extends DCLogic {
     const c = C[lang];
     const N = NAMES[lang];
     const isPaths = view.indexOf('opt') === 0;
-    const isB = view === 'optB' || view === 'optBSearch';
+    const isB = view === 'optB' || view === 'optBSearch' || view === 'optBJoined';
+    const isJoined = view === 'optBJoined';
     const searching = view === 'optBSearch';
     const isLand = view.indexOf('land') === 0;
     const tab = view === 'certs' ? 'profile' : 'paths';
@@ -386,7 +404,10 @@ class Component extends DCLogic {
     const ORDER = ['P01', 'P10', 'P14', 'P02', 'P05', 'P15', 'P12', 'P13'];
     const byId = {}; hybrid.forEach((h) => { byId[h.id] = Object.assign({ isHyb: true, isInter: false, cls: 'path-card press is-hybrid pc-stack has-art' }, h); });
     inter.forEach((q) => { byId[q.id] = Object.assign({ isHyb: false, isInter: true, cls: 'path-card press pc-stack has-art', aria: q.name }, q); });
-    const allB = ORDER.map((id) => byId[id]);
+    const JOINED = [['P14', '16%', 'cur'], ['P12', '0%', ''], ['P01', '0%', '']];
+    const joined = isJoined ? JOINED.map(([id, pct, cur]) => Object.assign({}, byId[id], { pct, isCurrent: !!cur, where: cur ? c.whereCur : c.whereNew,
+      cls: 'path-card press pc-stack has-art pc-joined' + (cur ? ' is-current sel-frame' : ''), aria: byId[id].name + ', ' + pct })) : [];
+    const allB = ORDER.filter((id) => !isJoined || !JOINED.some((j) => j[0] === id)).map((id) => byId[id]);
     const q = c.query.toLowerCase();
     const results = allB.filter((x) => (x.name + ' ' + x.sub + ' ' + (KW[lang][x.id] || []).join(' ')).toLowerCase().indexOf(q) >= 0)
       .map((x) => { const hit = (KW[lang][x.id] || []).filter((k) => k.toLowerCase().indexOf(q) >= 0); return Object.assign({ hit: hit.length ? hit[0] : '', hasHit: hit.length > 0 }, x); });
@@ -399,9 +420,9 @@ class Component extends DCLogic {
       bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
       logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
       markWhite: '/_blob/5667904a660c43335758c7e0120ae2b8',
-      is: { paths: isPaths, optA: view === 'optA', optB: isB, bList: isB && !searching, searching, oneList: view === 'optC', interList: !isB, certs: view === 'certs', land: isLand, landDiff: view === 'landDiff', landCert: view === 'landCert' },
+      is: { paths: isPaths, joined: isJoined, optA: view === 'optA', optB: isB, bList: isB && !searching, searching, oneList: view === 'optC', interList: !isB, certs: view === 'certs', land: isLand, landDiff: view === 'landDiff', landCert: view === 'landCert' },
       optLabel: c[view] || '',
-      hybrid, spot: hybrid, inter, interGrid: view === 'optA' ? '' : 'two', allB, results, query: c.query, queryVal: searching ? c.query : '', resultsLine: c.resultsLine(results.length, c.query),
+      hybrid, joined, spot: hybrid, inter, interGrid: view === 'optA' ? '' : 'two', allB, results, query: c.query, queryVal: searching ? c.query : '', resultsLine: c.resultsLine(results.length, c.query),
       pfTabs: ['overview', 'paths', 'certs', 'badges', 'board'].map((id, i) => { const on = id === 'certs';
         return { id: 'pf-' + id, label: c.pfTabNames[i], cur: on ? 'true' : 'false', cls: 'pf-tab' + (on ? ' is-on' : ''), icon: 'ph ' + ['ph-squares-four', 'ph-path', 'ph-certificate', 'ph-medal', 'ph-ranking'][i] }; }),
       earned: [{ name: N.P01, meta: c.earnedMeta(40, date), aria: c.earnedAria(N.P01) }],

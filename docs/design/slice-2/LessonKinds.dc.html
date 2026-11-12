@@ -389,6 +389,28 @@ body{margin:0}
     </section>
   </sc-if>
 
+  <!-- 12 Nov (Eyad, D1): in a skill check the learner can change an answer and move between questions; the check is submitted on the last one -->
+  <sc-if value="{{sh.nav}}" hint-placeholder-val="{{false}}">
+    <section class="sheet sheet-saved sheet-in lp-sheet ck-nav" role="region" aria-label="{{c.ckNavLabel}}">
+      <div class="col">
+        <p class="verdict-row"><span class="ph ph-cloud-check-fill" aria-hidden="true"></span>{{c.answerSaved}}</p>
+        <p class="body">{{c.ckChange}}</p>
+      </div>
+      <div class="col">
+        <ol class="ck-qs" aria-label="{{c.ckQsLabel}}">
+          <sc-for list="{{ckQs}}" as="q" hint-placeholder-count="6">
+            <li><a href="#q" class="{{q.cls}}" aria-label="{{q.aria}}" aria-current="{{q.cur}}"><span class="num">{{q.n}}</span></a></li>
+          </sc-for>
+        </ol>
+        <sc-if value="{{ckLeftShow}}" hint-placeholder-val="{{false}}"><p class="ck-left"><span class="ph ph-info" aria-hidden="true"></span>{{ckLeft}}</p></sc-if>
+      </div>
+      <div class="acts">
+        <a href="#prev" class="btn btn-secondary press"><span class="ph ph-arrow" aria-hidden="true"></span>{{c.ckPrev}}</a>
+        <a href="#next" class="btn btn-primary press" style="min-width: 160px;">{{ckGo}}<span class="{{ckGoIcon}}" aria-hidden="true"></span></a>
+      </div>
+    </section>
+  </sc-if>
+
   <sc-if value="{{sh.saved}}" hint-placeholder-val="{{false}}">
     <section class="sheet sheet-saved sheet-in lp-sheet" role="status">
       <div class="col">
@@ -445,7 +467,7 @@ body{margin:0}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","press","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"screen":{"editor":"enum","options":["844","664","640"],"default":"844"},"caseStep":{"editor":"enum","options":["first","later"],"default":"first"},"example":{"editor":"enum","options":["thumb","full"],"default":"thumb"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"kind":{"editor":"enum","options":["predict","words","fix","reason","sort","order","match","spot"],"default":"words"},"state":{"editor":"enum","options":["idle","select","wrong","hint2","reveal","rightFirst","right","why","also","confAsk","press","confWrong","list","saved"],"default":"select"},"mode":{"editor":"enum","options":["lesson","check","mastery","guest"],"default":"lesson"},"nav":{"editor":"enum","options":["off","mid","last"],"default":"off"},"overlay":{"editor":"enum","options":["none","exit","resume","saving","saved","offline","synced","review","sent"],"default":"none"},"screen":{"editor":"enum","options":["844","664","640"],"default":"844"},"caseStep":{"editor":"enum","options":["first","later"],"default":"first"},"example":{"editor":"enum","options":["thumb","full"],"default":"thumb"},"nav":{"editor":null},"sfx":{"editor":null},"$preview":{"width":390,"height":844}}'>
 /* Slice 2 lesson player: every step type, its feedback and the sheets that sit over a step.
    Props: kind (step type), state (preset to review), mode (lesson, skill check, mastery round, guest), overlay.
    The mastery round uses its own new case (M below), never the lesson's own examples. */
@@ -453,7 +475,7 @@ const C = {
   en: {
     exit: 'Leave lesson', progress: 'Lesson progress', lessonName: 'Forms That Flow · Lesson 1 · Every field costs something', example: 'Example',
     soundOn: 'Sound on. Turn sound off', soundOff: 'Sound off. Turn sound on',
-    check: 'Check', cont: 'Continue', retry: 'Try again', hint: 'Hint', reveal: 'Show the answer', whyBtn: 'Why?', nextQ: 'Next question',
+    check: 'Check', cont: 'Continue', retry: 'Try again', hint: 'Hint', reveal: 'Show the answer', whyBtn: 'Why?', nextQ: 'Next question', ckNavLabel: 'Skill check questions', ckChange: 'You can change it until you submit. Results come at the end.', ckQsLabel: 'Go to a question', ckPrev: 'Back', ckSave: 'Save and next', ckSubmit: 'Submit the check', ckLeft: (n) => n + (n === 1 ? ' question has' : ' questions have') + ' no answer yet. Tap a number to go back.', ckQAria: (n, st) => 'Question ' + n + ', ' + st, ckSt: { done: 'answered', now: 'this question', empty: 'no answer yet' },
     wrongTitle: 'Not quite', right: 'Right', also: 'Also works', revealed: 'The answer, step by step', 
     tryOf: (n) => 'Try ' + n + ' of 3', hintOf: (n) => 'Hint ' + n + ' of 2', kept: 'Your first answer is kept.',
     sure: 'How sure are you?', conf: ['Guessing', 'Fairly sure', 'Sure'], confHelp: 'Pick how sure you are, then Check.',
@@ -484,7 +506,7 @@ const C = {
   ar: {
     exit: 'الخروج من الدرس', progress: 'تقدّم الدرس', lessonName: 'Forms That Flow · الدرس 1 · كل حقل له تكلفة', example: 'مثال',
     soundOn: 'الصوت يعمل. أوقف الصوت', soundOff: 'الصوت متوقف. شغّل الصوت',
-    check: 'تحقّق', cont: 'متابعة', retry: 'حاول مرة أخرى', hint: 'تلميح', reveal: 'اعرض الإجابة', whyBtn: 'لماذا؟', nextQ: 'السؤال التالي',
+    check: 'تحقّق', cont: 'متابعة', retry: 'حاول مرة أخرى', hint: 'تلميح', reveal: 'اعرض الإجابة', whyBtn: 'لماذا؟', nextQ: 'السؤال التالي', ckNavLabel: 'أسئلة اختبار المهارة', ckChange: 'يمكنك تغييرها حتى ترسل الاختبار. النتيجة في النهاية.', ckQsLabel: 'انتقل إلى سؤال', ckPrev: 'السابق', ckSave: 'احفظ وتابع', ckSubmit: 'أرسل الاختبار', ckLeft: (n) => (n === 1 ? 'سؤال واحد بلا إجابة' : n === 2 ? 'سؤالان بلا إجابة' : n + ' أسئلة بلا إجابة') + ' بعد. اضغط رقمه للرجوع إليه.', ckQAria: (n, st) => 'السؤال ' + n + '، ' + st, ckSt: { done: 'أُجيب عنه', now: 'السؤال الحالي', empty: 'بلا إجابة بعد' },
     wrongTitle: 'ليس تمامًا', right: 'صحيح', also: 'تصلح أيضًا', revealed: 'الإجابة خطوة بخطوة', 
     tryOf: (n) => 'المحاولة ' + n + ' من 3', hintOf: (n) => 'تلميح ' + n + ' من 2', kept: 'نحتفظ بإجابتك الأولى.',
     sure: 'ما مدى تأكدك؟', conf: ['أخمّن', 'متأكد نوعًا ما', 'متأكد'], confHelp: 'اختر مدى تأكدك، ثم اضغط «تحقّق».',
@@ -862,17 +884,20 @@ class Component extends DCLogic {
     const after = ['wrong', 'right', 'saved'].indexOf(s.phase) >= 0;
     const isChoice = CHOICE_KINDS.indexOf(kind) >= 0;
     const isCheck = mode === 'check'; const isMastery = mode === 'mastery';
+    const ckNav = isCheck && ['mid', 'last'].indexOf(this.props.nav) >= 0; const ckLast = this.props.nav === 'last';
+    const ckStates = ckLast ? ['done', 'empty', 'done', 'now'] : ['done', 'now', 'done', 'empty'];
+    const ckEmpty = ckStates.filter((x) => x === 'empty').length;
     const ov = s.overlay;
 
     /* header */
-    const stepNo = isCheck ? 2 : isMastery && spec.q ? spec.q : spec.step;
+    const stepNo = isCheck ? (this.props.nav === 'last' ? 4 : 2) : isMastery && spec.q ? spec.q : spec.step;
     const stepMax = isCheck ? 4 : isMastery && spec.q ? M_TOTAL : 10;
     const over = isMastery && spec.q ? k.over + ' · ' + c.qOf(spec.q, M_TOTAL) : k.over;
     const save = ov === 'saving' ? { show: true, cls: 'lp-save is-saving', icon: 'ph ph-cloud-up', text: c.saving }
       : ov === 'saved' || ov === 'synced' ? { show: true, cls: 'lp-save is-saved', icon: 'ph ph-cloud-check-fill', text: c.saved }
       : ov === 'offline' ? { show: true, cls: 'lp-save is-offline', icon: 'ph ph-wifi-slash', text: c.offline }
       : { show: false };
-    const modeTag = isCheck ? { show: true, cls: 'lp-mode is-check', icon: 'ph ph-seal-fill', text: c.checkTag }
+    const modeTag = isCheck ? { show: true, cls: 'lp-mode is-check', icon: 'ph ph-seal-fill', text: this.props.nav === 'last' ? c.checkTag.replace('2', '4') : c.checkTag }
       : isMastery ? { show: true, cls: 'lp-mode is-mastery', icon: 'ph ph-target', text: c.masteryTag }
       : mode === 'guest' && isDesk ? { show: true, cls: 'lp-mode is-guest', icon: 'ph ph-user', text: c.guestTag }
       : { show: false };
@@ -1099,7 +1124,10 @@ class Component extends DCLogic {
       checkHelp, helpId: uid + '-help', helpRef: (checkHelp || goWait) ? uid + '-help' : '',
       checkCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block'), checkText: c.check,
       checkOff: !ready, check,
-      sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', saved: s.phase === 'saved' },
+      sh: { wrong: s.phase === 'wrong', right: s.phase === 'right', saved: s.phase === 'saved' && !ckNav, nav: s.phase === 'saved' && ckNav },
+      ckQs: ckStates.map((st, i) => ({ n: i + 1, cls: 'ck-q press is-' + st, cur: st === 'now' ? 'step' : 'false', aria: c.ckQAria(i + 1, c.ckSt[st]) })),
+      ckGo: ckLast ? c.ckSubmit : c.ckSave, ckGoIcon: ckLast ? 'ph ph-send' : 'ph ph-arrow flip',
+      ckLeftShow: ckLast && ckEmpty > 0, ckLeft: c.ckLeft(ckEmpty),
       showTry: !isMastery, tryText: c.tryOf(triesShown),
       showSure: s.phase === 'wrong' && s.conf === 2,
       wrongNote: isMastery ? c.masteryMiss : c.kept,
