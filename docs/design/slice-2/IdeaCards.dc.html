@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Idea cards</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+  <header class="lp-head">
+    <a href="#exit" class="{{headBtn}}" aria-label="{{c.exit}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+    <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+      <span class="frame-label" style="font-size: 13px;"><span class="ph ph-hash" aria-hidden="true"></span>{{d.head}}</span>
+    </sc-if>
+    <div class="progress" role="progressbar" aria-label="{{c.progress}}" aria-valuenow="{{d.step}}" aria-valuemin="0" aria-valuemax="{{d.total}}"><i style="width: {{d.pct}};"></i></div>
+    <span class="t-label num ink-2 lp-count">{{d.count}}</span>
+    <button class="lp-lang" type="button" lang="{{langBtn.lang}}" aria-label="{{langBtn.aria}}"><sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}"><span class="ph ph-globe" aria-hidden="true"></span></sc-if><span>{{langBtn.label}}</span></button>
+    <button class="{{headBtn}}" type="button" aria-label="{{c.sound}}" aria-pressed="false"><span class="ph ph-speaker-high" aria-hidden="true"></span></button>
+  </header>
+
+  <!-- Idea cards (S2-15, 7 Nov 2026): the card body is drawn as blocks, never as plain paragraphs. See docs/design/slice-2/idea-cards.md -->
+  <main class="lp-main lp-idea-main">
+    <section class="lp-idea" style="{{scroll}}" aria-labelledby="{{hid}}">
+      <header class="lp-idea-head">
+        <p class="t-over" style="color: var(--link);">{{d.over}}</p>
+        <h1 class="lp-qt" id="{{hid}}">{{d.title}}</h1>
+      </header>
+
+      <sc-if value="{{has.lead}}" hint-placeholder-val="{{true}}">
+        <article class="lp-sum-key lp-idea-key">
+          <span class="lp-sum-key-ic" aria-hidden="true"><span class="ph ph-bulb-fill"></span></span>
+          <div class="lp-sum-key-text">
+            <p class="lp-sum-key-over">{{c.key}}</p>
+            <sc-for list="{{d.lead}}" as="p" hint-placeholder-count="1"><p>{{p.t}}</p></sc-for>
+          </div>
+        </article>
+      </sc-if>
+
+      <sc-if value="{{has.points}}" hint-placeholder-val="{{true}}">
+        <ul class="{{gridCls}}">
+          <sc-for list="{{d.points}}" as="it" hint-placeholder-count="3">
+            <li class="lp-idea-card"><span class="lp-idea-ic" aria-hidden="true"><span class="{{it.icon}}"></span></span><span class="lp-idea-text"><b>{{it.title}}</b><span>{{it.text}}</span></span></li>
+          </sc-for>
+        </ul>
+      </sc-if>
+
+      <sc-if value="{{has.compare}}" hint-placeholder-val="{{false}}">
+        <div class="lp-idea-vs">
+          <sc-for list="{{d.sides}}" as="sd" hint-placeholder-count="2">
+            <section class="{{sd.cls}}" aria-labelledby="{{sd.hid}}">
+              <h2 id="{{sd.hid}}"><span class="lp-idea-ic" aria-hidden="true"><span class="{{sd.icon}}"></span></span>{{sd.title}}</h2>
+              <ul>
+                <sc-for list="{{sd.items}}" as="x" hint-placeholder-count="3"><li><span class="ph ph-check" aria-hidden="true"></span><span>{{x.t}}</span></li></sc-for>
+              </ul>
+            </section>
+          </sc-for>
+          <span class="lp-idea-or" aria-hidden="true">{{c.or}}</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{has.topics}}" hint-placeholder-val="{{false}}">
+        <div class="lp-idea-topics">
+          <sc-for list="{{d.topics}}" as="tp" hint-placeholder-count="2">
+            <article class="lp-idea-topic" aria-labelledby="{{tp.hid}}">
+              <header><span class="lp-idea-n num" aria-hidden="true">{{tp.n}}</span><h2 id="{{tp.hid}}">{{tp.title}}</h2><span class="lp-idea-term ltr">{{tp.term}}</span></header>
+              <p>{{tp.text}}</p>
+              <h3><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{c.todo}}</h3>
+              <ul>
+                <sc-for list="{{tp.items}}" as="x" hint-placeholder-count="2"><li><span class="ph ph-arrow flip" aria-hidden="true"></span><span>{{x.t}}</span></li></sc-for>
+              </ul>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{has.scales}}" hint-placeholder-val="{{false}}">
+        <ul class="lp-idea-scales">
+          <sc-for list="{{d.scales}}" as="sc" hint-placeholder-count="4">
+            <li>
+              <span class="lp-idea-end">{{sc.a}}</span>
+              <span class="lp-idea-track" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="lp-idea-end">{{sc.b}}</span>
+              <sc-if value="{{sc.hasNote}}" hint-placeholder-val="{{false}}"><small>{{sc.note}}</small></sc-if>
+            </li>
+          </sc-for>
+        </ul>
+      </sc-if>
+
+      <sc-if value="{{has.recap}}" hint-placeholder-val="{{false}}">
+        <ol class="lp-idea-done">
+          <sc-for list="{{d.points}}" as="it" hint-placeholder-count="5">
+            <li><span class="lp-idea-tick" aria-hidden="true"><span class="ph ph-check"></span></span><span class="lp-idea-text"><b>{{it.title}}</b><span>{{it.text}}</span></span></li>
+          </sc-for>
+        </ol>
+      </sc-if>
+
+      <sc-if value="{{has.rule}}" hint-placeholder-val="{{false}}">
+        <aside class="lp-idea-rule"><span class="lp-idea-ic" aria-hidden="true"><span class="ph ph-flag"></span></span><span class="lp-idea-text"><b>{{d.rule.title}}</b><span>{{d.rule.text}}</span></span></aside>
+      </sc-if>
+
+      <sc-if value="{{has.notes}}" hint-placeholder-val="{{false}}">
+        <aside class="lp-idea-note">
+          <p class="lp-idea-note-over"><span class="ph ph-sparkle" aria-hidden="true"></span>{{c.remember}}</p>
+          <sc-for list="{{d.notes}}" as="p" hint-placeholder-count="2"><p>{{p.t}}</p></sc-for>
+        </aside>
+      </sc-if>
+
+      <sc-if value="{{has.next}}" hint-placeholder-val="{{false}}">
+        <p class="lp-idea-next"><span class="lp-idea-next-over"><span class="ph ph-path" aria-hidden="true"></span>{{c.nextLesson}}</span><span>{{d.next}}</span></p>
+      </sc-if>
+    </section>
+  </main>
+  <footer class="lp-sum-foot">
+    <a href="#next" class="{{contCls}}">{{c.cont}}<span class="ph ph-arrow flip" aria-hidden="true"></span></a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["points","compare","topics","scales","recap"],"default":"points"},"part":{"editor":"enum","options":["top","end"],"default":"top"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+/* Idea cards (S2-15, 7 Nov 2026). Eyad: text-only idea screens look weak; use cards and other elements.
+   Every view is the real content of a lesson card, drawn by rules from the body text, so no content needs rewriting:
+   points  = P12-U01-L01 S03 (intro paragraph + "- **Title:** text" points)
+   compare = the same card with the optional `layout: compare`
+   topics  = P13-U03-L01 S03 ("**Title (Term).** text" paragraphs, each followed by "- " lines)
+   scales  = P15-U03-L01 S03 (points whose title holds "↔", then closing paragraphs)
+   recap   = P01-U01-L01 S09 (part: recap, points, then "Next lesson: …") */
+const C = {
+  en: { exit: 'Exit the lesson', progress: 'Lesson progress', sound: 'Sound is on. Turn sound off', cont: 'Continue',
+    key: 'The idea', or: 'or', todo: 'What to do', remember: 'Keep in mind', nextLesson: 'Next lesson',
+    v: {
+      points: { path: 'Design Better AI Experiences', part: 'The idea', n: 1, lesson: 'Start from the problem, not from AI', step: 3, total: 8,
+        title: 'Problem first, then ask: does AI help?',
+        lead: ['Ask “How might we solve this problem?”, not “Can we use AI to…?”'],
+        points: [['target', 'AI is often better for', 'Suggestions that differ for each person, predicting what comes next, understanding speech and language, and recognising things like faces.'],
+          ['bulb', 'A simple rule is often better for', 'Things that must stay in the same place (Home, Cancel), simple fixed information (a card form), and cases where people need to know exactly why something happened.'],
+          ['list', 'Simpler wins ties', 'A rule is easier to build, explain and fix.']] },
+      compare: { same: 'points',
+        sides: [['target', 'AI is often better for', ['Suggestions that differ for each person', 'Predicting what comes next', 'Understanding speech and language', 'Recognising things like faces']],
+          ['bulb', 'A simple rule is often better for', ['Things that must stay in the same place (Home, Cancel)', 'Simple fixed information (a card form)', 'Cases where people need to know exactly why something happened']]],
+        rule: ['Simpler wins ties', 'A rule is easier to build, explain and fix.'] },
+      topics: { path: 'AI Tools for Better UX', part: 'The idea', n: 1, lesson: 'Made-up facts and easy agreement', step: 3, total: 9,
+        title: 'Two traps: made-up facts and easy agreement',
+        topics: [['Made-up facts', 'Hallucinations', 'AI predicts likely words. It doesn’t know if they’re true. So it can state false facts, and invent studies and links, in a confident voice.', ['Check every fact at its original source.']],
+          ['Easy agreement', 'Sycophancy', 'AI tends to agree with you, even when you’re wrong.', ['Don’t put your opinion in the question.', 'Start a new chat for a fresh view.', 'If it flips when you ask “Are you sure?”, don’t trust either answer. Check it yourself.']]] },
+      scales: { path: 'Write Words That Work', part: 'The idea', n: 1, lesson: 'Hear the tone', step: 3, total: 9,
+        title: 'Tone has 4 scales',
+        lead: ['Tone is how your text feels: what it tells people about how you feel about the message. Each text sits somewhere on 4 scales:'],
+        scales: [['Formal', 'casual'], ['Serious', 'funny'], ['Respectful', 'irreverent', 'Teasing or mocking'], ['Matter-of-fact', 'enthusiastic']],
+        notes: ['You can move one scale and keep the others. For example, “Sorry, we’re having a problem on our side” is more casual than “We apologize for the inconvenience”, and still serious.', 'Casual is not the same as funny, and serious is not the same as cold.'] },
+      recap: { path: 'Forms That Flow', part: 'Recap', n: 1, lesson: 'Every field costs something', step: 9, total: 9,
+        title: 'What you did',
+        points: [['', 'Essential only', 'Removed the field the task didn’t need.'], ['', 'Ask later', 'Moved membership questions to the membership form.'], ['', 'Minimum first', 'Asked marketing’s question after sign-up.'],
+          ['', 'Say why', 'Explained the personal field at the field.'], ['', 'Not just short', 'Kept the field the delivery can’t work without.']],
+        next: 'Required or optional, and how to show it.' }
+    } },
+  ar: { exit: 'الخروج من الدرس', progress: 'تقدّم الدرس', sound: 'الصوت يعمل. أوقف الصوت', cont: 'متابعة',
+    key: 'الفكرة', or: 'أم', todo: 'ماذا تفعل', remember: 'تذكّر', nextLesson: 'الدرس التالي',
+    v: {
+      points: { path: 'صمّم تجارب أفضل بالذكاء الاصطناعي', part: 'الفكرة', n: 1, lesson: 'ابدأ من المشكلة، لا من الذكاء الاصطناعي', step: 3, total: 8,
+        title: 'المشكلة أولًا، ثم اسأل: هل يساعد الذكاء الاصطناعي؟',
+        lead: ['اسأل «كيف نحلّ هذه المشكلة؟»، لا «هل نستخدم الذكاء الاصطناعي لـ…؟»'],
+        points: [['target', 'الذكاء الاصطناعي غالبًا أفضل في', 'اقتراحات تختلف لكل شخص، وتوقّع ما سيحدث، وفهم الكلام واللغة، والتعرّف على أشياء مثل الوجوه.'],
+          ['bulb', 'القاعدة البسيطة غالبًا أفضل في', 'الأشياء التي يجب أن تبقى في مكانها (الرئيسية، الإلغاء)، والمعلومات البسيطة الثابتة (نموذج بيانات البطاقة)، والحالات التي يحتاج فيها الناس معرفة سبب ما حدث بالضبط.'],
+          ['list', 'الأبسط يفوز عند التساوي', 'القاعدة أسهل في البناء والشرح والإصلاح.']] },
+      compare: { same: 'points',
+        sides: [['target', 'الذكاء الاصطناعي غالبًا أفضل في', ['اقتراحات تختلف لكل شخص', 'توقّع ما سيحدث', 'فهم الكلام واللغة', 'التعرّف على أشياء مثل الوجوه']],
+          ['bulb', 'القاعدة البسيطة غالبًا أفضل في', ['الأشياء التي يجب أن تبقى في مكانها (الرئيسية، الإلغاء)', 'المعلومات البسيطة الثابتة (نموذج بيانات البطاقة)', 'الحالات التي يحتاج فيها الناس معرفة سبب ما حدث بالضبط']]],
+        rule: ['الأبسط يفوز عند التساوي', 'القاعدة أسهل في البناء والشرح والإصلاح.'] },
+      topics: { path: 'أدوات الذكاء الاصطناعي لتجربة مستخدم أفضل', part: 'الفكرة', n: 1, lesson: 'معلومات مُختلَقة وموافقة سهلة', step: 3, total: 9,
+        title: 'فخّان: معلومات مُختلَقة وموافقة سهلة',
+        topics: [['المعلومات المُختلَقة', 'Hallucinations', 'الذكاء الاصطناعي يتوقّع الكلمات المحتملة. ولا يعرف هل هي صحيحة. لذلك قد يذكر معلومات خاطئة، ويخترع دراسات وروابط، بصوت واثق.', ['تحقّق من كل معلومة في مصدرها الأصلي.']],
+          ['الموافقة السهلة', 'Sycophancy', 'الذكاء الاصطناعي يميل إلى موافقتك، حتى حين تكون مخطئًا.', ['لا تضع رأيك في السؤال.', 'ابدأ محادثة جديدة لرأي جديد.', 'إن غيّر إجابته حين تسأل «هل أنت متأكد؟»، فلا تثق بأي من الإجابتين. تحقّق بنفسك.']]] },
+      scales: { path: 'اكتب كلمات تؤدّي المهمة', part: 'الفكرة', n: 1, lesson: 'اسمع النبرة', step: 3, total: 9,
+        title: 'للنبرة أربعة مقاييس',
+        lead: ['النبرة (Tone) هي إحساس النص: ما يخبر به الناس عن شعورك تجاه الرسالة. وكل نص يقع في مكان ما على 4 مقاييس:'],
+        scales: [['رسمي', 'ودّي'], ['جاد', 'مضحك'], ['محترم', 'ساخر', 'يشاكس أو يستهزئ'], ['محايد', 'متحمّس']],
+        notes: ['يمكنك تحريك مقياس واحد وإبقاء الباقي كما هو. مثلًا، «عذرًا، عندنا مشكلة من جهتنا» أكثر ودًّا من «نعتذر عن الإزعاج»، وما زالت جادة.', 'الودّي ليس هو المضحك، والجاد ليس هو البارد.'] },
+      recap: { path: 'نماذج تسير بسلاسة', part: 'الخلاصة', n: 1, lesson: 'لكل حقل ثمن', step: 9, total: 9,
+        title: 'ماذا تعلّمت',
+        points: [['', 'الضروري فقط', 'حذفت الحقل الذي لا تحتاجه المهمة.'], ['', 'اسأل لاحقًا', 'نقلت أسئلة الاشتراك إلى نموذج الاشتراك.'], ['', 'الحد الأدنى أولًا', 'طرحت سؤال التسويق بعد التسجيل.'],
+          ['', 'وضّح السبب', 'شرحت الحقل الشخصي عند الحقل نفسه.'], ['', 'ليس الأقصر فقط', 'أبقيت الحقل الذي لا يعمل التوصيل بدونه.']],
+        next: 'إلزامي أم اختياري، وكيف توضّح ذلك.' }
+    } }
+};
+const VIEWS = ['points', 'compare', 'topics', 'scales', 'recap'];
+
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const isDesk = this.props.device === 'desktop';
+    const view = VIEWS.indexOf(this.props.view) >= 0 ? this.props.view : 'points';
+    const c = C[lang];
+    const raw = c.v[view];
+    const base = raw.same ? c.v[raw.same] : raw;
+    const sid = lang + '-' + theme + '-' + (isDesk ? 'd' : 'm') + '-' + view;
+    const n = (base.points || []).length;
+    const d = {
+      head: base.path + (lang === 'ar' ? ' · الدرس ' : ' · Lesson ') + base.n + ' · ' + base.lesson,
+      over: base.path + ' · ' + base.part, title: base.title,
+      step: base.step, total: base.total, pct: Math.round((base.step / base.total) * 100) + '%', count: base.step + '/' + base.total,
+      lead: (base.lead || []).map((t) => ({ t })),
+      points: (base.points || []).map(([icon, title, text]) => ({ icon: 'ph ph-' + (icon || 'check'), title, text })),
+      sides: (raw.sides || []).map(([icon, title, items], k) => ({ cls: 'lp-idea-side' + (k ? ' is-b' : ' is-a'), hid: 'idea-side-' + k + '-' + sid, icon: 'ph ph-' + icon, title, items: items.map((t) => ({ t })) })),
+      rule: raw.rule ? { title: raw.rule[0], text: raw.rule[1] } : { title: '', text: '' },
+      topics: (base.topics || []).map(([title, term, text, items], k) => ({ n: String(k + 1), hid: 'idea-tp-' + k + '-' + sid, title, term, text, items: items.map((t) => ({ t })) })),
+      scales: (base.scales || []).map(([a, b, note]) => ({ a, b, note: note || '', hasNote: !!note })),
+      notes: (base.notes || []).map((t) => ({ t })), next: base.next || ''
+    };
+    const has = { lead: d.lead.length > 0, points: view === 'points', compare: view === 'compare', topics: view === 'topics', scales: view === 'scales', recap: view === 'recap',
+      rule: view === 'compare', notes: d.notes.length > 0, next: !!d.next };
+    const scrollEnd = { scales: isDesk ? -40 : -470, topics: isDesk ? 0 : -330, recap: isDesk ? 0 : -260, compare: isDesk ? -60 : -470, points: isDesk ? 0 : -240 };
+    return {
+      lang, theme, dir: lang === 'ar' ? 'rtl' : 'ltr', c, d, has, isDesk, hid: 'idea-h-' + sid,
+      gridCls: 'lp-idea-grid n' + n,
+      scroll: this.props.part === 'end' ? 'margin-top: ' + scrollEnd[view] + 'px;' : '',
+      rootCls: 'ug lp lp-' + (isDesk ? 'desktop' : 'mobile'), headBtn: isDesk ? 'icon-btn' : 'icon-btn plain',
+      langBtn: lang === 'ar' ? { label: isDesk ? 'English' : 'EN', lang: 'en', aria: 'Switch the lesson to English' } : { label: 'عربي', lang: 'ar', aria: 'حوّل الدرس إلى العربية' },
+      contCls: 'btn btn-primary btn-lg press' + (isDesk ? '' : ' btn-block')
+    };
+  }
+}
+</script>
+</body>
+</html>

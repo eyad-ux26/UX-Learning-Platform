@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Slice 5 · Paywall, plans, checkout, results, locked states</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+
+</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <a class="dk-layer is-on" href="#path"><img src="{{img.forms}}" alt="" style="width: 22px; height: 22px; flex: none;"><span class="ltr" style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Forms That Flow</span><span class="num" style="font-size: 12px; color: var(--ink-3);">20%</span></a>
+      <div style="flex: 1;"></div>
+      <a class="dk-layer" href="#plans"><span class="pro-tag">PRO</span>{{c.railPlans}}</a>
+      <a class="dk-layer" href="#help"><span class="ph ph-lifebuoy" aria-hidden="true"></span>{{c.help}}</a>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <!-- ============ Plans page ============ -->
+  <sc-if value="{{is.plans}}" hint-placeholder-val="{{true}}">
+    <div class="pg-col">
+      <header class="pg-top" style="gap: 4px;">
+        <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#back" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+        <h1 class="pg-title" style="flex: 1; display: flex; align-items: center; gap: 10px;">UXGate Pro</h1>
+      </header>
+      <main class="pg-scroll" style="gap: 12px;">
+        <div class="pg-split" style="{{splitStyle}}">
+          <div class="pg-stack" style="gap: 12px;">
+            <p class="t-body ink-2" style="font-size: 15px;">{{c.plansLead}}</p>
+            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-globe" aria-hidden="true"></span><span>{{r.regionLine}} <a href="#country" class="hit" style="font-weight: 700;">{{c.changeCountry}}</a></span></p>
+            <div class="plans" role="radiogroup" aria-label="{{c.billingPeriod}}">
+              <sc-for list="{{planCards}}" as="p" hint-placeholder-count="2">
+                <button class="{{p.cls}}" type="button" role="radio" aria-checked="{{p.on}}" onClick="{{p.pick}}">
+                  <span class="pc-top"><span class="pc-name">{{p.name}}</span><span class="{{p.radio}}" aria-hidden="true"><span class="dot"></span></span></span>
+                  <sc-if value="{{p.hasWas}}" hint-placeholder-val="{{false}}"><span class="was"><span class="{{pc}}">{{p.was}}</span></span></sc-if>
+                  <span class="price"><span class="{{pc}}">{{p.price}}</span> <small>{{p.per}}</small></span>
+                  <span class="sub">{{p.sub}}</span>
+                  <sc-if value="{{p.hasSave}}" hint-placeholder-val="{{false}}"><span class="save-tag">{{p.save}}</span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+            <sc-if value="{{codeOn}}" hint-placeholder-val="{{false}}">
+              <div class="notice is-info"><span class="{{disc.icon}}" aria-hidden="true"></span><span class="grow"><b>{{disc.t}}</b><span>{{disc.body}}</span><span class="t-small ink-2" style="font-size: 12.5px;">{{c.oneDiscount}}</span></span><sc-if value="{{disc.canRemove}}" hint-placeholder-val="{{true}}"><a href="#remove" class="btn btn-ghost btn-sm" style="flex: none; padding: 0 10px;">{{c.remove}}</a></sc-if></div>
+            </sc-if>
+            <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+              <div class="facts"><sc-for list="{{c.facts}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p></sc-for></div>
+            </sc-if>
+            <p class="t-over set-sec" style="margin-top: 4px;">{{c.compareTitle}}</p>
+            <div class="fp" role="table" aria-label="{{c.compareTitle}}">
+              <span class="fp-h fp-k" role="columnheader"></span><span class="fp-h" role="columnheader">{{c.colFree}}</span><span class="fp-h is-pro" role="columnheader"><span class="pro-tag">PRO</span></span>
+              <sc-for list="{{fpRows}}" as="x" hint-placeholder-count="5">
+                <span class="{{x.kCls}}" role="rowheader">{{x.label}}</span>
+                <span class="{{x.fCls}}" role="cell" aria-label="{{x.fAria}}"><span class="{{x.fIc}}" aria-hidden="true"></span></span>
+                <span class="{{x.pCls}}" role="cell" aria-label="{{x.pAria}}"><span class="ph ph-check-circle-fill yes" aria-hidden="true"></span></span>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+            <aside class="pg-stack" style="gap: 14px;">
+              <section class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                <p class="t-over">{{c.yourChoice}}</p>
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;"><b style="font-size: 17px;">{{selName}}</b><b style="font-size: 22px;"><span class="{{pc}}">{{selPrice}}</span></b></div>
+                <p class="t-small ink-2" style="font-size: 13.5px;">{{selThen}}</p>
+                <a href="#checkout" class="btn btn-primary btn-lg btn-block press">{{c.toPay}}</a>
+                <div class="facts"><sc-for list="{{c.facts}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p></sc-for></div>
+              </section>
+              <section class="card" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+                <div class="field"><label for="code-{{lang}}-{{theme}}-{{device}}">{{c.codeLabel}}</label>
+                  <div style="display: flex; gap: 8px;"><div class="{{ce.cls}}" style="flex: 1;"><input id="code-{{lang}}-{{theme}}-{{device}}" type="text" value="{{codeVal}}" placeholder="{{c.codePh}}" autocapitalize="characters" aria-invalid="{{ce.inv}}" aria-describedby="{{ce.desc}}"></div><button class="btn btn-secondary press" type="button" style="flex: none;">{{c.apply}}</button></div>
+                  <sc-if value="{{ce.on}}" hint-placeholder-val="{{false}}"><span class="err" id="code-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{ce.msg}}</span></sc-if></div>
+                <a href="#student" class="set-row" style="border: 0; padding: 0; min-height: 48px;"><span class="ph ph-student" aria-hidden="true"></span><span class="set-l">{{c.studentT}}<small>{{c.studentS}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
+              </section>
+            </aside>
+          </sc-if>
+          <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+            <sc-if value="{{ce.on}}" hint-placeholder-val="{{false}}"><section class="card" style="padding: 14px 16px;"><div class="field"><label for="code-{{lang}}-{{theme}}-{{device}}">{{c.codeLabel}}</label>
+                  <div style="display: flex; gap: 8px;"><div class="{{ce.cls}}" style="flex: 1;"><input id="code-{{lang}}-{{theme}}-{{device}}" type="text" value="{{codeVal}}" placeholder="{{c.codePh}}" autocapitalize="characters" aria-invalid="{{ce.inv}}" aria-describedby="{{ce.desc}}"></div><button class="btn btn-secondary press" type="button" style="flex: none;">{{c.apply}}</button></div>
+                  <sc-if value="{{ce.on}}" hint-placeholder-val="{{false}}"><span class="err" id="code-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{ce.msg}}</span></sc-if></div></section></sc-if>
+            <div class="set">
+              <sc-if value="{{ce.off}}" hint-placeholder-val="{{true}}"><a href="#code" class="set-row"><span class="ph ph-tag" aria-hidden="true"></span><span class="set-l">{{c.codeLabel}}<small>{{c.codeKinds}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a></sc-if>
+              <a href="#student" class="set-row"><span class="ph ph-student" aria-hidden="true"></span><span class="set-l">{{c.studentT}}<small>{{c.studentS}}</small></span><span class="ph ph-caret flip ink-3" aria-hidden="true"></span></a>
+            </div>
+          </sc-if>
+        </div>
+      </main>
+      <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}">
+        <footer class="save-bar" style="gap: 8px;">
+          <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 700; color: var(--ink-2);"><span>{{selName}}</span><b style="font-size: 18px; color: var(--ink);"><span class="{{pc}}">{{selPrice}}</span></b></span>
+          <a href="#checkout" class="btn btn-primary btn-lg btn-block press">{{c.toPay}}</a>
+        </footer>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ Path map, free learner ============ -->
+  <sc-if value="{{is.map}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="pg-top" style="gap: 6px;">
+        <button class="sw-btn" type="button" aria-haspopup="dialog" aria-expanded="false">
+          <img src="{{img.forms}}" alt="">
+          <span class="sw-name"><span class="ltr">Forms That Flow</span><small>{{c.unit2of5}}</small></span>
+          <span class="ph ph-caret-down caret" aria-hidden="true"></span>
+        </button>
+        <div style="flex: 1;"></div>
+        <span class="stat"><span class="ph ph-bolt-fill" style="color: var(--hl-ledge);" aria-hidden="true"></span><span class="num ltr">420 XP</span></span>
+      </header>
+      <main class="pg-body" style="gap: 12px;">
+        <div class="pg-split" style="{{mapSplit}}">
+          <div class="pg-stack" style="gap: 10px;">
+            <a href="#unit1" class="card press" style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);">
+              <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--right-line); color: #01241A; flex: none; box-shadow: 0 3px 0 #2A7F5F;"><span class="ph ph-check" style="font-size: 22px;" aria-hidden="true"></span></span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+                <span style="display: flex; align-items: center; gap: 6px;"><span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unitN1}} · {{c.done}}</span><span class="kind kind-free">{{c.free}}</span></span>
+                <span class="t-label" style="font-size: 15px;">{{u1Title}}</span>
+                <span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="skill skill-shown" style="height: 24px; font-size: 12px; padding: 0 9px;"><span class="ph ph-seal-fill" style="font-size: 13px;" aria-hidden="true"></span>6 · {{c.shown}}</span></span>
+              </span>
+              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+            </a>
+            <a href="#unit2" class="unit-lock is-next press" style="margin-bottom: 4px; flex-wrap: wrap;">
+              <span class="ic"><span class="ph ph-lock-fill" aria-hidden="true"></span></span>
+              <span class="grow"><span style="display: flex; align-items: center; gap: 6px;"><span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.unitN2}} · {{c.next}}</span><span class="pro-tag">PRO</span></span><b>{{u2Title}}</b><span class="t-small ink-2" style="font-size: 13px;">{{c.u2Note}}</span></span>
+              <span class="ph ph-caret flip ink-3" aria-hidden="true"></span>
+            </a>
+            <sc-for list="{{laterUnits}}" as="u" hint-placeholder-count="3">
+              <a href="#locked" class="unit-lock">
+                <span class="ic"><span class="ph ph-lock-fill" aria-hidden="true"></span></span>
+                <span class="grow"><span style="display: flex; align-items: center; gap: 6px;"><span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{u.n}}</span><span class="pro-tag">PRO</span></span><b>{{u.title}}</b></span>
+              </a>
+            </sc-for>
+          </div>
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+            <aside class="pg-stack">
+              <section class="card" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;"><p class="t-over">{{c.yourPlan}}</p><span class="st st-wait">{{c.freePlan}}</span></div>
+                <div class="fl" style="grid-template-columns: minmax(0, 1fr);">
+                  <div><span class="fl-h">{{c.freeAlways}}</span><sc-for list="{{c.freeList}}" as="t" hint-placeholder-count="3"><p><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{t}}</p></sc-for></div>
+                  <div class="is-pro"><span class="fl-h"><span class="pro-tag">PRO</span>{{c.withPro}}</span><sc-for list="{{c.proList}}" as="t" hint-placeholder-count="3"><p><span class="ph ph-lock-open" style="color: var(--link);" aria-hidden="true"></span>{{t}}</p></sc-for></div>
+                </div>
+                <a href="#plans" class="btn btn-secondary btn-block press">{{c.seePlans}}</a>
+              </section>
+            </aside>
+          </sc-if>
+        </div>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ============ Profile, free learner: certificates locked ============ -->
+  <sc-if value="{{is.profile}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="pg-top"><h1 class="pg-title" style="flex: 1;">{{c.profile}}</h1><a href="#settings" class="icon-btn plain" aria-label="{{c.settings}}"><span class="ph ph-gear" aria-hidden="true"></span></a></header>
+      <main class="pg-scroll" style="gap: 12px;">
+        <div class="pg-cols">
+          <div class="pg-stack" style="gap: 12px;">
+            <section class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 14px;">
+              <span class="avatar" style="width: 56px; height: 56px; font-size: 22px;">{{c.initial}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;"><b style="font-size: 18px;">{{c.fullName}}</b><span style="display: flex; align-items: center; gap: 8px;"><span class="st st-wait">{{c.freePlan}}</span><a href="#plans" class="hit" style="font-weight: 700; font-size: 13px;">{{c.seePlans}}</a></span></span>
+            </section>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+              <sc-for list="{{c.tiles}}" as="t" hint-placeholder-count="3"><div class="card" style="padding: 10px 12px; display: flex; flex-direction: column; gap: 2px;"><b class="num" style="font-size: 20px;">{{t.v}}</b><span class="t-small ink-2" style="font-size: 12.5px; font-weight: 600;">{{t.l}}</span></div></sc-for>
+            </div>
+          </div>
+          <div class="pg-stack" style="gap: 10px;">
+            <p class="t-over set-sec">{{c.certsTitle}}</p>
+            <a href="#cert" class="cert-lock" style="text-decoration: none; color: var(--ink);">
+              <img src="{{img.cert}}" alt="">
+              <span class="grow"><span style="display: flex; align-items: center; gap: 6px;"><b class="ltr" style="text-align: start;">Forms That Flow</b><span class="pro-tag">PRO</span></span><span>{{c.certNote}}</span><span class="progress progress-sm" aria-hidden="true" style="margin-top: 4px;"><i style="width: 15%;"></i></span><span style="font-weight: 700; font-size: 12px;">{{c.certProgress}}</span></span>
+            </a>
+            <p class="pg-note" style="font-size: 13px;"><span class="ph ph-info" aria-hidden="true"></span><span>{{c.certRule}}</span></p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{false}}">
+    <nav class="bnav" aria-label="{{c.navLabel}}" style="position: absolute; bottom: 0; inset-inline: 0; z-index: 2;">
+      <sc-for list="{{bnav}}" as="n" hint-placeholder-count="4"><a href="#{{n.id}}" class="{{n.cls}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a></sc-for>
+    </nav>
+  </sc-if>
+
+  <!-- ============ Lesson end, free learner: Unit 1 done ============ -->
+  <sc-if value="{{is.end}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <main class="bye" style="gap: 14px;">
+        <img class="pop" src="{{img.medal}}" alt="" style="width: {{endIll}}; height: {{endIll}};">
+        <span class="t-small ink-3" style="font-weight: 700;">Forms That Flow · {{c.unitN1}}</span>
+        <h1>{{c.endTitle}}</h1>
+        <p>{{c.endBody}}</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;"><span class="pill"><span class="ph ph-bolt-fill" aria-hidden="true"></span><span class="num ltr">+80 XP</span></span><span class="skill skill-shown"><span class="ph ph-seal-fill" aria-hidden="true"></span>6 · {{c.shown}}</span></div>
+        <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; text-align: start; width: 100%; max-width: 460px;">
+          <div style="display: flex; align-items: center; gap: 12px;"><span class="unit-n" style="display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--panel); color: var(--panel-ink); font-weight: 800; flex: none;">2</span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span style="display: flex; align-items: center; gap: 6px;"><span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{c.nextUnit}}</span><span class="pro-tag">PRO</span></span><b style="font-size: 16px;">{{u2Title}}</b></span></div>
+          <p class="t-small ink-2" style="font-size: 13.5px;">{{c.endPro}}</p>
+        </section>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 360px;">
+          <a href="#plans" class="btn btn-primary btn-lg btn-block press">{{c.seePlans}}</a>
+          <a href="#map" class="btn btn-ghost btn-block">{{c.backToMap}}</a>
+        </div>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ============ Checkout hand-off: you'll pay on a secure page ============ -->
+  <sc-if value="{{is.handoff}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="secure-head">
+        <a href="#plans" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a>
+        <img src="{{logo}}" alt="UXGate" style="height: 28px; width: auto;">
+        <div style="flex: 1;"></div>
+        <span class="lockline"><span class="ph ph-lock-fill" aria-hidden="true"></span>{{c.secure}}</span>
+      </header>
+      <main class="chk">
+        <h1 class="pg-title">{{c.reviewTitle}}</h1>
+        <div class="sum">
+          <div class="sum-row"><span>{{c.sumPlan}}</span><b>{{selName}}</b></div>
+          <sc-if value="{{codeOn}}" hint-placeholder-val="{{false}}"><div class="sum-row"><span>{{c.sumCode}}</span><b>{{disc.sum}}</b></div></sc-if>
+          <div class="sum-row total"><span>{{c.sumToday}}</span><b><span class="{{pc}}">{{selPrice}}</span></b></div>
+          <div class="sum-row"><span>{{c.sumThen}}</span><b>{{selThen}}</b></div>
+          <div class="sum-row"><span>{{c.sumCountry}}</span><b>{{r.country}} · <a href="#country" class="hit" style="font-size: 14px;">{{c.change}}</a></b></div>
+        </div>
+        <div class="prov">
+          <span class="ph ph-shield-check" aria-hidden="true"></span>
+          <span class="grow"><span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;"><b>{{r.provT}}</b><span class="prov-mark">{{r.provName}}</span></span><span>{{r.provBody}}</span>
+            <span class="methods" style="margin-top: 4px;"><sc-for list="{{r.methods}}" as="m" hint-placeholder-count="3"><span class="tag" style="background: var(--surface); color: var(--ink);"><span class="{{m.icon}}" aria-hidden="true"></span>{{m.label}}</span></sc-for></span></span>
+        </div>
+        <div class="facts"><sc-for list="{{r.chkFacts}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span><span>{{f.text}}</span></p></sc-for></div>
+        <div style="flex: 1;"></div>
+        <a href="#provider" class="btn btn-primary btn-lg btn-block press">{{r.go}}<span class="ph ph-external" aria-hidden="true"></span></a>
+        <p class="t-small ink-3" style="text-align: center; font-size: 12.5px;">{{c.agree}} <a href="#terms" class="hit" style="font-weight: 700;">{{c.terms}}</a></p>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ============ Back from the provider: confirming ============ -->
+  <sc-if value="{{is.returning}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="secure-head"><img src="{{logo}}" alt="UXGate" style="height: 28px; width: auto;"></header>
+      <main class="bye" role="status" aria-live="polite">
+        <img src="{{img.payment}}" alt="" style="width: {{endIll}}; height: {{endIll}};">
+        <span class="spin" style="color: var(--link); width: 28px; height: 28px;" aria-hidden="true"></span>
+        <h1>{{r.retT}}</h1>
+        <p>{{c.retBody}}</p>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ============ Checkout result ============ -->
+  <sc-if value="{{is.result}}" hint-placeholder-val="{{false}}">
+    <div class="pg-col">
+      <header class="pub-head">
+        <img src="{{logo}}" alt="UXGate" style="height: 30px; width: auto;">
+        <a href="#lang" class="btn btn-quiet btn-sm" style="padding: 0 10px; gap: 6px;"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+      </header>
+      <main class="bye" role="status">
+        <img class="{{res.illCls}}" src="{{res.ill}}" alt="" style="width: {{endIll}}; height: {{endIll}};">
+        <h1>{{res.title}}</h1>
+        <p>{{res.body}}</p>
+        <section class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px;">
+          <p class="t-over">{{res.listT}}</p>
+          <sc-for list="{{res.rows}}" as="w" hint-placeholder-count="3"><div class="{{w.cls}}" style="border: 0; padding: 0; min-height: 0;"><span class="{{w.icon}}" aria-hidden="true"></span><span class="grow"><b>{{w.t}}</b><sc-if value="{{w.hasS}}" hint-placeholder-val="{{true}}"><span>{{w.s}}</span></sc-if></span></div></sc-for>
+        </section>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 360px;">
+          <a href="#go" class="btn btn-primary btn-lg btn-block press">{{res.go}}</a>
+          <a href="#alt" class="btn btn-ghost btn-block">{{res.alt}}</a>
+        </div>
+        <sc-if value="{{res.hasHelp}}" hint-placeholder-val="{{false}}"><p class="t-small" style="font-size: 13px;">{{c.stuck}} <a href="#mail" class="ltr hit" style="font-weight: 700;">support@uxgate.org</a></p></sc-if>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ============ Sheets: paywall from a unit, paywall from a certificate, student price ============ -->
+  <sc-if value="{{ov.any}}" hint-placeholder-val="{{false}}">
+    <div class="pg-scrim"></div>
+    <section class="pg-over sheet-in" role="dialog" aria-modal="true" aria-labelledby="ck-ov-{{lang}}-{{theme}}-{{device}}">
+      <div class="grab" aria-hidden="true"></div>
+      <sc-if value="{{ov.pay}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="{{pw.ill}}" alt="" style="width: 64px; height: 64px; flex: none;">
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;"><span class="t-small ink-3" style="font-weight: 700;">{{pw.over}}</span><h2 id="ck-ov-{{lang}}-{{theme}}-{{device}}">{{pw.title}}</h2></div>
+        </div>
+        <p class="t-small ink-2" style="font-size: 14.5px;">{{pw.body}}</p>
+        <div class="fl">
+          <div><span class="fl-h">{{c.freeAlways}}</span><sc-for list="{{c.freeList}}" as="t" hint-placeholder-count="3"><p><span class="ph ph-check-circle-fill" aria-hidden="true"></span>{{t}}</p></sc-for></div>
+          <div class="is-pro"><span class="fl-h"><span class="pro-tag">PRO</span>{{c.withPro}}</span><sc-for list="{{c.proList}}" as="t" hint-placeholder-count="3"><p><span class="ph ph-lock-open" style="color: var(--link);" aria-hidden="true"></span>{{t}}</p></sc-for></div>
+        </div>
+        <div class="tabs" role="radiogroup" aria-label="{{c.billingPeriod}}">
+          <sc-for list="{{periodTabs}}" as="o" hint-placeholder-count="2"><button class="{{o.cls}}" type="button" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for>
+        </div>
+        <a href="#checkout" class="btn btn-primary btn-lg btn-block press">{{payCta}}</a>
+        <div style="display: flex; gap: 8px;"><a href="#plans" class="btn btn-ghost" style="flex: 1; min-height: 44px; padding: 0 8px;">{{c.planDetails}}</a><a href="#close" class="btn btn-ghost" style="flex: 1; min-height: 44px; padding: 0 8px;">{{c.notNow}}</a></div>
+        <div class="facts inline"><sc-for list="{{c.factsShort}}" as="f" hint-placeholder-count="3"><p><span class="{{f.icon}}" aria-hidden="true"></span>{{f.text}}</p></sc-for></div>
+      </sc-if>
+      <sc-if value="{{ov.student}}" hint-placeholder-val="{{false}}">
+        <img class="pg-over-ill" src="{{img.gift}}" alt="" style="width: 76px; height: 76px;">
+        <h2 id="ck-ov-{{lang}}-{{theme}}-{{device}}" style="text-align: center;">{{c.stTitle}}</h2>
+        <p class="t-small ink-2" style="text-align: center; font-size: 14.5px;">{{c.stBody}}</p>
+        <div class="field"><label for="uni-{{lang}}-{{theme}}-{{device}}">{{c.stEmail}}</label><div class="{{se.cls}}"><span class="ph ph-mail" aria-hidden="true"></span><input id="uni-{{lang}}-{{theme}}-{{device}}" type="email" dir="ltr" value="{{se.val}}" aria-invalid="{{se.inv}}" aria-describedby="{{se.desc}}"></div><sc-if value="{{se.on}}" hint-placeholder-val="{{false}}"><span class="err" id="uni-err-{{lang}}-{{theme}}-{{device}}"><span class="ph ph-x-circle-fill" aria-hidden="true"></span>{{se.msg}}</span></sc-if><span class="help">{{c.stHelp}}</span></div>
+        <p class="t-small ink-3" style="font-size: 12.5px;">{{c.stDomains}}</p>
+        <div class="notice is-info" style="padding: 10px 12px;"><span class="ph ph-tag" aria-hidden="true"></span><span class="grow"><span>{{r.stPrice}}</span></span></div>
+        <a href="#send" class="btn btn-primary btn-lg btn-block press">{{c.stGo}}</a>
+        <a href="#close" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.notNow}}</a>
+      </sc-if>
+      <sc-if value="{{ov.studentId}}" hint-placeholder-val="{{false}}">
+        <h2 id="ck-ov-{{lang}}-{{theme}}-{{device}}">{{c.idTitle}}</h2>
+        <p class="t-small ink-2" style="font-size: 14.5px;">{{c.idBody}}</p>
+        <a href="#upload" class="snap" style="align-items: center; text-align: center; padding: 22px 16px; color: var(--ink); text-decoration: none;"><span class="ph ph-student" style="font-size: 34px; color: var(--link);" aria-hidden="true"></span><b style="font-size: 15px;">{{c.idDrop}}</b><span class="t-small ink-2" style="font-size: 13px;">{{c.idFormats}}</span></a>
+        <div class="notice is-info" style="padding: 10px 12px;"><span class="ph ph-shield-check" aria-hidden="true"></span><span class="grow"><span>{{c.idPrivacy}}</span></span></div>
+        <button class="btn btn-primary btn-lg btn-block is-disabled" type="button" aria-disabled="true">{{c.idGo}}</button>
+        <a href="#close" class="btn btn-ghost btn-block" style="min-height: 44px;">{{c.notNow}}</a>
+      </sc-if>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"region":{"editor":"enum","options":["eg","gulf","arab"],"default":"eg"},"view":{"editor":"enum","options":["paywallUnit","paywallCert","plans","plansCode","plansWelcome","studentAsk","studentId","handoffPaymob","handoffPaddle","returning","resultSuccess","resultPending","resultFailed","resultCancelled","mapFree","endFree","profileFree"],"default":"plans"},"error":{"editor":"enum","options":["none","codeInvalid","codeExpired","codeRegion","studentEmail"],"default":"none"},"$preview":{"width":390,"height":844}}'>
+/* Slice 5 · Paywall and plans (EN-15, spec §4.8), checkout hand-off and results (EN-16, EN-17), locked states for a free learner (EN-15).
+   Prices approved by Eyad on 2 Nov 2026: Egypt 249 / 2,249 EGP, Gulf $8 / $72, other Arab countries $5 / $45. Student 40%, founding member 30% on annual (year 1), welcome back 40% on annual (2 years). */
+const IMG = { forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', lock: '/_blob/7cbe7a77e505c37be737172ca25dd102', gate: '/_blob/940849193fa4b01dff04d73c95583da2', medal: '/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b',
+  cert: '/_blob/d9eda267550722d49fbe378d64d9eb01', payment: '/_blob/771c73990dbdac0c4c60019a15939cef', gift: '/_blob/69f4ee2e21acf9572d40c16983889570', calendar: '/_blob/f042bfb4689d32362320ee48e15ea560', shield: '/_blob/296b31e6708271de02299aaf9fce4de9' };
+/* m: monthly, y: annual, ym: annual per month, save: a year on annual, st: student monthly / annual, fy: founding first year */
+const PRICE = {
+  eg: { m: 249, y: 2249, ym: 187, save: 739, stm: 149, sty: 1349, fy: 1574, wb: 1349, usd: false, prov: 'paymob' },
+  gulf: { m: 8, y: 72, ym: 6, save: 24, stm: 4.8, sty: 43.2, fy: 50.4, wb: 43.2, usd: true, prov: 'paddle' },
+  arab: { m: 5, y: 45, ym: 3.75, save: 15, stm: 3, sty: 27, fy: 31.5, wb: 27, usd: true, prov: 'paddle' }
+};
+const money = (lang, p, n) => {
+  if (p.usd) return '$' + (Number.isInteger(n) ? String(n) : n.toFixed(2));
+  const s = n.toLocaleString('en-US');
+  return lang === 'ar' ? s + ' ج.م' : s + ' EGP';
+};
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, yourPaths: 'Your paths', help: 'Help', otherLang: 'العربية', back: 'Back', railPlans: 'See plans',
+    plansLead: 'Every unit in all 14 paths, and a certificate for each path you finish.', changeCountry: 'Not your country?', billingPeriod: 'Billing period',
+    monthly: 'Monthly', annual: 'Annual', perMonth: 'a month', perYear: 'a year', monthlySub: 'Pay each month', annualSub: (x) => 'About ' + x + ' a month', save: (x) => 'Save ' + x + ' a year',
+    firstYear: 'first year', thenYear: (x) => 'Then ' + x + ' a year',
+    facts: [{ icon: 'ph ph-calendar', text: 'No free trial. Your first charge is today.' }, { icon: 'ph ph-sync', text: 'Cancel any time. Pro stays on until the end of the period you paid for.' }, { icon: 'ph ph-refund', text: 'Changed your mind? Ask for a refund within 7 days of any charge.' }],
+    factsShort: [{ icon: 'ph ph-sync', text: 'Cancel any time' }, { icon: 'ph ph-refund', text: 'Refund within 7 days' }],
+    compareTitle: 'Free and Pro', colFree: 'Free',
+    fp: [['Unit 1 of every path', 1], ['Review and practice of your skills', 1], ['Streak, XP, badges and leaderboard', 1], ['Every unit after Unit 1, in all 14 paths', 0], ['A certificate for each path you finish', 0]],
+    included: 'included', notIncluded: 'not included',
+    codeT: 'Founding member · FOUNDING', oneDiscount: 'One discount per account. Discounts don’t add up.', remove: 'Remove',
+    codeLabel: 'Have a code?', codeKinds: 'Founding member', codePh: 'Enter your code', apply: 'Apply',
+    studentT: 'Student? 40% off', studentS: 'With a university email or student ID',
+    yourChoice: 'Your choice', toPay: 'Continue to payment',
+    thenM: (x) => 'Then ' + x + ' every month. Cancel any time.', thenY: (x) => 'Then ' + x + ' every year. Cancel any time.', thenFy: (x) => 'Then ' + x + ' a year from the second year.',
+    /* map, profile, end */
+    unit2of5: 'Unit 2 of 5', unitN1: 'Unit 1', unitN2: 'Unit 2', unitN: (n) => 'Unit ' + n, done: 'Done', next: 'Next', free: 'Free', shown: 'Shown',
+    units: ['Ask only what you need', 'Pick the right control', 'Keep labels and hints in sight', 'Errors people can fix', 'Forms everyone can finish'],
+    u2Note: 'Part of Pro. Your Unit 1 skills stay yours.',
+    yourPlan: 'Your plan', freePlan: 'Free', freeAlways: 'Free, always', withPro: 'With Pro',
+    freeList: ['Unit 1 of all 14 paths', 'Review and practice', 'Streak, XP and badges'], proList: ['Units 2 to 5 of this path', 'Every unit of all 14 paths', 'Path certificates'],
+    seePlans: 'See plans', profile: 'Profile', settings: 'Settings', initial: 'Y', fullName: 'Yasmin Adel',
+    tiles: [{ v: '420', l: 'XP' }, { v: '4', l: 'Day streak' }, { v: '6', l: 'Skills Shown' }],
+    certsTitle: 'Certificates', certNote: 'Every skill in the path Shown. Units 2 to 5 are part of Pro.', certProgress: '6 of 40 skills Shown',
+    certRule: 'A certificate needs every skill in a path Shown, so it comes with Pro. Your Unit 1 skills already count.',
+    endTitle: 'Unit 1 done', endBody: 'You showed all 6 skills of this unit on new cases, with no hints.', nextUnit: 'Next unit',
+    endPro: 'Unit 2 is part of UXGate Pro. Everything you did stays in your account, and review stays free.', backToMap: 'Back to the path map',
+    /* paywall */
+    pwUnitOver: 'Forms That Flow · Unit 2', pwUnitTitle: 'Unit 2 is part of Pro', pwUnitBody: 'You finished Unit 1 for free, and your progress is saved. Pro opens the next units of every path.',
+    pwCertOver: 'Certificates', pwCertTitle: 'Certificates come with Pro', pwCertBody: 'A path certificate shows you can do every skill in the path. Units 2 to 5, where most of those skills are, are part of Pro.',
+    payCtaM: (x) => 'Continue · ' + x + ' a month', payCtaY: (x) => 'Continue · ' + x + ' a year', planDetails: 'Plan details', notNow: 'Not now',
+    /* student */
+    stTitle: 'Student price: 40% off', stBody: 'For university students in any country. We check once, then again each year.',
+    stEmail: 'University email', stHelp: 'We send a link to this address. It works for 24 hours.', stGo: 'Send the link',
+    stDomains: 'University addresses ending in .edu, .edu.eg, .edu.sa, .ac.ae and similar count. No university email? Write to support@uxgate.org.',
+    idTitle: 'Upload your student ID', idBody: 'For students without a university email. A person from the UXGate team checks it within 2 working days.', idDrop: 'Add a photo or PDF of your student ID', idFormats: 'JPG, PNG or PDF, up to 5 MB. Your name, university and this year’s date must show.', idPrivacy: 'We use the file only for this check and delete it after 30 days.', idGo: 'Send for checking',
+    wbT: 'Welcome back · 40% off annual', wbBody: (x, y) => 'Welcome back, Yasmin. The annual plan is ' + x + ' a year for 2 years, instead of ' + y + '. It’s already applied.', wbThen: (x) => 'For 2 years, then ' + x + ' a year', wbSum: 'Welcome back · −40%',
+    fdT: 'Founding member · FOUNDING', fdSum: 'FOUNDING · −30%',
+    /* hand-off */
+    secure: 'Secure checkout', reviewTitle: 'Check and pay', sumPlan: 'Plan', sumCode: 'Code', sumToday: 'You pay today', sumThen: 'After that', sumCountry: 'Billing country', change: 'Change',
+    agree: 'By continuing, you agree to the', terms: 'Terms of use',
+    retBody: 'This takes a few seconds. Please keep this page open.',
+    stuck: 'Still not working? Write to',
+    /* results */
+    res: {
+      success: { title: 'Welcome to Pro, Yasmin', body: 'Your payment went through. We sent the receipt to y•••••@example.com.', listT: 'Open now',
+        rows: [['ph ph-lock-open', 'Units 2 to 5 of Forms That Flow', 'Start where you stopped: Unit 2, Lesson 1'], ['ph ph-squares-four', 'Every unit of all 14 paths', ''], ['ph ph-certificate', 'Path certificates', 'When every skill in a path is Shown']], go: 'Start Unit 2', alt: 'See my plan' },
+      pending: { title: 'Waiting for your wallet', body: 'Approve the payment in your wallet app. It can take a few minutes. Pro opens as soon as it is confirmed, and we email you.', listT: 'Meanwhile',
+        rows: [['ph ph-check-circle-fill', 'Nothing is charged twice', 'If you try again, only one payment goes through'], ['ph ph-book', 'Keep learning', 'Unit 1 of every path and your review stay open']], go: 'Check again', alt: 'Back to my path' },
+      failed: { title: 'The payment didn’t go through', body: 'Your bank declined it, so nothing was charged. Your choice is saved.', listT: 'What to try',
+        rows: [['ph ph-credit-card', 'Check the card details', 'Number, expiry date and the 3 digits on the back'], ['ph ph-globe', 'Allow online payments', 'Some banks turn them off for new cards. Your bank’s app can turn them on.'], ['ph ph-wallet', 'Use another card or a wallet', '']], go: 'Try again', alt: 'Choose another way to pay' },
+      cancelled: { title: 'You left the payment page', body: 'Nothing was charged. You can come back to it any time.', listT: 'Still free for you',
+        rows: [['ph ph-check-circle-fill', 'Unit 1 of all 14 paths', ''], ['ph ph-check-circle-fill', 'Review, streak and badges', '']], go: 'Back to plans', alt: 'Keep learning for free' }
+    },
+    R: {
+      eg: { regionLine: 'Prices for Egypt, in Egyptian pounds.', country: 'Egypt', provName: 'Paymob', provT: 'You pay on Paymob’s secure page',
+        provBody: 'Paymob is our payment partner in Egypt. UXGate never sees your card number. Your statement shows UXGATE.',
+        methods: [['ph ph-credit-card', 'Visa and Mastercard'], ['ph ph-credit-card', 'Meeza'], ['ph ph-wallet', 'Mobile wallets']],
+        chkFacts: [{ icon: 'ph ph-sync', text: 'Renews by itself with the card you use today. Cancel any time in Settings.' }, { icon: 'ph ph-refund', text: 'Refund within 7 days of any charge.' }],
+        go: 'Continue to Paymob', retT: 'Confirming your payment with Paymob', codeBody: '30% off your first year: 1,574 EGP instead of 2,249 EGP.', stPrice: 'After the check: 149 EGP a month or 1,349 EGP a year.' },
+      gulf: { regionLine: 'Prices for Saudi Arabia, in US dollars. Paddle shows the total in riyals, with VAT if it applies.', country: 'Saudi Arabia', provName: 'Paddle', provT: 'You pay on Paddle’s secure page',
+        provBody: 'Paddle sells UXGate for us and handles the tax. UXGate never sees your card number. Your statement shows PADDLE.NET* UXGATE.',
+        methods: [['ph ph-credit-card', 'Cards'], ['ph ph-wallet', 'Apple Pay'], ['ph ph-wallet', 'Google Pay']],
+        chkFacts: [{ icon: 'ph ph-sync', text: 'Renews by itself. Cancel any time in Settings.' }, { icon: 'ph ph-refund', text: 'Refund within 7 days of any charge.' }],
+        go: 'Continue to Paddle', retT: 'Confirming your payment with Paddle', codeBody: '30% off your first year: $50.40 instead of $72.', stPrice: 'After the check: $4.80 a month or $43.20 a year.' },
+      arab: { regionLine: 'Prices for Jordan, in US dollars. Paddle shows the total in your currency, with tax if it applies.', country: 'Jordan', provName: 'Paddle', provT: 'You pay on Paddle’s secure page',
+        provBody: 'Paddle sells UXGate for us and handles the tax. UXGate never sees your card number. Your statement shows PADDLE.NET* UXGATE.',
+        methods: [['ph ph-credit-card', 'Cards'], ['ph ph-wallet', 'Apple Pay'], ['ph ph-wallet', 'Google Pay']],
+        chkFacts: [{ icon: 'ph ph-sync', text: 'Renews by itself. Cancel any time in Settings.' }, { icon: 'ph ph-refund', text: 'Refund within 7 days of any charge.' }],
+        go: 'Continue to Paddle', retT: 'Confirming your payment with Paddle', codeBody: '30% off your first year: $31.50 instead of $45.', stPrice: 'After the check: $3 a month or $27 a year.' }
+    }
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'حسابي' }, yourPaths: 'مساراتك', help: 'المساعدة', otherLang: 'English', back: 'رجوع', railPlans: 'اعرض الخطط',
+    plansLead: 'كل الوحدات في المسارات الـ14 كلها، وشهادة لكل مسار تُكمله.', changeCountry: 'ليست دولتك؟', billingPeriod: 'مدة الدفع',
+    monthly: 'شهري', annual: 'سنوي', perMonth: 'شهريًا', perYear: 'سنويًا', monthlySub: 'تدفع كل شهر', annualSub: (x) => 'حوالي ' + x + ' شهريًا', save: (x) => 'وفّر ' + x + ' في السنة',
+    firstYear: 'للسنة الأولى', thenYear: (x) => 'ثم ' + x + ' سنويًا',
+    facts: [{ icon: 'ph ph-calendar', text: 'لا توجد فترة تجريبية مجانية. أول دفعة تكون اليوم.' }, { icon: 'ph ph-sync', text: 'ألغِ في أي وقت، ويبقى Pro مفعّلًا حتى نهاية المدة التي دفعت لها.' }, { icon: 'ph ph-refund', text: 'غيّرت رأيك؟ اطلب استرداد المبلغ خلال 7 أيام من أي دفعة.' }],
+    factsShort: [{ icon: 'ph ph-sync', text: 'ألغِ في أي وقت' }, { icon: 'ph ph-refund', text: 'استرداد خلال 7 أيام' }],
+    compareTitle: 'المجاني و Pro', colFree: 'مجاني',
+    fp: [['الوحدة 1 من كل مسار', 1], ['مراجعة مهاراتك والتدرّب عليها', 1], ['السلسلة والنقاط والشارات ولوحة الصدارة', 1], ['كل الوحدات بعد الوحدة 1، في المسارات الـ14', 0], ['شهادة لكل مسار تُكمله', 0]],
+    included: 'متاح', notIncluded: 'غير متاح',
+    codeT: 'عضو مؤسس · FOUNDING', oneDiscount: 'خصم واحد لكل حساب، والخصومات لا تُجمع.', remove: 'إزالة',
+    codeLabel: 'لديك رمز خصم؟', codeKinds: 'عضو مؤسس', codePh: 'اكتب الرمز', apply: 'تطبيق',
+    studentT: 'طالب؟ خصم 40%', studentS: 'ببريد جامعي أو بطاقة طالب',
+    yourChoice: 'اختيارك', toPay: 'تابع إلى الدفع',
+    thenM: (x) => 'ثم ' + x + ' كل شهر. ألغِ في أي وقت.', thenY: (x) => 'ثم ' + x + ' كل سنة. ألغِ في أي وقت.', thenFy: (x) => 'ثم ' + x + ' سنويًا من السنة الثانية.',
+    unit2of5: 'الوحدة 2 من 5', unitN1: 'الوحدة 1', unitN2: 'الوحدة 2', unitN: (n) => 'الوحدة ' + n, done: 'مكتملة', next: 'التالية', free: 'مجانية', shown: 'أثبتت',
+    units: ['اسأل فقط عمّا تحتاجه', 'اختر عنصر التحكّم المناسب', 'أبقِ العناوين والتلميحات ظاهرة', 'أخطاء يستطيع الناس إصلاحها', 'نماذج يستطيع الجميع إكمالها'],
+    u2Note: 'ضمن Pro. ومهاراتك في الوحدة 1 تبقى لك.',
+    yourPlan: 'خطتك', freePlan: 'مجانية', freeAlways: 'مجاني دائمًا', withPro: 'مع Pro',
+    freeList: ['الوحدة 1 من المسارات الـ14', 'المراجعة والتدرّب', 'السلسلة والنقاط والشارات'], proList: ['الوحدات من 2 إلى 5 في هذا المسار', 'كل وحدات المسارات الـ14', 'شهادات المسارات'],
+    seePlans: 'اعرض الخطط', profile: 'حسابي', settings: 'الإعدادات', initial: 'ي', fullName: 'ياسمين عادل',
+    tiles: [{ v: '420', l: 'نقطة XP' }, { v: '4', l: 'أيام متتالية' }, { v: '6', l: 'مهارات «أثبتت»' }],
+    certsTitle: 'الشهادات', certNote: 'كل مهارات المسار في حالة «أثبتت». الوحدات من 2 إلى 5 ضمن Pro.', certProgress: '6 من 40 مهارة «أثبتت»',
+    certRule: 'الشهادة تحتاج أن تكون كل مهارات المسار في حالة «أثبتت»، لذلك تأتي مع Pro. ومهاراتك في الوحدة 1 محسوبة من الآن.',
+    endTitle: 'أنهيت الوحدة 1', endBody: 'أثبتّ مهارات هذه الوحدة الست كلها على حالات جديدة، بدون تلميحات.', nextUnit: 'الوحدة التالية',
+    endPro: 'الوحدة 2 ضمن UXGate Pro. كل ما أنجزته يبقى في حسابك، والمراجعة تبقى مجانية.', backToMap: 'ارجع إلى خريطة المسار',
+    pwUnitOver: 'Forms That Flow · الوحدة 2', pwUnitTitle: 'الوحدة 2 ضمن Pro', pwUnitBody: 'أنهيت الوحدة 1 مجانًا، وتقدّمك محفوظ. يفتح لك Pro الوحدات التالية في كل المسارات.',
+    pwCertOver: 'الشهادات', pwCertTitle: 'الشهادات تأتي مع Pro', pwCertBody: 'شهادة المسار تُثبت أنك تتقن كل مهاراته. والوحدات من 2 إلى 5، حيث معظم هذه المهارات، ضمن Pro.',
+    payCtaM: (x) => 'تابع · ' + x + ' شهريًا', payCtaY: (x) => 'تابع · ' + x + ' سنويًا', planDetails: 'تفاصيل الخطة', notNow: 'ليس الآن',
+    stTitle: 'سعر الطلاب: خصم 40%', stBody: 'لطلاب الجامعات في أي دولة. نتحقّق مرة واحدة، ثم مرة كل سنة.',
+    stEmail: 'البريد الجامعي', stHelp: 'نرسل رابطًا إلى هذا العنوان، ويعمل لمدة 24 ساعة.', stGo: 'أرسل الرابط',
+    stDomains: 'تُقبل عناوين الجامعات التي تنتهي بـ .edu و.edu.eg و.edu.sa و.ac.ae وما يشبهها. ليس لديك بريد جامعي؟ راسلنا على support@uxgate.org.',
+    idTitle: 'ارفع بطاقة الطالب', idBody: 'للطلاب الذين ليس لديهم بريد جامعي. يراجعها شخص من فريق UXGate خلال يومَي عمل.', idDrop: 'أضف صورة أو ملف PDF لبطاقة الطالب', idFormats: 'JPG أو PNG أو PDF، حتى 5 ميجابايت. يجب أن يظهر اسمك وجامعتك وتاريخ هذا العام.', idPrivacy: 'نستخدم الملف لهذه المراجعة فقط، ونحذفه بعد 30 يومًا.', idGo: 'أرسل للمراجعة',
+    wbT: 'مرحبًا بعودتك · خصم 40% على السنوي', wbBody: (x, y) => 'مرحبًا بعودتك يا ياسمين. الخطة السنوية بسعر ' + x + ' سنويًا لمدة سنتين، بدلًا من ' + y + '. الخصم مطبّق بالفعل.', wbThen: (x) => 'لمدة سنتين، ثم ' + x + ' سنويًا', wbSum: 'مرحبًا بعودتك · −40%',
+    fdT: 'عضو مؤسس · FOUNDING', fdSum: 'FOUNDING · −30%',
+    secure: 'دفع آمن', reviewTitle: 'راجع وادفع', sumPlan: 'الخطة', sumCode: 'الرمز', sumToday: 'تدفع اليوم', sumThen: 'بعد ذلك', sumCountry: 'دولة الدفع', change: 'تغيير',
+    agree: 'بالمتابعة، أنت توافق على', terms: 'شروط الاستخدام',
+    retBody: 'يستغرق هذا بضع ثوانٍ. أبقِ هذه الصفحة مفتوحة من فضلك.',
+    stuck: 'ما زالت المشكلة قائمة؟ راسلنا على',
+    res: {
+      success: { title: 'أهلًا بك في Pro يا ياسمين', body: 'تمّت عملية الدفع، وأرسلنا الإيصال إلى y•••••@example.com.', listT: 'مفتوح الآن',
+        rows: [['ph ph-lock-open', 'الوحدات من 2 إلى 5 في Forms That Flow', 'ابدأ من حيث توقّفت: الوحدة 2، الدرس 1'], ['ph ph-squares-four', 'كل وحدات المسارات الـ14', ''], ['ph ph-certificate', 'شهادات المسارات', 'عندما تصبح كل مهارات المسار «أثبتت»']], go: 'ابدأ الوحدة 2', alt: 'اعرض خطتي' },
+      pending: { title: 'في انتظار تأكيد المحفظة', body: 'وافق على الدفع من تطبيق محفظتك. قد يستغرق ذلك بضع دقائق. يُفتح Pro فور التأكيد، ونرسل لك بريدًا.', listT: 'في هذه الأثناء',
+        rows: [['ph ph-check-circle-fill', 'لن يُخصم المبلغ مرتين', 'إن حاولت مرة أخرى، تتم دفعة واحدة فقط'], ['ph ph-book', 'تابع التعلّم', 'الوحدة 1 من كل مسار والمراجعة تبقى متاحة']], go: 'تحقّق مرة أخرى', alt: 'ارجع إلى مساري' },
+      failed: { title: 'لم تتم عملية الدفع', body: 'رفض البنك العملية، فلم يُخصم أي مبلغ. واختيارك محفوظ.', listT: 'جرّب ما يلي',
+        rows: [['ph ph-credit-card', 'راجع بيانات البطاقة', 'الرقم وتاريخ الانتهاء والأرقام الثلاثة على ظهرها'], ['ph ph-globe', 'فعّل الدفع عبر الإنترنت', 'بعض البنوك توقفه للبطاقات الجديدة، ويمكن تفعيله من تطبيق البنك.'], ['ph ph-wallet', 'استخدم بطاقة أخرى أو محفظة', '']], go: 'حاول مرة أخرى', alt: 'اختر طريقة دفع أخرى' },
+      cancelled: { title: 'خرجت من صفحة الدفع', body: 'لم يُخصم أي مبلغ، ويمكنك العودة في أي وقت.', listT: 'ما زال مجانيًا لك',
+        rows: [['ph ph-check-circle-fill', 'الوحدة 1 من المسارات الـ14', ''], ['ph ph-check-circle-fill', 'المراجعة والسلسلة والشارات', '']], go: 'ارجع إلى الخطط', alt: 'تابع التعلّم مجانًا' }
+    },
+    R: {
+      eg: { regionLine: 'الأسعار لمصر، بالجنيه المصري.', country: 'مصر', provName: 'Paymob', provT: 'تدفع على صفحة Paymob الآمنة',
+        provBody: 'Paymob شريكنا للدفع في مصر، ولا يرى UXGate رقم بطاقتك أبدًا. يظهر في كشف حسابك اسم UXGATE.',
+        methods: [['ph ph-credit-card', 'Visa و Mastercard'], ['ph ph-credit-card', 'ميزة'], ['ph ph-wallet', 'المحافظ الإلكترونية']],
+        chkFacts: [{ icon: 'ph ph-sync', text: 'يتجدّد تلقائيًا بالبطاقة التي تدفع بها اليوم. ألغِ في أي وقت من الإعدادات.' }, { icon: 'ph ph-refund', text: 'استرداد المبلغ خلال 7 أيام من أي دفعة.' }],
+        go: 'تابع إلى Paymob', retT: 'نتأكّد من الدفع مع Paymob', codeBody: 'خصم 30% على سنتك الأولى: 1,574 ج.م بدلًا من 2,249 ج.م.', stPrice: 'بعد التحقّق: 149 ج.م شهريًا أو 1,349 ج.م سنويًا.' },
+      gulf: { regionLine: 'الأسعار للسعودية، بالدولار الأمريكي. تعرض Paddle الإجمالي بالريال، مع ضريبة القيمة المضافة إن وُجدت.', country: 'السعودية', provName: 'Paddle', provT: 'تدفع على صفحة Paddle الآمنة',
+        provBody: 'تبيع Paddle اشتراك UXGate نيابةً عنّا وتتولّى الضرائب، ولا يرى UXGate رقم بطاقتك أبدًا. يظهر في كشف حسابك اسم PADDLE.NET* UXGATE.',
+        methods: [['ph ph-credit-card', 'البطاقات'], ['ph ph-wallet', 'Apple Pay'], ['ph ph-wallet', 'Google Pay']],
+        chkFacts: [{ icon: 'ph ph-sync', text: 'يتجدّد تلقائيًا. ألغِ في أي وقت من الإعدادات.' }, { icon: 'ph ph-refund', text: 'استرداد المبلغ خلال 7 أيام من أي دفعة.' }],
+        go: 'تابع إلى Paddle', retT: 'نتأكّد من الدفع مع Paddle', codeBody: 'خصم 30% على سنتك الأولى: 50.40$ بدلًا من 72$.', stPrice: 'بعد التحقّق: 4.80$ شهريًا أو 43.20$ سنويًا.' },
+      arab: { regionLine: 'الأسعار للأردن، بالدولار الأمريكي. تعرض Paddle الإجمالي بعملتك، مع الضريبة إن وُجدت.', country: 'الأردن', provName: 'Paddle', provT: 'تدفع على صفحة Paddle الآمنة',
+        provBody: 'تبيع Paddle اشتراك UXGate نيابةً عنّا وتتولّى الضرائب، ولا يرى UXGate رقم بطاقتك أبدًا. يظهر في كشف حسابك اسم PADDLE.NET* UXGATE.',
+        methods: [['ph ph-credit-card', 'البطاقات'], ['ph ph-wallet', 'Apple Pay'], ['ph ph-wallet', 'Google Pay']],
+        chkFacts: [{ icon: 'ph ph-sync', text: 'يتجدّد تلقائيًا. ألغِ في أي وقت من الإعدادات.' }, { icon: 'ph ph-refund', text: 'استرداد المبلغ خلال 7 أيام من أي دفعة.' }],
+        go: 'تابع إلى Paddle', retT: 'نتأكّد من الدفع مع Paddle', codeBody: 'خصم 30% على سنتك الأولى: 31.50$ بدلًا من 45$.', stPrice: 'بعد التحقّق: 3$ شهريًا أو 27$ سنويًا.' }
+    }
+  }
+};
+const VIEWS = ['paywallUnit', 'paywallCert', 'plans', 'plansCode', 'plansWelcome', 'studentAsk', 'studentId', 'handoffPaymob', 'handoffPaddle', 'returning', 'resultSuccess', 'resultPending', 'resultFailed', 'resultCancelled', 'mapFree', 'endFree', 'profileFree'];
+const ERRS = {
+  en: { country: { eg: 'Egypt', gulf: 'Saudi Arabia', arab: 'Jordan' },
+    codeInvalid: { val: 'FOUNDNG', msg: "We can't find this code. Check the spelling, for example FOUNDING." },
+    codeExpired: { val: 'LAUNCHWEEK', msg: 'This code ended on 31 October 2026. The prices below are the full prices.' },
+    codeRegion: { val: 'EGYPT20', msg: (cn) => 'This code is for learners billed in Egypt. Your billing country is ' + cn + '.' },
+    studentEmail: { val: 'yasmin.adel@gmail.com', msg: "This isn't a university email. Use the one your university gave you; the endings we accept are listed below." } },
+  ar: { country: { eg: 'مصر', gulf: 'السعودية', arab: 'الأردن' },
+    codeInvalid: { val: 'FOUNDNG', msg: 'لم نجد هذا الرمز. تحقّق من كتابته، مثل FOUNDING.' },
+    codeExpired: { val: 'LAUNCHWEEK', msg: 'انتهى هذا الرمز في 31 أكتوبر 2026. الأسعار أدناه هي الأسعار الكاملة.' },
+    codeRegion: { val: 'EGYPT20', msg: (cn) => 'هذا الرمز لمن يدفعون من مصر. بلد الفوترة لديك هو ' + cn + '.' },
+    studentEmail: { val: 'yasmin.adel@gmail.com', msg: 'هذا ليس بريدًا جامعيًا. استخدم البريد الذي أعطته لك جامعتك؛ النهايات المقبولة مكتوبة أدناه.' } }
+};
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { period: null }; }
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const view = VIEWS.indexOf(this.props.view) >= 0 ? this.props.view : 'plans';
+    let region = PRICE[this.props.region] ? this.props.region : 'eg';
+    if (view === 'handoffPaymob') region = 'eg';
+    if (view === 'handoffPaddle' && region === 'eg') region = 'gulf';
+    const c = C[lang]; const r = Object.assign({}, c.R[region]);
+    r.methods = r.methods.map(([icon, label]) => ({ icon: 'ph ' + icon.split(' ').pop(), label }));
+    const P = PRICE[region]; const $ = (n) => money(lang, P, n);
+    const isDesk = device === 'desktop';
+
+    const is = { plans: ['plans', 'plansCode', 'plansWelcome', 'studentAsk', 'studentId'].indexOf(view) >= 0, map: view === 'mapFree' || view === 'paywallUnit', profile: view === 'profileFree' || view === 'paywallCert',
+      end: view === 'endFree', handoff: view === 'handoffPaymob' || view === 'handoffPaddle', returning: view === 'returning', result: view.indexOf('result') === 0 };
+    const ov = { pay: view === 'paywallUnit' || view === 'paywallCert', student: view === 'studentAsk', studentId: view === 'studentId' };
+    ov.any = ov.pay || ov.student || ov.studentId;
+
+    const wb = view === 'plansWelcome';
+    /* Design audit U1: code and student email errors, message under the field, value kept, focus on the field */
+    const EM = ERRS[lang]; const errKey = this.props.error;
+    const codeE = view === 'plansCode' && ['codeInvalid', 'codeExpired', 'codeRegion'].indexOf(errKey) >= 0 ? EM[errKey] : null;
+    const idSfx = lang + '-' + theme + '-' + device;
+    const ce = codeE ? { on: true, off: false, cls: 'input is-error is-focus', inv: 'true', desc: 'code-err-' + idSfx, msg: typeof codeE.msg === 'function' ? codeE.msg(EM.country[region]) : codeE.msg }
+      : { on: false, off: true, cls: 'input', inv: 'false', desc: '', msg: '' };
+    const stE = errKey === 'studentEmail' && view === 'studentAsk';
+    const se = stE ? { on: true, cls: 'input is-error is-focus', val: EM.studentEmail.val, inv: 'true', desc: 'uni-err-' + idSfx, msg: EM.studentEmail.msg }
+      : { on: false, cls: 'input is-focus', val: 'yasmin.adel@cu.edu.eg', inv: 'false', desc: '', msg: '' };
+    const codeOn = (view === 'plansCode' && !codeE) || wb;
+    const defPeriod = (codeOn || view === 'handoffPaddle') ? 'y' : 'm';
+    const period = this.state.period || defPeriod;
+    const yPrice = wb ? P.wb : (codeOn ? P.fy : P.y);
+    const disc = wb ? { t: c.wbT, body: c.wbBody($(P.wb), $(P.y)), canRemove: false, icon: 'ph ph-sparkle', sum: c.wbSum } : { t: c.fdT, body: r.codeBody, canRemove: true, icon: 'ph ph-tag', sum: c.fdSum };
+    const planCards = ['m', 'y'].map((k) => { const on = k === period; const y = k === 'y';
+      return { name: y ? c.annual : c.monthly, price: $(y ? yPrice : P.m), per: y ? c.perYear : c.perMonth,
+        sub: y ? (wb ? c.wbThen($(P.y)) : codeOn ? c.thenYear($(P.y)) : c.annualSub($(P.ym))) : c.monthlySub, hasWas: y && codeOn, was: $(P.y),
+        hasSave: y && !codeOn, save: c.save($(P.save)), on: on ? 'true' : 'false', cls: 'plan-card press' + (on ? ' is-on' : ''), radio: 'radio' + (on ? ' is-on' : ''),
+        pick: () => this.setState({ period: k }) }; });
+    const selName = 'UXGate Pro · ' + (period === 'y' ? c.annual : c.monthly);
+    const selPrice = period === 'y' ? $(yPrice) : $(P.m);
+    const selThen = period === 'y' ? (wb ? c.wbThen($(P.y)) : codeOn ? c.thenFy($(P.y)) : c.thenY($(P.y))) : c.thenM($(P.m));
+    const fpRows = c.fp.map(([label, free], i, arr) => { const last = i === arr.length - 1 ? ' fp-last' : '';
+      return { label, kCls: 'fp-k' + last, fCls: last.trim(), pCls: 'is-pro' + last, fIc: free ? 'ph ph-check-circle-fill yes' : 'no', fAria: free ? c.included : c.notIncluded, pAria: c.included }; });
+    const periodTabs = ['m', 'y'].map((k) => ({ label: k === 'y' ? c.annual + ' · ' + c.save($(P.save)) : c.monthly, on: k === period ? 'true' : 'false', cls: 'tab' + (k === period ? ' is-on' : ''), pick: () => this.setState({ period: k }) }));
+    const payCta = period === 'y' ? c.payCtaY($(P.y)) : c.payCtaM($(P.m));
+    const pw = view === 'paywallCert' ? { ill: IMG.cert, over: c.pwCertOver, title: c.pwCertTitle, body: c.pwCertBody } : { ill: IMG.lock, over: c.pwUnitOver, title: c.pwUnitTitle, body: c.pwUnitBody };
+
+    const resKey = { resultSuccess: 'success', resultPending: 'pending', resultFailed: 'failed', resultCancelled: 'cancelled' }[view] || 'success';
+    const R0 = c.res[resKey];
+    const res = Object.assign({}, R0, { ill: resKey === 'success' ? IMG.gate : IMG.payment, illCls: resKey === 'success' ? 'pop' : '', hasHelp: resKey === 'failed',
+      rows: R0.rows.map(([icon, t, s]) => ({ icon, t, s, hasS: !!s, cls: 'why-row' + (icon.indexOf('check-circle') >= 0 || icon.indexOf('lock-open') >= 0 ? ' is-done' : '') })) });
+    if (resKey === 'pending' && region !== 'eg') {
+      res.title = lang === 'ar' ? 'بنكك يؤكّد الدفع' : 'Your bank is confirming the payment';
+      res.body = lang === 'ar' ? 'قد يستغرق ذلك بضع دقائق. يُفتح Pro فور التأكيد، ونرسل لك بريدًا.' : 'It can take a few minutes. Pro opens as soon as it is confirmed, and we email you.';
+    }
+
+    const tab = is.profile ? 'profile' : 'paths';
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: id === tab ? 'page' : 'false', icon: 'ph ' + (id === tab ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+    const inApp = is.plans || is.map || is.profile;
+    const pcUsd = P.usd ? 'ltr' : '';
+
+    return {
+      lang, theme, device, dir: lang === 'ar' ? 'rtl' : 'ltr', c, r, isDesk, isMobile: !isDesk, img: IMG, is, ov,
+      rootCls: 'ug pg pg-' + device, showRail: isDesk && inApp, showNav: !isDesk && (is.map || is.profile),
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      pc: pcUsd, codeOn, disc, codeVal: codeE ? codeE.val : view === 'plansCode' ? 'FOUNDING' : '', ce, se, planCards, selName, selPrice, selThen, fpRows, periodTabs, payCta, pw, res,
+      splitStyle: isDesk ? 'grid-template-columns: minmax(0, 1fr) 380px; max-width: 1120px;' : '',
+      mapSplit: isDesk ? 'grid-template-columns: minmax(0, 1fr) 360px;' : '',
+      laterUnits: [2, 3, 4].map((i) => ({ n: c.unitN(i + 1), title: c.units[i] })),
+      u1Title: c.units[0], u2Title: c.units[1],
+      endIll: isDesk ? '150px' : '104px'
+    };
+  }
+}
+</script>
+</body>
+</html>

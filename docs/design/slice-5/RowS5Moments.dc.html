@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>S5-11 · Illustrations and sound for slice 5</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="ug" lang="en" dir="ltr" style="width: 1800px; height: 1200px; box-sizing: border-box; background: #E6F1F6; padding: 40px 48px; display: flex; flex-direction: column; gap: 24px;">
+  <div style="display: flex; align-items: baseline; gap: 16px;"><h2 class="t-h1">S5-11 · Illustrations and sound for slice 5</h2><span class="t-body ink-2">Every slice 5 moment mapped to an illustration from the UXGate set (payment, gift, calendar and shield are new on the canvas, already in the repo set) and a sound from the existing set. No new sound files. Press a sound to hear it.</span></div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="18">
+      <section class="card" style="padding: 12px 14px; display: flex; align-items: center; gap: 14px; min-height: 96px;">
+        <img src="{{r.img}}" alt="" style="width: 72px; height: 72px; flex: none;">
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+          <b style="font-size: 16px; line-height: 1.3;">{{r.title}}</b>
+          <span class="t-small ink-3" style="font-weight: 700; font-size: 12px;">{{r.where}}</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+            <sc-for list="{{r.sounds}}" as="s" hint-placeholder-count="1">
+              <button class="chip press" type="button" onClick="{{s.play}}" aria-pressed="{{s.on}}" style="min-height: 32px; font-size: 12px; padding: 0 10px;"><span class="{{s.icon}}" aria-hidden="true"></span>{{s.name}}</button>
+            </sc-for>
+            <sc-if value="{{r.silent}}" hint-placeholder-val="{{false}}"><span class="chip" style="min-height: 32px; font-size: 12px; padding: 0 10px; color: var(--ink-2);"><span class="ph ph-speaker-slash" aria-hidden="true"></span>No sound</span></sc-if>
+          </div>
+          <span class="t-small ink-2" style="font-size: 12.5px; line-height: 1.4;">{{r.note}}</span>
+        </div>
+      </section>
+    </sc-for>
+  </div>
+  <section class="card" style="padding: 16px 20px; display: flex; gap: 32px; align-items: flex-start;">
+    <p class="t-over" style="flex: none; padding-top: 2px;">Rules kept</p>
+    <p class="t-small" style="flex: 1;"><b>Money moments stay quiet.</b> Billing plays no more than taps, toggles and sheets, so paying never feels like a game. The one exception is gate-open on success, because Pro just opened. <b>No blame sounds.</b> A declined card, a pause or a refund answer never plays error or wrong sounds. <b>Emails are silent.</b> <b>Illustrations</b> (lock, certificate, payment, gift, calendar, shield, gate, medal) all come from the UXGate illustration set in the repo.</p>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1800,"height":1200},"is_interactive":true}'>
+const SFX = {
+  'answer-also-works': '/_blob/f5d492c46b1ce8de199eecea1320f1bb',
+  'answer-right': '/_blob/3d88f4a3345269368a36ff20b8bb18b4',
+  'answer-right-streak': '/_blob/79f283044e58491d3a959b0c3aeb1ffe',
+  'answer-wrong': '/_blob/0274925ae7b976128a2b27e16a600dc1',
+  'badge-unlock': '/_blob/4494e7e2d4fbbd38e6d864c2df1140cf',
+  'check-press': '/_blob/586e217005bb18a48d7d2bdb02950f16',
+  'error-soft': '/_blob/e641c55b8c7d0da0d65e4ddf3b4dc532',
+  'gate-open': '/_blob/a25a3d0065636ac5fae2b35a15bafe17',
+  'goal-complete': '/_blob/44ffbd95e5f2f8c3e6304d479a248f0a',
+  'hint-open': '/_blob/52bae496babbcf7870dc02345a15e608',
+  'lesson-complete': '/_blob/15afbf5cd5c3a4e0206cd1cc0e589b81',
+  'lesson-start': '/_blob/811638c353ca3113f8695b1dc0ca7858',
+  'nav-switch': '/_blob/63d5188d5fb2b405e0a4cb29335e08c4',
+  'notification': '/_blob/6db74da62cf000dd0143a24dffa7cdfd',
+  'reveal-answer': '/_blob/cc5a4d8b526128a780934f151cd3ad40',
+  'select-snap': '/_blob/528346c93a60a8f014ce6a9c5dc86ecd',
+  'sheet-down': '/_blob/fbe7f7860683da28901ba84aa25209a4',
+  'sheet-up': '/_blob/a58925085888dbcbf96460c3dc14cc9c',
+  'skill-up': '/_blob/d78d5f4eb410b267f64ddb0e678d6ab5',
+  'streak-extend': '/_blob/320e5da40b83a996857f02cfc3b25756',
+  'streak-freeze': '/_blob/1f683a6c008b4bc73a904a05b7b27ac1',
+  'ui-tap': '/_blob/5e0161a91cde5476ca6aa4ba25cb800a',
+  'ui-toggle-off': '/_blob/98b69af114dc6dcea745927bca13e0fb',
+  'ui-toggle-on': '/_blob/77c98432f24ca99b879c1dd94396055d',
+  'welcome': '/_blob/a3fa16db2260ace2678d500bc5ab4603',
+  'xp-gain': '/_blob/acf1587dff8ef27713659e61b50620d1',
+  'xp-tick': '/_blob/519c1fa67941a7bb3fd8899a26f027cb'
+};
+let SFX_CTX = null;
+const SFX_BUF = {};
+function sfxCtx() {
+  if (!SFX_CTX) { const A = window.AudioContext || window.webkitAudioContext; SFX_CTX = new A(); }
+  if (SFX_CTX.state === 'suspended') SFX_CTX.resume();
+  return SFX_CTX;
+}
+function sfxLoad(name) {
+  if (!SFX_BUF[name]) {
+    SFX_BUF[name] = fetch(SFX[name]).then((r) => r.arrayBuffer()).then((b) => new Promise((res, rej) => sfxCtx().decodeAudioData(b, res, rej)));
+  }
+  return SFX_BUF[name];
+}
+function sfxPlay(name, volume) {
+  if (!SFX[name]) return Promise.resolve(0);
+  const ctx = sfxCtx();
+  return sfxLoad(name).then((buf) => {
+    const src = ctx.createBufferSource(); const gain = ctx.createGain();
+    src.buffer = buf; gain.gain.value = volume == null ? 0.9 : volume;
+    src.connect(gain); gain.connect(ctx.destination); src.start();
+    return buf.duration;
+  }).catch(() => { try { new Audio(SFX[name]).play(); } catch (e) {} return 1; });
+}
+function sfxPreload() { Object.keys(SFX).forEach((n) => sfxLoad(n).catch(() => {})); }
+const MOMENTS = [["/_blob/7cbe7a77e505c37be737172ca25dd102", "Paywall opens", "S5-1 · From a locked unit", "sheet-up", "Rises like any sheet. Not now plays sheet-down, nothing more."], ["/_blob/d9eda267550722d49fbe378d64d9eb01", "Certificate paywall", "S5-1 · From the profile", "sheet-up", "The same sheet sound. The locked certificate is greyed, never shaken."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Monthly or annual", "S5-2 · Plan cards and tabs", "select-snap", "The same snap as picking an answer."], ["/_blob/69f4ee2e21acf9572d40c16983889570", "Student price", "S5-2 · Check sheet", "sheet-up", "A gift, not a coupon hunt. Nothing plays on Send."], ["/_blob/296b31e6708271de02299aaf9fce4de9", "Secure hand-off", "S5-3 · Before Paymob or Paddle", "ui-tap", "A tap only. The provider’s page is theirs."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Confirming the payment", "S5-3 · Back from the provider", "", "Silent while the spinner runs."], ["/_blob/940849193fa4b01dff04d73c95583da2", "Welcome to Pro", "S5-4 · Success", "gate-open", "The gate opens: the one big sound in billing, because something opened."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Waiting for a wallet", "S5-4 · Pending", "", "Silent. The page updates by itself when it is confirmed."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Payment didn’t go through", "S5-4 · Failed", "", "No error or wrong sound: a declined card is not the learner’s mistake."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Left the payment page", "S5-4 · Cancelled", "", "Silent."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Plan and billing", "S5-5 · Settings", "ui-tap", "Taps and toggles as everywhere in Settings."], ["/_blob/f042bfb4689d32362320ee48e15ea560", "Plan cancelled", "S5-6 · After cancelling", "", "No sad sound, no celebration. The toast says what happens."], ["/_blob/940849193fa4b01dff04d73c95583da2", "Plan resumed", "S5-6 · Resume plan", "ui-toggle-on", "The same as turning a switch back on."], ["/_blob/f042bfb4689d32362320ee48e15ea560", "Refund request sent", "S5-7 · My requests", "", "Silent. The toast confirms."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Card expiring, renewal failed", "S5-8 · Notices", "", "Silent: a to-do, never an alarm."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Pro paused", "S5-8 · After the grace period", "", "Silent. Progress is kept and the page says so."], ["/_blob/fb2f12512ce48c0e8ad7af9fe5bef37b", "Unit 1 done, Unit 2 is Pro", "S5-10 · Lesson end", "lesson-complete", "The normal lesson-end sound. Being on the free plan never dims a win."], ["/_blob/771c73990dbdac0c4c60019a15939cef", "Billing emails", "S5-9 · Receipt and others", "", "Emails are silent."]];
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { playing: null }; }
+  play(name) {
+    this.setState({ playing: name });
+    sfxPlay(name).then((d) => { setTimeout(() => { if (this.state.playing === name) this.setState({ playing: null }); }, Math.max(300, d * 1000)); });
+  }
+  renderVals() {
+    const p = this.state.playing;
+    return { rows: MOMENTS.map(([img, title, where, snd, note], i) => ({ img, title, where, note, silent: !snd,
+      sounds: (snd ? snd.split('|') : []).map((name) => ({ name, on: p === name ? 'true' : 'false', icon: 'ph ' + (p === name ? 'ph-waveform' : 'ph-play'), play: () => this.play(name) })) })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -73,3 +73,23 @@ Every new moment is mapped to an illustration and a sound from `../sound/`; no n
 ## Fixes to earlier boards in this change
 
 - `LearnMotivation`: Kept is أتقنت (was حافظت) and means "right again in review, 3 or more days later" (was "a week later"); the freeze note now says "meet your goal on 5 days".
+
+## Loading between screens (`RowS3Loading.dc.html`, canvas v66)
+
+Drawn from what PR #155 built, so the canvas matches the app. `PathsPages` takes a `loading` prop (`none`, `early`, `layer`, `reduced`, `full`) drawn over Home with the Paths tab just tapped.
+
+- **Under 400 ms:** the tapped tab lights up at once, a 3 px line in the logo gradient runs along the top with a selection handle at its head (it grows from the right in Arabic), and the old screen dims to 55%. The rail and the phone toolbar never dim.
+- **After 400 ms:** the artboard loader fills the content area only: a frame named "# Paths" / «# المسارات» with a selection outline, the logo's `loading` eye motion and a cursor sketching a wireframe, then one tip line ("Snapping layers to the grid…" / «نضبط الطبقات على الشبكة…»). A hidden status says "Loading" / «جارٍ التحميل».
+- **Reduced motion:** the line stands still near the end, and the eye and the cursor stop.
+- **Lesson first load:** the same loader full screen, named "UXGate".
+- **Lesson video:** a spinner over the frame while the clip loads or buffers (`LessonPages` view `videoLoad`).
+- **Busy buttons:** `aria-busy="true"` adds a spinner after the label and keeps the button's colour, not the disabled grey. The components board's Loading column now shows this.
+
+## Start or continue a path (`RowS3PathGo.dc.html`, canvas v67)
+
+The path map opens with one main action card above the units (`PathsPages` views `mapStart`, `mapContinue`, `mapDone`; the switcher and locked views show the Continue card too).
+
+- **Not started:** "Start here · Unit 1, Lesson 1", the lesson name, **Start this path** → Unit 1, Lesson 1.
+- **Started:** "Next up · Unit N, Lesson M", the next unfinished lesson, the path progress bar, **Continue this path** → the learner's next unfinished step (a half-done lesson resumes at its step).
+- **Finished (proposed, the build thread confirms):** a green trophy, "Path complete", **Review this path** → a review session of this path's skills, and a quiet link **See your certificate**.
+- Arabic: ابدأ هذا المسار / تابع هذا المسار / راجع هذا المسار / اعرض شهادتك. The Start and Continue labels match the build (PR #160).

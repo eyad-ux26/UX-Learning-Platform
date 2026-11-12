@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Proposal 8 Nov · video paths, earned certificates, landing</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <!-- ============ App chrome (desktop rail) ============ -->
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.navLabel}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <sc-for list="{{railNav}}" as="n" hint-placeholder-count="4">
+        <a class="{{n.cls}}" href="#{{n.id}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+      </sc-for>
+      <div style="flex: 1;"></div>
+      <a class="dk-layer" href="#lang"><span class="ph ph-globe" aria-hidden="true"></span>{{c.otherLang}}</a>
+    </nav>
+  </sc-if>
+
+  <div class="pg-col">
+
+    <!-- ============ Paths tab, options A, B, C ============ -->
+    <sc-if value="{{is.paths}}" hint-placeholder-val="{{true}}">
+      <header class="pg-top">
+        <h1 class="pg-title" style="flex: 1;">{{c.pathsTitle}}</h1>
+        <span class="frame-label" style="position: static;"><span class="ph ph-frame-corners" aria-hidden="true"></span>{{optLabel}}</span>
+      </header>
+      <main class="pg-body pg-scroll" style="gap: 12px;">
+        <p class="t-small ink-2" style="margin-top: -6px;">{{c.pathsLead}}</p>
+        <!-- 12 Nov (Eyad, D4): Your paths uses the same card as All paths: name, meta, progress, small art at the end, no tile -->
+        <sc-if value="{{is.joined}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over">{{c.yourPathsN}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{joined}}" as="j" hint-placeholder-count="3">
+              <a href="#path" class="{{j.cls}}" aria-label="{{j.aria}}">
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{j.name}}</span></span>
+                </span>
+                <span class="pc-meta"><sc-if value="{{j.isCurrent}}" hint-placeholder-val="{{false}}"><span class="kind kind-current">{{c.currentTag}}</span></sc-if><sc-if value="{{j.isHyb}}" hint-placeholder-val="{{false}}"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span></sc-if><sc-if value="{{j.isInter}}" hint-placeholder-val="{{true}}"><span class="kind"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span></sc-if></span>
+                <span class="pj-prog"><span class="progress progress-sm" aria-hidden="true"><i style="width: {{j.pct}};"></i></span><span class="num">{{j.pct}}</span></span>
+                <span class="pj-where">{{j.where}}</span>
+                <img class="pc-art" src="{{j.art}}" alt="" aria-hidden="true">
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{is.optB}}" hint-placeholder-val="{{false}}">
+          <label class="input pth-search"><span class="ph ph-search" aria-hidden="true"></span><input type="search" placeholder="{{c.searchPh}}" value="{{queryVal}}" aria-label="{{c.searchPh}}"><sc-if value="{{is.searching}}" hint-placeholder-val="{{false}}"><button type="button" class="pth-clear" aria-label="{{c.clearLabel}}"><span class="ph ph-x" aria-hidden="true"></span></button></sc-if></label>
+        </sc-if>
+
+        <!-- Option B: instructor spotlight carousel -->
+        <sc-if value="{{is.bList}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over"><span class="ph ph-star-fill" aria-hidden="true"></span>{{c.spotTitle}}</p></div>
+          <section class="hy-carousel" aria-roledescription="carousel" aria-label="{{c.spotLabel}}">
+            <div class="hy-track">
+              <sc-for list="{{spot}}" as="h" hint-placeholder-count="2">
+                <a href="#path" class="hy-card is-hero hy-flat has-art" aria-label="{{h.aria}}">
+                  <span class="pc-text">
+                    <span class="pc-name"><span class="ltr">{{h.name}}</span></span>
+                    <span class="pc-sub">{{h.sub}}</span>
+                  </span>
+                  <span class="hy-who"><img class="hy-avatar" src="{{h.avatar}}" alt=""><span>{{c.withLabel}} <b>{{h.who}}</b></span></span>
+                  <span class="pc-meta"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span><span class="kind">{{h.units}}</span><span class="kind kind-free">{{c.free1}}</span></span>
+                  <img class="pc-art" src="{{h.art}}" alt="" aria-hidden="true">
+                </a>
+              </sc-for>
+            </div>
+            <div class="hy-dots" aria-hidden="true"><i class="is-on"></i><i></i></div>
+          </section>
+        </sc-if>
+
+        <!-- Option A: big video cards in their own group -->
+        <sc-if value="{{is.optA}}" hint-placeholder-val="{{true}}">
+          <div class="pg-sec"><p class="t-over"><span class="ph ph-video" aria-hidden="true"></span>{{c.secVideo}}</p></div>
+          <div class="hy-grid">
+            <sc-for list="{{hybrid}}" as="h" hint-placeholder-count="2">
+              <a href="#path" class="hy-card" aria-label="{{h.aria}}">
+                <span class="hy-media" aria-hidden="true">
+                  <span class="hy-pill"><span class="ph ph-play-fill"></span>{{c.videoOver}}</span>
+                  <span class="hy-art"><img src="{{h.img}}" alt=""></span>
+                </span>
+                <span class="hy-body">
+                  <span class="hy-name"><span class="ltr">{{h.name}}</span></span>
+                  <span class="hy-sub">{{h.sub}}</span>
+                  <span class="hy-foot">
+                    <span class="hy-who"><img class="hy-avatar" src="{{h.avatar}}" alt=""><span>{{c.withLabel}} <b>{{h.who}}</b></span></span>
+                    <span class="hy-meta"><span class="kind">{{h.units}}</span><span class="kind kind-free">{{c.free1}}</span></span>
+                  </span>
+                </span>
+              </a>
+            </sc-for>
+          </div>
+          <div class="pg-sec"><p class="t-over"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.secInter}}</p></div>
+        </sc-if>
+
+        <!-- Option B: all paths in catalog order, every card in the featured layout (Eyad, 9 Nov) -->
+        <sc-if value="{{is.bList}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over">{{c.secAll}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{allB}}" as="x" hint-placeholder-count="8">
+              <a href="#path" class="{{x.cls}}" aria-label="{{x.aria}}">
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{x.name}}</span></span>
+                  <span class="pc-sub">{{x.sub}}</span>
+                </span>
+                <sc-if value="{{x.isHyb}}" hint-placeholder-val="{{false}}"><span class="hy-who"><img class="hy-avatar" src="{{x.avatar}}" alt=""><span>{{c.withLabel}} <b>{{x.who}}</b></span></span></sc-if>
+                <span class="pc-meta"><sc-if value="{{x.isHyb}}" hint-placeholder-val="{{false}}"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span></sc-if><sc-if value="{{x.isInter}}" hint-placeholder-val="{{true}}"><span class="kind"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span></sc-if><span class="kind">{{x.units}}</span><sc-if value="{{x.isHyb}}" hint-placeholder-val="{{false}}"><span class="kind kind-free">{{c.free1}}</span></sc-if></span>
+                <img class="pc-art" src="{{x.art}}" alt="" aria-hidden="true">
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- Option B: search results. The query matches the name, the description and the keywords. -->
+        <sc-if value="{{is.searching}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over">{{resultsLine}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{results}}" as="x" hint-placeholder-count="2">
+              <a href="#path" class="{{x.cls}}" aria-label="{{x.aria}}">
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{x.name}}</span></span>
+                  <span class="pc-sub">{{x.sub}}</span>
+                </span>
+                <sc-if value="{{x.isHyb}}" hint-placeholder-val="{{false}}"><span class="hy-who"><img class="hy-avatar" src="{{x.avatar}}" alt=""><span>{{c.withLabel}} <b>{{x.who}}</b></span></span></sc-if>
+                <span class="pc-meta"><sc-if value="{{x.isHyb}}" hint-placeholder-val="{{false}}"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span></sc-if><sc-if value="{{x.isInter}}" hint-placeholder-val="{{true}}"><span class="kind"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span></sc-if><span class="kind">{{x.units}}</span><sc-if value="{{x.isHyb}}" hint-placeholder-val="{{false}}"><span class="kind kind-free">{{c.free1}}</span></sc-if><sc-if value="{{x.hasHit}}" hint-placeholder-val="{{false}}"><span class="kind kind-hit"><span class="ph ph-search" aria-hidden="true"></span>{{x.hit}}</span></sc-if></span>
+                <img class="pc-art" src="{{x.art}}" alt="" aria-hidden="true">
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- Option C: one list, video paths first with the instructor -->
+        <sc-if value="{{is.oneList}}" hint-placeholder-val="{{false}}">
+          <div class="pg-sec"><p class="t-over">{{c.secAll}}</p></div>
+          <div class="pg-grid two">
+            <sc-for list="{{hybrid}}" as="h" hint-placeholder-count="2">
+              <a href="#path" class="path-card press is-hybrid" aria-label="{{h.aria}}">
+                <span class="pc-ill is-who" aria-hidden="true"><img class="pc-who-photo" src="{{h.avatar}}" alt=""></span>
+                <span class="pc-text">
+                  <span class="pc-name"><span class="ltr">{{h.name}}</span></span>
+                  <span class="pc-sub">{{h.sub}}</span>
+                  <span class="pc-who"><span class="ph ph-video" aria-hidden="true"></span>{{h.withWho}}</span>
+                  <span class="pc-meta"><span class="kind kind-hybrid"><span class="ph ph-video" aria-hidden="true"></span>{{c.hybrid}}</span><span class="kind">{{h.units}}</span><span class="kind kind-free">{{c.free1}}</span></span>
+                </span>
+                <span class="pc-end"><span class="ph ph-caret flip" aria-hidden="true"></span></span>
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{is.interList}}" hint-placeholder-val="{{true}}">
+        <div class="pg-grid {{interGrid}}">
+          <sc-for list="{{inter}}" as="p" hint-placeholder-count="6">
+            <a href="#path" class="path-card press" aria-label="{{p.name}}">
+              <span class="pc-ill"><img src="{{p.img}}" alt=""></span>
+              <span class="pc-text">
+                <span class="pc-name"><span class="ltr">{{p.name}}</span></span>
+                <span class="pc-sub">{{p.sub}}</span>
+                <span class="pc-meta"><span class="kind"><span class="ph ph-cursor-click" aria-hidden="true"></span>{{c.interactive}}</span><span class="kind">{{p.units}}</span></span>
+              </span>
+              <span class="pc-end"><span class="ph ph-caret flip" aria-hidden="true"></span></span>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </main>
+    </sc-if>
+
+    <!-- ============ Profile · Certificates tab ============ -->
+    <sc-if value="{{is.certs}}" hint-placeholder-val="{{false}}">
+      <header class="pg-top">
+        <h1 class="pg-title" style="flex: 1;">{{c.profileTitle}}</h1>
+      </header>
+      <nav class="pf-tabs" aria-label="{{c.pfTabsLabel}}">
+        <div class="pf-tabs-row">
+          <sc-for list="{{pfTabs}}" as="t" hint-placeholder-count="5">
+            <a href="#{{t.id}}" class="{{t.cls}}" aria-current="{{t.cur}}"><span class="{{t.icon}}" aria-hidden="true"></span>{{t.label}}</a>
+          </sc-for>
+        </div>
+      </nav>
+      <main class="pg-body" style="gap: 12px; padding-top: 14px;">
+        <div class="pg-sec"><p class="t-over" style="color: var(--right-ink);"><span class="ph ph-seal-check-fill" aria-hidden="true"></span>{{c.secEarned}}</p></div>
+        <div class="ec-list">
+          <sc-for list="{{earned}}" as="e" hint-placeholder-count="1">
+            <article class="ec-card" aria-label="{{e.aria}}">
+              <div class="ec-text">
+                <span class="kind kind-done"><span class="ph ph-seal-check-fill" aria-hidden="true"></span>{{c.earnedChip}}</span>
+                <h2 class="ec-name"><span class="ltr">{{e.name}}</span></h2>
+                <p class="ec-meta">{{e.meta}}</p>
+                <div class="ec-acts">
+                  <a href="#share" class="btn btn-primary btn-sm"><span class="li-glyph" aria-hidden="true">in</span>{{c.shareLi}}</a>
+                  <a href="#certificate" class="btn btn-secondary btn-sm">{{c.viewCert}}</a>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+        <div class="pg-sec"><p class="t-over">{{c.secProgress}}</p></div>
+        <div class="pg-grid two">
+          <sc-for list="{{progress}}" as="r" hint-placeholder-count="2">
+            <a href="#path" class="path-card press ec-prog">
+              <span class="ec-thumb is-locked" aria-hidden="true"><span class="ec-b"></span><span class="ec-m"><i class="w1"></i><i class="ec-sel"></i><i class="w3"></i></span><span class="ec-lock"><span class="ph ph-lock"></span></span></span>
+              <span class="pc-text">
+                <span class="pc-name" style="font-size: 16px;"><span class="ltr">{{r.name}}</span></span>
+                <span class="t-small ink-2" style="font-size: 13px;">{{r.text}}</span>
+                <span class="pc-prog"><span class="progress progress-sm" role="progressbar" aria-label="{{c.skillsShown}}" aria-valuenow="{{r.pctNum}}" aria-valuemin="0" aria-valuemax="100"><i style="width: {{r.pct}};"></i></span><span class="num">{{r.pct}}</span></span>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </main>
+    </sc-if>
+
+    <!-- ============ Landing · What's different + certificate ============ -->
+    <sc-if value="{{is.land}}" hint-placeholder-val="{{false}}">
+      <div class="ld-page">
+        <header class="ld-head">
+          <img src="{{logo}}" alt="UXGate" style="height: 30px; width: auto;">
+          <span style="flex: 1;"></span>
+          <sc-if value="{{isDesk}}" hint-placeholder-val="{{false}}">
+            <nav class="ld-nav" aria-label="{{c.navLabel}}"><a href="#paths">{{c.lnPaths}}</a><a href="#diff" aria-current="true">{{c.lnDiff}}</a><a href="#cert">{{c.lnCert}}</a><a href="#pricing">{{c.lnPricing}}</a></nav>
+          </sc-if>
+          <a href="#lang" class="btn btn-ghost btn-sm">{{c.otherLang}}</a>
+          <a href="#signin" class="btn btn-secondary btn-sm">{{c.signin}}</a>
+        </header>
+
+        <sc-if value="{{is.landDiff}}" hint-placeholder-val="{{true}}">
+          <section class="ld-diff" id="diff" aria-labelledby="ld-diff-h">
+            <p class="ld-kicker">{{c.diffKicker}}</p>
+            <h2 id="ld-diff-h" class="ld-h"><span>{{c.diffA}}</span><mark class="ld-mark">{{c.diffMark}}</mark><span>{{c.diffB}}</span></h2>
+            <p class="ld-lead">{{c.diffLead}}</p>
+            <ul class="ld-tiles">
+              <sc-for list="{{tiles}}" as="t" hint-placeholder-count="6">
+                <li class="{{t.cls}}">
+                  <span class="ld-ic" aria-hidden="true"><span class="{{t.icon}}"></span></span>
+                  <span class="ld-tx"><b>{{t.title}}</b><span>{{t.text}}</span>
+                    <sc-if value="{{t.people}}" hint-placeholder-val="{{false}}"><span class="ld-people"><img src="/_blob/95909214c5242f2778cf8beae6f28826" alt=""><img src="/_blob/92a725e2d518de2b1df69f026c600a0e" alt=""><small>{{c.peopleLine}}</small></span></sc-if>
+                  </span>
+                </li>
+              </sc-for>
+            </ul>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{is.landCert}}" hint-placeholder-val="{{false}}">
+          <section class="ld-cert" id="cert" aria-labelledby="ld-cert-h">
+            <div class="ld-cert-text">
+              <p class="t-over" style="color: var(--right-ink);"><span class="ph ph-certificate" aria-hidden="true"></span>{{c.certKicker}}</p>
+              <h2 id="ld-cert-h" class="ld-h2">{{c.certH}}</h2>
+              <ul class="ld-checks">
+                <li><span class="ph ph-seal-check-fill" aria-hidden="true"></span><span><b>{{c.cert1t}}</b>{{c.cert1}}</span></li>
+                <li><span class="li-glyph is-lg" aria-hidden="true">in</span><span><b>{{c.cert2t}}</b>{{c.cert2}}</span></li>
+                <li><span class="ph ph-link" aria-hidden="true"></span><span><b>{{c.cert3t}}</b>{{c.cert3}}</span></li>
+              </ul>
+            </div>
+            <div class="ld-cert-art" aria-hidden="true">
+              <div class="ld-post">
+                <div class="ld-post-top"><span class="ld-post-ava">{{c.postInitial}}</span><span><b>{{c.postName}}</b><small>{{c.postWhen}}</small></span><span class="li-glyph is-lg" style="margin-inline-start: auto;">in</span></div>
+                <p class="ld-post-text">{{c.postText}}</p>
+                <div class="ld-mini">
+                  <span class="ld-mini-b"><img src="{{markWhite}}" alt=""><small>{{c.cOver}}</small><span class="ph ph-seal-check-fill"></span></span>
+                  <span class="ld-mini-m"><small>{{c.cThis}}</small><span class="ld-mini-name">{{c.postName}}</span><small>{{c.cShowed}}</small><b>{{c.cPath}}</b><small class="ltr">uxgate.org/c/7K3Q</small></span>
+                </div>
+                <p class="ld-post-link"><b>{{c.ogTitle}}</b><small>uxgate.org</small></p>
+              </div>
+            </div>
+          </section>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+      <nav class="bnav" aria-label="{{c.navLabel}}">
+        <sc-for list="{{bnav}}" as="n" hint-placeholder-count="4">
+          <a href="#{{n.id}}" class="{{n.cls}}" aria-current="{{n.cur}}"><span class="{{n.icon}}" aria-hidden="true"></span>{{n.label}}</a>
+        </sc-for>
+      </nav>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["en","ar"],"default":"ar"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"view":{"editor":"enum","options":["optA","optB","optBSearch","optBJoined","optC","certs","landDiff","landCert"],"default":"optA"},"$preview":{"width":390,"height":844}}'>
+/* Proposal 8 Nov 2026 (S3-18), for Eyad to choose before building:
+   video paths with their instructor (options A, B, C), earned certificates first on the profile,
+   landing "What's different about UXGate" and "Every path ends with a certificate". */
+const IMG = {
+  forms: '/_blob/5c8de666f75e9b797e0dbc0c15c327e3', hier: '/_blob/9d6324750c9c6e5d1281a9a3fa8241b4', usab: '/_blob/f754cc9b8a6f823f0d120f26ebb5cd51',
+  video: '/_blob/a60ce1789f905176f32c4553b2802acc', shield: '/_blob/296b31e6708271de02299aaf9fce4de9', rocket: '/_blob/e594bb3a340eff88e5cb77c7f6aeb364',
+  search: '/_blob/45dca903fb1d2f855f86e5ed32a2a286', mail: '/_blob/b8ff95a8c2f1c68111476aaf1b979bca'
+};
+/* Instructor per video path: assumed, Eyad to confirm. */
+const WHO = {
+  eyad: { en: 'Eyad Mahmoud', ar: 'إياد محمود', avatar: '/_blob/95909214c5242f2778cf8beae6f28826', portrait: '/_blob/1e5b533f913f06742057793faf83f103', media: '/_blob/71519e7effb4ee1776a2e0c49f0e5da5' },
+  mahmoud: { en: 'Mahmoud Raslan', ar: 'محمود رسلان', avatar: '/_blob/92a725e2d518de2b1df69f026c600a0e', portrait: '/_blob/c1d731b293bc179c2b0c2e2ba73f766d', media: '/_blob/bc7edd820d2c685801f9c70c06e3be7a' }
+};
+/* id, image, units, instructor */
+// Path illustrations (9 Nov, Eyad): no background, sit on the end side of the card, cropped by its edge.
+const ART = {"P14": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"62\" y=\"22\" width=\"92\" height=\"150\" rx=\"16\" fill=\"%23012E4B\"/%3E %3Crect x=\"69\" y=\"30\" width=\"78\" height=\"140\" rx=\"10\" fill=\"%23D8F4FB\"/%3E %3Crect x=\"69\" y=\"92\" width=\"78\" height=\"80\" rx=\"12\" fill=\"%23FFFFFF\"/%3E %3Crect x=\"98\" y=\"98\" width=\"20\" height=\"4\" rx=\"2\" fill=\"%2378E4FC\"/%3E %3Crect x=\"79\" y=\"110\" width=\"50\" height=\"6\" rx=\"3\" fill=\"%23012E4B\" opacity=\".85\"/%3E %3Crect x=\"79\" y=\"122\" width=\"38\" height=\"6\" rx=\"3\" fill=\"%2378E4FC\"/%3E %3Crect x=\"18\" y=\"44\" width=\"70\" height=\"46\" rx=\"10\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"3\"/%3E %3Crect x=\"28\" y=\"54\" width=\"34\" height=\"5\" rx=\"2.5\" fill=\"%23012E4B\"/%3E %3Crect x=\"28\" y=\"64\" width=\"46\" height=\"4\" rx=\"2\" fill=\"%2378E4FC\"/%3E %3Crect x=\"28\" y=\"74\" width=\"22\" height=\"9\" rx=\"4.5\" fill=\"%231677C0\"/%3E %3Crect x=\"54\" y=\"74\" width=\"22\" height=\"9\" rx=\"4.5\" fill=\"none\" stroke=\"%231677C0\" stroke-width=\"2\"/%3E %3Crect x=\"40\" y=\"8\" width=\"64\" height=\"16\" rx=\"8\" fill=\"%23FFC24B\"/%3E %3Ccircle cx=\"50\" cy=\"16\" r=\"3.5\" fill=\"%23012E4B\"/%3E %3Crect x=\"58\" y=\"13.5\" width=\"38\" height=\"5\" rx=\"2.5\" fill=\"%23012E4B\"/%3E %3C/svg%3E", "P02": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"40\" y=\"30\" width=\"130\" height=\"120\" rx=\"14\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"3\"/%3E %3Crect x=\"54\" y=\"46\" width=\"60\" height=\"7\" rx=\"3.5\" fill=\"%23012E4B\"/%3E %3Crect x=\"54\" y=\"60\" width=\"84\" height=\"5\" rx=\"2.5\" fill=\"%2378E4FC\"/%3E %3Crect x=\"54\" y=\"72\" width=\"70\" height=\"5\" rx=\"2.5\" fill=\"%2378E4FC\"/%3E %3Crect x=\"54\" y=\"92\" width=\"44\" height=\"14\" rx=\"7\" fill=\"%231677C0\"/%3E %3Ccircle cx=\"54\" cy=\"96\" r=\"30\" fill=\"%23D8F4FB\" fill-opacity=\".55\" stroke=\"%23012E4B\" stroke-width=\"7\"/%3E %3Crect x=\"18\" y=\"116\" width=\"14\" height=\"40\" rx=\"7\" fill=\"%23012E4B\" transform=\"rotate%2842 25 120%29\"/%3E %3Ccircle cx=\"84\" cy=\"22\" r=\"13\" fill=\"%23FFC24B\"/%3E %3Crect x=\"82\" y=\"13\" width=\"4\" height=\"11\" rx=\"2\" fill=\"%23012E4B\"/%3E %3Ccircle cx=\"84\" cy=\"29\" r=\"2.3\" fill=\"%23012E4B\"/%3E %3Ccircle cx=\"140\" cy=\"108\" r=\"15\" fill=\"%232BB673\"/%3E %3Cpath d=\"M132 108 l6 6 l10 -12\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3C/svg%3E", "P01": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"38\" y=\"18\" width=\"140\" height=\"140\" rx=\"16\" fill=\"%23D8F4FB\"/%3E %3Crect x=\"52\" y=\"34\" width=\"34\" height=\"5\" rx=\"2.5\" fill=\"%23012E4B\"/%3E %3Crect x=\"52\" y=\"44\" width=\"110\" height=\"20\" rx=\"7\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"2.5\"/%3E %3Ccircle cx=\"148\" cy=\"54\" r=\"7\" fill=\"%232BB673\"/%3E %3Cpath d=\"M144.5 54 l2.5 2.5 l4.5 -5\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3Crect x=\"52\" y=\"74\" width=\"28\" height=\"5\" rx=\"2.5\" fill=\"%23012E4B\"/%3E %3Crect x=\"52\" y=\"84\" width=\"110\" height=\"20\" rx=\"7\" fill=\"%23FFFFFF\" stroke=\"%231677C0\" stroke-width=\"3\"/%3E %3Crect x=\"60\" y=\"90\" width=\"3\" height=\"8\" rx=\"1.5\" fill=\"%231677C0\"/%3E %3Crect x=\"52\" y=\"116\" width=\"70\" height=\"22\" rx=\"11\" fill=\"%231677C0\"/%3E %3Crect x=\"68\" y=\"125\" width=\"38\" height=\"4\" rx=\"2\" fill=\"%23FFFFFF\"/%3E %3Cpath d=\"M18 70 l0 34 l9 -8 l7 15 l6 -3 l-7 -14 l12 -1 z\" fill=\"%23012E4B\" stroke=\"%23FFFFFF\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/%3E %3C/svg%3E", "P10": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"56\" y=\"30\" width=\"120\" height=\"44\" rx=\"10\" fill=\"%23012E4B\"/%3E %3Crect x=\"70\" y=\"44\" width=\"58\" height=\"8\" rx=\"4\" fill=\"%2378E4FC\"/%3E %3Crect x=\"70\" y=\"58\" width=\"38\" height=\"5\" rx=\"2.5\" fill=\"%23FFFFFF\" opacity=\".7\"/%3E %3Crect x=\"56\" y=\"84\" width=\"84\" height=\"26\" rx=\"8\" fill=\"%231677C0\"/%3E %3Crect x=\"56\" y=\"120\" width=\"56\" height=\"14\" rx=\"6\" fill=\"%2378E4FC\"/%3E %3Crect x=\"56\" y=\"142\" width=\"40\" height=\"10\" rx=\"5\" fill=\"%23D8F4FB\"/%3E %3Cpath d=\"M8 52 q22 -24 44 0 q-22 24 -44 0 z\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"3\"/%3E %3Ccircle cx=\"30\" cy=\"52\" r=\"8\" fill=\"%23012E4B\"/%3E %3Ccircle cx=\"33\" cy=\"49\" r=\"2.5\" fill=\"%23FFFFFF\"/%3E %3C/svg%3E", "P05": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Ccircle cx=\"112\" cy=\"92\" r=\"62\" fill=\"%23012E4B\"/%3E %3Cpath d=\"M112 30 a62 62 0 0 1 0 124 z\" fill=\"%231677C0\"/%3E %3Ccircle cx=\"112\" cy=\"58\" r=\"9\" fill=\"%23FFFFFF\"/%3E %3Cpath d=\"M84 74 l28 6 l28 -6\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3Cpath d=\"M112 80 l0 20 l-12 26 M112 100 l12 26\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3Crect x=\"14\" y=\"40\" width=\"38\" height=\"38\" rx=\"12\" fill=\"%23FFC24B\"/%3E %3Crect x=\"21\" y=\"48\" width=\"24\" height=\"6\" rx=\"2\" fill=\"%23012E4B\"/%3E %3Crect x=\"30\" y=\"48\" width=\"6\" height=\"22\" rx=\"2\" fill=\"%23012E4B\"/%3E %3Crect x=\"24\" y=\"92\" width=\"30\" height=\"30\" rx=\"15\" fill=\"%23FFFFFF\" stroke=\"%232BB673\" stroke-width=\"4\"/%3E %3Ccircle cx=\"39\" cy=\"107\" r=\"5\" fill=\"%232BB673\"/%3E %3C/svg%3E", "P15": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Cpath d=\"M44 26 h104 a16 16 0 0 1 16 16 v62 a16 16 0 0 1 -16 16 h-62 l-22 20 v-20 h-20 a16 16 0 0 1 -16 -16 v-62 a16 16 0 0 1 16 -16 z\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"3\"/%3E %3Crect x=\"46\" y=\"46\" width=\"70\" height=\"8\" rx=\"4\" fill=\"%23012E4B\"/%3E %3Crect x=\"46\" y=\"62\" width=\"96\" height=\"6\" rx=\"3\" fill=\"%2378E4FC\"/%3E %3Crect x=\"46\" y=\"76\" width=\"60\" height=\"6\" rx=\"3\" fill=\"%2378E4FC\"/%3E %3Crect x=\"46\" y=\"94\" width=\"34\" height=\"10\" rx=\"5\" fill=\"%231677C0\"/%3E %3Cg transform=\"rotate%28-40 120 120%29\"%3E %3Crect x=\"104\" y=\"112\" width=\"58\" height=\"16\" rx=\"3\" fill=\"%23FFC24B\"/%3E %3Crect x=\"150\" y=\"112\" width=\"12\" height=\"16\" rx=\"3\" fill=\"%23FF7A59\"/%3E %3Cpath d=\"M104 112 l-14 8 l14 8 z\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"2\"/%3E %3Cpath d=\"M95 117 l-5 3 l5 3 z\" fill=\"%23012E4B\"/%3E %3C/g%3E %3C/svg%3E", "P12": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Cpath d=\"M56 34 h88 a16 16 0 0 1 16 16 v50 a16 16 0 0 1 -16 16 h-50 l-20 18 v-18 h-18 a16 16 0 0 1 -16 -16 v-50 a16 16 0 0 1 16 -16 z\" fill=\"%23012E4B\"/%3E %3Cpath d=\"M98 50 q4 18 22 22 q-18 4 -22 22 q-4 -18 -22 -22 q18 -4 22 -22 z\" fill=\"%2378E4FC\"/%3E %3Cpath d=\"M134 46 q2 7 9 9 q-7 2 -9 9 q-2 -7 -9 -9 q7 -2 9 -9 z\" fill=\"%23FFC24B\"/%3E %3Cpath d=\"M30 70 l22 -8 l22 8 v20 c0 16 -10 26 -22 32 c-12 -6 -22 -16 -22 -32 z\" fill=\"%23FFFFFF\" stroke=\"%231677C0\" stroke-width=\"4\" stroke-linejoin=\"round\"/%3E %3Cpath d=\"M42 92 l7 7 l13 -15\" fill=\"none\" stroke=\"%232BB673\" stroke-width=\"4.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3C/svg%3E", "P13": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"58\" y=\"40\" width=\"120\" height=\"110\" rx=\"14\" fill=\"%23D8F4FB\"/%3E %3Crect x=\"74\" y=\"56\" width=\"50\" height=\"34\" rx=\"6\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"2.5\"/%3E %3Cpath d=\"M74 84 l14 -12 l10 8 l8 -6 l18 14\" fill=\"none\" stroke=\"%2378E4FC\" stroke-width=\"3\" stroke-linejoin=\"round\"/%3E %3Crect x=\"134\" y=\"58\" width=\"30\" height=\"6\" rx=\"3\" fill=\"%23012E4B\"/%3E %3Crect x=\"134\" y=\"70\" width=\"22\" height=\"5\" rx=\"2.5\" fill=\"%231677C0\"/%3E %3Crect x=\"74\" y=\"102\" width=\"90\" height=\"6\" rx=\"3\" fill=\"%23FFFFFF\"/%3E %3Crect x=\"74\" y=\"114\" width=\"64\" height=\"6\" rx=\"3\" fill=\"%23FFFFFF\"/%3E %3Cg transform=\"rotate%28-45 46 92%29\"%3E %3Crect x=\"10\" y=\"85\" width=\"74\" height=\"14\" rx=\"7\" fill=\"%23012E4B\"/%3E %3Crect x=\"66\" y=\"85\" width=\"18\" height=\"14\" rx=\"4\" fill=\"%23FFFFFF\" stroke=\"%23012E4B\" stroke-width=\"2.5\"/%3E %3C/g%3E %3Cpath d=\"M76 18 q3 11 14 14 q-11 3 -14 14 q-3 -11 -14 -14 q11 -3 14 -14 z\" fill=\"%23FFC24B\"/%3E %3Cpath d=\"M104 14 q1.6 6 8 8 q-6.4 1.6 -8 8 q-1.6 -6.4 -8 -8 q6.4 -2 8 -8 z\" fill=\"%2378E4FC\"/%3E %3Cpath d=\"M44 26 q1.4 5 6 6 q-4.6 1.4 -6 6 q-1.4 -4.6 -6 -6 q4.6 -1 6 -6 z\" fill=\"%231677C0\"/%3E %3C/svg%3E"};
+const ART_DARK = {"P14": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"62\" y=\"22\" width=\"92\" height=\"150\" rx=\"16\" fill=\"%234A90B0\"/%3E %3Crect x=\"69\" y=\"30\" width=\"78\" height=\"140\" rx=\"10\" fill=\"%23D8F4FB\"/%3E %3Crect x=\"69\" y=\"92\" width=\"78\" height=\"80\" rx=\"12\" fill=\"%23FFFFFF\"/%3E %3Crect x=\"98\" y=\"98\" width=\"20\" height=\"4\" rx=\"2\" fill=\"%2378E4FC\"/%3E %3Crect x=\"79\" y=\"110\" width=\"50\" height=\"6\" rx=\"3\" fill=\"%234A90B0\" opacity=\".85\"/%3E %3Crect x=\"79\" y=\"122\" width=\"38\" height=\"6\" rx=\"3\" fill=\"%2378E4FC\"/%3E %3Crect x=\"18\" y=\"44\" width=\"70\" height=\"46\" rx=\"10\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"3\"/%3E %3Crect x=\"28\" y=\"54\" width=\"34\" height=\"5\" rx=\"2.5\" fill=\"%234A90B0\"/%3E %3Crect x=\"28\" y=\"64\" width=\"46\" height=\"4\" rx=\"2\" fill=\"%2378E4FC\"/%3E %3Crect x=\"28\" y=\"74\" width=\"22\" height=\"9\" rx=\"4.5\" fill=\"%231677C0\"/%3E %3Crect x=\"54\" y=\"74\" width=\"22\" height=\"9\" rx=\"4.5\" fill=\"none\" stroke=\"%231677C0\" stroke-width=\"2\"/%3E %3Crect x=\"40\" y=\"8\" width=\"64\" height=\"16\" rx=\"8\" fill=\"%23FFC24B\"/%3E %3Ccircle cx=\"50\" cy=\"16\" r=\"3.5\" fill=\"%234A90B0\"/%3E %3Crect x=\"58\" y=\"13.5\" width=\"38\" height=\"5\" rx=\"2.5\" fill=\"%234A90B0\"/%3E %3C/svg%3E", "P02": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"40\" y=\"30\" width=\"130\" height=\"120\" rx=\"14\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"3\"/%3E %3Crect x=\"54\" y=\"46\" width=\"60\" height=\"7\" rx=\"3.5\" fill=\"%234A90B0\"/%3E %3Crect x=\"54\" y=\"60\" width=\"84\" height=\"5\" rx=\"2.5\" fill=\"%2378E4FC\"/%3E %3Crect x=\"54\" y=\"72\" width=\"70\" height=\"5\" rx=\"2.5\" fill=\"%2378E4FC\"/%3E %3Crect x=\"54\" y=\"92\" width=\"44\" height=\"14\" rx=\"7\" fill=\"%231677C0\"/%3E %3Ccircle cx=\"54\" cy=\"96\" r=\"30\" fill=\"%23D8F4FB\" fill-opacity=\".55\" stroke=\"%234A90B0\" stroke-width=\"7\"/%3E %3Crect x=\"18\" y=\"116\" width=\"14\" height=\"40\" rx=\"7\" fill=\"%234A90B0\" transform=\"rotate%2842 25 120%29\"/%3E %3Ccircle cx=\"84\" cy=\"22\" r=\"13\" fill=\"%23FFC24B\"/%3E %3Crect x=\"82\" y=\"13\" width=\"4\" height=\"11\" rx=\"2\" fill=\"%234A90B0\"/%3E %3Ccircle cx=\"84\" cy=\"29\" r=\"2.3\" fill=\"%234A90B0\"/%3E %3Ccircle cx=\"140\" cy=\"108\" r=\"15\" fill=\"%232BB673\"/%3E %3Cpath d=\"M132 108 l6 6 l10 -12\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3C/svg%3E", "P01": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"38\" y=\"18\" width=\"140\" height=\"140\" rx=\"16\" fill=\"%23D8F4FB\"/%3E %3Crect x=\"52\" y=\"34\" width=\"34\" height=\"5\" rx=\"2.5\" fill=\"%234A90B0\"/%3E %3Crect x=\"52\" y=\"44\" width=\"110\" height=\"20\" rx=\"7\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"2.5\"/%3E %3Ccircle cx=\"148\" cy=\"54\" r=\"7\" fill=\"%232BB673\"/%3E %3Cpath d=\"M144.5 54 l2.5 2.5 l4.5 -5\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3Crect x=\"52\" y=\"74\" width=\"28\" height=\"5\" rx=\"2.5\" fill=\"%234A90B0\"/%3E %3Crect x=\"52\" y=\"84\" width=\"110\" height=\"20\" rx=\"7\" fill=\"%23FFFFFF\" stroke=\"%231677C0\" stroke-width=\"3\"/%3E %3Crect x=\"60\" y=\"90\" width=\"3\" height=\"8\" rx=\"1.5\" fill=\"%231677C0\"/%3E %3Crect x=\"52\" y=\"116\" width=\"70\" height=\"22\" rx=\"11\" fill=\"%231677C0\"/%3E %3Crect x=\"68\" y=\"125\" width=\"38\" height=\"4\" rx=\"2\" fill=\"%23FFFFFF\"/%3E %3Cpath d=\"M18 70 l0 34 l9 -8 l7 15 l6 -3 l-7 -14 l12 -1 z\" fill=\"%234A90B0\" stroke=\"%23FFFFFF\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/%3E %3C/svg%3E", "P10": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"56\" y=\"30\" width=\"120\" height=\"44\" rx=\"10\" fill=\"%234A90B0\"/%3E %3Crect x=\"70\" y=\"44\" width=\"58\" height=\"8\" rx=\"4\" fill=\"%2378E4FC\"/%3E %3Crect x=\"70\" y=\"58\" width=\"38\" height=\"5\" rx=\"2.5\" fill=\"%23FFFFFF\" opacity=\".7\"/%3E %3Crect x=\"56\" y=\"84\" width=\"84\" height=\"26\" rx=\"8\" fill=\"%231677C0\"/%3E %3Crect x=\"56\" y=\"120\" width=\"56\" height=\"14\" rx=\"6\" fill=\"%2378E4FC\"/%3E %3Crect x=\"56\" y=\"142\" width=\"40\" height=\"10\" rx=\"5\" fill=\"%23D8F4FB\"/%3E %3Cpath d=\"M8 52 q22 -24 44 0 q-22 24 -44 0 z\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"3\"/%3E %3Ccircle cx=\"30\" cy=\"52\" r=\"8\" fill=\"%234A90B0\"/%3E %3Ccircle cx=\"33\" cy=\"49\" r=\"2.5\" fill=\"%23FFFFFF\"/%3E %3C/svg%3E", "P05": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Ccircle cx=\"112\" cy=\"92\" r=\"62\" fill=\"%234A90B0\"/%3E %3Cpath d=\"M112 30 a62 62 0 0 1 0 124 z\" fill=\"%231677C0\"/%3E %3Ccircle cx=\"112\" cy=\"58\" r=\"9\" fill=\"%23FFFFFF\"/%3E %3Cpath d=\"M84 74 l28 6 l28 -6\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3Cpath d=\"M112 80 l0 20 l-12 26 M112 100 l12 26\" fill=\"none\" stroke=\"%23FFFFFF\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3Crect x=\"14\" y=\"40\" width=\"38\" height=\"38\" rx=\"12\" fill=\"%23FFC24B\"/%3E %3Crect x=\"21\" y=\"48\" width=\"24\" height=\"6\" rx=\"2\" fill=\"%234A90B0\"/%3E %3Crect x=\"30\" y=\"48\" width=\"6\" height=\"22\" rx=\"2\" fill=\"%234A90B0\"/%3E %3Crect x=\"24\" y=\"92\" width=\"30\" height=\"30\" rx=\"15\" fill=\"%23FFFFFF\" stroke=\"%232BB673\" stroke-width=\"4\"/%3E %3Ccircle cx=\"39\" cy=\"107\" r=\"5\" fill=\"%232BB673\"/%3E %3C/svg%3E", "P15": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Cpath d=\"M44 26 h104 a16 16 0 0 1 16 16 v62 a16 16 0 0 1 -16 16 h-62 l-22 20 v-20 h-20 a16 16 0 0 1 -16 -16 v-62 a16 16 0 0 1 16 -16 z\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"3\"/%3E %3Crect x=\"46\" y=\"46\" width=\"70\" height=\"8\" rx=\"4\" fill=\"%234A90B0\"/%3E %3Crect x=\"46\" y=\"62\" width=\"96\" height=\"6\" rx=\"3\" fill=\"%2378E4FC\"/%3E %3Crect x=\"46\" y=\"76\" width=\"60\" height=\"6\" rx=\"3\" fill=\"%2378E4FC\"/%3E %3Crect x=\"46\" y=\"94\" width=\"34\" height=\"10\" rx=\"5\" fill=\"%231677C0\"/%3E %3Cg transform=\"rotate%28-40 120 120%29\"%3E %3Crect x=\"104\" y=\"112\" width=\"58\" height=\"16\" rx=\"3\" fill=\"%23FFC24B\"/%3E %3Crect x=\"150\" y=\"112\" width=\"12\" height=\"16\" rx=\"3\" fill=\"%23FF7A59\"/%3E %3Cpath d=\"M104 112 l-14 8 l14 8 z\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"2\"/%3E %3Cpath d=\"M95 117 l-5 3 l5 3 z\" fill=\"%234A90B0\"/%3E %3C/g%3E %3C/svg%3E", "P12": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Cpath d=\"M56 34 h88 a16 16 0 0 1 16 16 v50 a16 16 0 0 1 -16 16 h-50 l-20 18 v-18 h-18 a16 16 0 0 1 -16 -16 v-50 a16 16 0 0 1 16 -16 z\" fill=\"%234A90B0\"/%3E %3Cpath d=\"M98 50 q4 18 22 22 q-18 4 -22 22 q-4 -18 -22 -22 q18 -4 22 -22 z\" fill=\"%2378E4FC\"/%3E %3Cpath d=\"M134 46 q2 7 9 9 q-7 2 -9 9 q-2 -7 -9 -9 q7 -2 9 -9 z\" fill=\"%23FFC24B\"/%3E %3Cpath d=\"M30 70 l22 -8 l22 8 v20 c0 16 -10 26 -22 32 c-12 -6 -22 -16 -22 -32 z\" fill=\"%23FFFFFF\" stroke=\"%231677C0\" stroke-width=\"4\" stroke-linejoin=\"round\"/%3E %3Cpath d=\"M42 92 l7 7 l13 -15\" fill=\"none\" stroke=\"%232BB673\" stroke-width=\"4.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E %3C/svg%3E", "P13": "data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 160 140\"%3E %3Crect x=\"58\" y=\"40\" width=\"120\" height=\"110\" rx=\"14\" fill=\"%23D8F4FB\"/%3E %3Crect x=\"74\" y=\"56\" width=\"50\" height=\"34\" rx=\"6\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"2.5\"/%3E %3Cpath d=\"M74 84 l14 -12 l10 8 l8 -6 l18 14\" fill=\"none\" stroke=\"%2378E4FC\" stroke-width=\"3\" stroke-linejoin=\"round\"/%3E %3Crect x=\"134\" y=\"58\" width=\"30\" height=\"6\" rx=\"3\" fill=\"%234A90B0\"/%3E %3Crect x=\"134\" y=\"70\" width=\"22\" height=\"5\" rx=\"2.5\" fill=\"%231677C0\"/%3E %3Crect x=\"74\" y=\"102\" width=\"90\" height=\"6\" rx=\"3\" fill=\"%23FFFFFF\"/%3E %3Crect x=\"74\" y=\"114\" width=\"64\" height=\"6\" rx=\"3\" fill=\"%23FFFFFF\"/%3E %3Cg transform=\"rotate%28-45 46 92%29\"%3E %3Crect x=\"10\" y=\"85\" width=\"74\" height=\"14\" rx=\"7\" fill=\"%234A90B0\"/%3E %3Crect x=\"66\" y=\"85\" width=\"18\" height=\"14\" rx=\"4\" fill=\"%23FFFFFF\" stroke=\"%234A90B0\" stroke-width=\"2.5\"/%3E %3C/g%3E %3Cpath d=\"M76 18 q3 11 14 14 q-11 3 -14 14 q-3 -11 -14 -14 q11 -3 14 -14 z\" fill=\"%23FFC24B\"/%3E %3Cpath d=\"M104 14 q1.6 6 8 8 q-6.4 1.6 -8 8 q-1.6 -6.4 -8 -8 q6.4 -2 8 -8 z\" fill=\"%2378E4FC\"/%3E %3Cpath d=\"M44 26 q1.4 5 6 6 q-4.6 1.4 -6 6 q-1.4 -4.6 -6 -6 q4.6 -1 6 -6 z\" fill=\"%231677C0\"/%3E %3C/svg%3E"};
+// Search keywords per path (9 Nov, Eyad): the search matches name, description and these.
+const KW = {"en": {"P01": ["forms", "input fields", "validation", "error messages", "checkout", "sign up", "labels", "autofill", "required fields", "dropdown", "date picker"], "P10": ["visual hierarchy", "contrast", "typography", "font size", "colors", "spacing", "layout", "emphasis", "scanning", "attention", "white space"], "P14": ["UI patterns", "dialog", "modal", "bottom sheet", "toast", "snackbar", "search", "filters", "navigation", "empty state", "components"], "P02": ["usability", "heuristics", "Nielsen", "usability testing", "friction", "pain points", "audit", "feedback", "consistency", "error prevention"], "P05": ["accessibility", "a11y", "WCAG", "contrast", "screen reader", "color blindness", "keyboard", "tap target", "alt text", "inclusive design"], "P15": ["UX writing", "microcopy", "content design", "tone of voice", "button labels", "error messages", "empty state", "onboarding copy", "clarity"], "P12": ["AI", "artificial intelligence", "chatbot", "LLM", "trust", "explainability", "human in the loop", "feedback", "confidence", "PAIR"], "P13": ["AI tools", "ChatGPT", "Figma AI", "prompts", "research synthesis", "automation", "wireframes", "personas", "productivity"]}, "ar": {"P01": ["نماذج", "حقول الإدخال", "التحقق", "رسائل الخطأ", "الدفع", "التسجيل", "التسميات", "الملء التلقائي", "الحقول المطلوبة", "قائمة منسدلة", "اختيار التاريخ"], "P10": ["التسلسل البصري", "التباين", "الخطوط", "حجم الخط", "الألوان", "المسافات", "التخطيط", "التركيز", "القراءة السريعة", "الانتباه", "المساحات البيضاء"], "P14": ["أنماط الواجهة", "نافذة حوار", "Modal", "Bottom sheet", "Toast", "إشعار", "البحث", "الفلاتر", "التنقل", "الحالة الفارغة", "المكوّنات"], "P02": ["قابلية الاستخدام", "المبادئ الإرشادية", "Heuristics", "اختبار الاستخدام", "العوائق", "نقاط الألم", "تدقيق", "التغذية الراجعة", "الاتساق", "منع الأخطاء"], "P05": ["إتاحة الوصول", "Accessibility", "WCAG", "التباين", "قارئ الشاشة", "عمى الألوان", "لوحة المفاتيح", "حجم اللمس", "النص البديل", "تصميم شامل"], "P15": ["كتابة UX", "Microcopy", "تصميم المحتوى", "نبرة الصوت", "نصوص الأزرار", "رسائل الخطأ", "الحالة الفارغة", "نصوص الترحيب", "الوضوح"], "P12": ["الذكاء الاصطناعي", "AI", "روبوت محادثة", "LLM", "الثقة", "التفسير", "الإنسان في الحلقة", "التغذية الراجعة", "درجة الثقة", "PAIR"], "P13": ["أدوات الذكاء الاصطناعي", "ChatGPT", "Figma AI", "الأوامر", "تحليل الأبحاث", "الأتمتة", "Wireframes", "الشخصيات", "الإنتاجية"]}};
+const HYB = [['P14', 'video', 6, 'eyad'], ['P02', 'usab', 5, 'mahmoud']];
+const INTER = [['P01', 'forms', 5], ['P10', 'hier', 6], ['P05', 'shield', 5], ['P15', 'mail', 5], ['P12', 'rocket', 5], ['P13', 'search', 5]];
+const NAMES = {
+  en: { P01: 'Forms That Flow', P02: 'Find and Fix Usability', P05: 'Make UX Accessible', P10: 'Visual Hierarchy in Action', P12: 'Design Better AI Experiences', P13: 'AI Tools for Better UX', P14: 'Patterns That Fit', P15: 'Write Words That Work' },
+  ar: { P01: 'نماذج تسير بسلاسة', P02: 'اكتشف مشكلات الاستخدام وأصلحها', P05: 'اجعل تجربة المستخدم (UX) مناسبة للجميع', P10: 'التسلسل البصري عمليًا', P12: 'صمّم تجارب ذكاء اصطناعي أفضل', P13: 'أدوات الذكاء الاصطناعي لتجربة مستخدم أفضل', P14: 'أنماط في مكانها الصحيح', P15: 'اكتب كلمات تؤدّي المهمة' }
+};
+const C = {
+  en: {
+    navLabel: 'Main', nav: { home: 'Home', paths: 'Paths', review: 'Review', profile: 'Profile' }, otherLang: 'العربية',
+    pathsTitle: 'Paths', pathsLead: 'Pick a path. Unit 1 of every path is free.',
+    optA: 'Option A · two groups', optB: 'Option B · instructor spotlight', optBJoined: 'Approved B · with your paths (12 Nov)', optC: 'Option C · one list, video first',
+    yourPathsN: 'Your paths · 3', currentTag: 'Current', whereCur: 'Unit 2 · 4 of 25 lessons', whereNew: 'Not started', spotLabel: 'Featured courses', searchPh: 'Search paths, e.g. forms, contrast, AI', query: 'contrast', resultsLine: (n, q) => n + (n === 1 ? ' path' : ' paths') + ' for “' + q + '”', clearLabel: 'Clear search', matchLabel: 'Matches', spotTitle: 'Featured courses', secVideo: 'Video courses with an instructor', secInter: 'Interactive paths', secAll: 'All paths',
+    videoOver: 'Video + practice', instructor: 'Instructor', withLabel: 'With', startFree: 'Start free', free1: 'Unit 1 free', hybrid: 'Video', interactive: 'Interactive', units: (n) => n + ' units',
+    withWho: (n) => 'Videos with ' + n, aria: (p, n) => p + '. Video course with ' + n,
+    sub: { P01: 'Design forms people can finish, understand and recover from, in English and Arabic.', P10: 'Help people see what matters first, on any screen and in any language.', P14: 'Pick the right interface pattern for the moment: dialogs, sheets, messages, search and filters.', P02: 'Spot where people get stuck, and fix that first.', P05: 'Design that works for every ability and device.', P12: 'AI features people understand and trust.', P13: 'Use AI tools to research and design faster.', P15: 'Write screen text people can scan, understand and act on, in a tone that fits the moment.' },
+    profileTitle: 'Profile', pfTabsLabel: 'Profile sections', pfTabNames: ['Overview', 'Paths', 'Certificates', 'Badges', 'Leaderboard'],
+    secEarned: 'Earned · 1', earnedChip: 'Earned', secProgress: 'In progress · 2', viewCert: 'View certificate', shareLi: 'Share on LinkedIn', skillsShown: 'Skills Shown',
+    earnedMeta: (n, d) => n + ' skills Shown · ' + d, earnedAria: (p) => p + ' certificate, earned',
+    progText: (n, t) => n + ' of ' + t + ' skills Shown. Show all ' + t + ' to earn it.',
+    lnPaths: 'Paths', lnDiff: "What's different", lnCert: 'Certificate', lnPricing: 'Pricing', signin: 'Sign in',
+    diffKicker: 'Why UXGate', diffA: "What's ", diffMark: 'different', diffB: ' about UXGate',
+    diffLead: 'Not another English-only course library. UXGate is built for Arab designers who want to practise real decisions.',
+    tiles: [
+      ['ph ph-globe', 'Arabic first, English too', 'Every lesson is in Arabic and English. English UX terms stay, with a short Arabic explanation.', 'big'],
+      ['ph ph-video', 'Video courses with Arab instructors', 'Some paths mix short videos from working UX designers with hands-on practice.', 'big people'],
+      ['ph ph-cursor-click', 'Decide on real screens', 'You fix realistic apps and sites, in Arabic and English, right-to-left included. No trivia quizzes.', ''],
+      ['ph ph-target', 'Prove every skill', 'Each unit ends with a skill check on a case you have not seen, with no hints. Missed skills come back for review.', ''],
+      ['ph ph-certificate', 'A certificate that means it', 'You earn it only by showing every skill of the path. Share it on LinkedIn, and anyone can check it.', ''],
+      ['ph ph-book', 'Built on trusted research', 'Lessons follow NN/g, IxDF and Google PAIR guidance, written for our region.', '']
+    ],
+    peopleLine: 'Eyad Mahmoud · Mahmoud Raslan',
+    certKicker: 'Every path ends with a certificate', certH: 'Finish a path, earn a certificate, share it on LinkedIn.',
+    cert1t: 'Earned, not given. ', cert1: 'You get it when every skill of the path is Shown on a new case.',
+    cert2t: 'Share on LinkedIn in one tap. ', cert2: 'We write the post for you. Your certificate shows as the link picture.',
+    cert3t: 'Anyone can check it. ', cert3: 'Each certificate has its own page at uxgate.org/c/ with an ID.',
+    postInitial: 'Y', postName: 'Yasmin Adel', postWhen: 'Product designer · 1d',
+    postText: 'I earned my UXGate certificate in Forms That Flow. I showed all 40 skills on new cases, with no hints.',
+    cPath: 'Forms That Flow', cOver: 'Certificate of skill', cThis: 'This certifies that', cShowed: 'showed every skill of the path', ogTitle: 'Yasmin Adel · Forms That Flow · UXGate certificate'
+  },
+  ar: {
+    navLabel: 'الرئيسية', nav: { home: 'الرئيسية', paths: 'المسارات', review: 'المراجعة', profile: 'الملف الشخصي' }, otherLang: 'English',
+    pathsTitle: 'المسارات', pathsLead: 'اختر مسارًا. الوحدة الأولى من كل مسار مجانية.',
+    optA: 'الخيار A · مجموعتان', optB: 'الخيار B · المدرّب في الواجهة', optBJoined: 'الخيار B · مع مساراتك (12 نوفمبر)', optC: 'الخيار C · قائمة واحدة والفيديو أولًا',
+    yourPathsN: 'مساراتك · 3', currentTag: 'الحالي', whereCur: 'الوحدة 2 · 4 من 25 درسًا', whereNew: 'لم تبدأ بعد', spotLabel: 'كورسات مميّزة', searchPh: 'ابحث في المسارات، مثل: نماذج، التباين، AI', query: 'التباين', resultsLine: (n, q) => (n === 1 ? 'مسار واحد' : n + ' مسارات') + ' لـ «' + q + '»', clearLabel: 'امسح البحث', matchLabel: 'يطابق', spotTitle: 'كورسات مميّزة', secVideo: 'كورسات بالفيديو مع مدرّب', secInter: 'مسارات تفاعلية', secAll: 'كل المسارات',
+    videoOver: 'فيديو + تدريب', instructor: 'المدرّب', withLabel: 'مع', startFree: 'ابدأ مجانًا', free1: 'الوحدة 1 مجانية', hybrid: 'فيديو', interactive: 'تفاعلي', units: (n) => n + ' وحدات',
+    withWho: (n) => 'فيديوهات مع ' + n, aria: (p, n) => p + '. كورس بالفيديو مع ' + n,
+    sub: { P01: 'صمّم نماذج يستطيع الناس إكمالها وفهمها والتعافي من أخطائها، بالعربية والإنجليزية.', P10: 'ساعد الناس على رؤية الأهم أولًا، على أي شاشة وبأي لغة.', P14: 'اختر نمط الواجهة المناسب للّحظة: النوافذ، والـ Bottom sheets، والرسائل، والبحث، والفلاتر.', P02: 'اكتشف أين يتعثّر الناس، وأصلح ذلك أولًا.', P05: 'تصميم يناسب كل القدرات وكل الأجهزة.', P12: 'ميزات ذكاء اصطناعي يفهمها الناس ويثقون بها.', P13: 'استخدم أدوات الذكاء الاصطناعي لتبحث وتصمّم أسرع.', P15: 'اكتب نصوص الشاشات بحيث يتصفّحها الناس بسرعة ويفهمونها ويتصرّفون بها، وبنبرة تناسب الموقف.' },
+    profileTitle: 'الملف الشخصي', pfTabsLabel: 'أقسام الملف الشخصي', pfTabNames: ['نظرة عامة', 'المسارات', 'الشهادات', 'الشارات', 'لوحة الصدارة'],
+    secEarned: 'حصلت عليها · 1', earnedChip: 'حصلت عليها', secProgress: 'قيد التقدّم · 2', viewCert: 'اعرض الشهادة', shareLi: 'شارك على LinkedIn', skillsShown: 'المهارات التي أثبتّها',
+    earnedMeta: (n, d) => n + ' مهارة «أثبتت» · ' + d, earnedAria: (p) => 'شهادة ' + p + '، حصلت عليها',
+    progText: (n, t) => 'أثبتّ ' + n + ' من ' + t + ' مهارة. أثبت الـ' + t + ' كلها لتحصل عليها.',
+    lnPaths: 'المسارات', lnDiff: 'ما الذي يميّزنا', lnCert: 'الشهادة', lnPricing: 'الأسعار', signin: 'سجّل الدخول',
+    diffKicker: 'لماذا UXGate', diffA: 'المميزات ', diffMark: 'المختلفة', diffB: ' في UXGate',
+    diffLead: 'ليست مكتبة كورسات أخرى بالإنجليزية فقط. UXGate مصمَّمة للمصمّمين العرب الذين يريدون التدرّب على قرارات حقيقية.',
+    tiles: [
+      ['ph ph-globe', 'بالعربية أولًا، وبالإنجليزية أيضًا', 'كل درس بالعربية والإنجليزية. نُبقي مصطلحات UX الإنجليزية مع شرح عربي قصير.', 'big'],
+      ['ph ph-video', 'كورسات بالفيديو مع مدرّبين عرب', 'بعض المسارات تجمع فيديوهات قصيرة من مصمّمي UX يعملون في المجال مع تدريب عملي.', 'big people'],
+      ['ph ph-cursor-click', 'قرارات على شاشات حقيقية', 'تُصلح تطبيقات ومواقع واقعية بالعربية والإنجليزية، ومنها الشاشات من اليمين لليسار. لا أسئلة حفظ.', ''],
+      ['ph ph-target', 'أثبت كل مهارة', 'تنتهي كل وحدة باختبار مهارة على حالة لم ترها، بدون تلميحات. والمهارات التي فاتتك تعود للمراجعة.', ''],
+      ['ph ph-certificate', 'شهادة لها معنى', 'تحصل عليها فقط عندما تُثبت كل مهارات المسار. شاركها على LinkedIn، ويستطيع أي أحد التحقّق منها.', ''],
+      ['ph ph-book', 'مبنية على مصادر موثوقة', 'الدروس تتبع إرشادات NN/g وIxDF وGoogle PAIR، ومكتوبة لمنطقتنا.', '']
+    ],
+    peopleLine: 'إياد محمود · محمود رسلان',
+    certKicker: 'كل مسار ينتهي بشهادة', certH: 'أكمل المسار، واحصل على شهادة، وشاركها على LinkedIn.',
+    cert1t: 'تكسبها ولا تُمنح لك. ', cert1: 'تحصل عليها عندما تُثبت كل مهارات المسار على حالات جديدة.',
+    cert2t: 'شاركها على LinkedIn بضغطة. ', cert2: 'نكتب لك المنشور، وتظهر شهادتك كصورة الرابط.',
+    cert3t: 'يستطيع أي أحد التحقّق منها. ', cert3: 'لكل شهادة صفحة خاصة على uxgate.org/c/ مع رقم تعريف.',
+    postInitial: 'ي', postName: 'ياسمين عادل', postWhen: 'مصمّمة منتجات · منذ يوم',
+    postText: 'حصلت على شهادة UXGate في مسار «نماذج تسير بسلاسة». أثبتّ كل المهارات الـ40 في حالات جديدة، بدون تلميحات.',
+    cPath: 'نماذج تسير بسلاسة', cOver: 'شهادة مهارة', cThis: 'نشهد بأن', cShowed: 'أثبتت كل مهارات المسار', ogTitle: 'ياسمين عادل · نماذج تسير بسلاسة · شهادة UXGate'
+  }
+};
+const VIEWS = ['optA', 'optB', 'optBSearch', 'optBJoined', 'optC', 'certs', 'landDiff', 'landCert'];
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'en' ? 'en' : 'ar';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const device = this.props.device === 'desktop' ? 'desktop' : 'mobile';
+    const isDesk = device === 'desktop';
+    const view = VIEWS.indexOf(this.props.view) >= 0 ? this.props.view : 'optA';
+    const c = C[lang];
+    const N = NAMES[lang];
+    const isPaths = view.indexOf('opt') === 0;
+    const isB = view === 'optB' || view === 'optBSearch' || view === 'optBJoined';
+    const isJoined = view === 'optBJoined';
+    const searching = view === 'optBSearch';
+    const isLand = view.indexOf('land') === 0;
+    const tab = view === 'certs' ? 'profile' : 'paths';
+    const navItem = (id, icon, iconOn) => ({ id, label: c.nav[id], cur: tab === id ? 'page' : 'false', icon: 'ph ' + (tab === id ? iconOn : icon) });
+    const navs = [navItem('home', 'ph-house', 'ph-house-fill'), navItem('paths', 'ph-map', 'ph-map-fill'), navItem('review', 'ph-review', 'ph-review-fill'), navItem('profile', 'ph-user', 'ph-user-fill')];
+    const hybrid = HYB.map(([id, img, units, who]) => { const w = WHO[who];
+      return { id, name: N[id], sub: c.sub[id], art: (theme === 'dark' ? ART_DARK : ART)[id], img: IMG[img], units: c.units(units), who: w[lang], avatar: w.avatar, portrait: w.portrait, media: w.media, withWho: c.withWho(w[lang]), aria: c.aria(N[id], w[lang]) }; });
+    const inter = INTER.map(([id, img, units]) => ({ id, name: N[id], sub: c.sub[id], art: (theme === 'dark' ? ART_DARK : ART)[id], img: IMG[img], units: c.units(units) }));
+    const ORDER = ['P01', 'P10', 'P14', 'P02', 'P05', 'P15', 'P12', 'P13'];
+    const byId = {}; hybrid.forEach((h) => { byId[h.id] = Object.assign({ isHyb: true, isInter: false, cls: 'path-card press is-hybrid pc-stack has-art' }, h); });
+    inter.forEach((q) => { byId[q.id] = Object.assign({ isHyb: false, isInter: true, cls: 'path-card press pc-stack has-art', aria: q.name }, q); });
+    const JOINED = [['P14', '16%', 'cur'], ['P12', '0%', ''], ['P01', '0%', '']];
+    const joined = isJoined ? JOINED.map(([id, pct, cur]) => Object.assign({}, byId[id], { pct, isCurrent: !!cur, where: cur ? c.whereCur : c.whereNew,
+      cls: 'path-card press pc-stack has-art pc-joined' + (cur ? ' is-current sel-frame' : ''), aria: byId[id].name + ', ' + pct })) : [];
+    const allB = ORDER.filter((id) => !isJoined || !JOINED.some((j) => j[0] === id)).map((id) => byId[id]);
+    const q = c.query.toLowerCase();
+    const results = allB.filter((x) => (x.name + ' ' + x.sub + ' ' + (KW[lang][x.id] || []).join(' ')).toLowerCase().indexOf(q) >= 0)
+      .map((x) => { const hit = (KW[lang][x.id] || []).filter((k) => k.toLowerCase().indexOf(q) >= 0); return Object.assign({ hit: hit.length ? hit[0] : '', hasHit: hit.length > 0 }, x); });
+    const date = lang === 'ar' ? '2 نوفمبر 2026' : '2 November 2026';
+    return {
+      lang, theme, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk,
+      rootCls: 'ug pg pg-' + device + (isLand ? ' is-land' : ''),
+      showRail: isDesk && !isLand, showNav: !isDesk && !isLand,
+      railNav: navs.map((n) => Object.assign({}, n, { cls: 'dk-item' + (n.cur === 'page' ? ' is-on' : '') })),
+      bnav: navs.map((n) => Object.assign({}, n, { cls: n.cur === 'page' ? 'is-on' : '' })),
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      markWhite: '/_blob/5667904a660c43335758c7e0120ae2b8',
+      is: { paths: isPaths, joined: isJoined, optA: view === 'optA', optB: isB, bList: isB && !searching, searching, oneList: view === 'optC', interList: !isB, certs: view === 'certs', land: isLand, landDiff: view === 'landDiff', landCert: view === 'landCert' },
+      optLabel: c[view] || '',
+      hybrid, joined, spot: hybrid, inter, interGrid: view === 'optA' ? '' : 'two', allB, results, query: c.query, queryVal: searching ? c.query : '', resultsLine: c.resultsLine(results.length, c.query),
+      pfTabs: ['overview', 'paths', 'certs', 'badges', 'board'].map((id, i) => { const on = id === 'certs';
+        return { id: 'pf-' + id, label: c.pfTabNames[i], cur: on ? 'true' : 'false', cls: 'pf-tab' + (on ? ' is-on' : ''), icon: 'ph ' + ['ph-squares-four', 'ph-path', 'ph-certificate', 'ph-medal', 'ph-ranking'][i] }; }),
+      earned: [{ name: N.P01, meta: c.earnedMeta(40, date), aria: c.earnedAria(N.P01) }],
+      progress: [{ name: N.P10, text: c.progText(12, 35), pct: '34%', pctNum: 34 }, { name: N.P14, text: c.progText(5, 30), pct: '17%', pctNum: 17 }],
+      tiles: c.tiles.map(([icon, title, text, kind]) => ({ icon, title, text, people: kind.indexOf('people') >= 0, cls: 'ld-tile' + (kind.indexOf('big') >= 0 ? ' is-big' : '') }))
+    };
+  }
+}
+</script>
+</body>
+</html>

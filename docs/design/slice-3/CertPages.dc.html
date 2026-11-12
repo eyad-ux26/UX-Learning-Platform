@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Certificate pages</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./uxgate.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Titillium+Web:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div class="{{rootCls}}" lang="{{lang}}" dir="{{dir}}" data-theme="{{theme}}">
+
+  <sc-if value="{{showRail}}" hint-placeholder-val="{{false}}">
+    <nav class="dk-rail" aria-label="{{c.nav}}">
+      <img src="{{logo}}" alt="UXGate" style="height: 34px; width: auto; align-self: flex-start; margin: 2px 8px 18px;">
+      <a class="dk-item" href="#home"><span class="ph ph-house" aria-hidden="true"></span>{{c.navHome}}</a>
+      <a class="dk-item" href="#paths"><span class="ph ph-map" aria-hidden="true"></span>{{c.navPaths}}</a>
+      <a class="dk-item" href="#review"><span class="ph ph-review" aria-hidden="true"></span>{{c.navReview}}</a>
+      <a class="dk-item is-on" href="#profile" aria-current="page"><span class="ph ph-user-fill" aria-hidden="true"></span>{{c.navProfile}}</a>
+      <p class="dk-sec"><span class="ph ph-stack" aria-hidden="true"></span>{{c.yourPaths}}</p>
+      <a class="dk-layer is-on" href="#path"><img src="/_blob/5c8de666f75e9b797e0dbc0c15c327e3" alt="" style="width: 22px; height: 22px; flex: none;"><bdi style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{c.path}}</bdi><span class="num" style="font-size: 12px; color: var(--ink-3);">100%</span></a>
+      <a class="dk-layer" href="#paths" style="color: var(--link);"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addPath}}</a>
+    </nav>
+  </sc-if>
+
+  <!-- ============ Certificate page (signed in) and the share sheet over it ============ -->
+  <sc-if value="{{is.app}}" hint-placeholder-val="{{true}}">
+   <div class="pg-col">
+    <header class="pg-top" style="gap: 4px;">
+      <sc-if value="{{isMobile}}" hint-placeholder-val="{{true}}"><a href="#profile" class="icon-btn plain" aria-label="{{c.back}}"><span class="ph ph-arrow back" aria-hidden="true"></span></a></sc-if>
+      <h1 class="pg-title" style="flex: 1;">{{c.title}}</h1>
+    </header>
+    <main class="pg-body cxp-body">
+      <div class="cxp-split">
+        <div class="cxp-art">
+          <span class="frame-label"><span class="ph ph-frame-corners" aria-hidden="true"></span><bdi>{{c.path}}</bdi> · {{c.title}}</span>
+          <div class="cx-box" style="{{art.box}}">
+            <article class="{{art.cls}}" style="{{art.inner}}" lang="{{lang}}" dir="{{dir}}" aria-label="{{c.over}}">
+              <div class="cx-band">
+                <img class="cx-logo" src="/_blob/6ef1217443643f56706d5f2cf459ec0b" alt="UXGate">
+                <span class="cx-over">{{c.over}}</span>
+                <img class="cx-seal" src="/_blob/68b36b698602cc0ac59d5b87ca709073" alt="">
+                <ul class="cx-stats">
+                  <sc-for list="{{c.stats}}" as="s" hint-placeholder-count="3"><li><b class="num">{{s.n}}</b><span>{{s.t}}</span></li></sc-for>
+                </ul>
+              </div>
+              <div class="cx-main">
+                <span class="cx-lead">{{c.certifies}}</span>
+                <span class="cx-namebox"><i></i><i></i><i></i><i></i><span class="cx-name">{{c.name}}</span></span>
+                <span class="cx-lead">{{c.showed}}</span>
+                <span class="cx-path"><bdi>{{c.path}}</bdi></span>
+                <span class="cx-how">{{c.how}}</span>
+                <div class="cx-foot">
+                  <span><small>{{c.issued}}</small><b>{{c.date}}</b></span>
+                  <span><small>{{c.idLabel}}</small><b class="ltr">UXG-P01-7K3Q</b></span>
+                  <span><small>{{c.verify}}</small><b class="ltr">uxgate.org/c/7K3Q</b></span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="cxp-side">
+          <a href="#share-linkedin" class="btn btn-primary btn-lg press cxp-li"><span class="li-glyph" aria-hidden="true">in</span>{{c.li}}</a>
+          <a href="#add-to-profile" class="btn btn-secondary press"><span class="ph ph-plus" aria-hidden="true"></span>{{c.addProfile}}</a>
+          <div class="cxp-mini" role="group" aria-label="{{c.more}}">
+            <a href="#pdf" class="cxp-mini-btn press"><span class="ph ph-download" aria-hidden="true"></span>{{c.pdf}}</a>
+            <a href="#png" class="cxp-mini-btn press"><span class="ph ph-download" aria-hidden="true"></span>{{c.img}}</a>
+            <a href="#copy" class="cxp-mini-btn press"><span class="ph ph-link" aria-hidden="true"></span>{{c.link}}</a>
+          </div>
+          <div class="set">
+            <a href="#edit-name" class="set-row"><span class="ph ph-pencil" aria-hidden="true"></span><span class="set-l">{{c.nameRow}}<small>{{c.name}}</small></span><span class="set-v">{{c.edit}}<span class="ph ph-caret" aria-hidden="true"></span></span></a>
+            <div class="set-row"><span class="ph ph-globe" aria-hidden="true"></span><span class="set-l">{{c.pageTitle}}<small>{{pageState}}</small></span><button class="{{swCls}}" type="button" role="switch" aria-checked="{{swAria}}" aria-label="{{c.pageTitle}}"><span class="track" aria-hidden="true"></span></button></div>
+            <div class="set-row"><span class="ph ph-seal-check-fill" aria-hidden="true"></span><span class="set-l">{{c.verifyRow}}<small class="ltr" style="text-align: start;">uxgate.org/c/7K3Q · UXG-P01-7K3Q</small></span></div>
+          </div>
+          <p class="pg-note" style="font-size: 13px;"><span class="ph ph-eye" aria-hidden="true"></span><span>{{c.sees}}</span></p>
+        </div>
+      </div>
+    </main>
+    <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+      <nav class="bnav" aria-label="{{c.nav}}">
+        <a href="#home"><span class="ph ph-house" aria-hidden="true"></span>{{c.navHome}}</a>
+        <a href="#paths"><span class="ph ph-map" aria-hidden="true"></span>{{c.navPaths}}</a>
+        <a href="#review"><span class="ph ph-review" aria-hidden="true"></span>{{c.navReview}}</a>
+        <a href="#profile" class="is-on" aria-current="page"><span class="ph ph-user-fill" aria-hidden="true"></span>{{c.navProfile}}</a>
+      </nav>
+    </sc-if>
+   </div>
+
+    <sc-if value="{{is.name}}" hint-placeholder-val="{{false}}">
+      <div class="cxs-scrim" aria-hidden="true"></div>
+      <section class="cxs cxn" role="dialog" aria-modal="true" aria-labelledby="cxn-h-{{sid}}" aria-describedby="cxn-d-{{sid}}">
+        <header class="cxs-head">
+          <span class="cxn-ic" aria-hidden="true"><span class="ph ph-certificate"></span></span>
+          <h2 id="cxn-h-{{sid}}">{{c.nTitle}}</h2>
+        </header>
+        <p class="cxn-body" id="cxn-d-{{sid}}">{{nm.body}}</p>
+        <sc-if value="{{nm.fix}}" hint-placeholder-val="{{false}}">
+          <div class="field">
+            <label for="cxn-in-{{sid}}">{{c.nLabel}}</label>
+            <div class="input is-focus"><span class="ph ph-user" style="color: var(--link);" aria-hidden="true"></span><input id="cxn-in-{{sid}}" type="text" value="yasmin.adel88" dir="auto" autocomplete="name" aria-describedby="cxn-help-{{sid}}"></div>
+            <span class="help" id="cxn-help-{{sid}}">{{c.nHelp}}</span>
+          </div>
+        </sc-if>
+        <div class="cxn-preview">
+          <span class="cxn-over">{{c.nShows}}</span>
+          <span class="cxn-paper" lang="{{nm.nameLang}}" dir="{{nm.nameDir}}"><span class="cx-namebox"><i></i><i></i><i></i><i></i><span class="cx-name">{{nm.value}}</span></span></span>
+        </div>
+        <div class="cxs-acts">
+          <a href="#use-name" class="btn btn-primary btn-lg press">{{nm.primary}}</a>
+          <sc-if value="{{nm.read}}" hint-placeholder-val="{{true}}"><a href="#edit-name" class="btn btn-secondary press"><span class="ph ph-pencil" aria-hidden="true"></span>{{c.nEdit}}</a></sc-if>
+        </div>
+        <p class="t-small ink-2 cxs-foot">{{c.nNote}}</p>
+      </section>
+    </sc-if>
+    <sc-if value="{{is.share}}" hint-placeholder-val="{{false}}">
+      <div class="cxs-scrim" aria-hidden="true"></div>
+      <section class="cxs" role="dialog" aria-modal="true" aria-labelledby="cxs-h-{{sid}}">
+        <header class="cxs-head">
+          <span class="li-glyph is-lg" aria-hidden="true">in</span>
+          <h2 id="cxs-h-{{sid}}">{{c.shTitle}}</h2>
+          <a href="#close" class="icon-btn plain" aria-label="{{c.close}}"><span class="ph ph-x" aria-hidden="true"></span></a>
+        </header>
+        <label class="cxs-label" for="cxs-post-{{sid}}">{{c.shPost}}</label>
+        <div class="cxs-post" id="cxs-post-{{sid}}" role="textbox" aria-multiline="true" tabindex="0">
+          <sc-for list="{{c.postLines}}" as="l" hint-placeholder-count="3"><p>{{l.t}}</p></sc-for>
+        </div>
+        <p class="cxs-label">{{c.preview}}</p>
+        <div class="cxs-card">
+          <div class="cx-box" style="{{og.box}}">
+            <div class="{{og.cls}}" style="{{og.inner}}" lang="{{lang}}" dir="{{dir}}" aria-hidden="true">
+              <div class="cx-band">
+                <img class="cx-logo" src="/_blob/6ef1217443643f56706d5f2cf459ec0b" alt="">
+                <span class="cx-over">{{c.over}}</span>
+                <img class="cx-seal" src="/_blob/68b36b698602cc0ac59d5b87ca709073" alt="">
+                <ul class="cx-stats">
+                  <sc-for list="{{c.stats}}" as="s" hint-placeholder-count="3"><li><b class="num">{{s.n}}</b><span>{{s.t}}</span></li></sc-for>
+                </ul>
+              </div>
+              <div class="cx-main">
+                <span class="cx-lead">{{c.certifies}}</span>
+                <span class="cx-namebox"><i></i><i></i><i></i><i></i><span class="cx-name">{{c.name}}</span></span>
+                <span class="cx-lead">{{c.showed}}</span>
+                <span class="cx-path"><bdi>{{c.path}}</bdi></span>
+                <span class="cx-how">{{c.how}}</span>
+                <div class="cx-foot">
+                  <span><small>{{c.issued}}</small><b>{{c.date}}</b></span>
+                  <span><small>{{c.idLabel}}</small><b class="ltr">UXG-P01-7K3Q</b></span>
+                  <span><small>{{c.verify}}</small><b class="ltr">uxgate.org/c/7K3Q</b></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cxs-card-text"><b>{{c.cardTitle}}</b><span class="ltr">uxgate.org</span></div>
+        </div>
+        <p class="cxs-notice"><span class="ph ph-globe" aria-hidden="true"></span><span>{{c.notice}}</span></p>
+        <div class="cxs-acts">
+          <a href="#open-linkedin" class="btn btn-primary btn-lg press"><span class="ph ph-copy" aria-hidden="true"></span>{{c.open}}<span class="ph ph-external" aria-hidden="true"></span></a>
+          <a href="#close" class="btn btn-ghost">{{c.cancel}}</a>
+        </div>
+        <p class="t-small ink-2 cxs-foot">{{c.openNote}}</p>
+      </section>
+    </sc-if>
+  </sc-if>
+
+  <!-- ============ Public certificate page: uxgate.org/c/7K3Q (what LinkedIn links to) ============ -->
+  <sc-if value="{{is.public}}" hint-placeholder-val="{{false}}">
+   <div class="pg-col">
+    <header class="cxv-top">
+      <img src="{{logo}}" alt="UXGate" style="{{logoStyle}}">
+      <a href="#lang" class="pg-link" lang="{{otherCode}}">{{c.otherLang}}</a>
+    </header>
+    <main class="cxv-body">
+      <div class="cxv-wrap">
+        <p class="cxv-ok"><span class="ph ph-seal-check-fill" aria-hidden="true"></span>{{c.verified}}</p>
+        <h1 class="t-h1 cxv-h1">{{c.pubTitle}}</h1>
+        <div class="cx-box" style="{{art.box}}">
+          <article class="{{art.cls}}" style="{{art.inner}}" lang="{{lang}}" dir="{{dir}}" aria-label="{{c.over}}">
+            <div class="cx-band">
+              <img class="cx-logo" src="/_blob/6ef1217443643f56706d5f2cf459ec0b" alt="UXGate">
+              <span class="cx-over">{{c.over}}</span>
+              <img class="cx-seal" src="/_blob/68b36b698602cc0ac59d5b87ca709073" alt="">
+              <ul class="cx-stats">
+                <sc-for list="{{c.stats}}" as="s" hint-placeholder-count="3"><li><b class="num">{{s.n}}</b><span>{{s.t}}</span></li></sc-for>
+              </ul>
+            </div>
+            <div class="cx-main">
+              <span class="cx-lead">{{c.certifies}}</span>
+              <span class="cx-namebox"><i></i><i></i><i></i><i></i><span class="cx-name">{{c.name}}</span></span>
+              <span class="cx-lead">{{c.showed}}</span>
+              <span class="cx-path"><bdi>{{c.path}}</bdi></span>
+              <span class="cx-how">{{c.how}}</span>
+              <div class="cx-foot">
+                <span><small>{{c.issued}}</small><b>{{c.date}}</b></span>
+                <span><small>{{c.idLabel}}</small><b class="ltr">UXG-P01-7K3Q</b></span>
+                <span><small>{{c.verify}}</small><b class="ltr">uxgate.org/c/7K3Q</b></span>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="cxv-grid">
+          <dl class="cxv-facts">
+            <sc-for list="{{c.facts}}" as="f" hint-placeholder-count="5"><div><dt>{{f.k}}</dt><dd class="{{f.cls}}">{{f.v}}</dd></div></sc-for>
+          </dl>
+          <section class="cxv-mean">
+            <h2>{{c.meanTitle}}</h2>
+            <p>{{c.mean}}</p>
+            <a href="#start" class="btn btn-primary btn-lg press">{{c.cta}}</a>
+            <p class="t-small ink-2" style="margin: 0;">{{c.ctaSub}}</p>
+          </section>
+        </div>
+      </div>
+    </main>
+   </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"view":{"editor":"enum","options":["cert","nameCheck","nameFix","share","public"],"default":"cert"},"device":{"editor":"enum","options":["mobile","desktop"],"default":"mobile"},"lang":{"editor":"enum","options":["en","ar"],"default":"en"},"theme":{"editor":"enum","options":["light","dark"],"default":"light"},"$preview":{"width":390,"height":844}}'>
+/* Certificate, Share on LinkedIn and the public certificate page (S3-16, 7 Nov 2026). Spec: docs/design/slice-3/certificate.md
+   The certificate art is drawn at 1200 x 628 (the LinkedIn link-preview size), so the same art is the page, the PNG and the og:image.
+   Phones show a tall version of the same art. It always stays light, like paper, in both themes. */
+const C = {
+  en: { title: 'Certificate', back: 'Profile', close: 'Close', nav: 'Main', navHome: 'Home', navPaths: 'Paths', navReview: 'Review', navProfile: 'Profile', yourPaths: 'Your paths', addPath: 'Add a path',
+    nameRow: 'Name on certificates', edit: 'Edit',
+    nTitle: 'Your first certificate is ready', nRead: 'Check the name it will show. It’s printed on every certificate, and on LinkedIn when you share one.',
+    nFix: 'Your name came from your email. Write it the way you want it on your certificate.', nLabel: 'Name on your certificates', nHelp: 'Your full name, as you’d write it on a CV. 2 to 60 characters.',
+    nShows: 'Your certificate will show', nUse: 'Yes, use this name', nSave: 'Save and see my certificate', nEdit: 'Edit the name',
+    nNote: 'You can change it later in Settings. Copies you’ve already shared keep the old name.',
+    over: 'Certificate of skill', certifies: 'This certifies that', name: 'Yasmin Adel', showed: 'showed every skill of the path', path: 'Forms That Flow',
+    how: 'on new cases, with no hints, in 5 UXGate skill checks.',
+    stats: [['40', 'skills Shown'], ['5', 'skill checks'], ['20', 'lessons']],
+    issued: 'Issued', date: '2 November 2026', idLabel: 'Certificate ID', verify: 'Verify at',
+    li: 'Share on LinkedIn', addProfile: 'Add to LinkedIn profile', more: 'More ways to keep it', pdf: 'PDF', img: 'Image', link: 'Copy link',
+    pageTitle: 'Certificate page', pageOff: 'Private · only you can open it', pageOn: 'Public · anyone with the link', verifyRow: 'Check this certificate',
+    sees: 'Visitors see your name, the path, the skill count and the date. Never your email, XP or streak.',
+    shTitle: 'Share on LinkedIn', shPost: 'Your post', preview: 'How the link looks on LinkedIn',
+    postLines: ['I earned my UXGate certificate in Forms That Flow. I showed all 40 skills on new cases, with no hints, in 5 skill checks.', 'See it here: uxgate.org/c/7K3Q', '#UX #UXDesign #UXGate'],
+    cardTitle: 'Yasmin Adel · Forms That Flow · UXGate certificate',
+    notice: 'Sharing turns your certificate page on, so LinkedIn can show the image. Visitors see your name, the path, the skill count and the date. Turn it off any time.',
+    open: 'Copy the text and open LinkedIn', cancel: 'Cancel', openNote: 'If LinkedIn opens without the text, paste it. It’s already copied.',
+    otherLang: 'عربي', verified: 'Verified certificate', pubTitle: 'Yasmin Adel · Forms That Flow',
+    facts: [['Issued to', 'Yasmin Adel'], ['Path', 'Forms That Flow'], ['Skills Shown', '40 of 40'], ['Issued', '2 November 2026'], ['Certificate ID', 'UXG-P01-7K3Q', 1]],
+    meanTitle: 'What this means', mean: 'Every skill of this path was shown on new cases, with no hints, in UXGate skill checks. Each skill is a real design decision on a screen the learner hadn’t seen before.',
+    cta: 'Start learning on UXGate', ctaSub: 'Unit 1 of every path is free.' },
+  ar: { title: 'الشهادة', back: 'حسابي', close: 'إغلاق', nav: 'الرئيسية', navHome: 'الرئيسية', navPaths: 'المسارات', navReview: 'المراجعة', navProfile: 'حسابي', yourPaths: 'مساراتك', addPath: 'أضف مسارًا',
+    nameRow: 'الاسم على الشهادات', edit: 'تعديل',
+    nTitle: 'شهادتك الأولى جاهزة', nRead: 'تحقّق من الاسم الذي ستعرضه. فهو يُطبع على كل شهاداتك، ويظهر على LinkedIn حين تشارك إحداها.',
+    nFix: 'أخذنا اسمك من بريدك الإلكتروني. اكتبه كما تريده أن يظهر على شهادتك.', nLabel: 'الاسم على شهاداتك', nHelp: 'اسمك الكامل كما تكتبه في سيرتك الذاتية. من حرفين إلى 60 حرفًا.',
+    nShows: 'ستعرض شهادتك', nUse: 'نعم، استخدم هذا الاسم', nSave: 'احفظ واعرض شهادتي', nEdit: 'عدّل الاسم',
+    nNote: 'يمكنك تغييره لاحقًا من الإعدادات. والنسخ التي شاركتها من قبل تبقى بالاسم القديم.',
+    over: 'شهادة مهارة', certifies: 'نشهد أن', name: 'ياسمين عادل', showed: 'أثبتت كل مهارات مسار', path: 'نماذج تسير بسلاسة',
+    how: 'في حالات جديدة، بدون تلميحات، في 5 اختبارات مهارة على UXGate.',
+    stats: [['40', 'مهارة «أثبتت»'], ['5', 'اختبارات مهارة'], ['20', 'درسًا']],
+    issued: 'تاريخ الإصدار', date: '2 نوفمبر 2026', idLabel: 'رقم الشهادة', verify: 'تحقّق منها على',
+    li: 'شارك على LinkedIn', addProfile: 'أضفها إلى ملفك على LinkedIn', more: 'طرق أخرى للاحتفاظ بها', pdf: 'PDF', img: 'صورة', link: 'انسخ الرابط',
+    pageTitle: 'صفحة الشهادة', pageOff: 'خاصة · أنت فقط تستطيع فتحها', pageOn: 'عامة · لكل من لديه الرابط', verifyRow: 'تحقّق من هذه الشهادة',
+    sees: 'يرى الزوّار اسمك والمسار وعدد المهارات والتاريخ. ولا يرون أبدًا بريدك أو الـ XP أو السلسلة.',
+    shTitle: 'شارك على LinkedIn', shPost: 'منشورك', preview: 'كيف يظهر الرابط على LinkedIn',
+    postLines: ['حصلت على شهادة UXGate في مسار «نماذج تسير بسلاسة». أثبتّ كل المهارات الأربعين في حالات جديدة، بدون تلميحات، في 5 اختبارات مهارة.', 'شاهدها هنا: uxgate.org/c/7K3Q', '#UX #تجربة_المستخدم #UXGate'],
+    cardTitle: 'ياسمين عادل · نماذج تسير بسلاسة · شهادة UXGate',
+    notice: 'المشاركة تفتح صفحة شهادتك، ليتمكّن LinkedIn من عرض الصورة. يرى الزوّار اسمك والمسار وعدد المهارات والتاريخ. ويمكنك إغلاقها في أي وقت.',
+    open: 'انسخ النص وافتح LinkedIn', cancel: 'إلغاء', openNote: 'إن فُتح LinkedIn بدون النص، فالصقه. لقد نسخناه لك.',
+    otherLang: 'English', verified: 'شهادة موثّقة', pubTitle: 'ياسمين عادل · نماذج تسير بسلاسة',
+    facts: [['صدرت لـ', 'ياسمين عادل'], ['المسار', 'نماذج تسير بسلاسة'], ['المهارات «أثبتت»', '40 من 40'], ['تاريخ الإصدار', '2 نوفمبر 2026'], ['رقم الشهادة', 'UXG-P01-7K3Q', 1]],
+    meanTitle: 'ماذا تعني هذه الشهادة', mean: 'تعني أن كل مهارات هذا المسار أُثبتت في حالات جديدة، بدون تلميحات، في اختبارات المهارة على UXGate. وكل مهارة قرار تصميم حقيقي على شاشة لم يرها المتعلّم من قبل.',
+    cta: 'ابدأ التعلّم على UXGate', ctaSub: 'الوحدة الأولى من كل مسار مجانية.' }
+};
+const VIEWS = ['cert', 'nameCheck', 'nameFix', 'share', 'public'];
+/* The landscape art is 1200 x 628, scaled into its box. */
+const land = (w) => { const s = w / 1200; return { cls: 'cx', box: 'width: ' + w + 'px; height: ' + Math.round(628 * s) + 'px;', inner: 'transform: scale(' + s.toFixed(4) + ');' }; };
+const tall = { cls: 'cx is-tall', box: 'width: 100%;', inner: '' };
+
+class Component extends DCLogic {
+  renderVals() {
+    const lang = this.props.lang === 'ar' ? 'ar' : 'en';
+    const theme = this.props.theme === 'dark' ? 'dark' : 'light';
+    const isDesk = this.props.device === 'desktop';
+    const view = VIEWS.indexOf(this.props.view) >= 0 ? this.props.view : 'cert';
+    const raw = C[lang];
+    const c = Object.assign({}, raw, {
+      stats: raw.stats.map(([n, t]) => ({ n, t })),
+      postLines: raw.postLines.map((t) => ({ t })),
+      facts: raw.facts.map(([k, v, l]) => ({ k, v, cls: l ? 'ltr' : '' }))
+    });
+    if (view === 'nameFix') c.name = 'yasmin.adel88';
+    const isPublic = view === 'public';
+    const on = view === 'share' || view === 'public';
+    return {
+      lang, theme, dir: lang === 'ar' ? 'rtl' : 'ltr', c, isDesk, isMobile: !isDesk, sid: lang + '-' + theme + '-' + (isDesk ? 'd' : 'm') + '-' + view,
+      is: { app: !isPublic, share: view === 'share', public: isPublic, name: view === 'nameCheck' || view === 'nameFix' },
+      nm: view === 'nameFix' ? { fix: true, read: false, body: raw.nFix, value: 'yasmin.adel88', primary: raw.nSave, nameLang: 'en', nameDir: 'ltr' }
+        : { fix: false, read: true, body: raw.nRead, value: raw.name, primary: raw.nUse, nameLang: lang, nameDir: lang === 'ar' ? 'rtl' : 'ltr' },
+      art: isDesk ? land(isPublic ? 1000 : 720) : tall,
+      og: land(isDesk ? 500 : 350),
+      showNav: !isDesk && !isPublic, showRail: isDesk && !isPublic,
+      pageState: on ? raw.pageOn : raw.pageOff, swCls: 'switch sw-only' + (on ? ' is-on' : ''), swAria: on ? 'true' : 'false',
+      rootCls: 'ug pg ' + (isPublic ? 'pg-pub cxv ' : 'pg-app cxp ') + 'pg-' + (isDesk ? 'desktop' : 'mobile') + (view === 'share' || view === 'nameCheck' || view === 'nameFix' ? ' has-sheet' : ''),
+      logo: theme === 'dark' ? '/_blob/6ef1217443643f56706d5f2cf459ec0b' : '/_blob/577b148919a127340777a66135b4d694',
+      logoStyle: isDesk ? 'height: 34px; width: auto;' : 'height: 26px; width: auto;', otherCode: lang === 'ar' ? 'en' : 'ar'
+    };
+  }
+}
+</script>
+</body>
+</html>
