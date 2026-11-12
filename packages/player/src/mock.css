@@ -3,6 +3,7 @@
 .exmock{--mock-bg:#FFFFFF;--mock-ink:#1D1D1F;--mock-muted:#6B6B70;--mock-line:#E3E3E6;--mock-brand:#5B3FD1;--mock-focus:#5B3FD1}
 .exmock{background:var(--mock-bg);color:var(--mock-ink)}
 .exmock>.xm-body{padding:18px 16px 20px}
+.exmock *,.exmock *::before,.exmock *::after{box-sizing:border-box}
 .exmock .b{display:block;width:100%;text-align:start;border:0;background:none;color:inherit;padding:0;margin:0}
 .exmock .gap-xs{margin-top:0}.exmock .gap-s{margin-top:4px}.exmock .gap-m{margin-top:12px}.exmock .gap-l{margin-top:24px}.exmock .gap-xl{margin-top:40px}
 .exmock .k-title{font-size:1.35rem;font-weight:700;line-height:1.25}
@@ -121,6 +122,8 @@
 .exmock .k-tip::before{content:"";position:absolute;top:-6px;inset-inline-start:16px;border:6px solid transparent;border-top:0;border-bottom-color:#2B2B33}
 .exmock .k-tip{display:inline-block;width:auto;max-width:85%;background:#2B2B33;color:#fff;font-size:.8rem;border-radius:8px;padding:7px 10px;position:relative;margin-top:8px}
 .exmock .mk.mk-round{border-radius:50%}.exmock .mk.mk-square{border-radius:5px}.exmock .mk.act{cursor:pointer}
+/* The base overlay comes before its variants, so a toast stays dark and a sheet keeps its own padding. */
+.exmock .ov{position:absolute;background:var(--mock-bg);color:var(--mock-ink);box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px}
 .exmock .ov-banner{inset-inline:0;top:0;border-radius:0;box-shadow:none;background:#FFF4D6;color:#5C4300;padding:12px 16px;font-size:.88rem}
 .exmock .ov-dialog{inset-inline:8%;top:50%;transform:translateY(-50%);border-radius:16px}
 .exmock .ov-full{inset:0;border-radius:0;box-shadow:none}
@@ -129,7 +132,6 @@
 .exmock .ov-toast .k-link{color:#B9AEFF}
 .exmock .ov-toast{inset-inline:12px;bottom:14px;border-radius:10px;background:#2B2B33;color:#fff;padding:10px 14px;font-size:.88rem}
 .exmock .ovx{position:absolute;inset-block-start:8px;inset-inline-end:8px;z-index:2;display:grid;place-items:center;inline-size:28px;block-size:28px;border-radius:50%;background:var(--mock-bg,#fff);box-shadow:0 1px 3px rgba(0,0,0,.18);color:var(--mock-ink,#1C1C1E);font-size:15px}
-.exmock .ov{position:absolute;background:var(--mock-bg);color:var(--mock-ink);box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px}
 .exmock .ring-brand{outline:3px solid var(--mock-brand);outline-offset:3px;border-radius:6px}
 .exmock .ring-default{outline:2px solid #1A73E8;outline-offset:1px}
 .exmock .ring-double{outline:3px solid #FFFFFF;outline-offset:0;box-shadow:0 0 0 6px #1D1D1F}
@@ -340,3 +342,27 @@
 .exmock.th-dark .sb-box,.exmock.th-dark .ch-bub,.exmock.th-dark .k-segmented{background:#1E2227}
 .exmock.th-dark .sg.on{background:#2C3138;color:#fff}
 .exmock.th-dark .xm-tab{color:#8A8F96}.exmock.th-dark .li-ic{background:#1E2227}
+
+/* Overlays always draw above the screen's content (pictures, maps, pins), the scrim under the overlay. The screen is its own stacking context, so this never rises over the lesson's sticky header or footer. */
+.exmock{isolation:isolate}
+.exmock .scrim{z-index:5}.exmock .ov{z-index:6}
+/* A top banner is part of the screen: under the app bar, pushing the content down. */
+.exmock .ov.ov-banner{position:relative;inset:auto;z-index:auto;box-shadow:none;background:#EEF4FF;color:#1D1D1F;border-block-end:1px solid #D5E2FA}
+.exmock.th-dark .ov.ov-banner{background:#1E2A3A;color:#E6EDF7;border-color:#2C3A4D}
+.exmock .ov-banner.has-x{padding-inline-end:48px}
+.exmock .ov-banner .ovx{inset-block-start:50%;transform:translateY(-50%);background:transparent;box-shadow:none;color:inherit}
+/* A snackbar or banner action sits on the text's line, sized like a text button. */
+.exmock .ov-toast .row2,.exmock .ov-banner .row2{align-items:center;gap:12px}
+.exmock .ov-toast .row2>.k-link,.exmock .ov-toast .row2>.k-button,.exmock .ov-banner .row2>.k-link,.exmock .ov-banner .row2>.k-button{flex:none;width:auto}
+.exmock .ov-toast .row2>.k-link,.exmock .ov-banner .row2>.k-link{padding:8px 12px;margin-block:-8px;margin-inline-end:-8px;border-radius:8px;font-weight:700;text-decoration:none}
+/* A button beside a field keeps the field box's height and lines up with it, whatever the hint under the field. */
+.exmock .row2.has-field{align-items:flex-start}
+.exmock .row2.has-field>.row-side{flex:none}
+.exmock .row-side>.fl{font-size:.85rem;font-weight:600;visibility:hidden}
+.exmock .row-side>.k-button{margin-block-start:4px;block-size:44px;padding-block:0;padding-inline:18px;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+/* Accordions open and close on tap (the picture only). */
+.exmock button.ac-h{inline-size:100%;border:0;background:none;padding:0;font-family:inherit;color:inherit;text-align:start;cursor:pointer}
+.exmock button.ac-h:focus-visible{outline:2px solid var(--mock-focus);outline-offset:2px;border-radius:4px}
+/* "+12 more": the list goes on past what the picture shows. */
+.exmock .k-more{position:relative;display:flex;align-items:center;gap:6px;padding-block:10px 2px;font-size:.84rem;font-weight:600;color:var(--mock-muted)}
+.exmock .k-more.is-fade::before{content:"";position:absolute;inset-inline:0;inset-block-end:100%;block-size:44px;background:linear-gradient(to bottom,transparent,var(--mock-bg));pointer-events:none}
