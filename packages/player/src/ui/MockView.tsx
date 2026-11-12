@@ -1,6 +1,6 @@
 import { createContext, Fragment, useContext, useState, type ReactNode } from "react";
 import type { Locale, Mock, MockAction, MockApp, MockAppbar, MockBlock, MockFab, MockNavbar, MockOverlay, MockText } from "@uxgate/content/types";
-import { artBg, artSvg } from "./art";
+import { artBg, artEdge, artSvg } from "./art";
 
 /** Spot steps make blocks with a `region` tappable. */
 export type RegionCtx = { selected: string[]; state: (id: string) => "" | "is-right" | "is-wrong" | "is-dim"; labels: Record<string, string>; onPick: (id: string) => void; locked: boolean; rightWord: string; wrongWord: string };
@@ -80,6 +80,7 @@ function Calendar({ b, locale }: { b: MockBlock; locale: Locale }) {
   const lo = pair(b.from) ?? pair(b.pick) ?? -1;
   const hi = pair(b.to) ?? lo;
   const today = Array.isArray(b.today) ? (b.today as number[]) : null;
+  const before = pair(b.before) ?? -1; // days before this one are greyed out and can't be picked
   const wd = mt((b.weekdays as MockText) ?? { en: "S M T W T F S", ar: "ح ن ث ر خ ج س" }, locale).split(" ");
   return (
     <>
@@ -94,7 +95,7 @@ function Calendar({ b, locale }: { b: MockBlock; locale: Locale }) {
               {Array.from({ length: m.days ?? 30 }, (_, k) => {
                 const d = k + 1, v = key(mi, d), on = lo >= 0 && v >= lo && v <= hi, end = v === lo || v === hi;
                 const td = today && today[0] === mi && today[1] === d;
-                return <i key={d} className={`cd${on ? (end ? " cde" : " cdr") : ""}${td ? " cdt" : ""}`}>{d}</i>;
+                return <i key={d} className={`cd${on ? (end ? " cde" : " cdr") : ""}${td ? " cdt" : ""}${v < before ? " cdx" : ""}`}>{d}</i>;
               })}
             </div>
           </div>
@@ -141,9 +142,10 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
         <div className={cls} style={style}>
           <Label b={b} locale={locale} />
           {b.hintFirst ? hint : null}
-          <div className={`fi${b.filled ? " filled" : ""}${b.focus ? " focus" : ""}`} dir={looksLtr ? "ltr" : undefined}>
+          {/* With an icon, the box keeps the screen's direction (icons on the usual sides) and only the number reads left to right. */}
+          <div className={`fi${b.filled ? " filled" : ""}${b.focus ? " focus" : ""}`} dir={looksLtr && !b.icon && !b.trail ? "ltr" : undefined}>
             {b.icon ? <Icon name={String(b.icon)} /> : null}
-            {b.icon || b.trail ? <span className="fi-t">{text}</span> : text}
+            {b.icon || b.trail ? <span className="fi-t">{looksLtr ? <bdi dir="ltr">{text}</bdi> : text}</span> : text}
             {b.trail ? (/^[a-z0-9-]+$/.test(String(b.trail)) ? <Icon name={String(b.trail)} /> : <span>{mt(b.trail as MockText, locale)}</span>) : null}
             {b.kind === "select" ? <span className="chev" aria-hidden="true">▾</span> : null}
           </div>
@@ -210,9 +212,12 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
     case "image":
       if (b.art) {
         // A small image (72 px tall, full width) shows the whole drawing on its own background instead of an empty middle slice.
-        const fit = b.size === "s" ? "meet" : "slice";
+        // The gym drawing has an empty middle, so it is always shown whole.
+        const fit = b.size === "s" || b.art === "gym" ? "meet" : "slice";
         const bg = fit === "meet" ? artBg(String(b.art)) : undefined;
-        return <div className={cls + " has-art"} style={bg ? { ...style, background: bg } : style}><Art name={String(b.art)} label={mt(b.alt as MockText, locale)} fit={fit} />{text ? <span className="art-cap">{inline(text)}</span> : null}</div>;
+        // Beside it, the drawing's own edge columns (left and right, so the wrapper is always LTR), stretched, carry its bands (sand, road, floor) out to both edges.
+        const edge = (side: "start" | "end") => { const svg = artEdge(String(b.art), side); return svg ? <span className={`xm-art-edge is-${side}`} dangerouslySetInnerHTML={{ __html: svg }} /> : null; };
+        return <div className={cls + " has-art"} style={bg ? { ...style, background: bg } : style}>{fit === "meet" ? <span className="xm-art-edges" dir="ltr">{edge("start")}{edge("end")}</span> : null}<Art name={String(b.art)} label={mt(b.alt as MockText, locale)} fit={fit} />{text ? <span className="art-cap">{inline(text)}</span> : null}</div>;
       }
       return <div className={cls} style={style}>{inline(text)}</div>;
     case "button":
@@ -243,7 +248,7 @@ function Plain({ b, locale }: { b: MockBlock; locale: Locale }) {
   const core = <Core b={b} locale={locale} />;
   if (b.mark === undefined && !b.note) return core;
   return (
-    <div className={`xm-pin${b.gap ? ` gap-${b.gap}` : ""}`}>
+    <div className={`xm-pin${b.mark !== undefined ? " has-mark" : ""}${b.gap ? ` gap-${b.gap}` : ""}`}>
       {core}
       {b.mark !== undefined ? <span className="xm-mark" aria-hidden="true">{String(b.mark)}</span> : null}
       {b.note ? <span className="xm-note">{mt(b.note as MockText, locale)}</span> : null}
@@ -530,7 +535,7 @@ export function MockView({ mock, locale, label, tag, chip, regions }: { mock: Mo
   const banner = mock.overlay?.type === "banner" ? mock.overlay : null;
   const body = (
     <Rtl.Provider value={dir === "rtl"}>
-    <figure className={`xm xm-${frame}${chrome ? " xm-dev" : ""}`} role="group" aria-label={label} style={mock.width ? { maxWidth: Number(mock.width) + (phoneLike && chrome ? 12 : 0) } : undefined}>
+    <figure className={`xm xm-${frame}${chrome ? " xm-dev" : ""}${wide && mock.fit ? " xm-fit" : ""}`} role="group" aria-label={label} style={mock.width ? { maxWidth: Number(mock.width) + (phoneLike && chrome ? 12 : 0) } : undefined}>
       <figcaption className="xm-label" aria-hidden="true">{app ? <span className="xm-label-ic" style={{ background: app.color, color: onColor(app.color) }}><Icon name={app.icon} /></span> : null}<span>{caption}</span></figcaption>
       <div className="xm-shell">
         <div className={cls} dir={dir} style={screen}>

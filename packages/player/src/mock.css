@@ -78,7 +78,7 @@
 .exmock{overflow:hidden}
 .exmock .mcap{font-size:.75rem;color:var(--mock-muted);margin:-6px 0 10px;font-weight:600}
 .exmock .nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.exmock .row2{display:flex;gap:10px}.exmock .row2>*{flex:1}
+.exmock .row2{display:flex;gap:10px}.exmock .row2>*{flex:1}.exmock .row2>.k-iconbtn{flex:none;align-self:center}.exmock .row2>.k-price{flex:none;inline-size:auto;white-space:nowrap}.exmock .row2>.k-badge{min-inline-size:0;align-self:center}.exmock .row2>.k-badge>.xm-badge{white-space:normal}
 .exmock .k-group.scroll{overflow-x:auto;padding:0;border:0;border-radius:0}.exmock .k-group.scroll .row2>*{flex:none;width:var(--colw,120px)}
 .exmock .k-group.scroll.sticky .row2>:first-child{position:sticky;inset-inline-start:0;background:var(--mock-bg);z-index:1;box-shadow:1px 0 0 var(--mock-line)}
 
@@ -87,6 +87,7 @@
 .exmock .cal{display:flex;gap:10px}.exmock .cm{flex:1;min-width:0}
 .exmock .cg .cdr{background:color-mix(in srgb,var(--mock-brand) 18%,#fff)}.exmock .cg .cde{background:var(--mock-brand);color:var(--mock-on-brand,#fff);border-radius:50%;font-weight:700}
 .exmock .cg .cdt{outline:1.5px solid var(--mock-brand);outline-offset:-2px;border-radius:50%}
+.exmock .cg .cdx{color:#BCC1C8}
 .exmock .cg .cw{color:#8A8A90;font-weight:600}
 .exmock .cg i{font-style:normal;font-size:.74rem;line-height:1.85;color:#1C1C1E}
 .exmock .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:1px 0;text-align:center;font-style:normal}
@@ -169,6 +170,9 @@
 .xm-dev.xm-phone .xm-shell,.xm-dev.xm-small .xm-shell{border:6px solid #1F2429;border-radius:30px;box-shadow:0 6px 18px -8px rgba(0,0,0,.35)}
 .xm-dev.xm-tablet .xm-shell{border:9px solid #1F2429;border-radius:24px}
 .xm-wide .xm-shell{border-radius:10px;border:1px solid #C9D1D7;box-shadow:0 6px 18px -10px rgba(0,0,0,.3)}
+/* fit: true (opt-in, for laptop pages whose rows clip on a phone): below 440 px, zoom to 80% and lay out 25% wider, and let rows wrap instead of clipping. */
+.xm-fit{container-type:inline-size}
+@container (max-width:439.98px){.xm-fit>.xm-shell{zoom:.8;inline-size:calc(100cqi / .8)}.xm-fit .row2{flex-wrap:wrap}.xm-fit .row2>*{flex:1 1 auto}.xm-fit .row2>.k-button{white-space:nowrap}.xm-fit .xm-badge{white-space:normal}}
 .xm .exmock{position:relative;display:flex;flex-direction:column;min-block-size:0}
 .xm .exmock.has-chrome{min-block-size:420px}.xm-wide .exmock.has-chrome{min-block-size:300px}
 .xm .exmock.has-ov:not(.has-chrome){min-block-size:400px}
@@ -238,6 +242,7 @@
 .exmock .k-image.has-art{padding:0;background:none;overflow:hidden;position:relative;aspect-ratio:16/10;min-height:0}
 /* The drawing fills the image box exactly, so its fit (slice, or meet at size s) decides what shows. */
 .exmock .k-image.has-art>.xm-art{position:absolute;inset:0}
+.exmock .k-image.has-art>.xm-art-edges{position:absolute;inset:0}.exmock .xm-art-edge{position:absolute;inset-block:0;inline-size:50%}.exmock .xm-art-edge.is-start{inset-inline-start:0}.exmock .xm-art-edge.is-end{inset-inline-end:0}.exmock .xm-art-edge svg{display:block;inline-size:100%;block-size:100%}
 .exmock .k-image.has-art.size-s{aspect-ratio:auto;block-size:72px}.exmock .k-image.has-art.size-m{aspect-ratio:auto;block-size:120px}.exmock .k-image.has-art.size-l{aspect-ratio:auto;block-size:170px}.exmock .k-image.has-art.size-xl{aspect-ratio:auto;block-size:220px}
 .exmock .art-cap{position:absolute;inset-inline:0;inset-block-end:0;padding:18px 12px 8px;background:linear-gradient(transparent,rgba(0,0,0,.55));color:#fff;font-weight:700;font-size:.9rem;text-align:start}
 .exmock .k-field .fi{display:flex;align-items:center;gap:8px}
@@ -325,12 +330,14 @@
 .exmock .ct-l{display:flex;justify-content:space-around;font-size:.7rem;color:var(--mock-muted);margin-block-start:4px}
 .exmock .k-seatmap{display:flex;flex-direction:column;gap:5px;align-items:center}
 .exmock .sm-screen{inline-size:70%;block-size:6px;border-radius:3px;background:var(--mock-line);margin-block-end:8px}
-.exmock .sm-row{display:flex;gap:5px}
-.exmock .sm-row i{inline-size:18px;block-size:16px;border-radius:4px 4px 2px 2px;border:1.5px solid color-mix(in srgb,var(--mock-brand) 45%,#fff)}
+.exmock .sm-row{display:flex;gap:clamp(2px,1.2%,5px);max-inline-size:100%}
+.exmock .sm-row i{inline-size:18px;flex:0 1 18px;min-inline-size:0;block-size:16px;border-radius:4px 4px 2px 2px;border:1.5px solid color-mix(in srgb,var(--mock-brand) 45%,#fff)}
 .exmock .sm-row i.off{background:#D9D9DE;border-color:#D9D9DE}.exmock .sm-row i.on{background:var(--mock-brand);border-color:var(--mock-brand)}
-.exmock .sm-row i.sm-gap{border:0;inline-size:10px}
+.exmock .sm-row i.sm-gap{border:0;inline-size:10px;flex-basis:10px}
 .exmock .xm-pin{position:relative}
 .exmock .xm-mark{position:absolute;inset-block-start:-8px;inset-inline-start:-8px;inline-size:22px;block-size:22px;border-radius:50%;background:#E8590C;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 2px #fff;z-index:2}
+/* A pin on a bare line of text would cover its first letters, so the text moves over. */
+.exmock .xm-pin.has-mark>:is(.k-small,.k-text,.k-meta,.k-heading,.k-title,.k-line,.k-link){padding-inline-start:20px}
 /* The note sits in the flow, above its block, so it never covers the block's text (QA, note-overlap). */
 .exmock .xm-pin:has(>.xm-note){display:flex;flex-direction:column;align-items:stretch}
 .exmock .xm-note{order:-1;align-self:flex-end;max-inline-size:100%;box-sizing:border-box;margin-block-end:4px;background:#1D2329;color:#fff;font-size:11px;font-weight:600;line-height:1.3;border-radius:6px;padding:2px 7px}

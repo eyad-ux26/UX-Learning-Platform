@@ -33,7 +33,7 @@ steps:
     skill: SK-P02-U04-01
     value:
       en: "Check, flexibility and efficiency (NN/g): provide accelerators like keyboard shortcuts and touch gestures, alongside the slower visible path."
-      ar: "اختبار، المرونة والكفاءة (NN/g): قدّم مسرّعات مثل اختصارات لوحة المفاتيح وإيماءات اللمس، بجانب الطريق الظاهر الأبطأ."
+      ar: "اختبار، المرونة والكفاءة (NN/g): قدّم طرقًا مختصرة (Accelerators) مثل اختصارات لوحة المفاتيح وإيماءات اللمس، بجانب الطريقة الظاهرة الأبطأ."
     ref: { url: "https://www.nngroup.com/articles/ten-usability-heuristics/", quote: "Provide accelerators like keyboard shortcuts and touch gestures." }
     scenario:
       en: "To mark a task done, people open the task, tap ⋯ and choose **Mark as done**. A typical user does this 30 times a day."
@@ -126,6 +126,7 @@ steps:
         mock:
           app: {"name": {"en": "Maham", "ar": "مهام"}, "color": "#2F6FDB", "icon": "check-square-offset", "domain": "maham.example"}
           frame: "wide"
+          fit: true
           url: "maham.example/team/people/karim"
           blocks:
             - {"kind": "listitem", "avatar": {"text": "Karim", "art": "man-1"}, "text": {"en": "Karim's open tasks (30)", "ar": "مهام كريم المفتوحة (30)"}, "sub": {"en": "Karim left the team", "ar": "غادر كريم الفريق"}}
@@ -164,7 +165,7 @@ steps:
       ar: "إجراء واحد لعناصر كثيرة."
     explain:
       en: "Selecting all of one person's tasks and reassigning them together takes seconds and leaves none behind."
-      ar: "اختيار كل مهام شخص واحد وإعادة إسنادها معًا يستغرق ثواني ولا يترك أي مهمة خلفه."
+      ar: "حين يختار المدير كل مهام الشخص ويعيد إسنادها معًا، يستغرق الأمر ثواني، ولا تُنسى أي مهمة."
 
   - id: S04
     type: tune
@@ -172,7 +173,7 @@ steps:
     skill: SK-P02-U04-03
     value:
       en: "Check, aesthetic and minimalist design (NN/g): don't let unnecessary elements distract people from the information they really need. Fourteen charts bury the one number team leads check every morning."
-      ar: "اختبار، التصميم الجمالي البسيط (NN/g): لا تدَع العناصر غير الضرورية تشتّت الناس عن المعلومات التي يحتاجونها فعلًا. وأربعة عشر رسمًا بيانيًا تدفن الرقم الوحيد الذي يراجعه قادة الفرق كل صباح."
+      ar: "اختبار، التصميم الجمالي البسيط (NN/g): لا تدَع العناصر غير الضرورية تشتّت الناس عن المعلومات التي يحتاجونها فعلًا. فوسط أربعة عشر رسمًا بيانيًا، يضيع الرقم الوحيد الذي يراجعه قادة الفرق كل صباح."
     ref: { url: "https://www.nngroup.com/articles/ten-usability-heuristics/", quote: "Don't let unnecessary elements distract users from the information they really need." }
     scenario:
       en: "The team dashboard shows 14 charts. In interviews, team leads said they open it each morning for one thing: which tasks are overdue, and whose."
@@ -197,6 +198,7 @@ steps:
             - { kind: chart, type: line, values: [9, 7, 8, 6] }
             - { kind: chart, type: bar, values: [4, 9, 3, 7], highlight: 1 }
             - { kind: chart, type: line, values: [2, 4, 6, 5], note: { en: "14 charts; overdue tasks are one of them", ar: "14 رسمًا؛ ورسم المهام المتأخرة واحد منها" } }
+        - { kind: more, text: { en: "+8 more charts below", ar: "+8 رسوم أخرى في الأسفل" } }
     options:
       - id: overdue
         text: {"en": "An \"Overdue\" list grouped by person at the top; the charts move to a Reports page", "ar": "قائمة «متأخرة» مجمّعة حسب الشخص في الأعلى؛ وتنتقل الرسوم إلى صفحة التقارير"}
@@ -222,6 +224,7 @@ steps:
             - {"kind": "chart", "type": "bar", "values": [3, 5, 2, 7], "size": "l", "note": {"en": "Overdue chart, bigger; 13 charts still below", "ar": "رسم المتأخرات أكبر؛ و13 رسمًا ما زالت تحته"}}
             - {"kind": "row", "blocks": [{"kind": "chart", "type": "bar", "values": [12, 18, 9, 22]}, {"kind": "chart", "type": "line", "values": [3, 5, 4, 7]}, {"kind": "chart", "type": "bar", "values": [6, 2, 8, 5]}]}
             - {"kind": "row", "gap": "s", "blocks": [{"kind": "chart", "type": "line", "values": [9, 7, 8, 6]}, {"kind": "chart", "type": "bar", "values": [4, 9, 3, 7], "highlight": 1}, {"kind": "chart", "type": "line", "values": [2, 4, 6, 5], "note": {"en": "14 charts; overdue tasks are one of them", "ar": "14 رسمًا؛ ورسم المهام المتأخرة واحد منها"}}]}
+            - {"kind": "more", "text": {"en": "+7 more charts below", "ar": "+7 رسوم أخرى في الأسفل"}}
       - id: tabs
         text: {"en": "Split the 14 charts into 3 tabs", "ar": "تقسيم الرسوم الأربعة عشر إلى 3 تبويبات (Tabs)"}
         mock:
@@ -233,6 +236,7 @@ steps:
             - {"kind": "tabs", "options": [{"en": "Progress", "ar": "التقدّم"}, {"en": "Workload", "ar": "عبء العمل"}, {"en": "Deadlines", "ar": "المواعيد"}], "value": 0, "note": {"en": "14 charts in 3 tabs", "ar": "14 رسمًا في 3 تبويبات"}}
             - {"kind": "row", "blocks": [{"kind": "chart", "type": "bar", "values": [12, 18, 9, 22]}, {"kind": "chart", "type": "line", "values": [3, 5, 4, 7]}, {"kind": "chart", "type": "bar", "values": [6, 2, 8, 5]}]}
             - {"kind": "row", "gap": "m", "blocks": [{"kind": "chart", "type": "line", "values": [9, 7, 8, 6]}, {"kind": "chart", "type": "bar", "values": [4, 9, 3, 7], "highlight": 1}, {"kind": "chart", "type": "line", "values": [2, 4, 6, 5], "note": {"en": "14 charts; overdue tasks are one of them", "ar": "14 رسمًا؛ ورسم المهام المتأخرة واحد منها"}}]}
+            - {"kind": "more", "text": {"en": "+8 more charts in the other 2 tabs", "ar": "+8 رسوم أخرى في التبويبين الآخرين"}}
     answer: [overdue]
     misconceptions:
       - id: MC-P02-032
@@ -258,7 +262,7 @@ steps:
     skill: SK-P02-U04-04
     value:
       en: "Check, aesthetic and minimalist design (NN/g): if people cannot find or discover the necessary elements, those elements do not exist for them. Due dates hidden for a cleaner list are lost information."
-      ar: "اختبار، التصميم الجمالي البسيط (NN/g): إن لم يستطع الناس إيجاد العناصر الضرورية أو اكتشافها، فهي غير موجودة بالنسبة لهم. وتواريخ الاستحقاق المخفية لتبدو القائمة أنظف معلومات ضائعة."
+      ar: "اختبار، التصميم الجمالي البسيط (NN/g): إن لم يستطع الناس إيجاد العناصر الضرورية أو اكتشافها، فهي غير موجودة بالنسبة لهم. فإذا أخفيتَ تواريخ الاستحقاق لتبدو القائمة أنظف، ضاعت هذه المعلومة على الناس."
     ref: { url: "https://www.nngroup.com/articles/aesthetic-minimalist-design/", quote: "if our users cannot find or discover the necessary elements, as far as they are concerned, those elements do not exist." }
     scenario:
       en: "In a redesign, we removed due dates from the task list to make it cleaner. They now appear only inside each task. Missed deadlines went up."

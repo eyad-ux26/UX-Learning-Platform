@@ -123,6 +123,7 @@ steps:
             - { kind: small, text: { en: "All rooms have a balcony, air conditioning and a safe. Rooms on floors 5 to 9 face the river…", ar: "كل الغرف فيها شرفة وتكييف وخزنة. والغرف في الأدوار من الخامس إلى التاسع تطلّ على النيل…" }, gap: xs }
             - { kind: text, weight: bold, text: { en: "Breakfast", ar: "الإفطار" }, gap: m }
             - { kind: small, text: { en: "Served from 7 to 11 am in the garden restaurant. Children under 6 eat free…", ar: "يُقدَّم من 7 إلى 11 صباحًا في مطعم الحديقة. والأطفال تحت 6 سنوات مجانًا…" }, gap: xs }
+            - { kind: more, text: { en: "+6 more sections, all open", ar: "+6 أقسام أخرى، كلها مفتوحة" } }
       - id: acc
         text: { en: "The eight sections as an accordion under the price", ar: "الأقسام الثمانية في Accordion تحت السعر" }
         mock:
@@ -132,11 +133,11 @@ steps:
             - { kind: image, art: hotel-room, size: m, alt: { en: "Hotel room", ar: "غرفة الفندق" } }
             - { kind: heading, text: { en: "Nile View Hotel · ★ 4.6", ar: "فندق نايل فيو · ★ 4.6" }, gap: s }
             - { kind: price, text: { en: "EGP 1,400", ar: "1,400 جنيه" }, per: { en: "/ night", ar: "/ ليلة" }, gap: xs }
-            - { kind: accordion, text: { en: "Rooms", ar: "الغرف" }, gap: m }
-            - { kind: accordion, text: { en: "Breakfast", ar: "الإفطار" } }
-            - { kind: accordion, text: { en: "Parking", ar: "موقف السيارات" } }
-            - { kind: accordion, text: { en: "Pool", ar: "المسبح" } }
-            - { kind: meta, text: { en: "+ 4 more sections", ar: "+ 4 أقسام أخرى" }, gap: s }
+            - { kind: accordion, text: { en: "Rooms", ar: "الغرف" }, gap: m, blocks: [ { kind: small, text: { en: "All rooms have a balcony, air conditioning and a safe. Rooms on floors 5 to 9 face the river.", ar: "كل الغرف فيها شرفة وتكييف وخزنة. والغرف في الأدوار من الخامس إلى التاسع تطلّ على النيل." } } ] }
+            - { kind: accordion, text: { en: "Breakfast", ar: "الإفطار" }, blocks: [ { kind: small, text: { en: "Served from 7 to 11 am in the garden restaurant. Children under 6 eat free.", ar: "يُقدَّم من 7 إلى 11 صباحًا في مطعم الحديقة. والأطفال تحت 6 سنوات مجانًا." } } ] }
+            - { kind: accordion, text: { en: "Parking", ar: "موقف السيارات" }, blocks: [ { kind: small, text: { en: "Free parking under the hotel, 40 spaces. No booking needed.", ar: "موقف مجاني تحت الفندق، فيه 40 مكانًا. ولا يحتاج حجزًا." } } ] }
+            - { kind: accordion, text: { en: "Pool", ar: "المسبح" }, blocks: [ { kind: small, text: { en: "Rooftop pool, open 8 am to 8 pm. Towels are at the pool.", ar: "مسبح على السطح، مفتوح من 8 صباحًا إلى 8 مساءً. والمناشف عند المسبح." } } ] }
+            - { kind: meta, text: { en: "+ 4 more sections", ar: "+4 أقسام أخرى" }, gap: s }
       - id: two
         text: { en: "Show only Rooms and Breakfast; remove the other six", ar: "اعرض الغرف والإفطار فقط؛ واحذف الأقسام الستة الأخرى" }
         mock:
@@ -179,10 +180,10 @@ steps:
     ref: { url: "https://www.nngroup.com/articles/icon-usability/", quote: "Icon labels should be visible at all times, without any interaction from the user." }
     scenario:
       en: "Most people open **My trips** to start planning a new trip. The app also has a support chat, which few people use."
-      ar: "أغلب الناس يفتحون **رحلاتي** ليبدؤوا التخطيط لرحلة جديدة. وفي التطبيق أيضًا محادثة دعم، قليلون يستخدمونها."
+      ar: "أغلب الناس يفتحون شاشة **رحلاتي** ليبدؤوا التخطيط لرحلة جديدة. وفي التطبيق أيضًا محادثة دعم، قليلون يستخدمونها."
     prompt:
       en: "Try each floating button. Which one should ship?"
-      ar: "جرّب كل زر عائم. أيّ زر عائم يناسب سبب فتح الناس لـ«رحلاتي»، ويقول بوضوح ما يفعله؟"
+      ar: "جرّب كل زر عائم. أيّ زر عائم يناسب سبب فتح الناس لشاشة «رحلاتي»، ويقول بوضوح ما يفعله؟"
     start: icon
     options:
       - id: icon
@@ -261,14 +262,14 @@ steps:
     start: inside
     options:
       - id: inside
-        text: { en: "Keep the rule inside Payment details", ar: "أبقِ الشرط داخل «تفاصيل الدفع»" }
+        text: { en: "Keep the rule inside Payment details", ar: "أبقِ الشرط داخل قسم «تفاصيل الدفع»" }
         mock:
           app: nuzul
           appbar: &sbar { title: { en: "Booking summary", ar: "ملخّص الحجز" }, back: true }
           blocks:
             - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights", ar: "3 ليالٍ" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
-            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m }
-            - { kind: accordion, text: { en: "Payment details", ar: "تفاصيل الدفع" } }
+            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m, blocks: [ { kind: small, text: { en: "Double room, river view · 2 adults · check-in 2 pm.", ar: "غرفة مزدوجة تطلّ على النيل · شخصان بالغان · الدخول 2 ظهرًا." } } ] }
+            - { kind: accordion, text: { en: "Payment details", ar: "تفاصيل الدفع" }, blocks: [ { kind: small, text: { en: "EGP 500 is charged now and won't be refunded. The rest, EGP 3,700, is paid at the hotel.", ar: "يُخصم 500 جنيه الآن ولا يُسترد. والباقي، 3,700 جنيه، يُدفع في الفندق." } } ] }
           footer:
             - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: line
@@ -278,20 +279,20 @@ steps:
           appbar: *sbar
           blocks:
             - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights", ar: "3 ليالٍ" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
-            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m }
-            - { kind: accordion, text: { en: "Payment details", ar: "تفاصيل الدفع" } }
-            - { kind: small, weight: bold, text: { en: "EGP 500 is charged now and won't be refunded.", ar: "يُخصم 500 جنيه الآن ولا يُسترد." }, gap: l }
+            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m, blocks: [ { kind: small, text: { en: "Double room, river view · 2 adults · check-in 2 pm.", ar: "غرفة مزدوجة تطلّ على النيل · شخصان بالغان · الدخول 2 ظهرًا." } } ] }
+            - { kind: accordion, text: { en: "Payment details", ar: "تفاصيل الدفع" }, blocks: [ { kind: small, text: { en: "EGP 500 is charged now and won't be refunded. The rest, EGP 3,700, is paid at the hotel.", ar: "يُخصم 500 جنيه الآن ولا يُسترد. والباقي، 3,700 جنيه، يُدفع في الفندق." } } ] }
+            - { kind: small, weight: bold, text: { en: "EGP 500 is charged now and won't be refunded, so check your booking before you confirm.", ar: "يُخصم 500 جنيه الآن ولا يُسترد، فراجِع حجزك قبل التأكيد." }, gap: l }
           footer:
             - { kind: button, text: { en: "Book", ar: "احجز" } }
       - id: star
-        text: { en: "Keep it inside, and add ★ to the Payment details title", ar: "أبقِه بالداخل، وأضف ★ إلى عنوان «تفاصيل الدفع»" }
+        text: { en: "Keep it inside, and add ★ to the Payment details title", ar: "أبقِه داخل القسم، وأضف ★ إلى عنوان «تفاصيل الدفع»" }
         mock:
           app: nuzul
           appbar: *sbar
           blocks:
             - { kind: listitem, art: hotel-room, text: { en: "Nile View Hotel", ar: "فندق نايل فيو" }, sub: { en: "3 nights", ar: "3 ليالٍ" }, value: { en: "EGP 4,200", ar: "4,200 جنيه" } }
-            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m }
-            - { kind: accordion, text: { en: "Payment details ★", ar: "تفاصيل الدفع ★" } }
+            - { kind: accordion, text: { en: "Room", ar: "الغرفة" }, gap: m, blocks: [ { kind: small, text: { en: "Double room, river view · 2 adults · check-in 2 pm.", ar: "غرفة مزدوجة تطلّ على النيل · شخصان بالغان · الدخول 2 ظهرًا." } } ] }
+            - { kind: accordion, text: { en: "Payment details ★", ar: "تفاصيل الدفع ★" }, blocks: [ { kind: small, text: { en: "EGP 500 is charged now and won't be refunded. The rest, EGP 3,700, is paid at the hotel.", ar: "يُخصم 500 جنيه الآن ولا يُسترد. والباقي، 3,700 جنيه، يُدفع في الفندق." } } ] }
           footer:
             - { kind: button, text: { en: "Book", ar: "احجز" } }
     answer: [line]
@@ -300,7 +301,7 @@ steps:
         when: [inside, star]
         feedback:
           en: "Most people tap Book without opening Payment details, so they learn about the lost EGP 500 only after it's gone."
-          ar: "أغلب الناس يضغطون «احجز» دون أن يفتحوا «تفاصيل الدفع»، فلا يعرفون بالـ 500 جنيه إلا بعد أن تضيع."
+          ar: "أغلب الناس يضغطون «احجز» دون أن يفتحوا قسم «تفاصيل الدفع»، فلا يعرفون بالـ 500 جنيه إلا بعد أن تضيع."
     correct:
       en: "It changes the decision: keep it in sight."
       ar: "يغيّر القرار: أبقِه ظاهرًا."

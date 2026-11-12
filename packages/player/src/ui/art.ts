@@ -102,5 +102,12 @@ export function artSvg(name: string, label?: string, fit: "slice" | "meet" = "sl
   return `<svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid ${fit}" ${a11y} focusable="false">${body}</svg>`;
 }
 
+/** One edge column of a drawing, stretched to fill a box: drawn beside a "meet" drawing, it carries its bands (sand, road, floor) out to the box's edges. */
+export function artEdge(name: string, side: "start" | "end"): string | null {
+  const body = ART[name];
+  if (!body) return null;
+  return `<svg viewBox="${side === "start" ? 0.2 : 159.3} 0 0.5 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">${body}</svg>`;
+}
+
 /** The drawing's background colour (its first full-board rect), to fill the space around a "meet" drawing. */
 export const artBg = (name: string): string | undefined => /^\s*<rect width="160" height="120" fill="(#[0-9A-Fa-f]{3,8})"/.exec(ART[name] ?? "")?.[1];

@@ -129,7 +129,7 @@ mock:
 | `slider` (one thumb) | `value` instead of `from`/`to`. `bubble: above` shows the value over the thumb, `bubble: thumb` prints it on the thumb, `finger: true` (or the thumb's index) draws a fingertip over it, `ticks` is a list of labels under the track, `step` sets the drag step |
 | `stepper` limits | `min`/`max` grey out − or + when `text` is at the limit; `size: s` is the small version; `editable: true` draws the value as a typing box; `hint` goes under it |
 | `radio`, `check` extras | `marker: round` or `square` swaps the marker shape (to teach the wrong one); `hit: box` makes only the marker tappable |
-| `calendar` | `months`: a list of `{ title, start, days }` (`start` is the empty cells before day 1). `from`/`to` are `[month index, day]` for a range, `pick` one day, `today` an outlined day, `weekdays` overrides the letters, `text` a line under it |
+| `calendar` | `months`: a list of `{ title, start, days }` (`start` is the empty cells before day 1). `from`/`to` are `[month index, day]` for a range, `pick` one day, `today` an outlined day, `before: [month index, day]` greys out every earlier day, `weekdays` overrides the letters, `text` a line under it |
 | `wheel` | `columns`: lists of 5 values each; the middle row is the chosen one. Optional `label` |
 | `chips` | A wrapping row of UI chips. `items`: `{ text, on, x, icon }` (`on` is selected with ✓, `x` is removable with ✕). `boxed: true` draws a field around them; `label`, `lead` (text before) and `after` (text after) are optional |
 | `tip` | A dark tooltip with a pointer, under the block above it |

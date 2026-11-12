@@ -180,7 +180,40 @@ describe("small pictures show the whole drawing", () => {
       const s = render({ blocks: [{ kind: "image", art, size: "s" }] } as never, "en");
       expect(s, art).toContain('preserveAspectRatio="xMidYMid meet"');
       expect(s, art).toMatch(/class="b k-image size-s has-art" style="background:#[0-9A-Fa-f]{6}"/);
-      expect(render({ blocks: [{ kind: "image", art, size: "l" }] } as never, "en"), art).toContain('preserveAspectRatio="xMidYMid slice"');
+      expect(render({ blocks: [{ kind: "image", art, size: "l" }] } as never, "en"), art).toContain(`preserveAspectRatio="xMidYMid ${art === "gym" ? "meet" : "slice"}"`);
     }
+  });
+  it("stretches the drawing's edge columns beside a small drawing, so its bands reach both edges", () => {
+    const s = render({ blocks: [{ kind: "image", art: "desert", size: "s" }] } as never, "en");
+    expect(s).toContain('class="xm-art-edge is-start"');
+    expect(s).toContain('class="xm-art-edge is-end"');
+    expect(render({ blocks: [{ kind: "image", art: "desert", size: "l" }] } as never, "en")).not.toContain("xm-art-edge");
+  });
+});
+
+describe("other paths follow-ups (12 Nov)", () => {
+  it("greys out calendar days before the 'before' day", () => {
+    const html = render({ blocks: [{ kind: "calendar", months: [{ title: "May", start: 0, days: 31 }], before: [0, 12] }] } as never, "en");
+    expect(html).toContain('<i class="cd cdx">11</i>');
+    expect(html).toContain('<i class="cd">12</i>');
+  });
+  it("moves pinned text over so the number pin doesn't cover its first letters", () => {
+    expect(render({ blocks: [{ kind: "small", mark: 1, text: "Screen reader users" }] } as never, "en")).toContain('class="xm-pin has-mark"');
+    const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
+    expect(css).toMatch(/\.xm-pin\.has-mark>:is\([^)]*\.k-small[^)]*\)\{padding-inline-start:20px\}/);
+  });
+  it("zooms only wide frames marked fit, to 80% at most, and lets their rows wrap", () => {
+    const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
+    expect(css).not.toMatch(/\.xm-wide\{container-type/);
+    expect(css).toMatch(/\.xm-fit>\.xm-shell\{zoom:\.8;inline-size:calc\(100cqi \/ \.8\)\}/);
+    expect(css).toMatch(/\.xm-fit \.row2\{flex-wrap:wrap\}/);
+    const fit = render({ frame: "wide", fit: true, blocks: [] } as never, "en"), plain = render({ frame: "wide", blocks: [] } as never, "en");
+    expect(fit).toContain("xm-fit");
+    expect(plain).not.toContain("xm-fit");
+  });
+  it("keeps a field's icon on the screen's side and isolates only the number", () => {
+    const f = (text: string) => render({ blocks: [{ kind: "field", label: "Code", text, trail: "caret-up-down" }] } as never, "ar");
+    for (const t of ["48213", "4.4e15"]) expect(f(t)).not.toMatch(/class="fi[^"]*" dir="ltr"/);
+    expect(f("48213")).toContain('<bdi dir="ltr">48213</bdi>');
   });
 });

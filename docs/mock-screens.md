@@ -70,6 +70,8 @@ mock:
   blocks: [ ... ]
 ```
 
+Add `fit: true` to a wide frame whose rows would clip on a phone. Below 440 px it is zoomed to 80% and laid out 25% wider, and its rows wrap instead of clipping. Leave it off when the page already fits, so text stays full size.
+
 Other mock-level options:
 
 | Key | Meaning |
