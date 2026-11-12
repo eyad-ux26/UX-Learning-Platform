@@ -197,6 +197,11 @@ describe("other paths follow-ups (12 Nov)", () => {
     expect(html).toContain('<i class="cd cdx">11</i>');
     expect(html).toContain('<i class="cd">12</i>');
   });
+  it("moves pinned text over so the number pin doesn't cover its first letters", () => {
+    expect(render({ blocks: [{ kind: "small", mark: 1, text: "Screen reader users" }] } as never, "en")).toContain('class="xm-pin has-mark"');
+    const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
+    expect(css).toMatch(/\.xm-pin\.has-mark>:is\([^)]*\.k-small[^)]*\)\{padding-inline-start:20px\}/);
+  });
   it("zooms a laptop page down on a phone instead of letting its rows clip", () => {
     const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
     expect(css).toContain(".xm-wide{container-type:inline-size}");

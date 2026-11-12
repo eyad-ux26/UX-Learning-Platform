@@ -78,7 +78,7 @@
 .exmock{overflow:hidden}
 .exmock .mcap{font-size:.75rem;color:var(--mock-muted);margin:-6px 0 10px;font-weight:600}
 .exmock .nowrap{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.exmock .row2{display:flex;gap:10px}.exmock .row2>*{flex:1}
+.exmock .row2{display:flex;gap:10px}.exmock .row2>*{flex:1}.exmock .row2>.k-iconbtn{flex:none;align-self:center}.exmock .row2>.k-price{flex:none;inline-size:auto;white-space:nowrap}.exmock .row2>.k-badge{min-inline-size:0;align-self:center}.exmock .row2>.k-badge>.xm-badge{white-space:normal}
 .exmock .k-group.scroll{overflow-x:auto;padding:0;border:0;border-radius:0}.exmock .k-group.scroll .row2>*{flex:none;width:var(--colw,120px)}
 .exmock .k-group.scroll.sticky .row2>:first-child{position:sticky;inset-inline-start:0;background:var(--mock-bg);z-index:1;box-shadow:1px 0 0 var(--mock-line)}
 
@@ -343,12 +343,14 @@
 .exmock .ct-l{display:flex;justify-content:space-around;font-size:.7rem;color:var(--mock-muted);margin-block-start:4px}
 .exmock .k-seatmap{display:flex;flex-direction:column;gap:5px;align-items:center}
 .exmock .sm-screen{inline-size:70%;block-size:6px;border-radius:3px;background:var(--mock-line);margin-block-end:8px}
-.exmock .sm-row{display:flex;gap:5px}
-.exmock .sm-row i{inline-size:18px;block-size:16px;border-radius:4px 4px 2px 2px;border:1.5px solid color-mix(in srgb,var(--mock-brand) 45%,#fff)}
+.exmock .sm-row{display:flex;gap:clamp(2px,1.2%,5px);max-inline-size:100%}
+.exmock .sm-row i{inline-size:18px;flex:0 1 18px;min-inline-size:0;block-size:16px;border-radius:4px 4px 2px 2px;border:1.5px solid color-mix(in srgb,var(--mock-brand) 45%,#fff)}
 .exmock .sm-row i.off{background:#D9D9DE;border-color:#D9D9DE}.exmock .sm-row i.on{background:var(--mock-brand);border-color:var(--mock-brand)}
-.exmock .sm-row i.sm-gap{border:0;inline-size:10px}
+.exmock .sm-row i.sm-gap{border:0;inline-size:10px;flex-basis:10px}
 .exmock .xm-pin{position:relative}
 .exmock .xm-mark{position:absolute;inset-block-start:-8px;inset-inline-start:-8px;inline-size:22px;block-size:22px;border-radius:50%;background:#E8590C;color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;box-shadow:0 0 0 2px #fff;z-index:2}
+/* A pin on a bare line of text would cover its first letters, so the text moves over. */
+.exmock .xm-pin.has-mark>:is(.k-small,.k-text,.k-meta,.k-heading,.k-title,.k-line,.k-link){padding-inline-start:20px}
 /* The note sits in the flow, above its block, so it never covers the block's text (QA, note-overlap). */
 .exmock .xm-pin:has(>.xm-note){display:flex;flex-direction:column;align-items:stretch}
 .exmock .xm-note{order:-1;align-self:flex-end;max-inline-size:100%;box-sizing:border-box;margin-block-end:4px;background:#1D2329;color:#fff;font-size:11px;font-weight:600;line-height:1.3;border-radius:6px;padding:2px 7px}

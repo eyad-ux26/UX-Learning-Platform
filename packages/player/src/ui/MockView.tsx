@@ -247,7 +247,7 @@ function Plain({ b, locale }: { b: MockBlock; locale: Locale }) {
   const core = <Core b={b} locale={locale} />;
   if (b.mark === undefined && !b.note) return core;
   return (
-    <div className={`xm-pin${b.gap ? ` gap-${b.gap}` : ""}`}>
+    <div className={`xm-pin${b.mark !== undefined ? " has-mark" : ""}${b.gap ? ` gap-${b.gap}` : ""}`}>
       {core}
       {b.mark !== undefined ? <span className="xm-mark" aria-hidden="true">{String(b.mark)}</span> : null}
       {b.note ? <span className="xm-note">{mt(b.note as MockText, locale)}</span> : null}
