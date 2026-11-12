@@ -250,15 +250,22 @@
 .xp-tip-box { position: relative; display: inline-flex; }
 .xp-tip { position: absolute; inset-block-start: calc(100% + 8px); inset-inline-end: 0; z-index: 30; inline-size: min(300px, calc(100vw - 32px)); box-sizing: border-box; padding: 14px 16px; border-radius: var(--r-xl); background: var(--surface); border: 2px solid var(--line); box-shadow: 0 18px 36px -16px rgba(1, 46, 75, 0.35); display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
 .xp-tip[hidden] { display: none; }
-.xp-tip b { color: var(--ink); font-size: 15px; }
+.xp-tip-t { display: flex; align-items: center; gap: 6px; color: var(--ink); font-size: 15px; }
+.xp-tip-t .ph { color: var(--hl-ledge); }
+.xp-tip-l { margin: 0; padding-inline-start: 18px; display: flex; flex-direction: column; gap: 4px; }
+.xp-tip .pg-link { min-block-size: 44px; }
 .ug[lang="ar"] .xp-tip { line-height: 1.7; }
 .ug .home-split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
 .path-chips { display: flex; flex-direction: column; gap: 6px; }
 .path-chips .pg-sec .pg-link { min-block-size: 36px; }
-.ug .path-chips .prow { flex-wrap: wrap; }
-.ug .path-chips .pchip { flex: 1 1 150px; cursor: pointer; }
+/* Phone: a swipe row that snaps, with no scrollbar. Laptop: up to 3 cards, then the Add a path tile (76 px, dashed). */
+.ug .path-chips .prow { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; margin-inline: -20px; padding-inline: 20px; scroll-padding-inline: 20px; padding-block-start: 2px; }
+.ug .path-chips .prow::-webkit-scrollbar { display: none; }
+.ug .path-chips .pchip { flex: 0 0 min(220px, 64%); scroll-snap-align: start; cursor: pointer; }
+.ug .path-chips .pchip:only-of-type { flex-basis: 100%; }
 .ug .path-chips .pchip .progress { display: block; }
-.ug .path-chips .pchip.is-add { display: none; flex: 0 0 96px; text-decoration: none; }
+.ug .path-chips .pchip.is-add { display: none; flex: 0 0 76px; text-decoration: none; }
+.ug .home-avatar { display: none; }
 .review-ic { display: grid; place-items: center; inline-size: 52px; block-size: 52px; border-radius: 16px; background: var(--mint); color: var(--right-ink); flex: none; }
 .review-ic .ph { font-size: 26px; }
 .streak-link { min-block-size: 44px; color: var(--ink); text-decoration: none; border-radius: 12px; }
@@ -269,7 +276,11 @@
   .home-split .next-card .row { max-inline-size: calc(100% - 112px); }
 }
 @media (min-width: 1024px) {
+  .ug .path-chips .prow { overflow: visible; margin-inline: 0; padding-inline: 0; }
+  .ug .path-chips .pchip { flex: 1 1 0; }
+  .ug .path-chips .pchip.is-more { display: none; }
   .ug .path-chips .pchip.is-add { display: flex; }
+  .ug .home-avatar { display: inline-grid; text-decoration: none; }
 }
 @media (min-width: 1180px) {
   .ug .home-split { grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; }

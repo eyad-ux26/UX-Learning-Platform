@@ -16,6 +16,13 @@ type T = Awaited<ReturnType<typeof getTranslations>>;
 const pctOf = (v: PathView | null) => (v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0);
 const kindOf = (p: { kind: string }, t: T) => ({ cls: p.kind === "hybrid" ? "kind kind-hybrid" : "kind", icon: p.kind === "hybrid" ? "video" : "cursor-click", text: p.kind === "hybrid" ? t("hybrid") : t("interactive") });
 
+/** "Unit 2 · 4 of 25 lessons" under the bar on a joined path, or "Not started". */
+const whereOf = (v: PathView, t: T) => {
+  if (!v.doneCount) return t("pjNotStarted");
+  const u = v.units.find((x) => x.lessons.some((l) => l.state !== "done")) ?? v.units[v.units.length - 1];
+  return t("pjWhere", { unit: u?.number ?? 1, done: v.doneCount, total: v.totalCount });
+};
+
 function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathView | null; t: T; locale: Locale; done?: number; left?: number }) {
   const k = kindOf(p, t);
   const pct = pctOf(view);
@@ -35,7 +42,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
   if (done !== undefined) {
     // Completed (its certificate exists): mint card, Completed chip, no % bar (design S3-17).
     return (
-      <Link href={`/app/paths/${p.id}`} className="path-card is-done press pc-stack has-art has-art-sm" aria-label={t("doneAria", { name: p.name })}>
+      <Link href={`/app/paths/${p.id}`} className="path-card is-done press pc-stack has-art" aria-label={t("doneAria", { name: p.name })}>
         <span className="pc-name"><PathName name={p.name ?? ""} /></span>
         <span className="pc-meta">
           <span className="kind kind-done"><span className="ph ph-seal-check-fill" aria-hidden="true" />{t("completed")}</span>
@@ -47,7 +54,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
     );
   }
   return (
-    <Link href={`/app/paths/${p.id}`} className={`path-card press pc-stack has-art has-art-sm${p.state === "current" ? " is-current" : ""}`} aria-label={p.state === "current" ? t("currentAria", { name: p.name }) : p.name}>
+    <Link href={`/app/paths/${p.id}`} className={`path-card press pc-stack has-art${p.state === "current" ? " is-current" : ""}`} aria-label={p.state === "current" ? t("currentAria", { name: p.name }) : p.name}>
       <span className="pc-name"><PathName name={p.name ?? ""} /></span>
       {!joined ? <span className="pc-sub">{p.sub[locale]}</span> : null}
       <span className="pc-meta">
@@ -57,6 +64,7 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
         {!joined ? <><span className="kind">{t("units", { count: p.units })}</span><span className="kind kind-free">{t("free1")}</span></> : null}
       </span>
       {joined ? <span className="pc-prog"><span className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></span><span className="num">{pct}%</span></span> : null}
+      {joined && view ? <span className="pc-where">{whereOf(view, t)}</span> : null}
       {art}
     </Link>
   );

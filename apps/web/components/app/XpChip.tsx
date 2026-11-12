@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 
 /**
  * The XP count in the Home header. A tap (or keyboard focus and Enter) opens a small note that says what XP is for,
- * with a link to today's XP. Esc or a tap outside closes it. Hover opens it too on a laptop.
+ * with a link to how today's XP was counted (design S3-19 frame 2, view homeXpTip). Esc or a tap outside closes it. Hover opens it too on a laptop.
  */
 export function XpChip({ xp }: { xp: number }) {
   const t = useTranslations("home");
@@ -15,7 +15,7 @@ export function XpChip({ xp }: { xp: number }) {
   const [pinned, setPinned] = useState(false);
   const open = hover || pinned;
   const setOpen = (v: boolean) => { setHover(v); setPinned(v); };
-  const box = useRef<HTMLSpanElement>(null);
+  const box = useRef<HTMLDivElement>(null);
   const id = useId();
   useEffect(() => {
     if (!open) return;
@@ -26,16 +26,16 @@ export function XpChip({ xp }: { xp: number }) {
     return () => { document.removeEventListener("keydown", onKey); document.removeEventListener("pointerdown", onDown); };
   }, [open]);
   return (
-    <span ref={box} className="xp-tip-box" onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHover(true); }} onMouseLeave={() => setHover(false)}>
+    <div ref={box} className="xp-tip-box" onMouseEnter={() => { if (window.matchMedia("(hover: hover)").matches) setHover(true); }} onMouseLeave={() => setHover(false)}>
       <button type="button" className="stat stat-btn press" aria-expanded={open} aria-controls={id} aria-label={t("xpAria", { count: xp })} onClick={() => { if (pinned) setOpen(false); else setPinned(true); }}>
         <span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{xp} XP</span><span className="ph ph-info ink-3" style={{ fontSize: 16 }} aria-hidden="true" />
       </button>
-      <span id={id} className="xp-tip" role="region" aria-label={t("xpTipTitle")} hidden={!open}>
-        <b>{t("xpTipTitle")}</b>
+      <div id={id} className="xp-tip" role="dialog" aria-label={t("xpTipTitle")} hidden={!open}>
+        <b className="xp-tip-t"><span className="ph ph-bolt-fill" aria-hidden="true" />{t("xpTipTitle")}</b>
         <span>{t("xpTipBody")}</span>
-        <span>{t("xpTipBoard")}</span>
-        <Link href="/app/streak" className="pg-link" style={{ minBlockSize: 32 }}>{t("xpTipLink")}</Link>
-      </span>
-    </span>
+        <ul className="xp-tip-l"><li>{t("xpTip1")}</li><li>{t("xpTip2")}</li><li>{t("xpTip3")}</li></ul>
+        <Link href="/app/streak#numbers" className="pg-link">{t("xpTipLink")}<span className="ph ph-caret-right flip" aria-hidden="true" /></Link>
+      </div>
+    </div>
   );
 }

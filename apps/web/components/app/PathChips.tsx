@@ -14,7 +14,8 @@ export type Chip = { id: string; name: string; art: string; pct: number; current
 /**
  * "Your paths" on Home (design S3-2, PathsPages view home): one card per joined path with its art, name, a progress bar and
  * where the learner is. One tap makes another joined path current; nothing is lost on the others. "All paths" sits in the
- * section header, and a dashed "Add a path" tile ends the row on a laptop.
+ * section header. Phone: a swipe row with no scrollbar. Laptop: up to 3 cards (the current one first), then a dashed
+ * "Add a path" tile.
  */
 export function PathChips({ chips, label, addLabel, allLabel }: { chips: Chip[]; label: string; addLabel: string; allLabel: string }) {
   const t = useTranslations("paths");
@@ -37,14 +38,14 @@ export function PathChips({ chips, label, addLabel, allLabel }: { chips: Chip[];
     <section aria-label={label} className="path-chips">
       <div className="pg-sec"><p className="t-over">{label}</p><Link href="/app/paths" className="pg-link">{allLabel}</Link></div>
       <div className="prow">
-        {chips.map((c) => (
-          <button key={c.id} type="button" className={`pchip press${c.current ? " is-current" : ""}`} aria-pressed={c.current} aria-label={c.current ? t("currentAria", { name: c.name }) : t("switchTo", { name: c.name })} onClick={() => pick(c)} disabled={pending} aria-busy={(pending && busyId === c.id) || undefined}>
+        {chips.map((c, k) => (
+          <button key={c.id} type="button" className={`pchip press${c.current ? " is-current" : ""}${k >= 3 ? " is-more" : ""}`} aria-pressed={c.current} aria-label={c.current ? t("currentAria", { name: c.name }) : t("switchTo", { name: c.name })} onClick={() => pick(c)} disabled={pending} aria-busy={(pending && busyId === c.id) || undefined}>
             <span className="pchip-top"><img src={c.art} alt="" /><span className="pchip-name"><PathName name={c.name ?? ""} /></span></span>
             <span className="progress progress-sm" aria-hidden="true"><i style={{ inlineSize: `${c.pct}%` }} /></span>
             <span className="pchip-sub">{c.current ? <span className="ph ph-check-circle-fill" style={{ color: "var(--link)" }} aria-hidden="true" /> : null}<span>{c.current ? `${t("current")} · ${c.where}` : c.where}</span></span>
           </button>
         ))}
-        {chips.length < 3 ? <Link href="/app/paths" className="pchip is-add press"><span className="ph ph-plus" aria-hidden="true" />{addLabel}</Link> : null}
+        <Link href="/app/paths" className="pchip is-add press"><span className="ph ph-plus" aria-hidden="true" />{addLabel}</Link>
       </div>
       {failed ? <p className="ob-err" role="alert">{t("failed")}</p> : null}
     </section>

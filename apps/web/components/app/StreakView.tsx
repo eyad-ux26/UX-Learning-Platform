@@ -93,7 +93,7 @@ export async function StreakMain({ me }: { me: Learner }) {
         {([["how1", "check-circle"], ["how3", "freeze"], ["how2", "stack"], ["how4", "info"]] as const).map(([k, icon]) => <p key={k} className="pg-note" style={{ fontSize: 14 }}><span className={`ph ph-${icon}`} aria-hidden="true" /><span>{t(k, weekNames)}</span></p>)}
       </section>
 
-      <h2 className="t-h2">{t("numbersTitle")}</h2>
+      <h2 className="t-h2" id="numbers" style={{ scrollMarginBlockStart: 16 }}>{t("numbersTitle")}</h2>
       <p className="t-small ink-2">{t("numbersLead")}</p>
       <ul className="why-list">
         <li className="card"><span className="ph ph-bolt-fill" style={{ fontSize: 22, color: "var(--hl-ledge)" }} aria-hidden="true" /><div className="grow">

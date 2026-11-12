@@ -42,13 +42,13 @@ export async function HomeMain({ me, view, bell, banner }: { me: Learner; view: 
     const l = other?.next;
     if (other && l?.state === "in_progress") { resume = { lessonId: l.lesson.lessonId, title: l.lesson.body.title[locale], pathId: j.pathId, pathName: localPathName(j.pathId, locale) }; break; }
   }
+  // "Unit 2 · 6/20" under each Your paths card (design S3-2), or "Not started".
   const where = (v: PathView | null) => {
-    if (!v) return "";
-    const pct = v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0;
-    const u = v.next ? v.units.find((x) => x.unit.id === v.next!.unit.id) : null;
-    return u ? `${t("unit", { n: u.number })} · ${pct}%` : `${pct}%`;
+    if (!v || !v.doneCount) return t("pathNotStarted");
+    const u = v.units.find((x) => x.lessons.some((l) => l.state !== "done")) ?? v.units[v.units.length - 1];
+    return t("pathWhere", { unit: u?.number ?? 1, done: v.doneCount, total: v.totalCount });
   };
-  const joinedIds = me.joined.length ? me.joined.map((j) => j.pathId) : [view.path.id];
+  const joinedIds = me.joined.length ? [view.path.id, ...me.joined.map((j) => j.pathId).filter((id) => id !== view.path.id)] : [view.path.id];
   const chips = joinedIds.map((id) => {
     const j = { pathId: id };
     const v = buildPathView(j.pathId, progress, me.practicedSkills);
@@ -71,6 +71,7 @@ export async function HomeMain({ me, view, bell, banner }: { me: Learner; view: 
         <Link href="/app/streak" className="stat stat-link" aria-label={`${t("streakLabel", { count: progress.streak })}. ${t("streakOpen")}`}><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num">{progress.streak}</span></Link>
         <XpChip xp={progress.xpTotal} />
         {bell}
+        <Link href="/app/profile" className="avatar only-desk home-avatar" aria-label={t("profile")}>{(progress.displayName ?? "U").trim().charAt(0).toUpperCase() || "U"}</Link>
       </div>
       <h1 className="t-h1 h1-s">{await greeting(hour, progress.displayName)}</h1>
       {banner}
