@@ -140,21 +140,27 @@ async function readRows(db: SupabaseClient, userId: string, now: Date): Promise<
   };
 }
 
-const readAll = async (db: SupabaseClient, userId: string, now: Date) => (await readState(db, now)) ?? (await readRows(db, userId, now));
+const readAll = async (db: SupabaseClient, userId: string, now: Date, admin: boolean) =>
+  (admin ? null : await readState(db, now)) ?? (await readRows(db, userId, now));
 
 /**
  * Everything the app shell shows about a signed-in learner. Finished days are settled (freezes earned or used) at most
  * once a day: only when yesterday is not settled yet does it settle them and read again, so the page already shows them.
+ *
+ * `adminView`: an admin looking at another learner with the service-role client. my_learner_state reads auth.uid(),
+ * which is null for the service role (it would answer with empty lists, not an error), so this reads the rows by
+ * userId instead. It also never settles: an admin only looking must not change the learner's streak or freezes.
  */
-export async function readLearner(db: SupabaseClient, userId: string, opts: { email?: string | null; host: string | null; now?: Date }): Promise<Learner> {
+export async function readLearner(db: SupabaseClient, userId: string, opts: { email?: string | null; host: string | null; now?: Date; adminView?: boolean }): Promise<Learner> {
   const now = opts.now ?? new Date();
-  let rows = await readAll(db, userId, now);
+  const admin = !!opts.adminView;
+  let rows = await readAll(db, userId, now, admin);
   const weekStart0 = resolveWeekStart(rows.profile?.week_start, rows.profile?.locale);
   const through = rows.streak?.settled_through ?? null;
   const yesterday = shiftDay(localDay(now, rows.profile?.time_zone ?? null), -1);
-  if (rows.streakFailed || (rows.streak && !(through && through >= yesterday))) {
+  if (!admin && (rows.streakFailed || (rows.streak && !(through && through >= yesterday)))) {
     const settled = await settleLearner(userId, rows.profile?.time_zone ?? null, now, weekStart0); // never throws
-    if (settled.ok) rows = await readAll(db, userId, now);
+    if (settled.ok) rows = await readAll(db, userId, now, admin);
   }
   const { progress, timeZone: tz, profile, onboarding, skills, enrollments, streak, freezeNote, entitlement } = rows;
   const weekStart = resolveWeekStart(profile?.week_start, profile?.locale);
