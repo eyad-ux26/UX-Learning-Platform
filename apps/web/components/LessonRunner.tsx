@@ -21,7 +21,7 @@ import { markTourSeen, tourKind } from "@/lib/lesson-tour";
 export const GUEST_ID = "guest";
 
 type Props = {
-  lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitId: string; streak: number; userId: string; replay: ReplayKind | null;
+  lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitNo?: number; unitId: string; streak: number; userId: string; replay: ReplayKind | null;
   /** The mastery round of a unit: `lesson` is its re-test bank cut down to the steps in `plan`. */
   /** "review": a spaced-review session, also a cut-down bank, with its own end page. */
   variant?: "lesson" | "mastery" | "review";
@@ -76,7 +76,7 @@ function ViewLocale({ view, locale, other, children }: { view: Locale; locale: L
   return <NextIntlClientProvider locale={view} messages={(view === locale ? base : messages) as never} timeZone={timeZone}>{children}</NextIntlClientProvider>;
 }
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other, firstLesson = false }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other, firstLesson = false }: Props) {
   const router = useRouter();
   // The language shown. It starts as the page's language; the switch in the player header flips it in place.
   const [view, setView] = useState<Locale>(locale);
@@ -192,7 +192,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     <>
     {!sync.online && !guest ? <OfflineBar /> : null}
     <LessonPlayer
-      lesson={lesson} locale={view} initial={state} pathLabel={pathLabel} lessonNo={lessonNo}
+      lesson={lesson} locale={view} initial={state} pathLabel={pathLabel} lessonNo={lessonNo} unitNo={unitNo}
       muted={muted}
       onToggleMute={() => { const v = !muted; setMuted(v); setMutedState(v); if (!v) play("ui-toggle-on"); }}
       onSound={play} onState={onState} onEvent={onEvent}
