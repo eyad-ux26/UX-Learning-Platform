@@ -2,7 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getPath, getUnit } from "@uxgate/content";
 import { getLessonVersion } from "@/lib/server/content";
 import type { Locale } from "@uxgate/content/types";
-import { LessonRunner, GUEST_ID } from "@/components/LessonRunner";
+import { LessonRunner, GUEST_ID } from "@/components/lesson/LessonRunner";
 import { otherLocaleMessages } from "@/lib/server/lesson-messages";
 import { redirect } from "@/i18n/navigation";
 import { getLearner } from "@/lib/server/learner";

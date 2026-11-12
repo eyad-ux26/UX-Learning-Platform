@@ -59,7 +59,7 @@ export default {
     if (res.status >= 500 && !env.SUPPORT_FORWARD_TO) message.setReject("Temporary problem, please try again later");
   },
   async scheduled(event: { cron?: string }, env: Env, ctx: { waitUntil(p: Promise<unknown>): void }) {
-    // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts (slice 4). Up to 4 calls of 25.
+    // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts. Up to 4 calls of 25.
     if (event?.cron === "*/15 * * * *") {
       // Admin panel: approval reminders after 4 hours, and tickets waiting on the learner closing by themselves.
       ctx.waitUntil(handler.fetch(new Request("https://internal/api/cron/admin", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx)
@@ -100,7 +100,7 @@ export default {
       }
     };
     ctx.waitUntil(run().then(reviews));
-    // Slice 5: renewals, grace period, retries and billing reminders.
+    // Billing: renewals, grace period, retries and billing reminders.
     ctx.waitUntil(
       handler.fetch(new Request("https://internal/api/cron/billing", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx).then(async (res: Response) => {
         console.log(`cron billing: ${res.status} ${await res.text()}`);

@@ -10,7 +10,7 @@ vi.mock("@/i18n/navigation", () => ({ redirect: (a: unknown) => redirect(a) }));
 vi.mock("@/lib/server/content", () => ({ getLessonVersion: async () => ({ body: {}, hash: "h", pathId: "P01", unitId: "P01-U01", order: 0 }) }));
 vi.mock("@/lib/server/lesson-messages", () => ({ otherLocaleMessages: async () => ({}) }));
 vi.mock("@uxgate/content", () => ({ getPath: () => ({ title: { en: "P" } }), getUnit: () => ({ skills: [] }) }));
-vi.mock("@/components/LessonRunner", () => ({ LessonRunner: () => null, GUEST_ID: "guest" }));
+vi.mock("@/components/lesson/LessonRunner", () => ({ LessonRunner: () => null, GUEST_ID: "guest" }));
 
 import TryPage from "./page";
 

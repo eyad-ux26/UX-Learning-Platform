@@ -36,7 +36,7 @@ type Props = {
   /** The next lesson of the path, or null after its last one (then `pathEnd`). */
   upNext?: UpNext | null;
   pathEnd?: PathEnd | null;
-  /** The next unit, when it is part of Pro and the learner is on the free plan (slice 5). */
+  /** The next unit, when it is part of Pro and the learner is on the free plan. */
   proNext?: ProNext | null;
   /** The player's strings in the other language. With it, the header shows a language switch that works inside the lesson. */
   other?: OtherLocale;

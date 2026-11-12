@@ -1,4 +1,4 @@
-// Slice 3's notifications through slice 4's notify(): a badge turning gold (Kept) and skills due for review.
+// Progress notifications sent through notify() (lib/server/notify.ts): a badge turning gold (Kept) and skills due for review.
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { content, getPath } from "@uxgate/content";

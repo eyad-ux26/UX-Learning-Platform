@@ -3,7 +3,7 @@
 
 import { PathName } from "@/components/PathName";
 import { useEffect, useState, useTransition } from "react";
-import { SAMPLE_KEPT } from "@/components/GuestHandoff";
+import { SAMPLE_KEPT } from "@/components/lesson/GuestHandoff";
 import { useLocale, useTranslations } from "next-intl";
 import { ReminderField } from "@/components/app/ReminderField";
 import { LocaleSwitch } from "@/components/LocaleSwitch";

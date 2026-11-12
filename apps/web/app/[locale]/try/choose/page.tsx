@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import type { Lesson, Locale } from "@uxgate/content/types";
-import { LessonRunner, GUEST_ID } from "@/components/LessonRunner";
+import { LessonRunner, GUEST_ID } from "@/components/lesson/LessonRunner";
 
 /** Dev only (UG_DEV_FIXTURE=1): a choose step with an example screen. On a phone the example folds into a "Show the example again" bar once feedback is up; the axe check opens this page to see that bar. */
 const T = (en: string, ar: string) => ({ en, ar });

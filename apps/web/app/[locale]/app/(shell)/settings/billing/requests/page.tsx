@@ -9,7 +9,7 @@ import { formatDate, shellFor } from "@/lib/server/billing/page";
 
 export const dynamic = "force-dynamic";
 
-/** My requests: refund requests with their answers. (Slice 4's support requests can join this list at merge.) */
+/** My requests: refund requests with their answers. */
 export default async function RequestsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   const { locale } = await params;
   const sp = await searchParams;

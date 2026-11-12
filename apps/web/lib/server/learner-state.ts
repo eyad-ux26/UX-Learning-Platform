@@ -42,7 +42,7 @@ export type Learner = {
   leaderboardJoined: boolean;
   shareEnabled: boolean;
   handle: string | null;
-  /** On UXGate Pro right now (slice 5). Free learners get Unit 1 of every path. */
+  /** On UXGate Pro right now. Free learners get Unit 1 of every path. */
   pro: boolean;
   /** The plan row behind `pro`, read once per request and reused by the plans and billing screens. */
   entitlement: Entitlement | null;

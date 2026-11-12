@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { AccountFrame } from "@/components/account/AccountFrame";
 import { PageTop } from "@/components/account/PageTop";
-import { Faq } from "@/components/account/Faq";
+import { HelpFaq } from "@/components/account/HelpFaq";
 import { Link } from "@/i18n/navigation";
 import { requireLearner } from "@/lib/server/learner";
 
@@ -54,7 +54,7 @@ export default async function HelpPage({ params }: { params: Promise<{ locale: s
         </div>
         <div className="pg-stack" style={{ gap: 10 }}>
           <h2 className="t-over set-sec">{t("quick")}</h2>
-          <Faq items={[...[1, 2, 3, 4, 5].map((n) => ({ q: t(`q${n}`), a: t(`a${n}`) })), ...articles]} />
+          <HelpFaq items={[...[1, 2, 3, 4, 5].map((n) => ({ q: t(`q${n}`), a: t(`a${n}`) })), ...articles]} />
           <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
             <Link href="/privacy" className="pg-link"><span className="ph ph-shield-check" aria-hidden="true" />{t("privacy")}</Link>
             <Link href="/terms" className="pg-link"><span className="ph ph-article" aria-hidden="true" />{t("terms")}</Link>

@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { hasServiceKey } from "@/lib/supabase/env";
 import { KINDS, prefsToStore, readPrefs, type Prefs } from "@/lib/notifications";
 import { deleteAfter } from "@/lib/reminder-plan";
-import { onAccountDeletionScheduled } from "@/lib/server/account-hooks";
+import { onAccountDeletionScheduled } from "@/lib/server/account-deletion";
 import { sendDeletedEmail } from "@/lib/server/account-email";
 import { BYE_COOKIE } from "@/lib/server/account";
 import { isPushEndpoint } from "@/lib/push-hosts";
@@ -97,7 +97,7 @@ export async function markRead(input: { ids?: string[] }): Promise<{ ok: boolean
 }
 
 /**
- * Delete my account: schedule removal 30 days from now, stop renewal (slice 5 hook), email the undo date, and sign the
+ * Delete my account: schedule removal 30 days from now, stop renewal (lib/server/account-deletion.ts), email the undo date, and sign the
  * learner out on every device. Signing in before the date undoes it (lib/server/account.ts). The daily job removes the rest.
  */
 export async function deleteAccount(input: { confirm: boolean; locale: "en" | "ar" }): Promise<{ ok: boolean }> {

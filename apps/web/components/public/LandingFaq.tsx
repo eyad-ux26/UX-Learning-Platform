@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 
 /** Landing questions. One item open at a time, the first starts open. The answer stays in the DOM so it can animate (grid rows 0fr to 1fr). */
-export function Faq({ items }: { items: { q: string; a: string }[] }) {
+export function LandingFaq({ items }: { items: { q: string; a: string }[] }) {
   const [open, setOpen] = useState(0);
   const uid = useId();
   return (

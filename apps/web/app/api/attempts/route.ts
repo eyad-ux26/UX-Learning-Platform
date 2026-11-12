@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   // These reads do not depend on each other, so they go out together: a skill check sends all its answers in this one
   // request at the end (D1), and every serial round trip to the database was time the learner waited on its end page.
   const [pro, withinMinute, { data: versionRow }, { data: known }] = await Promise.all([
-    // Units after Unit 1 need Pro, checked here and not only on the screen (slice 5). Read with the learner's own session.
+    // Units after Unit 1 need Pro, checked here and not only on the screen. Read with the learner's own session.
     lessonOpen(body.lessonId, false) ? Promise.resolve(true) : readPro(supabase, userId, hostOf(req)),
     withinDbLimit(db, userId, "attempts-minute", PER_MINUTE, 60),
     // Answers given on an older version of the lesson are scored against that version, which stays stored.
