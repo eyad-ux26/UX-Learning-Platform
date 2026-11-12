@@ -1,5 +1,9 @@
 # Architecture
 
+> **Update, November 2026.** The app runs on Cloudflare Workers (OpenNext), not Vercel: see
+> [deploy-cloudflare.md](../deploy-cloudflare.md). Cron jobs are Cloudflare Cron Triggers (`apps/web/cf-worker.ts`).
+> For how the code is organised today, read the [learner app developer guide](learner-app.md).
+
 Version 1, 29 October 2026. Stack approved on 29 October 2026; payment providers are a working assumption (Paymob for Egypt, Paddle elsewhere).
 
 ## Overview

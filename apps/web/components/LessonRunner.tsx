@@ -23,8 +23,10 @@ export const GUEST_ID = "guest";
 
 type Props = {
   lesson: Lesson; hash: string; locale: Locale; pathLabel: string; lessonNo: number; unitNo?: number; unitId: string; streak: number; userId: string; replay: ReplayKind | null;
-  /** The mastery round of a unit: `lesson` is its re-test bank cut down to the steps in `plan`. */
-  /** "review": a spaced-review session, also a cut-down bank, with its own end page. */
+  /**
+   * "mastery": the mastery round of a unit, where `lesson` is its re-test bank cut down to the steps in `plan`.
+   * "review": a spaced-review session, also a cut-down bank, with its own end page.
+   */
   variant?: "lesson" | "mastery" | "review";
   plan?: string[];
   /** The sample lesson for someone who is not signed in: answers stay on this device until they sign up. */
@@ -47,15 +49,15 @@ type Props = {
 const LOCALE_PREFIX = /^\/(en|ar)(?=\/|$)/;
 const dirOf = (l: string) => (l === "ar" ? "rtl" : "ltr");
 
-/**
- * Shows the lesson in `view` when the learner switched language inside it. The lesson text has both languages already;
- * the player's own strings come from `other`. The page keeps its place, its answers and any open sheet.
- */
 function OfflineBar() {
   const t = useTranslations("sync");
   return <p className="offline-bar" role="status"><span className="ph ph-wifi-slash" aria-hidden="true" />{t("offlineBanner")}</p>;
 }
 
+/**
+ * Shows the lesson in `view` when the learner switched language inside it. The lesson text has both languages already;
+ * the player's own strings come from `other`. The page keeps its place, its answers and any open sheet.
+ */
 function ViewLocale({ view, locale, other, children }: { view: Locale; locale: Locale; other?: OtherLocale; children: React.ReactNode }) {
   const base = useMessages() as Record<string, Record<string, unknown>>;
   const timeZone = useTimeZone();

@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Sheet } from "@/components/account/Sheet";
 import { confirmCertificateName, setCertificatePublic } from "@/app/[locale]/app/(shell)/certificate/[pathId]/actions";
 import { validCertName } from "@/lib/cert-name";
-import { linkedInFeedUrl, linkedInProfileUrl, postText } from "@/lib/certificate-share";
+import { linkedInFeedUrl, linkedInProfileUrl } from "@/lib/certificate-share";
 
 type Props = {
   pathId: string; pathName: string; name: string; code: string; issuedAt: string; id: string; skills: number; checks: number;

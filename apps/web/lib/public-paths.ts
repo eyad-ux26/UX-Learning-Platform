@@ -186,7 +186,6 @@ export const PUBLIC_PATHS: PublicPath[] = [
 export const SITE_URL = "https://uxgate.org";
 export const artUrl = (p: Pick<PublicPath, "art">) => `/ill/uxgate-ill-${p.art}.png`;
 export const publicPathBySlug = (slug: string) => PUBLIC_PATHS.find((p) => p.slug === slug);
-export const publicPathById = (id: string) => PUBLIC_PATHS.find((p) => p.id === id);
 
 /** The bundle has playable lessons for this path. */
 export const isPublished = (pathId: string, b: ContentIndex = defaultBundle) => b.units.some((u) => u.pathId === pathId && u.lessons.length > 0);
