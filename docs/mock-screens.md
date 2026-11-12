@@ -70,6 +70,8 @@ mock:
   blocks: [ ... ]
 ```
 
+On a screen narrower than 520 px, a wide frame is laid out at 520 px and zoomed down to fit, like a screenshot of a laptop page, so its rows never clip.
+
 Other mock-level options:
 
 | Key | Meaning |

@@ -183,4 +183,26 @@ describe("small pictures show the whole drawing", () => {
       expect(render({ blocks: [{ kind: "image", art, size: "l" }] } as never, "en"), art).toContain('preserveAspectRatio="xMidYMid slice"');
     }
   });
+  it("stretches the drawing's edge columns beside a small drawing, so its bands reach both edges", () => {
+    const s = render({ blocks: [{ kind: "image", art: "desert", size: "s" }] } as never, "en");
+    expect(s).toContain('class="xm-art-edge is-start"');
+    expect(s).toContain('class="xm-art-edge is-end"');
+    expect(render({ blocks: [{ kind: "image", art: "desert", size: "l" }] } as never, "en")).not.toContain("xm-art-edge");
+  });
+});
+
+describe("other paths follow-ups (12 Nov)", () => {
+  it("greys out calendar days before the 'before' day", () => {
+    const html = render({ blocks: [{ kind: "calendar", months: [{ title: "May", start: 0, days: 31 }], before: [0, 12] }] } as never, "en");
+    expect(html).toContain('<i class="cd cdx">11</i>');
+    expect(html).toContain('<i class="cd">12</i>');
+  });
+  it("zooms a laptop page down on a phone instead of letting its rows clip", () => {
+    const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
+    expect(css).toContain(".xm-wide{container-type:inline-size}");
+    const steps = [...css.matchAll(/@container[^{]*max-width:([\d.]+)px\)\{\.xm-wide>\.xm-shell\{inline-size:(\d+)px;zoom:([\d.]+)\}\}/g)];
+    expect(steps.length).toBeGreaterThan(5);
+    // At the narrowest width of each step, the zoomed page must still fit.
+    for (const [, max, w, z] of steps) expect(Number(w) * Number(z)).toBeLessThanOrEqual(Number(max) - 19.98 + 0.5);
+  });
 });

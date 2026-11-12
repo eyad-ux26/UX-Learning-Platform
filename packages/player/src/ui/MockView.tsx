@@ -1,6 +1,6 @@
 import { createContext, Fragment, useContext, useState, type ReactNode } from "react";
 import type { Locale, Mock, MockAction, MockApp, MockAppbar, MockBlock, MockFab, MockNavbar, MockOverlay, MockText } from "@uxgate/content/types";
-import { artBg, artSvg } from "./art";
+import { artBg, artEdge, artSvg } from "./art";
 
 /** Spot steps make blocks with a `region` tappable. */
 export type RegionCtx = { selected: string[]; state: (id: string) => "" | "is-right" | "is-wrong" | "is-dim"; labels: Record<string, string>; onPick: (id: string) => void; locked: boolean; rightWord: string; wrongWord: string };
@@ -80,6 +80,7 @@ function Calendar({ b, locale }: { b: MockBlock; locale: Locale }) {
   const lo = pair(b.from) ?? pair(b.pick) ?? -1;
   const hi = pair(b.to) ?? lo;
   const today = Array.isArray(b.today) ? (b.today as number[]) : null;
+  const before = pair(b.before) ?? -1; // days before this one are greyed out and can't be picked
   const wd = mt((b.weekdays as MockText) ?? { en: "S M T W T F S", ar: "ح ن ث ر خ ج س" }, locale).split(" ");
   return (
     <>
@@ -94,7 +95,7 @@ function Calendar({ b, locale }: { b: MockBlock; locale: Locale }) {
               {Array.from({ length: m.days ?? 30 }, (_, k) => {
                 const d = k + 1, v = key(mi, d), on = lo >= 0 && v >= lo && v <= hi, end = v === lo || v === hi;
                 const td = today && today[0] === mi && today[1] === d;
-                return <i key={d} className={`cd${on ? (end ? " cde" : " cdr") : ""}${td ? " cdt" : ""}`}>{d}</i>;
+                return <i key={d} className={`cd${on ? (end ? " cde" : " cdr") : ""}${td ? " cdt" : ""}${v < before ? " cdx" : ""}`}>{d}</i>;
               })}
             </div>
           </div>
@@ -212,7 +213,9 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
         // A small image (72 px tall, full width) shows the whole drawing on its own background instead of an empty middle slice.
         const fit = b.size === "s" ? "meet" : "slice";
         const bg = fit === "meet" ? artBg(String(b.art)) : undefined;
-        return <div className={cls + " has-art"} style={bg ? { ...style, background: bg } : style}><Art name={String(b.art)} label={mt(b.alt as MockText, locale)} fit={fit} />{text ? <span className="art-cap">{inline(text)}</span> : null}</div>;
+        // Beside it, the drawing's own edge columns (left and right, so the wrapper is always LTR), stretched, carry its bands (sand, road, floor) out to both edges.
+        const edge = (side: "start" | "end") => { const svg = artEdge(String(b.art), side); return svg ? <span className={`xm-art-edge is-${side}`} dangerouslySetInnerHTML={{ __html: svg }} /> : null; };
+        return <div className={cls + " has-art"} style={bg ? { ...style, background: bg } : style}>{fit === "meet" ? <span className="xm-art-edges" dir="ltr">{edge("start")}{edge("end")}</span> : null}<Art name={String(b.art)} label={mt(b.alt as MockText, locale)} fit={fit} />{text ? <span className="art-cap">{inline(text)}</span> : null}</div>;
       }
       return <div className={cls} style={style}>{inline(text)}</div>;
     case "button":
