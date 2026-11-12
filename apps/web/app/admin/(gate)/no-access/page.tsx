@@ -15,7 +15,7 @@ export default async function NoAccessPage() {
   const email = "email" in s ? s.email : "";
   return (
     <GateCard title={s.kind === "suspended" ? "Your admin access is paused" : "You don’t have admin access"}
-      sub={s.kind === "suspended" ? "A super admin suspended this account. Your past actions stay in the audit log." : `${email} is not on the UXGate team. A super admin can invite you; the invite comes by email.`}>
+      sub={s.kind === "suspended" ? "An admin suspended this account. Your past actions stay in the audit log." : `${email} is not on the UXGate team. A super admin can invite you; the invite comes by email.`}>
       <div className="a-row" style={{ gap: 8 }}>
         <form action={gateSignOut}><button className="a-btn" type="submit">Sign out</button></form>
         <Link className="a-btn ghost" href="/">Go to UXGate</Link>

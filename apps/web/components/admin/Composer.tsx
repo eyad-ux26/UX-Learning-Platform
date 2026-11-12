@@ -3,7 +3,7 @@
 // A macro fills the text for this learner and can run actions when the reply is sent.
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Feedback, type Action, type Result } from "./forms";
+import { Feedback, useKeptForm, type Action, type Result } from "./forms";
 
 export type MacroOption = { id: string; title: string; category: string; actions: string[]; en: string; ar: string };
 
@@ -14,7 +14,8 @@ export function Composer({ action, ticket, lang: lang0, macros, canNote = true }
   const [lang, setLang] = useState<"en" | "ar">(lang0);
   const [macro, setMacro] = useState<MacroOption | null>(null);
   const [text, setText] = useState("");
-  const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
+  // Kept on failure: a long reply is never lost to an error.
+  const { state, pending, ref: form, onSubmit } = useKeptForm(action);
   const router = useRouter();
   const ref = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
@@ -32,7 +33,7 @@ export function Composer({ action, ticket, lang: lang0, macros, canNote = true }
   };
   const statusFromMacro = macro?.actions.find((a) => a.startsWith("status:"))?.slice(7);
   return (
-    <form action={formAction} className="a-composer" aria-label="Reply">
+    <form ref={form} onSubmit={onSubmit} className="a-composer" aria-label="Reply">
       <input type="hidden" name="ticket" value={ticket} />
       <input type="hidden" name="mode" value={mode} />
       <input type="hidden" name="lang" value={lang} />

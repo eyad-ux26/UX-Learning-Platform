@@ -105,8 +105,21 @@ export async function payment(id: string) {
     db.rpc("admin_events_for", { p_ref: pay.provider_payment_id }).then((r) => (r.data ?? []) as { id: string; provider: string; event_type: string; received_at: string; processed_at: string | null; error: string | null }[]),
     db.from("billing_accounts").select("country").eq("user_id", pay.user_id).maybeSingle().then((r) => r.data),
   ]);
-  const reqTicket = req ? (await db.from("support_tickets").select("id, status").eq("link_type", "refund_request").eq("link_id", req.id).maybeSingle()).data : null;
-  return { pay, sub, req, ticket: ticket ?? reqTicket, events, country: acct?.country ?? null };
+  const [reqTicket, approval] = await Promise.all([
+    req ? db.from("support_tickets").select("id, status").eq("link_type", "refund_request").eq("link_id", req.id).maybeSingle().then((r) => r.data) : null,
+    waitingRefundApproval(pay.id, req?.status === "waiting" ? req.id : null),
+  ]);
+  return { pay, sub, req, ticket: ticket ?? reqTicket, events, country: acct?.country ?? null, approval };
+}
+
+/**
+ * The refund approval still waiting for this payment, if any. It is filed against the learner's refund request when
+ * there is one, otherwise against the payment; only one may wait at a time (0044 admin_approvals_one_open).
+ */
+export async function waitingRefundApproval(paymentId: string, requestId: string | null): Promise<string | null> {
+  const targets = [paymentId, ...(requestId ? [requestId] : [])];
+  const { data } = await createAdminClient().from("admin_approvals").select("id").eq("kind", "refund").eq("status", "waiting").in("target_id", targets).limit(1);
+  return (data?.[0]?.id as string | undefined) ?? null;
 }
 
 // ───────── refunds ─────────

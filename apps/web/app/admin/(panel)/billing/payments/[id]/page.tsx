@@ -34,8 +34,10 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
     <main className="a-page">
       <PageHead crumbs={[{ label: "Money" }, { href: "/admin/billing/payments", label: "Payments" }, { label: pay.receipt_no }]}
         title={<Money minor={pay.amount_minor} currency={pay.currency} />} sub={<PaymentStatus p={pay} requested={req?.status === "waiting"} />}
-        actions={<RefundButtons pay={pay} requestId={req?.status === "waiting" ? req.id : null} blocked={blocked} fresh={isFresh(ctx)} overLimit={!usd || usd.minor > limit}
-          canDecide={allowed(ctx, "refunds.approve", "refunds.approve_any")} ar={p?.locale === "ar"} />} />
+        actions={d.approval && !pay.refund_sent_at && pay.status !== "refunded"
+          ? <Link href="/admin/team/approvals" className="a-btn sm">Refund waiting for approval</Link>
+          : <RefundButtons pay={pay} requestId={req?.status === "waiting" ? req.id : null} blocked={blocked} fresh={isFresh(ctx)} overLimit={!usd || usd.minor > limit}
+            canDecide={allowed(ctx, "refunds.approve", "refunds.approve_any")} ar={p?.locale === "ar"} />} />
       <div className="a-split">
         <div className="a-main-col">
           <Card title="Payment">

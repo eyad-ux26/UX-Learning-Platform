@@ -1,11 +1,11 @@
 "use client";
 // A risky export: asks for a reason (and a fresh code when needed), then saves the file the server action returns.
-import { useActionState, useEffect, useRef } from "react";
-import { CodeField, Feedback, type Action, type Result } from "./forms";
+import { useEffect, useRef } from "react";
+import { CodeField, Feedback, useKeptForm, type Action } from "./forms";
 
 export function ExportButton({ action, label, title, hidden = [], fresh, note }: { action: Action; label: string; title: string; hidden?: { name: string; value: string }[]; fresh: boolean; note?: string }) {
   const ref = useRef<HTMLDialogElement>(null);
-  const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
+  const { state, pending, ref: form, onSubmit } = useKeptForm(action);
   useEffect(() => {
     if (state?.ok && state.data && typeof state.data === "object" && "csv" in state.data) {
       const d = state.data as { csv: string; name: string; mime?: string };
@@ -13,14 +13,15 @@ export function ExportButton({ action, label, title, hidden = [], fresh, note }:
       const a = document.createElement("a");
       a.href = url; a.download = d.name; a.click();
       URL.revokeObjectURL(url);
+      form.current?.reset();
       ref.current?.close();
     }
-  }, [state]);
+  }, [state, form]);
   return (
     <>
       <button type="button" className="a-btn" onClick={() => ref.current?.showModal()}><span className="i i-download-simple" aria-hidden="true" />{label}</button>
       <dialog ref={ref} className="a-dialog" aria-label={title}>
-        <form action={formAction}>
+        <form ref={form} onSubmit={onSubmit}>
           <div className="a-dlg-h"><span className="ic"><span className="i i-download-simple" aria-hidden="true" /></span><div><h3 className="t-h2">{title}</h3>{note ? <p className="t-sm ink-2">{note}</p> : null}</div></div>
           <div className="a-dlg-b a-stack">
             {hidden.map((h) => <input key={h.name} type="hidden" name={h.name} value={h.value} />)}

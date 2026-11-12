@@ -187,6 +187,8 @@ export async function run(fn: () => Promise<unknown>, done?: string): Promise<Ac
     const err = e as { code?: string; message?: string };
     // Database guards (0044) answer 42501 with a sentence written for people.
     if (err?.code === "42501" || err?.code === "22023") return { ok: false, error: sentence(err.message ?? "Not allowed.") };
+    // A unique rule said no: someone (maybe in another tab) already did this.
+    if (err?.code === "23505") return { ok: false, error: "This is already done or already waiting. Reload the page to see it." };
     console.error("admin action failed", err?.code, err?.message);
     return { ok: false, error: "Something went wrong. Nothing was changed. Try again." };
   }

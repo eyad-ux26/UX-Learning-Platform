@@ -2,7 +2,7 @@
 // Admin forms: every change goes through a server action that checks the admin's permission again. Risky actions open
 // a confirm dialog that names the effects, asks for a reason and, when the last authenticator check is older than 10
 // minutes, for a fresh 6-digit code (requirements: "Safeguards").
-import { useActionState, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { createContext, startTransition, useActionState, useContext, useEffect, useId, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 
@@ -33,6 +33,25 @@ export function CodeField({ show }: { show: boolean }) {
 type Field = { name: string; value: string };
 
 /**
+ * Runs the action from onSubmit instead of <form action>. React resets a form after its action runs, even when the
+ * action said no, so a "fresh code needed" or any other error cleared everything the admin typed (QA F14). Here the
+ * fields keep their values; each form clears itself only after it worked.
+ */
+export function useKeptForm(action: Action) {
+  const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
+  const ref = useRef<HTMLFormElement>(null);
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget, (e.nativeEvent as SubmitEvent).submitter);
+    startTransition(() => formAction(fd));
+  };
+  return { state, pending, ref, onSubmit };
+}
+
+/** The pending state of the ActionForm around a <Submit> (useFormStatus only sees <form action>). */
+const Pending = createContext<boolean | null>(null);
+
+/**
  * A button that opens a confirm dialog for one action. `effects` lists what will happen. `reason` asks why (logged).
  * `typed` asks the admin to type a word or id exactly. `fresh` is false when a new authenticator code is needed.
  */
@@ -48,17 +67,19 @@ export function Confirm({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const uid = useId();
-  const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
+  const { state, pending, ref: form, onSubmit } = useKeptForm(action);
   const [typedOk, setTypedOk] = useState(!typed);
   const router = useRouter();
   const needCode = !fresh || (state && !state.ok && state.reauth);
   useEffect(() => {
     if (state?.ok) {
+      form.current?.reset();
+      setTypedOk(!typed);
       ref.current?.close();
       if (go) router.push(go);
       else if (refresh) router.refresh();
     }
-  }, [state, refresh, router, go]);
+  }, [state, refresh, router, go, form, typed]);
   const cls = `a-btn${small ? " sm" : ""}${danger ? " danger" : ""}${ghost ? " ghost" : ""}`;
   return (
     <>
@@ -67,7 +88,7 @@ export function Confirm({
       </button>
       {state?.ok ? <Done state={state} /> : null}
       <dialog ref={ref} className="a-dialog" aria-labelledby={`dlg-${uid}`}>
-        <form action={formAction}>
+        <form ref={form} onSubmit={onSubmit}>
           <div className="a-dlg-h">
             <span className={`ic${danger ? " bad" : ""}`}><Icon n={icon ?? (danger ? "warning" : "check")} /></span>
             <div><h3 className="t-h2" id={`dlg-${uid}`}>{title}</h3>{sub ? <p className="t-sm ink-2">{sub}</p> : null}</div>
@@ -108,20 +129,29 @@ export function Confirm({
  * use it, so its children are plain elements (a function child cannot cross from a server page to a client component);
  * use <Submit> inside it for a button that shows the pending state.
  */
-export function ActionForm({ action, children, className, reset = true, refresh = true }: { action: Action; children: ReactNode; className?: string; reset?: boolean; refresh?: boolean }) {
-  const [state, formAction] = useActionState<Result | null, FormData>(action, null);
-  const ref = useRef<HTMLFormElement>(null);
+export function ActionForm({ action, children, className, reset = true, refresh = true, codeWhenChanged, fresh = true }: {
+  action: Action; children: ReactNode; className?: string; reset?: boolean; refresh?: boolean;
+  /** A field that needs a fresh authenticator code when changed: the code field shows as soon as it differs. */
+  codeWhenChanged?: string; fresh?: boolean;
+}) {
+  const { state, pending, ref, onSubmit } = useKeptForm(action);
+  const [changed, setChanged] = useState(false);
   const router = useRouter();
   useEffect(() => {
     if (state?.ok) {
       if (reset) ref.current?.reset();
+      setChanged(false);
       if (refresh) router.refresh();
     }
-  }, [state, reset, refresh, router]);
+  }, [state, reset, refresh, router, ref]);
+  const onChange = (e: FormEvent<HTMLFormElement>) => {
+    const t = e.target as HTMLInputElement;
+    if (codeWhenChanged && t.name === codeWhenChanged) setChanged(t.value !== t.defaultValue);
+  };
   return (
-    <form ref={ref} action={formAction} className={className}>
-      {children}
-      <CodeField show={!!(state && !state.ok && state.reauth)} />
+    <form ref={ref} onSubmit={onSubmit} onChange={codeWhenChanged ? onChange : undefined} className={className}>
+      <Pending.Provider value={pending}>{children}</Pending.Provider>
+      <CodeField show={(changed && !fresh) || !!(state && !state.ok && state.reauth)} />
       <Feedback state={state} />
     </form>
   );
@@ -129,7 +159,8 @@ export function ActionForm({ action, children, className, reset = true, refresh 
 
 /** The submit button of the form it sits in: disabled and busy while the form's action runs. */
 export function Submit({ className = "a-btn sm", busy, children, style }: { className?: string; busy?: string; children: ReactNode; style?: CSSProperties }) {
-  const { pending } = useFormStatus();
+  const status = useFormStatus();
+  const pending = useContext(Pending) ?? status.pending;
   return <button type="submit" className={className} disabled={pending} aria-busy={pending} style={style}>{pending && busy ? busy : children}</button>;
 }
 
@@ -157,17 +188,17 @@ export function Drawer({ label, title, icon, primary = false, children, action, 
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const uid = useId();
-  const [state, formAction, pending] = useActionState<Result | null, FormData>(action, null);
+  const { state, pending, ref: form, onSubmit } = useKeptForm(action);
   const router = useRouter();
   useEffect(() => {
-    if (state?.ok) { ref.current?.close(); router.refresh(); }
-  }, [state, router]);
+    if (state?.ok) { form.current?.reset(); ref.current?.close(); router.refresh(); }
+  }, [state, router, form]);
   return (
     <>
       <button type="button" className={`a-btn${primary ? " pri" : ""}`} onClick={() => ref.current?.showModal()}>{icon ? <Icon n={icon} /> : null}{label}</button>
       {state?.ok ? <Done state={state} /> : null}
       <dialog ref={ref} className="a-drawer" aria-labelledby={`drw-${uid}`}>
-        <form action={formAction} style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <form ref={form} onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", height: "100%" }}>
           <div className="a-drw-h"><h2 className="t-h2 a-grow" id={`drw-${uid}`}>{title}</h2><button type="button" className="a-btn sm icon ghost" aria-label="Close" onClick={() => ref.current?.close()}><Icon n="x" /></button></div>
           <div className="a-drw-b a-stack">
             {children}

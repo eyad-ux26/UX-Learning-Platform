@@ -5,7 +5,7 @@ import { allowed, requireAdmin } from "@/lib/admin/guard";
 import { CATEGORY_LABEL, CHANNEL_LABEL, fillPlaceholders, STATUS_LABEL, TICKET_COLS, type Message, type Ticket } from "@/lib/admin/data/support";
 import { people } from "@/lib/admin/data/billing";
 import { maskEmail, maskName } from "@/lib/admin/mask";
-import { REGION_LABEL } from "@/lib/admin/format";
+import { REGION_LABEL, count } from "@/lib/admin/format";
 import { Card, I, Id, KV, Money, NoAccess, Note, PageHead, St, When, type Tone } from "@/components/admin/ui";
 import { Confirm } from "@/components/admin/forms";
 import { AutoSelect, Composer, type MacroOption } from "@/components/admin/Composer";
@@ -108,7 +108,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                 <KV rows={[
                   ["Plan", pro ? (ent?.source === "manual" ? "Pro (comp)" : `Pro ${sub?.period === "year" ? "annual" : "monthly"}${sub ? ` · ${REGION_LABEL[sub.region] ?? sub.region}` : ""}`) : "Free"],
                   ["Renews", sub ? <span key="r"><When at={sub.current_period_end} /> · <Money minor={sub.renew_amount_minor} currency={sub.currency} usd={false} /></span> : null],
-                  ["Streak", streak ? `${streak.current} days · ${streak.freezes_available} freeze${streak.freezes_available === 1 ? "" : "s"}` : null],
+                  ["Streak", streak ? `${count(streak.current, "day")} · ${count(streak.freezes_available, "freeze")}` : null],
                 ]} />
               </>
             ) : <><b className="t-sm">{t.name ?? maskEmail(t.email)}</b><span className="t-xs ink-2">{maskEmail(t.email)} · no UXGate account with this email</span></>}
