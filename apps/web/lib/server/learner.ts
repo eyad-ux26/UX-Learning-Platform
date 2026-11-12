@@ -11,7 +11,8 @@ export type { Learner } from "@/lib/server/learner-state";
 const fixture = (): Learner => ({
   db: null, weekStart: 1, userId: "fixture", email: "nour@example.com", unread: null, profileExtra: null, hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null, teamView: process.env.UG_DEV_TEAM === "1",
   practicedSkills: new Set(["SK-P01-U01-01"]),
-  joined: [{ pathId: "P01", startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" }], activePathId: "P01",
+  // UG_DEV_JOINED="P01,P14" joins more paths, to check screens that change with several paths.
+  joined: (process.env.UG_DEV_JOINED ?? "P01").split(",").map((pathId) => ({ pathId, startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" })), activePathId: "P01",
   skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
   freezes: 1, longestStreak: 12, freezeNote: null, leaderboardJoined: false, shareEnabled: false, handle: null,
   progress: {

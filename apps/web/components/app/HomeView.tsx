@@ -5,11 +5,11 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { IconMark } from "@/components/Logo";
 import type { PathView } from "@/lib/learning";
-import type { Progress } from "@/lib/progress";
 import type { Locale } from "@uxgate/content";
 import { GoalRing, Week } from "./Goal";
 import { FreezeNote } from "./FreezeNote";
 import { PathChips } from "./PathChips";
+import { XpChip } from "./XpChip";
 import { localPathName, pathArtUrl } from "@/lib/catalog";
 import { buildPathView } from "@/lib/learning";
 import { reviewDue } from "@/lib/skill-state";
@@ -42,124 +42,116 @@ export async function HomeMain({ me, view, bell, banner }: { me: Learner; view: 
     const l = other?.next;
     if (other && l?.state === "in_progress") { resume = { lessonId: l.lesson.lessonId, title: l.lesson.body.title[locale], pathId: j.pathId, pathName: localPathName(j.pathId, locale) }; break; }
   }
-  const chips = me.joined.map((j) => {
+  // "Unit 2 · 6/20" under each Your paths card (design S3-2), or "Not started".
+  const where = (v: PathView | null) => {
+    if (!v || !v.doneCount) return t("pathNotStarted");
+    const u = v.units.find((x) => x.lessons.some((l) => l.state !== "done")) ?? v.units[v.units.length - 1];
+    return t("pathWhere", { unit: u?.number ?? 1, done: v.doneCount, total: v.totalCount });
+  };
+  const joinedIds = me.joined.length ? [view.path.id, ...me.joined.map((j) => j.pathId).filter((id) => id !== view.path.id)] : [view.path.id];
+  const chips = joinedIds.map((id) => {
+    const j = { pathId: id };
     const v = buildPathView(j.pathId, progress, me.practicedSkills);
-    return { id: j.pathId, name: localPathName(j.pathId, locale), art: pathArt(j.pathId), pct: v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0, current: j.pathId === view.path.id };
+    return { id: j.pathId, name: localPathName(j.pathId, locale), art: pathArt(j.pathId), pct: v && v.totalCount ? Math.round((v.doneCount / v.totalCount) * 100) : 0, current: j.pathId === view.path.id, where: where(v) };
   });
   const now = new Date();
   const dueSkills = [...me.skillStates].filter(([, r]) => reviewDue(r, now));
   const due = { count: dueSkills.length, paths: new Set(dueSkills.map(([id]) => pathOfId(id))).size };
 
+  const streakText = progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone");
+
+  // Layout follows the approved canvas board S3-2 (PathsPages, view "home"): a header with the streak and XP, the greeting,
+  // then two columns on a laptop. Left: Your paths and the next lesson. Right: review and the goal and streak card.
+  // The old full-height side panel (Sprint 1 DeskHome) is gone, as on the board (Eyad, 12 Nov).
   return (
     <>
-      <div className="topline only-mobile">
-        <IconMark />
+      <div className="home-top">
+        <span className="only-mobile"><IconMark /></span>
         <div style={{ flex: 1 }} />
-        <span className="stat" aria-label={t("streakLabel", { count: progress.streak })}><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num">{progress.streak}</span></span>
-        <span className="stat" aria-label={t("xpLabel", { count: progress.xpTotal })}><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>
+        <Link href="/app/streak" className="stat stat-link" aria-label={`${t("streakLabel", { count: progress.streak })}. ${t("streakOpen")}`}><span className="ph ph-flame-fill" style={{ color: "#F59E2B" }} aria-hidden="true" /><span className="num">{progress.streak}</span></Link>
+        <XpChip xp={progress.xpTotal} />
         {bell}
+        <Link href="/app/profile" className="avatar only-desk home-avatar" aria-label={t("profile")}>{(progress.displayName ?? "U").trim().charAt(0).toUpperCase() || "U"}</Link>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <h1 className="t-h1 h1-s" style={{ flex: 1 }}>{await greeting(hour, progress.displayName)}</h1>
-        {bell ? <span className="only-desk">{bell}</span> : null}
-      </div>
-      {/* "Your paths" sits at the top, so switching path comes before the lesson card it changes (Eyad, 5 Nov). */}
-      {chips.length > 1 ? <PathChips chips={chips} label={t("yourPaths")} addLabel={t("addPath")} /> : null}
+      <h1 className="t-h1 h1-s">{await greeting(hour, progress.displayName)}</h1>
       {banner}
       {me.freezeNote ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
 
-      {next ? (
-        <section className="card-panel next-card" aria-label={t("nextLabel")}>
-          
-          <img className="next-art" src={pathArt(view.path.id)} alt="" />
-          <div className="stack">
-            <div className="row"><span className="tag" style={{ background: "var(--surface)" }}><PathName name={localPathName(view.path.id, locale) ?? ""} /> · {t("unit", { n: unitNumber })}</span>{next.unit.free ? <span className="tag tag-free">{t("free")}</span> : null}</div>
-            <div className="copy">
-              <p className="t-over" style={{ color: "var(--link)" }}>{next.state === "in_progress" ? t("continueUp") : t("nextUp")}</p>
-              <h2 className="t-h2" style={{ fontSize: 24, color: "var(--panel-ink)" }}>{lang}</h2>
-              {next.lesson.body.summary?.[locale] ? <p className="t-body ink-2 lesson-body">{next.lesson.body.summary[locale]}</p> : null}
+      <div className="home-split">
+        <div className="pg-stack" style={{ gap: 14 }}>
+          {/* "Your paths" sits at the top, so switching path comes before the lesson card it changes (Eyad, 5 Nov). */}
+          <PathChips chips={chips} label={t("yourPaths")} addLabel={t("addPath")} allLabel={t("allPaths")} />
+
+          {next ? (
+            <section className="card-panel next-card" aria-label={t("nextLabel")}>
+              <img className="next-art" src={pathArt(view.path.id)} alt="" />
+              <div className="stack">
+                <div className="row"><span className="tag" style={{ background: "var(--surface)", blockSize: "auto", minBlockSize: 26, paddingBlock: 3 }}><span><PathName name={localPathName(view.path.id, locale) ?? ""} /> · <span style={{ whiteSpace: "nowrap" }}>{t("unit", { n: unitNumber })}</span></span></span>{next.unit.free ? <span className="tag tag-free">{t("free")}</span> : null}</div>
+                <div className="copy">
+                  <p className="t-over" style={{ color: "var(--link)" }}>{next.state === "in_progress" ? t("continueUp") : t("nextUp")}</p>
+                  <h2 className="t-h2" style={{ fontSize: 24, color: "var(--panel-ink)" }}>{lang}</h2>
+                </div>
+                <div className="meta">
+                  <span className="t-small ink-2 meta-i"><span className="ph ph-book" aria-hidden="true" />{t("lessonOf", { n: next.indexInUnit, total: next.unitLessons })}</span>
+                  <span className="t-small ink-2 meta-i"><span className="ph ph-clock" aria-hidden="true" />{t("minutes", { count: next.lesson.minutes })}</span>
+                </div>
+                <div className="segs" aria-hidden="true">{unitLessons.map((l) => <span key={l.lesson.lessonId} className={l.state === "done" ? "on" : undefined} />)}</div>
+                <Link href={`/app/lesson/${next.lesson.lessonId}`} className="btn btn-primary btn-lg btn-block press" style={{ marginBlockStart: 4 }}><span className="ph ph-play" aria-hidden="true" />{next.state === "in_progress" ? t("continue") : t("start")}</Link>
+              </div>
+            </section>
+          ) : (
+            <section className="card-panel next-card" aria-label={t("nextLabel")}>
+              <div className="stack">
+                <h2 className="t-h2" style={{ color: "var(--panel-ink)" }}>{t("allDone")}</h2>
+                <p className="t-body ink-2">{t("allDoneBody")}</p>
+              </div>
+            </section>
+          )}
+
+          {resume ? (
+            <section className="card resume-card" aria-label={t("resumeOver")}>
+              <img src={pathArt(resume.pathId)} alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none" }} />
+              <div style={{ flex: 1, minInlineSize: 0 }}>
+                <p className="t-over">{t("resumeOver")}</p>
+                <p className="t-label">{resume.title}</p>
+                <p className="t-small ink-2">{t("from", { path: resume.pathName })}</p>
+              </div>
+              <Link href={`/app/lesson/${resume.lessonId}`} className="btn btn-secondary btn-sm press">{t("continue")}</Link>
+            </section>
+          ) : null}
+        </div>
+
+        <div className="pg-stack" style={{ gap: 14 }}>
+          {due.count > 0 ? (
+            <Link href="/app/review" className="card press review-card">
+              <span className="review-ic" aria-hidden="true"><span className="ph ph-review" /></span>
+              <div style={{ flex: 1, minInlineSize: 0 }}>
+                <p className="t-label" style={{ fontSize: 16 }}>{t("reviewTitle", { count: due.count })}</p>
+                <p className="t-small ink-2">{t("reviewBody", { paths: due.paths, minutes: Math.max(2, Math.round(due.count * 1.2)) })}</p>
+              </div>
+              <span className="btn btn-secondary btn-sm" aria-hidden="true">{t("review")}</span>
+            </Link>
+          ) : null}
+
+          <section className="card goal-card" aria-label={t("goalTitle")}>
+            <div className="goal-row">
+              <GoalRing done={progress.lessonsToday} goal={progress.dailyGoal} />
+              <div style={{ flex: 1, minInlineSize: 0 }}>
+                <p className="t-label" style={{ fontSize: 16 }}>{t("goalTitle")}</p>
+                <p className="t-small ink-2">{remaining > 0 ? t("goalMore", { count: remaining }) : t("goalDone")}</p>
+              </div>
             </div>
-            <div className="meta">
-              <span className="t-small ink-2 meta-i"><span className="ph ph-book" aria-hidden="true" />{t("lessonOf", { n: next.indexInUnit, total: next.unitLessons })}</span>
-              <span className="t-small ink-2 meta-i"><span className="ph ph-clock" aria-hidden="true" />{t("minutes", { count: next.lesson.minutes })}</span>
-            </div>
-            <div className="segs" aria-hidden="true">{unitLessons.map((l) => <span key={l.lesson.lessonId} className={l.state === "done" ? "on" : undefined} />)}</div>
-            <Link href={`/app/lesson/${next.lesson.lessonId}`} className="btn btn-primary btn-lg btn-block press" style={{ marginBlockStart: 4 }}><span className="ph ph-play" aria-hidden="true" />{next.state === "in_progress" ? t("continue") : t("start")}</Link>
-          </div>
-        </section>
-      ) : (
-        <section className="card-panel next-card" aria-label={t("nextLabel")}>
-          <div className="stack">
-            <h2 className="t-h2" style={{ color: "var(--panel-ink)" }}>{t("allDone")}</h2>
-            <p className="t-body ink-2">{t("allDoneBody")}</p>
-          </div>
-        </section>
-      )}
-
-      {resume ? (
-        <section className="card resume-card" aria-label={t("resumeOver")}>
-          
-          <img src={pathArt(resume.pathId)} alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none" }} />
-          <div style={{ flex: 1, minInlineSize: 0 }}>
-            <p className="t-over">{t("resumeOver")}</p>
-            <p className="t-label">{resume.title}</p>
-            <p className="t-small ink-2">{t("from", { path: resume.pathName })}</p>
-          </div>
-          <Link href={`/app/lesson/${resume.lessonId}`} className="btn btn-secondary btn-sm press">{t("continue")}</Link>
-        </section>
-      ) : null}
-
-      {due.count > 0 ? (
-        <Link href="/app/review" className="card press review-card">
-          
-          <img src="/ill/uxgate-ill-review.png" alt="" style={{ inlineSize: 44, blockSize: 44, flex: "none" }} />
-          <div style={{ flex: 1, minInlineSize: 0 }}>
-            <p className="t-label">{t("reviewTitle", { count: due.count })}</p>
-            <p className="t-small ink-2">{t("reviewBody", { paths: due.paths, minutes: Math.max(2, Math.round(due.count * 1.2)) })}</p>
-          </div>
-          <span className="btn btn-secondary btn-sm" aria-hidden="true">{t("review")}</span>
-        </Link>
-      ) : null}
-
-      <section className="card goal-card only-mobile" style={{ display: undefined }}>
-        <div className="goal-row">
-          <GoalRing done={progress.lessonsToday} goal={progress.dailyGoal} />
-          <div style={{ flex: 1, minInlineSize: 0 }}>
-            <p className="t-label" style={{ fontSize: 16 }}>{t("goalTitle")}</p>
-            <p className="t-small ink-2">{remaining > 0 ? t("goalMore", { count: remaining }) : t("goalDone")}</p>
-          </div>
+            <div className="rule" />
+            {/* The whole streak row opens the streak page, not only the freeze line (Eyad, 12 Nov). */}
+            <Link href="/app/streak" className="streak-row streak-link" aria-label={`${streakText}. ${t("streakOpen")}`}>
+              <span className="ph ph-flame-fill" style={{ fontSize: 20, color: "#F59E2B" }} aria-hidden="true" />
+              <span className="t-label" style={{ fontSize: 15, flex: 1 }}>{streakText}</span>
+              <span className="kind"><span className="ph ph-freeze-fill" aria-hidden="true" />{me.freezes > 0 ? t("freezeReady", { count: me.freezes }) : t("freezeNone")}</span>
+              <span className="ph ph-caret-right flip ink-3" aria-hidden="true" />
+            </Link>
+            <Week today={progress.today} activeDays={progress.activeDays} goalDays={goalDaysOf(progress)} frozenDays={progress.frozenDays} start={me.weekStart} />
+          </section>
         </div>
-        <div className="rule" />
-        <div className="streak-row">
-          <span className="ph ph-flame-fill" style={{ fontSize: 20, color: "#F59E2B" }} aria-hidden="true" />
-          <p className="t-label" style={{ fontSize: 15, flex: 1 }}>{progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone")}</p>
-          <Link href="/app/streak" className="kind"><span className="ph ph-freeze-fill" aria-hidden="true" />{me.freezes > 0 ? t("freezeReady", { count: me.freezes }) : t("freezeNone")}</Link>
-        </div>
-        <Week today={progress.today} activeDays={progress.activeDays} goalDays={goalDaysOf(progress)} frozenDays={progress.frozenDays} start={me.weekStart} />
-      </section>
-    </>
-  );
-}
-
-export async function HomePanel({ progress, freezes = 0, weekStart }: { progress: Progress; freezes?: number; weekStart?: number }) {
-  const t = await getTranslations("home");
-  const remaining = Math.max(0, progress.dailyGoal - progress.lessonsToday);
-  return (
-    <>
-      <div className="dk-prop">
-        <p className="t-over">{t("goalTitle")}</p>
-        <div className="goal-row" style={{ gap: 16 }}>
-          <GoalRing done={progress.lessonsToday} goal={progress.dailyGoal} size={76} />
-          <p className="t-small ink-2">{remaining > 0 ? t("goalMore", { count: remaining }) : t("goalDone")}</p>
-        </div>
-      </div>
-      <div className="dk-prop">
-        <div className="streak-row"><span className="ph ph-flame-fill" style={{ fontSize: 20, color: "#F59E2B" }} aria-hidden="true" /><p className="t-label" style={{ flex: 1 }}>{progress.streak > 0 ? t("streakTitle", { count: progress.streak }) : t("streakNone")}</p></div>
-        <Week today={progress.today} activeDays={progress.activeDays} goalDays={goalDaysOf(progress)} frozenDays={progress.frozenDays} start={weekStart} small />
-        <Link href="/app/streak" className="kind" style={{ alignSelf: "flex-start" }}><span className="ph ph-freeze-fill" aria-hidden="true" />{freezes > 0 ? t("freezeReady", { count: freezes }) : t("freezeNone")}</Link>
-      </div>
-      <div className="dk-prop">
-        <span className="stat" style={{ alignSelf: "flex-start" }}><span className="ph ph-bolt-fill" style={{ color: "var(--hl-ledge)" }} aria-hidden="true" /><span className="num ltr">{progress.xpTotal} XP</span></span>
       </div>
     </>
   );

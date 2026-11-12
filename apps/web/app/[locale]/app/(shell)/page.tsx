@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { Shell } from "@/components/app/Shell";
-import { HomeMain, HomePanel } from "@/components/app/HomeView";
+import { HomeMain } from "@/components/app/HomeView";
 import { buildPathView } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";
 import { BellLink } from "@/components/account/BellLink";
@@ -17,7 +17,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const view = buildPathView(me.activePathId, me.progress, me.practicedSkills)!;
   const [news, t] = await Promise.all([currentAnnouncement(locale), getTranslations("home")]);
   return (
-    <Shell me={me} panel={<HomePanel progress={me.progress} freezes={me.freezes} weekStart={me.weekStart} />}>
+    <Shell me={me}>
       <HomeMain me={me} view={view} bell={<BellLink me={me} />} banner={news ? <AnnouncementBanner a={news} open={t("announcementOpen")} close={t("dismiss")} /> : null} />
     </Shell>
   );
