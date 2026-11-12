@@ -150,6 +150,10 @@ describe("overlays, rows and accordions (test feedback, 12 Nov)", () => {
     const dialog = render({ blocks: [{ kind: "image", art: "map-route" }], overlay: { type: "dialog", blocks: [{ kind: "text", text: "Declined" }] } } as never, "en");
     expect(dialog.indexOf("xm-body")).toBeLessThan(dialog.indexOf("ov-dialog"));
     expect(readFileSync(new URL("../src/mock.css", import.meta.url), "utf8")).toMatch(/\.exmock \.ov\{z-index:6\}/);
+    // The base overlay rule must come before its variants, or a toast turns white (its light action text then fails contrast).
+    const css = readFileSync(new URL("../src/mock.css", import.meta.url), "utf8");
+    const base = css.indexOf(".exmock .ov{position:absolute");
+    for (const v of ["ov-toast", "ov-sheet", "ov-full", "ov-banner", "ov-dialog", "ov-menu", "ov-side"]) expect(base).toBeLessThan(css.indexOf(`.exmock .${v}{`));
   });
   it("lines a button up with the field box beside it, under a blank label line", () => {
     const row = { kind: "row", blocks: [{ kind: "field", label: T("Promo code", "كود الخصم"), text: "" }, { kind: "button", text: T("Apply", "طبّق") }] };
