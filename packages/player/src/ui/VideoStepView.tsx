@@ -19,6 +19,13 @@ export function VideoStepView({ step, locale, t, getSource, headingRef }: {
   const box = useRef<HTMLDivElement>(null);
   /** Full screen is the player's own box, not the bare <video>, so our controls, captions and tap to pause stay in charge. */
   const [full, setFull] = useState(false);
+  // While the page-filling fallback is open, hide the lesson header/footer and lock page scroll (a phone has no Esc key).
+  useEffect(() => {
+    if (!full) return;
+    const el = document.documentElement;
+    el.classList.add("lp-full-open");
+    return () => el.classList.remove("lp-full-open");
+  }, [full]);
   const [src, setSrc] = useState<VideoSource | "loading" | "error">("loading");
   const [playing, setPlaying] = useState(false);
   const [tapIcon, setTapIcon] = useState<{ n: number; play: boolean } | null>(null); // brief icon after a tap on the video
