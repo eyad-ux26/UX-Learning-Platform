@@ -1,6 +1,6 @@
 import { createContext, Fragment, useContext, useState, type ReactNode } from "react";
 import type { Locale, Mock, MockAction, MockApp, MockAppbar, MockBlock, MockFab, MockNavbar, MockOverlay, MockText } from "@uxgate/content/types";
-import { artSvg } from "./art";
+import { artBg, artSvg } from "./art";
 
 /** Spot steps make blocks with a `region` tappable. */
 export type RegionCtx = { selected: string[]; state: (id: string) => "" | "is-right" | "is-wrong" | "is-dim"; labels: Record<string, string>; onPick: (id: string) => void; locked: boolean; rightWord: string; wrongWord: string };
@@ -208,7 +208,12 @@ function Core({ b, locale }: { b: MockBlock; locale: Locale }) {
     case "divider":
       return <div className={cls} style={style} />;
     case "image":
-      if (b.art) return <div className={cls + " has-art"} style={style}><Art name={String(b.art)} label={mt(b.alt as MockText, locale)} />{text ? <span className="art-cap">{inline(text)}</span> : null}</div>;
+      if (b.art) {
+        // A small image (72 px tall, full width) shows the whole drawing on its own background instead of an empty middle slice.
+        const fit = b.size === "s" ? "meet" : "slice";
+        const bg = fit === "meet" ? artBg(String(b.art)) : undefined;
+        return <div className={cls + " has-art"} style={bg ? { ...style, background: bg } : style}><Art name={String(b.art)} label={mt(b.alt as MockText, locale)} fit={fit} />{text ? <span className="art-cap">{inline(text)}</span> : null}</div>;
+      }
       return <div className={cls} style={style}>{inline(text)}</div>;
     case "button":
     case "link":
@@ -259,8 +264,8 @@ export const Icon = ({ name, cls }: { name: string; cls?: string }) => {
   return /^[a-z0-9-]+$/.test(n) ? <span className={`xi xi-${n}${cls ? ` ${cls}` : ""}`} aria-hidden="true" /> : <span className={`xi-ch${cls ? ` ${cls}` : ""}`} aria-hidden="true">{name}</span>;
 };
 
-const Art = ({ name, label }: { name: string; label?: string }) => {
-  const svg = artSvg(name, label || undefined);
+const Art = ({ name, label, fit }: { name: string; label?: string; fit?: "slice" | "meet" }) => {
+  const svg = artSvg(name, label || undefined, fit);
   return svg ? <span className="xm-art" dangerouslySetInnerHTML={{ __html: svg }} /> : <span className="xm-art is-missing">{name}</span>;
 };
 

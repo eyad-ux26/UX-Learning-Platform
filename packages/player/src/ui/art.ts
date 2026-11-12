@@ -94,9 +94,13 @@ const ART: Record<string, string> = {
 export const ART_NAMES = Object.keys(ART);
 
 /** The SVG markup for a built-in illustration, or null for an unknown name. */
-export function artSvg(name: string, label?: string): string | null {
+/** `fit: "meet"` shows the whole drawing, centred, for short wide boxes where a slice would keep only an empty middle band. */
+export function artSvg(name: string, label?: string, fit: "slice" | "meet" = "slice"): string | null {
   const body = ART[name];
   if (!body) return null;
   const a11y = label ? `role="img" aria-label="${label.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string)}"` : `aria-hidden="true"`;
-  return `<svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid slice" ${a11y} focusable="false">${body}</svg>`;
+  return `<svg viewBox="0 0 160 120" preserveAspectRatio="xMidYMid ${fit}" ${a11y} focusable="false">${body}</svg>`;
 }
+
+/** The drawing's background colour (its first full-board rect), to fill the space around a "meet" drawing. */
+export const artBg = (name: string): string | undefined => /^\s*<rect width="160" height="120" fill="(#[0-9A-Fa-f]{3,8})"/.exec(ART[name] ?? "")?.[1];
