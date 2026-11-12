@@ -139,3 +139,33 @@ describe("line charts follow the reading direction", () => {
     expect(ar.map((p) => p[1])).toEqual(en.map((p) => p[1])); // same values, mirrored in x only
   });
 });
+
+describe("overlays, rows and accordions (test feedback, 12 Nov)", () => {
+  const T = (en: string, ar: string) => ({ en, ar });
+  it("puts a top banner under the app bar, in the flow, and other overlays above the screen", () => {
+    const html = render({ appbar: { title: T("Where to?", "إلى أين؟") }, blocks: [{ kind: "text", text: "Home" }], overlay: { type: "banner", close: true, blocks: [{ kind: "text", text: "Saved" }] } } as never, "ar");
+    expect(html.indexOf("xm-appbar")).toBeLessThan(html.indexOf("ov-banner"));
+    expect(html.indexOf("ov-banner")).toBeLessThan(html.indexOf("xm-body"));
+    expect(html).not.toContain("has-ov");
+    const dialog = render({ blocks: [{ kind: "image", art: "map-route" }], overlay: { type: "dialog", blocks: [{ kind: "text", text: "Declined" }] } } as never, "en");
+    expect(dialog.indexOf("xm-body")).toBeLessThan(dialog.indexOf("ov-dialog"));
+    expect(readFileSync(new URL("../src/mock.css", import.meta.url), "utf8")).toMatch(/\.exmock \.ov\{z-index:6\}/);
+  });
+  it("lines a button up with the field box beside it, under a blank label line", () => {
+    const row = { kind: "row", blocks: [{ kind: "field", label: T("Promo code", "كود الخصم"), text: "" }, { kind: "button", text: T("Apply", "طبّق") }] };
+    const html = render({ blocks: [row] } as never, "en");
+    expect(html).toContain("row2 has-field");
+    expect(html).toMatch(/<div class="row-side"><div class="fl" aria-hidden="true">.<\/div><div class="b k-button"/);
+  });
+  it("makes accordions a button that opens and closes, and keeps closed content ready", () => {
+    const acc = { kind: "accordion", text: T("Track my parcel", "تتبّع شحنتي"), blocks: [{ kind: "small", text: "Use the code" }] };
+    const html = render({ blocks: [acc] } as never, "en");
+    expect(html).toContain('<button type="button" class="ac-h" aria-expanded="false">');
+    expect(html).toMatch(/<div class="ac-b" hidden="">.*Use the code/);
+  });
+  it("draws a 'more' row that says the list goes on", () => {
+    const html = render({ blocks: [{ kind: "more", text: T("+12 more questions", "+12 سؤالًا آخر") }] } as never, "ar");
+    expect(html).toContain("k-more is-fade");
+    expect(html).toContain("سؤالًا آخر");
+  });
+});
