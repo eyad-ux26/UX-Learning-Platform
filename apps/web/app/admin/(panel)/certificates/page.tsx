@@ -14,7 +14,7 @@ import { REVOKE_REASONS } from "@/lib/admin/rules";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Certificates" };
 
-type Row = { code: string; path_id: string; user_id: string; issued_at: string; revoked_at: string | null; revoked_reason: { en?: string } | null; reissued_at: string | null; public_changed_at: string | null };
+type Row = { code: string; path_id: string; user_id: string; issued_at: string; revoked_at: string | null; revoked_reason: { en?: string } | null; reissued_at: string | null; public: boolean | null; public_changed_at: string | null };
 
 export default async function CertificatesPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const ctx = await requireAdmin();
@@ -22,7 +22,7 @@ export default async function CertificatesPage({ searchParams }: { searchParams:
   const sp = await searchParams;
   const db = createAdminClient();
   const q = (sp.q ?? "").trim();
-  let query = db.from("certificates").select("code, path_id, user_id, issued_at, revoked_at, revoked_reason, reissued_at, public_changed_at");
+  let query = db.from("certificates").select("code, path_id, user_id, issued_at, revoked_at, revoked_reason, reissued_at, public, public_changed_at");
   const m = q.match(/^(?:UXG-)?(?:(P\d{2})-)?([0-9A-Fa-f]{4,12})$/i);
   if (m) {
     if (m[1]) query = query.eq("path_id", m[1].toUpperCase());
@@ -93,7 +93,10 @@ export default async function CertificatesPage({ searchParams }: { searchParams:
                   <KV rows={[
                     ["Id", <Id key="i">{id}</Id>],
                     ["Status", sel.revoked_at ? <St tone="bad">Revoked <When at={sel.revoked_at} /></St> : <St tone="good">Valid</St>],
-                    ["Public page", <a key="u" href={url} target="_blank" rel="noreferrer noopener" className="t-sm">{url.replace(/^https?:\/\//, "")}</a>],
+                    // The public page is a 404 until the learner shares it (and has a name); a revoked one says it is no longer valid.
+                    ["Public page", sel.revoked_at || (sel.public && p?.display_name)
+                      ? <a key="u" href={url} target="_blank" rel="noreferrer noopener" className="t-sm">{url.replace(/^https?:\/\//, "")}</a>
+                      : <span key="u" className="t-sm ink-3">{sel.public ? "Not public (the learner has no name on their profile)" : "Not public (the learner hasn’t shared it)"}</span>],
                     ["Shown reason", sel.revoked_reason?.en ?? null],
                     ["Re-issued", sel.reissued_at ? <When at={sel.reissued_at} /> : null],
                   ]} />

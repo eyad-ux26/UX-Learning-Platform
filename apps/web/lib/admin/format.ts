@@ -35,10 +35,14 @@ export function fmtTime(at: string | Date, rel = false, now = Date.now()): strin
     if (s >= 0 && s < 60) return "Just now";
     if (s >= 0 && s < 3600) return `${Math.floor(s / 60)} min ago`;
     if (s >= 0 && s < 86400) return `${Math.floor(s / 3600)} h ago`;
-    if (s < 0 && s > -86400 * 2) return `in ${Math.max(1, Math.round(-s / 3600))} h`;
+    if (s < 0 && s > -3600) return `in ${Math.max(1, Math.ceil(-s / 60))} min`;
+    if (s < 0 && s > -86400 * 2) return `in ${Math.round(-s / 3600)} h`;
   }
   return dtf.format(d);
 }
+
+/** "1 day", "3 days". */
+export const count = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString("en")} ${n === 1 ? one : many}`;
 
 export const fmtDay = (at: string | Date) => dtfDay.format(new Date(at));
 export const fmtUtc = (at: string | Date) => `${new Date(at).toISOString().replace("T", " ").slice(0, 16)} UTC`;

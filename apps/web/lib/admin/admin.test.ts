@@ -173,3 +173,20 @@ describe("admin dialogs and drawers", () => {
     }
   });
 });
+
+describe("times and counts in the panel (QA F12, F16)", async () => {
+  const { fmtTime, count } = await import("./format");
+  const now = Date.parse("2026-11-12T10:00:00Z");
+  it("says minutes for a time less than an hour away", () => {
+    expect(fmtTime(new Date(now + 30 * 60_000), true, now)).toBe("in 30 min");
+    expect(fmtTime(new Date(now + 20_000), true, now)).toBe("in 1 min");
+    expect(fmtTime(new Date(now + 59 * 60_000), true, now)).toBe("in 59 min");
+    expect(fmtTime(new Date(now + 3 * 3_600_000), true, now)).toBe("in 3 h");
+    expect(fmtTime(new Date(now - 5 * 60_000), true, now)).toBe("5 min ago");
+  });
+  it("says 1 day, not 1 days", () => {
+    expect(count(1, "day")).toBe("1 day");
+    expect(count(0, "day")).toBe("0 days");
+    expect(count(2, "freeze")).toBe("2 freezes");
+  });
+});

@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Feedback, type Result } from "@/components/admin/forms";
+import { Feedback, useKeptForm } from "@/components/admin/forms";
 import { decide } from "./actions";
 
 // Starting text for each verdict, in the learner's app language. The member edits it before sending.
@@ -20,7 +20,7 @@ const START = {
 export function Decide({ id, quality, lang, name }: { id: string; quality: boolean; lang: "en" | "ar"; name: string }) {
   const [verdict, setVerdict] = useState<"accept" | "keep">("accept");
   const [text, setText] = useState(START.accept[lang]);
-  const [state, formAction, pending] = useActionState<Result | null, FormData>(decide, null);
+  const { state, pending, ref: form, onSubmit } = useKeptForm(decide);
   const router = useRouter();
   useEffect(() => { if (state?.ok) router.refresh(); }, [state, router]);
   const pick = (v: "accept" | "keep") => {
@@ -29,7 +29,7 @@ export function Decide({ id, quality, lang, name }: { id: string; quality: boole
     setVerdict(v);
   };
   return (
-    <form action={formAction} className="a-stack" aria-label="Answer the request">
+    <form ref={form} onSubmit={onSubmit} className="a-stack" aria-label="Answer the request">
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="verdict" value={verdict} />
       <input type="hidden" name="lang" value={lang} />

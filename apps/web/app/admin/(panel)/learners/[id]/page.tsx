@@ -7,7 +7,7 @@ import { learner360, learnerAudit } from "@/lib/admin/data/learners";
 import { people } from "@/lib/admin/data/billing";
 import { CATEGORY_LABEL, STATUS_LABEL } from "@/lib/admin/data/support";
 import { maskEmail } from "@/lib/admin/mask";
-import { REGION_LABEL } from "@/lib/admin/format";
+import { REGION_LABEL, count } from "@/lib/admin/format";
 import { AGENT_COMP_DAYS } from "@/lib/admin/rules";
 import { learningRules } from "@/lib/app-config";
 import { ActionForm, Confirm, Submit } from "@/components/admin/forms";
@@ -81,7 +81,7 @@ export default async function Learner360Page({ params, searchParams }: { params:
           {tab === "overview" ? (
             <>
               <div className="a-kpis">
-                <Kpi label="Streak" value={`${L?.progress.streak ?? 0} days`} note={`best ${L?.longestStreak ?? 0}`} icon="flame" />
+                <Kpi label="Streak" value={count(L?.progress.streak ?? 0, "day")} note={`best ${L?.longestStreak ?? 0}`} icon="flame" />
                 <Kpi label="Freezes held" value={`${L?.freezes ?? 0} of ${FREEZE_MAX}`} icon="snowflake" />
                 <Kpi label="XP" value={(L?.progress.xpTotal ?? 0).toLocaleString("en")} icon="lightning" />
                 <Kpi label="Certificates" value={d.certs.filter((c) => !c.revoked_at).length} icon="certificate" />

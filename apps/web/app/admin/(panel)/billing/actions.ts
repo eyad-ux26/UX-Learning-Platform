@@ -7,7 +7,7 @@ import { AGENT_COMP_DAYS } from "@/lib/admin/rules";
 import { fmtMoney, toUsd } from "@/lib/admin/format";
 import { toCsv } from "@/lib/admin/csv";
 import { declineRefund, needsSecondPerson, PAYMENT_COLS, refundLimitUsdMinor, refundNow, refundRule, type PaymentRow } from "@/lib/admin/data/refunds";
-import { accountantRows, people } from "@/lib/admin/data/billing";
+import { accountantRows, people, waitingRefundApproval } from "@/lib/admin/data/billing";
 import { applyEvent } from "@/lib/billing/engine";
 import { paddleEvents } from "@/lib/billing/paddle";
 import { confirmTransaction, transactionEvent } from "@/lib/billing/paymob";
@@ -66,6 +66,7 @@ export async function approveRefund(_: R | null, f: FormData): Promise<R> {
     const blocked = needsSecondPerson(ctx, pay, limit);
     const db = createAdminClient();
     if (blocked) {
+      if (await waitingRefundApproval(pay.id, requestId)) throw new AdminError("conflict", "A refund for this payment is already waiting for approval. See it in Approvals.");
       const p = (await people([pay.user_id])).get(pay.user_id);
       check(await db.rpc("admin_request_approval", {
         ...who(ctx), p_kind: "refund", p_permission: "refunds.approve_any", p_title: `Refund ${fmtMoney(pay.amount_minor, pay.currency)} to ${p?.email ?? "a learner"}`,

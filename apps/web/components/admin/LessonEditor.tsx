@@ -1,11 +1,11 @@
 "use client";
 // The lesson editor (CNT-1, CNT-2; board LessonEditor). English and Arabic side by side, step by step, with the
 // automatic checks live and a phone preview of the saved draft in both directions. Only words change here.
-import { useMemo, useState, useActionState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { Lesson } from "@uxgate/content/types";
 import { applyEdits, behind, lessonChecks, textFields, type Edits } from "@/lib/admin/content-edit";
-import { Feedback, type Action, type Result } from "./forms";
+import { Feedback, useKeptForm, type Action } from "./forms";
 
 const Icon = ({ n }: { n: string }) => <span className={`i i-${n}`} aria-hidden="true" />;
 
@@ -19,8 +19,8 @@ export function LessonEditor({ lessonId, base, start, acks0, canEdit, frozen, sa
   const [acks, setAcks] = useState<string[]>(acks0);
   const [saved, setSaved] = useState(JSON.stringify({ vals, acks }));
   const dirty = JSON.stringify({ vals, acks }) !== saved;
-  const [saveState, saveAction, saving] = useActionState<Result | null, FormData>(save, null);
-  const [subState, subAction, sending] = useActionState<Result | null, FormData>(submit, null);
+  const { state: saveState, pending: saving, ref: saveForm, onSubmit: onSave } = useKeptForm(save);
+  const { state: subState, pending: sending, ref: subForm, onSubmit: onSub } = useKeptForm(submit);
   const [lang, setLang] = useState<"en" | "ar">("en");
 
   const edits = useMemo(() => Object.fromEntries(baseFields.filter((f) => vals[f.path].en !== f.en || vals[f.path].ar !== f.ar).map((f) => [f.path, vals[f.path]])), [baseFields, vals]);
@@ -33,7 +33,7 @@ export function LessonEditor({ lessonId, base, start, acks0, canEdit, frozen, sa
     if (saveState?.ok) { setSaved(JSON.stringify({ vals, acks })); router.refresh(); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveState]);
-  useEffect(() => { if (subState?.ok) router.refresh(); }, [subState, router]);
+  useEffect(() => { if (subState?.ok) { subForm.current?.reset(); router.refresh(); } }, [subState, router, subForm]);
 
   const steps = [{ id: null as string | null, label: "Lesson" }, ...base.steps.map((s, i) => ({ id: s.id, label: `${s.id} · ${s.type}${s.part ? ` · ${s.part}` : ""}`, i }))];
   const byStep = new Map<string | null, typeof baseFields>();
@@ -95,14 +95,14 @@ export function LessonEditor({ lessonId, base, start, acks0, canEdit, frozen, sa
         {!ro ? (
           <section className="a-card" aria-label="Save">
             <div className="a-card-b a-stack sm">
-              <form action={saveAction} className="a-stack sm">
+              <form ref={saveForm} onSubmit={onSave} className="a-stack sm">
                 <input type="hidden" name="lesson" value={lessonId} />
                 <input type="hidden" name="edits" value={JSON.stringify(edits)} />
                 <input type="hidden" name="acks" value={JSON.stringify(acks)} />
                 <button type="submit" className="a-btn pri" disabled={saving || !dirty} aria-busy={saving}><Icon n="floppy-disk" />{saving ? "Saving…" : dirty ? "Save draft" : "Draft saved"}</button>
                 <Feedback state={saveState} />
               </form>
-              <form action={subAction} className="a-stack sm">
+              <form ref={subForm} onSubmit={onSub} className="a-stack sm">
                 <input type="hidden" name="lessons" value={lessonId} />
                 <div className="a-field"><label htmlFor="rel-title">Release title<span className="req" aria-hidden="true">*</span></label><input id="rel-title" name="title" className="a-in" required minLength={3} maxLength={140} defaultValue={`Wording fixes in ${lessonId}`} /></div>
                 <div className="a-field"><label htmlFor="rel-note">Note for the publisher</label><textarea id="rel-note" name="note" className="a-ta" rows={2} maxLength={1000} /></div>
