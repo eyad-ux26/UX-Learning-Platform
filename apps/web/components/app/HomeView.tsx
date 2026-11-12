@@ -75,7 +75,8 @@ export async function HomeMain({ me, view, bell, banner }: { me: Learner; view: 
       </div>
       <h1 className="t-h1 h1-s">{await greeting(hour, progress.displayName)}</h1>
       {banner}
-      {me.freezeNote ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
+      {/* A freeze that kept a streak of 0 days kept nothing worth saying (QA, 12 Nov). */}
+      {me.freezeNote && progress.streak > 0 ? <FreezeNote id={me.freezeNote.id} streak={progress.streak} /> : null}
 
       <div className="home-split">
         <div className="pg-stack" style={{ gap: 14 }}>

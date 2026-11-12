@@ -1,7 +1,9 @@
 // What a lesson's end page points to next: the following lesson of the same path, or the end of the path.
 import type { PathView } from "./learning";
 
-export type UpNext = { lessonId: string; title: { en: string; ar: string }; unitNo: number; lessonNo: number; minutes: number; newUnit: boolean };
+export type UpNext = { lessonId: string; title: { en: string; ar: string }; unitNo: number; lessonNo: number; minutes: number; newUnit: boolean;
+  /** Revise a unit: the next lesson is a finished one, played again in revise mode. */
+  revise?: boolean };
 /** The last lesson of a path. `certReady`: every skill of the path outside this unit is Shown already, so passing this unit's check earns the certificate. */
 export type PathEnd = { pathId: string; pathTitle: string; skills: number; certReady: boolean };
 

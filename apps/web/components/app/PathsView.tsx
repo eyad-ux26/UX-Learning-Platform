@@ -10,6 +10,9 @@ import { isShown, pathSkills } from "@/lib/certificate";
 import type { Learner } from "@/lib/server/learner";
 import { ChoosePath } from "./ChoosePath";
 import { PathSpotlight, type SpotCardData } from "./PathSpotlight";
+import { ReviseSheet, type ReviseText } from "./ReviseSheet";
+import { cookies } from "next/headers";
+import { REVISE_COOKIE, REVISE_WITH_CHECK, canRevise, reviseHref, reviseLessons, reviseResume } from "@/lib/revise";
 
 type T = Awaited<ReturnType<typeof getTranslations>>;
 
@@ -115,6 +118,32 @@ export async function PathsMain({ me }: { me: Learner }) {
 }
 
 /** One path: what is in it, and Start (joins it) or Continue (makes it current). Both keep every other path's progress. */
+type UnitRow = NonNullable<ReturnType<typeof buildPathView>>["units"][number];
+
+/** A unit's state on the path page (design S3-19 frame 4): done, the one the learner is in, opened, or locked. */
+function unitState(u: UnitRow, view: PathView): "done" | "cur" | "open" | "lock" {
+  if (u.lessons.every((l) => l.state === "done")) return "done";
+  if (u.lessons.every((l) => l.state === "locked")) return "lock";
+  return view.next && u.lessons.some((l) => l.lesson.lessonId === view.next!.lesson.lessonId) ? "cur" : "open";
+}
+
+/** The Revise sheet's text for a unit: what revising does, and where an earlier revise stopped. */
+function reviseText(u: UnitRow, t: T, locale: Locale, resumeAt: UnitRow["lessons"][number] | null): ReviseText {
+  const lessons = reviseLessons(u, false).length;
+  const hasCheck = REVISE_WITH_CHECK && reviseLessons(u).length > lessons;
+  return {
+    button: t("revise"), aria: t("reviseAria", { n: u.number }),
+    over: t("unitOver", { n: u.number, count: u.lessons.length }), title: t("rvTitle"), body: t("rvBody"),
+    rows: [
+      { icon: "book", title: hasCheck ? t("rvL1Check", { count: lessons }) : t("rvL1", { count: lessons }), sub: t("rvL1s") },
+      { icon: "seal", title: t("rvL2"), sub: hasCheck ? t("rvL2sCheck") : t("rvL2s") },
+      { icon: "bolt", title: t("rvL3"), sub: t("rvL3s") },
+    ],
+    resume: resumeAt ? t("rvResume", { n: resumeAt.indexInUnit, title: resumeAt.lesson.body.title[locale] }) : null,
+    go: resumeAt ? t("rvContinue") : t("rvGo"), not: t("rvNot"),
+  };
+}
+
 export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: string }) {
   const t = await getTranslations("paths");
   const locale = (await getLocale()) as Locale;
@@ -127,6 +156,8 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
   const pct = pctOf(view);
   const other = me.activePathId !== pathId ? catalogEntry(me.activePathId) : null;
   const next = view?.next;
+  const reviseCookie = (await cookies()).get(REVISE_COOKIE)?.value;
+  const revisePoint = reviseCookie ? decodeURIComponent(reviseCookie) : null;
   // One main button: Start this path (nothing opened yet) or Continue this path, straight into the next lesson.
   const mainLabel = joined && view && pathBegun(view) ? t("continueCta") : t("startCta");
   const mapHref = `/app/path/${pathId}`;
@@ -134,59 +165,88 @@ export async function PathDetailMain({ me, pathId }: { me: Learner; pathId: stri
   const facts: string[] = joined
     ? [next ? t("nextIs", { title: next.lesson.body.title[locale], minutes: next.lesson.minutes }) : "", t("factGoal")].filter(Boolean)
     : [...(entry.kind === "hybrid" ? [t("factVideo"), t("factPractice")] : []), t("factCheck")];
+  const actions = finished ? (
+    <>
+      <Link href={`/app/certificate/${pathId}`} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-certificate" aria-hidden="true" />{t("seeCert")}</Link>
+      <Link href={mapHref} className="btn btn-secondary btn-lg btn-block press">{t("reviewCta")}</Link>
+    </>
+  ) : isCurrent ? (
+    <>
+      {next ? <Link href={goHref} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{mainLabel}</Link> : null}
+      <Link href={mapHref} className={`btn ${next ? "btn-secondary" : "btn-primary"} btn-lg btn-block press`}>{t("seeMap")}</Link>
+    </>
+  ) : (
+    <>
+      <ChoosePath pathId={pathId} label={mainLabel} to={goHref} />
+      <p className="t-small ink-2">{other && joined ? t("keepNamed", { name: localPathName(other.id, locale) }) : t("keep")}</p>
+    </>
+  );
+  const aboutTitle = joined ? t("aboutContinue") : t("aboutStart");
   return (
     <div className="pg-page">
       <Link href="/app/paths" className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }}><span className="ph ph-arrow back" aria-hidden="true" />{t("title")}</Link>
-      <section className="card-panel" style={{ display: "flex", gap: 14, alignItems: "center", padding: 16, borderRadius: 24 }}>
-        
-        <img src={pathArtUrl(pathId)} alt="" style={{ inlineSize: 96, blockSize: 96, flex: "none" }} />
-        <div style={{ flex: 1, minInlineSize: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-          <h1 className="t-h2" style={{ color: "var(--panel-ink)" }}><PathName name={localPathName(entry.id, locale) ?? ""} /></h1>
-          <p className="t-small" style={{ color: "var(--ink-2)" }}>{entry.sub[locale]}</p>
-          <div className="pc-meta">
-            {isCurrent ? <span className="kind kind-current">{t("current")}</span> : null}
-            <span className={k.cls} style={{ background: "var(--surface)" }}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
-            <span className="kind" style={{ background: "var(--surface)" }}>{t("units", { count: view?.unitCount ?? 0 })}</span>
-          </div>
+      <div className="pg-split pd-split">
+        <div className="pg-stack">
+          <section className="card-panel" style={{ display: "flex", gap: 14, alignItems: "center", padding: 16, borderRadius: 24 }}>
+            <img src={pathArtUrl(pathId)} alt="" className="pd-art" />
+            <div style={{ flex: 1, minInlineSize: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+              <h1 className="t-h2" style={{ color: "var(--panel-ink)" }}><PathName name={localPathName(entry.id, locale) ?? ""} /></h1>
+              <p className="t-small" style={{ color: "var(--ink-2)" }}>{entry.sub[locale]}</p>
+              <div className="pc-meta">
+                {isCurrent ? <span className="kind kind-current">{t("current")}</span> : null}
+                <span className={k.cls} style={{ background: "var(--surface)" }}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
+                <span className="kind" style={{ background: "var(--surface)" }}>{t("units", { count: view?.unitCount ?? 0 })}</span>
+              </div>
+            </div>
+          </section>
+          {joined && view ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div className="between"><span className="t-label">{t("pathProgress")}</span><span className="t-small num" style={{ fontWeight: 700 }}>{pct}%</span></div>
+              <div className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></div>
+              <span className="t-small ink-2">{t("progressText", { done: view.doneCount, total: view.totalCount })}</span>
+            </div>
+          ) : null}
+          {/* Phone: the main button sits above the unit list, so it shows without scrolling (S3-13). */}
+          <div className="pd-go only-mobile">{actions}</div>
+          <p className="t-over">{t("unitsTitle")}</p>
+          <ol className="pg-units">
+            {view?.units.map((u, i) => {
+              const st = joined ? unitState(u, view) : (i === 0 ? "cur" : "lock");
+              const doneN = u.lessons.filter((l) => l.state === "done").length;
+              const note = st === "done" ? t("unitDoneNote") : st === "lock" ? (i > 0 ? t("unitOpensAfter", { n: i }) : "") : joined ? t("unitCurNote", { done: doneN, total: u.lessons.length }) : "";
+              const revise = joined && canRevise(u);
+              return (
+                <li key={u.unit.id} className={`pd-unit is-${st}`} aria-current={st === "cur" && joined ? "step" : undefined}>
+                  <span className="pd-dot" aria-hidden="true"><span className={`ph ${st === "done" ? "ph-check" : st === "lock" ? "ph-lock-fill" : "ph-play"}`} /></span>
+                  <span className="grow">
+                    <span className="pd-over">{t("unitOver", { n: u.number, count: u.lessons.length })}</span>
+                    <span className="t-label pd-title">{u.unit.title[locale]}</span>
+                    {note ? <span className="pd-note">{note}</span> : null}
+                  </span>
+                  {st === "done" ? <span className="kind kind-free">{t("unitDone")}</span> : st === "cur" && joined ? <span className="kind kind-current">{t("unitCurrent")}</span> : !joined && u.unit.free ? <span className="kind kind-free">{t("free1")}</span> : null}
+                  {revise ? (() => {
+                    const resumeAt = reviseResume(u, revisePoint);
+                    const first = reviseLessons(u)[0] ?? u.lessons[0];
+                    return <ReviseSheet id={u.unit.id} href={reviseHref((resumeAt ?? first).lesson.lessonId)} text={reviseText(u, t, locale, resumeAt)} />;
+                  })() : null}
+                </li>
+              );
+            })}
+          </ol>
+          <section className="card pg-about only-mobile">
+            <p className="t-over">{aboutTitle}</p>
+            <ul>{facts.map((f) => <li key={f} className="t-small">{f}</li>)}</ul>
+          </section>
         </div>
-      </section>
-      {joined && view ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <div className="between"><span className="t-label">{t("pathProgress")}</span><span className="t-small num" style={{ fontWeight: 700 }}>{pct}%</span></div>
-          <div className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></div>
-          <span className="t-small ink-2">{t("progressText", { done: view.doneCount, total: view.totalCount })}</span>
-        </div>
-      ) : null}
-      {/* The main button sits above the unit list, so a phone shows it without scrolling. */}
-      {finished ? (
-        <>
-          <Link href={`/app/certificate/${pathId}`} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-certificate" aria-hidden="true" />{t("seeCert")}</Link>
-          <Link href={mapHref} className="btn btn-secondary btn-lg btn-block press">{t("reviewCta")}</Link>
-        </>
-      ) : isCurrent ? (
-        <>
-          {next ? <Link href={goHref} className="btn btn-primary btn-lg btn-block press"><span className="ph ph-play" aria-hidden="true" />{mainLabel}</Link> : null}
-          <Link href={mapHref} className={`btn ${next ? "btn-secondary" : "btn-primary"} btn-lg btn-block press`}>{t("seeMap")}</Link>
-        </>
-      ) : (
-        <>
-          <ChoosePath pathId={pathId} label={mainLabel} to={goHref} />
-          <p className="t-small ink-2">{other && joined ? t("keepNamed", { name: localPathName(other.id, locale) }) : t("keep")}</p>
-        </>
-      )}
-      <p className="t-over">{t("unitsTitle")}</p>
-      <ol className="pg-units">
-        {view?.units.map((u) => (
-          <li key={u.unit.id} className="card">
-            <span className="t-label">{t("unitN", { n: u.number })} · {u.unit.title[locale]}</span>
-            <span className="t-small ink-2">{t("lessonsN", { count: u.lessons.length })}{u.unit.free ? <> · <span className="kind kind-free">{t("free1")}</span></> : null}</span>
-          </li>
-        ))}
-      </ol>
-      <section className="card pg-about">
-        <p className="t-over">{joined ? t("aboutContinue") : t("aboutStart")}</p>
-        <ul>{facts.map((f) => <li key={f} className="t-small">{f}</li>)}</ul>
-      </section>
+        {/* Laptop: the main action card in a right column (S3-1 detail, pathJoined). */}
+        <aside className="pg-stack only-desk">
+          <section className="card pd-aside">
+            <p className="t-over">{aboutTitle}</p>
+            {facts.map((f) => <p key={f} className="pg-note"><span className="ph ph-info" aria-hidden="true" /><span>{f}</span></p>)}
+            <div className="pd-go">{actions}</div>
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }
