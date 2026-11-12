@@ -46,21 +46,21 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
       </Link>
     );
   }
+  // Your paths (D4): the same card as All paths. Name and meta at the start, progress under them, the path art on the end side.
+  const cur = view?.units.find((u) => u.lessons.some((l) => l.state !== "done")) ?? view?.units[view.units.length - 1];
+  const begun = !!view && view.doneCount > 0;
   return (
-    <Link href={`/app/paths/${p.id}`} className={`path-card press${p.state === "current" ? " is-current" : ""}`} aria-label={p.state === "current" ? t("currentAria", { name: p.name }) : p.name}>
-      <span className="pc-ill"><img src={pathArtUrl(p.id)} alt="" /></span>
-      <span className="pc-text">
-        <span className="pc-name"><PathName name={p.name ?? ""} /></span>
-        {!joined ? <span className="pc-sub">{p.sub[locale]}</span> : null}
-        <span className="pc-meta">
-          {p.state === "current" ? <span className="kind kind-current">{t("current")}</span> : null}
-          <span className={k.cls}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
-          {left ? <span className="kind kind-left"><span className="ph ph-target" aria-hidden="true" />{t("skillsLeft", { count: left })}</span> : null}
-          {!joined ? <><span className="kind">{t("units", { count: p.units })}</span><span className="kind kind-free">{t("free1")}</span></> : null}
-        </span>
-        {joined ? <span className="pc-prog"><span className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></span><span className="num">{pct}%</span></span> : null}
+    <Link href={`/app/paths/${p.id}`} className={`path-card press pc-stack has-art pc-joined${p.kind === "hybrid" ? " is-hybrid" : ""}${p.state === "current" ? " is-current" : ""}`} aria-label={p.state === "current" ? t("currentAria", { name: p.name }) : p.name}>
+      <span className="hy-top"><span className="pc-text"><span className="pc-name"><PathName name={p.name ?? ""} /></span></span></span>
+      <span className="pc-meta">
+        {p.state === "current" ? <span className="kind kind-current">{t("current")}</span> : null}
+        <span className={k.cls}><span className={`ph ph-${k.icon}`} aria-hidden="true" />{k.text}</span>
+        {left ? <span className="kind kind-left"><span className="ph ph-target" aria-hidden="true" />{t("skillsLeft", { count: left })}</span> : null}
       </span>
-      <span className="pc-end"><span className="ph ph-arrow flip" aria-hidden="true" /></span>
+      <span className="pj-prog"><span className="progress progress-sm" role="progressbar" aria-label={t("pathProgress")} aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}><i style={{ inlineSize: `${pct}%` }} /></span><span className="num">{pct}%</span></span>
+      <span className="pj-where">{begun && cur && view ? t("pjWhere", { n: cur.number, done: view.doneCount, total: view.totalCount }) : t("pjNotStarted")}</span>
+      <img className="pc-art pc-art-l" src={`/ill/paths/${p.id}.svg`} alt="" aria-hidden="true" />
+      <img className="pc-art pc-art-d" src={`/ill/paths/${p.id}-dark.svg`} alt="" aria-hidden="true" />
     </Link>
   );
 }
@@ -102,7 +102,7 @@ export async function PathsMain({ me }: { me: Learner }) {
         <p className="t-over">{t("secDone", { count: completed.length })}</p>
         <div className="pg-cards">{completed.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} done={pathSkills(p.id).length} />)}</div>
       </> : null}
-      <PathSpotlight cards={spot} locale={locale} allHeading={joined.length || completed.length ? "new" : "all"} />
+      <PathSpotlight cards={spot} locale={locale} />
       <p className="t-over"><span className="ph ph-hourglass" aria-hidden="true" /> {t("secSoon", { count: soon.length })}</p>
       <div className="pg-cards pg-cards-soon">{soon.map((p) => <Card key={p.id} p={p} view={null} t={t} locale={locale} />)}</div>
     </div>

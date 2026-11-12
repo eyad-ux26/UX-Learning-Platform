@@ -50,7 +50,7 @@ function SpotCard({ c, t, flat, hit }: { c: SpotCardData; t: T; flat?: boolean; 
   );
 }
 
-export function PathSpotlight({ cards, locale, allHeading }: { cards: SpotCardData[]; locale: "en" | "ar"; allHeading: "all" | "new" }) {
+export function PathSpotlight({ cards, locale }: { cards: SpotCardData[]; locale: "en" | "ar" }) {
   const t = useTranslations("paths");
   const [typed, setTyped] = useState("");
   const [q, setQ] = useState("");
@@ -104,7 +104,7 @@ export function PathSpotlight({ cards, locale, allHeading }: { cards: SpotCardDa
           ) : null}
           {rest.length ? (
             <>
-              <p className="t-over">{allHeading === "all" ? t("secAll") : t("secNew")}</p>
+              <p className="t-over">{t("secAll")}</p>
               <div className="pg-cards">{rest.map((c) => <SpotCard key={c.id} c={c} t={t} />)}</div>
             </>
           ) : null}
