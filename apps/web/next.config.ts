@@ -9,6 +9,10 @@ const cfBeacon = !isDev;
 // Bunny Stream: hls.js fetches the signed playlist and segments (connect-src), Safari plays HLS natively (media-src).
 // The pull zone host is a Worker secret, read at run time, so the build cannot see it: allow Bunny's CDN domain.
 const bunny = " https://*.b-cdn.net";
+// Supabase: only this project's own host when the build knows it (NEXT_PUBLIC_SUPABASE_URL is a build variable), so a
+// script that slipped in could not send data to some other Supabase project. Without it, any Supabase host, as before.
+const supabaseHost = (() => { try { return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").host; } catch { return ""; } })();
+const supabase = /^[a-z0-9-]+\.supabase\.co$/.test(supabaseHost) ? supabaseHost : "*.supabase.co";
 
 // Content-Security-Policy. Next.js inlines small scripts and styles, so 'unsafe-inline' stays until a nonce setup replaces it.
 // Everything else is closed: no framing (clickjacking), no plugins, forms and base URL only to ourselves, data only to us and Supabase.
@@ -20,7 +24,7 @@ const csp = [
   `img-src 'self' data: blob:${bunny}`,
   "font-src 'self' data:",
   `media-src 'self' data: blob:${bunny}`,
-  `connect-src 'self' https://*.supabase.co wss://*.supabase.co${bunny}${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""} https://*.paddle.com`,
+  `connect-src 'self' https://${supabase} wss://${supabase}${bunny}${isDev ? " ws:" : ""}${cfBeacon ? " https://cloudflareinsights.com" : ""} https://*.paddle.com`,
   "frame-src https://buy.paddle.com https://sandbox-buy.paddle.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
