@@ -1,8 +1,8 @@
 // The launch list's confirmation email (design canvas v70, EmailPages view launchConfirm). Copy is in
-// messages/s6/*.json under `launchMail`. The launch-day email (launchLive) is sent once at launch and is built then.
+// messages/{en,ar}/emails.json under `launchMail`. The launch-day email (launchLive) is sent once at launch and is built then.
 
-import en from "../../../messages/s6/en.json";
-import ar from "../../../messages/s6/ar.json";
+import en from "../../../messages/en/emails.json";
+import ar from "../../../messages/ar/emails.json";
 import { emailLayout, type EmailLocale } from "./layout";
 import type { EmailOut } from "./templates";
 

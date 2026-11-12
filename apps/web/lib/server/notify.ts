@@ -4,7 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { allowed, readPrefs, type InboxKind, type Prefs } from "@/lib/notifications";
 import { inboxCopy, type InboxData } from "@/lib/inbox";
-import { slice4 } from "@/messages/s4";
+import { messageFiles } from "@/messages";
 import { isPushEndpoint } from "@/lib/push-hosts";
 import { sendPush } from "./webpush";
 
@@ -50,7 +50,7 @@ export async function notify(userId: string, kind: InboxKind, data: InboxData, h
       const { data: p } = await db.from("profiles").select("locale").eq("user_id", userId).maybeSingle();
       locale = p?.locale === "ar" ? "ar" : "en";
     }
-    const t = createTranslator({ locale, messages: slice4[locale] as Record<string, unknown> }) as unknown as (key: string, values?: Record<string, string | number>) => string;
+    const t = createTranslator({ locale, messages: messageFiles[locale].account as Record<string, unknown> }) as unknown as (key: string, values?: Record<string, string | number>) => string;
     const copy = inboxCopy(kind, data, locale);
     pushed = await pushToLearner(db, userId, { title: t(`inbox.${copy.title}`, copy.values), body: t(`inbox.${copy.body}`, copy.values), url: `/${locale}${href}`, tag: kind });
   }

@@ -3,8 +3,8 @@
 // fonts required. Direction comes from dir="rtl" on the tables, so no left/right is ever written here.
 // The subscriptions slice reuses emailLayout with this same signature; the extra fields are optional.
 
-import en from "../../../messages/s4/emails.en.json";
-import ar from "../../../messages/s4/emails.ar.json";
+import en from "../../../messages/en/emails.json";
+import ar from "../../../messages/ar/emails.json";
 import { siteOrigin } from "../../email-token";
 
 export type EmailLocale = "en" | "ar";

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { badgeEmail, count, deletedEmail, goalEmail, reminderEmail, welcomeEmail, type EmailOut } from "./templates";
 import { emailLayout, esc } from "./layout";
-import en from "../../../messages/s4/emails.en.json";
-import ar from "../../../messages/s4/emails.ar.json";
+import en from "../../../messages/en/emails.json";
+import ar from "../../../messages/ar/emails.json";
 
 const EVIL = `<script>alert("x")</script>&'`;
 const UNSUB = "https://uxgate.org/api/notifications/unsubscribe?t=abc.def&l=en";

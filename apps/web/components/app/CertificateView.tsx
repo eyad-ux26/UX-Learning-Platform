@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { createTranslator } from "next-intl";
-import en from "../../messages/en.json";
-import ar from "../../messages/ar.json";
+import en from "../../messages/en/app.json";
+import ar from "../../messages/ar/app.json";
 import { headers } from "next/headers";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@uxgate/content";
