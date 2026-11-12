@@ -4,8 +4,9 @@ import { useSyncExternalStore } from "react";
 import { queueAll, queueDel } from "./idb";
 import type { QueuedAttempt } from "./attempts";
 
-type Status = { online: boolean; pending: number; signedOut: boolean };
-let status: Status = { online: true, pending: 0, signedOut: false };
+/** `failed`: the last send did not reach the server and a retry is waiting (offline, 5xx, 429). Answers in flight are only `pending`. */
+type Status = { online: boolean; pending: number; signedOut: boolean; failed: boolean };
+let status: Status = { online: true, pending: 0, signedOut: false, failed: false };
 const listeners = new Set<() => void>();
 const set = (patch: Partial<Status>) => { status = { ...status, ...patch }; listeners.forEach((l) => l()); };
 
@@ -57,6 +58,7 @@ export async function flush(): Promise<void> {
     // Answers queued while this run was sending were not in its snapshot: send them now, not on the next retry.
     const seen = new Set(items.map((i) => i.key));
     if (left.some((i) => !seen.has(i.key))) again = true;
+    set({ failed: failed && left.length > 0 });
     if (failed && left.length) { schedule(); again = false; } else delay = 2000;
   } finally {
     running = false;
@@ -84,5 +86,7 @@ export function startSync() {
 export function kick() { delay = 2000; void flush(); }
 
 const subscribe = (l: () => void) => { listeners.add(l); return () => listeners.delete(l); };
-const SERVER: Status = { online: true, pending: 0, signedOut: false };
+const SERVER: Status = { online: true, pending: 0, signedOut: false, failed: false };
+/** The current status, outside React (tests). */
+export const syncStatusNow = (): Status => status;
 export const useSyncStatus = () => useSyncExternalStore(subscribe, () => status, () => SERVER);

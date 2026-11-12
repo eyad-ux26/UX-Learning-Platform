@@ -12,7 +12,7 @@ import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { NextIntlClientProvider, useMessages, useTimeZone, useTranslations } from "next-intl";
 import type { OtherLocale } from "@/lib/server/lesson-messages";
 import { LessonEnd, type ProNext } from "./LessonEnd";
-import { CheckPractice, CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
+import { CheckPractice, CheckSummary, GuestEnd, MasteryEnd, ReviewEnd, type SyncShown } from "./LessonPages";
 import { REVISE_COOKIE, reviseHref } from "@/lib/revise";
 import { replayXp, type ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
@@ -194,16 +194,19 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitNo
     } catch { /* the switch still works for this screen */ }
   }, [other, view, locale]);
 
+  // End pages: "Saving your results…" while the answers are on their way, the offline note only when sending failed (QA #264).
+  const syncShown: SyncShown = !sync.online || sync.failed ? true : sync.pending > 0 ? "saving" : false;
+
   function body() {
   if (!state) return <div className="player-loading" aria-busy="true"><Loader full /></div>;
   if (finished) {
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={view} />;
-    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
+    if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={syncShown} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
     // A finished skill check played again is practice: the results show, and no skill changes.
-    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onContinue={() => leave(pathHref)} xpOf={(n) => replayXp(n, replay)} />;
-    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
+    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onContinue={() => leave(pathHref)} xpOf={(n) => replayXp(n, replay)} />;
+    if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={syncShown} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={syncShown} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
   }
 
   return (

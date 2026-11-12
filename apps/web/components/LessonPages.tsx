@@ -22,6 +22,16 @@ export function skillResults(lesson: Lesson, state: LessonState, skills: Skill[]
   return skills.filter((k) => by.has(k.id)).map((k) => ({ skill: k, shown: by.get(k.id) === true }));
 }
 
+/** How the end page's answers stand with the server: true (offline or a send failed: kept on this device and retried), "saving" (on their way), false (saved). */
+export type SyncShown = boolean | "saving";
+
+/** The line on an end page: "Saving your results…" while the answers are sent, the offline note only when a send really failed. */
+export function SyncNote({ offline, text }: { offline: SyncShown; text: string }) {
+  if (!offline) return null;
+  if (offline === "saving") return <p className="t-small ink-2 lp-saving" role="status"><span className="ph ph-arrows-clockwise" aria-hidden="true" />{text}</p>;
+  return <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{text}</p>;
+}
+
 function Page({ art, title, sub, children, foot }: { art: string; title: string; sub?: string; children?: React.ReactNode; foot: React.ReactNode }) {
   return (
     <div className="end lp-pageroot">
@@ -51,7 +61,7 @@ function SkillRow({ title, can, status, label, retry }: { title: string; can?: s
  * End of a review session. Right first try on a due skill: Kept, its badge turns gold. Missed: it comes back tomorrow
  * with a new case and stays Shown. The server applies the same rule (one right first try per skill).
  */
-export function ReviewEnd({ lesson, state, locale, skills, offline, onHome, onBadges, onSound }: { lesson: Lesson; state: LessonState; locale: Locale; skills: Skill[]; offline: boolean; onHome: () => void; onBadges: () => void; onSound?: (name: string) => void }) {
+export function ReviewEnd({ lesson, state, locale, skills, offline, onHome, onBadges, onSound }: { lesson: Lesson; state: LessonState; locale: Locale; skills: Skill[]; offline: SyncShown; onHome: () => void; onBadges: () => void; onSound?: (name: string) => void }) {
   const t = useTranslations("review");
   const tp = useTranslations("pages");
   const rows = skillResults(lesson, state, skills, "any");
@@ -66,7 +76,7 @@ export function ReviewEnd({ lesson, state, locale, skills, offline, onHome, onBa
         <button type="button" className="btn btn-primary btn-lg press" onClick={onHome}>{t("home")}</button>
         {kept ? <button type="button" className="btn btn-ghost" style={{ minBlockSize: 44 }} onClick={onBadges}>{t("seeBadges")}</button> : null}
       </>}>
-      {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{tp("syncLater")}</p> : null}
+      <SyncNote offline={offline} text={offline === "saving" ? tp("saving") : tp("syncLater")} />
       <p className="lp-chips">
         <span className="pill pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+{sum.xp} XP</span></span>
         {kept ? <span className="pill"><span className="ph ph-star-fill" style={{ color: "var(--gold-ledge)" }} aria-hidden="true" /><span><span className="num">{kept}</span> {t("nowKept")}</span></span> : null}
@@ -85,7 +95,7 @@ export function ReviewEnd({ lesson, state, locale, skills, offline, onHome, onBa
 }
 
 /** End of a skill check: each skill is Shown or "Try again later". The mastery round follows when something was missed. */
-export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMastery, onContinue, upNext = null, pathEnd = null, onGo }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: boolean; onMastery: () => void; onContinue: () => void; upNext?: UpNext | null; pathEnd?: PathEnd | null; onGo?: (to: string) => void }) {
+export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMastery, onContinue, upNext = null, pathEnd = null, onGo }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: SyncShown; onMastery: () => void; onContinue: () => void; upNext?: UpNext | null; pathEnd?: PathEnd | null; onGo?: (to: string) => void }) {
   const t = useTranslations("pages");
   const rows = skillResults(lesson, state, unitSkills);
   const shown = rows.filter((r) => r.shown).length;
@@ -111,7 +121,7 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
         </>
       }
     >
-      {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{t("syncLater")}</p> : null}
+      <SyncNote offline={offline} text={offline === "saving" ? t("saving") : t("syncLater")} />
       {all ? <h2 className="t-small ink-2 lp-roundhd">{t("nowShown", { n: shown })}</h2> : null}
       <ul className="lp-list" aria-label={t("skills")} style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {rows.map(({ skill, shown: ok }) => ok
@@ -142,7 +152,7 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
  * A finished skill check played again (revise a unit, design S3-19 frame 4): practice only. The answers are checked and
  * shown here, but no skill changes, nothing goes to the mastery round, and it leads back to the path.
  */
-export function CheckPractice({ lesson, state, locale, unitSkills, offline, onContinue, xpOf = (n) => n }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: boolean; onContinue: () => void; xpOf?: (n: number) => number }) {
+export function CheckPractice({ lesson, state, locale, unitSkills, offline, onContinue, xpOf = (n) => n }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: SyncShown; onContinue: () => void; xpOf?: (n: number) => number }) {
   const t = useTranslations("pages");
   const sum = summarize(lesson, state, xpOf);
   const rows = skillResults(lesson, state, unitSkills);
@@ -150,7 +160,7 @@ export function CheckPractice({ lesson, state, locale, unitSkills, offline, onCo
   return (
     <Page art={right === rows.length ? "trophy" : "target"} title={t("practiceTitle")} sub={t("practiceSub", { right, total: rows.length })}
       foot={<button type="button" className="btn btn-primary btn-lg press" onClick={onContinue}>{t("backToPath")}</button>}>
-      {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{t("syncLater")}</p> : null}
+      <SyncNote offline={offline} text={offline === "saving" ? t("saving") : t("syncLater")} />
       <p className="lp-chips"><span className="pill pop"><span className="ph ph-bolt-fill" aria-hidden="true" /><span className="num ltr">+{sum.xp} XP</span></span></p>
       <p className="lp-banner" role="note"><span className="ph ph-seal" aria-hidden="true" />{t("practiceNote")}</p>
       <ul className="lp-list" aria-label={t("skills")} style={{ listStyle: "none", padding: 0, margin: 0 }}>
