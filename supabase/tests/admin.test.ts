@@ -388,6 +388,19 @@ describe("test money stays off the money screens (0065)", () => {
   });
 });
 
+describe("emails that never arrived (0066)", () => {
+  it("keeps one row per webhook event and address, and only the service role can read them", async () => {
+    const ins = `insert into email_bounces (email, kind, detail, resend_id, event_id) values ('new@example.com', 'bounced', 'Mailbox does not exist', 're_1', 'msg_1') on conflict (event_id, email) do nothing`;
+    await db.query(ins);
+    await db.query(ins);
+    expect((await one<{ n: number }>(`select count(*)::int n from email_bounces where event_id = 'msg_1'`)).n).toBe(1);
+    await expect(db.query(`insert into email_bounces (email, kind, event_id) values ('Upper@Example.com', 'bounced', 'msg_2')`)).rejects.toThrow(/check/);
+    await expect(db.query(`insert into email_bounces (email, kind, event_id) values ('a@b.co', 'delivered', 'msg_3')`)).rejects.toThrow(/check/);
+    await expect(asUser("authenticated", X, `select * from public.email_bounces`)).rejects.toThrow(/permission denied/);
+    await expect(asUser("anon", null, `select * from public.email_bounces`)).rejects.toThrow(/permission denied/);
+  });
+});
+
 describe("custom roles stay within the editor's own permissions (0048)", () => {
   it("refuses roles with permissions the editor lacks, edits to a role the editor holds, and giving such roles", async () => {
     const A = (await one<{ id: string }>(`insert into auth.users (email) values ('ops@uxgate.org') returning id`)).id;

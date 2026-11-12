@@ -16,7 +16,16 @@ Run each file in the Supabase SQL editor, one at a time, and wait for "Success" 
 | `supabase/migrations/0047_admin_dashboard.sql` | Read-only dashboard numbers: key numbers, money by day, the funnel, active learners per path. |
 | `supabase/migrations/0048_admin_hardening.sql` | Security fixes from QA: custom roles are saved only through `admin_save_role` (a role can hold only permissions its editor holds, and nobody edits a role they hold); invites and role changes can only hand out what the inviter holds; a safe first panel session; sender verification fields on support email. Run it after 0047. |
 
-Numbers 0044 to 0059 are Phase 1; Phase 2 uses 0060 and up. `0065_test_payments.sql` (after 0064) marks test money (test provider, Paddle sandbox) on payments and subscriptions and leaves it out of the dashboard, revenue, reports and the accountant export. Its backfill marks every Paddle row so far as test, so **run it before Paddle goes live**. Each file is safe to read before running; none deletes learner data.
+Numbers 0044 to 0059 are Phase 1; Phase 2 uses 0060 and up. `0065_test_payments.sql` (after 0064) marks test money (test provider, Paddle sandbox) on payments and subscriptions and leaves it out of the dashboard, revenue, reports and the accountant export. Its backfill marks every Paddle row so far as test, so **run it before Paddle goes live**. `0066_email_bounces.sql` stores emails that never arrived (from the Resend webhook), so Team and roles can show an invite that bounced.
+
+### Resend webhook (bounced invites)
+
+1. Run `0066_email_bounces.sql`.
+2. In Resend, Webhooks, add an endpoint `https://uxgate.org/api/webhooks/resend` with the events `email.bounced`, `email.complained` and `email.suppressed`.
+3. Copy its signing secret into the Worker secret `RESEND_WEBHOOK_SECRET`.
+4. Check: invite an address that does not exist (for example `nobody@uxgate.org` with no route). Within a minute Team and roles shows **Email bounced** on that invite. Then cancel the invite.
+
+Rows hold only the address, the kind, Resend's short reason and the time. Each file is safe to read before running; none deletes learner data.
 
 ### The founding super admin
 
@@ -42,6 +51,7 @@ as before (`docs/coming-soon.md`).
 | `RESEND_API_KEY` | Secret | Already set. Support replies go out from `UXGate Support <support@uxgate.org>`. |
 | `SUPPORT_FORWARD_TO` | Variable (in `wrangler.jsonc`) | Set to `uxgate8@gmail.com` in `apps/web/wrangler.jsonc`, not in the dashboard (a deploy replaces dashboard variables). A copy of every email to support@ also goes to this inbox (for attachments, and as a backup). Suggested: `uxgate8@gmail.com`. It must be a verified destination address in Email Routing. |
 | `PAYMOB_ENV` | Variable | Optional. `test` while the Worker uses Paymob test keys, so those payments are marked as test money. Remove it with the live keys. Paddle needs nothing: payments are test money while `PADDLE_ENV` is not `production`. |
+| `RESEND_WEBHOOK_SECRET` | Secret | The signing secret (`whsec_...`) of the Resend webhook below. Until it is set, `/api/webhooks/resend` answers 503 and nothing else changes. |
 | `UG_ENV` | Variable | `staging` on a staging Worker; the panel shows a Production badge otherwise. |
 
 The 15-minute Cron Trigger (already in `wrangler.jsonc`) now also calls `/api/cron/admin`: approval reminders after 4 hours,
