@@ -12,7 +12,8 @@ import { flush, kick, setSyncUser, startSync, useSyncStatus } from "@/lib/sync";
 import { NextIntlClientProvider, useMessages, useTimeZone, useTranslations } from "next-intl";
 import type { OtherLocale } from "@/lib/server/lesson-messages";
 import { LessonEnd, type ProNext } from "./LessonEnd";
-import { CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
+import { CheckPractice, CheckSummary, GuestEnd, MasteryEnd, ReviewEnd } from "./LessonPages";
+import { REVISE_COOKIE, reviseHref } from "@/lib/revise";
 import type { ReplayKind } from "@/lib/replay";
 import type { PathEnd, UpNext } from "@/lib/up-next";
 import { Loader } from "@/components/loading/Loader";
@@ -39,6 +40,8 @@ type Props = {
   other?: OtherLocale;
   /** The learner's first lesson since signing up: the lesson tour runs once (see lib/lesson-tour.ts). */
   firstLesson?: boolean;
+  /** Revise a unit (lib/revise.ts): a finished lesson played again from the path page's Revise button. */
+  revising?: boolean;
 };
 
 const LOCALE_PREFIX = /^\/(en|ar)(?=\/|$)/;
@@ -76,7 +79,7 @@ function ViewLocale({ view, locale, other, children }: { view: Locale; locale: L
   return <NextIntlClientProvider locale={view} messages={(view === locale ? base : messages) as never} timeZone={timeZone}>{children}</NextIntlClientProvider>;
 }
 
-export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other, firstLesson = false }: Props) {
+export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId, streak, userId, replay, variant = "lesson", plan, guest = false, unitSkills = [], upNext = null, pathEnd = null, proNext = null, other, firstLesson = false, revising = false }: Props) {
   const router = useRouter();
   // The language shown. It starts as the page's language; the switch in the player header flips it in place.
   const [view, setView] = useState<Locale>(locale);
@@ -111,6 +114,18 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     })();
     return () => { alive = false; };
   }, [lesson, hash, key, userId, guest, firstLesson, variant]);
+
+  // Revise a unit: remember the lesson it is on, so the Revise sheet can pick it up again after the learner leaves.
+  useEffect(() => {
+    if (!revising) return;
+    try { document.cookie = `${REVISE_COOKIE}=${encodeURIComponent(`${unitId}~${lesson.id}`)}; path=/; max-age=2592000; samesite=lax`; } catch { /* the revise still runs */ }
+  }, [revising, unitId, lesson.id]);
+  // The revise ends on this lesson's end page when nothing of the unit is left to revise after it.
+  useEffect(() => {
+    if (!revising || !finished || upNext?.revise) return;
+    try { document.cookie = `${REVISE_COOKIE}=; path=/; max-age=0; samesite=lax`; } catch { /* nothing to clear */ }
+  }, [revising, finished, upNext]);
+  const pathHref = `/app/paths/${lesson.id.split("-")[0]}`;
 
   const onState = useCallback((s: LessonState) => { kvSet(key, s).catch(() => {}); }, [key]);
   const onEvent = useCallback((e: TryEvent) => { enqueueAttempt(userId, attemptId.current, e, planKey ? planKey.split(",") : undefined, variant === "review" ? "review" : undefined).then(kick).catch(() => {}); }, [userId, planKey, variant]);
@@ -184,8 +199,10 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
     if (guest) return <GuestEnd lesson={lesson} state={finished} locale={view} />;
     if (variant === "review") return <ReviewEnd lesson={lesson} state={finished} locale={view} skills={unitSkills} offline={!sync.online || sync.pending > 0} onSound={play} onHome={() => leave()} onBadges={() => leave("/app/badges")} />;
     if (variant === "mastery") return <MasteryEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} unitId={unitId} onContinue={() => leave(`/app/path/${unitId.split("-")[0]}`)} />;
+    // A finished skill check played again is practice: the results show, and no skill changes.
+    if (lesson.mode === "check" && replay) return <CheckPractice lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onContinue={() => leave(pathHref)} />;
     if (lesson.mode === "check") return <CheckSummary lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} offline={!sync.online || sync.pending > 0} onMastery={() => leave(`/app/mastery/${unitId}`)} onContinue={() => leave()} upNext={upNext} pathEnd={pathEnd} onGo={(to) => leave(to)} />;
-    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave()} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(`/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} />;
+    return <LessonEnd lesson={lesson} state={finished} locale={view} unitSkills={unitSkills} streak={streak} replay={replay} offline={!sync.online || sync.pending > 0} onContinue={() => leave(revising ? pathHref : undefined)} pathLabel={pathLabel} upNext={upNext} onNext={upNext ? () => leave(upNext.revise ? reviseHref(upNext.lessonId) : `/app/lesson/${upNext.lessonId}`) : undefined} proNext={proNext} revising={revising} />;
   }
 
   return (
@@ -203,6 +220,7 @@ export function LessonRunner({ lesson, hash, locale, pathLabel, lessonNo, unitId
       videoSource={videoSource} notice={notice}
       onSwitchLocale={other ? switchLocale : undefined}
       tour={tour} onTourDone={() => { if (tour) markTourSeen(tour, userId); setTour(undefined); }}
+      revising={revising}
     />
     </>
   );

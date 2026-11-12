@@ -11,14 +11,15 @@ import { requireLearner } from "@/lib/server/learner";
 import { decideReplay } from "@/lib/replay";
 import { paidReplayStarts } from "@/lib/server/replays";
 import { upNextOf, type PathEnd } from "@/lib/up-next";
+import { reviseNext } from "@/lib/revise";
 import { isShown, pathSkills } from "@/lib/certificate";
 import { lessonOpen } from "@/lib/billing/access";
 import { otherLocaleMessages } from "@/lib/server/lesson-messages";
 
 export const dynamic = "force-dynamic";
 
-export default async function LessonPage({ params }: { params: Promise<{ locale: string; lessonId: string }> }) {
-  const { locale, lessonId } = await params;
+export default async function LessonPage({ params, searchParams }: { params: Promise<{ locale: string; lessonId: string }>; searchParams: Promise<{ revise?: string }> }) {
+  const [{ locale, lessonId }, sp] = await Promise.all([params, searchParams]);
   setRequestLocale(locale);
   // The lesson file and the learner's data load side by side.
   const [me, version, other] = await Promise.all([requireLearner(locale), getLessonVersion(lessonId), otherLocaleMessages(locale)]);
@@ -44,13 +45,15 @@ export default async function LessonPage({ params }: { params: Promise<{ locale:
   }
   // Where the end page points: the next lesson of this path, or (after its last lesson) the certificate and other paths.
   // A free learner at the end of the free unit sees the Pro card instead of a next lesson they cannot open.
-  const nextLesson = view ? upNextOf(view, lessonId) : null;
-  const upNext = proNext ? null : nextLesson;
+  // Revise a unit (lib/revise.ts): only a finished lesson is revised; it leads on through the same unit.
+  const revising = sp.revise === "1" && !!replay && !!view;
+  const nextLesson = view ? (revising ? reviseNext(view, lessonId) : upNextOf(view, lessonId)) : null;
+  const upNext = proNext && !revising ? null : nextLesson;
   let pathEnd: PathEnd | null = null;
-  if (view && !nextLesson) {
+  if (view && !nextLesson && !revising) {
     const skills = pathSkills(version.pathId);
     const others = skills.filter((s) => !unit?.skills.some((k) => k.id === s.id));
     pathEnd = { pathId: version.pathId, pathTitle, skills: skills.length, certReady: others.every((s) => isShown(me.skillStates.get(s.id)?.state)) };
   }
-  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={proNext} other={other} firstLesson={me.progress.finishedLessons.length === 0 && !replay} />;
+  return <LessonRunner upNext={upNext} pathEnd={pathEnd} lesson={version.body} hash={version.hash} locale={locale as Locale} pathLabel={pathTitle} lessonNo={version.order + 1} userId={me.userId} unitId={unit?.id ?? version.unitId} unitSkills={unit?.skills ?? []} streak={me.progress.streak + (me.progress.lessonsToday > 0 || replay === "unpaid" ? 0 : 1)} replay={replay} proNext={revising ? null : proNext} other={other} firstLesson={me.progress.finishedLessons.length === 0 && !replay} revising={revising} />;
 }

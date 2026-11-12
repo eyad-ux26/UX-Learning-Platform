@@ -138,6 +138,28 @@ export function CheckSummary({ lesson, state, locale, unitSkills, offline, onMas
   );
 }
 
+/**
+ * A finished skill check played again (revise a unit, design S3-19 frame 4): practice only. The answers are checked and
+ * shown here, but no skill changes, nothing goes to the mastery round, and it leads back to the path.
+ */
+export function CheckPractice({ lesson, state, locale, unitSkills, offline, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; offline: boolean; onContinue: () => void }) {
+  const t = useTranslations("pages");
+  const rows = skillResults(lesson, state, unitSkills);
+  const right = rows.filter((r) => r.shown).length;
+  return (
+    <Page art={right === rows.length ? "trophy" : "target"} title={t("practiceTitle")} sub={t("practiceSub", { right, total: rows.length })}
+      foot={<button type="button" className="btn btn-primary btn-lg press" onClick={onContinue}>{t("backToPath")}</button>}>
+      {offline ? <p className="lp-banner" role="status"><span className="ph ph-cloud-arrow-up" aria-hidden="true" />{t("syncLater")}</p> : null}
+      <p className="lp-banner" role="note"><span className="ph ph-seal" aria-hidden="true" />{t("practiceNote")}</p>
+      <ul className="lp-list" aria-label={t("skills")} style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        {rows.map(({ skill, shown: ok }) => ok
+          ? <SkillRow key={skill.id} title={skill.title[locale]} status="shown" label={t("practiceRight")} />
+          : <SkillRow key={skill.id} title={skill.title[locale]} status="later" label={t("practiceAgain")} retry />)}
+      </ul>
+    </Page>
+  );
+}
+
 /** End of the mastery round: skills answered right on the one try move to Shown; the rest come back once more. */
 export function MasteryEnd({ lesson, state, locale, unitSkills, unitId, onContinue }: { lesson: Lesson; state: LessonState; locale: Locale; unitSkills: Skill[]; unitId: string; onContinue: () => void }) {
   const t = useTranslations("pages");

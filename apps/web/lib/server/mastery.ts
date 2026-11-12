@@ -5,7 +5,8 @@ import type { QuestionStep } from "@uxgate/content/types";
 import { firstTries, missedSkills, pickRound, unresolvedSkills } from "@/lib/mastery";
 import { learningRules } from "@/lib/app-config";
 
-type Row = { attempt_id: string; step_id: string; skill_id: string | null; try_no: number; kind: string; correct: boolean; attempts: { lesson_id: string; started_at: string; finished_at: string | null; kind: string } | { lesson_id: string; started_at: string; finished_at: string | null; kind: string }[] };
+type Row = { attempt_id: string; step_id: string; skill_id: string | null; try_no: number; kind: string; correct: boolean; attempts: Att | Att[] };
+type Att = { lesson_id: string; started_at: string; finished_at: string | null; kind: string; replay_kind?: string | null };
 
 export type Round = { unitId: string; bankId: string; hash: string; skillCheckDone: boolean; missed: string[]; unresolved: string[]; steps: QuestionStep[] };
 
@@ -18,14 +19,15 @@ export async function loadRound(db: SupabaseClient, userId: string, unitId: stri
   const [{ data }, checkDone] = await Promise.all([
     db
       .from("step_results")
-      .select("attempt_id, step_id, skill_id, try_no, kind, correct, attempts!inner(lesson_id, started_at, finished_at, kind)")
+      .select("attempt_id, step_id, skill_id, try_no, kind, correct, attempts!inner(lesson_id, started_at, finished_at, kind, replay_kind)")
       .eq("user_id", userId)
       .in("attempts.lesson_id", [...unit.lessons, bank.lessonId]),
     checkId ? db.from("attempts").select("id").eq("user_id", userId).eq("lesson_id", checkId).not("finished_at", "is", null).limit(1) : Promise.resolve({ data: [] as unknown[] }),
   ]);
   const all = ((data ?? []) as unknown as Row[]).map((r) => ({ ...r, attempt: Array.isArray(r.attempts) ? r.attempts[0] : r.attempts }));
   // Review sessions also draw from the bank, but they are not part of the unit: they only mark cases as seen.
-  const rows = all.filter((r) => r.attempt.kind !== "review");
+  // A finished skill check played again (revise a unit) is practice only: it never puts a skill back in the round.
+  const rows = all.filter((r) => r.attempt.kind !== "review" && !(r.attempt.kind === "check" && r.attempt.replay_kind));
   const skillCheckDone = !!checkId && checkDone.data?.length === 1;
 
   // Per lesson, only its latest play counts: a lesson played again and aced no longer holds a miss against the learner.
