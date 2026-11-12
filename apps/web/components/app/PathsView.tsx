@@ -28,7 +28,6 @@ function Card({ p, view, t, locale, done, left }: { p: CatalogRow; view: PathVie
       </div>
     );
   }
-  const joined = p.state === "current" || p.state === "joined";
   if (done !== undefined) {
     // Completed (its certificate exists): mint card, check badge, Completed chip, no % bar (design S3-17).
     return (
