@@ -164,3 +164,48 @@ describe("whole lesson", () => {
     expect(bundle.lessons.length).toBeGreaterThan(0);
   });
 });
+
+describe("misconceptions that share an id (the same mistake behind different options)", () => {
+  // The first matching entry used to win on screen, because only the id was kept: choosing "banner" showed the "dialog" text.
+  const mcs = [
+    { id: "MC-X-1", when: "dialog", feedback: { en: "Dialog text", ar: "نص النافذة" } },
+    { id: "MC-X-1", when: "banner", feedback: { en: "Banner text", ar: "نص البانر" } },
+    { id: "MC-X-2", when: "toast", feedback: { en: "Toast text", ar: "نص التوست" } },
+  ];
+  const opt = (id: string) => ({ id, text: { en: id, ar: id } });
+  const mk = (extra: object) => ({ ...lesson, steps: [{ id: "Q1", type: "choose", prompt: { en: "q", ar: "q" }, options: ["ok", "dialog", "banner", "toast"].map(opt), answer: ["ok"], misconceptions: mcs, ...extra }] }) as unknown as Lesson;
+  const wrongFor = (l: Lesson, pick: string) => {
+    let s = E.startLesson(l, "h", 1);
+    s = E.select(l, s, pick);
+    const st = E.check(l, s).state.steps[0];
+    return E.matchedMisconception((l.steps[0] as unknown as { misconceptions: { id: string; feedback: { en: string } }[] }).misconceptions, st);
+  };
+  it("shows the entry that matched each option, even when ids repeat", () => {
+    const l = mk({});
+    expect(wrongFor(l, "dialog")?.feedback.en).toBe("Dialog text");
+    expect(wrongFor(l, "banner")?.feedback.en).toBe("Banner text");
+    expect(wrongFor(l, "toast")?.feedback.en).toBe("Toast text");
+  });
+  it("works in a mastery retest (one try) as well", () => {
+    const l = { ...mk({}), mode: "bank" } as Lesson;
+    expect(wrongFor(l, "banner")?.feedback.en).toBe("Banner text");
+  });
+  it("sort, order and match keep the matched entry", () => {
+    const sort = mk({ type: "sort", items: [{ id: "a", text: { en: "a", ar: "a" } }, { id: "b", text: { en: "b", ar: "b" } }], buckets: [{ id: "x", label: { en: "x", ar: "x" } }, { id: "y", label: { en: "y", ar: "y" } }], answer: { x: ["a"], y: ["b"] },
+      misconceptions: [{ id: "MC-S", when: { item: "a", bucket: "y" }, feedback: { en: "A in Y", ar: "" } }, { id: "MC-S", when: { item: "b", bucket: "x" }, feedback: { en: "B in X", ar: "" } }] });
+    let s = E.startLesson(sort, "h", 1);
+    s = E.setSelection(sort, s, ["b:x", "a:y"]);
+    const st = E.check(sort, s).state.steps[0];
+    expect(st.mcIdx).toBe(0);
+    const match = mk({ type: "match", left: [{ id: "l1", text: { en: "l1", ar: "l1" } }, { id: "l2", text: { en: "l2", ar: "l2" } }], right: [{ id: "r1", text: { en: "r1", ar: "r1" } }, { id: "r2", text: { en: "r2", ar: "r2" } }], answer: { l1: "r1", l2: "r2" },
+      misconceptions: [{ id: "MC-M", when: { left: "l1", right: "r2" }, feedback: { en: "first", ar: "" } }, { id: "MC-M", when: { left: "l2", right: "r1" }, feedback: { en: "second", ar: "" } }] });
+    let m = E.startLesson(match, "h", 1);
+    m = E.setSelection(match, m, ["l1:r1", "l2:r1"]);
+    const ms = E.check(match, m).state.steps[0];
+    expect(E.matchedMisconception((match.steps[0] as unknown as { misconceptions: { id: string; feedback: { en: string } }[] }).misconceptions, ms)?.feedback.en).toBe("second");
+  });
+  it("falls back to the id for state saved before the index existed", () => {
+    expect(E.matchedMisconception(mcs, { mc: "MC-X-2" })?.feedback.en).toBe("Toast text");
+    expect(E.matchedMisconception(mcs, { mc: null })).toBeUndefined();
+  });
+});

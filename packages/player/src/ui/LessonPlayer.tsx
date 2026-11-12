@@ -22,6 +22,8 @@ export type PlayerProps = {
   pathLabel: string;
   /** 1-based place of the lesson in its unit, for the header label. */
   lessonNo?: number;
+  /** The unit's number in its path, shown in the header ("Unit 1 · Lesson 2"). */
+  unitNo?: number;
   muted: boolean;
   onToggleMute: () => void;
   onSound: (name: string) => void;
@@ -78,7 +80,7 @@ function ResumeNote({ text, close, onClose }: { text: string; close: string; onC
 const KEYS: Record<Locale, string[]> = { en: ["A", "B", "C", "D", "E"], ar: ["أ", "ب", "ج", "د", "هـ"] };
 const VERDICT_DELAY = 150;
 
-export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, videoSource, notice, onSwitchLocale, tour, onTourDone }: PlayerProps) {
+export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, unitNo, muted, onToggleMute, onSound, onState, onEvent, onExit, onFinish, variant = "lesson", guest = false, saveStatus, onReview, videoSource, notice, onSwitchLocale, tour, onTourDone }: PlayerProps) {
   const t = useTranslations("player");
   const [state, setState] = useState(initial);
   const [whyOpen, setWhyOpen] = useState(false);
@@ -176,7 +178,7 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
         </div>
         {saveStatus ? <span className={`lp-save${saveStatus === "offline" ? " is-offline" : ""}`} role="status"><span className={`ph ${saveStatus === "saving" ? "ph-arrows-clockwise" : saveStatus === "saved" ? "ph-cloud-check" : "ph-wifi-slash"}`} aria-hidden="true" /><span className="lp-save-txt">{t(`save.${saveStatus}` as never)}</span></span> : null}
         {lesson.mode === "check" || variant !== "lesson" ? <span className="lp-mode"><span className={`ph ${variant === "mastery" ? "ph-target" : variant === "review" ? "ph-review" : "ph-seal-check"}`} aria-hidden="true" />{t(variant === "mastery" ? "modeMastery" : variant === "review" ? "modeReview" : "modeCheck")}</span> : null}
-        {lessonNo && variant === "lesson" ? <span className="t-small ink-3 player-label" title={t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t("headLabel", { path: pathLabel, n: lessonNo, title: lesson.title[locale] })}</span> : null}
+        {lessonNo && variant === "lesson" ? <span className="t-small ink-3 player-label" title={t(unitNo ? "headLabelUnit" : "headLabel", { path: pathLabel, unit: unitNo ?? 0, n: lessonNo, title: lesson.title[locale] })}><span className="hash" aria-hidden="true">#</span>{t(unitNo ? "headLabelUnit" : "headLabel", { path: pathLabel, unit: unitNo ?? 0, n: lessonNo, title: lesson.title[locale] })}</span> : null}
         <span className="t-label num ink-2 player-count">{state.i + 1}/{total}</span>
         {onSwitchLocale ? (
           <button type="button" className="lp-lang press" onClick={onSwitchLocale} aria-label={t("langSwitchAria")} title={t("langSwitchAria")}>
@@ -251,11 +253,17 @@ export function LessonPlayer({ lesson, locale, initial, pathLabel, lessonNo, mut
           const ok = await onReview({ stepId: step.id, answer: { sel: st.first?.sel ?? st.sel, reason: st.first?.reason ?? st.reason }, reason, note });
           setLayer(null);
           setToast(ok ? t("reviewSent") : t("reviewFailed"));
-          setTimeout(() => setToast(null), 4000);
+          setTimeout(() => setToast(null), 6000);
           return ok;
         }} />
       ) : null}
-      {toast || notice ? <p className="lp-toast" role="status">{toast ?? notice}</p> : null}
+      {toast || notice ? (
+        <div className="lp-toast" role="status">
+          <span className="ph ph-check-circle-fill lp-toast-ic" aria-hidden="true" />
+          <span className="lp-toast-t">{toast ?? notice}</span>
+          {toast ? <button type="button" className="lp-toast-x" aria-label={t("close")} onClick={() => setToast(null)}><span className="ph ph-x" aria-hidden="true" /></button> : null}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -649,7 +657,7 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
   }
   // Mastery round: one try. The verdict shows, and the skill comes back once more.
   if (st.phase === "missed") {
-    const mc = (step.misconceptions ?? []).find((m) => m.id === st.mc);
+    const mc = E.matchedMisconception(step.misconceptions, st);
     return (
       <section className="sheet sheet-wrong sheet-in player-sheet" role="alert">
         <div className="sheet-main">
@@ -666,7 +674,7 @@ function Sheet({ step, st, locale, t, whyOpen, setWhyOpen, btnRef, onHint, onRev
     const reasonStep = step.type === "compare" ? (step as CompareStep).reason : undefined;
     const partial = !!reasonStep && st.reason.length > 0;
     const mcList = partial ? reasonStep!.misconceptions : step.misconceptions;
-    const mc = (mcList ?? []).find((m) => m.id === st.mc);
+    const mc = E.matchedMisconception(mcList, st);
     return (
       <section className={`sheet sheet-wrong sheet-in player-sheet${st.hints > 0 ? " has-hints" : ""}`} role="alert">
         <div className="sheet-main">
