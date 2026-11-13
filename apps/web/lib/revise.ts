@@ -35,7 +35,15 @@ export function reviseNext(view: PathView, lessonId: string, withCheck = REVISE_
   const done = next.state === "done";
   if (done && next.lesson.body.mode === "check" && !withCheck) return null;
   const t = next.lesson.body.title;
-  return { lessonId: next.lesson.lessonId, title: { en: t.en, ar: t.ar }, unitNo: unit.number, lessonNo: next.indexInUnit, minutes: next.lesson.minutes, newUnit: false, revise: done };
+  return {
+    lessonId: next.lesson.lessonId,
+    title: { en: t.en, ar: t.ar },
+    unitNo: unit.number,
+    lessonNo: next.indexInUnit,
+    minutes: next.lesson.minutes,
+    newUnit: false,
+    revise: done,
+  };
 }
 
 /** The lesson a stored revise stopped on, if it still belongs to this unit and can be revised. */

@@ -23,8 +23,18 @@ export default async function ReviewSessionPage({ params }: { params: Promise<{ 
   const lesson: Lesson = { ...bank.body, id: bank.lessonId, mode: "bank", steps: session.steps };
   return (
     <LessonRunner
-      lesson={lesson} hash={bank.hash} locale={locale as Locale} pathLabel={localPathName(unit.pathId, locale)} lessonNo={0}
-      unitId={unit.id} streak={0} userId={me.userId} replay={null} other={other} variant="review" plan={session.steps.map((s) => s.id)}
+      lesson={lesson}
+      hash={bank.hash}
+      locale={locale as Locale}
+      pathLabel={localPathName(unit.pathId, locale)}
+      lessonNo={0}
+      unitId={unit.id}
+      streak={0}
+      userId={me.userId}
+      replay={null}
+      other={other}
+      variant="review"
+      plan={session.steps.map((s) => s.id)}
       unitSkills={unit.skills.filter((k) => session.skills.includes(k.id))}
     />
   );

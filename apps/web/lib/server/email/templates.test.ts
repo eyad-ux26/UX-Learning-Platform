@@ -13,13 +13,49 @@ const render = (kind: Kind, locale: "en" | "ar", evil = false): EmailOut => {
   const x = evil ? EVIL : "";
   switch (kind) {
     case "reminder":
-      return reminderEmail({ locale, name: `Yasmin${x}`, lessonTitle: `Pick the right control · Lesson 2${x}`, lessonLead: `Radio buttons or a dropdown?${x}`, minutes: 6, lessonHref: "/en/app/lesson/forms-u2-l2", time: `8:00 PM${x}`, settingsHref: "/en/app/settings", unsubscribeHref: UNSUB });
+      return reminderEmail({
+        locale,
+        name: `Yasmin${x}`,
+        lessonTitle: `Pick the right control · Lesson 2${x}`,
+        lessonLead: `Radio buttons or a dropdown?${x}`,
+        minutes: 6,
+        lessonHref: "/en/app/lesson/forms-u2-l2",
+        time: `8:00 PM${x}`,
+        settingsHref: "/en/app/settings",
+        unsubscribeHref: UNSUB,
+      });
     case "goal":
-      return goalEmail({ locale, done: 1, goal: 2, streak: 12, minutes: 5, reviewDue: 3, lessonHref: "/en/app", time: `8:00 PM${x}`, settingsHref: "/en/app/settings", unsubscribeHref: UNSUB });
+      return goalEmail({
+        locale,
+        done: 1,
+        goal: 2,
+        streak: 12,
+        minutes: 5,
+        reviewDue: 3,
+        lessonHref: "/en/app",
+        time: `8:00 PM${x}`,
+        settingsHref: "/en/app/settings",
+        unsubscribeHref: UNSUB,
+      });
     case "welcome":
-      return welcomeEmail({ locale, name: `Yasmin${x}`, pathTitle: `Forms That Flow${x}`, unitTitle: `Ask only what you need${x}`, startHref: "/en/app", time: "8:00 PM", settingsHref: "/en/app/settings" });
+      return welcomeEmail({
+        locale,
+        name: `Yasmin${x}`,
+        pathTitle: `Forms That Flow${x}`,
+        unitTitle: `Ask only what you need${x}`,
+        startHref: "/en/app",
+        time: "8:00 PM",
+        settingsHref: "/en/app/settings",
+      });
     case "badge":
-      return badgeEmail({ locale, skill: `Cut fields you do not need${x}`, where: `Forms That Flow · Unit 1${x}`, badgesHref: "/en/app/profile", settingsHref: "/en/app/settings", unsubscribeHref: UNSUB });
+      return badgeEmail({
+        locale,
+        skill: `Cut fields you do not need${x}`,
+        where: `Forms That Flow · Unit 1${x}`,
+        badgesHref: "/en/app/profile",
+        settingsHref: "/en/app/settings",
+        unsubscribeHref: UNSUB,
+      });
     case "deleted":
       return deletedEmail({ locale, deleteAfter: "2026-12-02T10:00:00Z", signinHref: SIGNIN });
   }
@@ -43,7 +79,7 @@ describe("app emails", () => {
           }
         });
         it("is one 600px column with the right direction and language", () => {
-          expect(e.html).toContain('max-width:600px');
+          expect(e.html).toContain("max-width:600px");
           expect(e.html).toContain(`<html lang="${locale}" dir="${locale === "ar" ? "rtl" : "ltr"}">`);
           if (locale === "ar") expect(e.html).toContain('dir="rtl"');
           else expect(e.html).not.toContain('dir="rtl"');
@@ -90,8 +126,12 @@ describe("app emails", () => {
     expect(render("reminder", "en").html).toContain("Your next lesson takes about 6 minutes.");
     expect(preheaderOf(render("reminder", "en").html)).toBe("Pick the right control · Lesson 2 · about 6 minutes");
     expect(render("reminder", "ar").html).toContain("درسك التالي يستغرق حوالي 6 دقائق.");
-    expect(render("goal", "en").html).toContain("You did 1 of your 2 lessons today. The next one takes about 5 minutes, and makes 12 days in a row.");
-    expect(render("goal", "ar").html).toContain("أنهيت درسًا من درسين اليوم. الدرس التالي يستغرق حوالي 5 دقائق، وبه تصل إلى 12 يومًا متتاليًا.");
+    expect(render("goal", "en").html).toContain(
+      "You did 1 of your 2 lessons today. The next one takes about 5 minutes, and makes 12 days in a row.",
+    );
+    expect(render("goal", "ar").html).toContain(
+      "أنهيت درسًا من درسين اليوم. الدرس التالي يستغرق حوالي 5 دقائق، وبه تصل إلى 12 يومًا متتاليًا.",
+    );
     expect(preheaderOf(render("goal", "en").html)).toBe("About 5 minutes. Your review is ready too.");
     expect(render("goal", "ar").html).toContain("3 مهارات جاهزة للمراجعة");
     expect(render("welcome", "ar").subject).toBe("أهلًا بك في UXGate يا ياسمين".replace("ياسمين", "Yasmin"));
@@ -99,7 +139,14 @@ describe("app emails", () => {
   });
 
   it("works without a name", () => {
-    const w = welcomeEmail({ locale: "en", name: "  ", pathTitle: "Forms That Flow", unitTitle: "Ask only what you need", startHref: "/en/app", settingsHref: "/en/app/settings" });
+    const w = welcomeEmail({
+      locale: "en",
+      name: "  ",
+      pathTitle: "Forms That Flow",
+      unitTitle: "Ask only what you need",
+      startHref: "/en/app",
+      settingsHref: "/en/app/settings",
+    });
     expect(w.subject).toBe("Welcome to UXGate");
     expect(w.html).not.toMatch(/,\s*</);
   });
@@ -114,12 +161,20 @@ describe("app emails", () => {
   });
 
   it("refuses links that are not web or mail addresses", () => {
-    const { html } = emailLayout({ locale: "en", preheader: "p", heading: "h", paragraphs: [], button: { label: "Go", href: "javascript:alert(1)" }, footer: "transactional" });
+    const { html } = emailLayout({
+      locale: "en",
+      preheader: "p",
+      heading: "h",
+      paragraphs: [],
+      button: { label: "Go", href: "javascript:alert(1)" },
+      footer: "transactional",
+    });
     expect(html).not.toContain("javascript:");
   });
 
   it("English and Arabic email strings have the same keys", () => {
-    const keys = (o: unknown, p = ""): string[] => Object.entries(o as object).flatMap(([k, v]) => (typeof v === "object" ? keys(v, `${p}${k}.`) : [`${p}${k}`]));
+    const keys = (o: unknown, p = ""): string[] =>
+      Object.entries(o as object).flatMap(([k, v]) => (typeof v === "object" ? keys(v, `${p}${k}.`) : [`${p}${k}`]));
     expect(keys(ar).sort()).toEqual(keys(en).sort());
   });
 });

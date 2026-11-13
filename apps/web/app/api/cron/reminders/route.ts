@@ -13,7 +13,8 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const db = createAdminClient();
   try {
     const purged = await purgeDeleted(db);

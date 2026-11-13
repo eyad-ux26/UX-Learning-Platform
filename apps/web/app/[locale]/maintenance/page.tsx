@@ -12,7 +12,11 @@ function backBy(locale: string): string | null {
   const v = process.env.UG_MAINTENANCE_UNTIL;
   const at = v ? new Date(v) : null;
   if (!at || Number.isNaN(at.getTime())) return null;
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-US", { hour: "numeric", minute: "2-digit", timeZone: "Africa/Cairo" }).format(at);
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "Africa/Cairo",
+  }).format(at);
 }
 
 type Params = { params: Promise<{ locale: string }> };
@@ -29,11 +33,22 @@ export default async function MaintenancePage({ params }: Params) {
   const time = backBy(locale);
   // Maintenance turned on in the admin panel (0061) shows the message the Admins wrote there.
   const access = accessFrom(await getAppConfig());
-  const custom = access.maintenance && access.maintenanceMessage ? access.maintenanceMessage[locale === "ar" ? "ar" : "en"] : null;
+  const custom =
+    access.maintenance && access.maintenanceMessage ? access.maintenanceMessage[locale === "ar" ? "ar" : "en"] : null;
   return (
-    <SystemView ill="rocket" code={t("mtCode")} title={t("mtTitle")} body={custom || (time ? t("mtBody", { time }) : t("mtSoon"))} safe={t("mtSafe")} foot={t("mtFoot")}>
+    <SystemView
+      ill="rocket"
+      code={t("mtCode")}
+      title={t("mtTitle")}
+      body={custom || (time ? t("mtBody", { time }) : t("mtSoon"))}
+      safe={t("mtSafe")}
+      foot={t("mtFoot")}
+    >
       {/* Reloads the address the learner asked for: once maintenance ends, that page opens. */}
-      <a href="" className={sysBtn(true)}><span className="ph ph-sync" aria-hidden="true" />{t("checkAgain")}</a>
+      <a href="" className={sysBtn(true)}>
+        <span className="ph ph-sync" aria-hidden="true" />
+        {t("checkAgain")}
+      </a>
     </SystemView>
   );
 }

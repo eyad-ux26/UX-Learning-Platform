@@ -102,7 +102,21 @@ const DARK_CSS = `
 }`;
 
 export function emailLayout(input: EmailLayoutInput): { html: string; text: string } {
-  const { locale, preheader, heading, paragraphs, table = [], button, box, footer, ill, illAlt = "", notes = [], safety, signoff } = input;
+  const {
+    locale,
+    preheader,
+    heading,
+    paragraphs,
+    table = [],
+    button,
+    box,
+    footer,
+    ill,
+    illAlt = "",
+    notes = [],
+    safety,
+    signoff,
+  } = input;
   const m = (locale === "ar" ? ar : en).emails.common;
   const dir = locale === "ar" ? "rtl" : "ltr";
   const font = FONT[locale];
@@ -112,49 +126,79 @@ export function emailLayout(input: EmailLayoutInput): { html: string; text: stri
 
   const links: EmailLink[] = [];
   for (const l of input.links ?? []) {
-    if (l === "unsubscribe") { if (unsub) links.push(unsub); }
-    else links.push(l);
+    if (l === "unsubscribe") {
+      if (unsub) links.push(unsub);
+    } else links.push(l);
   }
   if (unsub && !links.includes(unsub)) links.push(unsub);
 
-  const block = (html: string, first = false) => `<tr><td style="padding:${first ? "0" : "14px"} 0 0 0;">${html}</td></tr>`;
+  const block = (html: string, first = false) =>
+    `<tr><td style="padding:${first ? "0" : "14px"} 0 0 0;">${html}</td></tr>`;
   const pStyle = `margin:0;font-size:16px;line-height:${lh};color:${C.ink};font-family:${font};`;
   const mutedStyle = `margin:0;font-size:14px;line-height:${lh};color:${C.muted};font-family:${font};`;
 
   const rows: string[] = [];
-  if (ill) rows.push(block(`<img class="em-ill" src="${esc(imageUrl(ill))}" width="96" height="96" alt="${esc(illAlt)}" style="display:block;width:96px;height:96px;border:0;outline:none;">`, true));
-  rows.push(block(`<h1 style="margin:0;font-size:24px;line-height:1.25;font-weight:700;color:${C.ink};font-family:${font};">${esc(heading)}</h1>`, rows.length === 0));
+  if (ill)
+    rows.push(
+      block(
+        `<img class="em-ill" src="${esc(imageUrl(ill))}" width="96" height="96" alt="${esc(illAlt)}" style="display:block;width:96px;height:96px;border:0;outline:none;">`,
+        true,
+      ),
+    );
+  rows.push(
+    block(
+      `<h1 style="margin:0;font-size:24px;line-height:1.25;font-weight:700;color:${C.ink};font-family:${font};">${esc(heading)}</h1>`,
+      rows.length === 0,
+    ),
+  );
   for (const p of paragraphs) rows.push(block(`<p style="${pStyle}">${esc(p)}</p>`));
   if (table.length) {
     const cell = `padding:9px 0;border-bottom:1px solid ${C.cardLine};font-size:14px;line-height:1.4;font-family:${font};`;
-    rows.push(block(
-      `<table role="presentation" class="em-rows" width="100%" cellpadding="0" cellspacing="0" border="0" dir="${dir}" style="width:100%;border-top:1px solid ${C.cardLine};">` +
-        table.map(([k, v]) => `<tr><td style="${cell}color:${C.muted};">${esc(k)}</td><td style="${cell}color:${C.ink};font-weight:700;text-align:end;">${esc(v)}</td></tr>`).join("") +
-        `</table>`,
-    ));
+    rows.push(
+      block(
+        `<table role="presentation" class="em-rows" width="100%" cellpadding="0" cellspacing="0" border="0" dir="${dir}" style="width:100%;border-top:1px solid ${C.cardLine};">` +
+          table
+            .map(
+              ([k, v]) =>
+                `<tr><td style="${cell}color:${C.muted};">${esc(k)}</td><td style="${cell}color:${C.ink};font-weight:700;text-align:end;">${esc(v)}</td></tr>`,
+            )
+            .join("") +
+          `</table>`,
+      ),
+    );
   }
   if (box) {
     const img = box.img
       ? `<td width="56" valign="middle" style="width:56px;padding:0;"><img src="${esc(imageUrl(box.img))}" width="56" height="56" alt="" style="display:block;width:56px;height:56px;border:0;"></td><td width="14" style="width:14px;font-size:0;line-height:0;">&nbsp;</td>`
       : "";
-    const body = box.body ? `<br><span style="font-size:14px;line-height:1.5;color:${C.ink};font-family:${font};">${esc(box.body)}</span>` : "";
-    rows.push(block(
-      `<table role="presentation" class="em-box" width="100%" cellpadding="0" cellspacing="0" border="0" dir="${dir}" style="width:100%;background:${C.box};border-radius:12px;border-collapse:separate;">` +
-        `<tr><td style="padding:14px 16px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" dir="${dir}"><tr>${img}` +
-        `<td valign="middle" style="color:${C.ink};font-family:${font};"><b style="font-size:16px;line-height:1.35;color:${C.ink};">${esc(box.title)}</b>${body}</td>` +
-        `</tr></table></td></tr></table>`,
-    ));
+    const body = box.body
+      ? `<br><span style="font-size:14px;line-height:1.5;color:${C.ink};font-family:${font};">${esc(box.body)}</span>`
+      : "";
+    rows.push(
+      block(
+        `<table role="presentation" class="em-box" width="100%" cellpadding="0" cellspacing="0" border="0" dir="${dir}" style="width:100%;background:${C.box};border-radius:12px;border-collapse:separate;">` +
+          `<tr><td style="padding:14px 16px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" dir="${dir}"><tr>${img}` +
+          `<td valign="middle" style="color:${C.ink};font-family:${font};"><b style="font-size:16px;line-height:1.35;color:${C.ink};">${esc(box.title)}</b>${body}</td>` +
+          `</tr></table></td></tr></table>`,
+      ),
+    );
   }
   if (button) {
     const href = safeHref(button.href);
-    rows.push(block(
-      `<a class="em-btn" href="${esc(href)}" style="display:inline-block;padding:14px 26px;border-radius:14px;background:${C.btn};color:${C.btnInk};border-bottom:4px solid ${C.btnLedge};font-weight:700;font-size:17px;line-height:1.2;text-decoration:none;text-align:center;font-family:${font};">${esc(button.label)}</a>`,
-    ));
+    rows.push(
+      block(
+        `<a class="em-btn" href="${esc(href)}" style="display:inline-block;padding:14px 26px;border-radius:14px;background:${C.btn};color:${C.btnInk};border-bottom:4px solid ${C.btnLedge};font-weight:700;font-size:17px;line-height:1.2;text-decoration:none;text-align:center;font-family:${font};">${esc(button.label)}</a>`,
+      ),
+    );
   }
   for (const n of notes) rows.push(block(`<p class="em-muted" style="${mutedStyle}">${esc(n)}</p>`));
   if (button?.showLink) {
     const href = safeHref(button.href);
-    rows.push(block(`<p class="em-code" dir="ltr" style="margin:0;font-family:${MONO};font-size:13px;line-height:1.5;color:${C.muted};word-break:break-all;"><a href="${esc(href)}" style="color:${C.muted};text-decoration:underline;">${esc(href)}</a></p>`));
+    rows.push(
+      block(
+        `<p class="em-code" dir="ltr" style="margin:0;font-family:${MONO};font-size:13px;line-height:1.5;color:${C.muted};word-break:break-all;"><a href="${esc(href)}" style="color:${C.muted};text-decoration:underline;">${esc(href)}</a></p>`,
+      ),
+    );
   }
   if (signoff) rows.push(block(`<p class="em-muted" style="${mutedStyle}">${esc(m.team)}</p>`));
   if (safety) rows.push(block(`<p class="em-muted" style="${mutedStyle}">${esc(safety)}</p>`));
@@ -163,7 +207,14 @@ export function emailLayout(input: EmailLayoutInput): { html: string; text: stri
   const footLines: string[] = [];
   if (why) footLines.push(`<span style="${footStyle}">${esc(why)}</span>`);
   if (links.length) {
-    footLines.push(links.map((l) => `<a href="${esc(safeHref(l.href))}" style="color:${C.link};font-weight:700;text-decoration:underline;">${esc(l.label)}</a>`).join(`<span style="${footStyle}"> · </span>`));
+    footLines.push(
+      links
+        .map(
+          (l) =>
+            `<a href="${esc(safeHref(l.href))}" style="color:${C.link};font-weight:700;text-decoration:underline;">${esc(l.label)}</a>`,
+        )
+        .join(`<span style="${footStyle}"> · </span>`),
+    );
   }
   footLines.push(`<span style="${footStyle}">${esc(m.addr)}</span>`);
 

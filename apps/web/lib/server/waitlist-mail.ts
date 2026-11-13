@@ -6,7 +6,13 @@ import { siteOrigin } from "@/lib/email-token";
 import { newToken } from "@/lib/waitlist";
 
 /** Sends one launch-list confirmation email. On failure the row goes back to queued (waitlist_send_failed). */
-export async function sendConfirmation(db: SupabaseClient, to: { email: string; locale: "en" | "ar" }, token: string, hash: string, origin: string): Promise<boolean> {
+export async function sendConfirmation(
+  db: SupabaseClient,
+  to: { email: string; locale: "en" | "ar" },
+  token: string,
+  hash: string,
+  origin: string,
+): Promise<boolean> {
   const mail = launchConfirmEmail({ locale: to.locale, href: `${origin}/${to.locale}/coming-soon/confirm?t=${token}` });
   const sent = await sendEmail({ to: to.email, ...mail, kind: "launch-confirm", locale: to.locale });
   if (sent.ok) return true;
@@ -19,7 +25,10 @@ export async function sendConfirmation(db: SupabaseClient, to: { email: string; 
  * Daily job: sends the confirmation link to addresses that joined while email could not go out. Does nothing until
  * RESEND_API_KEY is set. Links point at the site's own address (NEXT_PUBLIC_SITE_URL).
  */
-export async function sendQueuedConfirmations(db: SupabaseClient, limit = 50): Promise<{ sent: number; failed: number }> {
+export async function sendQueuedConfirmations(
+  db: SupabaseClient,
+  limit = 50,
+): Promise<{ sent: number; failed: number }> {
   if (!process.env.RESEND_API_KEY) return { sent: 0, failed: 0 };
   const { data, error } = await db.rpc("waitlist_queued", { p_limit: limit });
   if (error || !Array.isArray(data)) return { sent: 0, failed: 0 };
@@ -29,7 +38,16 @@ export async function sendQueuedConfirmations(db: SupabaseClient, limit = 50): P
     const { token, hash } = await newToken();
     const { data: ok } = await db.rpc("waitlist_mark_sent", { p_id: row.id, p_token_hash: hash });
     if (ok !== true) continue;
-    if (await sendConfirmation(db, { email: row.email, locale: row.locale === "ar" ? "ar" : "en" }, token, hash, siteOrigin())) sent++;
+    if (
+      await sendConfirmation(
+        db,
+        { email: row.email, locale: row.locale === "ar" ? "ar" : "en" },
+        token,
+        hash,
+        siteOrigin(),
+      )
+    )
+      sent++;
     else failed++;
   }
   return { sent, failed };

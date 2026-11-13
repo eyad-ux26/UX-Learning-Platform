@@ -24,13 +24,23 @@ export function GuestHandoff() {
   useEffect(() => {
     if (busy.current) return;
     let flag: string | null = null;
-    try { flag = localStorage.getItem(FLAG); } catch { return; }
+    try {
+      flag = localStorage.getItem(FLAG);
+    } catch {
+      return;
+    }
     const age = Date.now() - Number(flag);
     if (!flag || !Number.isFinite(age) || age < 0 || age > HANDOFF_TTL_MS) {
       if (flag) {
         // Stale (or an old-format flag): forget the choice and the guest answers.
-        try { localStorage.removeItem(FLAG); } catch { /* nothing to clean */ }
-        queueAll<QueuedAttempt>().then((all) => Promise.all(all.filter((i) => i.userId === "guest").map((i) => queueDel(i.key)))).catch(() => {});
+        try {
+          localStorage.removeItem(FLAG);
+        } catch {
+          /* nothing to clean */
+        }
+        queueAll<QueuedAttempt>()
+          .then((all) => Promise.all(all.filter((i) => i.userId === "guest").map((i) => queueDel(i.key))))
+          .catch(() => {});
       }
       return;
     }
@@ -39,11 +49,24 @@ export function GuestHandoff() {
       // The session is HttpOnly, so ask the server who is signed in.
       const id = ((await (await fetch("/api/auth/whoami", { cache: "no-store" })).json()) as { id: string | null }).id;
       if (!id) return; // not signed up yet: keep waiting
-      const guest = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter((i) => i.userId === "guest");
+      const guest = (await queueAll<QueuedAttempt>().catch(() => [] as QueuedAttempt[])).filter(
+        (i) => i.userId === "guest",
+      );
       await Promise.all(guest.map((i) => queuePut({ ...i, userId: id } as { key: string })));
-      try { localStorage.removeItem(FLAG); if (guest.length) sessionStorage.setItem(SAMPLE_KEPT, "1"); } catch { /* nothing to clean */ }
-      setSyncUser(id); startSync(); kick();
-    })().catch(() => {}).finally(() => { busy.current = false; });
+      try {
+        localStorage.removeItem(FLAG);
+        if (guest.length) sessionStorage.setItem(SAMPLE_KEPT, "1");
+      } catch {
+        /* nothing to clean */
+      }
+      setSyncUser(id);
+      startSync();
+      kick();
+    })()
+      .catch(() => {})
+      .finally(() => {
+        busy.current = false;
+      });
   }, [pathname]);
   return null;
 }

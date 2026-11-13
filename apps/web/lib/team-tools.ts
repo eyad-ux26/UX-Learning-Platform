@@ -5,10 +5,19 @@ import { content as defaultContent, type ContentIndex } from "@uxgate/content";
 export type TeamPlan = { lessonIds: string[]; skillIds: string[]; unitIds: string[] };
 
 /** The lessons and skills of a path's units 1..throughUnit (all units when it is null), in play order. Empty for an unknown path. */
-export function teamPlan(pathId: string, throughUnit: number | null = null, b: ContentIndex = defaultContent): TeamPlan {
+export function teamPlan(
+  pathId: string,
+  throughUnit: number | null = null,
+  b: ContentIndex = defaultContent,
+): TeamPlan {
   const units = b.units.filter((u) => u.pathId === pathId);
   const picked = throughUnit === null ? units : units.slice(0, Math.max(0, Math.min(units.length, throughUnit)));
-  const lessonIds = picked.flatMap((u) => b.lessons.filter((l) => l.unitId === u.id).sort((a, c) => a.order - c.order).map((l) => l.lessonId));
+  const lessonIds = picked.flatMap((u) =>
+    b.lessons
+      .filter((l) => l.unitId === u.id)
+      .sort((a, c) => a.order - c.order)
+      .map((l) => l.lessonId),
+  );
   return { lessonIds, skillIds: picked.flatMap((u) => u.skills.map((s) => s.id)), unitIds: picked.map((u) => u.id) };
 }
 

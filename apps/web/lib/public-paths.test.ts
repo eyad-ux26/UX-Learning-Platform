@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { bundle } from "@uxgate/content/full";
 import type { ContentIndex } from "@uxgate/content";
-import { PUBLIC_PATHS, isOpen, isPublished, pageAlternates, pathFacts, publicPathParams, publicPathsInOrder } from "./public-paths";
+import {
+  PUBLIC_PATHS,
+  isOpen,
+  isPublished,
+  pageAlternates,
+  pathFacts,
+  publicPathParams,
+  publicPathsInOrder,
+} from "./public-paths";
 
 describe("public path list", () => {
   it("has an entry for every path in the content bundle, marked open", () => {
@@ -28,7 +36,10 @@ describe("public path list", () => {
   });
   it("every entry has English and Arabic text", () => {
     for (const p of PUBLIC_PATHS) {
-      for (const x of [p.sub, p.short ?? p.sub, ...(p.can ?? [])]) { expect(x.en.trim()).not.toBe(""); expect(x.ar.trim()).not.toBe(""); }
+      for (const x of [p.sub, p.short ?? p.sub, ...(p.can ?? [])]) {
+        expect(x.en.trim()).not.toBe("");
+        expect(x.ar.trim()).not.toBe("");
+      }
     }
   });
   it("open interactive paths have a sample step with a valid answer", () => {
@@ -47,12 +58,17 @@ describe("static pages", () => {
   it("cover every path in both languages", () => {
     const params = publicPathParams();
     expect(params).toHaveLength(PUBLIC_PATHS.length * 2);
-    for (const locale of ["en", "ar"]) for (const p of PUBLIC_PATHS) expect(params).toContainEqual({ locale, pathId: p.slug });
+    for (const locale of ["en", "ar"])
+      for (const p of PUBLIC_PATHS) expect(params).toContainEqual({ locale, pathId: p.slug });
   });
   it("link both languages with hreflang and x-default to Arabic (the default language)", () => {
     const a = pageAlternates("ar", "/paths/forms-that-flow");
     expect(a.canonical).toBe("https://uxgate.org/ar/paths/forms-that-flow");
-    expect(a.languages).toEqual({ en: "https://uxgate.org/en/paths/forms-that-flow", ar: "https://uxgate.org/ar/paths/forms-that-flow", "x-default": "https://uxgate.org/ar/paths/forms-that-flow" });
+    expect(a.languages).toEqual({
+      en: "https://uxgate.org/en/paths/forms-that-flow",
+      ar: "https://uxgate.org/ar/paths/forms-that-flow",
+      "x-default": "https://uxgate.org/ar/paths/forms-that-flow",
+    });
   });
 });
 

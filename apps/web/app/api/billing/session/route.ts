@@ -9,7 +9,11 @@ export async function GET(req: Request) {
   const { data: auth } = await db.auth.getUser();
   if (!auth.user) return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   // RLS: only the learner's own session is visible.
-  const { data } = await db.from("checkout_sessions").select("status, provider, kind, period, code").eq("id", id).maybeSingle();
+  const { data } = await db
+    .from("checkout_sessions")
+    .select("status, provider, kind, period, code")
+    .eq("id", id)
+    .maybeSingle();
   if (!data) return NextResponse.json({ error: "not_found" }, { status: 404 });
   return NextResponse.json(data, { headers: { "cache-control": "no-store" } });
 }

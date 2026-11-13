@@ -3,7 +3,13 @@
 // sent together (the code before #184), so the app never depends on the migration.
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { activitySince, loadProgressAndZone, progressFrom, type ActivityRow, type LessonRow } from "@/lib/server/load-progress";
+import {
+  activitySince,
+  loadProgressAndZone,
+  progressFrom,
+  type ActivityRow,
+  type LessonRow,
+} from "@/lib/server/load-progress";
 import type { Progress } from "@/lib/progress";
 import { localDay } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
@@ -51,17 +57,36 @@ export type Learner = {
   /** Unread inbox items for the bell, or null when not read with the learner (the bell then counts them itself). */
   unread: number | null;
   /** What the Profile page shows beyond the shell, or null when not read with the learner (the page then reads it). */
-  profileExtra: { reminderTime: string | null; createdAt: string | null; leaderboardOpen: boolean; certificates: Certificate[] } | null;
+  profileExtra: {
+    reminderTime: string | null;
+    createdAt: string | null;
+    leaderboardOpen: boolean;
+    certificates: Certificate[];
+  } | null;
   /** An admin using the tool while the public sees Coming Soon: the shell shows the "Pre-launch · team view" badge. Set by getLearner. */
   teamView?: boolean;
 };
 
 type ProfileRow = {
-  display_name?: string | null; daily_goal?: number | null; time_zone?: string | null; locale?: string | null; week_start?: number | null;
-  current_path_id?: string | null; handle?: string | null; share_enabled?: boolean | null; leaderboard_joined_at?: string | null;
-  reminder_time?: string | null; created_at?: string | null;
+  display_name?: string | null;
+  daily_goal?: number | null;
+  time_zone?: string | null;
+  locale?: string | null;
+  week_start?: number | null;
+  current_path_id?: string | null;
+  handle?: string | null;
+  share_enabled?: boolean | null;
+  leaderboard_joined_at?: string | null;
+  reminder_time?: string | null;
+  created_at?: string | null;
 };
-type SkillDbRow = { skill_id: string; state: string; shown_at: string | null; kept_at: string | null; next_review_at: string | null };
+type SkillDbRow = {
+  skill_id: string;
+  state: string;
+  shown_at: string | null;
+  kept_at: string | null;
+  next_review_at: string | null;
+};
 type StreakRow = { longest: number; freezes_available: number; settled_through: string | null };
 
 /** Every row the learner's pages read, however it arrived. */
@@ -81,9 +106,18 @@ export type LearnerRows = {
 };
 
 type StateJson = {
-  profile: ProfileRow | null; lessons: LessonRow[]; activity: ActivityRow[]; onboarding: LearnerRows["onboarding"]; skills: SkillDbRow[];
-  enrollments: LearnerRows["enrollments"]; streak: StreakRow | null; freeze_note: { id: string; day: string } | null;
-  entitlement: Record<string, unknown> | null; unread: number; certificates: { path_id: string; issued_at: string; code: string }[]; leaderboard_open: boolean;
+  profile: ProfileRow | null;
+  lessons: LessonRow[];
+  activity: ActivityRow[];
+  onboarding: LearnerRows["onboarding"];
+  skills: SkillDbRow[];
+  enrollments: LearnerRows["enrollments"];
+  streak: StreakRow | null;
+  freeze_note: { id: string; day: string } | null;
+  entitlement: Record<string, unknown> | null;
+  unread: number;
+  certificates: { path_id: string; issued_at: string; code: string }[];
+  leaderboard_open: boolean;
 };
 
 // PostgREST "function not found" and Postgres "undefined function": 0039 is not applied yet. Then this isolate stops
@@ -92,7 +126,9 @@ const MISSING = new Set(["PGRST202", "42883"]);
 const QUIET_MS = 60_000;
 let missingUntil = 0;
 /** For tests. */
-export const resetLearnerState = () => { missingUntil = 0; };
+export const resetLearnerState = () => {
+  missingUntil = 0;
+};
 
 /** The one-call read. Null when it is not available or failed; the caller then reads the rows separately. */
 async function readState(db: SupabaseClient, now: Date): Promise<LearnerRows | null> {
@@ -106,11 +142,21 @@ async function readState(db: SupabaseClient, now: Date): Promise<LearnerRows | n
   const s = data as StateJson;
   const { progress, timeZone } = progressFrom(s.profile, s.lessons ?? [], s.activity ?? [], now);
   return {
-    progress, timeZone, profile: s.profile, onboarding: s.onboarding, skills: s.skills ?? [], enrollments: s.enrollments ?? [],
-    streak: s.streak, streakFailed: false, freezeNote: s.freeze_note, entitlement: entitlementFromRow(s.entitlement),
+    progress,
+    timeZone,
+    profile: s.profile,
+    onboarding: s.onboarding,
+    skills: s.skills ?? [],
+    enrollments: s.enrollments ?? [],
+    streak: s.streak,
+    streakFailed: false,
+    freezeNote: s.freeze_note,
+    entitlement: entitlementFromRow(s.entitlement),
     unread: s.unread ?? 0,
     profileExtra: {
-      reminderTime: s.profile?.reminder_time ?? null, createdAt: s.profile?.created_at ?? null, leaderboardOpen: !!s.leaderboard_open,
+      reminderTime: s.profile?.reminder_time ?? null,
+      createdAt: s.profile?.created_at ?? null,
+      leaderboardOpen: !!s.leaderboard_open,
       certificates: (s.certificates ?? []).map((c) => ({ pathId: c.path_id, issuedAt: c.issued_at, code: c.code })),
     },
   };
@@ -123,20 +169,37 @@ async function readRows(db: SupabaseClient, userId: string, now: Date): Promise<
     db.from("onboarding").select("completed_at, recommended_path_id").eq("user_id", userId).maybeSingle(),
     db.from("skill_states").select("skill_id, state, shown_at, kept_at, next_review_at").eq("user_id", userId),
     // Its own query: if a column is missing the rest of the app still loads.
-    db.from("profiles").select("current_path_id, handle, share_enabled, leaderboard_joined_at").eq("user_id", userId).maybeSingle(),
+    db
+      .from("profiles")
+      .select("current_path_id, handle, share_enabled, leaderboard_joined_at")
+      .eq("user_id", userId)
+      .maybeSingle(),
     db.from("enrollments").select("path_id, started_at, last_active_at").eq("user_id", userId),
     db.from("streaks").select("longest, freezes_available, settled_through").eq("user_id", userId).maybeSingle(),
-    db.from("freeze_events").select("id, day").eq("user_id", userId).eq("kind", "used").is("seen_at", null).order("day", { ascending: false }).limit(1),
+    db
+      .from("freeze_events")
+      .select("id, day")
+      .eq("user_id", userId)
+      .eq("kind", "used")
+      .is("seen_at", null)
+      .order("day", { ascending: false })
+      .limit(1),
     readEntitlement(db, userId),
     db.from("profiles").select("time_zone, locale, week_start").eq("user_id", userId).maybeSingle(),
   ]);
   return {
-    progress, timeZone,
+    progress,
+    timeZone,
     profile: { ...(prof.data ?? {}), ...(extra.data ?? {}) } as ProfileRow,
-    onboarding: onb.data, skills: (skills.data ?? []) as SkillDbRow[], enrollments: (enr.data ?? []) as LearnerRows["enrollments"],
-    streak: streak.data as StreakRow | null, streakFailed: !!streak.error,
+    onboarding: onb.data,
+    skills: (skills.data ?? []) as SkillDbRow[],
+    enrollments: (enr.data ?? []) as LearnerRows["enrollments"],
+    streak: streak.data as StreakRow | null,
+    streakFailed: !!streak.error,
     freezeNote: (note.data?.[0] as { id: string; day: string } | undefined) ?? null,
-    entitlement, unread: null, profileExtra: null,
+    entitlement,
+    unread: null,
+    profileExtra: null,
   };
 }
 
@@ -151,7 +214,11 @@ const readAll = async (db: SupabaseClient, userId: string, now: Date, admin: boo
  * which is null for the service role (it would answer with empty lists, not an error), so this reads the rows by
  * userId instead. It also never settles: an admin only looking must not change the learner's streak or freezes.
  */
-export async function readLearner(db: SupabaseClient, userId: string, opts: { email?: string | null; host: string | null; now?: Date; adminView?: boolean }): Promise<Learner> {
+export async function readLearner(
+  db: SupabaseClient,
+  userId: string,
+  opts: { email?: string | null; host: string | null; now?: Date; adminView?: boolean },
+): Promise<Learner> {
   const now = opts.now ?? new Date();
   const admin = !!opts.adminView;
   let rows = await readAll(db, userId, now, admin);
@@ -164,21 +231,45 @@ export async function readLearner(db: SupabaseClient, userId: string, opts: { em
   }
   const { progress, timeZone: tz, profile, onboarding, skills, enrollments, streak, freezeNote, entitlement } = rows;
   const weekStart = resolveWeekStart(profile?.week_start, profile?.locale);
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(now));
-  const joined = enrollments.map((e) => ({ pathId: e.path_id, startedAt: e.started_at, lastActiveAt: e.last_active_at ?? null }))
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hourCycle: "h23", timeZone: tz ?? "UTC" }).format(now),
+  );
+  const joined = enrollments
+    .map((e) => ({ pathId: e.path_id, startedAt: e.started_at, lastActiveAt: e.last_active_at ?? null }))
     .sort((a, b) => (b.lastActiveAt ?? b.startedAt).localeCompare(a.lastActiveAt ?? a.startedAt));
   const recommended = onboarding?.recommended_path_id ?? null;
   const currentPathId = profile?.current_path_id ?? null;
   const d = (v: string | null) => (v ? new Date(v) : null);
-  const states = new Map<string, SkillRow>(skills.map((r) => [r.skill_id, { state: r.state as SkillStateName, shownAt: d(r.shown_at), keptAt: d(r.kept_at), nextReviewAt: d(r.next_review_at) }]));
+  const states = new Map<string, SkillRow>(
+    skills.map((r) => [
+      r.skill_id,
+      {
+        state: r.state as SkillStateName,
+        shownAt: d(r.shown_at),
+        keptAt: d(r.kept_at),
+        nextReviewAt: d(r.next_review_at),
+      },
+    ]),
+  );
   return {
-    db, weekStart, userId, email: opts.email ?? null, progress, hour, timeZone: tz,
+    db,
+    weekStart,
+    userId,
+    email: opts.email ?? null,
+    progress,
+    hour,
+    timeZone: tz,
     onboarded: !!onboarding?.completed_at,
     recommendedPathId: recommended,
     currentPathId,
     practicedSkills: new Set(states.keys()),
     joined,
-    activePathId: pickCurrent(currentPathId, joined.map((j) => j.pathId), recommended)?.id ?? "P01",
+    activePathId:
+      pickCurrent(
+        currentPathId,
+        joined.map((j) => j.pathId),
+        recommended,
+      )?.id ?? "P01",
     skillStates: states,
     freezes: streak?.freezes_available ?? 0,
     longestStreak: streak?.longest ?? 0,

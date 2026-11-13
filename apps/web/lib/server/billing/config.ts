@@ -11,8 +11,12 @@ const env = (k: string) => process.env[k] ?? "";
 
 export function paymobConfig() {
   const c = {
-    secretKey: env("PAYMOB_SECRET_KEY"), publicKey: env("PAYMOB_PUBLIC_KEY"), apiKey: env("PAYMOB_API_KEY"), hmac: env("PAYMOB_HMAC_SECRET"),
-    cardIntegration: Number(env("PAYMOB_CARD_INTEGRATION_ID")) || 0, walletIntegration: Number(env("PAYMOB_WALLET_INTEGRATION_ID")) || 0,
+    secretKey: env("PAYMOB_SECRET_KEY"),
+    publicKey: env("PAYMOB_PUBLIC_KEY"),
+    apiKey: env("PAYMOB_API_KEY"),
+    hmac: env("PAYMOB_HMAC_SECRET"),
+    cardIntegration: Number(env("PAYMOB_CARD_INTEGRATION_ID")) || 0,
+    walletIntegration: Number(env("PAYMOB_WALLET_INTEGRATION_ID")) || 0,
     motoIntegration: Number(env("PAYMOB_MOTO_INTEGRATION_ID")) || 0,
     base: env("PAYMOB_BASE_URL") || "https://accept.paymob.com",
   };
@@ -23,14 +27,32 @@ const PADDLE_REGIONS: Exclude<Region, "eg">[] = ["gulf", "arab", "world"];
 
 export function paddleConfig() {
   const prices = {} as Record<`${Exclude<Region, "eg">}_${Period}`, string>;
-  for (const r of PADDLE_REGIONS) for (const p of ["month", "year"] as const) prices[`${r}_${p}`] = env(`PADDLE_PRICE_${r.toUpperCase()}_${p === "month" ? "MONTH" : "YEAR"}`);
+  for (const r of PADDLE_REGIONS)
+    for (const p of ["month", "year"] as const)
+      prices[`${r}_${p}`] = env(`PADDLE_PRICE_${r.toUpperCase()}_${p === "month" ? "MONTH" : "YEAR"}`);
   const c = {
-    apiKey: env("PADDLE_API_KEY"), webhookSecret: env("PADDLE_WEBHOOK_SECRET"), clientToken: env("PADDLE_CLIENT_TOKEN"),
-    env: env("PADDLE_ENV") === "production" ? ("production" as const) : ("sandbox" as const), prices,
-    discounts: { student: env("PADDLE_DISCOUNT_STUDENT"), welcome_back: env("PADDLE_DISCOUNT_WELCOME_BACK"), founding: env("PADDLE_DISCOUNT_FOUNDING") },
+    apiKey: env("PADDLE_API_KEY"),
+    webhookSecret: env("PADDLE_WEBHOOK_SECRET"),
+    clientToken: env("PADDLE_CLIENT_TOKEN"),
+    env: env("PADDLE_ENV") === "production" ? ("production" as const) : ("sandbox" as const),
+    prices,
+    discounts: {
+      student: env("PADDLE_DISCOUNT_STUDENT"),
+      welcome_back: env("PADDLE_DISCOUNT_WELCOME_BACK"),
+      founding: env("PADDLE_DISCOUNT_FOUNDING"),
+    },
   };
   const base = c.env === "production" ? "https://api.paddle.com" : "https://sandbox-api.paddle.com";
-  return { ...c, base, ready: !!(c.apiKey && c.webhookSecret && c.clientToken && PADDLE_REGIONS.every((r) => prices[`${r}_month`] && prices[`${r}_year`])) };
+  return {
+    ...c,
+    base,
+    ready: !!(
+      c.apiKey &&
+      c.webhookSecret &&
+      c.clientToken &&
+      PADDLE_REGIONS.every((r) => prices[`${r}_month`] && prices[`${r}_year`])
+    ),
+  };
 }
 
 /**
@@ -38,7 +60,9 @@ export function paddleConfig() {
  * Rows written for it carry test = true and stay out of the dashboard, revenue and the accountant export.
  */
 export const isTestMoney = (provider: string) =>
-  provider === "mock" || (provider === "paddle" && paddleConfig().env !== "production") || (provider === "paymob" && env("PAYMOB_ENV") === "test");
+  provider === "mock" ||
+  (provider === "paddle" && paddleConfig().env !== "production") ||
+  (provider === "paymob" && env("PAYMOB_ENV") === "test");
 
 /**
  * The host a route request came to. Only the URL (the Host the request was routed by) counts: x-forwarded-host is

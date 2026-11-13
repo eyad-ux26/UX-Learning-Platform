@@ -66,9 +66,15 @@ export const navState = () => state;
 
 function subscribe(f: () => void) {
   subs.add(f);
-  return () => { subs.delete(f); };
+  return () => {
+    subs.delete(f);
+  };
 }
 
 export function useNavProgress(): NavState {
-  return useSyncExternalStore(subscribe, () => state, () => IDLE);
+  return useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => IDLE,
+  );
 }

@@ -12,7 +12,10 @@ export const REVIEW_AFTER_DAYS = DEFAULT_RULES.reviewAfterDays;
 export async function markPracticed(db: Db, userId: string, skillIds: string[]) {
   const ids = [...new Set(skillIds)];
   if (!ids.length) return;
-  await db.from("skill_states").upsert(ids.map((skill_id) => ({ user_id: userId, skill_id, state: "practiced" })), { onConflict: "user_id,skill_id", ignoreDuplicates: true });
+  await db.from("skill_states").upsert(
+    ids.map((skill_id) => ({ user_id: userId, skill_id, state: "practiced" })),
+    { onConflict: "user_id,skill_id", ignoreDuplicates: true },
+  );
 }
 
 /**
@@ -22,10 +25,23 @@ export async function markPracticed(db: Db, userId: string, skillIds: string[]) 
 export async function markShown(db: Db, userId: string, skillIds: string[], now = new Date()) {
   const ids = [...new Set(skillIds)];
   if (!ids.length) return;
-  const [{ data: current }, rules] = await Promise.all([db.from("skill_states").select("skill_id, state").eq("user_id", userId).in("skill_id", ids), learningRules()]);
-  const done = new Set((current ?? []).filter((r) => r.state === "kept" || r.state === "shown").map((r) => r.skill_id as string));
+  const [{ data: current }, rules] = await Promise.all([
+    db.from("skill_states").select("skill_id, state").eq("user_id", userId).in("skill_id", ids),
+    learningRules(),
+  ]);
+  const done = new Set(
+    (current ?? []).filter((r) => r.state === "kept" || r.state === "shown").map((r) => r.skill_id as string),
+  );
   const next = new Date(now.getTime() + rules.reviewAfterDays * 86_400_000).toISOString();
-  const rows = ids.filter((id) => !done.has(id)).map((skill_id) => ({ user_id: userId, skill_id, state: "shown", shown_at: now.toISOString(), next_review_at: next }));
+  const rows = ids
+    .filter((id) => !done.has(id))
+    .map((skill_id) => ({
+      user_id: userId,
+      skill_id,
+      state: "shown",
+      shown_at: now.toISOString(),
+      next_review_at: next,
+    }));
   if (rows.length) await db.from("skill_states").upsert(rows, { onConflict: "user_id,skill_id" });
 }
 
@@ -37,17 +53,33 @@ export async function markShown(db: Db, userId: string, skillIds: string[], now 
 export async function markReviewed(db: Db, userId: string, asked: string[], correct: string[], now = new Date()) {
   const ids = [...new Set(asked)];
   if (!ids.length) return [];
-  const { data } = await db.from("skill_states").select("skill_id, state, shown_at, kept_at, next_review_at").eq("user_id", userId).in("skill_id", ids);
+  const { data } = await db
+    .from("skill_states")
+    .select("skill_id, state, shown_at, kept_at, next_review_at")
+    .eq("user_id", userId)
+    .in("skill_id", ids);
   const ok = new Set(correct);
   const rules = await learningRules();
   const kept: string[] = [];
   for (const r of data ?? []) {
-    const prev: SkillRow = { state: r.state as SkillRow["state"], shownAt: r.shown_at ? new Date(r.shown_at as string) : null, keptAt: r.kept_at ? new Date(r.kept_at as string) : null, nextReviewAt: r.next_review_at ? new Date(r.next_review_at as string) : null };
+    const prev: SkillRow = {
+      state: r.state as SkillRow["state"],
+      shownAt: r.shown_at ? new Date(r.shown_at as string) : null,
+      keptAt: r.kept_at ? new Date(r.kept_at as string) : null,
+      nextReviewAt: r.next_review_at ? new Date(r.next_review_at as string) : null,
+    };
     const next = applyReview(prev, ok.has(r.skill_id as string), now, rules);
     if (next === prev) continue;
-    await db.from("skill_states")
-      .update({ state: next.state, kept_at: next.keptAt?.toISOString() ?? null, next_review_at: next.nextReviewAt?.toISOString() ?? null })
-      .eq("user_id", userId).eq("skill_id", r.skill_id as string).eq("state", "shown");
+    await db
+      .from("skill_states")
+      .update({
+        state: next.state,
+        kept_at: next.keptAt?.toISOString() ?? null,
+        next_review_at: next.nextReviewAt?.toISOString() ?? null,
+      })
+      .eq("user_id", userId)
+      .eq("skill_id", r.skill_id as string)
+      .eq("state", "shown");
     if (next.state === "kept") kept.push(r.skill_id as string);
   }
   return kept;

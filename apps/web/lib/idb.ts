@@ -15,19 +15,29 @@ function open(): Promise<IDBDatabase> {
   });
 }
 
-async function run<T>(store: "kv" | "queue", mode: IDBTransactionMode, fn: (s: IDBObjectStore) => IDBRequest<T>): Promise<T> {
+async function run<T>(
+  store: "kv" | "queue",
+  mode: IDBTransactionMode,
+  fn: (s: IDBObjectStore) => IDBRequest<T>,
+): Promise<T> {
   const db = await open();
   return new Promise<T>((resolve, reject) => {
     const tx = db.transaction(store, mode);
     const req = fn(tx.objectStore(store));
-    tx.oncomplete = () => { db.close(); resolve(req.result); };
-    tx.onerror = tx.onabort = () => { db.close(); reject(tx.error); };
+    tx.oncomplete = () => {
+      db.close();
+      resolve(req.result);
+    };
+    tx.onerror = tx.onabort = () => {
+      db.close();
+      reject(tx.error);
+    };
   });
 }
 
-export const kvGet = <T,>(key: string) => run<T | undefined>("kv", "readonly", (s) => s.get(key));
+export const kvGet = <T>(key: string) => run<T | undefined>("kv", "readonly", (s) => s.get(key));
 export const kvSet = (key: string, value: unknown) => run("kv", "readwrite", (s) => s.put(value, key));
 export const kvDel = (key: string) => run("kv", "readwrite", (s) => s.delete(key));
 export const queuePut = (item: { key: string }) => run("queue", "readwrite", (s) => s.put(item));
-export const queueAll = <T,>() => run<T[]>("queue", "readonly", (s) => s.getAll());
+export const queueAll = <T>() => run<T[]>("queue", "readonly", (s) => s.getAll());
 export const queueDel = (key: string) => run("queue", "readwrite", (s) => s.delete(key));

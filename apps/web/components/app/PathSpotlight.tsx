@@ -33,16 +33,31 @@ function SpotCard({ c, t, flat, hit }: { c: SpotCardData; t: T; flat?: boolean; 
     >
       <span className="hy-top">
         <span className="pc-text">
-          <span className="pc-name"><PathName name={c.name} /></span>
+          <span className="pc-name">
+            <PathName name={c.name} />
+          </span>
           <span className="pc-sub">{c.sub}</span>
         </span>
       </span>
-      {who ? <span className="pc-who"><img className="hy-avatar" src={`/instructors/${who.photo}-avatar.jpg`} alt="" width={28} height={28} />{t("withWho", { name: who.name })}</span> : null}
+      {who ? (
+        <span className="pc-who">
+          <img className="hy-avatar" src={`/instructors/${who.photo}-avatar.jpg`} alt="" width={28} height={28} />
+          {t("withWho", { name: who.name })}
+        </span>
+      ) : null}
       <span className="pc-meta">
-        <span className={c.video ? "kind kind-hybrid" : "kind"}><span className={`ph ph-${c.video ? "video" : "cursor-click"}`} aria-hidden="true" />{c.video ? t("hybrid") : t("interactive")}</span>
+        <span className={c.video ? "kind kind-hybrid" : "kind"}>
+          <span className={`ph ph-${c.video ? "video" : "cursor-click"}`} aria-hidden="true" />
+          {c.video ? t("hybrid") : t("interactive")}
+        </span>
         <span className="kind">{t("units", { count: c.units })}</span>
         {c.joined ? null : <span className="kind kind-free">{t("free1")}</span>}
-        {hit ? <span className="kind kind-hit"><span className="ph ph-magnifying-glass" aria-hidden="true" />{t("matches", { kw: hit })}</span> : null}
+        {hit ? (
+          <span className="kind kind-hit">
+            <span className="ph ph-magnifying-glass" aria-hidden="true" />
+            {t("matches", { kw: hit })}
+          </span>
+        ) : null}
       </span>
       <img className="pc-art pc-art-l" src={`/ill/paths/${c.id}.svg`} alt="" aria-hidden="true" />
       <img className="pc-art pc-art-d" src={`/ill/paths/${c.id}-dark.svg`} alt="" aria-hidden="true" />
@@ -50,16 +65,33 @@ function SpotCard({ c, t, flat, hit }: { c: SpotCardData; t: T; flat?: boolean; 
   );
 }
 
-export function PathSpotlight({ cards, locale, allHeading }: { cards: SpotCardData[]; locale: "en" | "ar"; allHeading: "all" | "new" }) {
+export function PathSpotlight({
+  cards,
+  locale,
+  allHeading,
+}: {
+  cards: SpotCardData[];
+  locale: "en" | "ar";
+  allHeading: "all" | "new";
+}) {
   const t = useTranslations("paths");
   const [typed, setTyped] = useState("");
   const [q, setQ] = useState("");
   const track = useRef<HTMLDivElement>(null);
-  useEffect(() => { const id = setTimeout(() => setQ(typed), 150); return () => clearTimeout(id); }, [typed]);
+  useEffect(() => {
+    const id = setTimeout(() => setQ(typed), 150);
+    return () => clearTimeout(id);
+  }, [typed]);
 
   const searching = foldSearch(q).length > 0;
   const byId = new Map(cards.map((c) => [c.id, c]));
-  const results = searching ? searchPaths(q, locale, cards.map((c) => c.id)) : [];
+  const results = searching
+    ? searchPaths(
+        q,
+        locale,
+        cards.map((c) => c.id),
+      )
+    : [];
   const featured = cards.filter((c) => c.video);
   const rest = cards.filter((c) => !c.joined);
   const scroll = (dir: 1 | -1) => {
@@ -73,39 +105,88 @@ export function PathSpotlight({ cards, locale, allHeading }: { cards: SpotCardDa
     <>
       <label className="input pth-search">
         <span className="ph ph-search" aria-hidden="true" />
-        <input type="search" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder={t("searchPh")} aria-label={t("searchLabel")} enterKeyHint="search" />
-        {typed ? <button type="button" className="pth-clear" aria-label={t("clearSearch")} onClick={() => { setTyped(""); setQ(""); }}><span className="ph ph-x" aria-hidden="true" /></button> : null}
+        <input
+          type="search"
+          value={typed}
+          onChange={(e) => setTyped(e.target.value)}
+          placeholder={t("searchPh")}
+          aria-label={t("searchLabel")}
+          enterKeyHint="search"
+        />
+        {typed ? (
+          <button
+            type="button"
+            className="pth-clear"
+            aria-label={t("clearSearch")}
+            onClick={() => {
+              setTyped("");
+              setQ("");
+            }}
+          >
+            <span className="ph ph-x" aria-hidden="true" />
+          </button>
+        ) : null}
       </label>
 
       {searching ? (
         <>
           {results.length ? (
             <>
-              <p className="t-over" role="status">{t("results", { count: results.length, q: q.trim() })}</p>
-              <div className="pg-cards">{results.map((r) => <SpotCard key={r.id} c={byId.get(r.id)!} t={t} hit={r.hit} />)}</div>
+              <p className="t-over" role="status">
+                {t("results", { count: results.length, q: q.trim() })}
+              </p>
+              <div className="pg-cards">
+                {results.map((r) => (
+                  <SpotCard key={r.id} c={byId.get(r.id)!} t={t} hit={r.hit} />
+                ))}
+              </div>
             </>
-          ) : <p className="t-small ink-2" role="status">{t("noResults", { q: q.trim() })}</p>}
+          ) : (
+            <p className="t-small ink-2" role="status">
+              {t("noResults", { q: q.trim() })}
+            </p>
+          )}
         </>
       ) : (
         <>
           {featured.length ? (
             <section className={`hy-carousel${featured.length <= 2 ? " is-few" : ""}`} aria-label={t("secFeatured")}>
               <div className="hy-bar">
-                <p className="t-over hy-title"><span className="ph ph-star-fill" aria-hidden="true" />{t("secFeatured")}</p>
+                <p className="t-over hy-title">
+                  <span className="ph ph-star-fill" aria-hidden="true" />
+                  {t("secFeatured")}
+                </p>
                 {featured.length > 1 ? (
                   <span className="hy-nav">
-                    <button type="button" className="hy-btn hy-prev" aria-label={t("carPrev")} onClick={() => scroll(-1)}><span className="ph ph-caret-end" aria-hidden="true" /></button>
-                    <button type="button" className="hy-btn" aria-label={t("carNext")} onClick={() => scroll(1)}><span className="ph ph-caret-end flip" aria-hidden="true" /></button>
+                    <button
+                      type="button"
+                      className="hy-btn hy-prev"
+                      aria-label={t("carPrev")}
+                      onClick={() => scroll(-1)}
+                    >
+                      <span className="ph ph-caret-end" aria-hidden="true" />
+                    </button>
+                    <button type="button" className="hy-btn" aria-label={t("carNext")} onClick={() => scroll(1)}>
+                      <span className="ph ph-caret-end flip" aria-hidden="true" />
+                    </button>
                   </span>
                 ) : null}
               </div>
-              <div className="hy-track" ref={track}>{featured.map((c) => <SpotCard key={c.id} c={c} t={t} flat />)}</div>
+              <div className="hy-track" ref={track}>
+                {featured.map((c) => (
+                  <SpotCard key={c.id} c={c} t={t} flat />
+                ))}
+              </div>
             </section>
           ) : null}
           {rest.length ? (
             <>
               <p className="t-over">{allHeading === "all" ? t("secAll") : t("secNew")}</p>
-              <div className="pg-cards">{rest.map((c) => <SpotCard key={c.id} c={c} t={t} />)}</div>
+              <div className="pg-cards">
+                {rest.map((c) => (
+                  <SpotCard key={c.id} c={c} t={t} />
+                ))}
+              </div>
             </>
           ) : null}
         </>

@@ -14,7 +14,9 @@ async function me() {
  * Turns the public achievement page on or off. Off by default; turning it off takes the page down at once
  * (the public route reads this flag on every request). The handle is made once, from the name, and kept.
  */
-export async function setAchievementPage(input: { enabled: boolean }): Promise<{ ok: boolean; handle?: string | null }> {
+export async function setAchievementPage(input: {
+  enabled: boolean;
+}): Promise<{ ok: boolean; handle?: string | null }> {
   const parsed = z.object({ enabled: z.boolean() }).safeParse(input);
   const userId = await me();
   if (!parsed.success || !userId) return { ok: false };
@@ -26,7 +28,11 @@ export async function setAchievementPage(input: { enabled: boolean }): Promise<{
     const base = handleBase((prof.display_name as string | null) ?? "");
     for (let i = 0; i < 6 && !handle; i++) {
       const candidate = `${base}-${Math.random().toString(36).slice(2, 6)}`.slice(0, 30);
-      const { error } = await db.from("profiles").update({ handle: candidate }).eq("user_id", userId).is("handle", null);
+      const { error } = await db
+        .from("profiles")
+        .update({ handle: candidate })
+        .eq("user_id", userId)
+        .is("handle", null);
       if (!error) handle = candidate;
     }
     if (!handle) return { ok: false };
@@ -43,13 +49,19 @@ export async function joinLeaderboard(input: { name: string }): Promise<{ ok: bo
   const db = createAdminClient();
   const { data: flag } = await db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle();
   if (!flag?.enabled) return { ok: false };
-  const { error } = await db.from("profiles").update({ leaderboard_joined_at: new Date().toISOString(), leaderboard_name: parsed.data.name }).eq("user_id", userId);
+  const { error } = await db
+    .from("profiles")
+    .update({ leaderboard_joined_at: new Date().toISOString(), leaderboard_name: parsed.data.name })
+    .eq("user_id", userId);
   return { ok: !error };
 }
 
 export async function leaveLeaderboard(): Promise<{ ok: boolean }> {
   const userId = await me();
   if (!userId) return { ok: false };
-  const { error } = await createAdminClient().from("profiles").update({ leaderboard_joined_at: null }).eq("user_id", userId);
+  const { error } = await createAdminClient()
+    .from("profiles")
+    .update({ leaderboard_joined_at: null })
+    .eq("user_id", userId);
   return { ok: !error };
 }

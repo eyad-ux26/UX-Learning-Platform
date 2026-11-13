@@ -14,10 +14,12 @@ export const dynamic = "force-dynamic";
 export default function sitemap(): MetadataRoute.Sitemap {
   const open = comingSoonOn() ? [""] : ["", "/paths", ...PUBLIC_PATHS.map((p) => `/paths/${p.slug}`)];
   const pages = [...open, "/pricing", ...(LEGAL_STATUS.approved ? ["/privacy", "/terms", "/refund"] : [])];
-  return pages.flatMap((page) => routing.locales.map((locale) => ({
-    url: `${SITE_URL}/${locale}${page}`,
-    changeFrequency: "weekly" as const,
-    priority: page === "" ? 1 : page.startsWith("/paths") ? 0.8 : 0.3,
-    alternates: { languages: Object.fromEntries(routing.locales.map((l) => [l, `${SITE_URL}/${l}${page}`])) },
-  })));
+  return pages.flatMap((page) =>
+    routing.locales.map((locale) => ({
+      url: `${SITE_URL}/${locale}${page}`,
+      changeFrequency: "weekly" as const,
+      priority: page === "" ? 1 : page.startsWith("/paths") ? 0.8 : 0.3,
+      alternates: { languages: Object.fromEntries(routing.locales.map((l) => [l, `${SITE_URL}/${l}${page}`])) },
+    })),
+  );
 }

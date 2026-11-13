@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const loc = { origin: "https://uxgate.test", pathname: "/en/app", search: "", href: "https://uxgate.test/en/app" };
-const go = (path: string) => { const u = new URL(path, loc.origin); loc.pathname = u.pathname; loc.search = u.search; loc.href = u.href; };
+const go = (path: string) => {
+  const u = new URL(path, loc.origin);
+  loc.pathname = u.pathname;
+  loc.search = u.search;
+  loc.href = u.href;
+};
 
 describe("navigation progress", () => {
   beforeEach(() => {
@@ -10,7 +15,11 @@ describe("navigation progress", () => {
     vi.stubGlobal("location", loc);
     go("/en/app");
   });
-  afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.resetModules(); });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.resetModules();
+  });
 
   const load = async () => {
     const m = await import("./nav-progress");

@@ -9,7 +9,10 @@ export const PRODUCTION_HOSTS = ["uxgate.org", "www.uxgate.org", "uxgate-web.uxg
  * Test-mode payments: on only when BILLING_MOCK=1 (set for preview versions alone, by the non-production deploy
  * command; it is not in wrangler.jsonc) and the request is not on a production host.
  */
-export function mockAllowed(host: string | null | undefined, env: Record<string, string | undefined> = process.env): boolean {
+export function mockAllowed(
+  host: string | null | undefined,
+  env: Record<string, string | undefined> = process.env,
+): boolean {
   if (env.BILLING_MOCK !== "1") return false;
   const h = (host ?? "").toLowerCase().trim().replace(/\.$/, "").split(":")[0];
   return !!h && !PRODUCTION_HOSTS.includes(h);

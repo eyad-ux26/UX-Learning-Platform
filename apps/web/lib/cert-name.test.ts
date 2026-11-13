@@ -3,7 +3,8 @@ import { nameLooksLikeEmail, validCertName } from "./cert-name";
 
 describe("nameLooksLikeEmail", () => {
   it("flags email-shaped names", () => {
-    for (const n of ["eyad.0588", "sara_k", "a@b.com", "Omar 2", "salma"]) expect(nameLooksLikeEmail(n, n === "salma" ? "salma@x.com" : null), n).toBe(true);
+    for (const n of ["eyad.0588", "sara_k", "a@b.com", "Omar 2", "salma"])
+      expect(nameLooksLikeEmail(n, n === "salma" ? "salma@x.com" : null), n).toBe(true);
   });
   it("accepts a normal name", () => {
     expect(nameLooksLikeEmail("Salma Ahmed", "salma@x.com")).toBe(false);

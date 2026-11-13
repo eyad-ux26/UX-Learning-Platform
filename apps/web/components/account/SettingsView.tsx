@@ -12,10 +12,20 @@ import { signOut } from "@/app/[locale]/app/(shell)/profile/actions";
 import { pushState, type PushState } from "@/lib/push-client";
 import { resetTours } from "@/lib/lesson-tour";
 import { Sheet } from "./Sheet";
-import { joinLeaderboard, leaveLeaderboard, setAchievementPage } from "@/app/[locale]/app/(shell)/profile/share-actions";
+import {
+  joinLeaderboard,
+  leaveLeaderboard,
+  setAchievementPage,
+} from "@/app/[locale]/app/(shell)/profile/share-actions";
 
-
-type Initial = { name: string; email: string; provider: string; theme: ThemePref; goal: 1 | 2 | 3; reminder: string | null };
+type Initial = {
+  name: string;
+  email: string;
+  provider: string;
+  theme: ThemePref;
+  goal: 1 | 2 | 3;
+  reminder: string | null;
+};
 /** The two sharing choices (both off by default). The leaderboard can only be joined while the admins have it open. */
 export type Sharing = { pageOn: boolean; boardJoined: boolean; boardOpen: boolean };
 
@@ -23,7 +33,17 @@ function Caret() {
   return <span className="ph ph-caret-right flip" aria-hidden="true" />;
 }
 
-export function SettingsView({ initial, userId, restored, sharing = { pageOn: false, boardJoined: false, boardOpen: false } }: { initial: Initial; userId: string; restored?: boolean; sharing?: Sharing }) {
+export function SettingsView({
+  initial,
+  userId,
+  restored,
+  sharing = { pageOn: false, boardJoined: false, boardOpen: false },
+}: {
+  initial: Initial;
+  userId: string;
+  restored?: boolean;
+  sharing?: Sharing;
+}) {
   const t = useTranslations("settings");
   const locale = useLocale() as "en" | "ar";
   const router = useRouter();
@@ -43,26 +63,49 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
   const [boardOn, setBoardOn] = useState(sharing.boardJoined);
   const [shareErr, setShareErr] = useState(false);
   // Same actions as Profile: the page switch makes the handle once; joining the board uses the learner's name.
-  const togglePage = () => start(async () => {
-    setShareErr(false);
-    const r = await setAchievementPage({ enabled: !pageOn }).catch(() => ({ ok: false }));
-    if (!r.ok) { setShareErr(true); return; }
-    setPageOn(!pageOn); play(pageOn ? "ui-toggle-off" : "ui-toggle-on");
-  });
-  const toggleBoard = () => start(async () => {
-    setShareErr(false);
-    const r = await (boardOn ? leaveLeaderboard() : joinLeaderboard({ name: (name || initial.email.split("@")[0] || "Learner").slice(0, 30) })).catch(() => ({ ok: false }));
-    if (!r.ok) { setShareErr(true); return; }
-    setBoardOn(!boardOn); play(boardOn ? "ui-toggle-off" : "ui-toggle-on");
-  });
+  const togglePage = () =>
+    start(async () => {
+      setShareErr(false);
+      const r = await setAchievementPage({ enabled: !pageOn }).catch(() => ({ ok: false }));
+      if (!r.ok) {
+        setShareErr(true);
+        return;
+      }
+      setPageOn(!pageOn);
+      play(pageOn ? "ui-toggle-off" : "ui-toggle-on");
+    });
+  const toggleBoard = () =>
+    start(async () => {
+      setShareErr(false);
+      const r = await (
+        boardOn
+          ? leaveLeaderboard()
+          : joinLeaderboard({ name: (name || initial.email.split("@")[0] || "Learner").slice(0, 30) })
+      ).catch(() => ({ ok: false }));
+      if (!r.ok) {
+        setShareErr(true);
+        return;
+      }
+      setBoardOn(!boardOn);
+      play(boardOn ? "ui-toggle-off" : "ui-toggle-on");
+    });
 
-  useEffect(() => { initSound(); setSound(!readMuted()); pushState().then(setPush); }, []);
-  useEffect(() => { if (!toast) return; const id = setTimeout(() => setToast(""), 6000); return () => clearTimeout(id); }, [toast]);
+  useEffect(() => {
+    initSound();
+    setSound(!readMuted());
+    pushState().then(setPush);
+  }, []);
+  useEffect(() => {
+    if (!toast) return;
+    const id = setTimeout(() => setToast(""), 6000);
+    return () => clearTimeout(id);
+  }, [toast]);
 
-  const save = (input: Parameters<typeof saveSetting>[0]) => start(async () => {
-    const r = await saveSetting(input).catch(() => ({ ok: false }));
-    setStatus(r.ok ? "saved" : "failed");
-  });
+  const save = (input: Parameters<typeof saveSetting>[0]) =>
+    start(async () => {
+      const r = await saveSetting(input).catch(() => ({ ok: false }));
+      setStatus(r.ok ? "saved" : "failed");
+    });
 
   const pickLocale = (l: "en" | "ar") => {
     if (l === locale) return;
@@ -72,29 +115,56 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
       router.replace(pathname, { locale: l });
     });
   };
-  const pickTheme = (v: ThemePref) => { setThemeState(v); applyTheme(v); play("ui-tap"); save({ field: "theme", value: v }); };
-  const pickGoal = (n: 1 | 2 | 3) => { setGoal(n); play("select-snap"); save({ field: "daily_goal", value: n }); };
-  const changeReminder = (v: string | null) => { setReminder(v); save({ field: "reminder_time", value: v }); };
-  const toggleSound = () => { const on = !sound; setSound(on); setMuted(!on); if (on) play("ui-toggle-on"); };
+  const pickTheme = (v: ThemePref) => {
+    setThemeState(v);
+    applyTheme(v);
+    play("ui-tap");
+    save({ field: "theme", value: v });
+  };
+  const pickGoal = (n: 1 | 2 | 3) => {
+    setGoal(n);
+    play("select-snap");
+    save({ field: "daily_goal", value: n });
+  };
+  const changeReminder = (v: string | null) => {
+    setReminder(v);
+    save({ field: "reminder_time", value: v });
+  };
+  const toggleSound = () => {
+    const on = !sound;
+    setSound(on);
+    setMuted(!on);
+    if (on) play("ui-toggle-on");
+  };
   const saveName = () => {
     const v = draft.trim();
     if (!v) return;
     start(async () => {
       const r = await saveSetting({ field: "display_name", value: v }).catch(() => ({ ok: false }));
       setStatus(r.ok ? "saved" : "failed");
-      if (r.ok) { setName(v); setEditing(false); router.refresh(); }
+      if (r.ok) {
+        setName(v);
+        setEditing(false);
+        router.refresh();
+      }
     });
   };
-  const doSignOut = () => start(async () => {
-    setSyncUser(userId);
-    await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
-    await signOut();
-    router.push("/");
-    router.refresh();
-  });
+  const doSignOut = () =>
+    start(async () => {
+      setSyncUser(userId);
+      await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
+      await signOut();
+      router.push("/");
+      router.refresh();
+    });
 
-  const via = initial.provider === "google" ? t("viaGoogle") : initial.provider === "apple" ? t("viaApple") : t("viaEmail");
-  const themes: [ThemePref, string][] = [["system", t("themeSystem")], ["light", t("themeLight")], ["dark", t("themeDark")]];
+  const via =
+    initial.provider === "google" ? t("viaGoogle") : initial.provider === "apple" ? t("viaApple") : t("viaEmail");
+  const themes: [ThemePref, string][] = [
+    ["system", t("themeSystem")],
+    ["light", t("themeLight")],
+    ["dark", t("themeDark")],
+  ];
 
   return (
     <>
@@ -102,75 +172,328 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
         <div className="pg-stack" style={{ gap: 10 }}>
           <h2 className="t-over set-sec">{t("secAccount")}</h2>
           <div className="set">
-            <button type="button" className="set-row" onClick={() => { setDraft(name); setEditing(true); play("sheet-up"); }} style={{ font: "inherit", background: "none", border: 0, borderBlockEnd: "2px solid var(--line)", textAlign: "start", cursor: "pointer", inlineSize: "100%" }}>
-              <span className="ph ph-user" aria-hidden="true" /><span className="set-l">{t("name")}<small>{name}</small></span><span className="set-v">{t("edit")}<Caret /></span>
+            <button
+              type="button"
+              className="set-row"
+              onClick={() => {
+                setDraft(name);
+                setEditing(true);
+                play("sheet-up");
+              }}
+              style={{
+                font: "inherit",
+                background: "none",
+                border: 0,
+                borderBlockEnd: "2px solid var(--line)",
+                textAlign: "start",
+                cursor: "pointer",
+                inlineSize: "100%",
+              }}
+            >
+              <span className="ph ph-user" aria-hidden="true" />
+              <span className="set-l">
+                {t("name")}
+                <small>{name}</small>
+              </span>
+              <span className="set-v">
+                {t("edit")}
+                <Caret />
+              </span>
             </button>
-            <div className="set-row"><span className="ph ph-mail" aria-hidden="true" /><span className="set-l">{t("email")}<small className="ltr" style={{ textAlign: "start" }}>{initial.email}</small></span><span className="set-v" style={{ fontWeight: 600 }}>{via}</span></div>
-            <Link href="/app/settings/billing" className="set-row"><span className="ph ph-credit-card" aria-hidden="true" /><span className="set-l">{t("billing")}<small>{t("billingSub")}</small></span><span className="set-v"><span className="pro-tag">PRO</span><Caret /></span></Link>
+            <div className="set-row">
+              <span className="ph ph-mail" aria-hidden="true" />
+              <span className="set-l">
+                {t("email")}
+                <small className="ltr" style={{ textAlign: "start" }}>
+                  {initial.email}
+                </small>
+              </span>
+              <span className="set-v" style={{ fontWeight: 600 }}>
+                {via}
+              </span>
+            </div>
+            <Link href="/app/settings/billing" className="set-row">
+              <span className="ph ph-credit-card" aria-hidden="true" />
+              <span className="set-l">
+                {t("billing")}
+                <small>{t("billingSub")}</small>
+              </span>
+              <span className="set-v">
+                <span className="pro-tag">PRO</span>
+                <Caret />
+              </span>
+            </Link>
           </div>
 
           <h2 className="t-over set-sec">{t("secLearning")}</h2>
           <div className="set">
-            <div className="set-row"><span className="ph ph-globe" aria-hidden="true" /><span className="set-l" id="st-lang">{t("language")}</span>
-              <div className="tabs" role="radiogroup" aria-labelledby="st-lang" style={{ inlineSize: 200, flex: "none" }}>
+            <div className="set-row">
+              <span className="ph ph-globe" aria-hidden="true" />
+              <span className="set-l" id="st-lang">
+                {t("language")}
+              </span>
+              <div
+                className="tabs"
+                role="radiogroup"
+                aria-labelledby="st-lang"
+                style={{ inlineSize: 200, flex: "none" }}
+              >
                 {(["en", "ar"] as const).map((l) => (
-                  <button key={l} type="button" role="radio" aria-checked={l === locale} lang={l} className={`tab${l === locale ? " is-on" : ""}`} onClick={() => pickLocale(l)} disabled={pending && l !== locale}>{l === "en" ? "English" : "العربية"}</button>
+                  <button
+                    key={l}
+                    type="button"
+                    role="radio"
+                    aria-checked={l === locale}
+                    lang={l}
+                    className={`tab${l === locale ? " is-on" : ""}`}
+                    onClick={() => pickLocale(l)}
+                    disabled={pending && l !== locale}
+                  >
+                    {l === "en" ? "English" : "العربية"}
+                  </button>
                 ))}
               </div>
             </div>
-            <div className="set-row"><span className="ph ph-moon" aria-hidden="true" /><span className="set-l" id="st-theme">{t("theme")}</span>
-              <div className="tabs" role="radiogroup" aria-labelledby="st-theme" style={{ inlineSize: 232, flex: "none" }}>
+            <div className="set-row">
+              <span className="ph ph-moon" aria-hidden="true" />
+              <span className="set-l" id="st-theme">
+                {t("theme")}
+              </span>
+              <div
+                className="tabs"
+                role="radiogroup"
+                aria-labelledby="st-theme"
+                style={{ inlineSize: 232, flex: "none" }}
+              >
                 {themes.map(([v, label]) => (
-                  <button key={v} type="button" role="radio" aria-checked={theme === v} className={`tab${theme === v ? " is-on" : ""}`} onClick={() => pickTheme(v)} style={{ padding: "0 4px" }}>{label}</button>
+                  <button
+                    key={v}
+                    type="button"
+                    role="radio"
+                    aria-checked={theme === v}
+                    className={`tab${theme === v ? " is-on" : ""}`}
+                    onClick={() => pickTheme(v)}
+                    style={{ padding: "0 4px" }}
+                  >
+                    {label}
+                  </button>
                 ))}
               </div>
             </div>
-            <div className="set-row"><span className="ph ph-target" aria-hidden="true" /><span className="set-l" id="st-goal">{t("goal")}<small>{t("goalSub")}</small></span>
-              <div className="tabs" role="radiogroup" aria-labelledby="st-goal" style={{ inlineSize: 156, flex: "none" }}>
+            <div className="set-row">
+              <span className="ph ph-target" aria-hidden="true" />
+              <span className="set-l" id="st-goal">
+                {t("goal")}
+                <small>{t("goalSub")}</small>
+              </span>
+              <div
+                className="tabs"
+                role="radiogroup"
+                aria-labelledby="st-goal"
+                style={{ inlineSize: 156, flex: "none" }}
+              >
                 {([1, 2, 3] as const).map((n) => (
-                  <button key={n} type="button" role="radio" aria-checked={goal === n} aria-label={t("goalAria", { count: n })} className={`tab${goal === n ? " is-on" : ""}`} onClick={() => pickGoal(n)}>{n}</button>
+                  <button
+                    key={n}
+                    type="button"
+                    role="radio"
+                    aria-checked={goal === n}
+                    aria-label={t("goalAria", { count: n })}
+                    className={`tab${goal === n ? " is-on" : ""}`}
+                    onClick={() => pickGoal(n)}
+                  >
+                    {n}
+                  </button>
                 ))}
               </div>
             </div>
-            <ReminderField value={reminder} onChange={changeReminder} settings={{ label: t("reminder"), sub: t("remSub"), switchLabel: t("remindMe"), on: t("remOn"), off: t("remOff") }} />
-            <div className="set-row"><span className="ph ph-speaker-high" aria-hidden="true" /><span className="set-l" id="st-sound">{t("sound")}<small>{t("soundSub")}</small></span>
-              <button type="button" role="switch" aria-checked={sound} aria-labelledby="st-sound" className={`switch sw-only${sound ? " is-on" : ""}`} onClick={toggleSound}><span className="track" aria-hidden="true" /></button>
+            <ReminderField
+              value={reminder}
+              onChange={changeReminder}
+              settings={{
+                label: t("reminder"),
+                sub: t("remSub"),
+                switchLabel: t("remindMe"),
+                on: t("remOn"),
+                off: t("remOff"),
+              }}
+            />
+            <div className="set-row">
+              <span className="ph ph-speaker-high" aria-hidden="true" />
+              <span className="set-l" id="st-sound">
+                {t("sound")}
+                <small>{t("soundSub")}</small>
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={sound}
+                aria-labelledby="st-sound"
+                className={`switch sw-only${sound ? " is-on" : ""}`}
+                onClick={toggleSound}
+              >
+                <span className="track" aria-hidden="true" />
+              </button>
             </div>
           </div>
-          <p className="t-small" role="status" aria-live="polite" style={{ minBlockSize: 20, margin: 0, color: status === "failed" ? "var(--wrong-ink)" : "var(--right-ink)", fontWeight: 700 }}>
-            {status === "saved" ? <><span className="ph ph-check-circle-fill" aria-hidden="true" /> {t("saved")}</> : status === "failed" ? t("failed") : ""}
+          <p
+            className="t-small"
+            role="status"
+            aria-live="polite"
+            style={{
+              minBlockSize: 20,
+              margin: 0,
+              color: status === "failed" ? "var(--wrong-ink)" : "var(--right-ink)",
+              fontWeight: 700,
+            }}
+          >
+            {status === "saved" ? (
+              <>
+                <span className="ph ph-check-circle-fill" aria-hidden="true" /> {t("saved")}
+              </>
+            ) : status === "failed" ? (
+              t("failed")
+            ) : (
+              ""
+            )}
           </p>
         </div>
 
         <div className="pg-stack" style={{ gap: 10 }}>
           <h2 className="t-over set-sec">{t("secNotif")}</h2>
           <div className="set">
-            <Link href="/app/settings/notifications" className="set-row"><span className="ph ph-bell" aria-hidden="true" /><span className="set-l">{t("notifChoices")}<small>{push === "on" ? t("pushOn") : t("pushOff")}</small></span><span className="set-v"><Caret /></span></Link>
+            <Link href="/app/settings/notifications" className="set-row">
+              <span className="ph ph-bell" aria-hidden="true" />
+              <span className="set-l">
+                {t("notifChoices")}
+                <small>{push === "on" ? t("pushOn") : t("pushOff")}</small>
+              </span>
+              <span className="set-v">
+                <Caret />
+              </span>
+            </Link>
           </div>
           <h2 className="t-over set-sec">{t("secSharing")}</h2>
           <div className="set">
-            <div className="set-row"><span className="ph ph-globe" aria-hidden="true" /><span className="set-l" id="st-pub">{t("pubTitle")}<small>{pageOn ? t("pubOn") : t("pubOff")}</small></span>
-              <button type="button" role="switch" aria-checked={pageOn} aria-labelledby="st-pub" className={`switch sw-only${pageOn ? " is-on" : ""}`} onClick={togglePage} disabled={pending}><span className="track" aria-hidden="true" /></button>
+            <div className="set-row">
+              <span className="ph ph-globe" aria-hidden="true" />
+              <span className="set-l" id="st-pub">
+                {t("pubTitle")}
+                <small>{pageOn ? t("pubOn") : t("pubOff")}</small>
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={pageOn}
+                aria-labelledby="st-pub"
+                className={`switch sw-only${pageOn ? " is-on" : ""}`}
+                onClick={togglePage}
+                disabled={pending}
+              >
+                <span className="track" aria-hidden="true" />
+              </button>
             </div>
-            <div className="set-row"><span className="ph ph-ranking" aria-hidden="true" /><span className="set-l" id="st-board">{t("boardTitle")}<small>{boardOn ? t("boardOn") : sharing.boardOpen ? t("boardOff") : t("boardClosed")}</small></span>
-              <button type="button" role="switch" aria-checked={boardOn} aria-labelledby="st-board" className={`switch sw-only${boardOn ? " is-on" : ""}`} onClick={toggleBoard} disabled={pending || (!boardOn && !sharing.boardOpen)}><span className="track" aria-hidden="true" /></button>
+            <div className="set-row">
+              <span className="ph ph-ranking" aria-hidden="true" />
+              <span className="set-l" id="st-board">
+                {t("boardTitle")}
+                <small>{boardOn ? t("boardOn") : sharing.boardOpen ? t("boardOff") : t("boardClosed")}</small>
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={boardOn}
+                aria-labelledby="st-board"
+                className={`switch sw-only${boardOn ? " is-on" : ""}`}
+                onClick={toggleBoard}
+                disabled={pending || (!boardOn && !sharing.boardOpen)}
+              >
+                <span className="track" aria-hidden="true" />
+              </button>
             </div>
           </div>
-          {shareErr ? <p className="ob-err" role="alert">{t("shareFailed")}</p> : null}
+          {shareErr ? (
+            <p className="ob-err" role="alert">
+              {t("shareFailed")}
+            </p>
+          ) : null}
           <h2 className="t-over set-sec">{t("secData")}</h2>
           <div className="set">
-            <Link href="/app/settings/data" className="set-row"><span className="ph ph-download" aria-hidden="true" /><span className="set-l">{t("download")}<small>{t("downloadSub")}</small></span><span className="set-v"><Caret /></span></Link>
-            <Link href="/app/settings/data#delete" className="set-row is-danger"><span className="ph ph-trash" aria-hidden="true" /><span className="set-l">{t("delete")}</span><span className="set-v"><Caret /></span></Link>
+            <Link href="/app/settings/data" className="set-row">
+              <span className="ph ph-download" aria-hidden="true" />
+              <span className="set-l">
+                {t("download")}
+                <small>{t("downloadSub")}</small>
+              </span>
+              <span className="set-v">
+                <Caret />
+              </span>
+            </Link>
+            <Link href="/app/settings/data#delete" className="set-row is-danger">
+              <span className="ph ph-trash" aria-hidden="true" />
+              <span className="set-l">{t("delete")}</span>
+              <span className="set-v">
+                <Caret />
+              </span>
+            </Link>
           </div>
           <h2 className="t-over set-sec">{t("secHelp")}</h2>
           <div className="set">
-            <Link href="/app/help" className="set-row"><span className="ph ph-lifebuoy" aria-hidden="true" /><span className="set-l">{t("helpLong")}<small className="ltr" style={{ textAlign: "start" }}>support@uxgate.org</small></span><span className="set-v"><Caret /></span></Link>
-            <button type="button" className="set-row" onClick={() => { resetTours(userId); setToast(t("tourAgainDone")); }}><span className="ph ph-compass" aria-hidden="true" /><span className="set-l">{t("tourAgain")}<small>{t("tourAgainSub")}</small></span></button>
-            <Link href="/privacy" className="set-row"><span className="ph ph-shield-check" aria-hidden="true" /><span className="set-l">{t("privacy")}</span><span className="set-v"><Caret /></span></Link>
-            <Link href="/terms" className="set-row"><span className="ph ph-article" aria-hidden="true" /><span className="set-l">{t("terms")}</span><span className="set-v"><Caret /></span></Link>
+            <Link href="/app/help" className="set-row">
+              <span className="ph ph-lifebuoy" aria-hidden="true" />
+              <span className="set-l">
+                {t("helpLong")}
+                <small className="ltr" style={{ textAlign: "start" }}>
+                  support@uxgate.org
+                </small>
+              </span>
+              <span className="set-v">
+                <Caret />
+              </span>
+            </Link>
+            <button
+              type="button"
+              className="set-row"
+              onClick={() => {
+                resetTours(userId);
+                setToast(t("tourAgainDone"));
+              }}
+            >
+              <span className="ph ph-compass" aria-hidden="true" />
+              <span className="set-l">
+                {t("tourAgain")}
+                <small>{t("tourAgainSub")}</small>
+              </span>
+            </button>
+            <Link href="/privacy" className="set-row">
+              <span className="ph ph-shield-check" aria-hidden="true" />
+              <span className="set-l">{t("privacy")}</span>
+              <span className="set-v">
+                <Caret />
+              </span>
+            </Link>
+            <Link href="/terms" className="set-row">
+              <span className="ph ph-article" aria-hidden="true" />
+              <span className="set-l">{t("terms")}</span>
+              <span className="set-v">
+                <Caret />
+              </span>
+            </Link>
           </div>
-          <button type="button" className="btn btn-secondary btn-signout btn-block press" style={{ marginBlockStart: 6 }} onClick={doSignOut} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
-          <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12 }}>{t("version")}</p>
+          <button
+            type="button"
+            className="btn btn-secondary btn-signout btn-block press"
+            style={{ marginBlockStart: 6 }}
+            onClick={doSignOut}
+            disabled={pending}
+            aria-busy={pending || undefined}
+          >
+            <span className="ph ph-signout" aria-hidden="true" />
+            {t("signOut")}
+          </button>
+          <p className="t-small ink-3" style={{ textAlign: "center", fontSize: 12 }}>
+            {t("version")}
+          </p>
         </div>
       </div>
 
@@ -179,14 +502,46 @@ export function SettingsView({ initial, userId, restored, sharing = { pageOn: fa
           <h2 id="st-name-t">{t("nameTitle")}</h2>
           <div className="field">
             <label htmlFor="st-name">{t("name")}</label>
-            <div className="input"><span className="ph ph-user" aria-hidden="true" /><input id="st-name" value={draft} maxLength={60} autoComplete="name" onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") saveName(); }} /></div>
+            <div className="input">
+              <span className="ph ph-user" aria-hidden="true" />
+              <input
+                id="st-name"
+                value={draft}
+                maxLength={60}
+                autoComplete="name"
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") saveName();
+                }}
+              />
+            </div>
             <span className="help">{t("nameHelp")}</span>
           </div>
-          <button type="button" className="btn btn-primary btn-lg btn-block press" onClick={saveName} disabled={pending || !draft.trim()} aria-busy={pending || undefined}>{t("save")}</button>
-          <button type="button" className="btn btn-ghost btn-block" style={{ minBlockSize: 44 }} onClick={() => setEditing(false)}>{t("cancel")}</button>
+          <button
+            type="button"
+            className="btn btn-primary btn-lg btn-block press"
+            onClick={saveName}
+            disabled={pending || !draft.trim()}
+            aria-busy={pending || undefined}
+          >
+            {t("save")}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost btn-block"
+            style={{ minBlockSize: 44 }}
+            onClick={() => setEditing(false)}
+          >
+            {t("cancel")}
+          </button>
         </Sheet>
       ) : null}
-      {toast ? <div className="toast pop s4-toast" role="status"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span style={{ flex: 1 }}>{toast}</span></div> : null}
+      {toast ? (
+        <div className="toast pop s4-toast" role="status">
+          <span className="ph ph-check-circle-fill" aria-hidden="true" />
+          <span style={{ flex: 1 }}>{toast}</span>
+        </div>
+      ) : null}
     </>
   );
 }

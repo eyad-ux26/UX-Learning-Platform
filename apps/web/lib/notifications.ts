@@ -58,7 +58,10 @@ export function allowed(prefs: Prefs, kind: InboxKind, channel: Channel): boolea
  * undo an opt-out made somewhere else.
  */
 export function prefsToStore(stored: unknown, prefs: Prefs): Record<string, unknown> {
-  const keep = (stored && typeof stored === "object" && !Array.isArray(stored) ? stored : {}) as Record<string, unknown>;
+  const keep = (stored && typeof stored === "object" && !Array.isArray(stored) ? stored : {}) as Record<
+    string,
+    unknown
+  >;
   const screen = Object.fromEntries(KINDS.map((k) => [k, Object.fromEntries(CHANNELS.map((c) => [c, prefs[k][c]]))]));
   return { ...keep, ...screen };
 }

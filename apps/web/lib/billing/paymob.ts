@@ -6,15 +6,42 @@ import type { Card } from "./subscription";
 
 /** Field order Paymob signs for a transaction callback. */
 export const TRANSACTION_FIELDS = [
-  "amount_cents", "created_at", "currency", "error_occured", "has_parent_transaction", "id", "integration_id", "is_3d_secure",
-  "is_auth", "is_capture", "is_refunded", "is_standalone_payment", "is_voided", "order.id", "owner", "pending",
-  "source_data.pan", "source_data.sub_type", "source_data.type", "success",
+  "amount_cents",
+  "created_at",
+  "currency",
+  "error_occured",
+  "has_parent_transaction",
+  "id",
+  "integration_id",
+  "is_3d_secure",
+  "is_auth",
+  "is_capture",
+  "is_refunded",
+  "is_standalone_payment",
+  "is_voided",
+  "order.id",
+  "owner",
+  "pending",
+  "source_data.pan",
+  "source_data.sub_type",
+  "source_data.type",
+  "success",
 ];
 /** Field order Paymob signs for a saved-card token callback. */
-export const TOKEN_FIELDS = ["card_subtype", "created_at", "email", "id", "masked_pan", "merchant_id", "order_id", "token"];
+export const TOKEN_FIELDS = [
+  "card_subtype",
+  "created_at",
+  "email",
+  "id",
+  "masked_pan",
+  "merchant_id",
+  "order_id",
+  "token",
+];
 
 type Obj = Record<string, unknown>;
-const get = (o: Obj, path: string): unknown => path.split(".").reduce<unknown>((v, k) => (v && typeof v === "object" ? (v as Obj)[k] : undefined), o);
+const get = (o: Obj, path: string): unknown =>
+  path.split(".").reduce<unknown>((v, k) => (v && typeof v === "object" ? (v as Obj)[k] : undefined), o);
 const str = (v: unknown) => (v === undefined || v === null ? "" : typeof v === "boolean" ? String(v) : String(v));
 
 export const signedString = (obj: Obj, fields: string[]) => fields.map((f) => str(get(obj, f))).join("");
@@ -43,10 +70,20 @@ export function cardFrom(source: Obj | undefined): Card {
  * could not be reached when this was written): look at a real card transaction once the test keys exist, and keep
  * only the right path (docs/billing-keys.md). While no path matches, the card country is unknown and nothing is refused.
  */
-export const CARD_COUNTRY_PATHS = ["source_data.issuer_country", "source_data.card_issuer_country", "data.card_issuer_country", "data.issuer_country", "data.card_country"];
+export const CARD_COUNTRY_PATHS = [
+  "source_data.issuer_country",
+  "source_data.card_issuer_country",
+  "data.card_issuer_country",
+  "data.issuer_country",
+  "data.card_country",
+];
 
 /** ISO 3166-1 alpha-2 codes, all assigned countries. NA (Namibia) is left out: Paymob may use it for "not available". */
-const ISO_ALPHA2 = new Set(("AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW").split(" "));
+const ISO_ALPHA2 = new Set(
+  "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW".split(
+    " ",
+  ),
+);
 
 /**
  * The card's issuing country as an ISO 3166-1 alpha-2 code, or null when Paymob does not say. Egypt's other spellings
@@ -69,18 +106,38 @@ export function transactionEvent(obj: Obj, provider: "paymob" | "mock" = "paymob
   const at = str(obj.created_at) ? new Date(str(obj.created_at)).toISOString() : new Date().toISOString();
   const ref = parseRef(get(obj, "order.merchant_order_id") ?? get(obj, "special_reference"));
   const base = { provider, at };
-  if (obj.is_refunded === true || obj.is_voided === true) return { ...base, type: "refunded", eventId: `${id}:refunded`, paymentId: id };
+  if (obj.is_refunded === true || obj.is_voided === true)
+    return { ...base, type: "refunded", eventId: `${id}:refunded`, paymentId: id };
   if (obj.is_refund === true && obj.has_parent_transaction === true && obj.parent_transaction)
     return { ...base, type: "refunded", eventId: `${id}:refund`, paymentId: str(obj.parent_transaction) };
   if (obj.success === true && obj.pending !== true)
     return {
-      ...base, type: "paid", eventId: `${id}:paid`, paymentId: id, sessionId: ref.sessionId, providerSubId: ref.subId, userId: null,
-      amountMinor: Number(obj.amount_cents), currency: str(obj.currency) || "EGP", recurring: !!ref.subId, periodStart: null, periodEnd: null,
-      card: cardFrom(obj.source_data as Obj | undefined), orderRef: str(get(obj, "order.id")) || null,
+      ...base,
+      type: "paid",
+      eventId: `${id}:paid`,
+      paymentId: id,
+      sessionId: ref.sessionId,
+      providerSubId: ref.subId,
+      userId: null,
+      amountMinor: Number(obj.amount_cents),
+      currency: str(obj.currency) || "EGP",
+      recurring: !!ref.subId,
+      periodStart: null,
+      periodEnd: null,
+      card: cardFrom(obj.source_data as Obj | undefined),
+      orderRef: str(get(obj, "order.id")) || null,
       ...(provider === "paymob" ? { cardCountry: cardCountry(obj) } : {}),
     };
-  if (obj.pending === true && ref.sessionId) return { ...base, type: "pending", eventId: `${id}:pending`, sessionId: ref.sessionId };
-  return { ...base, type: "failed", eventId: `${id}:failed`, sessionId: ref.sessionId, providerSubId: ref.subId, recurring: !!ref.subId };
+  if (obj.pending === true && ref.sessionId)
+    return { ...base, type: "pending", eventId: `${id}:pending`, sessionId: ref.sessionId };
+  return {
+    ...base,
+    type: "failed",
+    eventId: `${id}:failed`,
+    sessionId: ref.sessionId,
+    providerSubId: ref.subId,
+    recurring: !!ref.subId,
+  };
 }
 
 /** Signed fields that must be the same in the callback and in Paymob's own copy of the transaction. */
@@ -102,9 +159,18 @@ export type FetchTransaction = (id: string) => Promise<Obj | null>;
  * Checks a Paymob callback and translates it. `hmac` is the query parameter Paymob sends with the POST. A transaction
  * is translated from Paymob's own copy (`fetchTx`), never from the unsigned fields of the callback.
  */
-export async function verifyPaymob(body: string, hmac: string | null, secret: string, fetchTx?: FetchTransaction): Promise<Verified> {
+export async function verifyPaymob(
+  body: string,
+  hmac: string | null,
+  secret: string,
+  fetchTx?: FetchTransaction,
+): Promise<Verified> {
   let json: { type?: string; obj?: Obj };
-  try { json = JSON.parse(body); } catch { return { ok: false, reason: "payload" }; }
+  try {
+    json = JSON.parse(body);
+  } catch {
+    return { ok: false, reason: "payload" };
+  }
   const obj = json?.obj;
   if (!obj || typeof obj !== "object") return { ok: false, reason: "payload" };
   const type = String(json.type ?? "TRANSACTION").toUpperCase();
@@ -115,18 +181,32 @@ export async function verifyPaymob(body: string, hmac: string | null, secret: st
   if (type === "TOKEN") {
     const eventId = `token:${str(obj.id)}`;
     const ev: BillingEvent = {
-      provider: "paymob", type: "token", eventId, at: new Date().toISOString(), orderRef: str(obj.order_id) || null, token: str(obj.token),
+      provider: "paymob",
+      type: "token",
+      eventId,
+      at: new Date().toISOString(),
+      orderRef: str(obj.order_id) || null,
+      token: str(obj.token),
       card: { method: "card", brand: str(obj.card_subtype) || null, last4: last4(obj.masked_pan), expiry: null },
     };
     return { ok: true, events: [ev], eventType: "TOKEN", eventId };
   }
   if (type !== "TRANSACTION") {
     const eventId = `${type.toLowerCase()}:${str(obj.id)}`;
-    return { ok: true, events: [{ provider: "paymob", type: "ignored", eventId, at: new Date().toISOString(), eventType: type }], eventType: type, eventId };
+    return {
+      ok: true,
+      events: [{ provider: "paymob", type: "ignored", eventId, at: new Date().toISOString(), eventType: type }],
+      eventType: type,
+      eventId,
+    };
   }
   if (!fetchTx) return { ok: false, reason: "lookup" };
   let fetched: Obj | null;
-  try { fetched = await fetchTx(str(obj.id)); } catch { return { ok: false, reason: "lookup" }; }
+  try {
+    fetched = await fetchTx(str(obj.id));
+  } catch {
+    return { ok: false, reason: "lookup" };
+  }
   const tx = confirmTransaction(obj, fetched);
   if (!tx) return fetched ? { ok: false, reason: "payload" } : { ok: false, reason: "lookup" };
   const ev = transactionEvent(tx);

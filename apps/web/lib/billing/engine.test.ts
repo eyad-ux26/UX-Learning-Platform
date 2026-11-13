@@ -4,7 +4,14 @@ import { runDaily, type Charger } from "./daily";
 import { MemoryStore } from "./memory-store";
 import { makeMailer, type Transport } from "./mailer";
 import { hmacHex } from "./crypto";
-import { confirmTransaction, signedString, TOKEN_FIELDS, TRANSACTION_FIELDS, verifyPaymob, transactionEvent } from "./paymob";
+import {
+  confirmTransaction,
+  signedString,
+  TOKEN_FIELDS,
+  TRANSACTION_FIELDS,
+  verifyPaymob,
+  transactionEvent,
+} from "./paymob";
 import { mockAllowed, PRODUCTION_HOSTS } from "./hosts";
 import { verifyPaddle } from "./paddle";
 import { isPro, welcomeBackEligible } from "./subscription";
@@ -23,14 +30,35 @@ let sent: { to: string; subject: string; html: string; text: string }[];
 let clock: string;
 let engine: Engine;
 
-const at = (iso: string) => { clock = new Date(iso).toISOString(); };
-const transport: Transport = async (m) => { sent.push(m); return { id: `re_${sent.length}` }; };
+const at = (iso: string) => {
+  clock = new Date(iso).toISOString();
+};
+const transport: Transport = async (m) => {
+  sent.push(m);
+  return { id: `re_${sent.length}` };
+};
 
 function session(over: Partial<Session> = {}): Session {
   const s: Session = {
-    id: `5e55${String(store.sessions.size).padStart(4, "0")}-0000-4000-8000-000000000000`, userId: U, kind: "new", subscriptionId: null,
-    provider: "paymob", region: "eg", country: "EG", period: "month", discount: null, discountUntil: null, code: null,
-    amountMinor: 24900, renewAmountMinor: 24900, currency: "EGP", locale: "ar", status: "open", providerRef: "9001", createdAt: clock, ...over,
+    id: `5e55${String(store.sessions.size).padStart(4, "0")}-0000-4000-8000-000000000000`,
+    userId: U,
+    kind: "new",
+    subscriptionId: null,
+    provider: "paymob",
+    region: "eg",
+    country: "EG",
+    period: "month",
+    discount: null,
+    discountUntil: null,
+    code: null,
+    amountMinor: 24900,
+    renewAmountMinor: 24900,
+    currency: "EGP",
+    locale: "ar",
+    status: "open",
+    providerRef: "9001",
+    createdAt: clock,
+    ...over,
   };
   store.sessions.set(s.id, s);
   return s;
@@ -39,9 +67,25 @@ function session(over: Partial<Session> = {}): Session {
 /** A Paymob transaction callback signed the way Paymob signs it. */
 async function paymobCallback(obj: Record<string, unknown>, secret = PAYMOB_SECRET) {
   const full = {
-    amount_cents: 24900, created_at: clock, currency: "EGP", error_occured: false, has_parent_transaction: false, id: 1, integration_id: 4100,
-    is_3d_secure: true, is_auth: false, is_capture: false, is_refunded: false, is_standalone_payment: true, is_voided: false, order: { id: 9001, merchant_order_id: "" },
-    owner: 77, pending: false, source_data: { pan: "4242", sub_type: "Visa", type: "card" }, success: true, ...obj,
+    amount_cents: 24900,
+    created_at: clock,
+    currency: "EGP",
+    error_occured: false,
+    has_parent_transaction: false,
+    id: 1,
+    integration_id: 4100,
+    is_3d_secure: true,
+    is_auth: false,
+    is_capture: false,
+    is_refunded: false,
+    is_standalone_payment: true,
+    is_voided: false,
+    order: { id: 9001, merchant_order_id: "" },
+    owner: 77,
+    pending: false,
+    source_data: { pan: "4242", sub_type: "Visa", type: "card" },
+    success: true,
+    ...obj,
   };
   const body = JSON.stringify({ type: "TRANSACTION", obj: full });
   return { body, hmac: await hmacHex("SHA-512", secret, signedString(full, TRANSACTION_FIELDS)) };
@@ -71,7 +115,9 @@ async function deliverPaddle(json: Record<string, unknown>) {
 
 const ent = () => store.entitlements.get(U) ?? null;
 const pro = () => isPro(ent(), new Date(clock));
-const sub = () => [...store.subs.values()].find((s) => s.userId === U && ["active", "grace", "cancelled"].includes(s.status)) ?? [...store.subs.values()].at(-1)!;
+const sub = () =>
+  [...store.subs.values()].find((s) => s.userId === U && ["active", "grace", "cancelled"].includes(s.status)) ??
+  [...store.subs.values()].at(-1)!;
 const subjects = () => sent.map((m) => m.subject);
 
 beforeEach(() => {
@@ -80,7 +126,12 @@ beforeEach(() => {
   sent = [];
   at("2026-11-03T09:00:00Z");
   store.learners.set(U, { email: "yasmin@example.com", locale: "ar", name: "ياسمين" });
-  engine = { store, mail: makeMailer(store, transport, "https://uxgate.org"), seal: async (t) => `sealed:${t}`, now: () => clock };
+  engine = {
+    store,
+    mail: makeMailer(store, transport, "https://uxgate.org"),
+    seal: async (t) => `sealed:${t}`,
+    now: () => clock,
+  };
 });
 
 describe("Paymob: subscribe", () => {
@@ -90,7 +141,14 @@ describe("Paymob: subscribe", () => {
     await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     expect(pro()).toBe(true);
     expect(ent()?.validUntil).toBe("2026-12-03T09:00:00.000Z");
-    expect(sub()).toMatchObject({ status: "active", period: "month", payMethod: "card", cardLast4: "4242", cardBrand: "Visa", renewAmountMinor: 24900 });
+    expect(sub()).toMatchObject({
+      status: "active",
+      period: "month",
+      payMethod: "card",
+      cardLast4: "4242",
+      cardBrand: "Visa",
+      renewAmountMinor: 24900,
+    });
     expect(store.sessions.get(s.id)?.status).toBe("paid");
     expect(subjects()).toEqual(["إيصال UXGate · 249 ج.م"]);
     expect(sent[0].html).toContain('dir="rtl"');
@@ -111,7 +169,10 @@ describe("Paymob: subscribe", () => {
     const s = session();
     const { body } = await paymobCallback({ id: 502, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     expect(await verifyPaymob(body, "00".repeat(64), PAYMOB_SECRET)).toEqual({ ok: false, reason: "signature" });
-    const forged = await paymobCallback({ id: 502, order: { id: 9001, merchant_order_id: `s_${s.id}` } }, "someone-else");
+    const forged = await paymobCallback(
+      { id: 502, order: { id: 9001, merchant_order_id: `s_${s.id}` } },
+      "someone-else",
+    );
     expect((await verifyPaymob(forged.body, forged.hmac, PAYMOB_SECRET)).ok).toBe(false);
     // Changing the amount after signing breaks the signature.
     const real = await paymobCallback({ id: 503, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
@@ -121,10 +182,22 @@ describe("Paymob: subscribe", () => {
 
   it("a wallet waiting for approval is pending, then paid; a declined card is failed", async () => {
     const s = session();
-    await deliverPaymob({ id: 601, success: false, pending: true, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await deliverPaymob({
+      id: 601,
+      success: false,
+      pending: true,
+      source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
     expect(store.sessions.get(s.id)?.status).toBe("pending");
     expect(pro()).toBe(false);
-    await deliverPaymob({ id: 601, success: true, pending: false, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await deliverPaymob({
+      id: 601,
+      success: true,
+      pending: false,
+      source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
     expect(pro()).toBe(true);
     expect(sub()).toMatchObject({ payMethod: "wallet", cardLast4: "4521" });
     const s2 = session({ userId: "22222222-2222-4222-8222-222222222222" });
@@ -134,18 +207,51 @@ describe("Paymob: subscribe", () => {
 
   it("the saved card token is stored encrypted, never as sent", async () => {
     session({ providerRef: "9001" });
-    const obj = { id: 77, token: "card_tok_abc", masked_pan: "xxxx-xxxx-xxxx-4242", merchant_id: 1, card_subtype: "Visa", created_at: clock, email: "y@example.com", order_id: 9001 };
+    const obj = {
+      id: 77,
+      token: "card_tok_abc",
+      masked_pan: "xxxx-xxxx-xxxx-4242",
+      merchant_id: 1,
+      card_subtype: "Visa",
+      created_at: clock,
+      email: "y@example.com",
+      order_id: 9001,
+    };
     const body = JSON.stringify({ type: "TOKEN", obj });
-    const v = await verifyPaymob(body, await hmacHex("SHA-512", PAYMOB_SECRET, signedString(obj, TOKEN_FIELDS)), PAYMOB_SECRET);
+    const v = await verifyPaymob(
+      body,
+      await hmacHex("SHA-512", PAYMOB_SECRET, signedString(obj, TOKEN_FIELDS)),
+      PAYMOB_SECRET,
+    );
     expect(v.ok).toBe(true);
     if (v.ok) await applyEvent(engine, v.events[0]);
-    expect(store.tokens.get(`${U}:paymob`)).toEqual({ token: "sealed:card_tok_abc", card: { method: "card", brand: "Visa", last4: "4242", expiry: null } });
+    expect(store.tokens.get(`${U}:paymob`)).toEqual({
+      token: "sealed:card_tok_abc",
+      card: { method: "card", brand: "Visa", last4: "4242", expiry: null },
+    });
   });
 });
 
 describe("renewals, failed renewals and the grace period", () => {
-  const ok: Charger = async (s, attempt) => transactionEvent({ id: `r${attempt}-${s.currentPeriodEnd}`, success: true, pending: false, amount_cents: s.renewAmountMinor, currency: "EGP", created_at: clock, order: { merchant_order_id: `r_${s.id}_x_${attempt}` }, source_data: { pan: "4242", sub_type: "Visa", type: "card" } });
-  const declined: Charger = async (s, attempt) => transactionEvent({ id: `d${attempt}-${s.currentPeriodEnd}`, success: false, pending: false, created_at: clock, order: { merchant_order_id: `r_${s.id}_x_${attempt}` } });
+  const ok: Charger = async (s, attempt) =>
+    transactionEvent({
+      id: `r${attempt}-${s.currentPeriodEnd}`,
+      success: true,
+      pending: false,
+      amount_cents: s.renewAmountMinor,
+      currency: "EGP",
+      created_at: clock,
+      order: { merchant_order_id: `r_${s.id}_x_${attempt}` },
+      source_data: { pan: "4242", sub_type: "Visa", type: "card" },
+    });
+  const declined: Charger = async (s, attempt) =>
+    transactionEvent({
+      id: `d${attempt}-${s.currentPeriodEnd}`,
+      success: false,
+      pending: false,
+      created_at: clock,
+      order: { merchant_order_id: `r_${s.id}_x_${attempt}` },
+    });
 
   beforeEach(async () => {
     const s = session();
@@ -157,7 +263,11 @@ describe("renewals, failed renewals and the grace period", () => {
     at("2026-12-03T02:00:00Z");
     const r = await runDaily(engine, ok);
     expect(r.renewed).toBe(1);
-    expect(sub()).toMatchObject({ status: "active", currentPeriodStart: "2026-12-03T09:00:00.000Z", currentPeriodEnd: "2027-01-03T09:00:00.000Z" });
+    expect(sub()).toMatchObject({
+      status: "active",
+      currentPeriodStart: "2026-12-03T09:00:00.000Z",
+      currentPeriodEnd: "2027-01-03T09:00:00.000Z",
+    });
     expect(ent()?.validUntil).toBe("2027-01-03T09:00:00.000Z");
     expect(subjects()).toEqual(["إيصال UXGate · 249 ج.م"]);
     // Running the job again the same day does nothing more.
@@ -168,30 +278,45 @@ describe("renewals, failed renewals and the grace period", () => {
     store.learners.set(U, { email: "yasmin@example.com", locale: "en", name: "Yasmin" });
     at("2026-12-03T09:30:00Z");
     await runDaily(engine, declined);
-    expect(sub()).toMatchObject({ status: "grace", graceUntil: "2026-12-10T09:00:00.000Z", nextRetryAt: "2026-12-05T09:00:00.000Z" });
+    expect(sub()).toMatchObject({
+      status: "grace",
+      graceUntil: "2026-12-10T09:00:00.000Z",
+      nextRetryAt: "2026-12-05T09:00:00.000Z",
+    });
     expect(pro()).toBe(true);
     expect(subjects()).toEqual(["We couldn’t take your UXGate payment"]);
     expect(sent[0].text).toContain("we will try again on 5 December and 8 December");
 
-    at("2026-12-04T10:00:00Z"); await runDaily(engine, declined); // not a retry day
+    at("2026-12-04T10:00:00Z");
+    await runDaily(engine, declined); // not a retry day
     expect(sub().retries).toBe(0);
-    at("2026-12-05T10:00:00Z"); await runDaily(engine, declined);
+    at("2026-12-05T10:00:00Z");
+    await runDaily(engine, declined);
     expect(sub()).toMatchObject({ retries: 1, nextRetryAt: "2026-12-08T09:00:00.000Z" });
-    at("2026-12-08T10:00:00Z"); await runDaily(engine, declined);
+    at("2026-12-08T10:00:00Z");
+    await runDaily(engine, declined);
     expect(sub()).toMatchObject({ retries: 2, nextRetryAt: null });
     expect(pro()).toBe(true);
     expect(sent).toHaveLength(1); // one email for the failed month, not one per retry
 
-    at("2026-12-10T09:00:00Z"); await runDaily(engine, declined);
+    at("2026-12-10T09:00:00Z");
+    await runDaily(engine, declined);
     expect(sub().status).toBe("paused");
     expect(pro()).toBe(false);
     expect(ent()?.proEndedAt).toBe("2026-12-10T09:00:00.000Z");
   });
 
   it("a retry that goes through ends the grace period; the billing date does not move", async () => {
-    at("2026-12-03T09:30:00Z"); await runDaily(engine, declined);
-    at("2026-12-05T10:00:00Z"); await runDaily(engine, ok);
-    expect(sub()).toMatchObject({ status: "active", graceUntil: null, currentPeriodStart: "2026-12-03T09:00:00.000Z", currentPeriodEnd: "2027-01-03T09:00:00.000Z" });
+    at("2026-12-03T09:30:00Z");
+    await runDaily(engine, declined);
+    at("2026-12-05T10:00:00Z");
+    await runDaily(engine, ok);
+    expect(sub()).toMatchObject({
+      status: "active",
+      graceUntil: null,
+      currentPeriodStart: "2026-12-03T09:00:00.000Z",
+      currentPeriodEnd: "2027-01-03T09:00:00.000Z",
+    });
     expect(pro()).toBe(true);
   });
 
@@ -199,7 +324,8 @@ describe("renewals, failed renewals and the grace period", () => {
     await changePlan(engine, U, "year");
     expect(sub()).toMatchObject({ period: "month", pendingPeriod: "year", renewAmountMinor: 224900 });
     expect(store.payments.size).toBe(1); // nothing charged today
-    at("2026-12-03T10:00:00Z"); await runDaily(engine, ok);
+    at("2026-12-03T10:00:00Z");
+    await runDaily(engine, ok);
     expect(sub()).toMatchObject({ period: "year", pendingPeriod: null, currentPeriodEnd: "2027-12-03T09:00:00.000Z" });
   });
 });
@@ -219,7 +345,10 @@ describe("cancel and resume", () => {
     expect(subjects()).toEqual(["أُلغيت خطة UXGate Pro"]);
     let charged = 0;
     at("2026-12-03T09:00:00Z");
-    await runDaily(engine, async () => { charged++; return null; });
+    await runDaily(engine, async () => {
+      charged++;
+      return null;
+    });
     expect(charged).toBe(0);
     expect(sub().status).toBe("ended");
     expect(pro()).toBe(false);
@@ -238,7 +367,17 @@ describe("refunds", () => {
     const s = session();
     await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     const pay = [...store.payments.values()][0];
-    store.requests.set("rq1", { id: "rq1", userId: U, paymentId: pay.id, amountMinor: 24900, currency: "EGP", reason: "wrong plan", status: "waiting", createdAt: clock, answeredAt: null });
+    store.requests.set("rq1", {
+      id: "rq1",
+      userId: U,
+      paymentId: pay.id,
+      amountMinor: 24900,
+      currency: "EGP",
+      reason: "wrong plan",
+      status: "waiting",
+      createdAt: clock,
+      answeredAt: null,
+    });
     sent = [];
     at("2026-11-05T10:00:00Z");
     await deliverPaymob({ id: 501, is_refunded: true, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
@@ -252,48 +391,127 @@ describe("refunds", () => {
 
 describe("Paddle", () => {
   const txn = (over: Record<string, unknown> = {}) => ({
-    event_id: "evt_1", event_type: "transaction.completed", occurred_at: clock,
+    event_id: "evt_1",
+    event_type: "transaction.completed",
+    occurred_at: clock,
     data: {
-      id: "txn_1", status: "completed", origin: "web", subscription_id: "sub_1", currency_code: "USD", custom_data: { session_id: "", user_id: U },
-      billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2027-11-03T09:00:00Z" }, details: { totals: { grand_total: "7200" } },
-      payments: [{ status: "captured", method_details: { type: "card", card: { type: "mastercard", last4: "5100", expiry_month: 8, expiry_year: 2028 } } }], ...over,
+      id: "txn_1",
+      status: "completed",
+      origin: "web",
+      subscription_id: "sub_1",
+      currency_code: "USD",
+      custom_data: { session_id: "", user_id: U },
+      billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2027-11-03T09:00:00Z" },
+      details: { totals: { grand_total: "7200" } },
+      payments: [
+        {
+          status: "captured",
+          method_details: {
+            type: "card",
+            card: { type: "mastercard", last4: "5100", expiry_month: 8, expiry_year: 2028 },
+          },
+        },
+      ],
+      ...over,
     },
   });
 
   it("subscribe, cancel in Paddle, and the end of the plan, all through signed notifications", async () => {
     store.learners.set(U, { email: "y@example.com", locale: "en", name: "Yasmin" });
-    const s = session({ provider: "paddle", region: "gulf", country: "SA", period: "year", currency: "USD", amountMinor: 7200, renewAmountMinor: 7200, locale: "en" });
+    const s = session({
+      provider: "paddle",
+      region: "gulf",
+      country: "SA",
+      period: "year",
+      currency: "USD",
+      amountMinor: 7200,
+      renewAmountMinor: 7200,
+      locale: "en",
+    });
     const t = txn();
     (t.data.custom_data as Record<string, string>).session_id = s.id;
     await deliverPaddle(t);
-    expect(sub()).toMatchObject({ provider: "paddle", providerSubId: "sub_1", period: "year", cardExpiry: "08/28", currentPeriodEnd: "2027-11-03T09:00:00Z" });
+    expect(sub()).toMatchObject({
+      provider: "paddle",
+      providerSubId: "sub_1",
+      period: "year",
+      cardExpiry: "08/28",
+      currentPeriodEnd: "2027-11-03T09:00:00Z",
+    });
     expect(pro()).toBe(true);
     expect(subjects()).toEqual(["Your UXGate receipt · $72"]);
 
-    await deliverPaddle({ event_id: "evt_2", event_type: "subscription.updated", occurred_at: clock, data: { id: "sub_1", status: "active", scheduled_change: { action: "cancel", effective_at: "2027-11-03T09:00:00Z" } } });
+    await deliverPaddle({
+      event_id: "evt_2",
+      event_type: "subscription.updated",
+      occurred_at: clock,
+      data: {
+        id: "sub_1",
+        status: "active",
+        scheduled_change: { action: "cancel", effective_at: "2027-11-03T09:00:00Z" },
+      },
+    });
     expect(sub().status).toBe("cancelled");
     expect(pro()).toBe(true);
     expect(subjects()).toContain("Your UXGate Pro plan is cancelled");
 
-    await deliverPaddle({ event_id: "evt_3", event_type: "subscription.updated", occurred_at: clock, data: { id: "sub_1", status: "active", scheduled_change: null } });
+    await deliverPaddle({
+      event_id: "evt_3",
+      event_type: "subscription.updated",
+      occurred_at: clock,
+      data: { id: "sub_1", status: "active", scheduled_change: null },
+    });
     expect(sub().status).toBe("active");
 
     at("2027-11-03T09:00:01Z");
-    await deliverPaddle({ event_id: "evt_4", event_type: "subscription.canceled", occurred_at: clock, data: { id: "sub_1", status: "canceled" } });
+    await deliverPaddle({
+      event_id: "evt_4",
+      event_type: "subscription.canceled",
+      occurred_at: clock,
+      data: { id: "sub_1", status: "canceled" },
+    });
     expect(sub().status).toBe("ended");
     expect(pro()).toBe(false);
   });
 
   it("a renewal comes from Paddle; a failed one starts the grace period", async () => {
-    const s = session({ provider: "paddle", region: "arab", country: "JO", period: "month", currency: "USD", amountMinor: 500, renewAmountMinor: 500 });
-    const t = txn({ billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2026-12-03T09:00:00Z" }, details: { totals: { grand_total: "500" } } });
+    const s = session({
+      provider: "paddle",
+      region: "arab",
+      country: "JO",
+      period: "month",
+      currency: "USD",
+      amountMinor: 500,
+      renewAmountMinor: 500,
+    });
+    const t = txn({
+      billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2026-12-03T09:00:00Z" },
+      details: { totals: { grand_total: "500" } },
+    });
     (t.data.custom_data as Record<string, string>).session_id = s.id;
     await deliverPaddle(t);
     at("2026-12-03T09:05:00Z");
-    await deliverPaddle({ event_id: "evt_r1", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_2", origin: "subscription_recurring", subscription_id: "sub_1", currency_code: "USD", billing_period: { starts_at: "2026-12-03T09:00:00Z", ends_at: "2027-01-03T09:00:00Z" }, details: { totals: { grand_total: "500" } } } });
+    await deliverPaddle({
+      event_id: "evt_r1",
+      event_type: "transaction.completed",
+      occurred_at: clock,
+      data: {
+        id: "txn_2",
+        origin: "subscription_recurring",
+        subscription_id: "sub_1",
+        currency_code: "USD",
+        billing_period: { starts_at: "2026-12-03T09:00:00Z", ends_at: "2027-01-03T09:00:00Z" },
+        details: { totals: { grand_total: "500" } },
+      },
+    });
     expect(sub()).toMatchObject({ status: "active", currentPeriodEnd: "2027-01-03T09:00:00Z" });
     at("2027-01-03T09:05:00Z");
-    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_1", status: "past_due" } });
+    await deliverPaddle({
+      event_id: "evt_pd",
+      event_type: "subscription.past_due",
+      occurred_at: clock,
+      data: { id: "sub_1", status: "past_due" },
+    });
     expect(sub()).toMatchObject({ status: "grace", nextRetryAt: null }); // Paddle retries by itself
     expect(pro()).toBe(true);
   });
@@ -304,7 +522,9 @@ describe("Paddle", () => {
     const sig = `ts=${ts};h1=${await hmacHex("SHA-256", PADDLE_SECRET, `${ts}:${body}`)}`;
     expect(await verifyPaddle(body, sig, PADDLE_SECRET, new Date(clock))).toEqual({ ok: false, reason: "signature" });
     const now = String(Math.floor(new Date(clock).getTime() / 1000));
-    expect((await verifyPaddle(body, `ts=${now};h1=${"ab".repeat(32)}`, PADDLE_SECRET, new Date(clock))).ok).toBe(false);
+    expect((await verifyPaddle(body, `ts=${now};h1=${"ab".repeat(32)}`, PADDLE_SECRET, new Date(clock))).ok).toBe(
+      false,
+    );
     expect((await verifyPaddle(body, null, PADDLE_SECRET, new Date(clock))).ok).toBe(false);
   });
 
@@ -313,21 +533,39 @@ describe("Paddle", () => {
     const t = txn();
     (t.data.custom_data as Record<string, string>).session_id = s.id;
     await deliverPaddle(t);
-    await deliverPaddle({ event_id: "evt_adj", event_type: "adjustment.updated", occurred_at: clock, data: { id: "adj_1", action: "refund", status: "approved", transaction_id: "txn_1" } });
+    await deliverPaddle({
+      event_id: "evt_adj",
+      event_type: "adjustment.updated",
+      occurred_at: clock,
+      data: { id: "adj_1", action: "refund", status: "approved", transaction_id: "txn_1" },
+    });
     expect(pro()).toBe(false);
   });
 
   describe("refund amounts and chargebacks (#156)", () => {
     const paid = async () => {
       store.learners.set(U, { email: "y@example.com", locale: "en", name: "Yasmin" });
-      const s = session({ provider: "paddle", region: "gulf", country: "SA", period: "year", currency: "USD", amountMinor: 7200, renewAmountMinor: 7200 });
+      const s = session({
+        provider: "paddle",
+        region: "gulf",
+        country: "SA",
+        period: "year",
+        currency: "USD",
+        amountMinor: 7200,
+        renewAmountMinor: 7200,
+      });
       const t = txn({ details: { totals: { grand_total: "7871" } } }); // $72 + tax
       (t.data.custom_data as Record<string, string>).session_id = s.id;
       await deliverPaddle(t);
       sent = [];
     };
     const adj = (id: string, data: Record<string, unknown>) =>
-      deliverPaddle({ event_id: id, event_type: "adjustment.created", occurred_at: clock, data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_1", ...data } });
+      deliverPaddle({
+        event_id: id,
+        event_type: "adjustment.created",
+        occurred_at: clock,
+        data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_1", ...data },
+      });
     const payment = () => [...store.payments.values()].find((p) => p.providerPaymentId === "txn_1")!;
 
     it("a 'partial' refund of the whole total (how the dashboard sent it) is a full refund: Pro ends, refund email", async () => {
@@ -354,7 +592,11 @@ describe("Paddle", () => {
 
     it("a chargeback ends Pro like a full refund, with no 'refund approved' email; its reversal changes nothing", async () => {
       await paid();
-      const r = await adj("c1", { action: "chargeback", type: "full", totals: { total: "7871", currency_code: "USD" } });
+      const r = await adj("c1", {
+        action: "chargeback",
+        type: "full",
+        totals: { total: "7871", currency_code: "USD" },
+      });
       expect(r[0]).toMatchObject({ status: "applied", note: "chargeback" });
       expect(payment().status).toBe("refunded");
       expect(sub().status).toBe("refunded");
@@ -367,7 +609,12 @@ describe("Paddle", () => {
 
     it("a refund that is not approved yet changes nothing", async () => {
       await paid();
-      const r = await adj("p1", { action: "refund", status: "pending_approval", type: "full", totals: { total: "7871" } });
+      const r = await adj("p1", {
+        action: "refund",
+        status: "pending_approval",
+        type: "full",
+        totals: { total: "7871" },
+      });
       expect(r[0].status).toBe("ignored");
       expect(pro()).toBe(true);
     });
@@ -378,23 +625,47 @@ describe("wallet payers (Paymob cannot renew wallets)", () => {
   it("get a reminder 3 days before, a week of grace after the date, and paying extends from the old end date", async () => {
     store.learners.set(U, { email: "y@example.com", locale: "en", name: "Yasmin" });
     const s = session();
-    await deliverPaymob({ id: 700, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await deliverPaymob({
+      id: 700,
+      source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
     sent = [];
-    at("2026-11-30T10:00:00Z"); await runDaily(engine, async () => { throw new Error("wallets are never charged"); });
+    at("2026-11-30T10:00:00Z");
+    await runDaily(engine, async () => {
+      throw new Error("wallets are never charged");
+    });
     expect(subjects()).toEqual(["Your plan renews on 3 December · pay with your wallet"]);
-    at("2026-12-03T10:00:00Z"); await runDaily(engine, async () => { throw new Error("wallets are never charged"); });
+    at("2026-12-03T10:00:00Z");
+    await runDaily(engine, async () => {
+      throw new Error("wallets are never charged");
+    });
     expect(sub()).toMatchObject({ status: "grace", graceUntil: "2026-12-10T09:00:00.000Z", nextRetryAt: null });
     expect(pro()).toBe(true);
     const r = session({ kind: "renewal", subscriptionId: sub().id!, providerRef: "9002" });
     at("2026-12-06T10:00:00Z");
-    await deliverPaymob({ id: 701, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" }, order: { id: 9002, merchant_order_id: `s_${r.id}` } });
-    expect(sub()).toMatchObject({ status: "active", currentPeriodStart: "2026-12-03T09:00:00.000Z", currentPeriodEnd: "2027-01-03T09:00:00.000Z" });
+    await deliverPaymob({
+      id: 701,
+      source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet" },
+      order: { id: 9002, merchant_order_id: `s_${r.id}` },
+    });
+    expect(sub()).toMatchObject({
+      status: "active",
+      currentPeriodStart: "2026-12-03T09:00:00.000Z",
+      currentPeriodEnd: "2027-01-03T09:00:00.000Z",
+    });
   });
 });
 
 describe("discount renewals", () => {
   it("founding member: the first year is discounted, the renewal is the full price", async () => {
-    const s = session({ period: "year", discount: "founding", code: "FOUNDING", amountMinor: 157400, renewAmountMinor: 224900 });
+    const s = session({
+      period: "year",
+      discount: "founding",
+      code: "FOUNDING",
+      amountMinor: 157400,
+      renewAmountMinor: 224900,
+    });
     await deliverPaymob({ id: 900, amount_cents: 157400, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     expect(sub()).toMatchObject({ discount: "founding", renewAmountMinor: 224900 });
   });
@@ -402,7 +673,8 @@ describe("discount renewals", () => {
     const s = session();
     await deliverPaymob({ id: 901, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     await cancelPlan(engine, U, null);
-    at("2026-12-03T09:00:00Z"); await runDaily(engine, async () => null);
+    at("2026-12-03T09:00:00Z");
+    await runDaily(engine, async () => null);
     expect(welcomeBackEligible(ent(), new Date("2027-01-15T00:00:00Z"))).toBe(false);
     expect(welcomeBackEligible(ent(), new Date("2027-02-02T09:00:00Z"))).toBe(true);
   });
@@ -413,7 +685,22 @@ describe("entitlement", () => {
     expect((await syncEntitlement(engine, U)).plan).toBe("free");
   });
   it("events for unknown checkouts are recorded with an error, not applied", async () => {
-    const ev: BillingEvent = { provider: "paymob", type: "paid", eventId: "x:paid", at: clock, paymentId: "x", sessionId: "nope", providerSubId: null, userId: null, amountMinor: 1, currency: "EGP", recurring: false, periodStart: null, periodEnd: null, card: null };
+    const ev: BillingEvent = {
+      provider: "paymob",
+      type: "paid",
+      eventId: "x:paid",
+      at: clock,
+      paymentId: "x",
+      sessionId: "nope",
+      providerSubId: null,
+      userId: null,
+      amountMinor: 1,
+      currency: "EGP",
+      recurring: false,
+      periodStart: null,
+      periodEnd: null,
+      card: null,
+    };
     await expect(applyEvent(engine, ev)).rejects.toThrow(/unknown checkout/);
     expect(store.events.get("paymob:x:paid")?.error).toMatch(/unknown checkout/);
     expect(pro()).toBe(false);
@@ -425,7 +712,16 @@ describe("entitlement", () => {
 describe("test payments never give real Pro (#128)", () => {
   const mockPay = async () => {
     const s = session({ provider: "mock", providerRef: null });
-    const obj = { id: `mock-${s.id}`, amount_cents: 24900, currency: "EGP", created_at: clock, success: true, pending: false, order: { id: s.id, merchant_order_id: `s_${s.id}` }, source_data: { pan: "4242", sub_type: "Visa", type: "card" } };
+    const obj = {
+      id: `mock-${s.id}`,
+      amount_cents: 24900,
+      currency: "EGP",
+      created_at: clock,
+      success: true,
+      pending: false,
+      order: { id: s.id, merchant_order_id: `s_${s.id}` },
+      source_data: { pan: "4242", sub_type: "Visa", type: "card" },
+    };
     await applyEvent(engine, transactionEvent(obj, "mock"));
     return s;
   };
@@ -433,14 +729,15 @@ describe("test payments never give real Pro (#128)", () => {
   it("Pro from the test payment page is stored as test-mode Pro, and counts only where test payments are allowed", async () => {
     await mockPay();
     expect(ent()).toMatchObject({ plan: "pro", source: "mock" });
-    expect(isPro(ent(), new Date(clock))).toBe(false);       // production: uxgate.org, the production workers.dev host
-    expect(isPro(ent(), new Date(clock), true)).toBe(true);  // a preview host with BILLING_MOCK=1
+    expect(isPro(ent(), new Date(clock))).toBe(false); // production: uxgate.org, the production workers.dev host
+    expect(isPro(ent(), new Date(clock), true)).toBe(true); // a preview host with BILLING_MOCK=1
   });
 
   it("test payments are off without BILLING_MOCK=1, and always off on production hosts", () => {
     expect(mockAllowed("claude-x-uxgate-web.uxgate-web.workers.dev", {})).toBe(false);
     expect(mockAllowed("claude-x-uxgate-web.uxgate-web.workers.dev", { BILLING_MOCK: "1" })).toBe(true);
-    for (const h of [...PRODUCTION_HOSTS, "UXGATE.ORG", "uxgate.org:443", "uxgate.org."]) expect(mockAllowed(h, { BILLING_MOCK: "1" })).toBe(false);
+    for (const h of [...PRODUCTION_HOSTS, "UXGATE.ORG", "uxgate.org:443", "uxgate.org."])
+      expect(mockAllowed(h, { BILLING_MOCK: "1" })).toBe(false);
     expect(mockAllowed(null, { BILLING_MOCK: "1" })).toBe(false);
   });
 
@@ -449,12 +746,23 @@ describe("test payments never give real Pro (#128)", () => {
     sent = [];
     let charged = 0;
     at("2026-12-03T02:00:00Z");
-    const r = await runDaily(engine, async () => { charged++; return null; });
+    const r = await runDaily(engine, async () => {
+      charged++;
+      return null;
+    });
     expect(charged).toBe(0);
     expect(r).toMatchObject({ renewed: 0, failed: 0, settled: 0, reminders: 0 });
     expect(sent).toHaveLength(0);
     // Where test payments are on, it is renewed like any plan.
-    await runDaily(engine, async () => { charged++; return null; }, clock, { includeMock: true });
+    await runDaily(
+      engine,
+      async () => {
+        charged++;
+        return null;
+      },
+      clock,
+      { includeMock: true },
+    );
     expect(charged).toBe(1);
   });
 
@@ -485,7 +793,10 @@ describe("Paymob: only signed fields count (#132)", () => {
     const victim = session({ providerRef: "9001" });
     const theirs = session({ userId: B, providerRef: "9100" });
     // The attacker forwards a real, signed callback with merchant_order_id pointing at their own checkout.
-    await deliverPaymob({ id: 801, order: { id: 9001, merchant_order_id: `s_${theirs.id}` } }, { order: { id: 9001, merchant_order_id: `s_${victim.id}` } });
+    await deliverPaymob(
+      { id: 801, order: { id: 9001, merchant_order_id: `s_${theirs.id}` } },
+      { order: { id: 9001, merchant_order_id: `s_${victim.id}` } },
+    );
     expect(store.sessions.get(theirs.id)?.status).toBe("open");
     expect(store.entitlements.get(B)).toBeUndefined();
     expect(store.sessions.get(victim.id)?.status).toBe("paid");
@@ -511,7 +822,10 @@ describe("Paymob: only signed fields count (#132)", () => {
     const s = session({ providerRef: "9001" });
     await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     // A signed refund of transaction 900 (someone else's), with parent_transaction (unsigned) changed to 501.
-    const r = await deliverPaymob({ id: 901, is_refund: true, has_parent_transaction: true, parent_transaction: 501, order: { id: 7777 } }, { parent_transaction: 900 });
+    const r = await deliverPaymob(
+      { id: 901, is_refund: true, has_parent_transaction: true, parent_transaction: 501, order: { id: 7777 } },
+      { parent_transaction: 900 },
+    );
     expect(r[0]).toMatchObject({ status: "ignored", note: "refund for an unknown payment" });
     expect(pro()).toBe(true);
     expect([...store.payments.values()][0].status).toBe("paid");
@@ -521,9 +835,20 @@ describe("Paymob: only signed fields count (#132)", () => {
     const s = session({ providerRef: "9001" });
     const { body, hmac } = await paymobCallback({ id: 804, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     expect(await verifyPaymob(body, hmac, PAYMOB_SECRET)).toEqual({ ok: false, reason: "lookup" });
-    expect(await verifyPaymob(body, hmac, PAYMOB_SECRET, async () => { throw new Error("down"); })).toEqual({ ok: false, reason: "lookup" });
-    expect(await verifyPaymob(body, hmac, PAYMOB_SECRET, async () => ({ ...JSON.parse(body).obj, amount_cents: 100 }))).toEqual({ ok: false, reason: "payload" });
-    expect(confirmTransaction({ id: 1, amount_cents: 5, currency: "EGP", order: { id: 2 } }, { id: 1, amount_cents: 5, currency: "EGP", order: { id: 3 } })).toBeNull();
+    expect(
+      await verifyPaymob(body, hmac, PAYMOB_SECRET, async () => {
+        throw new Error("down");
+      }),
+    ).toEqual({ ok: false, reason: "lookup" });
+    expect(
+      await verifyPaymob(body, hmac, PAYMOB_SECRET, async () => ({ ...JSON.parse(body).obj, amount_cents: 100 })),
+    ).toEqual({ ok: false, reason: "payload" });
+    expect(
+      confirmTransaction(
+        { id: 1, amount_cents: 5, currency: "EGP", order: { id: 2 } },
+        { id: 1, amount_cents: 5, currency: "EGP", order: { id: 3 } },
+      ),
+    ).toBeNull();
     expect(pro()).toBe(false);
   });
 });
@@ -532,27 +857,56 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
   let calls: string[];
   let payerCountry: string | null;
   const paddleTxn = (id: string, subId: string, sessionId: string, total = "7200") => ({
-    event_id: `evt_${id}`, event_type: "transaction.completed", occurred_at: clock,
+    event_id: `evt_${id}`,
+    event_type: "transaction.completed",
+    occurred_at: clock,
     data: {
-      id, status: "completed", origin: "web", subscription_id: subId, currency_code: "USD", custom_data: { session_id: sessionId, user_id: U },
-      customer_id: "ctm_1", address_id: "add_1", billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2027-11-03T09:00:00Z" }, details: { totals: { grand_total: total } },
+      id,
+      status: "completed",
+      origin: "web",
+      subscription_id: subId,
+      currency_code: "USD",
+      custom_data: { session_id: sessionId, user_id: U },
+      customer_id: "ctm_1",
+      address_id: "add_1",
+      billing_period: { starts_at: "2026-11-03T09:00:00Z", ends_at: "2027-11-03T09:00:00Z" },
+      details: { totals: { grand_total: total } },
     },
   });
-  const paddleSession = (over: Partial<Session> = {}) => session({ provider: "paddle", region: "gulf", country: "SA", period: "year", currency: "USD", amountMinor: 7200, renewAmountMinor: 7200, locale: "en", providerRef: null, ...over });
+  const paddleSession = (over: Partial<Session> = {}) =>
+    session({
+      provider: "paddle",
+      region: "gulf",
+      country: "SA",
+      period: "year",
+      currency: "USD",
+      amountMinor: 7200,
+      renewAmountMinor: 7200,
+      locale: "en",
+      providerRef: null,
+      ...over,
+    });
 
   beforeEach(() => {
     calls = [];
     payerCountry = null;
     engine.actions = {
-      refund: async (p, id) => { calls.push(`refund ${p} ${id}`); },
-      cancelNow: async (p, id) => { calls.push(`cancel ${p} ${id}`); },
+      refund: async (p, id) => {
+        calls.push(`refund ${p} ${id}`);
+      },
+      cancelNow: async (p, id) => {
+        calls.push(`cancel ${p} ${id}`);
+      },
       payerCountry: async () => payerCountry,
-      reprice: async (s, region) => { calls.push(`reprice ${s.providerSubId} ${region}`); },
+      reprice: async (s, region) => {
+        calls.push(`reprice ${s.providerSubId} ${region}`);
+      },
     };
   });
 
   it("two checkouts paid one after the other: the second Paddle subscription is ended and refunded", async () => {
-    const a = paddleSession(), b = paddleSession();
+    const a = paddleSession(),
+      b = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
     const r = await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
     expect(r[0].status).toBe("ignored");
@@ -561,7 +915,12 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     expect(sub()).toMatchObject({ providerSubId: "sub_a", currentPeriodEnd: "2027-11-03T09:00:00Z" });
     expect([...store.payments.values()].find((p) => p.providerPaymentId === "txn_b")?.subscriptionId).toBeNull();
     // Its refund then comes back from Paddle and does not touch the plan.
-    await deliverPaddle({ event_id: "evt_adj_b", event_type: "adjustment.updated", occurred_at: clock, data: { action: "refund", status: "approved", transaction_id: "txn_b" } });
+    await deliverPaddle({
+      event_id: "evt_adj_b",
+      event_type: "adjustment.updated",
+      occurred_at: clock,
+      data: { action: "refund", status: "approved", transaction_id: "txn_b" },
+    });
     expect(pro()).toBe(true);
     expect(sub().status).toBe("active");
   });
@@ -582,8 +941,19 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     const first = paddleTxn("txn_a", "sub_a", a.id);
     await deliverPaddle({ ...first, data: { ...first.data, items: [{ price_id: "pri_1", quantity: 1 }] } });
     expect(sub()).toMatchObject({ providerSubId: "sub_a", status: "active" });
-    const renew = { origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", custom_data: { user_id: U }, details: { totals: { grand_total: "21600" } } };
-    const r = await deliverPaddle({ event_id: "evt_r3", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_r3", ...renew, items: [{ quantity: 3 }] } });
+    const renew = {
+      origin: "subscription_recurring",
+      subscription_id: "sub_a",
+      currency_code: "USD",
+      custom_data: { user_id: U },
+      details: { totals: { grand_total: "21600" } },
+    };
+    const r = await deliverPaddle({
+      event_id: "evt_r3",
+      event_type: "transaction.completed",
+      occurred_at: clock,
+      data: { id: "txn_r3", ...renew, items: [{ quantity: 3 }] },
+    });
     expect(r[0].status).toBe("ignored");
     expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_r3"]);
     expect(sub().currentPeriodEnd).toBe("2027-11-03T09:00:00Z");
@@ -593,29 +963,60 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
     const adj = (id: string, data: Record<string, unknown>) =>
-      deliverPaddle({ event_id: id, event_type: "adjustment.created", occurred_at: clock, data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_a", ...data } });
+      deliverPaddle({
+        event_id: id,
+        event_type: "adjustment.created",
+        occurred_at: clock,
+        data: { id: `adj_${id}`, status: "approved", transaction_id: "txn_a", ...data },
+      });
     await adj("p", { action: "refund", type: "partial", totals: { total: "100", currency_code: "USD" } });
     expect(calls).toEqual([]);
     await adj("f", { action: "refund", type: "full", totals: { total: "7100", currency_code: "USD" } });
     expect(calls).toEqual(["cancel paddle sub_a"]);
     expect(sub().status).toBe("refunded");
     // Paddle's own "canceled" notice then changes nothing.
-    await deliverPaddle({ event_id: "evt_c", event_type: "subscription.canceled", occurred_at: clock, data: { id: "sub_a", status: "canceled" } });
+    await deliverPaddle({
+      event_id: "evt_c",
+      event_type: "subscription.canceled",
+      occurred_at: clock,
+      data: { id: "sub_a", status: "canceled" },
+    });
     expect(sub().status).toBe("refunded");
 
     const b = paddleSession();
     await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
     calls = [];
-    await deliverPaddle({ event_id: "evt_cb", event_type: "adjustment.created", occurred_at: clock, data: { id: "adj_cb", action: "chargeback", status: "approved", transaction_id: "txn_b", totals: { total: "7200", currency_code: "USD" } } });
+    await deliverPaddle({
+      event_id: "evt_cb",
+      event_type: "adjustment.created",
+      occurred_at: clock,
+      data: {
+        id: "adj_cb",
+        action: "chargeback",
+        status: "approved",
+        transaction_id: "txn_b",
+        totals: { total: "7200", currency_code: "USD" },
+      },
+    });
     expect(calls).toEqual(["cancel paddle sub_b"]);
     expect(pro()).toBe(false);
   });
 
   it("a failed Paddle cancel after a refund is logged, and the refund still ends Pro", async () => {
-    engine.actions = { ...engine.actions, cancelNow: async () => { throw new Error("paddle down"); } };
+    engine.actions = {
+      ...engine.actions,
+      cancelNow: async () => {
+        throw new Error("paddle down");
+      },
+    };
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
-    const r = await deliverPaddle({ event_id: "evt_f", event_type: "adjustment.created", occurred_at: clock, data: { id: "adj_f", action: "refund", status: "approved", type: "full", transaction_id: "txn_a" } });
+    const r = await deliverPaddle({
+      event_id: "evt_f",
+      event_type: "adjustment.created",
+      occurred_at: clock,
+      data: { id: "adj_f", action: "refund", status: "approved", type: "full", transaction_id: "txn_a" },
+    });
     expect(r[0].status).toBe("applied");
     expect(pro()).toBe(false);
   });
@@ -624,14 +1025,35 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
     at("2027-11-03T09:05:00Z");
-    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_a", status: "past_due" } });
+    await deliverPaddle({
+      event_id: "evt_pd",
+      event_type: "subscription.past_due",
+      occurred_at: clock,
+      data: { id: "sub_a", status: "past_due" },
+    });
     const told: string[] = [];
-    await cancelPlan(engine, U, null, { cancel: async (s) => { told.push(s.status); } });
+    await cancelPlan(engine, U, null, {
+      cancel: async (s) => {
+        told.push(s.status);
+      },
+    });
     expect(told).toEqual(["grace"]); // paddle-api cancels "immediately" for a plan in grace
     expect(sub().status).toBe("ended");
     expect(pro()).toBe(false);
     // Paddle's dunning still got through before the cancel landed: the money goes back, the plan stays ended.
-    const r = await deliverPaddle({ event_id: "evt_late", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_late", origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", custom_data: { user_id: U }, details: { totals: { grand_total: "7200" } } } });
+    const r = await deliverPaddle({
+      event_id: "evt_late",
+      event_type: "transaction.completed",
+      occurred_at: clock,
+      data: {
+        id: "txn_late",
+        origin: "subscription_recurring",
+        subscription_id: "sub_a",
+        currency_code: "USD",
+        custom_data: { user_id: U },
+        details: { totals: { grand_total: "7200" } },
+      },
+    });
     expect(r[0].status).toBe("ignored");
     expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_late"]);
     expect(sub().status).toBe("ended");
@@ -642,12 +1064,29 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
     at("2027-11-03T09:05:00Z");
-    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_a", status: "past_due" } });
+    await deliverPaddle({
+      event_id: "evt_pd",
+      event_type: "subscription.past_due",
+      occurred_at: clock,
+      data: { id: "sub_a", status: "past_due" },
+    });
     await cancelPlan(engine, U, null, { cancel: async () => {} });
     const b = paddleSession();
     await deliverPaddle(paddleTxn("txn_b", "sub_b", b.id));
     expect(sub()).toMatchObject({ providerSubId: "sub_b", status: "active" });
-    await deliverPaddle({ event_id: "evt_old", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_old", origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", custom_data: { user_id: U }, details: { totals: { grand_total: "7200" } } } });
+    await deliverPaddle({
+      event_id: "evt_old",
+      event_type: "transaction.completed",
+      occurred_at: clock,
+      data: {
+        id: "txn_old",
+        origin: "subscription_recurring",
+        subscription_id: "sub_a",
+        currency_code: "USD",
+        custom_data: { user_id: U },
+        details: { totals: { grand_total: "7200" } },
+      },
+    });
     expect(calls).toEqual(["cancel paddle sub_a", "refund paddle txn_old"]);
     expect(sub()).toMatchObject({ providerSubId: "sub_b", status: "active" });
   });
@@ -656,9 +1095,26 @@ describe("Paddle: one subscription, one charge (#133, #134)", () => {
     const a = paddleSession();
     await deliverPaddle(paddleTxn("txn_a", "sub_a", a.id));
     at("2027-11-03T09:05:00Z");
-    await deliverPaddle({ event_id: "evt_pd", event_type: "subscription.past_due", occurred_at: clock, data: { id: "sub_a", status: "past_due" } });
+    await deliverPaddle({
+      event_id: "evt_pd",
+      event_type: "subscription.past_due",
+      occurred_at: clock,
+      data: { id: "sub_a", status: "past_due" },
+    });
     const again = paddleSession({ kind: "renewal", subscriptionId: sub().id!, providerRef: "txn_due" });
-    await deliverPaddle({ event_id: "evt_due", event_type: "transaction.completed", occurred_at: clock, data: { id: "txn_due", origin: "subscription_recurring", subscription_id: "sub_a", currency_code: "USD", billing_period: { starts_at: "2027-11-03T09:00:00Z", ends_at: "2028-11-03T09:00:00Z" }, details: { totals: { grand_total: "7200" } } } });
+    await deliverPaddle({
+      event_id: "evt_due",
+      event_type: "transaction.completed",
+      occurred_at: clock,
+      data: {
+        id: "txn_due",
+        origin: "subscription_recurring",
+        subscription_id: "sub_a",
+        currency_code: "USD",
+        billing_period: { starts_at: "2027-11-03T09:00:00Z", ends_at: "2028-11-03T09:00:00Z" },
+        details: { totals: { grand_total: "7200" } },
+      },
+    });
     expect(sub()).toMatchObject({ providerSubId: "sub_a", status: "active", currentPeriodEnd: "2028-11-03T09:00:00Z" });
     expect(store.sessions.get(again.id)?.status).toBe("paid");
     expect(calls).toEqual([]);
@@ -707,7 +1163,13 @@ describe("hardening (#135)", () => {
     const s = session({ providerRef: "9001" });
     await deliverPaymob({ id: 501, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
     at("2026-12-03T09:30:00Z");
-    const ev = transactionEvent({ id: "d0", success: false, pending: false, created_at: clock, order: { merchant_order_id: `r_${sub().id}_x_0` } });
+    const ev = transactionEvent({
+      id: "d0",
+      success: false,
+      pending: false,
+      created_at: clock,
+      order: { merchant_order_id: `r_${sub().id}_x_0` },
+    });
     await Promise.all([applyEvent(engine, ev), applyEvent(engine, ev)]);
     expect(sub()).toMatchObject({ status: "grace", retries: 0 });
   });
@@ -715,10 +1177,19 @@ describe("hardening (#135)", () => {
 
 describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ONLY)", () => {
   let refunds: string[];
-  const foreign = (id: number, s: Session, country = "DE") => deliverPaymob({ id, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: country }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+  const foreign = (id: number, s: Session, country = "DE") =>
+    deliverPaymob({
+      id,
+      source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: country },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
   beforeEach(() => {
     refunds = [];
-    engine.actions = { refund: async (provider, id, amount) => { refunds.push(`${provider}:${id}:${amount}`); } };
+    engine.actions = {
+      refund: async (provider, id, amount) => {
+        refunds.push(`${provider}:${id}:${amount}`);
+      },
+    };
     engine.egCardsOnly = true;
   });
 
@@ -742,7 +1213,12 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
     expect(subjects()).toEqual(["لم نتمكن من قبول هذه الدفعة: المبلغ في طريقه إليك"]);
     // The refund webhook then marks it refunded, and its email does not talk about Pro ending.
     sent = [];
-    await deliverPaymob({ id: 1501, is_refunded: true, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "DE" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await deliverPaymob({
+      id: 1501,
+      is_refunded: true,
+      source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "DE" },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
     expect([...store.payments.values()][0].status).toBe("refunded");
     expect(sent[0].text).not.toContain("انتهى Pro");
   });
@@ -754,11 +1230,31 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
     expect(sent[0].html).toContain("https://uxgate.org/ar/app/checkout?period=month&amp;intl=1&amp;code=FOUNDING");
     expect(sent[0].text).toContain("ادفع ببطاقة دولية");
     // The learner opens Paddle's checkout at the world price and pays.
-    const p = session({ provider: "paddle", region: "world", country: "ZZ", period: "month", currency: "USD", amountMinor: 800, renewAmountMinor: 800, providerRef: null, code: "FOUNDING" });
+    const p = session({
+      provider: "paddle",
+      region: "world",
+      country: "ZZ",
+      period: "month",
+      currency: "USD",
+      amountMinor: 800,
+      renewAmountMinor: 800,
+      providerRef: null,
+      code: "FOUNDING",
+    });
     await deliverPaddle({
-      event_id: "evt_intl", event_type: "transaction.completed", occurred_at: clock,
-      data: { id: "txn_intl", status: "completed", origin: "web", subscription_id: "sub_intl", currency_code: "USD", custom_data: { session_id: p.id, user_id: U },
-        billing_period: { starts_at: clock, ends_at: "2026-12-03T09:00:00Z" }, details: { totals: { grand_total: "800" } } },
+      event_id: "evt_intl",
+      event_type: "transaction.completed",
+      occurred_at: clock,
+      data: {
+        id: "txn_intl",
+        status: "completed",
+        origin: "web",
+        subscription_id: "sub_intl",
+        currency_code: "USD",
+        custom_data: { session_id: p.id, user_id: U },
+        billing_period: { starts_at: clock, ends_at: "2026-12-03T09:00:00Z" },
+        details: { totals: { grand_total: "800" } },
+      },
     });
     expect(pro()).toBe(true);
     expect(sub()).toMatchObject({ provider: "paddle", region: "world", currency: "USD", status: "active" });
@@ -768,7 +1264,11 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
 
   it("an Egyptian card (EG, EGY) starts Pro as usual", async () => {
     const s = session();
-    await deliverPaymob({ id: 1502, data: { card_issuer_country: "EGY" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await deliverPaymob({
+      id: 1502,
+      data: { card_issuer_country: "EGY" },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
     expect(pro()).toBe(true);
     expect(refunds).toEqual([]);
   });
@@ -778,7 +1278,11 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
       const uid = `00000000-0000-4000-8000-00000000c00${i}`;
       store.learners.set(uid, { email: `${i}@example.com`, locale: "en", name: "C" });
       const s = session({ userId: uid, providerRef: String(9100 + i) });
-      await deliverPaymob({ id: 1510 + i, source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: c }, order: { id: 9100 + i, merchant_order_id: `s_${s.id}` } });
+      await deliverPaymob({
+        id: 1510 + i,
+        source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: c },
+        order: { id: 9100 + i, merchant_order_id: `s_${s.id}` },
+      });
       expect(store.sessions.get(s.id)?.status, c).toBe("paid");
     }
     expect(refunds).toEqual([]);
@@ -786,7 +1290,11 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
 
   it("a wallet, or a card whose country Paymob does not report, is not refused", async () => {
     const s = session();
-    await deliverPaymob({ id: 1503, source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet", issuer_country: "DE" }, order: { id: 9001, merchant_order_id: `s_${s.id}` } });
+    await deliverPaymob({
+      id: 1503,
+      source_data: { pan: "01012344521", sub_type: "wallet", type: "wallet", issuer_country: "DE" },
+      order: { id: 9001, merchant_order_id: `s_${s.id}` },
+    });
     expect(pro()).toBe(true);
     const u2 = session({ userId: "00000000-0000-4000-8000-0000000000b2", providerRef: "9002" });
     store.learners.set(u2.userId, { email: "b@example.com", locale: "en", name: "B" });
@@ -797,7 +1305,10 @@ describe("Paymob: Egypt's price needs a card issued in Egypt (PAYMOB_EG_CARDS_ON
 
   it("the check reads Paymob's own copy, not the callback", async () => {
     const s = session();
-    await deliverPaymob({ id: 1505, order: { id: 9001, merchant_order_id: `s_${s.id}` } }, { source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "US" } });
+    await deliverPaymob(
+      { id: 1505, order: { id: 9001, merchant_order_id: `s_${s.id}` } },
+      { source_data: { pan: "4242", sub_type: "Visa", type: "card", issuer_country: "US" } },
+    );
     expect(pro()).toBe(false);
     expect(refunds).toEqual(["paymob:1505:24900"]);
   });

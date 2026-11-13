@@ -18,7 +18,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const [news, t] = await Promise.all([currentAnnouncement(locale), getTranslations("home")]);
   return (
     <Shell me={me}>
-      <HomeMain me={me} view={view} bell={<BellLink me={me} />} banner={news ? <AnnouncementBanner a={news} open={t("announcementOpen")} close={t("dismiss")} /> : null} />
+      <HomeMain
+        me={me}
+        view={view}
+        bell={<BellLink me={me} />}
+        banner={news ? <AnnouncementBanner a={news} open={t("announcementOpen")} close={t("dismiss")} /> : null}
+      />
     </Shell>
   );
 }

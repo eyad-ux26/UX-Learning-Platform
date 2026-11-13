@@ -12,5 +12,9 @@ export default async function PathStartedPage({ params }: { params: Promise<{ lo
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   if (!isPlayable(pathId) || !me.joined.some((j) => j.pathId === pathId)) notFound();
-  return <Shell me={me}><PathStartedMain me={me} pathId={pathId} /></Shell>;
+  return (
+    <Shell me={me}>
+      <PathStartedMain me={me} pathId={pathId} />
+    </Shell>
+  );
 }

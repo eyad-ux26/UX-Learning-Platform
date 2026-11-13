@@ -16,12 +16,20 @@ function src(name: string) {
 
 function load(name: string) {
   let a = cache.get(name);
-  if (!a) { a = new Audio(src(name)); a.preload = "auto"; cache.set(name, a); }
+  if (!a) {
+    a = new Audio(src(name));
+    a.preload = "auto";
+    cache.set(name, a);
+  }
   return a;
 }
 
 export function readMuted(): boolean {
-  try { return localStorage.getItem(MUTE_KEY) === "1"; } catch { return false; }
+  try {
+    return localStorage.getItem(MUTE_KEY) === "1";
+  } catch {
+    return false;
+  }
 }
 
 export function initSound() {
@@ -40,7 +48,11 @@ export function initSound() {
 
 export function setMuted(v: boolean) {
   muted = v;
-  try { localStorage.setItem(MUTE_KEY, v ? "1" : "0"); } catch { /* storage blocked: the choice lasts for this visit */ }
+  try {
+    localStorage.setItem(MUTE_KEY, v ? "1" : "0");
+  } catch {
+    /* storage blocked: the choice lasts for this visit */
+  }
   if (!v && unlocked) PRELOAD.forEach(load);
 }
 
@@ -51,5 +63,7 @@ export function play(name: string) {
     a.currentTime = 0;
     a.volume = 0.7;
     void a.play().catch(() => {});
-  } catch { /* audio unavailable: the visual change still carries the meaning */ }
+  } catch {
+    /* audio unavailable: the visual change still carries the meaning */
+  }
 }

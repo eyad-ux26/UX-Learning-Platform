@@ -24,7 +24,13 @@ export default async function TeamToolsPage({ params }: { params: Promise<{ loca
   const allowed = me.teamView || (me.db ? isAdmin((await (await createClient()).auth.getUser()).data.user) : false);
   if (!allowed) notFound();
   const t = await getTranslations("teamTools");
-  const paths = content.paths.filter((p) => isPlayable(p.id)).map((p) => ({ id: p.id, name: localPathName(p.id, locale), units: content.units.filter((u) => u.pathId === p.id).length }));
+  const paths = content.paths
+    .filter((p) => isPlayable(p.id))
+    .map((p) => ({
+      id: p.id,
+      name: localPathName(p.id, locale),
+      units: content.units.filter((u) => u.pathId === p.id).length,
+    }));
   return (
     <AccountFrame me={me} locale={locale}>
       <PageTop title={t("title")} back="/app/settings" backLabel={t("back")} />

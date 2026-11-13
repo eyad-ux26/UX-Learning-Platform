@@ -55,13 +55,19 @@ export async function POST(req: Request) {
     // Answers given on an older version of the lesson are scored against that version, which stays stored.
     db.from("content_versions").select("id, body").eq("lesson_id", body.lessonId).eq("hash", body.hash).maybeSingle(),
     // A first send for a play: it must be a lesson the learner has unlocked, and a learner can only start so many plays a day.
-    db.from("attempts").select("id, plan, kind").eq("user_id", auth.user.id).eq("client_attempt_id", body.attemptId).maybeSingle(),
+    db
+      .from("attempts")
+      .select("id, plan, kind")
+      .eq("user_id", auth.user.id)
+      .eq("client_attempt_id", body.attemptId)
+      .maybeSingle(),
   ]);
   if (!pro) return NextResponse.json({ error: "pro_required" }, { status: 403 });
   if (!withinMinute) return tooMany();
   if (!versionRow) {
     // The app knows this version but the database does not yet (a deploy that came before the content seed): the client must keep the answers and retry.
-    if (current.hash === body.hash) return NextResponse.json({ error: "content_not_ready" }, { status: 503, headers: { "retry-after": "300" } });
+    if (current.hash === body.hash)
+      return NextResponse.json({ error: "content_not_ready" }, { status: 503, headers: { "retry-after": "300" } });
     return NextResponse.json({ error: "content_not_published" }, { status: 409 }); // a version we never stored: nothing can score it
   }
   const lesson: Lesson = current.hash === body.hash ? current.body : (versionRow.body as Lesson);
@@ -82,8 +88,14 @@ export async function POST(req: Request) {
       // The page built the plan a little earlier; it still holds if every step is a case of this bank for a skill that is
       // due now, one per skill. Otherwise the queue moved on (a skill was reviewed elsewhere) and the play cannot be saved.
       // A case already answered is accepted only when that skill has no unseen case left (#141).
-      if (body.plan && (session.bankId !== body.lessonId || !reviewPlanOk(body.plan, lesson.steps.filter(isQuestion), session.due, session.seen))) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
-      if (!body.plan && session.bankId !== body.lessonId) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
+      if (
+        body.plan &&
+        (session.bankId !== body.lessonId ||
+          !reviewPlanOk(body.plan, lesson.steps.filter(isQuestion), session.due, session.seen))
+      )
+        return NextResponse.json({ error: "plan_changed" }, { status: 409 });
+      if (!body.plan && session.bankId !== body.lessonId)
+        return NextResponse.json({ error: "plan_changed" }, { status: 409 });
       if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
       plan = body.plan ?? session.steps.map((x) => x.id);
     }
@@ -96,7 +108,8 @@ export async function POST(req: Request) {
       if (!round.steps.length) return NextResponse.json({ error: "nothing_to_retest" }, { status: 409 });
       const serverPlan = round.steps.map((x) => x.id);
       if (round.bankId !== body.lessonId) return NextResponse.json({ error: "bad_request" }, { status: 400 });
-      if (body.plan && (body.plan.length !== serverPlan.length || body.plan.some((id) => !serverPlan.includes(id)))) return NextResponse.json({ error: "plan_changed" }, { status: 409 });
+      if (body.plan && (body.plan.length !== serverPlan.length || body.plan.some((id) => !serverPlan.includes(id))))
+        return NextResponse.json({ error: "plan_changed" }, { status: 409 });
       if (!(await withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400))) return tooMany();
       plan = serverPlan;
     }
@@ -113,52 +126,127 @@ export async function POST(req: Request) {
     const again = progress.finishedLessons.includes(body.lessonId);
     const [withinDay, paidRes, profRes] = await Promise.all([
       withinDbLimit(db, userId, "attempts-new-day", NEW_ATTEMPTS_PER_DAY, 86_400),
-      again ? db.from("attempts").select("started_at").eq("user_id", userId).eq("lesson_id", body.lessonId).eq("replay_kind", "paid") : null,
+      again
+        ? db
+            .from("attempts")
+            .select("started_at")
+            .eq("user_id", userId)
+            .eq("lesson_id", body.lessonId)
+            .eq("replay_kind", "paid")
+        : null,
       again ? db.from("profiles").select("time_zone").eq("user_id", userId).maybeSingle() : null,
     ]);
     if (!withinDay) return tooMany();
-    if (paidRes && !paidRes.error) replay = decideReplay(true, (paidRes.data ?? []).map((p) => p.started_at as string), new Date(), profRes?.data?.time_zone);
+    if (paidRes && !paidRes.error)
+      replay = decideReplay(
+        true,
+        (paidRes.data ?? []).map((p) => p.started_at as string),
+        new Date(),
+        profRes?.data?.time_zone,
+      );
   }
 
   // The attempt is created once per play; the client's attempt id makes repeated sends land on the same row.
-  const { data: attempt, error: aerr } = await db.from("attempts").upsert(
-    { client_attempt_id: body.attemptId, user_id: userId, lesson_id: body.lessonId, content_version_id: versionRow.id, started_at: new Date(body.startedAt).toISOString(), kind, ...(plan ? { plan } : {}) },
-    { onConflict: "user_id,client_attempt_id" },
-  ).select("id, finished_at").single();
+  const { data: attempt, error: aerr } = await db
+    .from("attempts")
+    .upsert(
+      {
+        client_attempt_id: body.attemptId,
+        user_id: userId,
+        lesson_id: body.lessonId,
+        content_version_id: versionRow.id,
+        started_at: new Date(body.startedAt).toISOString(),
+        kind,
+        ...(plan ? { plan } : {}),
+      },
+      { onConflict: "user_id,client_attempt_id" },
+    )
+    .select("id, finished_at")
+    .single();
   if (aerr || !attempt) return NextResponse.json({ error: "save_failed" }, { status: 500 });
   const [, { data: stored }] = await Promise.all([
     !known && replay ? db.from("attempts").update({ replay_kind: replay }).eq("id", attempt.id) : null,
-    db.from("step_results").select("step_id, try_no, kind, answer, hints_used").eq("attempt_id", attempt.id).eq("user_id", userId),
+    db
+      .from("step_results")
+      .select("step_id, try_no, kind, answer, hints_used")
+      .eq("attempt_id", attempt.id)
+      .eq("user_id", userId),
   ]);
-  const prior = (stored ?? []).map((r) => ({ stepId: r.step_id, tryNo: r.try_no, kind: r.kind as "check" | "main_ok" | "reveal", answer: r.answer as { sel: string[]; reason?: string[] }, hintsUsed: r.hints_used }));
+  const prior = (stored ?? []).map((r) => ({
+    stepId: r.step_id,
+    tryNo: r.try_no,
+    kind: r.kind as "check" | "main_ok" | "reveal",
+    answer: r.answer as { sel: string[]; reason?: string[] },
+    hintsUsed: r.hints_used,
+  }));
 
   const out = processEvents(lesson, body, prior, plan);
 
   const xpRows = replay === "unpaid" ? [] : out.xp.map((x) => ({ ...x, amount: replayXp(x.amount, replay) }));
   // Both writes are keyed, so a retry after a partial failure only adds what is missing.
   const [resWrite, xpWrite] = await Promise.all([
-    out.results.length ? db.from("step_results").upsert(
-      out.results.map((r) => ({ ...r, attempt_id: attempt.id, user_id: userId })),
-      { onConflict: "user_id,idempotency_key", ignoreDuplicates: true },
-    ) : null,
-    xpRows.length ? db.from("xp_events").upsert(
-      xpRows.map((x) => ({ user_id: userId, attempt_id: attempt.id, step_id: x.step_id, outcome: x.outcome, amount: x.amount })),
-      { onConflict: "attempt_id,step_id", ignoreDuplicates: true },
-    ) : null,
+    out.results.length
+      ? db.from("step_results").upsert(
+          out.results.map((r) => ({ ...r, attempt_id: attempt.id, user_id: userId })),
+          { onConflict: "user_id,idempotency_key", ignoreDuplicates: true },
+        )
+      : null,
+    xpRows.length
+      ? db.from("xp_events").upsert(
+          xpRows.map((x) => ({
+            user_id: userId,
+            attempt_id: attempt.id,
+            step_id: x.step_id,
+            outcome: x.outcome,
+            amount: x.amount,
+          })),
+          { onConflict: "attempt_id,step_id", ignoreDuplicates: true },
+        )
+      : null,
   ]);
   if (resWrite?.error || xpWrite?.error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
   if (out.finished && !attempt.finished_at) {
     const now = new Date();
     // Only the request that actually flips finished_at counts the lesson, so a double send cannot count it twice.
-    const { data: flipped } = await db.from("attempts").update({ finished_at: now.toISOString() }).eq("id", attempt.id).is("finished_at", null).select("id");
-    if (flipped?.length) await recordFinish(db, userId, body.lessonId, replay, kind, attempt.id, lesson.steps.flatMap((s) => ("skill" in s && (!plan || plan.includes(s.id)) ? [s.skill] : [])), now);
+    const { data: flipped } = await db
+      .from("attempts")
+      .update({ finished_at: now.toISOString() })
+      .eq("id", attempt.id)
+      .is("finished_at", null)
+      .select("id");
+    if (flipped?.length)
+      await recordFinish(
+        db,
+        userId,
+        body.lessonId,
+        replay,
+        kind,
+        attempt.id,
+        lesson.steps.flatMap((s) => ("skill" in s && (!plan || plan.includes(s.id)) ? [s.skill] : [])),
+        now,
+      );
   }
 
-  return NextResponse.json({ saved: out.results.length, xp: xpRows, replay, finished: out.finished, rejected: out.rejected });
+  return NextResponse.json({
+    saved: out.results.length,
+    xp: xpRows,
+    replay,
+    finished: out.finished,
+    rejected: out.rejected,
+  });
 }
 
 /** A lesson was finished for the first time in this attempt: count it for today and mark its skills Practiced. */
-async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: string, lessonId: string, replay: ReplayKind | null, kind: "lesson" | "check" | "mastery" | "review", attemptId: string, skillIds: string[], now: Date) {
+async function recordFinish(
+  db: ReturnType<typeof createAdminClient>,
+  userId: string,
+  lessonId: string,
+  replay: ReplayKind | null,
+  kind: "lesson" | "check" | "mastery" | "review",
+  attemptId: string,
+  skillIds: string[],
+  now: Date,
+) {
   if (kind === "review") {
     // A review session is not a lesson either. Right first try on a due skill: Kept. A miss: back tomorrow, nothing taken away.
     const kept = await markReviewed(db, userId, skillIds, await firstTryRight(db, attemptId, userId, "any"), now);
@@ -184,9 +272,19 @@ async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: st
     const bump = await db.rpc("bump_lessons_done", { p_user: userId, p_day: day, p_goal: goal });
     if (!bump.error) return;
     // Database not yet on migration 0003: fall back to read then write.
-    const { data: today } = await db.from("daily_activity").select("lessons_done").eq("user_id", userId).eq("day", day).maybeSingle();
+    const { data: today } = await db
+      .from("daily_activity")
+      .select("lessons_done")
+      .eq("user_id", userId)
+      .eq("day", day)
+      .maybeSingle();
     const lessonsDone = (today?.lessons_done ?? 0) + 1;
-    await db.from("daily_activity").upsert({ user_id: userId, day, lessons_done: lessonsDone, goal_met: lessonsDone >= goal }, { onConflict: "user_id,day" });
+    await db
+      .from("daily_activity")
+      .upsert(
+        { user_id: userId, day, lessons_done: lessonsDone, goal_met: lessonsDone >= goal },
+        { onConflict: "user_id,day" },
+      );
   };
   const skills = async () => {
     if (replay) return;
@@ -197,20 +295,43 @@ async function recordFinish(db: ReturnType<typeof createAdminClient>, userId: st
   await Promise.all([
     countDay(),
     // Lesson ids start with their path id (P01-U01-L01); mark that path as active just now.
-    db.from("enrollments").update({ last_active_at: now.toISOString() }).eq("user_id", userId).eq("path_id", lessonId.split("-")[0]),
+    db
+      .from("enrollments")
+      .update({ last_active_at: now.toISOString() })
+      .eq("user_id", userId)
+      .eq("path_id", lessonId.split("-")[0]),
     skills(),
   ]);
 }
 
 /** Skills whose step in this attempt was right on the first judged try. A skill with several steps needs all of them right in a skill check ("all"); in the mastery round one right first try is enough ("any"). */
-async function firstTryRight(db: ReturnType<typeof createAdminClient>, attemptId: string, userId: string, rule: "all" | "any" = "all"): Promise<string[]> {
-  const { data } = await db.from("step_results").select("step_id, skill_id, try_no, kind, correct").eq("attempt_id", attemptId).eq("user_id", userId).eq("kind", "check");
+async function firstTryRight(
+  db: ReturnType<typeof createAdminClient>,
+  attemptId: string,
+  userId: string,
+  rule: "all" | "any" = "all",
+): Promise<string[]> {
+  const { data } = await db
+    .from("step_results")
+    .select("step_id, skill_id, try_no, kind, correct")
+    .eq("attempt_id", attemptId)
+    .eq("user_id", userId)
+    .eq("kind", "check");
   const first = new Map<string, { skill: string; correct: boolean; tryNo: number }>();
   for (const r of data ?? []) {
     const cur = first.get(r.step_id as string);
-    if (r.skill_id && (!cur || (r.try_no as number) < cur.tryNo)) first.set(r.step_id as string, { skill: r.skill_id as string, correct: r.correct as boolean, tryNo: r.try_no as number });
+    if (r.skill_id && (!cur || (r.try_no as number) < cur.tryNo))
+      first.set(r.step_id as string, {
+        skill: r.skill_id as string,
+        correct: r.correct as boolean,
+        tryNo: r.try_no as number,
+      });
   }
   const bySkill = new Map<string, boolean>();
-  for (const f of first.values()) bySkill.set(f.skill, rule === "any" ? (bySkill.get(f.skill) ?? false) || f.correct : (bySkill.get(f.skill) ?? true) && f.correct);
+  for (const f of first.values())
+    bySkill.set(
+      f.skill,
+      rule === "any" ? (bySkill.get(f.skill) ?? false) || f.correct : (bySkill.get(f.skill) ?? true) && f.correct,
+    );
   return [...bySkill].filter(([, ok]) => ok).map(([skill]) => skill);
 }

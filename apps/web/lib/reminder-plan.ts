@@ -36,7 +36,9 @@ export function planReminder(r: ReminderInput): ReminderKind | null {
 }
 
 /** The same rules once the learner is known to be due this hour (the database picks them by their own hour). */
-export function planDue(r: Pick<ReminderInput, "dailyGoal" | "lessonsToday" | "streak" | "sentToday" | "deleting">): ReminderKind | null {
+export function planDue(
+  r: Pick<ReminderInput, "dailyGoal" | "lessonsToday" | "streak" | "sentToday" | "deleting">,
+): ReminderKind | null {
   if (r.deleting || r.sentToday) return null;
   if (r.lessonsToday >= r.dailyGoal) return null;
   // With a run of 3 days or more, today's one reminder uses the "goal still open" copy. Never a second email.
@@ -46,11 +48,22 @@ export function planDue(r: Pick<ReminderInput, "dailyGoal" | "lessonsToday" | "s
 /** The learner's local hour and day for an instant. Unknown zones count as UTC. */
 export function localClock(at: Date, timeZone: string | null | undefined): { hour: number; day: string } {
   const run = (tz: string) => {
-    const parts = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(at);
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(at);
     const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
     return { hour: Number(get("hour")) % 24, day: `${get("year")}-${get("month")}-${get("day")}` };
   };
-  try { return run(timeZone || "UTC"); } catch { return run("UTC"); }
+  try {
+    return run(timeZone || "UTC");
+  } catch {
+    return run("UTC");
+  }
 }
 
 /** 30 days after the delete request, the account is removed. */
@@ -62,5 +75,10 @@ export function deleteAfter(from: Date): Date {
 /** "2 December 2026" / "2 ديسمبر 2026" with Western digits, as on the canvas. */
 export function longDate(at: Date | string, locale: "en" | "ar"): string {
   const d = typeof at === "string" ? new Date(at) : at;
-  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(d);
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(d);
 }

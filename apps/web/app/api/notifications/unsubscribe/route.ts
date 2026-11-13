@@ -25,9 +25,14 @@ async function turnOff(userId: string, kind: UnsubKind): Promise<boolean> {
   const { data, error } = await db.from("notification_prefs").select("prefs").eq("user_id", userId).maybeSingle();
   if (error) return false;
   // Change only this cell, so every other choice keeps following the defaults until the learner sets it.
-  const stored = (data?.prefs && typeof data.prefs === "object" ? data.prefs : {}) as Record<string, Record<string, boolean> | undefined>;
+  const stored = (data?.prefs && typeof data.prefs === "object" ? data.prefs : {}) as Record<
+    string,
+    Record<string, boolean> | undefined
+  >;
   const prefs = { ...stored, [kind]: { ...(stored[kind] ?? {}), email: false } };
-  const { error: e2 } = await db.from("notification_prefs").upsert({ user_id: userId, prefs, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+  const { error: e2 } = await db
+    .from("notification_prefs")
+    .upsert({ user_id: userId, prefs, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
   return !e2;
 }
 
@@ -36,12 +41,14 @@ function page(view: View, l: Loc, token: string, kind: UnsubKind | null, status 
   const other: Loc = l === "ar" ? "en" : "ar";
   const k = kind ? m.kinds[kind] : "";
   const fill = (s: string) => s.replace("{kind}", k);
-  const title = view === "ask" ? fill(m.title) : view === "done" ? m.doneTitle : view === "bad" ? m.badTitle : m.errorTitle;
+  const title =
+    view === "ask" ? fill(m.title) : view === "done" ? m.doneTitle : view === "bad" ? m.badTitle : m.errorTitle;
   const lead = view === "ask" ? m.lead : view === "done" ? fill(m.doneLead) : view === "bad" ? m.badLead : m.errorLead;
   const self = `/api/notifications/unsubscribe?t=${encodeURIComponent(token)}&l=`;
-  const form = view === "ask" || view === "error"
-    ? `<form method="post" action="${esc(self + l)}"><input type="hidden" name="t" value="${esc(token)}"><button type="submit">${esc(m.button)}</button></form>`
-    : "";
+  const form =
+    view === "ask" || view === "error"
+      ? `<form method="post" action="${esc(self + l)}"><input type="hidden" name="t" value="${esc(token)}"><button type="submit">${esc(m.button)}</button></form>`
+      : "";
   const html = `<!doctype html>
 <html lang="${l}" dir="${l === "ar" ? "rtl" : "ltr"}">
 <head>
@@ -77,7 +84,12 @@ ${form}
 </html>`;
   return new Response(html, {
     status,
-    headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex", "referrer-policy": "no-referrer" },
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store",
+      "x-robots-tag": "noindex",
+      "referrer-policy": "no-referrer",
+    },
   });
 }
 
@@ -90,12 +102,17 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const form = await req.formData().catch(() => null);
-  const t = (typeof form?.get("t") === "string" ? (form.get("t") as string) : "") || req.nextUrl.searchParams.get("t") || "";
+  const t =
+    (typeof form?.get("t") === "string" ? (form.get("t") as string) : "") || req.nextUrl.searchParams.get("t") || "";
   const l = locOf(req.nextUrl.searchParams.get("l"));
   const oneClick = form?.get("List-Unsubscribe") === "One-Click";
   const v = await verifyUnsub(t);
   if (!v) return oneClick ? new Response("invalid link", { status: 400 }) : page("bad", l, "", null, 400);
   const ok = await turnOff(v.userId, v.kind);
-  if (oneClick) return new Response(ok ? "ok" : "try again later", { status: ok ? 200 : 503, headers: { "cache-control": "no-store" } });
+  if (oneClick)
+    return new Response(ok ? "ok" : "try again later", {
+      status: ok ? 200 : 503,
+      headers: { "cache-control": "no-store" },
+    });
   return ok ? page("done", l, t, v.kind) : page("error", l, t, v.kind, 503);
 }

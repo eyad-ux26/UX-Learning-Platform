@@ -17,13 +17,32 @@ export async function sendTrialEmails(db: SupabaseClient, limit = 50): Promise<{
   if (error || !Array.isArray(data)) return { sent: 0, failed: 0 };
   let sent = 0;
   let failed = 0;
-  for (const row of data as { user_id: string; kind: "reminder" | "ended"; ends_at: string; email: string | null; locale: string }[]) {
+  for (const row of data as {
+    user_id: string;
+    kind: "reminder" | "ended";
+    ends_at: string;
+    email: string | null;
+    locale: string;
+  }[]) {
     const { error: me } = await db.rpc("trial_mark", { p_user: row.user_id, p_kind: row.kind });
     if (me || !row.email) continue;
     const locale = row.locale === "ar" ? "ar" : "en";
-    const mail = trialEmail({ locale, kind: row.kind, endsOn: longDate(row.ends_at, locale), plansHref: `${siteOrigin()}/${locale}/app/plans` });
+    const mail = trialEmail({
+      locale,
+      kind: row.kind,
+      endsOn: longDate(row.ends_at, locale),
+      plansHref: `${siteOrigin()}/${locale}/app/plans`,
+    });
     const r = await sendEmail({ to: row.email, ...mail, kind: "billing", userId: row.user_id, locale });
-    if (r.ok) { sent++; await db.from("email_log").insert({ user_id: row.user_id, kind: "trial", day: new Date().toISOString().slice(0, 10), provider_id: r.id ?? null }); } else failed++;
+    if (r.ok) {
+      sent++;
+      await db.from("email_log").insert({
+        user_id: row.user_id,
+        kind: "trial",
+        day: new Date().toISOString().slice(0, 10),
+        provider_id: r.id ?? null,
+      });
+    } else failed++;
   }
   return { sent, failed };
 }

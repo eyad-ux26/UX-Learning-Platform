@@ -9,5 +9,9 @@ export default async function ReviewPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
-  return <Shell me={me}><ReviewMain me={me} /></Shell>;
+  return (
+    <Shell me={me}>
+      <ReviewMain me={me} />
+    </Shell>
+  );
 }

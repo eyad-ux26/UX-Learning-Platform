@@ -20,7 +20,8 @@ const BATCH = 100;
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
 
   const db = createAdminClient();
   // Launch list (0038): unconfirmed addresses go after 30 days. Cheap and safe to repeat; an error (before 0038) is ignored.
@@ -37,24 +38,45 @@ export async function GET(req: Request) {
   // UTC who is already settled up to their local yesterday is not picked again, so every call makes progress (#139).
   const { data: rows, error } = await db.rpc("settle_candidates", { p_limit: BATCH });
   if (error) return jobJson("daily", { error: "read_failed" }, { status: 500 });
-  const list = (rows ?? []) as { user_id: string; time_zone: string | null; locale: string | null; week_start: number | null }[];
+  const list = (rows ?? []) as {
+    user_id: string;
+    time_zone: string | null;
+    locale: string | null;
+    week_start: number | null;
+  }[];
   const ids = list.map((r) => r.user_id);
-  const prof = new Map(list.map((z) => [z.user_id, { tz: z.time_zone ?? null, start: resolveWeekStart(z.week_start, z.locale) }]));
+  const prof = new Map(
+    list.map((z) => [z.user_id, { tz: z.time_zone ?? null, start: resolveWeekStart(z.week_start, z.locale) }]),
+  );
   let settled = 0;
   let failed = 0;
   let stoppedEarly: string | null = null;
   for (const id of ids) {
     const r = await settleLearner(id, prof.get(id)?.tz ?? null, new Date(), prof.get(id)?.start);
-    if (r.ok) { settled++; continue; }
+    if (r.ok) {
+      settled++;
+      continue;
+    }
     failed++;
     // A Worker run has a budget of outbound calls (50 on the free plan). When it runs out every later call fails the same way,
     // so stop here, say so loudly, and let the next run (or the learner's next visit) settle the rest.
     if (/subrequest/i.test(r.error)) {
       stoppedEarly = "subrequest_budget";
-      console.warn(`WARN daily job stopped early: subrequest budget used up after ${settled} learners (${ids.length - settled} left). Turn on Workers Paid before real learners arrive. ${r.error}`);
+      console.warn(
+        `WARN daily job stopped early: subrequest budget used up after ${settled} learners (${ids.length - settled} left). Turn on Workers Paid before real learners arrive. ${r.error}`,
+      );
       break;
     }
     console.warn(`WARN daily job: could not settle ${id}: ${r.error}`);
   }
-  return jobJson("daily", { settled, failed, stoppedEarly, pruned: typeof pruned === "number" ? pruned : null, confirmations, trials, reports, more: stoppedEarly ? true : ids.length === BATCH && settled > 0 }); // a batch that only failed would come back the same: stop there
+  return jobJson("daily", {
+    settled,
+    failed,
+    stoppedEarly,
+    pruned: typeof pruned === "number" ? pruned : null,
+    confirmations,
+    trials,
+    reports,
+    more: stoppedEarly ? true : ids.length === BATCH && settled > 0,
+  }); // a batch that only failed would come back the same: stop there
 }

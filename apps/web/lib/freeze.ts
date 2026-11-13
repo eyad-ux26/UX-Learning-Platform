@@ -39,7 +39,8 @@ export const weekStartFor = (locale: string | null | undefined) => (locale === "
 export const resolveWeekStart = (stored: number | null | undefined, locale: string | null | undefined) =>
   typeof stored === "number" && stored >= 0 && stored <= 6 ? stored : weekStartFor(locale);
 /** The first day of the week that holds `day`. */
-export const weekStartOf = (day: string, start: number = WEEK_START) => shiftDay(day, -((weekday(day) - start + 7) % 7));
+export const weekStartOf = (day: string, start: number = WEEK_START) =>
+  shiftDay(day, -((weekday(day) - start + 7) % 7));
 /** The weekday number of the last day of a week that starts on `start`. */
 export const weekEndOf = (start: number) => (start + 6) % 7;
 /** Kept for the tests and older callers: the Monday-start week. */
@@ -51,13 +52,32 @@ export const mondayOf = (day: string) => weekStartOf(day, 1);
  * contains the first day settled, so a week that began before it still counts all its goal days.
  * With no `settledThrough` the learner starts at their first active day, so days before they began never count as missed.
  */
-export function settle(state: SettleState, settledThrough: string | null, through: string, activity: Record<string, DayActivity>, start: number = WEEK_START, rules: Pick<LearningRules, "freezeGoalDays" | "freezeMax"> = DEFAULT_RULES): Settled {
+export function settle(
+  state: SettleState,
+  settledThrough: string | null,
+  through: string,
+  activity: Record<string, DayActivity>,
+  start: number = WEEK_START,
+  rules: Pick<LearningRules, "freezeGoalDays" | "freezeMax"> = DEFAULT_RULES,
+): Settled {
   let { current, longest, freezes } = state;
   const usedDays: string[] = [];
   const earnedDays: string[] = [];
   let from: string | null = settledThrough ? shiftDay(settledThrough, 1) : null;
-  if (!from) from = Object.keys(activity).filter((d) => (activity[d].lessons ?? 0) > 0).sort()[0] ?? null;
-  if (!from || from > through) return { current, longest, freezes, usedDays, earnedDays, settledThrough: settledThrough && settledThrough > through ? settledThrough : through };
+  if (!from)
+    from =
+      Object.keys(activity)
+        .filter((d) => (activity[d].lessons ?? 0) > 0)
+        .sort()[0] ?? null;
+  if (!from || from > through)
+    return {
+      current,
+      longest,
+      freezes,
+      usedDays,
+      earnedDays,
+      settledThrough: settledThrough && settledThrough > through ? settledThrough : through,
+    };
 
   for (let d = from; d <= through; d = shiftDay(d, 1)) {
     const a = activity[d];
@@ -74,14 +94,22 @@ export function settle(state: SettleState, settledThrough: string | null, throug
       const monday = weekStartOf(d, start);
       let goalDays = 0;
       for (let i = 0; i < 7; i++) if (activity[shiftDay(monday, i)]?.goalMet) goalDays++;
-      if (goalDays >= rules.freezeGoalDays && freezes < rules.freezeMax) { freezes += 1; earnedDays.push(d); }
+      if (goalDays >= rules.freezeGoalDays && freezes < rules.freezeMax) {
+        freezes += 1;
+        earnedDays.push(d);
+      }
     }
   }
   return { current, longest, freezes, usedDays, earnedDays, settledThrough: through };
 }
 
 /** Goal days so far in the week that holds `today`, and how many more earn the next freeze (never negative). */
-export function weekGoalProgress(today: string, activity: Record<string, DayActivity>, start: number = WEEK_START, goalDays_: number = FREEZE_GOAL_DAYS) {
+export function weekGoalProgress(
+  today: string,
+  activity: Record<string, DayActivity>,
+  start: number = WEEK_START,
+  goalDays_: number = FREEZE_GOAL_DAYS,
+) {
   const monday = weekStartOf(today, start);
   let goalDays = 0;
   for (let i = 0; i < 7; i++) {

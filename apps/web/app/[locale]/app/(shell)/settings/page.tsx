@@ -14,18 +14,35 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: `${t("title")} · UXGate`, robots: { index: false } };
 }
 
-export default async function SettingsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ restored?: string }> }) {
+export default async function SettingsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ restored?: string }>;
+}) {
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
   const t = await getTranslations("settings");
   const tt = await getTranslations("teamTools");
   let boardOpen = false;
-  let initial = { name: me.progress.displayName ?? "", email: "nour@example.com", provider: "email", theme: "system" as ThemePref, goal: me.progress.dailyGoal as 1 | 2 | 3, reminder: "20:00" as string | null };
+  let initial = {
+    name: me.progress.displayName ?? "",
+    email: "nour@example.com",
+    provider: "email",
+    theme: "system" as ThemePref,
+    goal: me.progress.dailyGoal as 1 | 2 | 3,
+    reminder: "20:00" as string | null,
+  };
   if (me.db) {
     const [{ data: auth }, { data: prof }, { data: flag }] = await Promise.all([
       me.db.auth.getUser(),
-      me.db.from("profiles").select("display_name, theme, daily_goal, reminder_time").eq("user_id", me.userId).maybeSingle(),
+      me.db
+        .from("profiles")
+        .select("display_name, theme, daily_goal, reminder_time")
+        .eq("user_id", me.userId)
+        .maybeSingle(),
       me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
     ]);
     boardOpen = !!flag?.enabled;
@@ -42,10 +59,21 @@ export default async function SettingsPage({ params, searchParams }: { params: P
   return (
     <AccountFrame me={me} locale={locale}>
       <PageTop title={t("title")} back="/app/profile" backLabel={t("back")} />
-      <SettingsView initial={initial} userId={me.userId} restored={(await searchParams).restored === "1"} sharing={{ pageOn: me.shareEnabled, boardJoined: me.leaderboardJoined, boardOpen }} />
+      <SettingsView
+        initial={initial}
+        userId={me.userId}
+        restored={(await searchParams).restored === "1"}
+        sharing={{ pageOn: me.shareEnabled, boardJoined: me.leaderboardJoined, boardOpen }}
+      />
       {me.teamView ? (
         <div className="set" style={{ marginBlockStart: 16 }}>
-          <Link href="/app/settings/team" className="set-row"><span className="ph ph-wrench" aria-hidden="true" /><span className="set-l">{tt("link")}<small>{tt("linkSub")}</small></span></Link>
+          <Link href="/app/settings/team" className="set-row">
+            <span className="ph ph-wrench" aria-hidden="true" />
+            <span className="set-l">
+              {tt("link")}
+              <small>{tt("linkSub")}</small>
+            </span>
+          </Link>
         </div>
       ) : null}
     </AccountFrame>

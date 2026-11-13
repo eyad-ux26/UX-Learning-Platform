@@ -14,7 +14,12 @@ type Params = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pricingPage" });
-  return { metadataBase: new URL(SITE_URL), title: t("metaTitle"), description: t("metaDesc"), alternates: pageAlternates(locale, "/pricing") };
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: t("metaTitle"),
+    description: t("metaDesc"),
+    alternates: pageAlternates(locale, "/pricing"),
+  };
 }
 
 /**
@@ -28,29 +33,63 @@ export default async function PricingPage({ params }: Params) {
   const L = locale as Locale;
   const w = PRICES.world;
   const $ = (n: number) => formatMoney(n, w.currency, L);
-  const to = (href: "/terms" | "/privacy" | "/refund", c: React.ReactNode) => <Link href={href} className="pub-link">{c}</Link>;
+  const to = (href: "/terms" | "/privacy" | "/refund", c: React.ReactNode) => (
+    <Link href={href} className="pub-link">
+      {c}
+    </Link>
+  );
   return (
     <div className="s4-pub">
       <PubHeader />
       <main className="legal">
         <div className="pg-stack">
-          <div className="legal-head"><h1>{t("title")}</h1></div>
+          <div className="legal-head">
+            <h1>{t("title")}</h1>
+          </div>
           <p>{t("lead")}</p>
           <div className="doc" style={{ display: "grid", gap: 16 }}>
             <section className="card" aria-labelledby="pr-free" style={{ padding: 20 }}>
               <h2 id="pr-free">{t("freeName")}</h2>
-              <p><b className="num ltr">{t("freePrice")}</b> · {t("freeNote")}</p>
-              <ul><li>{t("free1")}</li><li>{t("free2")}</li></ul>
+              <p>
+                <b className="num ltr">{t("freePrice")}</b> · {t("freeNote")}
+              </p>
+              <ul>
+                <li>{t("free1")}</li>
+                <li>{t("free2")}</li>
+              </ul>
             </section>
             <section className="card" aria-labelledby="pr-pro" style={{ padding: 20 }}>
               <h2 id="pr-pro">{t("proName")}</h2>
-              <ul><li>{t("pro1")}</li><li>{t("pro2")}</li><li>{t("pro3")}</li></ul>
-              <p><b>{t("monthly")}</b>: <b className="num ltr">{$(w.month)}</b> {t("perMonth")}</p>
-              <p><b>{t("yearly")}</b>: <b className="num ltr">{$(w.year)}</b> {t("perYear")} · {t.rich("save", { amount: $(yearlySaving("world")), m: (c) => <span className="ltr">{c}</span> })}</p>
+              <ul>
+                <li>{t("pro1")}</li>
+                <li>{t("pro2")}</li>
+                <li>{t("pro3")}</li>
+              </ul>
+              <p>
+                <b>{t("monthly")}</b>: <b className="num ltr">{$(w.month)}</b> {t("perMonth")}
+              </p>
+              <p>
+                <b>{t("yearly")}</b>: <b className="num ltr">{$(w.year)}</b> {t("perYear")} ·{" "}
+                {t.rich("save", { amount: $(yearlySaving("world")), m: (c) => <span className="ltr">{c}</span> })}
+              </p>
             </section>
             <p>{t("notes", { percent: DISCOUNTS.student.percent })}</p>
-            <p>{t.rich("policies", { terms: (c) => to("/terms", c), privacy: (c) => to("/privacy", c), refund: (c) => to("/refund", c) })}</p>
-            <p>{t.rich("questions", { mail: (c) => <a href="mailto:support@uxgate.org" className="ltr pub-link">{c}</a> })}</p>
+            <p>
+              {t.rich("policies", {
+                terms: (c) => to("/terms", c),
+                privacy: (c) => to("/privacy", c),
+                refund: (c) => to("/refund", c),
+              })}
+            </p>
+            <p>
+              {t.rich("questions", {
+                mail: (c) => (
+                  <a href="mailto:support@uxgate.org" className="ltr pub-link">
+                    {c}
+                  </a>
+                ),
+              })}
+            </p>
           </div>
         </div>
       </main>

@@ -42,12 +42,15 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /** fetch for the server Supabase clients: records the call in the current trace and retries a failed read once, quickly. */
 export async function tracedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-  const method = (init?.method ?? (typeof input === "object" && "method" in input ? input.method : "GET")).toUpperCase();
+  const method = (
+    init?.method ?? (typeof input === "object" && "method" in input ? input.method : "GET")
+  ).toUpperCase();
   const canRetry = method === "GET" || method === "HEAD";
   const trace = currentTrace();
   const t0 = Date.now();
   let retried = false;
-  const record = (status: number) => trace?.calls.push({ label: labelOf(url), method, status, ms: Date.now() - t0, retried });
+  const record = (status: number) =>
+    trace?.calls.push({ label: labelOf(url), method, status, ms: Date.now() - t0, retried });
   for (;;) {
     try {
       const res = await fetch(input, init);
@@ -80,6 +83,9 @@ export function serverTiming(trace: Trace, totalMs: number): string {
 
 /** One log line per request: "db GET /en/app 412ms 1 call: rpc:my_learner_state 180ms". Retries and errors are marked. */
 export function traceLine(method: string, path: string, status: number, totalMs: number, trace: Trace): string {
-  const calls = trace.calls.map((c) => `${c.label} ${c.ms}ms${c.status >= 400 || c.status === 0 ? ` [${c.status}]` : ""}${c.retried ? " [retried]" : ""}`);
+  const calls = trace.calls.map(
+    (c) =>
+      `${c.label} ${c.ms}ms${c.status >= 400 || c.status === 0 ? ` [${c.status}]` : ""}${c.retried ? " [retried]" : ""}`,
+  );
   return `db ${method} ${path} ${status} ${totalMs}ms ${trace.calls.length} call${trace.calls.length === 1 ? "" : "s"}${calls.length ? `: ${calls.join(", ")}` : ""}`;
 }

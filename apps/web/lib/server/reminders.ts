@@ -9,50 +9,117 @@ import { loadPrefs, notify } from "./notify";
 import { sendReminderEmail } from "./account-email";
 
 type Candidate = {
-  user_id: string; email: string | null; locale: string; display_name: string | null; daily_goal: number; current_path_id: string | null;
-  local_day: string; lessons_today: number; active_days: string[]; reminder_time: string | null;
+  user_id: string;
+  email: string | null;
+  locale: string;
+  display_name: string | null;
+  daily_goal: number;
+  current_path_id: string | null;
+  local_day: string;
+  lessons_today: number;
+  active_days: string[];
+  reminder_time: string | null;
 };
 
 /** The next lesson in the learner's current path, from what they have finished. */
 async function nextLesson(db: SupabaseClient, c: Candidate) {
-  const { data: onb } = await db.from("onboarding").select("recommended_path_id").eq("user_id", c.user_id).maybeSingle();
+  const { data: onb } = await db
+    .from("onboarding")
+    .select("recommended_path_id")
+    .eq("user_id", c.user_id)
+    .maybeSingle();
   const path = pickPath(c.current_path_id ?? (onb?.recommended_path_id as string | null) ?? null);
   if (!path) return null;
-  const { data: att } = await db.from("attempts").select("lesson_id, finished_at").eq("user_id", c.user_id).not("finished_at", "is", null).limit(1000);
+  const { data: att } = await db
+    .from("attempts")
+    .select("lesson_id, finished_at")
+    .eq("user_id", c.user_id)
+    .not("finished_at", "is", null)
+    .limit(1000);
   const finished = (att ?? []).map((a) => a.lesson_id as string);
-  const view = buildPathView(path.id, { finishedLessons: finished, startedLessons: finished, xpByLesson: {} }, new Set());
+  const view = buildPathView(
+    path.id,
+    { finishedLessons: finished, startedLessons: finished, xpByLesson: {} },
+    new Set(),
+  );
   const next = view?.next;
   if (!next) return null;
-  return { id: next.lesson.lessonId, title: next.lesson.body.title, minutes: next.lesson.minutes || 5, path: getPath(path.id)?.title.en ?? path.title.en };
+  return {
+    id: next.lesson.lessonId,
+    title: next.lesson.body.title,
+    minutes: next.lesson.minutes || 5,
+    path: getPath(path.id)?.title.en ?? path.title.en,
+  };
 }
 
 /**
  * One run (every 15 minutes): everyone whose reminder time is this quarter hour gets at most one reminder that local day. The email_log
  * unique index makes a second email for the same day impossible even if two runs overlap.
  */
-export async function runReminders(db: SupabaseClient, batch = 25): Promise<{ sent: number; skipped: number; failed: number; more: boolean }> {
+export async function runReminders(
+  db: SupabaseClient,
+  batch = 25,
+): Promise<{ sent: number; skipped: number; failed: number; more: boolean }> {
   const { data, error } = await db.rpc("reminder_candidates", { p_limit: batch });
   if (error) throw new Error(`reminder_candidates: ${error.message}`);
   const list = (data ?? []) as Candidate[];
-  let sent = 0, skipped = 0, failed = 0;
+  let sent = 0,
+    skipped = 0,
+    failed = 0;
   for (const c of list) {
     try {
       const kind = planDue({
-        dailyGoal: c.daily_goal, lessonsToday: c.lessons_today, streak: streakDays(c.active_days ?? [], c.local_day), sentToday: false,
+        dailyGoal: c.daily_goal,
+        lessonsToday: c.lessons_today,
+        streak: streakDays(c.active_days ?? [], c.local_day),
+        sentToday: false,
       });
       const locale = c.locale === "ar" ? "ar" : "en";
       // Claim the day first: if this insert fails, someone else already sent today's reminder.
-      const { error: claim } = await db.from("email_log").insert({ user_id: c.user_id, kind: kind ?? "reminder", day: c.local_day, provider_id: kind ? null : "skipped" });
-      if (claim) { skipped++; continue; }
-      if (!kind) { skipped++; continue; }
+      const { error: claim } = await db.from("email_log").insert({
+        user_id: c.user_id,
+        kind: kind ?? "reminder",
+        day: c.local_day,
+        provider_id: kind ? null : "skipped",
+      });
+      if (claim) {
+        skipped++;
+        continue;
+      }
+      if (!kind) {
+        skipped++;
+        continue;
+      }
       const prefs = await loadPrefs(db, c.user_id);
       const lesson = await nextLesson(db, c);
       const href = lesson ? `/app/lesson/${lesson.id}` : "/app";
-      await notify(c.user_id, kind, lesson && kind === "reminder" ? { lesson: lesson.title, minutes: lesson.minutes, path: lesson.path } : {}, href, { db, prefs, locale });
+      await notify(
+        c.user_id,
+        kind,
+        lesson && kind === "reminder" ? { lesson: lesson.title, minutes: lesson.minutes, path: lesson.path } : {},
+        href,
+        { db, prefs, locale },
+      );
       if (c.email && allowed(prefs, kind, "email")) {
-        const id = await sendReminderEmail({ userId: c.user_id, to: c.email, locale, name: c.display_name ?? "", kind, lesson, streak: streakDays(c.active_days ?? [], c.local_day),
-          lessonsToday: c.lessons_today, dailyGoal: c.daily_goal, reminderTime: c.reminder_time ?? "20:00" });
-        if (id) await db.from("email_log").update({ provider_id: id }).eq("user_id", c.user_id).eq("day", c.local_day).in("kind", ["reminder", "goal"]);
+        const id = await sendReminderEmail({
+          userId: c.user_id,
+          to: c.email,
+          locale,
+          name: c.display_name ?? "",
+          kind,
+          lesson,
+          streak: streakDays(c.active_days ?? [], c.local_day),
+          lessonsToday: c.lessons_today,
+          dailyGoal: c.daily_goal,
+          reminderTime: c.reminder_time ?? "20:00",
+        });
+        if (id)
+          await db
+            .from("email_log")
+            .update({ provider_id: id })
+            .eq("user_id", c.user_id)
+            .eq("day", c.local_day)
+            .in("kind", ["reminder", "goal"]);
       }
       sent++;
     } catch (e) {

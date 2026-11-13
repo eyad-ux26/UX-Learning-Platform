@@ -7,7 +7,8 @@ import { useLocale } from "next-intl";
 export function AuthErrorRedirect() {
   const locale = useLocale();
   useEffect(() => {
-    if (/[#&]error(_description|_code)?=/.test(window.location.hash)) window.location.replace(`/${locale}/signin?error=link`);
+    if (/[#&]error(_description|_code)?=/.test(window.location.hash))
+      window.location.replace(`/${locale}/signin?error=link`);
   }, [locale]);
   return null;
 }

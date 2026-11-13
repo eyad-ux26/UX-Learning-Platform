@@ -6,4 +6,7 @@ export function nameLooksLikeEmail(name: string, email: string | null): boolean 
   return !!local && n.toLowerCase() === local;
 }
 /** 2 to 60 characters after trimming. */
-export const validCertName = (name: string): boolean => { const n = name.trim(); return n.length >= 2 && n.length <= 60; };
+export const validCertName = (name: string): boolean => {
+  const n = name.trim();
+  return n.length >= 2 && n.length <= 60;
+};

@@ -21,8 +21,18 @@ export default async function TryPage({ params }: { params: Promise<{ locale: st
   const v = v0!;
   return (
     <LessonRunner
-      lesson={v.body} hash={v.hash} locale={locale as Locale} pathLabel={getPath(v.pathId)?.title.en ?? v.pathId}
-      unitSkills={getUnit(v.unitId)?.skills ?? []} lessonNo={v.order + 1} unitId={v.unitId} streak={0} userId={GUEST_ID} replay={null} guest other={other}
+      lesson={v.body}
+      hash={v.hash}
+      locale={locale as Locale}
+      pathLabel={getPath(v.pathId)?.title.en ?? v.pathId}
+      unitSkills={getUnit(v.unitId)?.skills ?? []}
+      lessonNo={v.order + 1}
+      unitId={v.unitId}
+      streak={0}
+      userId={GUEST_ID}
+      replay={null}
+      guest
+      other={other}
     />
   );
 }

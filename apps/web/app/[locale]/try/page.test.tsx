@@ -5,9 +5,14 @@ vi.mock("server-only", () => ({}));
 vi.mock("next-intl/server", () => ({ setRequestLocale: () => {} }));
 const getLearner = vi.fn();
 vi.mock("@/lib/server/learner", () => ({ getLearner: () => getLearner() }));
-const redirect = vi.fn((...a: unknown[]) => { void a; throw new Error("NEXT_REDIRECT"); });
+const redirect = vi.fn((...a: unknown[]) => {
+  void a;
+  throw new Error("NEXT_REDIRECT");
+});
 vi.mock("@/i18n/navigation", () => ({ redirect: (a: unknown) => redirect(a) }));
-vi.mock("@/lib/server/content", () => ({ getLessonVersion: async () => ({ body: {}, hash: "h", pathId: "P01", unitId: "P01-U01", order: 0 }) }));
+vi.mock("@/lib/server/content", () => ({
+  getLessonVersion: async () => ({ body: {}, hash: "h", pathId: "P01", unitId: "P01-U01", order: 0 }),
+}));
 vi.mock("@/lib/server/lesson-messages", () => ({ otherLocaleMessages: async () => ({}) }));
 vi.mock("@uxgate/content", () => ({ getPath: () => ({ title: { en: "P" } }), getUnit: () => ({ skills: [] }) }));
 vi.mock("@/components/lesson/LessonRunner", () => ({ LessonRunner: () => null, GUEST_ID: "guest" }));
@@ -15,7 +20,10 @@ vi.mock("@/components/lesson/LessonRunner", () => ({ LessonRunner: () => null, G
 import TryPage from "./page";
 
 describe("/try", () => {
-  beforeEach(() => { getLearner.mockReset(); redirect.mockClear(); });
+  beforeEach(() => {
+    getLearner.mockReset();
+    redirect.mockClear();
+  });
 
   it("sends a signed-in learner to /app", async () => {
     getLearner.mockResolvedValue({ userId: "u1" });

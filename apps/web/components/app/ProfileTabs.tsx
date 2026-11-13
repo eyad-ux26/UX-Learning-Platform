@@ -23,7 +23,8 @@ export function ProfileTabs({ board }: { board: boolean }) {
         const el = document.getElementById(x.id);
         if (el && el.getBoundingClientRect().top <= 120) cur = x.id;
       }
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) cur = tabs[tabs.length - 1].id;
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4)
+        cur = tabs[tabs.length - 1].id;
       setOn(cur);
     };
     onScroll();
@@ -38,8 +39,14 @@ export function ProfileTabs({ board }: { board: boolean }) {
     <nav className="pf-tabs" aria-label={t("label")}>
       <div className="pf-tabs-row" ref={row}>
         {tabs.map((x) => (
-          <a key={x.id} href={`#${x.id}`} className={`pf-tab${on === x.id ? " is-on" : ""}`} aria-current={on === x.id ? "true" : undefined}>
-            <span className={`ph ph-${x.icon}`} aria-hidden="true" />{t(x.key)}
+          <a
+            key={x.id}
+            href={`#${x.id}`}
+            className={`pf-tab${on === x.id ? " is-on" : ""}`}
+            aria-current={on === x.id ? "true" : undefined}
+          >
+            <span className={`ph ph-${x.icon}`} aria-hidden="true" />
+            {t(x.key)}
           </a>
         ))}
       </div>

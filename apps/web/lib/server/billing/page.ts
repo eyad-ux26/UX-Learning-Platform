@@ -8,8 +8,20 @@ export function shellFor(me: Learner) {
 }
 
 export const countryName = (code: string, locale: string) => {
-  try { return new Intl.DisplayNames([locale], { type: "region" }).of(code) ?? code; } catch { return code; }
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code) ?? code;
+  } catch {
+    return code;
+  }
 };
 
 export const formatDate = (iso: string | null | undefined, locale: string, withYear = false) =>
-  iso ? new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}), timeZone: "Africa/Cairo", numberingSystem: "latn" }).format(new Date(iso)) : "";
+  iso
+    ? new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-GB", {
+        day: "numeric",
+        month: "short",
+        ...(withYear ? { year: "numeric" } : {}),
+        timeZone: "Africa/Cairo",
+        numberingSystem: "latn",
+      }).format(new Date(iso))
+    : "";

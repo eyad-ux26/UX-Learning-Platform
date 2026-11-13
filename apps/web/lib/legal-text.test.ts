@@ -4,7 +4,8 @@ import { LEGAL, LEGAL_STATUS } from "./legal-text";
 describe("legal text", () => {
   it("English and Arabic have the same sections, each with text", () => {
     for (const kind of ["privacy", "terms", "refund"] as const) {
-      const en = LEGAL[kind].en.sections, ar = LEGAL[kind].ar.sections;
+      const en = LEGAL[kind].en.sections,
+        ar = LEGAL[kind].ar.sections;
       expect(ar.length).toBe(en.length);
       en.forEach((s, i) => {
         expect(!!ar[i].list).toBe(!!s.list);

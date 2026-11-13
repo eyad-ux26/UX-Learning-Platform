@@ -31,7 +31,8 @@ export const UNKNOWN_COUNTRY = "ZZ";
  * The country a checkout is priced for. `intl` is "Pay with an international card", offered after Paymob refuses a
  * card issued outside Egypt: it prices at the world rate in USD through Paddle, whatever the request's country.
  */
-export const priceCountry = (ip: string | null, intl = false): string => (intl ? UNKNOWN_COUNTRY : ip ?? UNKNOWN_COUNTRY);
+export const priceCountry = (ip: string | null, intl = false): string =>
+  intl ? UNKNOWN_COUNTRY : (ip ?? UNKNOWN_COUNTRY);
 
 /** Check and pay with an international card (Paddle, world price), same plan and code. Relative to /{locale}. */
 export const intlCheckoutPath = (period: Period, code?: string | null): string =>
@@ -50,8 +51,8 @@ export const providerFor = (region: Region): Provider => (region === "eg" ? "pay
 
 export const DISCOUNTS: Record<DiscountKind, { percent: number; periods: Period[]; years: number | null }> = {
   student: { percent: 40, periods: ["month", "year"], years: null }, // while the student check is valid
-  welcome_back: { percent: 40, periods: ["year"], years: 2 },       // annual only, for 2 years
-  founding: { percent: 30, periods: ["year"], years: 1 },           // annual only, the first year
+  welcome_back: { percent: 40, periods: ["year"], years: 2 }, // annual only, for 2 years
+  founding: { percent: 30, periods: ["year"], years: 1 }, // annual only, the first year
 };
 
 /** A price with a percentage off. Egyptian pounds round down to a whole pound; dollars to the cent. */
@@ -104,16 +105,27 @@ export function quote(region: Region, period: Period, e: Eligibility): Quote {
   const p = PRICES[region];
   const base = p[period];
   const options: { kind: DiscountKind; percent: number; code: string | null }[] = [];
-  if (e.student && DISCOUNTS.student.periods.includes(period)) options.push({ kind: "student", percent: DISCOUNTS.student.percent, code: null });
-  if (e.welcomeBack && DISCOUNTS.welcome_back.periods.includes(period)) options.push({ kind: "welcome_back", percent: DISCOUNTS.welcome_back.percent, code: null });
-  if (e.code && (e.code.period === null || e.code.period === period)) options.push({ kind: e.code.kind, percent: e.code.percent, code: e.code.code });
+  if (e.student && DISCOUNTS.student.periods.includes(period))
+    options.push({ kind: "student", percent: DISCOUNTS.student.percent, code: null });
+  if (e.welcomeBack && DISCOUNTS.welcome_back.periods.includes(period))
+    options.push({ kind: "welcome_back", percent: DISCOUNTS.welcome_back.percent, code: null });
+  if (e.code && (e.code.period === null || e.code.period === period))
+    options.push({ kind: e.code.kind, percent: e.code.percent, code: e.code.code });
   // Highest percent first; on a tie the one with no code (it lasts longer) wins.
   const best = options.sort((a, b) => b.percent - a.percent || (a.code ? 1 : 0) - (b.code ? 1 : 0))[0] ?? null;
   const amount = best ? discounted(base, best.percent, p.currency) : base;
   const renewAmount = !best || best.kind === "founding" ? base : amount;
   return {
-    region, provider: providerFor(region), period, currency: p.currency, base, amount, renewAmount,
-    discount: best?.kind ?? null, percent: best?.percent ?? 0, code: best?.code ?? null,
+    region,
+    provider: providerFor(region),
+    period,
+    currency: p.currency,
+    base,
+    amount,
+    renewAmount,
+    discount: best?.kind ?? null,
+    percent: best?.percent ?? 0,
+    code: best?.code ?? null,
     discountYears: best ? DISCOUNTS[best.kind].years : null,
   };
 }

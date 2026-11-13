@@ -43,7 +43,13 @@ export type Card = { method: PayMethod; brand?: string | null; last4?: string | 
  * `source: "manual"` is Pro granted by admins with SQL (supabase/README.md), with no payment: it counts everywhere,
  * nothing renews it, and plan events leave it alone while it lasts longer than the plan.
  */
-export type Entitlement = { plan: "free" | "pro"; validUntil: string | null; proSince: string | null; proEndedAt: string | null; source?: "live" | "mock" | "manual" | "trial" };
+export type Entitlement = {
+  plan: "free" | "pro";
+  validUntil: string | null;
+  proSince: string | null;
+  proEndedAt: string | null;
+  source?: "live" | "mock" | "manual" | "trial";
+};
 
 export const GRACE_DAYS = 7;
 /** Failed renewals are tried again this many days after the charge date. */
@@ -61,7 +67,11 @@ const plusDays = (at: string | Date, days: number) => new Date(new Date(at).getT
 export const renewsHere = (s: Pick<Sub, "provider">) => s.provider !== "paddle";
 
 /** The amount of the next charge for `period`, starting at `at`, with the discount the plan still carries. */
-export function renewalPrice(s: Pick<Sub, "region" | "discount" | "discountUntil">, period: Period, at: string): number {
+export function renewalPrice(
+  s: Pick<Sub, "region" | "discount" | "discountUntil">,
+  period: Period,
+  at: string,
+): number {
   const p = PRICES[s.region];
   const base = p[period];
   if (!s.discount || s.discount === "founding") return base; // founding is the first year only
@@ -72,17 +82,46 @@ export function renewalPrice(s: Pick<Sub, "region" | "discount" | "discountUntil
 
 /** A first payment went through: a new plan starts now. */
 export function startSub(input: {
-  userId: string; provider: BillingProvider; providerSubId?: string | null; region: Region; country: string; period: Period; currency: string;
-  renewAmountMinor: number; discount: DiscountKind | null; discountUntil: Date | null; at: string; periodEnd?: string | null; card?: Card | null;
+  userId: string;
+  provider: BillingProvider;
+  providerSubId?: string | null;
+  region: Region;
+  country: string;
+  period: Period;
+  currency: string;
+  renewAmountMinor: number;
+  discount: DiscountKind | null;
+  discountUntil: Date | null;
+  at: string;
+  periodEnd?: string | null;
+  card?: Card | null;
 }): Sub {
   const end = input.periodEnd ?? iso(addPeriod(new Date(input.at), input.period));
   return {
-    userId: input.userId, provider: input.provider, providerSubId: input.providerSubId ?? null, region: input.region, country: input.country,
-    period: input.period, currency: input.currency, renewAmountMinor: input.renewAmountMinor, discount: input.discount,
-    discountUntil: input.discountUntil ? iso(input.discountUntil) : null, status: "active", currentPeriodStart: input.at, currentPeriodEnd: end,
-    graceUntil: null, nextRetryAt: null, retries: 0, pendingPeriod: null,
-    payMethod: input.card?.method ?? null, cardBrand: input.card?.brand ?? null, cardLast4: input.card?.last4 ?? null, cardExpiry: input.card?.expiry ?? null,
-    cancelReason: null, cancelledAt: null, endedAt: null,
+    userId: input.userId,
+    provider: input.provider,
+    providerSubId: input.providerSubId ?? null,
+    region: input.region,
+    country: input.country,
+    period: input.period,
+    currency: input.currency,
+    renewAmountMinor: input.renewAmountMinor,
+    discount: input.discount,
+    discountUntil: input.discountUntil ? iso(input.discountUntil) : null,
+    status: "active",
+    currentPeriodStart: input.at,
+    currentPeriodEnd: end,
+    graceUntil: null,
+    nextRetryAt: null,
+    retries: 0,
+    pendingPeriod: null,
+    payMethod: input.card?.method ?? null,
+    cardBrand: input.card?.brand ?? null,
+    cardLast4: input.card?.last4 ?? null,
+    cardExpiry: input.card?.expiry ?? null,
+    cancelReason: null,
+    cancelledAt: null,
+    endedAt: null,
   };
 }
 
@@ -91,15 +130,34 @@ export function startSub(input: {
  * even after a late payment in the grace period, so the billing date does not drift. A plan change waiting for
  * this date takes effect now.
  */
-export function renewed(s: Sub, p: { at: string; periodStart?: string | null; periodEnd?: string | null; card?: Card | null }): Sub {
+export function renewed(
+  s: Sub,
+  p: { at: string; periodStart?: string | null; periodEnd?: string | null; card?: Card | null },
+): Sub {
   const period = s.pendingPeriod ?? s.period;
   const start = p.periodStart ?? s.currentPeriodEnd;
   const end = p.periodEnd ?? iso(addPeriod(new Date(start), period));
   return {
-    ...s, status: "active", period, pendingPeriod: null, currentPeriodStart: start, currentPeriodEnd: end,
-    graceUntil: null, nextRetryAt: null, retries: 0, cancelledAt: null, cancelReason: null,
+    ...s,
+    status: "active",
+    period,
+    pendingPeriod: null,
+    currentPeriodStart: start,
+    currentPeriodEnd: end,
+    graceUntil: null,
+    nextRetryAt: null,
+    retries: 0,
+    cancelledAt: null,
+    cancelReason: null,
     renewAmountMinor: renewalPrice(s, period, end),
-    ...(p.card ? { payMethod: p.card.method, cardBrand: p.card.brand ?? s.cardBrand, cardLast4: p.card.last4 ?? s.cardLast4, cardExpiry: p.card.expiry ?? s.cardExpiry } : {}),
+    ...(p.card
+      ? {
+          payMethod: p.card.method,
+          cardBrand: p.card.brand ?? s.cardBrand,
+          cardLast4: p.card.last4 ?? s.cardLast4,
+          cardExpiry: p.card.expiry ?? s.cardExpiry,
+        }
+      : {}),
   };
 }
 
@@ -112,14 +170,29 @@ export function renewalFailed(s: Sub): Sub {
   const graceUntil = first ? iso(plusDays(s.currentPeriodEnd, GRACE_DAYS)) : s.graceUntil;
   const retries = first ? 0 : s.retries + 1; // retries already made
   const day = s.payMethod === "wallet" || !renewsHere(s) ? undefined : RETRY_DAYS[retries];
-  return { ...s, status: "grace", graceUntil, retries, nextRetryAt: day === undefined ? null : iso(plusDays(s.currentPeriodEnd, day)) };
+  return {
+    ...s,
+    status: "grace",
+    graceUntil,
+    retries,
+    nextRetryAt: day === undefined ? null : iso(plusDays(s.currentPeriodEnd, day)),
+  };
 }
 
 /** Cancel: no more charges, Pro stays on to the end of the paid period. An optional reason is kept. */
 export function cancelled(s: Sub, at: string, reason: string | null): Sub {
   if (s.status !== "active" && s.status !== "grace") return s;
   // In the grace period the period is unpaid, so cancelling ends Pro now instead of keeping it to the grace date.
-  if (s.status === "grace") return { ...s, status: "ended", cancelledAt: at, cancelReason: reason, endedAt: at, graceUntil: null, nextRetryAt: null };
+  if (s.status === "grace")
+    return {
+      ...s,
+      status: "ended",
+      cancelledAt: at,
+      cancelReason: reason,
+      endedAt: at,
+      graceUntil: null,
+      nextRetryAt: null,
+    };
   return { ...s, status: "cancelled", cancelledAt: at, cancelReason: reason, pendingPeriod: null };
 }
 
@@ -139,8 +212,10 @@ export function planChanged(s: Sub, period: Period): Sub {
 /** The daily job: a cancelled plan past its end date ends; a grace period that ran out pauses Pro. */
 export function settle(s: Sub, now: string): Sub {
   const t = new Date(now);
-  if (s.status === "cancelled" && t >= new Date(s.currentPeriodEnd)) return { ...s, status: "ended", endedAt: s.currentPeriodEnd };
-  if (s.status === "grace" && s.graceUntil && t >= new Date(s.graceUntil)) return { ...s, status: "paused", endedAt: s.graceUntil, nextRetryAt: null };
+  if (s.status === "cancelled" && t >= new Date(s.currentPeriodEnd))
+    return { ...s, status: "ended", endedAt: s.currentPeriodEnd };
+  if (s.status === "grace" && s.graceUntil && t >= new Date(s.graceUntil))
+    return { ...s, status: "paused", endedAt: s.graceUntil, nextRetryAt: null };
   return s;
 }
 
@@ -150,7 +225,13 @@ export function refunded(s: Sub, at: string): Sub {
 }
 
 /** The calendar day in Cairo. The daily job runs early in the Cairo morning and charges everything due that day. */
-export const cairoDay = (iso: string) => new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Cairo", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
+export const cairoDay = (iso: string) =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Africa/Cairo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(iso));
 
 /** Is a renewal charge due today (Paymob and the test provider; Paddle charges by itself)? */
 export function renewalDue(s: Sub, now: string): boolean {
@@ -163,16 +244,23 @@ export function renewalDue(s: Sub, now: string): boolean {
 
 /** A wallet payer whose period ended without a payment moves to the grace period (no retries: we cannot charge a wallet). */
 export function walletLate(s: Sub, now: string): boolean {
-  return s.provider !== "paddle" && s.payMethod === "wallet" && s.status === "active" && new Date(now) >= new Date(s.currentPeriodEnd);
+  return (
+    s.provider !== "paddle" &&
+    s.payMethod === "wallet" &&
+    s.status === "active" &&
+    new Date(now) >= new Date(s.currentPeriodEnd)
+  );
 }
 
 /** Pro is on for this plan right now, and until when. */
 export function proUntil(s: Sub | null, now: string): string | null {
   if (!s) return null;
   const t = new Date(now);
-  if ((s.status === "active" || s.status === "cancelled") && t < new Date(s.currentPeriodEnd)) return s.currentPeriodEnd;
+  if ((s.status === "active" || s.status === "cancelled") && t < new Date(s.currentPeriodEnd))
+    return s.currentPeriodEnd;
   // A renewal not yet run by the daily job still counts as paid until the grace date it would get.
-  if (s.status === "active" && t < plusDays(s.currentPeriodEnd, GRACE_DAYS)) return iso(plusDays(s.currentPeriodEnd, GRACE_DAYS));
+  if (s.status === "active" && t < plusDays(s.currentPeriodEnd, GRACE_DAYS))
+    return iso(plusDays(s.currentPeriodEnd, GRACE_DAYS));
   if (s.status === "grace" && s.graceUntil && t < new Date(s.graceUntil)) return s.graceUntil;
   return null;
 }
@@ -181,18 +269,44 @@ export function proUntil(s: Sub | null, now: string): string | null {
 export function entitlementFor(s: Sub | null, prev: Entitlement | null, now: string): Entitlement {
   const until = proUntil(s, now);
   // A grant from admins stands until it ends, unless a paid plan runs longer.
-  if (prev?.source === "manual" && prev.plan === "pro" && prev.validUntil && new Date(prev.validUntil) > new Date(now) && (!until || prev.validUntil >= until)) return prev;
+  if (
+    prev?.source === "manual" &&
+    prev.plan === "pro" &&
+    prev.validUntil &&
+    new Date(prev.validUntil) > new Date(now) &&
+    (!until || prev.validUntil >= until)
+  )
+    return prev;
   const source = s?.provider === "mock" ? "mock" : "live";
-  if (until) return { plan: "pro", validUntil: until, proSince: prev?.plan === "pro" && prev.source === source && prev.proSince ? prev.proSince : (s?.currentPeriodStart ?? now), proEndedAt: prev?.proEndedAt ?? null, source };
+  if (until)
+    return {
+      plan: "pro",
+      validUntil: until,
+      proSince:
+        prev?.plan === "pro" && prev.source === source && prev.proSince
+          ? prev.proSince
+          : (s?.currentPeriodStart ?? now),
+      proEndedAt: prev?.proEndedAt ?? null,
+      source,
+    };
   // Test-mode Pro ending is not a real end of Pro (it must not open the welcome-back discount).
   const wasPro = prev?.plan === "pro" && prev.source !== "mock";
   const ended = s?.endedAt ?? (wasPro ? now : null);
-  return { plan: "free", validUntil: null, proSince: null, proEndedAt: wasPro ? ended : (prev?.proEndedAt ?? null), source: "live" };
+  return {
+    plan: "free",
+    validUntil: null,
+    proSince: null,
+    proEndedAt: wasPro ? ended : (prev?.proEndedAt ?? null),
+    source: "live",
+  };
 }
 
 /** Pro is on right now. Test-mode Pro counts only where test payments are allowed (`allowMock`, preview hosts). */
-export const isPro = (e: Pick<Entitlement, "plan" | "validUntil" | "source"> | null, now: Date = new Date(), allowMock = false) =>
-  !!e && e.plan === "pro" && !!e.validUntil && new Date(e.validUntil) > now && (allowMock || e.source !== "mock");
+export const isPro = (
+  e: Pick<Entitlement, "plan" | "validUntil" | "source"> | null,
+  now: Date = new Date(),
+  allowMock = false,
+) => !!e && e.plan === "pro" && !!e.validUntil && new Date(e.validUntil) > now && (allowMock || e.source !== "mock");
 
 /** Welcome back: 40% off annual, applied by itself for a learner whose Pro ended 60 or more days ago. */
 export function welcomeBackEligible(e: Entitlement | null, now: Date = new Date()): boolean {
@@ -201,7 +315,11 @@ export function welcomeBackEligible(e: Entitlement | null, now: Date = new Date(
 }
 
 /** A refund can be asked within 7 days of a charge, once per charge. */
-export function refundWindow(p: { paidAt: string; status: string }, hasRequest: boolean, now: Date = new Date()): { ok: boolean; until: string; reason?: "late" | "asked" | "refunded" } {
+export function refundWindow(
+  p: { paidAt: string; status: string },
+  hasRequest: boolean,
+  now: Date = new Date(),
+): { ok: boolean; until: string; reason?: "late" | "asked" | "refunded" } {
   const until = iso(plusDays(p.paidAt, REFUND_DAYS));
   if (p.status === "refunded") return { ok: false, until, reason: "refunded" };
   if (hasRequest) return { ok: false, until, reason: "asked" };
@@ -223,6 +341,7 @@ export function remindersDue(s: Sub, now: string): ("renewSoon" | "walletDue")[]
   const left = (new Date(s.currentPeriodEnd).getTime() - new Date(now).getTime()) / DAY;
   const out: ("renewSoon" | "walletDue")[] = [];
   if (s.period === "year" && s.payMethod !== "wallet" && left > 0 && left <= RENEW_REMINDER_DAYS) out.push("renewSoon");
-  if (s.payMethod === "wallet" && s.provider !== "paddle" && left > 0 && left <= WALLET_REMINDER_DAYS) out.push("walletDue");
+  if (s.payMethod === "wallet" && s.provider !== "paddle" && left > 0 && left <= WALLET_REMINDER_DAYS)
+    out.push("walletDue");
   return out;
 }

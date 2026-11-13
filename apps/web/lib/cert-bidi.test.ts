@@ -13,7 +13,10 @@ describe("bidiGroups (Arabic text for the certificate image)", () => {
   });
   it("puts a trailing dot outside the Latin run so it ends the sentence", () => {
     const g = bidiGroups("عبر UXGate.");
-    expect(g[1]).toEqual([{ text: "UXGate", ltr: true }, { text: ".", ltr: false }]);
+    expect(g[1]).toEqual([
+      { text: "UXGate", ltr: true },
+      { text: ".", ltr: false },
+    ]);
   });
   it("keeps IDs, links and numbers whole, and drops « »", () => {
     expect(flat("UXG-P01-ABC123")).toEqual(["UXG-P01-ABC123"]);

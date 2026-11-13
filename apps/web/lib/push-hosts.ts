@@ -5,7 +5,11 @@ const SUFFIX = [".notify.windows.com", ".push.apple.com"];
 
 export function isPushEndpoint(endpoint: string): boolean {
   let u: URL;
-  try { u = new URL(endpoint); } catch { return false; }
+  try {
+    u = new URL(endpoint);
+  } catch {
+    return false;
+  }
   if (u.protocol !== "https:" || u.username || u.password || u.port) return false;
   const host = u.hostname.toLowerCase();
   return EXACT.has(host) || SUFFIX.some((s) => host.endsWith(s) && host.length > s.length);

@@ -12,7 +12,13 @@ import { loadOffer } from "@/lib/server/billing/plans";
 
 export const dynamic = "force-dynamic";
 
-export default async function PathPage({ params, searchParams }: { params: Promise<{ locale: string; pathId: string }>; searchParams: Promise<{ paywall?: string }> }) {
+export default async function PathPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string; pathId: string }>;
+  searchParams: Promise<{ paywall?: string }>;
+}) {
   const { locale, pathId } = await params;
   const { paywall } = await searchParams;
   setRequestLocale(locale);
@@ -29,8 +35,16 @@ export default async function PathPage({ params, searchParams }: { params: Promi
     <Shell me={me} panel={<PathMapPanel view={view} pro={me.pro} />}>
       <PathMapMain view={view} me={me} />
       {locked && offer ? (
-        <PaywallSheet key={locked.unit.id} kind="unit" unitN={locked.number} over={`${view.path.title.en} · ${tb("unitN", { n: locked.number })}`}
-          prices={{ month: formatMoney(offer.month.amount, offer.month.currency, locale as "en" | "ar"), year: formatMoney(offer.year.amount, offer.year.currency, locale as "en" | "ar") }} />
+        <PaywallSheet
+          key={locked.unit.id}
+          kind="unit"
+          unitN={locked.number}
+          over={`${view.path.title.en} · ${tb("unitN", { n: locked.number })}`}
+          prices={{
+            month: formatMoney(offer.month.amount, offer.month.currency, locale as "en" | "ar"),
+            year: formatMoney(offer.year.amount, offer.year.currency, locale as "en" | "ar"),
+          }}
+        />
       ) : null}
     </Shell>
   );

@@ -7,8 +7,14 @@ export default function NotFound() {
   const t = useTranslations("sys");
   return (
     <SystemView ill="search" code={t("nfCode")} title={t("nfTitle")} body={t("nfBody")} foot={t("nfFoot")}>
-      <Link href="/" className={sysBtn(true)}><span className="ph ph-house" aria-hidden="true" />{t("home")}</Link>
-      <Link href="/paths" className={sysBtn(false)}><span className="ph ph-map" aria-hidden="true" />{t("allPaths")}</Link>
+      <Link href="/" className={sysBtn(true)}>
+        <span className="ph ph-house" aria-hidden="true" />
+        {t("home")}
+      </Link>
+      <Link href="/paths" className={sysBtn(false)}>
+        <span className="ph ph-map" aria-hidden="true" />
+        {t("allPaths")}
+      </Link>
     </SystemView>
   );
 }

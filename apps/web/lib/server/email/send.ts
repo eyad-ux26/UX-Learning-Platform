@@ -53,7 +53,8 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         console.warn(`[email] no List-Unsubscribe for "${input.kind}": ${(e as Error).message}`);
       }
     }
-    if (Object.keys(headers).some((h) => h.toLowerCase() === "list-unsubscribe")) headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
+    if (Object.keys(headers).some((h) => h.toLowerCase() === "list-unsubscribe"))
+      headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
   }
 
   const body = {
@@ -75,7 +76,9 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
     });
     const data = (await res.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };
     if (!res.ok) {
-      console.error(`[email] Resend refused a "${input.kind}" email: ${res.status} ${data.name ?? ""} ${data.message ?? ""}`.trim());
+      console.error(
+        `[email] Resend refused a "${input.kind}" email: ${res.status} ${data.name ?? ""} ${data.message ?? ""}`.trim(),
+      );
       return { ok: false, error: data.message ?? `HTTP ${res.status}` };
     }
     return { ok: true, id: data.id };

@@ -8,7 +8,11 @@ export async function TeamPill() {
   const t = await getTranslations("soon");
   return (
     <Link href="/coming-soon" className="team-pill" aria-label={t("teamAria")}>
-      <span><span className="ph ph-eye" aria-hidden="true" />{t("teamTitle")}</span><small>{t("teamSub")}</small>
+      <span>
+        <span className="ph ph-eye" aria-hidden="true" />
+        {t("teamTitle")}
+      </span>
+      <small>{t("teamSub")}</small>
     </Link>
   );
 }
@@ -18,7 +22,9 @@ export async function TeamBar() {
   return (
     <div className="team-bar-wrap">
       <Link href="/coming-soon" className="team-bar" aria-label={t("teamAria")}>
-        <span className="ph ph-eye" aria-hidden="true" /><span className="grow">{t("teamTitle")}</span><small>{t("teamSubShort")}</small>
+        <span className="ph ph-eye" aria-hidden="true" />
+        <span className="grow">{t("teamTitle")}</span>
+        <small>{t("teamSubShort")}</small>
       </Link>
     </div>
   );

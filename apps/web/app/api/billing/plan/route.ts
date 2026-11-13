@@ -19,11 +19,19 @@ export async function POST(req: Request) {
   const engine = billingEngine();
   try {
     const a = parsed.data;
-    const sub = a.action === "cancel" ? await cancelPlan(engine, who.user.id, a.reason?.trim() || null, providerActions)
-      : a.action === "resume" ? await resumePlan(engine, who.user.id, providerActions)
-      : await changePlan(engine, who.user.id, a.period, providerActions);
+    const sub =
+      a.action === "cancel"
+        ? await cancelPlan(engine, who.user.id, a.reason?.trim() || null, providerActions)
+        : a.action === "resume"
+          ? await resumePlan(engine, who.user.id, providerActions)
+          : await changePlan(engine, who.user.id, a.period, providerActions);
     if (!sub) return bad("no_plan", 409);
-    return NextResponse.json({ ok: true, status: sub.status, periodEnd: sub.currentPeriodEnd, pendingPeriod: sub.pendingPeriod });
+    return NextResponse.json({
+      ok: true,
+      status: sub.status,
+      periodEnd: sub.currentPeriodEnd,
+      pendingPeriod: sub.pendingPeriod,
+    });
   } catch (err) {
     console.error("billing plan change", err);
     return bad("provider", 502);

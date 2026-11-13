@@ -11,7 +11,13 @@ const cfBeacon = !isDev;
 const bunny = " https://*.b-cdn.net";
 // Supabase: only this project's own host when the build knows it (NEXT_PUBLIC_SUPABASE_URL is a build variable), so a
 // script that slipped in could not send data to some other Supabase project. Without it, any Supabase host, as before.
-const supabaseHost = (() => { try { return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").host; } catch { return ""; } })();
+const supabaseHost = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").host;
+  } catch {
+    return "";
+  }
+})();
 const supabase = /^[a-z0-9-]+\.supabase\.co$/.test(supabaseHost) ? supabaseHost : "*.supabase.co";
 
 // Content-Security-Policy. Next.js inlines small scripts and styles, so 'unsafe-inline' stays until a nonce setup replaces it.
@@ -39,7 +45,11 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "X-Frame-Options", value: "DENY" },
   // Apple Pay and Google Pay run in Paddle's checkout frame and need the Payment Request API there (#151).
-  { key: "Permissions-Policy", value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://buy.paddle.com" "https://sandbox-buy.paddle.com"), usb=()' },
+  {
+    key: "Permissions-Policy",
+    value:
+      'camera=(), microphone=(), geolocation=(), payment=(self "https://buy.paddle.com" "https://sandbox-buy.paddle.com"), usb=()',
+  },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
   // One year, this host only: no includeSubDomains, so the old site's subdomains are not pulled onto https-only.
   ...(isDev ? [] : [{ key: "Strict-Transport-Security", value: "max-age=31536000" }]),
@@ -52,9 +62,20 @@ const config: NextConfig = {
   transpilePackages: ["@uxgate/tokens", "@uxgate/player", "@uxgate/content"],
   async headers() {
     // The admin panel's lesson preview plays inside the panel's own pages (same origin only), and the panel may frame it.
-    const sameOriginFrame = (h: typeof securityHeaders, framing: "ancestors" | "src") => h.map((x) =>
-      x.key === "Content-Security-Policy" ? { ...x, value: framing === "ancestors" ? x.value.replace("frame-ancestors 'none'", "frame-ancestors 'self'") : x.value.replace("frame-src ", "frame-src 'self' ") }
-        : x.key === "X-Frame-Options" && framing === "ancestors" ? { ...x, value: "SAMEORIGIN" } : x);
+    const sameOriginFrame = (h: typeof securityHeaders, framing: "ancestors" | "src") =>
+      h.map((x) =>
+        x.key === "Content-Security-Policy"
+          ? {
+              ...x,
+              value:
+                framing === "ancestors"
+                  ? x.value.replace("frame-ancestors 'none'", "frame-ancestors 'self'")
+                  : x.value.replace("frame-src ", "frame-src 'self' "),
+            }
+          : x.key === "X-Frame-Options" && framing === "ancestors"
+            ? { ...x, value: "SAMEORIGIN" }
+            : x,
+      );
     return [
       { source: "/:path*", headers: securityHeaders },
       { source: "/:locale(en|ar)/preview/:path*", headers: sameOriginFrame(securityHeaders, "ancestors") },

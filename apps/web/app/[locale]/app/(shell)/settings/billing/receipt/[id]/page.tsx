@@ -12,7 +12,13 @@ import { formatDate, shellFor } from "@/lib/server/billing/page";
 export const dynamic = "force-dynamic";
 
 /** A receipt the learner can print or save as PDF. Paddle also emails its own invoice as merchant of record. */
-export default async function ReceiptPage({ params, searchParams }: { params: Promise<{ locale: string; id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+export default async function ReceiptPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
   const { locale, id } = await params;
   const sp = await searchParams;
   setRequestLocale(locale);
@@ -33,18 +39,38 @@ export default async function ReceiptPage({ params, searchParams }: { params: Pr
   return (
     <Shell {...shellFor(me)}>
       <header className="pg-top no-print" style={{ gap: 4 }}>
-        <Link href="/app/settings/billing" className="icon-btn plain" aria-label={t("back")}><span className="ph ph-arrow back" aria-hidden="true" /></Link>
-        <h1 className="pg-title" style={{ flex: 1 }}>{t("tReceipt")}</h1>
+        <Link href="/app/settings/billing" className="icon-btn plain" aria-label={t("back")}>
+          <span className="ph ph-arrow back" aria-hidden="true" />
+        </Link>
+        <h1 className="pg-title" style={{ flex: 1 }}>
+          {t("tReceipt")}
+        </h1>
       </header>
       <article className="card rc" style={{ padding: 20, display: "flex", flexDirection: "column", gap: 14 }}>
-        <h2 className="t-h2" style={{ fontSize: 20 }}><bdi>{t("rcTitle", { no: p.receiptNo })}</bdi></h2>
+        <h2 className="t-h2" style={{ fontSize: 20 }}>
+          <bdi>{t("rcTitle", { no: p.receiptNo })}</bdi>
+        </h2>
         <div className="sum">
-          {rows.map(([k, val]) => <div key={k} className="sum-row"><span>{k}</span><b>{val}</b></div>)}
-          <div className="sum-row total"><span>{t("rcAmount")}</span><b><span className={moneyCls(p.currency)}>{formatMoney(p.amountMinor, p.currency, L)}</span></b></div>
+          {rows.map(([k, val]) => (
+            <div key={k} className="sum-row">
+              <span>{k}</span>
+              <b>{val}</b>
+            </div>
+          ))}
+          <div className="sum-row total">
+            <span>{t("rcAmount")}</span>
+            <b>
+              <span className={moneyCls(p.currency)}>{formatMoney(p.amountMinor, p.currency, L)}</span>
+            </b>
+          </div>
         </div>
-        <p className="t-small ink-3 ltr" style={{ textAlign: "start" }}>UXGate · uxgate.org · support@uxgate.org</p>
+        <p className="t-small ink-3 ltr" style={{ textAlign: "start" }}>
+          UXGate · uxgate.org · support@uxgate.org
+        </p>
       </article>
-      <div className="rc"><PrintButton label={t("rcPrint")} /></div>
+      <div className="rc">
+        <PrintButton label={t("rcPrint")} />
+      </div>
     </Shell>
   );
 }

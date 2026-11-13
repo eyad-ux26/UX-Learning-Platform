@@ -15,7 +15,9 @@ import { emailSendAllowed, signInAllowed, signInFailed } from "@/lib/server/auth
 export type AuthNext = "app" | "sent-signup" | "sent-magic" | "sent-reset";
 export type AuthError = AuthErrorKey | "needEmail" | "same" | "expired";
 /** restored: signing in undid a pending account deletion, so the app shows "Your account is kept". */
-export type AuthResult = { ok: true; next?: AuthNext; url?: string; restored?: boolean } | { ok: false; error: AuthError };
+export type AuthResult =
+  | { ok: true; next?: AuthNext; url?: string; restored?: boolean }
+  | { ok: false; error: AuthError };
 
 const locale = z.enum(routing.locales as unknown as [string, ...string[]]);
 const creds = z.object({ email: z.string().max(254), password: z.string().max(200), locale });
@@ -33,10 +35,17 @@ export async function signUpAction(input: unknown): Promise<AuthResult> {
   if (!p.success || !isEmail(p.data.email)) return { ok: false, error: "emailInvalid" };
   if (p.data.password.length < MIN_PASSWORD) return { ok: false, error: "weak" };
   if (!(await emailSendAllowed(p.data.email))) return { ok: false, error: "rate" };
-  const { data, error } = await (await createClient()).auth.signUp({ email: p.data.email.trim(), password: p.data.password, options: { emailRedirectTo: await callback(p.data.locale), data: { locale: p.data.locale } } });
+  const { data, error } = await (
+    await createClient()
+  ).auth.signUp({
+    email: p.data.email.trim(),
+    password: p.data.password,
+    options: { emailRedirectTo: await callback(p.data.locale), data: { locale: p.data.locale } },
+  });
   if (error) return { ok: false, error: authErrorKey(error) };
   // With email confirmation on, an email that already has an account comes back as a user with no identities.
-  if (data.user && !data.session && Array.isArray(data.user.identities) && data.user.identities.length === 0) return { ok: false, error: "exists" };
+  if (data.user && !data.session && Array.isArray(data.user.identities) && data.user.identities.length === 0)
+    return { ok: false, error: "exists" };
   // With email confirmation on there is no session yet; the learner confirms from the email.
   return { ok: true, next: data.session ? "app" : "sent-signup" };
 }
@@ -46,7 +55,9 @@ export async function signInAction(input: unknown): Promise<AuthResult> {
   if (!p.success || !isEmail(p.data.email)) return { ok: false, error: "emailInvalid" };
   if (!p.data.password) return { ok: false, error: "invalid" };
   if (!(await signInAllowed(p.data.email))) return { ok: false, error: "rate" };
-  const { data, error } = await (await createClient()).auth.signInWithPassword({ email: p.data.email.trim(), password: p.data.password });
+  const { data, error } = await (
+    await createClient()
+  ).auth.signInWithPassword({ email: p.data.email.trim(), password: p.data.password });
   if (error) {
     const key = authErrorKey(error);
     if (key === "invalid") await signInFailed(p.data.email);
@@ -63,7 +74,10 @@ export async function magicLinkAction(input: unknown): Promise<AuthResult> {
   if (!isEmail(p.data.email)) return { ok: false, error: p.data.email.trim() ? "emailInvalid" : "needEmail" };
   if (!(await emailSendAllowed(p.data.email))) return { ok: false, error: "rate" };
   const db = await createClient();
-  const { error } = await db.auth.signInWithOtp({ email: p.data.email.trim(), options: { emailRedirectTo: await callback(p.data.locale), data: { locale: p.data.locale } } });
+  const { error } = await db.auth.signInWithOtp({
+    email: p.data.email.trim(),
+    options: { emailRedirectTo: await callback(p.data.locale), data: { locale: p.data.locale } },
+  });
   if (error) return { ok: false, error: authErrorKey(error) };
   return { ok: true, next: "sent-magic" };
 }
@@ -73,7 +87,13 @@ export async function resendSignupAction(input: unknown): Promise<AuthResult> {
   const p = mail.safeParse(input);
   if (!p.success || !isEmail(p.data.email)) return { ok: false, error: "emailInvalid" };
   if (!(await emailSendAllowed(p.data.email))) return { ok: false, error: "rate" };
-  const { error } = await (await createClient()).auth.resend({ type: "signup", email: p.data.email.trim(), options: { emailRedirectTo: await callback(p.data.locale) } });
+  const { error } = await (
+    await createClient()
+  ).auth.resend({
+    type: "signup",
+    email: p.data.email.trim(),
+    options: { emailRedirectTo: await callback(p.data.locale) },
+  });
   if (error && authErrorKey(error) === "rate") return { ok: false, error: "rate" };
   return { ok: true, next: "sent-signup" };
 }
@@ -87,7 +107,9 @@ export async function forgotAction(input: unknown): Promise<AuthResult> {
   if (!p.success) return { ok: false, error: "needEmail" };
   if (!isEmail(p.data.email)) return { ok: false, error: p.data.email.trim() ? "emailInvalid" : "needEmail" };
   if (!(await emailSendAllowed(p.data.email))) return { ok: false, error: "rate" };
-  const { error } = await (await createClient()).auth.resetPasswordForEmail(p.data.email.trim(), { redirectTo: await callback(p.data.locale, "/reset") });
+  const { error } = await (
+    await createClient()
+  ).auth.resetPasswordForEmail(p.data.email.trim(), { redirectTo: await callback(p.data.locale, "/reset") });
   if (error && authErrorKey(error) === "rate") return { ok: false, error: "rate" };
   return { ok: true, next: "sent-reset" };
 }
@@ -98,7 +120,9 @@ export async function resetPasswordAction(input: unknown): Promise<AuthResult> {
   if (!p.success) return { ok: false, error: "generic" };
   if (p.data.password.length < MIN_PASSWORD) return { ok: false, error: "weak" };
   const db = await createClient();
-  const { data: { user } } = await db.auth.getUser();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
   if (!user) return { ok: false, error: "expired" };
   const { error } = await db.auth.updateUser({ password: p.data.password });
   if (error) return { ok: false, error: error.code === "same_password" ? "same" : authErrorKey(error) };
@@ -109,7 +133,12 @@ export async function resetPasswordAction(input: unknown): Promise<AuthResult> {
 async function oauth(provider: "google" | "apple", input: unknown): Promise<AuthResult> {
   const p = z.object({ locale }).safeParse(input);
   if (!p.success) return { ok: false, error: "generic" };
-  const { data, error } = await (await createClient()).auth.signInWithOAuth({ provider, options: { redirectTo: await callback(p.data.locale), skipBrowserRedirect: true } });
+  const { data, error } = await (
+    await createClient()
+  ).auth.signInWithOAuth({
+    provider,
+    options: { redirectTo: await callback(p.data.locale), skipBrowserRedirect: true },
+  });
   if (error || !data.url) return { ok: false, error: error ? authErrorKey(error) : "generic" };
   return { ok: true, url: data.url };
 }

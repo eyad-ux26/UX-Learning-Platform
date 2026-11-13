@@ -5,7 +5,9 @@ describe("originFromHost", () => {
   it("uses https for real hosts", () => {
     expect(originFromHost("uxgate.org")).toBe("https://uxgate.org");
     expect(originFromHost("UXGate.org.")).toBe("https://uxgate.org");
-    expect(originFromHost("abc-uxgate-web.uxgate-web.workers.dev")).toBe("https://abc-uxgate-web.uxgate-web.workers.dev");
+    expect(originFromHost("abc-uxgate-web.uxgate-web.workers.dev")).toBe(
+      "https://abc-uxgate-web.uxgate-web.workers.dev",
+    );
   });
   it("uses http only for a local dev server", () => {
     expect(originFromHost("localhost:3000")).toBe("http://localhost:3000");

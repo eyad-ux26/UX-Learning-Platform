@@ -14,7 +14,10 @@ describe("mastery round rules", () => {
       { lessonId: "L4", stepId: "S1", skillId: s3, correct: false },
     ];
     expect(missedSkills(unit, lessons, [])).toEqual([s1, s3]);
-    expect(missedSkills(unit, lessons, [{ lessonId: "B", stepId: "S1", skillId: s1, correct: false }])).toEqual([s1, s3]);
+    expect(missedSkills(unit, lessons, [{ lessonId: "B", stepId: "S1", skillId: s1, correct: false }])).toEqual([
+      s1,
+      s3,
+    ]);
     expect(missedSkills(unit, lessons, [{ lessonId: "B", stepId: "S1", skillId: s1, correct: true }])).toEqual([s3]);
   });
   it("a skill the skill check showed does not come back, even if a lesson missed it (#117)", () => {
@@ -38,7 +41,11 @@ describe("mastery round rules", () => {
     const first = pickRound(bank, [s1, s2], []);
     expect(first.filter((s) => s.skill === s1)).toHaveLength(2);
     expect(first.filter((s) => s.skill === s2)).toHaveLength(2);
-    const second = pickRound(bank, [s1, s2], first.map((s) => s.id));
+    const second = pickRound(
+      bank,
+      [s1, s2],
+      first.map((s) => s.id),
+    );
     expect(second.every((s) => !first.some((f) => f.id === s.id))).toBe(true);
     const all = bank.body.steps.map((s) => s.id);
     expect(pickRound(bank, [s1, s2], all)).toEqual([]);

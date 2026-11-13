@@ -14,7 +14,11 @@ export const NEW_ACCOUNT_MS = 10 * 60_000;
  * changed. A brand-new Google or Apple account has no language of ours at creation (the provider's own locale claim, if
  * any, decided it), so its week start, fixed at sign-up (Saturday for Arabic), is set again from the page's language.
  */
-export function signInLocale(user: { created_at?: string | null; user_metadata?: Record<string, unknown> | null }, locale: "en" | "ar", now = Date.now()) {
+export function signInLocale(
+  user: { created_at?: string | null; user_metadata?: Record<string, unknown> | null },
+  locale: "en" | "ar",
+  now = Date.now(),
+) {
   const meta = user.user_metadata?.locale;
   const created = user.created_at ? Date.parse(user.created_at) : NaN;
   const fresh = Number.isFinite(created) && now - created >= 0 && now - created < NEW_ACCOUNT_MS;
@@ -26,14 +30,18 @@ export function signInLocale(user: { created_at?: string | null; user_metadata?:
 export type AuthErrorKey = "invalid" | "exists" | "weak" | "emailInvalid" | "rate" | "unconfirmed" | "generic";
 
 /** Turns a Supabase auth error into one of our own messages, so the screen never shows raw English text in Arabic. */
-export function authErrorKey(error: { code?: string; message?: string; status?: number } | null | undefined): AuthErrorKey {
+export function authErrorKey(
+  error: { code?: string; message?: string; status?: number } | null | undefined,
+): AuthErrorKey {
   const code = error?.code ?? "";
   const msg = (error?.message ?? "").toLowerCase();
   if (code === "invalid_credentials" || msg.includes("invalid login")) return "invalid";
   if (code === "user_already_exists" || code === "email_exists" || msg.includes("already registered")) return "exists";
   if (code === "weak_password" || msg.includes("password should be")) return "weak";
-  if (code === "email_address_invalid" || code === "validation_failed" || msg.includes("invalid email")) return "emailInvalid";
-  if (code === "over_request_rate_limit" || code === "over_email_send_rate_limit" || error?.status === 429) return "rate";
+  if (code === "email_address_invalid" || code === "validation_failed" || msg.includes("invalid email"))
+    return "emailInvalid";
+  if (code === "over_request_rate_limit" || code === "over_email_send_rate_limit" || error?.status === 429)
+    return "rate";
   if (code === "email_not_confirmed") return "unconfirmed";
   return "generic";
 }

@@ -34,11 +34,21 @@ export async function chooseCurrentPath(input: { pathId: string }): Promise<{ ok
     await db.from("enrollments").update({ last_active_at: now }).eq("user_id", userId).eq("path_id", pathId);
   }
   if (previous !== pathId) {
-    const { error } = await db.from("profiles").update({ current_path_id: pathId, updated_at: now }).eq("user_id", userId);
+    const { error } = await db
+      .from("profiles")
+      .update({ current_path_id: pathId, updated_at: now })
+      .eq("user_id", userId);
     if (error) return { ok: false };
   }
   if (joined || previous !== pathId) {
-    await createAdminClient().from("path_events").insert({ user_id: userId, kind: joined ? "started" : "switched", path_id: pathId, from_path_id: previous && previous !== pathId ? previous : null });
+    await createAdminClient()
+      .from("path_events")
+      .insert({
+        user_id: userId,
+        kind: joined ? "started" : "switched",
+        path_id: pathId,
+        from_path_id: previous && previous !== pathId ? previous : null,
+      });
   }
   return { ok: true, joined };
 }

@@ -27,7 +27,11 @@ async function fetchConfig(): Promise<AppConfig> {
   });
   if (res.status === 404) return EMPTY; // 0061 not run yet: built-in defaults
   if (!res.ok) throw new Error(`app_config ${res.status}`);
-  const j = (await res.json()) as { flags?: Record<string, boolean>; settings?: Record<string, unknown>; team_password_set?: boolean } | null;
+  const j = (await res.json()) as {
+    flags?: Record<string, boolean>;
+    settings?: Record<string, unknown>;
+    team_password_set?: boolean;
+  } | null;
   return { flags: j?.flags ?? {}, settings: j?.settings ?? {}, teamPasswordSet: !!j?.team_password_set };
 }
 
@@ -56,13 +60,20 @@ export async function getAppConfig(now = Date.now()): Promise<AppConfig> {
 }
 
 /** Forget the cached answer (the panel calls it after a change, so the admin sees it at once on this isolate). */
-export const resetAppConfig = () => { cached = null; refreshingUntil = 0; };
+export const resetAppConfig = () => {
+  cached = null;
+  refreshingUntil = 0;
+};
 
 export const flagOn = async (key: string) => (await getAppConfig()).flags[key] === true;
 
 /** The learning rules now in force. */
 export async function learningRules(): Promise<LearningRules> {
-  try { return rulesFrom((await getAppConfig()).settings); } catch { return DEFAULT_RULES; }
+  try {
+    return rulesFrom((await getAppConfig()).settings);
+  } catch {
+    return DEFAULT_RULES;
+  }
 }
 
 export type AccessConfig = {
@@ -78,6 +89,7 @@ export function accessFrom(c: AppConfig): AccessConfig {
   return {
     comingSoon: typeof cs === "boolean" ? cs : null,
     maintenance: c.settings["access.maintenance"] === true,
-    maintenanceMessage: msg && typeof msg.en === "string" && typeof msg.ar === "string" ? { en: msg.en, ar: msg.ar } : null,
+    maintenanceMessage:
+      msg && typeof msg.en === "string" && typeof msg.ar === "string" ? { en: msg.en, ar: msg.ar } : null,
   };
 }

@@ -30,8 +30,12 @@ export async function POST(req: NextRequest) {
   const db = createAdminClient();
   const { token, hash } = await newToken();
   const { data, error } = await db.rpc("join_waitlist", {
-    p_email: input.email, p_locale: input.locale, p_consent: WAITLIST_CONSENT[input.locale], p_source: "coming-soon",
-    p_ip_hash: await ipHash(ip, "waitlist"), p_token_hash: hash,
+    p_email: input.email,
+    p_locale: input.locale,
+    p_consent: WAITLIST_CONSENT[input.locale],
+    p_source: "coming-soon",
+    p_ip_hash: await ipHash(ip, "waitlist"),
+    p_token_hash: hash,
   });
   if (error) {
     console.error("waitlist: join", error.code);
@@ -43,6 +47,7 @@ export async function POST(req: NextRequest) {
 
   // No email service yet, or it failed: the address stays on the list, unconfirmed and queued, and the daily job sends the
   // link once email works. The visitor is told a link is coming rather than seeing an error.
-  if (data === "send" && !(await sendConfirmation(db, input, token, hash, req.nextUrl.origin))) return NextResponse.json({ status: "queued" });
+  if (data === "send" && !(await sendConfirmation(db, input, token, hash, req.nextUrl.origin)))
+    return NextResponse.json({ status: "queued" });
   return NextResponse.json({ status });
 }

@@ -9,5 +9,9 @@ export default async function StreakPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const me = await requireLearner(locale);
-  return <Shell me={me}><StreakMain me={me} /></Shell>;
+  return (
+    <Shell me={me}>
+      <StreakMain me={me} />
+    </Shell>
+  );
 }

@@ -17,7 +17,11 @@ type Assets = { fetch(input: string): Promise<Response> };
 
 async function read(file: string): Promise<unknown> {
   let assets: Assets | undefined;
-  try { assets = (getCloudflareContext().env as { ASSETS?: Assets }).ASSETS; } catch { assets = undefined; } // not on Cloudflare
+  try {
+    assets = (getCloudflareContext().env as { ASSETS?: Assets }).ASSETS;
+  } catch {
+    assets = undefined;
+  } // not on Cloudflare
   if (assets) {
     const res = await assets.fetch(`https://assets.local/c/${file}`);
     if (!res.ok) throw new Error(`lesson file ${file}: ${res.status}`);
@@ -63,7 +67,12 @@ async function liveHashes(): Promise<Map<string, string> | null> {
 async function storedBody(lessonId: string, hash: string): Promise<Lesson | null> {
   const k = `${lessonId}:${hash}`;
   if (bodies.has(k)) return bodies.get(k)!;
-  const { data, error } = await createAdminClient().from("content_versions").select("body").eq("lesson_id", lessonId).eq("hash", hash).maybeSingle();
+  const { data, error } = await createAdminClient()
+    .from("content_versions")
+    .select("body")
+    .eq("lesson_id", lessonId)
+    .eq("hash", hash)
+    .maybeSingle();
   if (error) throw new Error(error.message);
   const b = data?.body as Lesson | undefined;
   const body = b && Array.isArray(b.steps) ? b : null;

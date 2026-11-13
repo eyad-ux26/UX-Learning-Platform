@@ -13,5 +13,9 @@ export default async function PathDetailPage({ params }: { params: Promise<{ loc
   const me = await requireLearner(locale);
   // A Coming soon path has nothing to open: it is a 404, not an empty page.
   if (!catalogEntry(pathId) || !isPlayable(pathId)) notFound();
-  return <Shell me={me}><PathDetailMain me={me} pathId={pathId} /></Shell>;
+  return (
+    <Shell me={me}>
+      <PathDetailMain me={me} pathId={pathId} />
+    </Shell>
+  );
 }

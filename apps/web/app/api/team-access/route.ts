@@ -11,7 +11,8 @@ import { signTeamPass, TEAM_COOKIE, TEAM_PASS_SECONDS, teamPasswordMatches } fro
 // nobody gets in (fail closed). A right password sets the ug_team pass for 12 hours. The answer never says more than
 // right, wrong or wait.
 
-const json = (body: object, status = 200, headers?: Record<string, string>) => NextResponse.json(body, { status, headers: { "cache-control": "no-store", ...headers } });
+const json = (body: object, status = 200, headers?: Record<string, string>) =>
+  NextResponse.json(body, { status, headers: { "cache-control": "no-store", ...headers } });
 const wait = () => json({ error: "rate_limited" }, 429, { "retry-after": "900" });
 
 export async function POST(req: NextRequest) {
@@ -22,7 +23,9 @@ export async function POST(req: NextRequest) {
   if (!withinMemoryLimit(`team:${ip}`, 5, 15 * 60_000)) return wait();
   if (!hasServiceKey()) return json({ error: "unavailable" }, 503);
 
-  const { data: allowed, error } = await createAdminClient().rpc("hit_team_gate", { p_ip_hash: await ipHash(ip, "team") });
+  const { data: allowed, error } = await createAdminClient().rpc("hit_team_gate", {
+    p_ip_hash: await ipHash(ip, "team"),
+  });
   if (error) {
     console.error("team access: counter", error.code);
     return json({ error: "unavailable" }, 503);
@@ -38,6 +41,12 @@ export async function POST(req: NextRequest) {
   const pass = await signTeamPass();
   if (!pass) return json({ error: "unavailable" }, 503);
   const res = json({ ok: true });
-  res.cookies.set(TEAM_COOKIE, pass, { httpOnly: true, secure: req.nextUrl.protocol === "https:", sameSite: "lax", path: "/", maxAge: TEAM_PASS_SECONDS });
+  res.cookies.set(TEAM_COOKIE, pass, {
+    httpOnly: true,
+    secure: req.nextUrl.protocol === "https:",
+    sameSite: "lax",
+    path: "/",
+    maxAge: TEAM_PASS_SECONDS,
+  });
   return res;
 }

@@ -13,7 +13,12 @@ type Params = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pathpage" });
-  return { metadataBase: new URL(SITE_URL), title: t("metaIndex"), description: t("indexLead"), alternates: pageAlternates(locale, "/paths") };
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: t("metaIndex"),
+    description: t("indexLead"),
+    alternates: pageAlternates(locale, "/paths"),
+  };
 }
 
 /** Every path, open ones first, each linking to its public page. */
@@ -38,13 +43,21 @@ export default async function PathsIndex({ params }: Params) {
         <section className="pp-sec" aria-labelledby="px-open">
           <h2 id="px-open">{t("indexOpen")}</h2>
           <ul className="pg-grid pub-list pub-grid">
-            {open.map((p) => <li key={p.id}><PathCard p={p} locale={locale} open /></li>)}
+            {open.map((p) => (
+              <li key={p.id}>
+                <PathCard p={p} locale={locale} open />
+              </li>
+            ))}
           </ul>
         </section>
         <section className="pp-sec" aria-labelledby="px-soon">
           <h2 id="px-soon">{t("indexSoon")}</h2>
           <ul className="pg-grid pub-list pub-grid">
-            {soon.map((p) => <li key={p.id}><PathCard p={p} locale={locale} open={false} /></li>)}
+            {soon.map((p) => (
+              <li key={p.id}>
+                <PathCard p={p} locale={locale} open={false} />
+              </li>
+            ))}
           </ul>
         </section>
       </main>

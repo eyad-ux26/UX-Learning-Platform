@@ -14,7 +14,10 @@ const body = z.object({
   lessonId: z.string().min(1).max(60),
   hash: z.string().length(64),
   stepId: z.string().min(1).max(40),
-  answer: z.object({ sel: z.array(z.string().max(60)).max(20), reason: z.array(z.string().max(60)).max(10).optional() }),
+  answer: z.object({
+    sel: z.array(z.string().max(60)).max(20),
+    reason: z.array(z.string().max(60)).max(10).optional(),
+  }),
   reason: z.enum(REVIEW_REASONS),
   note: z.string().max(NOTE_MAX).optional(),
 });
@@ -36,13 +39,31 @@ export async function POST(req: Request) {
 
   const db = createAdminClient();
   // A learner can send a handful a day; the same step twice in a row is one request.
-  if (!(await withinDbLimit(db, auth.user.id, "review-requests-day", 20, 86_400))) return NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "3600" } });
-  const { data: version } = await db.from("content_versions").select("id").eq("lesson_id", b.lessonId).eq("hash", b.hash).maybeSingle();
-  const { data: dup } = await db.from("review_requests").select("id").eq("user_id", auth.user.id).eq("lesson_id", b.lessonId).eq("step_id", b.stepId).eq("status", "open").maybeSingle();
+  if (!(await withinDbLimit(db, auth.user.id, "review-requests-day", 20, 86_400)))
+    return NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "3600" } });
+  const { data: version } = await db
+    .from("content_versions")
+    .select("id")
+    .eq("lesson_id", b.lessonId)
+    .eq("hash", b.hash)
+    .maybeSingle();
+  const { data: dup } = await db
+    .from("review_requests")
+    .select("id")
+    .eq("user_id", auth.user.id)
+    .eq("lesson_id", b.lessonId)
+    .eq("step_id", b.stepId)
+    .eq("status", "open")
+    .maybeSingle();
   if (dup) return NextResponse.json({ sent: true, duplicate: true });
   const { error } = await db.from("review_requests").insert({
-    user_id: auth.user.id, lesson_id: b.lessonId, step_id: b.stepId, content_version_id: version?.id ?? null,
-    answer: b.answer, reason: b.reason, note: b.note?.trim() ? b.note.trim() : null,
+    user_id: auth.user.id,
+    lesson_id: b.lessonId,
+    step_id: b.stepId,
+    content_version_id: version?.id ?? null,
+    answer: b.answer,
+    reason: b.reason,
+    note: b.note?.trim() ? b.note.trim() : null,
   });
   if (error) return NextResponse.json({ error: "save_failed" }, { status: 500 });
   return NextResponse.json({ sent: true });

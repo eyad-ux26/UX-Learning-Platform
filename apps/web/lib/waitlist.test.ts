@@ -3,7 +3,11 @@ import { looksLikeToken, newToken, parseWaitlist, tokenHash, WAITLIST_CONSENT, w
 
 describe("parseWaitlist", () => {
   it("accepts a trimmed address and a known language", () => {
-    expect(parseWaitlist({ email: "  sara@example.com ", locale: "ar" })).toEqual({ email: "sara@example.com", locale: "ar", trap: "" });
+    expect(parseWaitlist({ email: "  sara@example.com ", locale: "ar" })).toEqual({
+      email: "sara@example.com",
+      locale: "ar",
+      trap: "",
+    });
   });
   it("refuses a bad address or language", () => {
     expect(parseWaitlist({ email: "sara", locale: "en" })).toBeNull();

@@ -12,7 +12,7 @@ export function isStudentEmail(email: string): boolean {
   const host = e.split("@")[1];
   return STUDENT_SUFFIXES.some((suffix) => {
     const re = new RegExp(`\\.${suffix.slice(1).replace(/\./g, "\\.").replace(/\?/g, "[a-z]")}$`);
-    return re.test(`.${host}`) && host.split(".").length >= (suffix.split(".").length);
+    return re.test(`.${host}`) && host.split(".").length >= suffix.split(".").length;
   });
 }
 

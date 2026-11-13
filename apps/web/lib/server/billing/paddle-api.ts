@@ -9,7 +9,11 @@ import { paddleConfig } from "./config";
 
 async function call<T>(method: "GET" | "POST" | "PATCH", path: string, body?: unknown): Promise<T> {
   const c = paddleConfig();
-  const res = await fetch(`${c.base}${path}`, { method, headers: { authorization: `Bearer ${c.apiKey}`, "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  const res = await fetch(`${c.base}${path}`, {
+    method,
+    headers: { authorization: `Bearer ${c.apiKey}`, "content-type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined,
+  });
   const text = await res.text();
   if (!res.ok) throw new Error(`paddle ${method} ${path} ${res.status}: ${text.slice(0, 300)}`);
   return (text ? JSON.parse(text) : {}) as T;
@@ -21,7 +25,16 @@ export function priceId(region: Region, period: Period): string {
 }
 
 /** Creates the checkout transaction Paddle.js opens. Returns its id. */
-export async function createTransaction(input: { region: Region; period: Period; discount: DiscountKind | null; sessionId: string; userId: string; email: string; customerId: string | null; country: string }) {
+export async function createTransaction(input: {
+  region: Region;
+  period: Period;
+  discount: DiscountKind | null;
+  sessionId: string;
+  userId: string;
+  email: string;
+  customerId: string | null;
+  country: string;
+}) {
   const c = paddleConfig();
   const discountId = input.discount ? c.discounts[input.discount] : "";
   if (input.discount && !discountId) throw new Error(`Paddle discount for ${input.discount} is not set`);
@@ -40,16 +53,25 @@ export async function createTransaction(input: { region: Region; period: Period;
  * dunning stops: no later retry can charge a plan the learner cancelled.
  */
 export const cancelSubscription = (sub: Sub) =>
-  call("POST", `/subscriptions/${sub.providerSubId}/cancel`, { effective_from: sub.status === "grace" ? "immediately" : "next_billing_period" });
+  call("POST", `/subscriptions/${sub.providerSubId}/cancel`, {
+    effective_from: sub.status === "grace" ? "immediately" : "next_billing_period",
+  });
 
 /** Ends a Paddle subscription now (a duplicate one the engine refused). */
-export const cancelSubscriptionNow = (providerSubId: string) => call("POST", `/subscriptions/${encodeURIComponent(providerSubId)}/cancel`, { effective_from: "immediately" });
+export const cancelSubscriptionNow = (providerSubId: string) =>
+  call("POST", `/subscriptions/${encodeURIComponent(providerSubId)}/cancel`, { effective_from: "immediately" });
 
 /** Who a transaction belongs to, for Paddle's own payment links (?_ptxn=). */
 export async function transactionOwner(transactionId: string) {
-  const r = await call<{ data: { customer_id?: string | null; subscription_id?: string | null; custom_data?: { user_id?: unknown } | null } }>("GET", `/transactions/${encodeURIComponent(transactionId)}`);
+  const r = await call<{
+    data: { customer_id?: string | null; subscription_id?: string | null; custom_data?: { user_id?: unknown } | null };
+  }>("GET", `/transactions/${encodeURIComponent(transactionId)}`);
   const uid = r.data.custom_data?.user_id;
-  return { customerId: r.data.customer_id ?? null, subscriptionId: r.data.subscription_id ?? null, userId: typeof uid === "string" ? uid : null };
+  return {
+    customerId: r.data.customer_id ?? null,
+    subscriptionId: r.data.subscription_id ?? null,
+    userId: typeof uid === "string" ? uid : null,
+  };
 }
 
 /** Gives a whole transaction back (a duplicate or late charge the engine refused). */
@@ -58,23 +80,36 @@ export const refundTransaction = (transactionId: string, reason: string) =>
 
 /** The billing country the payer entered in Paddle's checkout. */
 export async function customerCountry(customerId: string, addressId: string): Promise<string | null> {
-  const r = await call<{ data: { country_code?: string } }>("GET", `/customers/${encodeURIComponent(customerId)}/addresses/${encodeURIComponent(addressId)}`);
+  const r = await call<{ data: { country_code?: string } }>(
+    "GET",
+    `/customers/${encodeURIComponent(customerId)}/addresses/${encodeURIComponent(addressId)}`,
+  );
   return r.data.country_code ?? null;
 }
 
 /** Remove a scheduled cancel. */
-export const resumeSubscription = (sub: Sub) => call("PATCH", `/subscriptions/${sub.providerSubId}`, { scheduled_change: null });
+export const resumeSubscription = (sub: Sub) =>
+  call("PATCH", `/subscriptions/${sub.providerSubId}`, { scheduled_change: null });
 
 /** Switch monthly and annual: nothing is charged today; the new price is charged in full on the next billing date. */
 export const changeSubscriptionPeriod = (sub: Sub, period: Period) =>
-  call("PATCH", `/subscriptions/${sub.providerSubId}`, { items: [{ price_id: priceId(sub.region, period), quantity: 1 }], proration_billing_mode: "full_next_billing_period" });
+  call("PATCH", `/subscriptions/${sub.providerSubId}`, {
+    items: [{ price_id: priceId(sub.region, period), quantity: 1 }],
+    proration_billing_mode: "full_next_billing_period",
+  });
 
 /** Renewals at another region's price from the next billing date (nothing is charged today). */
 export const changeSubscriptionRegion = (sub: Sub, region: Region) =>
-  call("PATCH", `/subscriptions/${sub.providerSubId}`, { items: [{ price_id: priceId(region, sub.pendingPeriod ?? sub.period), quantity: 1 }], proration_billing_mode: "do_not_bill" });
+  call("PATCH", `/subscriptions/${sub.providerSubId}`, {
+    items: [{ price_id: priceId(region, sub.pendingPeriod ?? sub.period), quantity: 1 }],
+    proration_billing_mode: "do_not_bill",
+  });
 
 /** A transaction that lets the learner change the card Paddle charges (opened with Paddle.js). */
 export async function updatePaymentTransaction(sub: Sub): Promise<string> {
-  const r = await call<{ data: { id: string } }>("GET", `/subscriptions/${sub.providerSubId}/update-payment-method-transaction`);
+  const r = await call<{ data: { id: string } }>(
+    "GET",
+    `/subscriptions/${sub.providerSubId}/update-payment-method-transaction`,
+  );
   return r.data.id;
 }

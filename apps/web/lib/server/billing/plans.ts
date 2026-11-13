@@ -1,5 +1,15 @@
 import "server-only";
-import { priceCountry, providerFor, quote, regionFor, UNKNOWN_COUNTRY, type Period, type Provider, type Quote, type Region } from "@/lib/billing/pricing";
+import {
+  priceCountry,
+  providerFor,
+  quote,
+  regionFor,
+  UNKNOWN_COUNTRY,
+  type Period,
+  type Provider,
+  type Quote,
+  type Region,
+} from "@/lib/billing/pricing";
 import { welcomeBackEligible } from "@/lib/billing/subscription";
 import type { Learner } from "@/lib/server/learner";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -33,27 +43,56 @@ const noDiscount = { student: false, welcomeBack: false, code: null };
 function fixtureOffer(country: string, offer: string | undefined, code: string | null, host: string | null): Offer {
   const region = regionFor(country);
   const e = {
-    student: offer === "student", welcomeBack: offer === "welcome",
-    code: offer === "founding" || code?.toUpperCase() === "FOUNDING" ? { code: "FOUNDING", kind: "founding" as const, percent: 30, period: "year" as Period } : null,
+    student: offer === "student",
+    welcomeBack: offer === "welcome",
+    code:
+      offer === "founding" || code?.toUpperCase() === "FOUNDING"
+        ? { code: "FOUNDING", kind: "founding" as const, percent: 30, period: "year" as Period }
+        : null,
   };
   const bad = code && code.toUpperCase() !== "FOUNDING" ? "invalid" : null;
   return {
-    country, region, provider: providerFor(region), mode: providerMode(providerFor(region), host) === "live" ? "live" : "mock", pro: process.env.UG_DEV_PRO === "1", grace: false,
-    month: quote(region, "month", bad ? noDiscount : e), year: quote(region, "year", bad ? noDiscount : e),
-    student: { verified: offer === "student", validUntil: offer === "student" ? new Date(Date.now() + 300 * 86_400_000).toISOString() : null, email: null },
-    welcomeBack: offer === "welcome", code: e.code && !bad ? "FOUNDING" : null, codeError: bad,
+    country,
+    region,
+    provider: providerFor(region),
+    mode: providerMode(providerFor(region), host) === "live" ? "live" : "mock",
+    pro: process.env.UG_DEV_PRO === "1",
+    grace: false,
+    month: quote(region, "month", bad ? noDiscount : e),
+    year: quote(region, "year", bad ? noDiscount : e),
+    student: {
+      verified: offer === "student",
+      validUntil: offer === "student" ? new Date(Date.now() + 300 * 86_400_000).toISOString() : null,
+      email: null,
+    },
+    welcomeBack: offer === "welcome",
+    code: e.code && !bad ? "FOUNDING" : null,
+    codeError: bad,
   };
 }
 
-export async function loadOffer(me: Learner, opts: { code?: string | null; fixtureOffer?: string; fixtureCountry?: string; intl?: boolean } = {}): Promise<Offer> {
+export async function loadOffer(
+  me: Learner,
+  opts: { code?: string | null; fixtureOffer?: string; fixtureCountry?: string; intl?: boolean } = {},
+): Promise<Offer> {
   const host = await requestHost();
   const code = opts.code?.trim() || null;
-  if (!me.db) return fixtureOffer(opts.intl ? UNKNOWN_COUNTRY : /^[A-Z]{2}$/.test(opts.fixtureCountry ?? "") ? opts.fixtureCountry! : "EG", opts.fixtureOffer, code, host);
+  if (!me.db)
+    return fixtureOffer(
+      opts.intl ? UNKNOWN_COUNTRY : /^[A-Z]{2}$/.test(opts.fixtureCountry ?? "") ? opts.fixtureCountry! : "EG",
+      opts.fixtureOffer,
+      code,
+      host,
+    );
 
   // The price region follows the country the request comes from (Cloudflare), so every read can start at once.
   const ip = priceCountry(await requestCountry(), opts.intl);
   const admin = createAdminClient();
-  let liveQ = me.db.from("subscriptions").select("*").eq("user_id", me.userId).in("status", ["active", "grace", "cancelled"]);
+  let liveQ = me.db
+    .from("subscriptions")
+    .select("*")
+    .eq("user_id", me.userId)
+    .in("status", ["active", "grace", "cancelled"]);
   if (!mockAllowed(host)) liveQ = liveQ.neq("provider", "mock"); // test-mode plans do not exist on the live site
   // The entitlement was read once for this request by getLearner. Before 0036 exists nothing else is asked for.
   const skip = billingTablesMissing();
@@ -72,8 +111,17 @@ export async function loadOffer(me: Learner, opts: { code?: string | null; fixtu
   const welcomeBack = welcomeBackEligible(me.entitlement);
   const e = { student: student.verified, welcomeBack, code: valid ? valid.code : null };
   return {
-    country, region, provider, mode: providerMode(provider, host), pro: me.pro, grace: sub?.status === "grace",
-    month: quote(region, "month", e), year: quote(region, "year", e), student, welcomeBack,
-    code: valid ? valid.code.code : null, codeError: check && !check.ok ? check.error : null,
+    country,
+    region,
+    provider,
+    mode: providerMode(provider, host),
+    pro: me.pro,
+    grace: sub?.status === "grace",
+    month: quote(region, "month", e),
+    year: quote(region, "year", e),
+    student,
+    welcomeBack,
+    code: valid ? valid.code.code : null,
+    codeError: check && !check.ok ? check.error : null,
   };
 }

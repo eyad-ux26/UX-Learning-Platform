@@ -8,7 +8,14 @@ import PostalMime from "postal-mime";
 import { trustedAuthResults } from "./lib/admin/inbound";
 
 type Env = { CRON_SECRET?: string; SUPPORT_FORWARD_TO?: string };
-type EmailMessage = { from: string; to: string; raw: ReadableStream; headers: Headers; forward(to: string): Promise<void>; setReject(reason: string): void };
+type EmailMessage = {
+  from: string;
+  to: string;
+  raw: ReadableStream;
+  headers: Headers;
+  forward(to: string): Promise<void>;
+  setReject(reason: string): void;
+};
 
 export default {
   // Lesson files are read by the server through ASSETS only: a request from outside gets 404.
@@ -40,21 +47,49 @@ export default {
     const mail = await PostalMime.parse(raw);
     // Which authentication headers arrived and who wrote them (authserv-id only, no addresses), to confirm what
     // Cloudflare adds on Worker delivery.
-    console.log("support inbound: auth headers", JSON.stringify((mail.headers ?? [])
-      .filter((h: { key: string }) => /^(arc-)?authentication-results$|^received-spf$|^dkim-signature$/i.test(h.key))
-      .map((h: { key: string; value: string }) => `${h.key.toLowerCase()}: ${h.value.replace(/^i\s*=\s*\d+\s*;\s*/i, "").split(";")[0].trim().slice(0, 80)}`)));
+    console.log(
+      "support inbound: auth headers",
+      JSON.stringify(
+        (mail.headers ?? [])
+          .filter((h: { key: string }) =>
+            /^(arc-)?authentication-results$|^received-spf$|^dkim-signature$/i.test(h.key),
+          )
+          .map(
+            (h: { key: string; value: string }) =>
+              `${h.key.toLowerCase()}: ${h.value
+                .replace(/^i\s*=\s*\d+\s*;\s*/i, "")
+                .split(";")[0]
+                .trim()
+                .slice(0, 80)}`,
+          ),
+      ),
+    );
     const payload = {
-      from: (mail.from?.address ?? message.from).toLowerCase(), name: mail.from?.name || null, subject: mail.subject ?? "",
-      text: mail.text ?? (mail.html ?? "").replace(/<[^>]+>/g, " "), messageId: mail.messageId ?? message.headers.get("message-id"),
-      inReplyTo: mail.inReplyTo ?? null, autoSubmitted: message.headers.get("auto-submitted"), attachments: mail.attachments?.length ?? 0,
+      from: (mail.from?.address ?? message.from).toLowerCase(),
+      name: mail.from?.name || null,
+      subject: mail.subject ?? "",
+      text: mail.text ?? (mail.html ?? "").replace(/<[^>]+>/g, " "),
+      messageId: mail.messageId ?? message.headers.get("message-id"),
+      inReplyTo: mail.inReplyTo ?? null,
+      autoSubmitted: message.headers.get("auto-submitted"),
+      attachments: mail.attachments?.length ?? 0,
       // Only results written by Cloudflare's mail server count; any other header may come from the sender (QA N1).
       authResults: trustedAuthResults(mail.headers),
     };
-    const res: Response = await handler.fetch(new Request("https://internal/api/support/inbound", {
-      method: "POST", headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}`, "content-type": "application/json" }, body: JSON.stringify(payload),
-    }), env, ctx);
+    const res: Response = await handler.fetch(
+      new Request("https://internal/api/support/inbound", {
+        method: "POST",
+        headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}`, "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      }),
+      env,
+      ctx,
+    );
     console.log(`support inbound: ${res.status} ${await res.text()}`);
-    if (env.SUPPORT_FORWARD_TO) await message.forward(env.SUPPORT_FORWARD_TO).catch((e: unknown) => console.warn("support forward failed", String(e)));
+    if (env.SUPPORT_FORWARD_TO)
+      await message
+        .forward(env.SUPPORT_FORWARD_TO)
+        .catch((e: unknown) => console.warn("support forward failed", String(e)));
     // A failure to save asks the sender's server to try again later rather than losing the email.
     if (res.status >= 500 && !env.SUPPORT_FORWARD_TO) message.setReject("Temporary problem, please try again later");
   },
@@ -62,26 +97,57 @@ export default {
     // Every 15 minutes: reminders in each learner's own quarter hour and removal of deleted accounts. Up to 4 calls of 25.
     if (event?.cron === "*/15 * * * *") {
       // Admin panel: approval reminders after 4 hours, and tickets waiting on the learner closing by themselves.
-      ctx.waitUntil(handler.fetch(new Request("https://internal/api/cron/admin", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx)
-        .then(async (res: Response) => console.log(`cron admin: ${res.status} ${await res.text()}`)));
-      ctx.waitUntil((async () => {
-        for (let i = 0; i < 4; i++) {
-          const res: Response = await handler.fetch(new Request("https://internal/api/cron/reminders", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
-          const text = await res.text();
-          console.log(`cron reminders ${i + 1}: ${res.status} ${text}`);
-          if (!res.ok || !text.includes('"more":true')) break;
-        }
-      })());
+      ctx.waitUntil(
+        handler
+          .fetch(
+            new Request("https://internal/api/cron/admin", {
+              headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
+            }),
+            env,
+            ctx,
+          )
+          .then(async (res: Response) => console.log(`cron admin: ${res.status} ${await res.text()}`)),
+      );
+      ctx.waitUntil(
+        (async () => {
+          for (let i = 0; i < 4; i++) {
+            const res: Response = await handler.fetch(
+              new Request("https://internal/api/cron/reminders", {
+                headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
+              }),
+              env,
+              ctx,
+            );
+            const text = await res.text();
+            console.log(`cron reminders ${i + 1}: ${res.status} ${text}`);
+            if (!res.ok || !text.includes('"more":true')) break;
+          }
+        })(),
+      );
       return;
     }
     // Calls the daily route directly; the secret keeps it closed to the public.
     // The job settles 100 learners a call and answers `more: true` while others are waiting; up to 10 calls a night.
     const run = async () => {
       for (let i = 0; i < 10; i++) {
-        const res: Response = await handler.fetch(new Request("https://internal/api/cron/daily", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+        const res: Response = await handler.fetch(
+          new Request("https://internal/api/cron/daily", {
+            headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
+          }),
+          env,
+          ctx,
+        );
         const text = await res.text();
-        if (!res.ok) { console.warn(`WARN cron daily ${i + 1} failed: ${res.status} ${text}`); break; }
-        if (text.includes('"stoppedEarly":"')) { console.warn(`WARN cron daily ${i + 1} stopped early (${text}). Calling again in this run would hit the same limit; the rest waits for the next run or the learner's next visit.`); break; }
+        if (!res.ok) {
+          console.warn(`WARN cron daily ${i + 1} failed: ${res.status} ${text}`);
+          break;
+        }
+        if (text.includes('"stoppedEarly":"')) {
+          console.warn(
+            `WARN cron daily ${i + 1} stopped early (${text}). Calling again in this run would hit the same limit; the rest waits for the next run or the learner's next visit.`,
+          );
+          break;
+        }
         console.log(`cron daily ${i + 1}: ${res.status} ${text}`);
         if (!text.includes('"more":true')) break;
       }
@@ -90,9 +156,18 @@ export default {
     const reviews = async () => {
       let after = "";
       for (let i = 0; i < 4; i++) {
-        const res: Response = await handler.fetch(new Request(`https://internal/api/cron/review-due${after ? `?after=${after}` : ""}`, { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx);
+        const res: Response = await handler.fetch(
+          new Request(`https://internal/api/cron/review-due${after ? `?after=${after}` : ""}`, {
+            headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
+          }),
+          env,
+          ctx,
+        );
         const text = await res.text();
-        if (!res.ok) { console.warn(`WARN cron review-due ${i + 1} failed: ${res.status} ${text}`); break; }
+        if (!res.ok) {
+          console.warn(`WARN cron review-due ${i + 1} failed: ${res.status} ${text}`);
+          break;
+        }
         console.log(`cron review-due ${i + 1}: ${res.status} ${text}`);
         const next = /"next":"([0-9a-f-]{36})"/.exec(text)?.[1];
         if (!next || text.includes('"stoppedEarly":"')) break;
@@ -102,9 +177,17 @@ export default {
     ctx.waitUntil(run().then(reviews));
     // Billing: renewals, grace period, retries and billing reminders.
     ctx.waitUntil(
-      handler.fetch(new Request("https://internal/api/cron/billing", { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` } }), env, ctx).then(async (res: Response) => {
-        console.log(`cron billing: ${res.status} ${await res.text()}`);
-      }),
+      handler
+        .fetch(
+          new Request("https://internal/api/cron/billing", {
+            headers: { authorization: `Bearer ${env.CRON_SECRET ?? ""}` },
+          }),
+          env,
+          ctx,
+        )
+        .then(async (res: Response) => {
+          console.log(`cron billing: ${res.status} ${await res.text()}`);
+        }),
     );
   },
 };

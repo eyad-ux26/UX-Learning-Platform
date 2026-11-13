@@ -14,15 +14,31 @@ export async function loadPrefs(db: SupabaseClient, userId: string): Promise<Pre
 }
 
 /** Push to every device of the learner; subscriptions the browser dropped are removed. */
-export async function pushToLearner(db: SupabaseClient, userId: string, msg: { title: string; body: string; url: string; tag?: string }): Promise<number> {
-  const { data: subs } = await db.from("push_subscriptions").select("id, endpoint, p256dh, auth").eq("user_id", userId).limit(10);
+export async function pushToLearner(
+  db: SupabaseClient,
+  userId: string,
+  msg: { title: string; body: string; url: string; tag?: string },
+): Promise<number> {
+  const { data: subs } = await db
+    .from("push_subscriptions")
+    .select("id, endpoint, p256dh, auth")
+    .eq("user_id", userId)
+    .limit(10);
   let sent = 0;
   for (const s of subs ?? []) {
-    if (!isPushEndpoint(s.endpoint as string)) { await db.from("push_subscriptions").delete().eq("id", s.id); continue; }
+    if (!isPushEndpoint(s.endpoint as string)) {
+      await db.from("push_subscriptions").delete().eq("id", s.id);
+      continue;
+    }
     try {
-      const r = await sendPush({ endpoint: s.endpoint as string, p256dh: s.p256dh as string, auth: s.auth as string }, msg);
-      if (r.ok) { sent++; await db.from("push_subscriptions").update({ last_ok_at: new Date().toISOString() }).eq("id", s.id); }
-      else if (r.gone) await db.from("push_subscriptions").delete().eq("id", s.id);
+      const r = await sendPush(
+        { endpoint: s.endpoint as string, p256dh: s.p256dh as string, auth: s.auth as string },
+        msg,
+      );
+      if (r.ok) {
+        sent++;
+        await db.from("push_subscriptions").update({ last_ok_at: new Date().toISOString() }).eq("id", s.id);
+      } else if (r.gone) await db.from("push_subscriptions").delete().eq("id", s.id);
     } catch (e) {
       console.warn(`WARN push failed for ${userId}: ${(e as Error).message}`);
     }
@@ -35,7 +51,13 @@ export async function pushToLearner(db: SupabaseClient, userId: string, msg: { t
  * Email is sent by the caller with the matching template, after checking `allowed(prefs, kind, "email")`.
  * Called for badges, certificates, review due and billing.
  */
-export async function notify(userId: string, kind: InboxKind, data: InboxData, href: string, opts: { db?: SupabaseClient; prefs?: Prefs; locale?: "en" | "ar" } = {}) {
+export async function notify(
+  userId: string,
+  kind: InboxKind,
+  data: InboxData,
+  href: string,
+  opts: { db?: SupabaseClient; prefs?: Prefs; locale?: "en" | "ar" } = {},
+) {
   const db = opts.db ?? createAdminClient();
   const prefs = opts.prefs ?? (await loadPrefs(db, userId));
   let inbox = false;
@@ -50,9 +72,17 @@ export async function notify(userId: string, kind: InboxKind, data: InboxData, h
       const { data: p } = await db.from("profiles").select("locale").eq("user_id", userId).maybeSingle();
       locale = p?.locale === "ar" ? "ar" : "en";
     }
-    const t = createTranslator({ locale, messages: messageFiles[locale].account as Record<string, unknown> }) as unknown as (key: string, values?: Record<string, string | number>) => string;
+    const t = createTranslator({
+      locale,
+      messages: messageFiles[locale].account as Record<string, unknown>,
+    }) as unknown as (key: string, values?: Record<string, string | number>) => string;
     const copy = inboxCopy(kind, data, locale);
-    pushed = await pushToLearner(db, userId, { title: t(`inbox.${copy.title}`, copy.values), body: t(`inbox.${copy.body}`, copy.values), url: `/${locale}${href}`, tag: kind });
+    pushed = await pushToLearner(db, userId, {
+      title: t(`inbox.${copy.title}`, copy.values),
+      body: t(`inbox.${copy.body}`, copy.values),
+      url: `/${locale}${href}`,
+      tag: kind,
+    });
   }
   return { inbox, pushed };
 }

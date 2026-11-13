@@ -20,13 +20,19 @@ export default async function BoardPage({ params }: { params: Promise<{ locale: 
   if (!flag?.enabled) notFound(); // behind an admin flag: closed means there is no page
   let rows: Row[] = [];
   if (me.leaderboardJoined) {
-    const { data } = await me.db.rpc("weekly_leaderboard", { p_since: weekStart(new Date(), me.timeZone, me.weekStart).toISOString(), p_limit: 50 });
+    const { data } = await me.db.rpc("weekly_leaderboard", {
+      p_since: weekStart(new Date(), me.timeZone, me.weekStart).toISOString(),
+      p_limit: 50,
+    });
     rows = (data as Row[] | null) ?? [];
   }
   return (
     <Shell me={me}>
       <div className="ph-page">
-        <Link href="/app/profile" className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }}><span className="ph ph-arrow back" aria-hidden="true" />{t("back")}</Link>
+        <Link href="/app/profile" className="btn btn-ghost btn-sm" style={{ alignSelf: "flex-start" }}>
+          <span className="ph ph-arrow back" aria-hidden="true" />
+          {t("back")}
+        </Link>
         <h1 className="t-h1 h1-s">{t("title")}</h1>
         {me.leaderboardJoined ? (
           <>
@@ -37,15 +43,22 @@ export default async function BoardPage({ params }: { params: Promise<{ locale: 
                   <li key={i} className={`card${r.is_me ? " is-me" : ""}`}>
                     <span className="rank num">{Number(r.rank)}</span>
                     <span className="ph ph-cursor" aria-hidden="true" />
-                    <span className="nm"><bdi>{r.name}</bdi>{r.is_me ? <> · {t("you")}</> : null}</span>
+                    <span className="nm">
+                      <bdi>{r.name}</bdi>
+                      {r.is_me ? <> · {t("you")}</> : null}
+                    </span>
                     <span className="num ltr">{Number(r.xp)} XP</span>
                   </li>
                 ))}
               </ol>
-            ) : <p className="t-small ink-2">{t("empty")}</p>}
+            ) : (
+              <p className="t-small ink-2">{t("empty")}</p>
+            )}
             <BoardLeave />
           </>
-        ) : <BoardJoin defaultName={me.progress.displayName ?? ""} />}
+        ) : (
+          <BoardJoin defaultName={me.progress.displayName ?? ""} />
+        )}
       </div>
     </Shell>
   );

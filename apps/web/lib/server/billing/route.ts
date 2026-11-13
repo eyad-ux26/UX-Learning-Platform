@@ -14,8 +14,10 @@ export async function billingCaller(req: Request, limitKey: string, perMinute = 
   if (gatedOut(data.user)) return { error: NextResponse.json({ error: "coming_soon" }, { status: 403 }) } as const;
   // Same-origin only: a form on another site cannot start a checkout or cancel a plan.
   const origin = req.headers.get("origin");
-  if (origin && origin !== new URL(req.url).origin) return { error: NextResponse.json({ error: "bad_origin" }, { status: 403 }) } as const;
-  if (!withinMemoryLimit(`${limitKey}:${data.user.id}`, perMinute, 60_000)) return { error: NextResponse.json({ error: "rate_limited" }, { status: 429 }) } as const;
+  if (origin && origin !== new URL(req.url).origin)
+    return { error: NextResponse.json({ error: "bad_origin" }, { status: 403 }) } as const;
+  if (!withinMemoryLimit(`${limitKey}:${data.user.id}`, perMinute, 60_000))
+    return { error: NextResponse.json({ error: "rate_limited" }, { status: 429 }) } as const;
   return { user: data.user, db: supabase, admin: createAdminClient() } as const;
 }
 

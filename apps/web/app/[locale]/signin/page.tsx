@@ -5,7 +5,13 @@ import { getLearner } from "@/lib/server/learner";
 
 export const dynamic = "force-dynamic";
 
-export default async function SignInPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ error?: string }> }) {
+export default async function SignInPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) {
   const { locale } = await params;
   const { error } = await searchParams;
   setRequestLocale(locale);

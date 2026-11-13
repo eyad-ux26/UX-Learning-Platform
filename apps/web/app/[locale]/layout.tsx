@@ -49,7 +49,14 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <NextIntlClientProvider><ThemeSync /><GuestHandoff />{children}<Suspense fallback={null}><NavProgress /></Suspense></NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <ThemeSync />
+          <GuestHandoff />
+          {children}
+          <Suspense fallback={null}>
+            <NavProgress />
+          </Suspense>
+        </NextIntlClientProvider>
         <WebAnalytics />
         <ServiceWorker />
       </body>
