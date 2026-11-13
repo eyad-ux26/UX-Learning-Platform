@@ -15,9 +15,14 @@ for (const [name, phase] of [["0060_admin_content.sql", 2]]) {
   const file = path.resolve(here, "../../../supabase/migrations", name);
   const src = fs.readFileSync(file, "utf8");
   const block = `${start}\n${seedSql(phase)}\n${end}`;
-  const out = src.includes(end) ? src.replace(new RegExp(`${start}[\\s\\S]*?${end}`), block) : src.replace(start, block);
+  const out = src.includes(end)
+    ? src.replace(new RegExp(`${start}[\\s\\S]*?${end}`), block)
+    : src.replace(start, block);
   if (process.argv.includes("--check")) {
-    if (out !== src) { console.error(`${name} is out of date: run npm run admin:sql -w @uxgate/web`); stale = true; }
+    if (out !== src) {
+      console.error(`${name} is out of date: run npm run admin:sql -w @uxgate/web`);
+      stale = true;
+    }
   } else fs.writeFileSync(file, out);
 }
 if (stale) process.exit(1);

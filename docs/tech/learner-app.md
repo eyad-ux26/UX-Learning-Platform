@@ -162,6 +162,10 @@ Each route answers with a summary and `more: true` while work is left; the Worke
 ## Conventions
 
 - TypeScript strict; the `@/` import alias points at `apps/web/`.
+- Formatting is Prettier (`apps/web/.prettierrc.json`, 120 columns). Run `npm run format -w @uxgate/web` before
+  committing; `npm run lint` fails on unformatted files. The admin panel is not formatted yet (`.prettierignore`).
+- `scripts/lint-logical.mjs` skips a line with `lint-logical-ignore`, or a block between `lint-logical-ignore-start`
+  and `lint-logical-ignore-end`; say why in the comment.
 - Comments say why, not what. Many comments name the issue, migration or design frame a rule comes from (for example
   `#184`, `0039`, `canvas v63`); keep those references, they are how to find the decision.
 - A database change is a new numbered file in `supabase/migrations/`; never edit one that has run.

@@ -18,20 +18,49 @@ export async function POST(req: Request) {
   if ("error" in who) return who.error;
   const parsed = body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return bad("reason_required");
-  const { data: row } = await who.admin.from("payments").select("*").eq("id", parsed.data.paymentId).eq("user_id", who.user.id).maybeSingle();
+  const { data: row } = await who.admin
+    .from("payments")
+    .select("*")
+    .eq("id", parsed.data.paymentId)
+    .eq("user_id", who.user.id)
+    .maybeSingle();
   if (!row) return bad("not_found", 404);
   const pay = paymentFromRow(row);
-  const { data: existing } = await who.admin.from("refund_requests").select("id").eq("payment_id", pay.id).maybeSingle();
+  const { data: existing } = await who.admin
+    .from("refund_requests")
+    .select("id")
+    .eq("payment_id", pay.id)
+    .maybeSingle();
   const w = refundWindow(pay, !!existing);
   if (!w.ok) return NextResponse.json({ ok: false, error: w.reason, until: w.until }, { status: 409 });
-  const { data: created, error } = await who.admin.from("refund_requests").insert({ user_id: who.user.id, payment_id: pay.id, amount_minor: pay.amountMinor, currency: pay.currency, reason: parsed.data.reason }).select("*").single();
-  if (error || !created) return bad(error?.code === "23505" ? "asked" : "save_failed", error?.code === "23505" ? 409 : 500);
+  const { data: created, error } = await who.admin
+    .from("refund_requests")
+    .insert({
+      user_id: who.user.id,
+      payment_id: pay.id,
+      amount_minor: pay.amountMinor,
+      currency: pay.currency,
+      reason: parsed.data.reason,
+    })
+    .select("*")
+    .single();
+  if (error || !created)
+    return bad(error?.code === "23505" ? "asked" : "save_failed", error?.code === "23505" ? 409 : 500);
   const request = requestFromRow(created);
   // Tell support. The learner sees the request in My requests at once; their answer email comes with the decision.
   const transport = resendTransport();
   if (transport) {
-    const m = renderEmail("refundAsked", { locale: "en", site: siteUrl(), name: null, payment: pay, request, extra: { email: who.user.email ?? "" } });
-    await transport({ to: SUPPORT_EMAIL, subject: m.subject, html: m.html, text: m.text }).catch((err) => console.error("refund request email", err));
+    const m = renderEmail("refundAsked", {
+      locale: "en",
+      site: siteUrl(),
+      name: null,
+      payment: pay,
+      request,
+      extra: { email: who.user.email ?? "" },
+    });
+    await transport({ to: SUPPORT_EMAIL, subject: m.subject, html: m.html, text: m.text }).catch((err) =>
+      console.error("refund request email", err),
+    );
   }
   return NextResponse.json({ ok: true, id: request.id });
 }

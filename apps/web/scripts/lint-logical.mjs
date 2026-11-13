@@ -38,13 +38,26 @@ let bad = 0;
 for (const f of files) {
   const rel = path.relative(root, f);
   const rules = f.endsWith(".css") ? CSS_RULES : [...CSS_RULES, ...TW_RULES];
-  fs.readFileSync(f, "utf8").split("\n").forEach((line, i) => {
-    // The loading spinner is rotationally symmetric, so its one transparent side is not directional.
-    if (line.includes("lint-logical-ignore") || line.includes(".spin {")) return;
-    for (const [re, hint] of rules) {
-      if (re.test(line)) { console.error(`${rel}:${i + 1}: physical property (${hint})\n  ${line.trim().slice(0, 140)}`); bad++; }
-    }
-  });
+  // A line with "lint-logical-ignore" is skipped; so is every line between "lint-logical-ignore-start" and
+  // "lint-logical-ignore-end" (for code the formatter spreads over several lines).
+  let skipping = false;
+  fs.readFileSync(f, "utf8")
+    .split("\n")
+    .forEach((line, i) => {
+      if (line.includes("lint-logical-ignore-start")) skipping = true;
+      if (line.includes("lint-logical-ignore-end")) skipping = false;
+      // The loading spinner is rotationally symmetric, so its one transparent side is not directional.
+      if (skipping || line.includes("lint-logical-ignore") || line.includes(".spin {")) return;
+      for (const [re, hint] of rules) {
+        if (re.test(line)) {
+          console.error(`${rel}:${i + 1}: physical property (${hint})\n  ${line.trim().slice(0, 140)}`);
+          bad++;
+        }
+      }
+    });
 }
-if (bad) { console.error(`\n${bad} physical-property problem(s).`); process.exit(1); }
+if (bad) {
+  console.error(`\n${bad} physical-property problem(s).`);
+  process.exit(1);
+}
 console.log(`logical-properties lint: ${files.length} files clean`);

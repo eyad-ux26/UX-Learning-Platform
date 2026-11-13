@@ -3,8 +3,10 @@ import { lastDays, lessonStates, localDay, streakDays, weekOf } from "./progress
 import { goalDaysOf } from "./progress";
 
 describe("streakDays", () => {
-  it("counts back from today", () => expect(streakDays(["2026-10-28", "2026-10-29", "2026-10-30"], "2026-10-30")).toBe(3));
-  it("keeps the run alive when today is still empty", () => expect(streakDays(["2026-10-28", "2026-10-29"], "2026-10-30")).toBe(2));
+  it("counts back from today", () =>
+    expect(streakDays(["2026-10-28", "2026-10-29", "2026-10-30"], "2026-10-30")).toBe(3));
+  it("keeps the run alive when today is still empty", () =>
+    expect(streakDays(["2026-10-28", "2026-10-29"], "2026-10-30")).toBe(2));
   it("breaks after a missed day", () => expect(streakDays(["2026-10-27", "2026-10-29"], "2026-10-30")).toBe(1));
   it("is zero with nothing recent", () => expect(streakDays(["2026-10-20"], "2026-10-30")).toBe(0));
   it("crosses month ends", () => expect(streakDays(["2026-10-31", "2026-11-01"], "2026-11-01")).toBe(2));
@@ -16,7 +18,8 @@ describe("localDay", () => {
     expect(localDay(t, "UTC")).toBe("2026-10-30");
     expect(localDay(t, "Africa/Cairo")).toBe("2026-10-31");
   });
-  it("falls back to UTC for unknown zones", () => expect(localDay(Date.UTC(2026, 9, 30, 12), "Nowhere/City")).toBe("2026-10-30"));
+  it("falls back to UTC for unknown zones", () =>
+    expect(localDay(Date.UTC(2026, 9, 30, 12), "Nowhere/City")).toBe("2026-10-30"));
 });
 
 describe("lastDays", () => {
@@ -30,24 +33,48 @@ describe("lessonStates", () => {
   it("moves on after a lesson is finished", () =>
     expect(lessonStates(ids, new Set(["L1"]), new Set(["L1"]))).toEqual({ L1: "done", L2: "available", L3: "locked" }));
   it("marks a started lesson in progress", () =>
-    expect(lessonStates(ids, new Set(["L1"]), new Set(["L1", "L2"]))).toEqual({ L1: "done", L2: "in_progress", L3: "locked" }));
+    expect(lessonStates(ids, new Set(["L1"]), new Set(["L1", "L2"]))).toEqual({
+      L1: "done",
+      L2: "in_progress",
+      L3: "locked",
+    }));
 });
 
 describe("weekOf", () => {
   it("English weeks run Monday to Sunday and hold today", () => {
     // 2026-11-04 is a Wednesday
-    expect(weekOf("2026-11-04", 1)).toEqual(["2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08"]);
+    expect(weekOf("2026-11-04", 1)).toEqual([
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+      "2026-11-07",
+      "2026-11-08",
+    ]);
     expect(weekOf("2026-11-08", 1)[0]).toBe("2026-11-02"); // Sunday is the last day
     expect(weekOf("2026-11-02", 1)[0]).toBe("2026-11-02"); // Monday is the first
   });
   it("Arabic weeks run Saturday to Friday", () => {
-    expect(weekOf("2026-11-04", 6)).toEqual(["2026-10-31", "2026-11-01", "2026-11-02", "2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06"]);
+    expect(weekOf("2026-11-04", 6)).toEqual([
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-05",
+      "2026-11-06",
+    ]);
     expect(weekOf("2026-10-31", 6)[0]).toBe("2026-10-31"); // Saturday is the first
   });
 });
 
 describe("goalDaysOf (#140)", () => {
   it("lists only the days the goal was met, not every day with a lesson", () => {
-    expect(goalDaysOf({ recentActivity: { "2026-11-03": { lessons: 1, goalMet: false }, "2026-11-04": { lessons: 2, goalMet: true } } })).toEqual(["2026-11-04"]);
+    expect(
+      goalDaysOf({
+        recentActivity: { "2026-11-03": { lessons: 1, goalMet: false }, "2026-11-04": { lessons: 2, goalMet: true } },
+      }),
+    ).toEqual(["2026-11-04"]);
   });
 });

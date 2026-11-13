@@ -6,7 +6,10 @@ import { KINDS, prefKindOf, type InboxKind, type Kind } from "./notifications";
 
 // "news" is the admin panel's campaign email (0063): not a choice on the Notifications screen, only turned off from its link.
 export type UnsubKind = Exclude<Kind, "billing"> | "news";
-export const UNSUB_KINDS: UnsubKind[] = [...KINDS.filter((k): k is Exclude<Kind, "billing"> => k !== "billing"), "news"];
+export const UNSUB_KINDS: UnsubKind[] = [
+  ...KINDS.filter((k): k is Exclude<Kind, "billing"> => k !== "billing"),
+  "news",
+];
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const enc = new TextEncoder();
@@ -60,7 +63,9 @@ export async function signUnsub(userId: string, kind: InboxKind | UnsubKind): Pr
 }
 
 /** Checks a token. Returns who and which kind, or null for anything that is not a valid, unaltered token. */
-export async function verifyUnsub(token: string | null | undefined): Promise<{ userId: string; kind: UnsubKind } | null> {
+export async function verifyUnsub(
+  token: string | null | undefined,
+): Promise<{ userId: string; kind: UnsubKind } | null> {
   const key = secret();
   if (!key || !token || token.length > 300) return null;
   const [p, s, extra] = token.split(".");
@@ -78,6 +83,10 @@ export async function verifyUnsub(token: string | null | undefined): Promise<{ u
 export const siteOrigin = () => (process.env.NEXT_PUBLIC_SITE_URL ?? "https://uxgate.org").replace(/\/+$/, "");
 
 /** The address for the footer link and the List-Unsubscribe header. Opening it shows a page; only its button (or a one-click POST) turns the email off. */
-export async function unsubHref(userId: string, kind: InboxKind | UnsubKind, locale: "en" | "ar" = "en"): Promise<string> {
+export async function unsubHref(
+  userId: string,
+  kind: InboxKind | UnsubKind,
+  locale: "en" | "ar" = "en",
+): Promise<string> {
   return `${siteOrigin()}/api/notifications/unsubscribe?t=${encodeURIComponent(await signUnsub(userId, kind))}&l=${locale}`;
 }

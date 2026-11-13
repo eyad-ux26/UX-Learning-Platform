@@ -4,7 +4,9 @@ import { createRequire } from "node:module";
 
 const { chromium } = createRequire(import.meta.url)("playwright-core");
 const base = process.argv[2] ?? "http://localhost:3100";
-const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || process.env.CHROME_PATH || undefined });
+const browser = await chromium.launch({
+  executablePath: process.env.PW_CHROMIUM || process.env.CHROME_PATH || undefined,
+});
 let bad = 0;
 for (const path of ["/en", "/en/onboarding", "/en/app", "/en/app/path/P01"]) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });

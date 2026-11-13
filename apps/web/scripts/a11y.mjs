@@ -6,17 +6,74 @@ import AxeBuilder from "@axe-core/playwright";
 const { chromium } = createRequire(import.meta.url)("playwright-core"); // comes with @axe-core/playwright; the browser is installed by `npx playwright-core install chromium`
 
 const base = process.argv[2] ?? "http://localhost:3100";
-const pages = ["", "/signup", "/signin", "/onboarding", "/app", "/app/path/P01", "/app/paths", "/app/paths/P01", "/app/review", "/app/streak", "/app/skills", "/app/badges", "/app/profile", "/app/lesson/P01-U01-L01", "/app/lesson/P10-U02-L03", "/app/lesson/P10-U02-L04", "/try", "/try/steps", "/try/video", "/app/settings", "/app/settings/notifications", "/app/settings/data", "/app/inbox", "/app/help", "/app/requests", "/app/requests/00000000-0000-4000-9000-000000000001", "/goodbye", "/paths", "/paths/forms-that-flow", "/paths/patterns-that-fit", "/privacy", "/terms", "/refund", "/coming-soon", "/coming-soon/confirm?t=x", "/offline", "/maintenance", "/no-such-page", "/forgot",
+const pages = [
+  "",
+  "/signup",
+  "/signin",
+  "/onboarding",
+  "/app",
+  "/app/path/P01",
+  "/app/paths",
+  "/app/paths/P01",
+  "/app/review",
+  "/app/streak",
+  "/app/skills",
+  "/app/badges",
+  "/app/profile",
+  "/app/lesson/P01-U01-L01",
+  "/app/lesson/P10-U02-L03",
+  "/app/lesson/P10-U02-L04",
+  "/try",
+  "/try/steps",
+  "/try/video",
+  "/app/settings",
+  "/app/settings/notifications",
+  "/app/settings/data",
+  "/app/inbox",
+  "/app/help",
+  "/app/requests",
+  "/app/requests/00000000-0000-4000-9000-000000000001",
+  "/goodbye",
+  "/paths",
+  "/paths/forms-that-flow",
+  "/paths/patterns-that-fit",
+  "/privacy",
+  "/terms",
+  "/refund",
+  "/coming-soon",
+  "/coming-soon/confirm?t=x",
+  "/offline",
+  "/maintenance",
+  "/no-such-page",
+  "/forgot",
   // Slice 5: paywall, plans, checkout, results and billing (fixture states, no database).
-  "/app/path/P01?paywall=P01-U02", "/app/profile?paywall=cert", "/app/plans", "/app/plans?offer=founding&country=SA", "/app/checkout?period=year",
-  "/app/checkout/return?state=success", "/app/checkout/return?state=failed", "/app/checkout/return?state=refused", "/app/checkout?period=year&intl=1", "/app/settings/billing", "/app/settings/billing?state=failed",
-  "/app/settings/billing?state=wallet", "/app/settings/billing?state=active", "/app/settings/billing/cancel?state=active", "/app/settings/billing/refund?state=active", "/app/settings/billing/requests?state=requested",
-  "/app/settings/billing/receipt/fixture-pay-2?state=active", "/app/settings/billing?state=lapsed", "/app/settings/billing?state=paddle"];
+  "/app/path/P01?paywall=P01-U02",
+  "/app/profile?paywall=cert",
+  "/app/plans",
+  "/app/plans?offer=founding&country=SA",
+  "/app/checkout?period=year",
+  "/app/checkout/return?state=success",
+  "/app/checkout/return?state=failed",
+  "/app/checkout/return?state=refused",
+  "/app/checkout?period=year&intl=1",
+  "/app/settings/billing",
+  "/app/settings/billing?state=failed",
+  "/app/settings/billing?state=wallet",
+  "/app/settings/billing?state=active",
+  "/app/settings/billing/cancel?state=active",
+  "/app/settings/billing/refund?state=active",
+  "/app/settings/billing/requests?state=requested",
+  "/app/settings/billing/receipt/fixture-pay-2?state=active",
+  "/app/settings/billing?state=lapsed",
+  "/app/settings/billing?state=paddle",
+];
 const views = [
   ["en", "light", { width: 1440, height: 900 }],
   ["ar", "dark", { width: 390, height: 844 }],
 ];
-const browser = await chromium.launch({ executablePath: process.env.PW_CHROMIUM || process.env.CHROME_PATH || undefined });
+const browser = await chromium.launch({
+  executablePath: process.env.PW_CHROMIUM || process.env.CHROME_PATH || undefined,
+});
 let bad = 0;
 for (const [locale, scheme, viewport] of views) {
   for (const p of pages) {
@@ -27,8 +84,16 @@ for (const [locale, scheme, viewport] of views) {
     const { violations } = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
     const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
     bad += serious.length;
-    console.log(`${locale} ${viewport.width} ${p || "/"}: ${serious.length ? "FAIL" : "ok"} (${violations.length} total)`);
-    for (const v of serious) console.log(`   ${v.impact} ${v.id}: ${v.help} · ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`);
+    console.log(
+      `${locale} ${viewport.width} ${p || "/"}: ${serious.length ? "FAIL" : "ok"} (${violations.length} total)`,
+    );
+    for (const v of serious)
+      console.log(
+        `   ${v.impact} ${v.id}: ${v.help} · ${v.nodes
+          .slice(0, 3)
+          .map((n) => n.target.join(" "))
+          .join(" | ")}`,
+      );
     await ctx.close();
   }
 }
@@ -40,11 +105,26 @@ const axeOn = async (page, label) => {
   const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   bad += serious.length;
   console.log(`${label}: ${serious.length ? "FAIL" : "ok"}`);
-  for (const v of serious) console.log(`   ${v.impact} ${v.id}: ${v.help} · ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`);
+  for (const v of serious)
+    console.log(
+      `   ${v.impact} ${v.id}: ${v.help} · ${v.nodes
+        .slice(0, 3)
+        .map((n) => n.target.join(" "))
+        .join(" | ")}`,
+    );
 };
-for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
+for (const [locale, scheme] of [
+  ["ar", "dark"],
+  ["en", "light"],
+]) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 664 }, colorScheme: scheme });
-  await ctx.addInitScript(() => { try { localStorage.setItem("ug-tour-guest", "1"); } catch { /* ignore */ } }); // the lesson tour has its own check below
+  await ctx.addInitScript(() => {
+    try {
+      localStorage.setItem("ug-tour-guest", "1");
+    } catch {
+      /* ignore */
+    }
+  }); // the lesson tour has its own check below
   const page = await ctx.newPage();
   await page.goto(`${base}/${locale}/try/choose`);
   await page.waitForSelector(".ug");
@@ -53,16 +133,25 @@ for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
   await page.locator(".player-foot .btn-primary, .player-foot .split-seg").last().click();
   await page.waitForTimeout(600);
   const thumb = page.locator(".lp-thumb-hit").first();
-  if (!(await thumb.count())) { bad++; console.log(`${locale} 390x664 example thumbnail: FAIL (never appeared)`); await ctx.close(); continue; }
+  if (!(await thumb.count())) {
+    bad++;
+    console.log(`${locale} 390x664 example thumbnail: FAIL (never appeared)`);
+    await ctx.close();
+    continue;
+  }
   await axeOn(page, `${locale} 390x664 example thumbnail after Check`);
   await thumb.click();
   await page.waitForTimeout(400);
-  if (!(await page.locator(".lp-exfull[role=dialog]").count())) { bad++; console.log(`${locale} full-screen example: FAIL (never opened)`); }
-  else {
+  if (!(await page.locator(".lp-exfull[role=dialog]").count())) {
+    bad++;
+    console.log(`${locale} full-screen example: FAIL (never opened)`);
+  } else {
     await axeOn(page, `${locale} 390x664 full-screen example`);
     await page.keyboard.press("Escape");
     await page.waitForTimeout(300);
-    const back = await page.evaluate(() => document.activeElement?.classList.contains("lp-thumb-hit") && !document.querySelector(".lp-exfull"));
+    const back = await page.evaluate(
+      () => document.activeElement?.classList.contains("lp-thumb-hit") && !document.querySelector(".lp-exfull"),
+    );
     if (!back) bad++;
     console.log(`${locale} Esc closes the example and focus returns: ${back ? "ok" : "FAIL"}`);
   }
@@ -70,7 +159,10 @@ for (const [locale, scheme] of [["ar", "dark"], ["en", "light"]]) {
 }
 
 // The lesson tour is modal: axe finds nothing serious on it, Esc skips it, and after that the choices take clicks.
-for (const [locale, scheme, vp] of [["en", "light", { width: 1440, height: 900 }], ["ar", "dark", { width: 390, height: 664 }]]) {
+for (const [locale, scheme, vp] of [
+  ["en", "light", { width: 1440, height: 900 }],
+  ["ar", "dark", { width: 390, height: 664 }],
+]) {
   const ctx = await browser.newContext({ viewport: vp, colorScheme: scheme });
   const page = await ctx.newPage();
   await page.goto(`${base}/${locale}/try/choose`);
@@ -80,7 +172,13 @@ for (const [locale, scheme, vp] of [["en", "light", { width: 1440, height: 900 }
   await page.keyboard.press("Escape");
   await page.waitForTimeout(300);
   let ok = (await page.locator(".lp-tour").count()) === 0;
-  if (ok) { try { await page.locator(".choice").nth(1).click({ timeout: 3000 }); } catch { ok = false; } }
+  if (ok) {
+    try {
+      await page.locator(".choice").nth(1).click({ timeout: 3000 });
+    } catch {
+      ok = false;
+    }
+  }
   if (!ok) bad++;
   console.log(`${locale} ${vp.width} Esc skips the tour and the choices take clicks: ${ok ? "ok" : "FAIL"}`);
   await ctx.close();

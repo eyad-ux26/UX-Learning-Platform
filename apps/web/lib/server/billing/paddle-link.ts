@@ -15,7 +15,12 @@ export async function ownPaddleTxn(userId: string, transactionId: string): Promi
     const [txn, acct, subs] = await Promise.all([
       transactionOwner(transactionId),
       admin.from("billing_accounts").select("paddle_customer_id").eq("user_id", userId).maybeSingle(),
-      admin.from("subscriptions").select("provider_sub_id").eq("user_id", userId).eq("provider", "paddle").not("provider_sub_id", "is", null),
+      admin
+        .from("subscriptions")
+        .select("provider_sub_id")
+        .eq("user_id", userId)
+        .eq("provider", "paddle")
+        .not("provider_sub_id", "is", null),
     ]);
     if (acct.error || subs.error) return false;
     const customerIds = acct.data?.paddle_customer_id ? [acct.data.paddle_customer_id as string] : [];

@@ -10,7 +10,12 @@ export async function currentAnnouncement(locale: string): Promise<Announcement 
   try {
     const db = await createClient();
     const { data } = await db.rpc("my_announcements");
-    const a = (Array.isArray(data) ? data[0] : null) as { id: string; title: Record<string, string>; body: Record<string, string>; link: string | null } | null;
+    const a = (Array.isArray(data) ? data[0] : null) as {
+      id: string;
+      title: Record<string, string>;
+      body: Record<string, string>;
+      link: string | null;
+    } | null;
     if (!a) return null;
     const l = locale === "ar" ? "ar" : "en";
     return { id: a.id, title: a.title[l], body: a.body[l], link: a.link ? `/${l}${a.link}` : null };

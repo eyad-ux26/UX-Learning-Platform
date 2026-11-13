@@ -30,8 +30,17 @@ export default async function MasteryPage({ params }: { params: Promise<{ locale
   const skills = unit.skills.filter((k) => round.steps.some((s) => s.skill === k.id));
   return (
     <MasteryGate
-      lesson={lesson} hash={bank.hash} locale={locale as Locale} pathLabel={getPath(unit.pathId)?.title.en ?? unit.pathId}
-      unitId={unitId} userId={me.userId} plan={round.steps.map((s) => s.id)} skills={skills} allSkills={unit.skills} backHref={back} other={other}
+      lesson={lesson}
+      hash={bank.hash}
+      locale={locale as Locale}
+      pathLabel={getPath(unit.pathId)?.title.en ?? unit.pathId}
+      unitId={unitId}
+      userId={me.userId}
+      plan={round.steps.map((s) => s.id)}
+      skills={skills}
+      allSkills={unit.skills}
+      backHref={back}
+      other={other}
     />
   );
 }

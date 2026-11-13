@@ -94,7 +94,14 @@ export function goalEmail(i: GoalInput): EmailOut {
   const minutes = count(i.locale, m.count.aboutMinutes, i.minutes);
   const review = (i.reviewDue ?? 0) > 0;
   const paragraphs = [
-    ...(i.done > 0 ? [fill(g.done, { done: count(i.locale, m.count.lessonsDone, i.done), goal: count(i.locale, m.count.lessonsGoal, i.goal) })] : []),
+    ...(i.done > 0
+      ? [
+          fill(g.done, {
+            done: count(i.locale, m.count.lessonsDone, i.done),
+            goal: count(i.locale, m.count.lessonsGoal, i.goal),
+          }),
+        ]
+      : []),
     fill(g.next, { minutes, streak: count(i.locale, m.count.daysInRow, i.streak) }),
   ];
   const out = emailLayout({
@@ -103,7 +110,9 @@ export function goalEmail(i: GoalInput): EmailOut {
     heading: g.heading,
     // Both sentences are one paragraph in the design.
     paragraphs: [paragraphs.join(" ")],
-    box: review ? { title: count(i.locale, m.count.skillsReady, i.reviewDue ?? 0), body: g.reviewBody, img: "review" } : undefined,
+    box: review
+      ? { title: count(i.locale, m.count.skillsReady, i.reviewDue ?? 0), body: g.reviewBody, img: "review" }
+      : undefined,
     button: { label: g.button, href: i.lessonHref },
     notes: [fill(g.note, { time: i.time })],
     ill: "flame",
@@ -141,7 +150,11 @@ export function welcomeEmail(i: WelcomeInput): EmailOut {
     preheader: fill(w.preheader, { path: pathTitle }),
     heading: name ? fill(w.heading, { name }) : w.headingNoName,
     paragraphs: [w.body],
-    box: { title: fill(w.boxTitle, { path: pathTitle }), body: fill(w.boxBody, { unit: i.unitTitle }), img: i.pathImg || "path-forms" },
+    box: {
+      title: fill(w.boxTitle, { path: pathTitle }),
+      body: fill(w.boxBody, { unit: i.unitTitle }),
+      img: i.pathImg || "path-forms",
+    },
     button: { label: w.button, href: i.startHref },
     notes: i.time ? [fill(w.note, { time: i.time })] : [],
     ill: "gate",

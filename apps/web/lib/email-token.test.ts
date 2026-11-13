@@ -42,9 +42,19 @@ describe("one-click unsubscribe tokens", () => {
   it("billing tokens made with the same secret are still refused", async () => {
     const enc = new TextEncoder();
     const payload = `${ID}:billing`;
-    const k = await crypto.subtle.importKey("raw", enc.encode("test-secret"), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    const k = await crypto.subtle.importKey(
+      "raw",
+      enc.encode("test-secret"),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
     const sig = new Uint8Array(await crypto.subtle.sign("HMAC", k, enc.encode(`unsub:${payload}`)));
-    const b = (u: Uint8Array) => btoa(String.fromCharCode(...u)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    const b = (u: Uint8Array) =>
+      btoa(String.fromCharCode(...u))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
     expect(await verifyUnsub(`${b(enc.encode(payload))}.${b(sig)}`)).toBeNull();
   });
 

@@ -16,7 +16,11 @@ export function paddleLinkTxn(v: string | string[] | undefined | null): string |
 }
 
 /** The learner's own language for a Paddle link, when it differs from the one in the link: their profile, else their last choice. */
-export function paddleLinkLocale(current: string, profileLocale: string | null | undefined, cookieLocale: string | null | undefined): Locale | null {
+export function paddleLinkLocale(
+  current: string,
+  profileLocale: string | null | undefined,
+  cookieLocale: string | null | undefined,
+): Locale | null {
   const want = isLocale(profileLocale) ? profileLocale : isLocale(cookieLocale) ? cookieLocale : null;
   return want && want !== current ? want : null;
 }
@@ -40,7 +44,12 @@ export type PaddleLinkStep =
  * What the middleware does about a Paddle link on this request. Every way of signing in (password, email link, Google,
  * a new account) ends on the app home, so that is where a kept link is picked up again.
  */
-export function paddleLinkStep(pathname: string, search: URLSearchParams, signedIn: boolean, kept: string | null | undefined): PaddleLinkStep | null {
+export function paddleLinkStep(
+  pathname: string,
+  search: URLSearchParams,
+  signedIn: boolean,
+  kept: string | null | undefined,
+): PaddleLinkStep | null {
   const onCheckout = pathname.match(CHECKOUT);
   if (onCheckout) {
     const txn = paddleLinkTxn(search.get("_ptxn"));
@@ -50,7 +59,8 @@ export function paddleLinkStep(pathname: string, search: URLSearchParams, signed
   }
   const home = pathname.match(APP_HOME);
   const txn = paddleLinkTxn(kept);
-  if (home && signedIn && txn) return { kind: "resume", to: `/${home[1]}/app/checkout?_ptxn=${encodeURIComponent(txn)}` };
+  if (home && signedIn && txn)
+    return { kind: "resume", to: `/${home[1]}/app/checkout?_ptxn=${encodeURIComponent(txn)}` };
   return null;
 }
 

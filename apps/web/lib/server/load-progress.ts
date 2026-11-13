@@ -28,28 +28,48 @@ async function lessonRows(db: SupabaseClient, userId: string): Promise<LessonRow
     r.finished ||= !!a.finished_at;
     rows.set(a.lesson_id, r);
   }
-  for (const e of xp.data ?? []) { const r = rows.get(lessonOf.get(e.attempt_id) ?? ""); if (r) r.xp += e.amount; }
+  for (const e of xp.data ?? []) {
+    const r = rows.get(lessonOf.get(e.attempt_id) ?? "");
+    if (r) r.xp += e.amount;
+  }
   return [...rows.values()];
 }
 
 /** The first day of daily activity a page asks for: one day more than it shows, since the learner's own day is not known yet. */
 export const activitySince = (now = new Date()) => lastDays(localDay(now, "UTC"), 122)[0];
 
-export type ProfileBasics = { display_name?: string | null; daily_goal?: number | null; time_zone?: string | null } | null;
+export type ProfileBasics = {
+  display_name?: string | null;
+  daily_goal?: number | null;
+  time_zone?: string | null;
+} | null;
 export type ActivityRow = { day: string; lessons_done: number; goal_met: boolean; freeze_used: boolean };
 
 /** loadProgress plus the learner's time zone. All reads go out at once: one round trip to the database. */
-export async function loadProgressAndZone(db: SupabaseClient, userId: string, now = new Date()): Promise<{ progress: Progress; timeZone: string | null }> {
+export async function loadProgressAndZone(
+  db: SupabaseClient,
+  userId: string,
+  now = new Date(),
+): Promise<{ progress: Progress; timeZone: string | null }> {
   const [{ data: profile }, lessons, activityRaw] = await Promise.all([
     db.from("profiles").select("display_name, daily_goal, time_zone").eq("user_id", userId).maybeSingle(),
     lessonRows(db, userId),
-    db.from("daily_activity").select("day, lessons_done, goal_met, freeze_used").eq("user_id", userId).gte("day", activitySince(now)),
+    db
+      .from("daily_activity")
+      .select("day, lessons_done, goal_met, freeze_used")
+      .eq("user_id", userId)
+      .gte("day", activitySince(now)),
   ]);
   return progressFrom(profile, lessons, (activityRaw.data ?? []) as ActivityRow[], now);
 }
 
 /** Builds Progress from the rows, however they were read (separate reads above, or the one-call my_learner_state). */
-export function progressFrom(profile: ProfileBasics, lessons: LessonRow[], activityRows: ActivityRow[], now = new Date()): { progress: Progress; timeZone: string | null } {
+export function progressFrom(
+  profile: ProfileBasics,
+  lessons: LessonRow[],
+  activityRows: ActivityRow[],
+  now = new Date(),
+): { progress: Progress; timeZone: string | null } {
   const today = localDay(now, profile?.time_zone);
   const since = lastDays(today, 120)[0];
   const activity = { data: activityRows.filter((d) => (d.day as string) >= since) };
@@ -58,11 +78,15 @@ export function progressFrom(profile: ProfileBasics, lessons: LessonRow[], activ
   const started = lessons.map((l) => l.lesson_id);
   const xpByLesson: Record<string, number> = {};
   let xpTotal = 0;
-  for (const l of lessons) { xpTotal += l.xp; if (l.xp) xpByLesson[l.lesson_id] = l.xp; }
+  for (const l of lessons) {
+    xpTotal += l.xp;
+    if (l.xp) xpByLesson[l.lesson_id] = l.xp;
+  }
   const days = (activity.data ?? []).filter((d) => d.lessons_done > 0).map((d) => d.day as string);
   const frozenDays = (activity.data ?? []).filter((d) => d.freeze_used).map((d) => d.day as string);
   const week: Record<string, { lessons: number; goalMet: boolean }> = {};
-  for (const d of activity.data ?? []) if (d.day >= lastDays(today, 14)[0]) week[d.day as string] = { lessons: d.lessons_done, goalMet: !!d.goal_met };
+  for (const d of activity.data ?? [])
+    if (d.day >= lastDays(today, 14)[0]) week[d.day as string] = { lessons: d.lessons_done, goalMet: !!d.goal_met };
 
   const progress: Progress = {
     displayName: profile?.display_name ?? null,

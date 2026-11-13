@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { addPeriod, discountUntil, formatMoney, perMonth, providerFor, quote, regionFor, yearlySaving, type Eligibility } from "./pricing";
+import {
+  addPeriod,
+  discountUntil,
+  formatMoney,
+  perMonth,
+  providerFor,
+  quote,
+  regionFor,
+  yearlySaving,
+  type Eligibility,
+} from "./pricing";
 
 const none: Eligibility = { student: false, welcomeBack: false, code: null };
 const founding = { code: "FOUNDING", kind: "founding" as const, percent: 30, period: "year" as const };
@@ -103,8 +113,17 @@ describe("pay with an international card (after Paymob refuses a foreign card)",
     expect(priceCountry(null)).toBe("ZZ");
     const region = regionFor(priceCountry("EG", true));
     expect(providerFor(region)).toBe("paddle");
-    expect(quote(region, "year", { student: false, welcomeBack: false, code: null })).toMatchObject({ currency: "USD", amount: 7200 });
-    expect(quote(region, "year", { student: false, welcomeBack: false, code: { code: "FOUNDING", kind: "founding", percent: 30, period: "year" } }).amount).toBeLessThan(7200);
+    expect(quote(region, "year", { student: false, welcomeBack: false, code: null })).toMatchObject({
+      currency: "USD",
+      amount: 7200,
+    });
+    expect(
+      quote(region, "year", {
+        student: false,
+        welcomeBack: false,
+        code: { code: "FOUNDING", kind: "founding", percent: 30, period: "year" },
+      }).amount,
+    ).toBeLessThan(7200);
     expect(intlCheckoutPath("month", "FOUNDING")).toBe("/app/checkout?period=month&intl=1&code=FOUNDING");
     expect(intlCheckoutPath("year", null)).toBe("/app/checkout?period=year&intl=1");
   });

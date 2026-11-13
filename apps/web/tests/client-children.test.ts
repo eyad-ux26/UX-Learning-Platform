@@ -32,8 +32,10 @@ describe("server pages and client components", () => {
       const s = fs.readFileSync(f, "utf8");
       if (isClient(s)) continue;
       const at = (i: number) => `${path.relative(root, f)}:${s.slice(0, i).split("\n").length}`;
-      for (const m of s.matchAll(/<(\w+)\b[^<>]*?>\s*\{\s*\(?[\w, {}]*\)?\s*=>/gs)) if (client.has(m[1])) found.push(`${at(m.index ?? 0)} <${m[1]}> function child`);
-      for (const m of s.matchAll(/<(\w+)\b[^>]*?\s(\w+)=\{\s*\(?[\w, ]*\)?\s*=>/gs)) if (client.has(m[1])) found.push(`${at(m.index ?? 0)} <${m[1]} ${m[2]}=...> function prop`);
+      for (const m of s.matchAll(/<(\w+)\b[^<>]*?>\s*\{\s*\(?[\w, {}]*\)?\s*=>/gs))
+        if (client.has(m[1])) found.push(`${at(m.index ?? 0)} <${m[1]}> function child`);
+      for (const m of s.matchAll(/<(\w+)\b[^>]*?\s(\w+)=\{\s*\(?[\w, ]*\)?\s*=>/gs))
+        if (client.has(m[1])) found.push(`${at(m.index ?? 0)} <${m[1]} ${m[2]}=...> function prop`);
     }
     expect(found).toEqual([]);
   });

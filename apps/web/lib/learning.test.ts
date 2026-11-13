@@ -3,11 +3,31 @@ import type { ContentIndex } from "@uxgate/content";
 import { buildPathView, canPlay, pathBegun, pickPath, testOutCheck } from "./learning";
 
 const t = (s: string) => ({ en: s, ar: s });
-const lesson = (lessonId: string, unitId: string, order: number) => ({ lessonId, unitId, pathId: "P1", order, mode: "lesson", minutes: 5, hash: "h", body: {} as never });
+const lesson = (lessonId: string, unitId: string, order: number) => ({
+  lessonId,
+  unitId,
+  pathId: "P1",
+  order,
+  mode: "lesson",
+  minutes: 5,
+  hash: "h",
+  body: {} as never,
+});
 const b = {
-  paths: [{ id: "P0", title: t("Empty"), subtitle: t("") }, { id: "P1", title: t("One"), subtitle: t("") }],
+  paths: [
+    { id: "P0", title: t("Empty"), subtitle: t("") },
+    { id: "P1", title: t("One"), subtitle: t("") },
+  ],
   units: [
-    { id: "U1", pathId: "P1", title: t("u1"), skill: t(""), free: true, skills: [{ id: "S1", title: t(""), can_do: t("") }], lessons: ["L1", "L2"] },
+    {
+      id: "U1",
+      pathId: "P1",
+      title: t("u1"),
+      skill: t(""),
+      free: true,
+      skills: [{ id: "S1", title: t(""), can_do: t("") }],
+      lessons: ["L1", "L2"],
+    },
     { id: "U2", pathId: "P1", title: t("u2"), skill: t(""), free: false, skills: [], lessons: ["L3"] },
   ],
   lessons: [lesson("L2", "U1", 2), lesson("L1", "U1", 1), lesson("L3", "U2", 1)],
@@ -29,7 +49,12 @@ describe("buildPathView", () => {
     expect(v.totalCount).toBe(3);
   });
   it("moves on across units and counts what is done", () => {
-    const v = buildPathView("P1", { finishedLessons: ["L1", "L2"], startedLessons: ["L1", "L2", "L3"], xpByLesson: { L1: 60 } }, new Set(["S1"]), b)!;
+    const v = buildPathView(
+      "P1",
+      { finishedLessons: ["L1", "L2"], startedLessons: ["L1", "L2", "L3"], xpByLesson: { L1: 60 } },
+      new Set(["S1"]),
+      b,
+    )!;
     expect(v.next?.lesson.lessonId).toBe("L3");
     expect(v.next?.state).toBe("in_progress");
     expect(v.doneCount).toBe(2);
@@ -37,7 +62,10 @@ describe("buildPathView", () => {
     expect(v.units[0].lessons[0].xp).toBe(60);
   });
   it("has no next lesson when everything is done", () => {
-    expect(buildPathView("P1", { finishedLessons: ["L1", "L2", "L3"], startedLessons: [], xpByLesson: {} }, new Set(), b)!.next).toBeNull();
+    expect(
+      buildPathView("P1", { finishedLessons: ["L1", "L2", "L3"], startedLessons: [], xpByLesson: {} }, new Set(), b)!
+        .next,
+    ).toBeNull();
   });
 });
 
@@ -46,7 +74,9 @@ describe("pathBegun (Start path or Continue path)", () => {
     const none = { finishedLessons: [], startedLessons: [], xpByLesson: {} };
     expect(pathBegun(buildPathView("P1", none, new Set(), b)!)).toBe(false);
     expect(pathBegun(buildPathView("P1", { ...none, startedLessons: ["L1"] }, new Set(), b)!)).toBe(true);
-    expect(pathBegun(buildPathView("P1", { ...none, finishedLessons: ["L1"], startedLessons: ["L1"] }, new Set(), b)!)).toBe(true);
+    expect(
+      pathBegun(buildPathView("P1", { ...none, finishedLessons: ["L1"], startedLessons: ["L1"] }, new Set(), b)!),
+    ).toBe(true);
   });
 });
 
@@ -64,7 +94,11 @@ describe("test out of a unit", () => {
     expect(canPlay(fresh, fresh.units[1].lessons[0].lesson.lessonId)).toBe(false);
   });
   it("passing it opens the next unit, and the skipped lessons stay open", () => {
-    const after = buildPathView("P01", { finishedLessons: [u1[0].lesson.lessonId, check.lesson.lessonId], startedLessons: [], xpByLesson: {} }, new Set())!;
+    const after = buildPathView(
+      "P01",
+      { finishedLessons: [u1[0].lesson.lessonId, check.lesson.lessonId], startedLessons: [], xpByLesson: {} },
+      new Set(),
+    )!;
     const all = order(after);
     expect(after.units[1].lessons[0].state).toBe("available");
     expect(after.next?.lesson.lessonId).toBe(after.units[1].lessons[0].lesson.lessonId);

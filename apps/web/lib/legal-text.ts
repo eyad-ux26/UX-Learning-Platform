@@ -24,7 +24,9 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
       sections: [
         {
           h: "Who we are",
-          ps: ["UXGate (uxgate.org) is a place to practise UX design in Arabic and English. It is run by [COMPANY LEGAL NAME], [ADDRESS]. This policy explains what we keep about you, why we keep it, and how you control it."],
+          ps: [
+            "UXGate (uxgate.org) is a place to practise UX design in Arabic and English. It is run by [COMPANY LEGAL NAME], [ADDRESS]. This policy explains what we keep about you, why we keep it, and how you control it.",
+          ],
         },
         {
           h: "What we collect",
@@ -56,11 +58,15 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "Cookies",
-          ps: ["We use only the cookies the service needs: one to keep you signed in, and small ones that remember your language and theme. There are no advertising or social media cookies, so there is nothing to accept or refuse."],
+          ps: [
+            "We use only the cookies the service needs: one to keep you signed in, and small ones that remember your language and theme. There are no advertising or social media cookies, so there is nothing to accept or refuse.",
+          ],
         },
         {
           h: "Who else handles it",
-          ps: ["These services run parts of UXGate for us. Each one gets only what its job needs, and may use it only for that job:"],
+          ps: [
+            "These services run parts of UXGate for us. Each one gets only what its job needs, and may use it only for that job:",
+          ],
           list: [
             "Supabase: database and sign-in, hosted in Frankfurt, Germany.",
             "Vercel: website hosting, in its Frankfurt region.",
@@ -93,19 +99,27 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "How long we keep it",
-          ps: ["We keep your data while your account is open. After you delete it, your personal data is removed within 30 days. We keep payment records for as long as tax law requires ([PERIOD]). Backups are deleted on a rolling basis within [N] days."],
+          ps: [
+            "We keep your data while your account is open. After you delete it, your personal data is removed within 30 days. We keep payment records for as long as tax law requires ([PERIOD]). Backups are deleted on a rolling basis within [N] days.",
+          ],
         },
         {
           h: "How we protect it",
-          ps: ["Every connection uses HTTPS. Our providers encrypt stored data. Your sign-in session cookie can’t be read by page scripts. Only a few team members can reach learner data, and only to run the service or answer you."],
+          ps: [
+            "Every connection uses HTTPS. Our providers encrypt stored data. Your sign-in session cookie can’t be read by page scripts. Only a few team members can reach learner data, and only to run the service or answer you.",
+          ],
         },
         {
           h: "Age",
-          ps: ["UXGate is for people aged [MINIMUM AGE] or older. If you think a younger child has an account, write to us and we will delete it."],
+          ps: [
+            "UXGate is for people aged [MINIMUM AGE] or older. If you think a younger child has an account, write to us and we will delete it.",
+          ],
         },
         {
           h: "Changes to this policy",
-          ps: ["If we change something important, we tell you by email before it applies. The date at the top shows the last change."],
+          ps: [
+            "If we change something important, we tell you by email before it applies. The date at the top shows the last change.",
+          ],
         },
         {
           h: "Contact us",
@@ -118,7 +132,9 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
       sections: [
         {
           h: "من نحن",
-          ps: ["UXGate ‏(uxgate.org) مكان للتدرّب على تصميم UX بالعربية والإنجليزية، وتديره شركة [اسم الشركة القانوني]، ‏[العنوان]. توضّح هذه السياسة ما نحتفظ به عنك ولماذا، وكيف تتحكم فيه."],
+          ps: [
+            "UXGate ‏(uxgate.org) مكان للتدرّب على تصميم UX بالعربية والإنجليزية، وتديره شركة [اسم الشركة القانوني]، ‏[العنوان]. توضّح هذه السياسة ما نحتفظ به عنك ولماذا، وكيف تتحكم فيه.",
+          ],
         },
         {
           h: "ما الذي نجمعه",
@@ -150,11 +166,15 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "ملفات تعريف الارتباط (cookies)",
-          ps: ["نستخدم فقط ما تحتاجه الخدمة: ملفًا يُبقيك مسجّل الدخول، وملفات صغيرة تتذكّر لغتك ومظهرك. لا توجد ملفات إعلانية أو لمواقع التواصل، لذلك لا يوجد ما تقبله أو ترفضه."],
+          ps: [
+            "نستخدم فقط ما تحتاجه الخدمة: ملفًا يُبقيك مسجّل الدخول، وملفات صغيرة تتذكّر لغتك ومظهرك. لا توجد ملفات إعلانية أو لمواقع التواصل، لذلك لا يوجد ما تقبله أو ترفضه.",
+          ],
         },
         {
           h: "من يتعامل معها أيضًا",
-          ps: ["هذه الخدمات تشغّل أجزاء من UXGate لنا. كل خدمة تحصل فقط على ما يحتاجه عملها، ولا تستخدمه إلا لهذا العمل:"],
+          ps: [
+            "هذه الخدمات تشغّل أجزاء من UXGate لنا. كل خدمة تحصل فقط على ما يحتاجه عملها، ولا تستخدمه إلا لهذا العمل:",
+          ],
           list: [
             "Supabase: قاعدة البيانات وتسجيل الدخول، في فرانكفورت بألمانيا.",
             "Vercel: استضافة الموقع، في منطقة فرانكفورت.",
@@ -187,11 +207,15 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "مدة الاحتفاظ",
-          ps: ["نحتفظ ببياناتك طالما حسابك مفتوح. بعد حذفه، تُحذف بياناتك الشخصية خلال 30 يومًا. نحتفظ بسجلات الدفع للمدة التي يطلبها قانون الضرائب ([المدة]). وتُحذف النسخ الاحتياطية تباعًا خلال [عدد] يومًا."],
+          ps: [
+            "نحتفظ ببياناتك طالما حسابك مفتوح. بعد حذفه، تُحذف بياناتك الشخصية خلال 30 يومًا. نحتفظ بسجلات الدفع للمدة التي يطلبها قانون الضرائب ([المدة]). وتُحذف النسخ الاحتياطية تباعًا خلال [عدد] يومًا.",
+          ],
         },
         {
           h: "كيف نحميها",
-          ps: ["كل اتصال يستخدم HTTPS. ومزوّدونا يشفّرون البيانات المخزّنة. وملف جلسة الدخول لا تستطيع سكربتات الصفحة قراءته. وعدد قليل فقط من الفريق يصل إلى بيانات المتعلّمين، فقط لتشغيل الخدمة أو الردّ عليك."],
+          ps: [
+            "كل اتصال يستخدم HTTPS. ومزوّدونا يشفّرون البيانات المخزّنة. وملف جلسة الدخول لا تستطيع سكربتات الصفحة قراءته. وعدد قليل فقط من الفريق يصل إلى بيانات المتعلّمين، فقط لتشغيل الخدمة أو الردّ عليك.",
+          ],
         },
         {
           h: "العمر",
@@ -214,11 +238,15 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
       sections: [
         {
           h: "About these terms",
-          ps: ["These terms are an agreement between you and [COMPANY LEGAL NAME], which runs UXGate. By creating an account or using UXGate, you agree to them."],
+          ps: [
+            "These terms are an agreement between you and [COMPANY LEGAL NAME], which runs UXGate. By creating an account or using UXGate, you agree to them.",
+          ],
         },
         {
           h: "The service",
-          ps: ["UXGate gives you short practice lessons in UX design, skill checks, reviews and certificates, in Arabic and English. Some paths include short videos."],
+          ps: [
+            "UXGate gives you short practice lessons in UX design, skill checks, reviews and certificates, in Arabic and English. Some paths include short videos.",
+          ],
         },
         {
           h: "Your account",
@@ -231,7 +259,9 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "Free and paid parts",
-          ps: ["Unit 1 of every path, review and your profile are free. A subscription opens every other unit and the certificates."],
+          ps: [
+            "Unit 1 of every path, review and your profile are free. A subscription opens every other unit and the certificates.",
+          ],
         },
         {
           h: "Subscription, cancelling and refunds",
@@ -250,27 +280,39 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "Our content and yours",
-          ps: ["Lessons, videos, illustrations and characters belong to UXGate or to the instructors who made them. You may use them for your own learning. Your answers and messages stay yours; you let us store and use them to run the service, as the privacy policy explains."],
+          ps: [
+            "Lessons, videos, illustrations and characters belong to UXGate or to the instructors who made them. You may use them for your own learning. Your answers and messages stay yours; you let us store and use them to run the service, as the privacy policy explains.",
+          ],
         },
         {
           h: "Certificates",
-          ps: ["A certificate says you passed every skill check in a path, on new cases with no hints. Anyone with its link can check it. We may withdraw a certificate earned by breaking these terms."],
+          ps: [
+            "A certificate says you passed every skill check in a path, on new cases with no hints. Anyone with its link can check it. We may withdraw a certificate earned by breaking these terms.",
+          ],
         },
         {
           h: "Changes to the service",
-          ps: ["We improve lessons and features over time. We may pause UXGate for maintenance and say when it will be back. If we remove something you pay for, we tell you first and you can cancel."],
+          ps: [
+            "We improve lessons and features over time. We may pause UXGate for maintenance and say when it will be back. If we remove something you pay for, we tell you first and you can cancel.",
+          ],
         },
         {
           h: "Ending your account",
-          ps: ["You can delete your account in Settings at any time. We may suspend or close an account that breaks these terms, and we tell you why. You can reply to us if you think we made a mistake."],
+          ps: [
+            "You can delete your account in Settings at any time. We may suspend or close an account that breaks these terms, and we tell you why. You can reply to us if you think we made a mistake.",
+          ],
         },
         {
           h: "Our responsibility",
-          ps: ["UXGate is a learning service. We work hard to keep it accurate and available, but we can’t promise it will never have errors or downtime. As far as the law allows, our responsibility to you is limited to what you paid us in the last 12 months. Nothing here limits rights you have by law."],
+          ps: [
+            "UXGate is a learning service. We work hard to keep it accurate and available, but we can’t promise it will never have errors or downtime. As far as the law allows, our responsibility to you is limited to what you paid us in the last 12 months. Nothing here limits rights you have by law.",
+          ],
         },
         {
           h: "Law",
-          ps: ["These terms follow the laws of [GOVERNING LAW]. Disputes go to the courts of [PLACE], unless the law of your country gives you another choice."],
+          ps: [
+            "These terms follow the laws of [GOVERNING LAW]. Disputes go to the courts of [PLACE], unless the law of your country gives you another choice.",
+          ],
         },
         {
           h: "Changes to these terms",
@@ -287,11 +329,15 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
       sections: [
         {
           h: "عن هذه الشروط",
-          ps: ["هذه الشروط اتفاق بينك وبين شركة [اسم الشركة القانوني] التي تدير UXGate. بإنشاء حساب أو استخدام UXGate، أنت توافق عليها."],
+          ps: [
+            "هذه الشروط اتفاق بينك وبين شركة [اسم الشركة القانوني] التي تدير UXGate. بإنشاء حساب أو استخدام UXGate، أنت توافق عليها.",
+          ],
         },
         {
           h: "الخدمة",
-          ps: ["يقدّم لك UXGate دروس تدريب قصيرة في تصميم UX واختبارات مهارة ومراجعات وشهادات، بالعربية والإنجليزية. وبعض المسارات تتضمن فيديوهات قصيرة."],
+          ps: [
+            "يقدّم لك UXGate دروس تدريب قصيرة في تصميم UX واختبارات مهارة ومراجعات وشهادات، بالعربية والإنجليزية. وبعض المسارات تتضمن فيديوهات قصيرة.",
+          ],
         },
         {
           h: "حسابك",
@@ -323,27 +369,39 @@ export const LEGAL: Record<LegalKind, Record<Locale, LegalDoc>> = {
         },
         {
           h: "محتوانا ومحتواك",
-          ps: ["الدروس والفيديوهات والرسوم والشخصيات ملك لـUXGate أو للمدرّبين الذين صنعوها، ويمكنك استخدامها لتعلّمك الشخصي. إجاباتك ورسائلك تبقى لك، وتسمح لنا بتخزينها واستخدامها لتشغيل الخدمة كما توضّح سياسة الخصوصية."],
+          ps: [
+            "الدروس والفيديوهات والرسوم والشخصيات ملك لـUXGate أو للمدرّبين الذين صنعوها، ويمكنك استخدامها لتعلّمك الشخصي. إجاباتك ورسائلك تبقى لك، وتسمح لنا بتخزينها واستخدامها لتشغيل الخدمة كما توضّح سياسة الخصوصية.",
+          ],
         },
         {
           h: "الشهادات",
-          ps: ["الشهادة تعني أنك اجتزت كل اختبارات المهارة في المسار، على حالات جديدة وبدون تلميحات. يستطيع أي شخص لديه رابطها التحقّق منها. وقد نسحب شهادة حُصل عليها بمخالفة هذه الشروط."],
+          ps: [
+            "الشهادة تعني أنك اجتزت كل اختبارات المهارة في المسار، على حالات جديدة وبدون تلميحات. يستطيع أي شخص لديه رابطها التحقّق منها. وقد نسحب شهادة حُصل عليها بمخالفة هذه الشروط.",
+          ],
         },
         {
           h: "تغييرات الخدمة",
-          ps: ["نطوّر الدروس والمزايا باستمرار. وقد نوقف UXGate مؤقتًا للصيانة ونخبرك متى يعود. وإن أزلنا شيئًا تدفع مقابله، نخبرك أولًا ويمكنك الإلغاء."],
+          ps: [
+            "نطوّر الدروس والمزايا باستمرار. وقد نوقف UXGate مؤقتًا للصيانة ونخبرك متى يعود. وإن أزلنا شيئًا تدفع مقابله، نخبرك أولًا ويمكنك الإلغاء.",
+          ],
         },
         {
           h: "إنهاء حسابك",
-          ps: ["يمكنك حذف حسابك من الإعدادات في أي وقت. وقد نوقف أو نغلق حسابًا يخالف هذه الشروط، ونخبرك بالسبب. ويمكنك الردّ علينا إن ظننت أننا أخطأنا."],
+          ps: [
+            "يمكنك حذف حسابك من الإعدادات في أي وقت. وقد نوقف أو نغلق حسابًا يخالف هذه الشروط، ونخبرك بالسبب. ويمكنك الردّ علينا إن ظننت أننا أخطأنا.",
+          ],
         },
         {
           h: "مسؤوليتنا",
-          ps: ["UXGate خدمة تعليمية. نعمل جاهدين ليبقى دقيقًا ومتاحًا، لكن لا نستطيع أن نعد بأنه لن تحدث أخطاء أو توقفات أبدًا. وفي حدود ما يسمح به القانون، تقتصر مسؤوليتنا تجاهك على ما دفعته لنا في آخر 12 شهرًا. ولا شيء هنا يقيّد حقوقك التي يمنحها لك القانون."],
+          ps: [
+            "UXGate خدمة تعليمية. نعمل جاهدين ليبقى دقيقًا ومتاحًا، لكن لا نستطيع أن نعد بأنه لن تحدث أخطاء أو توقفات أبدًا. وفي حدود ما يسمح به القانون، تقتصر مسؤوليتنا تجاهك على ما دفعته لنا في آخر 12 شهرًا. ولا شيء هنا يقيّد حقوقك التي يمنحها لك القانون.",
+          ],
         },
         {
           h: "القانون",
-          ps: ["تخضع هذه الشروط لقوانين [الدولة]. وتُنظر النزاعات أمام محاكم [المدينة]، ما لم يمنحك قانون بلدك خيارًا آخر."],
+          ps: [
+            "تخضع هذه الشروط لقوانين [الدولة]. وتُنظر النزاعات أمام محاكم [المدينة]، ما لم يمنحك قانون بلدك خيارًا آخر.",
+          ],
         },
         {
           h: "تغيير الشروط",

@@ -15,8 +15,14 @@ describe("notification choices", () => {
     expect(allowed(readPrefs({ billing: { email: false } }), "billing", "email")).toBe(true);
   });
   it("every other kind can be turned off on every channel", () => {
-    const off = readPrefs({ reminder: { in_app: false, email: false, push: false }, review: { in_app: false, email: false, push: false }, badge: { in_app: false, email: false, push: false }, answer: { in_app: false, email: false, push: false } });
-    for (const k of ["reminder", "review", "badge", "answer"] as const) for (const c of ["in_app", "email", "push"] as const) expect(allowed(off, k, c)).toBe(false);
+    const off = readPrefs({
+      reminder: { in_app: false, email: false, push: false },
+      review: { in_app: false, email: false, push: false },
+      badge: { in_app: false, email: false, push: false },
+      answer: { in_app: false, email: false, push: false },
+    });
+    for (const k of ["reminder", "review", "badge", "answer"] as const)
+      for (const c of ["in_app", "email", "push"] as const) expect(allowed(off, k, c)).toBe(false);
   });
   it("the goal-still-open message follows the daily reminder choice", () => {
     const p = readPrefs({ reminder: { email: false } });

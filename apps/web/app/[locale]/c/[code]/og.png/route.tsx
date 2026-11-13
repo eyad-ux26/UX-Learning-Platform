@@ -13,5 +13,18 @@ export async function GET(req: Request, { params }: { params: Promise<{ locale: 
   if (!c || (locale !== "en" && locale !== "ar")) notFound();
   const s = certStats(c.pathId);
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(c.issuedAt));
-  return renderCertPng({ name: c.name, pathName: localPathName(c.pathId, locale), shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: c.code, pathId: c.pathId, locale }, new URL(req.url).origin);
+  return renderCertPng(
+    {
+      name: c.name,
+      pathName: localPathName(c.pathId, locale),
+      shown: s.skills,
+      checks: s.checks,
+      lessons: s.lessons,
+      issued,
+      code: c.code,
+      pathId: c.pathId,
+      locale,
+    },
+    new URL(req.url).origin,
+  );
 }

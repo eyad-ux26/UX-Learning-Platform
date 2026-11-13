@@ -22,7 +22,10 @@ export function fromB64u(s: string): Uint8Array<ArrayBuffer> {
 function concat(...parts: Uint8Array[]): Uint8Array<ArrayBuffer> {
   const out = new Uint8Array(new ArrayBuffer(parts.reduce((n, p) => n + p.length, 0)));
   let o = 0;
-  for (const p of parts) { out.set(p, o); o += p.length; }
+  for (const p of parts) {
+    out.set(p, o);
+    o += p.length;
+  }
   return out;
 }
 async function hmac(key: Uint8Array<ArrayBuffer>, data: Uint8Array<ArrayBuffer>): Promise<Uint8Array<ArrayBuffer>> {
@@ -37,18 +40,38 @@ export async function vapidAuth(endpoint: string, now = Date.now()): Promise<str
   const pub = fromB64u(process.env.VAPID_PUBLIC_KEY ?? "");
   const d = process.env.VAPID_PRIVATE_KEY ?? "";
   if (pub.length !== 65 || !d) throw new Error("VAPID keys are not set");
-  const key = await crypto.subtle.importKey("jwk", { kty: "EC", crv: "P-256", d, x: b64u(pub.slice(1, 33)), y: b64u(pub.slice(33, 65)), ext: true }, { name: "ECDSA", namedCurve: "P-256" }, false, ["sign"]);
+  const key = await crypto.subtle.importKey(
+    "jwk",
+    { kty: "EC", crv: "P-256", d, x: b64u(pub.slice(1, 33)), y: b64u(pub.slice(33, 65)), ext: true },
+    { name: "ECDSA", namedCurve: "P-256" },
+    false,
+    ["sign"],
+  );
   const head = b64u(enc.encode(JSON.stringify({ typ: "JWT", alg: "ES256" })));
-  const claims = b64u(enc.encode(JSON.stringify({ aud: new URL(endpoint).origin, exp: Math.floor(now / 1000) + 12 * 3600, sub: "mailto:support@uxgate.org" })));
+  const claims = b64u(
+    enc.encode(
+      JSON.stringify({
+        aud: new URL(endpoint).origin,
+        exp: Math.floor(now / 1000) + 12 * 3600,
+        sub: "mailto:support@uxgate.org",
+      }),
+    ),
+  );
   const sig = await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, key, enc.encode(`${head}.${claims}`));
   return `vapid t=${head}.${claims}.${b64u(sig)}, k=${b64u(pub)}`;
 }
 
 /** RFC 8291 aes128gcm: one record, the payload then the 0x02 delimiter. */
-export async function encryptPayload(target: PushTarget, payload: Uint8Array<ArrayBuffer>, salt = crypto.getRandomValues(new Uint8Array(16))): Promise<Uint8Array<ArrayBuffer>> {
+export async function encryptPayload(
+  target: PushTarget,
+  payload: Uint8Array<ArrayBuffer>,
+  salt = crypto.getRandomValues(new Uint8Array(16)),
+): Promise<Uint8Array<ArrayBuffer>> {
   const uaPublic = fromB64u(target.p256dh);
   const authSecret = fromB64u(target.auth);
-  const local = (await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveBits"])) as CryptoKeyPair;
+  const local = (await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, [
+    "deriveBits",
+  ])) as CryptoKeyPair;
   const asPublic = new Uint8Array(await crypto.subtle.exportKey("raw", local.publicKey));
   const uaKey = await crypto.subtle.importKey("raw", uaPublic, { name: "ECDH", namedCurve: "P-256" }, false, []);
   const ecdh = new Uint8Array(await crypto.subtle.deriveBits({ name: "ECDH", public: uaKey }, local.privateKey, 256));
@@ -58,18 +81,29 @@ export async function encryptPayload(target: PushTarget, payload: Uint8Array<Arr
   const cek = (await hmac(prk, concat(enc.encode("Content-Encoding: aes128gcm\0"), new Uint8Array([1])))).slice(0, 16);
   const nonce = (await hmac(prk, concat(enc.encode("Content-Encoding: nonce\0"), new Uint8Array([1])))).slice(0, 12);
   const aes = await crypto.subtle.importKey("raw", cek, "AES-GCM", false, ["encrypt"]);
-  const cipher = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce }, aes, concat(payload, new Uint8Array([2]))));
+  const cipher = new Uint8Array(
+    await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce }, aes, concat(payload, new Uint8Array([2]))),
+  );
   const rs = new Uint8Array([0, 0, 16, 0]); // 4096
   return concat(salt, rs, new Uint8Array([asPublic.length]), asPublic, cipher);
 }
 
 /** Sends one push. `gone` means the browser dropped the subscription and the row should be removed. */
-export async function sendPush(target: PushTarget, msg: PushMessage): Promise<{ ok: boolean; gone?: boolean; status?: number }> {
+export async function sendPush(
+  target: PushTarget,
+  msg: PushMessage,
+): Promise<{ ok: boolean; gone?: boolean; status?: number }> {
   if (!hasVapid()) return { ok: false };
   const body = await encryptPayload(target, enc.encode(JSON.stringify(msg)));
   const res = await fetch(target.endpoint, {
     method: "POST",
-    headers: { authorization: await vapidAuth(target.endpoint), "content-encoding": "aes128gcm", "content-type": "application/octet-stream", ttl: "86400", urgency: "normal" },
+    headers: {
+      authorization: await vapidAuth(target.endpoint),
+      "content-encoding": "aes128gcm",
+      "content-type": "application/octet-stream",
+      ttl: "86400",
+      urgency: "normal",
+    },
     body,
   });
   return { ok: res.ok, gone: res.status === 404 || res.status === 410, status: res.status };

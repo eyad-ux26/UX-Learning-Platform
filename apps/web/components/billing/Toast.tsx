@@ -13,7 +13,12 @@ export function Toast({ text }: { text: string | null }) {
   }, [text]);
   return (
     <div className="toast-wrap" role="status" aria-live="polite">
-      {shown ? <div className="toast pop"><span className="ph ph-check-circle-fill" aria-hidden="true" /><span style={{ flex: 1 }}>{shown}</span></div> : null}
+      {shown ? (
+        <div className="toast pop">
+          <span className="ph ph-check-circle-fill" aria-hidden="true" />
+          <span style={{ flex: 1 }}>{shown}</span>
+        </div>
+      ) : null}
     </div>
   );
 }

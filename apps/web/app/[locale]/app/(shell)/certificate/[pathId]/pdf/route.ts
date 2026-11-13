@@ -15,18 +15,41 @@ export async function GET(req: Request, { params }: { params: Promise<{ locale: 
   const { locale, pathId } = await params;
   if (locale !== "en" && locale !== "ar") notFound();
   const me = await requireLearner(locale);
-  const cert = (await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates)).find((c) => c.pathId === pathId);
+  const cert = (
+    await ensureCertificates(
+      me.userId,
+      me.joined.map((j) => j.pathId),
+      me.skillStates,
+    )
+  ).find((c) => c.pathId === pathId);
   if (!cert) notFound();
   const name = me.progress.displayName ?? "";
   const pathName = localPathName(pathId, locale);
   const s = certStats(pathId);
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(cert.issuedAt));
-  const png = await (await renderCertPng({ name, pathName, shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: cert.code, pathId, locale }, new URL(req.url).origin, 2)).arrayBuffer();
+  const png = await (
+    await renderCertPng(
+      {
+        name,
+        pathName,
+        shown: s.skills,
+        checks: s.checks,
+        lessons: s.lessons,
+        issued,
+        code: cert.code,
+        pathId,
+        locale,
+      },
+      new URL(req.url).origin,
+      2,
+    )
+  ).arrayBuffer();
   const pdf = await PDFDocument.create();
   pdf.setTitle(`UXGate certificate: ${name}, ${pathName}`);
   pdf.setAuthor("UXGate");
   const img = await pdf.embedPng(png);
-  const w = 842, h = Math.round((842 * 628) / 1200); // A4 landscape width, the art's proportions
+  const w = 842,
+    h = Math.round((842 * 628) / 1200); // A4 landscape width, the art's proportions
   const page = pdf.addPage([w, h]);
   page.drawImage(img, { x: 0, y: 0, width: w, height: h });
   const bytes = await pdf.save();

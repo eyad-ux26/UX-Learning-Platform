@@ -18,9 +18,19 @@ export default async function OfflinePage({ params }: Params) {
   setRequestLocale(locale);
   const t = await getTranslations("sys");
   return (
-    <SystemView ill="offline" code={t("offCode")} title={t("offTitle")} body={t("offBody")} safe={t("offSafe")} foot={t("offFoot")}>
+    <SystemView
+      ill="offline"
+      code={t("offCode")}
+      title={t("offTitle")}
+      body={t("offBody")}
+      safe={t("offSafe")}
+      foot={t("offFoot")}
+    >
       {/* An empty href reloads the address the learner was on, which is what the service worker answered with this page. */}
-      <a href="" className={sysBtn(true)}><span className="ph ph-sync" aria-hidden="true" />{t("retry")}</a>
+      <a href="" className={sysBtn(true)}>
+        <span className="ph ph-sync" aria-hidden="true" />
+        {t("retry")}
+      </a>
     </SystemView>
   );
 }

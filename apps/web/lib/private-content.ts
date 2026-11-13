@@ -4,4 +4,5 @@
 // same under Node. The server's own ASSETS.fetch does not go through the Worker, so it still reads them.
 export const PRIVATE_CONTENT_PREFIX = "/c/";
 export const isPrivateContent = (pathname: string) => pathname.startsWith(PRIVATE_CONTENT_PREFIX);
-export const notFound = () => new Response("Not found", { status: 404, headers: { "content-type": "text/plain", "cache-control": "no-store" } });
+export const notFound = () =>
+  new Response("Not found", { status: 404, headers: { "content-type": "text/plain", "cache-control": "no-store" } });

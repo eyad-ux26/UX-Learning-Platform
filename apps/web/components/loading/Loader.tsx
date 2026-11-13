@@ -12,7 +12,15 @@ const TIPS = ["tip1", "tip2", "tip3", "tip4"] as const;
  * design-tool cursor.
  * A short line under the frame changes every two seconds. It fades in after 400 ms, so a fast load never flashes it.
  */
-export function Loader({ name, variant = "loading", full = false }: { name?: string; variant?: "loading" | "thinking"; full?: boolean }) {
+export function Loader({
+  name,
+  variant = "loading",
+  full = false,
+}: {
+  name?: string;
+  variant?: "loading" | "thinking";
+  full?: boolean;
+}) {
   const t = useTranslations("loading");
   const [tip, setTip] = useState(0);
   useEffect(() => {
@@ -21,17 +29,26 @@ export function Loader({ name, variant = "loading", full = false }: { name?: str
   }, []);
   return (
     <div className={`ug-loader${full ? " is-full" : ""}`}>
-      <span className="sr-only" role="status">{t("label")}</span>
+      <span className="sr-only" role="status">
+        {t("label")}
+      </span>
       <div className="ug-loader-art" aria-hidden="true">
-        <span className="ug-loader-tag"><span className="ph ph-hash" />{name ?? "UXGate"}</span>
+        <span className="ug-loader-tag">
+          <span className="ph ph-hash" />
+          {name ?? "UXGate"}
+        </span>
         <div className="ug-loader-frame sel-frame">
           <LogoMotion variant={variant} size={56} />
           <span className="skel ug-loader-line" />
           <span className="skel ug-loader-line is-short" />
-          <span className="ug-loader-cursor"><span className="ph ph-cursor-fill" /></span>
+          <span className="ug-loader-cursor">
+            <span className="ph ph-cursor-fill" />
+          </span>
         </div>
       </div>
-      <p className="ug-loader-tip" aria-hidden="true" key={tip}>{t(TIPS[tip])}</p>
+      <p className="ug-loader-tip" aria-hidden="true" key={tip}>
+        {t(TIPS[tip])}
+      </p>
     </div>
   );
 }

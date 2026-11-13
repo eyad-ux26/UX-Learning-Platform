@@ -20,12 +20,23 @@ export async function GET() {
     return NextResponse.json({ error: "rate_limited" }, { status: 429, headers: { "retry-after": "3600" } });
   }
   const tables: Record<string, unknown[]> = {};
-  await Promise.all(EXPORT_TABLES.map(async ({ table, columns }) => {
-    const { data, error } = await db.from(table).select(columns).eq("user_id", user.id).limit(10000);
-    // A table another slice adds later may not exist yet on this database; leave it out instead of failing the download.
-    if (!error) tables[table] = data ?? [];
-  }));
-  const body = buildExport({ id: user.id, email: user.email ?? null, createdAt: user.created_at, provider: (user.app_metadata?.provider as string | undefined) ?? "email" }, tables, new Date());
+  await Promise.all(
+    EXPORT_TABLES.map(async ({ table, columns }) => {
+      const { data, error } = await db.from(table).select(columns).eq("user_id", user.id).limit(10000);
+      // A table another slice adds later may not exist yet on this database; leave it out instead of failing the download.
+      if (!error) tables[table] = data ?? [];
+    }),
+  );
+  const body = buildExport(
+    {
+      id: user.id,
+      email: user.email ?? null,
+      createdAt: user.created_at,
+      provider: (user.app_metadata?.provider as string | undefined) ?? "email",
+    },
+    tables,
+    new Date(),
+  );
   const day = new Date().toISOString().slice(0, 10);
   return new NextResponse(JSON.stringify(body, null, 2), {
     headers: {

@@ -4,8 +4,13 @@ export type LessonState = "done" | "in_progress" | "available" | "locked";
 
 /** The calendar day (YYYY-MM-DD) of an instant in the learner's time zone. Unknown zones count as UTC. */
 export function localDay(at: Date | number, timeZone?: string | null): string {
-  const fmt = (tz?: string) => new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(at);
-  try { return fmt(timeZone ?? "UTC"); } catch { return fmt("UTC"); }
+  const fmt = (tz?: string) =>
+    new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(at);
+  try {
+    return fmt(timeZone ?? "UTC");
+  } catch {
+    return fmt("UTC");
+  }
 }
 
 const shiftDay = (day: string, by: number) => {
@@ -24,7 +29,10 @@ export function streakDays(activeDays: Iterable<string>, today: string, frozenDa
   const frozen = new Set(frozenDays);
   let cursor = days.has(today) || frozen.has(today) ? today : shiftDay(today, -1);
   let n = 0;
-  while (days.has(cursor) || frozen.has(cursor)) { if (days.has(cursor)) n++; cursor = shiftDay(cursor, -1); }
+  while (days.has(cursor) || frozen.has(cursor)) {
+    if (days.has(cursor)) n++;
+    cursor = shiftDay(cursor, -1);
+  }
   return n;
 }
 
@@ -47,18 +55,26 @@ export function weekOf(today: string, weekStart: number): string[] {
  * Lessons play in order. A finished lesson is done; the first unfinished one is open (in progress when the
  * learner has started it); everything after it waits. Finished lessons stay open for replay.
  */
-export function lessonStates(lessonIds: string[], finished: ReadonlySet<string>, started: ReadonlySet<string>): Record<string, LessonState> {
+export function lessonStates(
+  lessonIds: string[],
+  finished: ReadonlySet<string>,
+  started: ReadonlySet<string>,
+): Record<string, LessonState> {
   const out: Record<string, LessonState> = {};
   // A learner who tested out (passed a unit's skill check early) skipped some lessons: those stay open, and the path
   // goes on in order after the furthest finished lesson.
   let lastDone = -1;
-  lessonIds.forEach((id, i) => { if (finished.has(id)) lastDone = i; });
+  lessonIds.forEach((id, i) => {
+    if (finished.has(id)) lastDone = i;
+  });
   let openUsed = false;
   lessonIds.forEach((id, i) => {
     if (finished.has(id)) out[id] = "done";
     else if (i < lastDone) out[id] = started.has(id) ? "in_progress" : "available";
-    else if (!openUsed) { out[id] = started.has(id) ? "in_progress" : "available"; openUsed = true; }
-    else out[id] = "locked";
+    else if (!openUsed) {
+      out[id] = started.has(id) ? "in_progress" : "available";
+      openUsed = true;
+    } else out[id] = "locked";
   });
   return out;
 }
@@ -79,4 +95,7 @@ export type Progress = {
 };
 
 /** Days of the last two weeks on which the daily goal was met (a day with a lesson can still be short of the goal). */
-export const goalDaysOf = (p: Pick<Progress, "recentActivity">) => Object.entries(p.recentActivity).filter(([, a]) => a.goalMet).map(([day]) => day);
+export const goalDaysOf = (p: Pick<Progress, "recentActivity">) =>
+  Object.entries(p.recentActivity)
+    .filter(([, a]) => a.goalMet)
+    .map(([day]) => day);

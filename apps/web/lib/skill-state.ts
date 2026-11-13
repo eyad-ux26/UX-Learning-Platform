@@ -35,4 +35,5 @@ export function applyReview(prev: SkillRow, correct: boolean, now: Date, rules: 
 }
 
 /** Badge colour of a skill: blue at Shown, gold at Kept, none before. */
-export const badgeOf = (state: SkillStateName | undefined): "gold" | "blue" | null => (state === "kept" ? "gold" : state === "shown" ? "blue" : null);
+export const badgeOf = (state: SkillStateName | undefined): "gold" | "blue" | null =>
+  state === "kept" ? "gold" : state === "shown" ? "blue" : null;

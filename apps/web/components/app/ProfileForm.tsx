@@ -10,7 +10,15 @@ import { play } from "@/lib/sound";
 import { flush, setSyncUser } from "@/lib/sync";
 import { saveProfile, signOut } from "@/app/[locale]/app/(shell)/profile/actions";
 
-export function ProfileForm({ initial, email, userId }: { initial: { displayName: string; dailyGoal: 1 | 2 | 3; reminder: string }; email: string; userId: string }) {
+export function ProfileForm({
+  initial,
+  email,
+  userId,
+}: {
+  initial: { displayName: string; dailyGoal: 1 | 2 | 3; reminder: string };
+  email: string;
+  userId: string;
+}) {
   const t = useTranslations("profile");
   const o = useTranslations("onboarding");
   const router = useRouter();
@@ -20,11 +28,15 @@ export function ProfileForm({ initial, email, userId }: { initial: { displayName
   const [status, setStatus] = useState<"idle" | "saved" | "failed">("idle");
   const [pending, start] = useTransition();
 
-  const save = () => start(async () => {
-    const res = await saveProfile({ displayName: name, dailyGoal: goal, reminder: reminder || null });
-    setStatus(res.ok ? "saved" : "failed");
-    if (res.ok) { play("ui-toggle-on"); router.refresh(); }
-  });
+  const save = () =>
+    start(async () => {
+      const res = await saveProfile({ displayName: name, dailyGoal: goal, reminder: reminder || null });
+      setStatus(res.ok ? "saved" : "failed");
+      if (res.ok) {
+        play("ui-toggle-on");
+        router.refresh();
+      }
+    });
 
   return (
     <div className="profile">
@@ -32,30 +44,105 @@ export function ProfileForm({ initial, email, userId }: { initial: { displayName
       <section className="card profile-card">
         <div className="field">
           <label htmlFor="pf-name">{t("name")}</label>
-          <div className="input"><span className="ph ph-user" aria-hidden="true" /><input id="pf-name" value={name} maxLength={60} onChange={(e) => { setName(e.target.value); setStatus("idle"); }} /></div>
-          <span className="help ltr" style={{ textAlign: "start" }}>{email}</span>
+          <div className="input">
+            <span className="ph ph-user" aria-hidden="true" />
+            <input
+              id="pf-name"
+              value={name}
+              maxLength={60}
+              onChange={(e) => {
+                setName(e.target.value);
+                setStatus("idle");
+              }}
+            />
+          </div>
+          <span className="help ltr" style={{ textAlign: "start" }}>
+            {email}
+          </span>
         </div>
         <div className="field">
-          <span className="label-like" id="pf-goal">{o("goal")}</span>
+          <span className="label-like" id="pf-goal">
+            {o("goal")}
+          </span>
           <div className="ob-opts" role="radiogroup" aria-labelledby="pf-goal">
             {([1, 2, 3] as const).map((n) => (
-              <button key={n} type="button" role="radio" aria-checked={goal === n} className={`choice press sm${goal === n ? " is-selected" : ""}`} onClick={() => { setGoal(n); setStatus("idle"); play("select-snap"); }}>
-                <span className="grow ob-opt-t" style={{ paddingInlineStart: 8 }}>{o(`goal${n}`)}</span>
-                <span className={`radio${goal === n ? " is-on" : ""}`} aria-hidden="true" style={{ minBlockSize: 0 }}><span className="dot" /></span>
+              <button
+                key={n}
+                type="button"
+                role="radio"
+                aria-checked={goal === n}
+                className={`choice press sm${goal === n ? " is-selected" : ""}`}
+                onClick={() => {
+                  setGoal(n);
+                  setStatus("idle");
+                  play("select-snap");
+                }}
+              >
+                <span className="grow ob-opt-t" style={{ paddingInlineStart: 8 }}>
+                  {o(`goal${n}`)}
+                </span>
+                <span className={`radio${goal === n ? " is-on" : ""}`} aria-hidden="true" style={{ minBlockSize: 0 }}>
+                  <span className="dot" />
+                </span>
               </button>
             ))}
           </div>
         </div>
-        <ReminderField value={reminder || null} onChange={(v) => { setReminder(v ?? ""); setStatus("idle"); }} />
-        <button type="button" className="btn btn-primary btn-lg press" onClick={save} disabled={pending || !name.trim()} aria-busy={pending || undefined}>{t("save")}</button>
-        {status === "saved" ? <p className="t-small" role="status" style={{ color: "var(--right-ink)", fontWeight: 700 }}>{t("saved")}</p> : null}
-        {status === "failed" ? <p className="ob-err" role="alert">{t("failed")}</p> : null}
+        <ReminderField
+          value={reminder || null}
+          onChange={(v) => {
+            setReminder(v ?? "");
+            setStatus("idle");
+          }}
+        />
+        <button
+          type="button"
+          className="btn btn-primary btn-lg press"
+          onClick={save}
+          disabled={pending || !name.trim()}
+          aria-busy={pending || undefined}
+        >
+          {t("save")}
+        </button>
+        {status === "saved" ? (
+          <p className="t-small" role="status" style={{ color: "var(--right-ink)", fontWeight: 700 }}>
+            {t("saved")}
+          </p>
+        ) : null}
+        {status === "failed" ? (
+          <p className="ob-err" role="alert">
+            {t("failed")}
+          </p>
+        ) : null}
       </section>
       <section className="card profile-card">
-        <div className="field"><span className="label-like">{t("theme")}</span><ThemeSwitch /></div>
-        <div className="field only-mobile"><span className="label-like">{t("language")}</span><LocaleSwitch /></div>
+        <div className="field">
+          <span className="label-like">{t("theme")}</span>
+          <ThemeSwitch />
+        </div>
+        <div className="field only-mobile">
+          <span className="label-like">{t("language")}</span>
+          <LocaleSwitch />
+        </div>
       </section>
-      <button type="button" className="btn btn-secondary btn-signout press" onClick={() => start(async () => { setSyncUser(userId); await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]); await signOut(); router.push("/"); router.refresh(); })} disabled={pending} aria-busy={pending || undefined}><span className="ph ph-signout" aria-hidden="true" />{t("signOut")}</button>
+      <button
+        type="button"
+        className="btn btn-secondary btn-signout press"
+        onClick={() =>
+          start(async () => {
+            setSyncUser(userId);
+            await Promise.race([flush().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
+            await signOut();
+            router.push("/");
+            router.refresh();
+          })
+        }
+        disabled={pending}
+        aria-busy={pending || undefined}
+      >
+        <span className="ph ph-signout" aria-hidden="true" />
+        {t("signOut")}
+      </button>
     </div>
   );
 }

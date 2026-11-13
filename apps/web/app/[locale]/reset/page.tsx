@@ -13,7 +13,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /** Set a new password. The reset link signs the learner in through /api/auth/callback?next=/reset first. */
-export default async function ResetPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ restored?: string }> }) {
+export default async function ResetPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ restored?: string }>;
+}) {
   const { locale } = await params;
   const { restored } = await searchParams;
   setRequestLocale(locale);

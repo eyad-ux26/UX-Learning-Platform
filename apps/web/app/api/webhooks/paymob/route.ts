@@ -18,7 +18,11 @@ export async function POST(req: Request) {
   const body = await req.text();
   const v = await verifyPaymob(body, new URL(req.url).searchParams.get("hmac"), c.hmac, fetchTransaction);
   // "lookup": Paymob could not be asked just now; 503 makes Paymob send the callback again later.
-  if (!v.ok) return NextResponse.json({ error: v.reason }, { status: v.reason === "signature" ? 401 : v.reason === "lookup" ? 503 : 400 });
+  if (!v.ok)
+    return NextResponse.json(
+      { error: v.reason },
+      { status: v.reason === "signature" ? 401 : v.reason === "lookup" ? 503 : 400 },
+    );
   try {
     const engine = billingEngine();
     const results = [];

@@ -9,16 +9,57 @@ import { comingSoonOn, isAdmin } from "@/lib/coming-soon";
 export type { Learner } from "@/lib/server/learner-state";
 
 const fixture = (): Learner => ({
-  db: null, weekStart: 1, userId: "fixture", email: "nour@example.com", unread: null, profileExtra: null, hour: 20, onboarded: true, recommendedPathId: "P01", currentPathId: "P01", timeZone: "UTC", pro: process.env.UG_DEV_PRO === "1", entitlement: null, locale: process.env.UG_DEV_LOCALE ?? null, teamView: process.env.UG_DEV_TEAM === "1",
+  db: null,
+  weekStart: 1,
+  userId: "fixture",
+  email: "nour@example.com",
+  unread: null,
+  profileExtra: null,
+  hour: 20,
+  onboarded: true,
+  recommendedPathId: "P01",
+  currentPathId: "P01",
+  timeZone: "UTC",
+  pro: process.env.UG_DEV_PRO === "1",
+  entitlement: null,
+  locale: process.env.UG_DEV_LOCALE ?? null,
+  teamView: process.env.UG_DEV_TEAM === "1",
   practicedSkills: new Set(["SK-P01-U01-01"]),
   // UG_DEV_JOINED="P01,P14" joins more paths, to check screens that change with several paths.
-  joined: (process.env.UG_DEV_JOINED ?? "P01").split(",").map((pathId) => ({ pathId, startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" })), activePathId: "P01",
-  skillStates: new Map([["SK-P01-U01-01", { state: "shown", shownAt: new Date("2026-10-28T10:00:00Z"), keptAt: null, nextReviewAt: new Date("2026-10-31T10:00:00Z") }]]),
-  freezes: 1, longestStreak: 12, freezeNote: null, leaderboardJoined: false, shareEnabled: false, handle: null,
+  joined: (process.env.UG_DEV_JOINED ?? "P01")
+    .split(",")
+    .map((pathId) => ({ pathId, startedAt: "2026-10-01T00:00:00Z", lastActiveAt: "2026-10-30T09:00:00Z" })),
+  activePathId: "P01",
+  skillStates: new Map([
+    [
+      "SK-P01-U01-01",
+      {
+        state: "shown",
+        shownAt: new Date("2026-10-28T10:00:00Z"),
+        keptAt: null,
+        nextReviewAt: new Date("2026-10-31T10:00:00Z"),
+      },
+    ],
+  ]),
+  freezes: 1,
+  longestStreak: 12,
+  freezeNote: null,
+  leaderboardJoined: false,
+  shareEnabled: false,
+  handle: null,
   progress: {
-    displayName: "Nour", dailyGoal: 2, xpTotal: 240, lessonsToday: 1, streak: 12, today: "2026-10-30",
-    activeDays: ["2026-10-24", "2026-10-25", "2026-10-26", "2026-10-28", "2026-10-29", "2026-10-30"], frozenDays: [], recentActivity: {},
-    finishedLessons: ["P01-U01-L01"], startedLessons: ["P01-U01-L01"], xpByLesson: { "P01-U01-L01": 60 },
+    displayName: "Nour",
+    dailyGoal: 2,
+    xpTotal: 240,
+    lessonsToday: 1,
+    streak: 12,
+    today: "2026-10-30",
+    activeDays: ["2026-10-24", "2026-10-25", "2026-10-26", "2026-10-28", "2026-10-29", "2026-10-30"],
+    frozenDays: [],
+    recentActivity: {},
+    finishedLessons: ["P01-U01-L01"],
+    startedLessons: ["P01-U01-L01"],
+    xpByLesson: { "P01-U01-L01": 60 },
   },
 });
 
@@ -39,7 +80,10 @@ async function loadLearner(): Promise<Learner | null> {
   const userId = auth?.claims?.sub;
   if (!userId) return null;
   // One database call for the whole shell (my_learner_state, issue #184), or one round of separate reads before 0039.
-  const me = await readLearner(db, userId, { email: typeof auth.claims.email === "string" ? auth.claims.email : null, host: await requestHost() });
+  const me = await readLearner(db, userId, {
+    email: typeof auth.claims.email === "string" ? auth.claims.email : null,
+    host: await requestHost(),
+  });
   return { ...me, teamView: comingSoonOn() && isAdmin(auth.claims as { app_metadata?: Record<string, unknown> }) };
 }
 

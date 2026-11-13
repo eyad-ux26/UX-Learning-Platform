@@ -42,8 +42,14 @@ describe("review queue", () => {
   const row = (skillId: string, pathId: string, at: string) => ({ skillId, pathId, ...shown(at) });
   it("puts confident errors first, then the longest waiting, and labels each with its path", () => {
     const q = buildQueue(
-      [row("SK-P01-U01-01", "P01", "2026-10-20"), row("SK-P10-U01-02", "P10", "2026-10-25"), row("SK-P01-U01-03", "P01", "2026-10-22"), row("SK-P10-U01-04", "P10", "2026-11-01")],
-      new Set(["SK-P10-U01-02"]), day("2026-11-03"),
+      [
+        row("SK-P01-U01-01", "P01", "2026-10-20"),
+        row("SK-P10-U01-02", "P10", "2026-10-25"),
+        row("SK-P01-U01-03", "P01", "2026-10-22"),
+        row("SK-P10-U01-04", "P10", "2026-11-01"),
+      ],
+      new Set(["SK-P10-U01-02"]),
+      day("2026-11-03"),
     );
     expect(q.map((x) => x.skillId)).toEqual(["SK-P10-U01-02", "SK-P01-U01-01", "SK-P01-U01-03"]); // the last one is not due until 11-04
     expect(q.map((x) => x.pathId)).toEqual(["P10", "P01", "P01"]);
@@ -52,7 +58,8 @@ describe("review queue", () => {
   it("finds confident errors: Sure and wrong, with no right answer after", () => {
     const set = confidentErrorSkills([
       { skillId: "a", correct: false, confidence: 2, at: 1 },
-      { skillId: "b", correct: false, confidence: 2, at: 1 }, { skillId: "b", correct: true, confidence: 2, at: 2 },
+      { skillId: "b", correct: false, confidence: 2, at: 1 },
+      { skillId: "b", correct: true, confidence: 2, at: 2 },
       { skillId: "c", correct: false, confidence: 0, at: 1 },
     ]);
     expect([...set]).toEqual(["a"]);

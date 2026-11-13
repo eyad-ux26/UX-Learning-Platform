@@ -19,7 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "soon" });
   // It stands in for the home page, so search engines index it under the home address.
   return {
-    metadataBase: new URL(SITE_URL), title: { absolute: t("metaTitle") }, description: t("metaDesc"),
+    metadataBase: new URL(SITE_URL),
+    title: { absolute: t("metaTitle") },
+    description: t("metaDesc"),
     alternates: { canonical: `/${locale}`, languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])) },
   };
 }

@@ -14,12 +14,22 @@ export function useRouter(): ReturnType<typeof nav.useRouter> {
   const router = nav.useRouter();
   return useMemo(() => {
     const track = (href: Parameters<typeof router.push>[0], locale?: string) => {
-      startNavProgress(typeof href === "string" && !locale ? `/${document.documentElement.lang}${href.startsWith("/") ? href : `/${href}`}` : null);
+      startNavProgress(
+        typeof href === "string" && !locale
+          ? `/${document.documentElement.lang}${href.startsWith("/") ? href : `/${href}`}`
+          : null,
+      );
     };
     return {
       ...router,
-      push: (href, options) => { track(href, options?.locale); router.push(href, options); },
-      replace: (href, options) => { track(href, options?.locale); router.replace(href, options); },
+      push: (href, options) => {
+        track(href, options?.locale);
+        router.push(href, options);
+      },
+      replace: (href, options) => {
+        track(href, options?.locale);
+        router.replace(href, options);
+      },
     };
   }, [router]);
 }

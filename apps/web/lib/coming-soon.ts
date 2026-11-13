@@ -15,7 +15,8 @@ type WithAppMeta = { app_metadata?: Record<string, unknown> | null } | null | un
  * True for a user or token claims whose app_metadata.role is "admin", or whose admin-panel roles include the team
  * testing tools (app_metadata.team_tools, kept in step by lib/admin/team-tools-sync.ts when roles change, TEAM-6).
  */
-export const isAdmin = (u: WithAppMeta): boolean => u?.app_metadata?.role === "admin" || u?.app_metadata?.team_tools === true;
+export const isAdmin = (u: WithAppMeta): boolean =>
+  u?.app_metadata?.role === "admin" || u?.app_metadata?.team_tools === true;
 
 /** True when the gate is on and this user (or nobody) is not an admin. */
 export const gatedOut = (u: WithAppMeta): boolean => comingSoonOn() && !isAdmin(u);
@@ -26,7 +27,8 @@ export const COMING_SOON_PATH = "/coming-soon";
 // (lib/team-access.ts), the public pricing page and the legal pages, which Paddle's website review and Google's brand verification read,
 // and the support rating page that the ticket survey email links to (a learner may not be signed in).
 // The admin panel's lesson preview checks the panel's own access itself (requireAdmin), so the gate lets it through.
-const OPEN = /^\/(en|ar)\/(coming-soon(\/confirm)?|team|pricing|terms|privacy|refund|maintenance|offline|c\/[a-z0-9]{8,32}|rate\/[A-Za-z0-9_-]{32,64}|preview\/lesson\/P\d{2}-U\d{2}-[LB]\d{2})\/?$/;
+const OPEN =
+  /^\/(en|ar)\/(coming-soon(\/confirm)?|team|pricing|terms|privacy|refund|maintenance|offline|c\/[a-z0-9]{8,32}|rate\/[A-Za-z0-9_-]{32,64}|preview\/lesson\/P\d{2}-U\d{2}-[LB]\d{2})\/?$/;
 // Sign-in, "forgot password" and reset: only with a team pass (the right team password) or an admin session.
 const TEAM = /^\/(en|ar)\/(signin|forgot|reset)\/?$/;
 // Pages search engines may index while the gate is on: the home address (it shows Coming Soon), the pricing page and the legal pages.

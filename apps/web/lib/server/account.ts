@@ -11,7 +11,10 @@ export async function restoreIfDeleting(userId: string): Promise<boolean> {
   const db = createAdminClient();
   const { data } = await db.from("profiles").select("delete_after").eq("user_id", userId).maybeSingle();
   if (!data?.delete_after) return false;
-  const { error } = await db.from("profiles").update({ delete_after: null, delete_requested_at: null }).eq("user_id", userId);
+  const { error } = await db
+    .from("profiles")
+    .update({ delete_after: null, delete_requested_at: null })
+    .eq("user_id", userId);
   return !error;
 }
 

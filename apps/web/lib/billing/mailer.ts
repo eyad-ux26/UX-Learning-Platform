@@ -2,7 +2,12 @@
 import type { BillingMailer, BillingStore } from "./engine";
 import { renderEmail, type Email } from "./emails";
 
-export type Transport = (msg: { to: string; subject: string; html: string; text: string }) => Promise<{ id: string | null } | null>;
+export type Transport = (msg: {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+}) => Promise<{ id: string | null } | null>;
 
 export function makeMailer(store: BillingStore, transport: Transport | null, site: string): BillingMailer {
   return async (userId, kind, ref, data) => {

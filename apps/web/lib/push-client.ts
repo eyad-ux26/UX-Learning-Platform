@@ -6,7 +6,13 @@ const ASKED_KEY = "ug-push-asked";
 const vapidKey = () => process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
 
 export function pushSupported(): boolean {
-  return typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && !!vapidKey();
+  return (
+    typeof window !== "undefined" &&
+    "serviceWorker" in navigator &&
+    "PushManager" in window &&
+    "Notification" in window &&
+    !!vapidKey()
+  );
 }
 
 export async function pushState(): Promise<PushState> {
@@ -19,10 +25,18 @@ export async function pushState(): Promise<PushState> {
 }
 
 export function askedBefore(): boolean {
-  try { return localStorage.getItem(ASKED_KEY) === "1"; } catch { return true; }
+  try {
+    return localStorage.getItem(ASKED_KEY) === "1";
+  } catch {
+    return true;
+  }
 }
 export function markAsked() {
-  try { localStorage.setItem(ASKED_KEY, "1"); } catch { /* storage blocked: we may ask again next visit */ }
+  try {
+    localStorage.setItem(ASKED_KEY, "1");
+  } catch {
+    /* storage blocked: we may ask again next visit */
+  }
 }
 
 function keyBytes(b64: string): Uint8Array<ArrayBuffer> {
@@ -42,11 +56,17 @@ export async function turnOnPush(): Promise<PushState> {
   if (perm !== "granted") return "off";
   const reg = await navigator.serviceWorker.register("/sw.js");
   await navigator.serviceWorker.ready;
-  const subscribe = () => reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(vapidKey()) });
+  const subscribe = () =>
+    reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(vapidKey()) });
   const save = async (s: PushSubscription) => {
     const json = s.toJSON() as { endpoint?: string; keys?: { p256dh?: string; auth?: string } };
     if (!json.endpoint || !json.keys?.p256dh || !json.keys?.auth) return { ok: false };
-    return savePushSubscription({ endpoint: json.endpoint, p256dh: json.keys.p256dh, auth: json.keys.auth, userAgent: navigator.userAgent.slice(0, 300) });
+    return savePushSubscription({
+      endpoint: json.endpoint,
+      p256dh: json.keys.p256dh,
+      auth: json.keys.auth,
+      userAgent: navigator.userAgent.slice(0, 300),
+    });
   };
   let sub = (await reg.pushManager.getSubscription()) ?? (await subscribe());
   let r = await save(sub);

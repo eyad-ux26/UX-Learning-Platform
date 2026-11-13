@@ -3,11 +3,19 @@ import type { Learner } from "@/lib/server/learner-state";
 import { ensureCertificates, type Certificate } from "@/lib/server/certificates";
 import { certificateEarned } from "@/lib/certificate";
 
-export type ProfileData = { email: string; reminder: string; since: string | null; boardOpen: boolean; certificates: Certificate[] };
+export type ProfileData = {
+  email: string;
+  reminder: string;
+  since: string | null;
+  boardOpen: boolean;
+  certificates: Certificate[];
+};
 
 /** Joined paths whose skills are all Shown or Kept but that have no certificate yet. */
 export const unissuedCertificates = (me: Pick<Learner, "joined" | "skillStates">, have: Certificate[]) =>
-  me.joined.map((j) => j.pathId).filter((p) => certificateEarned(p, (id) => me.skillStates.get(id)?.state) && !have.some((c) => c.pathId === p));
+  me.joined
+    .map((j) => j.pathId)
+    .filter((p) => certificateEarned(p, (id) => me.skillStates.get(id)?.state) && !have.some((c) => c.pathId === p));
 
 /**
  * What the Profile page shows beyond the shell. Usually it is already in `me` (read with the learner in one call, and the
@@ -20,13 +28,18 @@ export async function loadProfileData(me: Learner): Promise<ProfileData> {
   const x = me.profileExtra;
   const joined = me.joined.map((j) => j.pathId);
   // Certificates are read while the profile reads below run, not after them.
-  const certs = x && !unissuedCertificates(me, x.certificates).length ? Promise.resolve(x.certificates) : ensureCertificates(me.userId, joined, me.skillStates);
+  const certs =
+    x && !unissuedCertificates(me, x.certificates).length
+      ? Promise.resolve(x.certificates)
+      : ensureCertificates(me.userId, joined, me.skillStates);
   const [auth, extra] = await Promise.all([
     me.email ? null : me.db.auth.getUser(),
-    x ? null : Promise.all([
-      me.db.from("profiles").select("reminder_time, created_at").eq("user_id", me.userId).maybeSingle(),
-      me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
-    ]),
+    x
+      ? null
+      : Promise.all([
+          me.db.from("profiles").select("reminder_time, created_at").eq("user_id", me.userId).maybeSingle(),
+          me.db.from("app_flags").select("enabled").eq("key", "leaderboard").maybeSingle(),
+        ]),
   ]);
   const reminderTime = x ? x.reminderTime : ((extra?.[0].data?.reminder_time as string | null | undefined) ?? null);
   const createdAt = x ? x.createdAt : ((extra?.[0].data?.created_at as string | undefined) ?? null);

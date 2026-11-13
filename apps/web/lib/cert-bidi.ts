@@ -14,7 +14,11 @@ export function bidiGroups(text: string): Piece[][] {
   const words = text.replace(/[«»]/g, "").split(/\s+/).filter(Boolean);
   const groups: Piece[][] = [];
   for (let i = 0; i < words.length; ) {
-    if (!isLtrWord(words[i])) { groups.push([{ text: words[i], ltr: false }]); i++; continue; }
+    if (!isLtrWord(words[i])) {
+      groups.push([{ text: words[i], ltr: false }]);
+      i++;
+      continue;
+    }
     let j = i;
     while (j < words.length && isLtrWord(words[j])) j++;
     const run = words.slice(i, j);

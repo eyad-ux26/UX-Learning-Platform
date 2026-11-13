@@ -19,8 +19,16 @@ describe("Paddle links in the learner's own language", () => {
 
 describe("Paddle links across sign-in", () => {
   it("signed out on a link: keep the transaction and go to sign-in in the link's language", () => {
-    expect(paddleLinkStep("/en/app/checkout", q(`_ptxn=${TXN}`), false, null)).toEqual({ kind: "signin", to: "/en/signin", txn: TXN });
-    expect(paddleLinkStep("/ar/app/checkout/", q(`_ptxn=${TXN}`), false, null)).toEqual({ kind: "signin", to: "/ar/signin", txn: TXN });
+    expect(paddleLinkStep("/en/app/checkout", q(`_ptxn=${TXN}`), false, null)).toEqual({
+      kind: "signin",
+      to: "/en/signin",
+      txn: TXN,
+    });
+    expect(paddleLinkStep("/ar/app/checkout/", q(`_ptxn=${TXN}`), false, null)).toEqual({
+      kind: "signin",
+      to: "/ar/signin",
+      txn: TXN,
+    });
   });
   it("after signing in, the app home opens the link again with _ptxn", () => {
     expect(paddleLinkStep("/en/app", q(), true, TXN)).toEqual({ kind: "resume", to: `/en/app/checkout?_ptxn=${TXN}` });
@@ -51,6 +59,11 @@ describe("a Paddle link opens only the learner's own transaction", () => {
     expect(paddleTxnOwned({ userId: "u2", customerId: "ctm_me", subscriptionId: "sub_me" }, me)).toBe(false); // made for u2
     expect(paddleTxnOwned({ userId: null, customerId: "ctm_other", subscriptionId: null }, me)).toBe(false);
     expect(paddleTxnOwned({ userId: null, customerId: null, subscriptionId: null }, me)).toBe(false);
-    expect(paddleTxnOwned({ userId: null, customerId: "ctm_x", subscriptionId: null }, { userId: "u1", customerIds: [], subscriptionIds: [] })).toBe(false);
+    expect(
+      paddleTxnOwned(
+        { userId: null, customerId: "ctm_x", subscriptionId: null },
+        { userId: "u1", customerIds: [], subscriptionIds: [] },
+      ),
+    ).toBe(false);
   });
 });

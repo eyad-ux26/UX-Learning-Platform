@@ -9,7 +9,8 @@ describe("push endpoints", () => {
       "https://web.push.apple.com/QGx",
       "https://wns2-db5p.notify.windows.com/w/?token=x",
       "https://api.push.apple.com/3/device/x",
-    ]) expect(isPushEndpoint(u), u).toBe(true);
+    ])
+      expect(isPushEndpoint(u), u).toBe(true);
   });
   it("refuses any other address", () => {
     for (const u of [
@@ -20,6 +21,7 @@ describe("push endpoints", () => {
       "https://user:pw@fcm.googleapis.com/x",
       "https://fcm.googleapis.com:8443/x",
       "not a url",
-    ]) expect(isPushEndpoint(u), u).toBe(false);
+    ])
+      expect(isPushEndpoint(u), u).toBe(false);
   });
 });

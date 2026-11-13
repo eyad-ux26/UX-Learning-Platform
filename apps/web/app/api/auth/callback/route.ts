@@ -12,7 +12,9 @@ import { routing } from "@/i18n/routing";
  */
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = req.nextUrl;
-  const locale = (routing.locales as readonly string[]).includes(searchParams.get("locale") ?? "") ? searchParams.get("locale")! : routing.defaultLocale;
+  const locale = (routing.locales as readonly string[]).includes(searchParams.get("locale") ?? "")
+    ? searchParams.get("locale")!
+    : routing.defaultLocale;
   const next = safeNext(searchParams.get("next"));
   const reset = next === "/reset";
   const code = searchParams.get("code");
@@ -24,7 +26,9 @@ export async function GET(req: NextRequest) {
   if (!code && !(tokenHash && /^[0-9a-f]{20,200}$/i.test(tokenHash))) return fail;
 
   const db = await createClient();
-  const { data, error } = code ? await db.auth.exchangeCodeForSession(code) : await db.auth.verifyOtp({ token_hash: tokenHash!, type: "magiclink" });
+  const { data, error } = code
+    ? await db.auth.exchangeCodeForSession(code)
+    : await db.auth.verifyOtp({ token_hash: tokenHash!, type: "magiclink" });
   if (error || !data.user) return fail;
 
   // Emails follow the language the learner last signed in with. Google sign-ups and existing learners cannot carry a language
@@ -37,7 +41,10 @@ export async function GET(req: NextRequest) {
   }
   // A new Google or Apple account on the Arabic page: its week start follows Arabic too (learners cannot write it).
   if (fix.weekStart !== null && hasServiceKey()) {
-    const { error: we } = await createAdminClient().from("profiles").update({ week_start: fix.weekStart }).eq("user_id", data.user.id);
+    const { error: we } = await createAdminClient()
+      .from("profiles")
+      .update({ week_start: fix.weekStart })
+      .eq("user_id", data.user.id);
     if (we) console.error("auth callback: profile week start", we.code);
   }
 

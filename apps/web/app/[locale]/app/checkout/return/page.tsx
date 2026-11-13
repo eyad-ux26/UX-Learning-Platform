@@ -8,7 +8,13 @@ export const dynamic = "force-dynamic";
 
 const STATES = ["returning", "success", "pending", "pendingBank", "failed", "cancelled", "refused"] as const;
 
-export default async function CheckoutReturnPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
+export default async function CheckoutReturnPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
+}) {
   const { locale } = await params;
   const sp = await searchParams;
   setRequestLocale(locale);
@@ -26,8 +32,17 @@ export default async function CheckoutReturnPage({ params, searchParams }: { par
   const path = pickPath(me.currentPathId ?? me.recommendedPathId);
   return (
     <div className="chk-page">
-      <header className="pub-head"><Logo height={30} /></header>
-      <ReturnView sessionId={session} fixtureState={fixtureState} pathHref={path ? `/app/path/${path.id}` : "/app"} overlayClosed={sp.left === "1"} providerName={provider} mock={mock} />
+      <header className="pub-head">
+        <Logo height={30} />
+      </header>
+      <ReturnView
+        sessionId={session}
+        fixtureState={fixtureState}
+        pathHref={path ? `/app/path/${path.id}` : "/app"}
+        overlayClosed={sp.left === "1"}
+        providerName={provider}
+        mock={mock}
+      />
     </div>
   );
 }

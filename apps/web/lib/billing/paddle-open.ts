@@ -12,7 +12,10 @@ export type PaddleOpenOptions = {
  * never opens. So `customer` is sent only with the learner's email, which the server gives only when the transaction has
  * no Paddle customer yet. The billing country rides along with it; otherwise Paddle uses the transaction's customer or asks.
  */
-export function paddleOpenOptions(p: { transactionId: string; successUrl: string; country: string | null; email?: string | null }, locale: string): PaddleOpenOptions {
+export function paddleOpenOptions(
+  p: { transactionId: string; successUrl: string; country: string | null; email?: string | null },
+  locale: string,
+): PaddleOpenOptions {
   const email = p.email?.trim();
   return {
     transactionId: p.transactionId,

@@ -34,36 +34,92 @@ export class MemoryStore implements BillingStore {
     const e = this.events.get(`${provider}:${eventId}`);
     if (e) Object.assign(e, { error, processed: !error, claimed: false });
   }
-  async getSession(id: string) { return this.sessions.get(id) ?? null; }
-  async sessionByRef(provider: BillingProvider, ref: string) { return [...this.sessions.values()].find((s) => s.provider === provider && s.providerRef === ref) ?? null; }
-  async updateSession(id: string, patch: Partial<Session>) { const s = this.sessions.get(id); if (s) Object.assign(s, patch); }
-  async liveSub(userId: string) { const s = [...this.subs.values()].find((x) => x.userId === userId && ["active", "grace", "cancelled"].includes(x.status)); return s ? { ...s } : null; }
-  async latestSub(userId: string) { const s = [...this.subs.values()].filter((x) => x.userId === userId).at(-1); return s ? { ...s } : null; }
-  async subById(id: string) { const s = this.subs.get(id); return s ? { ...s } : null; }
-  async dueSubs() { return [...this.subs.values()].filter((s) => ["active", "grace", "cancelled"].includes(s.status)).map((s) => ({ ...s })); }
-  async subByProviderId(provider: BillingProvider, id: string) { const s = [...this.subs.values()].find((x) => x.provider === provider && x.providerSubId === id); return s ? { ...s } : null; }
+  async getSession(id: string) {
+    return this.sessions.get(id) ?? null;
+  }
+  async sessionByRef(provider: BillingProvider, ref: string) {
+    return [...this.sessions.values()].find((s) => s.provider === provider && s.providerRef === ref) ?? null;
+  }
+  async updateSession(id: string, patch: Partial<Session>) {
+    const s = this.sessions.get(id);
+    if (s) Object.assign(s, patch);
+  }
+  async liveSub(userId: string) {
+    const s = [...this.subs.values()].find(
+      (x) => x.userId === userId && ["active", "grace", "cancelled"].includes(x.status),
+    );
+    return s ? { ...s } : null;
+  }
+  async latestSub(userId: string) {
+    const s = [...this.subs.values()].filter((x) => x.userId === userId).at(-1);
+    return s ? { ...s } : null;
+  }
+  async subById(id: string) {
+    const s = this.subs.get(id);
+    return s ? { ...s } : null;
+  }
+  async dueSubs() {
+    return [...this.subs.values()]
+      .filter((s) => ["active", "grace", "cancelled"].includes(s.status))
+      .map((s) => ({ ...s }));
+  }
+  async subByProviderId(provider: BillingProvider, id: string) {
+    const s = [...this.subs.values()].find((x) => x.provider === provider && x.providerSubId === id);
+    return s ? { ...s } : null;
+  }
   async saveSub(sub: Sub) {
     const live = ["active", "grace", "cancelled"];
-    if (live.includes(sub.status) && [...this.subs.values()].some((s) => s.userId === sub.userId && s.id !== sub.id && live.includes(s.status))) throw new Error("duplicate live subscription");
+    if (
+      live.includes(sub.status) &&
+      [...this.subs.values()].some((s) => s.userId === sub.userId && s.id !== sub.id && live.includes(s.status))
+    )
+      throw new Error("duplicate live subscription");
     const saved = { ...sub, id: sub.id ?? uuid() };
     this.subs.set(saved.id, saved);
     return { ...saved };
   }
-  async paymentByProviderId(provider: BillingProvider, id: string) { return [...this.payments.values()].find((p) => p.provider === provider && p.providerPaymentId === id) ?? null; }
+  async paymentByProviderId(provider: BillingProvider, id: string) {
+    return [...this.payments.values()].find((p) => p.provider === provider && p.providerPaymentId === id) ?? null;
+  }
   async insertPayment(p: Omit<Payment, "id" | "receiptNo" | "refundedAt" | "status">) {
     if (await this.paymentByProviderId(p.provider, p.providerPaymentId)) return null;
-    const pay: Payment = { ...p, id: uuid(), receiptNo: `UXG-2026-${String(++this.receipt).padStart(6, "0")}`, status: "paid", refundedAt: null };
+    const pay: Payment = {
+      ...p,
+      id: uuid(),
+      receiptNo: `UXG-2026-${String(++this.receipt).padStart(6, "0")}`,
+      status: "paid",
+      refundedAt: null,
+    };
     this.payments.set(pay.id, pay);
     return { ...pay };
   }
-  async linkPayment(id: string, subscriptionId: string, periodEnd: string) { const p = this.payments.get(id); if (p) Object.assign(p, { subscriptionId, periodEnd }); }
-  async markPaymentRefunded(id: string, at: string) { const p = this.payments.get(id); if (p) Object.assign(p, { status: "refunded", refundedAt: at }); }
-  async getEntitlement(userId: string) { return this.entitlements.get(userId) ?? null; }
-  async saveEntitlement(userId: string, e: Entitlement) { this.entitlements.set(userId, { ...e }); }
-  async saveToken(userId: string, provider: BillingProvider, token: string, card: Card) { this.tokens.set(`${userId}:${provider}`, { token, card }); }
-  async refundRequestFor(paymentId: string) { return [...this.requests.values()].find((r) => r.paymentId === paymentId) ?? null; }
-  async answerRefundRequest(id: string, status: "approved" | "declined", at: string) { const r = this.requests.get(id); if (r) Object.assign(r, { status, answeredAt: at }); }
-  async learner(userId: string) { return this.learners.get(userId) ?? null; }
+  async linkPayment(id: string, subscriptionId: string, periodEnd: string) {
+    const p = this.payments.get(id);
+    if (p) Object.assign(p, { subscriptionId, periodEnd });
+  }
+  async markPaymentRefunded(id: string, at: string) {
+    const p = this.payments.get(id);
+    if (p) Object.assign(p, { status: "refunded", refundedAt: at });
+  }
+  async getEntitlement(userId: string) {
+    return this.entitlements.get(userId) ?? null;
+  }
+  async saveEntitlement(userId: string, e: Entitlement) {
+    this.entitlements.set(userId, { ...e });
+  }
+  async saveToken(userId: string, provider: BillingProvider, token: string, card: Card) {
+    this.tokens.set(`${userId}:${provider}`, { token, card });
+  }
+  async refundRequestFor(paymentId: string) {
+    return [...this.requests.values()].find((r) => r.paymentId === paymentId) ?? null;
+  }
+  async answerRefundRequest(id: string, status: "approved" | "declined", at: string) {
+    const r = this.requests.get(id);
+    if (r) Object.assign(r, { status, answeredAt: at });
+  }
+  async learner(userId: string) {
+    return this.learners.get(userId) ?? null;
+  }
   async claimEmail(userId: string, kind: EmailKind, ref: string, locale: string, to: string) {
     const k = `${userId}:${kind}:${ref}`;
     if (this.emails.has(k)) return false;

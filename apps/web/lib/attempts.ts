@@ -20,8 +20,22 @@ export const attemptIdFor = (lessonId: string, startedAt: number) => `${lessonId
 export const keyFor = (attemptId: string, e: TryEvent) => `${attemptId}:${e.stepId}:${e.tryNo}:${e.kind}`;
 
 /** Writes the answer to IndexedDB first. Sending to the server happens separately and retries. */
-export async function enqueueAttempt(userId: string, attemptId: string, event: TryEvent, plan?: string[], purpose?: "review") {
-  const item: QueuedAttempt = { key: keyFor(attemptId, event), userId, attemptId, event, ...(plan ? { plan } : {}), ...(purpose ? { purpose } : {}), queuedAt: Date.now() };
+export async function enqueueAttempt(
+  userId: string,
+  attemptId: string,
+  event: TryEvent,
+  plan?: string[],
+  purpose?: "review",
+) {
+  const item: QueuedAttempt = {
+    key: keyFor(attemptId, event),
+    userId,
+    attemptId,
+    event,
+    ...(plan ? { plan } : {}),
+    ...(purpose ? { purpose } : {}),
+    queuedAt: Date.now(),
+  };
   await queuePut(item);
   return item;
 }

@@ -14,11 +14,20 @@ const BATCH = 25;
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`))
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const after = new URL(req.url).searchParams.get("after");
   try {
-    const r = await notifyReviewsDue(createAdminClient(), new Date(), after && /^[0-9a-f-]{36}$/.test(after) ? after : null, BATCH);
-    if (r.stoppedEarly) console.warn(`WARN review notices stopped early: subrequest budget used up after ${r.notified} learners. Turn on Workers Paid before real learners arrive.`);
+    const r = await notifyReviewsDue(
+      createAdminClient(),
+      new Date(),
+      after && /^[0-9a-f-]{36}$/.test(after) ? after : null,
+      BATCH,
+    );
+    if (r.stoppedEarly)
+      console.warn(
+        `WARN review notices stopped early: subrequest budget used up after ${r.notified} learners. Turn on Workers Paid before real learners arrive.`,
+      );
     return jobJson("review-due", r as Record<string, unknown>);
   } catch (e) {
     return jobJson("review-due", { error: "read_failed", detail: (e as Error).message }, { status: 500 });

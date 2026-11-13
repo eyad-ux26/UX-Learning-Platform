@@ -9,7 +9,15 @@ const act = (days: Record<string, [number, boolean]>): Record<string, DayActivit
 
 describe("settle", () => {
   it("earns a freeze when the goal is met on 5 days of a Monday to Sunday week", () => {
-    const a = act({ "2026-11-02": [1, true], "2026-11-03": [1, true], "2026-11-04": [1, true], "2026-11-05": [1, true], "2026-11-06": [1, true], "2026-11-07": [0, false], "2026-11-08": [1, false] });
+    const a = act({
+      "2026-11-02": [1, true],
+      "2026-11-03": [1, true],
+      "2026-11-04": [1, true],
+      "2026-11-05": [1, true],
+      "2026-11-06": [1, true],
+      "2026-11-07": [0, false],
+      "2026-11-08": [1, false],
+    });
     // 07 is a miss with no freeze yet, so the run restarts there; the freeze is still earned on Sunday 08
     const r = settle({ current: 0, longest: 0, freezes: 0 }, "2026-11-01", "2026-11-08", a);
     expect(r.earnedDays).toEqual(["2026-11-08"]);
@@ -17,11 +25,23 @@ describe("settle", () => {
     expect(r.usedDays).toEqual([]);
   });
   it("does not earn one with only 4 goal days", () => {
-    const a = act({ "2026-11-02": [1, true], "2026-11-03": [1, true], "2026-11-04": [1, true], "2026-11-05": [1, true], "2026-11-06": [1, false], "2026-11-07": [1, false], "2026-11-08": [1, false] });
+    const a = act({
+      "2026-11-02": [1, true],
+      "2026-11-03": [1, true],
+      "2026-11-04": [1, true],
+      "2026-11-05": [1, true],
+      "2026-11-06": [1, false],
+      "2026-11-07": [1, false],
+      "2026-11-08": [1, false],
+    });
     expect(settle({ current: 0, longest: 0, freezes: 0 }, "2026-11-01", "2026-11-08", a).freezes).toBe(0);
   });
   it("never holds more than 2", () => {
-    const a = act(Object.fromEntries(Array.from({ length: 7 }, (_, i) => [`2026-11-0${2 + i}`.replace("2026-11-010", "2026-11-10"), [1, true]])));
+    const a = act(
+      Object.fromEntries(
+        Array.from({ length: 7 }, (_, i) => [`2026-11-0${2 + i}`.replace("2026-11-010", "2026-11-10"), [1, true]]),
+      ),
+    );
     const r = settle({ current: 10, longest: 10, freezes: 2 }, "2026-11-01", "2026-11-08", a);
     expect(r.freezes).toBe(2);
     expect(r.earnedDays).toEqual([]);
@@ -46,12 +66,21 @@ describe("settle", () => {
     expect(again).toMatchObject({ current: first.current, freezes: first.freezes, usedDays: [], earnedDays: [] });
   });
   it("starts at the first active day, so days before the learner began are not misses", () => {
-    const r = settle({ current: 0, longest: 0, freezes: 0 }, null, "2026-11-04", act({ "2026-11-03": [1, true], "2026-11-04": [1, true] }));
+    const r = settle(
+      { current: 0, longest: 0, freezes: 0 },
+      null,
+      "2026-11-04",
+      act({ "2026-11-03": [1, true], "2026-11-04": [1, true] }),
+    );
     expect(r.current).toBe(2);
     expect(r.usedDays).toEqual([]);
   });
   it("a learner with no activity settles to yesterday with nothing changed", () => {
-    expect(settle({ current: 0, longest: 0, freezes: 0 }, null, "2026-11-04", {})).toMatchObject({ current: 0, freezes: 0, settledThrough: "2026-11-04" });
+    expect(settle({ current: 0, longest: 0, freezes: 0 }, null, "2026-11-04", {})).toMatchObject({
+      current: 0,
+      freezes: 0,
+      settledThrough: "2026-11-04",
+    });
   });
 });
 
@@ -70,7 +99,11 @@ describe("week goal progress", () => {
     expect(weekGoalProgress("2026-11-04", a)).toMatchObject({ goalDays: 2, more: 3, monday: "2026-11-02" });
   });
   it("mondayOf finds Monday from any day", () => {
-    expect(["2026-11-02", "2026-11-05", "2026-11-08"].map(mondayOf)).toEqual(["2026-11-02", "2026-11-02", "2026-11-02"]);
+    expect(["2026-11-02", "2026-11-05", "2026-11-08"].map(mondayOf)).toEqual([
+      "2026-11-02",
+      "2026-11-02",
+      "2026-11-02",
+    ]);
   });
 });
 
@@ -86,7 +119,9 @@ describe("time zones: the same instant is a different day for Cairo and Riyadh",
     const riyadhYesterday = localDay(new Date(at.getTime() - 86_400_000), "Asia/Riyadh"); // 2026-11-02
     const cairoYesterday = localDay(new Date(at.getTime() - 86_400_000), "Africa/Cairo"); // 2026-11-01
     expect(settle({ current: 3, longest: 3, freezes: 0 }, "2026-11-01", riyadhYesterday, a).current).toBe(4);
-    expect(settle({ current: 3, longest: 3, freezes: 0 }, "2026-11-01", cairoYesterday, a).settledThrough).toBe("2026-11-01");
+    expect(settle({ current: 3, longest: 3, freezes: 0 }, "2026-11-01", cairoYesterday, a).settledThrough).toBe(
+      "2026-11-01",
+    );
   });
   it("the leaderboard week starts Monday 00:00 in the learner's own zone", () => {
     expect(startOfDay("2026-11-02", "Africa/Cairo").toISOString()).toBe("2026-11-01T22:00:00.000Z");
@@ -104,11 +139,23 @@ describe("the week start is one setting per language", () => {
   });
   it("finds the first day of a Saturday week", () => {
     // 2026-10-31 is a Saturday; 2026-11-06 is the Friday that ends that week
-    expect(["2026-10-31", "2026-11-03", "2026-11-06"].map((d) => weekStartOf(d, 6))).toEqual(["2026-10-31", "2026-10-31", "2026-10-31"]);
+    expect(["2026-10-31", "2026-11-03", "2026-11-06"].map((d) => weekStartOf(d, 6))).toEqual([
+      "2026-10-31",
+      "2026-10-31",
+      "2026-10-31",
+    ]);
     expect(weekStartOf("2026-11-07", 6)).toBe("2026-11-07");
   });
   it("earns the freeze on the Friday that ends a Saturday week", () => {
-    const a = act({ "2026-10-31": [1, true], "2026-11-01": [1, true], "2026-11-02": [1, true], "2026-11-03": [1, true], "2026-11-04": [1, true], "2026-11-05": [1, false], "2026-11-06": [1, false] });
+    const a = act({
+      "2026-10-31": [1, true],
+      "2026-11-01": [1, true],
+      "2026-11-02": [1, true],
+      "2026-11-03": [1, true],
+      "2026-11-04": [1, true],
+      "2026-11-05": [1, false],
+      "2026-11-06": [1, false],
+    });
     const r = settle({ current: 0, longest: 0, freezes: 0 }, "2026-10-30", "2026-11-06", a, 6);
     expect(r.earnedDays).toEqual(["2026-11-06"]);
     // the same days under a Monday week do not complete a week, so nothing is earned yet

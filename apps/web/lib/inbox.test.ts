@@ -6,7 +6,10 @@ import { inboxCopy, safeHref, shortAgo } from "./inbox";
 describe("inbox items", () => {
   it("every kind has its title, body and where-it-opens copy in both languages", () => {
     for (const kind of ["reminder", "goal", "review", "badge", "answer", "billing", "welcome"] as const) {
-      for (const data of [{}, { lesson: { en: "L", ar: "د" }, name: { en: "B", ar: "ش" }, status: "accepted" as const, cert: false }]) {
+      for (const data of [
+        {},
+        { lesson: { en: "L", ar: "د" }, name: { en: "B", ar: "ش" }, status: "accepted" as const, cert: false },
+      ]) {
         const c = inboxCopy(kind, data);
         for (const k of [c.title, c.body, c.go]) {
           expect(en.inbox, `${kind} ${k}`).toHaveProperty(k);

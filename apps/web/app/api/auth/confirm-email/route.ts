@@ -8,7 +8,9 @@ import { routing } from "@/i18n/routing";
  */
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = req.nextUrl;
-  const locale = (routing.locales as readonly string[]).includes(searchParams.get("locale") ?? "") ? searchParams.get("locale")! : routing.defaultLocale;
+  const locale = (routing.locales as readonly string[]).includes(searchParams.get("locale") ?? "")
+    ? searchParams.get("locale")!
+    : routing.defaultLocale;
   const hash = searchParams.get("token_hash") ?? "";
   if (!/^[0-9a-f]{20,200}$/i.test(hash)) return NextResponse.redirect(`${origin}/${locale}/signin?error=link`);
   const db = await createClient();

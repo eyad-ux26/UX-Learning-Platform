@@ -11,5 +11,8 @@ import { tracedFetch } from "@/lib/server/db-trace";
 export function createAdminClient() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set");
-  return createClient(supabaseUrl(), key, { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch: tracedFetch } });
+  return createClient(supabaseUrl(), key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { fetch: tracedFetch },
+  });
 }

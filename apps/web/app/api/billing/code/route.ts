@@ -15,6 +15,14 @@ export async function POST(req: Request) {
   if (!parsed.success) return bad();
   const country = ipCountry(req.headers) ?? UNKNOWN_COUNTRY;
   const { q, codeCheck } = await priceFor(who.admin, who.user.id, country, parsed.data.period, parsed.data.code);
-  if (!codeCheck?.ok) return NextResponse.json({ ok: false, error: codeCheck?.error ?? "invalid", region: regionFor(country) });
-  return NextResponse.json({ ok: true, code: codeCheck.code.code, applied: q.code === codeCheck.code.code, amount: q.amount, renewAmount: q.renewAmount, currency: q.currency });
+  if (!codeCheck?.ok)
+    return NextResponse.json({ ok: false, error: codeCheck?.error ?? "invalid", region: regionFor(country) });
+  return NextResponse.json({
+    ok: true,
+    code: codeCheck.code.code,
+    applied: q.code === codeCheck.code.code,
+    amount: q.amount,
+    renewAmount: q.renewAmount,
+    currency: q.currency,
+  });
 }

@@ -36,8 +36,13 @@ export async function notifyKept(db: SupabaseClient, userId: string, skillIds: s
     const base = `${siteOrigin()}/${locale}`;
     const path = getPath(first.unit.pathId);
     const mail = badgeEmail({
-      locale, skill: first.skill.title[locale], where: `${path?.title.en ?? first.unit.pathId} · ${first.unit.title[locale]}`, pathImg: pathArt(first.unit.pathId),
-      badgesHref: `${base}/app/badges`, settingsHref: `${base}/app/settings/notifications`, unsubscribeHref: await unsubHref(userId, "badge", locale),
+      locale,
+      skill: first.skill.title[locale],
+      where: `${path?.title.en ?? first.unit.pathId} · ${first.unit.title[locale]}`,
+      pathImg: pathArt(first.unit.pathId),
+      badgesHref: `${base}/app/badges`,
+      settingsHref: `${base}/app/settings/notifications`,
+      unsubscribeHref: await unsubHref(userId, "badge", locale),
     });
     await sendEmail({ to: u.user.email, ...mail, kind: "badge", userId, locale });
   } catch (e) {
@@ -55,15 +60,33 @@ export const reviewMinutes = (count: number) => Math.max(2, Math.round(Math.min(
  */
 export async function notifyReviewsDue(db: SupabaseClient, now: Date, after: string | null, limit: number) {
   const dayAgo = new Date(now.getTime() - 86_400_000).toISOString();
-  let q = db.from("skill_states").select("user_id").eq("state", "shown").gt("next_review_at", dayAgo).lte("next_review_at", now.toISOString()).order("user_id").limit(limit * 5);
+  let q = db
+    .from("skill_states")
+    .select("user_id")
+    .eq("state", "shown")
+    .gt("next_review_at", dayAgo)
+    .lte("next_review_at", now.toISOString())
+    .order("user_id")
+    .limit(limit * 5);
   if (after) q = q.gt("user_id", after);
   const { data, error } = await q;
   if (error) throw new Error(error.message);
   const users = [...new Set((data ?? []).map((r) => r.user_id as string))].slice(0, limit);
-  if (!users.length) return { notified: 0, failed: 0, next: null as string | null, stoppedEarly: null as string | null };
+  if (!users.length)
+    return { notified: 0, failed: 0, next: null as string | null, stoppedEarly: null as string | null };
   const [{ data: due }, { data: told }] = await Promise.all([
-    db.from("skill_states").select("user_id").eq("state", "shown").lte("next_review_at", now.toISOString()).in("user_id", users),
-    db.from("notifications").select("user_id").eq("kind", "review").gte("created_at", new Date(now.getTime() - 20 * 3_600_000).toISOString()).in("user_id", users),
+    db
+      .from("skill_states")
+      .select("user_id")
+      .eq("state", "shown")
+      .lte("next_review_at", now.toISOString())
+      .in("user_id", users),
+    db
+      .from("notifications")
+      .select("user_id")
+      .eq("kind", "review")
+      .gte("created_at", new Date(now.getTime() - 20 * 3_600_000).toISOString())
+      .in("user_id", users),
   ]);
   const count = new Map<string, number>();
   for (const r of due ?? []) count.set(r.user_id as string, (count.get(r.user_id as string) ?? 0) + 1);

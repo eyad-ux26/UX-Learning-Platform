@@ -15,7 +15,10 @@ function fakeDb(queued: { id: string; email: string; locale: string }[], markOk 
   return { db: { rpc } as never, calls };
 }
 
-afterEach(() => { delete process.env.RESEND_API_KEY; sendEmail.mockReset(); });
+afterEach(() => {
+  delete process.env.RESEND_API_KEY;
+  sendEmail.mockReset();
+});
 
 describe("sendQueuedConfirmations", () => {
   it("does nothing until email is set up", async () => {
@@ -28,7 +31,10 @@ describe("sendQueuedConfirmations", () => {
     process.env.RESEND_API_KEY = "re_test";
     const { sendQueuedConfirmations } = await import("./waitlist-mail");
     sendEmail.mockResolvedValueOnce({ ok: true }).mockResolvedValueOnce({ ok: false, error: "x" });
-    const { db, calls } = fakeDb([{ id: "1", email: "a@example.com", locale: "ar" }, { id: "2", email: "b@example.com", locale: "en" }]);
+    const { db, calls } = fakeDb([
+      { id: "1", email: "a@example.com", locale: "ar" },
+      { id: "2", email: "b@example.com", locale: "en" },
+    ]);
     expect(await sendQueuedConfirmations(db)).toEqual({ sent: 1, failed: 1 });
     expect(sendEmail.mock.calls[0][0]).toMatchObject({ to: "a@example.com", kind: "launch-confirm", locale: "ar" });
     expect(sendEmail.mock.calls[0][0].text).toMatch(/\/ar\/coming-soon\/confirm\?t=[A-Za-z0-9_-]{43}/);

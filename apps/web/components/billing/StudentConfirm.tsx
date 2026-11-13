@@ -18,11 +18,22 @@ export function StudentConfirm({ token, until }: { token: string | null; until: 
   return (
     <main className="bye" role="status" aria-live="polite">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={state === "expired" ? "/ill/uxgate-ill-error.png" : "/ill/uxgate-ill-key.png"} alt="" width={120} height={120} />
-      {state === "busy" ? <span className="spin" style={{ color: "var(--link)", inlineSize: 28, blockSize: 28 }} aria-hidden="true" /> : null}
+      <img
+        src={state === "expired" ? "/ill/uxgate-ill-error.png" : "/ill/uxgate-ill-key.png"}
+        alt=""
+        width={120}
+        height={120}
+      />
+      {state === "busy" ? (
+        <span className="spin" style={{ color: "var(--link)", inlineSize: 28, blockSize: 28 }} aria-hidden="true" />
+      ) : null}
       <h1>{state === "done" ? t("stDone") : state === "expired" ? t("stExpired") : t("stTitle")}</h1>
       {state === "done" ? <p>{t("stDoneBody", { date: until })}</p> : null}
-      {state !== "busy" ? <Link href="/app/plans" className="btn btn-primary btn-lg press" style={{ minInlineSize: 240 }}>{t("seePlans")}</Link> : null}
+      {state !== "busy" ? (
+        <Link href="/app/plans" className="btn btn-primary btn-lg press" style={{ minInlineSize: 240 }}>
+          {t("seePlans")}
+        </Link>
+      ) : null}
     </main>
   );
 }

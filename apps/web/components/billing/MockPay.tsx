@@ -15,26 +15,55 @@ export function MockPay({ sessionId, pending }: { sessionId: string; pending: bo
   const [busy, setBusy] = useState<Action | null>(null);
   const [err, setErr] = useState(false);
   const act = async (action: Action) => {
-    setBusy(action); setErr(false);
+    setBusy(action);
+    setErr(false);
     const r = await billingPost("mock", { session: sessionId, action, renewals });
-    if (!r.ok) { setBusy(null); setErr(true); return; }
+    if (!r.ok) {
+      setBusy(null);
+      setErr(true);
+      return;
+    }
     router.replace(`/app/checkout/return?session=${sessionId}`);
   };
   const b = (action: Action, label: string, cls = "btn-secondary") => (
-    <button type="button" className={`btn ${cls} btn-lg btn-block press`} aria-disabled={!!busy} onClick={() => !busy && act(action)}>
-      {busy === action ? <span className="spin" aria-hidden="true" /> : null}{label}
+    <button
+      type="button"
+      className={`btn ${cls} btn-lg btn-block press`}
+      aria-disabled={!!busy}
+      onClick={() => !busy && act(action)}
+    >
+      {busy === action ? <span className="spin" aria-hidden="true" /> : null}
+      {label}
     </button>
   );
   return (
     <>
-      {err ? <p className="err" role="alert"><span className="ph ph-x-circle-fill" aria-hidden="true" />{t("error")}</p> : null}
-      {pending ? b("approve", t("mock.approve"), "btn-primary") : (
+      {err ? (
+        <p className="err" role="alert">
+          <span className="ph ph-x-circle-fill" aria-hidden="true" />
+          {t("error")}
+        </p>
+      ) : null}
+      {pending ? (
+        b("approve", t("mock.approve"), "btn-primary")
+      ) : (
         <>
           <fieldset className="field" style={{ border: 0, padding: 0, margin: 0 }}>
-            <legend className="t-label" style={{ marginBlockEnd: 6 }}>{t("mock.renewals")}</legend>
+            <legend className="t-label" style={{ marginBlockEnd: 6 }}>
+              {t("mock.renewals")}
+            </legend>
             <div className="tabs" role="radiogroup" aria-label={t("mock.renewals")}>
               {(["ok", "decline"] as const).map((v) => (
-                <button key={v} type="button" role="radio" aria-checked={renewals === v} className={`tab${renewals === v ? " is-on" : ""}`} onClick={() => setRenewals(v)}>{v === "ok" ? t("mock.renewOk") : t("mock.renewDecline")}</button>
+                <button
+                  key={v}
+                  type="button"
+                  role="radio"
+                  aria-checked={renewals === v}
+                  className={`tab${renewals === v ? " is-on" : ""}`}
+                  onClick={() => setRenewals(v)}
+                >
+                  {v === "ok" ? t("mock.renewOk") : t("mock.renewDecline")}
+                </button>
               ))}
             </div>
           </fieldset>

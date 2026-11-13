@@ -12,11 +12,30 @@ export async function GET(req: Request, { params }: { params: Promise<{ locale: 
   const { locale, pathId } = await params;
   if (locale !== "en" && locale !== "ar") notFound();
   const me = await requireLearner(locale);
-  const cert = (await ensureCertificates(me.userId, me.joined.map((j) => j.pathId), me.skillStates)).find((c) => c.pathId === pathId);
+  const cert = (
+    await ensureCertificates(
+      me.userId,
+      me.joined.map((j) => j.pathId),
+      me.skillStates,
+    )
+  ).find((c) => c.pathId === pathId);
   if (!cert) notFound();
   const s = certStats(pathId);
   const issued = new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(cert.issuedAt));
-  const res = await renderCertPng({ name: me.progress.displayName ?? "", pathName: localPathName(pathId, locale), shown: s.skills, checks: s.checks, lessons: s.lessons, issued, code: cert.code, pathId, locale }, new URL(req.url).origin);
+  const res = await renderCertPng(
+    {
+      name: me.progress.displayName ?? "",
+      pathName: localPathName(pathId, locale),
+      shown: s.skills,
+      checks: s.checks,
+      lessons: s.lessons,
+      issued,
+      code: cert.code,
+      pathId,
+      locale,
+    },
+    new URL(req.url).origin,
+  );
   res.headers.set("Cache-Control", "private, no-store");
   res.headers.set("Content-Disposition", `attachment; filename="uxgate-certificate-${pathId}.png"`);
   return res;

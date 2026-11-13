@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TeamPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  if (!comingSoonOn() || (await teamPassValid((await cookies()).get(TEAM_COOKIE)?.value))) return redirect({ href: "/signin", locale }) as never;
+  if (!comingSoonOn() || (await teamPassValid((await cookies()).get(TEAM_COOKIE)?.value)))
+    return redirect({ href: "/signin", locale }) as never;
   return <TeamGate />;
 }

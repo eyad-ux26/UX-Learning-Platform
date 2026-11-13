@@ -45,10 +45,16 @@ async function storedHash(now = Date.now()): Promise<string | null> {
   if (!url || !key) return null;
   try {
     const res = await fetch(`${url}/rest/v1/rpc/app_team_password`, {
-      method: "POST", body: "{}", cache: "no-store", signal: AbortSignal.timeout(1500),
+      method: "POST",
+      body: "{}",
+      cache: "no-store",
+      signal: AbortSignal.timeout(1500),
       headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
     });
-    if (res.status === 404) { stored = { at: now, hash: null }; return null; } // 0061 not run yet
+    if (res.status === 404) {
+      stored = { at: now, hash: null };
+      return null;
+    } // 0061 not run yet
     if (!res.ok) throw new Error(String(res.status));
     const h = (await res.json()) as unknown;
     stored = { at: now, hash: typeof h === "string" && h.startsWith("pbkdf2$") ? h : null };
@@ -59,12 +65,16 @@ async function storedHash(now = Date.now()): Promise<string | null> {
 }
 
 /** Forget the stored hash (after the panel replaced it). */
-export const resetTeamPassword = () => { stored = null; };
+export const resetTeamPassword = () => {
+  stored = null;
+};
 
 async function pbkdf2(pw: string, saltHex: string, iterations: number): Promise<Uint8Array> {
   const salt = new Uint8Array((saltHex.match(/../g) ?? []).map((b) => parseInt(b, 16)));
   const base = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveBits"]);
-  return new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations }, base, 256));
+  return new Uint8Array(
+    await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations }, base, 256),
+  );
 }
 
 /** The stored form of a new team password. */
@@ -75,7 +85,13 @@ export async function hashTeamPassword(pw: string): Promise<string> {
 
 /** A new team password must stand up to guessing (the gate also limits tries). Null when it is fine. */
 export const teamPasswordProblem = (p: string): string | null =>
-  p.length < 14 ? "Use at least 14 characters." : p.length > 200 ? "Use at most 200 characters." : new Set(p).size < 5 ? "Use more different characters." : null;
+  p.length < 14
+    ? "Use at least 14 characters."
+    : p.length > 200
+      ? "Use at most 200 characters."
+      : new Set(p).size < 5
+        ? "Use more different characters."
+        : null;
 
 /** The cookie signing key: derived from the password (or its stored hash) and the server's link secret, so neither alone forges a pass. */
 async function passKey(): Promise<string | null> {
@@ -91,7 +107,14 @@ export async function teamPasswordMatches(typed: string): Promise<boolean> {
   if (h) {
     const [, it, salt, want] = h.split("$");
     const iterations = Number(it);
-    if (!Number.isInteger(iterations) || iterations < 10_000 || iterations > PBKDF2_ITERATIONS || !/^[0-9a-f]{32}$/.test(salt) || !/^[0-9a-f]{64}$/.test(want)) return false;
+    if (
+      !Number.isInteger(iterations) ||
+      iterations < 10_000 ||
+      iterations > PBKDF2_ITERATIONS ||
+      !/^[0-9a-f]{32}$/.test(salt) ||
+      !/^[0-9a-f]{64}$/.test(want)
+    )
+      return false;
     return same(enc.encode(hex(await pbkdf2(typed, salt, iterations))), enc.encode(want));
   }
   const p = password();

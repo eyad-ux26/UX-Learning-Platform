@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { pickReviewSteps, reviewPlanOk, sessionSkills, REVIEW_SESSION_MAX, type ReviewItem } from "./review";
 
-const item = (skillId: string, confidentError = false): ReviewItem => ({ skillId, pathId: skillId.slice(3, 6), confidentError, dueAt: new Date(0) });
+const item = (skillId: string, confidentError = false): ReviewItem => ({
+  skillId,
+  pathId: skillId.slice(3, 6),
+  confidentError,
+  dueAt: new Date(0),
+});
 const unitOf = (id: string) => id.match(/P\d{2}-U\d{2}/)?.[0];
 
 describe("review session", () => {
@@ -16,15 +21,29 @@ describe("review session", () => {
   });
   it("asks one new case per skill, and the oldest seen case once every case was seen", () => {
     const bank = [
-      { id: "R1", skill: "A" }, { id: "R2", skill: "A" }, { id: "R3", skill: "B" }, { id: "R4", skill: "B" }, { id: "R5", skill: "C" },
+      { id: "R1", skill: "A" },
+      { id: "R2", skill: "A" },
+      { id: "R3", skill: "B" },
+      { id: "R4", skill: "B" },
+      { id: "R5", skill: "C" },
     ];
-    const seen = new Map([["R1", 10], ["R3", 30], ["R4", 20], ["R5", 5]]);
+    const seen = new Map([
+      ["R1", 10],
+      ["R3", 30],
+      ["R4", 20],
+      ["R5", 5],
+    ]);
     expect(pickReviewSteps(bank, ["A", "B", "C", "D"], seen).map((s) => s.id)).toEqual(["R2", "R4", "R5"]);
   });
 });
 
 describe("reviewPlanOk (#141)", () => {
-  const bank = [{ id: "a1", skill: "A" }, { id: "a2", skill: "A" }, { id: "b1", skill: "B" }, { id: "c1", skill: "C" }];
+  const bank = [
+    { id: "a1", skill: "A" },
+    { id: "a2", skill: "A" },
+    { id: "b1", skill: "B" },
+    { id: "c1", skill: "C" },
+  ];
   const due = new Set(["A", "B"]);
   it("takes unseen cases of due skills, one per skill", () => {
     expect(reviewPlanOk(["a2", "b1"], bank, due, new Map([["a1", 1]]))).toBe(true);

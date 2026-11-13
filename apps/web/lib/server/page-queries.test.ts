@@ -31,46 +31,116 @@ const today = localDay(now, "Africa/Cairo");
 
 // A heavy learner: 8 joined paths, every lesson of them started (most finished), 300+ attempts, 4 months of activity.
 const paths = content.paths.slice(0, 8).map((p) => p.id);
-const lessons = content.lessons.filter((l) => paths.includes(content.units.find((u) => u.id === l.unitId)?.pathId ?? ""));
+const lessons = content.lessons.filter((l) =>
+  paths.includes(content.units.find((u) => u.id === l.unitId)?.pathId ?? ""),
+);
 const lessonRows = lessons.map((l, i) => ({ lesson_id: l.lessonId, finished: i % 7 !== 0, xp: 40 + (i % 5) * 10 }));
-const skillRows = content.units.filter((u) => paths.includes(u.pathId)).flatMap((u) => u.skills).map((s, i) => ({ skill_id: s.id, state: i % 3 ? "practiced" : "shown", shown_at: i % 3 ? null : "2026-10-20T10:00:00+00:00", kept_at: null, next_review_at: i % 3 ? null : "2026-10-23T10:00:00+00:00" }));
-const activityRows = lastDays(today, 121).map((day, i) => ({ day, lessons_done: i % 4 ? 3 : 0, goal_met: i % 4 !== 0, freeze_used: false }));
-const enrollmentRows = paths.map((p, i) => ({ path_id: p, started_at: `2026-07-0${1 + i}T08:00:00+00:00`, last_active_at: `2026-11-0${1 + (i % 5)}T08:00:00+00:00` }));
-const profileRow = { display_name: "Heavy", daily_goal: 3, time_zone: "Africa/Cairo", locale: "ar", week_start: 6, current_path_id: paths[2], handle: "heavy", share_enabled: true, leaderboard_joined_at: "2026-10-01T00:00:00+00:00", reminder_time: "20:30:00", created_at: "2026-07-01T07:00:00+00:00" };
+const skillRows = content.units
+  .filter((u) => paths.includes(u.pathId))
+  .flatMap((u) => u.skills)
+  .map((s, i) => ({
+    skill_id: s.id,
+    state: i % 3 ? "practiced" : "shown",
+    shown_at: i % 3 ? null : "2026-10-20T10:00:00+00:00",
+    kept_at: null,
+    next_review_at: i % 3 ? null : "2026-10-23T10:00:00+00:00",
+  }));
+const activityRows = lastDays(today, 121).map((day, i) => ({
+  day,
+  lessons_done: i % 4 ? 3 : 0,
+  goal_met: i % 4 !== 0,
+  freeze_used: false,
+}));
+const enrollmentRows = paths.map((p, i) => ({
+  path_id: p,
+  started_at: `2026-07-0${1 + i}T08:00:00+00:00`,
+  last_active_at: `2026-11-0${1 + (i % 5)}T08:00:00+00:00`,
+}));
+const profileRow = {
+  display_name: "Heavy",
+  daily_goal: 3,
+  time_zone: "Africa/Cairo",
+  locale: "ar",
+  week_start: 6,
+  current_path_id: paths[2],
+  handle: "heavy",
+  share_enabled: true,
+  leaderboard_joined_at: "2026-10-01T00:00:00+00:00",
+  reminder_time: "20:30:00",
+  created_at: "2026-07-01T07:00:00+00:00",
+};
 const streakRow = { longest: 40, freezes_available: 2, settled_through: shiftDay(today, -1) };
-const entitlementRow = { plan: "pro", valid_until: "2027-11-01T00:00:00+00:00", pro_since: "2026-11-01T00:00:00+00:00", pro_ended_at: null, source: "manual" };
+const entitlementRow = {
+  plan: "pro",
+  valid_until: "2027-11-01T00:00:00+00:00",
+  pro_since: "2026-11-01T00:00:00+00:00",
+  pro_ended_at: null,
+  source: "manual",
+};
 const attemptCount = lessonRows.length * 3;
 
-type Mode = { rpc: "ok" | "missing" | "flaky"; streak: typeof streakRow; certificates: { path_id: string; issued_at: string; code: string }[] };
+type Mode = {
+  rpc: "ok" | "missing" | "flaky";
+  streak: typeof streakRow;
+  certificates: { path_id: string; issued_at: string; code: string }[];
+};
 let mode: Mode;
 
 /** The fake Supabase: PostgREST-shaped answers from the rows above. */
 async function fakeSupabase(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url);
   const method = init?.method ?? "GET";
-  const json = (body: unknown, status = 200, headers: Record<string, string> = {}) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", ...headers } });
+  const json = (body: unknown, status = 200, headers: Record<string, string> = {}) =>
+    new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", ...headers } });
   const route = url.pathname.replace("/rest/v1/", "");
   if (route === "rpc/my_learner_state") {
-    if (mode.rpc === "missing") return json({ code: "PGRST202", message: "Could not find the function public.my_learner_state" }, 404);
-    if (mode.rpc === "flaky") { mode.rpc = "ok"; return json({ message: "schema cache" }, 503); }
+    if (mode.rpc === "missing")
+      return json({ code: "PGRST202", message: "Could not find the function public.my_learner_state" }, 404);
+    if (mode.rpc === "flaky") {
+      mode.rpc = "ok";
+      return json({ message: "schema cache" }, 503);
+    }
     return json({
-      profile: profileRow, lessons: lessonRows, activity: activityRows.filter((d) => d.day >= (url.searchParams.get("p_since") ?? "")),
-      onboarding: { completed_at: "2026-07-01T07:05:00+00:00", recommended_path_id: paths[0] }, skills: skillRows, enrollments: enrollmentRows,
-      streak: mode.streak, freeze_note: null, entitlement: entitlementRow, unread: 3, certificates: mode.certificates, leaderboard_open: true,
+      profile: profileRow,
+      lessons: lessonRows,
+      activity: activityRows.filter((d) => d.day >= (url.searchParams.get("p_since") ?? "")),
+      onboarding: { completed_at: "2026-07-01T07:05:00+00:00", recommended_path_id: paths[0] },
+      skills: skillRows,
+      enrollments: enrollmentRows,
+      streak: mode.streak,
+      freeze_note: null,
+      entitlement: entitlementRow,
+      unread: 3,
+      certificates: mode.certificates,
+      leaderboard_open: true,
     });
   }
   const tables: Record<string, unknown[]> = {
-    "rpc/my_lesson_progress": lessonRows, profiles: [profileRow], daily_activity: activityRows.filter((d) => d.day >= (url.searchParams.get("day")?.replace("gte.", "") ?? "")),
-    onboarding: [{ completed_at: "2026-07-01T07:05:00+00:00", recommended_path_id: paths[0] }], skill_states: skillRows, enrollments: enrollmentRows,
-    streaks: [mode.streak], freeze_events: [], entitlements: [entitlementRow], certificates: mode.certificates, app_flags: [{ enabled: true }],
+    "rpc/my_lesson_progress": lessonRows,
+    profiles: [profileRow],
+    daily_activity: activityRows.filter((d) => d.day >= (url.searchParams.get("day")?.replace("gte.", "") ?? "")),
+    onboarding: [{ completed_at: "2026-07-01T07:05:00+00:00", recommended_path_id: paths[0] }],
+    skill_states: skillRows,
+    enrollments: enrollmentRows,
+    streaks: [mode.streak],
+    freeze_events: [],
+    entitlements: [entitlementRow],
+    certificates: mode.certificates,
+    app_flags: [{ enabled: true }],
     attempts: [{ started_at: "2026-11-06T07:00:00+00:00" }],
   };
-  if (route === "notifications" && method === "HEAD") return new Response(null, { status: 200, headers: { "content-range": "*/3" } });
+  if (route === "notifications" && method === "HEAD")
+    return new Response(null, { status: 200, headers: { "content-range": "*/3" } });
   if (route in tables) return json(tables[route]);
   return json({ message: `no fake for ${method} ${route}` }, 500);
 }
 
-const learnerDb = () => createClient(URL_, "anon", { global: { fetch: tracedFetch }, db: { retry: false }, auth: { persistSession: false, autoRefreshToken: false } });
+const learnerDb = () =>
+  createClient(URL_, "anon", {
+    global: { fetch: tracedFetch },
+    db: { retry: false },
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 const read = () => readLearner(learnerDb(), USER, { email: "heavy@example.com", host: "uxgate.org", now });
 /** Counts the Supabase calls fn makes. */
 async function count<T>(fn: () => Promise<T>) {
@@ -125,7 +195,12 @@ describe("Supabase calls per signed-in page (issue #184)", () => {
   it(`Profile: at most ${BUDGET.profile}, with the email from the session token and no extra reads`, async () => {
     const { value, calls } = await count(async () => loadProfileData(await read()));
     expect(calls.length).toBeLessThanOrEqual(BUDGET.profile);
-    expect(value).toMatchObject({ email: "heavy@example.com", reminder: "20:30", since: profileRow.created_at, boardOpen: true });
+    expect(value).toMatchObject({
+      email: "heavy@example.com",
+      reminder: "20:30",
+      since: profileRow.created_at,
+      boardOpen: true,
+    });
   });
   it("Profile issues a new certificate when a path was just earned (and only then)", async () => {
     const pathId = paths[0];
@@ -142,7 +217,12 @@ describe("Supabase calls per signed-in page (issue #184)", () => {
   it("pages do not read the database themselves: new reads go through the helpers above, inside the caps", () => {
     const here = path.dirname(fileURLToPath(import.meta.url));
     const app = path.join(here, "../../app/[locale]/app");
-    for (const f of ["(shell)/page.tsx", "(shell)/path/[pathId]/page.tsx", "(shell)/profile/page.tsx", "lesson/[lessonId]/page.tsx"]) {
+    for (const f of [
+      "(shell)/page.tsx",
+      "(shell)/path/[pathId]/page.tsx",
+      "(shell)/profile/page.tsx",
+      "lesson/[lessonId]/page.tsx",
+    ]) {
       const src = fs.readFileSync(path.join(app, f), "utf8");
       expect(src, f).not.toMatch(/\.from\(|\.rpc\(|auth\.getUser\(/);
     }

@@ -11,7 +11,11 @@ export async function BellLink({ me }: { me: Pick<Learner, "db" | "userId" | "un
   return (
     <Link href="/app/inbox" className="bell-link" aria-label={n ? t("bellCount", { count: n }) : t("bell")}>
       <span className={`ph ph-bell${n ? "" : ""}`} aria-hidden="true" />
-      {n ? <span className="badge" aria-hidden="true">{n > 9 ? "9+" : n}</span> : null}
+      {n ? (
+        <span className="badge" aria-hidden="true">
+          {n > 9 ? "9+" : n}
+        </span>
+      ) : null}
     </Link>
   );
 }

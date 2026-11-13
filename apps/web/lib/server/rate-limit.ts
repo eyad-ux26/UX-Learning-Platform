@@ -16,8 +16,19 @@ export function withinMemoryLimit(key: string, limit: number, windowMs: number, 
 }
 
 /** True while the user is within `limit` hits per window, counted in the database. If the check itself fails, requests are let through. */
-export async function withinDbLimit(db: SupabaseClient, userId: string, key: string, limit: number, windowSeconds: number): Promise<boolean> {
-  const { data, error } = await db.rpc("hit_rate_limit", { p_user: userId, p_key: key, p_limit: limit, p_window_seconds: windowSeconds });
+export async function withinDbLimit(
+  db: SupabaseClient,
+  userId: string,
+  key: string,
+  limit: number,
+  windowSeconds: number,
+): Promise<boolean> {
+  const { data, error } = await db.rpc("hit_rate_limit", {
+    p_user: userId,
+    p_key: key,
+    p_limit: limit,
+    p_window_seconds: windowSeconds,
+  });
   if (error) return true;
   return data !== false;
 }

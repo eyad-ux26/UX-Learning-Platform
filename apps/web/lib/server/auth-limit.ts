@@ -36,8 +36,16 @@ export async function signInAllowed(email: string): Promise<boolean> {
   if (!hasServiceKey()) return true;
   const db = createAdminClient();
   const [ip, em] = await Promise.all([
-    db.rpc("admin_signin_paused", { p_buckets: [b.ipBucket], p_limit: SIGNIN_LIMIT.perIp, p_window_seconds: SIGNIN_LIMIT.windowSeconds }),
-    db.rpc("admin_signin_paused", { p_buckets: [b.emailBucket], p_limit: SIGNIN_LIMIT.perEmail, p_window_seconds: SIGNIN_LIMIT.windowSeconds }),
+    db.rpc("admin_signin_paused", {
+      p_buckets: [b.ipBucket],
+      p_limit: SIGNIN_LIMIT.perIp,
+      p_window_seconds: SIGNIN_LIMIT.windowSeconds,
+    }),
+    db.rpc("admin_signin_paused", {
+      p_buckets: [b.emailBucket],
+      p_limit: SIGNIN_LIMIT.perEmail,
+      p_window_seconds: SIGNIN_LIMIT.windowSeconds,
+    }),
   ]);
   return !(ip.data === true || em.data === true);
 }
@@ -48,8 +56,16 @@ export async function signInFailed(email: string): Promise<void> {
   const b = await buckets("signin", email);
   const db = createAdminClient();
   await Promise.all([
-    db.rpc("admin_signin_fail", { p_buckets: [b.ipBucket], p_limit: SIGNIN_LIMIT.perIp, p_window_seconds: SIGNIN_LIMIT.windowSeconds }),
-    db.rpc("admin_signin_fail", { p_buckets: [b.emailBucket], p_limit: SIGNIN_LIMIT.perEmail, p_window_seconds: SIGNIN_LIMIT.windowSeconds }),
+    db.rpc("admin_signin_fail", {
+      p_buckets: [b.ipBucket],
+      p_limit: SIGNIN_LIMIT.perIp,
+      p_window_seconds: SIGNIN_LIMIT.windowSeconds,
+    }),
+    db.rpc("admin_signin_fail", {
+      p_buckets: [b.emailBucket],
+      p_limit: SIGNIN_LIMIT.perEmail,
+      p_window_seconds: SIGNIN_LIMIT.windowSeconds,
+    }),
   ]).catch(() => undefined);
 }
 
@@ -60,8 +76,16 @@ export async function emailSendAllowed(email: string): Promise<boolean> {
   if (!hasServiceKey()) return true;
   const db = createAdminClient();
   const [ip, em] = await Promise.all([
-    db.rpc("admin_signin_fail", { p_buckets: [b.ipBucket], p_limit: EMAIL_LIMIT.perIp, p_window_seconds: EMAIL_LIMIT.windowSeconds }),
-    db.rpc("admin_signin_fail", { p_buckets: [b.emailBucket], p_limit: EMAIL_LIMIT.perEmail, p_window_seconds: EMAIL_LIMIT.windowSeconds }),
+    db.rpc("admin_signin_fail", {
+      p_buckets: [b.ipBucket],
+      p_limit: EMAIL_LIMIT.perIp,
+      p_window_seconds: EMAIL_LIMIT.windowSeconds,
+    }),
+    db.rpc("admin_signin_fail", {
+      p_buckets: [b.emailBucket],
+      p_limit: EMAIL_LIMIT.perEmail,
+      p_window_seconds: EMAIL_LIMIT.windowSeconds,
+    }),
   ]);
   return !(ip.data === false || em.data === false);
 }

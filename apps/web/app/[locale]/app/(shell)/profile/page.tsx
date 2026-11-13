@@ -16,7 +16,13 @@ import { BellLink } from "@/components/account/BellLink";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProfilePage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ paywall?: string }> }) {
+export default async function ProfilePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ paywall?: string }>;
+}) {
   const { locale } = await params;
   const { paywall } = await searchParams;
   setRequestLocale(locale);
@@ -30,15 +36,37 @@ export default async function ProfilePage({ params, searchParams }: { params: Pr
   return (
     <Shell me={me}>
       <div className="s4-bar">
-        <Link href="/app/settings" className="bell-link" aria-label={(await getTranslations("settings"))("title")}><span className="ph ph-gear" aria-hidden="true" /></Link>
+        <Link href="/app/settings" className="bell-link" aria-label={(await getTranslations("settings"))("title")}>
+          <span className="ph ph-gear" aria-hidden="true" />
+        </Link>
         <BellLink me={me} />
       </div>
       <h1 className="t-h1 h1-s">{t("title")}</h1>
       <ProfileTabs board={boardOpen} />
       <ProfileMain me={me} certificates={certificates} boardOpen={boardOpen} since={since} />
-      <ProfileForm initial={{ displayName: me.progress.displayName ?? "", dailyGoal: me.progress.dailyGoal as 1 | 2 | 3, reminder }} email={email} userId={me.userId} />
-      <ProfilePlan pro={me.pro} pathTitle={localPathName(path.id, locale)} pct={view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0} />
-      {offer ? <PaywallSheet kind="cert" prices={{ month: formatMoney(offer.month.amount, offer.month.currency, locale as "en" | "ar"), year: formatMoney(offer.year.amount, offer.year.currency, locale as "en" | "ar") }} /> : null}
+      <ProfileForm
+        initial={{
+          displayName: me.progress.displayName ?? "",
+          dailyGoal: me.progress.dailyGoal as 1 | 2 | 3,
+          reminder,
+        }}
+        email={email}
+        userId={me.userId}
+      />
+      <ProfilePlan
+        pro={me.pro}
+        pathTitle={localPathName(path.id, locale)}
+        pct={view.totalCount ? Math.round((view.doneCount / view.totalCount) * 100) : 0}
+      />
+      {offer ? (
+        <PaywallSheet
+          kind="cert"
+          prices={{
+            month: formatMoney(offer.month.amount, offer.month.currency, locale as "en" | "ar"),
+            year: formatMoney(offer.year.amount, offer.year.currency, locale as "en" | "ar"),
+          }}
+        />
+      ) : null}
     </Shell>
   );
 }

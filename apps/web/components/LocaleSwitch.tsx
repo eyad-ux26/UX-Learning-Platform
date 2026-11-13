@@ -9,13 +9,7 @@ export function LocaleSwitch() {
   const pathname = usePathname();
   const other = locale === "ar" ? "en" : "ar";
   return (
-    <Link
-      href={pathname}
-      locale={other}
-      hrefLang={other}
-      lang={other}
-      className="btn btn-quiet btn-sm"
-    >
+    <Link href={pathname} locale={other} hrefLang={other} lang={other} className="btn btn-quiet btn-sm">
       <span className="ph ph-globe" aria-hidden="true" />
       {t("switchToOther")}
     </Link>

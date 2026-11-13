@@ -11,7 +11,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 /** "Forgot password?": sends a reset link that lands on /reset through the auth callback. */
-export default async function ForgotPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ error?: string }> }) {
+export default async function ForgotPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) {
   const { locale } = await params;
   const { error } = await searchParams;
   setRequestLocale(locale);

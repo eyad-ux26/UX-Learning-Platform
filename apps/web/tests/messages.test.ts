@@ -5,7 +5,8 @@ const keys = (o: unknown, prefix = ""): string[] =>
   Object.entries(o as Record<string, unknown>).flatMap(([k, v]) =>
     typeof v === "object" && v !== null ? keys(v, `${prefix}${k}.`) : [`${prefix}${k}`],
   );
-const flat = (o: unknown): string[] => Object.values(o as object).flatMap((v) => (typeof v === "object" ? flat(v) : [String(v)]));
+const flat = (o: unknown): string[] =>
+  Object.values(o as object).flatMap((v) => (typeof v === "object" ? flat(v) : [String(v)]));
 
 describe("message files", () => {
   it("English and Arabic have exactly the same keys, file by file", () => {
@@ -29,9 +30,12 @@ describe("message files", () => {
     for (const m of [messages.en, messages.ar]) for (const s of flat(m)) expect(s.trim()).not.toBe("");
   });
   it("reminders and notifications never use loss-framed words", () => {
-    const LOSS = /\b(lose|losing|lost|miss out|break your streak|don't break|before it's gone|expire)\b|تخسر|ستفقد|ستخسر|قبل أن تضيع/i;
+    const LOSS =
+      /\b(lose|losing|lost|miss out|break your streak|don't break|before it's gone|expire)\b|تخسر|ستفقد|ستخسر|قبل أن تضيع/i;
     const files = (["account", "public", "emails"] as const).flatMap((f) => [messageFiles.en[f], messageFiles.ar[f]]);
-    const texts = files.flatMap(flat).filter((s) => !/never send a message about losing|لا نرسل أبدًا رسالة عن خسارة/.test(s));
+    const texts = files
+      .flatMap(flat)
+      .filter((s) => !/never send a message about losing|لا نرسل أبدًا رسالة عن خسارة/.test(s));
     for (const s of texts) expect(s, s).not.toMatch(LOSS);
   });
 });

@@ -1,8 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { signTeamPass, TEAM_PASS_SECONDS, teamPassValid, teamPasswordMatches } from "./team-access";
 
-beforeEach(() => { process.env.UG_TEAM_PASSWORD = "correct horse battery staple"; process.env.EMAIL_LINK_SECRET = "link-secret"; });
-afterEach(() => { delete process.env.UG_TEAM_PASSWORD; delete process.env.EMAIL_LINK_SECRET; });
+beforeEach(() => {
+  process.env.UG_TEAM_PASSWORD = "correct horse battery staple";
+  process.env.EMAIL_LINK_SECRET = "link-secret";
+});
+afterEach(() => {
+  delete process.env.UG_TEAM_PASSWORD;
+  delete process.env.EMAIL_LINK_SECRET;
+});
 
 describe("team password", () => {
   it("matches only the exact secret", async () => {

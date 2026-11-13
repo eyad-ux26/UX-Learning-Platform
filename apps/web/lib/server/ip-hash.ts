@@ -9,4 +9,5 @@ export async function ipHash(ip: string, purpose: string): Promise<string | null
 }
 
 /** The visitor's IP as Cloudflare reports it. */
-export const clientIp = (h: Headers): string => h.get("cf-connecting-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+export const clientIp = (h: Headers): string =>
+  h.get("cf-connecting-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";

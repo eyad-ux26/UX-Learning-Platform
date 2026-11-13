@@ -18,7 +18,11 @@ export default async function GoodbyePage({ params }: { params: Promise<{ locale
   setRequestLocale(locale);
   const t = await getTranslations("acctdata");
   let info: { d?: string; e?: string; n?: string } = {};
-  try { info = JSON.parse((await cookies()).get(BYE_COOKIE)?.value ?? "{}"); } catch { /* unreadable: same as none */ }
+  try {
+    info = JSON.parse((await cookies()).get(BYE_COOKIE)?.value ?? "{}");
+  } catch {
+    /* unreadable: same as none */
+  }
   // Only right after a delete request (the cookie lasts an hour) is there a real date to show; otherwise go home.
   const at = info.d ? new Date(info.d) : null;
   if (!at || Number.isNaN(at.getTime())) redirect(`/${locale}`);
@@ -34,14 +38,42 @@ export default async function GoodbyePage({ params }: { params: Promise<{ locale
         <h1>{t("byeTitle")}</h1>
         <p>{info.n ? t("byeBodyName", { name: info.n }) : t("byeBody")}</p>
         <section className="card" style={{ padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
-          <div className="why-row is-done" style={{ border: 0, padding: 0, minBlockSize: 0 }}><span className="ph ph-signout" aria-hidden="true" /><span className="grow"><b>{t("byeOut")}</b><span>{t("byeOutBody")}</span></span></div>
-          {info.e ? <div className="why-row is-done" style={{ border: 0, padding: 0, minBlockSize: 0 }}><span className="ph ph-mail" aria-hidden="true" /><span className="grow"><b>{t("byeMail")}</b><span className="ltr" style={{ textAlign: "start" }}>{info.e}</span></span></div> : null}
-          <div className="why-row" style={{ border: 0, padding: 0, minBlockSize: 0 }}><span className="ph ph-calendar" style={{ color: "var(--link)" }} aria-hidden="true" /><span className="grow"><b>{t("byeWhen", { date })}</b><span>{t("byeWhenBody")}</span></span></div>
+          <div className="why-row is-done" style={{ border: 0, padding: 0, minBlockSize: 0 }}>
+            <span className="ph ph-signout" aria-hidden="true" />
+            <span className="grow">
+              <b>{t("byeOut")}</b>
+              <span>{t("byeOutBody")}</span>
+            </span>
+          </div>
+          {info.e ? (
+            <div className="why-row is-done" style={{ border: 0, padding: 0, minBlockSize: 0 }}>
+              <span className="ph ph-mail" aria-hidden="true" />
+              <span className="grow">
+                <b>{t("byeMail")}</b>
+                <span className="ltr" style={{ textAlign: "start" }}>
+                  {info.e}
+                </span>
+              </span>
+            </div>
+          ) : null}
+          <div className="why-row" style={{ border: 0, padding: 0, minBlockSize: 0 }}>
+            <span className="ph ph-calendar" style={{ color: "var(--link)" }} aria-hidden="true" />
+            <span className="grow">
+              <b>{t("byeWhen", { date })}</b>
+              <span>{t("byeWhenBody")}</span>
+            </span>
+          </div>
         </section>
-        <p className="t-small" style={{ fontSize: 14 }}><b>{t("byeUndoT")}</b> {t("byeUndo", { date })}</p>
+        <p className="t-small" style={{ fontSize: 14 }}>
+          <b>{t("byeUndoT")}</b> {t("byeUndo", { date })}
+        </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, inlineSize: "100%", maxInlineSize: 340 }}>
-          <Link href="/signin" className="btn btn-secondary btn-block press">{t("signInKeep")}</Link>
-          <Link href="/" className="btn btn-ghost btn-block">{t("toSite")}</Link>
+          <Link href="/signin" className="btn btn-secondary btn-block press">
+            {t("signInKeep")}
+          </Link>
+          <Link href="/" className="btn btn-ghost btn-block">
+            {t("toSite")}
+          </Link>
         </div>
       </main>
     </div>

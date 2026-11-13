@@ -17,4 +17,6 @@ export function noteBillingError(error: { code?: string } | null | undefined, no
 }
 
 /** For tests. */
-export const resetBillingTables = () => { missingUntil = 0; };
+export const resetBillingTables = () => {
+  missingUntil = 0;
+};
