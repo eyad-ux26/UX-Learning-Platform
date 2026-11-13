@@ -11,7 +11,7 @@ import { accessFrom, getAppConfig } from "./lib/app-config";
 
 const intl = createMiddleware(routing);
 // Only screens that know who the learner is need their session kept fresh.
-const SIGNED_IN_AREA = /^\/(en|ar)\/(app|onboarding|signin|signup|forgot|reset)(\/|$)/;
+const SIGNED_IN_AREA = /^\/(en|ar)\/(app|onboarding|signin|signup|forgot|reset|try)(\/|$)/;
 
 // A sign-in that fails at the provider (an expired Google consent screen, for example) comes back to the site address with
 // error in the query. Show the sign-in page's "that link did not work" message instead of a plain home page.

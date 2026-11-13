@@ -3,5 +3,6 @@ import { defineConfig } from "vitest/config";
 
 // The "@/" path alias from tsconfig.json, so tests can import server modules the way the app does.
 export default defineConfig({
+  oxc: { jsx: { runtime: "automatic" } },
   resolve: { alias: { "@/": fileURLToPath(new URL("./", import.meta.url)) } },
 });
