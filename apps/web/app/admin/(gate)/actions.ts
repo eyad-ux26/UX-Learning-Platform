@@ -11,6 +11,7 @@ import { clientIp, ipHash } from "@/lib/server/ip-hash";
 import { SIGNIN_PAUSE_SECONDS, SIGNIN_TRIES } from "@/lib/admin/rules";
 import { sha256Hex } from "@/lib/admin/tokens";
 import { getAdminState } from "@/lib/admin/guard";
+import { requestOrigin } from "@/lib/server/origin";
 
 export type GateResult = { ok: boolean; error?: string; url?: string; qr?: string; secret?: string; factorId?: string } | null;
 
@@ -54,12 +55,9 @@ export async function adminPasswordSignIn(_: GateResult, form: FormData): Promis
 }
 
 export async function adminGoogleSignIn(_: GateResult, form: FormData): Promise<GateResult> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const next = adminNext(form.get("next"));
   const { data, error } = await (await createClient()).auth.signInWithOAuth({
-    provider: "google", options: { redirectTo: `${proto}://${host}/api/auth/callback?locale=en&next=${encodeURIComponent(next)}`, skipBrowserRedirect: true },
+    provider: "google", options: { redirectTo: `${await requestOrigin()}/api/auth/callback?locale=en&next=${encodeURIComponent(next)}`, skipBrowserRedirect: true },
   });
   if (error || !data.url) return { ok: false, error: "Google sign-in did not start. Try again." };
   redirect(data.url);
