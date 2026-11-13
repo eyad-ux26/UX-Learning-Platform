@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { withinMemoryLimit } from "@/lib/server/rate-limit";
+import { clientIp } from "@/lib/server/ip-hash";
 
 const body = z.object({ email: z.string().trim().email().max(254), locale: z.enum(["en", "ar"]) });
 
@@ -10,7 +11,7 @@ const body = z.object({ email: z.string().trim().email().max(254), locale: z.enu
  * language of the page the learner is on. It answers the same way whether or not the email has an account, so it reveals nothing.
  */
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ip = clientIp(req.headers); // Cloudflare's address for the visitor; X-Forwarded-For is whatever the sender wrote
   if (!withinMemoryLimit(`email-locale:${ip}`, 20, 60_000)) return new NextResponse(null, { status: 429, headers: { "Retry-After": "60" } });
   const parsed = body.safeParse(await req.json().catch(() => null));
   if (parsed.success) {

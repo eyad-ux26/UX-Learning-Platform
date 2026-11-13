@@ -1,3 +1,4 @@
+import { sameSecret } from "@/lib/server/secret";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyReviewsDue } from "@/lib/server/progress-notify";
@@ -13,7 +14,7 @@ const BATCH = 25;
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const after = new URL(req.url).searchParams.get("after");
   try {
     const r = await notifyReviewsDue(createAdminClient(), new Date(), after && /^[0-9a-f-]{36}$/.test(after) ? after : null, BATCH);

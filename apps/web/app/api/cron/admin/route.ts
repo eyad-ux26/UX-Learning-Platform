@@ -1,3 +1,4 @@
+import { sameSecret } from "@/lib/server/secret";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { APPROVAL_REMIND_SECONDS } from "@/lib/admin/rules";
@@ -15,7 +16,7 @@ export const dynamic = "force-dynamic";
  */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const db = createAdminClient();
   const now = Date.now();
   let reminded = 0;

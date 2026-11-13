@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Logo } from "@/components/Logo";
@@ -8,16 +7,14 @@ import { Link } from "@/i18n/navigation";
 import { localPathName } from "@/lib/catalog";
 import { certStats } from "@/lib/certificate-stats";
 import { certId, ogUrl, publicUrl } from "@/lib/certificate-share";
+import { requestOrigin } from "@/lib/server/origin";
 import { publicCertificate, revokedCertificate } from "@/lib/server/certificates";
 
 // Read on every request: turning the certificate page off must take it down at once, so nothing here may be cached.
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const originOf = async () => {
-  const h = await headers();
-  return `${h.get("x-forwarded-proto") ?? "https"}://${h.get("x-forwarded-host") ?? h.get("host") ?? "uxgate.org"}`;
-};
+const originOf = requestOrigin;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; code: string }> }): Promise<Metadata> {
   const { locale, code } = await params;

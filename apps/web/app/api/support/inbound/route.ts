@@ -1,3 +1,4 @@
+import { sameSecret } from "@/lib/server/secret";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -21,7 +22,7 @@ const body = z.object({
  */
 export async function POST(req: Request) {
   const secret = process.env.CRON_SECRET;
-  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  if (!secret || !sameSecret(req.headers.get("authorization") ?? "", `Bearer ${secret}`)) return NextResponse.json({ error: "forbidden" }, { status: 403 });
   const p = body.safeParse(await req.json().catch(() => null));
   if (!p.success) return NextResponse.json({ error: "payload" }, { status: 400 });
   const m = p.data;
