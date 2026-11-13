@@ -5,7 +5,7 @@ import { campaignEmail } from "@/lib/server/email/campaign";
 import type { EmailLocale } from "@/lib/server/email/layout";
 
 // COM-1: every email the app sends, rendered with sample data, so the team can check both languages before a change
-// ships. The wording lives in messages/s4/emails.*.json and is changed in a reviewed code change, not here.
+// ships. The wording lives in messages/{en,ar}/emails.json and is changed in a reviewed code change, not here.
 
 const SITE = "https://uxgate.org";
 const U = `${SITE}/en/app/settings/notifications`;

@@ -1,11 +1,11 @@
 // The emails the app sends itself, in English and Arabic (canvas v63, EmailPages). Sign-in, sign-up and reset emails are
 // Supabase Auth templates (supabase/templates). Inputs are plain data; every value is escaped by emailLayout.
-// Copy lives in messages/s4/emails.*.json under `emails`, read directly (not through next-intl). Arabic uses the app's
+// Copy lives in messages/{en,ar}/emails.json under `emails`, read directly (not through next-intl). Arabic uses the app's
 // default masculine form of address. No email here uses loss-framed words, and reminder and goal are the same daily
 // reminder: the goal copy is a variant, never a second email.
 
-import en from "../../../messages/s4/emails.en.json";
-import ar from "../../../messages/s4/emails.ar.json";
+import en from "../../../messages/en/emails.json";
+import ar from "../../../messages/ar/emails.json";
 import { longDate } from "../../reminder-plan";
 import { emailLayout, type EmailLocale } from "./layout";
 

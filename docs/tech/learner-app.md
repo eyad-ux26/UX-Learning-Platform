@@ -68,7 +68,7 @@ lib/                   logic with no UI. Most files are pure and have a *.test.t
   billing/             pure billing rules: prices, subscription life, webhook parsing, the billing engine
   supabase/            the three Supabase clients and their settings
 i18n/                  next-intl routing and message loading
-messages/              UI strings, English and Arabic (see Strings below)
+messages/              UI strings: en/ and ar/, one JSON file per area (see Strings below)
 middleware.ts          locale routing, maintenance mode, Coming Soon gate, session refresh. No access control
 cf-worker.ts           the Worker entry: OpenNext handler, Cron Triggers, inbound support email
 scripts/               build helpers and the browser checks CI runs (a11y, keyboard, flow, theme)
@@ -116,15 +116,10 @@ The mastery round (`lib/mastery.ts`) and spaced review (`lib/review.ts`) reuse t
 
 ## Strings (English and Arabic)
 
-All UI text lives in `messages/`. `i18n/request.ts` merges the files once per locale:
-
-- `messages/en.json`, `ar.json`: the main namespaces
-- `messages/s4/`: account, public pages and emails
-- `messages/s5/`: billing
-- `messages/s6/`: Coming Soon
-
-The `s4`/`s5`/`s6` folders were split by build slice so parallel work did not edit the same file. A new string goes in
-the file that already has its namespace. `tests/messages.test.ts` fails when a key exists in one language only.
+All UI text lives in `messages/en/` and `messages/ar/`, one JSON file per area (`app`, `account`, `public`,
+`emails`, `billing`). `messages/index.ts` puts them together and says what each file holds; `i18n/request.ts` hands
+them to next-intl. Every namespace lives in one file only, so a new string goes in the file that already holds its
+namespace. `tests/messages.test.ts` fails when a key exists in one language only or a namespace is in two files.
 
 Write both languages in the same change. Arabic is the default locale and the page is RTL, so CSS uses logical
 properties only (`margin-inline-start`, not `margin-left`); `npm run lint` enforces it.

@@ -3,8 +3,8 @@ import { verifyUnsub, type UnsubKind } from "@/lib/email-token";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasServiceKey } from "@/lib/supabase/env";
 import { esc } from "@/lib/server/email/layout";
-import en from "@/messages/s4/emails.en.json";
-import ar from "@/messages/s4/emails.ar.json";
+import en from "@/messages/en/emails.json";
+import ar from "@/messages/ar/emails.json";
 
 /**
  * The "turn off" link in reminder, review, badge and answer emails, and their List-Unsubscribe header (RFC 8058).

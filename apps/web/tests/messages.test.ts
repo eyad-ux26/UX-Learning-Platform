@@ -1,14 +1,5 @@
 import { describe, expect, it } from "vitest";
-import enBase from "../messages/en.json";
-import arBase from "../messages/ar.json";
-import { slice4 } from "../messages/s4";
-import en5 from "../messages/s5/en.json";
-import ar5 from "../messages/s5/ar.json";
-import en6 from "../messages/s6/en.json";
-import ar6 from "../messages/s6/ar.json";
-
-const en = { ...enBase, ...slice4.en };
-const ar = { ...arBase, ...slice4.ar };
+import { messageFiles, messages } from "../messages";
 
 const keys = (o: unknown, prefix = ""): string[] =>
   Object.entries(o as Record<string, unknown>).flatMap(([k, v]) =>
@@ -17,29 +8,30 @@ const keys = (o: unknown, prefix = ""): string[] =>
 const flat = (o: unknown): string[] => Object.values(o as object).flatMap((v) => (typeof v === "object" ? flat(v) : [String(v)]));
 
 describe("message files", () => {
-  it("English and Arabic have exactly the same keys", () => {
-    expect(keys(ar).sort()).toEqual(keys(en).sort());
-    expect(keys(ar5).sort()).toEqual(keys(en5).sort());
-    expect(keys(ar6).sort()).toEqual(keys(en6).sort());
+  it("English and Arabic have exactly the same keys, file by file", () => {
+    for (const [file, en] of Object.entries(messageFiles.en)) {
+      const ar = messageFiles.ar[file as keyof typeof messageFiles.ar];
+      expect(keys(ar).sort(), file).toEqual(keys(en).sort());
+    }
   });
-  it("the Coming Soon file adds keys and never replaces one", () => {
-    const all = keys({ ...enBase, ...slice4.en, ...en5 });
-    for (const k of keys(en6)) expect(all).not.toContain(k);
-  });
-  it("slice files only add new namespaces", () => {
-    for (const ns of Object.keys(en5)) expect(Object.keys(en)).not.toContain(ns);
+  it("every namespace lives in one file only", () => {
+    for (const files of [messageFiles.en, messageFiles.ar]) {
+      const seen = new Map<string, string>();
+      for (const [file, m] of Object.entries(files)) {
+        for (const ns of Object.keys(m)) {
+          expect(seen.get(ns), `namespace "${ns}" is in ${seen.get(ns)} and ${file}`).toBeUndefined();
+          seen.set(ns, file);
+        }
+      }
+    }
   });
   it("no message is empty", () => {
-    for (const m of [en, ar]) for (const k of keys(m)) expect(k.length).toBeGreaterThan(0);
-    for (const m of [en, ar, en5, ar5, en6, ar6]) for (const s of flat(m)) expect(s.trim()).not.toBe("");
-  });
-  it("slice 4 files add namespaces and never replace one from the main files", () => {
-    for (const ns of Object.keys(slice4.en)) expect(Object.keys(enBase)).not.toContain(ns);
-    for (const ns of Object.keys(slice4.ar)) expect(Object.keys(arBase)).not.toContain(ns);
+    for (const m of [messages.en, messages.ar]) for (const s of flat(m)) expect(s.trim()).not.toBe("");
   });
   it("reminders and notifications never use loss-framed words", () => {
     const LOSS = /\b(lose|losing|lost|miss out|break your streak|don't break|before it's gone|expire)\b|تخسر|ستفقد|ستخسر|قبل أن تضيع/i;
-    const s4 = [...flat(slice4.en), ...flat(slice4.ar)].filter((s) => !/never send a message about losing|لا نرسل أبدًا رسالة عن خسارة/.test(s));
-    for (const s of s4) expect(s, s).not.toMatch(LOSS);
+    const files = (["account", "public", "emails"] as const).flatMap((f) => [messageFiles.en[f], messageFiles.ar[f]]);
+    const texts = files.flatMap(flat).filter((s) => !/never send a message about losing|لا نرسل أبدًا رسالة عن خسارة/.test(s));
+    for (const s of texts) expect(s, s).not.toMatch(LOSS);
   });
 });

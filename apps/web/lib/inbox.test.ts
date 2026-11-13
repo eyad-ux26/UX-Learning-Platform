@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import en from "../messages/s4/account.en.json";
-import ar from "../messages/s4/account.ar.json";
+import en from "../messages/en/account.json";
+import ar from "../messages/ar/account.json";
 import { inboxCopy, safeHref, shortAgo } from "./inbox";
 
 describe("inbox items", () => {
