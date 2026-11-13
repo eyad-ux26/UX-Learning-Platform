@@ -1,5 +1,5 @@
 // Builds app/styles/billing-icons.css: the Phosphor icons slice 5 adds (canvas v63 "Slice 5" block), as CSS masks,
-// the same way build-assets.mjs does for the rest. Kept apart so other slices regenerating icons.css do not clash.
+// the same way build-assets.mjs does for the rest. Kept apart from icons.css so the billing icons have one owner.
 // Run: node scripts/build-billing-icons.mjs
 import fs from "node:fs";
 import path from "node:path";

@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getUnit } from "@uxgate/content";
 import { getLessonVersion } from "@/lib/server/content";
 import type { Locale } from "@uxgate/content/types";
-import { LessonRunner } from "@/components/LessonRunner";
+import { LessonRunner } from "@/components/lesson/LessonRunner";
 import { redirect } from "@/i18n/navigation";
 import { buildPathView, canPlay } from "@/lib/learning";
 import { requireLearner } from "@/lib/server/learner";

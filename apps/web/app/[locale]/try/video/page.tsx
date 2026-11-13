@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import type { Lesson, Locale } from "@uxgate/content/types";
-import { LessonRunner, GUEST_ID } from "@/components/LessonRunner";
+import { LessonRunner, GUEST_ID } from "@/components/lesson/LessonRunner";
 
 /** Test page for the video step, with the 8-second test clip. Hidden once real clips are in lessons (set UG_VIDEO_TEST=0). */
 const lesson: Lesson = {

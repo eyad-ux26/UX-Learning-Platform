@@ -3,8 +3,8 @@ import { localPathName } from "@/lib/catalog-list";
 import { pathSkills } from "@/lib/certificate";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AuthErrorRedirect } from "@/components/AuthErrorRedirect";
-import { LandingPreview } from "@/components/LandingPreview";
-import { Faq } from "@/components/Faq";
+import { LandingPreview } from "@/components/public/LandingPreview";
+import { LandingFaq } from "@/components/public/LandingFaq";
 import { Logo } from "@/components/Logo";
 import { LocaleSwitch } from "@/components/LocaleSwitch";
 import { ThemeSwitch } from "@/components/ThemeSwitch";
@@ -189,7 +189,7 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
             <a href="mailto:support@uxgate.org" className="help-link"><span className="ph ph-chat" aria-hidden="true" />{t("help")}</a>
           </div>
           <div className="faq-main">
-            <Faq items={[{ q: t("q1"), a: t("a1") }, { q: t("q4"), a: t("a4") }, { q: t("q2"), a: t("a2") }, { q: t("q3"), a: t("a3") }, { q: t("q5"), a: t("a5") }]} />
+            <LandingFaq items={[{ q: t("q1"), a: t("a1") }, { q: t("q4"), a: t("a4") }, { q: t("q2"), a: t("a2") }, { q: t("q3"), a: t("a3") }, { q: t("q5"), a: t("a5") }]} />
             <div className="card-mint help-card">
               <span className="help-icon"><span className="ph ph-chat" aria-hidden="true" /></span>
               <div><p className="t-label">{t("help")}</p><a href="mailto:support@uxgate.org" className="t-small ltr help-mail hit">support@uxgate.org</a></div>

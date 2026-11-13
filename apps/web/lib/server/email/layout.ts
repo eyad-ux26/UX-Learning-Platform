@@ -1,7 +1,7 @@
 // One layout for every email the app sends itself (canvas v63, EmailPages). Email-safe on purpose: a single 600px table
 // column, inline styles, solid colours, the button ledge drawn as a bottom border, absolute image addresses and no web
 // fonts required. Direction comes from dir="rtl" on the tables, so no left/right is ever written here.
-// The subscriptions slice reuses emailLayout with this same signature; the extra fields are optional.
+// Billing emails (lib/billing/emails.ts) use emailLayout too; the extra fields are optional.
 
 import en from "../../../messages/en/emails.json";
 import ar from "../../../messages/ar/emails.json";
@@ -18,7 +18,7 @@ export type EmailLayoutInput = {
   paragraphs: string[];
   /** showLink prints the address under the button as copyable text. Every button that signs in sets it. */
   button?: { label: string; href: string; showLink?: boolean };
-  /** Label and value lines under the paragraphs (receipts: plan, amount, card, next charge). Slice 5. */
+  /** Label and value lines under the paragraphs (receipts: plan, amount, card, next charge). */
   table?: Array<[string, string]>;
   /** img: an illustration name ("path-forms"), a site path ("/ill/x.png") or an absolute https address. */
   box?: { title: string; body: string; img?: string };

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import type { Lesson, Locale, Mock } from "@uxgate/content/types";
-import { LessonRunner, GUEST_ID } from "@/components/LessonRunner";
+import { LessonRunner, GUEST_ID } from "@/components/lesson/LessonRunner";
 
 /** Dev only (UG_DEV_FIXTURE=1): one step of each type that no lesson uses yet, for screenshots and the keyboard and axe checks. */
 const T = (en: string, ar: string) => ({ en, ar });

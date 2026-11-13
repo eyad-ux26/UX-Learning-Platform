@@ -8,7 +8,7 @@ export type FirstTry = { lessonId: string; stepId: string; skillId: string; corr
 
 import { DEFAULT_RULES } from "./learning-rules";
 
-/** At most this many mastery misses before a skill is left Practiced (it goes to spaced review in slice 3). Default; see Learning rules. */
+/** At most this many mastery misses before a skill is left Practiced (it goes to spaced review). Default; see Learning rules. */
 export const MAX_MASTERY_MISSES = DEFAULT_RULES.maxMasteryMisses;
 /** At most this many fresh variants of one skill in a round. Default; see Learning rules. */
 export const VARIANTS_PER_SKILL = DEFAULT_RULES.variantsPerSkill;

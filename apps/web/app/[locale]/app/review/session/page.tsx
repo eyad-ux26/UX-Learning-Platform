@@ -3,7 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getUnit } from "@uxgate/content";
 import { getBank } from "@/lib/server/content";
 import type { Lesson, Locale } from "@uxgate/content/types";
-import { LessonRunner } from "@/components/LessonRunner";
+import { LessonRunner } from "@/components/lesson/LessonRunner";
 import { requireLearner } from "@/lib/server/learner";
 import { loadReviewSession } from "@/lib/server/review-session";
 import { localPathName } from "@/lib/catalog";

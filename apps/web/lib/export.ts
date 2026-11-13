@@ -16,7 +16,7 @@ export const EXPORT_TABLES: { table: string; columns: string }[] = [
   { table: "notification_prefs", columns: "*" },
   { table: "email_log", columns: "kind, day, sent_at" },
   { table: "push_subscriptions", columns: "user_agent, created_at, last_ok_at" },
-  // Slice 3 tables; skipped when they do not exist yet.
+  // Tables from later migrations; skipped when they do not exist yet.
   { table: "path_events", columns: "*" },
   { table: "freeze_events", columns: "*" },
   { table: "certificates", columns: "*" },

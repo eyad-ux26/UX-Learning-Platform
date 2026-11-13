@@ -1,10 +1,10 @@
-// Hooks other slices fill in at merge time, so this slice does not import modules that do not exist yet.
+// What else has to happen when a learner asks to delete their account (used by Settings and by the admin panel).
 import "server-only";
 import { cancelPlan } from "@/lib/billing/engine";
 import { billingEngine, providerActions } from "@/lib/server/billing";
 
 /**
- * Called right after a learner asks to delete their account. Slice 5: renewal stops (the plan is cancelled, with
+ * Called right after a learner asks to delete their account. Renewal stops (the plan is cancelled, with
  * Paddle too), so nothing is charged again; Pro stays to the end of the paid period, before the account goes.
  * A failure here never blocks the deletion: it is logged for support.
  */

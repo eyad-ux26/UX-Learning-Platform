@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 
 /** Quick answers: one open at a time, each question a real button with aria-expanded. */
-export function Faq({ items }: { items: { q: string; a: string }[] }) {
+export function HelpFaq({ items }: { items: { q: string; a: string }[] }) {
   const [open, setOpen] = useState<number | null>(0);
   const id = useId();
   return (

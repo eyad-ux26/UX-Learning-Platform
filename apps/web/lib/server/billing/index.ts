@@ -10,7 +10,7 @@ import { SupabaseBillingStore } from "./store";
 import { cancelSubscription, cancelSubscriptionNow, changeSubscriptionPeriod, changeSubscriptionRegion, customerCountry, refundTransaction, resumeSubscription } from "./paddle-api";
 import { refundTransaction as refundPaymob } from "./paymob-api";
 
-/** Sends through the app's one email sender (slice 4). Without RESEND_API_KEY emails are logged as skipped (staging before Resend is set up). */
+/** Sends through the app's one email sender (lib/server/email/send.ts). Without RESEND_API_KEY emails are logged as skipped (staging before Resend is set up). */
 export function resendTransport(): Transport | null {
   if (!process.env.RESEND_API_KEY) return null;
   return async (m) => {

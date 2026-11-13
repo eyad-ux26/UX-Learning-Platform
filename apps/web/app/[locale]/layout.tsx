@@ -13,7 +13,7 @@ import "@fontsource/titillium-web/400.css";
 import "@fontsource/titillium-web/600.css";
 import "@fontsource/titillium-web/700.css";
 import "../globals.css";
-import { GuestHandoff } from "@/components/GuestHandoff";
+import { GuestHandoff } from "@/components/lesson/GuestHandoff";
 import { ThemeSync } from "@/components/ThemeSync";
 import { NavProgress } from "@/components/loading/NavProgress";
 import { routing, isRtl } from "@/i18n/routing";

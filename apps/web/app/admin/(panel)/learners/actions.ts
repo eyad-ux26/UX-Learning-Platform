@@ -11,7 +11,7 @@ import { resolveWeekStart, shiftDay } from "@/lib/freeze";
 import { learningRules } from "@/lib/app-config";
 import { localDay } from "@/lib/progress";
 import { settleLearner } from "@/lib/server/settle";
-import { onAccountDeletionScheduled } from "@/lib/server/account-hooks";
+import { onAccountDeletionScheduled } from "@/lib/server/account-deletion";
 import { emailLayout, siteOrigin } from "@/lib/server/email/layout";
 import { sendEmail, SUPPORT_FROM } from "@/lib/server/email/send";
 import { maskEmail } from "@/lib/admin/mask";

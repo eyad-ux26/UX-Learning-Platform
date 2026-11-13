@@ -198,7 +198,7 @@ function content(kind: EmailKind, i: EmailInput): Body {
   }
 }
 
-/** Billing emails use the one app email layout (slice 4, lib/server/email/layout.ts). They are transactional: they cannot be turned off. */
+/** Billing emails use the one app email layout (lib/server/email/layout.ts). They are transactional: they cannot be turned off. */
 export function renderEmail(kind: EmailKind, input: EmailInput): Email {
   const b = content(kind, input);
   const { html, text } = emailLayout({

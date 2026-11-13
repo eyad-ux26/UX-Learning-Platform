@@ -33,7 +33,7 @@ export async function pushToLearner(db: SupabaseClient, userId: string, msg: { t
 /**
  * One notification: an inbox row (when In app is on) and a push to each device (when Push is on).
  * Email is sent by the caller with the matching template, after checking `allowed(prefs, kind, "email")`.
- * Other slices call this for badges, certificates, review due and billing.
+ * Called for badges, certificates, review due and billing.
  */
 export async function notify(userId: string, kind: InboxKind, data: InboxData, href: string, opts: { db?: SupabaseClient; prefs?: Prefs; locale?: "en" | "ar" } = {}) {
   const db = opts.db ?? createAdminClient();
